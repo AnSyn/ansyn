@@ -1,0 +1,21 @@
+<div class="menu-wrapper">
+
+  <div class="menu" [style.width.px]="width">
+    <a
+      *ngFor="let menu_item of menu_items; let index = index"
+      [class.active]="isActive(index)"
+      (click)="toggleItem(index)">
+
+      <img [src]="menu_item.icon_url"/>
+      {{menu_item.name}}
+    </a>
+  </div>
+
+
+
+  <div  [style.left.px]="width" class="container" #container [@expand]="expand" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation(expand)">
+    <button class="close" (click)="closeMenu()">×</button>
+    <template #selected_component_elem></template>
+  </div>
+
+</div>

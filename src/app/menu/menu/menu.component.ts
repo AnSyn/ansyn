@@ -4,6 +4,8 @@ import {
 } from '@angular/core';
 import {MenuItem} from "../menu-item.model";
 
+const DEFAULT_WIDTH = 80;
+
 const animations: AnimationEntryMetadata[] = [
   trigger(
     'expand', [
@@ -30,6 +32,7 @@ export class MenuComponent implements OnChanges {
 
   @Input("selectedItemIndex") private _selected_item_index:number;
   @Input("menuItems") private menu_items:MenuItem[];
+  @Input("width") private width:number = DEFAULT_WIDTH;
   @Output("selectedItemIndexChange") private selectedItemIndexChange:EventEmitter<any> = new EventEmitter();
   @ViewChild("container") container:ElementRef;
   @ViewChild("selected_component_elem", {read: ViewContainerRef}) selected_component_elem:ViewContainerRef;

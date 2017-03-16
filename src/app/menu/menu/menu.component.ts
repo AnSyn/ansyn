@@ -34,7 +34,7 @@ export class MenuComponent implements OnChanges {
   @ViewChild("container") container:ElementRef;
   @ViewChild("selected_component_elem", {read: ViewContainerRef}) selected_component_elem:ViewContainerRef;
 
-  selected_component_factory: ComponentRef<any>;
+  selected_component_ref: ComponentRef<any>;
   private on_animation:boolean = false;
   private expand:boolean = false;
 
@@ -54,16 +54,9 @@ export class MenuComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["_selected_item_index"]) {
-      if(this.isMenuOpen() && !this.selected_component_factory) {
-        this.componentChanges();
-        this.expand = true;
-      } else {
-        if(this.on_animation && this.isMenuOpen() ){
-          this.componentChanges();
-        } else {
-          this.expand = false;
-        }
-      }
+      let expand_result = this.itemSelected() && (!this.selected_component_ref || this.on_animation);
+      if(expand_result) this.componentChanges();
+      this.expand = expand_result;
     }
   }
 
@@ -73,16 +66,16 @@ export class MenuComponent implements OnChanges {
   }
 
   destroyCurrentComponent() {
-    if(this.selected_component_factory) {
-      this.selected_component_factory.destroy();
-      this.selected_component_factory = undefined;
+    if(this.selected_component_ref) {
+      this.selected_component_ref.destroy();
+      this.selected_component_ref = undefined;
     }
   }
 
   buildCurrentComponent() {
-    if(this.isMenuOpen()) {
+    if(this.itemSelected()) {
       let factory = this.componentFactoryResolver.resolveComponentFactory(this.selected_item.component);
-      this.selected_component_factory = this.selected_component_elem.createComponent(factory);
+      this.selected_component_ref = this.selected_component_elem.createComponent(factory);
     }
   }
 
@@ -99,24 +92,24 @@ export class MenuComponent implements OnChanges {
     this.selected_item_index = -1;
   }
 
-  isMenuClose():boolean {
+  itemNotSelected():boolean {
     return this.selected_item == undefined;
   }
 
-  isMenuOpen():boolean {
-    return !this.isMenuClose();
+  itemSelected():boolean {
+    return !this.itemNotSelected();
   }
 
-  onStartExpandAnimation() {
-    if(this.isMenuOpen()) this.on_animation = true;
+  onStartAnimation(expand) {
+    if(this.itemSelected()) this.on_animation = true;
   }
 
-  onEndExpandAnimation(expand){
+  onFinishAnimation(expand){
     this.on_animation = false;
 
     if(!expand){
       this.componentChanges();
-      if(this.isMenuOpen()) this.expand = true;
+      if(this.itemSelected()) this.expand = true;
     }
   }
 }

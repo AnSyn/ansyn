@@ -13,7 +13,7 @@
 
 
 
-  <div class="container" #container [@expand]="expand" (@expand.done)="onEndExpandAnimation(expand)" (@expand.start)="onStartExpandAnimation(expand)">
+  <div class="container" #container [@expand]="expand" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation(expand)">
     <button class="close" (click)="closeMenu()">×</button>
     <template #selected_component_elem></template>
   </div>

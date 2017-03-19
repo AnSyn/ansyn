@@ -15,8 +15,8 @@ const animations: AnimationEntryMetadata[] = [
       state('false', style({
         transform: 'translate(-100%)'
       })),
-      transition('1 => 0', animate('0.15s ease-in-out')),
-      transition('0 => 1', animate('0.25s ease-in-out'))
+      transition('1 => 0', animate('5.15s ease-in-out')),
+      transition('0 => 1', animate('5.25s ease-in-out'))
     ]
   )
 ];

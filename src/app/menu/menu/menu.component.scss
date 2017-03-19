@@ -1,13 +1,10 @@
 div.menu-wrapper {
-  position: relative;
   height: 100vh;
+  display: flex;
   div.menu {
-    position: absolute;
+    position: relative;
     background: #2E2D46;
     width: 80px;
-    height: 100vh;
-    top: 0;
-    left: 0;
     flex-direction: column;
     display: flex;
     z-index: 2;
@@ -30,20 +27,16 @@ div.menu-wrapper {
       }
     }
   }
-
+  div.yaya{
+    background: greenyellow;
+    width: 100px;
+  }
   div.container {
-    position: absolute;
-    left: 80px;
-    height: 100%;
     background: #27B2CF;
-    top: 0;
-    box-sizing: content-box;
-    box-shadow: inset 1px 1px 0px 11px #27b2cf;
-    transform: translate(-100%);
-    z-index: 1;
 
     button.close {
-      float: right;
+      position: absolute;
+      right: 0;
       color: white;
       border: none;
       background: transparent;

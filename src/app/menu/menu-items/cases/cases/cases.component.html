@@ -1,3 +1,30 @@
-<p>
-  cases works!
-</p>
+<div class="cases">
+
+  <div class="buttons-group">
+    <button>
+      <img src="/assets/icons/add.svg"/>
+    </button>
+    <button>
+      <img src="/assets/icons/delete.svg"/>
+    </button>
+    <button>
+      <img src="/assets/icons/share.svg"/>
+    </button>
+  </div>
+
+  <table>
+    <thead>
+    <tr>
+      <th *ngFor="let a of ['Name','Owner','Last modified']">{{a}}</th>
+    </tr>
+    </thead>
+    <tbody (appInfiniteScroll)="ddd()">
+    <tr *ngFor="let a of cases">
+      <td *ngFor="let b of [1,2,3]">
+        {{a}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

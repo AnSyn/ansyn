@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {MenuItem} from "../menu-item.model";
 
-const DEFAULT_WIDTH = 80;
+const DEFAULT_WIDTH = 60
 
 const animations: AnimationEntryMetadata[] = [
   trigger(

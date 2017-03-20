@@ -25,6 +25,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^2.2.1",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.22",
+    "angular-tree-component": "^3.2.3",
     "core-js": "^2.4.1",
     "event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64",
     "rxjs": "^5.1.0",

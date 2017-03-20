@@ -3,3 +3,30 @@ button{
   right: 0;
   top:0;
 }
+div.app{
+  display: flex;
+  .layer{
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    .map{
+      height: 90%;
+      background: #84c7d2;
+      text-align: center;
+      font-size: xx-large;
+    }
+    .status{
+      height: 5%;
+      background: #636363;
+      text-align: center;
+      font-size: xx-large;
+    }
+    .timeline{
+      height: 5%;
+      background: #557f86;
+      text-align: center;
+      font-size: xx-large;
+    }
+  }
+}

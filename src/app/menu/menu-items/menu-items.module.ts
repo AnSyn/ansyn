@@ -16,7 +16,8 @@ import {AlgorithmsModule} from "./algorithms/algorithms.module";
     ToolsModule,
     AlgorithmsModule,
     SettingsModule
-  ]
+  ],
+  exports:[AlgorithmsModule]
 })
 
 export class MenuItemsModule { }

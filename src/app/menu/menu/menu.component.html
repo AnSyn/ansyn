@@ -1,14 +1,15 @@
 <div class="menu-wrapper">
 
-  <div class="menu" [style.width.px]="width">
-    <a
+  <div class="menu" [style.min-width.px]="width">
+    <div
+      class="menu-btn"
       *ngFor="let menu_item of menu_items; let index = index"
       [class.active]="isActive(index)"
       (click)="toggleItem(index)">
 
       <img [src]="menu_item.icon_url"/>
       {{menu_item.name}}
-    </a>
+    </div>
   </div>
 
 
@@ -17,7 +18,5 @@
     <template #selected_component_elem></template>
   </div>
 
-  <div class="yaya">
 
-  </div>
 </div>

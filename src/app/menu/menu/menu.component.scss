@@ -4,11 +4,10 @@ div.menu-wrapper {
   div.menu {
     position: relative;
     background: #2E2D46;
-    width: 80px;
     flex-direction: column;
     display: flex;
     z-index: 2;
-    a {
+    div.menu-btn {
       text-align: center;
       color: white;
       text-decoration: none;
@@ -16,7 +15,7 @@ div.menu-wrapper {
       cursor: pointer;
       font-size:1rem;
       img {
-        margin: auto;
+        margin: 0 auto 5px auto;
         display: block;
       }
       &:hover {
@@ -27,12 +26,11 @@ div.menu-wrapper {
       }
     }
   }
-  div.yaya{
-    background: greenyellow;
-    width: 100px;
-  }
   div.container {
+    position: relative;
     background: #27B2CF;
+    overflow: hidden;
+    width: auto;
 
     button.close {
       position: absolute;

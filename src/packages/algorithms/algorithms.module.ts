@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
-import {MenuService} from "../../menu.service";
-import {MenuItem} from "../../menu-item.model";
+import {CoreModule, StoreService, MenuItem} from "core";
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CoreModule, CommonModule],
   declarations: [AlgorithmsComponent],
   entryComponents:[AlgorithmsComponent],
   exports:[AlgorithmsComponent]
 })
 export class AlgorithmsModule {
-  constructor(menuService:MenuService){
-    menuService.addMenuItem(new MenuItem("Algorithms", AlgorithmsComponent, "/assets/icons/algorithms.svg"));
+  constructor(storeService:StoreService){
+    storeService.menu.addMenuItem(new MenuItem("Algorithms", AlgorithmsComponent, "/assets/icons/algorithms.svg"));
   }
 }

@@ -4,12 +4,12 @@
   "peerDependencies": {
     "@angular/common": "~2.4.0",
     "@angular/core": "^2.4.0",
-    "@ansyn/core": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core",
-    "@ansyn/cases": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\cases",
-    "@ansyn/algorithms": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\algorithms",
-    "@ansyn/filters": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\filters",
-    "@ansyn/data-layers": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\data-layers",
-    "@ansyn/tools": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\tools",
-    "@ansyn/settings": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core"
+    "@ansyn/core": "^0.0.1",
+    "@ansyn/cases": "^0.0.1",
+    "@ansyn/algorithms": "^0.0.1",
+    "@ansyn/filters": "^0.0.1",
+    "@ansyn/data-layers": "^0.0.1",
+    "@ansyn/tools": "^0.0.1",
+    "@ansyn/settings": "^0.0.1"
   }
 }

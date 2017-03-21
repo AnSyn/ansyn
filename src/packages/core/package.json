@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@ansyn/core",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,8 +9,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@angular/core": "^2.4.0",
-    "@angular/common": "~2.4.0"
+  "peerDependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/core": "^2.4.0"
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataLayersComponent } from './data-layers/data-layers.component';
-import {CoreModule, StoreService, MenuItem} from "core";
+import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 
 @NgModule({
   imports: [CoreModule, CommonModule],

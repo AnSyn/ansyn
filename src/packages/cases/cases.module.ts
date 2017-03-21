@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './cases/cases.component';
 import { InfiniteScrollDirective } from './infinite-scroll.directive';
-import {CoreModule, StoreService, MenuItem} from "core";
+import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 
 @NgModule({
   imports: [CommonModule, CoreModule],

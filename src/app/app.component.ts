@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {StoreService} from "core";
+import {StoreService} from "../packages/core/store.service";
 
 @Component({
   selector: 'app-root',

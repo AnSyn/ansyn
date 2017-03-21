@@ -2,9 +2,9 @@ import {
   Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, Output,
   EventEmitter, OnChanges, SimpleChanges, AnimationEntryMetadata, trigger, state, style, transition, animate
 } from '@angular/core';
-import {MenuItem} from "core";
+import {MenuItem} from "@ansyn/core";
 
-const DEFAULT_WIDTH = 60
+const DEFAULT_WIDTH = 60;
 
 const animations: AnimationEntryMetadata[] = [
   trigger(

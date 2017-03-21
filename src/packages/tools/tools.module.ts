@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
-import {CoreModule, StoreService, MenuItem} from "core";
+import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 
 @NgModule({
   imports: [CommonModule, CoreModule],

@@ -1,5 +1,5 @@
 {
-  "name": "cases",
+  "name": "@ansyn/cases",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,9 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "@angular/common": "~2.4.0",
     "@angular/core": "^2.4.0",
-    "core": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core"
+    "@ansyn/core": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core"
   }
 }

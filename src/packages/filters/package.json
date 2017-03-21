@@ -1,5 +1,5 @@
 {
-  "name": "filters",
+  "name": "@ansyn/filters",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,5 +8,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "peerDependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/core": "^2.4.0",
+    "@ansyn/core": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core"
+  }
 }

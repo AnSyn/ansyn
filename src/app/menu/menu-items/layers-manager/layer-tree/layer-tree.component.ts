@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NodeCheckedChangedEventArgs } from '../EventArgs/node-checked-changed-event-args';
 import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
 import { TreeNode } from 'angular-tree-component';
+
 @Component({
   selector: 'app-layer-tree',
   templateUrl: './layer-tree.component.html',
@@ -24,7 +25,6 @@ export class LayerTreeComponent implements OnInit {
       getChildren: () => new Promise((resolve, reject) => { }),
       actionMapping: this.actionMappingService.getActionMapping()
     };
-
   }
 
   private checkedChanged(node: TreeNode, event): void {

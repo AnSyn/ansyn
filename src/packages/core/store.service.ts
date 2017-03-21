@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {MenuService} from "../menu/menu.service";
+import {MenuService} from "./services/menu.service";
 
 @Injectable()
-export class AppDataService {
+export class StoreService {
   constructor(public menu:MenuService) { }
 }
 

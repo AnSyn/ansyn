@@ -1,3 +1,6 @@
+@import "../common.scss";
+
+
 button{
   position: absolute;
   right: 0;
@@ -12,7 +15,9 @@ div.app{
     color: white;
     .map{
       height: 90%;
-      background: #84c7d2;
+      //background: #84c7d2;
+      background: $base_color_of_text;
+      font-size: $base_size_of_text;
       text-align: center;
       font-size: xx-large;
     }

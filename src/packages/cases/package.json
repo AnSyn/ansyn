@@ -1,0 +1,17 @@
+{
+  "name": "cases",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/core": "^2.4.0",
+    "core": "file:///C:\\Users\\user\\Desktop\\Development\\ansyn\\src\\packages\\core"
+  }
+}

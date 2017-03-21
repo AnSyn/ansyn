@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import {MenuModule} from "./menu/menu.module";
-import {AppDataModule} from "./app-data/app-data.module";
+import {MenuItemsModule} from "./menu-items/menu-items.module";
+import {CoreModule} from "core";
+import {MenuModule} from "menu/menu.module";
 
 @NgModule({
   declarations: [
@@ -14,8 +15,9 @@ import {AppDataModule} from "./app-data/app-data.module";
     BrowserModule,
     FormsModule,
     HttpModule,
+    CoreModule,
     MenuModule,
-    AppDataModule
+    MenuItemsModule,
   ],
   bootstrap: [AppComponent]
 })

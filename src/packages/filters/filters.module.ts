@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FiltersComponent} from "./filters/filters.component";
-import {MenuItem} from "../../menu-item.model";
-import {MenuService} from "../../menu.service";
+import {CoreModule, StoreService, MenuItem} from "core";
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, CoreModule],
   declarations:[FiltersComponent],
   entryComponents:[FiltersComponent]
 })
 export class FiltersModule {
-  constructor(menuService:MenuService){
-    menuService.addMenuItem(new MenuItem("Filters", FiltersComponent, "/assets/icons/filters.svg"));
+  constructor(storeService:StoreService){
+    storeService.menu.addMenuItem(new MenuItem("Filters", FiltersComponent, "/assets/icons/filters.svg"));
   }
 }

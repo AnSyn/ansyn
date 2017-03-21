@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './cases/cases.component';
-import {MenuService} from "../../menu.service";
-import {MenuItem} from "../../menu-item.model";
 import { InfiniteScrollDirective } from './infinite-scroll.directive';
+import {CoreModule, StoreService, MenuItem} from "core";
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, CoreModule],
   declarations: [CasesComponent, InfiniteScrollDirective],
   entryComponents:[CasesComponent]
 })
 export class CasesModule {
-  constructor(menuService:MenuService){
-    menuService.addMenuItem(new MenuItem("Cases", CasesComponent, "/assets/icons/cases.svg"));
+  constructor(storeService:StoreService){
+    storeService.menu.addMenuItem(new MenuItem("Cases", CasesComponent, "/assets/icons/cases.svg"));
   }
 }

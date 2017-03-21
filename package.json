@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "link": "npm link ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
-    "unlink": "npm unlink ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
+    "postinstall": "npm link ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
+    "unlinks": "npm unlink ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools && npm uninstall ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

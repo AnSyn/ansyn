@@ -1,16 +1,22 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {AppDataService} from "./app-data.service";
-import {MenuService} from "../menu/menu.service";
+import {StoreService} from "./store.service";
+import {MenuService} from "./services/menu.service";
 
 
 describe('AppDataService', () => {
+
+  let storeService:StoreService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AppDataService, MenuService]
+      providers: [StoreService, MenuService]
     });
   });
-
-  it('should ...', inject([AppDataService], (service: AppDataService) => {
-    expect(service).toBeTruthy();
+  beforeEach(inject([StoreService], (_storeService: StoreService) => {
+    storeService = _storeService;
   }));
+
+  it('should ...', () => {
+    expect(storeService).toBeTruthy();
+  });
 });

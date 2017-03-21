@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
-import {MenuService} from "../menu.service";
-import {MenuItem} from "../menu-item.model";
+import {MenuService} from "@ansyn/core";
+import {MenuItem} from "@ansyn/core";
 
 describe('MenuComponent', () => {
   let menuComponent: MenuComponent;

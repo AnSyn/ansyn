@@ -1,5 +1,5 @@
 {
-  "name": "@ansyn/algorithms",
+  "name": "@ansyn/utils/infinite-scroll",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,6 @@
   "license": "ISC",
   "peerDependencies": {
     "@angular/common": "~2.4.0",
-    "@angular/core": "^2.4.0",
-    "@ansyn/core": "^0.0.1"
+    "@angular/core": "^2.4.0"
   }
 }

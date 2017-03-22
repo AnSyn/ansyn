@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './cases/cases.component';
-import { InfiniteScrollDirective } from './infinite-scroll.directive';
 import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
+import {InfiniteScrollModule} from "@ansyn/utils";
 
 @NgModule({
-  imports: [CommonModule, CoreModule],
-  declarations: [CasesComponent, InfiniteScrollDirective],
+  imports: [CommonModule, CoreModule, InfiniteScrollModule],
+  declarations: [CasesComponent],
   entryComponents:[CasesComponent]
 })
 export class CasesModule {

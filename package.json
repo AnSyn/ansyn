@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm link ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
-    "unlinks": "npm unlink ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools && npm uninstall ./src/packages/algorithms ./src/packages/cases ./src/packages/core ./src/packages/data-layers ./src/packages/filters ./src/packages/menu ./src/packages/menu-items ./src/packages/settings ./src/packages/tools",
+    "postinstall": "npm link ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils",
+    "unlinks": "npm unlink @ansyn/menu-items/algorithms @ansyn/menu-items/cases @ansyn/core @ansyn/menu-items/data-layers @ansyn/menu-items/filters @ansyn/menu @ansyn/menu-items @ansyn/menu-items/settings @ansyn/menu-items/tools && npm uninstall @ansyn/menu-items/algorithms @ansyn/menu-items/cases @ansyn/core @ansyn/menu-items/data-layers @ansyn/menu-items/filters @ansyn/menu @ansyn/menu-items @ansyn/menu-items/settings @ansyn/menu-items/tools",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

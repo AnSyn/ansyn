@@ -1,1 +1,1 @@
-export {InfiniteScrollModule, InfiniteScrollDirective} from './infinite-scroll';
+export { InfiniteScrollModule, InfiniteScrollDirective } from './infinite-scroll';

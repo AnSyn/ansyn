@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm link ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils",
-    "unlinks": "npm unlink @ansyn/menu-items/algorithms @ansyn/menu-items/cases @ansyn/core @ansyn/menu-items/data-layers @ansyn/menu-items/filters @ansyn/menu @ansyn/menu-items @ansyn/menu-items/settings @ansyn/menu-items/tools && npm uninstall @ansyn/menu-items/algorithms @ansyn/menu-items/cases @ansyn/core @ansyn/menu-items/data-layers @ansyn/menu-items/filters @ansyn/menu @ansyn/menu-items @ansyn/menu-items/settings @ansyn/menu-items/tools",
+    "unlinks": "npm unlink @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/menu-items @ansyn/utils",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

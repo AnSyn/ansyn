@@ -28,7 +28,7 @@ const animations: AnimationEntryMetadata[] = [
 ];
 
 @Component({
-  selector: 'app-menu',
+  selector: 'ansyn-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['menu.component.scss'],
   animations

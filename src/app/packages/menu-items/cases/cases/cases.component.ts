@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-cases',
+  selector: 'ansyn-cases',
   templateUrl: './cases.component.html',
   styleUrls: ['cases.component.scss']
 })

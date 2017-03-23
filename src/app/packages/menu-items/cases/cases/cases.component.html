@@ -18,7 +18,7 @@
       <th *ngFor="let a of ['Name','Owner','Last modified']">{{a}}</th>
     </tr>
     </thead>
-    <tbody (appInfiniteScroll)="ddd()">
+    <tbody (ansynInfiniteScroll)="ddd()">
     <tr *ngFor="let a of cases">
       <td *ngFor="let b of [1,2,3]">
         {{a}}

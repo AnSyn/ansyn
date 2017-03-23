@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-tools',
+  selector: 'ansyn-tools',
   templateUrl: './tools.component.html',
   styleUrls: ['tools.component.scss']
 })

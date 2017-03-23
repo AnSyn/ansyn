@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-algorithms',
+  selector: 'ansyn-algorithms',
   templateUrl: './algorithms.component.html',
   styleUrls: ['algorithms.component.scss']
 })

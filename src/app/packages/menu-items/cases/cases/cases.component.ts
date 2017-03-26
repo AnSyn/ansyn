@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CasesService} from "../../../core/services/cases.service";
 
 @Component({
-  selector: 'app-cases',
+  selector: 'ansyn-cases',
   templateUrl: './cases.component.html',
   styleUrls: ['cases.component.scss']
 })

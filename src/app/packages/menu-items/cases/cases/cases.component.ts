@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {CasesService} from "../../../core/services/cases.service";
 
 @Component({
   selector: 'ansyn-cases',
@@ -9,7 +10,7 @@ export class CasesComponent implements OnInit {
   i = 0;
   count = 60;
   cases = [];
-  constructor() { }
+  constructor(private casesService:CasesService) { }
 
   getData(){
     for(let index = this.i; index < this.i + this.count ; index++) {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CasesService, Case } from "@ansyn/core";
 
 @Component({
   selector: 'ansyn-cases',

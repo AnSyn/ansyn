@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm link ./src/app/packages/timeline ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils",
-    "unlinks": "npm unlink @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/utils",
+    "unlinks": "npm unlink @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/utils @ansyn/timeline",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

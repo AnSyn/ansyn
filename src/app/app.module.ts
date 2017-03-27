@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from "@ansyn/core";
 import { MenuModule } from "@ansyn/menu";
+import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from "@ansyn/menu-items";
 
 @NgModule({
@@ -18,6 +19,7 @@ import { MenuItemsModule } from "@ansyn/menu-items";
     CoreModule,
     MenuModule,
     MenuItemsModule,
+    TimelineModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule }   from '@angular/router';
 
-
-import { Ng2MobxModule } from 'ng2-mobx';
 import { HttpModule } from '@angular/http';
 
 import { TimelineComponent } from './timeline/timeline.component';
@@ -13,12 +10,10 @@ import { ContainerComponent } from './container/container.component';
 
 @NgModule({
   imports: [
-    CommonModule,
-    RouterModule.forChild([{
-    	path: 'event-drops',component:ContainerComponent
-    }])
+    CommonModule,HttpModule
   ],
   declarations: [TimelineComponent, ContainerComponent],
+  exports: [ContainerComponent],
   providers: [TimelineService,TimelineEmitterService]
 })
 export class TimelineModule { 

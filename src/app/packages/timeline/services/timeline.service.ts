@@ -10,23 +10,21 @@ import 'rxjs/add/operator/map';
 export class TimelineService {
 	private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
   	
-  	//@Observable data;
-
   	constructor(private http:Http ) { 
-
-  	}
+	}
 
   	//@todo add support for parsing callback function 
   	fetchData (url?:string): Observable<any[]>{
     	let tmp = url;
+    	
     	if(!tmp){
     		tmp = this.dataUrl;
     	} 
     	
     	return this.http.get(tmp)
-      						.map(this.extractData)
-      						.catch(this.handleError);
-      	}
+					.map(this.extractData)
+					.catch(this.handleError);
+  	}
 
 	
 
@@ -48,7 +46,6 @@ export class TimelineService {
   		}
   		return Observable.throw(errorMessage);
   	}
-
-
 }
+
  

@@ -1,7 +1,7 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TimelineService } from '../services/timeline.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import {Subscription} from 'rxjs/Rx';
+
 import * as d3 from 'd3';
 
 @Component({
@@ -9,11 +9,11 @@ import * as d3 from 'd3';
   	templateUrl: './container.component.html',
   	styleUrls: ['./container.component.css']
 })
-export class ContainerComponent implements OnInit , OnDestroy {
+export class ContainerComponent implements OnInit  {
 	public drops: any[] = [];
 	public configuration: any;
 	private errorMessage: string;
-	private subscriptions: Subscription[] = [];
+	
 
 	constructor(private timelineService: TimelineService,private emitter : TimelineEmitterService) {
 		this.configuration = {    
@@ -22,20 +22,7 @@ export class ContainerComponent implements OnInit , OnDestroy {
         	eventLineColor: (d,i) => d3.schemeCategory10[i],
         	date: d => new Date(d.date)
         };
-        //this.subscriptions = [];
-		
-		/*this.subscriptions = [
-			emitter.provide('timeline:click').subscribe(
-				(e) => { 
-					console.log('click',e);	
-				}),
-
-	 		emitter.provide('timeline:zoomend').subscribe(
-				(e) => { 
-					console.log('zoomend',e);	
-				})	              
-		];*/          
-  	}
+    }
 
 	ngOnInit(): void {
 		this.timelineService.fetchData()
@@ -44,10 +31,4 @@ export class ContainerComponent implements OnInit , OnDestroy {
 				error => this.errorMessage = <any>error
 			);
 	}
-
-	ngOnDestroy(): void {
-		this.subscriptions.forEach(item => {     
-       		item.unsubscribe();                                
-       	})
- 	}	
 }

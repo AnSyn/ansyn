@@ -1,6 +1,6 @@
 import { Component, OnInit,ViewChild,ElementRef,Input,OnChanges } from '@angular/core';
 import * as d3 from 'd3';
-import * as eventDrops from 'event-drops';
+import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 
 @Component({

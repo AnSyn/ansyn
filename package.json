@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "^2.4.0",
     "@angular/router": "^3.4.0",
     "core-js": "^2.4.1",
-    "event-drops": "github:marmelab/EventDrops#70e8e18404ce555364183f83fd28217255dba9f0",
+    "event-drops": "github:marmelab/EventDrops#61420a978bc002d9134ad9c7a3eed74c735de4d2",
     "rxjs": "^5.1.0",
     "zone.js": "^0.7.6"
   },

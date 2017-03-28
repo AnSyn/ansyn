@@ -40,8 +40,7 @@ describe('TimelineService', () => {
       		}
 
       		if(connection.request.url == "error") {
-      			console.log('errpr'); 		
-	      		connection.mockError(new Error('Username or password is incorrect'));
+      			connection.mockError(new Error('Username or password is incorrect'));
       		}
     	});
 
@@ -56,11 +55,8 @@ describe('TimelineService', () => {
  		
  		timeLineService.fetchData().subscribe(result => {     
      		expect(result.data.length).toBe(2);
-     	})
+     	});
  		
-		timeLineService.fetchData('tmp').subscribe(result => {     
-     		expect(result.key).toBe('value');
-     	})
  	});
 
 	it('check the method fetchData with spyOn', () => {

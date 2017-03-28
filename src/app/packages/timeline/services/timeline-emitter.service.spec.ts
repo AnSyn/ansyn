@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-
+import { Subject } from 'rxjs/Rx';
 import { TimelineEmitterService } from './timeline-emitter.service';
 
 describe('TimelineEmitterService', () => {
@@ -21,8 +21,9 @@ describe('TimelineEmitterService', () => {
 	});
 
 	it('check the provide function ', () => {     
-   		const result = timeLineEmitterService.provide('timeline:click');
+   		const result:any = timeLineEmitterService.provide('timeline:click');
    		expect(result.constructor.name).toBe('Subject');
+   		expect(result instanceof Subject).toBe(true);
  	});
 
 	it('check that next actully fires an event', () => {
@@ -40,4 +41,9 @@ describe('TimelineEmitterService', () => {
 			});
 		timeLineEmitterService.provide("timeline:mouseout").next({key:'value'});
 	});
+
+	it('check the ask for wrong event will throw an error', () => {     
+ 		
+ 		expect( () => timeLineEmitterService.provide("name:string")).toThrow(new Error("name:string emitter does not exist "));
+ 	})
 });

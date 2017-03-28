@@ -19,7 +19,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "ansyn",
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "../node_modules/event-drops/style.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

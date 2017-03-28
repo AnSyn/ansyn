@@ -1,0 +1,11 @@
+{
+  "name": "@ansyn/timeline",
+  "version": "1.0.0",
+  "description": "timeline component to show data with graphic touch",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "",
+  "license": "ISC"
+}

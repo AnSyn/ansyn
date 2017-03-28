@@ -2,25 +2,30 @@
 
 div.app{
   display: flex;
+  
   .layer{
     width: 100%;
     height: 100vh;
     color: white;
-    .map, .status, .timeline{
+    display:flex;
+    flex-direction:column;
+
+    .map, .status{
       text-align: center;
       font-size: xx-large;
     }
     .map{
-      height: 90%;
-      background: $map-color;
+      	//height: 90%;
+      	background: $map-color;
+      	flex-grow:1;
     }
     .status{
-      height: 5%;
-      background: $status-color;
+  		min-height: 5%;
+      	background: $status-color;
     }
-    .timeline{
-      height: 5%;
-      background: $timeline-color;
+    .app-timeline-container{
+		//min-height: 5%;
+		//background: $timeline-color;
     }
   }
 }

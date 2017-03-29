@@ -14,15 +14,15 @@ export class LayersManagerComponent implements OnInit {
   ngOnInit() {
 
     let rootNode: ILayerTreeNode = {
-      parent: null,
       name: 'Fields',
-      id: 0,
+      id: 1,
       children: []
     };
 
-    rootNode.children.push({ parent: rootNode, name: 'Rice Fields', id: 1, children: [] });
-    rootNode.children.push({ parent: rootNode, name: 'Wheat Fields', id: 2, children: [] });
-    rootNode.children.push({ parent: rootNode, name: 'Oat Fields', id: 3, children: [] });
+    rootNode.children.push({ name: 'Rice Fields', id: 2, children: [{name: 'Brown Rice', id: 5, children: []},
+    {name: 'Persian Rice', id: 6, children: []}] });
+    rootNode.children.push({ name: 'Wheat Fields', id: 3, children: [] });
+    rootNode.children.push({ name: 'Oat Fields', id: 4, children: [] });
 
     this.nodes = [rootNode];
   }

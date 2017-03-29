@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import {MenuModule} from "./menu/menu.module";
-import {AppDataModule} from "./app-data/app-data.module";
+import { CoreModule } from "@ansyn/core";
+import { MenuModule } from "@ansyn/menu";
+import { TimelineModule } from '@ansyn/timeline';
+import { MenuItemsModule } from "@ansyn/menu-items";
 
 @NgModule({
   declarations: [
@@ -14,8 +16,10 @@ import {AppDataModule} from "./app-data/app-data.module";
     BrowserModule,
     FormsModule,
     HttpModule,
+    CoreModule,
     MenuModule,
-    AppDataModule
+    MenuItemsModule,
+    TimelineModule
   ],
   bootstrap: [AppComponent]
 })

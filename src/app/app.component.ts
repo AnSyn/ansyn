@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AppDataService} from "./app-data/app-data.service";
+import {StoreService} from "@ansyn/core";
 
 @Component({
   selector: 'app-root',
@@ -7,5 +7,5 @@ import {AppDataService} from "./app-data/app-data.service";
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  constructor(private appData:AppDataService){}
+  constructor(private store:StoreService){}
 }

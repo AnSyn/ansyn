@@ -1,32 +1,31 @@
-button{
-  position: absolute;
-  right: 0;
-  top:0;
-}
+@import "../common.scss";
+
 div.app{
   display: flex;
+  
   .layer{
     width: 100%;
     height: 100vh;
-    background: rgba(0,0,0,0.5);
     color: white;
-    .map{
-      height: 90%;
-      background: #84c7d2;
+    display:flex;
+    flex-direction:column;
+
+    .map, .status{
       text-align: center;
       font-size: xx-large;
+    }
+    .map{
+      	//height: 90%;
+      	background: $map-color;
+      	flex-grow:1;
     }
     .status{
-      height: 5%;
-      background: #636363;
-      text-align: center;
-      font-size: xx-large;
+  		min-height: 5%;
+      	background: $status-color;
     }
-    .timeline{
-      height: 5%;
-      background: #557f86;
-      text-align: center;
-      font-size: xx-large;
+    .app-timeline-container{
+		//min-height: 5%;
+		//background: $timeline-color;
     }
   }
 }

@@ -1,11 +1,12 @@
 <div class="app">
 
-  <app-menu width=90 [menuItems]="appData.menu.menu_items" [(selectedItemIndex)]="appData.menu.selected_item_index"></app-menu>
+  <ansyn-menu width=90 [menuItems]="store.menu.menu_items" [(selectedItemIndex)]="store.menu.selected_item_index"></ansyn-menu>
 
   <div class="layer">
     <div class="map"> map</div>
     <div class="status"> status</div>
-    <div class="timeline"> timeline</div>
+    <div class="app-timeline-container">
+		<timeline-container></timeline-container>
+    </div>
   </div>
-
 </div>

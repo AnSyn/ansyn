@@ -1,0 +1,36 @@
+<div class="cases">
+
+  <div class="buttons-group">
+    <button>
+      <img src="/assets/icons/add.svg"/>
+    </button>
+    <button>
+      <img src="/assets/icons/delete.svg"/>
+    </button>
+    <button>
+      <img src="/assets/icons/share.svg"/>
+    </button>
+  </div>
+
+  <table>
+    <thead>
+    <tr>
+      <th  *ngFor="let case_key of case_keys" >{{case_key.name}}</th>
+    </tr>
+    </thead>
+    <tbody (ansynInfiniteScroll)="loadCases()">
+
+    <template ngFor [ngForOf]="cases" let-case>
+      <tr (click)="selectCase(case)" [class.selected]="isSelectedCase(case)">
+        <td *ngFor="let case_key of case_keys">
+          {{case[case_key.key]}}
+        </td>
+      </tr>
+    </template>
+
+
+
+    </tbody>
+  </table>
+
+</div>

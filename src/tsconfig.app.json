@@ -13,7 +13,11 @@
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "baseUrl": "",
-    "types": []
+    "types": [
+      "d3",
+      "dom",
+      "event-drops"
+    ]
   },
   "exclude": [
     "test.ts",

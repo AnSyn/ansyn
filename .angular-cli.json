@@ -17,9 +17,10 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "ansyn",
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "../node_modules/event-drops/style.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

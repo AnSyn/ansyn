@@ -27,10 +27,44 @@ export class LayerTreeComponent implements OnInit {
     };
   }
 
-  private checkedChanged(node: TreeNode, event): void {
-    for (let childNode of node.children) {
-      childNode.setIsActive(event.target.checked, true);
+  private onNodeActivated(event): void {
+    event.node.children.forEach((childNode) => {
+      childNode.setIsActive(true, true);
+    });
+
+    let parentNode: TreeNode = event.node.realParent;
+
+    if (parentNode &&
+      !parentNode.isActive &&
+      parentNode.children.every(child => child.isActive)) {
+      parentNode.setIsActive(true, true);
+    }
+  }
+  private onNodeDeactivated(event): void {
+    event.node.children.forEach((childNode) => {
+      childNode.setIsActive(false, true);
+    });
+
+    let parentNode: TreeNode = event.node.realParent;
+    if (parentNode &&
+        parentNode.isActive &&
+        parentNode.children.every(child => !child.isActive)) {
+      parentNode.setIsActive(false, true);
     }
   }
 
+  private isNodeIndeterminate(node: TreeNode): boolean {
+    if (!node.hasChildren) {
+      return false;
+    }
+
+    let allChildrenActive: boolean = node.children.every(child => child.isActive);
+    let allChildrenDeactive: boolean = node.children.every(child => !child.isActive);
+
+    if (allChildrenActive || allChildrenDeactive) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

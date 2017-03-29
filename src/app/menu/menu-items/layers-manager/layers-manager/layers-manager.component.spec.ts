@@ -1,16 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { LayerTreeComponent } from '../layer-tree/layer-tree.component';
 import { LayersManagerComponent } from './layers-manager.component';
 
-describe('DataLayersComponent', () => {
+describe('LayersManagerComponent', () => {
   let component: LayersManagerComponent;
   let fixture: ComponentFixture<LayersManagerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayersManagerComponent ]
+      imports: [LayerTreeComponent],
+      declarations: [LayersManagerComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

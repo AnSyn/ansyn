@@ -11,6 +11,11 @@ import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 })
 export class AlgorithmsModule {
   constructor(storeService:StoreService){
-    storeService.menu.addMenuItem(new MenuItem("Algorithms", AlgorithmsComponent, "/assets/icons/algorithms.svg"));
+    let menu_item: MenuItem = {
+      name:"Algorithms",
+      component: AlgorithmsComponent,
+      icon_url: "/assets/icons/algorithms.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

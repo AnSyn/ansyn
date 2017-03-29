@@ -1,7 +1,6 @@
-export class Case {
-
-  public id;
-
-  constructor(public name:string, public owner:string, public last_modified:string){}
-
+export type Case = {
+  id:number;
+  name:string;
+  owner:string;
+  last_modified:string;
 }

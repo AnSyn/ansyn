@@ -1,3 +1,5 @@
-export class MenuItem {
-  constructor(public name:string, public component:any, public icon_url:string) {}
+export type MenuItem = {
+  name:string;
+  component:any;
+  icon_url:string;
 }

@@ -7,7 +7,7 @@ import { CasesService, Case } from "@ansyn/core";
   styleUrls: ['cases.component.scss']
 })
 export class CasesComponent implements OnInit {
-  selected_case_id: -1;
+  selected_case_id:number =  -1;
 
   case_keys:any[] = [
     {name: "Name", key:"name"},

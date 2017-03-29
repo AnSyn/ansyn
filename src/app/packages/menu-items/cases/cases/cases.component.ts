@@ -26,12 +26,10 @@ export class CasesComponent implements OnInit {
   }
 
   loadCases():void{
-    console.log("loadCases");
     this.casesService.loadCases();
   }
 
   selectCase(selected_case:Case):void {
-    console.log("here!")
     this.selected_case_id = selected_case.id;
   }
 

@@ -40,6 +40,7 @@ div.menu-wrapper {
       background: transparent;
       cursor: pointer;
       outline: none;
+      z-index: 2;
       &:hover {
         color: #2e2d46;
       }

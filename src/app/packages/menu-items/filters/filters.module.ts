@@ -10,6 +10,11 @@ import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 })
 export class FiltersModule {
   constructor(storeService:StoreService){
-    storeService.menu.addMenuItem(new MenuItem("Filters", FiltersComponent, "/assets/icons/filters.svg"));
+    let menu_item: MenuItem = {
+      name:"Filters",
+      component: FiltersComponent,
+      icon_url: "/assets/icons/filters.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

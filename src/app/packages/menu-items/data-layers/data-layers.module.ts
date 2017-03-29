@@ -10,6 +10,11 @@ import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 })
 export class DataLayersModule {
   constructor(storeService:StoreService){
-    storeService.menu.addMenuItem(new MenuItem("Data Layers", DataLayersComponent, "/assets/icons/data-layers.svg"));
+    let menu_item: MenuItem = {
+      name:"Data Layers",
+      component: DataLayersComponent,
+      icon_url: "/assets/icons/data-layers.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

@@ -10,6 +10,11 @@ import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
 })
 export class SettingsModule {
   constructor(storeService:StoreService){
-    storeService.menu.addMenuItem(new MenuItem("Settings", SettingsComponent, "/assets/icons/settings.svg"));
+    let menu_item: MenuItem = {
+      name:"Settings",
+      component: SettingsComponent,
+      icon_url: "/assets/icons/settings.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

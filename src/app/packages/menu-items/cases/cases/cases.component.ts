@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {CasesService} from "../../../core/services/cases.service";
+import { CasesService, Case } from "@ansyn/core";
 
 @Component({
   selector: 'ansyn-cases',
@@ -7,23 +7,35 @@ import {CasesService} from "../../../core/services/cases.service";
   styleUrls: ['cases.component.scss']
 })
 export class CasesComponent implements OnInit {
-  i = 0;
-  count = 60;
-  cases = [];
+  selected_case_id: -1;
+
+  case_keys:any[] = [
+    {name: "Name", key:"name"},
+    {name: "Owner", key:"name"},
+    {name: "Last Modified", key:"last_modified"}
+  ];
+
   constructor(private casesService:CasesService) { }
 
-  getData(){
-    for(let index = this.i; index < this.i + this.count ; index++) {
-      index++ ;
-      this.cases.push(index);
-    }
-    this.i += this.count
-  }
   ngOnInit() {
-    this.getData();
-  }
-  ddd(){
-    this.getData();
+    this.loadCases();
   }
 
+  get cases():Case[]{
+    return this.casesService.cases;
+  }
+
+  loadCases():void{
+    console.log("loadCases");
+    this.casesService.loadCases();
+  }
+
+  selectCase(selected_case:Case):void {
+    console.log("here!")
+    this.selected_case_id = selected_case.id;
+  }
+
+  isSelectedCase(selected_case:Case):boolean   {
+   return this.selected_case_id == selected_case.id;
+  }
 }

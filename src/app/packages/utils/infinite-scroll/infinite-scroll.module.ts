@@ -6,6 +6,7 @@ import { InfiniteScrollDirective } from "./infinite-scroll.directive";
   imports: [
     CommonModule
   ],
-  declarations: [InfiniteScrollDirective]
+  declarations: [InfiniteScrollDirective],
+  exports: [InfiniteScrollDirective]
 })
 export class InfiniteScrollModule { }

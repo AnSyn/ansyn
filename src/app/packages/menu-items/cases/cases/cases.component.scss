@@ -16,9 +16,25 @@ div.cases{
   table ,tr td{
     text-align: left;
   }
+
   tr{
     border-bottom: 1px solid white;
   }
+
+  tbody{
+    tr{
+      cursor: pointer;
+      &:hover{
+        background: white;
+        color:#27B2CF
+      }
+      &.selected{
+        background: white;
+        color:#27B2CF
+      }
+    }
+  }
+
   tbody {
     display:block;
     overflow:auto;
@@ -28,6 +44,7 @@ div.cases{
     display:table;
     width:100%;
     table-layout:fixed;
+    padding: 16px 0;
   }
   thead {
     width: calc( 100% - 1em );

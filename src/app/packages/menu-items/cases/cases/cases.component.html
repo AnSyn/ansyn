@@ -15,15 +15,21 @@
   <table>
     <thead>
     <tr>
-      <th *ngFor="let a of ['Name','Owner','Last modified']">{{a}}</th>
+      <th  *ngFor="let case_key of case_keys" >{{case_key.name}}</th>
     </tr>
     </thead>
-    <tbody (ansynInfiniteScroll)="ddd()">
-    <tr *ngFor="let a of cases">
-      <td *ngFor="let b of [1,2,3]">
-        {{a}}
-      </td>
-    </tr>
+    <tbody (ansynInfiniteScroll)="loadCases()">
+
+    <template ngFor [ngForOf]="cases" let-case>
+      <tr (click)="selectCase(case)" [class.selected]="isSelectedCase(case)">
+        <td *ngFor="let case_key of case_keys">
+          {{case[case_key.key]}}
+        </td>
+      </tr>
+    </template>
+
+
+
     </tbody>
   </table>
 

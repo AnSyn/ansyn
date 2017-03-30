@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Case} from "../models/case.model";
-import {Http} from "@angular/http";
+import { Case } from "../models/case.model";
+import { Http } from "@angular/http";
 import "rxjs/add/operator/map";
 
 @Injectable()

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CasesComponent } from './cases.component';
+import {HttpModule} from "@angular/http/src/http_module";
+import {CoreModule} from "@ansyn/core";
 
 describe('CasesComponent', () => {
   let component: CasesComponent;
@@ -8,7 +9,8 @@ describe('CasesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CasesComponent ]
+      imports:[HttpModule, CoreModule],
+      declarations: [CasesComponent]
     })
     .compileComponents();
   }));

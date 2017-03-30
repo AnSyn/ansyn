@@ -22,7 +22,13 @@ describe('MenuService', () => {
   it('addMenuItem should add MenuItem to menu_items by "push"', () => {
     spyOn(menuService.menu_items, "push");
     class fake_component{}
-    let menuItem:MenuItem = new MenuItem("Fake Name", new fake_component(), "fake/icon/url")
+
+    let menuItem:MenuItem = {
+      name: "Fake Name",
+      component: new fake_component(),
+      icon_url: "fake/icon/url"
+    };
+
     menuService.addMenuItem(menuItem);
     expect(menuService.menu_items.push).toHaveBeenCalledWith(menuItem);
   });

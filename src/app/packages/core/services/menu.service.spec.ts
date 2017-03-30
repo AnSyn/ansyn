@@ -23,7 +23,7 @@ describe('MenuService', () => {
     spyOn(menuService.menu_items, "push");
     class fake_component{}
 
-    let menuItem:MenuItem = {
+    let menuItem: MenuItem = {
       name: "Fake Name",
       component: new fake_component(),
       icon_url: "fake/icon/url"

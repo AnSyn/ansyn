@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { NodeCheckedChangedEventArgs } from '../EventArgs/node-checked-changed-event-args';
 import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
-import { TreeNode } from 'angular-tree-component';
+import { TreeNode, TreeComponent } from 'angular-tree-component';
 
 @Component({
   selector: 'app-layer-tree',
@@ -15,6 +15,8 @@ export class LayerTreeComponent implements OnInit {
   @Input() public source: any[];
 
   @Output() public nodeCheckedChanged = new EventEmitter<NodeCheckedChangedEventArgs>();
+
+  @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
   private options;
 

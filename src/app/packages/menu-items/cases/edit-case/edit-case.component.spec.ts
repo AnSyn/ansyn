@@ -15,7 +15,7 @@ describe('EditCaseComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditCaseComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance;git 
     fixture.detectChanges();
   });
 

@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {MenuService} from "./menu.service";
-import {MenuItem} from "../models/menu-item.model";
+import { MenuService } from "./menu.service";
+import { MenuItem } from "../models/menu-item.model";
 
 describe('MenuService', () => {
   let menuService:MenuService;

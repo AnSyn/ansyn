@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CasesComponent } from './cases.component';
-import {HttpModule} from "@angular/http/src/http_module";
-import {CoreModule} from "@ansyn/core";
+import { HttpModule } from "@angular/http/src/http_module";
+import { CoreModule } from "@ansyn/core";
 
 describe('CasesComponent', () => {
   let component: CasesComponent;

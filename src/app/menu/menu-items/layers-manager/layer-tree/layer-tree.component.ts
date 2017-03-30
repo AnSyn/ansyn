@@ -47,8 +47,8 @@ export class LayerTreeComponent implements OnInit {
 
     let parentNode: TreeNode = event.node.realParent;
     if (parentNode &&
-        parentNode.isActive &&
-        parentNode.children.every(child => !child.isActive)) {
+      parentNode.isActive &&
+      parentNode.children.every(child => !child.isActive)) {
       parentNode.setIsActive(false, true);
     }
   }
@@ -58,8 +58,10 @@ export class LayerTreeComponent implements OnInit {
       return false;
     }
 
-    let allChildrenActive: boolean = node.children.every(child => child.isActive);
-    let allChildrenDeactive: boolean = node.children.every(child => !child.isActive);
+    let flattenedChildren: TreeNode[] = this.getFlattenedChildren(node, true);
+
+    let allChildrenActive: boolean = flattenedChildren.every(child => child.isActive);
+    let allChildrenDeactive: boolean = flattenedChildren.every(child => !child.isActive);
 
     if (allChildrenActive || allChildrenDeactive) {
       return false;
@@ -67,4 +69,22 @@ export class LayerTreeComponent implements OnInit {
       return true;
     }
   }
+
+  private getFlattenedChildren(node: TreeNode, isRoot: boolean): TreeNode[] {
+    let flattenedArray: TreeNode[] = [];
+
+    if (!node.hasChildren) {
+      flattenedArray.push(node);
+    } else {
+      flattenedArray =
+        Array.prototype.concat.apply([], node.children.map(child => this.getFlattenedChildren(child, false)));
+      if (!isRoot) {
+        flattenedArray.push(node);
+      }
+    }
+
+    return flattenedArray;
+  }
 }
+
+

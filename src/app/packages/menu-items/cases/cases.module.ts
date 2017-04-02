@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CasesComponent } from './cases/cases.component';
 import { CoreModule, StoreService, MenuItem } from "@ansyn/core";
 import { InfiniteScrollModule } from "@ansyn/utils";
+import {Case} from "@ansyn/core";
 
 @NgModule({
   imports: [CommonModule, CoreModule, InfiniteScrollModule],
@@ -11,6 +12,11 @@ import { InfiniteScrollModule } from "@ansyn/utils";
 })
 export class CasesModule {
   constructor(storeService:StoreService){
-    storeService.menu.addMenuItem(new MenuItem("Cases", CasesComponent, "/assets/icons/cases.svg"));
+    let menu_item: MenuItem = {
+      name:"Cases",
+      component: CasesComponent,
+      icon_url: "/assets/icons/cases.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

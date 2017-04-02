@@ -46,7 +46,12 @@ describe('MenuComponent', () => {
   });
 
   it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
-    let mock_menu_item = new MenuItem("one", "fake_comp", "fake/url/to/icon");
+
+    let mock_menu_item: MenuItem = {
+      name:"one",
+      component:"fake_comp",
+      icon_url:"fake/url/to/icon"
+    };
     menuComponent['menu_items'] = [mock_menu_item];
     menuComponent['_selected_item_index'] = 0;
     spyOn(menuComponent, 'itemSelected').and.returnValue(true);

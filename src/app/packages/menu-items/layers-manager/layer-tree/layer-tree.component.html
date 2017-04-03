@@ -1,10 +1,12 @@
-    <tree-root (onActivate)="onNodeActivated($event)" (onDeactivate)="onNodeDeactivated($event)" [focused]="true" [nodes]="source" [options]="options">
-      <template #treeNodeTemplate let-node let-index="index">
-        <input [indeterminate]="isNodeIndeterminate(node)" type="checkbox" [checked]="node.isActive">
-        <span [class]="node.data.className" [class.title]="true">{{ node.data.name }}</span>
-      </template>
-      <template #loadingTemplate let-node>
-        <div [class]="node.data.className + 'Loading'">Loading {{ node.data.title }}...</div>
-      </template>
-    </tree-root>
-   <br/>
+<tree-root (onActivate)="onNodeActivated($event)" (onDeactivate)="onNodeDeactivated($event)" [focused]="true" [nodes]="source" [options]="options">
+  <template #treeNodeTemplate let-node let-index="index">
+    <div id="node{{ node.data.id }}">
+      <input [indeterminate]="isNodeIndeterminate(node)" type="checkbox" [checked]="node.isActive">
+      <span [class]="node.data.className" [class.title]="true">{{ node.data.name }}</span>
+    </div>
+  </template>
+  <template #loadingTemplate let-node>
+    <div [class]="node.data.className + 'Loading'">Loading {{ node.data.title }}...</div>
+  </template>
+</tree-root>
+<br/>

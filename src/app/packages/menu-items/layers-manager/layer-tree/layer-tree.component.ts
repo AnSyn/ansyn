@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { NodeCheckedChangedEventArgs } from '../EventArgs/node-checked-changed-event-args';
+import { NodeActivationChangedEventArgs } from '../event-args/node-activation-changed-event-args';
 import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
 
@@ -12,13 +12,13 @@ import { TreeNode, TreeComponent } from 'angular-tree-component';
 
 export class LayerTreeComponent implements OnInit {
 
-  @Input() public source: any[];
-
-  @Output() public nodeCheckedChanged = new EventEmitter<NodeCheckedChangedEventArgs>();
+  private options;
 
   @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-  private options;
+  @Input() public source: any[];
+
+  @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
   constructor(private actionMappingService: TreeActionMappingServiceService) { }
 
@@ -30,6 +30,8 @@ export class LayerTreeComponent implements OnInit {
   }
 
   private onNodeActivated(event): void {
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(event.node, true));
+
     event.node.children.forEach((childNode) => {
       childNode.setIsActive(true, true);
     });
@@ -41,7 +43,10 @@ export class LayerTreeComponent implements OnInit {
       parentNode.setIsActive(true, true);
     }
   }
+
   private onNodeDeactivated(event): void {
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(event.node, false));
+
     event.node.children.forEach((childNode) => {
       childNode.setIsActive(false, true);
     });

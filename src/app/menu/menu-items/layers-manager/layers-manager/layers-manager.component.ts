@@ -16,13 +16,16 @@ export class LayersManagerComponent implements OnInit {
     let rootNode: ILayerTreeNode = {
       name: 'Fields',
       id: 1,
+      isChecked: false,
       children: []
     };
 
-    rootNode.children.push({ name: 'Rice Fields', id: 2, children: [{name: 'Brown Rice', id: 5, children: []},
-    {name: 'Persian Rice', id: 6, children: []}] });
-    rootNode.children.push({ name: 'Wheat Fields', id: 3, children: [] });
-    rootNode.children.push({ name: 'Oat Fields', id: 4, children: [] });
+    rootNode.children.push({
+      name: 'Rice Fields', id: 2, isChecked: false, children: [{ name: 'Brown Rice', id: 5, isChecked: false, children: [] },
+      { name: 'Persian Rice', id: 6, isChecked: false, children: [] }]
+    });
+    rootNode.children.push({ name: 'Wheat Fields', id: 3, isChecked: false, children: [] });
+    rootNode.children.push({ name: 'Oat Fields', id: 4, isChecked: false, children: [] });
 
     this.nodes = [rootNode];
   }

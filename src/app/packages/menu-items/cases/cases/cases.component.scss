@@ -5,11 +5,19 @@ div.cases{
 
   div.buttons-group{
     display: flex;
-    height: 5%;
+    height: 24px;
     button{
-      background: transparent;
-      border: none;
       cursor: pointer;
+      border:none;
+      font-style: normal;
+      font-weight: normal;
+      letter-spacing: 0.464286px;
+      font-size: 13px;
+      background: #FFFFFF;
+      box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.237602), 0px 0px 8px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
+      border-radius: 2px;
+      margin: 0 4px;
+      color: #156879;
     }
   }
 
@@ -25,12 +33,12 @@ div.cases{
     tr{
       cursor: pointer;
       &:hover{
-        background: white;
-        color:#27B2CF
+        background: #EBF8FA;
+        color:#156879;
       }
       &.selected{
-        background: white;
-        color:#27B2CF
+        background: #EBF8FA;
+        color:#156879;
       }
     }
   }

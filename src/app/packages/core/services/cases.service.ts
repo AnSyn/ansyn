@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Case } from "../models/case.model";
-import { Http } from "@angular/http";
+import { Http, Headers, RequestOptions, Response } from "@angular/http";
+import { Observable } from "rxjs";
 import "rxjs/add/operator/map";
 
 @Injectable()
@@ -16,8 +17,15 @@ export class CasesService {
     });
   }
 
-  createCase(one_case:Case) {
-    return this.http.post(`http://localhost:9001/api/v1/cases`, {'case':one_case}).map(res => res.json()).subscribe((case_value:Case)=>{
+  createCase(one_case:Case): Observable<any> {
+    let url:string = "http://localhost:9001/api/v1/cases";
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let body:string = JSON.stringify(one_case);
+    let options = new RequestOptions({ headers});
+    return this.http.post (url, body, options).map((res:Response) => {
+      let add_cases = res.json();
+      this.cases.unshift(add_cases);
+      return add_cases;
     });
   }
 

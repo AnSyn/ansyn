@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { NodeActivationChangedEventArgs } from '../event-args/node-activation-changed-event-args';
 import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
+import { ILayerTreeNode } from '../models/layer-tree-node';
 
 @Component({
   selector: 'app-layer-tree',
@@ -10,7 +11,7 @@ import { TreeNode, TreeComponent } from 'angular-tree-component';
   providers: [TreeActionMappingServiceService]
 })
 
-export class LayerTreeComponent implements OnInit {
+export class LayerTreeComponent implements OnInit, AfterViewInit{
 
   private options;
 
@@ -20,13 +21,27 @@ export class LayerTreeComponent implements OnInit {
 
   @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
-  constructor(private actionMappingService: TreeActionMappingServiceService) { }
+  constructor(private actionMappingService: TreeActionMappingServiceService, private myElement: ElementRef) { }
 
   ngOnInit() {
     this.options = {
       getChildren: () => new Promise((resolve, reject) => { }),
       actionMapping: this.actionMappingService.getActionMapping()
     };
+  }
+
+  ngAfterViewInit() {
+    this.treeComponent.treeModel.virtualScroll.setNewScroll({ viewport: this.myElement.nativeElement });
+
+    this.initializeNodes();
+  }
+
+  private initializeNodes() {
+    if (this.source) {
+      this.flattenInputNodes().filter((node: ILayerTreeNode) => node.isChecked).
+        forEach((node: ILayerTreeNode) => this.treeComponent.treeModel.getNodeBy(treeNode => treeNode.data.id === node.id).
+          setIsActive(true, true));
+    }
   }
 
   private onNodeActivated(event): void {
@@ -89,6 +104,22 @@ export class LayerTreeComponent implements OnInit {
         flattenedArray.push(node);
       }
     }
+
+    return flattenedArray;
+  }
+
+  private flattenInputNodes(): ILayerTreeNode[] {
+    let flattenedTree: ILayerTreeNode[] = [];
+
+    this.source.forEach(node => this.treeVisitor(node, flattenedTree));
+
+    return flattenedTree;
+  }
+
+  private treeVisitor(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
+    flattenedArray.push(rootNode);
+
+    rootNode.children.forEach((child: ILayerTreeNode) => this.treeVisitor(child, flattenedArray));
 
     return flattenedArray;
   }

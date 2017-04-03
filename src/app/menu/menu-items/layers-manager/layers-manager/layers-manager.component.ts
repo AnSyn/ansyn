@@ -16,7 +16,7 @@ export class LayersManagerComponent implements OnInit {
     let rootNode: ILayerTreeNode = {
       name: 'Fields',
       id: 1,
-      isChecked: false,
+      isChecked: true,
       children: []
     };
 

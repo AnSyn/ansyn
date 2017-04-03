@@ -13,14 +13,15 @@ fdescribe('LayerTreeComponent', () => {
   const nodes: ILayerTreeNode[] = [{
     name: 'Fields',
     id: 1,
+    isChecked: false,
     children: [
       {
-        name: 'Rice Fields', id: 2, children: [
-          { name: 'Brown Rice', id: 5, children: [] },
-          { name: 'Persian Rice', id: 6, children: [] }]
+        name: 'Rice Fields', id: 2, isChecked: false, children: [
+          { name: 'Brown Rice', id: 5, isChecked: false, children: [] },
+          { name: 'Persian Rice', id: 6, isChecked: false, children: [] }]
       },
-      { name: 'Wheat Fields', id: 3, children: [] },
-      { name: 'Oat Fields', id: 4, children: [] }
+      { name: 'Wheat Fields', id: 3, isChecked: false, children: [] },
+      { name: 'Oat Fields', id: 4, isChecked: false, children: [] }
     ]
   }];
 

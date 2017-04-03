@@ -27,7 +27,7 @@ fdescribe('LayerTreeComponent', () => {
   function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
     flattenedArray.push(rootNode);
 
-    rootNode.children.forEach((child: ILayerTreeNode) => flattenedArray.concat(flattenNodeTree(child, flattenedArray)));
+    rootNode.children.forEach((child: ILayerTreeNode) => flattenNodeTree(child, flattenedArray));
 
     return flattenedArray;
   }

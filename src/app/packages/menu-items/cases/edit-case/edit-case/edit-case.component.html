@@ -1,0 +1,5 @@
+
+<template [ngIf]="show">
+  <div class="blackscreen" [@blackscreen] (click)="show = false"></div>
+  <ansyn-content [@content] [(show)]="show" (submitCase)="submitCase.emit($event)"></ansyn-content>
+</template>

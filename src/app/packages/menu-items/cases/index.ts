@@ -1,2 +1,2 @@
 export { CasesModule } from "./cases.module";
-export { EditCaseComponent } from "./edit-case/edit-case.component";
+export { EditCaseModule } from "./edit-case/edit-case.module";

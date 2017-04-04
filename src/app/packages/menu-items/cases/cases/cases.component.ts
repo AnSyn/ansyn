@@ -15,33 +15,33 @@ export class CasesComponent implements OnInit {
     show: false
   };
 
-  selected_case_id:string =  '-1';
-  case_keys:any[] = [
-    {name: "Name", key:"name"},
-    {name: "Owner", key:"owner"},
-    {name: "Owner", key:"owner"},
+  selected_case_id: string = '-1';
+  case_keys: any[] = [
+    {name: "Name", key: "name"},
+    {name: "Owner", key: "owner"},
+    {name: "Owner", key: "owner"},
   ];
 
-  constructor(private casesService:CasesService) { }
+  constructor(private casesService: CasesService) {
+  }
 
   ngOnInit() {
     this.loadCases();
   }
 
-  get cases():Case[]{
+  get cases(): Case[] {
     return this.casesService.cases;
   }
 
-  loadCases():void{
+  loadCases(): void {
     this.casesService.loadCases();
   }
 
-  selectCase(selected_case:Case):void {
+  selectCase(selected_case: Case): void {
     this.selected_case_id = selected_case.id;
   }
 
-  isCaseSelected(selected_case:Case):boolean   {
-  isCaseSelected(selected_case:Case):boolean   {
+  isCaseSelected(selected_case: Case): boolean {
     return this.selected_case_id == selected_case.id;
   }
 
@@ -49,7 +49,8 @@ export class CasesComponent implements OnInit {
     this.add_object.show = true;
   }
 
-  onCasesAdded(selected_case:Case) {
+  onCasesAdded(selected_case: Case) {
     this.selectCase(selected_case);
     this.tbody_element.nativeElement.scrollTop = 0;
   }
+}

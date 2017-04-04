@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../layers-manager.module';
 import { CoreModule } from '../../../core/core.module';
-import { ILayerTreeNode } from '../models/layer-tree-node'
+import { ILayerTreeNode } from '@ansyn/core';
 import { TreeNode } from 'angular-tree-component';
 
 fdescribe('LayerTreeComponent', () => {

@@ -1,8 +1,9 @@
-import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { OnInit, SimpleChanges, AfterViewInit } from '@angular/core';
 import { NodeActivationChangedEventArgs } from '../event-args/node-activation-changed-event-args';
 import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
-import { ILayerTreeNode } from '../models/layer-tree-node';
+import { ILayerTreeNode } from '@ansyn/core';
 
 @Component({
   selector: 'app-layer-tree',
@@ -11,13 +12,13 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
   providers: [TreeActionMappingServiceService]
 })
 
-export class LayerTreeComponent implements OnInit, AfterViewInit{
+export class LayerTreeComponent implements OnInit, AfterViewInit {
 
   private options;
 
   @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-  @Input() public source: any[];
+  @Input() source: ILayerTreeNode[];
 
   @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
@@ -32,8 +33,6 @@ export class LayerTreeComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit() {
     this.treeComponent.treeModel.virtualScroll.setNewScroll({ viewport: this.myElement.nativeElement });
-
-    this.initializeNodes();
   }
 
   private initializeNodes() {
@@ -72,6 +71,10 @@ export class LayerTreeComponent implements OnInit, AfterViewInit{
       parentNode.children.every(child => !child.isActive)) {
       parentNode.setIsActive(false, true);
     }
+  }
+
+  private onTreeInitialized(event): void {
+    this.initializeNodes();
   }
 
   private isNodeIndeterminate(node: TreeNode): boolean {

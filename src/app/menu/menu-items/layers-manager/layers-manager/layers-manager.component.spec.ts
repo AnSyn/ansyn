@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { LayerTreeComponent } from '../layer-tree/layer-tree.component';
+import { LayersManagerModule } from '../layers-manager.module';
+import { CoreModule } from '@ansyn/core/core.module';
 import { LayersManagerComponent } from './layers-manager.component';
 
 describe('LayersManagerComponent', () => {
@@ -8,8 +9,7 @@ describe('LayersManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayerTreeComponent],
-      declarations: [LayersManagerComponent]
+      imports: [LayersManagerModule, CoreModule]
     })
       .compileComponents();
   }));

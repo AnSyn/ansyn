@@ -3,11 +3,11 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../layers-manager.module';
-import { CoreModule } from '../../../core/core.module';
+import { CoreModule } from '@ansyn/core/core.module';
 import { ILayerTreeNode } from '@ansyn/core';
 import { TreeNode } from 'angular-tree-component';
 
-fdescribe('LayerTreeComponent', () => {
+describe('LayerTreeComponent', () => {
   let component: LayerTreeComponent;
   let fixture: ComponentFixture<LayerTreeComponent>;
   let allFalseNodes: ILayerTreeNode[] = [{

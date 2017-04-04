@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { OnInit, SimpleChanges, AfterViewInit } from '@angular/core';
 import { NodeActivationChangedEventArgs } from '../event-args/node-activation-changed-event-args';
-import { TreeActionMappingServiceService } from '../services/tree-action-mapping-service.service';
+import { TreeActionMappingService } from '../services/tree-action-mapping.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
 import { ILayerTreeNode } from '@ansyn/core';
 
@@ -9,7 +9,7 @@ import { ILayerTreeNode } from '@ansyn/core';
   selector: 'app-layer-tree',
   templateUrl: './layer-tree.component.html',
   styleUrls: ['./layer-tree.component.scss'],
-  providers: [TreeActionMappingServiceService]
+  providers: [TreeActionMappingService]
 })
 
 export class LayerTreeComponent implements OnInit, AfterViewInit {
@@ -22,7 +22,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
   @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
-  constructor(private actionMappingService: TreeActionMappingServiceService, private myElement: ElementRef) { }
+  constructor(private actionMappingService: TreeActionMappingService, private myElement: ElementRef) { }
 
   ngOnInit() {
     this.options = {

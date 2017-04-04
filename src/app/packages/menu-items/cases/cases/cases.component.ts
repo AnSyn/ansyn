@@ -1,17 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CasesService, Case } from "@ansyn/core";
+
 
 @Component({
   selector: 'ansyn-cases',
   templateUrl: './cases.component.html',
   styleUrls: ['cases.component.scss']
 })
-export class CasesComponent implements OnInit {
-  selected_case_id:number =  -1;
 
+export class CasesComponent implements OnInit {
+  @ViewChild("tbody_element") tbody_element: ElementRef;
+
+  add_object = {
+    show: false
+  };
+
+  selected_case_id:string =  '-1';
   case_keys:any[] = [
     {name: "Name", key:"name"},
-    {name: "Owner", key:"name"},
-    {name: "Last Modified", key:"last_modified"}
+    {name: "Owner", key:"owner"},
+    {name: "Owner", key:"owner"},
   ];
 
   constructor(private casesService:CasesService) { }
@@ -32,7 +40,16 @@ export class CasesComponent implements OnInit {
     this.selected_case_id = selected_case.id;
   }
 
-  isSelectedCase(selected_case:Case):boolean   {
-   return this.selected_case_id == selected_case.id;
+  isCaseSelected(selected_case:Case):boolean   {
+  isCaseSelected(selected_case:Case):boolean   {
+    return this.selected_case_id == selected_case.id;
   }
-}
+
+  showModal() {
+    this.add_object.show = true;
+  }
+
+  onCasesAdded(selected_case:Case) {
+    this.selectCase(selected_case);
+    this.tbody_element.nativeElement.scrollTop = 0;
+  }

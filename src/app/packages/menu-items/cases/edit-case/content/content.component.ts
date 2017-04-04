@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { EventEmitter } from "@angular/core";
 import { CasesService, Case } from "@ansyn/core";
 
@@ -10,7 +10,7 @@ import { CasesService, Case } from "@ansyn/core";
   outputs:['showChange', 'submitCase']
 })
 
-export class ContentComponent implements OnInit {
+export class ContentComponent {
 
   public showChange = new EventEmitter();
   public submitCase = new EventEmitter();
@@ -40,9 +40,6 @@ export class ContentComponent implements OnInit {
   }
 
   constructor(private casesService:CasesService) { }
-
-  ngOnInit() {
-  }
 
   onSubmitCase() {
     this.casesService.createCase(this.case_model).subscribe( (case_with_id:Case) => {

@@ -1,14 +1,12 @@
 <div class="cases">
 
   <div class="buttons-group">
-    <button (click)="add_object.show = !add_object.show">
-      <img src="/assets/icons/add.svg"/>
+
+    <button class="add-case" type="button" (click)="showModal()">
+      Add Case
     </button>
-    <button>
-      <img src="/assets/icons/delete.svg"/>
-    </button>
-    <button>
-      <img src="/assets/icons/share.svg"/>
+    <button class="add-case" type="button">
+      Save As
     </button>
   </div>
 
@@ -18,12 +16,20 @@
       <th  *ngFor="let case_key of case_keys" >{{case_key.name}}</th>
     </tr>
     </thead>
-    <tbody (ansynInfiniteScroll)="loadCases()">
+    <tbody (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
     <template ngFor [ngForOf]="cases" let-case>
-      <tr (click)="selectCase(case)" [class.selected]="isSelectedCase(case)">
+      <tr (click)="selectCase(case)" [class.selected]="isCaseSelected(case)">
         <td *ngFor="let case_key of case_keys">
-          {{case[case_key.key]}}
+
+          <template [ngIf]="case_key.key == 'last_modified'">
+            {{ case[case_key.key] | date:"MM/dd/yy hh:mm" }}
+          </template>
+
+          <template [ngIf]="case_key.key != 'last_modified'">
+            {{case[case_key.key]}}
+          </template>
+
         </td>
       </tr>
     </template>
@@ -35,4 +41,6 @@
 
 </div>
 
-<ansyn-edit-case></ansyn-edit-case>
+<ansyn-edit-case [(show)]="add_object.show" (submitCase)="onCasesAdded($event)"></ansyn-edit-case>
+
+<!--<img src="/assets/icons/add.svg"/>-->

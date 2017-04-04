@@ -22,10 +22,11 @@ export class CasesService {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let body:string = JSON.stringify(one_case);
     let options = new RequestOptions({ headers});
+
     return this.http.post (url, body, options).map((res:Response) => {
-      let add_cases = res.json();
-      this.cases.unshift(add_cases);
-      return add_cases;
+      let added_case = res.json();
+      this.cases.unshift(added_case);
+      return added_case;
     });
   }
 

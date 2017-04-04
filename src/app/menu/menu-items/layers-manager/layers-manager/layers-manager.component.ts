@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'angular-tree-component';
-import { ILayerTreeNode } from '../models/layer-tree-node';
+import { ILayerTreeNode } from '@ansyn/core';
+import { DataLayersService } from '@ansyn/core';
+
 @Component({
   selector: 'app-layer-managers',
   templateUrl: './layers-manager.component.html',
@@ -9,25 +11,11 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
 export class LayersManagerComponent implements OnInit {
 
   private nodes: ILayerTreeNode[];
-  constructor() { }
+  constructor(private dataLayersService: DataLayersService) {
+  }
 
   ngOnInit() {
-
-    let rootNode: ILayerTreeNode = {
-      name: 'Fields',
-      id: 1,
-      isChecked: true,
-      children: []
-    };
-
-    rootNode.children.push({
-      name: 'Rice Fields', id: 2, isChecked: false, children: [{ name: 'Brown Rice', id: 5, isChecked: false, children: [] },
-      { name: 'Persian Rice', id: 6, isChecked: false, children: [] }]
-    });
-    rootNode.children.push({ name: 'Wheat Fields', id: 3, isChecked: false, children: [] });
-    rootNode.children.push({ name: 'Oat Fields', id: 4, isChecked: false, children: [] });
-
-    this.nodes = [rootNode];
+    this.dataLayersService.getAllLayersInATree().then(tree => this.nodes = tree);
   }
 
 }

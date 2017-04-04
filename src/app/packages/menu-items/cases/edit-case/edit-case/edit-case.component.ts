@@ -1,5 +1,5 @@
-import { Component, OnInit, trigger, transition, style, animate, EventEmitter } from '@angular/core';
-import {AnimationEntryMetadata} from "@angular/core/src/animation/metadata";
+import { Component, trigger, transition, style, animate, EventEmitter } from '@angular/core';
+import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
 
 const animations_during = '0.2s';
 
@@ -22,7 +22,7 @@ const animations: AnimationEntryMetadata[] = [
   outputs:['showChange', 'submitCase'],
   animations
 })
-export class EditCaseComponent implements OnInit {
+export class EditCaseComponent {
   public showChange = new EventEmitter();
   public submitCase = new EventEmitter();
 
@@ -37,12 +37,4 @@ export class EditCaseComponent implements OnInit {
     return this._show;
   }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-  what(dddd) {
-    console.log({dddd})
-  }
 }

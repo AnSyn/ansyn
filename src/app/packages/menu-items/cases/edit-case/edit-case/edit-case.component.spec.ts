@@ -1,6 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditCaseComponent } from './edit-case.component';
+import { Input, Output, Component } from '@angular/core';
+
+@Component({
+  selector: 'ansyn-content',
+  template: `<h1>ansyn-content</h1>`
+})
+class mockContentComponent {
+  @Input() show;
+  @Output() showChange;
+  @Output() submitCase;
+}
 
 describe('EditCaseComponent', () => {
   let component: EditCaseComponent;
@@ -8,7 +18,7 @@ describe('EditCaseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditCaseComponent ]
+      declarations: [ EditCaseComponent, mockContentComponent]
     })
     .compileComponents();
   }));
@@ -22,4 +32,12 @@ describe('EditCaseComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('show setter should call showChange.emit', () => {
+    spyOn(component.showChange , 'emit');
+    component.show = true;
+    expect(component.showChange.emit).toHaveBeenCalledWith(true);
+    expect(component.show).toBeTruthy();
+  });
+
 });

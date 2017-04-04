@@ -22,7 +22,6 @@
     "@angular/platform-browser": "^2.4.0",
     "@angular/platform-browser-dynamic": "^2.4.0",
     "@angular/router": "^3.4.0",
-    "angular-tree-component": "^3.2.3",
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^2.2.1",
     "core-js": "^2.4.1",

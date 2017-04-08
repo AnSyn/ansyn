@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { CasesComponent } from './cases/cases.component';
 import { CoreModule, StoreService, MenuItem } from "@ansyn/core";
 import { InfiniteScrollModule } from "@ansyn/utils";
-import {Case} from "@ansyn/core";
+import { EditCaseModule } from "./edit-case/edit-case.module";
 
 @NgModule({
-  imports: [CommonModule, CoreModule, InfiniteScrollModule],
+  imports: [CommonModule, CoreModule, InfiniteScrollModule, EditCaseModule],
   declarations: [CasesComponent],
   entryComponents:[CasesComponent]
 })

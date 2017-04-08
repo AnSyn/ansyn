@@ -1,6 +1,6 @@
 export type Case = {
-  id:number;
-  name:string;
-  owner:string;
-  last_modified:string;
+  id?:string;
+  name?:string;
+  owner?:string;
+  last_modified?:Date;
 }

@@ -3,7 +3,7 @@ import { ContentComponent } from './content.component';
 import { FormsModule } from "@angular/forms";
 import { CoreModule } from "@ansyn/core";
 import { HttpModule } from "@angular/http";
-import {CasesService} from "../../../../core/services/cases.service";
+import { CasesService } from "@ansyn/core";
 
 
 describe('ContentComponent', () => {
@@ -13,13 +13,13 @@ describe('ContentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[FormsModule, CoreModule, HttpModule],
-      declarations: [ ContentComponent ]
+      imports: [FormsModule, CoreModule, HttpModule],
+      declarations: [ContentComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
-  beforeEach(inject([CasesService], (_casesService:CasesService) => {
+  beforeEach(inject([CasesService], (_casesService: CasesService) => {
     fixture = TestBed.createComponent(ContentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -31,20 +31,22 @@ describe('ContentComponent', () => {
   });
 
   it('show setter should call showChange.emit', () => {
-    spyOn(component.showChange , 'emit');
+    spyOn(component.showChange, 'emit');
     component.show = true;
     expect(component.showChange.emit).toHaveBeenCalledWith(true);
     expect(component.show).toBeTruthy();
   });
 
   it('onSubmitCase should call casesService.createCase with case_model, in call back should change show to "false"', () => {
-    spyOn(component.submitCase , 'emit');
+    spyOn(component.submitCase, 'emit');
     let fake_case_id = '12345678';
-    spyOn(casesService , 'createCase').and.callFake(
+    spyOn(casesService, 'createCase').and.callFake(
       () =>
-        new Object( {subscribe(callback){
-          callback(fake_case_id);
-        }})
+        new Object({
+          subscribe(callback) {
+            callback(fake_case_id);
+          }
+        })
     );
     component.onSubmitCase();
     expect(casesService.createCase).toHaveBeenCalledWith(component.case_model);

@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CasesModule, FiltersModule, DataLayersModule, ToolsModule, AlgorithmsModule, SettingsModule} from "./index";
+import {CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule} from "./index";
 
 @NgModule({
   imports: [
     CommonModule,
     CasesModule,
     FiltersModule,
-    DataLayersModule,
+    LayersManagerModule,
     ToolsModule,
     AlgorithmsModule,
     SettingsModule

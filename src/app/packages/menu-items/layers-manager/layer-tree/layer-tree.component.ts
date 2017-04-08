@@ -51,7 +51,6 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     });
 
     let parentNode: TreeNode = event.node.realParent;
-
     if (parentNode &&
       !parentNode.isActive &&
       parentNode.children.every(child => child.isActive)) {

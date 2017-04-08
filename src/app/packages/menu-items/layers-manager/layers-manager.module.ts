@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'angular-tree-component';
 import { LayersManagerComponent } from './layers-manager/layers-manager.component';
-import { MenuItem } from "../../menu-item.model";
-import { MenuService } from "../../menu.service";
+import { MenuItem, MenuService, StoreService } from '@ansyn/core';
 import { LayerTreeComponent } from './layer-tree/layer-tree.component';
 
 @NgModule({
@@ -11,8 +10,14 @@ import { LayerTreeComponent } from './layer-tree/layer-tree.component';
   declarations: [LayersManagerComponent, LayerTreeComponent],
   entryComponents: [LayersManagerComponent]
 })
-export class DataLayersModule {
-  constructor(menuService: MenuService) {
-    menuService.addMenuItem(new MenuItem("Layers Manager", LayersManagerComponent, "/assets/icons/data-layers.svg"));
+export class LayersManagerModule {
+  constructor(storeService: StoreService) {
+
+    let menu_item: MenuItem = {
+      name:"Layers Manager",
+      component: LayersManagerComponent,
+      icon_url: "/assets/icons/data-layers.svg"
+    };
+    storeService.menu.addMenuItem(menu_item);
   }
 }

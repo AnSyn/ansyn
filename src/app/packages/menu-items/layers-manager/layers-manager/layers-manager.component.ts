@@ -15,7 +15,6 @@ export class LayersManagerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataLayersService.getAllLayersInATree().then(tree => this.nodes = tree);
+    this.dataLayersService.getAllLayersInATree().subscribe(tree => this.nodes = tree);
   }
-
-}
+};

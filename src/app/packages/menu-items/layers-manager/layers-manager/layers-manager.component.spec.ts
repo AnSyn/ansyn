@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LayersManagerModule } from '../layers-manager.module';
 import { CoreModule } from '@ansyn/core/core.module';
 import { LayersManagerComponent } from './layers-manager.component';
+import { HttpModule } from '@angular/http';
 
 describe('LayersManagerComponent', () => {
   let component: LayersManagerComponent;
@@ -9,7 +10,7 @@ describe('LayersManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule]
+      imports: [LayersManagerModule, CoreModule, HttpModule]
     })
       .compileComponents();
   }));

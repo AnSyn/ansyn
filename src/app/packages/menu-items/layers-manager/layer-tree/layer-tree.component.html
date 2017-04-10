@@ -1,7 +1,13 @@
-<tree-root (onActivate)="onNodeActivated($event)" (onDeactivate)="onNodeDeactivated($event)" (onInitialized)=onTreeInitialized($event) [focused]="true" [nodes]="source" [options]="options">
+<tree-root class="tree" 
+(onActivate)="onNodeActivated($event)" 
+(onDeactivate)="onNodeDeactivated($event)" 
+(onInitialized)="onTreeInitialized($event)"
+[focused]="true" 
+[nodes]="source" 
+[options]="options">
   <template #treeNodeTemplate let-node let-index="index">
     <div id="node{{ node.data.id }}">
-      <input [indeterminate]="isNodeIndeterminate(node)" type="checkbox" [checked]="node.isActive">
+      <input [indeterminate]="node.data.indeterminate" type="checkbox" [checked]="node.isActive">
       <span [class]="node.data.className" [class.title]="true">{{ node.data.name }}</span>
     </div>
   </template>

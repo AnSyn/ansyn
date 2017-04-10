@@ -31,12 +31,7 @@ export class DataLayersService {
     let returnValue: ILayerTreeNode[] = [];
 
     for (let serverRoot of serverTree) {
-      returnValue.push({
-        id: serverRoot.id,
-        name: serverRoot.name,
-        children: this.serverLayerContainerToLayerTreeNodes(serverRoot),
-        isChecked: false
-      });
+      returnValue = returnValue.concat(this.serverLayerContainerToLayerTreeNodes(serverRoot));
     }
 
     return returnValue;

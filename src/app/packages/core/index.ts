@@ -5,5 +5,5 @@ export { MenuItem } from "./models/menu-item.model";
 export { Case } from "./models/case.model";
 export { CasesService } from "./services/cases.service";
 export { DataLayersService } from './services/data-layers.service';
-export { ILayerTreeNode } from './models/layer-tree-node';
+export { ILayerTreeNode } from './models/data-layers/layer-tree-node';
 export { CaseModalService } from './services/case-modal.service';

@@ -27,7 +27,9 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.options = {
       getChildren: () => new Promise((resolve, reject) => { }),
-      actionMapping: this.actionMappingService.getActionMapping()
+      actionMapping: this.actionMappingService.getActionMapping(),
+      useVirtualScroll: true,
+      nodeHeight: 24
     };
   }
 
@@ -44,32 +46,47 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   }
 
   private onNodeActivated(event): void {
-    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(event.node, true));
+    let node: TreeNode = event.node;
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, true));
 
-    event.node.children.forEach((childNode) => {
-      childNode.setIsActive(true, true);
-    });
+    for (let i = 0; i < node.children.length; i++) {
+      if (!node.children[i].isActive) {
+        node.children[i].setIsActive(true, true);
+      }
+    }
 
-    let parentNode: TreeNode = event.node.realParent;
+    let parentNode: TreeNode = node.realParent;
     if (parentNode &&
       !parentNode.isActive &&
       parentNode.children.every(child => child.isActive)) {
       parentNode.setIsActive(true, true);
     }
+
+    if (parentNode && node.isLeaf) {
+      this.bubbleIndeterminate(parentNode);
+    }
   }
 
   private onNodeDeactivated(event): void {
-    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(event.node, false));
+    let node: TreeNode = event.node;
 
-    event.node.children.forEach((childNode) => {
-      childNode.setIsActive(false, true);
-    });
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, false));
 
-    let parentNode: TreeNode = event.node.realParent;
+    for (let i = 0; i < node.children.length; i++) {
+      if (node.children[i].isActive) {
+        node.children[i].setIsActive(false, true);
+      }
+    }
+
+    let parentNode: TreeNode = node.realParent;
     if (parentNode &&
       parentNode.isActive &&
       parentNode.children.every(child => !child.isActive)) {
       parentNode.setIsActive(false, true);
+    }
+
+    if (parentNode && node.isLeaf) {
+      this.bubbleIndeterminate(parentNode);
     }
   }
 
@@ -77,17 +94,19 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     this.initializeNodes();
   }
 
+  private bubbleIndeterminate(node: TreeNode): void {
+    node.data.indeterminate = this.isNodeIndeterminate(node);
+    if (node.realParent) {
+      this.bubbleIndeterminate(node.realParent);
+    }
+  }
+
   private isNodeIndeterminate(node: TreeNode): boolean {
     if (!node.hasChildren) {
       return false;
     }
 
-    let flattenedChildren: TreeNode[] = this.getFlattenedChildren(node, true);
-
-    let allChildrenActive: boolean = flattenedChildren.every(child => child.isActive);
-    let allChildrenDeactive: boolean = flattenedChildren.every(child => !child.isActive);
-
-    if (allChildrenActive || allChildrenDeactive) {
+    if (node.children.every(child => child.isActive) || node.children.every(child => !child.isActive)) {
       return false;
     } else {
       return true;
@@ -125,6 +144,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
     return flattenedArray;
   }
-}
+};
+
 
 

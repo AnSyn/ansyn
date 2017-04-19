@@ -1,1 +1,1 @@
-export { TimelineModule } from './timeline.module';
+export { TimelineModule, TimelineReducer } from './timeline.module';

@@ -7,7 +7,7 @@ export class TreeActionMappingService {
   public getActionMapping(): IActionMapping {
     return {
       mouse: {
-        click: TREE_ACTIONS.TOGGLE_SELECTED_MULTI,
+        click: null,
         dblClick: null,
         contextMenu: null,
         expanderClick: TREE_ACTIONS.TOGGLE_EXPANDED,

@@ -32,7 +32,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.treeComponent.treeModel.virtualScroll.setNewScroll({ viewport: this.myElement.nativeElement });
+    this.treeComponent.treeModel.virtualScroll.setViewport({ viewport: this.myElement.nativeElement });
   }
 
   private initializeNodes() {

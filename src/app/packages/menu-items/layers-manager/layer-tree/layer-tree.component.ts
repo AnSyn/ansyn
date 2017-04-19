@@ -4,6 +4,7 @@ import { NodeActivationChangedEventArgs } from '../event-args/node-activation-ch
 import { TreeActionMappingService } from '../services/tree-action-mapping.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
 import { ILayerTreeNode } from '@ansyn/core';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-layer-tree',
@@ -18,7 +19,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
   @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-  @Input() source: ILayerTreeNode[];
+  @Input() source: Observable<ILayerTreeNode[]>;
 
   @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
@@ -36,66 +37,54 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.treeComponent.treeModel.virtualScroll.setViewport( this.myElement.nativeElement );
   }
-
-  private initializeNodes() {
-    if (this.source) {
-      this.flattenInputNodes().filter((node: ILayerTreeNode) => node.isChecked).
-        forEach((node: ILayerTreeNode) => this.treeComponent.treeModel.getNodeBy(treeNode => treeNode.data.id === node.id).
-          setIsActive(true, true));
-    }
+  
+  private onSpanClicked(event, node: TreeNode): void {
+    let parentDiv: HTMLElement = event.target.parentNode;
+    let element: HTMLInputElement = <HTMLInputElement>parentDiv.children.namedItem('nodeInput');
+    this.onCheckboxClicked(null, node);
+    event.stopPropagation();
   }
 
-  private onNodeActivated(event): void {
-    let node: TreeNode = event.node;
-    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, true));
-
-    for (let i = 0; i < node.children.length; i++) {
-      if (!node.children[i].isActive) {
-        node.children[i].setIsActive(true, true);
-      }
-    }
-
+  private onCheckboxClicked(event, node: TreeNode): void {
+    let newCheckValue: boolean = !node.data.isChecked;
     let parentNode: TreeNode = node.realParent;
-    if (parentNode &&
-      !parentNode.isActive &&
-      parentNode.children.every(child => child.isActive)) {
-      parentNode.setIsActive(true, true);
-    }
 
-    if (parentNode && node.isLeaf) {
-      this.bubbleIndeterminate(parentNode);
+    node.data.isChecked = newCheckValue;
+    this.bubbleActivationDown(node, newCheckValue);
+    this.bubbleActivationUp(parentNode, newCheckValue);
+    this.bubbleIndeterminate(node.realParent);
+  }
+
+  private bubbleActivationDown(node: TreeNode, activationValue: boolean) {
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, activationValue));
+
+    node.children.filter(child => child.data.isChecked !== activationValue).forEach(child => {
+      child.data.isChecked = activationValue;
+      this.bubbleActivationDown(child, activationValue);
+    });
+
+    if (node.isLeaf) {
+      this.bubbleIndeterminate(node.realParent);
     }
   }
 
-  private onNodeDeactivated(event): void {
-    let node: TreeNode = event.node;
-
-    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, false));
-
-    for (let i = 0; i < node.children.length; i++) {
-      if (node.children[i].isActive) {
-        node.children[i].setIsActive(false, true);
-      }
+  private bubbleActivationUp(node: TreeNode, newValue: boolean): void {
+    if (!node) {
+      return;
     }
 
-    let parentNode: TreeNode = node.realParent;
-    if (parentNode &&
-      parentNode.isActive &&
-      parentNode.children.every(child => !child.isActive)) {
-      parentNode.setIsActive(false, true);
+    if ((newValue && node.children.every(child => child.data.isChecked === newValue)) ||
+      (!newValue && node.children.some(child => child.data.isChecked === newValue))) {
+      node.data.isChecked = newValue;
+      this.bubbleActivationUp(node.realParent, newValue);
     }
-
-    if (parentNode && node.isLeaf) {
-      this.bubbleIndeterminate(parentNode);
-    }
-  }
-
-  private onTreeInitialized(event): void {
-    this.initializeNodes();
   }
 
   private bubbleIndeterminate(node: TreeNode): void {
-    node.data.indeterminate = this.isNodeIndeterminate(node);
+    if (!node) {
+      return;
+    }
+    node.data.isIndeterminate = this.isNodeIndeterminate(node);
     if (node.realParent) {
       this.bubbleIndeterminate(node.realParent);
     }
@@ -106,43 +95,11 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    if (node.children.every(child => child.isActive) || node.children.every(child => !child.isActive)) {
+    if (node.children.every(child => child.data.isChecked) || node.children.every(child => !child.data.isChecked)) {
       return false;
     } else {
       return true;
     }
-  }
-
-  private getFlattenedChildren(node: TreeNode, isRoot: boolean): TreeNode[] {
-    let flattenedArray: TreeNode[] = [];
-
-    if (!node.hasChildren) {
-      flattenedArray.push(node);
-    } else {
-      flattenedArray =
-        Array.prototype.concat.apply([], node.children.map(child => this.getFlattenedChildren(child, false)));
-      if (!isRoot) {
-        flattenedArray.push(node);
-      }
-    }
-
-    return flattenedArray;
-  }
-
-  private flattenInputNodes(): ILayerTreeNode[] {
-    let flattenedTree: ILayerTreeNode[] = [];
-
-    this.source.forEach(node => this.treeVisitor(node, flattenedTree));
-
-    return flattenedTree;
-  }
-
-  private treeVisitor(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
-    flattenedArray.push(rootNode);
-
-    rootNode.children.forEach((child: ILayerTreeNode) => this.treeVisitor(child, flattenedArray));
-
-    return flattenedArray;
   }
 };
 

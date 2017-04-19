@@ -48,7 +48,11 @@ export class DataLayersService {
       flattenedChildren = flattenedChildren.concat(this.serverDataLayersToClientLayerTreeNodes(container.dataLayers));
     }
 
-    return [{ id: container.id, name: container.name, children: flattenedChildren, isChecked: false }];
+    let allChecked: boolean = flattenedChildren.every(child => child.isChecked);
+    let allUncheked: boolean = flattenedChildren.every(child => !child.isChecked);
+    let isIndeterminate: boolean = !(allChecked || allUncheked);
+
+    return [{ id: container.id, name: container.name, children: flattenedChildren, isChecked: allChecked, isIndeterminate: isIndeterminate }];
   }
 
   private serverDataLayersToClientLayerTreeNodes(serverDataLayers: IServerDataLayer[]): ILayerTreeNode[] {
@@ -59,7 +63,8 @@ export class DataLayersService {
         id: serverDataLayer.id,
         name: serverDataLayer.name,
         children: [],
-        isChecked: serverDataLayer.isChecked
+        isChecked: serverDataLayer.isChecked,
+        isIndeterminate: false
       });
     }
     return returnValue;

@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 	selector: 'timeline-container',
   	templateUrl: './container.component.html',
   	styleUrls: ['./container.component.css']
-});
+})
 
 export class ContainerComponent implements OnInit  {
 	public drops: any[] = [];

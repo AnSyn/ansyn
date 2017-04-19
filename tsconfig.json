@@ -4,11 +4,14 @@
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
+    "stripInternal": true,
+    "module": "es2015",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
+    "skipLibCheck": true,
     "typeRoots": [
       "node_modules/@types"
     ],

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TimelineService } from '../services/timeline.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { Observable } from 'rxjs/Observable';
 
 import { Store } from '@ngrx/store';
 import * as overlay from '../actions/timeline.actions';
@@ -18,7 +19,8 @@ export class ContainerComponent implements OnInit  {
 	public drops: any[] = [];
 	public configuration: any;
 	private errorMessage: string;
-	
+	//public demoCount:Observable<number>;
+	public overlays : any;	
 
 	constructor(private store: Store <reducer.State>,private timelineService: TimelineService,private emitter : TimelineEmitterService) {
 		this.configuration = {    
@@ -27,6 +29,13 @@ export class ContainerComponent implements OnInit  {
         	eventLineColor: (d,i) => d3.schemeCategory10[i],
         	date: d => new Date(d.date)
         };
+        
+        /*this.store.select('overlays').subscribe( (data:reducer.State) => {
+        	this.overlays = data.demo;
+        });*/	
+        this.overlays = this.store.select('overlays')
+        	.map( (data:reducer.State) => data.demo )
+
     }
 
 	ngOnInit(): void {

@@ -27,10 +27,13 @@ export const initialState: State = {
 export function reducer(state = initialState,action: overlay.Actions): State {
 	switch(action.type){
 		case overlay.ActionTypes.DEMO:
-			let demo = state.demo++;
-			return Object.assign({}, state, {    
+			console.log(state,action);
+			let demo = ++state.demo;
+			let tmp:State = Object.assign({}, state, {    
             	demo:demo
             });
+			return tmp;
+
 			//break;
 		case overlay.ActionTypes.SELECT_OVERLAY:
 			break;

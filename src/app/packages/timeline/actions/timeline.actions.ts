@@ -45,7 +45,7 @@ export class LoadOverlaysFailAction implements Action {
 export class DemoAction implements Action {     
 	type = ActionTypes.DEMO;
 	constructor(public payload: any) {     
-    	console.log('payload');                                
+    	console.log(payload);                                
     }
 }
 

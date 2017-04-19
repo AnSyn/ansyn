@@ -24,6 +24,7 @@
     "@angular/router": "^3.4.0",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.22",
     "@ngrx/core": "^1.2.0",
+    "@ngrx/effects": "^2.0.2",
     "@ngrx/store": "^2.2.1",
     "@types/lodash": "^4.14.63",
     "angular-tree-component": "^3.3.0",

@@ -10,18 +10,14 @@ const animations: AnimationEntryMetadata[] = [
   trigger(
     'expand', [
       state('true', style({
-        // transform: 'translate(0%)',
-        // marginLeft:"0%"
+
         maxWidth: '1000px',
-        // width: 'auto'
+        overflowX: 'visible'
       })),
       state('false', style({
-        // transform: 'translate(-100%)',
-        // ma/rginLeft:"-100%"
         maxWidth: 0,
-        // width: 0
       })),
-      transition('1 => 0', animate('0.15s ease-in-out')),
+      transition('1 => 0', animate('0.25s ease-in-out')),
       transition('0 => 1', animate('0.25s ease-in-out'))
     ]
   ),

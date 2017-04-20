@@ -1,0 +1,20 @@
+<div class="edit-case">
+  <button (click)="close()" class="close" type="button">
+    <span>×</span>
+  </button>
+
+  <img src="../../../../../assets/icons/Delete.svg"/>
+
+  <form class="edit-case-form" (submit)="onSubmitRemove()" >
+
+    <p>
+      Are you sure you want to delete <span class="name">{{case_model.name}}</span>?
+    </p>
+
+    <div class="bottom-btns">
+      <button type="button" (click)="close()">Cancel</button>
+      <button type="submit">OK</button>
+    </div>
+  </form>
+
+</div>

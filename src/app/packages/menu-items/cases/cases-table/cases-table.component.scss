@@ -1,0 +1,107 @@
+table{
+  width:400px;
+  color: white;
+  font-size: 13px;
+
+  tr {
+    position: relative;
+    display:table;
+    width:100%;
+    table-layout:fixed;
+
+    padding: 16px 0;
+    text-align: left;
+  }
+
+  thead {
+    display: table;
+    border-bottom: 2px solid white;
+  }
+
+  tbody{
+    direction: rtl;
+    display:block;
+    overflow-y:auto;
+    height: 80vh;
+
+    &::-webkit-scrollbar {
+      width: 14px;
+      height: 18px;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+      border: 4px solid transparent;
+      background-clip: padding-box;
+      border-radius: 8px;
+      background-color: white;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+    }
+
+
+    tr{
+      direction: ltr;
+      cursor: pointer;
+      box-shadow: 0 0 2px 0px white;
+      transition: background .3s, color .3s, box-shadow .3s;
+      box-shadow: inset 0px 0px 0px 0px #EBF8FA;
+      border-bottom: 1px solid;
+
+      &:hover {
+        background: #9deeff;
+        color: #156879;
+        td.td_case_menu div.case-menu {
+          transform: translate(-10%, 50%);
+          opacity: 1;
+        }
+      }
+
+      &.active{
+        background: #9deeff;
+        color:#156879;
+      }
+
+      &.selected{
+        color:#156879;
+        box-shadow: inset 396px 0px 0px 0px #EBF8FA;
+      }
+
+      td.td_case_menu {
+        width: 0;
+        height: 100%;
+
+        div.case-menu {
+          transition: .3s;
+          opacity: 0;
+          position: fixed;
+          border: 0.5px solid #404040;
+          box-sizing: border-box;
+          box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
+          border-radius: 4px;
+          background: #FFFFFF;
+          transform: translate(-50%, 50%);
+          button {
+            background: transparent;
+            border: 1px solid transparent;
+            &:hover{
+              box-sizing: border-box;
+              border: 1px solid #7b7b7b;
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+}

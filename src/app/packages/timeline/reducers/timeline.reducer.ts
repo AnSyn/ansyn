@@ -8,26 +8,26 @@ import { createSelector } from 'reselect';
 export interface State {
 	loaded: boolean;
 	loading: boolean;
-	ids: string[];
-	overlays: { [id: string]: Overlay};
+	overlays: any; //Map
 	selectedOverlays: string[];
 	demo: number;
-
+	filters : any;
 }
 
 export const initialState: State = {
 	loaded: false,
 	loading: false,
-	ids: [],
-	overlays: {},
+	overlays: new Map(),
 	selectedOverlays: [],
-	demo: 1
+	demo: 1,
+	//@todo change to Map
+	filters: {}
 }
 
 export function reducer(state = initialState,action: overlay.Actions): State {
 	switch(action.type){
 		case overlay.ActionTypes.DEMO:
-			console.log(state,action);
+			
 			let demo = ++state.demo;
 			let tmp:State = Object.assign({}, state, {    
             	demo:demo
@@ -48,15 +48,18 @@ export function reducer(state = initialState,action: overlay.Actions): State {
 
 		case overlay.ActionTypes.LOAD_OVERLAYS_SUCCESS:
 				const overlays = action.payload;
-				const newIds = [];
-				const newOverlays = {};
+				
+				
 				overlays.forEach(overlay => {
-					if(state.overlays[overlay.id] !== undefined){
-						newIds.push(overlay.id);
-						newOverlays[overlay.id] = Object.assign({},overlay);
+					if(!state.overlays.has(overlay.id)){
+						state.overlays.set(overlay.id,overlay);
 					}
 				});
-				return;
+				//we already initiliazing the state 
+				return Object.assign({},state,{    
+               		loading: false,
+               		loaded: true
+               	});
 
 
 		case overlay.ActionTypes.LOAD_OVERLAYS_FAIL:

@@ -38,10 +38,10 @@ export class TimelineComponent {
     		.mouseover( data => this.emitter.provide('timeline:mouseover').next(data))
     		.zoomend((a,b,c) => this.emitter.provide('timeline:zoomend').next({a,b,c}))
     		.click(data => 	this.emitter.provide('timeline:click').next(data));
-
-    	const dataSet = this._drops.map(repository => ({
-        		name: repository.name,
-        		data: repository.commits,
+    	
+    	const dataSet = this.drops.map(entities => ({
+        		name: entities.name,
+        		data: entities.data,
     		}));	
 		
 		const element = d3.select(this.context.nativeElement)

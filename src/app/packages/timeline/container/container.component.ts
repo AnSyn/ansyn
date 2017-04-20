@@ -3,6 +3,8 @@ import { TimelineService } from '../services/timeline.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Observable';
 
+import 'rxjs/add/operator/filter';
+
 import { Store } from '@ngrx/store';
 import * as overlay from '../actions/timeline.actions';
 import * as reducer from '../reducers/timeline.reducer';
@@ -30,23 +32,35 @@ export class ContainerComponent implements OnInit  {
         	date: d => new Date(d.date)
         };
         
-        /*this.store.select('overlays').subscribe( (data:reducer.State) => {
-        	this.overlays = data.demo;
-        });*/	
-        this.overlays = this.store.select('overlays')
-        	.map( (data:reducer.State) => data.demo )
+     	this.store.select('overlays')
+        	.map( (data: any) => {    
+          		let result = new Array();
+          		let overlays = new Array(); 
+				if(!Object.keys(data.filters).length){    
+             		data.overlays.forEach( value => overlays.push(value)) 
+             		result.push({
+             				name: undefined,
+             				data: overlays 
+             			});
+             	}
+          		return result;
+          	})
+        	//.map( (data:reducer.State) => data.ews )
+        	.subscribe( overlays => {    
+          			this.drops = overlays;
+          	})	
 
     }
 
 	ngOnInit(): void {
-		this.timelineService.fetchData()
+		/*this.timelineService.fetchData()
 			.subscribe(
 				data => this.drops = data,
 				error => this.errorMessage = <any>error
-			);
+			);*/
 	}
 
 	demo(): void {     
-   		this.store.dispatch( new overlay.DemoAction({key:'value'}));
+   		this.store.dispatch( new overlay.LoadOverlaysAction());
    	}
 }

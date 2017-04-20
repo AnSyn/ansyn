@@ -12,6 +12,8 @@ export const ActionTypes = {
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
+	SET_FILTER: type('[Overlay] Set Filter'),
+	CLEAR_FILTER: type('[Overlay Clear Filter'),
 	DEMO: type('[Overlay] demo')
 
 }
@@ -29,7 +31,9 @@ export class UnSelectOverlayAction implements Action {
 
 export class LoadOverlaysAction implements Action {
 	type = ActionTypes.LOAD_OVERLAYS;
-	constructor(){}
+	constructor(){    
+   		console.log('load overlays action');
+   	}
 }
 
 export class LoadOverlaysSuccessAction implements Action {
@@ -42,6 +46,16 @@ export class LoadOverlaysFailAction implements Action {
 	constructor(public payload: Overlay[]){}
 }
 
+export class SetFilter implements Action {    
+	type = ActionTypes.SET_FILTER;
+	constructor(public payload:any){}                                          
+}
+
+export class ClearFilter implements Action {    
+	type = ActionTypes.CLEAR_FILTER;
+	constructor(){}                                          
+}
+
 export class DemoAction implements Action {     
 	type = ActionTypes.DEMO;
 	constructor(public payload: any) {     
@@ -49,10 +63,14 @@ export class DemoAction implements Action {
     }
 }
 
+
+
 export type Actions
 	= SelectOverlayAction
-	| UnSelectOverlayAction
-	| LoadOverlaysAction
-	| LoadOverlaysSuccessAction
-	| LoadOverlaysFailAction
+	|	UnSelectOverlayAction
+	| 	LoadOverlaysAction
+	| 	LoadOverlaysSuccessAction
+	| 	LoadOverlaysFailAction
+	|	ClearFilter
+	|	SetFilter
 	| DemoAction;

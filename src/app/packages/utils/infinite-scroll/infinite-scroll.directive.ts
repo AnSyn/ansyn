@@ -6,10 +6,10 @@ import * as _ from 'lodash';
 
 })
 export class InfiniteScrollDirective {
-  @Output("ansynInfiniteScroll") private ansynInfiniteScroll = new EventEmitter();
+  @Output("ansynInfiniteScroll") ansynInfiniteScroll = new EventEmitter();
 
   constructor(private elementRef:ElementRef) {
-    elementRef.nativeElement.addEventListener("scroll", _.debounce(this.onScroll.bind(this)), 300);
+    elementRef.nativeElement.addEventListener("scroll", _.debounce(this.onScroll.bind(this), 300));
   }
 
   onScroll($event) {

@@ -4,7 +4,7 @@ import { HttpModule } from "@angular/http";
 import { Case } from "../models/case.model";
 import { Http, Headers, RequestOptions } from "@angular/http";
 
-fdescribe('CasesService', () => {
+describe('CasesService', () => {
   let casesService:CasesService;
   let http: Http;
 

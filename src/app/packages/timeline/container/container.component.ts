@@ -24,7 +24,7 @@ export class ContainerComponent implements OnInit  {
 	//public demoCount:Observable<number>;
 	public overlays : any;	
 
-	constructor(private store: Store <reducer.State>,private timelineService: TimelineService,private emitter : TimelineEmitterService) {
+	constructor(private store: Store <reducer.IOverlayState>,private timelineService: TimelineService,private emitter : TimelineEmitterService) {
 		this.configuration = {    
 		  	start: new Date(new Date().getTime() - 3600000 * 24 * 365),
         	end: new Date(),
@@ -58,6 +58,7 @@ export class ContainerComponent implements OnInit  {
 				data => this.drops = data,
 				error => this.errorMessage = <any>error
 			);*/
+			this.demo();
 	}
 
 	demo(): void {     

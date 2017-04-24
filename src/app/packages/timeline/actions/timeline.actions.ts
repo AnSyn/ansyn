@@ -65,7 +65,7 @@ export class DemoAction implements Action {
 
 
 
-export type Actions
+export type OverlaysActions
 	= SelectOverlayAction
 	|	UnSelectOverlayAction
 	| 	LoadOverlaysAction

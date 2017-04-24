@@ -5,7 +5,7 @@ import * as overlay from '../actions/timeline.actions';
 import { Overlay } from "../models/overlay.model";
 import { createSelector } from 'reselect';
 
-export interface State {
+export interface IOverlayState {
 	loaded: boolean;
 	loading: boolean;
 	overlays: any; //Map
@@ -14,7 +14,7 @@ export interface State {
 	filters : any;
 }
 
-export const initialState: State = {
+export const initialState: IOverlayState = {
 	loaded: false,
 	loading: false,
 	overlays: new Map(),
@@ -24,13 +24,13 @@ export const initialState: State = {
 	filters: {}
 }
 
-export function reducer(state = initialState,action: overlay.Actions): State {
+export function reducer(state = initialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
 		case overlay.ActionTypes.DEMO:
 			
 			let demo = ++state.demo;
-			let tmp:State = Object.assign({}, state, {    
-            	demo:demo
+			let tmp:IOverlayState = Object.assign({}, state, {    
+            	demo
             });
 			return tmp;
 

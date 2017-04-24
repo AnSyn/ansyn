@@ -5,17 +5,17 @@
 
 export interface  Overlay {
 	id: string,
-	footprint: any,//@todo add type geojson_multipoligon,
-	sensorType: string,
-	sensorName: string,
-	channel: string,
-	bestResolution: number,
-	isStereo: boolean,
+	footprint?: any,//@todo add type geojson_multipoligon,
+	sensorType?: string,
+	sensorName?: string,
+	channel?: string,
+	bestResolution?: number,
+	isStereo?: boolean,
 	name: string,
-	imageUrl: string,
-	thumbnailUrl: string,
+	imageUrl?: string,
+	thumbnailUrl?: string,
 	photoTime: Date,
 	azimuth: number, //radians
-	aproximateTransform: any,
-	csmState: string
+	aproximateTransform?: any,
+	csmState?: string
 }

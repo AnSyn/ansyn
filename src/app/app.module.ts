@@ -30,7 +30,7 @@ import { AppReducers } from './app.reducers';
     MenuModule,
     MenuItemsModule,
     TimelineModule,
-    StoreModule.provideStore(AppReducers),
+    StoreModule.provideStore(AppReducers()),
     //RouterStoreModule.connectRouter(),
     //StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule

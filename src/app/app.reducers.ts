@@ -5,4 +5,6 @@ const reducers = {
 	overlays : TimelineReducer
 }
 
-export const AppReducers = combineReducers(reducers);
+export function AppReducers() { 
+	return combineReducers(reducers); 
+};

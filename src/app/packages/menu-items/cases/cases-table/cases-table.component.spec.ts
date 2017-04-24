@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesTableComponent } from './cases-table.component';
-import { CasesService, Case } from "@ansyn/core";
+import { CasesService, Case, CaseModalService } from "@ansyn/core";
 import { HttpModule } from "@angular/http";
 import { CoreModule } from "@ansyn/core";
 import { DeleteCaseComponent } from "../delete-case/delete-case.component";
@@ -10,6 +10,7 @@ describe('CasesTableComponent', () => {
   let component: CasesTableComponent;
   let fixture: ComponentFixture<CasesTableComponent>;
   let casesService: CasesService;
+  let caseModalService: CaseModalService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -19,11 +20,13 @@ describe('CasesTableComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(inject([CasesService], (_casesService: CasesService) => {
+  beforeEach(inject([CasesService, CaseModalService], (_casesService: CasesService, _caseModalService: CaseModalService) => {
+    spyOn(_casesService, 'loadCases');
     fixture = TestBed.createComponent(CasesTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     casesService = _casesService;
+    caseModalService = _caseModalService;
   }));
 
   it('should create', () => {
@@ -37,7 +40,6 @@ describe('CasesTableComponent', () => {
   });
 
   it('loadCases should call casesService.loadCases()', () => {
-    spyOn(casesService, 'loadCases');
     component.loadCases();
     expect(casesService.loadCases).toHaveBeenCalled();
   });
@@ -59,25 +61,23 @@ describe('CasesTableComponent', () => {
   });
 
   it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
-    casesService.modal = <any> {showModal: () => null};
     let $event: MouseEvent = <any>{stopPropagation: () => null};
     spyOn($event, 'stopPropagation');
-    spyOn(casesService.modal, 'showModal');
+    spyOn(caseModalService, 'showModal');
     let selected_case_id: string = 'fake_selected_case_id'
     component.removeCase($event, selected_case_id)
     expect($event.stopPropagation).toHaveBeenCalled();
-    expect(casesService.modal.showModal).toHaveBeenCalledWith(DeleteCaseComponent, selected_case_id);
+    expect(caseModalService.showModal).toHaveBeenCalledWith(DeleteCaseComponent, selected_case_id);
   });
 
   it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
-    casesService.modal = <any> {showModal: () => null};
     let $event: MouseEvent = <any>{stopPropagation: () => null};
     spyOn($event, 'stopPropagation');
-    spyOn(casesService.modal, 'showModal');
+    spyOn(caseModalService, 'showModal');
     let selected_case_id: string = 'fake_selected_case_id'
     component.editCase($event, selected_case_id)
     expect($event.stopPropagation).toHaveBeenCalled();
-    expect(casesService.modal.showModal).toHaveBeenCalledWith(EditCaseComponent, selected_case_id);
+    expect(caseModalService.showModal).toHaveBeenCalledWith(EditCaseComponent, selected_case_id);
   });
 
 });

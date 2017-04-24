@@ -23,7 +23,7 @@ describe('InfiniteScrollDirective', () => {
     directive.onScroll($event);
     //not 0 + 100 >= 101
     expect(directive.ansynInfiniteScroll.emit).not.toHaveBeenCalled();
-    target.scrollHeight = 101;
+    target.scrollHeight = 99;
     directive.onScroll($event);
     //0 + 100 >= 99
     expect(directive.ansynInfiniteScroll.emit).toHaveBeenCalled();

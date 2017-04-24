@@ -1,6 +1,6 @@
-import { Component, trigger, transition, style, animate, EventEmitter, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, trigger, transition, style, animate, EventEmitter, OnInit } from '@angular/core';
 import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
-import { CasesService, Case } from "@ansyn/core";
+import { CasesService, Case, CaseModalService } from "@ansyn/core";
 
 const animations_during = '0.2s';
 
@@ -32,7 +32,7 @@ const host = {
 export class DeleteCaseComponent implements OnInit {
 
   ngOnInit(): void {
-    this.case_model = this.casesService.modal.getSelectedCase();
+    this.case_model = this.caseModalService.getSelectedCase();
   }
 
   public submitCase = new EventEmitter();
@@ -40,14 +40,14 @@ export class DeleteCaseComponent implements OnInit {
   case_model:Case;
 
   close():void {
-    this.casesService.modal.closeModal();
+    this.caseModalService.closeModal();
   }
 
-  constructor(private casesService:CasesService) { }
+  constructor(private caseModalService: CaseModalService, private casesService: CasesService) { }
 
   onSubmitRemove() {
     this.casesService.removeCase(this.case_model.id).subscribe(()=>{
-      this.casesService.modal.closeModal();
+      this.caseModalService.closeModal();
     })
   }
 

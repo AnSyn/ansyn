@@ -6,19 +6,16 @@ import "rxjs/add/operator/map";
 
 @Injectable()
 export class CasesService {
-  base_url = 'http://localhost:9001/api/v1';
+  base_url = 'http://localhost:9001/api/v1/cases';
   LIMIT:number = 15;
   cases:Case[] = [];
   selected_case_id;
-  modal: CaseModal;
   caseAdded: EventEmitter<Case> = new EventEmitter();
 
-  constructor(private http: Http,  public componentFactoryResolver: ComponentFactoryResolver) {
-    this.loadCases();
-  }
+  constructor(private http: Http,  public componentFactoryResolver: ComponentFactoryResolver) {}
 
   loadCases() {
-    return this.http.get(`http://localhost:9001/api/v1/cases/pagination/${this.getLastId()}?limit=${this.LIMIT}`).map(res => res.json()).subscribe((array:Case[])=>{
+    return this.http.get(`${this.base_url}/pagination/${this.getLastId()}?limit=${this.LIMIT}`).map(res => res.json()).subscribe((array:Case[])=>{
       this.cases = this.cases.concat(array);
     });
   }
@@ -27,16 +24,12 @@ export class CasesService {
     this.selected_case_id = selected_case.id;
   }
 
-  isCaseActive(selected_case: Case) {
-    return selected_case.id == this.modal.case_id;
-  }
-
   isCaseSelected(selected_case: Case): boolean {
     return this.selected_case_id == selected_case.id;
   }
 
   createCase(selected_case:Case): Observable<Case> {
-    let url:string = `${this.base_url}/cases`;
+    let url:string = `${this.base_url}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let body:string = JSON.stringify(selected_case);
     let options = new RequestOptions({ headers});
@@ -50,7 +43,7 @@ export class CasesService {
   }
 
   updateCase(selected_case:Case): Observable<Case> {
-    let url:string = "http://localhost:9001/api/v1/cases";
+    let url:string = `${this.base_url}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let body:string = JSON.stringify(selected_case);
     let options = new RequestOptions({ headers});
@@ -68,7 +61,7 @@ export class CasesService {
   }
 
   removeCase(selected_case_id:string): Observable<Case>{
-    let url:string = `http://localhost:9001/api/v1/cases/${selected_case_id}`;
+    let url:string = `${this.base_url}/${selected_case_id}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers});
 
@@ -87,52 +80,6 @@ export class CasesService {
   getLastId(): string{
     let last_case = this.cases[this.cases.length - 1];
     return last_case ? last_case.id : '-1';
-  }
-
-}
-
-export class CaseModal {
-
-  private _selected_component;
-  private _show:boolean;
-  factory;
-  case_id:string;
-
-  constructor(private casesService:CasesService, private template: ViewContainerRef) {}
-
-  set selected_component(value: any) {
-    this._selected_component = value;
-  }
-
-  get selected_component(): any {
-    return this._selected_component;
-  }
-
-  showModal(compnent_constructor, _case_id?:string){
-    this.closeModal();
-    this.factory  = this.casesService.componentFactoryResolver.resolveComponentFactory(compnent_constructor);
-    this.selected_component = this.template.createComponent(this.factory)
-    this.case_id = _case_id;
-  }
-
-  closeModal() {
-    if(this.selected_component) {
-      this.selected_component.destroy();
-      this.selected_component = null;
-    }
-    this.case_id = undefined;
-  }
-
-  getEmptyCase(): Case {
-    return {
-      name:'',
-      owner:'',
-      last_modified: new Date()
-    };
-  }
-
-  getSelectedCase(): Case  {
-    return this.casesService.cases.find(case_value => case_value.id == this.case_id) || this.getEmptyCase();
   }
 
 }

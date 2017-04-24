@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {StoreService} from "@ansyn/core";
+import { Component } from '@angular/core';
+import { StoreService } from '@ansyn/core';
 
 @Component({
   selector: 'app-root',

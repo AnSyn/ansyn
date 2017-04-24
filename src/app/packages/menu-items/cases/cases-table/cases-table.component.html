@@ -12,8 +12,6 @@
     <th>
       Last Modified
     </th>
-
-    <th  *ngFor="let case_key of casesService.case_keys" >{{case_key.name}}</th>
   </tr>
   </thead>
 
@@ -21,7 +19,7 @@
 
   <template ngFor [ngForOf]="cases" let-case>
 
-    <tr (click)="selectCase(case)" [class.active]="casesService.isCaseActive(case)" [class.selected]="casesService.isCaseSelected(case)" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
+    <tr (click)="selectCase(case)" [class.active]="caseModalService.isCaseActive(case)" [class.selected]="casesService.isCaseSelected(case)" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
 
       <td>
         {{case.name}}

@@ -49,7 +49,6 @@ export function reducer(state = initialState,action: overlay.OverlaysActions): I
 		case overlay.ActionTypes.LOAD_OVERLAYS_SUCCESS:
 				const overlays = action.payload;
 				
-				
 				overlays.forEach(overlay => {
 					if(!state.overlays.has(overlay.id)){
 						state.overlays.set(overlay.id,overlay);

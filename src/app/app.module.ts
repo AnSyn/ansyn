@@ -9,7 +9,7 @@ import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from "@ansyn/menu-items";
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { AppReducers } from './app.reducers';
+import { AppReducers ,tmpCombineReducers} from './app.reducers';
 //import { RouterStoreModule } from '@ngrx/router-store';
 //import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -30,7 +30,7 @@ import { AppReducers } from './app.reducers';
     MenuModule,
     MenuItemsModule,
     TimelineModule,
-    StoreModule.provideStore(AppReducers()),
+    StoreModule.provideStore(tmpCombineReducers(AppReducers)),
     //RouterStoreModule.connectRouter(),
     //StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule

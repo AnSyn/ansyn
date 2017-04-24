@@ -2,10 +2,10 @@ import { reducer,initialState,IOverlayState } from './timeline.reducer';
 import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/timeline.actions';
 import { Overlay } from '../models/overlay.model';
 
-fdescribe('Overlay Reducer',() => {    
+describe('Overlay Reducer',() => {    
    	
-   	fdescribe("Load Overlays",() => {    
-		fit("should activate load_overlay reducer",()=> {
+   	describe("Load Overlays",() => {    
+		it("should activate load_overlay reducer",()=> {
 			const action  = new LoadOverlaysAction();
 			//expect(result.loaded).toBe(false);
 			const result = reducer(initialState,action);
@@ -14,7 +14,7 @@ fdescribe('Overlay Reducer',() => {
 	});
 
 	describe("Load Overlays Success",()=>{    
-		fit('should load all overlays',() => {
+		it('should load all overlays',() => {
 			const overlays =  <Overlay[]>[
 				{    
 	         		id: '12',

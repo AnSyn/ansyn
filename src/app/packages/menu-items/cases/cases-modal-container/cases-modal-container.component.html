@@ -1,5 +1,5 @@
-<template [ngIf]="casesService.modal.selected_component">
-  <div class="blackscreen" (click)="casesService.modal.closeModal()" [@blackScreen] ></div>
+<template [ngIf]="selected_component_ref">
+  <div class="blackscreen" (click)="caseModalService.closeModal()" [@blackScreen] ></div>
 </template>
 
 <template #modal_content></template>

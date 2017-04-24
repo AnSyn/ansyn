@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CasesService } from "@ansyn/core";
+import { CasesService, CaseModalService } from "@ansyn/core";
 import { EditCaseComponent } from "../edit-case/edit-case.component";
 
 @Component({
@@ -9,10 +9,10 @@ import { EditCaseComponent } from "../edit-case/edit-case.component";
 })
 export class CasesToolsComponent {
 
-  constructor(private casesService:CasesService) { }
+  constructor(private caseModalService: CaseModalService) { }
 
   showCaseModal(): void {
-    this.casesService.modal.showModal(EditCaseComponent)
+    this.caseModalService.showModal(EditCaseComponent)
   }
 
 }

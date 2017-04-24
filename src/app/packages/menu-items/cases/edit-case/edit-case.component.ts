@@ -1,6 +1,6 @@
 import { Component, trigger, transition, style, animate, HostListener, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
-import { CasesService, Case } from "@ansyn/core";
+import { CasesService, Case, CaseModalService } from "@ansyn/core";
 import * as _ from "lodash";
 
 const animations_during = '0.2s';
@@ -42,14 +42,14 @@ export class EditCaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.case_model = _.cloneDeep(this.casesService.modal.getSelectedCase());
+    this.case_model = _.cloneDeep(this.caseModalService.getSelectedCase());
   }
 
   close():void {
-    this.casesService.modal.closeModal();
+    this.caseModalService.closeModal();
   }
 
-  constructor(private casesService:CasesService) { }
+  constructor(private casesService:CasesService, private caseModalService: CaseModalService) { }
 
   onSubmitCase() {
     if(this.case_model.id) {

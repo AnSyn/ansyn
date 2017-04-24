@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, trigger, transition, style, animate, 
 import { Case, CasesService } from "@ansyn/core";
 import {DeleteCaseComponent} from "../delete-case/delete-case.component";
 import {EditCaseComponent} from "../edit-case/edit-case.component";
+import {CaseModalService} from "../../../core/services/case-modal.service";
 
 const animations = [
   trigger("leaveAnim", [
@@ -18,12 +19,14 @@ const animations = [
 export class CasesTableComponent implements OnInit{
   @ViewChild("tbody_element") tbody_element: ElementRef;
 
-  constructor(private casesService:CasesService) {
+  constructor(private casesService:CasesService, private caseModalService: CaseModalService) {
     this.casesService.caseAdded.subscribe(this.onCasesAdded.bind(this));
   }
 
   ngOnInit(): void {
-
+    if(this.casesService.cases.length < this.casesService.LIMIT) {
+      this.loadCases();
+    }
   }
 
   get cases(): Case[] {
@@ -48,12 +51,12 @@ export class CasesTableComponent implements OnInit{
 
   removeCase($event: MouseEvent, selected_case_id: string): void {
     $event.stopPropagation();
-    this.casesService.modal.showModal(DeleteCaseComponent, selected_case_id);
+    this.caseModalService.showModal(DeleteCaseComponent, selected_case_id);
   }
 
   editCase($event: MouseEvent, selected_case_id: string){
     $event.stopPropagation();
-    this.casesService.modal.showModal(EditCaseComponent, selected_case_id);
+    this.caseModalService.showModal(EditCaseComponent, selected_case_id);
   }
 
   selectCase(selected_case: Case): void {

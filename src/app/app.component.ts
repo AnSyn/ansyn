@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { StoreService } from "@ansyn/core";
-
+import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { StoreService } from '@ansyn/core';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +8,6 @@ import { StoreService } from "@ansyn/core";
 })
 
 export class AppComponent {
-  constructor(private store:StoreService){}
+  constructor(private store: StoreService) {}
+
 }

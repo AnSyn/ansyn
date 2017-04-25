@@ -59,6 +59,34 @@ describe('TimelineService', () => {
  		
  	});
 
+	it('check parseOverlayDataForDisplay', () => {
+		const data = [
+			{
+				id: '12',
+				name: 'tmp12',
+				photoTime: new Date(Date.now()),
+				azimuth: 10
+			},
+			{
+				id: '13',
+				name: 'tmp13',
+				photoTime: new Date(Date.now()),
+				azimuth: 10
+			}
+		];
+		const mockData = {
+			filters: {},
+			overlays: new Map()
+		};
+		data.forEach(item => {
+			mockData.overlays.set(item.id, item);	
+		});
+
+		const result = timeLineService.parseOverlayDataForDispaly(mockData.overlays, mockData.filters);
+		expect(result[0].name).toBe(undefined);
+		expect(result[0].data.length).toBe(data.length);
+	});
+
 	it('check the method fetchData with spyOn', () => {
 		let response = new Response( new ResponseOptions({
 	      			body: JSON.stringify({key:'value'})

@@ -9,14 +9,9 @@ import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from "@ansyn/menu-items";
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { AppReducers ,tmpCombineReducers} from './app.reducers';
+import { AppReducers } from './app.reducers';
 //import { RouterStoreModule } from '@ngrx/router-store';
 //import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -30,7 +25,7 @@ import { AppReducers ,tmpCombineReducers} from './app.reducers';
     MenuModule,
     MenuItemsModule,
     TimelineModule,
-    StoreModule.provideStore(tmpCombineReducers(AppReducers)),
+    StoreModule.provideStore(AppReducers),
     //RouterStoreModule.connectRouter(),
     //StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule

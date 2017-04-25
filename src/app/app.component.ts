@@ -8,6 +8,5 @@ import { StoreService } from '@ansyn/core';
 })
 
 export class AppComponent {
-  constructor(private store: StoreService) {}
-
+  constructor(public store: StoreService) {}
 }

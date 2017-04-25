@@ -17,6 +17,7 @@ import * as d3 from 'd3';
   	styleUrls: ['./container.component.css']
 })
 
+
 export class ContainerComponent implements OnInit  {
 	public drops: any[] = [];
 	public configuration: any;
@@ -32,26 +33,7 @@ export class ContainerComponent implements OnInit  {
         	date: d => new Date(d.date)
         };
         
-     	this.store.select('overlays')
-        	.map( (data: any) => {    
-          		let result = new Array();
-          		let overlays = new Array(); 
-				if(!Object.keys(data.filters).length){    
-             		data.overlays.forEach( value => overlays.push(value)) 
-             		result.push({
-             				name: undefined,
-             				data: overlays 
-             			});
-             	}
-          		return result;
-          	})
-        	//.map( (data:reducer.State) => data.ews )
-        	.subscribe( overlays => {    
-          			this.drops = overlays;
-          	})	
-
     }
-
 	ngOnInit(): void {
 		/*this.timelineService.fetchData()
 			.subscribe(
@@ -62,6 +44,14 @@ export class ContainerComponent implements OnInit  {
 	}
 
 	demo(): void {     
+		this.store.select('overlays')
+			.map((data: any) => {
+				return this.timelineService.parseOverlayDataForDispaly(data.overlays, data.filters);
+			})
+			//.map( (data:reducer.State) => data.ews )
+			.subscribe(overlays => {
+				this.drops = overlays;
+			});
    		this.store.dispatch( new overlay.LoadOverlaysAction());
    	}
 }

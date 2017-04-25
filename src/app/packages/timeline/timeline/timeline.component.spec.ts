@@ -14,7 +14,7 @@ describe('TimelineComponent', () => {
 	const dropsData = [
 			{
 				"name": "admin-on-rest",
-				"commits": [
+				"data": [
 							{
 								"sha":"ad4a690c2708e11156e24534e01238df16b07f23","message":"Merge-pull-request-19-from-marmelab-jpetitcolas-patch-1","author":{"name":"Francois Zaninotto","email":"fzaninotto@gmail.com"},"date":"Wed, 7 Sep 2016 12:04:14 +0200"
 							},
@@ -25,7 +25,7 @@ describe('TimelineComponent', () => {
 			},
 			{
 				"name" : "demo",
-				"commits" : [
+				"data" : [
 							{
 								"sha":"412a71481f94e845cb1e920616136a9221b91c17","message":"Update-watch-target","author":{"name":"Robin Bressan","email":"robin@buddey.net"},"date":"Thu, 22 Jan 2015 13:13:56 +0100"
 							},

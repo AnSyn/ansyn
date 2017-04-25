@@ -31,6 +31,24 @@ export class TimelineService {
 					.catch(this.handleError);
   	}
 
+    parseOverlayDataForDispaly(overlays = [], filters = {}): Array<any> {
+      let result = new Array();
+      let overlaysData = new Array();
+      if (!Object.keys(filters).length) {
+
+        //convert the "hash table" to array of objects (very bed performence must think on another way of doing that)
+        //maybe I will do it inside the event drops component itself
+        //so the component will be able to get 2 types Array and Map
+        overlays.forEach(value => overlaysData.push(value));
+
+        result.push({
+          name: undefined,
+          data: overlaysData
+        });
+      }
+      return result;
+    } 
+
 	
 
   	extractData(response: Response){

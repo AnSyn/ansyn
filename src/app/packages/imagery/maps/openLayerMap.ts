@@ -2,7 +2,7 @@ import { IProvidedMap } from '../model/model';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
-declare var ol: any;
+import * as ol from 'openlayers';
 
 export class OpenLayerMap implements IProvidedMap {
 

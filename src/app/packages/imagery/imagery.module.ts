@@ -4,7 +4,7 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '@ansyn/core';
-import { ImageryComponent } from './imageryProvider/imagery.component';
+import { ImageryComponent } from './imageryComponent/imagery.component';
 
 @NgModule({
   imports: [CommonModule, CoreModule],

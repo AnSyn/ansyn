@@ -1,4 +1,5 @@
 import { OpenLayerMap } from '../maps/openLayerMap';
+import { IProvidedMap } from '../model/model';
 /**
  * Created by AsafMasa on 24/04/2017.
  */
@@ -8,7 +9,7 @@ export interface IMapProvider {
 }
 
 export class ImageryProvider {
-  public init(elementId: string, type: string) {
+  public init(elementId: string, type: string): IProvidedMap {
     let mapProvided;
     switch (type) {
       case 'openLayers':

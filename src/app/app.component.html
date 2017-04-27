@@ -3,7 +3,9 @@
   <ansyn-menu width=90 [menuItems]="store.menu.menu_items" [(selectedItemIndex)]="store.menu.selected_item_index"></ansyn-menu>
 
   <div class="layer">
-    <imagery-view [mapComponentSettings]="{id:'imagery1', mapTypes:['openLayers']}" class="map"></imagery-view>
+    <imagery-view [mapComponentSettings]="{id:'imagery1', mapTypes:['openLayers']}"
+				  [mapCommunicator]="mapCommunicator"
+				  class="map"></imagery-view>
     <div class="status"> status</div>
     <div class="app-timeline-container">
       <timeline-container></timeline-container>

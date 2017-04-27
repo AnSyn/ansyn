@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
-export class MapCommunicator {
+export class ImageryCommunicator {
 	public setBoundingView(boundingRectangle: GeoJSON.MultiPolygon) {
 		this.mapBoundingRectangleChanged.emit(boundingRectangle);
 	}

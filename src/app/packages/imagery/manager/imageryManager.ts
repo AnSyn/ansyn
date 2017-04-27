@@ -1,14 +1,14 @@
-import { MapCommunicator } from '../api/mapCommunicator';
+import { ImageryCommunicator } from '../api/imageryCommunicator';
 import { IProvidedMap } from '../model/model';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
-export class MapManager {
-	private _mapCommunicator: MapCommunicator;
+export class ImageryManager {
+	private _mapCommunicator: ImageryCommunicator;
 	private _activeMap: IProvidedMap;
 	private _subscriptions = [];
 
-	constructor(mapCommunicator: MapCommunicator) {
+	constructor(mapCommunicator: ImageryCommunicator) {
 		this._mapCommunicator = mapCommunicator;
 
 		this.registerMapCommunicatorEvents();

@@ -3,8 +3,8 @@
  */
 import { Component, ElementRef, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ImageryProvider } from '../imageryProvider/imageryProvider';
-import { MapCommunicator } from '../api/mapCommunicator';
-import { MapManager } from '../manager/mapManager';
+import { ImageryManager } from '../manager/imageryManager';
+import { ImageryCommunicatorService } from '../api/imageryCommunicatorService';
 
 @Component({
   moduleId: module.id,
@@ -18,11 +18,10 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
   @ViewChild('imagery') imageryElement: ElementRef;
   @Input() public mapComponentSettings;
-  @Input() public mapCommunicator: MapCommunicator;
 
-  private _manager: MapManager;
+  private _manager: ImageryManager;
 
-  constructor() {
+  constructor(private imageryCommunicatorService: ImageryCommunicatorService) {
   }
 
   ngOnInit() {
@@ -35,7 +34,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
     element.id = 'openLayersMap';
     this.imageryElement.nativeElement.appendChild(element);
 
-    this._manager = new MapManager(this.mapCommunicator);
+    this._manager = new ImageryManager(this.imageryCommunicatorService.imageryCommunicator);
     const olMap = imageryProvider.init(element.id, 'openLayers');
     this._manager.setActiveMap(olMap);
   }

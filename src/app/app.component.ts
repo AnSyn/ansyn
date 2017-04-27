@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
 import { StoreService } from '@ansyn/core';
-import { MapCommunicator } from './packages/imagery/api/mapCommunicator';
+import { ImageryCommunicatorService } from './packages/imagery/api/imageryCommunicatorService';
 
 @Component({
   selector: 'app-root',
@@ -10,14 +10,13 @@ import { MapCommunicator } from './packages/imagery/api/mapCommunicator';
 
 export class AppComponent {
 
-	public mapCommunicator: MapCommunicator = new MapCommunicator();
-  	constructor(public store: StoreService) {
+  	constructor(public store: StoreService, public imageryCommunicatorService: ImageryCommunicatorService) {
   		setTimeout(() => {
   			const geoPoint: GeoJSON.Point = {
   				type: 'Point',
 				coordinates: [15.7, 37.9]
 			};
-  			this.mapCommunicator.setCenter(geoPoint);
+  			this.imageryCommunicatorService.imageryCommunicator.setCenter(geoPoint);
 		}, 2000);
 	}
 }

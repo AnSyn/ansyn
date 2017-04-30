@@ -37,10 +37,16 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.treeComponent.treeModel.virtualScroll.setViewport( this.myElement.nativeElement );
   }
-  
+
+  private onDivClicked(event, node: TreeNode): void {
+    if (event.target.type === 'checkbox') {
+      return;
+    }
+    this.onCheckboxClicked(null, node);
+    event.stopPropagation();
+  }
+
   private onSpanClicked(event, node: TreeNode): void {
-    let parentDiv: HTMLElement = event.target.parentNode;
-    let element: HTMLInputElement = <HTMLInputElement>parentDiv.children.namedItem('nodeInput');
     this.onCheckboxClicked(null, node);
     event.stopPropagation();
   }
@@ -50,16 +56,22 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     let parentNode: TreeNode = node.realParent;
 
     node.data.isChecked = newCheckValue;
+    if (node.isLeaf) {
+      this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, newCheckValue));
+    }
+
     this.bubbleActivationDown(node, newCheckValue);
     this.bubbleActivationUp(parentNode, newCheckValue);
     this.bubbleIndeterminate(node.realParent);
   }
 
   private bubbleActivationDown(node: TreeNode, activationValue: boolean) {
-    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, activationValue));
 
     node.children.filter(child => child.data.isChecked !== activationValue).forEach(child => {
       child.data.isChecked = activationValue;
+      if (child.isLeaf) {
+        this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(child, activationValue));
+      }
       this.bubbleActivationDown(child, activationValue);
     });
 

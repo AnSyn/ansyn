@@ -6,39 +6,11 @@ import { LayersManagerModule } from '../layers-manager.module';
 import { CoreModule } from '@ansyn/core/core.module';
 import { ILayerTreeNode } from '@ansyn/core';
 import { TreeNode } from 'angular-tree-component';
+import { Observable } from 'rxjs/Observable';
 
 describe('LayerTreeComponent', () => {
   let component: LayerTreeComponent;
   let fixture: ComponentFixture<LayerTreeComponent>;
-  let allFalseNodes: ILayerTreeNode[] = [{
-    name: 'Fields',
-    id: '1',
-    isChecked: false,
-    children: [
-      {
-        name: 'Rice Fields', id: '2', isChecked: false, children: [
-          { name: 'Brown Rice', id: '5', isChecked: false, children: [] },
-          { name: 'Persian Rice', id: '6', isChecked: false, children: [] }]
-      },
-      { name: 'Wheat Fields', id: '3', isChecked: false, children: [] },
-      { name: 'Oat Fields', id: '4', isChecked: false, children: [] }
-    ]
-  }];
-
-  let trueRootNodes: ILayerTreeNode[] = [{
-    name: 'Fields',
-    id: '1',
-    isChecked: true,
-    children: [
-      {
-        name: 'Rice Fields', id: '2', isChecked: false, children: [
-          { name: 'Brown Rice', id: '5', isChecked: false, children: [] },
-          { name: 'Persian Rice', id: '6', isChecked: false, children: [] }]
-      },
-      { name: 'Wheat Fields', id: '3', isChecked: false, children: [] },
-      { name: 'Oat Fields', id: '4', isChecked: false, children: [] }
-    ]
-  }];
 
   function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
     flattenedArray.push(rootNode);
@@ -66,12 +38,32 @@ describe('LayerTreeComponent', () => {
   });
 
   it('should initialize treeview after nodes was assigned', () => {
-    component.source = allFalseNodes;
+    let allFalseNodes: ILayerTreeNode[] = [{
+      name: 'Fields',
+      id: '1',
+      isChecked: false,
+      isIndeterminate: false,
+      children: [
+        {
+          name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
+            { name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+            { name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
+        },
+        { name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+        { name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
+      ]
+    }];
+
+    component.source = Observable.of(allFalseNodes);
+    fixture.detectChanges();
+    component.ngAfterViewInit();
     fixture.detectChanges();
     component.treeComponent.treeModel.expandAll();
     fixture.detectChanges();
+    component.treeComponent.treeModel.getNodeBy(node => node.data.id === '2').expand();
+    fixture.detectChanges();
 
-    const allSpans: Array<HTMLSpanElement> = Array.from<HTMLSpanElement>(fixture.nativeElement.querySelectorAll('span.title'));
+    const allSpans: Array<any> = Array.from(fixture.nativeElement.querySelectorAll('span.title'));
     const allNodes: ILayerTreeNode[] = flattenNodeTree(allFalseNodes[0]);
 
     expect(allSpans.length).toEqual(allNodes.length);
@@ -80,29 +72,48 @@ describe('LayerTreeComponent', () => {
 
   it('selection in the root should bubble to its children', () => {
     let activatedNodes: TreeNode[] = [];
+    let allFalseNodes: ILayerTreeNode[] = [{
+      name: 'Fields',
+      id: '1',
+      isChecked: false,
+      isIndeterminate: false,
+      children: [
+        {
+          name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
+            { name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+            { name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
+        },
+        { name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+        { name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
+      ]
+    }];
 
-    component.source = allFalseNodes;
+    component.source = Observable.of(allFalseNodes);
+    fixture.detectChanges();
+    component.ngAfterViewInit();
     fixture.detectChanges();
     component.treeComponent.treeModel.expandAll();
+    fixture.detectChanges();
+    component.treeComponent.treeModel.getNodeBy(node => node.data.id === '2').expand();
     fixture.detectChanges();
 
     component.nodeActivationChanged.subscribe((event) => {
       if (event.newState) {
         activatedNodes.push(event.node);
       } else {
-        let nodeIndex: number = activatedNodes.indexOf(event.node)
+        let nodeIndex: number = activatedNodes.indexOf(event.node);
         activatedNodes.splice(nodeIndex, 1);
       }
     });
 
-    const rootDiv: HTMLElement = fixture.debugElement.query(By.css('#node' + allFalseNodes[0].id)).nativeElement;
+    const rootDiv = fixture.debugElement.query(By.css('#node' + allFalseNodes[0].id)).nativeElement;
     const allNodes: ILayerTreeNode[] = flattenNodeTree(allFalseNodes[0]);
 
     rootDiv.click();
     fixture.detectChanges();
 
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeTruthy();
+    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy();
+    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy();
     expect(activatedNodes.find(node => node.data.id === '3')).toBeTruthy();
     expect(activatedNodes.find(node => node.data.id === '4')).toBeTruthy();
     expect(activatedNodes.find(node => node.data.id === '5')).toBeTruthy();
@@ -118,29 +129,51 @@ describe('LayerTreeComponent', () => {
 
   it('selection in sub children should select the parent, and set indeterminate in the grandparent', () => {
     let activatedNodes: TreeNode[] = [];
-    component.source = allFalseNodes;
+    let allFalseNodes: ILayerTreeNode[] = [{
+      name: 'Fields',
+      id: '1',
+      isChecked: false,
+      isIndeterminate: false,
+      children: [
+        {
+          name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
+            { name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+            { name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
+        },
+        { name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+        { name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
+      ]
+    }];
+
+    component.source = Observable.of(allFalseNodes);
+    fixture.detectChanges();
+    component.ngAfterViewInit();
     fixture.detectChanges();
     component.treeComponent.treeModel.expandAll();
+    fixture.detectChanges();
+    component.treeComponent.treeModel.getNodeBy(node => node.data.id === '2').expand();
     fixture.detectChanges();
 
     component.nodeActivationChanged.subscribe((event) => {
       if (event.newState) {
         activatedNodes.push(event.node);
       } else {
-        let nodeIndex: number = activatedNodes.indexOf(event.node)
+        let nodeIndex: number = activatedNodes.indexOf(event.node);
         activatedNodes.splice(nodeIndex, 1);
       }
     });
 
-    const brownRiceNode: HTMLElement = fixture.debugElement.query(By.css('#node5')).nativeElement;
-    const persianRiceNode: HTMLElement = fixture.debugElement.query(By.css('#node6')).nativeElement;
+    const brownRiceNode = fixture.debugElement.query(By.css('#node5')).nativeElement;
+    const persianRiceNode = fixture.debugElement.query(By.css('#node6')).nativeElement;
 
     brownRiceNode.click();
     persianRiceNode.click();
     fixture.detectChanges();
+    fixture.detectChanges();
+    fixture.detectChanges();
 
     expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeTruthy();
+    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy();
     expect(activatedNodes.find(node => node.data.id === '3')).toBeFalsy();
     expect(activatedNodes.find(node => node.data.id === '4')).toBeFalsy();
     expect(activatedNodes.find(node => node.data.id === '5')).toBeTruthy();
@@ -153,79 +186,111 @@ describe('LayerTreeComponent', () => {
     expect(fixture.debugElement.query(By.css('#node5 > input')).nativeElement.checked).toBeTruthy();
     expect(fixture.debugElement.query(By.css('#node6 > input')).nativeElement.checked).toBeTruthy();
 
-    const riceParentInput: HTMLInputElement = fixture.debugElement.query(By.css('#node1 > input')).nativeElement;
+    const riceParentInput = fixture.debugElement.query(By.css('#node1 > input')).nativeElement;
     expect(riceParentInput.indeterminate).toBe(true);
   });
 
   it('selection and unselection in sub children should return to the initial state', () => {
     let activatedNodes: TreeNode[] = [];
-    component.source = allFalseNodes;
+    let allFalseNodes: ILayerTreeNode[] = [{
+      name: 'Fields',
+      id: '1',
+      isChecked: false,
+      isIndeterminate: false,
+      children: [
+        {
+          name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
+            { name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+            { name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
+        },
+        { name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+        { name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
+      ]
+    }];
+
+    component.source = Observable.of(allFalseNodes);
+    fixture.detectChanges();
+    component.ngAfterViewInit();
     fixture.detectChanges();
     component.treeComponent.treeModel.expandAll();
+    fixture.detectChanges();
+    component.treeComponent.treeModel.getNodeBy(node => node.data.id === '2').expand();
     fixture.detectChanges();
 
     component.nodeActivationChanged.subscribe((event) => {
       if (event.newState) {
         activatedNodes.push(event.node);
       } else {
-        let nodeIndex: number = activatedNodes.indexOf(event.node)
+        let nodeIndex: number = activatedNodes.indexOf(event.node);
         activatedNodes.splice(nodeIndex, 1);
       }
     });
 
-    const brownRiceNode: HTMLElement = fixture.debugElement.query(By.css('#node5')).nativeElement;
-    const persianRiceNode: HTMLElement = fixture.debugElement.query(By.css('#node6')).nativeElement;
+    const brownRiceNode = fixture.debugElement.query(By.css('#node5')).nativeElement;
+    const persianRiceNode = fixture.debugElement.query(By.css('#node6')).nativeElement;
 
     brownRiceNode.click();
     persianRiceNode.click();
     fixture.detectChanges();
+    fixture.detectChanges();
+
     brownRiceNode.click();
     persianRiceNode.click();
     fixture.detectChanges();
 
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '3')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '4')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '5')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '6')).toBeFalsy();
+    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy('activatedNodes.find(node => node.data.id === 1)');
+    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy('activatedNodes.find(node => node.data.id === 2)');
+    expect(activatedNodes.find(node => node.data.id === '3')).toBeFalsy('activatedNodes.find(node => node.data.id === 3)');
+    expect(activatedNodes.find(node => node.data.id === '4')).toBeFalsy('activatedNodes.find(node => node.data.id === 4)');
+    expect(activatedNodes.find(node => node.data.id === '5')).toBeFalsy('activatedNodes.find(node => node.data.id === 5)');
+    expect(activatedNodes.find(node => node.data.id === '6')).toBeFalsy('activatedNodes.find(node => node.data.id === 6)');
 
-    expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeFalsy();
-    expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeFalsy();
-    expect(fixture.debugElement.query(By.css('#node3 > input')).nativeElement.checked).toBeFalsy();
-    expect(fixture.debugElement.query(By.css('#node4 > input')).nativeElement.checked).toBeFalsy();
-    expect(fixture.debugElement.query(By.css('#node5 > input')).nativeElement.checked).toBeFalsy();
-    expect(fixture.debugElement.query(By.css('#node6 > input')).nativeElement.checked).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeFalsy('(#node1 > input)).nativeElement.checked');
+    expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeFalsy('(#node2 > input)).nativeElement.checked');
+    expect(fixture.debugElement.query(By.css('#node3 > input')).nativeElement.checked).toBeFalsy('(#node3 > input)).nativeElement.checked');
+    expect(fixture.debugElement.query(By.css('#node4 > input')).nativeElement.checked).toBeFalsy('(#node4 > input)).nativeElement.checked');
+    expect(fixture.debugElement.query(By.css('#node5 > input')).nativeElement.checked).toBeFalsy('(#node5 > input)).nativeElement.checked');
+    expect(fixture.debugElement.query(By.css('#node6 > input')).nativeElement.checked).toBeFalsy('(#node6 > input)).nativeElement.checked');
 
-    const riceParentInput: HTMLInputElement = fixture.debugElement.query(By.css('#node1 > input')).nativeElement;
+    const riceParentInput = fixture.debugElement.query(By.css('#node1 > input')).nativeElement;
     expect(riceParentInput.indeterminate).toBe(false);
   });
 
   it('the component should obey to the initial state of the nodes', () => {
     let activatedNodes: TreeNode[] = [];
+    let allTrueNodes: ILayerTreeNode[] = [{
+      name: 'Fields',
+      id: '1',
+      isChecked: true,
+      isIndeterminate: false,
+      children: [
+        {
+          name: 'Rice Fields', id: '2', isChecked: true, isIndeterminate: false, children: [
+            { name: 'Brown Rice', id: '5', isChecked: true, isIndeterminate: false, children: [] },
+            { name: 'Persian Rice', id: '6', isChecked: true, isIndeterminate: false, children: [] }]
+        },
+        { name: 'Wheat Fields', id: '3', isChecked: true, isIndeterminate: false, children: [] },
+        { name: 'Oat Fields', id: '4', isChecked: true, isIndeterminate: false, children: [] }
+      ]
+    }];
 
     component.nodeActivationChanged.subscribe((event) => {
       if (event.newState) {
         activatedNodes.push(event.node);
       } else {
-        let nodeIndex: number = activatedNodes.indexOf(event.node)
+        let nodeIndex: number = activatedNodes.indexOf(event.node);
         activatedNodes.splice(nodeIndex, 1);
       }
     });
 
-    component.source = trueRootNodes;
-    fixture.detectChanges();
-    component.treeComponent.treeModel.expandAll();
+    component.source = Observable.of(allTrueNodes);
     fixture.detectChanges();
     component.ngAfterViewInit();
     fixture.detectChanges();
-
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '3')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '4')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '5')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '6')).toBeTruthy();
+    component.treeComponent.treeModel.expandAll();
+    fixture.detectChanges();
+    component.treeComponent.treeModel.getNodeBy(node => node.data.id === '2').expand();
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeTruthy();
     expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeTruthy();

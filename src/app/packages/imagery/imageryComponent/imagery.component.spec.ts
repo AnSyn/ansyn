@@ -3,6 +3,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
+import {ImageryCommunicatorService} from '../api/imageryCommunicatorService';
 
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;
@@ -11,7 +12,7 @@ describe('ImageryComponent', () => {
 	const imageryData = {id: 'imagery1', mapTypes: ['openLayers']};
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({declarations: [ ImageryComponent ]}).compileComponents();
+		TestBed.configureTestingModule({declarations: [ ImageryComponent ], providers: [ ImageryCommunicatorService ]}).compileComponents();
 	}));
 
 	beforeEach(() => {

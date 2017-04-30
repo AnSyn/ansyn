@@ -40,8 +40,8 @@ that <I can make purchases>.”
  
  
 <!-- For Feature / Task / UserStory -->
-**Desription:**
-<!-- Describe as mutch as you can -->
+**Description:**
+<!-- Describe as much as you can -->
 
 **Breakdown Tasks:**
 <!-- if userstory please link the relevant issue-->

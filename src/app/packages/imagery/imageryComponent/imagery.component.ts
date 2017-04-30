@@ -40,8 +40,8 @@ export class ImageryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-  	if (this._manager){
-		this._manager.dispose();
-	}
+    if (this._manager) {
+      this._manager.dispose();
+    }
   }
 }

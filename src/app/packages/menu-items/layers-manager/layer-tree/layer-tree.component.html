@@ -3,7 +3,7 @@
 [nodes]="source | async" 
 [options]="options">
   <template #treeNodeTemplate let-node let-index="index">
-    <div id="node{{ node.data.id }}">
+    <div id="node{{ node.data.id }}" (click)="onDivClicked($event,node)">
       <input name="nodeInput" [indeterminate]="node.data.isIndeterminate" type="checkbox" [checked]="node.data.isChecked" (change)="onCheckboxClicked($event,node)">
       <span [class]="node.data.className" [class.title]="true" (click)="onSpanClicked($event,node)">{{ node.data.name }}</span>
     </div>

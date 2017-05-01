@@ -5,43 +5,49 @@ import { Component, ElementRef, Input, OnInit, OnDestroy, ViewChild } from '@ang
 import { ImageryProvider } from '../imageryProvider/imageryProvider';
 import { ImageryManager } from '../manager/imageryManager';
 import { ImageryCommunicatorService } from '../api/imageryCommunicatorService';
+import {MapComponentSettings} from './mapComponentSettings';
 
 @Component({
-  moduleId: module.id,
-  selector: 'imagery-view',
-  template: `
-    <div #imagery></div>
-  `
+	moduleId: module.id,
+	selector: 'imagery-view',
+	template: `
+		<div #imagery></div>
+	`
 })
 
 export class ImageryComponent implements OnInit, OnDestroy {
 
-  @ViewChild('imagery') imageryElement: ElementRef;
-  @Input() public mapComponentSettings;
+	@ViewChild('imagery') imageryElement: ElementRef;
+	@Input() public mapComponentSettings: MapComponentSettings;
 
-  private _manager: ImageryManager;
+	private _manager: ImageryManager;
 
-  constructor(private imageryCommunicatorService: ImageryCommunicatorService) {
-  }
+	constructor(private imageryCommunicatorService: ImageryCommunicatorService) {
+	}
 
-  ngOnInit() {
-    const imageryProvider: ImageryProvider = new ImageryProvider();
-    if (!this.mapComponentSettings) {
-      console.error('mapComponentSettings is Needed!');
-      return;
-    }
-    const element = document.createElement('div');
-    element.id = 'openLayersMap';
-    this.imageryElement.nativeElement.appendChild(element);
+	ngOnInit() {
+		const imageryProvider: ImageryProvider = new ImageryProvider();
+		if (!this.mapComponentSettings) {
+			console.error('mapComponentSettings is Needed!');
+			return;
+		}
+		const element = document.createElement('div');
+		element.id = 'openLayersMap';
+		this.imageryElement.nativeElement.appendChild(element);
 
-    this._manager = new ImageryManager(this.imageryCommunicatorService.imageryCommunicator);
-    const olMap = imageryProvider.init(element.id, 'openLayers');
-    this._manager.setActiveMap(olMap);
-  }
+		const imageryCommunicator = this.imageryCommunicatorService.getImageryAPI(this.mapComponentSettings.mapComponentId);
+		this._manager = new ImageryManager(this.mapComponentSettings.mapComponentId);
+		const olMap = imageryProvider.init(element.id, this.mapComponentSettings.mapComponentId);
+		this._manager.setActiveMap(olMap);
 
-  ngOnDestroy() {
-    if (this._manager) {
-      this._manager.dispose();
-    }
-  }
+		imageryCommunicator.setImageryManager(this._manager);
+	}
+
+	ngOnDestroy() {
+
+		if (this._manager) {
+			this.imageryCommunicatorService.removeImageryAPI(this.mapComponentSettings.mapComponentId);
+			this._manager.dispose();
+		}
+	}
 }

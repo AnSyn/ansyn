@@ -1,25 +1,28 @@
 /**
  * Created by AsafMasa on 26/04/2017.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import {ImageryCommunicatorService} from '../api/imageryCommunicatorService';
+import {MapComponentSettings} from './mapComponentSettings';
 
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
+	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	const imageryData = {id: 'imagery1', mapTypes: ['openLayers']};
+	const imageryData: MapComponentSettings = {mapComponentId: 'imagery1', mapTypes: ['openLayers']};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({declarations: [ ImageryComponent ], providers: [ ImageryCommunicatorService ]}).compileComponents();
 	}));
 
-	beforeEach(() => {
+	beforeEach(inject([ImageryCommunicatorService], (_imageryCommunicatorService) => {
+		imageryCommunicatorService = _imageryCommunicatorService;
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+	}));
 
 	it('should create', () => {expect(component).toBeTruthy(); });
 
@@ -31,4 +34,21 @@ describe('ImageryComponent', () => {
 		const olOverlaycontainer = div.querySelector('.ol-overlaycontainer');
 		expect(olOverlaycontainer).toBeDefined();
 	});
+
+	it('should create "imageryCommunicatorService" service is fires event', () => {
+		expect(imageryCommunicatorService).toBeTruthy();
+	});
+
+	// it('Check setCenter and getCenter API', () => {
+	// 	component.mapComponentSettings = imageryData;
+	// 	component.ngOnInit();
+	//
+	// 	const geoPoint: GeoJSON.Point = {
+	// 		type: 'Point',
+	// 		coordinates: [15.7, 37.9]
+	// 	};
+	// 	imageryCommunicatorService.getImageryAPI(imageryData.mapComponentId).setCenter(geoPoint);
+	// 	const expectedGeoPointCenter = imageryCommunicatorService.getImageryAPI(imageryData.mapComponentId).getCenter();
+	// 	expect(geoPoint).toEqual(expectedGeoPointCenter);
+	// });
 });

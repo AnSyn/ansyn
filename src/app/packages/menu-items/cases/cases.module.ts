@@ -21,7 +21,6 @@ import { CasesService } from './services/cases.service';
     CoreModule,
     InfiniteScrollModule,
     FormsModule,
-    StoreModule.provideStore({cases: casesReducer}),
     EffectsModule.run(CasesEffects)
   ],
   declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent],

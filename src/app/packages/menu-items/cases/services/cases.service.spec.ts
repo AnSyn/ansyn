@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { CasesService } from './cases.service';
 import { HttpModule } from "@angular/http";
-import { Case } from "../models/case.model";
+import { Case } from "../../../core/models/case.model";
 import { Http, Headers, RequestOptions } from "@angular/http";
 
 describe('CasesService', () => {

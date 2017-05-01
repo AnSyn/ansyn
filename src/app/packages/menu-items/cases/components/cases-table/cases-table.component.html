@@ -17,9 +17,9 @@
 
   <tbody (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
-  <template ngFor [ngForOf]="cases" let-case>
+  <template ngFor [ngForOf]="cases_from_state$ | async" let-case>
 
-    <tr (click)="selectCase(case)" [class.active]="caseModalService.isCaseActive(case)" [class.selected]="casesService.isCaseSelected(case)" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
+    <tr (click)="selectCase(case.id)" [class.active]="(active_case_id$ | async) ==  case.id" [class.selected]="(selected_case_id$ | async) ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
 
       <td>
         {{case.name}}

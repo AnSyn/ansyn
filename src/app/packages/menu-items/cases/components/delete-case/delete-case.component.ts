@@ -1,6 +1,10 @@
 import { Component, trigger, transition, style, animate, EventEmitter, OnInit } from '@angular/core';
 import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
-import { CasesService, Case, CaseModalService } from "@ansyn/core";
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { ICasesState } from '../../reducers/cases.reducer';
+import { CasesActionTypes, CloseModalAction } from '../../actions/cases.actions';
+import { Case } from '../../models/case.model';
 
 const animations_during = '0.2s';
 
@@ -29,26 +33,23 @@ const host = {
   host
 })
 
-export class DeleteCaseComponent implements OnInit {
+export class DeleteCaseComponent {
 
-  ngOnInit(): void {
-    this.case_model = this.caseModalService.getSelectedCase();
+  constructor(private store: Store <ICasesState>) { }
+
+  selected_case_name$: Observable <string> = this.store.select("cases").map(this.getActiveCaseName);
+
+  getActiveCaseName(case_state: ICasesState): string {
+    let s_case: Case = case_state.cases.find( (case_value: Case) => case_value.id == case_state.active_case_id);
+    return s_case ? s_case.name : '';
   }
-
-  public submitCase = new EventEmitter();
-
-  case_model:Case;
 
   close():void {
-    this.caseModalService.closeModal();
+    this.store.dispatch(new CloseModalAction());
   }
 
-  constructor(private caseModalService: CaseModalService, private casesService: CasesService) { }
-
   onSubmitRemove() {
-    this.casesService.removeCase(this.case_model.id).subscribe(()=>{
-      this.caseModalService.closeModal();
-    })
+    this.store.dispatch({type: CasesActionTypes.DELETE_CASE});
   }
 
 }

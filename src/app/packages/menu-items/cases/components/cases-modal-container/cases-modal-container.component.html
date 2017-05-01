@@ -1,0 +1,5 @@
+<template [ngIf]="modal$ | async">
+  <div class="blackscreen" (click)="close()" [@blackScreen] ></div>
+</template>
+
+<template #modal_content></template>

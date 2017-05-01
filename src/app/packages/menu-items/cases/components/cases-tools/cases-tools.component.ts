@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { CasesService, CaseModalService } from "@ansyn/core";
 import { EditCaseComponent } from "../edit-case/edit-case.component";
+import { ICasesState } from '../../reducers/cases.reducer';
+import { Store } from '@ngrx/store';
+import { OpenModalAction } from '../../actions/cases.actions';
 
 @Component({
   selector: 'ansyn-cases-tools',
@@ -9,10 +11,10 @@ import { EditCaseComponent } from "../edit-case/edit-case.component";
 })
 export class CasesToolsComponent {
 
-  constructor(private caseModalService: CaseModalService) { }
+  constructor(private store: Store<ICasesState>) { }
 
   showCaseModal(): void {
-    this.caseModalService.showModal(EditCaseComponent)
+    this.store.dispatch(new OpenModalAction({component: EditCaseComponent}));
   }
 
 }

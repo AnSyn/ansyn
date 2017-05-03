@@ -72,7 +72,7 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
-		let $event: MouseEvent = <any>{stopPropagation: () => null};
+		let $event = <any>{stopPropagation: () => null};
 		spyOn($event, 'stopPropagation');
 		let selected_case_id: string = 'fake_selected_case_id';
 		component.editCase($event, selected_case_id)

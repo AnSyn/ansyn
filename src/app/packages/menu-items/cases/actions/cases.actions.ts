@@ -52,17 +52,17 @@ export class UpdateCaseSuccessAction implements Action{
 
 export class DeleteCaseAction implements Action{
   type = CasesActionTypes.DELETE_CASE;
-  constructor(public payload: Case[]){}
+  constructor(public payload?: Case){}
 }
 
 export class DeleteCaseSuccessAction implements Action{
   type = CasesActionTypes.DELETE_CASE_SUCCESS;
-  constructor(public payload: any){}
+  constructor(public payload?: any){}
 }
 
 export class OpenModalAction implements Action{
   type = CasesActionTypes.OPEN_MODAL;
-  constructor(public payload?: any){}
+  constructor(public payload: {component: any, case_id?: string}){}
 }
 export class CloseModalAction implements Action{
   type = CasesActionTypes.CLOSE_MODAL;

@@ -1,58 +1,72 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { CoreModule, CasesService, Case, CaseModalService } from "@ansyn/core";
 import { DeleteCaseComponent } from './delete-case.component';
 import { HttpModule } from "@angular/http";
-
+import { Store, StoreModule } from '@ngrx/store';
+import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { CasesModule } from '../../cases.module';
+import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
+import { Observable } from 'rxjs';
+import * as _ from 'lodash';
 
 describe('DeleteCaseComponent', () => {
-  let component: DeleteCaseComponent;
-  let fixture: ComponentFixture<DeleteCaseComponent>;
-  let casesService: CasesService;
-  let caseModalService: CaseModalService;
-  let fake_case: Case = {id: 'fake_id', name: 'fake_case'};
+	let component: DeleteCaseComponent;
+	let fixture: ComponentFixture<DeleteCaseComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports:[HttpModule, CoreModule],
-      declarations: [ DeleteCaseComponent ]
-    })
-      .compileComponents();
-  }));
+	let fake_iCasesState: ICasesState = {
+		cases: [
+			{id: 'fake_id1', name: 'fake_name1'},
+			{id: 'fake_id2', name: 'fake_name2'}
+		],
+		active_case_id: 'fake_id1',
+		selected_case_id: null,
+		modal: true
+	};
 
-  beforeEach(inject([CasesService, CaseModalService], (_casesService:CasesService, _caseModalService: CaseModalService) => {
-    casesService = _casesService;
-    caseModalService = _caseModalService;
-    spyOn(caseModalService, 'getSelectedCase').and.callFake(() => fake_case);
+	let store: Store<ICasesState>;
 
-    fixture = TestBed.createComponent(DeleteCaseComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+		}).compileComponents();
+	}));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
+		spyOn(_store, 'dispatch');
+		spyOn(_store, 'select').and.callFake(() => Observable.of(fake_iCasesState));
 
-  it('text on "p" tag shuold include case name', () => {
-    let p_tag = fixture.nativeElement.querySelector("p");
-    expect(p_tag.innerText).toEqual(`Are you sure you want to delete ${fake_case.name}?`);
+		fixture = TestBed.createComponent(DeleteCaseComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		store = _store;
+	}));
 
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  it('close should call modal.closeModal', () => {
-    spyOn(caseModalService, 'closeModal');
-    component.close();
-    expect(caseModalService.closeModal).toHaveBeenCalled();
-  });
+	it('getActiveCaseName should return case_name by active_case_id', () => {
+		let clone_state = _.cloneDeep(fake_iCasesState);
+		clone_state.active_case_id = clone_state.cases[0].id;
+		let result: string = component.getActiveCaseName(clone_state);
+		expect(result).toEqual(clone_state .cases[0].name);
+		clone_state.active_case_id = clone_state .cases[1].id;
+		result = component.getActiveCaseName(clone_state );
+		expect(result).toEqual(clone_state .cases[1].name);
+	});
 
-  it('onSubmitRemove should call removeCase with callBack that call modal.closeModal', () => {
-    let fake_observable = {subscribe: (callBack) => callBack()};
-    spyOn(casesService, 'removeCase').and.callFake(() => fake_observable);
-    spyOn(caseModalService, 'closeModal');
-    component.onSubmitRemove();
-    expect(casesService.removeCase).toHaveBeenCalledWith('fake_id');
-    //callBack
-    expect(caseModalService.closeModal).toHaveBeenCalled();
-  });
+	it('text on "p" tag should include case name', () => {
+		let p_tag = fixture.nativeElement.querySelector("p");
+		expect(p_tag.innerText).toEqual(`Are you sure you want to delete ${fake_iCasesState.cases[0].name}?`);
+	});
+
+	it('close should call store.dispatch with CloseModalAction', () => {
+		component.close();
+		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
+	});
+
+	it('onSubmitRemove should call store.dispatch with CloseModalAction', () => {
+		component.onSubmitRemove();
+		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction());
+	});
 
 });

@@ -1,9 +1,9 @@
 import { TimelineReducer } from '@ansyn/timeline';
-import { casesReducer } from '@ansyn/menu-items/cases';
+import { CasesReducer } from '@ansyn/menu-items/cases';
 
 export const AppReducers = {
 	overlays: TimelineReducer,
-	cases: casesReducer
+	cases: CasesReducer
 };
 
 //export const tmpCombineReducers = combineReducers;

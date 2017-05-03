@@ -6,7 +6,7 @@ export interface ICasesState {
   selected_case_id: string,
   active_case_id: string,
   modal: boolean
-};
+}
 
 export const initialCasesState: ICasesState = {
   cases: [],
@@ -16,7 +16,7 @@ export const initialCasesState: ICasesState = {
 };
 
 
-export function casesReducer(state: ICasesState = initialCasesState , action: CasesActions ) {
+export function CasesReducer(state: ICasesState = initialCasesState , action: CasesActions ) {
 
   switch (action.type) {
 

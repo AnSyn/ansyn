@@ -1,51 +1,52 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
-import { HttpModule } from "../../../../../../node_modules/@angular/http/src/http_module";
-import { CoreModule, CaseModalService } from "@ansyn/core";
 import { EditCaseComponent } from "../edit-case/edit-case.component";
-import { CasesModule } from "../cases.module";
 import { DeleteCaseComponent } from "../delete-case/delete-case.component";
+import { HttpModule } from '@angular/http';
+import { CasesModule } from '../../cases.module';
+import { OpenModalAction } from '../../actions/cases.actions';
+import { StoreModule } from '@ngrx/store';
+import { CasesReducer } from '../../reducers/cases.reducer';
 
 describe('ModalContainerComponent', () => {
-  let component: CasesModalContainerComponent;
-  let fixture: ComponentFixture<CasesModalContainerComponent>;
-  let caseModalService: CaseModalService;
+	let component: CasesModalContainerComponent;
+	let fixture: ComponentFixture<CasesModalContainerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports:[HttpModule, CoreModule, CasesModule],
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CasesModalContainerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(CasesModalContainerComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  beforeEach(inject([CaseModalService], (_caseModalService: CaseModalService) => {
-    caseModalService = _caseModalService;
-  }));
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
+	it('buildTemplate should get OpenModalAction and create modal component ', () => {
+		let action: OpenModalAction = new OpenModalAction({component: EditCaseComponent});
+		component.buildTemplate(action);
+		expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
+		expect(component.selected_component_ref.instance instanceof EditCaseComponent).toBeTruthy();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+		action = new OpenModalAction({component: DeleteCaseComponent});
+		component.buildTemplate(action);
+		expect(fixture.nativeElement.querySelector('ansyn-delete-case')).toBeDefined();
+		expect(component.selected_component_ref.instance instanceof DeleteCaseComponent).toBeTruthy();
+	});
 
-  it('modal should be defined', () => {
-    expect(caseModalService).toBeDefined();
-  });
-
-  it('create modal component', () => {
-    caseModalService.showModal(EditCaseComponent);
-    expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
-    expect(component.selected_component_ref.instance instanceof EditCaseComponent).toBeTruthy();
-    caseModalService.showModal(DeleteCaseComponent);
-    expect(fixture.nativeElement.querySelector('ansyn-delete-case')).toBeDefined();
-    expect(component.selected_component_ref.instance instanceof DeleteCaseComponent).toBeTruthy();
-
-  });
+	it('destroyTemplate should destory modal component', () => {
+		component.selected_component_ref = {destroy: () => null};
+		spyOn(component.selected_component_ref, 'destroy');
+		component.destroyTemplate();
+		expect(component.selected_component_ref.destroy).toHaveBeenCalled();
+	});
 
 
 });

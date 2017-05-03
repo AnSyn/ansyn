@@ -1,48 +1,53 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesToolsComponent } from './cases-tools.component';
-import { CoreModule, CaseModalService } from "@ansyn/core";
+import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { Store, StoreModule } from '@ngrx/store';
+import { CasesModule } from '../../cases.module';
+import { HttpModule } from '@angular/http';
+import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { HttpModule } from "@angular/http";
 
 describe('CasesToolsComponent', () => {
-  let component: CasesToolsComponent;
-  let fixture: ComponentFixture<CasesToolsComponent>;
-  let caseModalService: CaseModalService;
+	let component: CasesToolsComponent;
+	let fixture: ComponentFixture<CasesToolsComponent>;
+	let store: Store<ICasesState>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports:[HttpModule, CoreModule],
-      declarations: [ CasesToolsComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CasesToolsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
+		spyOn(_store, 'dispatch');
+		fixture = TestBed.createComponent(CasesToolsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		store = _store;
+	}));
 
-  beforeEach(inject([CaseModalService], (_caseModalService: CaseModalService) => {
-    caseModalService = _caseModalService;
-  }));
+	beforeEach(() => {
+		fixture = TestBed.createComponent(CasesToolsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  it('add-case button should call showCaseModal()', () => {
-    spyOn(component, 'showCaseModal');
-    let button = fixture.nativeElement.querySelector("button.add-case");
-    button.click();
-    fixture.detectChanges();
-    expect(component.showCaseModal).toHaveBeenCalled();
-  });
+	it('add-case button should call showCaseModal()', () => {
+		spyOn(component, 'showCaseModal');
+		let button = fixture.nativeElement.querySelector("button.add-case");
+		button.click();
+		fixture.detectChanges();
+		expect(component.showCaseModal).toHaveBeenCalled();
+	});
 
-  it('showCaseModal should call modal.showModal with EditCaseComponent', () => {
-    spyOn(caseModalService, 'showModal');
-    component.showCaseModal();
-    expect(caseModalService.showModal).toHaveBeenCalledWith(EditCaseComponent);
-  });
+	it('showCaseModal should call store.dispatch with OpenModalAction', () => {
+	  component.showCaseModal();
+	  expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({component: EditCaseComponent}));
+	});
 
 });

@@ -9,9 +9,7 @@ import { FormsModule } from "@angular/forms";
 import { CasesModalContainerComponent } from './components/cases-modal-container/cases-modal-container.component';
 import { DeleteCaseComponent } from './components/delete-case/delete-case.component';
 import { CasesToolsComponent } from './components/cases-tools/cases-tools.component';
-import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { casesReducer } from './reducers/cases.reducer';
 import { CasesEffects } from './effects/cases.effects';
 import { CasesService } from './services/cases.service';
 

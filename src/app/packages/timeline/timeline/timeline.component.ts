@@ -1,12 +1,13 @@
-import { Component, OnInit,ViewChild,ElementRef,Input,OnChanges } from '@angular/core';
+import { Component, OnInit,ViewChild,ElementRef,Input,OnChanges,ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
 import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 
 @Component({
-  selector: 'timeline',
-  templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.css']
+  	selector: 'timeline',
+  	templateUrl: './timeline.component.html',
+  	styleUrls: ['./timeline.component.css'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /**

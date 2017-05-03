@@ -21,19 +21,17 @@ export const ActionTypes = {
 export class SelectOverlayAction implements Action {
 	type = ActionTypes.SELECT_OVERLAY;
 
-	constructor	(public payload: Overlay){}
+	constructor	(public payload: string){}
 }
 
 export class UnSelectOverlayAction implements Action {
 	type = ActionTypes.UNSELECT_OVERLAY;
-	constructor (public payload: Overlay){}
+	constructor (public payload: string){}
 }
 
 export class LoadOverlaysAction implements Action {
 	type = ActionTypes.LOAD_OVERLAYS;
-	constructor(){    
-   		console.log('load overlays action');
-   	}
+	constructor(){}
 }
 
 export class LoadOverlaysSuccessAction implements Action {
@@ -59,11 +57,9 @@ export class ClearFilter implements Action {
 export class DemoAction implements Action {     
 	type = ActionTypes.DEMO;
 	constructor(public payload: any) {     
-    	console.log(payload);                                
+    	console.log(payload);
     }
 }
-
-
 
 export type OverlaysActions
 	= SelectOverlayAction

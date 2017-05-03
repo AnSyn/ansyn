@@ -2,6 +2,8 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { TimelineService } from './timeline.service';
 
+import { IOverlayState,overlayInitialState } from '../reducers/timeline.reducer';
+
 import { HttpModule,XHRBackend,Response,ResponseOptions,Http } from '@angular/http';
 
 import { MockBackend } from '@angular/http/testing';
@@ -11,7 +13,7 @@ import { Observable ,Observer} from 'rxjs';
 
 describe('TimelineService', () => {
   let timeLineService,mockBackend,lastConnection,http ;
-
+  let overlaysTmpData:any[];
   let response = 	{ data : [ 
 			{key: "a",value: 1},
 			{key: "b",value: 2} 
@@ -44,6 +46,23 @@ describe('TimelineService', () => {
       		}
     	});
 
+    	overlaysTmpData = [
+			{
+				id: '12',
+				name: 'tmp12',
+				photoTime: new Date(Date.now()),
+				date: new Date(Date.now()),
+				azimuth: 10
+			},
+			{
+				id: '13',
+				name: 'tmp13',
+				photoTime: new Date(Date.now()),
+				date: new Date(Date.now()),
+				azimuth: 10
+			}
+		];
+
  	}));
 
 	it('check all dependencies are defined properly', () => {
@@ -60,32 +79,37 @@ describe('TimelineService', () => {
  	});
 
 	it('check parseOverlayDataForDisplay', () => {
-		const data = [
-			{
-				id: '12',
-				name: 'tmp12',
-				photoTime: new Date(Date.now()),
-				azimuth: 10
-			},
-			{
-				id: '13',
-				name: 'tmp13',
-				photoTime: new Date(Date.now()),
-				azimuth: 10
-			}
-		];
+		
 		const mockData = {
 			filters: {},
 			overlays: new Map()
 		};
-		data.forEach(item => {
+		overlaysTmpData.forEach(item => {
 			mockData.overlays.set(item.id, item);	
 		});
 
 		const result = timeLineService.parseOverlayDataForDispaly(mockData.overlays, mockData.filters);
 		expect(result[0].name).toBe(undefined);
-		expect(result[0].data.length).toBe(data.length);
+		expect(result[0].data.length).toBe(overlaysTmpData.length);
 	});
+
+	it('compare overlay ', () => {
+		const mockData = {
+			filters: {},
+			overlays: new Map()
+		};
+		overlaysTmpData.forEach(item => {
+			mockData.overlays.set(item.id, item);	
+		});
+
+		const overlayState1: IOverlayState = Object.assign({},overlayInitialState);
+		const overlayState2: IOverlayState = Object.assign({},overlayInitialState);
+		expect(timeLineService.compareOverlays(overlayState1,overlayState2)).toBeTruthy();
+		
+		overlayState1.overlays = mockData;
+		expect(timeLineService.compareOverlays(overlayState1,overlayState2)).toBeFalsy();
+
+	})
 
 	it('check the method fetchData with spyOn', () => {
 		let response = new Response( new ResponseOptions({

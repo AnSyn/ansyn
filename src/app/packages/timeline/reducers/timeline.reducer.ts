@@ -14,7 +14,7 @@ export interface IOverlayState {
 	filters : any;
 }
 
-export const initialState: IOverlayState = {
+export const overlayInitialState: IOverlayState = {
 	loaded: false,
 	loading: false,
 	overlays: new Map(),
@@ -24,41 +24,65 @@ export const initialState: IOverlayState = {
 	filters: {}
 }
 
-export function reducer(state = initialState,action: overlay.OverlaysActions): IOverlayState {
+export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
 		case overlay.ActionTypes.DEMO:
-			
 			let demo = ++state.demo;
 			let tmp:IOverlayState = Object.assign({}, state, {    
             	demo
             });
+            
 			return tmp;
 
-			//break;
+		//break;
 		case overlay.ActionTypes.SELECT_OVERLAY:
-			break;
+			
+			const selected = state.selectedOverlays.slice();
+			if(selected.indexOf(action.payload) === -1){
+				selected.push(action.payload);
+			}
+			return Object.assign({},state,{ 
+				selectedOverlays: selected	
+			});
+			
 
 		case overlay.ActionTypes.UNSELECT_OVERLAY:
-			break;
-
+			const selected1 = state.selectedOverlays.slice();
+			const index = selected1.indexOf(action.payload);
+			if( index > -1){
+				selected1.splice(index,1);
+				return Object.assign({},state,{ 
+					selectedOverlays: selected1	
+				});
+			}
+			else{ 
+				return state;
+			}
+			
 		case overlay.ActionTypes.LOAD_OVERLAYS:
+				console.log("load overlays")
 				return Object.assign({},state,{
 					loading: true
 				});
 
 		case overlay.ActionTypes.LOAD_OVERLAYS_SUCCESS:
+				console.log('load overlays suceess')
 				const overlays = action.payload;
 				
+				const stateOverlays = new Map(state.overlays);
+				
 				overlays.forEach(overlay => {
-					if(!state.overlays.has(overlay.id)){
-						state.overlays.set(overlay.id,overlay);
+					if(!stateOverlays.has(overlay.id)){
+						stateOverlays.set(overlay.id,overlay);
 					}
 				});
+
 				//we already initiliazing the state 
 				return Object.assign({},state,{    
                		loading: false,
-               		loaded: true
-               	});
+               		loaded: true,
+               		overlays: stateOverlays
+				});
 
 
 		case overlay.ActionTypes.LOAD_OVERLAYS_FAIL:

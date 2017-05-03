@@ -3,7 +3,7 @@
  */
 
 
-export interface  Overlay {
+export type  Overlay = {
 	id: string,
 	footprint?: any,//@todo add type geojson_multipoligon,
 	sensorType?: string,

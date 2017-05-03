@@ -31,25 +31,23 @@ export class OverlayEffects {
 	@Effect()
 	loadOverlays$: Observable<Action> = this.actions$
 		.ofType(overlay.ActionTypes.LOAD_OVERLAYS)
-		.switchMap(() => {
+		.switchMap((tmp) => {
 			return this.timelineService.fetchData()
 				.map(data => {
-					//debugger;	
 					data.forEach(item => {
 						item.date = item.photoTime
 					});
 					return new overlay.LoadOverlaysSuccessAction(data);
 				});
-
-
 		});
+
 
 
  	@Effect({ dispatch: false })
  	demo$: Observable<Action> = this.actions$
 		  	.ofType(overlay.ActionTypes.DEMO)
+		  	.debug('tmp1')
 	  		.switchMap( action => {     
-      			
-          		return Observable.empty();
-          	});                             
+      			return Observable.empty();
+  		});                             
 }

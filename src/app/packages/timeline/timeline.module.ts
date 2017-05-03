@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineService } from './services/timeline.service';
 import { TimelineEmitterService } from './services/timeline-emitter.service';
-import { ContainerComponent } from './container/container.component';
+import { OverlayContainerComponent } from './container/container.component';
 
 import { StoreModule } from '@ngrx/store';
 
@@ -14,7 +14,7 @@ import * as timelineReducer from './reducers/timeline.reducer';
 import { OverlayEffects } from './effects/timeline.effects';
 import { EffectsModule } from '@ngrx/effects';
 
-export const TimelineReducer = timelineReducer.reducer;
+
 
 @NgModule({
   imports: [
@@ -23,8 +23,8 @@ export const TimelineReducer = timelineReducer.reducer;
     EffectsModule.run(OverlayEffects)
   ],
   
-  declarations: [TimelineComponent,ContainerComponent],
-  exports: [ContainerComponent],
+  declarations: [TimelineComponent,OverlayContainerComponent],
+  exports: [OverlayContainerComponent],
   providers: [TimelineService,TimelineEmitterService]
 })
 

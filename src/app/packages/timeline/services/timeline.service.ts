@@ -39,7 +39,8 @@ export class TimelineService {
         //convert the "hash table" to array of objects (very bed performence must think on another way of doing that)
         //maybe I will do it inside the event drops component itself
         //so the component will be able to get 2 types Array and Map
-        overlays.forEach(value => overlaysData.push(value));
+        
+        overlays.forEach(value => overlaysData.push({ id: value.id,date: value.date }));
 
         result.push({
           name: undefined,
@@ -55,6 +56,11 @@ export class TimelineService {
   		let data = response.json();
 	  	return data || [];
   	}
+
+    compareOverlays(data: IOverlayState,data1: IOverlayState){
+      	const result = _.isEqual(data.overlays,data1.overlays);
+        return result;
+    }
 
   	handleError(error: Response | any):any{
   		let errorMessage: string;

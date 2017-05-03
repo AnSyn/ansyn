@@ -1,5 +1,5 @@
-import { reducer,initialState,IOverlayState } from './timeline.reducer';
-import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/timeline.actions';
+import { OverlayReducer,overlayInitialState,IOverlayState } from './timeline.reducer';
+import { UnSelectOverlayAction, SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/timeline.actions';
 import { Overlay } from '../models/overlay.model';
 
 describe('Overlay Reducer',() => {    
@@ -8,10 +8,38 @@ describe('Overlay Reducer',() => {
 		it("should activate load_overlay reducer",()=> {
 			const action  = new LoadOverlaysAction();
 			//expect(result.loaded).toBe(false);
-			const result = reducer(initialState,action);
+			const result = OverlayReducer(overlayInitialState,action);
 			expect(result.loading).toBe(true);
 		});
 	});
+
+   	describe("Selected Overlay",() => { 
+   		it('should add overaly id to seleced overlays array\'s',() => { 
+   			const fakeId:string = 'iu34-2322'
+   			const action = new SelectOverlayAction(fakeId);
+
+   			const result:IOverlayState = OverlayReducer(overlayInitialState,action);
+   			expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+
+   		});	
+   	});
+
+   	describe("UnSelected Overlay",() => { 
+   		it('should remove overaly id from the seleced overlays array\'s',() => { 
+   			const fakeId:string = 'iu34-2322'
+   			const action = new SelectOverlayAction(fakeId);
+
+   			let result:IOverlayState = OverlayReducer(overlayInitialState,action);
+   			
+   			expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+
+   			const unSelectAction = new UnSelectOverlayAction(fakeId);
+
+   			result = OverlayReducer(result,unSelectAction);
+
+   			expect(result.selectedOverlays.length).toBe(0);
+   		});	
+   	});
 
 	describe("Load Overlays Success",()=>{    
 		it('should load all overlays',() => {
@@ -31,7 +59,7 @@ describe('Overlay Reducer',() => {
            	]
            	
            	const action = new LoadOverlaysSuccessAction(overlays);
-           	const result = reducer(initialState,action);
+           	const result = OverlayReducer(overlayInitialState,action);
            	expect(result.overlays.size).toBe(2);
            	expect(result.loading).toBe(false);
            	expect(result.loaded).toBe(true);

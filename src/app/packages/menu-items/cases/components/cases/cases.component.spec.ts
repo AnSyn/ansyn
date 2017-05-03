@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesComponent } from './cases.component';
 import { HttpModule } from "@angular/http/src/http_module";
-import { CoreModule, CasesService, Case } from "@ansyn/core";
-import { MockComponent } from "../../../../helpers/mock-component";
+import { CasesService } from '../../services/cases.service';
+import { MockComponent } from '../../../../../helpers/mock-component';
 
 
 let a = MockComponent({selector: "ansyn-cases-tools"});
@@ -17,18 +17,16 @@ describe('CasesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[HttpModule, CoreModule],
       declarations: [CasesComponent, a, b, c]
     })
     .compileComponents();
   }));
 
-  beforeEach(inject([CasesService], (_casesService:CasesService) => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(CasesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    casesService = _casesService;
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

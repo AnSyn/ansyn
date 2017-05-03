@@ -3,7 +3,7 @@ import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { CasesActionTypes, CloseModalAction } from '../../actions/cases.actions';
+import { CasesActionTypes, CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Case } from '../../models/case.model';
 
 const animations_during = '0.2s';
@@ -49,7 +49,7 @@ export class DeleteCaseComponent {
   }
 
   onSubmitRemove() {
-    this.store.dispatch({type: CasesActionTypes.DELETE_CASE});
+    this.store.dispatch(new DeleteCaseAction());
   }
 
 }

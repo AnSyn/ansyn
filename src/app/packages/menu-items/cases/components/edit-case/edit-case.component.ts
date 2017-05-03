@@ -72,19 +72,12 @@ export class EditCaseComponent implements OnInit {
     this.store.dispatch(new CloseModalAction());
   }
 
-
   onSubmitCase() {
     if(this.case_model.id) {
       this.store.dispatch(new UpdateCaseAction(this.case_model));
     } else {
       this.store.dispatch(new AddCaseAction(this.case_model));
     }
-
-    // if(this.case_model.id) {
-    //   this.casesService.updateCase(this.case_model).subscribe(this.close.bind(this));
-    // } else {
-    //   this.casesService.createCase(this.case_model)
-    // }
   }
 
 }

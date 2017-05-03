@@ -5,7 +5,7 @@ import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
-import { CloseModalAction } from '../../actions/cases.actions';
+import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
 const animations_during = '0.2s';
 
@@ -38,7 +38,7 @@ export class CasesModalContainerComponent implements OnInit {
     this.casesEffects.closeModal$.subscribe(this.destroyTemplate.bind(this));
   }
 
-  buildTemplate(action: {payload: {component: any}}) {
+  buildTemplate(action: OpenModalAction) {
     let factory = this.componentFactoryResolver.resolveComponentFactory(action.payload.component);
     this.selected_component_ref = this.modal_content.createComponent(factory);
   }
@@ -46,7 +46,6 @@ export class CasesModalContainerComponent implements OnInit {
   destroyTemplate() {
     if(this.selected_component_ref) {
       this.selected_component_ref.destroy();
-      this.selected_component_ref = null;
     }
   }
 

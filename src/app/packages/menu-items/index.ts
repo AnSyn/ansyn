@@ -5,4 +5,4 @@ export { AlgorithmsModule } from '@ansyn/menu-items/algorithms';
 export { SettingsModule } from '@ansyn/menu-items/settings';
 export { ToolsModule } from '@ansyn/menu-items/tools';
 
-export {MenuItemsModule} from './menu-items.module';
+export { MenuItemsModule } from './menu-items.module';

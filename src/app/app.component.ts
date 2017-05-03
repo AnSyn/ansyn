@@ -15,7 +15,7 @@ export class AppComponent {
 				type: 'Point',
 				coordinates: [15.7, 37.9]
 			};
-			this.imageryCommunicatorService.getImageryAPI('imagery1').setCenter(geoPoint);
+			this.imageryCommunicatorService.getImageryCommunicator('imagery1').setCenter(geoPoint);
 		}, 2000);
 	}
 }

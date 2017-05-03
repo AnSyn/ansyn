@@ -4,14 +4,14 @@
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import {ImageryCommunicatorService} from '../api/imageryCommunicatorService';
-import {MapComponentSettings} from './mapComponentSettings';
+import {ImageryComponentSettings} from './imageryComponentSettings';
 
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	const imageryData: MapComponentSettings = {mapComponentId: 'imagery1', mapTypes: ['openLayers']};
+	const imageryData: ImageryComponentSettings = {mapComponentId: 'imagery1', mapTypes: ['openLayers']};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({declarations: [ ImageryComponent ], providers: [ ImageryCommunicatorService ]}).compileComponents();
@@ -47,8 +47,8 @@ describe('ImageryComponent', () => {
 	// 		type: 'Point',
 	// 		coordinates: [15.7, 37.9]
 	// 	};
-	// 	imageryCommunicatorService.getImageryAPI(imageryData.mapComponentId).setCenter(geoPoint);
-	// 	const expectedGeoPointCenter = imageryCommunicatorService.getImageryAPI(imageryData.mapComponentId).getCenter();
+	// 	imageryCommunicatorService.getImageryCommunicator(imageryData.mapComponentId).setCenter(geoPoint);
+	// 	const expectedGeoPointCenter = imageryCommunicatorService.getImageryCommunicator(imageryData.mapComponentId).getCenter();
 	// 	expect(geoPoint).toEqual(expectedGeoPointCenter);
 	// });
 });

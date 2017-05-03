@@ -13,7 +13,7 @@ export class ImageryCommunicatorService {
 		this._communicators = {};
 	}
 
-	public getImageryAPI(id: string): ImageryCommunicator {
+	public getImageryCommunicator(id: string): ImageryCommunicator {
 		if (!this._communicators[id]) {
 			this.createImageryCommunicator(id);
 		}
@@ -25,7 +25,7 @@ export class ImageryCommunicatorService {
 		this._communicators[id] = new ImageryCommunicator();
 	}
 
-	public removeImageryAPI(id: string) {
+	public removeImageryCommunicator(id: string) {
 		console.log(`'removeImageryAPI ${id}'`);
 		this._communicators[id].dispose();
 		this._communicators[id] = null;

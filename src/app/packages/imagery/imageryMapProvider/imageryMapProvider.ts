@@ -8,8 +8,8 @@ export interface IMapProvider {
   type: string;
 }
 
-export class ImageryProvider {
-  public init(elementId: string, type: string): IProvidedMap {
+export class ImageryMapProvider {
+  public provideMapForMapType(elementId: string, type: string): IProvidedMap {
     let mapProvided;
     switch (type) {
       case 'openLayers':

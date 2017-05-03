@@ -49,5 +49,5 @@ export class OverlayEffects {
 		  	.debug('tmp1')
 	  		.switchMap( action => {     
       			return Observable.empty();
-  		});                             
+  			});                             
 }

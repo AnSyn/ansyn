@@ -14,6 +14,8 @@ import { reducer } from './app.reducers';
 //import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ImageryModule } from './packages/imagery/imagery.module';
 
+import { mapAppEffects } from './effects/map.effects';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +32,7 @@ import { ImageryModule } from './packages/imagery/imagery.module';
     //RouterStoreModule.connectRouter(),
     //StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule,
+    EffectsModule.run(mapAppEffects),
     ImageryModule
   ],
   bootstrap: [AppComponent]

@@ -23,7 +23,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.ADD_CASE:
 			return state;
 
-		case CasesActionTypes.ADD_CASE_SUCEESS:
+		case CasesActionTypes.ADD_CASE_SUCCESS:
 			let cases_added: Case[] = [
 				action.payload,
 				...state.cases,
@@ -39,13 +39,23 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.UPDATE_CASE:
 			return state;
 
+		// reference
 		case CasesActionTypes.UPDATE_CASE_SUCCESS:
 			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == state.active_case_id);
+			let indexOfUpdated = state.cases.indexOf(old_case);
 			let updated_case = action.payload;
+
 			Object.keys(old_case).forEach( (key: string) => {
 				old_case[key] = updated_case[key]
 			});
-			return state;
+
+			let cases_updated: Case[] = [
+				...state.cases.slice(0, indexOfUpdated),
+				old_case,
+				...state.cases.slice(indexOfUpdated + 1, state.cases.length)
+			];
+
+			return Object.assign({}, state, {cases: cases_updated});
 
 		case CasesActionTypes.LOAD_CASES:
 			return state;

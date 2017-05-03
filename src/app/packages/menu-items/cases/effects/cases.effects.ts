@@ -79,13 +79,13 @@ export class CasesEffects {
 
 	@Effect()
 	closeModalAction$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE_SUCCESS, CasesActionTypes.DELETE_CASE_SUCCESS, CasesActionTypes.ADD_CASE_SUCEESS)
+		.ofType(CasesActionTypes.UPDATE_CASE_SUCCESS, CasesActionTypes.DELETE_CASE_SUCCESS, CasesActionTypes.ADD_CASE_SUCCESS)
 		.map(() => new CloseModalAction())
 		.share();
 
 	@Effect({dispatch: false})
 	addCaseSuccess$: Observable<any> = this.actions$.
-	ofType(CasesActionTypes.ADD_CASE_SUCEESS).share();
+	ofType(CasesActionTypes.ADD_CASE_SUCCESS).share();
 
 }
 //

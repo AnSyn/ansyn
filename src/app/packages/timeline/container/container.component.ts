@@ -45,7 +45,7 @@ export class OverlayContainerComponent implements OnInit,AfterViewInit  {
         	eventLineColor: (d,i) => d3.schemeCategory10[i],
         	date: d => new Date(d.date)
         };
-        console.log(turf);
+        //console.log(turf);
         
     }
 	ngOnInit(): void {

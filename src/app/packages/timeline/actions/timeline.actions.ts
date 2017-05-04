@@ -31,7 +31,7 @@ export class UnSelectOverlayAction implements Action {
 
 export class LoadOverlaysAction implements Action {
 	type = ActionTypes.LOAD_OVERLAYS;
-	constructor(){}
+	constructor(public payload?: any){}
 }
 
 export class LoadOverlaysSuccessAction implements Action {
@@ -51,7 +51,7 @@ export class SetFilter implements Action {
 
 export class ClearFilter implements Action {    
 	type = ActionTypes.CLEAR_FILTER;
-	constructor(){}                                          
+	constructor(public payload?: any){}                                    
 }
 
 export class DemoAction implements Action {     

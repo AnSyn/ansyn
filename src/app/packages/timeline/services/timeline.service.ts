@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Response,Headers,RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
+import { IOverlayState } from '../reducers/timeline.reducer';
+import * as _ from 'lodash';
+
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { IOverlayState } from '../reducers/timeline.reducer';

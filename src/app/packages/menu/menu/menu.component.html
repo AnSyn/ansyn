@@ -4,9 +4,8 @@
     <div
       class="menu-btn"
       *ngFor="let menu_item of menu_items; let index = index"
-      [class.active]="isActive(index)"
-      (click)="toggleItem(index)">
-
+		[class.active]="isActive(index)"
+		(click)="toggleItem(index)">
       <img [src]="menu_item.icon_url"/>
       {{menu_item.name}}
     </div>

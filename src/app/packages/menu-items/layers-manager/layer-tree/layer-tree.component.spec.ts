@@ -7,6 +7,8 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { ILayerTreeNode } from '@ansyn/core';
 import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
+import { StoreModule } from '@ngrx/store';
+import { AppReducers } from '../../../../app.reducers';
 
 describe('LayerTreeComponent', () => {
   let component: LayerTreeComponent;
@@ -22,7 +24,7 @@ describe('LayerTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule],
+      imports: [LayersManagerModule, CoreModule, StoreModule.provideStore(AppReducers)],
     })
       .compileComponents();
   }));

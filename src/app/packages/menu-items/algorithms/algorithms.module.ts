@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
-import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
+import { CoreModule, MenuItem } from "@ansyn/core";
+import { Store } from '@ngrx/store';
+import { AddMenuItemAction } from '../../core/actions/core.actions';
 
 @NgModule({
   imports: [CoreModule, CommonModule],
@@ -10,12 +12,12 @@ import {CoreModule, StoreService, MenuItem} from "@ansyn/core";
   exports:[AlgorithmsComponent]
 })
 export class AlgorithmsModule {
-  constructor(storeService:StoreService){
+  constructor(store: Store <any>){
     let menu_item: MenuItem = {
       name:"Algorithms",
       component: AlgorithmsComponent,
       icon_url: "/assets/icons/algorithms.svg"
     };
-    storeService.menu.addMenuItem(menu_item);
+    store.dispatch(new AddMenuItemAction(menu_item));
   }
 }

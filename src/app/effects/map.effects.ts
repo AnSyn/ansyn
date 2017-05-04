@@ -15,6 +15,7 @@ export class MapAppEffects {
 
 	constructor(private actions$: Actions, private store$: Store<IAppState>, private communicator: ImageryCommunicatorService) {
 		// code...
+		//
 	}
 
 	@Effect({dispatch: false})

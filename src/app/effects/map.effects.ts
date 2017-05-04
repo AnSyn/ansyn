@@ -11,13 +11,15 @@ import * as turf from '@turf/turf';
 import { ActionTypes } from '@ansyn/timeline/actions/timeline.actions';
 import { IOverlayState} from '@ansyn/timeline/reducers/timeline.reducer';
 import { Overlay } from '@ansyn/timeline/models/overlay.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicatorService';
+
 import 'rxjs/add/operator/withLatestFrom';
 
 
 @Injectable()
 export class mapAppEffects {
 
-	constructor(private actions$: Actions,private store$: Store<IAppState>) {
+	constructor(private actions$: Actions,private store$: Store<IAppState>,private communicator: ImageryCommunicatorService) {
 		// code...
 	}
 
@@ -28,10 +30,10 @@ export class mapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), (overlayId: string,store:IOverlayState )=> {
 			return store.overlays.get(overlayId);
 		})
-		.switchMap( (overlay: Overlay) => {
-      			return Observable.empty();
-		});
-
-
+		.switchMap( (overlay: Overlay) => {     
+			const center:any = turf.center(overlay.footprint); 	
+			this.communicator.getImageryCommunicator('imagery1').setCenter(center.geometry);
+  			return Observable.empty();
+		});                             
 
 }

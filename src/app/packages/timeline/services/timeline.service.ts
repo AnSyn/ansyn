@@ -7,8 +7,6 @@ import * as _ from 'lodash';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { IOverlayState } from '../reducers/timeline.reducer';
-import * as _ from 'lodash';
 
 @Injectable()
 export class TimelineService {

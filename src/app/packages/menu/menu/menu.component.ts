@@ -5,7 +5,6 @@ import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from "@ansyn/c
 import { Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
-import { MenuEffects } from '../effects/menu.effects';
 import * as _ from 'lodash';
 
 const DEFAULT_WIDTH = 60;

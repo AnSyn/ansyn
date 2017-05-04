@@ -28,37 +28,37 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 	switch(action.type){
 		case overlay.ActionTypes.DEMO:
 			let demo = ++state.demo;
-			let tmp:IOverlayState = Object.assign({}, state, {    
+			let tmp:IOverlayState = Object.assign({}, state, {
             	demo
             });
-            
+
 			return tmp;
 
 		//break;
 		case overlay.ActionTypes.SELECT_OVERLAY:
-			
+
 			const selected = state.selectedOverlays.slice();
 			if(selected.indexOf(action.payload) === -1){
 				selected.push(action.payload);
 			}
-			return Object.assign({},state,{ 
-				selectedOverlays: selected	
+			return Object.assign({},state,{
+				selectedOverlays: selected
 			});
-			
+
 
 		case overlay.ActionTypes.UNSELECT_OVERLAY:
 			const selected1 = state.selectedOverlays.slice();
 			const index = selected1.indexOf(action.payload);
 			if( index > -1){
 				selected1.splice(index,1);
-				return Object.assign({},state,{ 
-					selectedOverlays: selected1	
+				return Object.assign({},state,{
+					selectedOverlays: selected1
 				});
 			}
-			else{ 
+			else{
 				return state;
 			}
-			
+
 		case overlay.ActionTypes.LOAD_OVERLAYS:
 				console.log("load overlays")
 				return Object.assign({},state,{
@@ -68,17 +68,17 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 		case overlay.ActionTypes.LOAD_OVERLAYS_SUCCESS:
 				console.log('load overlays suceess')
 				const overlays = action.payload;
-				
+
 				const stateOverlays = new Map(state.overlays);
-				
+
 				overlays.forEach(overlay => {
 					if(!stateOverlays.has(overlay.id)){
 						stateOverlays.set(overlay.id,overlay);
 					}
 				});
 
-				//we already initiliazing the state 
-				return Object.assign({},state,{    
+				//we already initiliazing the state
+				return Object.assign({},state,{
                		loading: false,
                		loaded: true,
                		overlays: stateOverlays

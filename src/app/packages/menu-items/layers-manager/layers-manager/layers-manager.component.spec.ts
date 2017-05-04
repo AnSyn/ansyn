@@ -4,7 +4,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { LayersManagerComponent } from './layers-manager.component';
 import { HttpModule } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
-import { AppReducers } from '../../../../app.reducers';
+import { reducer } from '../../../../app.reducers.module';
 
 describe('LayersManagerComponent', () => {
   let component: LayersManagerComponent;
@@ -12,7 +12,7 @@ describe('LayersManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule, HttpModule, StoreModule.provideStore(AppReducers)]
+      imports: [LayersManagerModule, CoreModule, HttpModule, StoreModule.provideStore(reducer)]
     })
       .compileComponents();
   }));

@@ -8,7 +8,6 @@ import { ImageryCommunicatorService } from '../api/imageryCommunicatorService';
 import {ImageryComponentSettings} from './imageryComponentSettings';
 
 @Component({
-	moduleId: module.id,
 	selector: 'imagery-view',
 	template: `
 		<div #imagery></div>

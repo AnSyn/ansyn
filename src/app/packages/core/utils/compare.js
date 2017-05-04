@@ -1,36 +1,27 @@
-interface Array<T> {
-        equals(array: Array<T>)
-}
-
-interface Map<K,V> {
-    equals(map: Map<K,V>)
-}
-
-Array.prototype.equals = function (array: Array<any>): boolean {
+//declare global {
+Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
     if (!array)
         return false;
-
     // compare lengths - can save a lot of time 
     if (this.length != array.length)
         return false;
-
-    for (var i = 0, l=this.length; i < l; i++) {
+    for (var i = 0, l = this.length; i < l; i++) {
         // Check if we have nested arrays
         if (this[i] instanceof Array && array[i] instanceof Array) {
             // recurse into the nested arrays
             if (!this[i].equals(array[i]))
-                return false;       
-        }           
-        else if (this[i] != array[i]) { 
+                return false;
+        }
+        else if (this[i] != array[i]) {
             // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;   
-        }           
-    }       
+            return false;
+        }
+    }
     return true;
-}
-
-Map.prototype.equals = function (map:Map<any,any>):boolean {
+};
+/*
+Map.prototype.equals = function (map:Map<T>) {
     var testVal;
     if (this.size !== map.size) {
         return false;
@@ -44,5 +35,4 @@ Map.prototype.equals = function (map:Map<any,any>):boolean {
         }
     }
     return true;
-}
-
+}*/ 

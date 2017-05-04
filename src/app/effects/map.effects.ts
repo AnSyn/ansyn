@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Action,Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable ,ObservableInput} from 'rxjs/Observable';
-import { IAppState } from '../app.reducers';
+import { IAppState } from '../app.reducers.module';
 
 
-import * as turf from '@turf/turf'; 
+import * as turf from '@turf/turf';
 
 import { ActionTypes } from '@ansyn/timeline/actions/timeline.actions';
 import { IOverlayState} from '@ansyn/timeline/reducers/timeline.reducer';
@@ -28,10 +28,10 @@ export class mapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), (overlayId: string,store:IOverlayState )=> {
 			return store.overlays.get(overlayId);
 		})
-		.switchMap( (overlay: Overlay) => {     
+		.switchMap( (overlay: Overlay) => {
       			return Observable.empty();
-		});                             
+		});
 
-		
+
 
 }

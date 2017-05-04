@@ -7,34 +7,32 @@ import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from "@ansyn/menu-items";
-import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { reducer } from './app.reducers';
-//import { RouterStoreModule } from '@ngrx/router-store';
-//import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { AppReducer, reducer } from './app.reducers.module';
 import { ImageryModule } from './packages/imagery/imagery.module';
-
 import { mapAppEffects } from './effects/map.effects';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    CoreModule,
-    MenuModule,
-    MenuItemsModule,
-    TimelineModule,
-    StoreModule.provideStore(reducer),
-    //RouterStoreModule.connectRouter(),
-    //StoreDevtoolsModule.instrumentOnlyWithExtension(),
-    EffectsModule,
-    EffectsModule.run(mapAppEffects),
-    ImageryModule
-  ],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+	],
+	imports: [
+		BrowserModule,
+		FormsModule,
+		HttpModule,
+		CoreModule,
+		MenuModule,
+		MenuItemsModule,
+		TimelineModule,
+		AppReducer,
+		// StoreModule.provideStore(reducer),
+		//RouterStoreModule.connectRouter(),
+		//StoreDevtoolsModule.instrumentOnlyWithExtension(),
+		EffectsModule,
+		EffectsModule.run(mapAppEffects),
+		ImageryModule
+	],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,15 +1,17 @@
+import { DataLayersService } from './services/data-layers.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'angular-tree-component';
-import { LayersManagerComponent } from './layers-manager/layers-manager.component';
+import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
 import { MenuItem, AddMenuItemAction } from '@ansyn/core';
-import { LayerTreeComponent } from './layer-tree/layer-tree.component';
+import { LayerTreeComponent } from './components/layer-tree/layer-tree.component';
 import { Store } from '@ngrx/store';
 
 @NgModule({
 	imports: [CommonModule, TreeModule],
 	declarations: [LayersManagerComponent, LayerTreeComponent],
-	entryComponents: [LayersManagerComponent]
+	entryComponents: [LayersManagerComponent],
+	providers: [DataLayersService]
 })
 export class LayersManagerModule {
 	constructor(store: Store <any>) {

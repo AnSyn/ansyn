@@ -1,11 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { LayersManagerModule } from '../layers-manager.module';
+import { LayersManagerModule } from '../../layers-manager.module';
 import { CoreModule } from '@ansyn/core/core.module';
 import { LayersManagerComponent } from './layers-manager.component';
 import { HttpModule } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
-import { reducer } from '../../../../app.reducers.module';
-import { DataLayersService } from '../../../core/services/data-layers.service';
+import { reducer } from '../../../../../app.reducers.module';
+import { DataLayersService } from '../../services/data-layers.service';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;

@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { OnInit, SimpleChanges, AfterViewInit } from '@angular/core';
-import { NodeActivationChangedEventArgs } from '../event-args/node-activation-changed-event-args';
-import { TreeActionMappingService } from '../services/tree-action-mapping.service';
+import { NodeActivationChangedEventArgs } from '../../event-args/node-activation-changed-event-args';
+import { TreeActionMappingService } from '../../services/tree-action-mapping.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
-import { ILayerTreeNode } from '@ansyn/core';
+import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
 
 @Component({

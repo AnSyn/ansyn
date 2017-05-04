@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'angular-tree-component';
-import { ILayerTreeNode } from '@ansyn/core';
-import { DataLayersService } from '@ansyn/core';
+import { ILayerTreeNode } from '../../models/layer-tree-node';
+import { DataLayersService } from './../../services/data-layers.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({

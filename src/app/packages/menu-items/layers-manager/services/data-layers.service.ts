@@ -1,6 +1,6 @@
-import { ILayerTreeNode } from '../models/data-layers/layer-tree-node';
-import { IServerDataLayerContainer } from '../models/data-layers/server-data-layer-container';
-import { IServerDataLayer } from '../models/data-layers/server-data-layer';
+import { ILayerTreeNode } from '../models/layer-tree-node';
+import { IServerDataLayerContainer } from '../models/server-data-layer-container';
+import { IServerDataLayer } from '../models/server-data-layer';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';

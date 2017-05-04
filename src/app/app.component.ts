@@ -1,5 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
-import { StoreService } from '@ansyn/core';
+import { Component } from '@angular/core';
 import { ImageryCommunicatorService } from './packages/imagery/api/imageryCommunicatorService';
 
 @Component({
@@ -9,7 +8,7 @@ import { ImageryCommunicatorService } from './packages/imagery/api/imageryCommun
 })
 export class AppComponent {
 
-	constructor(public store: StoreService, public imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(public imageryCommunicatorService: ImageryCommunicatorService) {
 		setTimeout(() => {
 			const geoPoint: GeoJSON.Point = {
 				type: 'Point',

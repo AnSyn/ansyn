@@ -1,33 +1,24 @@
 import { OverlayReducer, IOverlayState } from '@ansyn/timeline';
 import { CasesReducer, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { compose } from '@ngrx/core/compose';
-import { ActionReducer,combineReducers } from '@ngrx/store';
+import { combineReducers } from '@ngrx/store';
+import { IMenuState, MenuReducer } from './packages/menu/reducers/menu.reducer';
 
 
-const  reducers = {    
+const  reducers = {
 	overlays : OverlayReducer,
-	cases: CasesReducer
-
-}
+	cases: CasesReducer,
+	menu: MenuReducer
+};
 
 const appReducer = compose(combineReducers)(reducers);
 
-export function reducer(state: any,action: any){ 
+export function reducer(state: any,action: any){
 	return appReducer(state, action);
 }
 
 export interface IAppState {
 	overlays: IOverlayState,
-	cases: ICasesState
-} 
-
-
-//export const tmpCombineReducers = combineReducers;
-
-
-
-//export { combineReducers } from '@ngrx/store';
-
-/*export function AppReducers() {
-	return combineReducers(reducers);
-};*/
+	cases: ICasesState,
+	menu: IMenuState
+}

@@ -25,8 +25,7 @@ export interface IAppState {
 }
 
 @NgModule({
-	imports: [StoreModule.provideStore(reducer)],
-	exports: [StoreModule]
+	imports: [StoreModule.provideStore(reducer)]
 })
 export class AppReducer {
 

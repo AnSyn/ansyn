@@ -7,12 +7,13 @@ import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, CloseModalAction, DeleteCaseSuccessAction, LoadCasesAction,
-	LoadCasesSuccessAction,
+	LoadCasesSuccessAction, LoadContextsSuccessAction,
 	UpdateCaseSuccessAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
 import { Case } from '../models/case.model';
+import { Context } from '../models/context.model';
 
 @Injectable()
 export class CasesEffects {
@@ -87,5 +88,19 @@ export class CasesEffects {
 	addCaseSuccess$: Observable<any> = this.actions$.
 	ofType(CasesActionTypes.ADD_CASE_SUCCESS).share();
 
+	@Effect()
+	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
+		.ofType(CasesActionTypes.LOAD_CONTEXTS)
+		.withLatestFrom(this.store.select("cases"))
+		.switchMap( ([action, state]: [any, ICasesState])  => {
+			let observable: Observable<Context[]>;
+			if(state.contexts_loaded) {
+				observable = Observable.of(state.contexts);
+			} else {
+				observable = this.casesService.loadCcntexts();
+			}
+			return observable.map((contexts) => { return new LoadContextsSuccessAction(contexts)});
+		}).share();
+
 }
-//
+

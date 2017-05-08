@@ -38,4 +38,11 @@ export class CasesService {
     return this.http.delete(url, options).map(res => res.json());;
   }
 
+  loadCcntexts(): Observable<any> {
+	  let url:string = `${this.base_url}/contexts`;
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers});
+	  return this.http.get(url).map((res) => res.json());
+  }
+
 }

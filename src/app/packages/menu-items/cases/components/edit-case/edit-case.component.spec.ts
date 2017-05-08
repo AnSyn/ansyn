@@ -8,7 +8,7 @@ import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 
-describe('EditCaseComponent', () => {
+fdescribe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
 	let fixture: ComponentFixture<EditCaseComponent>;
 	let store: Store<ICasesState>;
@@ -20,7 +20,9 @@ describe('EditCaseComponent', () => {
 		],
 		active_case_id: 'fake_id1',
 		selected_case_id: null,
-		modal: true
+		modal: true,
+		contexts: [],
+		contexts_loaded: true
 	};
 
 	beforeEach(async(() => {
@@ -56,6 +58,15 @@ describe('EditCaseComponent', () => {
 		component.case_model.id = 'some_id_not_null';
 		component.onSubmitCase();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
+	});
+	it('distinctUntilChangedActiveCase should compare between active_case_id of prev state and current', () => {
+		let prev_state: ICasesState = {active_case_id: undefined} as any;
+		let current_state: ICasesState = {active_case_id: undefined} as any;
+		let result: boolean = component.distinctUntilChangedActiveCase(prev_state, current_state);
+		expect(result).toBeTruthy();
+		current_state.active_case_id = '1234-56789-1011-1213';
+		result = component.distinctUntilChangedActiveCase(prev_state, current_state);
+		expect(result).toBeFalsy();
 	});
 
 	describe("template",  ()=> {

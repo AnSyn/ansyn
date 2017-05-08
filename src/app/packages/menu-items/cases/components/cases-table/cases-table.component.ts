@@ -1,4 +1,7 @@
-import { Component, ViewChild, ElementRef, trigger, transition, style, animate, OnInit} from '@angular/core';
+import {
+	Component, ViewChild, ElementRef, trigger, transition, style, animate, OnInit,
+	ChangeDetectionStrategy
+} from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
@@ -19,6 +22,7 @@ const animations = [
   selector: 'ansyn-cases-table',
   templateUrl: './cases-table.component.html',
   styleUrls: ['./cases-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations
 })
 export class CasesTableComponent implements OnInit{
@@ -27,7 +31,6 @@ export class CasesTableComponent implements OnInit{
   cases_from_state$: Observable <Case[]> = this.store.select("cases").map((state: ICasesState ) => state.cases);
   active_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.active_case_id);
   selected_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.selected_case_id);
-
 
   constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
     this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));

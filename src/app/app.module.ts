@@ -12,6 +12,7 @@ import { AppReducer, reducer } from './app.reducers.module';
 import { ImageryModule } from './packages/imagery/imagery.module';
 import { mapAppEffects } from './effects/map.effects';
 import { StoreModule } from '@ngrx/store';
+import { CasesAppEffects } from './effects/cases.app.effects';
 
 @NgModule({
 	declarations: [
@@ -29,8 +30,6 @@ import { StoreModule } from '@ngrx/store';
 		// StoreModule.provideStore(reducer),
 		//RouterStoreModule.connectRouter(),
 		//StoreDevtoolsModule.instrumentOnlyWithExtension(),
-		EffectsModule,
-		EffectsModule.run(mapAppEffects),
 		ImageryModule
 	],
 	bootstrap: [AppComponent]

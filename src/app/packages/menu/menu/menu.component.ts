@@ -13,9 +13,7 @@ const animations: AnimationEntryMetadata[] = [
 	trigger(
 		'expand', [
 			state('true', style({
-
 				maxWidth: '1000px',
-				overflowX: 'visible'
 			})),
 			state('false', style({
 				maxWidth: 0,

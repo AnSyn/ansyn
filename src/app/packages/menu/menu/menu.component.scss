@@ -29,7 +29,6 @@ div.menu-wrapper {
   div.container {
     position: relative;
     background: #27B2CF;
-    overflow: hidden;
     width: auto;
 
     button.close {
@@ -40,7 +39,7 @@ div.menu-wrapper {
       background: transparent;
       cursor: pointer;
       outline: none;
-      z-index: 2;
+      z-index: 1;
       &:hover {
         color: #2e2d46;
       }

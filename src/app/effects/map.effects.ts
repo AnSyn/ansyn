@@ -1,20 +1,14 @@
 import { Injectable } from '@angular/core';
-
 import { Action,Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable ,ObservableInput} from 'rxjs/Observable';
 import { IAppState } from '../app.reducers.module';
-
-
 import * as turf from '@turf/turf';
-
 import { ActionTypes } from '@ansyn/timeline/actions/timeline.actions';
 import { IOverlayState} from '@ansyn/timeline/reducers/timeline.reducer';
 import { Overlay } from '@ansyn/timeline/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicatorService';
-
 import 'rxjs/add/operator/withLatestFrom';
-
 
 @Injectable()
 export class mapAppEffects {
@@ -30,10 +24,10 @@ export class mapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), (overlayId: string,store:IOverlayState )=> {
 			return store.overlays.get(overlayId);
 		})
-		.switchMap( (overlay: Overlay) => {     
-			const center:any = turf.center(overlay.footprint); 	
+		.switchMap( (overlay: Overlay) => {
+			const center:any = turf.center(overlay.footprint);
 			this.communicator.getImageryCommunicator('imagery1').setCenter(center.geometry);
   			return Observable.empty();
-		});                             
+		});
 
 }

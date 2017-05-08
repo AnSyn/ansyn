@@ -11,7 +11,13 @@ import {ImageryComponentSettings} from './imageryComponentSettings';
 	selector: 'imagery-view',
 	template: `
 		<div #imagery></div>
-	`
+	`,
+	styles: [
+		`div{
+			width: 100%;
+			height: 100%;
+		}`
+	]
 })
 
 export class ImageryComponent implements OnInit, OnDestroy {
@@ -32,6 +38,8 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		}
 		const element = document.createElement('div');
 		element.id = 'openLayersMap';
+		element.style.width = '100%';
+		element.style.height = '100%';
 		this.imageryElement.nativeElement.appendChild(element);
 
 		const imageryCommunicator = this.imageryCommunicatorService.getImageryCommunicator(this.mapComponentSettings.mapComponentId);

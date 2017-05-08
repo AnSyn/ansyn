@@ -4,6 +4,9 @@ import { compose } from '@ngrx/core/compose';
 import { combineReducers, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from './packages/menu/reducers/menu.reducer';
 import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { mapAppEffects } from './effects/map.effects';
+import { CasesAppEffects } from './effects/cases.app.effects';
 
 
 const  reducers = {
@@ -25,7 +28,11 @@ export interface IAppState {
 }
 
 @NgModule({
-	imports: [StoreModule.provideStore(reducer)]
+	imports: [
+		StoreModule.provideStore(reducer),
+		EffectsModule.run(mapAppEffects),
+		EffectsModule.run(CasesAppEffects),
+	]
 })
 export class AppReducer {
 

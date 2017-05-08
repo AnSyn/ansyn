@@ -5,7 +5,7 @@ import { IMap, IMapComponent } from '@ansyn/imagery/model/model';
  * Created by AsafMas on 07/05/2017.
  */
 @Component({
-	selector: 'ol-component',
+	selector: 'ansyn-ol-component',
 	template: `
 		<div #olMap></div>
 	`,

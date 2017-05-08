@@ -1,7 +1,7 @@
 {
-  "name": "@ansyn/timeline",
+  "name": "@ansyn/overlays",
   "version": "1.0.0",
-  "description": "timeline component to show data with graphic touch",
+  "description": "overlays component to show data with graphic touch",
   "main": "index.ts",
   "scripts": {
     "test": "npm test"

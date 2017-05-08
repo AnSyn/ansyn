@@ -1,7 +1,7 @@
 /**
  * Created by ohad1 on 02/04/2017.
  */
-import * as overlay from '../actions/timeline.actions';
+import * as overlay from '../actions/overlays.actions';
 import { Overlay } from "../models/overlay.model";
 import { createSelector } from 'reselect';
 

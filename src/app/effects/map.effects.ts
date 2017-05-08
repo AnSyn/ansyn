@@ -4,10 +4,13 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../app.reducers.module';
 import * as turf from '@turf/turf';
-import { ActionTypes } from '@ansyn/timeline/actions/timeline.actions';
-import { IOverlayState} from '@ansyn/timeline/reducers/timeline.reducer';
-import { Overlay } from '@ansyn/timeline/models/overlay.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
+
+
+import { ActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { IOverlayState} from '@ansyn/overlays/reducers/overlays.reducer';
+import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicatorService';
+
 import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()

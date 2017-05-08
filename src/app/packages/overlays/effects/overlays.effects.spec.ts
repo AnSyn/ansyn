@@ -16,13 +16,13 @@ import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable, ObservableInput } from 'rxjs/Observable';
-import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/timeline.actions';
+import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/overlays.actions';
 //import * as collection from '../actions/collection';
 
 import { Overlay } from '../models/overlay.model';
-import * as overlay from '../actions/timeline.actions';
-import { OverlayEffects } from '../effects/timeline.effects';
-import { TimelineService } from '../services/timeline.service';
+import * as overlay from '../actions/overlays.actions';
+import { OverlaysEffects } from './overlays.effects';
+import { OverlaysService } from '../services/overlays.service';
 
 describe("Overlays Effects ", () => {
     const overlays = <Overlay[]>[
@@ -46,8 +46,8 @@ describe("Overlays Effects ", () => {
         ],
         providers: [
             OverlayEffects, {
-                provide: TimelineService,
-                useValue: jasmine.createSpyObj('timelineService', ['fetchData'])
+                provide: OverlaysService,
+                useValue: jasmine.createSpyObj('overlaysService', ['fetchData'])
             }
         ]
     }));
@@ -55,29 +55,29 @@ describe("Overlays Effects ", () => {
     function setup() {
         return {
             runner: TestBed.get(EffectsRunner),
-            overlaysEffects: TestBed.get(OverlayEffects),
-            timelineService: TestBed.get(TimelineService)
+            overlaysEffects: TestBed.get(OverlaysEffects),
+            overlaysService: TestBed.get(OverlaysService)
         }
     };
 
     it('it should load all the overlays', () => {
-        const { runner, overlaysEffects, timelineService } = setup();
+        const { runner, overlaysEffects, overlaysService } = setup();
         let tmp = <Overlay[]>[];
         overlays.forEach(i => tmp.push(Object.assign({}, i,{date :i.photoTime})));
         const expectedResult = new LoadOverlaysSuccessAction(tmp);
-        
-        timelineService.fetchData.and.returnValue(Observable.of(overlays));
-        
-        runner.queue(new LoadOverlaysAction());
-        
-        let result = null;
-        overlaysEffects.loadOverlays$.subscribe(_result => { 
-            result = _result; 
-        });
-        
 
-        
+        overlaysService.fetchData.and.returnValue(Observable.of(overlays));
+
+        runner.queue(new LoadOverlaysAction());
+
+        let result = null;
+        overlaysEffects.loadOverlays$.subscribe(_result => {
+            result = _result;
+        });
+
+
+
         expect(result).toEqual(expectedResult);
-        
+
     });
-});    
+});

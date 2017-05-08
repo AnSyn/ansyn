@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
-import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from '@ansyn/menu-items';
 import { AppReducer } from './app.reducers.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpenLayerMap.module';
+import { OverlaysModule } from '@ansyn/overlays';
+
+
 
 @NgModule({
 	declarations: [
@@ -23,7 +25,7 @@ import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpe
 		CoreModule,
 		MenuModule,
 		MenuItemsModule,
-		TimelineModule,
+		OverlaysModule,
 		AppReducer,
 		ImageryModule
 	],

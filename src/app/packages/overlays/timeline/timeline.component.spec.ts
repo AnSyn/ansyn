@@ -10,7 +10,7 @@ describe('TimelineComponent', () => {
 	let component: TimelineComponent;
 	let fixture: ComponentFixture<TimelineComponent>;
 	let timeLineEmitterService: TimelineEmitterService;
-	let de: DebugElement;	
+	let de: DebugElement;
 	const dropsData = [
 			{
 				"name": "admin-on-rest",
@@ -60,21 +60,21 @@ describe('TimelineComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it("update drops variable will call eventDrops method", () => {   
+	it("update drops variable will call eventDrops method", () => {
 		spyOn(component,"eventDropsHandler")
 		component.drops = dropsData;
 		expect(component.eventDropsHandler).toHaveBeenCalled();
 	});
 
 	it("the view is working after initiliazing", () => {
-		
+
 		const svg = fixture.nativeElement.querySelector('svg');
 		expect(svg).toBeNull();
 		component.drops = dropsData;
 		const svg2 = fixture.nativeElement.querySelector('svg');
 		expect(svg2).toBeDefined();
 
-		//de.nativeElement	
+		//de.nativeElement
 	});
 
 	it("check that the drops are installed properly",() => {
@@ -84,5 +84,5 @@ describe('TimelineComponent', () => {
 		expect(lines.length).toEqual(component.drops.length);
 	});
 
-	
+
 });

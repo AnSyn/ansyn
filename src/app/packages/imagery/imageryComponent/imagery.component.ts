@@ -5,30 +5,21 @@ import {
 	Component, ElementRef, Input, OnInit, OnDestroy, ViewChild, ViewContainerRef, ComponentRef,
 	ComponentFactoryResolver, Type
 } from '@angular/core';
-import { ImageryProviderService } from '../imageryProviderService/imageryProviderService';
+import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { ImageryManager } from '../manager/imageryManager';
-import { ImageryCommunicatorService } from '../api/imageryCommunicatorService';
+import { ImageryCommunicatorService } from '../api/imageryCommunicator.service';
 import {ImageryComponentSettings} from './imageryComponentSettings';
 import { IMap, IMapComponent } from '../model/model';
 
 @Component({
 	selector: 'imagery-view',
 	template: `
-		<div #imagery>
-			<template #selected_component_elem></template>
-		</div>
-	`,
-	styles: [
-		`div{
-		width: 100%;
-        height: 100%;
-}`
-	]
+		<template #selected_component_elem></template>
+	`
 })
 
 export class ImageryComponent implements OnInit, OnDestroy {
 
-	@ViewChild('imagery') imageryElement: ElementRef;
 	@ViewChild('selected_component_elem', {read: ViewContainerRef}) selected_component_elem: ViewContainerRef;
 	@Input() public mapComponentSettings: ImageryComponentSettings;
 	private selected_component_ref: ComponentRef<any>;
@@ -76,7 +67,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 
 		if (this._manager) {
-			this.imageryCommunicatorService.removeImageryCommunicator(this.mapComponentSettings.mapComponentId);
+			this.imageryCommunicatorService.removeCommunicator(this.mapComponentSettings.mapComponentId);
 			this._manager.dispose();
 		}
 	}

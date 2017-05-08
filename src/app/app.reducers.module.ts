@@ -5,7 +5,7 @@ import { combineReducers, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from './packages/menu/reducers/menu.reducer';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { mapAppEffects } from './effects/map.effects';
+import { MapAppEffects } from './effects/map.effects';
 import { CasesAppEffects } from './effects/cases.app.effects';
 
 
@@ -17,20 +17,20 @@ const  reducers = {
 
 export const appReducer = compose(combineReducers)(reducers);
 
-export function reducer(state: any,action: any){
+export function reducer(state: any, action: any) {
 	return appReducer(state, action);
 }
 
 export interface IAppState {
-	overlays: IOverlayState,
-	cases: ICasesState,
-	menu: IMenuState
+	overlays: IOverlayState;
+	cases: ICasesState;
+	menu: IMenuState;
 }
 
 @NgModule({
 	imports: [
 		StoreModule.provideStore(reducer),
-		EffectsModule.run(mapAppEffects),
+		EffectsModule.run(MapAppEffects),
 		EffectsModule.run(CasesAppEffects),
 	]
 })

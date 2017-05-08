@@ -7,13 +7,9 @@ import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { TimelineModule } from '@ansyn/timeline';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { EffectsModule } from '@ngrx/effects';
-import { AppReducer, reducer } from './app.reducers.module';
+import { AppReducer } from './app.reducers.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { mapAppEffects } from './effects/map.effects';
-import { StoreModule } from '@ngrx/store';
 import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpenLayerMap.module';
-import { CasesAppEffects } from './effects/cases.app.effects';
 
 @NgModule({
 	declarations: [
@@ -29,9 +25,6 @@ import { CasesAppEffects } from './effects/cases.app.effects';
 		MenuItemsModule,
 		TimelineModule,
 		AppReducer,
-		// StoreModule.provideStore(reducer),
-		//RouterStoreModule.connectRouter(),
-		//StoreDevtoolsModule.instrumentOnlyWithExtension(),
 		ImageryModule
 	],
 	bootstrap: [AppComponent]

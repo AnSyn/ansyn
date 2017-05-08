@@ -2,7 +2,7 @@
  * Created by AsafMas on 07/05/2017.
  */
 import { Injectable } from '@angular/core';
-import { ImageryProviderService } from '@ansyn/imagery/imageryProviderService/imageryProviderService';
+import { ImageryProviderService } from '@ansyn/imagery/imageryProviderService/imageryProvider.service';
 import { OpenLayerComponent } from '../map/openLayer.component';
 
 @Injectable()

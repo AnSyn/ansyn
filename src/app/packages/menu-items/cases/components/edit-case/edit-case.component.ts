@@ -74,7 +74,8 @@ export class EditCaseComponent implements OnInit {
 		return {
 			name:'',
 			owner:'',
-			last_modified: new Date()
+			last_modified: new Date(),
+			state: {} as any
 		};
 	}
 
@@ -103,7 +104,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	setContextValues(case_model: Case) {
-		let selected_context: Context = _.cloneDeep(this.contexts_list.find((context: Context) => context.id === case_model.selected_context_id));
+		let selected_context: Context = _.cloneDeep(this.contexts_list.find((context: Context) => context.id === case_model.state.selected_context_id));
 		let [facets, region, time] = [selected_context.facets, selected_context.region, selected_context.time];
 		case_model.state = {facets, region ,time};
 	}

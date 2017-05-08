@@ -8,6 +8,7 @@ export type Case = {
 	state?: {
 		selected_overlay_id?: string;
 		selected_context_id?: string;
+		maps?: {position: any} [],
 		time: {
 			type:string,
 			from: Date,
@@ -19,7 +20,6 @@ export type Case = {
 			Stereo: boolean,
 			Resolution: number
 		},
-		maps: {position: any} [],
 		region: {}
 
 	}

@@ -8,7 +8,12 @@ import { IMap, IMapComponent } from '@ansyn/imagery/model/model';
 	selector: 'ol-component',
 	template: `
 		<div #olMap></div>
-	`
+	`,
+	styles: [
+			`div{
+			width: 100%;
+			height: 100%;
+		}`]
 })
 
 export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {

@@ -3,10 +3,10 @@
  */
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
-import {ImageryCommunicatorService} from '../api/imageryCommunicatorService';
+import {ImageryCommunicatorService} from '../api/imageryCommunicator.service';
 import {ImageryComponentSettings} from './imageryComponentSettings';
 import { MapSettings } from './mapSettings';
-import { ImageryProviderService } from '../imageryProviderService/imageryProviderService';
+import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;

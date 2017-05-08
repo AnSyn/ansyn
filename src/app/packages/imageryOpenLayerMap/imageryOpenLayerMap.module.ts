@@ -3,7 +3,7 @@
  */
 import {NgModule} from '@angular/core';
 import { OpenLayerComponent } from './map/openLayer.component';
-import { RegisterToImageryProviderService } from './services/registerToImageryProviderService';
+import { RegisterToImageryProviderService } from './services/registerToImageryProvider.service';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 
 @NgModule({

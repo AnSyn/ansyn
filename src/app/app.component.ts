@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicatorService';
 import { ImageryComponentSettings } from '@ansyn/imagery/imageryComponent/imageryComponentSettings';
 import { MapSettings } from '@ansyn/imagery/imageryComponent/mapSettings';
 
@@ -12,8 +11,7 @@ export class AppComponent {
 
 	public imageryComponentSettings: ImageryComponentSettings;
 
-	constructor(public imageryCommunicatorService: ImageryCommunicatorService) {
-
+	constructor() {
 		this.getMapSettings();
 	}
 

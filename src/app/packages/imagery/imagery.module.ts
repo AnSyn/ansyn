@@ -4,8 +4,8 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imageryComponent/imagery.component';
-import { ImageryCommunicatorService } from './api/imageryCommunicatorService';
-import { ImageryProviderService } from './imageryProviderService/imageryProviderService';
+import { ImageryCommunicatorService } from './api/imageryCommunicator.service';
+import { ImageryProviderService } from './imageryProviderService/imageryProvider.service';
 
 @NgModule({
   imports: [CommonModule],

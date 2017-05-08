@@ -44,19 +44,19 @@ export class LoadOverlaysFailAction implements Action {
 	constructor(public payload: Overlay[]){}
 }
 
-export class SetFilter implements Action {    
+export class SetFilter implements Action {
 	type = ActionTypes.SET_FILTER;
-	constructor(public payload:any){}                                          
+	constructor(public payload:any){}
 }
 
-export class ClearFilter implements Action {    
+export class ClearFilter implements Action {
 	type = ActionTypes.CLEAR_FILTER;
-	constructor(public payload?: any){}                                    
+	constructor(public payload?: any){}
 }
 
-export class DemoAction implements Action {     
+export class DemoAction implements Action {
 	type = ActionTypes.DEMO;
-	constructor(public payload: any) {     
+	constructor(public payload: any) {
     	console.log(payload);
     }
 }

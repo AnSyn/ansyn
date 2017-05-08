@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Http, Response,Headers,RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { IOverlayState } from '../reducers/timeline.reducer';
+import { IOverlayState } from '../reducers/overlays.reducer';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class TimelineService {
+export class OverlaysService {
 	//private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
 	private dataUrl = "http://localhost:9001/api/v1/overlays";
 

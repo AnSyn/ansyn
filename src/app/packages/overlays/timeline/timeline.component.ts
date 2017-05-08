@@ -7,7 +7,7 @@ import { TimelineEmitterService } from '../services/timeline-emitter.service';
 
 import  '@ansyn/core/utils/d3extending';
 
-/*d3.selection.prototype.moveToFront = function() {  
+/*d3.selection.prototype.moveToFront = function() {
       return this.each(function(){
         this.parentNode.appendChild(this);
       });
@@ -23,36 +23,36 @@ import  '@ansyn/core/utils/d3extending';
 })
 
 /**
- * 
+ *
  */
 export class TimelineComponent {
-	
+
 	private _drops: any[];
-	
+
 	@ViewChild('context') context: ElementRef;
-	
+
 
 	@Input()
-		set drops(drops:any[]) { 
+		set drops(drops:any[]) {
 			this._drops = drops;
         	this.eventDropsHandler();
 		}
-		get drops() {     
+		get drops() {
        		return this._drops;
        	}
 
-	
+
 	@Input() configuration:any;
-	
-	constructor(private emitter : TimelineEmitterService) { 
+
+	constructor(private emitter : TimelineEmitterService) {
 	}
-	
+
 
 	clickEvent() {
 	    const tolerance = 5;
         let down,last,wait;
-        const dist = (a,b) => Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2)); 
-        
+        const dist = (a,b) => Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2));
+
         return (element,index,nodes,tmp) => {
             if(!down){
                 down = d3.mouse(document.body);
@@ -63,7 +63,7 @@ export class TimelineComponent {
                     nodes[index].classList.toggle('selected');
                     d3.select(nodes[index])['moveToFront']();
                     this.emitter.provide('timeline:click').next({event:d3.event,element,index,nodes});
-                })(d3.event),300);    
+                })(d3.event),300);
             }
             else{
                 if(dist(down,d3.mouse(document.body)) < tolerance){
@@ -74,12 +74,12 @@ export class TimelineComponent {
                     wait = null;
                     down = null;
                 }
-                return; 
-            }    
+                return;
+            }
         }
     }
 
-	eventDropsHandler() :void {     
+	eventDropsHandler() :void {
 		const chart = eventDrops(this.configuration)
 			.mouseout( data => 	this.emitter.provide('timeline:mouseout').next(data))
     		.mouseover( data => this.emitter.provide('timeline:mouseover').next(data))
@@ -88,15 +88,15 @@ export class TimelineComponent {
     		.dblclick( () => {
     			d3.event.stopPropagation()
     		})
-    	
+
     	const dataSet = this.drops.map(entities => ({
         		name: entities.name || "",
         		data: entities.data,
-    		}));	
-		
+    		}));
+
 		const element = d3.select(this.context.nativeElement)
 			.datum(dataSet);
-		
-    	chart(element);	
+
+    	chart(element);
     }
 }

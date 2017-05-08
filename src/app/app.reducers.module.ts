@@ -1,4 +1,4 @@
-import { OverlayReducer, IOverlayState } from '@ansyn/timeline';
+import { OverlayReducer, IOverlayState } from '@ansyn/overlays';
 import { CasesReducer, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { compose } from '@ngrx/core/compose';
 import { combineReducers, StoreModule } from '@ngrx/store';

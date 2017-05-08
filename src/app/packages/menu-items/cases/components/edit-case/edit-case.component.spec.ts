@@ -8,7 +8,7 @@ import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 
-fdescribe('EditCaseComponent', () => {
+describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
 	let fixture: ComponentFixture<EditCaseComponent>;
 	let store: Store<ICasesState>;

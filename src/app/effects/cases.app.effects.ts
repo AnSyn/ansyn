@@ -3,12 +3,11 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.reducers.module';
 import { Observable } from 'rxjs';
-import { ActionTypes } from '../packages/timeline/actions/timeline.actions';
-import { CasesService } from '../packages/menu-items/cases/services/cases.service';
-import { Overlay } from '../packages/timeline/models/overlay.model';
-import { ICasesState } from '../packages/menu-items/cases/reducers/cases.reducer';
-import { Case } from '../packages/menu-items/cases/models/case.model';
-import { UpdateCaseSuccessAction } from '../packages/menu-items/cases/actions/cases.actions';
+import { ActionTypes } from '@ansyn/timeline/actions/timeline.actions';
+import { CasesService } from '@ansyn/menu-items/cases';
+import { ICasesState } from '@ansyn/menu-items/cases';
+import { Case } from '@ansyn/menu-items/cases';
+import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
 
 @Injectable()
 export class CasesAppEffects{

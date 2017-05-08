@@ -1,3 +1,5 @@
-export { CasesModule } from "./cases.module";
-export { Case } from "./models/case.model";
-export { CasesReducer } from "./reducers/cases.reducer";
+export { CasesModule } from './cases.module';
+export { Case } from './models/case.model';
+export { CasesReducer, ICasesState } from './reducers/cases.reducer';
+export { CasesService } from './services/cases.service';
+export { UpdateCaseSuccessAction } from './actions/cases.actions';

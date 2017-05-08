@@ -97,7 +97,7 @@ export class CasesEffects {
 			if(state.contexts_loaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				observable = this.casesService.loadCcntexts();
+				observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts) => { return new LoadContextsSuccessAction(contexts)});
 		}).share();

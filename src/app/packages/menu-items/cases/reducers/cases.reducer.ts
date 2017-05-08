@@ -1,18 +1,23 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
+import { Context } from '../models/context.model';
 
 export interface ICasesState {
 	cases: Case[];
 	selected_case_id: string,
 	active_case_id: string,
-	modal: boolean
+	modal: boolean,
+	contexts: Context[],
+	contexts_loaded: boolean
 }
 
 export const initialCasesState: ICasesState = {
 	cases: [],
 	selected_case_id: "",
 	active_case_id: "",
-	modal: false
+	modal: false,
+	contexts: [],
+	contexts_loaded: false
 };
 
 
@@ -21,7 +26,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 	switch (action.type) {
 
 		case CasesActionTypes.ADD_CASE:
-			return state;
+			return Object.assign({}, state);
 
 		case CasesActionTypes.ADD_CASE_SUCCESS:
 			let cases_added: Case[] = [
@@ -81,6 +86,12 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		case CasesActionTypes.SELECT_CASE:
 			return Object.assign({}, state, {selected_case_id: action.payload});
+
+		case CasesActionTypes.LOAD_CONTEXTS:
+			return Object.assign({}, state);
+
+		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
+			return Object.assign({}, state, {contexts: action.payload, contexts_loaded: true});
 
 		default:
 			return state;

@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
+import { Context } from '../models/context.model';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -17,7 +18,11 @@ export const CasesActionTypes = {
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
-	SELECT_CASE: 'SELECT_CASE'
+	SELECT_CASE: 'SELECT_CASE',
+
+	LOAD_CONTEXTS: 'LOAD_CONTEXTS',
+	LOAD_CONTEXTS_SUCCESS: 'LOAD_CONTEXTS_SUCCESS',
+
 };
 
 export type CasesActions = any;
@@ -71,5 +76,13 @@ export class CloseModalAction implements Action{
 export class SelectCaseAction implements Action{
 	type = CasesActionTypes.SELECT_CASE;
 	constructor(public payload: string){}
+}
+export class LoadContextsAction implements Action{
+	type = CasesActionTypes.LOAD_CONTEXTS;
+	constructor(public payload?: string){}
+}
+export class LoadContextsSuccessAction implements Action{
+	type = CasesActionTypes.LOAD_CONTEXTS_SUCCESS;
+	constructor(public payload: Context[]){}
 }
 

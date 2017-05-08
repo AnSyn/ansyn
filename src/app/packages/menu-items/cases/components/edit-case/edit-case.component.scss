@@ -164,6 +164,10 @@ div.edit-case {
         option{
           text-align: center;
         }
+		  &:disabled {
+			  opacity: .5;
+			  cursor: default;
+		  }
       }
     }
     .bottom-btns {

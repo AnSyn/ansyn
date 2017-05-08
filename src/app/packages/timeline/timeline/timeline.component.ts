@@ -1,6 +1,8 @@
 import { ViewEncapsulation,Component, OnInit,ViewChild,ElementRef,Input,OnChanges,ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
-import { eventDrops } from 'event-drops';
+
+import  { eventDrops }   from 'event-drops';
+
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 
 import  '@ansyn/core/utils/d3extending';
@@ -29,6 +31,7 @@ export class TimelineComponent {
 	
 	@ViewChild('context') context: ElementRef;
 	
+
 	@Input()
 		set drops(drops:any[]) { 
 			this._drops = drops;
@@ -37,12 +40,14 @@ export class TimelineComponent {
 		get drops() {     
        		return this._drops;
        	}
+
 	
 	@Input() configuration:any;
 	
 	constructor(private emitter : TimelineEmitterService) { 
 	}
 	
+
 	clickEvent() {
 	    const tolerance = 5;
         let down,last,wait;

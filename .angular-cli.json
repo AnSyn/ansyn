@@ -20,7 +20,7 @@
       "prefix": "ansyn",
       "styles": [
         "styles.scss",
-        "../node_modules/event-drops/style.css"
+        "../node_modules/event-drops/src/style.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

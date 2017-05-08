@@ -41,6 +41,12 @@ export class OverlayContainerComponent implements OnInit,AfterViewInit  {
 	constructor(private store: Store <IOverlayState>,private timelineService: TimelineService,private emitter : TimelineEmitterService) {
 		this.configuration = {    
 		  	start: new Date(new Date().getTime() - 3600000 * 24 * 365),
+		  	margin:{
+		  		top: 60,
+	            left: 50,
+	            bottom: 40,
+	            right: 50,
+		  	},
         	end: new Date(),
         	eventLineColor: (d,i) => d3.schemeCategory10[i],
         	date: d => new Date(d.date),
@@ -50,6 +56,7 @@ export class OverlayContainerComponent implements OnInit,AfterViewInit  {
     }
 
 	ngOnInit(): void {
+		
 		this.init();
 	}
 

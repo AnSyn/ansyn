@@ -3,14 +3,14 @@
  */
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoreModule } from '@ansyn/core';
 import { ImageryComponent } from './imageryComponent/imagery.component';
 import { ImageryCommunicatorService } from './api/imageryCommunicatorService';
+import { ImageryProviderService } from './imageryProviderService/imageryProviderService';
 
 @NgModule({
-  imports: [CommonModule, CoreModule],
+  imports: [CommonModule],
   declarations: [ImageryComponent],
-  providers: [ImageryCommunicatorService],
+  providers: [ImageryCommunicatorService, ImageryProviderService],
   exports: [ImageryComponent]
 })
 export class ImageryModule { }

@@ -1,0 +1,17 @@
+{
+	"name": "@ansyn/imageryOpenLayerMap",
+	"version": "0.0.1",
+	"description": "",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"peerDependencies": {
+		"@ansyn/imagery": "~0.0.0",
+		"openlayers": "^4.1.0",
+		"@angular/common": "~2.4.0",
+		"@angular/core": "^2.4.0"
+	}
+}

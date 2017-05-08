@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
-import { HttpModule } from "@angular/http";
+import { HttpModule } from '@angular/http';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
 	let fixture: ComponentFixture<DeleteCaseComponent>;
 
-	let fake_iCasesState: ICasesState = {
+	const fake_iCasesState: ICasesState = {
 		cases: [
 			{id: 'fake_id1', name: 'fake_name1'},
 			{id: 'fake_id2', name: 'fake_name2'}
@@ -20,7 +20,7 @@ describe('DeleteCaseComponent', () => {
 		active_case_id: 'fake_id1',
 		selected_case_id: null,
 		modal: true
-	};
+	} as any;
 
 	let store: Store<ICasesState>;
 

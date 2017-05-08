@@ -2,7 +2,7 @@
  * Created by AsafMasa on 27/04/2017.
  */
 import { Injectable } from '@angular/core';
-import {IImageryCommunicator, ImageryCommunicator} from './imageryCommunicator';
+import { IImageryCommunicator, ImageryCommunicator } from './imageryCommunicator';
 
 @Injectable()
 export class ImageryCommunicatorService {

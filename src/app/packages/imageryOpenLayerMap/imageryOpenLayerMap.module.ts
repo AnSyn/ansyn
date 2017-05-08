@@ -3,18 +3,18 @@
  */
 import {NgModule} from '@angular/core';
 import { OpenLayerComponent } from './map/openLayer.component';
-import { RegisterToImageryProviderService } from './services/registerToImageryProvider.service';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ImageryProviderService } from '@ansyn/imagery/imageryProviderService/imageryProvider.service';
 
 @NgModule({
 	imports: [ImageryModule],
 	declarations: [OpenLayerComponent],
-	providers: [RegisterToImageryProviderService],
+	providers: [],
 	exports: [OpenLayerComponent],
 	entryComponents: [OpenLayerComponent]
 })
 export class ImageryOpenLayerMapModule {
-	constructor(registerToImageryProviderService: RegisterToImageryProviderService) {
-
+	constructor(imageryProviderService: ImageryProviderService) {
+		imageryProviderService.registerMapProvider('openLayerMap', OpenLayerComponent);
 	}
 }

@@ -1,10 +1,10 @@
 /**
  * Created by AsafMasa on 26/04/2017.
  */
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
-import {ImageryCommunicatorService} from '../api/imageryCommunicator.service';
-import {ImageryComponentSettings} from './imageryComponentSettings';
+import { ImageryCommunicatorService } from '../api/imageryCommunicator.service';
+import { ImageryComponentSettings } from './imageryComponentSettings';
 import { MapSettings } from './mapSettings';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 
@@ -24,7 +24,9 @@ describe('ImageryComponent', () => {
 	const imageryData: ImageryComponentSettings = {mapComponentId: 'imagery1', mapSettings: [mapSettings], mapCenter: geoPoint};
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({declarations: [ ImageryComponent ], providers: [ ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
+		TestBed.configureTestingModule({
+			declarations: [ ImageryComponent ],
+			providers: [ ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ImageryProviderService], (_imageryCommunicatorService, _imageryProviderService) => {
@@ -46,14 +48,6 @@ describe('ImageryComponent', () => {
 	// 	const olOverlaycontainer = div.querySelector('.ol-overlaycontainer');
 	// 	expect(olOverlaycontainer).toBeDefined();
 	// });
-
-	it('should create "imageryCommunicatorService" service', () => {
-		expect(imageryCommunicatorService).toBeTruthy();
-	});
-
-	it('should create "imageryProviderService" service', () => {
-		expect(imageryProviderService).toBeTruthy();
-	});
 
 	// it('Check setCenter and getCenter API', () => {
 	// 	component.mapComponentSettings = imageryData;

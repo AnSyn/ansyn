@@ -31,7 +31,7 @@
     "@types/openlayers": "^4.0.1",
     "angular-tree-component": "^3.3.0",
     "core-js": "^2.4.1",
-    "event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64",
+    "event-drops": "github:osadan/EventDrops#f6a1e068f94e6a454d4f18c245bf2a09dfafb9e2",
     "lodash": "^4.17.4",
     "ng2-destroy-subscribers": "0.0.28",
     "reselect": "^3.0.0",

@@ -1,29 +1,31 @@
-import { IProvidedMap } from '../model/model';
+import { IMap } from '@ansyn/imagery';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
 import * as ol from 'openlayers';
 import {EventEmitter} from '@angular/core';
 
-export class OpenLayerMap implements IProvidedMap {
+export class OpenLayerMap implements IMap {
 
+	private _mapType: string;
 	private _mapObject: ol.Map;
 	private mapTileLayr: ol.layer.Tile;
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 
-	constructor(elementid: string) {
+	constructor(element: HTMLElement) {
+		this._mapType = 'openLayers';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.initMap(elementid);
+		this.initMap(element);
 	}
 
-	private initMap(elementId: string) {
+	private initMap(element: HTMLElement) {
 		this.mapTileLayr = new ol.layer.Tile({
 			source: new ol.source.OSM()
 		});
 
 		this._mapObject = new ol.Map({
-			target: elementId,
+			target: element,
 			layers: [this.mapTileLayr],
 			renderer: 'canvas',
 			controls: [],
@@ -39,15 +41,18 @@ export class OpenLayerMap implements IProvidedMap {
 		});
 	}
 
-	// IProvidedMap Start
+	// IMap Start
 
 	public get mapObject() {
 		return this._mapObject;
 	}
 
-	//public set type(value: string){}
 	public get mapType(){
-		return 'openLayers';
+		return this._mapType;
+	}
+
+	public set mapType(value){
+		this._mapType = value;
 	}
 
 	public setCenter(center: GeoJSON.Point) {
@@ -83,5 +88,8 @@ export class OpenLayerMap implements IProvidedMap {
 		// console.log(`extent: ${JSON.stringify(extenta)}`);
 		// //[minx, miny, maxx, maxy].
 	}
-	// IProvidedMap End
+	// IMap End
+	public dispose() {
+
+	}
 }

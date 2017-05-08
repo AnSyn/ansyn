@@ -2,7 +2,7 @@
  * Created by AsafMasa on 27/04/2017.
  */
 import { Injectable } from '@angular/core';
-import { ImageryCommunicator } from './imageryCommunicator';
+import {IImageryCommunicator, ImageryCommunicator} from './imageryCommunicator';
 
 @Injectable()
 export class ImageryCommunicatorService {
@@ -13,7 +13,7 @@ export class ImageryCommunicatorService {
 		this._communicators = {};
 	}
 
-	public getImageryCommunicator(id: string): ImageryCommunicator {
+	public provideCommunicator(id: string): IImageryCommunicator {
 		if (!this._communicators[id]) {
 			this.createImageryCommunicator(id);
 		}
@@ -21,11 +21,11 @@ export class ImageryCommunicatorService {
 	}
 
 	private createImageryCommunicator(id: string): void {
-		console.log(`'createImageryAPI ${id}'`);
+		console.log(`'createImageryCommunicator ${id}'`);
 		this._communicators[id] = new ImageryCommunicator();
 	}
 
-	public removeImageryCommunicator(id: string) {
+	public removeCommunicator(id: string) {
 		console.log(`'removeImageryAPI ${id}'`);
 		this._communicators[id].dispose();
 		this._communicators[id] = null;

@@ -1,11 +1,10 @@
-import { ImageryCommunicator } from '../api/imageryCommunicator';
-import { IProvidedMap } from '../model/model';
+import { IMap } from '../model/model';
 import {EventEmitter} from '@angular/core';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
 export class ImageryManager {
-	private _activeMap: IProvidedMap;
+	private _activeMap: IMap;
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 
@@ -13,7 +12,7 @@ export class ImageryManager {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 	}
 
-	public setActiveMap(activeMap: IProvidedMap) {
+	public setActiveMap(activeMap: IMap) {
 		console.log(`'${this.id} setActiveMap ${activeMap.mapType} map'`);
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();

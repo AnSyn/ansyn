@@ -26,7 +26,7 @@ export class mapAppEffects {
 		})
 		.switchMap( (overlay: Overlay) => {
 			const center:any = turf.center(overlay.footprint);
-			this.communicator.getImageryCommunicator('imagery1').setCenter(center.geometry);
+			this.communicator.provideCommunicator('imagery1').setCenter(center.geometry);
   			return Observable.empty();
 		});
 

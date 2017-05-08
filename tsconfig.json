@@ -17,10 +17,11 @@
     ],
     "types":[
       "jasmine",
-      "node"
+      "node",
+      "d3"
     ],
     "lib": [
-      "es2016",
+      "es6",
       "dom"
     ]
   }

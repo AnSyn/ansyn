@@ -37,6 +37,7 @@ export class TimelineEmitterService {
 	  	
 	  	constructor() { 
 	  		this.create('timeline:click');
+	  		this.create('timeline:dblclick');
 	  		this.create('timeline:mouseover');
 	  		this.create('timeline:mouseout');
 	  		this.create('timeline:zoomend');

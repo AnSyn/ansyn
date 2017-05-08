@@ -43,18 +43,19 @@ export class OverlayContainerComponent implements OnInit,AfterViewInit  {
 		  	start: new Date(new Date().getTime() - 3600000 * 24 * 365),
         	end: new Date(),
         	eventLineColor: (d,i) => d3.schemeCategory10[i],
-        	date: d => new Date(d.date)
+        	date: d => new Date(d.date),
+        	displayLabels: false
+
         };
-        //console.log(turf);
-        
     }
+
 	ngOnInit(): void {
 		this.init();
 	}
 
 	ngAfterViewInit(): void { 
-		this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
-			.subscribe(data => this.toggleOverlay(data.id));	
+		this.subscribers.clickEmitter = this.emitter.provide('timeline:dblclick')
+			.subscribe(data => this.toggleOverlay(data.element.id));	
 	}
 
 	//maybe to move this to the service
@@ -72,7 +73,6 @@ export class OverlayContainerComponent implements OnInit,AfterViewInit  {
 	
 	init(): void {     
 		this.subscribers.overlays = this.store.select('overlays')
-			//look for better solution for this problem
 			.skip(1)
 			.distinctUntilChanged(this.timelineService.compareOverlays)
     		.map((data: any) =>   this.timelineService.parseOverlayDataForDispaly(data.overlays, data.filters))

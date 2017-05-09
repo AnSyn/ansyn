@@ -38,7 +38,7 @@ describe('OverlayContainerComponent', () => {
   		],
   		declarations: [
       		OverlaysContainer,
-      		MockComponent({selector: 'timeline',inputs: ['drops','configuration']})
+      		MockComponent({selector: 'ansyn-timeline',inputs: ['drops','configuration']})
   		],
 			imports: [HttpModule,StoreModule.provideStore( OverlayReducer)]
     })

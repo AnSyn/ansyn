@@ -26,7 +26,7 @@ export const overlayInitialState: IOverlayState = {
 
 export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
-		case overlay.ActionTypes.DEMO:
+		case overlay.OverlaysActionTypes.DEMO:
 			let demo = ++state.demo;
 			let tmp:IOverlayState = Object.assign({}, state, {
             	demo
@@ -35,7 +35,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			return tmp;
 
 		//break;
-		case overlay.ActionTypes.SELECT_OVERLAY:
+		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
 			if(selected.indexOf(action.payload) === -1){
@@ -46,7 +46,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			});
 
 
-		case overlay.ActionTypes.UNSELECT_OVERLAY:
+		case overlay.OverlaysActionTypes.UNSELECT_OVERLAY:
 			const selected1 = state.selectedOverlays.slice();
 			const index = selected1.indexOf(action.payload);
 			if( index > -1){
@@ -59,13 +59,13 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				return state;
 			}
 
-		case overlay.ActionTypes.LOAD_OVERLAYS:
+		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
 				console.log("load overlays")
 				return Object.assign({},state,{
 					loading: true
 				});
 
-		case overlay.ActionTypes.LOAD_OVERLAYS_SUCCESS:
+		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 				console.log('load overlays suceess')
 				const overlays = action.payload;
 
@@ -85,7 +85,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				});
 
 
-		case overlay.ActionTypes.LOAD_OVERLAYS_FAIL:
+		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 				return Object.assign({},state,{
 					loading: false
 				});

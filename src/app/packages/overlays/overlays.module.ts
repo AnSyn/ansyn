@@ -18,8 +18,11 @@ import { EffectsModule } from "@ngrx/effects";
     EffectsModule.run(OverlaysEffects)
   ],
 
-  declarations: [TimelineComponent,OverlaysContainer],
-  exports: [OverlaysContainer],
+  declarations: [
+    TimelineComponent,
+    OverlaysContainer
+  ],
+  exports: [OverlaysContainer,TimelineComponent],
   providers: [
   	OverlaysService,
   	TimelineEmitterService

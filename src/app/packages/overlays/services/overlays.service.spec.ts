@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { TimelineService } from './overlays.service';
+import { OverlaysService } from './overlays.service';
 
 import { IOverlayState,overlayInitialState } from '../reducers/overlays.reducer';
 
@@ -11,8 +11,8 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable ,Observer} from 'rxjs';
 
 
-describe('TimelineService', () => {
-  let timeLineService,mockBackend,lastConnection,http ;
+describe('OverlaysService', () => {
+  let overlaysService,mockBackend,lastConnection,http ;
   let overlaysTmpData:any[];
   let response = 	{ data : [
 			{key: "a",value: 1},
@@ -22,15 +22,15 @@ describe('TimelineService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 		  providers: [
-		  	TimelineService,
+		  	OverlaysService,
 		  	{ provide: XHRBackend, useClass: MockBackend }
 		  ],
 		  imports:[HttpModule]
 		});
 	});
 
-  	beforeEach( inject([TimelineService,XHRBackend,Http], (_timeLineService,_mockBackend,_http) => {
-  		timeLineService = _timeLineService;
+  	beforeEach( inject([OverlaysService,XHRBackend,Http], (_overlaysService: OverlaysService,_mockBackend,_http) => {
+  		overlaysService = _overlaysService;
   		mockBackend = _mockBackend;
   		http = _http;
 
@@ -66,13 +66,13 @@ describe('TimelineService', () => {
  	}));
 
 	it('check all dependencies are defined properly', () => {
-		expect(timeLineService).toBeTruthy();
+		expect(overlaysService).toBeTruthy();
 
 	});
 
 	it('check the method fetchData with mock data', () => {
 
- 		timeLineService.fetchData().subscribe(result => {
+ 		overlaysService.fetchData().subscribe(result => {
      		expect(result.data.length).toBe(2);
      	});
 
@@ -88,7 +88,7 @@ describe('TimelineService', () => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = timeLineService.parseOverlayDataForDispaly(mockData.overlays, mockData.filters);
+		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays, mockData.filters);
 		expect(result[0].name).toBe(undefined);
 		expect(result[0].data.length).toBe(overlaysTmpData.length);
 	});
@@ -104,10 +104,10 @@ describe('TimelineService', () => {
 
 		const overlayState1: IOverlayState = Object.assign({},overlayInitialState);
 		const overlayState2: IOverlayState = Object.assign({},overlayInitialState);
-		expect(timeLineService.compareOverlays(overlayState1,overlayState2)).toBeTruthy();
+		expect(overlaysService.compareOverlays(overlayState1,overlayState2)).toBeTruthy();
 
 		overlayState1.overlays = mockData;
-		expect(timeLineService.compareOverlays(overlayState1,overlayState2)).toBeFalsy();
+		expect(overlaysService.compareOverlays(overlayState1,overlayState2)).toBeFalsy();
 
 	})
 
@@ -122,7 +122,7 @@ describe('TimelineService', () => {
             });
 		});
 
-		timeLineService.fetchData('tmp').subscribe(result => {
+		overlaysService.fetchData('tmp').subscribe(result => {
         	expect(result.key).toBe('value');
      	});
 
@@ -130,7 +130,7 @@ describe('TimelineService', () => {
   			body: JSON.stringify({key:'value2'})
   		}));
 
-  		timeLineService.fetchData('tmp').subscribe(result => {
+  		overlaysService.fetchData('tmp').subscribe(result => {
         	expect(result.key).toBe('value2' );
      	});
   	})
@@ -146,10 +146,10 @@ describe('TimelineService', () => {
             });
 		});
 
-		spyOn(timeLineService,"extractData");
+		spyOn(overlaysService,"extractData");
 
-		timeLineService.fetchData('tmp').subscribe(result => {
-            expect(timeLineService.extractData).toHaveBeenCalled();
+		overlaysService.fetchData('tmp').subscribe(result => {
+            expect(overlaysService.extractData).toHaveBeenCalled();
  		})
 
  	});
@@ -165,12 +165,12 @@ describe('TimelineService', () => {
             });
 		});
 
-		spyOn(timeLineService,"handleError");
+		spyOn(overlaysService,"handleError");
 
-		timeLineService.fetchData('error').subscribe(result => {
+		overlaysService.fetchData('error').subscribe(result => {
 
 		}, error => {
-        	expect(timeLineService.handleError.calls.any()).toEqual(true);
+        	expect(overlaysService.handleError.calls.any()).toEqual(true);
         })
  	});
 
@@ -185,12 +185,12 @@ describe('TimelineService', () => {
             });
 		});
 
-		spyOn(timeLineService,"handleError");
+		spyOn(overlaysService,"handleError");
 
-		timeLineService.fetchData('tmp').subscribe(result => {
+		overlaysService.fetchData('tmp').subscribe(result => {
 
 		}, error => {
-        	expect(timeLineService.handleError.calls.any()).toEqual(true);
+        	expect(overlaysService.handleError.calls.any()).toEqual(true);
         })
  	});
 });

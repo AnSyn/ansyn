@@ -45,7 +45,7 @@ describe("Overlays Effects ", () => {
             EffectsTestingModule
         ],
         providers: [
-            OverlayEffects, {
+            OverlaysEffects, {
                 provide: OverlaysService,
                 useValue: jasmine.createSpyObj('overlaysService', ['fetchData'])
             }

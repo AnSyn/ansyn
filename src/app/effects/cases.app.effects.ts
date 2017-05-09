@@ -3,7 +3,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.reducers.module';
 import { Observable } from 'rxjs';
-import { ActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
@@ -19,7 +19,7 @@ export class CasesAppEffects{
 
 	@Effect()
 	selectOverlay$: Observable<Action> = this.actions$
-		.ofType(ActionTypes.SELECT_OVERLAY)
+		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [{payload: any}, ICasesState]) => {
 			let selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);

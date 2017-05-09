@@ -6,7 +6,7 @@ import { IAppState } from '../app.reducers.module';
 import * as turf from '@turf/turf';
 
 
-import { ActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
@@ -23,7 +23,7 @@ export class MapAppEffects {
 
 	@Effect({dispatch: false})
 	selectOverlay$: Observable<Action> = this.actions$
-		.ofType(ActionTypes.SELECT_OVERLAY)
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('overlays'), (overlayId: string, store: IOverlayState ) => {
 			return store.overlays.get(overlayId);

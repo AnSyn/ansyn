@@ -23,7 +23,7 @@ export class OverlaysEffects {
 
 	@Effect()
 	loadOverlays$: Observable<Action> = this.actions$
-		.ofType(overlay.ActionTypes.LOAD_OVERLAYS)
+		.ofType(overlay.OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((tmp) => {
 			return this.overlaysService.fetchData()
 				.map(data => {
@@ -38,7 +38,7 @@ export class OverlaysEffects {
 
  	@Effect({ dispatch: false })
  	demo$: Observable<Action> = this.actions$
-		  	.ofType(overlay.ActionTypes.DEMO)
+		  	.ofType(overlay.OverlaysActionTypes.DEMO)
 		  	.debug('tmp1')
 	  		.switchMap( action => {
       			return Observable.empty();

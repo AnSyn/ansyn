@@ -14,7 +14,8 @@
     "baseUrl": "",
     "types": [
       "jasmine",
-      "node"
+      "node",
+      "dom"
     ]
   },
   "files": [

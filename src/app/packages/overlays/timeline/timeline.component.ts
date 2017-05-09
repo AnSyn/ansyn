@@ -15,11 +15,10 @@ import  '@ansyn/core/utils/d3extending';
 
 
 @Component({
-  	selector: 'timeline',
+  	selector: 'ansyn-timeline',
   	templateUrl: './timeline.component.html',
   	styleUrls: ['./timeline.component.css'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.Native
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /**
@@ -50,19 +49,18 @@ export class TimelineComponent {
 
 	clickEvent() {
 	    const tolerance = 5;
-        let down,last,wait;
+        let down,wait;
         const dist = (a,b) => Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2));
 
-        return (element,index,nodes,tmp) => {
+        return (element,index,nodes) => {
             if(!down){
                 down = d3.mouse(document.body);
-                last = +new Date();
                 wait = window.setTimeout( ((e) => () => {
                     wait = null;
                     down = null;
                     nodes[index].classList.toggle('selected');
                     d3.select(nodes[index])['moveToFront']();
-                    this.emitter.provide('timeline:click').next({event:d3.event,element,index,nodes});
+                    this.emitter.provide('timeline:click').next({event:e,element,index,nodes});
                 })(d3.event),300);
             }
             else{

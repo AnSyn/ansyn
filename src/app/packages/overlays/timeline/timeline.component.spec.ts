@@ -71,14 +71,16 @@ describe('TimelineComponent', () => {
 		const svg = fixture.nativeElement.querySelector('svg');
 		expect(svg).toBeNull();
 		component.drops = dropsData;
+		fixture.detectChanges();
 		const svg2 = fixture.nativeElement.querySelector('svg');
-		expect(svg2).toBeDefined();
+		expect(svg2).not.toBe(null);
 
 		//de.nativeElement
 	});
 
 	it("check that the drops are installed properly",() => {
 		component.drops = dropsData;
+		fixture.detectChanges();
 		const svg = fixture.nativeElement.querySelector('svg');
 		const lines = svg.querySelectorAll('.drop-line');
 		expect(lines.length).toEqual(component.drops.length);

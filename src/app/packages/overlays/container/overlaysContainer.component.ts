@@ -9,7 +9,7 @@ import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/compare';
 
 import { Store } from '@ngrx/store';
-import * as overlayAction from '../actions/overlays.actions';
+import * as overlaysAction from '../actions/overlays.actions';
 import { IOverlayState } from '../reducers/overlays.reducer';
 
 import * as d3 from 'd3';
@@ -27,9 +27,9 @@ import { OverlaysService } from "../services/overlays.service";
 export class OverlaysContainer implements OnInit,AfterViewInit  {
 	public drops: any[] = [];
 	public configuration: any;
+	
 	private errorMessage: string;
-	//public demoCount:Observable<number>;
-
+	
 	public overlays : any;
 	public selectedOverlays: Array<string> = [];
 	public subscribers: any = {};
@@ -58,8 +58,10 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 	}
 
 	ngAfterViewInit(): void {
-		this.subscribers.clickEmitter = this.emitter.provide('timeline:dblclick')
+		this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
 			.subscribe(data => this.toggleOverlay(data.element.id));
+		this.subscribers.clickEmitter = this.emitter.provide('timeline:dblclick')
+			.subscribe(data => this.store.dispatch(new overlaysAction.DisplayOverlayAction(data.element.id)));	
 	}
 
 	//maybe to move this to the service
@@ -72,7 +74,7 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 	}
 
 	demo(): void {
-		this.store.dispatch( new overlayAction.DemoAction('tmp'))
+		this.store.dispatch( new overlaysAction.DemoAction('tmp'))
 	}
 
 	init(): void {
@@ -88,7 +90,7 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 			.map( (data:IOverlayState) => data.selectedOverlays)
 			.subscribe(selectedOverlays => 	this.selectedOverlays = selectedOverlays)
 
-		this.store.dispatch(new overlayAction.LoadOverlaysAction());
+		this.store.dispatch(new overlaysAction.LoadOverlaysAction());
    	}
 
 }

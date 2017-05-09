@@ -9,7 +9,7 @@ import * as turf from '@turf/turf';
 import { ActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicatorService';
+import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
 
 import 'rxjs/add/operator/withLatestFrom';
 

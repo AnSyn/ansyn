@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../../layers-manager.module';
@@ -8,7 +9,7 @@ import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
 import { StoreModule } from '@ngrx/store';
-import { reducer } from '../../../../app.reducers.module';
+import { LayersReducer } from '../../reducers/layers.reducer';
 
 describe('LayerTreeComponent', () => {
   let component: LayerTreeComponent;
@@ -24,7 +25,7 @@ describe('LayerTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule, StoreModule.provideStore(reducer)],
+      imports: [LayersManagerModule, CoreModule,HttpModule, StoreModule.provideStore({layers: LayersReducer})],
     })
       .compileComponents();
   }));
@@ -114,12 +115,12 @@ describe('LayerTreeComponent', () => {
     rootDiv.click();
     fixture.detectChanges();
 
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '3')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '4')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '5')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '6')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '1')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '2')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '3')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '4')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '5')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '6')).toBeTruthy();
 
     expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeTruthy();
     expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeTruthy();
@@ -174,12 +175,12 @@ describe('LayerTreeComponent', () => {
     fixture.detectChanges();
     fixture.detectChanges();
 
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '3')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '4')).toBeFalsy();
-    expect(activatedNodes.find(node => node.data.id === '5')).toBeTruthy();
-    expect(activatedNodes.find(node => node.data.id === '6')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '1')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '2')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '3')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '4')).toBeFalsy();
+    expect(activatedNodes.find(node => node.id === '5')).toBeTruthy();
+    expect(activatedNodes.find(node => node.id === '6')).toBeTruthy();
 
     expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeFalsy();
     expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeTruthy();
@@ -240,12 +241,12 @@ describe('LayerTreeComponent', () => {
     persianRiceNode.click();
     fixture.detectChanges();
 
-    expect(activatedNodes.find(node => node.data.id === '1')).toBeFalsy('activatedNodes.find(node => node.data.id === 1)');
-    expect(activatedNodes.find(node => node.data.id === '2')).toBeFalsy('activatedNodes.find(node => node.data.id === 2)');
-    expect(activatedNodes.find(node => node.data.id === '3')).toBeFalsy('activatedNodes.find(node => node.data.id === 3)');
-    expect(activatedNodes.find(node => node.data.id === '4')).toBeFalsy('activatedNodes.find(node => node.data.id === 4)');
-    expect(activatedNodes.find(node => node.data.id === '5')).toBeFalsy('activatedNodes.find(node => node.data.id === 5)');
-    expect(activatedNodes.find(node => node.data.id === '6')).toBeFalsy('activatedNodes.find(node => node.data.id === 6)');
+    expect(activatedNodes.find(node => node.id === '1')).toBeFalsy('activatedNodes.find(node => node.data.id === 1)');
+    expect(activatedNodes.find(node => node.id === '2')).toBeFalsy('activatedNodes.find(node => node.data.id === 2)');
+    expect(activatedNodes.find(node => node.id === '3')).toBeFalsy('activatedNodes.find(node => node.data.id === 3)');
+    expect(activatedNodes.find(node => node.id === '4')).toBeFalsy('activatedNodes.find(node => node.data.id === 4)');
+    expect(activatedNodes.find(node => node.id === '5')).toBeFalsy('activatedNodes.find(node => node.data.id === 5)');
+    expect(activatedNodes.find(node => node.id === '6')).toBeFalsy('activatedNodes.find(node => node.data.id === 6)');
 
     expect(fixture.debugElement.query(By.css('#node1 > input')).nativeElement.checked).toBeFalsy('(#node1 > input)).nativeElement.checked');
     expect(fixture.debugElement.query(By.css('#node2 > input')).nativeElement.checked).toBeFalsy('(#node2 > input)).nativeElement.checked');

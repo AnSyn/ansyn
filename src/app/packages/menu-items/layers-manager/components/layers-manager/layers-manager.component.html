@@ -1,3 +1,3 @@
 <div class="layer-manager">
-    <app-layer-tree [source]=nodes></app-layer-tree>
+    <app-layer-tree [source]=nodes (nodeActivationChanged)="onNodeActivationChanged($event)"></app-layer-tree>
 </div>

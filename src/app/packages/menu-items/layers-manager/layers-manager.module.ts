@@ -1,3 +1,5 @@
+import { LayersEffects } from './effects/layers.effects';
+import { EffectsModule } from '@ngrx/effects';
 import { DataLayersService } from './services/data-layers.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,15 +10,19 @@ import { LayerTreeComponent } from './components/layer-tree/layer-tree.component
 import { Store } from '@ngrx/store';
 
 @NgModule({
-	imports: [CommonModule, TreeModule],
+	imports: [
+		CommonModule,
+		TreeModule,
+		EffectsModule.run(LayersEffects)
+	],
 	declarations: [LayersManagerComponent, LayerTreeComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })
 export class LayersManagerModule {
-	constructor(store: Store <any>) {
+	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
-			name:"Layers Manager",
+			name: "Layers Manager",
 			component: LayersManagerComponent,
 			icon_url: "/assets/icons/data-layers.svg"
 		};

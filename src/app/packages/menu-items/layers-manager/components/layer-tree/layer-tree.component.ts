@@ -57,7 +57,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
     node.data.isChecked = newCheckValue;
     if (node.isLeaf) {
-      this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node, newCheckValue));
+      this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node.data, newCheckValue));
     }
 
     this.bubbleActivationDown(node, newCheckValue);
@@ -70,7 +70,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     node.children.filter(child => child.data.isChecked !== activationValue).forEach(child => {
       child.data.isChecked = activationValue;
       if (child.isLeaf) {
-        this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(child, activationValue));
+        this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(child.data, activationValue));
       }
       this.bubbleActivationDown(child, activationValue);
     });

@@ -1,3 +1,5 @@
+import { ILayerState, LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { LayersAppEffects } from './effects/layers.app.effects';
 import { OverlayReducer, IOverlayState } from '@ansyn/overlays';
 import { CasesReducer, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { compose } from '@ngrx/core/compose';
@@ -15,7 +17,8 @@ const  reducers = {
 	overlays : OverlayReducer,
 	cases: CasesReducer,
 	menu: MenuReducer,
-	map: MapReducer
+	map: MapReducer,
+	layers: LayersReducer
 };
 
 export const appReducer = compose(combineReducers)(reducers);
@@ -28,6 +31,7 @@ export interface IAppState {
 	overlays: IOverlayState;
 	cases: ICasesState;
 	menu: IMenuState;
+	layers: ILayerState;
 }
 
 @NgModule({
@@ -35,7 +39,8 @@ export interface IAppState {
 		StoreModule.provideStore(reducer),
 		EffectsModule.run(MapAppEffects),
 		EffectsModule.run(CasesAppEffects),
-		EffectsModule.run(MenuAppEffects)
+		EffectsModule.run(MenuAppEffects),
+		EffectsModule.run(LayersAppEffects)
 	]
 })
 export class AppReducer {

@@ -12,6 +12,7 @@ export interface IMap {
 	getCenter(): GeoJSON.Point;
 	setCenter(center: GeoJSON.Point);
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
+	setLayer(layer: any): void;
 }
 
 export interface IMapComponent {

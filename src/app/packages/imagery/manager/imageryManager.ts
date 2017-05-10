@@ -58,4 +58,8 @@ export class ImageryManager {
 		}
 		this._subscriptions = [];
 	}
+
+	public setLayer(layer: any) {
+		this._activeMap.setLayer(layer);
+	}
 }

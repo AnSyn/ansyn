@@ -1,0 +1,14 @@
+<div>
+	<h1>Test Imagery View</h1>
+
+	<h3>Set Center</h3>
+	<label>lat</label>
+	<input #latInput type="number" (keyup)="0">
+	<label>long</label>
+	<input #longInput type="number" (keyup)="0">
+	<button (click)="setCenter({lat :latInput.value, long: longInput.value})">set center to lat: {{latInput.value}}, long: {{longInput.value}})</button>
+
+	<h3>load source</h3>
+	<button (click)="loadImageLayer()">Load Image Layer</button>
+	<button (click)="loadWorldLayer()">Load World Layer</button>
+</div>

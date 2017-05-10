@@ -14,6 +14,7 @@ export interface IImageryCommunicator {
 	setBoundingView(boundingRectangle: GeoJSON.MultiPolygon);
 	setCenter(center: GeoJSON.Point);
 	setActiveMap(mapType: string);
+	setLayer(layer: any);
 
 	getActiveMapObject(): any;
 	getCenter(): GeoJSON.Point;
@@ -22,7 +23,6 @@ export interface IImageryCommunicator {
 }
 
 export class ImageryCommunicator implements IImageryCommunicator {
-
 	private _manager: ImageryManager;
 	private _managerSubscriptions;
 	private _plugginCommunicators: { [id: string]: IPlugginCommunicator };
@@ -92,6 +92,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 
 	public getPlugginCommunicator(plugginId: string): IPlugginCommunicator {
 		return this._plugginCommunicators[plugginId];
+	}
+
+	public setLayer(layer: any) {
+		this._manager.setLayer(layer);
 	}
 
 	//IImageryCommunicator methods end

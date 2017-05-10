@@ -43,6 +43,12 @@ export class OpenLayerMap implements IMap {
 
 	// IMap Start
 
+	public setLayer(layer: any) {
+		this._mapObject.removeLayer(this.mapTileLayr);
+		this.mapTileLayr = layer;
+		this._mapObject.addLayer(this.mapTileLayr);
+	}
+
 	public get mapObject() {
 		return this._mapObject;
 	}

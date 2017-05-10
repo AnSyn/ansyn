@@ -10,6 +10,7 @@ import { AppReducer } from './app.reducers.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpenLayerMap.module';
 import { OverlaysModule } from '@ansyn/overlays';
+import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagerySandBox.module';
 
 
 
@@ -27,7 +28,8 @@ import { OverlaysModule } from '@ansyn/overlays';
 		MenuItemsModule,
 		OverlaysModule,
 		AppReducer,
-		ImageryModule
+		ImageryModule,
+		ImagerySandBoxModule
 	],
 	bootstrap: [AppComponent]
 })

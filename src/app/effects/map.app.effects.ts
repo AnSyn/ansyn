@@ -7,9 +7,7 @@ import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
-import { CasesActionTypes, SelectCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
-import { Case } from '../packages/menu-items/cases/models/case.model';
-import { ICasesState } from '../packages/menu-items/cases/reducers/cases.reducer';
+import { Case, ICasesState, CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
 

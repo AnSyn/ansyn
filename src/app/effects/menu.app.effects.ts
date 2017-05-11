@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { MenuActionTypes } from '@ansyn/core';
-import { UpdateMapSizeAction } from '../packages/map-facade/actions/map.actions';
+import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()

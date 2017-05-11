@@ -1,4 +1,5 @@
-import { IMap, IPosition } from '@ansyn/imagery';
+import { IMap } from '@ansyn/imagery';
+import { Position } from '@ansyn/core';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
@@ -12,12 +13,12 @@ export class OpenLayerMap implements IMap {
 	private _mapLayers = [];
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public positionChanged: EventEmitter<IPosition>;
+	public positionChanged: EventEmitter<Position>;
 
 	constructor(element: HTMLElement) {
 		this._mapType = 'openLayers';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<IPosition>();
+		this.positionChanged = new EventEmitter<Position>();
 		this.initMap(element);
 	}
 
@@ -99,14 +100,14 @@ export class OpenLayerMap implements IMap {
 		return geoPoint;
 	}
 
-	public setPosition(IPosition): void {
+	public setPosition(Position): void {
 		this.mapObject.setView(new ol.View(<olx.ViewOptions>{
-			center: ol.proj.fromLonLat(IPosition.center.coordinates),
-			zoom: IPosition.zoom
+			center: ol.proj.fromLonLat(Position.center.coordinates),
+			zoom: Position.zoom
 		}));
 	}
 
-	public getPosition(): IPosition {
+	public getPosition(): Position {
 		window['OpenLayerMap'] = this;
 		let center: GeoJSON.Point = this.getCenter();
 		let zoom: number = this.mapObject.getView().getZoom();

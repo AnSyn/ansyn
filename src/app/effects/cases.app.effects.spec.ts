@@ -1,18 +1,18 @@
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import { SelectOverlayAction, UnSelectOverlayAction } from '../packages/overlays/actions/overlays.actions';
-import { CasesService } from '../packages/menu-items/cases/services/cases.service';
+import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
+import { CasesService } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
-import { Case } from '../packages/menu-items/cases/models/case.model';
-import { UpdateCaseSuccessAction } from '../packages/menu-items/cases/actions/cases.actions';
+import { Case } from '@ansyn/menu-items/cases/models/case.model';
+import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { HttpModule } from '@angular/http';
 import { CasesReducer } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ICasesState } from '../packages/menu-items/cases/reducers/cases.reducer';
-import { PositionChangedAction } from '../packages/map-facade/actions/map.actions';
-import { IPosition } from '../packages/imagery/model/model';
+import { ICasesState } from '@ansyn//menu-items/cases/reducers/cases.reducer';
+import { PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
+import { Position } from '@ansyn/core';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -96,7 +96,7 @@ describe('CasesAppEffects', () => {
 
 		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
 
-		let position: IPosition = {
+		let position: Position = {
 			zoom: 1,
 			center: "" as any
 		};

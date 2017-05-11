@@ -16,7 +16,7 @@ export interface IMapSourceProviderContainer{
 }
 
 @Injectable()
-export class MapSourceProviderContainer implements IMapSourceProviderContainer  {
+export class MapSourceProviderContainerService implements IMapSourceProviderContainer {
    
 
     private _sourceProvides : Map<string,ISourceProvider>;

@@ -1,8 +1,8 @@
-import {MapSourceProviderContainer,sourceMapProviders} from './map-source-provider-container.service';
+import {MapSourceProviderContainerService,sourceMapProviders} from './map-source-provider-container.service';
 import { TestBed, inject } from '@angular/core/testing';
 import { ISourceProvider} from '../models/models';
 
-class SourceProvider implements ISourceProvider {
+class SourceProviderMock implements ISourceProvider {
     mapType: string;
     sourceType: string;
     
@@ -18,24 +18,24 @@ class SourceProvider implements ISourceProvider {
 }
 
 describe('MapSourceProviderContainer', () => {
-	let mapSourceProviderContainer: MapSourceProviderContainer;
+	let mapSourceProviderContainer: MapSourceProviderContainerService;
     let sourceProviders : ISourceProvider[] = [
-        new SourceProvider('mapType1','sourceType1'),
-        new SourceProvider('mapType2','sourceType2')
+        new SourceProviderMock('mapType1','sourceType1'),
+        new SourceProviderMock('mapType2','sourceType2')
     ];
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
-                MapSourceProviderContainer,
+                MapSourceProviderContainerService,
                 {provide: sourceMapProviders , useValue: sourceProviders}
             ]
 		});
 	});
 
 	beforeEach(
-        inject([MapSourceProviderContainer], 
-        (_mapSourceProviderContainer: MapSourceProviderContainer) => {
+        inject([MapSourceProviderContainerService], 
+        (_mapSourceProviderContainer: MapSourceProviderContainerService) => {
 		mapSourceProviderContainer = _mapSourceProviderContainer;
 	}));
 
@@ -54,7 +54,7 @@ describe('MapSourceProviderContainer', () => {
     })
 
     it('should register new SourceProvider',() => {
-        let expectedValue = new SourceProvider('mapType3','sourceType3');
+        let expectedValue = new SourceProviderMock('mapType3','sourceType3');
         mapSourceProviderContainer.register(expectedValue);
         expect(mapSourceProviderContainer.
         resolve('mapType3','sourceType3')).

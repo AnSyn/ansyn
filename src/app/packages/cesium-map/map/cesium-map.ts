@@ -2,7 +2,7 @@
  * Created by AsafMas on 11/05/2017.
  */
 import { IMap } from '@ansyn/imagery';
-import {EventEmitter} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 
 export class CesiumMap implements IMap {

@@ -6,7 +6,7 @@ import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { AnimationEndAction } from '@ansyn/core/actions/menu.actions';
 import { UpdateMapSizeAction } from '../packages/map-facade/actions/map.actions';
 
-fdescribe('MenuAppEffects', () => {
+describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
 	let effectsRunner: EffectsRunner;
 

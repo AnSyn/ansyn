@@ -12,13 +12,14 @@ import {
 import { Observable } from 'rxjs';
 import { Case } from '../models/case.model';
 import { compose } from '@ngrx/core';
+import { OverlayReducer } from '../../../overlays/reducers/overlays.reducer';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let effectsRunner: EffectsRunner;
 
-	const appReducer = compose(combineReducers)({cases: CasesReducer, overlays: OverlaysReducer});
+	const appReducer = compose(combineReducers)({cases: CasesReducer, overlays: OverlayReducer});
 
 	function reducer(state: any, action: any) {
 		return appReducer(state, action);

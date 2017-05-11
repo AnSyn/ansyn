@@ -1,0 +1,11 @@
+{
+  "name": "map-source-provider",
+  "version": "1.0.0",
+  "description": "This is map source provider package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "eldadcohen1",
+  "license": "MIT"
+}

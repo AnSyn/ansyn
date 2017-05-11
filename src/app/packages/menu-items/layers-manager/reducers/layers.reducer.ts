@@ -25,10 +25,19 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
             });
 
         case LayersActionTypes.SELECT_LAYER:
+            let selectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
+            if (selectedLayerIndex > -1){
+                return state;
+            }
+
             return Object.assign({}, state, { selectedLayers: state.selectedLayers.concat([action.payload]) });
 
         case LayersActionTypes.UNSELECT_LAYER:
             let unselectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
+            if(unselectedLayerIndex === -1){
+                return state;
+            }
+            
             let newSelectedArray: ILayerTreeNode[] = [
                 ...state.selectedLayers.slice(0, unselectedLayerIndex),
                 ...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];

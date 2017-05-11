@@ -34,7 +34,6 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 
 			return tmp;
 
-		//break;
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
@@ -60,13 +59,14 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			}
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
-				console.log("load overlays")
+				const filters = action.payload;
 				return Object.assign({},state,{
-					loading: true
+					loading: true,
+					filters
 				});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
-				console.log('load overlays suceess')
+				
 				const overlays = action.payload;
 
 				const stateOverlays = new Map(state.overlays);

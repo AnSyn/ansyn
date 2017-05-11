@@ -90,7 +90,7 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 			.map( (data:IOverlayState) => data.selectedOverlays)
 			.subscribe(selectedOverlays => 	this.selectedOverlays = selectedOverlays)
 
-		this.store.dispatch(new overlaysAction.LoadOverlaysAction());
+		//this.store.dispatch(new overlaysAction.LoadOverlaysAction());
    	}
 
 }

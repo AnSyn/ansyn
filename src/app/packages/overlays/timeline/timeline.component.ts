@@ -34,7 +34,9 @@ export class TimelineComponent {
 	@Input()
 		set drops(drops:any[]) {
 			this._drops = drops;
-        	this.eventDropsHandler();
+        	if(this._drops.length){
+                this.eventDropsHandler();
+            }
 		}
 		get drops() {
        		return this._drops;

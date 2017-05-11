@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed,fakeAsync } from '@angular/core/testing';
 import * as d3 from 'd3';
 import * as eventDrops from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';

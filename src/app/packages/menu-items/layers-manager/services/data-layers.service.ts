@@ -1,3 +1,4 @@
+import { IServerDataLayerContainerRoot } from './../models/server-data-layer-container-root';
 import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';
@@ -11,30 +12,30 @@ export type LayersBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTre
 
 @Injectable()
 export class DataLayersService {
-  private baseUrl = 'http://localhost:9001/api/v1/cases';
+  baseUrl = 'http://localhost:9001/api/v1/cases';
 
-  private tree: ILayerTreeNode[] = [];
+  tree: ILayerTreeNode[] = [];
 
   constructor(private http: Http) { }
 
   public getAllLayersInATree(caseId: string = 'caseId'): Observable<LayersBundle> {
     return this.http.get(`${this.baseUrl}/${caseId}/layers`)
-      .map((res) => this.extractData(res))
+      .map((res) => this.extractData(res.json()))
       .catch(this.handleError);
   }
 
-  private extractData(res: Response): LayersBundle {
-    let dataLayerArray: IServerDataLayerContainer[] = res.json();
+  public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayersBundle {
     let clientTree: LayersBundle = this.serverTreeToClientTree(dataLayerArray);
     return clientTree || { layers: [], selectedLayers: [] };
   }
 
-  private serverTreeToClientTree(serverTree: IServerDataLayerContainer[]): LayersBundle {
+  private serverTreeToClientTree(serverTree: IServerDataLayerContainerRoot[]): LayersBundle {
     let allRoots: ILayerTreeNode[] = [];
     let selectedLayers: ILayerTreeNode[] = [];
 
     for (let serverRoot of serverTree) {
       let rootBundle: LayersBundle = this.serverLayerContainerToLayerTreeNodes(serverRoot);
+      rootBundle.layers[0]['type'] = serverRoot.type;
       allRoots = allRoots.concat(rootBundle.layers);
       selectedLayers = selectedLayers.concat(rootBundle.selectedLayers);
     }

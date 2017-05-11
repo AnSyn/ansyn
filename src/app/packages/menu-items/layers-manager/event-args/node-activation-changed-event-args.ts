@@ -1,10 +1,10 @@
-import { ILayerTreeNode } from './../models/layer-tree-node';
+import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 
 export class NodeActivationChangedEventArgs {
-    public node: ILayerTreeNode;
+    public node: ILayerTreeNodeLeaf;
     public newState: boolean;
 
-    constructor(node: ILayerTreeNode, newState: boolean) {
+    constructor(node: ILayerTreeNodeLeaf, newState: boolean) {
         this.node = node;
         this.newState = newState;
     }

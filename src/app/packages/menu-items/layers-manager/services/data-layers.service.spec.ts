@@ -2,7 +2,7 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainerRoot } from '../models/server-data-layer-container-root';
 import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
 import { HttpModule, Http, Headers, RequestOptions } from "@angular/http";
-import { DataLayersService, LayersBundle } from './data-layers.service';
+import { DataLayersService, LayerRootsBundle } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';

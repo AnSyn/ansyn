@@ -1,9 +1,12 @@
-import { ILayerTreeNode } from '../models/layer-tree-node';
+import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNode } from './../models/layer-tree-node';
+import { LayerType } from './../models/layer-type';
 import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { HttpModule } from '@angular/http';
-import { DataLayersService, LayersBundle } from '../services/data-layers.service';
+import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction } from './../actions/layers.actions';
@@ -32,14 +35,15 @@ describe('LayersEffects', () => {
     });
 
     it('beginLayerTreeLoad$ should call dataLayersService.getAllLayersInATree with case id from state, and return LayerTreeLoadedAction', () => {
-        let staticLayer: ILayerTreeNode = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, isIndeterminate: false, children: <ILayerTreeNode[]>[] };
-        let dynamicLayer: ILayerTreeNode = { name: 'dynamicLayer', id: 'dynamicLayerId', isChecked: false, isIndeterminate: false, children: <ILayerTreeNode[]>[] };
-        let complexLayer: ILayerTreeNode = { name: 'complexLayers', id: 'complexLayersId', isChecked: false, isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+        let staticLeaf: ILayerTreeNodeLeaf = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, url: "fake_url", isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+        let staticLayer: ILayerTreeNodeRoot = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, type: LayerType.static, isIndeterminate: false, children: <ILayerTreeNode[]>[staticLeaf] };
+        let dynamicLayer: ILayerTreeNodeRoot = { name: 'dynamicLayer', id: 'dynamicLayerId', isChecked: false, type: LayerType.dynamic, isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+        let complexLayer: ILayerTreeNodeRoot = { name: 'complexLayers', id: 'complexLayersId', isChecked: false, type: LayerType.complex, isIndeterminate: false, children: <ILayerTreeNode[]>[] };
 
-        let layers: ILayerTreeNode[] = [staticLayer, dynamicLayer, complexLayer];
-        let selectedLayers: ILayerTreeNode[] = [staticLayer, dynamicLayer];
+        let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+        let selectedLayers: ILayerTreeNode[] = [staticLeaf];
 
-        let loadedTreeBundle: LayersBundle = { layers: layers, selectedLayers: selectedLayers };
+        let loadedTreeBundle = { layers: layers, selectedLayers: selectedLayers };
         spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
 
         effectsRunner.queue(new BeginLayerTreeLoadAction({caseId: 'blabla'}));

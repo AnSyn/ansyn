@@ -1,10 +1,11 @@
 import { ILayerState } from './layers.reducer';
-import { ILayerTreeNode } from './../models/layer-tree-node';
+import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { LayersActionTypes, LayersActions } from '../actions/layers.actions';
 
 export interface ILayerState {
-    layers: ILayerTreeNode[];
-    selectedLayers: ILayerTreeNode[];
+    layers: ILayerTreeNodeRoot[];
+    selectedLayers: ILayerTreeNodeLeaf[];
 }
 
 export const initialLayersState: ILayerState = {
@@ -38,7 +39,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
                 return state;
             }
             
-            let newSelectedArray: ILayerTreeNode[] = [
+            let newSelectedArray: ILayerTreeNodeLeaf[] = [
                 ...state.selectedLayers.slice(0, unselectedLayerIndex),
                 ...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
             return Object.assign({}, state, { selectedLayers: newSelectedArray });

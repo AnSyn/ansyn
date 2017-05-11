@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.reducers.module';
 import { Observable } from 'rxjs';
-import { OverlaysActionTypes, SelectOverlayAction  } from '@ansyn/overlays/actions/overlays.actions';
+
+import { OverlaysActionTypes,LoadOverlaysAction,SelectOverlayAction,UnSelectOverlayAction } from '@ansyn/overlays';
+import { MapActionTypes, PositionChangedAction } from '../packages/map-facade/actions/map.actions';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
-import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes, PositionChangedAction } from '../packages/map-facade/actions/map.actions';
+import { UpdateCaseSuccessAction, CasesActionTypes } from '@ansyn/menu-items/cases';
+import { empty } from 'rxjs/observable/empty';
+
 import 'rxjs/add/operator/withLatestFrom';
-import { UnSelectOverlayAction } from '../packages/overlays/actions/overlays.actions';
+import '@ansyn/core/utils/debug'
 
 @Injectable()
 export class CasesAppEffects {
@@ -68,6 +71,24 @@ export class CasesAppEffects {
 			});
 		});
 
+	@Effect()	
+	selectCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.map(toPayload)
+		.withLatestFrom(this.store$.select('cases'))
+		.map( ([caseId,state]: [string,ICasesState]) =>  {
+			const filter = {};
+			const caseSelected: Case = state.cases.filter((item:Case) => item.id == caseId )[0];
+			
+			const overlayFilter = {
+				to: caseSelected.state.time.to,
+				from: caseSelected.state.time.from,
+				polygon: caseSelected.state.region
+			}
+			
+			return new LoadOverlaysAction(filter);
+		})
+	
 
 	@Effect()
 	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$

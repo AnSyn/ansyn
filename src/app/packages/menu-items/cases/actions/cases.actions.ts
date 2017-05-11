@@ -75,7 +75,9 @@ export class CloseModalAction implements Action{
 }
 export class SelectCaseAction implements Action{
 	type = CasesActionTypes.SELECT_CASE;
-	constructor(public payload: string){}
+	constructor(public payload: string){
+		
+	}
 }
 export class LoadContextsAction implements Action{
 	type = CasesActionTypes.LOAD_CONTEXTS;

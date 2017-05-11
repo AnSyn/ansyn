@@ -1,5 +1,5 @@
 import { MenuItem } from '../../core/models/menu-item.model';
-import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/core.actions';
+import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/menu.actions';
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
 describe('MenuReducer', () =>{
 

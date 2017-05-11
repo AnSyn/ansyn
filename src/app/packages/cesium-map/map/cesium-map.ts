@@ -3,18 +3,13 @@
  */
 import { IMap } from '@ansyn/imagery';
 import {EventEmitter} from '@angular/core';
+import { GeoJsonObject } from 'geojson';
 
 export class CesiumMap implements IMap {
-
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	mapObject: any;
+	positionChanged: EventEmitter<{zoom: number; center: GeoJSON.Point; }>;
 	mapType: string;
-
-	constructor(element: HTMLElement) {
-		this.mapType = 'cesium';
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.mapObject = {};
-	}
+	mapObject: any;
 
 	getCenter(): GeoJSON.Point {
 		throw new Error('Method not implemented.');
@@ -24,7 +19,9 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setBoundingRectangle(rect: GeoJSON.MultiPolygon) {
+	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
+	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
+	setBoundingRectangle(rect: any) {
 		throw new Error('Method not implemented.');
 	}
 
@@ -35,6 +32,32 @@ export class CesiumMap implements IMap {
 	addLayer(layer: any): void {
 		throw new Error('Method not implemented.');
 	}
+
+	setPosition(Position: any): void {
+		throw new Error('Method not implemented.');
+	}
+
+	getPosition(): {zoom: number; center: GeoJSON.Point;} {
+		throw new Error('Method not implemented.');
+	}
+
+	updateSize(): void {
+		throw new Error('Method not implemented.');
+	}
+
+	addGeojsonLayer(data: GeoJsonObject) {
+		throw new Error('Method not implemented.');
+	}
+
+
+	constructor(element: HTMLElement) {
+		this.mapType = 'cesium';
+		this.centerChanged = new EventEmitter<GeoJSON.Point>();
+		this.positionChanged = new EventEmitter<{ zoom: number; center: GeoJSON.Point; }>();
+		this.mapObject = {};
+	}
+
+
 
 
 }

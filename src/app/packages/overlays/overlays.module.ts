@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineEmitterService } from './services/timeline-emitter.service';
-import { OverlaysContainer } from './container/overlaysContainer.component';
+import { OverlaysContainer } from './container/overlays-container.component';
 
 import { OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from "./effects/overlays.effects";

@@ -5,4 +5,4 @@ export { OverlaysActionTypes,SelectOverlayAction, UnSelectOverlayAction, LoadOve
 export { OverlaysEffects } from './effects/overlays.effects';
 export { Overlay } from './models/overlay.model';
 export { IOverlayState,overlayInitialState,OverlayReducer }  from './reducers/overlays.reducer';
-export { OverlaysContainer } from './container/overlaysContainer.component';
+export { OverlaysContainer } from './container/overlays-container.component';

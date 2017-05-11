@@ -12,6 +12,7 @@ export interface IOverlayState {
 	selectedOverlays: string[];
 	demo: number;
 	filters : any;
+	queryParams: any;
 }
 
 export const overlayInitialState: IOverlayState = {
@@ -21,7 +22,8 @@ export const overlayInitialState: IOverlayState = {
 	selectedOverlays: [],
 	demo: 1,
 	//@todo change to Map
-	filters: {}
+	filters: {},
+	queryParams: {}
 }
 
 export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
@@ -59,10 +61,10 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			}
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
-				const filters = action.payload;
+				const queryParams = action.payload && {};
 				return Object.assign({},state,{
 					loading: true,
-					filters
+					queryParams
 				});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:

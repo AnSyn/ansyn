@@ -17,8 +17,8 @@ import { OverlaysService } from "../services/overlays.service";
 
 @Component({
 	selector: 'overlays-container',
-  	templateUrl: './overlaysContainer.component.html',
-  	styleUrls: ['./overlaysContainer.component.css']
+  	templateUrl: './overlays-container.component.html',
+  	styleUrls: ['./overlays-container.component.css']
 })
 
 @DestroySubscribers({

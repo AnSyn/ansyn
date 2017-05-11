@@ -83,10 +83,11 @@ export class CasesAppEffects {
 			const overlayFilter = {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,
-				polygon: caseSelected.state.region
+				polygon: caseSelected.state.region,
+				caseId: caseId
 			}
 			
-			return new LoadOverlaysAction(filter);
+			return new LoadOverlaysAction(overlayFilter);
 		})
 	
 

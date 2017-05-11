@@ -11,24 +11,24 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class OverlaysService {
 	//private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
-	private dataUrl = "http://localhost:9001/api/v1/overlays";
+	private dataUrl = "http://localhost:9001/api/v1/case/:id/overlays";
 
 	constructor(private http:Http ) {
 	}
 
 	//@todo add support for parsing callback function
-	fetchData ({url="",params={}}: {url?:string,params?:any} = {}): Observable<any[]>{
-		let tmp = url;
+	fetchData (url = "",params:any = {}): Observable<any[]>{
+		let restPath = url;
 
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers: headers });
 
-		if(!tmp){
-			tmp = this.dataUrl;
+		if(!restPath){
+			restPath = this.dataUrl.replace(':id',params.caseId);
 		}
 
-		const data = JSON.stringify(params);
-		return this.http.post(tmp,data,options)
+		//const data = JSON.stringify(params);
+		return this.http.get(restPath,options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
@@ -75,6 +75,7 @@ export class OverlaysService {
 		else{
 			errorMessage = error.message ? error.message : error.toString();
 		}
+		console.warn(errorMessage);
 		return Observable.empty();
 	}
 }

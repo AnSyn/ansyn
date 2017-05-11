@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
 import { MockComponent } from '../../../helpers/mock-component';
 import { StoreFixture,createStore } from '../../../helpers/mock-store';
-import { OverlaysContainer } from './overlaysContainer.component';
+import { OverlaysContainer } from './overlays-container.component';
 import { OverlaysService } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Subscription,Observable,Observer } from 'rxjs/Rx';
@@ -73,7 +73,7 @@ describe('OverlayContainerComponent', () => {
 	});
 
 
-	it('should call store dispatch on ngOnInit with LoadOverlayAction',() => {
+	xit('should call store dispatch on ngOnInit with LoadOverlayAction',() => {
 		spyOn(store,'dispatch').and.callThrough();
 		component.ngOnInit();
 		const expectedResult = new LoadOverlaysAction();

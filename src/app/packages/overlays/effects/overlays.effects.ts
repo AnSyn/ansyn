@@ -24,8 +24,8 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<Action> = this.actions$
 		.ofType(overlay.OverlaysActionTypes.LOAD_OVERLAYS)
-		.switchMap((tmp) => {
-			return this.overlaysService.fetchData()
+		.switchMap((action) => {
+			return this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
 						item.date = item.photoTime

@@ -22,8 +22,8 @@ export class ImageryManager {
 		console.debug("TODO: implement setBoundingView");
 	}
 
-	public setCenter(center: GeoJSON.Point) {
-		this._activeMap.setCenter(center);
+	public setCenter(center: GeoJSON.Point, animation: boolean) {
+		this._activeMap.setCenter(center, animation);
 	}
 
 	public getMapObject() {
@@ -61,5 +61,9 @@ export class ImageryManager {
 
 	public setLayer(layer: any) {
 		this._activeMap.setLayer(layer);
+	}
+
+	public addLayer(layer: any) {
+		this._activeMap.addLayer(layer);
 	}
 }

@@ -10,9 +10,10 @@ export interface IMap {
 
 	mapObject: any;
 	getCenter(): GeoJSON.Point;
-	setCenter(center: GeoJSON.Point);
+	setCenter(center: GeoJSON.Point, animation: boolean);
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	setLayer(layer: any): void;
+	addLayer(layer: any): void;
 }
 
 export interface IMapComponent {

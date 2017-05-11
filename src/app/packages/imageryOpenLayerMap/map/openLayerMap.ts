@@ -9,7 +9,7 @@ export class OpenLayerMap implements IMap {
 
 	private _mapType: string;
 	private _mapObject: ol.Map;
-	private mapTileLayr: ol.layer.Tile;
+	private _mapLayers = [];
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 
@@ -20,13 +20,13 @@ export class OpenLayerMap implements IMap {
 	}
 
 	private initMap(element: HTMLElement) {
-		this.mapTileLayr = new ol.layer.Tile({
+		const mapTileLayr = new ol.layer.Tile({
 			source: new ol.source.OSM()
 		});
 
 		this._mapObject = new ol.Map({
 			target: element,
-			layers: [this.mapTileLayr],
+			layers: [mapTileLayr],
 			renderer: 'canvas',
 			controls: [],
 			view: new ol.View({
@@ -34,6 +34,8 @@ export class OpenLayerMap implements IMap {
 				zoom: 12
 			})
 		});
+
+		this._mapLayers.push(mapTileLayr);
 
 		this._mapObject.on('moveend', (e) => {
 			const center = this.getCenter();
@@ -44,9 +46,17 @@ export class OpenLayerMap implements IMap {
 	// IMap Start
 
 	public setLayer(layer: any) {
-		this._mapObject.removeLayer(this.mapTileLayr);
-		this.mapTileLayr = layer;
-		this._mapObject.addLayer(this.mapTileLayr);
+		this._mapLayers.forEach((existingLayer) => {
+			this._mapObject.removeLayer(existingLayer);
+		});
+
+		this._mapLayers = [layer];
+		this._mapObject.addLayer(layer);
+	}
+
+	public addLayer(layer: any) {
+		this._mapLayers.push(layer);
+		this._mapObject.addLayer(layer);
 	}
 
 	public get mapObject() {
@@ -61,10 +71,14 @@ export class OpenLayerMap implements IMap {
 		this._mapType = value;
 	}
 
-	public setCenter(center: GeoJSON.Point) {
+	public setCenter(center: GeoJSON.Point, animation: boolean) {
 		const projection = this._mapObject.getView().getProjection();
 		const olCenter = ol.proj.transform([center.coordinates[0], center.coordinates[1]], 'EPSG:4326', projection);
-		this.flyTo(olCenter);
+		if (animation) {
+			this.flyTo(olCenter);
+		} else {
+			this._mapObject.getView().setCenter(olCenter);
+		}
 	}
 
 	public getCenter(): GeoJSON.Point {

@@ -12,7 +12,7 @@ import {
 import { Observable } from 'rxjs';
 import { Case } from '../models/case.model';
 import { compose } from '@ngrx/core';
-import { OverlayReducer } from '../../../overlays/reducers/overlays.reducer';
+import { OverlayReducer } from '@ansyn/overlays';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

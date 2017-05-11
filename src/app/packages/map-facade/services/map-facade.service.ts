@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
-import { ImageryCommunicatorService } from '../../imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { PositionChangedAction } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 

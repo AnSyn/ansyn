@@ -28,9 +28,9 @@ export class ImageryManager {
 		this._mapComponentRef = this.map_component_elem.createComponent(factory);
 
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
-		const subscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
+		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
-			subscribe.unsubscribe();
+			mapCreatedSubscribe.unsubscribe();
 		});
 	}
 

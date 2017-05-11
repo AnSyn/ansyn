@@ -1,6 +1,6 @@
 import { ILayerTreeNode } from './../models/layer-tree-node';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, LayersActionTypes } from './../actions/layers.actions';
-import { DataLayersService, LayersBundle } from '../services/data-layers.service';
+import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -19,7 +19,7 @@ export class LayersEffects {
         .ofType(LayersActionTypes.BEGIN_LAYER_TREE_LOAD)
         .switchMap((action: BeginLayerTreeLoadAction) => {
             return this.dataLayersService.getAllLayersInATree(action.payload.caseId)
-                .map((layersBundle: LayersBundle) => {
+                .map((layersBundle: LayerRootsBundle) => {
                     return new LayerTreeLoadedAction({ layers: layersBundle.layers, selectedLayers: layersBundle.selectedLayers });
                 });
         }).share();

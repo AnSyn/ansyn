@@ -1,6 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryManager } from '../manager/imageryManager';
-import { IPlugginCommunicator, IPosition } from '../model/model';
+import { IPlugginCommunicator } from '../model/model';
+import { Position } from '@ansyn/core';
+
 import * as _ from 'lodash';
 
 /**
@@ -9,7 +11,7 @@ import * as _ from 'lodash';
 export interface IImageryCommunicator {
 	plugginCommunicatorAdded: EventEmitter<string>;
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<IPosition>;
+	positionChanged: EventEmitter<Position>;
 
 	init(manager: ImageryManager);
 
@@ -18,7 +20,7 @@ export interface IImageryCommunicator {
 	setActiveMap(mapType: string);
 	setLayer(layer: any);
 	addLayer(layer: any);
-	setPosition(IPosition): void;
+	setPosition(Position): void;
 	updateSize(): void;
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void
 	getActiveMapObject(): any;
@@ -32,13 +34,13 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	private _managerSubscriptions;
 	private _plugginCommunicators: { [id: string]: IPlugginCommunicator };
 
-	public positionChanged: EventEmitter<IPosition>;
+	public positionChanged: EventEmitter<Position>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public plugginCommunicatorAdded: EventEmitter<string>;
 
 	constructor() {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<IPosition>();
+		this.positionChanged = new EventEmitter<Position>();
 		this.plugginCommunicatorAdded = new EventEmitter<string>();
 		this._plugginCommunicators = {};
 	}
@@ -47,7 +49,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: IPosition ) => {
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: Position ) => {
 			this.positionChanged.emit(position);
 		}));
 
@@ -97,7 +99,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._manager.setCenter(center, animate);
 	}
 
-	public setPosition(position: IPosition) {
+	public setPosition(position: Position) {
 		this._manager.setPosition(position);
 	}
 

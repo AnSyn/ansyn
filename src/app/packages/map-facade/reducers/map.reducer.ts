@@ -1,6 +1,8 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
+import { Position } from '@ansyn/core'
+
 export interface IMapState {
-	position: GeoJSON.Polygon
+	position: Position
 }
 
 export const initialMapState: IMapState = {
@@ -11,7 +13,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 	switch (action.type) {
 		case MapActionTypes.POSITION_CHANGED:
-			return state;
+			return Object.assign(state, {position: action.payload});
 
 		case MapActionTypes.UPDATE_MAP_SIZE:
 			return state;

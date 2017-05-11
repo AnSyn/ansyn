@@ -18,19 +18,25 @@ export class CasesAppEffects {
 	constructor(private actions$: Actions, private store$: Store<IAppState>, private casesService: CasesService) {}
 
 	@Effect()
-	selectOverlay$: Observable<UpdateCaseSuccessAction | void > = this.actions$
+	selectOverlay$: Observable<UpdateCaseSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [SelectOverlayAction, ICasesState]) => {
-			let selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
+			const selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
 
 			if(!selected_case) {
-				return Observable.of(new UpdateCaseSuccessAction(selected_case));
+				return Observable.empty();
 			}
 
-			if(!selected_case.state.selected_overlays_ids) selected_case.state.selected_overlays_ids = [];
+			if(!selected_case.state.selected_overlays_ids){
+				selected_case.state.selected_overlays_ids = [];
+			}
+
 			let exist = selected_case.state.selected_overlays_ids.find((value) => value == action.payload);
-			if(!exist) selected_case.state.selected_overlays_ids.push(action.payload);
+
+			if(!exist){
+				selected_case.state.selected_overlays_ids.push(action.payload);
+			}
 
 			return this.casesService.updateCase(selected_case).map((updated_case) => {
 				return new UpdateCaseSuccessAction(updated_case);
@@ -42,14 +48,20 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
-			let selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
+			const selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
 			if(!selected_case) {
 				return Observable.empty();
 			}
 
-			if(!selected_case.state.selected_overlays_ids) selected_case.state.selected_overlays_ids = [];
-			let exist_index = selected_case.state.selected_overlays_ids.findIndex((value) => value == action.payload);
-			if(exist_index != -1) selected_case.state.selected_overlays_ids.splice(exist_index, 1);
+			if(!selected_case.state.selected_overlays_ids){
+				selected_case.state.selected_overlays_ids = [];
+			}
+
+			const exist_index = selected_case.state.selected_overlays_ids.findIndex((value) => value == action.payload);
+
+			if(exist_index != -1){
+				selected_case.state.selected_overlays_ids.splice(exist_index, 1);
+			}
 
 			return this.casesService.updateCase(selected_case).map((updated_case) => {
 				return new UpdateCaseSuccessAction(updated_case);
@@ -62,7 +74,7 @@ export class CasesAppEffects {
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
-			let selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
+			const selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
 			if(!selected_case){
 				return Observable.empty()
 			}

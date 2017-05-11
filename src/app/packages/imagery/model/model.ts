@@ -1,17 +1,13 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryCommunicator } from '../api/imageryCommunicator';
+import { Position } from '@ansyn/core'
 /**
  * Created by AsafMasa on 25/04/2017.
  */
 
-export type IPosition = {
-	zoom: number;
-	center: GeoJSON.Point
-}
-
 export interface IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<IPosition>;
+	positionChanged: EventEmitter<Position>;
 
 	mapType: string;
 	mapObject: any;
@@ -20,8 +16,8 @@ export interface IMap {
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	setLayer(layer: any): void;
 	addLayer(layer: any): void;
-	setPosition(IPosition): void;
-	getPosition(): IPosition;
+	setPosition(Position): void;
+	getPosition(): Position;
 	updateSize(): void;
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);

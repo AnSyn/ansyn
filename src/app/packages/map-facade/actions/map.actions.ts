@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IPosition } from '../../imagery/model/model';
+import { Position } from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -10,7 +10,7 @@ export type MapActions = any;
 
 export class PositionChangedAction implements Action{
 	type = MapActionTypes.POSITION_CHANGED;
-	constructor	(public payload: IPosition) {}
+	constructor	(public payload: Position) {}
 }
 export class UpdateMapSizeAction implements Action{
 	type = MapActionTypes.UPDATE_MAP_SIZE;

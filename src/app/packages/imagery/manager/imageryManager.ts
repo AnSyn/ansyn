@@ -1,5 +1,6 @@
-import { IMap, IPosition } from '../model/model';
+import { IMap } from '../model/model';
 import { EventEmitter } from '@angular/core';
+import { Position } from '@ansyn/core';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -8,11 +9,11 @@ export class ImageryManager {
 	private _subscriptions = [];
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public positionChanged: EventEmitter<IPosition>;
+	public positionChanged: EventEmitter<Position>;
 
 	constructor(public id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<IPosition>();
+		this.positionChanged = new EventEmitter<Position>();
 	}
 
 	public setActiveMap(activeMap: IMap) {
@@ -28,7 +29,7 @@ export class ImageryManager {
 	public setCenter(center: GeoJSON.Point, animation: boolean) {
 		this._activeMap.setCenter(center, animation);
 	}
-	public setPosition(position: IPosition) {
+	public setPosition(position: Position) {
 		this._activeMap.setPosition(position);
 	}
 	public getPosition(): void {
@@ -60,7 +61,7 @@ export class ImageryManager {
 		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
-		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: IPosition) => {
+		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: Position) => {
 			this.positionChanged.emit(position);
 		}));
 	}

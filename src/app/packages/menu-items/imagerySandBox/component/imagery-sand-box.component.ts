@@ -28,14 +28,14 @@ export class ImagerySandBoxComponent implements OnInit {
 				type: 'Point',
 				coordinates: [long, lat]
 			};
-			this.imageryCommunicatorService.provideCommunicator('imagery1').setCenter(geoPoint);
+			this.imageryCommunicatorService.provideCommunicator('imagery1').setCenter(geoPoint, coordinate.animation);
 		} catch (ex) {
-			console.log(`'${JSON.stringify(ex)}'`);
+			throw new Error(`setCenter failed ${ex}`);
 		}
 	}
 
-	public loadWorldLayer() {
-		console.log(`'loadWorldLayer'`);
+	public setWorldLayer() {
+		console.log(`'setWorldLayer'`);
 
 		try {
 			const mapTileLayr = new ol.layer.Tile({
@@ -43,41 +43,55 @@ export class ImagerySandBoxComponent implements OnInit {
 			});
 			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(mapTileLayr);
 		} catch (ex) {
-			console.log(`'${JSON.stringify(ex)}'`);
+			throw new Error(`setWorldLayer failed ${ex}`);
 		}
 	}
 
-	public loadImageLayer() {
-		console.log(`'loadImageLayer'`);
+	public addImageLayer() {
+		console.log(`addImageLayer`);
 
 		try {
-
-			const projection = new ol.proj.Projection({
-				code: 'EPSG:4326',
-				units: 'degrees',
-				axisOrientation: 'neu',
-				global: true
-			});
-
-			const tiled = new ol.layer.Tile({
-				visible: true,
-				source: new ol.source.TileWMS({
-					url: 'http://localhost:8080/geoserver/ansyn/wms',
-					params: {
-						'FORMAT': 'image/png',
-						'VERSION': '1.1.1',
-						tiled: true,
-						STYLES: '',
-						LAYERS: 'ansyn:israel_center_1',
-						tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
-					},
-					projection: projection
-				})
-			});
-			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(tiled);
+			const layer = this.createImageLayer();
+			this.imageryCommunicatorService.provideCommunicator('imagery1').addLayer(layer);
 		} catch (ex) {
-			console.log(`'${JSON.stringify(ex)}'`);
+			throw new Error(`addImageLayer failed ${ex}`);
 		}
 	}
 
+	public setImageLayer() {
+		console.log(`setImageLayer`);
+
+		try {
+			const layer = this.createImageLayer();
+			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(layer);
+		} catch (ex) {
+			throw new Error(`setImageLayer failed ${ex}`);
+		}
+	}
+
+	private createImageLayer(): ol.layer.Tile {
+		const projection = new ol.proj.Projection({
+			code: 'EPSG:4326',
+			units: 'degrees',
+			axisOrientation: 'neu',
+			global: true
+		});
+
+		const tiled = new ol.layer.Tile({
+			visible: true,
+			source: new ol.source.TileWMS({
+				url: 'http://localhost:8080/geoserver/ansyn/wms',
+				params: {
+					'FORMAT': 'image/png',
+					'VERSION': '1.1.1',
+					tiled: true,
+					STYLES: '',
+					LAYERS: 'ansyn:israel_center_1',
+					tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
+				},
+				projection: projection
+			})
+		});
+		return tiled;
+	}
 }

@@ -67,6 +67,8 @@ export class TimelineComponent {
             }
             else{
                 if(dist(down,d3.mouse(document.body)) < tolerance){
+                    d3.select(nodes[index])['moveToFront']();
+                    nodes[index].classList.add('selected');
                     this.emitter.provide('timeline:dblclick').next({event:d3.event,element,index,nodes});
                 }
                 if(wait){

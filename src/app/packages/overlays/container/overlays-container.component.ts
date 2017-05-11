@@ -61,7 +61,13 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 		this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
 			.subscribe(data => this.toggleOverlay(data.element.id));
 		this.subscribers.clickEmitter = this.emitter.provide('timeline:dblclick')
-			.subscribe(data => this.store.dispatch(new overlaysAction.DisplayOverlayAction(data.element.id)));	
+			.subscribe(data => {
+				const id = data.element.id;
+				this.store.dispatch(new overlaysAction.DisplayOverlayAction(id))
+				if(this.selectedOverlays.indexOf(id) === -1){
+					this.store.dispatch(new SelectOverlayAction(id));
+				}
+			});	
 	}
 
 	//maybe to move this to the service

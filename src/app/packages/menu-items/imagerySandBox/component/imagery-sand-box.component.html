@@ -14,4 +14,9 @@
 	<button (click)="setImageLayer()">Set Image Layer (remove other layers)</button>
 	<button (click)="setWorldLayer()">Set  World Layer (remove other layers)</button>
 	<button (click)="addImageLayer()">add Image Layer (on top of other layers)</button>
+
+	<h3>Toggle maps</h3>
+	<input #mapTypeInput type="string" (keyup)="0">
+	<button (click)="setActiveMap(mapTypeInput.value)">set active map: {{mapTypeInput.value}}</button>
+
 </div>

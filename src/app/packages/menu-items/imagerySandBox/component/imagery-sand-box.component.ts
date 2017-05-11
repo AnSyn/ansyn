@@ -94,4 +94,8 @@ export class ImagerySandBoxComponent implements OnInit {
 		});
 		return tiled;
 	}
+
+	public setActiveMap(mapType: string) {
+		this.imageryCommunicatorService.provideCommunicator('imagery1').setActiveMap(mapType);
+	}
 }

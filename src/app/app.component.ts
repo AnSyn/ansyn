@@ -21,7 +21,7 @@ export class AppComponent {
 			coordinates: [16, 38]
 		};
 
-		const mapSettings: MapSettings[] = [{mapType: 'openLayerMap', mapModes: []}];
+		const mapSettings: MapSettings[] = [{ mapType: 'openLayerMap', mapModes: []}, { mapType: 'cesiumMap', mapModes: []}];
 		this.imageryComponentSettings = {mapCenter: geoPoint, mapComponentId: 'imagery1', mapSettings: mapSettings};
 	}
 }

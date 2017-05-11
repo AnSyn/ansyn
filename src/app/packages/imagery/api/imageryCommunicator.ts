@@ -74,7 +74,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this.registerToManagerEvents();
 	}
 	public setActiveMap(mapType: string) {
-		throw new Error('Method not implemented.');
+		this._manager.setActiveMap(mapType);
 	}
 
 	public getActiveMapObject() {

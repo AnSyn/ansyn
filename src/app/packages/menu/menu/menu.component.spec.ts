@@ -3,7 +3,7 @@ import { MenuComponent } from './menu.component';
 import { MenuItem } from "@ansyn/core";
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/core.actions';
+import { SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/menu.actions';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;

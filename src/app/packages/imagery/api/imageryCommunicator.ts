@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
-import {ImageryManager} from '../manager/imageryManager';
-import {IPlugginCommunicator} from '../model/model';
+import { ImageryManager } from '../manager/imageryManager';
+import { IPlugginCommunicator, IPosition } from '../model/model';
 import * as _ from 'lodash';
 
 /**
@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 export interface IImageryCommunicator {
 	plugginCommunicatorAdded: EventEmitter<string>;
 	centerChanged: EventEmitter<GeoJSON.Point>;
+	positionChanged: EventEmitter<IPosition>;
 
 	init(manager: ImageryManager);
 
@@ -17,7 +18,9 @@ export interface IImageryCommunicator {
 	setActiveMap(mapType: string);
 	setLayer(layer: any);
 	addLayer(layer: any);
-
+	setPosition(IPosition): void;
+	updateSize(): void;
+	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void
 	getActiveMapObject(): any;
 	getCenter(): GeoJSON.Point;
 	getPlugginCommunicator(plugginId: string): IPlugginCommunicator;
@@ -29,11 +32,13 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	private _managerSubscriptions;
 	private _plugginCommunicators: { [id: string]: IPlugginCommunicator };
 
+	public positionChanged: EventEmitter<IPosition>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public plugginCommunicatorAdded: EventEmitter<string>;
 
 	constructor() {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
+		this.positionChanged = new EventEmitter<IPosition>();
 		this.plugginCommunicatorAdded = new EventEmitter<string>();
 		this._plugginCommunicators = {};
 	}
@@ -42,6 +47,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: IPosition ) => {
+			this.positionChanged.emit(position);
+		}));
+
 	}
 
 	private unregisterToManagerEvents() {
@@ -62,7 +71,6 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
 	}
-
 	public setActiveMap(mapType: string) {
 		throw new Error('Method not implemented.');
 	}
@@ -74,7 +82,12 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	public getCenter(): GeoJSON.Point {
 		return this._manager.getMapCenter();
 	}
-
+	public updateSize(): void {
+		return this._manager.updateSize();
+	}
+	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
+		return this._manager.addGeojsonLayer(data);
+	}
 	public setBoundingView(boundingRectangle: GeoJSON.MultiPolygon) {
 		this._manager.setBoundingView(boundingRectangle);
 	}
@@ -82,6 +95,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
 		const animate = (_.isNil(animation)) ? true : animation;
 		this._manager.setCenter(center, animate);
+	}
+
+	public setPosition(position: IPosition) {
+		this._manager.setPosition(position);
 	}
 
 	public registerPlugginCommunicator(plugginId: string, plugginCommunicator: IPlugginCommunicator) {

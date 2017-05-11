@@ -46,7 +46,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		// reference
 		case CasesActionTypes.UPDATE_CASE_SUCCESS:
-			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == state.active_case_id);
+			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == action.payload.id);
 			let indexOfUpdated = state.cases.indexOf(old_case);
 			let updated_case = action.payload;
 

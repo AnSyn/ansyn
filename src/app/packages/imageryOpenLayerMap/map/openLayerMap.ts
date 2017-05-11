@@ -1,4 +1,4 @@
-import { IMap } from '@ansyn/imagery';
+import { IMap, IPosition } from '@ansyn/imagery';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
@@ -12,10 +12,12 @@ export class OpenLayerMap implements IMap {
 	private _mapLayers = [];
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
+	public positionChanged: EventEmitter<IPosition>;
 
 	constructor(element: HTMLElement) {
 		this._mapType = 'openLayers';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
+		this.positionChanged = new EventEmitter<IPosition>();
 		this.initMap(element);
 	}
 
@@ -40,6 +42,7 @@ export class OpenLayerMap implements IMap {
 		this._mapObject.on('moveend', (e) => {
 			const center = this.getCenter();
 			this.centerChanged.emit(center);
+			this.positionChanged.emit(this.getPosition());
 		});
 	}
 
@@ -81,15 +84,33 @@ export class OpenLayerMap implements IMap {
 		}
 	}
 
+	public updateSize(): void {
+		this._mapObject.updateSize();
+	}
+
 	public getCenter(): GeoJSON.Point {
 		const projection = this._mapObject.getView().getProjection();
 		const center = this._mapObject.getView().getCenter();
-		const transformedCenter = ol.proj.transform([center[0], center[1]], projection, 'EPSG:4326');
+		const transformedCenter = ol.proj.transform(center, projection, 'EPSG:4326');
 		const geoPoint: GeoJSON.Point = {
 			type: 'Point',
 			coordinates: transformedCenter
 		};
 		return geoPoint;
+	}
+
+	public setPosition(IPosition): void {
+		this.mapObject.setView(new ol.View(<olx.ViewOptions>{
+			center: ol.proj.fromLonLat(IPosition.center.coordinates),
+			zoom: IPosition.zoom
+		}));
+	}
+
+	public getPosition(): IPosition {
+		window['OpenLayerMap'] = this;
+		let center: GeoJSON.Point = this.getCenter();
+		let zoom: number = this.mapObject.getView().getZoom();
+		return {center, zoom};
 	}
 
 	private flyTo(location) {
@@ -101,13 +122,18 @@ export class OpenLayerMap implements IMap {
 	}
 
 	public setBoundingRectangle(rect: GeoJSON.MultiPolygon) {
-		// let olView = this._mapObject.getView();
-		// let extenta = olView.calculateExtent(this._mapObject.getSize());
-		// extenta[0] += 1000;
-		// this.mapTileLayr.setExtent(extenta);
-		// console.log(`extent: ${JSON.stringify(extenta)}`);
-		// //[minx, miny, maxx, maxy].
+
 	}
+
+	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
+		let layer: ol.layer.Vector = new ol.layer.Vector({
+			source: new ol.source.Vector({
+			    features: new ol.format.GeoJSON().readFeatures(data)
+			})
+		});
+		this.mapObject.addLayer(layer);
+	}
+
 	// IMap End
 	public dispose() {
 

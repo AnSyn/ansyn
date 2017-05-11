@@ -1,7 +1,7 @@
 import {
 	Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, AnimationEntryMetadata, trigger, state, style, transition, animate
 } from '@angular/core';
-import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from "@ansyn/core";
+import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction, AnimationStartAction, AnimationEndAction } from "@ansyn/core";
 import { Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
@@ -51,12 +51,16 @@ export class MenuComponent {
 	selected_item_index: number;
 
 	selected_component_ref: ComponentRef<any>;
-	private on_animation:boolean = false;
+
+	private animation$: Observable<boolean> = this.store.select("menu").map((store: IMenuState) => store.animation).distinctUntilChanged(_.isEqual);
+	private animation: boolean;
+
 	private expand:boolean = false;
 
 	constructor(private componentFactoryResolver: ComponentFactoryResolver, private store: Store<IMenuState>) {
 		this.menu_items$.subscribe((menu_items: MenuItem[]) => {this.menu_items = menu_items});
 		this.selected_menu_item_index$.subscribe(this.onSelectedIndexChange.bind(this));
+		this.animation$.subscribe((_animation: boolean) => {this.animation = _animation;});
 	}
 
 	get selected_item(): MenuItem {
@@ -65,7 +69,7 @@ export class MenuComponent {
 
 	onSelectedIndexChange(selected_item_index: number): void {
 		this.selected_item_index = selected_item_index;
-		let expand_result = this.itemSelected() && (!this.selected_component_ref || this.on_animation);
+		let expand_result = this.itemSelected() && (!this.selected_component_ref || this.animation);
 		if(expand_result) this.componentChanges();
 		this.expand = expand_result;
 	}
@@ -118,15 +122,19 @@ export class MenuComponent {
 	}
 
 	onStartAnimation(): void {
-		if(this.itemSelected()) this.on_animation = true;
+		if(this.itemSelected()){
+			this.store.dispatch(new AnimationStartAction())
+		}
 	}
 
 	onFinishAnimation(expand): void{
-		this.on_animation = false;
+		this.store.dispatch(new AnimationEndAction());
 
 		if(!expand){
 			this.componentChanges();
-			if(this.itemSelected()) this.expand = true;
+			if(this.itemSelected()){
+				this.expand = true;
+			}
 		}
 	}
 }

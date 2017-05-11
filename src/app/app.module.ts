@@ -11,8 +11,7 @@ import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpenLayerMap.module';
 import { OverlaysModule } from '@ansyn/overlays';
 import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
-
-
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 @NgModule({
 	declarations: [
@@ -29,7 +28,9 @@ import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-s
 		OverlaysModule,
 		AppReducer,
 		ImageryModule,
-		ImagerySandBoxModule
+		ImagerySandBoxModule,
+		MapFacadeModule,
+		ImageryModule
 	],
 	bootstrap: [AppComponent]
 })

@@ -3,7 +3,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { HttpModule } from '@angular/http';
 import { CasesService } from '../services/cases.service';
-import { StoreModule } from '@ngrx/store';
+import { combineReducers, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction, AddCaseSuccessAction, CloseModalAction, DeleteCaseAction, DeleteCaseSuccessAction, LoadCasesAction,
@@ -11,15 +11,22 @@ import {
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs';
 import { Case } from '../models/case.model';
+import { compose } from '@ngrx/core';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let effectsRunner: EffectsRunner;
 
+	const appReducer = compose(combineReducers)({cases: CasesReducer, overlays: OverlaysReducer});
+
+	function reducer(state: any, action: any) {
+		return appReducer(state, action);
+	}
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer)],
 			providers: [CasesEffects, CasesService]
 		}).compileComponents();
 	}));

@@ -60,6 +60,16 @@ describe('TimelineComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
+	xit('should check that click was called instead of double click',fakeAsync(() => {
+			const event = component.clickEvent();
+			function createElement(className){
+				const element = document.createElement('div');
+				element.classList.add(className);
+			}
+
+			const el1 = createElement('tmp');
+	}));
+
 	it("update drops variable will call eventDrops method", () => {
 		spyOn(component,"eventDropsHandler")
 		component.drops = dropsData;

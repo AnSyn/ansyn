@@ -1,3 +1,6 @@
+import { UnselectLayerAction } from './../packages/menu-items/layers-manager/actions/layers.actions';
+import { SelectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
@@ -16,12 +19,12 @@ describe('MapAppEffects', () => {
 	let store: Store<any>;
 	let icase_state: ICasesState;
 	let imageryCommunicatorServiceMock = {
-		provideCommunicator() {}
+		provideCommunicator() { }
 	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ cases: CasesReducer })],
 			providers: [
 				MapAppEffects,
 				{
@@ -34,7 +37,7 @@ describe('MapAppEffects', () => {
 	}));
 
 
-	beforeEach(inject([Store], (_store: Store <any>) => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 
 		icase_state = {
@@ -43,11 +46,11 @@ describe('MapAppEffects', () => {
 					id: 'case1',
 					state: {
 						maps: [{
-								position: {
-							 		center: "",
-									zoom: 1
-								}
-							}]
+							position: {
+								center: "",
+								zoom: 1
+							}
+						}]
 					}
 				}
 			],
@@ -87,4 +90,39 @@ describe('MapAppEffects', () => {
 		});
 	})
 
+	it('addVectorLayer$ should add the selected Layer to the map', () => {
+		let staticLeaf: ILayerTreeNodeLeaf = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, url: "fake_url", isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+
+		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
+		let imagery1 = {
+			addVectorLayer: () => {
+
+			}
+		};
+		effectsRunner.queue(action);
+		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
+		spyOn(imagery1, 'addVectorLayer');
+
+		mapAppEffects.selectCase$.subscribe(() => {
+			expect(imagery1.addVectorLayer).toHaveBeenCalledWith(staticLeaf);
+		});
+	});
+
+		it('removeVectorLayer$ should remove the unselected Layer to the map', () => {
+		let staticLeaf: ILayerTreeNodeLeaf = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, url: "fake_url", isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+
+		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
+		let imagery1 = {
+			removeVectorLayer: () => {
+
+			}
+		};
+		effectsRunner.queue(action);
+		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
+		spyOn(imagery1, 'removeVectorLayer');
+
+		mapAppEffects.selectCase$.subscribe(() => {
+			expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
+		});
+	});
 });

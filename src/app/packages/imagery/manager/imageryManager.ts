@@ -122,4 +122,12 @@ export class ImageryManager {
 	public addLayer(layer: any) {
 		this._activeMap.addLayer(layer);
 	}
+
+	public addVectorLayer(layer: any): void {
+		this._activeMap.addVectorLayer(layer);
+	}
+
+	public removeVectorLayer(layer: any): void {
+		this._activeMap.removeVectorLayer(layer);		
+	}
 }

@@ -4,7 +4,7 @@ import { Position } from '@ansyn/core';
  * Created by AsafMasa on 25/04/2017.
  */
 import * as ol from 'openlayers';
-import {EventEmitter} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 export class OpenLayerMap implements IMap {
 
@@ -63,15 +63,23 @@ export class OpenLayerMap implements IMap {
 		this._mapObject.addLayer(layer);
 	}
 
+	public addVectorLayer(layer: any): void {
+
+	}
+
+	public removeVectorLayer(layer: any): void {
+
+	}
+
 	public get mapObject() {
 		return this._mapObject;
 	}
 
-	public get mapType(){
+	public get mapType() {
 		return this._mapType;
 	}
 
-	public set mapType(value){
+	public set mapType(value) {
 		this._mapType = value;
 	}
 
@@ -111,7 +119,7 @@ export class OpenLayerMap implements IMap {
 		window['OpenLayerMap'] = this;
 		let center: GeoJSON.Point = this.getCenter();
 		let zoom: number = this.mapObject.getView().getZoom();
-		return {center, zoom};
+		return { center, zoom };
 	}
 
 	private flyTo(location) {
@@ -129,7 +137,7 @@ export class OpenLayerMap implements IMap {
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
 		let layer: ol.layer.Vector = new ol.layer.Vector({
 			source: new ol.source.Vector({
-			    features: new ol.format.GeoJSON().readFeatures(data)
+				features: new ol.format.GeoJSON().readFeatures(data)
 			})
 		});
 		this.mapObject.addLayer(layer);

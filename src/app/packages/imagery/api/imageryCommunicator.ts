@@ -20,6 +20,8 @@ export interface IImageryCommunicator {
 	setActiveMap(mapType: string);
 	setLayer(layer: any);
 	addLayer(layer: any);
+	addVectorLayer(layer: any): void;
+	removeVectorLayer(layer: any): void;
 	setPosition(Position): void;
 	updateSize(): void;
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void
@@ -122,6 +124,14 @@ export class ImageryCommunicator implements IImageryCommunicator {
 
 	public addLayer(layer: any) {
 		this._manager.addLayer(layer);
+	}
+
+    public addVectorLayer(layer: any): void {
+		this._manager.addVectorLayer(layer);
+	}
+
+	public removeVectorLayer(layer: any): void {
+		this._manager.removeVectorLayer(layer);		
 	}
 
 	//IImageryCommunicator methods end

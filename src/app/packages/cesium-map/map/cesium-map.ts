@@ -33,6 +33,14 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
+	addVectorLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	}
+
+	removeVectorLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	}
+
 	setPosition(Position: any): void {
 		throw new Error('Method not implemented.');
 	}

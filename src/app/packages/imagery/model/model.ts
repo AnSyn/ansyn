@@ -16,6 +16,8 @@ export interface IMap {
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	setLayer(layer: any): void;
 	addLayer(layer: any): void;
+	addVectorLayer(layer: any): void;
+	removeVectorLayer(layer: any): void;
 	setPosition(Position): void;
 	getPosition(): Position;
 	updateSize(): void;

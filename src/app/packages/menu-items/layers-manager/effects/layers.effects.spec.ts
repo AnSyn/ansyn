@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
-import { BeginLayerTreeLoadAction, LayerTreeLoadedAction } from './../actions/layers.actions';
+import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from './../actions/layers.actions';
 import { Observable } from 'rxjs';
 
 describe('LayersEffects', () => {
@@ -46,12 +46,19 @@ describe('LayersEffects', () => {
         let loadedTreeBundle = { layers: layers, selectedLayers: selectedLayers };
         spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
 
-        effectsRunner.queue(new BeginLayerTreeLoadAction({caseId: 'blabla'}));
+        effectsRunner.queue(new BeginLayerTreeLoadAction({ caseId: 'blabla' }));
 
         layersEffects.beginLayerTreeLoad$.subscribe((result: LayerTreeLoadedAction) => {
             expect(dataLayersService.getAllLayersInATree).toHaveBeenCalledWith('blabla');
-            expect(result instanceof LayerTreeLoadedAction).toBeTruthy();
-            expect(result.payload).toEqual(loadedTreeBundle);
+            expect(result instanceof LayerTreeLoadedAction ||
+                result instanceof SelectLayerAction).toBeTruthy();
+            if (result instanceof LayerTreeLoadedAction) {
+                expect(result.payload).toEqual(loadedTreeBundle);
+            }
+
+            if (result instanceof SelectLayerAction) {
+                expect(result.payload).toEqual(staticLeaf);
+            }
         });
     });
 });

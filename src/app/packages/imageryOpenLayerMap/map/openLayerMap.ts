@@ -11,7 +11,7 @@ export class OpenLayerMap implements IMap {
 	private _mapType: string;
 	private _mapObject: ol.Map;
 	private _mapLayers = [];
-
+	private _mapVectorLayers = [];
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<Position>;
 
@@ -64,11 +64,23 @@ export class OpenLayerMap implements IMap {
 	}
 
 	public addVectorLayer(layer: any): void {
-
+		var vectorLayer = new ol.layer.Tile({
+			source: new ol.source.OSM({
+				attributions: [
+					layer.name
+				],
+				opaque: false,
+				url: layer.url,
+				crossOrigin: null
+			})
+		});
+		this._mapObject.addLayer(vectorLayer);
+		this._mapVectorLayers[layer] = vectorLayer;		
 	}
 
 	public removeVectorLayer(layer: any): void {
-
+		this._mapObject.removeLayer(this._mapVectorLayers[layer]);
+		delete this._mapVectorLayers[layer];
 	}
 
 	public get mapObject() {

@@ -1,15 +1,15 @@
-import {
-	Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, AnimationEntryMetadata, trigger, state, style, transition, animate
-} from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input } from '@angular/core';
 import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction, AnimationStartAction, AnimationEndAction } from "@ansyn/core";
 import { Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+
 import * as _ from 'lodash';
 
-const DEFAULT_WIDTH = 60;
+const DEFAULT_WIDTH = 90;
 
-const animations: AnimationEntryMetadata[] = [
+const animations: any[] = [
 	trigger(
 		'expand', [
 			state('true', style({
@@ -18,8 +18,8 @@ const animations: AnimationEntryMetadata[] = [
 			state('false', style({
 				maxWidth: 0,
 			})),
-			transition('1 => 0', animate('0.25s ease-in-out')),
-			transition('0 => 1', animate('0.25s ease-in-out'))
+			transition('* => true', animate('0.25s ease-in-out')),
+			transition('* => false', animate('0.25s ease-in-out'))
 		]
 	),
 ];

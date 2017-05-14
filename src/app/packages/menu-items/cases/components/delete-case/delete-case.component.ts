@@ -1,14 +1,14 @@
-import { Component, trigger, transition, style, animate, EventEmitter, OnInit } from '@angular/core';
-import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { CasesActionTypes, CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
+import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Case } from '../../models/case.model';
+import { transition, trigger, style, animate } from '@angular/animations';
 
 const animations_during = '0.2s';
 
-const animations: AnimationEntryMetadata[] = [
+const animations: any[] = [
   trigger('modalContent', [
     transition(":enter", [style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, 100%)'}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}))]),
     transition(":leave", [style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, 100%)'}))]),

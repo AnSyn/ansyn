@@ -1,7 +1,4 @@
-import {
-	Component, ViewChild, ElementRef, trigger, transition, style, animate, OnInit,
-	ChangeDetectionStrategy
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
@@ -9,10 +6,10 @@ import { AddCaseAction, LoadCasesAction, OpenModalAction, SelectCaseAction } fro
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { CasesService } from '../../services/cases.service';
 import { Case } from '../../models/case.model';
+import { trigger, transition, style, animate } from '@angular/animations';
 
-const animations = [
+const animations: any[] = [
   trigger("leaveAnim", [
     transition(":leave", [style({boxShadow: 'inset 382px 0 0 0 rgb(206, 120, 128)'}), animate("0.3s", style({boxShadow: 'inset 0px 0px 0px 0px rgb(206, 120, 128)', color: 'white'}))]),
   ])

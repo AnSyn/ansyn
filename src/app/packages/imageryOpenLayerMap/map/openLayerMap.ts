@@ -63,6 +63,7 @@ export class OpenLayerMap implements IMap {
 		this._mapObject.addLayer(layer);
 	}
 
+	// In the future we'll use @ansyn/map-source-provider
 	public addVectorLayer(layer: any): void {
 		var vectorLayer = new ol.layer.Tile({
 			source: new ol.source.OSM({
@@ -75,7 +76,7 @@ export class OpenLayerMap implements IMap {
 			})
 		});
 		this._mapObject.addLayer(vectorLayer);
-		this._mapVectorLayers[layer] = vectorLayer;		
+		this._mapVectorLayers[layer] = vectorLayer;
 	}
 
 	public removeVectorLayer(layer: any): void {

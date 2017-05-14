@@ -1,5 +1,4 @@
-import { UnselectLayerAction } from './../packages/menu-items/layers-manager/actions/layers.actions';
-import { SelectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -91,7 +90,14 @@ describe('MapAppEffects', () => {
 	})
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, url: "fake_url", isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+		let staticLeaf: ILayerTreeNodeLeaf = {
+			name: 'staticLayer',
+			id: 'staticLayerId',
+			isChecked: false,
+			url: "fake_url",
+			isIndeterminate: false,
+			children: []
+		};
 
 		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
 		let imagery1 = {
@@ -108,8 +114,15 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-		it('removeVectorLayer$ should remove the unselected Layer to the map', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = { name: 'staticLayer', id: 'staticLayerId', isChecked: false, url: "fake_url", isIndeterminate: false, children: <ILayerTreeNode[]>[] };
+	it('removeVectorLayer$ should remove the unselected Layer to the map', () => {
+		let staticLeaf: ILayerTreeNodeLeaf = {
+			name: 'staticLayer',
+			id: 'staticLayerId',
+			isChecked: false,
+			url: "fake_url",
+			isIndeterminate: false,
+			children: []
+		};
 
 		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
 		let imagery1 = {

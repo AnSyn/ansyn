@@ -4,6 +4,7 @@ import { MenuItem } from "@ansyn/core";
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/menu.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -13,7 +14,7 @@ describe('MenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[StoreModule.provideStore({menu: MenuReducer})],
+			imports:[BrowserAnimationsModule, StoreModule.provideStore({menu: MenuReducer})],
 			declarations: [MenuComponent],
 		}).compileComponents();
 	}));

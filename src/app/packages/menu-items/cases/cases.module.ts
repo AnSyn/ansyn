@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { CasesEffects } from './effects/cases.effects';
 import { CasesService } from './services/cases.service';
 import { Store } from '@ngrx/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
 	imports: [
@@ -20,7 +21,8 @@ import { Store } from '@ngrx/store';
 		CoreModule,
 		InfiniteScrollModule,
 		FormsModule,
-		EffectsModule.run(CasesEffects)
+		EffectsModule.run(CasesEffects),
+		BrowserAnimationsModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent],
 	entryComponents:[CasesComponent, EditCaseComponent, DeleteCaseComponent],

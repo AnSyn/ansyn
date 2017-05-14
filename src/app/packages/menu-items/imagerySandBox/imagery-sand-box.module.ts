@@ -15,7 +15,7 @@ import { Store } from '@ngrx/store';
 export class ImagerySandBoxModule {
 	constructor(store: Store <any>) {
 		const menu_item: MenuItem = {
-			name: 'ImagerySandBox',
+			name: 'Imagery SandBox',
 			component: ImagerySandBoxComponent,
 			icon_url: '/assets/icons/tools.svg'
 		};

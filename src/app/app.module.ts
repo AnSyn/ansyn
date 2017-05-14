@@ -13,7 +13,7 @@ import { ImageryOpenLayerMapModule } from '@ansyn/imageryOpenLayerMap/imageryOpe
 import { OverlaysModule } from '@ansyn/overlays';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
 	declarations: [
@@ -25,6 +25,7 @@ import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
 		BrowserModule,
 		FormsModule,
 		HttpModule,
+		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule,
 		MenuItemsModule,

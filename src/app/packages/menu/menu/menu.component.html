@@ -1,6 +1,6 @@
 <div class="menu-wrapper">
 
-  <div class="menu" [style.min-width.px]="width">
+  <div class="menu" [style.width.px]="width">
     <div
       class="menu-btn"
       *ngFor="let menu_item of menu_items; let index = index"
@@ -12,7 +12,7 @@
   </div>
 
 
-  <div class="container" #container [@expand]="expand" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation(expand)">
+  <div class="container" #container [@expand]="expand.toString()" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation(expand)">
     <button class="close" (click)="closeMenu()">×</button>
     <template #selected_component_elem></template>
   </div>

@@ -1,8 +1,5 @@
-import {
-	Component, trigger, transition, style, animate, HostListener, OnInit, ViewChild, ElementRef,
-	ChangeDetectionStrategy
-} from '@angular/core';
-import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
+import { Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { transition, trigger, style, animate } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs';
@@ -13,7 +10,7 @@ import { Context } from '../../models/context.model';
 
 const animations_during = '0.2s';
 
-const animations: AnimationEntryMetadata[] = [
+const animations: any[] = [
 	trigger('modalContent', [
 		transition(":enter", [style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)'}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}))]),
 		transition(":leave", [style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)'}))]),

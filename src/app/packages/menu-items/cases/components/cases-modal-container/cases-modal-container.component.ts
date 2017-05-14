@@ -1,8 +1,5 @@
-import {
-	Component, OnInit, trigger, transition, style, animate, ViewChild, ViewContainerRef,
-	OnDestroy
-} from '@angular/core';
-import { AnimationEntryMetadata } from "@angular/core/src/animation/metadata";
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
+import { trigger, transition, style, animate } from "@angular/animations";
 import { ComponentFactoryResolver } from "@angular/core";
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
@@ -12,7 +9,7 @@ import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
 const animations_during = '0.2s';
 
-const animations: AnimationEntryMetadata[] = [
+const animations: any[] = [
 	trigger('blackScreen', [
 		transition(":enter", [style({ opacity: 0}), animate(animations_during, style({ opacity: 1}))]),
 		transition(":leave", [style({ opacity: 1}), animate(animations_during, style({ opacity: 0}))]),

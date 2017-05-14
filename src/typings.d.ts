@@ -1,8 +1,9 @@
 /* SystemJS module definition */
 /*declare var module: {
-  id: string;
-};*/
+ id: string;
+ };
 
-declare module "package.json"{
-	version: string
-}
+ declare module "package.json"{
+ version: string
+ }
+ */

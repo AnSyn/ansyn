@@ -7,6 +7,7 @@ import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;

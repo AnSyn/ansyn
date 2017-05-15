@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
-import { MockComponent } from '../../../helpers/mock-component';
-import { StoreFixture,createStore } from '../../../helpers/mock-store';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockComponent } from '@ansyn/core/test';
+import { StoreFixture, createStore } from '@ansyn/core/test';
 import { OverlaysContainer } from './overlays-container.component';
 import { OverlaysService } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { Subscription,Observable,Observer } from 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs/Rx';
 import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';

@@ -1,3 +1,4 @@
+import { CoreModule } from '@ansyn/core';
 import { CasesEffects } from './cases.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
@@ -27,7 +28,7 @@ describe('CasesEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer)],
+			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), CoreModule.forRoot(null)],
 			providers: [CasesEffects, CasesService]
 		}).compileComponents();
 	}));

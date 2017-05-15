@@ -1,3 +1,4 @@
+import { Config } from '@ansyn/core';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
 import { IServerDataLayerContainerRoot } from './../models/server-data-layer-container-root';
@@ -16,11 +17,13 @@ type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNo
 @Injectable()
 export class DataLayersService {
   // should be in a global config
-  baseUrl = 'http://localhost:9001/api/v1/cases';
+  private baseUrl;
 
   tree: ILayerTreeNode[] = [];
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private config: Config) {
+    this.baseUrl = this.config.get("layers.layersByCaseIdUrl");
+   }
 
   public getAllLayersInATree(caseId: string = 'caseId'): Observable<LayerRootsBundle> {
     return this.http.get(`${this.baseUrl}/${caseId}/layers`)

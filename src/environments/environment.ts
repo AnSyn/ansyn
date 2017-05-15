@@ -4,5 +4,11 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  layers: {
+    layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
+  },
+  cases: {
+    casesBaseUrl: 'http://localhost:9001/api/v1/cases'
+  }
 };

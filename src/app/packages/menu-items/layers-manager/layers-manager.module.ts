@@ -1,3 +1,4 @@
+import { CoreModule } from '@ansyn/core';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { DataLayersService } from './services/data-layers.service';
@@ -13,6 +14,7 @@ import { Store } from '@ngrx/store';
 	imports: [
 		CommonModule,
 		TreeModule,
+		CoreModule,
 		EffectsModule.run(LayersEffects)
 	],
 	declarations: [LayersManagerComponent, LayerTreeComponent],

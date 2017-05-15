@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -29,7 +30,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		FormsModule,
 		HttpModule,
 		BrowserAnimationsModule,
-		CoreModule,
+		CoreModule.forRoot(environment),
 		MenuModule,
 		MenuItemsModule,
 		OverlaysModule,

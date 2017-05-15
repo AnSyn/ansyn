@@ -1,3 +1,4 @@
+import { Config } from '@ansyn/core';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
@@ -6,10 +7,12 @@ import { Case } from '../models/case.model';
 
 @Injectable()
 export class CasesService {
-  base_url = 'http://localhost:9001/api/v1/cases';
+  base_url;
   LIMIT:number = 15;
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, private config: Config) {
+    this.base_url = this.config.get('cases.casesBaseUrl');
+  }
 
   loadCases(last_id: string = '-1'): Observable<any> {
     return this.http.get(`${this.base_url}/pagination/${last_id}?limit=${this.LIMIT}`).map(res => res.json())

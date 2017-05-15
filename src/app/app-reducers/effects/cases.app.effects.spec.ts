@@ -1,3 +1,4 @@
+import { CoreModule } from '@ansyn/core';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
@@ -23,13 +24,16 @@ describe('CasesAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({overlays : OverlayReducer, cases: CasesReducer})],
+			imports: [HttpModule,
+				EffectsTestingModule,
+				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
+				CoreModule.forRoot(null)],
 			providers: [CasesAppEffects, CasesService]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store <any>) => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 
 		icase_state = {
@@ -62,8 +66,8 @@ describe('CasesAppEffects', () => {
 		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
 
 		effectsRunner.queue(new SelectOverlayAction("1234-5678"));
-		let result: UpdateCaseSuccessAction ;
-		casesAppEffects.selectOverlay$.subscribe( (_result: UpdateCaseSuccessAction) => {
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.selectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
 			result = _result;
 		});
 
@@ -80,8 +84,8 @@ describe('CasesAppEffects', () => {
 		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
 
 		effectsRunner.queue(new UnSelectOverlayAction("1234-5678"));
-		let result: UpdateCaseSuccessAction ;
-		casesAppEffects.unSelectOverlay$.subscribe( (_result: UpdateCaseSuccessAction) => {
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.unSelectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
 			result = _result;
 		});
 
@@ -102,8 +106,8 @@ describe('CasesAppEffects', () => {
 		};
 
 		effectsRunner.queue(new PositionChangedAction(position));
-		let result: UpdateCaseSuccessAction ;
-		casesAppEffects.positionChanged$.subscribe( (_result: UpdateCaseSuccessAction) => {
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.positionChanged$.subscribe((_result: UpdateCaseSuccessAction) => {
 			result = _result;
 		});
 

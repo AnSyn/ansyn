@@ -17,7 +17,7 @@ type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNo
 @Injectable()
 export class DataLayersService {
   // should be in a global config
-  private baseUrl;
+  baseUrl;
 
   tree: ILayerTreeNode[] = [];
 

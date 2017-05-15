@@ -30,14 +30,18 @@
 		"@ngrx/effects": "^2.0.2",
 		"@ngrx/store": "^2.2.1",
 		"@turf/turf": "^4.2.0",
+		"@types/d3": "^4.7.0",
 		"@types/lodash": "^4.14.63",
-		"@types/openlayers": "^4.0.1",
+		"@types/openlayers": "^4.1.0",
 		"angular-tree-component": "^3.3.0",
-		"event-drops": "github:osadan/EventDrops#19e131ffb62e21e347d149e3f474d454b45b9b66",
+		"configurable.js": "0.1.0",
+		"d3": "4.7.0",
+		"debounce": "^1.0.0",
+		"event-drops": "1.0.1",
 		"lodash": "^4.17.4",
 		"ng2-destroy-subscribers": "0.0.28",
-		"reselect": "^3.0.0",
-		"openlayers": "^4.1.0"
+		"openlayers": "^4.1.1",
+		"reselect": "^3.0.0"
 	},
 	"devDependencies": {
 		"@angular/cli": "1.0.3",
@@ -57,6 +61,7 @@
 		"ts-node": "~2.0.0",
 		"tslint": "~4.5.0",
 		"typescript": "~2.2.0",
-		"@types/d3": "^4.7.0"
+		"@types/d3": "^4.7.0",
+		"@types/openlayers": "^4.1.0"
 	}
 }

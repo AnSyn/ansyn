@@ -76,12 +76,12 @@ export class OpenLayerMap implements IMap {
 			})
 		});
 		this._mapObject.addLayer(vectorLayer);
-		this._mapVectorLayers[layer] = vectorLayer;
+		this._mapVectorLayers[layer.id] = vectorLayer;
 	}
 
 	public removeVectorLayer(layer: any): void {
-		this._mapObject.removeLayer(this._mapVectorLayers[layer]);
-		delete this._mapVectorLayers[layer];
+		this._mapObject.removeLayer(this._mapVectorLayers[layer.id]);
+		delete this._mapVectorLayers[layer.id];
 	}
 
 	public get mapObject() {

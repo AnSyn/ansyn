@@ -37,7 +37,7 @@
 		"configurable.js": "0.1.0",
 		"d3": "4.7.0",
 		"debounce": "^1.0.0",
-		"event-drops": "1.0.1",
+		"event-drops": "github:osadan/EventDrops#19e131ffb62e21e347d149e3f474d454b45b9b66",
 		"lodash": "^4.17.4",
 		"ng2-destroy-subscribers": "0.0.28",
 		"openlayers": "^4.1.1",

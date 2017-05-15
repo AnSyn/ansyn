@@ -4,7 +4,7 @@ import { StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { AnimationEndAction } from '@ansyn/core/actions/menu.actions';
-import { UpdateMapSizeAction } from '../packages/map-facade/actions/map.actions';
+import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

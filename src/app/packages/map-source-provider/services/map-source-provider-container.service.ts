@@ -1,23 +1,23 @@
 import {ISourceProvider} from '../models/models';
-import {Injectable,Inject,OpaqueToken} from '@angular/core';
+import { Injectable, Inject, InjectionToken } from '@angular/core';
 
-export const sourceMapProviders : OpaqueToken = new OpaqueToken('source-map-provides');
+export const sourceMapProviders : InjectionToken<any> = new InjectionToken('source-map-provides');
 
 export interface IMapSourceProviderContainer{
     /**
      * register
-     * sourceProvider : ISourceProvider : void    
+     * sourceProvider : ISourceProvider : void
     */
     register(sourceProvider : ISourceProvider) : void;
-    
+
     unregister(mapType : string ,sourceType : string) : void;
-    
+
     resolve(mapType : string ,sourceType : string) : ISourceProvider;
 }
 
 @Injectable()
 export class MapSourceProviderContainerService implements IMapSourceProviderContainer {
-   
+
 
     private _sourceProvides : Map<string,ISourceProvider>;
 
@@ -39,7 +39,7 @@ export class MapSourceProviderContainerService implements IMapSourceProviderCont
     public unregister(mapType: string, sourceType: string): void {
         this._sourceProvides.delete([mapType,sourceType].join(','));
     }
-    
+
     public resolve(mapType : string , sourceType : string) : ISourceProvider {
         return this._sourceProvides.get([mapType,sourceType].join(','));
     }

@@ -14,7 +14,7 @@
 
   <div class="container" #container [@expand]="expand.toString()" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation(expand)">
     <button class="close" (click)="closeMenu()">×</button>
-    <template #selected_component_elem></template>
+    <ng-template #selected_component_elem></ng-template>
   </div>
 
 

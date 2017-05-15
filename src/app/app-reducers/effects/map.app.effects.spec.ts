@@ -6,10 +6,10 @@ import { HttpModule } from '@angular/http';
 import { CasesReducer } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService } from '../packages/imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
 import { Observable } from 'rxjs/Observable';
-import { ICasesState } from '../packages/menu-items/cases/reducers/cases.reducer';
-import { SelectCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;

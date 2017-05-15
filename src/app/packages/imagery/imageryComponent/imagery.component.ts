@@ -14,7 +14,7 @@ import { IMap, IMapComponent } from '../model/model';
 @Component({
 	selector: 'imagery-view',
 	template: `
-		<template #map_component_elem></template>
+		<ng-template #map_component_elem></ng-template>
 	`
 })
 

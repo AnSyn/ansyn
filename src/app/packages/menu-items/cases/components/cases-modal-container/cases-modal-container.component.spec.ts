@@ -1,3 +1,4 @@
+import { CoreModule } from '@ansyn/core';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
 import { EditCaseComponent } from "../edit-case/edit-case.component";
@@ -14,7 +15,7 @@ describe('ModalContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer}), CoreModule.forRoot(null)],
 		})
 			.compileComponents();
 	}));

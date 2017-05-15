@@ -13,9 +13,9 @@
     <div class="select-context">
       <h4>Context</h4>
       <select [(ngModel)]="case_model.state.selected_context_id" (ngModelChange)="setContextValues(case_model)" name="context" required [disabled]="on_edit_case">
-        <template ngFor [ngForOf]="contexts_list$ | async" let-context>
+        <ng-template ngFor [ngForOf]="contexts_list$ | async" let-context>
           <option [value]="context.id">{{context.name}}</option>
-        </template>
+        </ng-template>
       </select>
     </div>
 

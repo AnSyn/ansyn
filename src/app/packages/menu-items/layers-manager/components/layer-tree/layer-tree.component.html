@@ -1,15 +1,15 @@
-<tree-root class="tree" 
-[focused]="true" 
-[nodes]="source | async" 
+<tree-root class="tree"
+[focused]="true"
+[nodes]="source | async"
 [options]="options">
-  <template #treeNodeTemplate let-node let-index="index">
+  <ng-template #treeNodeTemplate let-node let-index="index">
     <div id="node{{ node.data.id }}" (click)="onDivClicked($event,node)">
       <input name="nodeInput" [indeterminate]="node.data.isIndeterminate" type="checkbox" [checked]="node.data.isChecked" (change)="onCheckboxClicked($event,node)">
       <span [class]="node.data.className" [class.title]="true" (click)="onSpanClicked($event,node)">{{ node.data.name }}</span>
     </div>
-  </template>
-  <template #loadingTemplate let-node>
+  </ng-template>
+  <ng-template #loadingTemplate let-node>
     <div [class]="node.data.className + 'Loading'">Loading {{ node.data.title }}...</div>
-  </template>
+  </ng-template>
 </tree-root>
 <br/>

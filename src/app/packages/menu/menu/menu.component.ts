@@ -18,8 +18,7 @@ const animations: any[] = [
 			state('false', style({
 				maxWidth: 0,
 			})),
-			transition('* => true', animate('0.25s ease-in-out')),
-			transition('* => false', animate('0.25s ease-in-out'))
+			transition('false <=> true', animate('0.25s ease-in-out')),
 		]
 	),
 ];
@@ -57,7 +56,7 @@ export class MenuComponent {
 
 	private expand:boolean = false;
 
-	constructor(private componentFactoryResolver: ComponentFactoryResolver, private store: Store<IMenuState>) {
+	constructor(public componentFactoryResolver: ComponentFactoryResolver, private store: Store<IMenuState>) {
 		this.menu_items$.subscribe((menu_items: MenuItem[]) => {this.menu_items = menu_items});
 		this.selected_menu_item_index$.subscribe(this.onSelectedIndexChange.bind(this));
 		this.animation$.subscribe((_animation: boolean) => {this.animation = _animation;});
@@ -106,7 +105,7 @@ export class MenuComponent {
 	}
 
 	itemNotSelected():boolean {
-		return this.selected_item_index === -1;
+		return _.isNil(this.selected_item);
 	}
 
 	itemSelected():boolean {

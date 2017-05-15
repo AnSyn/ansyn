@@ -3,9 +3,9 @@ import { MapSettings } from '../packages/imagery/imageryComponent/mapSettings';
 import { ImageryComponentSettings } from '../packages/imagery/imageryComponent/imageryComponentSettings';
 
 @Component({
-  selector: 'ansyn-ansyn',
-  templateUrl: './ansyn.component.html',
-  styleUrls: ['./ansyn.component.scss']
+	selector: 'ansyn-ansyn',
+	templateUrl: './ansyn.component.html',
+	styleUrls: ['./ansyn.component.scss']
 })
 export class AnsynComponent {
 

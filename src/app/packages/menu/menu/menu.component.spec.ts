@@ -49,7 +49,8 @@ describe('MenuComponent', () => {
 	});
 
 	it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
-
+		let fake_factory = {destroy():void {}};
+		spyOn(menuComponent, 'componentChanges');
 		let mock_menu_item: MenuItem = {
 			name:"one",
 			component:"fake_comp",
@@ -58,11 +59,13 @@ describe('MenuComponent', () => {
 		menuComponent.menu_items = [mock_menu_item];
 		menuComponent.selected_item_index = 0;
 		spyOn(menuComponent, 'itemSelected').and.returnValue(true);
-		spyOn(menuComponent['componentFactoryResolver'], 'resolveComponentFactory').and.callFake(()=> "fake_ComponentFactory" );
-		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(()=> "fake_ComponentRef");
+		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(()=> fake_factory );
+		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(()=> fake_factory);
 		menuComponent.buildCurrentComponent();
-		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith("fake_ComponentFactory");
-		expect(menuComponent.selected_component_ref).toEqual("fake_ComponentRef");
+		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith(fake_factory);
+		expect(menuComponent.selected_component_ref).toEqual(fake_factory);
+		menuComponent.selected_item_index = -1;
+		menuComponent.menu_items = [];
 	});
 
 
@@ -74,12 +77,14 @@ describe('MenuComponent', () => {
 		expect(menuComponent.closeMenu).toHaveBeenCalled();
 		menuComponent.toggleItem(1);
 		expect(menuComponent.openMenu).toHaveBeenCalledWith(1);
+		menuComponent.selected_item_index = -1;
 	});
 
 	it('isActive should get index and check if selected_item_index equal to index', () => {
 		menuComponent.selected_item_index = 6;
 		expect(menuComponent.isActive(5)).toBeFalsy();
 		expect(menuComponent.isActive(6)).toBeTruthy();
+		menuComponent.selected_item_index = -1;
 	});
 
 	it('closeMenu should call store.dispatch with UnSelectMenuItemAction', () => {

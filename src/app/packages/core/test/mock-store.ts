@@ -1,5 +1,5 @@
-import { StoreModule, Store, State, ActionReducer } from '@ngrx/store';
-import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
+import { Store, State, ActionReducer } from '@ngrx/store';
+import { TestBed, getTestBed } from '@angular/core/testing';
 
 export type StoreFixture<T> = {
 	store: Store<T>;

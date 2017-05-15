@@ -3,14 +3,8 @@ import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/acti
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../app.reducers.module';
+import { IAppState } from '../';
 import { Observable } from 'rxjs';
-import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesService } from '@ansyn/menu-items/cases';
-import { ICasesState } from '@ansyn/menu-items/cases';
-import { Case } from '@ansyn/menu-items/cases';
-import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
-import { empty } from 'rxjs/observable/empty';
 
 import 'rxjs/add/operator/withLatestFrom';
 

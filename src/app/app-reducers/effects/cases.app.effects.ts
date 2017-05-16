@@ -68,8 +68,9 @@ export class CasesAppEffects {
 			});
 		});
 
-	@Effect()
-	selectCase$: Observable<any> = this.actions$
+
+	@Effect()	
+	selectCase$: Observable<LoadOverlaysAction|void> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
@@ -77,14 +78,17 @@ export class CasesAppEffects {
 			const filter = {};
 			const caseSelected: Case = state.cases.filter((item:Case) => item.id == caseId )[0];
 
+			if(!caseSelected){
+				return;
+			}
 			const overlayFilter = {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,
 				polygon: caseSelected.state.region,
 				caseId: caseId
 			}
-
 			return new LoadOverlaysAction(overlayFilter);
+			
 		})
 
 

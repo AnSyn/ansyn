@@ -61,7 +61,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			}
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
-				const queryParams = action.payload && {};
+				const queryParams = action.payload || {};
 				return Object.assign({},state,{
 					loading: true,
 					queryParams,

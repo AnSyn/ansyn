@@ -88,7 +88,7 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 			.skip(1)
 			.distinctUntilChanged(this.overlaysService.compareOverlays)
     		.map((data: any) =>   this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters))
-			.subscribe(overlays => this.drops = overlays);
+    		.subscribe(overlays => this.drops = overlays);
 
 		this.subscribers.selected = this.store.select('overlays')
 			.skip(1)

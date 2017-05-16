@@ -6,10 +6,15 @@ describe('Overlay Reducer',() => {
 
    	describe("Load Overlays",() => {
 		it("should activate load_overlay reducer",()=> {
-			const action  = new LoadOverlaysAction();
+      const queryParams = { search: '9399ejf'};
+			const action  = new LoadOverlaysAction(queryParams);
+      overlayInitialState.overlays.set('tmp','value');
 			//expect(result.loaded).toBe(false);
+      expect(overlayInitialState.overlays.size).toBe(1);
 			const result = OverlayReducer(overlayInitialState,action);
 			expect(result.loading).toBe(true);
+      expect(result.overlays.size).toBe(0);
+      expect(result.queryParams).toEqual(queryParams)
 		});
 	});
 
@@ -43,7 +48,8 @@ describe('Overlay Reducer',() => {
 
 	describe("Load Overlays Success",()=>{
 		it('should load all overlays',() => {
-			const overlays =  <Overlay[]>[
+			overlayInitialState.overlays = new Map();
+      const overlays =  <Overlay[]>[
 				{
 	         		id: '12',
 	         		name: 'tmp12',

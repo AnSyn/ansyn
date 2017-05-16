@@ -26,17 +26,105 @@ describe('CasesAppEffects', () => {
         TestBed.configureTestingModule({
 			imports: [HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
-				CoreModule.forRoot(null)
-				],
+<<<<<<< HEAD
+				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer })],
 			providers: [CasesAppEffects,
 				CasesService,
 				{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
+=======
+				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
+				CoreModule.forRoot(null)],
+            providers: [CasesAppEffects, CasesService]
+>>>>>>> test for loading overlays on  select case effects
 
         }).compileComponents();
     }));
 
+<<<<<<< HEAD
 	beforeEach(inject([Store, casesConfig], (_store: Store<any>) => {
+		store = _store;
+
+		icase_state = {
+			cases: [
+				{
+					id: 'case1',
+					state: {
+						selected_overlays_ids: []
+					}
+				}
+			],
+			selected_case_id: 'case1'
+		} as any;
+
+		spyOn(store, 'select').and.callFake(() => {
+			return Observable.of(icase_state);
+		});
+	}));
+
+	beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {
+		casesAppEffects = _casesAppEffects;
+		effectsRunner = _effectsRunner;
+		casesService = _casesService;
+	}));
+
+	it('selectOverlay$ should push overlay.id to selected_overlays_ids on cases', () => {
+		let selected_case: Case = icase_state.cases[0];
+
+		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
+
+		effectsRunner.queue(new SelectOverlayAction("1234-5678"));
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.selectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
+			result = _result;
+		});
+
+		expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
+		expect(result.payload).toEqual(selected_case);
+		expect(selected_case.state.selected_overlays_ids).toEqual(["1234-5678"]);
+		expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
+
+	});
+
+	it('unSelectOverlay$ should delete overlay.id to selected_overlays_ids on cases', () => {
+		let selected_case: Case = icase_state.cases[0];
+		selected_case.state.selected_overlays_ids = ["1234-5678"]
+		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
+
+		effectsRunner.queue(new UnSelectOverlayAction("1234-5678"));
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.unSelectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
+			result = _result;
+		});
+
+		expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
+		expect(result.payload).toEqual(selected_case);
+		expect(selected_case.state.selected_overlays_ids).toEqual([]);
+		expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
+	});
+
+	it('positionChanged$ should save the position from PositionChange Action to selected_case', () => {
+		let selected_case: Case = icase_state.cases[0];
+
+		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
+
+		let position: Position = {
+			zoom: 1,
+			center: "" as any
+		};
+
+		effectsRunner.queue(new PositionChangedAction(position));
+		let result: UpdateCaseSuccessAction;
+		casesAppEffects.positionChanged$.subscribe((_result: UpdateCaseSuccessAction) => {
+			result = _result;
+		});
+
+		expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
+		expect(result.payload).toEqual(selected_case);
+		expect(selected_case.state.maps[0].position).toEqual(position);
+		expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
+	});
+=======
+	beforeEach(inject([Store], (_store: Store<any>) => {
         store = _store;
 
         icase_state = {
@@ -55,6 +143,7 @@ describe('CasesAppEffects', () => {
         });*/
         store.dispatch(new AddCaseSuccessAction(icase_state.cases[0]));
         store.dispatch(new SelectCaseAction(icase_state.selected_case_id));
+
     }));
 
     beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {
@@ -265,6 +354,7 @@ describe('CasesAppEffects', () => {
         
         
     });
+>>>>>>> test for loading overlays on  select case effects
 
 
 });

@@ -37,7 +37,9 @@ const host = {
 
 export class EditCaseComponent implements OnInit {
 
-	active_case$: Observable <Case> = this.store.select("cases").distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this)).map(this.getCloneActiveCase.bind(this));
+	active_case$: Observable <Case> = this.store.select("cases")
+	.distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this))
+	.map(this.getCloneActiveCase.bind(this));
 	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(_.isEqual);
 	contexts_list: Context[];
 

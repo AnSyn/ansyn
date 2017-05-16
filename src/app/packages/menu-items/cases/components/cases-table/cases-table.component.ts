@@ -18,7 +18,7 @@ const animations: any[] = [
 @Component({
   selector: 'ansyn-cases-table',
   templateUrl: './cases-table.component.html',
-  styleUrls: ['./cases-table.component.scss'],
+  styleUrls: ['./cases-table.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations
 })

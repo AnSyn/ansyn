@@ -18,7 +18,7 @@ import { OverlaysService } from "../services/overlays.service";
 @Component({
 	selector: 'overlays-container',
   	templateUrl: './overlays-container.component.html',
-  	styleUrls: ['./overlays-container.component.css']
+  	styleUrls: ['./overlays-container.component.less']
 })
 
 @DestroySubscribers({
@@ -27,9 +27,9 @@ import { OverlaysService } from "../services/overlays.service";
 export class OverlaysContainer implements OnInit,AfterViewInit  {
 	public drops: any[] = [];
 	public configuration: any;
-	
+
 	private errorMessage: string;
-	
+
 	public overlays : any;
 	public selectedOverlays: Array<string> = [];
 	public subscribers: any = {};
@@ -67,7 +67,7 @@ export class OverlaysContainer implements OnInit,AfterViewInit  {
 				if(this.selectedOverlays.indexOf(id) === -1){
 					this.store.dispatch(new SelectOverlayAction(id));
 				}
-			});	
+			});
 	}
 
 	//maybe to move this to the service

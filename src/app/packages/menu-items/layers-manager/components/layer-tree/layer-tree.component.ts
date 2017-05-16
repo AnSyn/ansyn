@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-layer-tree',
   templateUrl: './layer-tree.component.html',
-  styleUrls: ['./layer-tree.component.scss'],
+  styleUrls: ['./layer-tree.component.less'],
   providers: [TreeActionMappingService]
 })
 

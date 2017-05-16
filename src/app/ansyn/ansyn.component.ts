@@ -5,7 +5,7 @@ import { ImageryComponentSettings } from '../packages/imagery/imageryComponent/i
 @Component({
 	selector: 'ansyn-ansyn',
 	templateUrl: './ansyn.component.html',
-	styleUrls: ['./ansyn.component.scss']
+	styleUrls: ['./ansyn.component.less']
 })
 export class AnsynComponent {
 

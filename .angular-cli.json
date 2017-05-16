@@ -19,7 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "ansyn",
       "styles": [
-        "styles.scss",
+        "styles.less",
         "../node_modules/event-drops/src/style.css"
       ],
       "scripts": [],
@@ -52,7 +52,7 @@
     }
   },
   "defaults": {
-    "styleExt": "scss",
+    "styleExt": "less",
     "component": {}
   }
 }

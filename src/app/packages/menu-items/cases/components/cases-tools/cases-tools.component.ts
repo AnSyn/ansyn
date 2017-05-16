@@ -7,7 +7,7 @@ import { OpenModalAction } from '../../actions/cases.actions';
 @Component({
   selector: 'ansyn-cases-tools',
   templateUrl: './cases-tools.component.html',
-  styleUrls: ['./cases-tools.component.scss']
+  styleUrls: ['./cases-tools.component.less']
 })
 export class CasesToolsComponent {
 

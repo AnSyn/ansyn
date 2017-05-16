@@ -29,7 +29,7 @@ const host = {
 @Component({
 	selector: 'ansyn-edit-case',
 	templateUrl: './edit-case.component.html',
-	styleUrls: ['./edit-case.component.scss'],
+	styleUrls: ['./edit-case.component.less'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations,
 	host

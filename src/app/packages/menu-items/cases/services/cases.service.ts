@@ -5,14 +5,14 @@ import { Observable } from "rxjs";
 import "rxjs/add/operator/map";
 import { Case } from '../models/case.model';
 
-export const casesBaseUrl: InjectionToken<CasesConfig> = new InjectionToken('cases-base-url');
+export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
 @Injectable()
 export class CasesService {
   base_url;
   LIMIT:number = 15;
 
-  constructor(private http: Http, @Inject(casesBaseUrl) private config: CasesConfig) {
+  constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig) {
     this.base_url = this.config.casesBaseUrl;
   }
 

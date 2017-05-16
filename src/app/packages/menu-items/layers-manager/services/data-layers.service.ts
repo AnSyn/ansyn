@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-export const layersBaseUrl: InjectionToken<LayersManagerConfig> = new InjectionToken('layers-base-url');
+export const layersConfig: InjectionToken<LayersManagerConfig> = new InjectionToken('layers-config');
 
 export type LayerRootsBundle = { layers: ILayerTreeNodeRoot[], selectedLayers: ILayerTreeNodeLeaf[] };
 type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNodeLeaf[] };
@@ -23,7 +23,7 @@ export class DataLayersService {
 
   tree: ILayerTreeNode[] = [];
 
-  constructor(private http: Http, @Inject(layersBaseUrl) private config: LayersManagerConfig) {
+  constructor(private http: Http, @Inject(layersConfig) private config: LayersManagerConfig) {
     this.baseUrl = this.config.layersByCaseIdUrl;
   }
 

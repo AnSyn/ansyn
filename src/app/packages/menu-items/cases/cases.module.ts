@@ -12,7 +12,7 @@ import { DeleteCaseComponent } from './components/delete-case/delete-case.compon
 import { CasesToolsComponent } from './components/cases-tools/cases-tools.component';
 import { EffectsModule } from '@ngrx/effects';
 import { CasesEffects } from './effects/cases.effects';
-import { CasesService, casesBaseUrl } from './services/cases.service';
+import { CasesService, casesConfig } from './services/cases.service';
 import { Store } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -35,7 +35,7 @@ export class CasesModule {
 			ngModule: CasesModule,
 			providers: [
 				CasesService,
-				{ provide: casesBaseUrl, useValue: config }
+				{ provide: casesConfig, useValue: config }
 			]
 		};
 	}

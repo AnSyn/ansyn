@@ -1,7 +1,7 @@
 import { LayersManagerConfig } from './models/layers-manager-config';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { DataLayersService, layersBaseUrl } from './services/data-layers.service';
+import { DataLayersService, layersConfig } from './services/data-layers.service';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'angular-tree-component';
@@ -22,12 +22,12 @@ import { Store } from '@ngrx/store';
 })
 
 export class LayersManagerModule {
-	static forRoot(config: LayersManagerConfig): ModuleWithProviders {
+	static forChild(config: LayersManagerConfig): ModuleWithProviders {
 		return {
 			ngModule: LayersManagerModule,
 			providers: [
 				DataLayersService,
-				{ provide: layersBaseUrl, useValue: config }
+				{ provide: layersConfig, useValue: config }
 			]
 		};
 	}

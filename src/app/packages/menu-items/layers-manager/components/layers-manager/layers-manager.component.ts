@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-layer-managers',
   templateUrl: './layers-manager.component.html',
-  styleUrls: ['layers-manager.component.scss']
+  styleUrls: ['./layers-manager.component.less']
 })
 export class LayersManagerComponent {
 
@@ -24,7 +24,7 @@ export class LayersManagerComponent {
       this.store.dispatch(new SelectLayerAction(args.node));
     }
     else {
-      this.store.dispatch(new UnselectLayerAction(args.node));      
+      this.store.dispatch(new UnselectLayerAction(args.node));
     }
   }
 

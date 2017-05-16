@@ -19,7 +19,7 @@ const animations: any[] = [
 @Component({
 	selector: 'ansyn-cases-modal-container',
 	templateUrl: './cases-modal-container.component.html',
-	styleUrls: ['./cases-modal-container.component.scss'],
+	styleUrls: ['./cases-modal-container.component.less'],
 	animations
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {

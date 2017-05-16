@@ -26,7 +26,7 @@ const animations: any[] = [
 @Component({
 	selector: 'ansyn-menu',
 	templateUrl: './menu.component.html',
-	styleUrls: ['menu.component.scss'],
+	styleUrls: ['./menu.component.less'],
 	animations
 })
 

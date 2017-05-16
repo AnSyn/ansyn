@@ -1,4 +1,4 @@
-@import "../../common.scss";
+@import "../../common.less";
 
 div.app{
 	display: flex;
@@ -15,12 +15,12 @@ div.app{
 			font-size: xx-large;
 		}
 		.map{
-			background: $map-color;
+			background: @map-color;
 			height: 80%;
 		}
 		.status{
 			min-height: 5%;
-			background: $status-color;
+			background: @status-color;
 		}
 		.app-timeline-container{
 		}

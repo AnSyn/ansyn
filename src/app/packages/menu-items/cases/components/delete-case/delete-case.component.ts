@@ -27,7 +27,7 @@ const host = {
 @Component({
   selector: 'ansyn-delete-case',
   templateUrl: './delete-case.component.html',
-  styleUrls: ['./delete-case.component.scss'],
+  styleUrls: ['./delete-case.component.less'],
   outputs:['submitCase'],
   animations,
   host

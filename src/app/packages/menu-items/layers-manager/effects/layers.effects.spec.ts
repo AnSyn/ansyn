@@ -1,4 +1,3 @@
-import { CoreModule } from '@ansyn/core';
 import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { ILayerTreeNode } from './../models/layer-tree-node';
@@ -20,7 +19,7 @@ describe('LayersEffects', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer }), CoreModule.forRoot(null)],
+            imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
             providers: [LayersEffects, DataLayersService]
         }).compileComponents();
     }));

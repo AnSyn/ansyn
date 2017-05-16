@@ -1,4 +1,3 @@
-import { CoreModule } from '@ansyn/core';
 import { TestBed, inject } from '@angular/core/testing';
 import { CasesService } from './cases.service';
 import { HttpModule } from "@angular/http";
@@ -11,7 +10,7 @@ describe('CasesService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CoreModule.forRoot(null)],
+			imports:[HttpModule],
 			providers: [CasesService]
 		});
 	});

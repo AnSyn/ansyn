@@ -1,6 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { LayersManagerModule } from '../../layers-manager.module';
-import { CoreModule } from '@ansyn/core';
 import { LayersManagerComponent } from './layers-manager.component';
 import { HttpModule } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
@@ -13,7 +12,7 @@ describe('LayersManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule, HttpModule, StoreModule.provideStore({layers: LayersReducer}), CoreModule.forRoot(null)]
+      imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({layers: LayersReducer})]
     })
       .compileComponents();
   }));

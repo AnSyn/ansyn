@@ -1,4 +1,3 @@
-import { CoreModule } from '@ansyn/core';
 import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainerRoot } from '../models/server-data-layer-container-root';
 import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
@@ -14,7 +13,7 @@ describe('DataLayersService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, CoreModule.forRoot(null)],
+            imports: [HttpModule],
             providers: [DataLayersService]
         });
     });

@@ -1,8 +1,8 @@
-import { CoreModule } from '@ansyn/core';
+import { LayersManagerConfig } from './models/layers-manager-config';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { DataLayersService } from './services/data-layers.service';
-import { NgModule } from '@angular/core';
+import { DataLayersService, layersBaseUrl } from './services/data-layers.service';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'angular-tree-component';
 import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
@@ -14,14 +14,24 @@ import { Store } from '@ngrx/store';
 	imports: [
 		CommonModule,
 		TreeModule,
-		CoreModule,
 		EffectsModule.run(LayersEffects)
 	],
 	declarations: [LayersManagerComponent, LayerTreeComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })
+
 export class LayersManagerModule {
+	static forRoot(config: LayersManagerConfig): ModuleWithProviders {
+		return {
+			ngModule: LayersManagerModule,
+			providers: [
+				DataLayersService,
+				{ provide: layersBaseUrl, useValue: config }
+			]
+		};
+	}
+
 	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
 			name: "Layers Manager",

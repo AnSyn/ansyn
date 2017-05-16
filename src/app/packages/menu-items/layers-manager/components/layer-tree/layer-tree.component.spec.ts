@@ -4,7 +4,6 @@ import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../../layers-manager.module';
-import { CoreModule } from '@ansyn/core';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
@@ -25,7 +24,7 @@ describe('LayerTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LayersManagerModule, CoreModule,HttpModule, StoreModule.provideStore({layers: LayersReducer}), CoreModule.forRoot(null)],
+      imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
     })
       .compileComponents();
   }));

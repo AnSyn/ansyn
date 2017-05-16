@@ -1,4 +1,3 @@
-import { CoreModule } from '@ansyn/core';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
 import { HttpModule } from '@angular/http';
@@ -28,7 +27,7 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer}), CoreModule.forRoot(null)],
+			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
 		}).compileComponents();
 	}));
 

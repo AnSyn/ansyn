@@ -1,4 +1,3 @@
-import { CoreModule } from '@ansyn/core';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
@@ -26,8 +25,7 @@ describe('CasesAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
-				CoreModule.forRoot(null)],
+				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer })],
 			providers: [CasesAppEffects, CasesService]
 
 		}).compileComponents();

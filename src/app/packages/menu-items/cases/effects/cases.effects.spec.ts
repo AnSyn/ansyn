@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { Case } from '../models/case.model';
 import { compose } from '@ngrx/core';
 import { OverlayReducer } from '@ansyn/overlays';
+import { casesConfig } from '@ansyn/menu-items/cases';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -28,7 +29,7 @@ describe('CasesEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer)],
-			providers: [CasesEffects, CasesService]
+			providers: [CasesEffects, CasesService,{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
 

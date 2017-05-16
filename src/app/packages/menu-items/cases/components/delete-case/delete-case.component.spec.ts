@@ -8,6 +8,7 @@ import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions'
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { casesConfig } from '@ansyn/menu-items/cases';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -15,8 +16,8 @@ describe('DeleteCaseComponent', () => {
 
 	const fake_iCasesState: ICasesState = {
 		cases: [
-			{id: 'fake_id1', name: 'fake_name1'},
-			{id: 'fake_id2', name: 'fake_name2'}
+			{ id: 'fake_id1', name: 'fake_name1' },
+			{ id: 'fake_id2', name: 'fake_name2' }
 		],
 		active_case_id: 'fake_id1',
 		selected_case_id: null,
@@ -27,7 +28,8 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
 
@@ -49,10 +51,10 @@ describe('DeleteCaseComponent', () => {
 		let clone_state = _.cloneDeep(fake_iCasesState);
 		clone_state.active_case_id = clone_state.cases[0].id;
 		let result: string = component.getActiveCaseName(clone_state);
-		expect(result).toEqual(clone_state .cases[0].name);
-		clone_state.active_case_id = clone_state .cases[1].id;
-		result = component.getActiveCaseName(clone_state );
-		expect(result).toEqual(clone_state .cases[1].name);
+		expect(result).toEqual(clone_state.cases[0].name);
+		clone_state.active_case_id = clone_state.cases[1].id;
+		result = component.getActiveCaseName(clone_state);
+		expect(result).toEqual(clone_state.cases[1].name);
 	});
 
 	it('text on "p" tag should include case name', () => {

@@ -1,3 +1,4 @@
+import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { HttpModule } from '@angular/http';
@@ -25,6 +26,7 @@ describe('LayerTreeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+      providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
     })
       .compileComponents();
   }));

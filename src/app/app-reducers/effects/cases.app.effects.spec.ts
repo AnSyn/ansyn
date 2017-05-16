@@ -2,7 +2,7 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
-import { CasesService } from '@ansyn/menu-items/cases';
+import { CasesService, casesConfig, CasesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -26,12 +26,14 @@ describe('CasesAppEffects', () => {
 			imports: [HttpModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer })],
-			providers: [CasesAppEffects, CasesService]
+			providers: [CasesAppEffects,
+				CasesService,
+				{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store, casesConfig], (_store: Store<any>) => {
 		store = _store;
 
 		icase_state = {
@@ -49,7 +51,6 @@ describe('CasesAppEffects', () => {
 		spyOn(store, 'select').and.callFake(() => {
 			return Observable.of(icase_state);
 		});
-
 	}));
 
 	beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {

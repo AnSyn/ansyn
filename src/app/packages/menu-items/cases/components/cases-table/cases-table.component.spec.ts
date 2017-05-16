@@ -9,6 +9,7 @@ import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { AddCaseAction, LoadCasesAction, OpenModalAction, SelectCaseAction } from '../../actions/cases.actions';
 import { HttpModule } from '@angular/http';
+import { casesConfig } from '@ansyn/menu-items/cases';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -18,7 +19,8 @@ describe('CasesTableComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		})
 			.compileComponents();
 	}));
@@ -48,7 +50,7 @@ describe('CasesTableComponent', () => {
 	it('onCasesAdded should call selectCase and change tbody_element scrollTop to 0', () => {
 		spyOn(component, 'selectCase');
 		let id = `fake_id_blblblblblb`;
-		let fake_case: Case = {id};
+		let fake_case: Case = { id };
 		let addCaseAction: AddCaseAction = new AddCaseAction(fake_case);
 		component.onCasesAdded(addCaseAction);
 		expect(component.selectCase).toHaveBeenCalledWith(fake_case.id);
@@ -56,28 +58,28 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('calcTopCaseMenu should get MouseEvent calc the top and put on case_menu.style', () => {
-		let case_menu = <any> {style: {top: '-1px'}};
-		let $event = <any>{target: {offsetTop: 100, parentElement: {scrollTop: 50}}};
+		let case_menu = <any>{ style: { top: '-1px' } };
+		let $event = <any>{ target: { offsetTop: 100, parentElement: { scrollTop: 50 } } };
 		component.calcTopCaseMenu($event, case_menu);
 		expect(case_menu.style.top).toEqual('50px');
 	});
 
 	it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
-		let $event = <any>{stopPropagation: () => null};
+		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
 		let selected_case_id: string = 'fake_selected_case_id';
 		component.removeCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({component: DeleteCaseComponent, case_id: selected_case_id}));
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: DeleteCaseComponent, case_id: selected_case_id }));
 	});
 
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
-		let $event = <any>{stopPropagation: () => null};
+		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
 		let selected_case_id: string = 'fake_selected_case_id';
 		component.editCase($event, selected_case_id)
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({component: EditCaseComponent, case_id: selected_case_id}));
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent, case_id: selected_case_id }));
 	});
 
 });

@@ -1,3 +1,4 @@
+import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { LayersManagerModule } from '../../layers-manager.module';
 import { LayersManagerComponent } from './layers-manager.component';
@@ -10,12 +11,13 @@ describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
 	let fixture: ComponentFixture<LayersManagerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({layers: LayersReducer})]
-    })
-      .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
+		})
+			.compileComponents();
+	}));
 
 	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
 		spyOn(_dataLayersService, 'getAllLayersInATree');

@@ -6,6 +6,7 @@ import { CasesModule } from '../../cases.module';
 import { HttpModule } from '@angular/http';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
+import { casesConfig } from '@ansyn/menu-items/cases';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -14,7 +15,8 @@ describe('CasesToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		})
 			.compileComponents();
 	}));
@@ -46,8 +48,8 @@ describe('CasesToolsComponent', () => {
 	});
 
 	it('showCaseModal should call store.dispatch with OpenModalAction', () => {
-	  component.showCaseModal();
-	  expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({component: EditCaseComponent}));
+		component.showCaseModal();
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent }));
 	});
 
 });

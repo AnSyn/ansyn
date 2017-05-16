@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from './../actions/layers.actions';
 import { Observable } from 'rxjs';
+import { layersConfig } from '@ansyn/menu-items/layers-manager';
 
 describe('LayersEffects', () => {
     let layersEffects: LayersEffects;
@@ -20,7 +21,7 @@ describe('LayersEffects', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
-            providers: [LayersEffects, DataLayersService]
+            providers: [LayersEffects, DataLayersService,{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
         }).compileComponents();
     }));
 

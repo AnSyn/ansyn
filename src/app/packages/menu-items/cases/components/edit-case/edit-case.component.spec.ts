@@ -6,6 +6,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { casesConfig } from '@ansyn/menu-items/cases';
 
 xdescribe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -14,8 +15,8 @@ xdescribe('EditCaseComponent', () => {
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
-			{id: 'fake_id1', name: 'fake_name1'},
-			{id: 'fake_id2', name: 'fake_name2'}
+			{ id: 'fake_id1', name: 'fake_name1' },
+			{ id: 'fake_id2', name: 'fake_name2' }
 		],
 		active_case_id: 'fake_id1',
 		selected_case_id: null,
@@ -26,7 +27,8 @@ xdescribe('EditCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer})],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
 
@@ -59,8 +61,8 @@ xdescribe('EditCaseComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
 	});
 	it('distinctUntilChangedActiveCase should compare between active_case_id of prev state and current', () => {
-		let prev_state: ICasesState = {active_case_id: undefined} as any;
-		let current_state: ICasesState = {active_case_id: undefined} as any;
+		let prev_state: ICasesState = { active_case_id: undefined } as any;
+		let current_state: ICasesState = { active_case_id: undefined } as any;
 		let result: boolean = component.distinctUntilChangedActiveCase(prev_state, current_state);
 		expect(result).toBeTruthy();
 		current_state.active_case_id = '1234-56789-1011-1213';
@@ -68,8 +70,8 @@ xdescribe('EditCaseComponent', () => {
 		expect(result).toBeFalsy();
 	});
 
-	describe("template",  ()=> {
-		let template :any;
+	describe("template", () => {
+		let template: any;
 
 		beforeEach(() => {
 			template = fixture.nativeElement;

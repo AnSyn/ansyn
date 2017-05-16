@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 })
 
 export class LayersManagerModule {
-	static forChild(config: LayersManagerConfig): ModuleWithProviders {
+	static forRoot(config: LayersManagerConfig): ModuleWithProviders {
 		return {
 			ngModule: LayersManagerModule,
 			providers: [

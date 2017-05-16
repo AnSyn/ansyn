@@ -112,6 +112,9 @@ describe('OverlayContainerComponent', () => {
          		azimuth: 10
            	}
        	]
+       	const filter = {
+       		
+       	}
 		store.dispatch(new LoadOverlaysAction());
 		expect(state.value.loading).toBe(true);
 		store.dispatch(new LoadOverlaysSuccessAction(overlays));

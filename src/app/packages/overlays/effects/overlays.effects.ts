@@ -39,8 +39,7 @@ export class OverlaysEffects {
  	@Effect({ dispatch: false })
  	demo$: Observable<Action> = this.actions$
 		  	.ofType(overlay.OverlaysActionTypes.DEMO)
-		  	.debug('tmp1')
-	  		.switchMap( action => {
+		  	.switchMap( action => {
       			return Observable.empty();
   			});
 }

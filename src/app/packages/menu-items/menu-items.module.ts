@@ -7,6 +7,8 @@ import { layersConfig } from '@ansyn/menu-items/layers-manager';
 
 const menuItemsConfig: InjectionToken<MenuItemsConfig> = new InjectionToken('menu-items-config');
 
+const configTmp:any = {};
+
 @NgModule({
   imports: [
     CommonModule,

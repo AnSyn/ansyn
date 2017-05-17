@@ -2,7 +2,7 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
-import { CasesService, casesConfig, CasesConfig } from '@ansyn/menu-items/cases';
+import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';

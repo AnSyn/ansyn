@@ -54,24 +54,26 @@ export class TimelineComponent {
         let down,wait;
         const dist = (a,b) => Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2));
 
-        return (element,index,nodes) => {
+        return (data,index,nodes) => {
             if(!down){
                 down = d3.mouse(document.body);
                 wait = window.setTimeout( ((e) => () => {
                     wait = null;
                     down = null;
-                    nodes[index].classList.toggle('selected');
-                    d3.select(nodes[index])['moveToFront']();
-                    this.emitter.provide('timeline:click').next({event:e,element,index,nodes});
+                    this.selectDrop(nodes[index]);            
+                    this.emitter.provide('timeline:click').next({event: e,element: data,index,nodes});
                 })(d3.event),300);
             }
             else{
+                //debugger;
+                console.log(dist(down,d3.mouse(document.body)))
                 if(dist(down,d3.mouse(document.body)) < tolerance){
-                    d3.select(nodes[index])['moveToFront']();
-                    nodes[index].classList.add('selected');
-                    this.emitter.provide('timeline:dblclick').next({event:d3.event,element,index,nodes});
+                    console.log('no distance')
+                    this.selectDrop(nodes[index]);            
+                    this.emitter.provide('timeline:dblclick').next({event:d3.event,element: data,index,nodes});
                 }
                 if(wait){
+                    console.log("wait")
                     window.clearTimeout(wait);
                     wait = null;
                     down = null;
@@ -79,6 +81,11 @@ export class TimelineComponent {
                 return;
             }
         }
+    }
+
+    selectDrop(element){
+        d3.select(element)['moveToFront']();
+        element.classList.add('selected');
     }
 
 	eventDropsHandler() :void {

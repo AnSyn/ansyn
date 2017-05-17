@@ -1,10 +1,11 @@
-import { async, ComponentFixture, TestBed,fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed,fakeAsync,inject,tick } from '@angular/core/testing';
 import * as d3 from 'd3';
 import * as eventDrops from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import {Subject,Subscription} from 'rxjs/Rx';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -56,18 +57,58 @@ describe('TimelineComponent', () => {
 	    fixture.detectChanges();
   	});
 
+  	beforeEach(inject([TimelineEmitterService],(_timelineEmitterService) => {
+  		timeLineEmitterService = _timelineEmitterService;
+  	}))
+
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 
-	xit('should check that click was called instead of double click',fakeAsync(() => {
+	it('should check that click was called instead of double click',fakeAsync((done) => {
 			const event = component.clickEvent();
+			const data = {
+				id: '100'
+			}
+			
 			function createElement(className){
 				const element = document.createElement('div');
 				element.classList.add(className);
+				return element;
 			}
 
-			const el1 = createElement('tmp');
+			const list = createElement('list');
+			list.appendChild(createElement('test1'));
+			list.appendChild(createElement('test2'));
+			document.body.appendChild(list);
+			expect(document.querySelector('.list')['childNodes'].length).toBe(2);
+			
+			const handler = spyOn(timeLineEmitterService,'provide').and.returnValue(new Subject());
+
+
+			const mouseSpy = spyOn(d3,'mouse').and.returnValue([10,15]);
+			spyOn(d3,'event').and.returnValue({});
+
+			event({key: 'value'},1,list.childNodes);
+			tick(400);
+			expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:click');
+					
+			event({key: 'value'},1,list.childNodes);
+			tick(150);
+			event({key: 'value'},1,list.childNodes);
+			expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:dblclick');
+			
+			tick(500);
+			timeLineEmitterService.provide['calls'].reset();
+
+			mouseSpy.and.returnValue([20,20]);
+			event({key: 'value'},1,list.childNodes);
+			tick(150);
+			mouseSpy.and.returnValue([200,200]);
+			event({key: 'value'},1,list.childNodes);
+			expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:click');
+			expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:dblclick');
+			
 	}));
 
 	it("update drops variable will call eventDrops method", () => {

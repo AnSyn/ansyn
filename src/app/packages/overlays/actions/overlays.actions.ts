@@ -33,7 +33,7 @@ export class UnSelectOverlayAction implements Action {
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 	constructor(public payload?: any){
-		console.log('2')
+		
 	}
 }
 

@@ -65,15 +65,11 @@ export class TimelineComponent {
                 })(d3.event),300);
             }
             else{
-                //debugger;
-                console.log(dist(down,d3.mouse(document.body)))
                 if(dist(down,d3.mouse(document.body)) < tolerance){
-                    console.log('no distance')
                     this.selectDrop(nodes[index]);            
                     this.emitter.provide('timeline:dblclick').next({event:d3.event,element: data,index,nodes});
                 }
                 if(wait){
-                    console.log("wait")
                     window.clearTimeout(wait);
                     wait = null;
                     down = null;

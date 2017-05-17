@@ -75,7 +75,6 @@ export class CasesAppEffects {
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
 		.map( ([caseId,state]: [string,ICasesState]) =>  {
-			const filter = {};
 			const caseSelected: Case = state.cases.filter((item:Case) => item.id == caseId )[0];
 
 			if(!caseSelected){

@@ -1,15 +1,17 @@
-import { Config } from '@ansyn/core';
+import { LayersManagerConfig } from './../models/layers-manager-config';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
 import { IServerDataLayerContainerRoot } from './../models/server-data-layer-container-root';
 import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+
+export const layersConfig: InjectionToken<LayersManagerConfig> = new InjectionToken('layers-config');
 
 export type LayerRootsBundle = { layers: ILayerTreeNodeRoot[], selectedLayers: ILayerTreeNodeLeaf[] };
 type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNodeLeaf[] };
@@ -21,9 +23,9 @@ export class DataLayersService {
 
   tree: ILayerTreeNode[] = [];
 
-  constructor(private http: Http, private config: Config) {
-    this.baseUrl = this.config.get("layers.layersByCaseIdUrl");
-   }
+  constructor(private http: Http, @Inject(layersConfig) private config: LayersManagerConfig) {
+    this.baseUrl = this.config.layersByCaseIdUrl;
+  }
 
   public getAllLayersInATree(caseId: string = 'caseId'): Observable<LayerRootsBundle> {
     return this.http.get(`${this.baseUrl}/${caseId}/layers`)

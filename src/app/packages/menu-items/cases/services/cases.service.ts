@@ -1,17 +1,19 @@
-import { Config } from '@ansyn/core';
-import { Injectable } from '@angular/core';
+import { CasesConfig } from './../models/cases-config';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 import "rxjs/add/operator/map";
 import { Case } from '../models/case.model';
+
+export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
 @Injectable()
 export class CasesService {
   base_url;
   LIMIT:number = 15;
 
-  constructor(private http: Http, private config: Config) {
-    this.base_url = this.config.get('cases.casesBaseUrl');
+  constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig) {
+    this.base_url = this.config.casesBaseUrl;
   }
 
   loadCases(last_id: string = '-1'): Observable<any> {

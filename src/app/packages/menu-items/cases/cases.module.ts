@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { CasesConfig } from './models/cases-config';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
 import { CoreModule, MenuItem, AddMenuItemAction } from "@ansyn/core";
@@ -11,7 +12,7 @@ import { DeleteCaseComponent } from './components/delete-case/delete-case.compon
 import { CasesToolsComponent } from './components/cases-tools/cases-tools.component';
 import { EffectsModule } from '@ngrx/effects';
 import { CasesEffects } from './effects/cases.effects';
-import { CasesService } from './services/cases.service';
+import { CasesService, casesConfig } from './services/cases.service';
 import { Store } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -25,13 +26,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		BrowserAnimationsModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent],
-	entryComponents:[CasesComponent, EditCaseComponent, DeleteCaseComponent],
+	entryComponents: [CasesComponent, EditCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })
 export class CasesModule {
-	constructor(store: Store <any>){
+	static forRoot(config: CasesConfig): ModuleWithProviders {
+		return {
+			ngModule: CasesModule,
+			providers: [
+				CasesService,
+				{ provide: casesConfig, useValue: config }
+			]
+		};
+	}
+
+	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
-			name:"Cases",
+			name: "Cases",
 			component: CasesComponent,
 			icon_url: "/assets/icons/cases.svg"
 		};

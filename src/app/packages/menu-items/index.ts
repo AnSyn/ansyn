@@ -6,3 +6,4 @@ export { SettingsModule } from '@ansyn/menu-items/settings';
 export { ToolsModule } from '@ansyn/menu-items/tools';
 export { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
 export { MenuItemsModule } from './menu-items.module';
+export { MenuItemsConfig } from './models/menu-items-config';

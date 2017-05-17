@@ -1,74 +1,73 @@
-import { OverlayReducer,overlayInitialState,IOverlayState } from './overlays.reducer';
+import { OverlayReducer, overlayInitialState, IOverlayState } from './overlays.reducer';
 import { UnSelectOverlayAction, SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 
-describe('Overlay Reducer',() => {
+describe('Overlay Reducer', () => {
 
-   	describe("Load Overlays",() => {
-		it("should activate load_overlay reducer",()=> {
-      const queryParams = { search: '9399ejf'};
-			const action  = new LoadOverlaysAction(queryParams);
-      overlayInitialState.overlays.set('tmp','value');
-			//expect(result.loaded).toBe(false);
-      expect(overlayInitialState.overlays.size).toBe(1);
-			const result = OverlayReducer(overlayInitialState,action);
-			expect(result.loading).toBe(true);
-      expect(result.overlays.size).toBe(0);
-      expect(result.queryParams).toEqual(queryParams)
-		});
-	});
+    describe("Load Overlays", () => {
+        it("should activate load_overlay reducer", () => {
+            const queryParams = { search: '9399ejf' };
+            const action = new LoadOverlaysAction(queryParams);
+            
+            overlayInitialState.overlays.set('tmp', 'value');
+            expect(overlayInitialState.overlays.size).toBe(1);
 
-   	describe("Selected Overlay",() => {
-   		it('should add overaly id to seleced overlays array\'s',() => {
-   			const fakeId:string = 'iu34-2322'
-   			const action = new SelectOverlayAction(fakeId);
+            const result = OverlayReducer(overlayInitialState, action);
+            
+            expect(result.loading).toBe(true);
+            expect(result.overlays.size).toBe(0);
+            expect(result.queryParams).toEqual(queryParams)
+        });
+    });
 
-   			const result:IOverlayState = OverlayReducer(overlayInitialState,action);
-   			expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+    describe("Selected Overlay", () => {
+        it('should add overaly id to seleced overlays array\'s', () => {
+            const fakeId: string = 'iu34-2322'
+            const action = new SelectOverlayAction(fakeId);
 
-   		});
-   	});
+            const result: IOverlayState = OverlayReducer(overlayInitialState, action);
+            expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
 
-   	describe("UnSelected Overlay",() => {
-   		it('should remove overaly id from the seleced overlays array\'s',() => {
-   			const fakeId:string = 'iu34-2322'
-   			const action = new SelectOverlayAction(fakeId);
+        });
+    });
 
-   			let result:IOverlayState = OverlayReducer(overlayInitialState,action);
+    describe("UnSelected Overlay", () => {
+        it('should remove overaly id from the seleced overlays array\'s', () => {
+            const fakeId: string = 'iu34-2322'
+            const action = new SelectOverlayAction(fakeId);
 
-   			expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+            let result: IOverlayState = OverlayReducer(overlayInitialState, action);
 
-   			const unSelectAction = new UnSelectOverlayAction(fakeId);
+            expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
 
-   			result = OverlayReducer(result,unSelectAction);
+            const unSelectAction = new UnSelectOverlayAction(fakeId);
 
-   			expect(result.selectedOverlays.length).toBe(0);
-   		});
-   	});
+            result = OverlayReducer(result, unSelectAction);
 
-	describe("Load Overlays Success",()=>{
-		it('should load all overlays',() => {
-			overlayInitialState.overlays = new Map();
-      const overlays =  <Overlay[]>[
-				{
-	         		id: '12',
-	         		name: 'tmp12',
-	         		photoTime: new Date(Date.now()),
-	         		azimuth: 10
-	         	},
-	         	{
-	         		id: '13',
-	         		name: 'tmp13',
-	         		photoTime: new Date(Date.now()),
-	         		azimuth: 10
-	           	}
-           	]
+            expect(result.selectedOverlays.length).toBe(0);
+        });
+    });
 
-           	const action = new LoadOverlaysSuccessAction(overlays);
-           	const result = OverlayReducer(overlayInitialState,action);
-           	expect(result.overlays.size).toBe(2);
-           	expect(result.loading).toBe(false);
-           	expect(result.loaded).toBe(true);
-		});
-  	});
+    describe("Load Overlays Success", () => {
+        it('should load all overlays', () => {
+            overlayInitialState.overlays = new Map();
+            const overlays = < Overlay[] > [{
+                id: '12',
+                name: 'tmp12',
+                photoTime: new Date(Date.now()),
+                azimuth: 10
+            }, {
+                id: '13',
+                name: 'tmp13',
+                photoTime: new Date(Date.now()),
+                azimuth: 10
+            }]
+
+            const action = new LoadOverlaysSuccessAction(overlays);
+            const result = OverlayReducer(overlayInitialState, action);
+            expect(result.overlays.size).toBe(2);
+            expect(result.loading).toBe(false);
+            expect(result.loaded).toBe(true);
+        });
+    });
 });

@@ -257,7 +257,6 @@ describe('CasesAppEffects', () => {
         let result: any;
         
         casesAppEffects.selectCase$.subscribe((_result: LoadOverlaysAction) => {
-    		debugger;
     		result = _result;	
     	});
 

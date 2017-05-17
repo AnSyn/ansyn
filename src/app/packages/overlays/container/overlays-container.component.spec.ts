@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed,inject } from '@angular/core/testing';
 import { MockComponent } from '@ansyn/core/test';
 import { StoreFixture, createStore } from '@ansyn/core/test';
 import { OverlaysContainer } from './overlays-container.component';
@@ -30,6 +30,8 @@ describe('OverlayContainerComponent', () => {
   let state: State<IOverlayState>;
   let getState: () => IOverlayState;
 
+  let timelineEmitterService: TimelineEmitterService;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
   		providers:[
@@ -50,14 +52,14 @@ describe('OverlayContainerComponent', () => {
     state =  storeFixture.state; //(overlayInitialState);
     //state = overlayInitialState;
   }));
-
-	beforeEach(() => {
+	
+	beforeEach(inject([TimelineEmitterService],(_timelineEmitterService) => {
 		fixture = TestBed.createComponent(OverlaysContainer);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		overlaysService = fixture.debugElement.injector.get(OverlaysService);
-
-	});
+		timelineEmitterService = _timelineEmitterService;
+	}));
 
 
 	it('should create', () => {
@@ -72,6 +74,50 @@ describe('OverlayContainerComponent', () => {
 		expect(store.select).toHaveBeenCalledWith('overlays');
 	});
 
+	it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data',() => {
+		const data = {
+			element : {
+				id : 'test'
+			}
+		};
+		spyOn(store,'dispatch');
+		
+		component.selectedOverlays = ['test'];
+		timelineEmitterService.provide('timeline:dblclick').next(data);
+		expect(store.dispatch).toHaveBeenCalledTimes(1);		
+
+	});
+
+	it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data',() => {
+		const data = {
+			element : {
+				id : 'test'
+			}
+		};
+		spyOn(store,'dispatch');
+		timelineEmitterService.provide('timeline:dblclick').next(data);
+		expect(store.dispatch).toHaveBeenCalledTimes(2);		
+
+	});
+
+	it('check for timeline single click',() => {
+		spyOn(component,'toggleOverlay')
+		const data = {
+			element : {
+				id : 'test'
+			}
+		};
+		timelineEmitterService.provide('timeline:click').next(data);
+		expect(component.toggleOverlay).toHaveBeenCalledWith(data.element.id);
+
+	});
+
+	it('check that we subscribing for both overlays and selected overlays',() => {
+		spyOn(store,'select').and.returnValue(Observable.of(overlayInitialState))
+		component.ngOnInit();
+		expect(store.select).toHaveBeenCalledTimes(2);
+
+	});
 
 	xit('should call store dispatch on ngOnInit with LoadOverlayAction',() => {
 		spyOn(store,'dispatch').and.callThrough();

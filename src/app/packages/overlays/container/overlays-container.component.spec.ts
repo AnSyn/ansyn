@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { MockComponent } from '@ansyn/core/test';
 import { StoreFixture, createStore } from '@ansyn/core/test';
 import { OverlaysContainer } from './overlays-container.component';
-import { OverlaysService,overlaysConfig } from '../services/overlays.service';
+import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable, Observer } from 'rxjs/Rx';
 import { HttpModule } from '@angular/http';
@@ -39,7 +39,7 @@ describe('OverlayContainerComponent', () => {
                 providers: [
                     OverlaysService,
                     TimelineEmitterService,
-                    { provide: overlaysConfig, useValue: configuration.OverlaysConfig }
+                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
                 ],
                 declarations: [
                     OverlaysContainer,

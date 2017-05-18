@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-export const  overlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionToken('overlays-config');
+export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionToken('overlays-config');
 
 
 @Injectable()
@@ -17,7 +17,7 @@ export class OverlaysService {
     //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
     private dataUrl = "http://localhost:9001/api/v1/case/:id/overlays";
 
-    constructor(private http: Http,@Inject(overlaysConfig)private config: IOverlaysConfig) {
+    constructor(private http: Http,@Inject(OverlaysConfig)private config: IOverlaysConfig) {
         console.log('tmp')
     }
 

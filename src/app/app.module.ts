@@ -33,7 +33,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		CoreModule,
 		MenuModule,
 		MenuItemsModule.forRoot(configuration),
-		OverlaysModule,
+		OverlaysModule.forRoot(configuration.OverlaysConfig),
 		AppReducersModule,
 		AppRouter,
 		ImageryModule,

@@ -12,7 +12,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases/reducers/cases.reducer';
 import { PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
-import { Position } from '@ansyn/core';
+import { Position, CoreModule } from '@ansyn/core';
 
 describe('CasesAppEffects', () => {
     let casesAppEffects: CasesAppEffects;
@@ -27,7 +27,7 @@ describe('CasesAppEffects', () => {
 			imports: [HttpModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
-				CoreModule.forRoot(null)
+				CoreModule
 				],
 			providers: [CasesAppEffects,
 				CasesService,

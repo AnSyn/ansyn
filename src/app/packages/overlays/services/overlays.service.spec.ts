@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { OverlaysService } from './overlays.service';
+import { OverlaysService, overlaysConfig } from './overlays.service';
 
 import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
 
@@ -10,6 +10,7 @@ import { MockBackend } from '@angular/http/testing';
 
 import { Observable, Observer } from 'rxjs';
 
+import { configuration } from '../../../../configuration/configuration'
 
 describe('OverlaysService', () => {
     let overlaysService, mockBackend, lastConnection, http;
@@ -25,7 +26,8 @@ describe('OverlaysService', () => {
         TestBed.configureTestingModule({
             providers: [
                 OverlaysService,
-                { provide: XHRBackend, useClass: MockBackend }
+                { provide: XHRBackend, useClass: MockBackend },
+                { provide: overlaysConfig, useValue: configuration.OverlaysConfig }
             ],
             imports: [HttpModule]
         });

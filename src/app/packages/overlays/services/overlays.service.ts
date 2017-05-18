@@ -1,19 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { IOverlayState } from '../reducers/overlays.reducer';
+import { IOverlaysConfig } from '../models/overlays.config';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+
+export const  overlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionToken('overlays-config');
+
 
 @Injectable()
 export class OverlaysService {
     //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
     private dataUrl = "http://localhost:9001/api/v1/case/:id/overlays";
 
-    constructor(private http: Http) {}
+    constructor(private http: Http,@Inject(overlaysConfig)private config: IOverlaysConfig) {
+        console.log('tmp')
+    }
 
     //@todo add support for parsing callback function
     fetchData(url = "", params: any = {}): Observable < any[] > {

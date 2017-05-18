@@ -14,7 +14,7 @@ export const configuration = {
   },
   OverlaysConfig: {
   	baseUrl: 'http://localhost:9001/api/v1/',
-  	overlaysByCaseId:  'cases/:id/overlays',
+  	overlaysByCaseId:  'case/:id/overlays',
   	defaultApi: 'overlays'
   }
 

@@ -15,7 +15,7 @@ export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionTo
 @Injectable()
 export class OverlaysService {
     //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
-    private dataUrl = "http://localhost:9001/api/v1/case/:id/overlays";
+    private dataUrl: string;
 
     constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
         this.dataUrl = this.config.baseUrl + this.config.overlaysByCaseId;

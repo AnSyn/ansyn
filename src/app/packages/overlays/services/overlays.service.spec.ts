@@ -136,13 +136,13 @@ describe('OverlaysService', () => {
         });
     })
 
-    fit('check that the url is correct without params', () => {
+    it('check that the url is correct without params', () => {
         const spyHandler = spyOn(http, 'get').and.returnValue(Observable.empty());
         overlaysService.fetchData('case/:id/overlays');
         expect(http.get).toHaveBeenCalledWith('case/:id/overlays', jasmine.any(RequestOptions));
     });
 
-    fit('check that the url is correct with params', () => {
+    it('check that the url is correct with params', () => {
         spyOn(http, 'get').and.returnValue(Observable.empty());
         overlaysService.fetchData('', { caseId: "123" });
         expect(http.get).toHaveBeenCalledWith('http://localhost:9001/api/v1/case/123/overlays', jasmine.any(RequestOptions));

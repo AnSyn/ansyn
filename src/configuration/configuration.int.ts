@@ -8,8 +8,8 @@ export const configuration = {
     layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
   },
   OverlaysConfig: {
-  	baseUrl: 'http://localhost:9001/api/v1/'
-  	overlaysByCaseId:  'cases/:id/overlays'
+  	baseUrl: 'http://localhost:9001/api/v1/',
+  	overlaysByCaseId:  'cases/:id/overlays',
   	defaultApi: 'overlays'
   }
 

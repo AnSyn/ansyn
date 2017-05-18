@@ -8,7 +8,7 @@ import { TimelineEmitterService } from './services/timeline-emitter.service';
 import { OverlaysContainer } from './container/overlays-container.component';
 import { IOverlaysConfig } from './models/overlays.config';
 
-import { OverlaysService } from './services/overlays.service';
+import { OverlaysService, OverlaysConfig } from './services/overlays.service';
 import { OverlaysEffects } from "./effects/overlays.effects";
 import { EffectsModule } from "@ngrx/effects";
 
@@ -24,13 +24,17 @@ import { EffectsModule } from "@ngrx/effects";
         OverlaysContainer
     ],
     exports: [OverlaysContainer, TimelineComponent],
+    providers: [
+        OverlaysService,
+        TimelineEmitterService 
+    ]
 
 })
 
 export class OverlaysModule {
     static forRoot(config: IOverlaysConfig): ModuleWithProviders {
         return {
-            NgModule: OverlaysModule,
+            ngModule: OverlaysModule,
             providers: [
                 OverlaysService,
                 TimelineEmitterService, 

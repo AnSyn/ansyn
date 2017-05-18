@@ -17,8 +17,8 @@ export class OverlaysService {
     //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
     private dataUrl = "http://localhost:9001/api/v1/case/:id/overlays";
 
-    constructor(private http: Http,@Inject(OverlaysConfig)private config: IOverlaysConfig) {
-        console.log('tmp')
+    constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
+        this.dataUrl = this.config.baseUrl + this.config.overlaysByCaseId;
     }
 
     //@todo add support for parsing callback function

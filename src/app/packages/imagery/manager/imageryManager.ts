@@ -1,7 +1,10 @@
-import { IMap, IMapComponent } from '../model/model';
+import { IImageryConfig, IMap, IMapComponent, IMapConfig } from '../model/model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { Position } from '@ansyn/core';
+import {
+	MapSourceProviderContainerService
+} from '@ansyn/map-source-provider';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -16,7 +19,9 @@ export class ImageryManager {
 				private imageryProviderService: ImageryProviderService,
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private map_component_elem: ViewContainerRef,
-				private _mapComponentRef: ComponentRef<any>) {
+				private _mapComponentRef: ComponentRef<any>,
+				private mapSourceProviderContainerService: MapSourceProviderContainerService,
+				private config: IImageryConfig) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
 	}
@@ -32,6 +37,19 @@ export class ImageryManager {
 			this.internalSetActiveMap(map);
 			mapCreatedSubscribe.unsubscribe();
 		});
+		let releventMapConfig: IMapConfig = null;
+		this.config.geoMapsInitialMapSource.forEach((mapConfig)=>{
+			if (mapConfig.mapType === activeMapType) {
+				releventMapConfig = mapConfig;
+			}
+		});
+		if (!releventMapConfig) {
+			throw new Error(`no config found for ${activeMapType}`);
+		}
+
+		const sourceProvider = this.mapSourceProviderContainerService.resolve(releventMapConfig.mapType, releventMapConfig.mapSource);
+		const layers = sourceProvider.create(releventMapConfig.mapSourceMetadata);
+		mapComponent.createMap(layers);
 	}
 
 	private destroyCurrentComponent(): void {
@@ -71,7 +89,7 @@ export class ImageryManager {
 		this._activeMap.getPosition();
 	}
 
-	public updateSize() :void {
+	public updateSize(): void {
 		this._activeMap.updateSize();
 	}
 
@@ -128,6 +146,6 @@ export class ImageryManager {
 	}
 
 	public removeVectorLayer(layer: any): void {
-		this._activeMap.removeVectorLayer(layer);		
+		this._activeMap.removeVectorLayer(layer);
 	}
 }

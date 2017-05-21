@@ -3,10 +3,22 @@
  */
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
-import { ImageryCommunicatorService } from '../api/imageryCommunicator.service';
+import { ImageryCommunicatorService, ImageryConfig } from '../api/imageryCommunicator.service';
 import { ImageryComponentSettings } from './imageryComponentSettings';
 import { MapSettings } from './mapSettings';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
+import { BaseSourceProvider, MapSourceProviderContainerService } from '@ansyn/map-source-provider';
+
+import { configuration } from '../../../../configuration/configuration';
+
+class SourceProviderMock1 implements BaseSourceProvider {
+	mapType= 'mapType1';
+	sourceType = 'sourceType1';
+
+	create(metaData: any): any {
+		return true;
+	}
+}
 
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;
@@ -26,7 +38,11 @@ describe('ImageryComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ImageryComponent ],
-			providers: [ ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
+			providers: [
+				MapSourceProviderContainerService,
+				{ provide: ImageryConfig, useValue: configuration.ImageryConfig },
+				{ provide: BaseSourceProvider , useClass: SourceProviderMock1, multi:true},
+				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ImageryProviderService], (_imageryCommunicatorService, _imageryProviderService) => {

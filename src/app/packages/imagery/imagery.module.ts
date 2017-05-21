@@ -1,11 +1,12 @@
 /**
  * Created by AsafMasa on 25/04/2017.
  */
-import {NgModule} from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imageryComponent/imagery.component';
-import { ImageryCommunicatorService } from './api/imageryCommunicator.service';
+import { ImageryCommunicatorService, ImageryConfig } from './api/imageryCommunicator.service';
 import { ImageryProviderService } from './imageryProviderService/imageryProvider.service';
+import { IImageryConfig } from './model/model';
 
 @NgModule({
   imports: [CommonModule],
@@ -13,4 +14,16 @@ import { ImageryProviderService } from './imageryProviderService/imageryProvider
   providers: [ImageryCommunicatorService, ImageryProviderService],
   exports: [ImageryComponent]
 })
-export class ImageryModule { }
+export class ImageryModule {
+
+	static forRoot(config: IImageryConfig): ModuleWithProviders {
+		return {
+			ngModule: ImageryModule,
+			providers: [
+				ImageryCommunicatorService,
+				ImageryProviderService,
+				{ provide: ImageryConfig, useValue: config }
+			]
+		};
+	}
+}

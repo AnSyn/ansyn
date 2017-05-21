@@ -9,9 +9,10 @@
 	"author": "",
 	"license": "ISC",
 	"peerDependencies": {
-		"@ansyn/imagery": "~0.0.0",
 		"openlayers": "^4.1.0",
 		"@angular/common": "~2.4.0",
-		"@angular/core": "^2.4.0"
+		"@angular/core": "^2.4.0",
+		"@ansyn/imagery": "~0.0.0",
+		"@ansyn/map-source-provider": "~0.0.0"
 	}
 }

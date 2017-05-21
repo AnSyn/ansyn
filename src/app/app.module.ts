@@ -17,8 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
-import { MapSourceProviderModule,BaseSourceProvider } from '@ansyn/map-source-provider';
-import {OpenLayerTileWMSSourceProvider,OpenLayerOSMSourceProvider} from '@ansyn/imageryOpenLayerMap';
+import { MapSourceProviderModule, BaseSourceProvider } from '@ansyn/map-source-provider';
+import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider } from '@ansyn/imageryOpenLayerMap';
 
 @NgModule({
 	providers:[

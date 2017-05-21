@@ -33,13 +33,13 @@ export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
 		const tiled = new ol.layer.Tile({
 			visible: true,
 			source: new ol.source.TileWMS({
-				url: 'http://localhost:8080/geoserver/ansyn/wms',
+				url: url,
 				params: {
 					'FORMAT': 'image/png',
 					'VERSION': '1.1.1',
 					tiled: true,
 					STYLES: '',
-					LAYERS: 'ansyn:israel_center_1',
+					LAYERS: layerName,
 					tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
 				},
 				projection: projection

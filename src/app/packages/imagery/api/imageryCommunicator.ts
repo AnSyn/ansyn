@@ -40,7 +40,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public plugginCommunicatorAdded: EventEmitter<string>;
 
-	constructor() {
+	constructor(private _id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
 		this.plugginCommunicatorAdded = new EventEmitter<string>();
@@ -87,6 +87,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		return this._manager.getMapCenter();
 	}
 	public updateSize(): void {
+		if (!this._manager) {
+			console.warn(`'id ${this._id}', can't update size communicator manager is not set`);
+			return;
+		}
 		return this._manager.updateSize();
 	}
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
@@ -131,7 +135,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	}
 
 	public removeVectorLayer(layer: any): void {
-		this._manager.removeVectorLayer(layer);		
+		this._manager.removeVectorLayer(layer);
 	}
 
 	//IImageryCommunicator methods end

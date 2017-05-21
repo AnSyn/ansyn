@@ -17,13 +17,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
+import { MapSourceProviderModule,BaseSourceProvider } from '@ansyn/map-source-provider';
+import {OpenLayerTileWMSSourceProvider,OpenLayerOSMSourceProvider} from '@ansyn/imageryOpenLayerMap';
 
 @NgModule({
+	providers:[
+		{ provide: BaseSourceProvider , useClass: OpenLayerTileWMSSourceProvider, multi:true},
+		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true}
+	],
 	declarations: [
 		AppComponent,
 		AnsynComponent,
 	],
 	imports: [
+		MapSourceProviderModule,
 		ImageryOpenLayerMapModule,
 		ImageryCesiumMapModule,
 		BrowserModule,
@@ -39,7 +46,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		ImageryModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule
+		ImageryModule.forRoot(configuration.ImageryConfig)
 	],
 	bootstrap: [AppComponent]
 })

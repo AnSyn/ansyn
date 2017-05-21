@@ -3,8 +3,7 @@
  */
 import {NgModule} from '@angular/core';
 import { OpenLayerComponent } from './map/openLayer.component';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { ImageryProviderService } from '@ansyn/imagery/imageryProviderService/imageryProvider.service';
+import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 
 @NgModule({
 	imports: [ImageryModule],

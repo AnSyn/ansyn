@@ -1,2 +1,3 @@
+export { MapSourceProviderContainerService, IMapSourceProviderContainer,sourceMapProviders } from './services/map-source-provider-container.service';
 export {MapSourceProviderModule} from './map-source-provider.module';
-export {ISourceProvider} from './models/models';
+export {BaseSourceProvider} from './models/models';

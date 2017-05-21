@@ -1,8 +1,11 @@
 /**
  * Created by AsafMasa on 27/04/2017.
  */
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { IImageryCommunicator, ImageryCommunicator } from './imageryCommunicator';
+import { IImageryConfig } from '../model/model';
+
+export const ImageryConfig: InjectionToken<IImageryConfig> = new InjectionToken('imagery-config');
 
 @Injectable()
 export class ImageryCommunicatorService {
@@ -22,7 +25,7 @@ export class ImageryCommunicatorService {
 
 	private createImageryCommunicator(id: string): void {
 		console.log(`'createImageryCommunicator ${id}'`);
-		this._communicators[id] = new ImageryCommunicator();
+		this._communicators[id] = new ImageryCommunicator(id);
 	}
 
 	public removeCommunicator(id: string) {

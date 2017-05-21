@@ -1,8 +1,9 @@
-import { IMap } from '@ansyn/imagery';
-import { Position } from '@ansyn/core';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
+
+import { IMap } from '@ansyn/imagery';
+import { Position } from '@ansyn/core';
 import * as ol from 'openlayers';
 import { EventEmitter } from '@angular/core';
 
@@ -15,21 +16,18 @@ export class OpenLayerMap implements IMap {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<Position>;
 
-	constructor(element: HTMLElement) {
+	constructor(element: HTMLElement, layers: any) {
 		this._mapType = 'openLayers';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
-		this.initMap(element);
+		this.initMap(element, layers);
 	}
 
-	private initMap(element: HTMLElement) {
-		const mapTileLayr = new ol.layer.Tile({
-			source: new ol.source.OSM()
-		});
+	private initMap(element: HTMLElement, layers: any) {
 
 		this._mapObject = new ol.Map({
 			target: element,
-			layers: [mapTileLayr],
+			layers: layers,
 			renderer: 'canvas',
 			controls: [],
 			view: new ol.View({
@@ -38,7 +36,7 @@ export class OpenLayerMap implements IMap {
 			})
 		});
 
-		this._mapLayers.push(mapTileLayr);
+		this._mapLayers = layers;
 
 		this._mapObject.on('moveend', (e) => {
 			const center = this.getCenter();
@@ -65,7 +63,7 @@ export class OpenLayerMap implements IMap {
 
 	// In the future we'll use @ansyn/map-source-provider
 	public addVectorLayer(layer: any): void {
-		var vectorLayer = new ol.layer.Tile({
+		const vectorLayer = new ol.layer.Tile({
 			source: new ol.source.OSM({
 				attributions: [
 					layer.name

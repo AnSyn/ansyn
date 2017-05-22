@@ -60,7 +60,7 @@ export class ImageryManager {
 	}
 
 	public setActiveMap(activeMapType: string) {
-		console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
+		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -68,7 +68,7 @@ export class ImageryManager {
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {
-		console.log(`'${this.id} setActiveMap ${activeMap.mapType} map'`);
+		// console.log(`'${this.id} setActiveMap ${activeMap.mapType} map'`);
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();
 	}
@@ -126,7 +126,6 @@ export class ImageryManager {
 	}
 
 	public dispose() {
-		console.log(`'dispose manager ${this.id}'`);
 		for (let i = 0; i < this._subscriptions.length; i++) {
 			this._subscriptions[i].unsubscribe();
 		}

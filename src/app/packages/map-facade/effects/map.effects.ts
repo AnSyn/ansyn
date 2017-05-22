@@ -19,4 +19,10 @@ export class MapEffects{
 			this.communicator.provideCommunicator('imagery1').updateSize();
 		});
 
+	@Effect({dispatch: false})
+	onCommunicatorChange$: Observable<void> = this.actions$
+		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
+		.map((): void => {
+			this.mapFacadeService.initPositionChangedEmitters();
+		})
 }

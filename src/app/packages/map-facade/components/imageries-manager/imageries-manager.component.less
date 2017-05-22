@@ -1,0 +1,67 @@
+div.imageries-container{
+
+	display: flex;
+	height: 100%;
+	flex-wrap: wrap;
+	overflow: hidden;
+	div{
+		&.active-map {
+
+		}
+	}
+	&.layout1 {
+		div{
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&.layout2 {
+		div{
+			position: relative;
+			width: 50%;
+			height: 100%;
+		}
+	}
+	&.layout3 {
+		flex-direction: column;
+		div{
+			position: relative;
+			width: 100%;
+			height: 50%;
+		}
+	}
+	&.layout4 {
+		div {
+			position: relative;
+			width: 50%;
+			height: 50%;
+			&:first-child{
+				width: 100%;
+				height: 50%;
+			}
+
+		}
+	}
+
+	&.layout5 {
+		div{
+			position: relative;
+			width: 50%;
+			height: 50%;
+			&:first-child {
+				width: 50%;
+				height: 100%;
+			}
+		}
+		flex-direction: column;
+	}
+	&.layout6 {
+		div{
+			position: relative;
+			width: 50%;
+			height: 50%;
+		}
+	}
+}

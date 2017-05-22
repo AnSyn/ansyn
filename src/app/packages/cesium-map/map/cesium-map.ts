@@ -4,10 +4,11 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
+import { Position } from '@ansyn/core';
 
 export class CesiumMap implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<{zoom: number; center: GeoJSON.Point; }>;
+	positionChanged: EventEmitter<Position>;
 	mapType: string;
 	mapObject: any;
 
@@ -45,7 +46,7 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	getPosition(): {zoom: number; center: GeoJSON.Point;} {
+	getPosition(): Position {
 		throw new Error('Method not implemented.');
 	}
 
@@ -61,7 +62,7 @@ export class CesiumMap implements IMap {
 	constructor(element: HTMLElement) {
 		this.mapType = 'cesium';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<{ zoom: number; center: GeoJSON.Point; }>();
+		this.positionChanged = new EventEmitter<Position>();
 		this.mapObject = {};
 	}
 

@@ -1,7 +1,4 @@
-/**
- * Created by AsafMasa on 27/04/2017.
- */
-import { Injectable, InjectionToken } from '@angular/core';
+import { EventEmitter, Injectable, InjectionToken } from '@angular/core';
 import { IImageryCommunicator, ImageryCommunicator } from './imageryCommunicator';
 import { IImageryConfig } from '../model/model';
 
@@ -11,6 +8,7 @@ export const ImageryConfig: InjectionToken<IImageryConfig> = new InjectionToken(
 export class ImageryCommunicatorService {
 
 	private  _communicators: { [id: string]: ImageryCommunicator };
+	public communicatorsChange = new EventEmitter();
 
 	constructor() {
 		this._communicators = {};
@@ -24,14 +22,14 @@ export class ImageryCommunicatorService {
 	}
 
 	private createImageryCommunicator(id: string): void {
-		console.log(`'createImageryCommunicator ${id}'`);
 		this._communicators[id] = new ImageryCommunicator(id);
+		this.communicatorsChange.emit(this._communicators);
 	}
 
 	public removeCommunicator(id: string) {
-		console.log(`'removeImageryAPI ${id}'`);
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);
+		this.communicatorsChange.emit(this._communicators);
 	}
 }

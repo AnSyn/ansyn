@@ -28,7 +28,6 @@ export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {
 	}
 
 	ngOnInit(): void {
-		console.log(`'OpenLayerComponent init'`);
 	}
 
 	createMap(layers: any): void {
@@ -38,7 +37,6 @@ export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {
 
 	ngOnDestroy(): void {
 		this._map.dispose();
-		console.log(`'OpenLayerComponent destroy'`);
 	}
 
 }

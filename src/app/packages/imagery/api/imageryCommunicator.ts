@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 export interface IImageryCommunicator {
 	plugginCommunicatorAdded: EventEmitter<string>;
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<Position>;
+	positionChanged: EventEmitter<{id: string, position: Position}>;
 
 	init(manager: ImageryManager);
 
@@ -36,13 +36,13 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	private _managerSubscriptions;
 	private _plugginCommunicators: { [id: string]: IPlugginCommunicator };
 
-	public positionChanged: EventEmitter<Position>;
+	public positionChanged: EventEmitter<{id: string, position: Position}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public plugginCommunicatorAdded: EventEmitter<string>;
 
 	constructor(private _id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<Position>();
+		this.positionChanged = new EventEmitter<{id: string, position: Position}>();
 		this.plugginCommunicatorAdded = new EventEmitter<string>();
 		this._plugginCommunicators = {};
 	}
@@ -52,7 +52,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 			this.centerChanged.emit(center);
 		}));
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: Position ) => {
-			this.positionChanged.emit(position);
+			this.positionChanged.emit({id: this._id, position});
 		}));
 
 	}

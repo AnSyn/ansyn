@@ -12,7 +12,7 @@ import { Observable, Observer } from 'rxjs';
 
 import { configuration } from '../../../../configuration/configuration'
 
-describe('OverlaysService', () => {
+fdescribe('OverlaysService', () => {
     let overlaysService, mockBackend, lastConnection, http;
     let overlaysTmpData: any[];
     let response = {
@@ -134,6 +134,49 @@ describe('OverlaysService', () => {
         overlaysService.fetchData('tmp').subscribe(result => {
             expect(result.key).toBe('value2');
         });
+    })
+
+    it('check the method searchOverlay with spyOn',() => {
+      
+       let response = new Response(new ResponseOptions({
+            body: JSON.stringify({ key: 'value' })
+        }));
+
+        var calls = spyOn(http, 'post').and.callFake(function() {
+            return Observable.create((observer: Observer < any > ) => {
+             
+                observer.next(response);
+            });
+        }).calls;
+
+        
+        let params =  {
+                polygon:"mypolygon",
+                from: new Date(2020),
+                to:Date.now()
+
+            };
+         overlaysService.searchOverlay(
+            "",
+            params
+           ).subscribe(result => {
+            let requestBody = calls.allArgs()[0][1];
+            expect(JSON.stringify(requestBody)).
+            toEqual(JSON.stringify(
+                {
+                    "region":"mypolygon",
+                    "timeRange":
+                        {
+                            "start":"1970-01-01T00:00:02.020Z",
+                            "end":1495457269136
+                        }
+                }));
+            expect(result.key).toBe('value');
+        });
+        
+        
+        //var requestBody = spyOn(http,'post').calls.first();
+
     })
 
     it('check that the url is correct without params', () => {

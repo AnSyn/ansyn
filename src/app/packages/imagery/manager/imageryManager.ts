@@ -98,7 +98,7 @@ export class ImageryManager {
 	}
 
 	public getMapObject() {
-		return this._activeMap.mapObject;
+		return this._activeMap;
 	}
 
 	// private registerMapCommunicatorEvents() {

@@ -16,9 +16,11 @@ export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionTo
 export class OverlaysService {
     //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
     private dataUrl: string;
+    private polygonTimeSearchUrl: string;
 
     constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
         this.dataUrl = this.config.baseUrl + this.config.overlaysByCaseId;
+        this.polygonTimeSearchUrl = this.config.baseUrl +  this.config.overlaysByTimeAndPolygon;
     }
 
     //@todo add support for parsing callback function
@@ -34,6 +36,28 @@ export class OverlaysService {
 
         //const data = JSON.stringify(params);
         return this.http.get(restPath, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    searchOverlay(url = "", params: any = {}): Observable < any[] >{
+        let restPath = url;
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        if (!restPath) {
+            restPath = this.polygonTimeSearchUrl;
+        }
+
+        var qData = {
+            region : params.polygon,
+            timeRange :{
+                start: params.from,
+                end: params.to
+            }
+        } 
+        return this.http.post(restPath,qData, options)
             .map(this.extractData)
             .catch(this.handleError);
     }

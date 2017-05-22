@@ -17,7 +17,7 @@ export class OpenLayerMap implements IMap {
 	public positionChanged: EventEmitter<Position>;
 
 	constructor(element: HTMLElement, layers: any) {
-		this._mapType = 'openLayers';
+		this._mapType = 'openLayerMap';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
 		this.initMap(element, layers);

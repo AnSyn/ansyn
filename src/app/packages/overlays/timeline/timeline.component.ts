@@ -4,6 +4,8 @@ import * as d3 from 'd3';
 import { eventDrops } from 'event-drops';
 
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import '@ansyn/core/utils/d3extending';
 
@@ -24,19 +26,21 @@ import '@ansyn/core/utils/d3extending';
 /**
  *
  */
-export class TimelineComponent {
+export class TimelineComponent implements OnInit {
 
     private _drops: any[];
+    private stream: Observable<any>;
 
     @ViewChild('context') context: ElementRef;
 
 
     @Input()
     set drops(drops: any[]) {
-        this._drops = drops;
-        if (this._drops.length) {
-            this.eventDropsHandler();
-        }
+        
+        this._drops = drops || [];
+        this.eventDropsHandler();
+        //this.stream.next();
+        
     }
     get drops() {
         return this._drops;
@@ -45,9 +49,22 @@ export class TimelineComponent {
 
     @Input() configuration: any;
 
+    @Input() redraw$: BehaviorSubject<number>;
+      
+
     constructor(private emitter: TimelineEmitterService) {}
 
-
+    ngOnInit(){
+        const drops$ = Observable.of(this.drops);
+        const configuration$ = Observable.of(this.configuration);
+        
+        this.redraw$.subscribe(value => {
+            if(this.drops){
+                this.eventDropsHandler();
+            }
+        })
+    }
+    
     clickEvent() {
         const tolerance = 5;
         let down, wait;
@@ -59,13 +76,13 @@ export class TimelineComponent {
                 wait = window.setTimeout(((e) => () => {
                     wait = null;
                     down = null;
-                    this.selectDrop(nodes[index]);
+                    this.toggleDrop(nodes[index]);
                     this.emitter.provide('timeline:click').next({ event: e, element: data, index, nodes });
                 })(d3.event), 300);
             } else {
                 if (dist(down, d3.mouse(document.body)) < tolerance) {
-                    this.selectDrop(nodes[index]);
-                    this.emitter.provide('timeline:dblclick').next({ event: d3.event, element: data, index, nodes });
+                    this.selectAndShowDrop(nodes[index],d3.event,data,index,nodes);
+                    
                 }
                 if (wait) {
                     window.clearTimeout(wait);
@@ -77,9 +94,16 @@ export class TimelineComponent {
         }
     }
 
-    selectDrop(element) {
+    selectAndShowDrop(element,event,data,index,nodes) {
         d3.select(element)['moveToFront']();
         element.classList.add('selected');
+        this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
+    }
+
+    toggleDrop(element) {
+        d3.select(element)['moveToFront']();
+        element.classList.toggle('selected');
+
     }
 
     eventDropsHandler(): void {

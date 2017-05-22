@@ -9,7 +9,7 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable } from 'rxjs/Observable';
 
-import * as overlay from '../actions/overlays.actions';
+import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '../actions/overlays.actions';
 
 import { OverlaysService } from '../services/overlays.service';
 
@@ -20,25 +20,28 @@ export class OverlaysEffects {
 	constructor(private actions$: Actions,private overlaysService: OverlaysService ){
 
 	}
+	@Effect({dispatch: false})
+	onRedrawTimeline$: Observable<boolean> = this.actions$
+		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
+		.map(() => true)
+		.share();
 
 	@Effect()
-	loadOverlays$: Observable<Action> = this.actions$
-		.ofType(overlay.OverlaysActionTypes.LOAD_OVERLAYS)
+	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
+		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
 			return this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
 						item.date = item.photoTime
 					});
-					return new overlay.LoadOverlaysSuccessAction(data);
+					return new LoadOverlaysSuccessAction(data);
 				});
 		});
 
-
-
  	@Effect({ dispatch: false })
  	demo$: Observable<Action> = this.actions$
-		  	.ofType(overlay.OverlaysActionTypes.DEMO)
+		  	.ofType(OverlaysActionTypes.DEMO)
 		  	.switchMap( action => {
       			return Observable.empty();
   			});

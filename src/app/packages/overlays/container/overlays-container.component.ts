@@ -3,10 +3,11 @@ import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 
-import * as _ from 'lodash';
+import { isEmpty,isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/compare';
+import { OverlaysEffects } from '../effects/overlays.effects';
 
 import { Store } from '@ngrx/store';
 import * as overlaysAction from '../actions/overlays.actions';
@@ -14,6 +15,10 @@ import { IOverlayState } from '../reducers/overlays.reducer';
 
 import * as d3 from 'd3';
 import { OverlaysService } from "../services/overlays.service";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+
+
 
 @Component({
     selector: 'overlays-container',
@@ -26,6 +31,7 @@ import { OverlaysService } from "../services/overlays.service";
 })
 export class OverlaysContainer implements OnInit, AfterViewInit {
     public drops: any[] = [];
+    public redraw$: BehaviorSubject<number>;
     public configuration: any;
 
     private errorMessage: string;
@@ -35,7 +41,13 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     public subscribers: any = {};
 
 
-    constructor(private store: Store < IOverlayState > , private overlaysService: OverlaysService, private emitter: TimelineEmitterService) {
+    constructor(private store: Store <IOverlayState> , 
+                private overlaysService: OverlaysService, 
+                private emitter: TimelineEmitterService,
+                private effects: OverlaysEffects    
+                ) 
+    {
+        this.redraw$ = new BehaviorSubject(0);
         this.configuration = {
             start: new Date(new Date().getTime() - 3600000 * 24 * 365),
             margin: {
@@ -89,15 +101,32 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         this.subscribers.overlays = this.store.select('overlays')
             .skip(1)
             .distinctUntilChanged(this.overlaysService.compareOverlays)
-            .map((data: any) => this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters))
-            .subscribe(overlays => this.drops = overlays);
+            .filter(data => !isEmpty(data))
+            .debug('tmp')
+            .map((data: any) => {
+                
+                return {
+                    overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
+                    configuration: data.queryParams 
+                }
+            })
+            .subscribe(data => {
+                this.configuration.start = new Date(data.configuration.from);
+                this.configuration.end = new Date(data.configuration.to);
+                this.drops = data.overlay;
+            });
 
+        
+            
         this.subscribers.selected = this.store.select('overlays')
             .skip(1)
-            .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => _.isEqual(data.selectedOverlays, data1.selectedOverlays))
+            .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
             .map((data: IOverlayState) => data.selectedOverlays)
             .subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays)
 
+        this.effects.onRedrawTimeline$.subscribe(() => {
+            this.redraw$.next(Math.random());
+        })    
         //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }
 

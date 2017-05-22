@@ -6,6 +6,9 @@ import { TimelineComponent } from './timeline.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Subject, Subscription } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+
 
 describe('TimelineComponent', () => {
     let component: TimelineComponent;
@@ -61,6 +64,7 @@ describe('TimelineComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TimelineComponent);
         component = fixture.componentInstance;
+        component.redraw$ = new BehaviorSubject(Math.random());
         fixture.detectChanges();
     });
 

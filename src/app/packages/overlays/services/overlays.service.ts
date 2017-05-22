@@ -50,7 +50,7 @@ export class OverlaysService {
             restPath = this.polygonTimeSearchUrl;
         }
 
-        var qData = {
+        const qData = {
             region : params.polygon,
             timeRange :{
                 start: params.from,

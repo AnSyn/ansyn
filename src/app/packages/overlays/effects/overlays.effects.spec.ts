@@ -47,7 +47,7 @@ describe("Overlays Effects ", () => {
         providers: [
             OverlaysEffects, {
                 provide: OverlaysService,
-                useValue: jasmine.createSpyObj('overlaysService', ['fetchData'])
+                useValue: jasmine.createSpyObj('overlaysService', ['fetchData','searchOverlay'])
             }
         ]
     }));
@@ -66,8 +66,8 @@ describe("Overlays Effects ", () => {
         overlays.forEach(i => tmp.push(Object.assign({}, i,{date :i.photoTime})));
         const expectedResult = new LoadOverlaysSuccessAction(tmp);
 
-        overlaysService.fetchData.and.returnValue(Observable.of(overlays));
-
+       // overlaysService.fetchData.and.returnValue(Observable.of(overlays));
+       overlaysService.searchOverlay.and.returnValue(Observable.of(overlays));
         runner.queue(new LoadOverlaysAction());
 
         let result = null;

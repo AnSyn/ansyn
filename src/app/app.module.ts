@@ -18,12 +18,13 @@ import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { MapSourceProviderModule, BaseSourceProvider } from '@ansyn/map-source-provider';
-import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider } from '@ansyn/imageryOpenLayerMap';
+import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerIDAHOSourceProvider } from '@ansyn/imageryOpenLayerMap';
 
 @NgModule({
 	providers:[
 		{ provide: BaseSourceProvider , useClass: OpenLayerTileWMSSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true}
+		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true},
+		{ provide: BaseSourceProvider , useClass: OpenLayerIDAHOSourceProvider, multi:true}
 	],
 	declarations: [
 		AppComponent,

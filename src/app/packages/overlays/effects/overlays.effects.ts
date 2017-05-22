@@ -30,7 +30,7 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
-			return this.overlaysService.fetchData("",action.payload)
+			return this.overlaysService.searchOverlay("",action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
 						item.date = item.photoTime

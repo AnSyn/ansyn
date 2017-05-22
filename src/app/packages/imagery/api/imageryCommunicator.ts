@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryManager } from '../manager/imageryManager';
-import { IPlugginCommunicator } from '../model/model';
+import {IMap, IPlugginCommunicator} from '../model/model';
 import { Position } from '@ansyn/core';
 
 import * as _ from 'lodash';
@@ -25,7 +25,7 @@ export interface IImageryCommunicator {
 	setPosition(Position): void;
 	updateSize(): void;
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void
-	getActiveMapObject(): any;
+	getActiveMapObject(): IMap;
 	getCenter(): GeoJSON.Point;
 	getPlugginCommunicator(plugginId: string): IPlugginCommunicator;
 	registerPlugginCommunicator(plugginId: string, plugginCommunicator: IPlugginCommunicator);

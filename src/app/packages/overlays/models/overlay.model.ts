@@ -17,5 +17,6 @@ export type  Overlay = {
 	photoTime: Date,
 	azimuth: number, //radians
 	aproximateTransform?: any,
-	csmState?: string
+	csmState?: string,
+	sourceType?:string
 }

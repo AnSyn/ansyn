@@ -7,6 +7,7 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
 import { Case, ICasesState, CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases';
+import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
@@ -15,7 +16,12 @@ import 'rxjs/add/operator/withLatestFrom';
 @Injectable()
 export class MapAppEffects {
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private communicator: ImageryCommunicatorService) { }
+	constructor(
+		private actions$: Actions,
+		private store$: Store<IAppState>,
+		private communicator: ImageryCommunicatorService,
+		private mapSourceProviderContainerService: MapSourceProviderContainerService
+		) { }
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
@@ -27,6 +33,9 @@ export class MapAppEffects {
 		.switchMap((overlay: Overlay) => {
 			const center: any = turf.center(overlay.footprint);
 			this.communicator.provideCommunicator('imagery1').setCenter(center.geometry);
+			const mapType =this.communicator.provideCommunicator('imagery1').getActiveMapObject().mapType;
+			const layer = this.mapSourceProviderContainerService.resolve(mapType,overlay.sourceType).create(overlay);
+			this.communicator.provideCommunicator('imagery1').setLayer(layer);
 			return Observable.empty();
 		});
 

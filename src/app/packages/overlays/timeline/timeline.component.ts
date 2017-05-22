@@ -4,6 +4,8 @@ import * as d3 from 'd3';
 import { eventDrops } from 'event-drops';
 
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import '@ansyn/core/utils/d3extending';
 
@@ -24,19 +26,21 @@ import '@ansyn/core/utils/d3extending';
 /**
  *
  */
-export class TimelineComponent {
+export class TimelineComponent implements OnInit {
 
     private _drops: any[];
+    private stream: Observable<any>;
 
     @ViewChild('context') context: ElementRef;
 
 
     @Input()
     set drops(drops: any[]) {
+        
         this._drops = drops;
-        if (this._drops.length) {
-            this.eventDropsHandler();
-        }
+        this.eventDropsHandler();
+        //this.stream.next();
+        
     }
     get drops() {
         return this._drops;
@@ -45,9 +49,27 @@ export class TimelineComponent {
 
     @Input() configuration: any;
 
+    @Input() redraw$: BehaviorSubject<number>;
+
     constructor(private emitter: TimelineEmitterService) {}
 
-
+    ngOnInit(){
+        const drops$ = Observable.of(this.drops);
+        const configuration$ = Observable.of(this.configuration);
+        
+        this.stream = drops$
+            .combineLatest(configuration$,(drops,configuration) => {
+                    const result = Object.assign({},drops,configuration);
+                    console.log(drops,configuration,result);
+                    return result;
+                })
+            .debug("data");
+            
+            this.stream.subscribe(res => {
+                console.log('62')
+            });
+    }
+    
     clickEvent() {
         const tolerance = 5;
         let down, wait;
@@ -83,6 +105,7 @@ export class TimelineComponent {
     }
 
     eventDropsHandler(): void {
+        console.log('draw',this.configuration && this.configuration.start,this.configuration && this.configuration.end,this.drops && this.drops[0] && this.drops[0].data.length);
         const chart = eventDrops(this.configuration)
             .mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
             .mouseover(data => this.emitter.provide('timeline:mouseover').next(data))

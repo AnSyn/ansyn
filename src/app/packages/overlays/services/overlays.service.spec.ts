@@ -12,7 +12,7 @@ import { Observable, Observer } from 'rxjs';
 
 import { configuration } from '../../../../configuration/configuration'
 
-fdescribe('OverlaysService', () => {
+describe('OverlaysService', () => {
     let overlaysService, mockBackend, lastConnection, http;
     let overlaysTmpData: any[];
     let response = {
@@ -164,11 +164,11 @@ fdescribe('OverlaysService', () => {
             expect(JSON.stringify(requestBody)).
             toEqual(JSON.stringify(
                 {
-                    "region":"mypolygon",
+                    "region":params.polygon,
                     "timeRange":
                         {
-                            "start":"1970-01-01T00:00:02.020Z",
-                            "end":1495457269136
+                            "start": params.from,
+                            "end":params.to
                         }
                 }));
             expect(result.key).toBe('value');

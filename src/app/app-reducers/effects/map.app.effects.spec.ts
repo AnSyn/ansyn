@@ -1,3 +1,4 @@
+import { MapSourceProviderContainerService ,BaseSourceProvider} from '@ansyn/map-source-provider';
 import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
@@ -6,10 +7,21 @@ import { HttpModule } from '@angular/http';
 import { CasesReducer } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService, ImageryConfig } from '@ansyn/imagery/api/imageryCommunicator.service';
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { configuration } from "configuration/configuration";
+
+class SourceProviderMock1 implements BaseSourceProvider {
+	mapType= 'mapType1';
+	sourceType = 'sourceType1';	
+
+	create(metaData: any): any {
+		return true;
+	}
+}
+
 
 describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;
@@ -26,6 +38,9 @@ describe('MapAppEffects', () => {
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ cases: CasesReducer })],
 			providers: [
 				MapAppEffects,
+				MapSourceProviderContainerService,				
+				{ provide: ImageryConfig, useValue: configuration.ImageryConfig },
+				{ provide: BaseSourceProvider , useClass: SourceProviderMock1, multi:true},
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock

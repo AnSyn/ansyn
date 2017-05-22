@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MapSettings } from '../packages/imagery/imageryComponent/mapSettings';
-import { ImageryComponentSettings } from '../packages/imagery/imageryComponent/imageryComponentSettings';
+import { Component } from '@angular/core';
+import { MapSettings } from '@ansyn/imagery/imagery/mapSettings';
+import { ImageryComponentSettings } from '@ansyn/imagery/imagery/imageryComponentSettings';
+import { IAppState } from '../app-reducers';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
+import { ICasesState } from '../packages/menu-items/cases/reducers/cases.reducer';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -9,20 +14,24 @@ import { ImageryComponentSettings } from '../packages/imagery/imageryComponent/i
 })
 export class AnsynComponent {
 
-	public imageryComponentSettings: ImageryComponentSettings;
+	maps_data$: Observable<any[]> = this.store.select('cases').map((state: ICasesState) => {
+		const s_case = state.cases[state.selected_case.index];
+		let maps_data;
+		if(s_case) {
+			maps_data = s_case.state.maps.data;
+		} else {
+			maps_data = [];
+		}
+		return maps_data;
+	}).distinctUntilChanged(_.isEqual);
 
-	constructor() {
-		this.getMapSettings();
-	}
+	maps_data: any[];
 
-	private getMapSettings() {
-		const geoPoint: GeoJSON.Point = {
-			type: 'Point',
-			coordinates: [16, 38]
-		};
 
-		const mapSettings: MapSettings[] = [{ mapType: 'openLayerMap', mapModes: []}, { mapType: 'cesiumMap', mapModes: []}];
-		this.imageryComponentSettings = {mapCenter: geoPoint, mapComponentId: 'imagery1', mapSettings: mapSettings};
+	constructor(private store: Store<IAppState>) {
+		this.maps_data$.subscribe((_maps_data)=>{
+			this.maps_data = _maps_data;
+		})
 	}
 
 }

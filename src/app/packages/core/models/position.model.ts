@@ -4,5 +4,6 @@
 
 export type Position = {
 	zoom: number;
-	center: GeoJSON.Point
+	rotation: number;
+	center: GeoJSON.Point;
 }

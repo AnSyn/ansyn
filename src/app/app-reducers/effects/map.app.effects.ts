@@ -12,6 +12,8 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
+import { UpdateCaseSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { MapActionTypes, PositionChangedAction } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -40,17 +42,6 @@ export class MapAppEffects {
 		});
 
 	@Effect({ dispatch: false })
-	selectCase$: Observable<void> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select('cases'), (action: SelectCaseAction, store: ICasesState) => store.cases.find((case_val) => case_val.id == action.payload))
-		.map((selected_case: Case): void => {
-			let imagery = this.communicator.provideCommunicator('imagery1');
-			if (selected_case.state.maps[0].position) {
-				imagery.setPosition(selected_case.state.maps[0].position);
-			}
-		});
-
-	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
 		.map((action: SelectLayerAction) => {
@@ -65,4 +56,32 @@ export class MapAppEffects {
 			let imagery = this.communicator.provideCommunicator('imagery1');
 			imagery.removeVectorLayer(action.payload);
 		}).share();
+
+	@Effect()
+	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$
+		.ofType(MapActionTypes.POSITION_CHANGED)
+		.withLatestFrom(this.store$.select('cases'))
+		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
+			const selected_case: Case = state.cases[state.selected_case.index];
+			if(!selected_case){
+				return Observable.empty()
+			}
+			const selected_map = selected_case.state.maps.data.find((map) => map.id == action.payload.id);
+			selected_map.data.position = action.payload.position;
+
+			return this.casesService.updateCase(selected_case).map((updated_case) => {
+				return new UpdateCaseSuccessAction(updated_case);
+			});
+		});
+
+	// @Effect({ dispatch: false })
+	// selectCase$: Observable<void> = this.actions$
+	// 	.ofType(CasesActionTypes.SELECT_CASE)
+	// 	.withLatestFrom(this.store$.select('cases'), (action: SelectCaseAction, store: ICasesState) => store.cases[action.payload.index])
+	// 	.map((selected_case: Case): void => {
+	// 		let imagery = this.communicator.provideCommunicator('imagery1');
+	// 		if (selected_case.state.maps.data) {
+	// 			imagery.setPosition(selected_case.state.maps.data[0].data.position);
+	// 		}
+	// 	});
 }

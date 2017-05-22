@@ -47,7 +47,8 @@ import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerID
 		ImageryModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule.forRoot(configuration.ImageryConfig)
+		ImageryModule.forRoot(configuration.ImageryConfig),
+		StatusBarModule
 	],
 	bootstrap: [AppComponent]
 })

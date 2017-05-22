@@ -4,8 +4,8 @@
 
 import { IMap } from '@ansyn/imagery';
 import { Position } from '@ansyn/core';
-import * as ol from 'openlayers';
 import { EventEmitter } from '@angular/core';
+import * as ol from 'openlayers';
 
 export class OpenLayerMap implements IMap {
 
@@ -119,10 +119,11 @@ export class OpenLayerMap implements IMap {
 		return geoPoint;
 	}
 
-	public setPosition(Position): void {
+	public setPosition(position: Position): void {
 		this.mapObject.setView(new ol.View(<olx.ViewOptions>{
-			center: ol.proj.fromLonLat(Position.center.coordinates),
-			zoom: Position.zoom
+			center: ol.proj.fromLonLat(<[number, number]>position.center.coordinates),
+			zoom: position.zoom,
+			rotation: position.rotation
 		}));
 	}
 
@@ -130,7 +131,8 @@ export class OpenLayerMap implements IMap {
 		window['OpenLayerMap'] = this;
 		let center: GeoJSON.Point = this.getCenter();
 		let zoom: number = this.mapObject.getView().getZoom();
-		return { center, zoom };
+		let rotation: number = this.mapObject.getView().getRotation();
+		return { center, zoom , rotation};
 	}
 
 	private flyTo(location) {

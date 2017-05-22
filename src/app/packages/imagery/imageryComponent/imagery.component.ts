@@ -39,16 +39,21 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		const imageryCommunicator = this.imageryCommunicatorService.provideCommunicator(this.mapComponentSettings.mapComponentId);
-		this._manager = new ImageryManager(this.mapComponentSettings.mapComponentId, this.imageryProviderService,
+
+		const imageryCommunicator = this.imageryCommunicatorService.provideCommunicator(this.mapComponentSettings.id);
+
+		this._manager = new ImageryManager(this.mapComponentSettings.id, this.imageryProviderService,
 			this.componentFactoryResolver, this.map_component_elem,
 			this._mapComponentRef, this.mapSourceProviderContainerService, this.config);
-		this._manager.setActiveMap(this.mapComponentSettings.mapSettings[0].mapType);
+		this._manager.setActiveMap(this.mapComponentSettings.settings[0].mapType);
+
 		imageryCommunicator.init(this._manager);
+		this._manager.setPosition(this.mapComponentSettings.data.position)
+		console.log("initialize ", this.mapComponentSettings.id)
 	}
 
 	ngOnDestroy() {
-
+		console.log("destroy ", this.mapComponentSettings.id)
 		if (this._manager) {
 			this.imageryCommunicatorService.removeCommunicator(this.mapComponentSettings.mapComponentId);
 			this._manager.dispose();

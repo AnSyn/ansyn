@@ -11,10 +11,13 @@ import { DebugElement } from '@angular/core';
 import * as d3 from 'd3';
 
 import { Overlay } from '../models/overlay.model';
+import { OverlaysEffects } from '../effects/overlays.effects';
+
 import { StoreModule, Store, State, ActionReducer } from '@ngrx/store';
 
 import { IOverlayState, OverlayReducer, overlayInitialState } from '../reducers/overlays.reducer';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { configuration } from '../../../../configuration/configuration'
 
@@ -25,6 +28,7 @@ describe('OverlayContainerComponent', () => {
     let component: OverlaysContainer;
     let fixture: ComponentFixture < OverlaysContainer > ;
     let overlaysService: OverlaysService;
+    let overlaysEffects: OverlaysEffects;
     let de: DebugElement;
 
     let storeFixture: StoreFixture < IOverlayState > ;
@@ -39,11 +43,13 @@ describe('OverlayContainerComponent', () => {
                 providers: [
                     OverlaysService,
                     TimelineEmitterService,
+                    OverlaysEffects,
+                    Actions,
                     { provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
                 ],
                 declarations: [
                     OverlaysContainer,
-                    MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration'] })
+                    MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration','redraw$'] })
                 ],
                 imports: [HttpModule, StoreModule.provideStore(OverlayReducer)]
             })
@@ -61,6 +67,7 @@ describe('OverlayContainerComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         overlaysService = fixture.debugElement.injector.get(OverlaysService);
+        overlaysEffects = fixture.debugElement.injector.get(OverlaysEffects);
         timelineEmitterService = _timelineEmitterService;
     }));
 
@@ -161,6 +168,7 @@ describe('OverlayContainerComponent', () => {
         
         store.dispatch(new LoadOverlaysAction());
         expect(state.value.loading).toBe(true);
+        
         store.dispatch(new LoadOverlaysSuccessAction(overlays));
         expect(state.value.overlays.size).toEqual(2);
         expect(state.value.loading).toBe(false);

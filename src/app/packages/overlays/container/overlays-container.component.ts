@@ -3,7 +3,7 @@ import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 
-import * as _ from 'lodash';
+import { isEmpty,isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/compare';
@@ -17,6 +17,7 @@ import * as d3 from 'd3';
 import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+
 
 
 @Component({
@@ -100,10 +101,13 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         this.subscribers.overlays = this.store.select('overlays')
             .skip(1)
             .distinctUntilChanged(this.overlaysService.compareOverlays)
+            .filter(data => !isEmpty(data))
+            .debug('tmp')
             .map((data: any) => {
+                
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
-                    configuration: data.queryParams
+                    configuration: data.queryParams 
                 }
             })
             .subscribe(data => {
@@ -116,7 +120,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             
         this.subscribers.selected = this.store.select('overlays')
             .skip(1)
-            .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => _.isEqual(data.queryParams, data1.queryParams))
+            .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
             .map((data: IOverlayState) => data.selectedOverlays)
             .subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays)
 

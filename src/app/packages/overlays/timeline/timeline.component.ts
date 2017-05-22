@@ -37,7 +37,7 @@ export class TimelineComponent implements OnInit {
     @Input()
     set drops(drops: any[]) {
         
-        this._drops = drops;
+        this._drops = drops || [];
         this.eventDropsHandler();
         //this.stream.next();
         
@@ -59,7 +59,9 @@ export class TimelineComponent implements OnInit {
         const configuration$ = Observable.of(this.configuration);
         
         this.redraw$.subscribe(value => {
-            this.eventDropsHandler();
+            if(this.drops){
+                this.eventDropsHandler();
+            }
         })
     }
     
@@ -105,7 +107,6 @@ export class TimelineComponent implements OnInit {
     }
 
     eventDropsHandler(): void {
-        console.log('draw',this.configuration && this.configuration.start,this.configuration && this.configuration.end,this.drops && this.drops[0] && this.drops[0].data.length);
         const chart = eventDrops(this.configuration)
             .mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
             .mouseover(data => this.emitter.provide('timeline:mouseover').next(data))

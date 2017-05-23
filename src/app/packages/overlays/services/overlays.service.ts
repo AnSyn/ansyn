@@ -14,7 +14,6 @@ export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionTo
 
 @Injectable()
 export class OverlaysService {
-    //private dataUrl = "//localhost:8037/api/mock/eventDrops/data";
     private dataUrl: string;
     private polygonTimeSearchUrl: string;
 
@@ -23,43 +22,29 @@ export class OverlaysService {
         this.polygonTimeSearchUrl = this.config.baseUrl +  this.config.overlaysByTimeAndPolygon;
     }
 
-    //@todo add support for parsing callback function
-    fetchData(url = "", params: any = {}): Observable < any[] > {
-        let restPath = url;
-
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-
-        if (!restPath) {
-            restPath = this.dataUrl.replace(':id', params.caseId);
-        }
-
-        //const data = JSON.stringify(params);
-        return this.http.get(restPath, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+    //@todo move to cases
+    getByCase(url = "", params: any = { caseId : ':'}): Observable <any[]> {
+        return this.fetch(url || this.dataUrl.replace(':id', params.caseId));
     }
 
-    searchOverlay(url = "", params: any = {}): Observable < any[] >{
-        let restPath = url;
-
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-
-        if (!restPath) {
-            restPath = this.polygonTimeSearchUrl;
-        }
-
-        const qData = {
+    search(url = "", params: any = {}): Observable <any[]>{
+        return this.fetch(url || this.polygonTimeSearchUrl ,{
             region : params.polygon,
             timeRange :{
                 start: params.from,
                 end: params.to
             }
-        } 
-        return this.http.post(restPath,qData, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        });
+    }
+
+    fetch(url,params = undefined){
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers });
+        
+        if(params){
+           return this.http.post(url,params,options).map(this.extractData).catch(this.handleError);
+        }
+        return this.http.get(url,options).map(this.extractData).catch(this.handleError);
     }
 
     parseOverlayDataForDispaly(overlays = [], filters = {}): Array < any > {

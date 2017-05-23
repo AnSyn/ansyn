@@ -73,7 +73,7 @@ describe('OverlaysService', () => {
 
     it('check the method fetchData with mock data', () => {
 
-        overlaysService.fetchData().subscribe(result => {
+        overlaysService.getByCase().subscribe(result => {
             expect(result.data.length).toBe(2);
         });
 
@@ -123,7 +123,7 @@ describe('OverlaysService', () => {
             });
         });
 
-        overlaysService.fetchData('tmp').subscribe(result => {
+        overlaysService.getByCase('tmp').subscribe(result => {
             expect(result.key).toBe('value');
         });
 
@@ -131,7 +131,7 @@ describe('OverlaysService', () => {
             body: JSON.stringify({ key: 'value2' })
         }));
 
-        overlaysService.fetchData('tmp').subscribe(result => {
+        overlaysService.getByCase('tmp').subscribe(result => {
             expect(result.key).toBe('value2');
         });
     })
@@ -156,7 +156,7 @@ describe('OverlaysService', () => {
                 to:Date.now()
 
             };
-         overlaysService.searchOverlay(
+         overlaysService.search(
             "",
             params
            ).subscribe(result => {
@@ -181,13 +181,13 @@ describe('OverlaysService', () => {
 
     it('check that the url is correct without params', () => {
         const spyHandler = spyOn(http, 'get').and.returnValue(Observable.empty());
-        overlaysService.fetchData('case/:id/overlays');
+        overlaysService.getByCase('case/:id/overlays');
         expect(http.get).toHaveBeenCalledWith('case/:id/overlays', jasmine.any(RequestOptions));
     });
 
     it('check that the url is correct with params', () => {
         spyOn(http, 'get').and.returnValue(Observable.empty());
-        overlaysService.fetchData('', { caseId: "123" });
+        overlaysService.getByCase('', { caseId: "123" });
         expect(http.get).toHaveBeenCalledWith('http://localhost:9001/api/v1/case/123/overlays', jasmine.any(RequestOptions));
     });
 
@@ -204,7 +204,7 @@ describe('OverlaysService', () => {
 
         spyOn(overlaysService, "extractData");
 
-        overlaysService.fetchData('tmp').subscribe(result => {
+        overlaysService.getByCase('tmp').subscribe(result => {
             expect(overlaysService.extractData).toHaveBeenCalled();
         })
 
@@ -223,7 +223,7 @@ describe('OverlaysService', () => {
 
         spyOn(overlaysService, "handleError");
 
-        overlaysService.fetchData('error').subscribe(result => {
+        overlaysService.getByCase('error').subscribe(result => {
 
         }, error => {
             expect(overlaysService.handleError.calls.any()).toEqual(true);
@@ -243,7 +243,7 @@ describe('OverlaysService', () => {
 
         spyOn(overlaysService, "handleError");
 
-        overlaysService.fetchData('tmp').subscribe(result => {
+        overlaysService.getByCase('tmp').subscribe(result => {
 
         }, error => {
             expect(overlaysService.handleError.calls.any()).toEqual(true);

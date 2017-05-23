@@ -36,7 +36,7 @@ export class OverlaysService {
     fetch(url,params = undefined){
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers });
-        url = this.baseUrl.concat(url);    
+        url = this.config.baseUrl.concat(url);    
         if(params){
            return this.http.post(url,params,options).map(this.extractData).catch(this.handleError);
         }

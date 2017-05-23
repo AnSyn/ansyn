@@ -3,4 +3,5 @@ export interface IOverlaysConfig {
 	overlaysByCaseId: string;
 	defaultApi: string;
 	overlaysByTimeAndPolygon : string;
+	searchByCase: boolean;
 }

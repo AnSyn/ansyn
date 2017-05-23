@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 
-import { Injectable } from '@angular/core';
+import { Injectable,Inject } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
@@ -11,13 +11,17 @@ import { Observable } from 'rxjs/Observable';
 
 import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '../actions/overlays.actions';
 
-import { OverlaysService } from '../services/overlays.service';
+import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
+
+import { IOverlaysConfig } from '../models/overlays.config';
 
 
 @Injectable()
 export class OverlaysEffects {
 
-	constructor(private actions$: Actions,private overlaysService: OverlaysService ){
+	constructor(private actions$: Actions,
+			private overlaysService: OverlaysService,
+			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {
 
 	}
 	@Effect({dispatch: false})
@@ -30,7 +34,7 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
-			return this.overlaysService.searchOverlay("",action.payload) //this.overlaysService.fetchData("",action.payload)
+			return this.overlaysService[this.config.searchByCase ? "getByCase" : "search" ]("",action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
 						item.date = item.photoTime

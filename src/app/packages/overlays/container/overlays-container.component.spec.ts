@@ -178,13 +178,13 @@ describe('OverlayContainerComponent', () => {
     	this is nice test I am keeping it as an example
      */
     xit('check that fetchData has been called', () => {
-        spyOn(overlaysService, 'fetchData').and.callFake(() => {
+        spyOn(overlaysService, 'getByCase').and.callFake(() => {
             return Observable.create((observer: Observer < any > ) => {
                 observer.next({ key: 'value' });
             });
         });
         component.ngOnInit();
-        expect(overlaysService.fetchData).toHaveBeenCalled();
+        expect(overlaysService.getByCase).toHaveBeenCalled();
     })
 
 

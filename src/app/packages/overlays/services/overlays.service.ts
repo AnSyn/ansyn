@@ -14,21 +14,17 @@ export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionTo
 
 @Injectable()
 export class OverlaysService {
-    private dataUrl: string;
-    private polygonTimeSearchUrl: string;
-
     constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
-        this.dataUrl = this.config.baseUrl + this.config.overlaysByCaseId;
-        this.polygonTimeSearchUrl = this.config.baseUrl +  this.config.overlaysByTimeAndPolygon;
+        
     }
 
     //@todo move to cases
     getByCase(url = "", params: any = { caseId : ':'}): Observable <any[]> {
-        return this.fetch(url || this.dataUrl.replace(':id', params.caseId));
+        return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));
     }
 
     search(url = "", params: any = {}): Observable <any[]>{
-        return this.fetch(url || this.polygonTimeSearchUrl ,{
+        return this.fetch(url || this.config.overlaysByTimeAndPolygon ,{
             region : params.polygon,
             timeRange :{
                 start: params.from,
@@ -40,7 +36,7 @@ export class OverlaysService {
     fetch(url,params = undefined){
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers });
-        
+        url = this.baseUrl.concat(url);    
         if(params){
            return this.http.post(url,params,options).map(this.extractData).catch(this.handleError);
         }

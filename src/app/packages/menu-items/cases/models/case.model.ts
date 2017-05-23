@@ -1,3 +1,5 @@
+import { MapState } from './map-state.model';
+
 export type Case = {
 	id?:string;
 	name?:string;
@@ -6,7 +8,7 @@ export type Case = {
 	state?: {
 		selected_overlays_ids?: string[];
 		selected_context_id?: string;
-		maps?: {position: any} [],
+		maps?: {layouts_index: number, active_map_id: string, data: MapState[]},
 		time: {
 			type:string,
 			from: Date,

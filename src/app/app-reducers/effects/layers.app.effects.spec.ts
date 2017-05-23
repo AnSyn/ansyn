@@ -23,10 +23,10 @@ describe('LayersAppEffects', () => {
 		effectsRunner = _effectsRunner;
 	}));
 
-	it('selectOverlay$ should push overlay.id to selected_overlays_ids on cases', () => {
+	it('selectCase$', () => {
 		let selectedCaseId = 'asdfasdf';
 
-		effectsRunner.queue(new SelectCaseAction(selectedCaseId));
+		effectsRunner.queue(new SelectCaseAction({id: selectedCaseId, index: 0}));
 		let result: BeginLayerTreeLoadAction ;
 		layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
 			result = _result;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { range } from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar';
 
@@ -12,8 +12,9 @@ import { MapsLayout } from '@ansyn/status-bar';
 export class ImageriesManagerComponent {
 	public MAPS_COUNT = range(4);
 	private _selected_layout;
-	private _maps_data;
-	private active_map_id;
+	private _maps;
+
+	@Output() public setActiveImagery = new EventEmitter();
 
 	@Input()
 	set selected_layout(value: MapsLayout) {
@@ -21,21 +22,16 @@ export class ImageriesManagerComponent {
 	}
 
 	@Input()
-	set maps_data(value) {
-		this._maps_data = value;
+	set maps(value) {
+		this._maps = value;
 	};
 
-	get maps_data() {
-		return this._maps_data;
+	get maps() {
+		return this._maps;
 	};
 
 	get selected_layout(): MapsLayout {
 		return this._selected_layout;
-	}
-
-	setActiveImagery(id: string) {
-		console.log("id = ", id)
-		this.active_map_id = id;
 	}
 
 }

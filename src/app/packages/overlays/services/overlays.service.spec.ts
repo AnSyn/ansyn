@@ -179,12 +179,14 @@ describe('OverlaysService', () => {
 
     })
 
+    //@todo take the baseUrl string from the configuration
     it('check that the url is correct without params', () => {
         const spyHandler = spyOn(http, 'get').and.returnValue(Observable.empty());
         overlaysService.getByCase('case/:id/overlays');
         expect(http.get).toHaveBeenCalledWith('http://localhost:9001/api/v1/case/:id/overlays', jasmine.any(RequestOptions));
     });
 
+    //@todo take the baseUrl string from the configuration
     it('check that the url is correct with params', () => {
         spyOn(http, 'get').and.returnValue(Observable.empty());
         overlaysService.getByCase('', { caseId: "123" });

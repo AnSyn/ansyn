@@ -3,11 +3,10 @@ import { CasesTableComponent } from './cases-table.component';
 import { DeleteCaseComponent } from "../delete-case/delete-case.component";
 import { EditCaseComponent } from "../edit-case/edit-case.component";
 import { CasesService } from '../../services/cases.service';
-import { Case } from '../../models/case.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
-import { AddCaseAction, LoadCasesAction, OpenModalAction, SelectCaseAction } from '../../actions/cases.actions';
+import { LoadCasesAction, OpenModalAction, SelectCaseAction } from '../../actions/cases.actions';
 import { HttpModule } from '@angular/http';
 import { casesConfig } from '@ansyn/menu-items/cases';
 
@@ -43,17 +42,12 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('selectCase should call casesService.selectCase', () => {
-		component.selectCase("id");
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction("id"));
+		component.selectCase("id", 0);
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction({id: "id", index: 0}));
 	});
 
-	it('onCasesAdded should call selectCase and change tbody_element scrollTop to 0', () => {
-		spyOn(component, 'selectCase');
-		let id = `fake_id_blblblblblb`;
-		let fake_case: Case = { id };
-		let addCaseAction: AddCaseAction = new AddCaseAction(fake_case);
-		component.onCasesAdded(addCaseAction);
-		expect(component.selectCase).toHaveBeenCalledWith(fake_case.id);
+	it('onCasesAdded should change tbody_element scrollTop to 0', () => {
+		component.onCasesAdded();
 		expect(component.tbody_element.nativeElement.scrollTop).toEqual(0);
 	});
 

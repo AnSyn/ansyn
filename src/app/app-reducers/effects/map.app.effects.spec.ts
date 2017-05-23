@@ -15,13 +15,14 @@ import { configuration } from "configuration/configuration";
 
 class SourceProviderMock1 implements BaseSourceProvider {
 	mapType= 'mapType1';
-	sourceType = 'sourceType1';	
+	sourceType = 'sourceType1';
 
 	create(metaData: any): any {
 		return true;
 	}
 }
 
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;
@@ -38,12 +39,16 @@ describe('MapAppEffects', () => {
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ cases: CasesReducer })],
 			providers: [
 				MapAppEffects,
-				MapSourceProviderContainerService,				
+				MapSourceProviderContainerService,
 				{ provide: ImageryConfig, useValue: configuration.ImageryConfig },
 				{ provide: BaseSourceProvider , useClass: SourceProviderMock1, multi:true},
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
+				},
+				{
+					provide: CasesService,
+					useValue: {updateCase: () => null}
 				}
 			]
 
@@ -86,24 +91,6 @@ describe('MapAppEffects', () => {
 		expect(mapAppEffects).toBeTruthy();
 	});
 
-
-	it('selectCase$ should get selected_case and set the position from case on the map', () => {
-		let selected_case = icase_state.cases[0];
-		let action: SelectCaseAction = new SelectCaseAction('case1');
-		let imagery1 = {
-			setPosition: () => {
-
-			}
-		};
-		effectsRunner.queue(action);
-		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
-		spyOn(imagery1, 'setPosition');
-
-		mapAppEffects.selectCase$.subscribe(() => {
-			expect(imagery1.setPosition).toHaveBeenCalledWith(selected_case.state.maps[0].position);
-		});
-	})
-
 	it('addVectorLayer$ should add the selected Layer to the map', () => {
 		let staticLeaf: ILayerTreeNodeLeaf = {
 			name: 'staticLayer',
@@ -124,7 +111,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
 		spyOn(imagery1, 'addVectorLayer');
 
-		mapAppEffects.selectCase$.subscribe(() => {
+		mapAppEffects.addVectorLayer$.subscribe(() => {
 			expect(imagery1.addVectorLayer).toHaveBeenCalledWith(staticLeaf);
 		});
 	});
@@ -149,7 +136,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
 		spyOn(imagery1, 'removeVectorLayer');
 
-		mapAppEffects.selectCase$.subscribe(() => {
+		mapAppEffects.removeVectorLayer$.subscribe(() => {
 			expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
 		});
 	});

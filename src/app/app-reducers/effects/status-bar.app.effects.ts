@@ -13,12 +13,12 @@ import * as _ from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { MapState } from '@ansyn/menu-items/cases/models/map-state.model';
 import { UpdateMapSizeAction } from '../../packages/map-facade/actions/map.actions';
-import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
 
 @Injectable()
 export class StatusBarAppEffects {
 
 	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}
+
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -46,23 +46,25 @@ export class StatusBarAppEffects {
 
 				selected_case.state.maps.layouts_index = action.payload;
 
-				if(selected_case_layout.maps_count !== selected_layout.maps_count){
-					if(selected_case_layout.maps_count < selected_layout.maps_count){
-						for (let i = selected_case_layout.maps_count; i < selected_layout.maps_count; i++){
-							selected_case.state.maps.data.push(this.getMapWithId(i + 1))
-						}
-					} else if(selected_case_layout.maps_count > selected_layout.maps_count){
-						for (let i = selected_layout.maps_count; i < selected_case_layout.maps_count; i++){
-							selected_case.state.maps.data.pop();
-						}
-					}
-				}
+				// if(selected_case_layout.maps_count !== selected_layout.maps_count){
+				// 	if(selected_case_layout.maps_count < selected_layout.maps_count){
+				// 		for (let i = selected_case_layout.maps_count; i < selected_layout.maps_count; i++){
+				// 			selected_case.state.maps.data.push(this.getMapWithId(i + 1))
+				// 		}
+				// 	} else if(selected_case_layout.maps_count > selected_layout.maps_count){
+				// 		for (let i = selected_layout.maps_count; i < selected_case_layout.maps_count; i++){
+				// 			selected_case.state.maps.data.pop();
+				// 		}
+				// 		const exist = selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id);
+				// 		if(!exist) selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
+				// 	}
+				// }
 
 				return this.casesService.updateCase(selected_case).map( (updated_case) => {
 					return new UpdateCaseSuccessAction(updated_case);
 				});
 			})
-		.mergeMap((updateCaseSuccessAction:UpdateCaseSuccessAction) => {
+		.mergeMap((updateCaseSuccessAction: UpdateCaseSuccessAction) => {
 			return [updateCaseSuccessAction, new UpdateMapSizeAction()];
 		})
 		.share();
@@ -91,8 +93,8 @@ export class StatusBarAppEffects {
 			}
 		}
 	}
-	getMapsViaCount(state) {
 
+	getMapsViaCount(state) {
 		switch (state) {
 			case 0:
 				return [ this.getMapWithId(1) ];

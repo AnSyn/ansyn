@@ -19,11 +19,13 @@ xdescribe('EditCaseComponent', () => {
 			{ id: 'fake_id2', name: 'fake_name2' }
 		],
 		active_case_id: 'fake_id1',
-		selected_case_id: null,
+		selected_case: {
+
+		},
 		modal: true,
 		contexts: [],
 		contexts_loaded: true
-	};
+	} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

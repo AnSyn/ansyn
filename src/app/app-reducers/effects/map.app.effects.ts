@@ -6,8 +6,12 @@ import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
+<<<<<<< HEAD
 import { Case, ICasesState, CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
+=======
+import { Case, ICasesState } from '@ansyn/menu-items/cases';
+>>>>>>> finish unit testing fix
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
@@ -18,12 +22,16 @@ import { MapActionTypes, PositionChangedAction } from '../../packages/map-facade
 @Injectable()
 export class MapAppEffects {
 
+<<<<<<< HEAD
 	constructor(
 		private actions$: Actions,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
 		private mapSourceProviderContainerService: MapSourceProviderContainerService
 		) { }
+=======
+	constructor(private actions$: Actions, private store$: Store<IAppState>, private communicator: ImageryCommunicatorService, private casesService: CasesService) { }
+>>>>>>> finish unit testing fix
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
@@ -74,14 +82,4 @@ export class MapAppEffects {
 			});
 		});
 
-	// @Effect({ dispatch: false })
-	// selectCase$: Observable<void> = this.actions$
-	// 	.ofType(CasesActionTypes.SELECT_CASE)
-	// 	.withLatestFrom(this.store$.select('cases'), (action: SelectCaseAction, store: ICasesState) => store.cases[action.payload.index])
-	// 	.map((selected_case: Case): void => {
-	// 		let imagery = this.communicator.provideCommunicator('imagery1');
-	// 		if (selected_case.state.maps.data) {
-	// 			imagery.setPosition(selected_case.state.maps.data[0].data.position);
-	// 		}
-	// 	});
 }

@@ -33,9 +33,9 @@ describe('CasesReducer', () =>{
 	});
 
 	it('SELECT_CASE action should set selected_case_id from payload', () => {
-		let action: SelectCaseAction = new SelectCaseAction('fake_case_id');
+		let action: SelectCaseAction = new SelectCaseAction({id: 'fake_case_id', index: 0});
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selected_case_id).toEqual('fake_case_id');
+		expect(result.selected_case.id).toEqual('fake_case_id');
 	});
 
 	it('UPDATE_CASE_SUCCESS action should update existing case from payload(by "id") ', () => {

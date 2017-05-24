@@ -13,6 +13,9 @@ import * as _ from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { MapState } from '@ansyn/menu-items/cases/models/map-state.model';
 import { UpdateMapSizeAction } from '../../packages/map-facade/actions/map.actions';
+import { Position } from '../../packages/core/models/position.model';
+
+const settings = [{"mapType": "openLayerMap", "mapModes": []}];
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -31,34 +34,17 @@ export class StatusBarAppEffects {
 	@Effect()
 	onLayoutsChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store, (action, state: IAppState): [ChangeLayoutAction, Case, MapsLayout, MapsLayout]  => {
-			const selected_case = state.cases.cases[state.cases.selected_case.index];
-			const selected_layout = state.status_bar.layouts[state.status_bar.selected_layout_index];
-			const selected_case_layout = state.status_bar.layouts[selected_case.state.maps.layouts_index];
-			return [action, selected_case, selected_case_layout, selected_layout]
+		.withLatestFrom(this.store, (action, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
+			const selected_case = _.cloneDeep(state.cases.cases[state.cases.selected_case.index]);
+			const selected_layout = _.cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
+			return [action, selected_case, selected_layout]
 		})
+		.filter(([action, selected_case, selected_layout]) => !_.isEmpty(selected_case))
 		.switchMap(
-			([action, selected_case, selected_case_layout, selected_layout]: [ChangeLayoutAction, Case, MapsLayout, MapsLayout]  ) => {
-
-				if(!selected_case){
-					return Observable.empty();
-				}
+			([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
 
 				selected_case.state.maps.layouts_index = action.payload;
-
-				// if(selected_case_layout.maps_count !== selected_layout.maps_count){
-				// 	if(selected_case_layout.maps_count < selected_layout.maps_count){
-				// 		for (let i = selected_case_layout.maps_count; i < selected_layout.maps_count; i++){
-				// 			selected_case.state.maps.data.push(this.getMapWithId(i + 1))
-				// 		}
-				// 	} else if(selected_case_layout.maps_count > selected_layout.maps_count){
-				// 		for (let i = selected_layout.maps_count; i < selected_case_layout.maps_count; i++){
-				// 			selected_case.state.maps.data.pop();
-				// 		}
-				// 		const exist = selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id);
-				// 		if(!exist) selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
-				// 	}
-				// }
+				this.setMapsDataChanges(selected_case, selected_layout);
 
 				return this.casesService.updateCase(selected_case).map( (updated_case) => {
 					return new UpdateCaseSuccessAction(updated_case);
@@ -69,44 +55,30 @@ export class StatusBarAppEffects {
 		})
 		.share();
 
-	getMapWithId(index): MapState {
-		return {
-			id: `imagery${index}`,
-			settings: [
-				{
-					"mapType": "openLayerMap",
-					"mapModes": []
+	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout) {
+		const case_maps_count = selected_case.state.maps.data.length;
+		if(selected_layout.maps_count !== case_maps_count){
+			if(case_maps_count < selected_layout.maps_count){
+				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
+					const active_map_position = _.cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
+					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position))
 				}
-			],
-			data:{
-				position:{
-					zoom: 0,
-					rotation: 0,
-					center: {
-						type: "Point",
-						coordinates: [
-							0,
-							0
-						]
-					},
+			} else if( selected_layout.maps_count < case_maps_count){
+				for (let i = selected_layout.maps_count; i < case_maps_count; i++){
+					selected_case.state.maps.data.pop();
 				}
+				const exist = selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id);
+				if(!exist) selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
 			}
 		}
+
 	}
 
-	getMapsViaCount(state) {
-		switch (state) {
-			case 0:
-				return [ this.getMapWithId(1) ];
-			case 1:
-			case 2:
-				return [ this.getMapWithId(1), this.getMapWithId(2) ];
-			case 3:
-			case 4:
-				return [ this.getMapWithId(1), this.getMapWithId(2), this.getMapWithId(3) ];
-			case 5:
-				return [ this.getMapWithId(1), this.getMapWithId(2), this.getMapWithId(3), this.getMapWithId(4) ];
+	createCopyMap(index, position: Position): MapState {
+		return {
+			id: `imagery${index}`,
+			settings, data:{position}
 		}
-
 	}
+
 }

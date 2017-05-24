@@ -9,7 +9,7 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import {
 	AddCaseSuccessAction, SelectCaseAction,
 	UpdateCaseSuccessAction
-} from '../../packages/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '../../packages/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '../../packages/map-facade/actions/map.actions';
@@ -35,7 +35,8 @@ describe('StatusBarAppEffects', () => {
 		casesService = _casesService;
 	}));
 
-	it('onLayoutsChange should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
+	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
+		spyOn(statusBarAppEffects, 'setMapsDataChanges');
 		const new_layout_index = 1;
 		const layouts_index = 2;
 
@@ -51,7 +52,6 @@ describe('StatusBarAppEffects', () => {
 
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
-		let result: number;
 
 		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));
 
@@ -76,7 +76,7 @@ describe('StatusBarAppEffects', () => {
 		};
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
-		effectsRunner.queue(new SelectCaseAction({id: caseItem.id, index: 0}));
+		effectsRunner.queue(new SelectCaseAction(caseItem.id));
 		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
 			expect(result instanceof ChangeLayoutAction).toBeTruthy();
 			expect(result.payload).toEqual(layouts_index)

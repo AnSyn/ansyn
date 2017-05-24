@@ -5,7 +5,6 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../';
 import { Observable } from 'rxjs';
-
 import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()

@@ -26,7 +26,7 @@ describe('LayersAppEffects', () => {
 	it('selectCase$', () => {
 		let selectedCaseId = 'asdfasdf';
 
-		effectsRunner.queue(new SelectCaseAction({id: selectedCaseId, index: 0}));
+		effectsRunner.queue(new SelectCaseAction(selectedCaseId));
 		let result: BeginLayerTreeLoadAction ;
 		layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
 			result = _result;

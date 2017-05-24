@@ -8,20 +8,17 @@ import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { casesConfig } from '@ansyn/menu-items/cases';
 
-xdescribe('EditCaseComponent', () => {
+describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
 	let fixture: ComponentFixture<EditCaseComponent>;
 	let store: Store<ICasesState>;
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1' },
-			{ id: 'fake_id2', name: 'fake_name2' }
+			{ id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null},},
+			{ id: 'fake_id2', name: 'fake_name2', state: {selected_context_id: null}, }
 		],
 		active_case_id: 'fake_id1',
-		selected_case: {
-
-		},
 		modal: true,
 		contexts: [],
 		contexts_loaded: true

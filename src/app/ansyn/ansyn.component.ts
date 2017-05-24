@@ -33,9 +33,9 @@ export class AnsynComponent implements OnInit{
 	constructor(private store: Store<IAppState>) {}
 
 	ngOnInit(): void {
-		// this.selected_case$.subscribe((selected_case) => {this.selected_case = selected_case});
-		// this.selected_layout$.subscribe((selected_layout) => {this.selected_layout = selected_layout});
-		// this.maps$.subscribe((maps) => {this.maps = maps});
+		this.selected_case$.subscribe((selected_case) => {this.selected_case = selected_case});
+		this.selected_layout$.subscribe((selected_layout) => {this.selected_layout = selected_layout});
+		this.maps$.subscribe((maps) => {this.maps = maps});
 	}
 
 

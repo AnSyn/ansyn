@@ -42,8 +42,8 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('selectCase should call casesService.selectCase', () => {
-		component.selectCase("id", 0);
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction({id: "id", index: 0}));
+		component.selectCase("id");
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction("id"));
 	});
 
 	it('onCasesAdded should change tbody_element scrollTop to 0', () => {

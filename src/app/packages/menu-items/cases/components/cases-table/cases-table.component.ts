@@ -65,8 +65,8 @@ export class CasesTableComponent implements OnInit{
     this.store.dispatch(new OpenModalAction({component, case_id}));
   }
 
-  selectCase(case_id: string): void {
-    this.store.dispatch(new SelectCaseAction(case_id));
+  selectCase(id: string): void {
+    this.store.dispatch(new SelectCaseAction(id));
   }
 
 }

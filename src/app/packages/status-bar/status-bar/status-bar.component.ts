@@ -23,8 +23,8 @@ export class StatusBarComponent implements OnInit {
 
 	constructor(private store: Store<IStatusBarState>) { }
 
-	layoutSelectChange(_selected_layout_index: number) {
-		this.store.dispatch(new ChangeLayoutAction(_selected_layout_index))
+	layoutSelectChange(selected_layout_index: number) {
+		this.store.dispatch(new ChangeLayoutAction(selected_layout_index))
 	}
 
 }

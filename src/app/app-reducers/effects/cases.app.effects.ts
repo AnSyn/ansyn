@@ -9,8 +9,8 @@ import { Case } from '@ansyn/menu-items/cases';
 import { UpdateCaseSuccessAction, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/debug'
-import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
 import { IAppState } from '../';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class CasesAppEffects {
@@ -74,12 +74,10 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
-		.map( ([caseId,state]: [string,ICasesState]) =>  {
-			const caseSelected: Case = state.cases.filter((item:Case) => item.id == caseId )[0];
+		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.cases[state.selected_case.index]))
+		.map( ([caseId, state]: [string, ICasesState]) =>  {
+			const caseSelected: Case = state.cases[state.selected_case.index];
 
-			if(!caseSelected){
-				return;
-			}
 			const overlayFilter = {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,

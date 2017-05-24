@@ -71,7 +71,7 @@ describe('CasesTableComponent', () => {
 		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
 		let selected_case_id: string = 'fake_selected_case_id';
-		component.editCase($event, selected_case_id)
+		component.editCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent, case_id: selected_case_id }));
 	});

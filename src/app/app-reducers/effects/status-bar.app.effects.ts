@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { ChangeLayoutAction, StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ChangeLayoutAction, StatusBarActionsTypes } from '../../packages/status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '../../packages/menu-items/cases/reducers/cases.reducer';
@@ -10,8 +10,8 @@ import { CasesActionTypes, UpdateCaseSuccessAction } from '../../packages/menu-i
 import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import * as _ from 'lodash';
-import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { MapState } from '@ansyn/menu-items/cases/models/map-state.model';
+import { MapsLayout } from '../../packages/status-bar/reducers/status-bar.reducer';
+import { MapState } from '../../packages/menu-items/cases/models/map-state.model';
 import { UpdateMapSizeAction } from '../../packages/map-facade/actions/map.actions';
 import { Position } from '../../packages/core/models/position.model';
 

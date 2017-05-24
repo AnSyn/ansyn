@@ -1,37 +1,25 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { StatusBarComponent } from './status-bar.component';
-import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, StatusBarReducer } from '../reducers/status-bar.reducer';
-import { StatusBarModule } from '../status-bar.module';
-import { ChangeLayoutAction } from '../actions/status-bar.actions';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('StatusBarComponent', () => {
-	let component: StatusBarComponent;
-	let fixture: ComponentFixture<StatusBarComponent>;
-	let store: Store<IStatusBarState>;
+import { ImageryStatusComponent } from './imagery-status.component';
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.provideStore({status_bar: StatusBarReducer})],
-		})
-			.compileComponents();
-	}));
+describe('ImageryStatusComponent', () => {
+  let component: ImageryStatusComponent;
+  let fixture: ComponentFixture<ImageryStatusComponent>;
 
-	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
-		fixture = TestBed.createComponent(StatusBarComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		store = _store;
-	}));
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ ImageryStatusComponent ]
+    })
+    .compileComponents();
+  }));
 
-	it('should be created', () => {
-		expect(component).toBeTruthy();
-	});
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ImageryStatusComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-	it('layoutSelectChange call store.dispatch with ChangeLayoutAction', () => {
-		spyOn(store, 'dispatch');
-		component.layoutSelectChange(5);
-		expect(store.dispatch).toHaveBeenCalledWith(new ChangeLayoutAction(5));
-	});
-
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
 });

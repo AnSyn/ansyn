@@ -20,7 +20,11 @@ export class ImageryCommunicatorService {
 		}
 		return this._communicators[id];
 	}
-
+	
+	get communicators(): any {
+		return this._communicators;
+	}
+	
 	private createImageryCommunicator(id: string): void {
 		this._communicators[id] = new ImageryCommunicator(id);
 		this.communicatorsChange.emit(this._communicators);

@@ -1,0 +1,16 @@
+{
+	"name": "@ansyn/status-bar",
+	"version": "1.0.0",
+	"description": "status-bar",
+	"main": "index.ts",
+	"scripts": {
+		"test": "npm test"
+	},
+	"author": "",
+	"license": "ISC",
+	"peerDependencies" : {
+		"@angular/core": "^4.0.0",
+		"@angular/common": "^4.0.0",
+		"@ansyn/core": "^0.0.1"
+	}
+}

@@ -22,7 +22,7 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [SelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
+			const selected_case: Case = state.cases[state.selected_case.index];
 
 			if(!selected_case) {
 				return Observable.empty();
@@ -48,7 +48,7 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.cases.find((case_value) =>  case_value.id == state.selected_case_id);
+			const selected_case: Case = state.cases[state.selected_case.index];
 			if(!selected_case) {
 				return Observable.empty();
 			}

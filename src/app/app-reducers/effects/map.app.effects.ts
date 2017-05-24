@@ -6,32 +6,24 @@ import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
-<<<<<<< HEAD
-import { Case, ICasesState, CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
-=======
-import { Case, ICasesState } from '@ansyn/menu-items/cases';
->>>>>>> finish unit testing fix
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
-import { UpdateCaseSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
 import { MapActionTypes, PositionChangedAction } from '../../packages/map-facade/actions/map.actions';
+import { Case, ICasesState, CasesService, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
 
 @Injectable()
 export class MapAppEffects {
 
-<<<<<<< HEAD
 	constructor(
 		private actions$: Actions,
+		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
 		private mapSourceProviderContainerService: MapSourceProviderContainerService
 		) { }
-=======
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private communicator: ImageryCommunicatorService, private casesService: CasesService) { }
->>>>>>> finish unit testing fix
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$

@@ -3,7 +3,7 @@
  */
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageryComponent } from './imageryComponent/imagery.component';
+import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService, ImageryConfig } from './api/imageryCommunicator.service';
 import { ImageryProviderService } from './imageryProviderService/imageryProvider.service';
 import { IImageryConfig } from './model/model';

@@ -1,4 +1,4 @@
-@import "../../common.less";
+@import "~@ansyn/core/less/common.less";
 
 div.app{
 	display: flex;
@@ -10,17 +10,12 @@ div.app{
 		display:flex;
 		flex-direction:column;
 		overflow: hidden;
-		.map, .status{
-			text-align: center;
-			font-size: xx-large;
-		}
 		.map{
 			background: transparent;
 			height: 80%;
 		}
 		.status{
-			min-height: 5%;
-			background: @status-color;
+			position: relative;
 		}
 		.app-timeline-container{
 		}

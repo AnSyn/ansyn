@@ -10,13 +10,16 @@ import { ImageryCommunicatorService } from '../../imagery/api/imageryCommunicato
 @Injectable()
 export class MapEffects{
 
-	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicator: ImageryCommunicatorService) {}
+	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
 
 	@Effect({dispatch: false})
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
 		.map( () => {
-			this.communicator.provideCommunicator('imagery1').updateSize();
+
+			Object.keys(this.communicatorsService.communicators).forEach((imagery_id: string)=>{
+				this.communicatorsService.provideCommunicator(imagery_id).updateSize();
+			})
 		});
 
 	@Effect({dispatch: false})

@@ -4,6 +4,6 @@
 export { ImageryProviderService } from './imageryProviderService/imageryProvider.service';
 export { ImageryModule } from './imagery.module';
 export { ImageryCommunicatorService } from './api/imageryCommunicator.service';
-export { ImageryComponentSettings } from './imageryComponent/imageryComponentSettings';
+export { ImageryComponentSettings } from './imagery/imageryComponentSettings';
 export { IMap, IMapState, IMapComponent } from './model/model';
 

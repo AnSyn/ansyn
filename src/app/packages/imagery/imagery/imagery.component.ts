@@ -14,9 +14,8 @@ import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 
 @Component({
 	selector: 'imagery-view',
-	template: `
-		<ng-template #map_component_elem></ng-template>
-	`
+	templateUrl: './imagery.component.html',
+	styleUrls: ['./imagery.component.less']
 })
 
 export class ImageryComponent implements OnInit, OnDestroy {
@@ -53,7 +52,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		if (this._manager) {
-			this.imageryCommunicatorService.removeCommunicator(this.mapComponentSettings.mapComponentId);
+			this.imageryCommunicatorService.removeCommunicator(this.mapComponentSettings.id);
 			this._manager.dispose();
 		}
 	}

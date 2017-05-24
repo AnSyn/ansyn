@@ -19,6 +19,7 @@ import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { MapSourceProviderModule, BaseSourceProvider } from '@ansyn/map-source-provider';
 import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerIDAHOSourceProvider } from '@ansyn/imageryOpenLayerMap';
+import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 
 @NgModule({
 	providers:[
@@ -41,7 +42,7 @@ import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerID
 		CoreModule,
 		MenuModule,
 		MenuItemsModule.forRoot(configuration),
-		OverlaysModule.forRoot(configuration.OverlaysConfig),
+		OverlaysModule.forRoot(<any>configuration.OverlaysConfig),
 		AppReducersModule,
 		AppRouter,
 		ImageryModule,

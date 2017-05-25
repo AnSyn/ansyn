@@ -27,7 +27,7 @@ export class CasesTableComponent implements OnInit{
 
 	cases_from_state$: Observable <Case[]> = this.store.select("cases").map((state: ICasesState ) => state.cases);
 	active_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.active_case_id);
-	selected_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.selected_case.id);
+	selected_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.selected_case ? state.selected_case.id: null);
 
 	constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
 		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));

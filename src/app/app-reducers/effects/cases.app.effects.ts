@@ -22,7 +22,7 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [SelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.cases[state.selected_case.index];
+			const selected_case: Case = state.selected_case;
 
 			if(!selected_case) {
 				return Observable.empty();
@@ -48,7 +48,8 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.cases[state.selected_case.index];
+			const selected_case: Case = state.selected_case;
+
 			if(!selected_case) {
 				return Observable.empty();
 			}
@@ -74,9 +75,9 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.cases[state.selected_case.index]))
+		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
 		.map( ([caseId, state]: [string, ICasesState]) =>  {
-			const caseSelected: Case = state.cases[state.selected_case.index];
+			const caseSelected: Case = state.selected_case;
 
 			const overlayFilter = {
 				to: caseSelected.state.time.to,

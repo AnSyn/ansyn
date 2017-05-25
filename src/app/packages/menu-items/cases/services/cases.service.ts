@@ -33,14 +33,14 @@ export class CasesService {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let body:string = JSON.stringify(selected_case);
     let options = new RequestOptions({ headers});
-    return this.http.put (url, body, options).map(res => res.json());;
+    return this.http.put (url, body, options).map(res => res.json());
   }
 
   removeCase(selected_case_id:string): Observable<any>  {
     let url:string = `${this.base_url}/${selected_case_id}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers});
-    return this.http.delete(url, options).map(res => res.json());;
+    return this.http.delete(url, options).map(res => res.json());
   }
 
   loadContexts(): Observable<any> {

@@ -4,10 +4,7 @@ import { Context } from '../models/context.model';
 
 export interface ICasesState {
 	cases: Case[];
-	selected_case: {
-		id: string,
-		index: number
-	},
+	selected_case: Case,
 	active_case_id: string,
 	modal: boolean,
 	contexts: Context[],
@@ -15,10 +12,7 @@ export interface ICasesState {
 }
 export const initialCasesState: ICasesState = {
 	cases: [],
-	selected_case: {
-		id: null,
-		index: null
-	},
+	selected_case: null,
 	active_case_id: "",
 	modal: false,
 	contexts: [],
@@ -38,11 +32,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 				action.payload,
 				...state.cases,
 			];
-			const new_selected_case_value = {
-				index: 0,
-				id: action.payload.id
-			}
-			return Object.assign({}, state, {cases: cases_added, selected_case: new_selected_case_value });
+			return Object.assign({}, state, {cases: cases_added, selected_case: action.payload });
 
 		case CasesActionTypes.OPEN_MODAL:
 			return Object.assign({}, state, {active_case_id: action.payload.case_id , modal: true});
@@ -95,11 +85,8 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases});
 
 		case CasesActionTypes.SELECT_CASE:
-			const selected_case_value = {
-				id: action.payload,
-				index: state.cases.findIndex((case_value) => case_value.id === action.payload)
-			};
-			return Object.assign({}, state, {selected_case: selected_case_value});
+			const s_case = state.cases.find((case_value: Case) => case_value.id == action.payload)
+			return Object.assign({}, state, { selected_case: s_case });
 
 		case CasesActionTypes.LOAD_CONTEXTS:
 			return Object.assign({}, state);

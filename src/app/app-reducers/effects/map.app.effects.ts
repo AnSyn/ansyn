@@ -11,8 +11,10 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
-import { MapActionTypes, PositionChangedAction } from '../../packages/map-facade/actions/map.actions';
+import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
 import { Case, ICasesState, CasesService, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
+import { isEmpty } from 'lodash';
+import '@ansyn/core/utils/clone-deep';
 
 @Injectable()
 export class MapAppEffects {
@@ -61,13 +63,14 @@ export class MapAppEffects {
 	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, state]: [PositionChangedAction, ICasesState]) => !isEmpty(state.selected_case))
+		.cloneDeep()
 		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
-			const selected_case: Case = state.cases[state.selected_case.index];
-			if(!selected_case){
-				return Observable.empty()
-			}
-			const selected_map = selected_case.state.maps.data.find((map) => map.id == action.payload.id);
+			const selected_case: Case = state.selected_case;
+			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id == action.payload.id);
+			const selected_map = selected_case.state.maps.data[selected_map_index];
 			selected_map.data.position = action.payload.position;
+			selected_case.state.maps.data[selected_map_index] = selected_map;
 
 			return this.casesService.updateCase(selected_case).map((updated_case) => {
 				return new UpdateCaseSuccessAction(updated_case);

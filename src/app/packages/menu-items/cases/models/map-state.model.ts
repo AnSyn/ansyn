@@ -7,3 +7,5 @@ export type MapState = {
 	};
 	settings: {	mapType: string, mapModes: string[]}[];
 }
+
+export const BaseSettings = [{"mapType": "openLayerMap", "mapModes": []}];

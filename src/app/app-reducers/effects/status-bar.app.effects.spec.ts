@@ -10,9 +10,9 @@ import {
 	AddCaseSuccessAction, SelectCaseAction,
 	UpdateCaseSuccessAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CasesReducer } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
-import { UpdateMapSizeAction } from '../../packages/map-facade/actions/map.actions';
+import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;

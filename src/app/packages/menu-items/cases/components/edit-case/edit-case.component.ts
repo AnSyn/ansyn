@@ -7,6 +7,7 @@ import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction }
 import * as _ from "lodash";
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
+import { BaseSettings } from '../../models/map-state.model';
 
 const animations_during = '0.2s';
 
@@ -38,8 +39,8 @@ const host = {
 export class EditCaseComponent implements OnInit {
 
 	active_case$: Observable <Case> = this.store.select("cases")
-	.distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this))
-	.map(this.getCloneActiveCase.bind(this));
+		.distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this))
+		.map(this.getCloneActiveCase.bind(this));
 	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(_.isEqual);
 	contexts_list: Context[];
 
@@ -76,8 +77,33 @@ export class EditCaseComponent implements OnInit {
 			last_modified: new Date(),
 			state: {
 				selected_overlays_ids: [],
-				maps: [{position: null}]
-			} as any
+				maps: {
+					layouts_index: 0,
+					active_map_id: 'imagery1',
+					data: [
+						{
+							id:'imagery1',
+							data: {
+								position: {
+									zoom: 0,
+									rotation: 0,
+									center: {
+										type: "Point",
+										coordinates: [
+											-1032.6339954767493,
+											-24.489491521255573
+										]
+									}
+								}
+							},
+							settings: BaseSettings,
+						},
+					]
+				},
+				time: <any>"",
+				region: <any>"",
+				facets: <any>"",
+			}
 		};
 	}
 

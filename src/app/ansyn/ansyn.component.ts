@@ -1,5 +1,3 @@
-import { MapSettings } from '@ansyn/imagery/imagery/mapSettings';
-import { ImageryComponentSettings } from '@ansyn/imagery/imagery/imageryComponentSettings';
 import { IAppState } from '../app-reducers';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
@@ -19,10 +17,10 @@ import * as _ from 'lodash';
 
 export class AnsynComponent implements OnInit{
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar').map((state: IStatusBarState) => state.layouts[state.selected_layout_index]).distinctUntilChanged(_.isEqual);
-	selected_case$: Observable<Case> = this.store.select('cases').map(((state: ICasesState) => cloneDeep(state.cases[state.selected_case.index]))).distinctUntilChanged(_.isEqual);
+	selected_case$: Observable<Case> = this.store.select('cases').map(((state: ICasesState) => cloneDeep(state.selected_case))).distinctUntilChanged(_.isEqual);
 	maps$: Observable<any[]> = this.store.select('cases').map((state: ICasesState) => {
 
-		const s_case = state.cases[state.selected_case.index];
+		const s_case = state.selected_case;
 		return s_case ? s_case.state.maps : {data: []};
 	}).distinctUntilChanged(_.isEqual);
 

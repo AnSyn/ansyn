@@ -48,8 +48,9 @@ export class ImageryManager {
 		}
 
 		const sourceProvider = this.mapSourceProviderContainerService.resolve(releventMapConfig.mapType, releventMapConfig.mapSource);
-		const layers = sourceProvider.create(releventMapConfig.mapSourceMetadata);
-		mapComponent.createMap(layers);
+		sourceProvider.createAsync(releventMapConfig.mapSourceMetadata).then((layers)=>{
+			mapComponent.createMap(layers);
+		});
 	}
 
 	private destroyCurrentComponent(): void {

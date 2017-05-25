@@ -36,10 +36,10 @@ export class MapAppEffects {
 		})
 		.switchMap((overlay: Overlay) => {
 			const center: any = turf.center(overlay.footprint);
-			this.communicator.provideCommunicator('imagery1').setCenter(center.geometry);
 			const mapType =this.communicator.provideCommunicator('imagery1').getActiveMapObject().mapType;
 			const layer = this.mapSourceProviderContainerService.resolve(mapType,overlay.sourceType).create(overlay);
 			this.communicator.provideCommunicator('imagery1').setLayer(layer);
+			this.communicator.provideCommunicator('imagery1').setCenter(center.geometry);
 			return Observable.empty();
 		});
 

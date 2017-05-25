@@ -10,7 +10,8 @@ export const configuration = {
 		baseUrl: 'http://localhost:9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
 		overlaysByTimeAndPolygon : 'overlays/find',
-		defaultApi: 'overlays'
+		defaultApi: 'overlays',
+		searchByCase: false
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{

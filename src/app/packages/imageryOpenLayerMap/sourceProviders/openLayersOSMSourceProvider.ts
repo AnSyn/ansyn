@@ -27,4 +27,9 @@ export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
 		});
 		return [osmLayer,openSeaMapLayer];
 	}
+
+	createAsync(metaData: any): Promise<any> {
+		let layer = this.create(metaData);
+		return Promise.resolve(layer);
+	}
 }

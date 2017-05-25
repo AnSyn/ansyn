@@ -9,6 +9,10 @@ class SourceProviderMock1 implements BaseSourceProvider {
 	create(metaData: any): any {
 		return true;
 	}
+
+	createAsync(metaData: any): Promise<any> {
+		return Promise.resolve();
+	}
 }
 
 class SourceProviderMock2 implements BaseSourceProvider {
@@ -19,6 +23,9 @@ class SourceProviderMock2 implements BaseSourceProvider {
 		return true;
 	}
 
+	createAsync(metaData: any): Promise<any> {
+		return Promise.resolve();
+	}
 }
 
 class SourceProviderMock3 implements BaseSourceProvider {
@@ -29,6 +36,9 @@ class SourceProviderMock3 implements BaseSourceProvider {
 		return true;
 	}
 
+	createAsync(metaData: any): Promise<any> {
+		return Promise.resolve();
+	}
 }
 
 describe('MapSourceProviderContainer', () => {

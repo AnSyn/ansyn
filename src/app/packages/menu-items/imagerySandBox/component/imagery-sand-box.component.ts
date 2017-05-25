@@ -37,14 +37,14 @@ export class ImagerySandBoxComponent implements OnInit {
 	public setWorldLayer() {
 		console.log(`'setWorldLayer'`);
 
-		try {
+		//try {
 			const mapTileLayr = new ol.layer.Tile({
 				source: new ol.source.OSM()
 			});
 			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(mapTileLayr);
-		} catch (ex) {
-			throw new Error(`setWorldLayer failed ${ex}`);
-		}
+		// } catch (ex) {
+		// 	throw new Error(`setWorldLayer failed ${ex}`);
+		// }
 	}
 
 	public addImageLayer() {
@@ -61,12 +61,12 @@ export class ImagerySandBoxComponent implements OnInit {
 	public setImageLayer() {
 		console.log(`setImageLayer`);
 
-		try {
+		// try {
 			const layer = this.createImageLayer();
 			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(layer);
-		} catch (ex) {
-			throw new Error(`setImageLayer failed ${ex}`);
-		}
+		// } catch (ex) {
+		// 	throw new Error(`setImageLayer failed ${ex}`);
+		// }
 	}
 
 	private createImageLayer(): ol.layer.Tile {

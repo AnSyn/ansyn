@@ -20,6 +20,10 @@ class SourceProviderMock1 implements BaseSourceProvider {
 	create(metaData: any): any {
 		return true;
 	}
+
+	createAsync(metaData: any): Promise<any> {
+		return Promise.resolve();
+	}
 }
 
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';

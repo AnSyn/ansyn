@@ -21,4 +21,9 @@ export class OpenLayerIDAHOSourceProvider extends BaseSourceProvider {
         });
 		return osmLayer;
 	}
+
+	createAsync(metaData: any): Promise<any> {
+		let layer = this.create(metaData);
+		return Promise.resolve(layer);
+	}
 }

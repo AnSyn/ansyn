@@ -11,6 +11,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/debug'
 import { IAppState } from '../';
 import { isEmpty } from 'lodash';
+import "@ansyn/core/utils/clone-deep";
 
 @Injectable()
 export class CasesAppEffects {
@@ -21,6 +22,7 @@ export class CasesAppEffects {
 	selectOverlay$: Observable<UpdateCaseSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
+		.cloneDeep()
 		.switchMap( ([action, state]: [SelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 
@@ -47,6 +49,7 @@ export class CasesAppEffects {
 	unSelectOverlay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
+		.cloneDeep()
 		.switchMap( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 

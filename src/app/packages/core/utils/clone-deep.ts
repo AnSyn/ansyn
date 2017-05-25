@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 Observable.prototype.cloneDeep = function () {
 	return this.do(
 		nextValue => {
-			return nextValue.map(data => cloneDeep(data));
+			return cloneDeep(nextValue);
 		}
 	)
 };

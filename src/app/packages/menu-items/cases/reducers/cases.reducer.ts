@@ -85,7 +85,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases});
 
 		case CasesActionTypes.SELECT_CASE:
-			const s_case = state.cases.find((case_value: Case) => case_value.id == action.payload)
+			const s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			return Object.assign({}, state, { selected_case: s_case });
 
 		case CasesActionTypes.LOAD_CONTEXTS:

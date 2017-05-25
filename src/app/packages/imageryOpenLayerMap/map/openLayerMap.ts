@@ -48,12 +48,48 @@ export class OpenLayerMap implements IMap {
 	// IMap Start
 
 	public setLayer(layer: any) {
+		this.setMainLayer(layer);
+		this.fitCurrentView(layer);
+	}
+
+	private setMainLayer(layer: ol.layer.Layer) {
+		// TODO: check about other layers (interaction etc.)
+		//this._mapObject.getLayers().clear();
 		this._mapLayers.forEach((existingLayer) => {
 			this._mapObject.removeLayer(existingLayer);
 		});
+		this._mapLayers = [];
 
-		this._mapLayers = [layer];
-		this._mapObject.addLayer(layer);
+		const currentZoom = this._mapObject.getView().getZoom();
+		const currentCenter = this._mapObject.getView().getCenter();
+
+		const projection = this._mapObject.getView().getProjection();
+		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
+
+		if (!newCenter) {
+			newCenter = [0, 0];
+		}
+
+		const view: any = new ol.View({
+			center: newCenter,
+			zoom: currentZoom,
+			projection: layer.getSource().getProjection()
+		});
+
+		this._mapObject.setView(view);
+		this.addLayer(layer);
+	}
+
+	private fitCurrentView(layer: ol.layer.Layer) {
+		const view = this._mapObject.getView();
+		const layerExtent = layer.getExtent();
+		if (layerExtent) {
+			view.setCenter(ol.extent.getCenter(layerExtent));
+			view.fit(layerExtent, {
+				size: this._mapObject.getSize(),
+				constrainResolution: false
+			});
+		}
 	}
 
 	public addLayer(layer: any) {

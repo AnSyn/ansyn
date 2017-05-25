@@ -18,6 +18,10 @@ class SourceProviderMock1 implements BaseSourceProvider {
 	create(metaData: any): any {
 		return true;
 	}
+
+	createAsync(metaData: any): Promise<any> {
+		return Promise.resolve();
+	}
 }
 
 describe('ImageryComponent', () => {

@@ -36,7 +36,9 @@ describe('StatusBarAppEffects', () => {
 	}));
 
 	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
-		spyOn(statusBarAppEffects, 'setMapsDataChanges');
+		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));
+		spyOn(statusBarAppEffects, 'setMapsDataChanges').and.callFake((s_case) => s_case);
+
 		const new_layout_index = 1;
 		const layouts_index = 2;
 
@@ -52,8 +54,6 @@ describe('StatusBarAppEffects', () => {
 
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
-
-		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));
 
 		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseSuccessAction | UpdateMapSizeAction)=>{
 			expect((_result instanceof UpdateCaseSuccessAction) || (_result instanceof UpdateMapSizeAction) ).toBeTruthy();

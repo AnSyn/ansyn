@@ -8,6 +8,7 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { cloneDeep } from 'lodash'
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import * as _ from 'lodash';
+import "@ansyn/core/utils/clone-deep";
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -17,7 +18,7 @@ import * as _ from 'lodash';
 
 export class AnsynComponent implements OnInit{
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar').map((state: IStatusBarState) => state.layouts[state.selected_layout_index]).distinctUntilChanged(_.isEqual);
-	selected_case$: Observable<Case> = this.store.select('cases').map(((state: ICasesState) => cloneDeep(state.selected_case))).distinctUntilChanged(_.isEqual);
+	selected_case$: Observable<Case> = this.store.select('cases').map((state: ICasesState) => state.selected_case).cloneDeep().distinctUntilChanged(_.isEqual);
 	maps$: Observable<any[]> = this.store.select('cases').map((state: ICasesState) => {
 
 		const s_case = state.selected_case;

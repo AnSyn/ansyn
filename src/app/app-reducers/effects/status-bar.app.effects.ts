@@ -14,6 +14,7 @@ import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { BaseSettings, MapState } from '@ansyn/menu-items/cases/models/map-state.model';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { Position } from '@ansyn/core/models/position.model';
+import "@ansyn/core/utils/clone-deep";
 
 
 
@@ -25,7 +26,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState): Case => _.cloneDeep(state.selected_case))
+		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState): Case => state.selected_case)
 		.map( (selected_case: Case) =>  {
 			const layouts_index = selected_case.state.maps.layouts_index;
 			return new ChangeLayoutAction(+layouts_index)

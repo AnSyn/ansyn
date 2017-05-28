@@ -48,21 +48,24 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
-		.withLatestFrom(this.store$.select('cases'), ([action, state]: [SelectLayerAction, ICasesState]): [UnselectLayerAction, string] => [action, state.selected_case.state.maps.active_map_id])
+		.withLatestFrom(this.store$.select("cases"))
+		.map(([action, state]: [SelectLayerAction, ICasesState]) => {
+			return [action, state.selected_case.state.maps.active_map_id]
+		})
 		.map(([action, active_map_id] : [SelectLayerAction, string]) => {
-			let imagery = this.communicator.provideCommunicator(active_map_id);
+			const imagery = this.communicator.provideCommunicator(active_map_id);
 			imagery.addVectorLayer(action.payload);
 		}).share();
 
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.withLatestFrom(this.store$.select('cases'), ([action, state]: [UnselectLayerAction, ICasesState]): [UnselectLayerAction, string] => [action, state.selected_case.state.maps.active_map_id])
-		.map(
-			([action, active_map_id]: [UnselectLayerAction, string]) => {
-				let imagery = this.communicator.provideCommunicator(active_map_id);
-				imagery.removeVectorLayer(action.payload);
-			}).share();
+		.withLatestFrom(this.store$.select('cases'))
+		.map(([action, state]: [UnselectLayerAction, ICasesState])=> [action, state.selected_case.state.maps.active_map_id])
+		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
+			let imagery = this.communicator.provideCommunicator(active_map_id);
+			imagery.removeVectorLayer(action.payload);
+		}).share();
 
 	@Effect()
 	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$

@@ -38,7 +38,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
             if(unselectedLayerIndex === -1){
                 return state;
             }
-            
+
             let newSelectedArray: ILayerTreeNodeLeaf[] = [
                 ...state.selectedLayers.slice(0, unselectedLayerIndex),
                 ...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];

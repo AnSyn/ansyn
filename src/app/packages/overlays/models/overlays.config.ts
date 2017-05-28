@@ -2,6 +2,7 @@ export interface IOverlaysConfig {
 	baseUrl: string;
 	overlaysByCaseId: string;
 	defaultApi: string;
-	overlaysByTimeAndPolygon : string;
+	overlaysByTimeAndPolygon: string;
 	searchByCase: boolean;
+	overlayeSource: string;
 }

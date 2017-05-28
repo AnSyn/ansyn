@@ -37,7 +37,8 @@ export class OverlaysEffects {
 			return this.overlaysService[this.config.searchByCase ? "getByCase" : "search" ]("",action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
-						item.date = item.photoTime
+						item.date = item.photoTime;
+						item.sourceType = this.config.overlayeSource;
 					});
 					return new LoadOverlaysSuccessAction(data);
 				});

@@ -16,14 +16,14 @@ export class OpenLayerMap implements IMap {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<Position>;
 
-	constructor(element: HTMLElement, layers: any, position: Position) {
+	constructor(element: HTMLElement, layers: any, position?: Position) {
 		this._mapType = 'openLayerMap';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
 		this.initMap(element, layers, position);
 	}
 
-	private initMap(element: HTMLElement, layers: any,  position: Position) {
+	private initMap(element: HTMLElement, layers: any,  position?: Position) {
 
 		let center = [16, 38];
 		let zoom = 12;
@@ -71,6 +71,7 @@ export class OpenLayerMap implements IMap {
 
 		const currentZoom = this._mapObject.getView().getZoom();
 		const currentCenter = this._mapObject.getView().getCenter();
+		const currentRotation = this._mapObject.getView().getRotation();
 
 		const projection = this._mapObject.getView().getProjection();
 		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
@@ -82,6 +83,7 @@ export class OpenLayerMap implements IMap {
 		const view: any = new ol.View({
 			center: newCenter,
 			zoom: currentZoom,
+			rotation: currentRotation,
 			projection: layer.getSource().getProjection()
 		});
 

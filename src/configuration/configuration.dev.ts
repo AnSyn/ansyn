@@ -17,7 +17,7 @@ export const configuration = {
 		overlaysByCaseId:  'case/:id/overlays',
 		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',
-		searchByCase: false
+		searchByCase: true
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{

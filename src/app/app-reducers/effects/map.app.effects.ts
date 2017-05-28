@@ -39,9 +39,11 @@ export class MapAppEffects {
 		.switchMap( ([overlay, active_map_id]:[Overlay, string]) => {
 			const center: any = turf.center(overlay.footprint);
 			const mapType =this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
-			const layer = this.mapSourceProviderContainerService.resolve(mapType,overlay.sourceType).create(overlay);
-			this.communicator.provideCommunicator(active_map_id).setLayer(layer);
-			this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
+			const sourceLoader = this.mapSourceProviderContainerService.resolve(mapType, overlay.sourceType);
+			sourceLoader.createAsync(overlay).then((layer)=> {
+				this.communicator.provideCommunicator(active_map_id).setLayer(layer);
+				this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
+			});
 			return Observable.empty();
 		});
 

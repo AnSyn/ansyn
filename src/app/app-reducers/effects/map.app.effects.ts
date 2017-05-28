@@ -25,39 +25,44 @@ export class MapAppEffects {
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
 		private mapSourceProviderContainerService: MapSourceProviderContainerService
-		) { }
+	) { }
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.map(toPayload)
-		.withLatestFrom(this.store$.select('overlays'), (overlayId: string, store: IOverlayState) => {
-			return store.overlays.get(overlayId);
+		.withLatestFrom(this.store$, (overlayId: string, store: IAppState) => {
+			const overlay = store.overlays.overlays.get(overlayId);
+			const active_map_id = store.cases.selected_case.state.maps.active_map_id;
+			return [overlay, active_map_id];
 		})
-		.switchMap((overlay: Overlay) => {
+		.switchMap( ([overlay, active_map_id]:[Overlay, string]) => {
 			const center: any = turf.center(overlay.footprint);
-			const mapType =this.communicator.provideCommunicator('imagery1').getActiveMapObject().mapType;
+			const mapType =this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
 			const layer = this.mapSourceProviderContainerService.resolve(mapType,overlay.sourceType).create(overlay);
-			this.communicator.provideCommunicator('imagery1').setLayer(layer);
-			this.communicator.provideCommunicator('imagery1').setCenter(center.geometry);
+			this.communicator.provideCommunicator(active_map_id).setLayer(layer);
+			this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
 			return Observable.empty();
 		});
 
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
-		.map((action: SelectLayerAction) => {
-			let imagery = this.communicator.provideCommunicator('imagery1');
+		.withLatestFrom(this.store$.select('cases'), ([action, state]: [SelectLayerAction, ICasesState]): [UnselectLayerAction, string] => [action, state.selected_case.state.maps.active_map_id])
+		.map(([action, active_map_id] : [SelectLayerAction, string]) => {
+			let imagery = this.communicator.provideCommunicator(active_map_id);
 			imagery.addVectorLayer(action.payload);
 		}).share();
 
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.map((action: UnselectLayerAction) => {
-			let imagery = this.communicator.provideCommunicator('imagery1');
-			imagery.removeVectorLayer(action.payload);
-		}).share();
+		.withLatestFrom(this.store$.select('cases'), ([action, state]: [UnselectLayerAction, ICasesState]): [UnselectLayerAction, string] => [action, state.selected_case.state.maps.active_map_id])
+		.map(
+			([action, active_map_id]: [UnselectLayerAction, string]) => {
+				let imagery = this.communicator.provideCommunicator(active_map_id);
+				imagery.removeVectorLayer(action.payload);
+			}).share();
 
 	@Effect()
 	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$

@@ -27,7 +27,6 @@ export class LayersEffects {
             layersBundle.selectedLayers.forEach((layer: ILayerTreeNodeLeaf) => {
                 actionsArray.push(new SelectLayerAction(layer));
             });
-
             return Observable.from(actionsArray);
         })
         .share();

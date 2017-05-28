@@ -62,22 +62,21 @@ describe('MapAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
+		const cases = [{
+			id: 'case1',
+			state: {
+				maps: [{
+					position: {
+						center: "",
+						zoom: 1
+					}
+				}]
+			}
+		}];
 
 		icase_state = {
-			cases: [
-				{
-					id: 'case1',
-					state: {
-						maps: [{
-							position: {
-								center: "",
-								zoom: 1
-							}
-						}]
-					}
-				}
-			],
-			selected_case_id: null
+			cases,
+			selected_case: cases[0]
 		} as any;
 
 		spyOn(store, 'select').and.callFake(() => {
@@ -96,7 +95,7 @@ describe('MapAppEffects', () => {
 	});
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		const staticLeaf: ILayerTreeNodeLeaf = {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
@@ -105,8 +104,8 @@ describe('MapAppEffects', () => {
 			children: []
 		};
 
-		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
-		let imagery1 = {
+		const action: SelectLayerAction = new SelectLayerAction(staticLeaf);
+		const imagery1 = {
 			addVectorLayer: () => {
 
 			}

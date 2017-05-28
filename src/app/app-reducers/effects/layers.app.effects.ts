@@ -12,11 +12,11 @@ export class LayersAppEffects {
 
     constructor(private actions$: Actions, private store$: Store<IAppState>) { }
 
-    // @Effect()
-    // selectCase$: Observable<Action> = this.actions$
-    //     .ofType(CasesActionTypes.SELECT_CASE)
-    //     .map((action: SelectCaseAction) => {
-    //         return new BeginLayerTreeLoadAction({ caseId: action.payload })
-    //     }).share();
+    @Effect()
+    selectCase$: Observable<Action> = this.actions$
+        .ofType(CasesActionTypes.SELECT_CASE)
+        .map((action: SelectCaseAction) => {
+            return new BeginLayerTreeLoadAction({ caseId: action.payload })
+        }).share();
 
 }

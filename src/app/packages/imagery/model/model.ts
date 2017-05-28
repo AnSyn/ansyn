@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryCommunicator } from '../api/imageryCommunicator';
-import { Position } from '@ansyn/core'
+import { Position } from '@ansyn/core';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
@@ -36,7 +36,7 @@ export interface IMap {
 
 export interface IMapComponent {
 	mapCreated: EventEmitter<IMap>;
-	createMap(layers: any): void;
+	createMap(layers: any, position?: Position): void;
 }
 
 export interface IMapState {

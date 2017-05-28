@@ -16,31 +16,40 @@ export class OpenLayerMap implements IMap {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<Position>;
 
-	constructor(element: HTMLElement, layers: any) {
+	constructor(element: HTMLElement, layers: any, position: Position) {
 		this._mapType = 'openLayerMap';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
-		this.initMap(element, layers);
+		this.initMap(element, layers, position);
 	}
 
-	private initMap(element: HTMLElement, layers: any) {
+	private initMap(element: HTMLElement, layers: any,  position: Position) {
 
+		let center = [16, 38];
+		let zoom = 12;
+		let rotation = 0;
+		if (position) {
+			center = position.center.coordinates;
+			zoom = position.zoom;
+			rotation = position.rotation;
+		}
 		this._mapObject = new ol.Map({
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
 			controls: [],
 			view: new ol.View({
-				center: ol.proj.fromLonLat([16, 38]),
-				zoom: 12
+				center: ol.proj.fromLonLat([center[0],center[1]]),
+				zoom: zoom,
+				rotation: rotation
 			})
 		});
 
 		this._mapLayers = layers;
 
 		this._mapObject.on('moveend', (e) => {
-			const center = this.getCenter();
-			this.centerChanged.emit(center);
+			const mapCenter = this.getCenter();
+			this.centerChanged.emit(mapCenter);
 			this.positionChanged.emit(this.getPosition());
 		});
 	}

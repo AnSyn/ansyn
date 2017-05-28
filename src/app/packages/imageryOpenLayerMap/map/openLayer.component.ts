@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayerMap } from './openLayerMap';
 import { IMap, IMapComponent } from '@ansyn/imagery/model/model';
+import { Position } from '@ansyn/core';
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -30,8 +31,8 @@ export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {
 	ngOnInit(): void {
 	}
 
-	createMap(layers: any): void {
-		this._map = new OpenLayerMap(this.mapElement.nativeElement, layers);
+	createMap(layers: any, position?: Position): void {
+		this._map = new OpenLayerMap(this.mapElement.nativeElement, layers, position);
 		this.mapCreated.emit(this._map);
 	}
 

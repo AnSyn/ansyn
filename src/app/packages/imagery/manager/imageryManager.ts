@@ -26,7 +26,7 @@ export class ImageryManager {
 		this.positionChanged = new EventEmitter<Position>();
 	}
 
-	private buildCurrentComponent(activeMapType: string): void {
+	private buildCurrentComponent(activeMapType: string, position?: Position): void {
 		const component = this.imageryProviderService.provideMap(activeMapType);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(component);
 
@@ -49,7 +49,7 @@ export class ImageryManager {
 
 		const sourceProvider = this.mapSourceProviderContainerService.resolve(releventMapConfig.mapType, releventMapConfig.mapSource);
 		sourceProvider.createAsync(releventMapConfig.mapSourceMetadata).then((layers)=>{
-			mapComponent.createMap(layers);
+			mapComponent.createMap(layers, position);
 		});
 	}
 
@@ -60,12 +60,12 @@ export class ImageryManager {
 		}
 	}
 
-	public setActiveMap(activeMapType: string) {
+	public setActiveMap(activeMapType: string, position?: Position) {
 		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
-		this.buildCurrentComponent(activeMapType);
+		this.buildCurrentComponent(activeMapType, position);
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {

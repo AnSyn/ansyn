@@ -23,63 +23,67 @@ import { Overlay } from '../models/overlay.model';
 import * as overlay from '../actions/overlays.actions';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
-import { configuration } from '../../../../configuration/configuration'
+import { configuration } from '../../../../configuration/configuration';
 
 describe("Overlays Effects ", () => {
-    const overlays = <Overlay[]>[
-        {
-            id: '12',
-            name: 'tmp12',
-            photoTime: new Date(Date.now()),
-            azimuth: 10
-        },
-        {
-            id: '13',
-            name: 'tmp13',
-            photoTime: new Date(Date.now()),
-            azimuth: 10
-        }
-    ]
+	const overlays = <Overlay[]>[
+		{
+			id: '12',
+			name: 'tmp12',
+			photoTime: new Date(Date.now()),
+			azimuth: 10
+		},
+		{
+			id: '13',
+			name: 'tmp13',
+			photoTime: new Date(Date.now()),
+			azimuth: 10
+		}
+	];
 
-    beforeEach(() => TestBed.configureTestingModule({
-        imports: [
-            EffectsTestingModule
-        ],
-        providers: [
-            OverlaysEffects, {
-                provide: OverlaysService,
-                useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search'])
-            },
-            { provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
-        ]
-    }));
+	beforeEach(() => TestBed.configureTestingModule({
+		imports: [
+			EffectsTestingModule
+		],
+		providers: [
+			OverlaysEffects, {
+				provide: OverlaysService,
+				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search'])
+			},
+			{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+		]
+	}));
 
-    function setup() {
-        return {
-            runner: TestBed.get(EffectsRunner),
-            overlaysEffects: TestBed.get(OverlaysEffects),
-            overlaysService: TestBed.get(OverlaysService)
-        }
-    };
+	function setup() {
+		return {
+			runner: TestBed.get(EffectsRunner),
+			overlaysEffects: TestBed.get(OverlaysEffects),
+			overlaysService: TestBed.get(OverlaysService),
+			overlaysConfig: TestBed.get(OverlaysConfig)
+		};
+	};
 
-    it('it should load all the overlays', () => {
-        const { runner, overlaysEffects, overlaysService } = setup();
-        let tmp = <Overlay[]>[];
-        overlays.forEach(i => tmp.push(Object.assign({}, i,{date :i.photoTime})));
-        const expectedResult = new LoadOverlaysSuccessAction(tmp);
+	it('it should load all the overlays', () => {
+		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
+		let tmp = <Overlay[]>[];
+		overlays.forEach(i => tmp.push(Object.assign({}, i,{
+			date :i.photoTime,
+			sourceType: overlaysConfig.overlayeSource
+		})));
+		const expectedResult = new LoadOverlaysSuccessAction(tmp);
 
-       overlaysService.getByCase.and.returnValue(Observable.of(overlays));
-       overlaysService.search.and.returnValue(Observable.of(overlays));
-        runner.queue(new LoadOverlaysAction());
+		overlaysService.getByCase.and.returnValue(Observable.of(overlays));
+		overlaysService.search.and.returnValue(Observable.of(overlays));
+		runner.queue(new LoadOverlaysAction());
 
-        let result = null;
-        overlaysEffects.loadOverlays$.subscribe(_result => {
-            result = _result;
-        });
+		let result = null;
+		overlaysEffects.loadOverlays$.subscribe(_result => {
+			result = _result;
+		});
 
 
 
-        expect(result).toEqual(expectedResult);
+		expect(result).toEqual(expectedResult);
 
-    });
+	});
 });

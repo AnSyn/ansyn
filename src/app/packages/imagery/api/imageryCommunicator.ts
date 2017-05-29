@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryManager } from '../manager/imageryManager';
-import {IMap, IPlugginCommunicator} from '../model/model';
+import { Extent, IMap, IPlugginCommunicator } from '../model/model';
 import { Position } from '@ansyn/core';
 
 import * as _ from 'lodash';
@@ -18,7 +18,7 @@ export interface IImageryCommunicator {
 	setBoundingView(boundingRectangle: GeoJSON.MultiPolygon);
 	setCenter(center: GeoJSON.Point, animation ?: boolean);
 	setActiveMap(mapType: string);
-	setLayer(layer: any);
+	setLayer(layer: any, extent?: Extent);
 	addLayer(layer: any);
 	addVectorLayer(layer: any): void;
 	removeVectorLayer(layer: any): void;
@@ -122,8 +122,8 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		return this._plugginCommunicators[plugginId];
 	}
 
-	public setLayer(layer: any) {
-		this._manager.setLayer(layer);
+	public setLayer(layer: any, extent?: Extent) {
+		this._manager.setLayer(layer, extent);
 	}
 
 	public addLayer(layer: any) {

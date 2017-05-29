@@ -6,6 +6,7 @@ import { DestroySubscribers } from "ng2-destroy-subscribers";
 import { isEmpty,isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
+import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 
@@ -101,14 +102,13 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         this.subscribers.overlays = this.store.select('overlays')
             .skip(1)
             .distinctUntilChanged(this.overlaysService.compareOverlays)
-            .filter(data => !isEmpty(data))
-            .debug('tmp')
+            .filter(data => !isEmpty(data)) //@todo change to isEmpty
             .map((data: any) => {
                 
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
                     configuration: data.queryParams 
-                }
+                };
             })
             .subscribe(data => {
                 this.configuration.start = new Date(data.configuration.from);

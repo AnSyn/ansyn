@@ -30,7 +30,7 @@ export class ImageryProviderService {
 		}
 		this._mapStatesProviders[mapState] = mapStateCreateMethod;
 	}
-
+<div></div>
 	public provideMap(mapType: string): any {
 		if (!this._mapProviders[mapType]) {
 			throw new Error(`'Map Provider ${mapType} doesn't exist.'`);

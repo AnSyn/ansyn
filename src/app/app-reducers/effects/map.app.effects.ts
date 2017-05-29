@@ -19,14 +19,6 @@ import '@ansyn/core/utils/clone-deep';
 @Injectable()
 export class MapAppEffects {
 
-	constructor(
-		private actions$: Actions,
-		private casesService: CasesService,
-		private store$: Store<IAppState>,
-		private communicator: ImageryCommunicatorService,
-		private mapSourceProviderContainerService: MapSourceProviderContainerService
-	) { }
-
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -46,13 +38,13 @@ export class MapAppEffects {
 			const bbox = turf.bbox(footprintFeature);
 			const bboxPolygon = turf.bboxPolygon(bbox);
 			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-
 			const mapType = this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
 			const sourceLoader = this.mapSourceProviderContainerService.resolve(mapType, overlay.sourceType);
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				this.communicator.provideCommunicator(active_map_id).setLayer(layer, extent);
 				this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
 			});
+
 			return Observable.empty();
 		});
 
@@ -96,4 +88,11 @@ export class MapAppEffects {
 			});
 		});
 
+	constructor(
+		private actions$: Actions,
+		private casesService: CasesService,
+		private store$: Store<IAppState>,
+		private communicator: ImageryCommunicatorService,
+		private mapSourceProviderContainerService: MapSourceProviderContainerService
+	) { }	
 }

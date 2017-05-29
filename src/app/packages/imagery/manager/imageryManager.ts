@@ -2,9 +2,7 @@ import { Extent, IImageryConfig, IMap, IMapComponent, IMapConfig } from '../mode
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { Position } from '@ansyn/core';
-import {
-	MapSourceProviderContainerService
-} from '@ansyn/map-source-provider';
+import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -60,8 +58,12 @@ export class ImageryManager {
 		}
 	}
 
+<<<<<<< HEAD
 	public setActiveMap(activeMapType: string, position?: Position) {
 		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
+=======
+	public setActiveMap(activeMapType: string) {
+>>>>>>> I added linter and there is the result
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -69,7 +71,10 @@ export class ImageryManager {
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {
+<<<<<<< HEAD
 		// console.log(`'${this.id} setActiveMap ${activeMap.mapType} map'`);
+=======
+>>>>>>> I added linter and there is the result
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();
 	}

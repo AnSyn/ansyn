@@ -19,11 +19,6 @@ import { IOverlaysConfig } from '../models/overlays.config';
 @Injectable()
 export class OverlaysEffects {
 
-	constructor(private actions$: Actions,
-			private overlaysService: OverlaysService,
-			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {
-
-	}
 	@Effect({dispatch: false})
 	onRedrawTimeline$: Observable<boolean> = this.actions$
 		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
@@ -50,4 +45,8 @@ export class OverlaysEffects {
 		  	.switchMap( action => {
       			return Observable.empty();
   			});
+
+  	constructor(private actions$: Actions,
+			private overlaysService: OverlaysService,
+			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}		
 }

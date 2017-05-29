@@ -1,4 +1,4 @@
-import { IImageryConfig, IMap, IMapComponent, IMapConfig } from '../model/model';
+import { Extent, IImageryConfig, IMap, IMapComponent, IMapConfig } from '../model/model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { Position } from '@ansyn/core';
@@ -133,8 +133,8 @@ export class ImageryManager {
 		this._subscriptions = [];
 	}
 
-	public setLayer(layer: any) {
-		this._activeMap.setLayer(layer);
+	public setLayer(layer: any, extent?: Extent) {
+		this._activeMap.setLayer(layer, extent);
 	}
 
 	public addLayer(layer: any) {

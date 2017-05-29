@@ -37,11 +37,20 @@ export class MapAppEffects {
 			return [overlay, active_map_id];
 		})
 		.switchMap( ([overlay, active_map_id]:[Overlay, string]) => {
-			const center: any = turf.center(overlay.footprint);
-			const mapType =this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
+			const footprintFeature: GeoJSON.Feature<any> = {
+				"type": 'Feature',
+				"properties": {},
+				"geometry": overlay.footprint
+			};
+			const center = turf.center(footprintFeature);
+			const bbox = turf.bbox(footprintFeature);
+			const bboxPolygon = turf.bboxPolygon(bbox);
+			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
+
+			const mapType = this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
 			const sourceLoader = this.mapSourceProviderContainerService.resolve(mapType, overlay.sourceType);
 			sourceLoader.createAsync(overlay).then((layer)=> {
-				this.communicator.provideCommunicator(active_map_id).setLayer(layer);
+				this.communicator.provideCommunicator(active_map_id).setLayer(layer, extent);
 				this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
 			});
 			return Observable.empty();
@@ -52,9 +61,9 @@ export class MapAppEffects {
 		.ofType(LayersActionTypes.SELECT_LAYER)
 		.withLatestFrom(this.store$.select("cases"))
 		.map(([action, state]: [SelectLayerAction, ICasesState]) => {
-			return [action, state.selected_case.state.maps.active_map_id]
+			return [action, state.selected_case.state.maps.active_map_id];
 		})
-		.map(([action, active_map_id] : [SelectLayerAction, string]) => {
+		.map(([action, active_map_id]: [SelectLayerAction, string]) => {
 			const imagery = this.communicator.provideCommunicator(active_map_id);
 			imagery.addVectorLayer(action.payload);
 		}).share();

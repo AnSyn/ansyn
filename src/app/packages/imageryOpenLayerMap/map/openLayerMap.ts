@@ -6,6 +6,7 @@ import { IMap } from '@ansyn/imagery';
 import { Position } from '@ansyn/core';
 import { EventEmitter } from '@angular/core';
 import * as ol from 'openlayers';
+import { Extent } from '@ansyn/imagery';
 
 export class OpenLayerMap implements IMap {
 
@@ -56,9 +57,9 @@ export class OpenLayerMap implements IMap {
 
 	// IMap Start
 
-	public setLayer(layer: any) {
+	public setLayer(layer: any, extent?: Extent) {
 		this.setMainLayer(layer);
-		this.fitCurrentView(layer);
+		this.fitCurrentView(layer, extent);
 	}
 
 	private setMainLayer(layer: ol.layer.Layer) {
@@ -91,12 +92,24 @@ export class OpenLayerMap implements IMap {
 		this.addLayer(layer);
 	}
 
-	private fitCurrentView(layer: ol.layer.Layer) {
+	private fitCurrentView(layer: ol.layer.Layer, extent?: Extent) {
 		const view = this._mapObject.getView();
 		const layerExtent = layer.getExtent();
 		if (layerExtent) {
 			view.setCenter(ol.extent.getCenter(layerExtent));
 			view.fit(layerExtent, {
+				size: this._mapObject.getSize(),
+				constrainResolution: false
+			});
+		}
+		else if (extent) {
+			const layerProjection = layer.getSource().getProjection();
+			const topLeft = ol.proj.transform([extent.topLeft[0],extent.topLeft[1]], 'EPSG:4326', layerProjection);
+			const topRight = ol.proj.transform([extent.topRight[0],extent.topRight[1]], 'EPSG:4326', layerProjection);
+			const bottomLeft = ol.proj.transform([extent.bottomLeft[0],extent.bottomLeft[1]], 'EPSG:4326', layerProjection);
+			const bottomRight = ol.proj.transform([extent.bottomRight[0],extent.bottomRight[1]], 'EPSG:4326', layerProjection);
+			const viewExtent = ol.extent.boundingExtent([topLeft, topRight, bottomLeft, bottomRight]);
+			view.fit(viewExtent, {
 				size: this._mapObject.getSize(),
 				constrainResolution: false
 			});

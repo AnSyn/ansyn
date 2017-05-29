@@ -23,7 +23,7 @@ export interface IMap {
 	getCenter(): GeoJSON.Point;
 	setCenter(center: GeoJSON.Point, animation: boolean);
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
-	setLayer(layer: any): void;
+	setLayer(layer: any, extent?: Extent): void;
 	addLayer(layer: any): void;
 	addVectorLayer(layer: any): void;
 	removeVectorLayer(layer: any): void;
@@ -47,4 +47,11 @@ export interface IMapState {
 
 export interface IPlugginCommunicator {
 	plugginId: string;
+}
+
+export interface Extent {
+	topLeft: GeoJSON.Position;
+	topRight: GeoJSON.Position;
+	bottomLeft: GeoJSON.Position;
+	bottomRight: GeoJSON.Position;
 }

@@ -2,8 +2,9 @@
  * Created by AsafMas on 10/05/2017.
  */
 import { Component, OnInit } from '@angular/core';
-import { ImageryCommunicatorService } from '../../../imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import * as ol from 'openlayers';
+import * as turf from '@turf/turf';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -38,10 +39,21 @@ export class ImagerySandBoxComponent implements OnInit {
 		console.log(`'setWorldLayer'`);
 
 		//try {
-			const mapTileLayr = new ol.layer.Tile({
-				source: new ol.source.OSM()
-			});
-			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(mapTileLayr);
+		const mapTileLayr = new ol.layer.Tile({
+			source: new ol.source.OSM()
+		});
+		const footprint:GeoJSON.MultiPolygon = {"type":"MultiPolygon","coordinates":[[[[35.66132962,32.71470156],[35.84337173,32.71244083],[35.84258139,32.5720059],[35.6607346,32.57504756],[35.66132962,32.71470156]]]],"bbox":[35.6607346,32.5720059,35.84337173,32.71470156]};
+
+		const a: GeoJSON.Feature<any> = {
+			"type": 'Feature',
+			"properties": {},
+			"geometry": footprint
+		};
+		const center = turf.center(a);
+		const bbox = turf.bbox(a);
+		const bboxPolygon = turf.bboxPolygon(bbox);
+		const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
+		this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(mapTileLayr, extent);
 		// } catch (ex) {
 		// 	throw new Error(`setWorldLayer failed ${ex}`);
 		// }
@@ -62,8 +74,21 @@ export class ImagerySandBoxComponent implements OnInit {
 		console.log(`setImageLayer`);
 
 		// try {
-			const layer = this.createImageLayer();
-			this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(layer);
+		const layer = this.createImageLayer();
+
+		const footprint:GeoJSON.MultiPolygon = {"type":"MultiPolygon","coordinates":[[[[35.66132962,32.71470156],[35.84337173,32.71244083],[35.84258139,32.5720059],[35.6607346,32.57504756],[35.66132962,32.71470156]]]],"bbox":[35.6607346,32.5720059,35.84337173,32.71470156]};
+
+		const a: GeoJSON.Feature<any> = {
+			"type": 'Feature',
+			"properties": {},
+			"geometry": footprint
+		};
+
+		const center = turf.center(a);
+		const bbox = turf.bbox(a);
+		const bboxPolygon = turf.bboxPolygon(bbox);
+		const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
+		this.imageryCommunicatorService.provideCommunicator('imagery1').setLayer(layer, extent);
 		// } catch (ex) {
 		// 	throw new Error(`setImageLayer failed ${ex}`);
 		// }

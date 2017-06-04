@@ -4,7 +4,6 @@ import { ImageryProviderService } from '../imageryProviderService/imageryProvide
 import { Position } from '@ansyn/core';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { ImageryComponentSettings } from '../imagery/imageryComponentSettings';
-import { MapSettings } from '../imagery/mapSettings';
 import { IImageryCommunicator } from '../api/imageryCommunicator';
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -69,30 +68,29 @@ export class ImageryManager {
 		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
-			this.destroyActiveMapStatePlugins();
+			this.destroyActiveMapPlugins();
 		}
 		this.buildCurrentComponent(activeMapType, position);
-		this.buildActiveMapStatePlugins(activeMapType);
+		this.buildActiveMapPlugins(activeMapType);
 	}
 
-	private buildActiveMapStatePlugins(activeMapType: string) {
-		// Create Map "State" plugin
-		const mapSettings = this.imagerySettings.settings.find((element: MapSettings)=> {
-			return element.mapType === activeMapType;
-		});
+	private buildActiveMapPlugins(activeMapType: string) {
+		// Create Map plugin's
 
-		if (mapSettings.mapModes && mapSettings.mapModes.length > 0) {
-			mapSettings.mapModes.forEach((mapMode: string)=>{
-				const mapPlugin: IMapPlugin = this.imageryProviderService.createMapState(mapMode, this.imageryCommunicator);
-				this._plugins.push(mapPlugin);
-			});
+		const mapPlugins: IMapPlugin[] = this.imageryProviderService.createPlugins(activeMapType, this.imageryCommunicator);
+		if (mapPlugins) {
+			this._plugins = mapPlugins;
+		} else {
+			this._plugins = [];
 		}
 	}
 
-	private destroyActiveMapStatePlugins() {
-		this._plugins.forEach((plugin: IMapPlugin)=>{
-			plugin.dispose();
-		});
+	private destroyActiveMapPlugins() {
+		if (this._plugins) {
+			this._plugins.forEach((plugin: IMapPlugin) => {
+				plugin.dispose();
+			});
+		}
 		this._plugins = [];
 	}
 

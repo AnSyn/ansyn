@@ -5,7 +5,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService, ImageryConfig } from '../api/imageryCommunicator.service';
 import { ImageryComponentSettings } from './imageryComponentSettings';
-import { MapSettings } from './mapSettings';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { BaseSourceProvider, MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 
@@ -35,9 +34,7 @@ describe('ImageryComponent', () => {
 		coordinates: [15.7, 37.9]
 	};
 
-	const mapSettings: MapSettings = { mapType: 'openLayerMap', mapModes: []};
-
-	const imageryData: ImageryComponentSettings = {id: 'imagery1', settings: [mapSettings], data:{position: {center: geoPoint, zoom: 0}}};
+	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapTypes: ['openLayerMap'], data:{position: {center: geoPoint, zoom: 0}}};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

@@ -20,6 +20,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { MapSourceProviderModule, BaseSourceProvider } from '@ansyn/map-source-provider';
 import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerIDAHOSourceProvider } from '@ansyn/imageryOpenLayerMap';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
+import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 
 @NgModule({
 	providers:[
@@ -32,6 +33,7 @@ import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 		AnsynComponent,
 	],
 	imports: [
+		OpenLayerCenterMarkerPluginModule,
 		MapSourceProviderModule,
 		ImageryOpenLayerMapModule,
 		ImageryCesiumMapModule,

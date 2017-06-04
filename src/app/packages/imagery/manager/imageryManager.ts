@@ -1,8 +1,11 @@
-import { Extent, IImageryConfig, IMap, IMapComponent, IMapConfig } from '../model/model';
+import { Extent, IImageryConfig, IMap, IMapComponent, IMapConfig, IMapPlugin } from '../model/model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
 import { Position } from '@ansyn/core';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
+import { ImageryComponentSettings } from '../imagery/imageryComponentSettings';
+import { MapSettings } from '../imagery/mapSettings';
+import { IImageryCommunicator } from '../api/imageryCommunicator';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -12,6 +15,7 @@ export class ImageryManager {
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<Position>;
+	private _plugins: IMapPlugin[];
 
 	constructor(public id: string,
 				private imageryProviderService: ImageryProviderService,
@@ -19,9 +23,12 @@ export class ImageryManager {
 				private map_component_elem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
 				private mapSourceProviderContainerService: MapSourceProviderContainerService,
-				private config: IImageryConfig) {
+				private config: IImageryConfig,
+				private imagerySettings: ImageryComponentSettings,
+				private imageryCommunicator: IImageryCommunicator) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<Position>();
+		this._plugins = [];
 	}
 
 	private buildCurrentComponent(activeMapType: string, position?: Position): void {
@@ -62,8 +69,35 @@ export class ImageryManager {
 		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
+			this.destroyActiveMapStatePlugins();
 		}
 		this.buildCurrentComponent(activeMapType, position);
+		this.buildActiveMapStatePlugins(activeMapType);
+	}
+
+	private buildActiveMapStatePlugins(activeMapType: string) {
+		// Create Map "State" plugin
+		const mapSettings = this.imagerySettings.settings.find((element: MapSettings)=> {
+			return element.mapType === activeMapType;
+		});
+
+		if (mapSettings.mapModes && mapSettings.mapModes.length > 0) {
+			mapSettings.mapModes.forEach((mapMode: string)=>{
+				const mapPlugin: IMapPlugin = this.imageryProviderService.createMapState(mapMode, this.imageryCommunicator);
+				this._plugins.push(mapPlugin);
+			});
+		}
+	}
+
+	private destroyActiveMapStatePlugins() {
+		this._plugins.forEach((plugin: IMapPlugin)=>{
+			plugin.dispose();
+		});
+		this._plugins = [];
+	}
+
+	public getPlugins() {
+		return this._plugins;
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {
@@ -136,6 +170,10 @@ export class ImageryManager {
 
 	public addLayer(layer: any) {
 		this._activeMap.addLayer(layer);
+	}
+
+	public removeLayer(layer: any) {
+		this._activeMap.removeLayer(layer);
 	}
 
 	public addVectorLayer(layer: any): void {

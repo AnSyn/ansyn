@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { ImageryCommunicator } from '../api/imageryCommunicator';
+import { IImageryCommunicator } from '../api/imageryCommunicator';
 import { Position } from '@ansyn/core';
 /**
  * Created by AsafMasa on 25/04/2017.
@@ -25,6 +25,7 @@ export interface IMap {
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	setLayer(layer: any, extent?: Extent): void;
 	addLayer(layer: any): void;
+	removeLayer(layer: any): void;
 	addVectorLayer(layer: any): void;
 	removeVectorLayer(layer: any): void;
 	setPosition(Position): void;
@@ -39,14 +40,12 @@ export interface IMapComponent {
 	createMap(layers: any, position?: Position): void;
 }
 
-export interface IMapState {
-	mapStateType: string;
+export interface IMapPlugin {
+	pluginName: string;
+	isEnabled: boolean;
 
-	setImageryCommunicator(imageryCommunicator: ImageryCommunicator): void;
-}
-
-export interface IPlugginCommunicator {
-	plugginId: string;
+	setImageryCommunicator(imageryCommunicator: IImageryCommunicator): void;
+	dispose();
 }
 
 export interface Extent {

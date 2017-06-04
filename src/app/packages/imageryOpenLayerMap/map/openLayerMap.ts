@@ -121,6 +121,14 @@ export class OpenLayerMap implements IMap {
         this._mapObject.addLayer(layer);
     }
 
+	public removeLayer(layer: any): void {
+		const index = this._mapLayers.indexOf(layer);
+		if (index > -1) {
+			this._mapLayers.splice(layer);
+			this._mapObject.removeLayer(layer);
+		}
+	}
+
     // In the future we'll use @ansyn/map-source-provider
     public addVectorLayer(layer: any): void {
         const vectorLayer = new ol.layer.Tile({

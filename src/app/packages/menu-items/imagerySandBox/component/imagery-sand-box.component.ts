@@ -2,7 +2,7 @@
  * Created by AsafMas on 10/05/2017.
  */
 import { Component, OnInit } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 import * as turf from '@turf/turf';
 
@@ -122,5 +122,10 @@ export class ImagerySandBoxComponent implements OnInit {
 
 	public setActiveMap(mapType: string) {
 		this.imageryCommunicatorService.provideCommunicator('imagery1').setActiveMap(mapType);
+	}
+
+	private toggleDrawCenterPluggin() {
+		const plugin: IMapPlugin = this.imageryCommunicatorService.provideCommunicator('imagery1').getPlugin("openLayerCenterMarker");
+		plugin.isEnabled = !plugin.isEnabled;
 	}
 }

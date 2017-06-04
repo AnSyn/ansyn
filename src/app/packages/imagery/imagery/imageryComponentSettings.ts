@@ -7,5 +7,5 @@ export class ImageryComponentSettings {
 	data: {
 		position: Position
 	};
-	mapTypes: string[];
+	mapType: string;
 }

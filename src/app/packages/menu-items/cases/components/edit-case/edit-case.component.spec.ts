@@ -76,7 +76,7 @@ describe('EditCaseComponent', () => {
 			template = fixture.nativeElement;
 		});
 
-		it('input name text should current case_model name', async(() => {
+	xit('input name text should current case_model name', async(() => {
 			let input = template.querySelector("input[name='name']");
 			fixture.detectChanges();
 			fixture.whenStable().then(() => {

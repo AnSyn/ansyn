@@ -118,7 +118,7 @@ export class EditCaseComponent implements OnInit {
 
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
-		})
+		});
 	}
 
 	close(): void {

@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryManager } from '../manager/imageryManager';
-import { Extent, IMap, IPlugginCommunicator } from '../model/model';
+import { Extent, IMap, IMapPlugin } from '../model/model';
 import { Position } from '@ansyn/core';
 
 import * as _ from 'lodash';
@@ -9,7 +9,6 @@ import * as _ from 'lodash';
  * Created by AsafMasa on 27/04/2017.
  */
 export interface IImageryCommunicator {
-	plugginCommunicatorAdded: EventEmitter<string>;
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<{id: string, position: Position}>;
 
@@ -20,6 +19,7 @@ export interface IImageryCommunicator {
 	setActiveMap(mapType: string);
 	setLayer(layer: any, extent?: Extent);
 	addLayer(layer: any);
+	removeLayer(layer: any);
 	addVectorLayer(layer: any): void;
 	removeVectorLayer(layer: any): void;
 	setPosition(Position): void;
@@ -27,24 +27,20 @@ export interface IImageryCommunicator {
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void
 	getActiveMapObject(): IMap;
 	getCenter(): GeoJSON.Point;
-	getPlugginCommunicator(plugginId: string): IPlugginCommunicator;
-	registerPlugginCommunicator(plugginId: string, plugginCommunicator: IPlugginCommunicator);
+
+	getPlugin(pluginName: string): IMapPlugin;
 }
 
 export class ImageryCommunicator implements IImageryCommunicator {
 	private _manager: ImageryManager;
 	private _managerSubscriptions;
-	private _plugginCommunicators: { [id: string]: IPlugginCommunicator };
 
 	public positionChanged: EventEmitter<{id: string, position: Position}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public plugginCommunicatorAdded: EventEmitter<string>;
 
 	constructor(private _id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: Position}>();
-		this.plugginCommunicatorAdded = new EventEmitter<string>();
-		this._plugginCommunicators = {};
 	}
 
 	private registerToManagerEvents() {
@@ -54,7 +50,6 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: Position ) => {
 			this.positionChanged.emit({id: this._id, position});
 		}));
-
 	}
 
 	private unregisterToManagerEvents() {
@@ -88,7 +83,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 	}
 	public updateSize(): void {
 		if (!this._manager) {
-			console.warn(`'id ${this._id}', can't update size communicator manager is not set`);
+			console.warn(`'id ${this._id}', can't update size communicator manager is not set'`);
 			return;
 		}
 		return this._manager.updateSize();
@@ -109,17 +104,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 		this._manager.setPosition(position);
 	}
 
-	public registerPlugginCommunicator(plugginId: string, plugginCommunicator: IPlugginCommunicator) {
-		if (this._plugginCommunicators[plugginId]) {
-			throw new Error(`'Pluggin Communicator ${plugginId} is already registered.'`);
-		}
-
-		this._plugginCommunicators[plugginId] = plugginCommunicator;
-		this.plugginCommunicatorAdded.emit(plugginId);
-	}
-
-	public getPlugginCommunicator(plugginId: string): IPlugginCommunicator {
-		return this._plugginCommunicators[plugginId];
+	public getPlugin(pluginName: string): IMapPlugin {
+		const existingPlugins = this._manager.getPlugins();
+		let pluginResult: IMapPlugin = existingPlugins.find((plugin: IMapPlugin) => plugin.pluginName === pluginName);
+		return pluginResult;
 	}
 
 	public setLayer(layer: any, extent?: Extent) {
@@ -128,6 +116,10 @@ export class ImageryCommunicator implements IImageryCommunicator {
 
 	public addLayer(layer: any) {
 		this._manager.addLayer(layer);
+	}
+
+	public removeLayer(layer: any) {
+		this._manager.removeLayer(layer);
 	}
 
     public addVectorLayer(layer: any): void {

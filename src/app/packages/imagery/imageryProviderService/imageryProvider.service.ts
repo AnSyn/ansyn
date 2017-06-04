@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IMapState } from '../model/model';
-import { ImageryCommunicator } from '../api/imageryCommunicator';
+import { IMapPlugin } from '../model/model';
+import { IImageryCommunicator } from '../api/imageryCommunicator';
 /**
  * Created by AsafMasa on 24/04/2017.
  */
@@ -40,18 +40,18 @@ export class ImageryProviderService {
 		return providedMap;
 	}
 
-	public createMapState(mapState: string, imageryCommunicator: ImageryCommunicator): IMapState {
+	public createMapState(mapState: string, imageryCommunicator: IImageryCommunicator): IMapPlugin {
 		const mapStateObject = this.provideMapState(mapState);
 		mapStateObject.setImageryCommunicator(imageryCommunicator);
 		return mapStateObject;
 	}
 
-	private provideMapState(mapState: string): IMapState {
+	private provideMapState(mapState: string): IMapPlugin {
 		if (!this._mapStatesProviders[mapState]) {
 			throw new Error(`'Map State Provider ${mapState} doesn't exist.'`);
 		}
 
-		const providedState = this._mapStatesProviders[mapState]();
+		const providedState = new this._mapStatesProviders[mapState](mapState);
 		return providedState;
 	}
 }

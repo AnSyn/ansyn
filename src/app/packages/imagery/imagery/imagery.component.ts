@@ -18,19 +18,12 @@ import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 export class ImageryComponent implements OnInit, OnDestroy {
 
 	@ViewChild('map_component_elem', {read: ViewContainerRef}) map_component_elem: ViewContainerRef;
-	
-	@Input() public mapComponentSettings: ImageryComponentSettings;
-	
-	private _mapComponentRef: ComponentRef<any>;
-	
-	private _manager: ImageryManager;
 
-	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
-				private componentFactoryResolver: ComponentFactoryResolver,
-				private imageryProviderService: ImageryProviderService,
-				private mapSourceProviderContainerService: MapSourceProviderContainerService,
-				@Inject(ImageryConfig) private config:IImageryConfig) {
-	}
+	@Input() public mapComponentSettings: ImageryComponentSettings;
+
+	private _mapComponentRef: ComponentRef<any>;
+
+	private _manager: ImageryManager;
 
 	ngOnInit() {
 		if (!this.mapComponentSettings) {
@@ -41,11 +34,17 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 		this._manager = new ImageryManager(this.mapComponentSettings.id, this.imageryProviderService,
 			this.componentFactoryResolver, this.map_component_elem,
-			this._mapComponentRef, this.mapSourceProviderContainerService, this.config);
+			this._mapComponentRef, this.mapSourceProviderContainerService, this.config, this.mapComponentSettings, imageryCommunicator);
 		this._manager.setActiveMap(this.mapComponentSettings.settings[0].mapType, this.mapComponentSettings.data.position);
 
-
 		imageryCommunicator.init(this._manager);
+	}
+
+	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
+				private componentFactoryResolver: ComponentFactoryResolver,
+				private imageryProviderService: ImageryProviderService,
+				private mapSourceProviderContainerService: MapSourceProviderContainerService,
+				@Inject(ImageryConfig) private config:IImageryConfig) {
 	}
 
 	ngOnDestroy() {

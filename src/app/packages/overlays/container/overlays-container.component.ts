@@ -78,7 +78,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
             .subscribe(data => {
                 const id = data.element.id;
-                this.store.dispatch(new overlaysAction.DisplayOverlayAction(id))
+                this.store.dispatch(new overlaysAction.DisplayOverlayAction(id));
                 if (this.selectedOverlays.indexOf(id) === -1) {
                     this.store.dispatch(new SelectOverlayAction(id));
                 }
@@ -95,7 +95,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     }
 
     demo(): void {
-        this.store.dispatch(new overlaysAction.DemoAction('tmp'))
+        this.store.dispatch(new overlaysAction.DemoAction('tmp'));
     }
 
     init(): void {
@@ -122,11 +122,11 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             .skip(1)
             .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
             .map((data: IOverlayState) => data.selectedOverlays)
-            .subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays)
+            .subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);
 
         this.effects.onRedrawTimeline$.subscribe(() => {
             this.redraw$.next(Math.random());
-        })    
+        });    
         //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }
 

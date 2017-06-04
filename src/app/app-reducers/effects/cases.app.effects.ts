@@ -92,23 +92,6 @@ export class CasesAppEffects {
 			return new LoadOverlaysAction(overlayFilter);
 		});
 
-	@Effect()
-	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$
-		.ofType(MapActionTypes.POSITION_CHANGED)
-		.withLatestFrom(this.store$.select('cases'))
-		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
-			const caseSelected: Case = state.selected_case;
-			
-			if(!caseSelected){
-				return Observable.empty();
-			}
-			
-			caseSelected.state.maps = {...caseSelected.state.maps,position: action.payload};
-			
-			return this.casesService.updateCase(caseSelected).map((updated_case) => {
-				return new UpdateCaseSuccessAction(updated_case);
-			});
-		});
 	
 	constructor(private actions$: Actions, private store$: Store<IAppState>, private casesService: CasesService){}
 

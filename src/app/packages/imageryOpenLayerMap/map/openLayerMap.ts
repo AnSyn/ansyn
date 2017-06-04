@@ -7,7 +7,7 @@ import { Position } from '@ansyn/core';
 import { EventEmitter } from '@angular/core';
 import * as ol from 'openlayers';
 import { Extent } from '@ansyn/imagery';
-
+    
 export class OpenLayerMap implements IMap {
 
     private _mapType: string;
@@ -214,6 +214,10 @@ export class OpenLayerMap implements IMap {
             })
         });
         this.mapObject.addLayer(layer);
+    }
+
+    public togglePointerMove(){
+
     }
 
     // IMap End

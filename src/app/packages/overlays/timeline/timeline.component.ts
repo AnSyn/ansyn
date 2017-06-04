@@ -62,7 +62,7 @@ export class TimelineComponent implements OnInit {
             if(this.drops){
                 this.eventDropsHandler();
             }
-        })
+        });
     }
     
     clickEvent() {
@@ -91,7 +91,7 @@ export class TimelineComponent implements OnInit {
                 }
                 return;
             }
-        }
+        };
     }
 
     selectAndShowDrop(element,event,data,index,nodes) {
@@ -113,8 +113,8 @@ export class TimelineComponent implements OnInit {
             .zoomend((a, b, c) => this.emitter.provide('timeline:zoomend').next({ a, b, c }))
             .click(this.clickEvent())
             .dblclick(() => {
-                d3.event.stopPropagation()
-            })
+                d3.event.stopPropagation();
+            });
 
         const dataSet = this.drops.map(entities => ({
             name: entities.name || "",

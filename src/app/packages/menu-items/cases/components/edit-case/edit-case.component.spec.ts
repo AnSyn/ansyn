@@ -4,7 +4,7 @@ import { HttpModule } from "@angular/http";
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { casesConfig } from '@ansyn/menu-items/cases';
 

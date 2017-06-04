@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetection
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction } from '../../actions/cases.actions';
 import * as _ from "lodash";
 import { Case } from '../../models/case.model';
@@ -60,7 +60,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getCloneActiveCase(case_state: ICasesState): Case {
-		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id == case_state.active_case_id);
+		let s_case: Case = case_state.selected_case;//case_state.cases.find((case_value: Case) => case_value.id == case_state.active_case_id);
 		if(s_case) {
 			s_case = _.cloneDeep(s_case);
 			this.on_edit_case = true;
@@ -77,7 +77,9 @@ export class EditCaseComponent implements OnInit {
 			last_modified: new Date(),
 			state: {
 				selected_overlays_ids: [],
+				selected_context_id: "",
 				maps: {
+					position:{},
 					layouts_index: 0,
 					active_map_id: 'imagery1',
 					data: [

@@ -18,8 +18,6 @@ import { Context } from '../models/context.model';
 @Injectable()
 export class CasesEffects {
 
-	constructor(private actions$: Actions, private casesService: CasesService, private store: Store<ICasesState>){}
-
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
@@ -43,7 +41,7 @@ export class CasesEffects {
 			return this.casesService.createCase(action.payload)
 				.map((added_case: Case) => {
 					return new AddCaseSuccessAction(added_case);
-				})
+				});
 		}).share();
 
 	@Effect()
@@ -52,7 +50,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => state.active_case_id)
 		.switchMap((active_case_id: string) => {
 			return this.casesService.removeCase(active_case_id).map((deleted_case: Case ) => {
-				return new DeleteCaseSuccessAction(deleted_case)
+				return new DeleteCaseSuccessAction(deleted_case);
 			});
 		}).share();
 
@@ -62,7 +60,7 @@ export class CasesEffects {
 		.switchMap((action: {payload: Case}) => {
 			return this.casesService.updateCase(action.payload)
 				.map((updated_case: Case ) => {
-					return new UpdateCaseSuccessAction(updated_case)
+					return new UpdateCaseSuccessAction(updated_case);
 				});
 		}).share();
 
@@ -70,7 +68,7 @@ export class CasesEffects {
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL)
 		.map((action) => {
-			return action
+			return action;
 		}).share();
 
 	@Effect({dispatch: false})
@@ -99,8 +97,11 @@ export class CasesEffects {
 			} else {
 				observable = this.casesService.loadContexts();
 			}
-			return observable.map((contexts) => { return new LoadContextsSuccessAction(contexts)});
+			return observable.map((contexts) => { 
+				return new LoadContextsSuccessAction(contexts);
+			});
 		}).share();
 
+	constructor(private actions$: Actions, private casesService: CasesService, private store: Store<ICasesState>){}	
 }
 

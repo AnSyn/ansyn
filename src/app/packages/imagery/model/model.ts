@@ -44,7 +44,7 @@ export interface IMapPlugin {
 	pluginName: string;
 	isEnabled: boolean;
 
-	setImageryCommunicator(imageryCommunicator: IImageryCommunicator): void;
+	init(): void;
 	dispose();
 }
 

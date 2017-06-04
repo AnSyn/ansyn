@@ -31,8 +31,10 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		return this._isEnabled;
 	}
 
-	constructor(mapStateName: string) {
-		this.pluginName = mapStateName;
+	constructor(pluginName: string, imageryCommunicator: IImageryCommunicator) {
+		this.pluginName = pluginName;
+		this._imageryCommunicator = imageryCommunicator;
+
 		this._isEnabled = true;
 
 		this._iconStyle = new ol.style.Style({
@@ -47,9 +49,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		this._subscriptions = [];
 	}
 
-	public setImageryCommunicator(imageryCommunicator: IImageryCommunicator): void {
-		this._imageryCommunicator = imageryCommunicator;
-
+	public init(): void {
 		this.register();
 	}
 

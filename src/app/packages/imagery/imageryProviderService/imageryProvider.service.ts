@@ -9,11 +9,11 @@ import { IImageryCommunicator } from '../api/imageryCommunicator';
 export class ImageryProviderService {
 
 	private _mapProviders: { [id: string]: any };
-	private _mapStatesProviders: { [id: string]: any };
+	private _mapPluginProviders: { [mapType: string]: [{"pluginType": string, "pluginClass": any}] };
 
 	constructor() {
 		this._mapProviders = {};
-		this._mapStatesProviders = {};
+		this._mapPluginProviders = {};
 	}
 
 	public registerMapProvider(mapType: string, component: any) {
@@ -24,34 +24,37 @@ export class ImageryProviderService {
 		this._mapProviders[mapType] = component;
 	}
 
-	public registerMapStateProvider(mapState: string, mapStateCreateMethod: any) {
-		if (this._mapStatesProviders[mapState]) {
-			throw new Error(`'Map State Provider ${mapState} is already registered.'`);
+	public registerPlugin(mapType: string, pluginName: string, pluginClass: any) {
+
+		if (!this._mapPluginProviders[mapType]) {
+			this._mapPluginProviders[mapType] = [{"pluginType": pluginName, "pluginClass": pluginClass}];
+		} else {
+			this._mapPluginProviders[mapType].push({"pluginType": pluginName, "pluginClass": pluginClass});
 		}
-		this._mapStatesProviders[mapState] = mapStateCreateMethod;
 	}
 
 	public provideMap(mapType: string): any {
 		if (!this._mapProviders[mapType]) {
-			throw new Error(`'Map Provider ${mapType} doesn't exist.'`);
+			throw new Error(`'mapType ${mapType} doesn't exist, can't provide it`);
 		}
 
 		const providedMap = this._mapProviders[mapType];
 		return providedMap;
 	}
 
-	public createMapState(mapState: string, imageryCommunicator: IImageryCommunicator): IMapPlugin {
-		const mapStateObject = this.provideMapState(mapState);
-		mapStateObject.setImageryCommunicator(imageryCommunicator);
-		return mapStateObject;
-	}
-
-	private provideMapState(mapState: string): IMapPlugin {
-		if (!this._mapStatesProviders[mapState]) {
-			throw new Error(`'Map State Provider ${mapState} doesn't exist.'`);
+	public createPlugins(mapType: string, imageryCommunicator: IImageryCommunicator): IMapPlugin[] {
+		const pluginSettings = this._mapPluginProviders[mapType];
+		if (!pluginSettings) {
+			return null;
 		}
 
-		const providedState = new this._mapStatesProviders[mapState](mapState);
-		return providedState;
+		const plugins: IMapPlugin[] = [];
+		pluginSettings.forEach(settings => {
+			const providedPlugin: IMapPlugin = new settings.pluginClass(settings.pluginType, imageryCommunicator);
+			providedPlugin.init();
+			plugins.push(providedPlugin);
+		});
+
+		return plugins;
 	}
 }

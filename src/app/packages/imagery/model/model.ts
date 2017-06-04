@@ -41,7 +41,7 @@ export interface IMapComponent {
 }
 
 export interface IMapPlugin {
-	pluginName: string;
+	pluginType: string;
 	isEnabled: boolean;
 
 	init(): void;

@@ -7,7 +7,8 @@ import { Position } from '@ansyn/core';
 import * as ol from 'openlayers';
 
 export class CenterMarkerPlugin implements IMapPlugin {
-	pluginName: string;
+	static s_pluginType = 'openLayerCenterMarker';
+	pluginType: string;
 	private _subscriptions;
 	private _imageryCommunicator: IImageryCommunicator;
 
@@ -31,8 +32,8 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		return this._isEnabled;
 	}
 
-	constructor(pluginName: string, imageryCommunicator: IImageryCommunicator) {
-		this.pluginName = pluginName;
+	constructor(imageryCommunicator: IImageryCommunicator) {
+		this.pluginType = CenterMarkerPlugin.s_pluginType;
 		this._imageryCommunicator = imageryCommunicator;
 
 		this._isEnabled = true;

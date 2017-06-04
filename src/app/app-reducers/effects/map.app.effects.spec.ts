@@ -10,7 +10,7 @@ import { MapAppEffects } from './map.app.effects';
 import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { configuration } from "configuration/configuration";
 
 class SourceProviderMock1 implements BaseSourceProvider {

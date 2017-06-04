@@ -3,11 +3,15 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
+import { defaultCase } from './cases/default_case';
+
 export const configuration = {
 	env: 'dev',
 	production: false,
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost:9001/api/v1/cases'
+		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
+		casesPaginationLimit: 15,
+		defaultCase
 	},
 	LayersManagerConfig: {
 		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'
@@ -15,7 +19,7 @@ export const configuration = {
 	OverlaysConfig: {
 		baseUrl: 'http://localhost:9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
-		overlaysByTimeAndPolygon : 'overlays/find',
+		overlaysByTimeAndPolygon : 'overlays/',
 		defaultApi: 'overlays',
 		searchByCase: false,
 		overlayeSource: 'IDAHO'

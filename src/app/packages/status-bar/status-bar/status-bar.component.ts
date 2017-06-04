@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout } from '../reducers/status-bar.reducer';
 import { ChangeLayoutAction } from '../actions/status-bar.actions';
@@ -14,6 +14,7 @@ export class StatusBarComponent implements OnInit {
 	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar").map((state: IStatusBarState) => state.layouts).distinctUntilChanged(isEqual);
 	selected_layout_index$: Observable<number> = this.store.select("status_bar").map((state: IStatusBarState) => state.selected_layout_index).distinctUntilChanged(isEqual);
 	selected_layout_index: number;
+	@Input() selected_case_name: string;
 
 	ngOnInit(): void {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {

@@ -18,11 +18,16 @@ export const CasesActionTypes = {
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
-	SELECT_CASE: 'SELECT_CASE',
+	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
 
 	LOAD_CONTEXTS: 'LOAD_CONTEXTS',
 	LOAD_CONTEXTS_SUCCESS: 'LOAD_CONTEXTS_SUCCESS',
 
+	LOAD_CASE: 'LOAD_CASE',
+	LOAD_CASE_SUCCESS: 'LOAD_CASE_SUCCESS',
+
+	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
+	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS'
 };
 
 export type CasesActions = any;
@@ -73,8 +78,8 @@ export class CloseModalAction implements Action{
 	type = CasesActionTypes.CLOSE_MODAL;
 	constructor(public payload?: any){}
 }
-export class SelectCaseAction implements Action{
-	type = CasesActionTypes.SELECT_CASE;
+export class SelectCaseByIdAction implements Action{
+	type = CasesActionTypes.SELECT_CASE_BY_ID;
 	constructor(public payload: string){
 	}
 }
@@ -86,4 +91,19 @@ export class LoadContextsSuccessAction implements Action{
 	type = CasesActionTypes.LOAD_CONTEXTS_SUCCESS;
 	constructor(public payload: Context[]){}
 }
-
+export class LoadCaseAction implements Action{
+	type = CasesActionTypes.LOAD_CASE;
+	constructor(public payload: string){}
+}
+export class LoadCaseSuccessAction implements Action{
+	type = CasesActionTypes.LOAD_CASE_SUCCESS;
+	constructor(public payload: Case){}
+}
+export class LoadDefaultCaseAction implements Action {
+	type = CasesActionTypes.LOAD_DEFAULT_CASE;
+	constructor(public payload?: Case) {}
+}
+export class LoadDefaultCaseSuccessAction implements Action {
+	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
+	constructor(public payload: Case) {}
+}

@@ -1,18 +1,23 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
+import { isNil, cloneDeep } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
-	selected_case: Case,
-	active_case_id: string,
-	modal: boolean,
-	contexts: Context[],
-	contexts_loaded: boolean
+	unlisted_case: Case;
+	default_case: Case;
+	selected_case: Case;
+	active_case_id: string;
+	modal: boolean;
+	contexts: Context[];
+	contexts_loaded: boolean;
 }
 export const initialCasesState: ICasesState = {
 	cases: [],
+	unlisted_case: null,
 	selected_case: null,
+	default_case: {},
 	active_case_id: "",
 	modal: false,
 	contexts: [],
@@ -32,7 +37,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 				action.payload,
 				...state.cases,
 			];
-			return Object.assign({}, state, {cases: cases_added, selected_case: action.payload });
+			return Object.assign({}, state, {cases: cases_added });
 
 		case CasesActionTypes.OPEN_MODAL:
 			return Object.assign({}, state, {active_case_id: action.payload.case_id , modal: true});
@@ -40,27 +45,31 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.CLOSE_MODAL:
 			return Object.assign({}, state, {active_case_id: null, modal: false});
 
-		case CasesActionTypes.UPDATE_CASE:
-			return state;
+		// case CasesActionTypes.UPDATE_CASE:
+		// 	return state;
 
 		// reference
 		case CasesActionTypes.UPDATE_CASE_SUCCESS:
 			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == action.payload.id);
-
-			let indexOfUpdated = state.cases.indexOf(old_case);
-			let updated_case = action.payload;
+			if(!old_case){
+				if(action.payload.id == state.selected_case.id){
+					return {...state, selected_case: action.payload};
+				}
+			}
+			const indexOfUpdated = state.cases.indexOf(old_case);
+			const updated_case = action.payload;
 
 			Object.keys(old_case).forEach( (key: string) => {
 				old_case[key] = updated_case[key]
 			});
 
-			let cases_updated: Case[] = [
+			const cases_updated: Case[] = [
 				...state.cases.slice(0, indexOfUpdated),
 				old_case,
 				...state.cases.slice(indexOfUpdated + 1, state.cases.length)
 			];
-
 			return Object.assign({}, state, {cases: cases_updated});
+
 
 		case CasesActionTypes.LOAD_CASES:
 			return state;
@@ -84,8 +93,15 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			];
 			return Object.assign({}, state, {cases});
 
-		case CasesActionTypes.SELECT_CASE:
-			const s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
+		case CasesActionTypes.SELECT_CASE_BY_ID:
+			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
+			if(isNil(s_case)){
+				if(state.unlisted_case && state.unlisted_case.id == action.payload) {
+					s_case = state.unlisted_case;
+				} else if(state.default_case && state.default_case.id == action.payload) {
+					s_case = state.default_case;
+				}
+			}
 			return Object.assign({}, state, { selected_case: s_case });
 
 		case CasesActionTypes.LOAD_CONTEXTS:
@@ -94,7 +110,21 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
 			return Object.assign({}, state, {contexts: action.payload, contexts_loaded: true});
 
+		case CasesActionTypes.LOAD_CASE:
+			return Object.assign({}, state);
+
+		case CasesActionTypes.LOAD_CASE_SUCCESS:
+			return Object.assign({}, state, {unlisted_case: action.payload});
+
+		case CasesActionTypes.LOAD_DEFAULT_CASE:
+			return Object.assign({}, state);
+
+		case CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS:
+			return Object.assign({}, state, {default_case: action.payload});
+
+
+
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 }

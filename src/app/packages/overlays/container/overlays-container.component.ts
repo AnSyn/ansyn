@@ -42,11 +42,11 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     public subscribers: any = {};
 
 
-    constructor(private store: Store <IOverlayState> , 
-                private overlaysService: OverlaysService, 
+    constructor(private store: Store <IOverlayState> ,
+                private overlaysService: OverlaysService,
                 private emitter: TimelineEmitterService,
-                private effects: OverlaysEffects    
-                ) 
+                private effects: OverlaysEffects
+                )
     {
         this.redraw$ = new BehaviorSubject(0);
         this.configuration = {
@@ -71,10 +71,10 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        
+
         this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
             .subscribe(data => this.toggleOverlay(data.element.id));
-        
+
         this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
             .subscribe(data => {
                 const id = data.element.id;
@@ -104,7 +104,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             .distinctUntilChanged(this.overlaysService.compareOverlays)
             .filter(data => !isEmpty(data)) //@todo change to isEmpty
             .map((data: any) => {
-                
+
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
                     configuration: data.queryParams 
@@ -116,8 +116,8 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                 this.drops = data.overlay;
             });
 
-        
-            
+
+
         this.subscribers.selected = this.store.select('overlays')
             .skip(1)
             .distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))

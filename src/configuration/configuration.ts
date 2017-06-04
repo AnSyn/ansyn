@@ -1,8 +1,12 @@
+import { defaultCase } from './cases/default_case';
+
 export const configuration = {
 	env: 'default',
 	production: false,
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost:9001/api/v1/cases'
+		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
+		casesPaginationLimit: 15,
+		defaultCase
 	},
 	LayersManagerConfig: {
 		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'

@@ -1,6 +1,6 @@
 import { LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { BeginLayerTreeLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
@@ -26,7 +26,7 @@ describe('LayersAppEffects', () => {
 	it('selectCase$', () => {
 		let selectedCaseId = 'asdfasdf';
 
-		effectsRunner.queue(new SelectCaseAction(selectedCaseId));
+		effectsRunner.queue(new SelectCaseByIdAction(selectedCaseId));
 		let result: BeginLayerTreeLoadAction ;
 		layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
 			result = _result;

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input } from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction, AnimationStartAction, AnimationEndAction } from "@ansyn/core";
 import { Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
@@ -30,11 +30,11 @@ const animations: any[] = [
 	animations
 })
 
-export class MenuComponent {
+export class MenuComponent implements AfterViewInit {
 
-	@Input("width") private width:number = DEFAULT_WIDTH;
-	@ViewChild("container") container:ElementRef;
-	@ViewChild("selected_component_elem", {read: ViewContainerRef}) selected_component_elem:ViewContainerRef;
+	@Input("width") private width: number = DEFAULT_WIDTH;
+	@ViewChild("container") container: ElementRef;
+	@ViewChild("selected_component_elem", { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
 	menu_items$: Observable<MenuItem[]> = this.store.select("menu")
 		.map((state: IMenuState) => state.menu_items)
@@ -43,9 +43,9 @@ export class MenuComponent {
 	menu_items: MenuItem[];
 
 	selected_menu_item_index$: Observable<number> =
-		this.store.select("menu")
-			.map((state: IMenuState) => state.selected_menu_item_index)
-			.distinctUntilChanged(_.isEqual);
+	this.store.select("menu")
+		.map((state: IMenuState) => state.selected_menu_item_index)
+		.distinctUntilChanged(_.isEqual);
 
 	selected_item_index: number;
 
@@ -54,12 +54,12 @@ export class MenuComponent {
 	private animation$: Observable<boolean> = this.store.select("menu").map((store: IMenuState) => store.animation).distinctUntilChanged(_.isEqual);
 	private animation: boolean;
 
-	private expand:boolean = false;
+	private expand: boolean = false;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver, private store: Store<IMenuState>) {
-		this.menu_items$.subscribe((menu_items: MenuItem[]) => {this.menu_items = menu_items});
+		this.menu_items$.subscribe((menu_items: MenuItem[]) => { this.menu_items = menu_items });
 		this.selected_menu_item_index$.subscribe(this.onSelectedIndexChange.bind(this));
-		this.animation$.subscribe((_animation: boolean) => {this.animation = _animation;});
+		this.animation$.subscribe((_animation: boolean) => { this.animation = _animation; });
 	}
 
 	get selected_item(): MenuItem {
@@ -69,7 +69,7 @@ export class MenuComponent {
 	onSelectedIndexChange(selected_item_index: number): void {
 		this.selected_item_index = selected_item_index;
 		let expand_result = this.itemSelected() && (!this.selected_component_ref || this.animation);
-		if(expand_result) this.componentChanges();
+		if (expand_result) this.componentChanges();
 		this.expand = expand_result;
 	}
 
@@ -79,36 +79,36 @@ export class MenuComponent {
 	}
 
 	destroyCurrentComponent(): void {
-		if(this.selected_component_ref) {
+		if (this.selected_component_ref) {
 			this.selected_component_ref.destroy();
 			this.selected_component_ref = undefined;
 		}
 	}
 
-	isActive(index:number): boolean{
+	isActive(index: number): boolean {
 		return this.selected_item_index == index;
 	}
 
 	buildCurrentComponent(): void {
-		if(this.itemSelected()) {
+		if (this.itemSelected() && this.selected_component_elem) {
 			let factory = this.componentFactoryResolver.resolveComponentFactory(this.selected_item.component);
 			this.selected_component_ref = this.selected_component_elem.createComponent(factory);
 		}
 	}
 
-	toggleItem(index:number): void {
-		if(this.selected_item_index == index){
+	toggleItem(index: number): void {
+		if (this.selected_item_index == index) {
 			this.closeMenu();
 		} else {
 			this.openMenu(index);
 		}
 	}
 
-	itemNotSelected():boolean {
+	itemNotSelected(): boolean {
 		return _.isNil(this.selected_item);
 	}
 
-	itemSelected():boolean {
+	itemSelected(): boolean {
 		return !this.itemNotSelected();
 	}
 
@@ -121,19 +121,23 @@ export class MenuComponent {
 	}
 
 	onStartAnimation(): void {
-		if(this.itemSelected()){
+		if (this.itemSelected()) {
 			this.store.dispatch(new AnimationStartAction())
 		}
 	}
 
-	onFinishAnimation(expand): void{
+	onFinishAnimation(expand): void {
 		this.store.dispatch(new AnimationEndAction());
 
-		if(!expand){
+		if (!expand) {
 			this.componentChanges();
-			if(this.itemSelected()){
+			if (this.itemSelected()) {
 				this.expand = true;
 			}
 		}
+	}
+
+	ngAfterViewInit() {
+		this.componentChanges();
 	}
 }

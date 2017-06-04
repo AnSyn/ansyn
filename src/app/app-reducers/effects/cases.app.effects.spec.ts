@@ -5,7 +5,7 @@ import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { UpdateCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
@@ -51,7 +51,7 @@ describe('CasesAppEffects', () => {
 		} as any;
 
 		store.dispatch(new AddCaseSuccessAction(icase_state.cases[0]));
-		store.dispatch(new SelectCaseAction(icase_state.selected_case.id));
+		store.dispatch(new SelectCaseByIdAction(icase_state.selected_case.id));
 	}));
 
 	beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {
@@ -176,7 +176,7 @@ describe('CasesAppEffects', () => {
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
 
-		effectsRunner.queue(new SelectCaseAction(caseItem.id));
+		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 
 		casesAppEffects.selectCase$.subscribe((result: LoadOverlaysAction) => {
 			expect(result instanceof LoadOverlaysAction).toBeTruthy();
@@ -191,7 +191,7 @@ describe('CasesAppEffects', () => {
 
 	it('On selectCase$ call to loadOverlaysAction with no params and recieve nothing ', () => {
 
-		effectsRunner.queue(new SelectCaseAction('tmp'));
+		effectsRunner.queue(new SelectCaseByIdAction('tmp'));
 		let result: any;
 
 		casesAppEffects.selectCase$.subscribe((_result: LoadOverlaysAction) => {

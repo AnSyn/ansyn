@@ -7,7 +7,7 @@ import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer'
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import {
-	AddCaseSuccessAction, SelectCaseAction,
+	AddCaseSuccessAction, SelectCaseByIdAction,
 	UpdateCaseSuccessAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -76,7 +76,7 @@ describe('StatusBarAppEffects', () => {
 		};
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
-		effectsRunner.queue(new SelectCaseAction(caseItem.id));
+		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
 			expect(result instanceof ChangeLayoutAction).toBeTruthy();
 			expect(result.payload).toEqual(layouts_index)

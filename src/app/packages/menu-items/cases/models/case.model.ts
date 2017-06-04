@@ -1,4 +1,5 @@
 import { MapState } from './map-state.model';
+import { Position } from '@ansyn/core';
 
 export type Case = {
 	id?:string;
@@ -8,7 +9,12 @@ export type Case = {
 	state?: {
 		selected_overlays_ids?: string[];
 		selected_context_id?: string;
-		maps?: {layouts_index: number, active_map_id: string, data: MapState[]},
+		maps?: {
+			layouts_index: number, 
+			active_map_id: string, 
+			data: MapState[],
+			position: any
+		},
 		time: {
 			type:string,
 			from: Date,
@@ -23,4 +29,4 @@ export type Case = {
 		region: {}
 
 	}
-}
+};

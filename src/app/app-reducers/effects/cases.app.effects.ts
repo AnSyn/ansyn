@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+	import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -97,12 +97,15 @@ export class CasesAppEffects {
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('cases'))
 		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
-			const selected_case: Case = state.cases.find((case_value) =>  case_value.id === state.selected_case_id);
-			if(!selected_case){
+			const caseSelected: Case = state.selected_case;
+			
+			if(!caseSelected){
 				return Observable.empty();
 			}
-			selected_case.state.maps = [{position: action.payload}];
-			return this.casesService.updateCase(selected_case).map((updated_case) => {
+			
+			caseSelected.state.maps = {...caseSelected.state.maps,position: action.payload};
+			
+			return this.casesService.updateCase(caseSelected).map((updated_case) => {
 				return new UpdateCaseSuccessAction(updated_case);
 			});
 		});

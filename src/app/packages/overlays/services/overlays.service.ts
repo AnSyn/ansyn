@@ -8,42 +8,45 @@ import * as _ from 'lodash';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import * as turf from '@turf/turf';
 
-export const  OverlaysConfig: InjectionToken <IOverlaysConfig> = new InjectionToken('overlays-config');
+export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 
 @Injectable()
 export class OverlaysService {
     constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
-        
+
     }
 
     //@todo move to cases
-    getByCase(url = "", params: any = { caseId : ':'}): Observable <any[]> {
+    getByCase(url = "", params: any = { caseId: ':' }): Observable<any[]> {
         return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));
     }
 
-    search(url = "", params: any = {}): Observable <any[]>{
-        return this.fetch(url || this.config.overlaysByTimeAndPolygon ,{
-            region : params.polygon,
-            timeRange :{
+    search(url = "", params: any = {}): Observable<any[]> {
+        let bbox = turf.bbox(params.polygon);
+        let bboxFeature = turf.bboxPolygon(bbox);
+        return this.fetch(url || this.config.overlaysByTimeAndPolygon, {
+            region: bboxFeature.geometry,
+            timeRange: {
                 start: params.from,
                 end: params.to
             }
         });
     }
 
-    fetch(url,params = undefined){
+    fetch(url, params = undefined) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers });
-        url = this.config.baseUrl.concat(url);    
-        if(params){
-           return this.http.post(url,params,options).map(this.extractData).catch(this.handleError);
+        url = this.config.baseUrl.concat(url);
+        if (params) {
+            return this.http.post(url, params, options).map(this.extractData).catch(this.handleError);
         }
-        return this.http.get(url,options).map(this.extractData).catch(this.handleError);
+        return this.http.get(url, options).map(this.extractData).catch(this.handleError);
     }
 
-    parseOverlayDataForDispaly(overlays = [], filters = {}): Array < any > {
+    parseOverlayDataForDispaly(overlays = [], filters = {}): Array<any> {
         let result = new Array();
         let overlaysData = new Array();
         if (!Object.keys(filters).length) {

@@ -15,6 +15,7 @@ import { CasesEffects } from './effects/cases.effects';
 import { CasesService, casesConfig } from './services/cases.service';
 import { Store } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SaveCaseComponent } from './components/save-case/save-case.component';
 
 @NgModule({
 	imports: [
@@ -25,7 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		EffectsModule.run(CasesEffects),
 		BrowserAnimationsModule
 	],
-	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent],
+	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })

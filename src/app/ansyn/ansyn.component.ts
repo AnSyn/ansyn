@@ -5,10 +5,11 @@ import { IStatusBarState, MapsLayout } from '@ansyn/status-bar/reducers/status-b
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { cloneDeep } from 'lodash'
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import * as _ from 'lodash';
 import "@ansyn/core/utils/clone-deep";
+import { ActivatedRoute, Params } from '@angular/router';
+import { LoadCaseAction, LoadDefaultCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -29,12 +30,22 @@ export class AnsynComponent implements OnInit{
 	selected_case: Case;
 	maps: any[];
 
-	constructor(private store: Store<IAppState>) {}
+	constructor(private store: Store<IAppState>, public activatedRoute: ActivatedRoute) {}
 
 	ngOnInit(): void {
 		this.selected_case$.subscribe((selected_case) => {this.selected_case = selected_case});
 		this.selected_layout$.subscribe((selected_layout) => {this.selected_layout = selected_layout});
-		this.maps$.subscribe((maps) => {this.maps = maps});
+		this.maps$.subscribe((maps) => {
+			this.maps = maps;
+		});
+
+		this.activatedRoute.params.subscribe((params: Params) => {
+			if(_.isNil(params['case_id'])) {
+				this.store.dispatch(new LoadDefaultCaseAction());
+			} else {
+				this.store.dispatch(new LoadCaseAction(params['case_id']));
+			}
+		})
 	}
 
 

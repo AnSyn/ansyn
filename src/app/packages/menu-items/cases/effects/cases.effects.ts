@@ -6,8 +6,10 @@ import { Store } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, CloseModalAction, DeleteCaseSuccessAction, LoadCasesAction,
-	LoadCasesSuccessAction, LoadContextsSuccessAction,
+	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, CloseModalAction, DeleteCaseSuccessAction, LoadCaseAction,
+	LoadCasesAction,
+	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
+	SelectCaseByIdAction, UpdateCaseAction,
 	UpdateCaseSuccessAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
@@ -26,8 +28,7 @@ export class CasesEffects {
 		.switchMap( ([action, state]: [LoadCasesAction, ICasesState]) => {
 			let last_case: Case = state.cases[state.cases.length - 1];
 			let last_id = last_case ? last_case.id : '-1';
-
-			return this.casesService.loadCases(last_id )
+			return this.casesService.loadCases(last_id)
 				.map(new_cases => {
 					return new LoadCasesSuccessAction(new_cases);
 				});
@@ -57,7 +58,11 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.switchMap((action: {payload: Case}) => {
+		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [action, state.default_case.id])
+		.switchMap( ([action, default_case_id]: [UpdateCaseAction, string]) => {
+			if(action.payload.id === default_case_id) {
+				return Observable.of(new UpdateCaseSuccessAction(action.payload));
+			}
 			return this.casesService.updateCase(action.payload)
 				.map((updated_case: Case ) => {
 					return new UpdateCaseSuccessAction(updated_case);
@@ -100,6 +105,48 @@ export class CasesEffects {
 			return observable.map((contexts) => { 
 				return new LoadContextsSuccessAction(contexts);
 			});
+		}).share();
+
+	@Effect()
+	loadCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.LOAD_CASE)
+		.withLatestFrom(this.store.select("cases"))
+		.switchMap( ([action, state]: [LoadCaseAction, ICasesState]) => {
+			const existing_case = state.cases.find(case_val => case_val.id == action.payload);
+
+			if(existing_case) {
+				return Observable.of(new SelectCaseByIdAction(existing_case.id) as any);
+			} else {
+				return this.casesService.loadCase(action.payload)
+					.map(new_cases => {
+						return new LoadCaseSuccessAction(new_cases);
+					});
+			}
+
+		}).share();
+
+	@Effect()
+	loadCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$
+		.ofType(CasesActionTypes.LOAD_CASE_SUCCESS)
+		.map( (action: LoadCaseSuccessAction) => {
+			return new SelectCaseByIdAction(action.payload.id);
+		}).share();
+
+
+	@Effect()
+	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
+		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
+		.switchMap( (action: LoadCaseSuccessAction) => {
+			return this.casesService.loadDefaultCase().map((default_case) => {
+				return new LoadDefaultCaseSuccessAction(default_case );
+			});
+		}).share();
+
+	@Effect()
+	loadDefaultCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$
+		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS)
+		.map( (action: LoadCaseSuccessAction) => {
+			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
 
 	constructor(private actions$: Actions, private casesService: CasesService, private store: Store<ICasesState>){}	

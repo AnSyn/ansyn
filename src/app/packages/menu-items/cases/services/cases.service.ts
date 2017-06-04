@@ -50,4 +50,15 @@ export class CasesService {
 	  return this.http.get(url).map((res) => res.json());
   }
 
+	loadCase(selected_case_id:string): Observable<any>  {
+		let url:string = `${this.base_url}/${selected_case_id}`;
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers});
+		return this.http.get(url, options).map(res => {
+			return res.json()
+		});
+	}
+	loadDefaultCase(){
+		return Observable.of(this.config.defaultCase);
+	}
 }

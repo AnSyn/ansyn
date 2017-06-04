@@ -1,6 +1,6 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
-	SelectCaseAction,
+	SelectCaseByIdAction,
 	UpdateCaseSuccessAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
@@ -37,7 +37,7 @@ describe('CasesReducer', () =>{
 		state.cases = [
 			{id: 'fake_case_id', name:'fake_case_name1'},
 		];
-		let action: SelectCaseAction = new SelectCaseAction('fake_case_id');
+		let action: SelectCaseByIdAction = new SelectCaseByIdAction('fake_case_id');
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selected_case.id).toEqual('fake_case_id');
 	});

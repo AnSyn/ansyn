@@ -5,6 +5,10 @@ import { AnsynComponent } from './ansyn/ansyn.component';
 const routes: Routes = [
 	{
 		path: '',
+		component: AnsynComponent,
+	},
+	{
+		path: ':case_id',
 		component: AnsynComponent
 	}
 ];

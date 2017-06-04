@@ -16,16 +16,19 @@ import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions
 import { IAppState } from '../';
 import { isEmpty } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
+import { Router } from '@angular/router';
+import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class CasesAppEffects {
 
 	@Effect()
-	selectOverlay$: Observable<UpdateCaseSuccessAction> = this.actions$
+	selectOverlay$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.cloneDeep()
-		.switchMap( ([action, state]: [SelectOverlayAction, ICasesState]) => {
+		.map( ([action, state]: [SelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 
 			if(!selected_case) {
@@ -41,18 +44,15 @@ export class CasesAppEffects {
 			if(!exist){
 				selected_case.state.selected_overlays_ids.push(action.payload);
 			}
-
-			return this.casesService.updateCase(selected_case).map((updated_case) => {
-				return new UpdateCaseSuccessAction(updated_case);
-			});
+			return new UpdateCaseAction(selected_case);
 		});
 
 	@Effect()
-	unSelectOverlay$: Observable<Action> = this.actions$
+	unSelectOverlay$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.cloneDeep()
-		.switchMap( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
+		.map( ([action, state]: [UnSelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 
 			if(!selected_case) {
@@ -68,31 +68,43 @@ export class CasesAppEffects {
 			if(exist_index !== -1){
 				selected_case.state.selected_overlays_ids.splice(exist_index, 1);
 			}
-
-			return this.casesService.updateCase(selected_case).map((updated_case) => {
-				return new UpdateCaseSuccessAction(updated_case);
-			});
+			return new UpdateCaseAction(selected_case);
 		});
 
+    //
+	// @Effect()
+	// selectCase$: Observable<LoadOverlaysAction|void> = this.actions$
+	// 	.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+	// 	.map(toPayload)
+	// 	.withLatestFrom(this.store$.select('cases'))
+	// 	.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
+	// 	.map( ([caseId, state]: [string, ICasesState]) =>  {
+	// 		const caseSelected: Case = state.selected_case;
+    //
+	// 		const overlayFilter = {
+	// 			to: caseSelected.state.time.to,
+	// 			from: caseSelected.state.time.from,
+	// 			polygon: caseSelected.state.region,
+	// 			caseId: caseId
+	// 		}
+	// 		return new LoadOverlaysAction(overlayFilter);
+    //
+	// 	})
 
-	@Effect()
-	selectCase$: Observable<LoadOverlaysAction|void> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(toPayload)
+
+	@Effect({dispatch: false})
+	selectCaseUpdateRouter$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.filter(action => !isEmpty(action))
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
-		.map( ([caseId, state]: [string, ICasesState]) =>  {
-			const caseSelected: Case = state.selected_case;
-			const overlayFilter = {
-				to: caseSelected.state.time.to,
-				from: caseSelected.state.time.from,
-				polygon: caseSelected.state.region,
-				caseId: caseId
-			};
-			return new LoadOverlaysAction(overlayFilter);
-		});
+		.switchMap( ([action, state]: [SelectCaseByIdAction, ICasesState]) =>  {
+			if(state.default_case && action.payload == state.default_case.id) {
+				return Observable.empty();
+			}
 
-	
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private casesService: CasesService){}
+			return this.router.navigate(['', action.payload]);
+		})
+
+	constructor(private actions$: Actions, private store$: Store<IAppState>, private casesService: CasesService, private router: Router) {}
 
 }

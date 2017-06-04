@@ -1,0 +1,18 @@
+<div class="save-case">
+  <button (click)="close()" class="close" type="button">
+    <span>×</span>
+  </button>
+
+  <form class="save-case-form" (submit)="onSubmitCase()" >
+
+    <input type="text" name="name" required [(ngModel)]="case_model.name" #name_input>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label>Name</label>
+
+    <div class="bottom-btns">
+      <button type="button" (click)="close()">Cancel</button>
+      <button type="submit">OK</button>
+    </div>
+  </form>
+</div>

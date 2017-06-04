@@ -1,4 +1,6 @@
 <div class="status-bar">
+	<b>{{selected_case_name}}</b>
+
 	<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
 
 		<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">

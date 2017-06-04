@@ -106,7 +106,7 @@ export class ImageryCommunicator implements IImageryCommunicator {
 
 	public getPlugin(pluginName: string): IMapPlugin {
 		const existingPlugins = this._manager.getPlugins();
-		let pluginResult: IMapPlugin = existingPlugins.find((plugin: IMapPlugin) => plugin.pluginName === pluginName);
+		let pluginResult: IMapPlugin = existingPlugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
 		return pluginResult;
 	}
 

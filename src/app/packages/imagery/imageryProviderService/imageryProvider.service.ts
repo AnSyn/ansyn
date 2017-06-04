@@ -24,12 +24,12 @@ export class ImageryProviderService {
 		this._mapProviders[mapType] = component;
 	}
 
-	public registerPlugin(mapType: string, pluginName: string, pluginClass: any) {
+	public registerPlugin(mapType: string, pluginType: string, pluginClass: any) {
 
 		if (!this._mapPluginProviders[mapType]) {
-			this._mapPluginProviders[mapType] = [{"pluginType": pluginName, "pluginClass": pluginClass}];
+			this._mapPluginProviders[mapType] = [{"pluginType": pluginType, "pluginClass": pluginClass}];
 		} else {
-			this._mapPluginProviders[mapType].push({"pluginType": pluginName, "pluginClass": pluginClass});
+			this._mapPluginProviders[mapType].push({"pluginType": pluginType, "pluginClass": pluginClass});
 		}
 	}
 
@@ -43,14 +43,14 @@ export class ImageryProviderService {
 	}
 
 	public createPlugins(mapType: string, imageryCommunicator: IImageryCommunicator): IMapPlugin[] {
-		const pluginSettings = this._mapPluginProviders[mapType];
-		if (!pluginSettings) {
+		const mapPluginProviders = this._mapPluginProviders[mapType];
+		if (!mapPluginProviders) {
 			return null;
 		}
 
 		const plugins: IMapPlugin[] = [];
-		pluginSettings.forEach(settings => {
-			const providedPlugin: IMapPlugin = new settings.pluginClass(settings.pluginType, imageryCommunicator);
+		mapPluginProviders.forEach(provider => {
+			const providedPlugin: IMapPlugin = new provider.pluginClass(imageryCommunicator);
 			providedPlugin.init();
 			plugins.push(providedPlugin);
 		});

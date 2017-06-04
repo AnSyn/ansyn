@@ -27,17 +27,16 @@ export class CesiumComponent implements OnInit, OnDestroy, IMapComponent {
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
-
+		this.mapCreated = new EventEmitter<IMap>();
 	}
 
 	createMap(layers: any) {
-		this.mapCreated = new EventEmitter<IMap>();
+		this._map = new CesiumMap(this.mapElement.nativeElement);
+		this.mapCreated.emit(this._map);
 	}
 
 	ngOnInit(): void {
 		console.log(`'cesiumComponent init'`);
-		this._map = new CesiumMap(this.mapElement.nativeElement);
-		this.mapCreated.emit(this._map);
 	}
 
 	ngOnDestroy(): void {

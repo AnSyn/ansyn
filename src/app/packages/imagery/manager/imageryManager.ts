@@ -65,7 +65,7 @@ export class ImageryManager {
 	}
 
 	public setActiveMap(activeMapType: string, position?: Position) {
-		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
+		// console.log(`'${this.id} setActiveMap ${mapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 			this.destroyActiveMapPlugins();

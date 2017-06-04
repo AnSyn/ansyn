@@ -34,7 +34,7 @@ describe('ImageryComponent', () => {
 		coordinates: [15.7, 37.9]
 	};
 
-	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapTypes: ['openLayerMap'], data:{position: {center: geoPoint, zoom: 0}}};
+	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapType: 'openLayerMap', data:{position: {center: geoPoint, zoom: 0}}};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

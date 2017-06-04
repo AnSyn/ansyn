@@ -58,12 +58,8 @@ export class ImageryManager {
 		}
 	}
 
-<<<<<<< HEAD
 	public setActiveMap(activeMapType: string, position?: Position) {
 		// console.log(`'${this.id} setActiveMap ${activeMapType} map'`);
-=======
-	public setActiveMap(activeMapType: string) {
->>>>>>> I added linter and there is the result
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -71,10 +67,6 @@ export class ImageryManager {
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {
-<<<<<<< HEAD
-		// console.log(`'${this.id} setActiveMap ${activeMap.mapType} map'`);
-=======
->>>>>>> I added linter and there is the result
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();
 	}

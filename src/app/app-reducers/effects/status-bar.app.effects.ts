@@ -21,7 +21,6 @@ import "@ansyn/core/utils/clone-deep";
 @Injectable()
 export class StatusBarAppEffects {
 
-
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
@@ -56,6 +55,8 @@ export class StatusBarAppEffects {
 
 	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}
 
+	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}	
+		
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;
 		if(selected_layout.maps_count !== case_maps_count){

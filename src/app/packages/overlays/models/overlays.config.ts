@@ -4,5 +4,5 @@ export interface IOverlaysConfig {
 	defaultApi: string;
 	overlaysByTimeAndPolygon: string;
 	searchByCase: boolean;
-	overlayeSource: string;
+	overlaySource: string;
 }

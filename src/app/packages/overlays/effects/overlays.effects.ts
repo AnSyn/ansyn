@@ -33,7 +33,7 @@ export class OverlaysEffects {
 				.map(data => {
 					data.forEach(item => {
 						item.date = item.photoTime;
-						item.sourceType = this.config.overlayeSource;
+						item.sourceType = this.config.overlaySource;
 					});
 					return new LoadOverlaysSuccessAction(data);
 				});

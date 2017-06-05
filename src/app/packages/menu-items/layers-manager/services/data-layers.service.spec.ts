@@ -5,6 +5,7 @@ import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
 import { HttpModule, Http, Headers, RequestOptions } from "@angular/http";
 import { DataLayersService, LayerRootsBundle } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
+import { configuration } from '../../../../../configuration/configuration';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -15,7 +16,7 @@ describe('DataLayersService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule],
-            providers: [DataLayersService,{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
+            providers: [DataLayersService,{ provide: layersConfig, useValue: configuration.LayersManagerConfig }]
         });
     });
 
@@ -62,6 +63,6 @@ describe('DataLayersService', () => {
 
         spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
         dataLayersService.getAllLayersInATree('caseId');
-        expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}/caseId/layers`);
+        expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}?case_id=caseId`);
     });
 });

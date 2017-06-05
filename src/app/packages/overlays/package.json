@@ -8,7 +8,7 @@
   },
   "author": "",
   "license": "ISC",
-  "peerDependencies" : {
-  	"event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64"
+  "peerDependencies": {
+    "event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64"
   }
 }

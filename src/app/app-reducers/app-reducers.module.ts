@@ -20,41 +20,48 @@ import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.re
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+
 export interface IAppState {
-	overlays: IOverlayState;
-	cases: ICasesState;
-	menu: IMenuState;
-	layers: ILayerState;
-	status_bar: IStatusBarState,
-	map: IMapState,
+    overlays: IOverlayState;
+    cases: ICasesState;
+    menu: IMenuState;
+    layers: ILayerState;
+    status_bar: IStatusBarState;
+    map: IMapState;
 }
 
 
 const reducers = {
-	overlays : OverlayReducer,
-	cases: CasesReducer,
-	menu: MenuReducer,
-	map: MapReducer,
-	layers: LayersReducer,
-	status_bar: StatusBarReducer
+    overlays: OverlayReducer,
+    cases: CasesReducer,
+    menu: MenuReducer,
+    map: MapReducer,
+    layers: LayersReducer,
+    status_bar: StatusBarReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-	return appReducer(state, action);
+    console.log(action.type);
+    return appReducer(state, action);
 }
 
 @NgModule({
-	imports: [
-		StoreModule.provideStore(reducer),
-		EffectsModule.run(MapAppEffects),
-		EffectsModule.run(CasesAppEffects),
-		EffectsModule.run(MenuAppEffects),
-		EffectsModule.run(LayersAppEffects),
-		EffectsModule.run(StatusBarAppEffects)
+    imports: [
+        StoreModule.provideStore(reducer),
+        StoreDevtoolsModule.instrumentOnlyWithExtension({
+            maxAge: 5
+        }),
+        EffectsModule.run(MapAppEffects),
+        EffectsModule.run(CasesAppEffects),
+        EffectsModule.run(MenuAppEffects),
+        EffectsModule.run(LayersAppEffects),
+        EffectsModule.run(StatusBarAppEffects)
 
-	]
+    ]
 })
 export class AppReducersModule {
 

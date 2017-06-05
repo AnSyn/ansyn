@@ -16,6 +16,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	private _existingLayer;
 
 	private _isEnabled: boolean;
+	
 	public set isEnabled(value: boolean) {
 		if (this._isEnabled !== value) {
 			this._isEnabled = value;

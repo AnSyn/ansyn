@@ -13,6 +13,7 @@ export interface ICasesState {
 	contexts: Context[];
 	contexts_loaded: boolean;
 }
+
 export const initialCasesState: ICasesState = {
 	cases: [],
 	unlisted_case: null,
@@ -59,8 +60,9 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			const indexOfUpdated = state.cases.indexOf(old_case);
 			const updated_case = action.payload;
 
+
 			Object.keys(old_case).forEach( (key: string) => {
-				old_case[key] = updated_case[key]
+				old_case[key] = updated_case[key];
 			});
 
 			const cases_updated: Case[] = [
@@ -85,7 +87,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return state;
 
 		case CasesActionTypes.DELETE_CASE_SUCCESS:
-			let case_to_remove: Case = state.cases.find((case_value: Case) => case_value.id == state.active_case_id);
+			let case_to_remove: Case = state.cases.find((case_value: Case) => case_value.id === state.active_case_id);
 			let case_to_remove_index: number = state.cases.indexOf(case_to_remove);
 			let cases: Case[] = [
 				...state.cases.slice(0, case_to_remove_index),
@@ -102,6 +104,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 					s_case = state.default_case;
 				}
 			}
+
 			return Object.assign({}, state, { selected_case: s_case });
 
 		case CasesActionTypes.LOAD_CONTEXTS:

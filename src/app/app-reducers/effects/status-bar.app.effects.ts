@@ -28,7 +28,7 @@ export class StatusBarAppEffects {
 		.cloneDeep()
 		.map( (selected_case: Case) =>  {
 			const layouts_index = selected_case.state.maps.layouts_index;
-			return new ChangeLayoutAction(+layouts_index)
+			return new ChangeLayoutAction(+layouts_index);
 		});
 
 	@Effect()
@@ -37,7 +37,7 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store, (action, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
 			const selected_case = state.cases.selected_case;
 			const selected_layout = _.cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
-			return [action, selected_case, selected_layout]
+			return [action, selected_case, selected_layout];
 		})
 		.filter(([action, selected_case, selected_layout]) => !_.isEmpty(selected_case))
 		.cloneDeep()
@@ -59,20 +59,29 @@ export class StatusBarAppEffects {
 		
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;
+		
 		if(selected_layout.maps_count !== case_maps_count){
 			if(case_maps_count < selected_layout.maps_count){
+				
 				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
 					const active_map_position = _.cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
-					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position))
+					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position));
 				}
-			} else if( selected_layout.maps_count < case_maps_count){
+			} 
+			else if( selected_layout.maps_count < case_maps_count){
+				
 				for (let i = selected_layout.maps_count; i < case_maps_count; i++){
 					selected_case.state.maps.data.pop();
 				}
+
 				const exist = selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id);
-				if(!exist) selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
+				
+				if(!exist) {
+					selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
+				}
 			}
 		}
+		
 		return selected_case;
 	}
 
@@ -86,5 +95,9 @@ export class StatusBarAppEffects {
 			mapType: defaultMapType
 		};
 		return mapStateCopy;
+		/*return {
+			id: `imagery${index}`,
+			settings: BaseSettings, data:{position}
+		};*/
 	}
 }

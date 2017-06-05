@@ -16,6 +16,11 @@ export class Map implements IMap {
     private _mapVectorLayers = [];
     public centerChanged: EventEmitter < GeoJSON.Point > ;
     public positionChanged: EventEmitter < MapPosition > ;
+    private _flags = {
+        pointerMoveListener : false
+    };
+
+
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
         this._mapType = 'openLayersMap';
@@ -229,6 +234,18 @@ export class Map implements IMap {
     }
 
     public togglePointerMove(){
+        if (!this._flags.pointerMoveListener) {
+           
+           this._flags.pointerMoveListener = this.mapObject.on('pointemove',e => {
+                console.log('pointer move ',e);
+            });
+        }
+        else{
+            this.mapObject.unByKey(this._flags.pointerMoveListener);
+            this._flags.pointerMoveListener = false;
+        }
+
+        
 
     }
 

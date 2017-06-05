@@ -25,6 +25,9 @@ import {OpenLayerIDAHOSourceProvider} from './app-models/map-source-providers/op
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
 
+
+
+
 @NgModule({
 	providers:[
 	],

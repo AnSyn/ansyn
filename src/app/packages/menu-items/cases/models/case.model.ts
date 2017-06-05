@@ -42,4 +42,4 @@ export type CaseMapState = {
 	mapType: string;
 }
 
-export const BaseSettings = {"mapType": "openLayerMap", "mapModes": []};
+export const BaseSettings = {mapType: "openLayerMap"};

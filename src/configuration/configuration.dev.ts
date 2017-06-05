@@ -19,7 +19,7 @@ export const configuration = {
 	OverlaysConfig: {
 		baseUrl: 'http://localhost:9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
-		overlaysByTimeAndPolygon : 'overlays/',
+		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',
 		searchByCase: false,
 		overlayeSource: 'IDAHO'

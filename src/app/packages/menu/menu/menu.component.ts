@@ -30,7 +30,7 @@ const animations: any[] = [
 	animations
 })
 
-export class MenuComponent implements AfterViewInit {
+export class MenuComponent implements AfterViewInit{
 
 	@Input("width") private width: number = DEFAULT_WIDTH;
 	@ViewChild("container") container: ElementRef;
@@ -56,10 +56,20 @@ export class MenuComponent implements AfterViewInit {
 
 	private expand: boolean = false;
 
-	constructor(public componentFactoryResolver: ComponentFactoryResolver, private store: Store<IMenuState>) {
-		this.menu_items$.subscribe((menu_items: MenuItem[]) => { this.menu_items = menu_items });
-		this.selected_menu_item_index$.subscribe(this.onSelectedIndexChange.bind(this));
-		this.animation$.subscribe((_animation: boolean) => { this.animation = _animation; });
+	constructor(public componentFactoryResolver: ComponentFactoryResolver,
+		private store: Store<IMenuState>) {
+
+		this.menu_items$.subscribe((menu_items: MenuItem[]) => {
+			this.menu_items = menu_items;
+		});
+
+		this.selected_menu_item_index$
+			.debug()
+			.subscribe(this.onSelectedIndexChange.bind(this));
+
+		this.animation$.subscribe((_animation: boolean) => {
+			this.animation = _animation;
+		});
 	}
 
 	get selected_item(): MenuItem {
@@ -69,7 +79,9 @@ export class MenuComponent implements AfterViewInit {
 	onSelectedIndexChange(selected_item_index: number): void {
 		this.selected_item_index = selected_item_index;
 		let expand_result = this.itemSelected() && (!this.selected_component_ref || this.animation);
-		if (expand_result) this.componentChanges();
+		if (expand_result) {
+			this.componentChanges();
+		}
 		this.expand = expand_result;
 	}
 

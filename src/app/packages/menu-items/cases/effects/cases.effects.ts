@@ -23,7 +23,6 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-
 		.withLatestFrom(this.store.select("cases"))
 		.switchMap( ([action, state]: [LoadCasesAction, ICasesState]) => {
 			let last_case: Case = state.cases[state.cases.length - 1];

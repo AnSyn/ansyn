@@ -87,7 +87,7 @@ export class MapAppEffects {
 				return new UpdateCaseSuccessAction(updated_case);
 			});
 		});
-
+		
 	constructor(
 		private actions$: Actions,
 		private casesService: CasesService,

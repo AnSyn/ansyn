@@ -11,14 +11,13 @@ import { isEmpty } from 'lodash';
 @Injectable()
 export class LayersAppEffects {
 
+    @Effect()
+    selectCase$: Observable<Action> = this.actions$
+        .ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.filter((action: SelectCaseByIdAction) => !isEmpty(action.payload))
+        .map((action: SelectCaseByIdAction) => {
+            return new BeginLayerTreeLoadAction({ caseId: action.payload })
+        }).share();
+
     constructor(private actions$: Actions, private store$: Store<IAppState>) { }
-
-    // @Effect()
-    // selectCase$: Observable<Action> = this.actions$
-    //     .ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		// .filter((action: SelectCaseByIdAction) => !isEmpty(action.payload))
-    //     .map((action: SelectCaseByIdAction) => {
-    //         return new BeginLayerTreeLoadAction({ caseId: action.payload })
-    //     }).share();
-
 }

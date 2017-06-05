@@ -27,8 +27,9 @@ export class DataLayersService {
     this.baseUrl = this.config.layersByCaseIdUrl;
   }
 
-  public getAllLayersInATree(caseId: string = 'caseId'): Observable<LayerRootsBundle> {
-    return this.http.get(`${this.baseUrl}?case_id=${caseId}`)
+  public getAllLayersInATree(caseId?: string): Observable<LayerRootsBundle> {
+    const url_string: string = this.baseUrl + (caseId? `?case_id=${caseId}` : '');
+    return this.http.get(url_string)
       .map((res) => this.extractData(res.json()))
       .catch(this.handleError);
   }

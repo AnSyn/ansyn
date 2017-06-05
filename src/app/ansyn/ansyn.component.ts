@@ -45,10 +45,8 @@ export class AnsynComponent implements OnInit{
 			} else {
 				this.store.dispatch(new LoadCaseAction(params['case_id']));
 			}
-		})
+		});
 	}
-
-
 
 	onActiveImagery(active_map_id: string) {
 		this.selected_case.state.maps.active_map_id = active_map_id;

@@ -10,6 +10,8 @@ import { MockBackend } from '@angular/http/testing';
 
 import { Observable, Observer } from 'rxjs';
 
+import * as turf from '@turf/turf';
+
 import { configuration } from '../../../../configuration/configuration'
 
 describe('OverlaysService', () => {
@@ -151,20 +153,47 @@ describe('OverlaysService', () => {
 
         
         let params =  {
-                polygon:"mypolygon",
+                polygon:{
+                    "type": "Polygon",
+                    "coordinates": [
+                    [
+                        [
+                        -14.4140625,
+                        59.99349233206085
+                        ],
+                        [
+                        37.96875,
+                        59.99349233206085
+                        ],
+                        [
+                        37.96875,
+                        35.915747419499695
+                        ],
+                        [
+                        -14.4140625,
+                        35.915747419499695
+                        ],
+                        [
+                        -14.4140625,
+                        59.99349233206085
+                        ]
+                    ]
+                    ]
+                },
                 from: new Date(2020),
-                to:Date.now()
-
+                to: Date.now()
             };
          overlaysService.search(
             "",
             params
            ).subscribe(result => {
             let requestBody = calls.allArgs()[0][1];
+            let bbox = turf.bbox({type: 'Feature', geometry: params.polygon, properties: {}});
+            let bboxFeature = turf.bboxPolygon(bbox);
             expect(JSON.stringify(requestBody)).
             toEqual(JSON.stringify(
                 {
-                    "region":params.polygon,
+                    "region":bboxFeature.geometry,
                     "timeRange":
                         {
                             "start": params.from,

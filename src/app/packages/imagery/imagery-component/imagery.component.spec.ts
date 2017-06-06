@@ -3,12 +3,13 @@
  */
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
-import { ImageryCommunicatorService, ImageryConfig } from '../api/imageryCommunicator.service';
-import { ImageryComponentSettings } from './imageryComponentSettings';
-import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { ImageryComponentSettings } from '../model/imagery-component-settings';
+import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseSourceProvider, MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 
 import { configuration } from '../../../../configuration/configuration';
+import { ConfigurationToken } from '../configuration.token';
 
 class SourceProviderMock1 implements BaseSourceProvider {
 	mapType= 'mapType1';
@@ -34,14 +35,14 @@ describe('ImageryComponent', () => {
 		coordinates: [15.7, 37.9]
 	};
 
-	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapType: 'openLayerMap', data:{position: {center: geoPoint, zoom: 0}}};
+	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapType: 'openLayersMap', data:{position: {center: geoPoint, zoom: 0}}};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ImageryComponent ],
 			providers: [
 				MapSourceProviderContainerService,
-				{ provide: ImageryConfig, useValue: configuration.ImageryConfig },
+				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				{ provide: BaseSourceProvider , useClass: SourceProviderMock1, multi:true},
 				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));

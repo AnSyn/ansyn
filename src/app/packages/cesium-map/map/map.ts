@@ -1,14 +1,13 @@
 /**
  * Created by AsafMas on 11/05/2017.
  */
-import { IMap } from '@ansyn/imagery';
+import { IMap, MapPosition } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
-import { Position } from '@ansyn/core';
 
-export class CesiumMap implements IMap {
+export class Map implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<Position>;
+	positionChanged: EventEmitter<MapPosition>;
 	mapType: string;
 	mapObject: any;
 
@@ -46,11 +45,11 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setPosition(Position: any): void {
+	setPosition(MapPosition: any): void {
 		throw new Error('Method not implemented.');
 	}
 
-	getPosition(): Position {
+	getPosition(): MapPosition {
 		throw new Error('Method not implemented.');
 	}
 
@@ -66,7 +65,7 @@ export class CesiumMap implements IMap {
 	constructor(element: HTMLElement) {
 		this.mapType = 'cesium';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<Position>();
+		this.positionChanged = new EventEmitter<MapPosition>();
 		this.mapObject = {};
 	}
 

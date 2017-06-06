@@ -1,32 +1,29 @@
-import { EventEmitter, Injectable, InjectionToken } from '@angular/core';
-import { IImageryCommunicator, ImageryCommunicator } from './imageryCommunicator';
-import { IImageryConfig } from '../model/model';
-
-export const ImageryConfig: InjectionToken<IImageryConfig> = new InjectionToken('imagery-config');
+import { EventEmitter, Injectable } from '@angular/core';
+import { CommunicatorEntity } from './communicator.entity';
 
 @Injectable()
 export class ImageryCommunicatorService {
 
-	private  _communicators: { [id: string]: ImageryCommunicator };
+	private  _communicators: { [id: string]: CommunicatorEntity };
 	public communicatorsChange = new EventEmitter();
 
 	constructor() {
 		this._communicators = {};
 	}
 
-	public provideCommunicator(id: string): IImageryCommunicator {
+	public provideCommunicator(id: string): CommunicatorEntity {
 		if (!this._communicators[id]) {
 			this.createImageryCommunicator(id);
 		}
 		return this._communicators[id];
 	}
-	
+
 	get communicators(): any {
 		return this._communicators;
 	}
-	
+
 	private createImageryCommunicator(id: string): void {
-		this._communicators[id] = new ImageryCommunicator(id);
+		this._communicators[id] = new CommunicatorEntity(id);
 		this.communicatorsChange.emit(this._communicators);
 	}
 

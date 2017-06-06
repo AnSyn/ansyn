@@ -3,7 +3,7 @@
  */
 
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
+import { ImageryProviderService } from './provider.service';
 
 describe('ImageryProviderService', () => {
 	let imageryProviderService: ImageryProviderService;

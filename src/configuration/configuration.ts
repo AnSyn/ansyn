@@ -17,10 +17,10 @@ export const configuration = {
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{
-			mapType: 'openLayerMap',
+			mapType: 'openLayersMap',
 			mapSource: 'OSM',
 			mapSourceMetadata: null
-			// mapType: 'openLayerMap',
+			// mapType: 'openLayersMap',
 			// mapSource: 'TileWMS',
 			// mapSourceMetadata: [{url: 'http://localhost:8080/geoserver/ansyn/wms', layerName: 'ansyn:israel_center_1'}]
 		}, {

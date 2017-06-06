@@ -3,9 +3,9 @@
  */
 
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ImageryCommunicatorService } from '../api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from './communicator.service';
 
-describe('ImageryCommunicator', () => {
+describe('CommunicatorEntity', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
 	beforeEach(async(() => {

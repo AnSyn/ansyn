@@ -2,15 +2,16 @@
  * Created by AsafMasa on 25/04/2017.
  */
 import { Component, Input, OnInit, OnDestroy, ViewChild, ViewContainerRef, ComponentRef,ComponentFactoryResolver, Inject } from '@angular/core';
-import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
-import { ImageryManager } from '../manager/imageryManager';
-import { ImageryCommunicatorService, ImageryConfig } from '../api/imageryCommunicator.service';
-import { ImageryComponentSettings } from './imageryComponentSettings';
-import { IImageryConfig } from '../model/model';
+import { ImageryProviderService } from '../provider-service/provider.service';
+import { ImageryComponentManager } from './manager/imagery.component.manager';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { ImageryComponentSettings } from '../model/imagery-component-settings';
+import { IImageryConfig } from '../model/iimagery-config';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
+import { ConfigurationToken } from '../configuration.token';
 
 @Component({
-	selector: 'imagery-view',
+	selector: 'ansyn-imagery-view',
 	templateUrl: './imagery.component.html',
 	styleUrls: ['./imagery.component.less']
 })
@@ -23,7 +24,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	private _mapComponentRef: ComponentRef<any>;
 
-	private _manager: ImageryManager;
+	private _manager: ImageryComponentManager;
 
 	ngOnInit() {
 		if (!this.mapComponentSettings) {
@@ -32,7 +33,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		}
 		const imageryCommunicator = this.imageryCommunicatorService.provideCommunicator(this.mapComponentSettings.id);
 
-		this._manager = new ImageryManager(this.mapComponentSettings.id, this.imageryProviderService,
+		this._manager = new ImageryComponentManager(this.mapComponentSettings.id, this.imageryProviderService,
 			this.componentFactoryResolver, this.map_component_elem,
 			this._mapComponentRef, this.mapSourceProviderContainerService, this.config, this.mapComponentSettings, imageryCommunicator);
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position);
@@ -44,7 +45,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private imageryProviderService: ImageryProviderService,
 				private mapSourceProviderContainerService: MapSourceProviderContainerService,
-				@Inject(ImageryConfig) private config:IImageryConfig) {
+				@Inject(ConfigurationToken) private config:IImageryConfig) {
 	}
 
 	ngOnDestroy() {

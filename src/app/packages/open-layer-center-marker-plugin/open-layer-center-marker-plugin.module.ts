@@ -13,6 +13,6 @@ import { CenterMarkerPlugin } from './plugin/center-marker-plugin';
 
 export class OpenLayerCenterMarkerPluginModule {
 	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerPlugin('openLayerMap', CenterMarkerPlugin.s_pluginType, CenterMarkerPlugin);
+		imageryProviderService.registerPlugin('openLayersMap', CenterMarkerPlugin.s_pluginType, CenterMarkerPlugin);
 	}
 }

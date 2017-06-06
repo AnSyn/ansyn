@@ -3,7 +3,7 @@
  */
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IMap, IMapComponent } from '@ansyn/imagery';
-import { CesiumMap } from './cesium-map';
+import { Map } from '../map/map';
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -19,11 +19,12 @@ import { CesiumMap } from './cesium-map';
 		}`]
 })
 
-export class CesiumComponent implements OnInit, OnDestroy, IMapComponent {
+export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 
+	static mapType = 'cesiumMap';
 	@ViewChild('cesiumMap') mapElement: ElementRef;
 
-	private _map: CesiumMap;
+	private _map: Map;
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
@@ -31,7 +32,7 @@ export class CesiumComponent implements OnInit, OnDestroy, IMapComponent {
 	}
 
 	createMap(layers: any) {
-		this._map = new CesiumMap(this.mapElement.nativeElement);
+		this._map = new Map(this.mapElement.nativeElement);
 		this.mapCreated.emit(this._map);
 	}
 

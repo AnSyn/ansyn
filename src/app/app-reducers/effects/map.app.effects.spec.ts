@@ -7,7 +7,7 @@ import { HttpModule } from '@angular/http';
 import { CasesReducer } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService, ImageryConfig } from '@ansyn/imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -44,7 +44,7 @@ describe('MapAppEffects', () => {
 			providers: [
 				MapAppEffects,
 				MapSourceProviderContainerService,
-				{ provide: ImageryConfig, useValue: configuration.ImageryConfig },
+				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				{ provide: BaseSourceProvider , useClass: SourceProviderMock1, multi:true},
 				{
 					provide: ImageryCommunicatorService,

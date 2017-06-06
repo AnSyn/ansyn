@@ -6,7 +6,7 @@ import { BaseSourceProvider } from '@ansyn/map-source-provider';
 import * as ol from 'openlayers';
 
 export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
-	public mapType = 'openLayerMap';
+	public mapType = 'openLayersMap';
 	public sourceType = 'OSM';
 
 	constructor() {

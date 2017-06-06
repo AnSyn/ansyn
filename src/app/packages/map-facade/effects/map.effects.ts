@@ -5,7 +5,7 @@ import { IMapState } from '../reducers/map.reducer';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs';
 import { MapActionTypes } from '../actions/map.actions';
-import { ImageryCommunicatorService } from '../../imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Injectable()
 export class MapEffects{

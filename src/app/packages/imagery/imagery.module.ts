@@ -3,10 +3,11 @@
  */
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageryComponent } from './imagery/imagery.component';
-import { ImageryCommunicatorService, ImageryConfig } from './api/imageryCommunicator.service';
-import { ImageryProviderService } from './imageryProviderService/imageryProvider.service';
-import { IImageryConfig } from './model/model';
+import { ImageryComponent } from './imagery-component/imagery.component';
+import { ImageryCommunicatorService } from './communicator-service/communicator.service';
+import { ImageryProviderService } from './provider-service/provider.service';
+import { IImageryConfig } from './model/iimagery-config';
+import { ConfigurationToken } from './configuration.token';
 
 @NgModule({
   imports: [CommonModule],
@@ -22,7 +23,7 @@ export class ImageryModule {
 			providers: [
 				ImageryCommunicatorService,
 				ImageryProviderService,
-				{ provide: ImageryConfig, useValue: config }
+				{ provide: ConfigurationToken, useValue: config }
 			]
 		};
 	}

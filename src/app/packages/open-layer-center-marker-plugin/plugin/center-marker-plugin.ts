@@ -2,15 +2,15 @@
  * Created by AsafMas on 04/06/2017.
  */
 
-import { IImageryCommunicator, IMap, IMapPlugin } from '@ansyn/imagery';
-import { Position } from '@ansyn/core';
+import { CommunicatorEntity, IMap, IMapPlugin } from '@ansyn/imagery';
 import * as ol from 'openlayers';
+import { MapPosition } from '../../imagery/model/map-position';
 
 export class CenterMarkerPlugin implements IMapPlugin {
 	static s_pluginType = 'openLayerCenterMarker';
 	pluginType: string;
 	private _subscriptions;
-	private _imageryCommunicator: IImageryCommunicator;
+	private _imageryCommunicator: CommunicatorEntity;
 
 	private _iconStyle: ol.style.Style;
 	private _existingLayer;
@@ -32,9 +32,8 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		return this._isEnabled;
 	}
 
-	constructor(imageryCommunicator: IImageryCommunicator) {
+	constructor() {
 		this.pluginType = CenterMarkerPlugin.s_pluginType;
-		this._imageryCommunicator = imageryCommunicator;
 
 		this._isEnabled = true;
 
@@ -50,12 +49,13 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		this._subscriptions = [];
 	}
 
-	public init(): void {
+	public init(imageryCommunicator: CommunicatorEntity): void {
+		this._imageryCommunicator = imageryCommunicator;
 		this.register();
 	}
 
 	private register() {
-		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: Position)=>{
+		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: MapPosition)=>{
 			if (this.isEnabled) {
 				this.tryDrawCenter();
 			} else {

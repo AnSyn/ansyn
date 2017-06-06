@@ -1,19 +1,23 @@
-import { Extent, IImageryConfig, IMap, IMapComponent, IMapConfig, IMapPlugin } from '../model/model';
+import { Extent } from '../../model/extent';
+import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
+import { IMap } from '../../model/imap';
+import { IMapComponent } from '../../model/imap-component';
+import { IMapPlugin } from '../../model/imap-plugin';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService } from '../imageryProviderService/imageryProvider.service';
-import { Position } from '@ansyn/core';
+import { ImageryProviderService } from '../../provider-service/provider.service';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
-import { ImageryComponentSettings } from '../imagery/imageryComponentSettings';
-import { IImageryCommunicator } from '../api/imageryCommunicator';
+import { ImageryComponentSettings } from '../../model/imagery-component-settings';
+import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
+import { MapPosition } from '../../model/map-position';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
-export class ImageryManager {
+export class ImageryComponentManager {
 	private _activeMap: IMap;
 	private _subscriptions = [];
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public positionChanged: EventEmitter<Position>;
+	public positionChanged: EventEmitter<MapPosition>;
 	private _plugins: IMapPlugin[];
 
 	constructor(public id: string,
@@ -24,13 +28,13 @@ export class ImageryManager {
 				private mapSourceProviderContainerService: MapSourceProviderContainerService,
 				private config: IImageryConfig,
 				private imagerySettings: ImageryComponentSettings,
-				private imageryCommunicator: IImageryCommunicator) {
+				private imageryCommunicator: CommunicatorEntity) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<Position>();
+		this.positionChanged = new EventEmitter<MapPosition>();
 		this._plugins = [];
 	}
 
-	private buildCurrentComponent(activeMapType: string, position?: Position): void {
+	private buildCurrentComponent(activeMapType: string, position?: MapPosition): void {
 		const component = this.imageryProviderService.provideMap(activeMapType);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(component);
 
@@ -64,7 +68,7 @@ export class ImageryManager {
 		}
 	}
 
-	public setActiveMap(activeMapType: string, position?: Position) {
+	public setActiveMap(activeMapType: string, position?: MapPosition) {
 		// console.log(`'${this.id} setActiveMap ${mapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
@@ -104,14 +108,14 @@ export class ImageryManager {
 	}
 
 	public setBoundingView(boundingRectangle: GeoJSON.MultiPolygon) {
-		console.debug("TODO: implement setBoundingView");
+		//console.debug("TODO: implement setBoundingView");
 	}
 
 	public setCenter(center: GeoJSON.Point, animation: boolean) {
 		this._activeMap.setCenter(center, animation);
 	}
 
-	public setPosition(position: Position) {
+	public setPosition(position: MapPosition) {
 		this._activeMap.setPosition(position);
 	}
 
@@ -146,7 +150,7 @@ export class ImageryManager {
 		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
-		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: Position) => {
+		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: MapPosition) => {
 			this.positionChanged.emit(position);
 		}));
 	}

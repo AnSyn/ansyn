@@ -6,7 +6,7 @@ import * as ol from 'openlayers';
 import { BaseSourceProvider } from '@ansyn/map-source-provider';
 
 export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
-	public mapType = 'openLayerMap';
+	public mapType = 'openLayersMap';
 	public sourceType = 'TileWMS';
 
 	constructor() {

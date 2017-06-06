@@ -3,28 +3,28 @@
  */
 
 import { IMap } from '@ansyn/imagery';
-import { Position } from '@ansyn/core';
 import { EventEmitter } from '@angular/core';
 import * as ol from 'openlayers';
 import { Extent } from '@ansyn/imagery';
-    
-export class OpenLayerMap implements IMap {
+import { MapPosition } from 'app/packages/imagery/model/map-position';
+
+export class Map implements IMap {
 
     private _mapType: string;
     private _mapObject: ol.Map;
     private _mapLayers = [];
     private _mapVectorLayers = [];
     public centerChanged: EventEmitter < GeoJSON.Point > ;
-    public positionChanged: EventEmitter < Position > ;
+    public positionChanged: EventEmitter < MapPosition > ;
 
-	constructor(element: HTMLElement, layers: any, position?: Position) {
-        this._mapType = 'openLayerMap';
+	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
+        this._mapType = 'openLayersMap';
         this.centerChanged = new EventEmitter < GeoJSON.Point > ();
-        this.positionChanged = new EventEmitter < Position > ();
+        this.positionChanged = new EventEmitter < MapPosition > ();
 		this.initMap(element, layers, position);
     }
 
-	private initMap(element: HTMLElement, layers: any,  position?: Position) {
+	private initMap(element: HTMLElement, layers: any,  position?: MapPosition) {
 
 		let center = [16, 38];
 		let zoom = 12;
@@ -187,7 +187,7 @@ export class OpenLayerMap implements IMap {
         return geoPoint;
     }
 
-	public setPosition(position: Position): void {
+	public setPosition(position: MapPosition): void {
         this.mapObject.setView(new ol.View( < olx.ViewOptions > {
 			center: ol.proj.fromLonLat(<[number, number]>position.center.coordinates),
 			zoom: position.zoom,
@@ -195,8 +195,7 @@ export class OpenLayerMap implements IMap {
         }));
     }
 
-    public getPosition(): Position {
-        window['OpenLayerMap'] = this; //why ?????? and what if someone will do window.OpenLayerMap = null ,
+    public getPosition(): MapPosition {
         let center: GeoJSON.Point = this.getCenter();
         let zoom: number = this.mapObject.getView().getZoom();
 		let rotation: number = this.mapObject.getView().getRotation();

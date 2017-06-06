@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { OpenLayerMap } from './openLayerMap';
-import { IMap, IMapComponent } from '@ansyn/imagery/model/model';
-import { Position } from '@ansyn/core';
+import { Map } from '../map/map';
+import { IMap, IMapComponent } from '@ansyn/imagery';
+import { MapPosition } from '../../imagery/model/map-position';
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -17,11 +17,13 @@ import { Position } from '@ansyn/core';
 		}`]
 })
 
-export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {
+export class MapComponent implements OnInit, OnDestroy, IMapComponent {
+
+	static mapType = 'openLayersMap';
 
 	@ViewChild('olMap') mapElement: ElementRef;
 
-	private _map: OpenLayerMap;
+	private _map: Map;
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
@@ -31,8 +33,8 @@ export class OpenLayerComponent implements OnInit, OnDestroy, IMapComponent {
 	ngOnInit(): void {
 	}
 
-	createMap(layers: any, position?: Position): void {
-		this._map = new OpenLayerMap(this.mapElement.nativeElement, layers, position);
+	createMap(layers: any, position?: MapPosition): void {
+		this._map = new Map(this.mapElement.nativeElement, layers, position);
 		this.mapCreated.emit(this._map);
 	}
 

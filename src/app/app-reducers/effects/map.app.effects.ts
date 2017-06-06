@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/api/imageryCommunicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
@@ -94,5 +94,5 @@ export class MapAppEffects {
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
 		private mapSourceProviderContainerService: MapSourceProviderContainerService
-	) { }	
+	) { }
 }

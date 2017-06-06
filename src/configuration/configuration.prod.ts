@@ -16,7 +16,7 @@ export const configuration = {
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{
-			mapType: 'openLayerMap',
+			mapType: 'openLayersMap',
 			mapSource: 'OSM',
 			mapSourceMetadata: null
 		}, {

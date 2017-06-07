@@ -54,34 +54,48 @@ export class CommunicatorEntity {
 		this._manager.setActiveMap(mapType);
 	}
 
-	public getActiveMapObject(): IMap {
-		return this._manager.getMapObject();
+	public getActiveMap(): IMap {
+		if (this._manager)
+		{
+			return this._manager.getActiveMap();
+		}
+
+		return null;
 	}
 
 	public getCenter(): GeoJSON.Point {
-		return this._manager.getMapCenter();
+		const map = this.getActiveMap();
+		if (map) {
+			return map.getCenter();
+		}
+		return null;
 	}
 	public updateSize(): void {
-		if (!this._manager) {
-			console.warn(`'id ${this._id}', can't update size communicator manager is not set'`);
-			return;
+		const map = this.getActiveMap();
+		if (map) {
+			return map.updateSize();
 		}
-		return this._manager.updateSize();
 	}
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
-		return this._manager.addGeojsonLayer(data);
-	}
-	public setBoundingView(boundingRectangle: GeoJSON.MultiPolygon) {
-		this._manager.setBoundingView(boundingRectangle);
+		const map = this.getActiveMap();
+		if (map) {
+			map.addGeojsonLayer(data);
+		}
 	}
 
 	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
-		const animate = (_.isNil(animation)) ? true : animation;
-		this._manager.setCenter(center, animate);
+		const map = this.getActiveMap();
+		if (map) {
+			const animate = (_.isNil(animation)) ? true : animation;
+			map.setCenter(center, animate);
+		}
 	}
 
 	public setPosition(position: MapPosition) {
-		this._manager.setPosition(position);
+		const map = this.getActiveMap();
+		if (map) {
+			map.setPosition(position);
+		}
 	}
 
 	public getPlugin(pluginName: string): IMapPlugin {
@@ -91,23 +105,38 @@ export class CommunicatorEntity {
 	}
 
 	public setLayer(layer: any, extent?: Extent) {
-		this._manager.setLayer(layer, extent);
+		const map = this.getActiveMap();
+		if (map) {
+			map.setLayer(layer, extent);
+		}
 	}
 
 	public addLayer(layer: any) {
-		this._manager.addLayer(layer);
+		const map = this.getActiveMap();
+		if (map) {
+			map.addLayer(layer);
+		}
 	}
 
 	public removeLayer(layer: any) {
-		this._manager.removeLayer(layer);
+		const map = this.getActiveMap();
+		if (map) {
+			map.removeLayer(layer);
+		}
 	}
 
     public addVectorLayer(layer: any): void {
-		this._manager.addVectorLayer(layer);
+		const map = this.getActiveMap();
+		if (map) {
+			map.addVectorLayer(layer);
+		}
 	}
 
 	public removeVectorLayer(layer: any): void {
-		this._manager.removeVectorLayer(layer);
+		const map = this.getActiveMap();
+		if (map) {
+			map.removeVectorLayer(layer);
+		}
 	}
 
 	//CommunicatorEntity methods end

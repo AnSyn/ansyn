@@ -38,7 +38,7 @@ export class MapAppEffects {
 			const bbox = turf.bbox(footprintFeature);
 			const bboxPolygon = turf.bboxPolygon(bbox);
 			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-			const mapType = this.communicator.provideCommunicator(active_map_id).getActiveMapObject().mapType;
+			const mapType = this.communicator.provideCommunicator(active_map_id).getActiveMap().mapType;
 			const sourceLoader = this.mapSourceProviderContainerService.resolve(mapType, overlay.sourceType);
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				this.communicator.provideCommunicator(active_map_id).setLayer(layer, extent);

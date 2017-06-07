@@ -5,7 +5,8 @@ export type MapState = {
 	data: {
 		position: Position
 	};
-	settings: {	mapType: string, mapModes: string[]}[];
+	"mapType": string;
 };
 
-export const BaseSettings = [{"mapType": "openLayersMap", "mapModes": []}];
+// TODO: Need to get the real map Type from store
+export const defaultMapType = "openLayersMap";

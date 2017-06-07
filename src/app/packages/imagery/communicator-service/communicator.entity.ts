@@ -10,7 +10,6 @@ import { MapPosition } from '../model/map-position';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
-<<<<<<< HEAD:src/app/packages/imagery/communicator-service/communicator.entity.ts
 
 export class CommunicatorEntity {
 	private _manager: ImageryComponentManager;

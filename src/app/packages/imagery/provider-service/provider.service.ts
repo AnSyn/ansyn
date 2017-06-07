@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD:src/app/packages/imagery/provider-service/provider.service.ts
 import { IMapPlugin } from '../model/imap-plugin';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-=======
-import { IMapPlugin } from '../model/model';
-import { ImageryCommunicator } from '../api/imageryCommunicator';
->>>>>>> create shadow mouse with the sandbox:src/app/packages/imagery/imageryProviderService/imageryProvider.service.ts
 /**
  * Created by AsafMasa on 24/04/2017.
  */
@@ -47,11 +42,7 @@ export class ImageryProviderService {
 		return providedMap;
 	}
 
-<<<<<<< HEAD:src/app/packages/imagery/provider-service/provider.service.ts
 	public createPlugins(mapType: string, imageryCommunicator: CommunicatorEntity): IMapPlugin[] {
-=======
-	public createPlugins(mapType: string, imageryCommunicator: ImageryCommunicator): IMapPlugin[] {
->>>>>>> create shadow mouse with the sandbox:src/app/packages/imagery/imageryProviderService/imageryProvider.service.ts
 		const mapPluginProviders = this._mapPluginProviders[mapType];
 		if (!mapPluginProviders) {
 			return null;

@@ -1,3 +1,9 @@
 <div class="status" [class.active]="active">
-	{{overlayName || 'World View'}}
+	<div class='status-container'> 
+		<div class='status-bar-title' data-index="{{map_id}}">{{overlayName || 'World View'}}</div>
+		<!-- maybe the will change that later <div class='status-bar-icons'>
+			<a *ngIf='!active' (click)=followActiveMap($event)>f</a>
+		</div> -->	
+	</div>
+
 </div>

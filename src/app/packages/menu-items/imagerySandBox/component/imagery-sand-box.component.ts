@@ -128,4 +128,27 @@ export class ImagerySandBoxComponent implements OnInit {
 		const plugin: IMapPlugin = this.imageryCommunicatorService.provideCommunicator('imagery1').getPlugin("openLayerCenterMarker");
 		plugin.isEnabled = !plugin.isEnabled;
 	}
+	
+	public togglePointerMoveEvent() {
+		//todo take from active
+		const communicators = this.imageryCommunicatorService.communicators;
+		const key = Object.keys(communicators)[0];
+		communicators[key].toggleMouseShadowListener();
+		communicators[key]['pointerMove'].subscribe( latLon => {
+			this.drawShadowMouse(latLon);
+		});
+	}
+
+	public startListenToPointerMove(){
+		const communicators = this.imageryCommunicatorService.communicators;
+		const key = Object.keys(communicators)[1];
+		communicators[key].addMouseShadowVectorLayer();
+	}
+
+	public drawShadowMouse(latLon){
+		const communicators = this.imageryCommunicatorService.communicators;
+		const key = Object.keys(communicators)[1];
+		communicators[key].drawShadowMouse(latLon);
+	}
+
 }

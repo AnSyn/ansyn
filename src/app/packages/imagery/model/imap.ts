@@ -9,6 +9,7 @@ import { MapPosition } from './map-position';
 export interface IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
+	pointerMove: EventEmitter<any>;
 
 	mapType: string;
 	mapObject: any;
@@ -25,4 +26,5 @@ export interface IMap {
 	updateSize(): void;
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
+	togglePointerMove();
 }

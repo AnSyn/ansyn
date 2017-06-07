@@ -1,7 +1,10 @@
 /**
  * Created by AsafMasa on 25/04/2017.
  */
-import { Component, Input, OnInit, OnDestroy, ViewChild, ViewContainerRef, ComponentRef,ComponentFactoryResolver, Inject } from '@angular/core';
+import {
+	Component, Input, OnInit, OnChanges, OnDestroy, ViewChild,
+	ViewContainerRef, ComponentRef, ComponentFactoryResolver, Inject, SimpleChanges
+} from '@angular/core';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
@@ -16,9 +19,9 @@ import { ConfigurationToken } from '../configuration.token';
 	styleUrls: ['./imagery.component.less']
 })
 
-export class ImageryComponent implements OnInit, OnDestroy {
+export class ImageryComponent implements OnInit, OnDestroy, OnChanges {
 
-	@ViewChild('map_component_elem', {read: ViewContainerRef}) map_component_elem: ViewContainerRef;
+	@ViewChild('map_component_elem', { read: ViewContainerRef }) map_component_elem: ViewContainerRef;
 
 	@Input() public mapComponentSettings: ImageryComponentSettings;
 
@@ -42,16 +45,22 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
-				private componentFactoryResolver: ComponentFactoryResolver,
-				private imageryProviderService: ImageryProviderService,
-				private mapSourceProviderContainerService: MapSourceProviderContainerService,
-				@Inject(ConfigurationToken) private config:IImageryConfig) {
+		private componentFactoryResolver: ComponentFactoryResolver,
+		private imageryProviderService: ImageryProviderService,
+		private mapSourceProviderContainerService: MapSourceProviderContainerService,
+		@Inject(ConfigurationToken) private config: IImageryConfig) {
 	}
 
 	ngOnDestroy() {
 		if (this._manager) {
 			this.imageryCommunicatorService.removeCommunicator(this.mapComponentSettings.id);
 			this._manager.dispose();
+		}
+	}
+
+	ngOnChanges(changes) {
+		if (this._manager) {
+			this._manager.ActiveMap.setPosition(changes.mapComponentSettings.currentValue.data.position);
 		}
 	}
 }

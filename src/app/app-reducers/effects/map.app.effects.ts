@@ -9,16 +9,31 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
-import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
+import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction  } from '@ansyn/map-facade/actions/map.actions';
 import { Case, ICasesState, CasesService, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { isEmpty } from 'lodash';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools'; 
+
 import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
 import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapAppEffects {
+
+	@Effect()
+	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
+		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
+		.debug('map app effects start')
+		.map(() => new StartMapShadowAction());
+		
+	@Effect()
+	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
+		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
+		.debug('map app effects stop')
+		.map(() => new StopMapShadowAction());
+
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
@@ -78,7 +93,7 @@ export class MapAppEffects {
 		.cloneDeep()
 		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
-			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id == action.payload.id);
+			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
 			const selected_map = selected_case.state.maps.data[selected_map_index];
 			selected_map.data.position = action.payload.position;
 			selected_case.state.maps.data[selected_map_index] = selected_map;

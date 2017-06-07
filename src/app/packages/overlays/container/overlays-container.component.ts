@@ -30,6 +30,7 @@ import { Observable } from 'rxjs/Observable';
 @DestroySubscribers({
     destroyFunc: 'ngOnDestroy',
 })
+
 export class OverlaysContainer implements OnInit, AfterViewInit {
     public drops: any[] = [];
     public redraw$: BehaviorSubject<number>;

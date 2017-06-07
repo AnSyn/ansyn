@@ -6,9 +6,9 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { MenuActionTypes, SelectMenuItemAction, MenuItem } from '@ansyn/core';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { redrawTimelineAction } from '@ansyn/overlays';
 import { IAppState } from '../';
 import { isEmpty } from 'lodash';
+import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()
@@ -17,15 +17,15 @@ export class MenuAppEffects {
 	@Effect()
 	onAnimationEnd$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(MenuActionTypes.ANIMATION_END)
-		.map(() => {
-			return new UpdateMapSizeAction()
+		.map( () => {
+			return new UpdateMapSizeAction();
 		});
 
 	@Effect()
-	redrawTimeline$: Observable<redrawTimelineAction> = this.actions$
+	redrawTimeline$: Observable<RedrawTimelineAction> = this.actions$
 		.ofType(MenuActionTypes.ANIMATION_END)
 		.map(() => {
-			return new redrawTimelineAction(true);
+			return new RedrawTimelineAction(true);
 		});
     //
 	// @Effect()

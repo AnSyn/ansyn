@@ -6,14 +6,20 @@ import { Component, Input, OnInit } from '@angular/core';
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent implements OnInit {
-
-	constructor() { }
-
+	
 	@Input() map_id;
 	@Input('overlay-name') overlayName;
 	@Input() active;
 
+	//if not active show button follow 
+	constructor() { }
+	
 	ngOnInit() {
+	}
+
+	followActiveMap(event){
+		event.stopPropagation();
+		console.log('f');
 	}
 
 }

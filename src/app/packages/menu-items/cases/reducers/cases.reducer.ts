@@ -40,10 +40,10 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases: cases_added });
 
 		case CasesActionTypes.OPEN_MODAL:
-			return Object.assign({}, state, {active_case_id: action.payload.case_id , modal: true});
+			return Object.assign({}, state, {modal: true});
 
 		case CasesActionTypes.CLOSE_MODAL:
-			return Object.assign({}, state, {active_case_id: null, modal: false});
+			return Object.assign({}, state, {modal: false});
 
 		// case CasesActionTypes.UPDATE_CASE:
 		// 	return state;
@@ -122,7 +122,8 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS:
 			return Object.assign({}, state, {default_case: action.payload});
 
-
+		case CasesActionTypes.SAVE_DEFAULT_CASE:
+			return Object.assign({}, state);
 
 		default:
 			return Object.assign({}, state);

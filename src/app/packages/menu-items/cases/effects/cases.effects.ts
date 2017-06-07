@@ -86,9 +86,12 @@ export class CasesEffects {
 		.map(() => new CloseModalAction())
 		.share();
 
-	@Effect({dispatch: false})
+	@Effect()
 	addCaseSuccess$: Observable<any> = this.actions$.
-	ofType(CasesActionTypes.ADD_CASE_SUCCESS).share();
+	ofType(CasesActionTypes.ADD_CASE_SUCCESS)
+	.map((action: AddCaseSuccessAction) => {
+			return new SelectCaseByIdAction(action.payload.id);
+	}).share();
 
 	@Effect()
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$

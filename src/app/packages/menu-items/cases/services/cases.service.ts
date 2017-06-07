@@ -58,7 +58,12 @@ export class CasesService {
 			return res.json()
 		});
 	}
+
 	loadDefaultCase(){
 		return Observable.of(this.config.defaultCase);
 	}
+
+  enhanceDefaultCase(default_case: Case): void{
+    default_case.last_modified = new Date();
+  }
 }

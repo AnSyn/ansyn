@@ -27,7 +27,9 @@ export const CasesActionTypes = {
 	LOAD_CASE_SUCCESS: 'LOAD_CASE_SUCCESS',
 
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
-	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS'
+	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS',
+
+	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE'
 };
 
 export type CasesActions = any;
@@ -105,5 +107,9 @@ export class LoadDefaultCaseAction implements Action {
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
+	constructor(public payload: Case) {}
+}
+export class SaveDefaultCaseAction implements Action {
+	type = CasesActionTypes.SAVE_DEFAULT_CASE;
 	constructor(public payload: Case) {}
 }

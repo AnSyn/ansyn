@@ -7,7 +7,7 @@ import { OverlaysActionTypes, LoadOverlaysAction, SelectOverlayAction, UnSelectO
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
-import { UpdateCaseSuccessAction, CasesActionTypes } from '@ansyn/menu-items/cases';
+import { UpdateCaseSuccessAction, CasesActionTypes, AddCaseAction } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 
 
@@ -105,6 +105,18 @@ export class CasesAppEffects {
 
 			return this.router.navigate(['', action.payload]);
 		})
+
+	@Effect()
+	saveDefaultCase: Observable<AddCaseAction> = this.actions$
+		.ofType(CasesActionTypes.SAVE_DEFAULT_CASE)
+		.map(toPayload)
+		.map((default_case: Case) => {
+			
+			this.casesService.enhanceDefaultCase(default_case);
+			default_case.owner = "Default Owner"; //TODO: replace with id from authentication service
+
+			return new AddCaseAction(default_case);
+		});
 
 	constructor(private actions$: Actions,
 		private store$: Store<IAppState>,

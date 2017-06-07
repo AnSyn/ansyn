@@ -8,6 +8,8 @@ import { GeoJsonObject } from 'geojson';
 export class Map implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
+	pointerMove: EventEmitter<any>;
+
 	mapType: string;
 	mapObject: any;
 
@@ -59,6 +61,10 @@ export class Map implements IMap {
 
 	addGeojsonLayer(data: GeoJsonObject) {
 		throw new Error('Method not implemented.');
+	}
+
+	togglePointerMove(){
+		
 	}
 
 

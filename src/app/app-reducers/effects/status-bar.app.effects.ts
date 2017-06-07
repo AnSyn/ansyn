@@ -99,5 +99,6 @@ export class StatusBarAppEffects {
 			id: `imagery${index}`,
 			settings: BaseSettings, data:{position}
 		};*/
+
 	}
 }

@@ -12,6 +12,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	private _subscriptions;
 	private _imageryCommunicator: CommunicatorEntity;
 
+
 	private _iconStyle: ol.style.Style;
 	private _existingLayer;
 

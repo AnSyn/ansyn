@@ -14,14 +14,14 @@ export class MapFacadeService {
 
 		imageryCommunicatorService.communicatorsChange.subscribe((communicators) => {
 			this.store.dispatch(new CommuincatorsChangeAction(communicators));
-		})
+		});
 
 	}
 
 	initPositionChangedEmitters() {
 		this.unsubscribeAll();
 		Object.keys(this.imageryCommunicatorService.communicators).forEach((id)=>{
-			this.positionChangedSubscribers.push(this.imageryCommunicatorService.provideCommunicator(id).positionChanged.subscribe(this.positionChanged.bind(this)))
+			this.positionChangedSubscribers.push(this.imageryCommunicatorService.provideCommunicator(id).positionChanged.subscribe(this.positionChanged.bind(this)));
 		});
 	}
 

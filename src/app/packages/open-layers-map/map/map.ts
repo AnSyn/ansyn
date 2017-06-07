@@ -16,8 +16,10 @@ export class Map implements IMap {
     private _mapVectorLayers = [];
     public centerChanged: EventEmitter < GeoJSON.Point > ;
     public positionChanged: EventEmitter < MapPosition > ;
+    public pointerMove: EventEmitter<any>;
+    private _shadowMouselayerId = 'shadowMouse';
     private _flags = {
-        pointerMoveListener : false
+        pointerMoveListener: null    
     };
 
 
@@ -26,6 +28,7 @@ export class Map implements IMap {
         this._mapType = 'openLayersMap';
         this.centerChanged = new EventEmitter < GeoJSON.Point > ();
         this.positionChanged = new EventEmitter < MapPosition > ();
+        this.pointerMove = new EventEmitter<any>();
 		this.initMap(element, layers, position);
     }
 
@@ -66,6 +69,10 @@ export class Map implements IMap {
 		this.setMainLayer(layer);
 		this.fitCurrentView(layer, extent);
 	}
+
+    public getLayerById(id: string){
+        return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id )[0];
+    }
 
 	private setMainLayer(layer: ol.layer.Layer) {
 		this.removeAllLayers();
@@ -233,19 +240,82 @@ export class Map implements IMap {
         this.mapObject.addLayer(layer);
     }
 
+    public  onPointerMove (e)   {
+            console.log('pointer move ',e.coordinate,e);
+            const latLon = ol.proj.toLonLat(e.coordinate);
+
+            const projection = this._mapObject.getView().getProjection();
+            
+
+            const tmp = ol.proj.transform(e.coordinate, projection,'EPSG:4326');
+            console.log('pointer move ',tmp);
+
+            this.pointerMove.emit(e.coordinate);
+    };
+
+    public drawShadowMouse(lonLat){
+        //const layer = this.mapObject.getLayers().getArray().filter(item => item.get('id') === "shadowMouse" )[0];
+        console.log('draw mouse shadow',lonLat);
+        const layer = this.getLayerById(this._shadowMouselayerId);
+        if(!layer){
+            console.log('no layer');
+            return;
+        }
+        const feature = layer['getSource']().getFeatures()[0];
+        //console.log(feature);
+        //const lonLatCords = ol.proj.fromLonLat(lonLat);
+        
+        const projection = this._mapObject.getView().getProjection();
+        const tmp = ol.proj.transform(lonLat, 'EPSG:4326',projection);
+
+        console.log('draw mouse shadow 2',tmp);
+
+        feature.setGeometry(new ol.geom.Point(lonLat));
+        this.mapObject.render();    
+    }
+
     public togglePointerMove(){
         if (!this._flags.pointerMoveListener) {
            
-           this._flags.pointerMoveListener = this.mapObject.on('pointemove',e => {
-                console.log('pointer move ',e);
-            });
+           this._flags.pointerMoveListener = this.mapObject.on('pointermove',this.onPointerMove,this);
         }
         else{
-            this.mapObject.unByKey(this._flags.pointerMoveListener);
+            this.mapObject['un']('pointermove',this.onPointerMove,this);
             this._flags.pointerMoveListener = false;
         }
+    }
+    
+    
 
+    public toggleMouseShadowVectorLayer(){
         
+        const layer = this.getLayerById(this._shadowMouselayerId);
+        if(layer){
+            layer.set('visible',!layer.get('visible'));
+        }
+        else{
+            console.log('create layer');
+            const feature = new ol.Feature({
+                id: 'shadowMousePosition'
+            });
+
+            const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [feature]
+                }),
+                style: new ol.style.Style({
+/*                    fill: new ol.style.Fill({ color: '#000' }),
+*/                    image: new ol.style.Icon({
+                        scale: 0.05,
+                        src: 'https://68.media.tumblr.com/avatar_0d505a9b41c3_128.png'
+                    })
+                })
+            });
+
+            vectorLayer.setZIndex(12000);
+            vectorLayer.set('id',this._shadowMouselayerId);
+            this.addLayer(vectorLayer);
+        }
 
     }
 

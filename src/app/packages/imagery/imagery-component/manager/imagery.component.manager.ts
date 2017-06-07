@@ -9,6 +9,7 @@ import { ImageryComponentSettings } from '../../model/imagery-component-settings
 import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
 import { MapPosition } from '../../model/map-position';
 import { TypeContainerService } from '@ansyn/type-container';
+
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -18,6 +19,7 @@ export class ImageryComponentManager {
 
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<MapPosition>;
+	public pointerMove: EventEmitter<any>;
 	private _plugins: IMapPlugin[];
 
 	constructor(public id: string,
@@ -28,8 +30,10 @@ export class ImageryComponentManager {
 				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
 				private imageryCommunicator: CommunicatorEntity) {
+		
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();
+		this.pointerMove = new EventEmitter<any>();
 		this._plugins = [];
 	}
 
@@ -107,12 +111,19 @@ export class ImageryComponentManager {
 	}
 
 	private registerToActiveMapEvents() {
+		
 		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
+		
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: MapPosition) => {
 			this.positionChanged.emit(position);
 		}));
+
+		this._subscriptions.push(this._activeMap.pointerMove.subscribe((latLon: Array<any>) => {
+			this.pointerMove.emit(latLon);
+		}));
+
 	}
 
 	public get ActiveMap(): IMap {

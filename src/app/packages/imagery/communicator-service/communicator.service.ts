@@ -12,6 +12,7 @@ export class ImageryCommunicatorService {
 	}
 
 	public provideCommunicator(id: string): CommunicatorEntity {
+
 		if (!this._communicators[id]) {
 			this.createImageryCommunicator(id);
 		}

@@ -10,6 +10,7 @@ import { MapPosition } from '../model/map-position';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
+<<<<<<< HEAD:src/app/packages/imagery/communicator-service/communicator.entity.ts
 
 export class CommunicatorEntity {
 	private _manager: ImageryComponentManager;
@@ -17,19 +18,27 @@ export class CommunicatorEntity {
 
 	public positionChanged: EventEmitter<{id: string, position: MapPosition}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
+	public pointerMove: EventEmitter<any>;
 
 	constructor(private _id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
+		this.pointerMove = new EventEmitter<any>();
 	}
 
 	private registerToManagerEvents() {
 		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
+		
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition ) => {
 			this.positionChanged.emit({id: this._id, position});
 		}));
+
+		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {
+			this.pointerMove.emit(latLon);
+		}));
+
 	}
 
 	private unregisterToManagerEvents() {
@@ -129,6 +138,19 @@ export class CommunicatorEntity {
 			this.ActiveMap.removeVectorLayer(layer);
 		}
 	}
-
 	//CommunicatorEntity methods end
+
+	//======shadow mouse start
+	public toggleMouseShadowListener(){
+		this._manager.getMapObject().togglePointerMove();
+	}
+
+	public addMouseShadowVectorLayer(){
+		(<any>this._manager.getMapObject()).toggleMouseShadowVectorLayer();	
+	}
+
+	public drawShadowMouse(latLon){
+		(<any>this._manager.getMapObject()).drawShadowMouse(latLon);
+	}
+	//======shadow mouse end
 }

@@ -82,7 +82,6 @@ export class EditCaseComponent implements OnInit {
 				selected_overlays_ids: [],
 				selected_context_id: "",
 				maps: {
-					position:{},
 					layouts_index: 0,
 					active_map_id: 'imagery1',
 					data: [

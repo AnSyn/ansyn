@@ -1,4 +1,3 @@
-import { Extent } from '../../model/extent';
 import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { IMapComponent } from '../../model/imap-component';
@@ -107,45 +106,6 @@ export class ImageryComponentManager {
 		this.registerToActiveMapEvents();
 	}
 
-	public setBoundingView(boundingRectangle: GeoJSON.MultiPolygon) {
-		//console.debug("TODO: implement setBoundingView");
-	}
-
-	public setCenter(center: GeoJSON.Point, animation: boolean) {
-		this._activeMap.setCenter(center, animation);
-	}
-
-	public setPosition(position: MapPosition) {
-		this._activeMap.setPosition(position);
-	}
-
-	public getPosition(): void {
-		this._activeMap.getPosition();
-	}
-
-	public updateSize(): void {
-		this._activeMap.updateSize();
-	}
-
-	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void{
-		this._activeMap.addGeojsonLayer(data);
-	}
-
-	public getMapObject() {
-		return this._activeMap;
-	}
-
-	// private registerMapCommunicatorEvents() {
-	// 	this._subscriptions.push(this._mapCommunicator.mapBoundingRectangleChanged.subscribe((boundingRectangle: GeoJSON.MultiPolygon) => {
-	// 		this._activeMap.setBoundingRectangle(boundingRectangle);
-	// 	}));
-	//
-	// 	this._subscriptions.push(this._mapCommunicator.mapCenterChanged.subscribe((setCenter: GeoJSON.Point) => {
-	// 		this._activeMap.setCenter(setCenter);
-	// 	}));
-	// }
-	//
-
 	private registerToActiveMapEvents() {
 		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
@@ -155,8 +115,8 @@ export class ImageryComponentManager {
 		}));
 	}
 
-	getMapCenter(): GeoJSON.Point {
-		return this._activeMap.getCenter();
+	public getActiveMap(): IMap {
+		return this._activeMap;
 	}
 
 	public dispose() {
@@ -164,25 +124,5 @@ export class ImageryComponentManager {
 			this._subscriptions[i].unsubscribe();
 		}
 		this._subscriptions = [];
-	}
-
-	public setLayer(layer: any, extent?: Extent) {
-		this._activeMap.setLayer(layer, extent);
-	}
-
-	public addLayer(layer: any) {
-		this._activeMap.addLayer(layer);
-	}
-
-	public removeLayer(layer: any) {
-		this._activeMap.removeLayer(layer);
-	}
-
-	public addVectorLayer(layer: any): void {
-		this._activeMap.addVectorLayer(layer);
-	}
-
-	public removeVectorLayer(layer: any): void {
-		this._activeMap.removeVectorLayer(layer);
 	}
 }

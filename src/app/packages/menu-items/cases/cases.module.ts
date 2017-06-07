@@ -27,7 +27,7 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 		BrowserAnimationsModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
-	entryComponents: [CasesComponent, EditCaseComponent, DeleteCaseComponent],
+	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })
 export class CasesModule {

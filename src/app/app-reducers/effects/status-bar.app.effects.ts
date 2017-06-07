@@ -25,7 +25,7 @@ export class StatusBarAppEffects {
 
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState): Case => state.selected_case)
 		.cloneDeep()
 		.map( (selected_case: Case) =>  {

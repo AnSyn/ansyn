@@ -115,7 +115,7 @@ export class ImageryComponentManager {
 		}));
 	}
 
-	public getActiveMap(): IMap {
+	public get ActiveMap(): IMap {
 		return this._activeMap;
 	}
 

@@ -54,47 +54,43 @@ export class CommunicatorEntity {
 		this._manager.setActiveMap(mapType);
 	}
 
-	public getActiveMap(): IMap {
+	public get ActiveMap() {
 		if (this._manager)
 		{
-			return this._manager.getActiveMap();
+			return this._manager.ActiveMap;
 		}
 
 		return null;
 	}
 
 	public getCenter(): GeoJSON.Point {
-		const map = this.getActiveMap();
-		if (map) {
-			return map.getCenter();
+		if (this.ActiveMap) {
+			return this.ActiveMap.getCenter();
 		}
 		return null;
 	}
 	public updateSize(): void {
-		const map = this.getActiveMap();
-		if (map) {
-			return map.updateSize();
+		if (this.ActiveMap) {
+			this.ActiveMap.updateSize();
 		}
 	}
+
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
-		const map = this.getActiveMap();
-		if (map) {
-			map.addGeojsonLayer(data);
+		if (this.ActiveMap) {
+			this.ActiveMap.addGeojsonLayer(data);
 		}
 	}
 
 	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
-		const map = this.getActiveMap();
-		if (map) {
+		if (this.ActiveMap) {
 			const animate = (_.isNil(animation)) ? true : animation;
-			map.setCenter(center, animate);
+			this.ActiveMap.setCenter(center, animate);
 		}
 	}
 
 	public setPosition(position: MapPosition) {
-		const map = this.getActiveMap();
-		if (map) {
-			map.setPosition(position);
+		if (this.ActiveMap) {
+			this.ActiveMap.setPosition(position);
 		}
 	}
 
@@ -105,37 +101,32 @@ export class CommunicatorEntity {
 	}
 
 	public setLayer(layer: any, extent?: Extent) {
-		const map = this.getActiveMap();
-		if (map) {
-			map.setLayer(layer, extent);
+		if (this.ActiveMap) {
+			this.ActiveMap.setLayer(layer, extent);
 		}
 	}
 
 	public addLayer(layer: any) {
-		const map = this.getActiveMap();
-		if (map) {
-			map.addLayer(layer);
+		if (this.ActiveMap) {
+			this.ActiveMap.addLayer(layer);
 		}
 	}
 
 	public removeLayer(layer: any) {
-		const map = this.getActiveMap();
-		if (map) {
-			map.removeLayer(layer);
+		if (this.ActiveMap) {
+			this.ActiveMap.removeLayer(layer);
 		}
 	}
 
     public addVectorLayer(layer: any): void {
-		const map = this.getActiveMap();
-		if (map) {
-			map.addVectorLayer(layer);
+		if (this.ActiveMap) {
+			this.ActiveMap.addVectorLayer(layer);
 		}
 	}
 
 	public removeVectorLayer(layer: any): void {
-		const map = this.getActiveMap();
-		if (map) {
-			map.removeVectorLayer(layer);
+		if (this.ActiveMap) {
+			this.ActiveMap.removeVectorLayer(layer);
 		}
 	}
 

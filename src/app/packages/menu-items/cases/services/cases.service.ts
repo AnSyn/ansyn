@@ -10,7 +10,7 @@ export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('case
 @Injectable()
 export class CasesService {
   base_url;
-  LIMIT:number = 15;
+  LIMIT: number = 15;
 
   constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig) {
     this.base_url = this.config.casesBaseUrl;
@@ -20,50 +20,60 @@ export class CasesService {
     return this.http.get(`${this.base_url}/pagination/${last_id}?limit=${this.LIMIT}`).map(res => res.json())
   }
 
-  createCase(selected_case:Case): Observable<Case> {
-    let url:string = `${this.base_url}`;
+  createCase(selected_case: Case): Observable<Case> {
+    let url: string = `${this.base_url}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
-    let body:string = JSON.stringify(selected_case);
-    let options = new RequestOptions({ headers});
+    let body: string = JSON.stringify(selected_case);
+    let options = new RequestOptions({ headers });
     return this.http.post(url, body, options).map(res => res.json());
   }
 
   updateCase(selected_case: Case): Observable<Case> {
-    let url:string = `${this.base_url}`;
+    let url: string = `${this.base_url}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
-    let body:string = JSON.stringify(selected_case);
-    let options = new RequestOptions({ headers});
-    return this.http.put (url, body, options).map(res => res.json());
+    let body: string = JSON.stringify(selected_case);
+    let options = new RequestOptions({ headers });
+    return this.http.put(url, body, options).map(res => res.json());
   }
 
-  removeCase(selected_case_id:string): Observable<any>  {
-    let url:string = `${this.base_url}/${selected_case_id}`;
+  removeCase(selected_case_id: string): Observable<any> {
+    let url: string = `${this.base_url}/${selected_case_id}`;
     let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers});
+    let options = new RequestOptions({ headers });
     return this.http.delete(url, options).map(res => res.json());
   }
 
   loadContexts(): Observable<any> {
-	  let url: string = `${this.base_url}/contexts`;
-	  let headers = new Headers({ 'Content-Type': 'application/json' });
-	  let options = new RequestOptions({ headers});
-	  return this.http.get(url).map((res) => res.json());
+    let url: string = `${this.base_url}/contexts`;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers });
+    return this.http.get(url).map((res) => res.json());
   }
 
-	loadCase(selected_case_id:string): Observable<any>  {
-		let url:string = `${this.base_url}/${selected_case_id}`;
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers});
-		return this.http.get(url, options).map(res => {
-			return res.json()
-		});
-	}
+  loadCase(selected_case_id: string): Observable<any> {
+    let url: string = `${this.base_url}/${selected_case_id}`;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers });
+    return this.http.get(url, options)
+    .map(res => {
+      let response = null;
+      
+     try {
+       response = res.json();
+     } catch (exception) { }
 
-	loadDefaultCase(){
-		return Observable.of(this.config.defaultCase);
-	}
+     return response;
+    })
+    .catch((error) => {
+      return Observable.of("");
+    });
+  }
 
-  enhanceDefaultCase(default_case: Case): void{
+  loadDefaultCase() {
+    return Observable.of(this.config.defaultCase);
+  }
+
+  enhanceDefaultCase(default_case: Case): void {
     default_case.last_modified = new Date();
   }
 }

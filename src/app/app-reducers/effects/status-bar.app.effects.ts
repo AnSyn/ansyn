@@ -11,7 +11,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import * as _ from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { BaseSettings, MapState } from '@ansyn/menu-items/cases/models/map-state.model';
+import { MapState, defaultMapType } from '@ansyn/menu-items/cases/models/map-state.model';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
@@ -75,10 +75,8 @@ export class StatusBarAppEffects {
 	}
 
 	createCopyMap(index, position: Position): MapState {
-		return {
-			id: `imagery${index}`,
-			settings: BaseSettings, data:{position}
-		}
+		// TODO: Need to get the real map Type from store instead of default map
+		const mapStateCopy: MapState = {id: `imagery${index}`, data:{position}, mapType: defaultMapType};
+		return mapStateCopy;
 	}
-
 }

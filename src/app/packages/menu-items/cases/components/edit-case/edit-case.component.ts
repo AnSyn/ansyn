@@ -7,7 +7,7 @@ import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction }
 import * as _ from "lodash";
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
-import { BaseSettings } from '../../models/map-state.model';
+import { defaultMapType } from '../../models/map-state.model';
 
 const animations_during = '0.2s';
 
@@ -98,7 +98,7 @@ export class EditCaseComponent implements OnInit {
 									}
 								}
 							},
-							settings: BaseSettings,
+							mapType: defaultMapType,
 						},
 					]
 				},

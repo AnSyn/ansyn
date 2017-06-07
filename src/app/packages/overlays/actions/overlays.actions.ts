@@ -18,7 +18,7 @@ export const OverlaysActionTypes = {
 	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline')
 
-}
+};
 
 export class SelectOverlayAction implements Action {
 	type = OverlaysActionTypes.SELECT_OVERLAY;
@@ -70,7 +70,7 @@ export class DemoAction implements Action {
     }
 }
 
-export class redrawTimelineAction implements Action {
+export class RedrawTimelineAction implements Action {
 	type = OverlaysActionTypes.REDRAW_TIMELINE;
 	constructor(public payload?: boolean){};
 }
@@ -85,4 +85,4 @@ export type OverlaysActions
 	|	ClearFilter
 	|	SetFilter
 	| 	DemoAction
-	| 	redrawTimelineAction;
+	| 	RedrawTimelineAction;

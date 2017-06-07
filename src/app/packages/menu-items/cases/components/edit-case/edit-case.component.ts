@@ -38,14 +38,17 @@ const host = {
 
 export class EditCaseComponent implements OnInit {
 
-	active_case$: Observable <Case> = this.store.select("cases")
+	active_case$: Observable<Case> = this.store.select("cases")
 		.distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this))
 		.map(this.getCloneActiveCase.bind(this));
+	default_case_id$: Observable<string> = this.store.select("cases").map((state: ICasesState) => state.default_case.id);
+
 	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(_.isEqual);
 	contexts_list: Context[];
 
 	case_model:Case;
 	on_edit_case = false;
+	default_case_id: string;
 
 	@ViewChild("name_input") name_input: ElementRef;
 
@@ -61,7 +64,7 @@ export class EditCaseComponent implements OnInit {
 
 	getCloneActiveCase(case_state: ICasesState): Case {
 		let s_case: Case = case_state.selected_case;//case_state.cases.find((case_value: Case) => case_value.id == case_state.active_case_id);
-		if(s_case) {
+		if(s_case && s_case.id !== case_state.default_case.id) {
 			s_case = _.cloneDeep(s_case);
 			this.on_edit_case = true;
 		} else {
@@ -119,6 +122,10 @@ export class EditCaseComponent implements OnInit {
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
 		});
+
+		this.default_case_id$.subscribe((default_id: string) => {
+			this.default_case_id = default_id;
+		});
 	}
 
 	close(): void {
@@ -126,7 +133,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
-		if(this.case_model.id) {
+		if(this.case_model.id && this.case_model.id !== this.default_case_id) {
 			this.store.dispatch(new UpdateCaseAction(this.case_model));
 		} else {
 			this.store.dispatch(new AddCaseAction(this.case_model));

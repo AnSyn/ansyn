@@ -5,7 +5,7 @@ import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import * as _ from "lodash";
-import { AddCaseAction, CloseModalAction } from '../../actions/cases.actions';
+import { SaveDefaultCaseAction, CloseModalAction } from '../../actions/cases.actions';
 
 const animations_during = '0.2s';
 
@@ -35,9 +35,8 @@ const host = {
 })
 export class SaveCaseComponent implements OnInit {
 
-  active_case$: Observable<Case> = this.store.select("cases")
-    .distinctUntilChanged(this.distinctUntilChangedActiveCase.bind(this))
-    .map(this.getCloneActiveCase.bind(this));
+  selected_case$: Observable<Case> = this.store.select("cases")
+    .map(this.getCloneSelectedCase.bind(this));
 
   case_model: Case;
   on_edit_case = false;
@@ -50,18 +49,14 @@ export class SaveCaseComponent implements OnInit {
 
   constructor(private store: Store<ICasesState>) { }
 
-  distinctUntilChangedActiveCase(state_prev: ICasesState, state_current: ICasesState) {
-    return _.isEqual(state_prev.active_case_id, state_current.active_case_id);
-  }
-
-  getCloneActiveCase(case_state: ICasesState): Case {
+  getCloneSelectedCase(case_state: ICasesState): Case {
     let s_case: Case = case_state.selected_case;
     return s_case;
   }
 
   ngOnInit(): void {
-    this.active_case$.subscribe((active_case: Case) => {
-      this.case_model = active_case;
+    this.selected_case$.subscribe((selected_case: Case) => {
+      this.case_model = selected_case;
     });
   }
 
@@ -70,7 +65,7 @@ export class SaveCaseComponent implements OnInit {
   }
 
   onSubmitCase() {
-    this.store.dispatch(new AddCaseAction(this.case_model));
+    this.store.dispatch(new SaveDefaultCaseAction(this.case_model));
   }
 }
 

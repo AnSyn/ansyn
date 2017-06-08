@@ -1,8 +1,9 @@
 import { CasesConfig } from './../models/cases-config';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions } from "@angular/http";
-import { Observable } from "rxjs";
+import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/debounce";
 import { Case } from '../models/case.model';
 import { isEmpty } from 'lodash';
 
@@ -29,12 +30,27 @@ export class CasesService {
     return this.http.post(url, body, options).map(res => res.json());
   }
 
+  wrapUpdateCase(selected_case: Case): Observable<Case>{
+     return Observable.create( observer => {
+         observer.next(Date.now());
+     })
+     .debounceTime(1000)
+        .switchMap(() => {
+          return this.updateCase(selected_case);
+        }); 
+  }
+
   updateCase(selected_case: Case): Observable<Case> {
-    let url: string = `${this.base_url}`;
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let body: string = JSON.stringify(selected_case);
-    let options = new RequestOptions({ headers });
-    return this.http.put(url, body, options).map(res => res.json());
+    
+    const url:string = `${this.base_url}`;
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const body:string = JSON.stringify(selected_case);
+    const options = new RequestOptions({ headers});
+    return this.http
+            .put (url, body, options)
+            .map(res => res.json());
+            
+
   }
 
   removeCase(selected_case_id: string): Observable<any> {

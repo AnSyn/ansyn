@@ -47,7 +47,7 @@ export class StatusBarAppEffects {
 				selected_case.state.maps.layouts_index = action.payload;
 				selected_case = this.setMapsDataChanges(selected_case, selected_layout);
 
-				return this.casesService.updateCase(selected_case).mergeMap( (updated_case) => {
+				return this.casesService.wrapUpdateCase(selected_case).mergeMap( (updated_case) => {
 					return [new UpdateCaseSuccessAction(updated_case), new UpdateMapSizeAction()];
 				});
 			})

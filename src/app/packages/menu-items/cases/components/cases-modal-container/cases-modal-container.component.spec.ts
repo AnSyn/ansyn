@@ -8,6 +8,7 @@ import { OpenModalAction } from '../../actions/cases.actions';
 import { StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../../reducers/cases.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -15,7 +16,7 @@ describe('ModalContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }),RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		})
 			.compileComponents();

@@ -7,6 +7,7 @@ import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -21,12 +22,14 @@ describe('EditCaseComponent', () => {
 		active_case_id: 'fake_id1',
 		modal: true,
 		contexts: [],
-		contexts_loaded: true
+		contexts_loaded: true,
+		selected_case: { id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null}},
+		default_case: { id: 'fake_id3', name: 'fake_name3', state: {selected_context_id: null}}
 	} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
@@ -50,12 +53,7 @@ describe('EditCaseComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});
 
-	it('onSubmitCase should call dispatch with UpdateCaseAction if case_id exist and CreateCaseAction if not.', () => {
-		//active_case_id = null -> CreateCaseAction
-		component.case_model.id = undefined;
-		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.case_model));
-		component.case_model.id = 'some_id_not_null';
+	it('onSubmitCase should call dispatch with UpdateCaseAction', () => {
 		component.onSubmitCase();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
 	});

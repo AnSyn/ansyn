@@ -35,7 +35,7 @@ class SourceProviderMock3 extends BaseOverlayDataSourceFacade {
     sourceType = 'sourceType3';
 }
 
-fdescribe('DataSourceFacadeModule', () => {
+describe('DataSourceFacadeModule', () => {
 	let sourceFacadeContainerService: SourceFacadeContainerService;
 	let sourceProviders: BaseOverlayDataSourceFacade[] = [
 		new SourceProviderMock1(),

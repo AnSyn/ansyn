@@ -64,7 +64,6 @@ export class MenuComponent implements AfterViewInit{
 		});
 
 		this.selected_menu_item_index$
-			.debug()
 			.subscribe(this.onSelectedIndexChange.bind(this));
 
 		this.animation$.subscribe((_animation: boolean) => {

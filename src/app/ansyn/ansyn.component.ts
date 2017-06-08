@@ -9,7 +9,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import "@ansyn/core/utils/clone-deep";
 import { ActivatedRoute, Params } from '@angular/router';
 import { LoadCaseAction, LoadDefaultCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
-import * as _ from 'lodash';
+import { isNil, isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -18,13 +18,13 @@ import * as _ from 'lodash';
 })
 
 export class AnsynComponent implements OnInit{
-	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar').map((state: IStatusBarState) => state.layouts[state.selected_layout_index]).distinctUntilChanged(_.isEqual);
-	selected_case$: Observable<Case> = this.store.select('cases').map((state: ICasesState) => state.selected_case).cloneDeep().distinctUntilChanged(_.isEqual);
+	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar').map((state: IStatusBarState) => state.layouts[state.selected_layout_index]).distinctUntilChanged(isEqual);
+	selected_case$: Observable<Case> = this.store.select('cases').map((state: ICasesState) => state.selected_case).cloneDeep().distinctUntilChanged(isEqual);
 	maps$: Observable<any[]> = this.store.select('cases').map((state: ICasesState) => {
 
 		const s_case = state.selected_case;
 		return s_case ? s_case.state.maps : {data: []};
-	}).distinctUntilChanged(_.isEqual);
+	}).distinctUntilChanged(isEqual);
 
 	selected_layout: MapsLayout;
 	selected_case: Case;
@@ -40,7 +40,7 @@ export class AnsynComponent implements OnInit{
 		});
 
 		this.activatedRoute.params.subscribe((params: Params) => {
-			if(_.isNil(params['case_id'])) {
+			if(isNil(params['case_id'])) {
 				this.store.dispatch(new LoadDefaultCaseAction());
 			} else {
 				this.store.dispatch(new LoadCaseAction(params['case_id']));

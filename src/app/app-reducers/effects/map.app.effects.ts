@@ -97,8 +97,8 @@ export class MapAppEffects {
 			const selected_map = selected_case.state.maps.data[selected_map_index];
 			selected_map.data.position = action.payload.position;
 			selected_case.state.maps.data[selected_map_index] = selected_map;
-
-			return this.casesService.updateCase(selected_case).map((updated_case) => {
+			console.log('position changed effect');
+			return this.casesService.wrapUpdateCase(selected_case).map((updated_case) => {
 				return new UpdateCaseSuccessAction(updated_case);
 			});
 		});

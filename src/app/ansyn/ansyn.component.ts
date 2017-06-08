@@ -61,8 +61,10 @@ export class AnsynComponent implements OnInit{
 	}
 
 	onActiveImagery(active_map_id: string) {
-		this.selected_case.state.maps.active_map_id = active_map_id;
-		this.store.dispatch(new UpdateCaseAction(this.selected_case))
+		if(this.selected_case.state.maps.active_map_id !== active_map_id ){
+			this.selected_case.state.maps.active_map_id = active_map_id;
+			this.store.dispatch(new UpdateCaseAction(this.selected_case));
+		}
 	}
 
 }

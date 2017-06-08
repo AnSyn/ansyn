@@ -1,7 +1,7 @@
 {
-  "name": "@ansyn/map-source-provider",
-  "version": "1.0.0",
-  "description": "This is map source provider package",
+  "name": "data-source-facade",
+  "version": "0.0.1",
+  "description": "This package expose all the facades that necessary for the application to work",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,6 @@
   "author": "eldadcohen1",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^4.0.0",
     "@angular/core": "^4.0.0"
   }
 }

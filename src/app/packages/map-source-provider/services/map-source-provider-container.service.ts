@@ -21,7 +21,7 @@ export class MapSourceProviderContainerService implements IMapSourceProviderCont
 
 	private _sourceProvides: Map<string,BaseSourceProvider>;
 
-	constructor(@Inject(BaseSourceProvider) private _sourceMapProviders: BaseSourceProvider[]) {
+	constructor(@Inject(BaseSourceProvider)  _sourceMapProviders: BaseSourceProvider[]) {
 		this._sourceProvides = new Map<string,BaseSourceProvider>();
 		if (!_sourceMapProviders) {
 			console.log("Non providers were provide: Empty or undefined ");

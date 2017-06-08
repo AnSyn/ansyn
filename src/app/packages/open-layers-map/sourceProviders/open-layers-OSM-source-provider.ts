@@ -14,8 +14,10 @@ export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
 	}
 
 	create(metaData: any): any {
-		const osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
-		var openSeaMapLayer = new ol.layer.Tile({
+		const osmLayer = new ol.layer.Tile({
+			source: new ol.source.OSM()
+		});
+		const openSeaMapLayer = new ol.layer.Tile({
 			source: new ol.source.OSM(<any>{
 				attributions: [
 					'All maps © <a href="http://www.openseamap.org/">OpenSeaMap</a>',

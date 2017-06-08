@@ -5,13 +5,14 @@ import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { UpdateCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction, UpdateCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases/reducers/cases.reducer';
 import { CoreModule } from '@ansyn/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -25,7 +26,8 @@ describe('CasesAppEffects', () => {
 			imports: [HttpModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
-				CoreModule
+				CoreModule,
+				RouterTestingModule
 			],
 			providers: [CasesAppEffects,
 				CasesService,
@@ -66,16 +68,14 @@ describe('CasesAppEffects', () => {
 		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
 
 		effectsRunner.queue(new SelectOverlayAction("1234-5678"));
-		let result: UpdateCaseSuccessAction;
+		let result: UpdateCaseAction;
 		casesAppEffects.selectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
 			result = _result;
 		});
 
-		expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
+		expect(result instanceof UpdateCaseAction).toBeTruthy();
 		expect(result.payload).toEqual(selected_case);
 		expect(selected_case.state.selected_overlays_ids).toEqual(["1234-5678"]);
-		expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
-
 	});
 
 	it('unSelectOverlay$ should delete overlay.id to selected_overlays_ids on cases', () => {
@@ -84,38 +84,15 @@ describe('CasesAppEffects', () => {
 		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
 
 		effectsRunner.queue(new UnSelectOverlayAction("1234-5678"));
-		let result: UpdateCaseSuccessAction;
+		let result: UpdateCaseAction;
 		casesAppEffects.unSelectOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
 			result = _result;
 		});
 
-		expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
+		expect(result instanceof UpdateCaseAction).toBeTruthy();
 		expect(result.payload).toEqual(selected_case);
 		expect(selected_case.state.selected_overlays_ids).toEqual([]);
-		expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
 	});
-
-	// it('positionChanged$ should save the position from PositionChange Action to selected_case', () => {
-	//     let selected_case: Case = icase_state.cases[0];
-	//
-	//     spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
-	//
-	//     let position: Position = {
-	//         zoom: 1,
-	//         center: "" as any
-	//     };
-	//
-	//     effectsRunner.queue(new PositionChangedAction({id: 'imagery1', position}));
-	//     let result: UpdateCaseSuccessAction;
-	//     casesAppEffects.positionChanged$.subscribe((_result: UpdateCaseSuccessAction) => {
-	//         result = _result;
-	//     });
-	//
-	//     expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
-	//     expect(result.payload).toEqual(selected_case);
-	//     expect(selected_case.state.maps[0].position).toEqual(position);
-	//     expect(casesService.updateCase).toHaveBeenCalledWith(selected_case);
-	// });
 
 	it('On selectCase$ call to loadOverlaysAction with case params ', () => {
 
@@ -175,6 +152,7 @@ describe('CasesAppEffects', () => {
 		} as any;
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
 
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 
@@ -182,27 +160,10 @@ describe('CasesAppEffects', () => {
 			expect(result instanceof LoadOverlaysAction).toBeTruthy();
 			expect(result.payload.to).toEqual(caseItem.state.time.to);
 			expect(result.payload.from).toEqual(caseItem.state.time.from);
-			expect(result.payload.polygon).toEqual(caseItem.state.region)
-			expect(result.payload.caseId).toEqual(caseItem.id)
+			expect(result.payload.polygon).toEqual(caseItem.state.region);
+			expect(result.payload.caseId).toEqual(caseItem.id);
 		});
 
 	});
-/*
-
-	it('On selectCase$ call to loadOverlaysAction with no params and recieve nothing ', () => {
-
-		effectsRunner.queue(new SelectCaseByIdAction('tmp'));
-		let result: any;
-
-		casesAppEffects.selectCase$.subscribe((_result: LoadOverlaysAction) => {
-			result = _result;
-		});
-
-		expect(result).toBeFalsy();
-
-
-	});
-*/
-
 
 });

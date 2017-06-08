@@ -6,9 +6,10 @@ import { CasesService } from '../../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
-import { LoadCasesAction, OpenModalAction, SelectCaseAction } from '../../actions/cases.actions';
+import { LoadCasesAction, OpenModalAction, SelectCaseByIdAction } from '../../actions/cases.actions';
 import { HttpModule } from '@angular/http';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -18,7 +19,7 @@ describe('CasesTableComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		})
 			.compileComponents();
@@ -43,7 +44,7 @@ describe('CasesTableComponent', () => {
 
 	it('selectCase should call casesService.selectCase', () => {
 		component.selectCase("id");
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction("id"));
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseByIdAction("id"));
 	});
 
 	it('onCasesAdded should change tbody_element scrollTop to 0', () => {

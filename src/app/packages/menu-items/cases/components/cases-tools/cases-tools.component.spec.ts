@@ -7,6 +7,7 @@ import { HttpModule } from '@angular/http';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -15,7 +16,7 @@ describe('CasesToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		})
 			.compileComponents();
@@ -40,15 +41,15 @@ describe('CasesToolsComponent', () => {
 	});
 
 	it('add-case button should call showCaseModal()', () => {
-		spyOn(component, 'showCaseModal');
+		spyOn(component, 'showEditCaseModal');
 		let button = fixture.nativeElement.querySelector("button.add-case");
 		button.click();
 		fixture.detectChanges();
-		expect(component.showCaseModal).toHaveBeenCalled();
+		expect(component.showEditCaseModal).toHaveBeenCalled();
 	});
 
 	it('showCaseModal should call store.dispatch with OpenModalAction', () => {
-		component.showCaseModal();
+		component.showEditCaseModal();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent }));
 	});
 

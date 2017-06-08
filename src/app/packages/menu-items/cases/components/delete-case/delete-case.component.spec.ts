@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -28,7 +29,7 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer })],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));

@@ -76,13 +76,13 @@ describe('StatusBarAppEffects', () => {
 		};
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
+		
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
 			expect(result instanceof ChangeLayoutAction).toBeTruthy();
-			expect(result.payload).toEqual(layouts_index)
+			expect(result.payload).toEqual(layouts_index);
 		});
-	})
-
-
+	});
 
 });

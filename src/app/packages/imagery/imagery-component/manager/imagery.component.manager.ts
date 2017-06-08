@@ -26,7 +26,6 @@ export class ImageryComponentManager {
 				private _mapComponentRef: ComponentRef<any>,
 				private mapSourceProviderContainerService: MapSourceProviderContainerService,
 				private config: IImageryConfig,
-				private imagerySettings: ImageryComponentSettings,
 				private imageryCommunicator: CommunicatorEntity) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();

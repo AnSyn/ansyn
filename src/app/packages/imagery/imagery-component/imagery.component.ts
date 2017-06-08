@@ -38,7 +38,7 @@ export class ImageryComponent implements OnInit, OnDestroy, OnChanges {
 
 		this._manager = new ImageryComponentManager(this.mapComponentSettings.id, this.imageryProviderService,
 			this.componentFactoryResolver, this.map_component_elem,
-			this._mapComponentRef, this.mapSourceProviderContainerService, this.config, this.mapComponentSettings, imageryCommunicator);
+			this._mapComponentRef, this.mapSourceProviderContainerService, this.config, imageryCommunicator);
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position);
 
 		imageryCommunicator.init(this._manager);

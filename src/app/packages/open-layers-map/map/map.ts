@@ -63,12 +63,7 @@ export class Map implements IMap {
 	}
 
 	private setMainLayer(layer: ol.layer.Layer) {
-		// TODO: check about other layers (interaction etc.)
-		//this._mapObject.getLayers().clear();
-        this._mapLayers.forEach((existingLayer) => {
-            this._mapObject.removeLayer(existingLayer);
-        });
-		this._mapLayers = [];
+		this.removeAllLayers();
 
 		const currentZoom = this._mapObject.getView().getZoom();
 		const currentCenter = this._mapObject.getView().getCenter();
@@ -121,10 +116,20 @@ export class Map implements IMap {
         this._mapObject.addLayer(layer);
     }
 
+    public removeAllLayers() {
+		// TODO: check about other layers (interaction etc.)
+		//this._mapObject.getLayers().clear();
+		this._mapLayers.forEach((existingLayer) => {
+			this._mapObject.removeLayer(existingLayer);
+		});
+
+		this._mapLayers = [];
+	}
+
 	public removeLayer(layer: any): void {
 		const index = this._mapLayers.indexOf(layer);
 		if (index > -1) {
-			this._mapLayers.splice(layer);
+			this._mapLayers = this._mapLayers.slice(layer);
 			this._mapObject.removeLayer(layer);
 		}
 	}

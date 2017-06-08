@@ -19,6 +19,8 @@ export class OverlaysService {
 
     }
 
+    
+
     //@todo move to cases
     getByCase(url = "", params: any = { caseId: ':' }): Observable<any[]> {
         return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));

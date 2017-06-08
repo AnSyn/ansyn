@@ -24,17 +24,16 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 
 @NgModule({
 	providers:[
-		{ provide: BaseSourceProvider , useClass: OpenLayerTileWMSSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerIDAHOSourceProvider, multi:true}
 	],
 	declarations: [
 		AppComponent,
 		AnsynComponent,
 	],
 	imports: [
+		MapSourceProviderModule.register(OpenLayerTileWMSSourceProvider),
+		MapSourceProviderModule.register(OpenLayerOSMSourceProvider),
+		MapSourceProviderModule.register(OpenLayerIDAHOSourceProvider),
 		OpenLayerCenterMarkerPluginModule,
-		MapSourceProviderModule,
 		OpenLayerMapModule,
 		CesiumMapModule,
 		BrowserModule,

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes, SelectMenuItemAction, MenuItem } from '@ansyn/core';
+import { MenuActionTypes, SelectMenuItemAction, MenuItem, EmptyAction } from '@ansyn/core';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { redrawTimelineAction } from '@ansyn/overlays';
 import { IAppState } from '../';
@@ -36,9 +36,9 @@ export class MenuAppEffects {
 			const casesIndex = appState.menu.menu_items.indexOf(casesMenuItem);
 
 			if (casesIndex === appState.menu.selected_menu_item_index) {
-				return Observable.empty();
+				return new EmptyAction();
 			} else if (appState.cases.default_case && action.payload == appState.cases.default_case.id) {
-				return Observable.empty();
+				return new EmptyAction();
 			}
 
 			return new SelectMenuItemAction(casesIndex);

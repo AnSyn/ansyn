@@ -1,3 +1,4 @@
+import { EmptyAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
@@ -33,7 +34,7 @@ export class CasesAppEffects {
 			const selected_case: Case = state.selected_case;
 
 			if (!selected_case) {
-				return Observable.empty();
+				return new EmptyAction();
 			}
 
 			if (!selected_case.state.selected_overlays_ids) {
@@ -57,7 +58,7 @@ export class CasesAppEffects {
 			const selected_case: Case = state.selected_case;
 
 			if (!selected_case) {
-				return Observable.empty();
+				return new EmptyAction();
 			}
 
 			if (!selected_case.state.selected_overlays_ids) {

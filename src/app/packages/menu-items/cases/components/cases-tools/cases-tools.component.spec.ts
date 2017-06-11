@@ -1,3 +1,4 @@
+import { SaveCaseComponent } from './../save-case/save-case.component';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesToolsComponent } from './cases-tools.component';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
@@ -48,9 +49,21 @@ describe('CasesToolsComponent', () => {
 		expect(component.showEditCaseModal).toHaveBeenCalled();
 	});
 
-	it('showCaseModal should call store.dispatch with OpenModalAction', () => {
+	it('showEditCaseModal should call store.dispatch with OpenModalAction', () => {
 		component.showEditCaseModal();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent }));
 	});
 
+	it('save-case button should call showCaseModal()', () => {
+		spyOn(component, 'showSaveCaseModal');
+		let button = fixture.nativeElement.querySelector("button.save-case");
+		button.click();
+		fixture.detectChanges();
+		expect(component.showSaveCaseModal).toHaveBeenCalled();
+	});
+
+	it('showSaveCaseModal should call store.dispatch with OpenModalAction', () => {
+		component.showSaveCaseModal();
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: SaveCaseComponent }));
+	});
 });

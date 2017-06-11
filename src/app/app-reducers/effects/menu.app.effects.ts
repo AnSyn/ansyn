@@ -37,7 +37,7 @@ export class MenuAppEffects {
 
 			if (casesIndex === appState.menu.selected_menu_item_index) {
 				return new EmptyAction();
-			} else if (appState.cases.default_case && action.payload == appState.cases.default_case.id) {
+			} else if (appState.cases.default_case && action.payload === appState.cases.default_case.id) {
 				return new EmptyAction();
 			}
 

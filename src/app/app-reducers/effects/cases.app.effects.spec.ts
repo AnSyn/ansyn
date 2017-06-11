@@ -5,14 +5,19 @@ import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { UpdateCaseAction, UpdateCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction, UpdateCaseSuccessAction, SelectCaseByIdAction, LoadDefaultCaseSuccessAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
-import { ICasesState } from '@ansyn//menu-items/cases/reducers/cases.reducer';
+import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';   
+
+class MockRouter {
+    navigate(url: string) { return url; }
+}
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -20,7 +25,8 @@ describe('CasesAppEffects', () => {
 	let casesService: CasesService;
 	let store: Store < any > ;
 	let icase_state: ICasesState;
-
+	let router: Router;
+	
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule,
@@ -31,13 +37,15 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
+				{ provide: casesConfig, useValue: { casesBaseUrl: null } },
+				{ provide: Router, useClass: MockRouter }]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, casesConfig], (_store: Store<any>) => {
+	beforeEach(inject([Store, casesConfig, Router], (_store: Store<any>, casesConfig:any, _router: Router) => {
 		store = _store;
+		router =_router;
 
 		icase_state = {
 			cases: [{
@@ -49,6 +57,12 @@ describe('CasesAppEffects', () => {
 			selected_case:{
 				id: 'case1',
 				index: 0
+			},
+			default_case: {
+				id: 'case1',
+				state: {
+					selected_overlays_ids: []
+				}
 			}
 		} as any;
 
@@ -164,6 +178,94 @@ describe('CasesAppEffects', () => {
 			expect(result.payload.caseId).toEqual(caseItem.id);
 		});
 
+	});
+
+	it('selectCaseUpdateRouter$ route to the (non-default) case being selected', () => {
+		const caseItem: Case =  {
+			"name": "look here for overlay",
+			"owner": "Elisha Auer",
+			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
+			"state": {
+				"maps": [{
+					"position": {
+						"center": {
+							"type": "Point",
+							"coordinates": [
+								9.146954103469149,
+								3.664086952897634
+							]
+						},
+						"zoom": 9
+					}
+				}],
+				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
+				"facets": {
+					"SensorName": "Welch, Dooley and Labadie",
+					"SensorType": "SAR",
+					"Stereo": true,
+					"Resolution": 6
+				},
+				"region": {
+					"type": "FeatureCollection",
+					"features": [{
+						"type": "Feature",
+						"properties": {
+							"MUN_HEB": "Hasharon",
+							"MUN_ENG": "Hasharon"
+						},
+						"geometry": {
+							"type": "Polygon",
+							"coordinates": [
+								[
+									[35.71991824722275, 32.709192409794866],
+									[35.54566531753454, 32.393992011030576]
+								]
+							]
+						}
+					}]
+				},
+				"time": {
+					"type": "absolute",
+					"from": new Date("2013-06-27T08:43:03.624Z"),
+					"to": new Date("2015-04-17T03:55:12.129Z")
+				},
+				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
+			},
+			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+		} as any;
+
+		spyOn(router, 'navigate');
+
+		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
+
+		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
+
+		casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
+			expect(router.navigate).toHaveBeenCalledWith(['', caseItem.id]);
+		});
+	});
+
+	it('selectCaseUpdateRouter$ route to the (default) case being selected', () => {
+		spyOn(router, 'navigate');
+
+		store.dispatch(new LoadDefaultCaseSuccessAction(icase_state.default_case));
+		store.dispatch(new SelectCaseByIdAction(icase_state.default_case.id));
+
+		effectsRunner.queue(new SelectCaseByIdAction(icase_state.default_case.id));
+
+		casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
+			expect(router.navigate).toHaveBeenCalledTimes(0);
+		});
+	});
+
+	it('saveDefaultCase$ should add a default case', () => {
+		effectsRunner.queue(new SaveDefaultCaseAction(icase_state.default_case));
+
+		casesAppEffects.saveDefaultCase$.subscribe((result: AddCaseAction) => {
+			expect(result instanceof AddCaseAction).toBeTruthy();
+			expect(result.payload).toEqual(icase_state.default_case);
+		});
 	});
 
 });

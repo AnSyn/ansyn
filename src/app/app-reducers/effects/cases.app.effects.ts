@@ -99,16 +99,16 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.filter(action => !isEmpty(action))
 		.withLatestFrom(this.store$.select('cases'))
-		.switchMap(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
-			if (state.default_case && action.payload == state.default_case.id) {
-				return Observable.empty();
+		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
+			if (state.default_case && action.payload === state.default_case.id) {
+				return;
 			}
 
 			return this.router.navigate(['', action.payload]);
-		})
+		});
 
 	@Effect()
-	saveDefaultCase: Observable<AddCaseAction> = this.actions$
+	saveDefaultCase$: Observable<AddCaseAction> = this.actions$
 		.ofType(CasesActionTypes.SAVE_DEFAULT_CASE)
 		.map(toPayload)
 		.map((default_case: Case) => {

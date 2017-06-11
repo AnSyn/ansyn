@@ -1,3 +1,4 @@
+import { SaveDefaultCaseAction } from './../../actions/cases.actions';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
@@ -47,4 +48,9 @@ describe('SaveCaseComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
+	it('onSubmitCase should call dispatch with UpdateCaseAction', () => {
+		component.onSubmitCase();
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveDefaultCaseAction(component.case_model));
+	});
 });

@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -17,6 +16,7 @@ import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class CasesEffects {
@@ -126,7 +126,6 @@ export class CasesEffects {
 						if (data) {
 							return new LoadCaseSuccessAction(data);
 						} else {
-							this.router.navigate(['', '']);							
 							return new LoadDefaultCaseAction();
 						}
 					});
@@ -145,7 +144,9 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
-		.switchMap((action: LoadDefaultCaseAction) => {
+		.withLatestFrom(this.store.select("cases"))
+		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
+		.switchMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
 			return this.casesService.loadDefaultCase().map((default_case) => {
 				return new LoadDefaultCaseSuccessAction(default_case);
 			});
@@ -160,7 +161,6 @@ export class CasesEffects {
 
 	constructor(private actions$: Actions, 
 	private casesService: CasesService, 
-	private store: Store<ICasesState>,
-	private router: Router) { }
+	private store: Store<ICasesState>) { }
 }
 

@@ -1,4 +1,3 @@
-import { EmptyAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
@@ -29,13 +28,10 @@ export class CasesAppEffects {
 	selectOverlay$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, state]: [SelectOverlayAction, ICasesState]) => !isEmpty(state.selected_case))
 		.cloneDeep()
 		.map(([action, state]: [SelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
-
-			if (!selected_case) {
-				return new EmptyAction();
-			}
 
 			if (!selected_case.state.selected_overlays_ids) {
 				selected_case.state.selected_overlays_ids = [];
@@ -53,13 +49,10 @@ export class CasesAppEffects {
 	unSelectOverlay$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, state]: [SelectOverlayAction, ICasesState]) => !isEmpty(state.selected_case))
 		.cloneDeep()
 		.map(([action, state]: [UnSelectOverlayAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
-
-			if (!selected_case) {
-				return new EmptyAction();
-			}
 
 			if (!selected_case.state.selected_overlays_ids) {
 				selected_case.state.selected_overlays_ids = [];
@@ -101,7 +94,7 @@ export class CasesAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
 			if (state.default_case && action.payload === state.default_case.id) {
-				return;
+			return this.router.navigate(['', '']);
 			}
 
 			return this.router.navigate(['', action.payload]);

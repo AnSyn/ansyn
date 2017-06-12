@@ -1,7 +1,7 @@
 {
-  "name": "data-source-facade",
-  "version": "0.0.1",
-  "description": "This package expose all the facades that necessary for the application to work",
+  "name": "@ansyn/type-container",
+  "version": "0.0.2",
+  "description": "This package use as a type container to resolve types",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -115,7 +115,7 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_CASE)
 		.withLatestFrom(this.store.select("cases"))
 		.switchMap(([action, state]: [LoadCaseAction, ICasesState]) => {
-			const existing_case = state.cases.find(case_val => case_val.id == action.payload);
+			const existing_case = state.cases.find(case_val => case_val.id === action.payload);
 
 			if (existing_case) {
 				return Observable.of(new SelectCaseByIdAction(existing_case.id) as any);
@@ -145,7 +145,7 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
-		.switchMap((action: LoadCaseSuccessAction) => {
+		.switchMap((action: LoadDefaultCaseAction) => {
 			return this.casesService.loadDefaultCase().map((default_case) => {
 				return new LoadDefaultCaseSuccessAction(default_case);
 			});

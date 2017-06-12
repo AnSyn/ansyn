@@ -2,7 +2,7 @@
  * Created by EldadCohen on 22/05/2017.
  */
 
-import { BaseSourceProvider } from '@ansyn/map-source-provider';
+import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export class OpenLayerIDAHOSourceProvider extends BaseSourceProvider {

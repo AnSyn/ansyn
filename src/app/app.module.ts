@@ -17,10 +17,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
-import { MapSourceProviderModule, BaseSourceProvider } from '@ansyn/map-source-provider';
-import { OpenLayerTileWMSSourceProvider, OpenLayerOSMSourceProvider, OpenLayerIDAHOSourceProvider } from '@ansyn/open-layers-map';
+import { BaseSourceProvider } from '@ansyn/imagery';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
+import {OpenLayerTileWMSSourceProvider} from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
+import {OpenLayerOSMSourceProvider} from './app-models/map-source-providers/open-layers-OSM-source-provider';
+import {OpenLayerIDAHOSourceProvider} from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
+import { TypeContainerModule } from '@ansyn/type-container';
 
 @NgModule({
 	providers:[
@@ -30,9 +33,21 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 		AnsynComponent,
 	],
 	imports: [
-		MapSourceProviderModule.register(OpenLayerTileWMSSourceProvider),
-		MapSourceProviderModule.register(OpenLayerOSMSourceProvider),
-		MapSourceProviderModule.register(OpenLayerIDAHOSourceProvider),
+		TypeContainerModule.register({
+			baseType :BaseSourceProvider,
+			type : OpenLayerTileWMSSourceProvider, 
+			name : ['openLayersMap','TileWMS'].join(',')
+		}),
+		TypeContainerModule.register({
+			baseType :BaseSourceProvider,
+			type : OpenLayerOSMSourceProvider,
+			name : ['openLayersMap','OSM'].join(',')
+		}),
+		TypeContainerModule.register({
+			baseType :BaseSourceProvider,
+			type : OpenLayerIDAHOSourceProvider,
+			name : ['openLayersMap','IDAHO'].join(',')
+		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		CesiumMapModule,

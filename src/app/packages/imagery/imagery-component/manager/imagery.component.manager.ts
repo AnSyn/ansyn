@@ -2,12 +2,13 @@ import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { IMapComponent } from '../../model/imap-component';
 import { IMapPlugin } from '../../model/imap-plugin';
+import { BaseSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../../provider-service/provider.service';
-import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { ImageryComponentSettings } from '../../model/imagery-component-settings';
 import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
 import { MapPosition } from '../../model/map-position';
+import { TypeContainerService } from '@ansyn/type-container';
 /**
  * Created by AsafMasa on 27/04/2017.
  */
@@ -24,7 +25,7 @@ export class ImageryComponentManager {
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private map_component_elem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
-				private mapSourceProviderContainerService: MapSourceProviderContainerService,
+				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
 				private imageryCommunicator: CommunicatorEntity) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
@@ -53,7 +54,7 @@ export class ImageryComponentManager {
 			throw new Error(`no config found for ${activeMapType}`);
 		}
 
-		const sourceProvider = this.mapSourceProviderContainerService.resolve(releventMapConfig.mapType, releventMapConfig.mapSource);
+		const sourceProvider = this.typeContainerService.resolve(BaseSourceProvider,[releventMapConfig.mapType, releventMapConfig.mapSource].join(','));
 		sourceProvider.createAsync(releventMapConfig.mapSourceMetadata).then((layers)=>{
 			mapComponent.createMap(layers, position);
 		});

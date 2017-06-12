@@ -6,15 +6,16 @@ import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
 import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
 import { Case, ICasesState, CasesService, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
+import { BaseSourceProvider } from '@ansyn/imagery';
 import { isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
+import { TypeContainerService } from "@ansyn/type-container";
 
 @Injectable()
 export class MapAppEffects {
@@ -39,7 +40,7 @@ export class MapAppEffects {
 			const bboxPolygon = turf.bboxPolygon(bbox);
 			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
 			const mapType = this.communicator.provideCommunicator(active_map_id).ActiveMap.mapType;
-			const sourceLoader = this.mapSourceProviderContainerService.resolve(mapType, overlay.sourceType);
+			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				this.communicator.provideCommunicator(active_map_id).setLayer(layer, extent);
 				this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
@@ -93,6 +94,6 @@ export class MapAppEffects {
 		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
-		private mapSourceProviderContainerService: MapSourceProviderContainerService
+		private typeContainerService: TypeContainerService
 	) { }
 }

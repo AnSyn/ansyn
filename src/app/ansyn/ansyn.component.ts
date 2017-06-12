@@ -9,7 +9,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import "@ansyn/core/utils/clone-deep";
 import { ActivatedRoute, Params } from '@angular/router';
 import { LoadCaseAction, LoadDefaultCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
-import { isNil, isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -40,7 +40,7 @@ export class AnsynComponent implements OnInit{
 		});
 
 		this.activatedRoute.params.subscribe((params: Params) => {
-			if(isNil(params['case_id'])) {
+			if(isEmpty(params['case_id'])) {
 				this.store.dispatch(new LoadDefaultCaseAction());
 			} else {
 				this.store.dispatch(new LoadCaseAction(params['case_id']));

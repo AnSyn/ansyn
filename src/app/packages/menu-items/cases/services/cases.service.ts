@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 import "rxjs/add/operator/map";
 import { Case } from '../models/case.model';
+import { isEmpty } from 'lodash';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -51,9 +52,12 @@ export class CasesService {
   }
 
   loadCase(selected_case_id: string): Observable<any> {
-    let url: string = `${this.base_url}/${selected_case_id}`;
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers });
+    if (isEmpty(selected_case_id)) {
+      return Observable.of("");
+    }
+    const url = `${this.base_url}/${selected_case_id}`;
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers });
     return this.http.get(url, options)
     .map(res => {
       let response = null;

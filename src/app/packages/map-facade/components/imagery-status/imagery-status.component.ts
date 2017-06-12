@@ -17,9 +17,6 @@ export class ImageryStatusComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	followActiveMap(event){
-		event.stopPropagation();
-		console.log('f');
-	}
+	
 
 }

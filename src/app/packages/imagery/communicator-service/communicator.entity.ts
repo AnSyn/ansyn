@@ -6,6 +6,8 @@ import { IMapPlugin } from '../model/imap-plugin';
 import { Extent } from '../model/extent';
 import { IMap } from '../model/imap';
 import { MapPosition } from '../model/map-position';
+import { Subject } from 'rxjs/Subject';
+
 
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -14,16 +16,22 @@ import { MapPosition } from '../model/map-position';
 export class CommunicatorEntity {
 	private _manager: ImageryComponentManager;
 	private _managerSubscriptions;
-
+	
+	public id: string;
 	public positionChanged: EventEmitter<{id: string, position: MapPosition}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public pointerMove: EventEmitter<any>;
+	public isReady: EventEmitter<any>;
 
 	constructor(private _id: string) {
+		
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
 		this.pointerMove = new EventEmitter<any>();
+		this.isReady = new EventEmitter<any>();
 	}
+
+
 
 	private registerToManagerEvents() {
 		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
@@ -57,6 +65,7 @@ export class CommunicatorEntity {
 		this._manager = manager;
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
+		this.isReady.next(true);
 	}
 	public setActiveMap(mapType: string) {
 		this._manager.setActiveMap(mapType);
@@ -141,15 +150,19 @@ export class CommunicatorEntity {
 
 	//======shadow mouse start
 	public toggleMouseShadowListener(){
-		this._manager.getMapObject().togglePointerMove();
+		this.ActiveMap.togglePointerMove();
 	}
 
-	public addMouseShadowVectorLayer(){
-		(<any>this._manager.getMapObject()).toggleMouseShadowVectorLayer();	
+	public startMouseShadowVectorLayer(){
+		(<any>this.ActiveMap).startMouseShadowVectorLayer();	
+	}
+
+	public stopMouseShadowVectorLayer(){
+		(<any>this.ActiveMap).stopMouseShadowVectorLayer();	
 	}
 
 	public drawShadowMouse(latLon){
-		(<any>this._manager.getMapObject()).drawShadowMouse(latLon);
+		(<any>this.ActiveMap).drawShadowMouse(latLon);
 	}
 	//======shadow mouse end
 }

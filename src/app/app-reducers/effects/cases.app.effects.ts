@@ -38,6 +38,7 @@ export class CasesAppEffects {
 	/*  
 	// displaySelectedOverlay$ effect will display overlays from selected case.
 	@Effect()
+<<<<<<< HEAD
 	displaySelectedOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$)
@@ -86,6 +87,7 @@ export class CasesAppEffects {
 		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
 			if (state.default_case && action.payload === state.default_case.id) {
 				return this.router.navigate(['', '']);
+
 			}
 
 			return this.router.navigate(['', action.payload]);

@@ -63,7 +63,7 @@ export class CasesEffects {
 			if (action.payload.id === default_case_id) {
 				return Observable.of(new UpdateCaseSuccessAction(action.payload));
 			}
-			return this.casesService.updateCase(action.payload)
+			return this.casesService.wrapUpdateCase(action.payload)
 				.map((updated_case: Case) => {
 					return new UpdateCaseSuccessAction(updated_case);
 				});
@@ -147,6 +147,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"))
 		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
 		.switchMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
+
 			return this.casesService.loadDefaultCase().map((default_case) => {
 				return new LoadDefaultCaseSuccessAction(default_case);
 			});

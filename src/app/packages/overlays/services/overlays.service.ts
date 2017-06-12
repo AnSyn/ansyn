@@ -75,6 +75,7 @@ export class OverlaysService {
     }
 
     compareOverlays(data: IOverlayState, data1: IOverlayState) {
+        console.log(data,data1);
         const result = _.isEqual(data.overlays, data1.overlays);
         return result;
     }

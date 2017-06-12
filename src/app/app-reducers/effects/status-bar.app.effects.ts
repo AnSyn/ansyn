@@ -9,13 +9,15 @@ import { Case, defaultMapType } from '@ansyn/menu-items/cases/models/case.model'
 import { CasesActionTypes, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
-import * as _ from 'lodash';
+import { cloneDeep , isEmpty} from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseMapState } from '@ansyn/menu-items/cases';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
+import { MapState, defaultMapType } from '@ansyn/menu-items/cases/models/map-state.model';
+import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
-
+import { UUID } from 'angular2-uuid';
 
 
 @Injectable()
@@ -31,15 +33,18 @@ export class StatusBarAppEffects {
 			return new ChangeLayoutAction(+layouts_index);
 		});
 
+	//move this to map-facade package and create all the login in the server
+	//as metter of conceren the status bar app effects does not need to include any logic just pass
+	//the actioin to the correct reference (I don't think it should be an independed package at all it should be part of ״scope" functionality)	
 	@Effect()
 	onLayoutsChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
 		.withLatestFrom(this.store, (action, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
 			const selected_case = state.cases.selected_case;
-			const selected_layout = _.cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
+			const selected_layout = cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
 			return [action, selected_case, selected_layout];
 		})
-		.filter(([action, selected_case, selected_layout]) => !_.isEmpty(selected_case))
+		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.cloneDeep()
 		.switchMap(
 			([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
@@ -55,8 +60,6 @@ export class StatusBarAppEffects {
 
 	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}
 
-	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}	
-		
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;
 		
@@ -64,7 +67,7 @@ export class StatusBarAppEffects {
 			if(case_maps_count < selected_layout.maps_count){
 				
 				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
-					const active_map_position = _.cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
+					const active_map_position = cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
 					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position));
 				}
 			} 
@@ -84,21 +87,12 @@ export class StatusBarAppEffects {
 		
 		return selected_case;
 	}
-
-	createCopyMap(index, position: Position): CaseMapState {
+	
+	createCopyMap(index, position: Position): MapState {
 		// TODO: Need to get the real map Type from store instead of default map
-		const mapStateCopy: CaseMapState = {
-			id: `imagery${index}`,
-			data:{
-				position
-			},
-			mapType: defaultMapType
-		};
+		const mapStateCopy: MapState = {id: UUID.UUID(), data:{position}, mapType: defaultMapType};
 		return mapStateCopy;
-		/*return {
-			id: `imagery${index}`,
-			settings: BaseSettings, data:{position}
-		};*/
+		
 
 	}
 }

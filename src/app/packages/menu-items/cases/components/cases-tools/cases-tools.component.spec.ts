@@ -56,13 +56,13 @@ describe('CasesToolsComponent', () => {
 
 	it('save-case button should call showCaseModal()', () => {
 		spyOn(component, 'showSaveCaseModal');
-		let button = fixture.nativeElement.querySelector("button.save-case");
+		const button = fixture.nativeElement.querySelector("button.save-case");
 		button.click();
 		fixture.detectChanges();
 		expect(component.showSaveCaseModal).toHaveBeenCalled();
 	});
 
-	it('showSaveCaseModal should call store.dispatch with OpenModalAction', () => {
+	it('showSaveCaseModal should call store.dispatch with showSaveCaseModal', () => {
 		component.showSaveCaseModal();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: SaveCaseComponent }));
 	});

@@ -113,55 +113,6 @@ describe('CasesEffects', () => {
 
 	it('loadCase$ should select the case loaded case if it exists', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 
@@ -176,55 +127,6 @@ describe('CasesEffects', () => {
 
 	it('loadCase$ should dispatch LoadCaseSuccessAction if the case is valid but not in the loaded cases', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
@@ -238,55 +140,6 @@ describe('CasesEffects', () => {
 
 	it('loadCase$ should dispatch LoadDefaultCaseAction if the case id is not valid', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 
@@ -300,55 +153,6 @@ describe('CasesEffects', () => {
 
 	it('loadCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 
@@ -362,55 +166,6 @@ describe('CasesEffects', () => {
 
 	it('loadDefaultCase$ should load the default case and dispatch LoadDefaultCaseSuccessAction', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 		spyOn(casesService, 'loadDefaultCase').and.callFake(() => Observable.of(caseItem));
@@ -424,55 +179,6 @@ describe('CasesEffects', () => {
 
 	it('loadDefaultCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
 		const caseItem: Case = {
-			"name": "look here for overlay",
-			"owner": "Elisha Auer",
-			"last_modified": new Date("2017-05-10T07:43:38.000Z"),
-			"state": {
-				"maps": [{
-					"position": {
-						"center": {
-							"type": "Point",
-							"coordinates": [
-								9.146954103469149,
-								3.664086952897634
-							]
-						},
-						"zoom": 9
-					}
-				}],
-				"selected_context_id": "1b0854f6-1634-4672-8bc3-4999a9cb18c3",
-				"facets": {
-					"SensorName": "Welch, Dooley and Labadie",
-					"SensorType": "SAR",
-					"Stereo": true,
-					"Resolution": 6
-				},
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			},
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 

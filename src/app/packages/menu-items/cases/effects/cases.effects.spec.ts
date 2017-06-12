@@ -16,18 +16,11 @@ import { compose } from '@ngrx/core';
 import { OverlayReducer } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router'; 
-
-class MockRouter {
-    navigate(url: string) { return url; }
-}
-
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
-	let router: Router;
 
 	const appReducer = compose(combineReducers)({ cases: CasesReducer, overlays: OverlayReducer });
 
@@ -40,14 +33,12 @@ describe('CasesEffects', () => {
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
 			providers: [CasesEffects, 
 			CasesService, 
-			{ provide: casesConfig, useValue: { casesBaseUrl: null } },
-			{ provide: Router, useClass: MockRouter }]
+			{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, Router], (_store: Store<any>, _router: Router) => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		router =_router;
 	}));
 
 	beforeEach(inject([CasesEffects, CasesService, EffectsRunner], (_casesEffects: CasesEffects, _casesService: CasesService, _effectsRunner: EffectsRunner) => {
@@ -300,11 +291,9 @@ describe('CasesEffects', () => {
 		} as any;
 
 		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(null));
-		spyOn(router, 'navigate');
 		effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
 		casesEffects.loadCase$.subscribe((result: LoadDefaultCaseAction) => {
-			expect(router.navigate).toHaveBeenCalledWith(['', '']);		
 			expect(result instanceof LoadDefaultCaseAction).toBeTruthy();
 		});
 	});

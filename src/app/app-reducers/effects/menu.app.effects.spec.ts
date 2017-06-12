@@ -1,4 +1,4 @@
-import { EmptyAction, SelectMenuItemAction, AddMenuItemAction } from '@ansyn/core';
+import { SelectMenuItemAction, AddMenuItemAction } from '@ansyn/core';
 import { AddCaseSuccessAction, SelectCaseByIdAction, LoadDefaultCaseSuccessAction, CasesReducer } from '@ansyn/menu-items/cases';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -97,7 +97,7 @@ describe('MenuAppEffects', () => {
 		effectsRunner.queue(new SelectCaseByIdAction(app_state.cases.cases[0].id));
 
 		menuAppEffects.onCaseLoaded$.subscribe((result: Action) => {
-			expect(result instanceof EmptyAction).toBeTruthy();
+			expect(result).toBeUndefined();
 		});
 	});
 
@@ -118,7 +118,7 @@ describe('MenuAppEffects', () => {
 		effectsRunner.queue(new SelectCaseByIdAction(app_state.cases.cases[1].id));
 
 		menuAppEffects.onCaseLoaded$.subscribe((result: SelectMenuItemAction) => {
-			expect(result instanceof EmptyAction).toBeTruthy();
+			expect(result).toBeUndefined();
 		});
 	});
 });

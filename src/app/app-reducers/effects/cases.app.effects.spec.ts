@@ -255,7 +255,7 @@ describe('CasesAppEffects', () => {
 		effectsRunner.queue(new SelectCaseByIdAction(icase_state.default_case.id));
 
 		casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
-			expect(router.navigate).toHaveBeenCalledTimes(0);
+			expect(router.navigate).toHaveBeenCalledWith(['', '']);
 		});
 	});
 

@@ -5,13 +5,13 @@ import { ChangeLayoutAction, StatusBarActionsTypes } from '@ansyn/status-bar/act
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { Case } from '@ansyn/menu-items/cases/models/case.model';
+import { Case, defaultMapType } from '@ansyn/menu-items/cases/models/case.model';
 import { CasesActionTypes, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import * as _ from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { MapState, defaultMapType } from '@ansyn/menu-items/cases/models/map-state.model';
+import { CaseMapState } from '@ansyn/menu-items/cases';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
@@ -53,7 +53,7 @@ export class StatusBarAppEffects {
 				});
 			})
 		.share();
-		
+
 	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}
 
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
@@ -75,9 +75,18 @@ export class StatusBarAppEffects {
 		return selected_case;
 	}
 
-	createCopyMap(index, position: Position): MapState {
+	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map
-		const mapStateCopy: MapState = {id: `imagery${index}`, data:{position}, mapType: defaultMapType};
+		const mapStateCopy: CaseMapState = {
+			id: `imagery${index}`,
+			data:{
+				position,
+				selectedOverlay: {
+					'name': `overlay${index}`
+				} as any
+			},
+			mapType: defaultMapType
+		};
 		return mapStateCopy;
 	}
 }

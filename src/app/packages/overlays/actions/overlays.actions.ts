@@ -34,7 +34,7 @@ export class UnSelectOverlayAction implements Action {
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 	constructor(public payload?: any){
-		
+
 	}
 }
 
@@ -72,7 +72,7 @@ export class DemoAction implements Action {
 
 export class redrawTimelineAction implements Action {
 	type = OverlaysActionTypes.REDRAW_TIMELINE;
-	constructor(public payload?: boolean){};	
+	constructor(public payload?: boolean){};
 }
 
 export type OverlaysActions

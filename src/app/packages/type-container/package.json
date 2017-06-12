@@ -2,7 +2,7 @@
   "name": "@ansyn/type-container",
   "version": "0.0.2",
   "description": "This package use as a type container to resolve types",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

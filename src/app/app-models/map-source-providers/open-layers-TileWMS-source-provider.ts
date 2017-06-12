@@ -2,8 +2,7 @@
  * Created by AsafMas on 21/05/2017.
  */
 
-import * as ol from 'openlayers';
-import { BaseSourceProvider } from '@ansyn/map-source-provider';
+import { BaseSourceProvider } from '@ansyn/imagery';
 
 export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
 	public mapType = 'openLayersMap';

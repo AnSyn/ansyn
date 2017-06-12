@@ -10,8 +10,8 @@ import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
-import { MapSourceProviderContainerService } from '@ansyn/map-source-provider';
 import { ConfigurationToken } from '../configuration.token';
+import { TypeContainerService } from '@ansyn/type-container';
 
 @Component({
 	selector: 'ansyn-imagery-view',
@@ -38,7 +38,7 @@ export class ImageryComponent implements OnInit, OnDestroy, OnChanges {
 
 		this._manager = new ImageryComponentManager(this.mapComponentSettings.id, this.imageryProviderService,
 			this.componentFactoryResolver, this.map_component_elem,
-			this._mapComponentRef, this.mapSourceProviderContainerService, this.config, imageryCommunicator);
+			this._mapComponentRef, this.typeContainerService, this.config, imageryCommunicator);
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position);
 
 		imageryCommunicator.init(this._manager);
@@ -47,7 +47,7 @@ export class ImageryComponent implements OnInit, OnDestroy, OnChanges {
 	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private imageryProviderService: ImageryProviderService,
-		private mapSourceProviderContainerService: MapSourceProviderContainerService,
+		private typeContainerService: TypeContainerService,
 		@Inject(ConfigurationToken) private config: IImageryConfig) {
 	}
 

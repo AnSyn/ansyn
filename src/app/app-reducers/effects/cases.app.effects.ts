@@ -1,69 +1,62 @@
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes, LoadOverlaysAction, SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
-import { UpdateCaseSuccessAction, CasesActionTypes, AddCaseAction } from '@ansyn/menu-items/cases';
+import { CasesActionTypes, AddCaseAction } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
-
-
 import '@ansyn/core/utils/debug';
-import { MapActionTypes, PositionChangedAction } from '@ansyn/map-facade/actions/map.actions';
-
 import { IAppState } from '../';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Router } from '@angular/router';
 import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { Overlay } from '../../packages/overlays/models/overlay.model';
 
 @Injectable()
 export class CasesAppEffects {
 
 	@Effect()
-	selectOverlay$: Observable<UpdateCaseAction> = this.actions$
+	selectOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [SelectOverlayAction, ICasesState]) => !isEmpty(state.selected_case))
-		.cloneDeep()
-		.map(([action, state]: [SelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.selected_case;
-
-			if (!selected_case.state.selected_overlays_ids) {
-				selected_case.state.selected_overlays_ids = [];
-			}
-
-			let exist = selected_case.state.selected_overlays_ids.find((value) => value === action.payload);
-
-			if (!exist) {
-				selected_case.state.selected_overlays_ids.push(action.payload);
-			}
+		.withLatestFrom(this.store$)
+		.filter(([action, state]: [SelectOverlayAction, IAppState]) => !isEmpty(state.cases.selected_case) )
+		.map(([action, state]: [SelectOverlayAction, IAppState]) => {
+			const selected_case: Case = cloneDeep(state.cases.selected_case);
+			const selected_overlay: Overlay = state.overlays.overlays.get(action.payload);
+			const active_map = selected_case.state.maps.data.find((map) => selected_case.state.maps.active_map_id == map.id);
+			active_map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType}
 			return new UpdateCaseAction(selected_case);
 		});
 
-	@Effect()
-	unSelectOverlay$: Observable<UpdateCaseAction> = this.actions$
+	@Effect({dispatch: false})
+	unSelectOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, state]: [SelectOverlayAction, ICasesState]) => !isEmpty(state.selected_case))
 		.cloneDeep()
 		.map(([action, state]: [UnSelectOverlayAction, ICasesState]) => {
-			const selected_case: Case = state.selected_case;
-
-			if (!selected_case.state.selected_overlays_ids) {
-				selected_case.state.selected_overlays_ids = [];
-			}
-
-			const exist_index = selected_case.state.selected_overlays_ids.findIndex((value) => value === action.payload);
-
-			if (exist_index !== -1) {
-				selected_case.state.selected_overlays_ids.splice(exist_index, 1);
-			}
-			return new UpdateCaseAction(selected_case);
+			// const selected_case: Case = state.selected_case;
+			//
+			// if (!selected_case) {
+			// return Observable.empty();
+			// }
+			//
+			// if (!selected_case.state.selected_overlays_ids) {
+			// selected_case.state.selected_overlays_ids = [];
+			// }
+			//
+			// const exist_index = selected_case.state.selected_overlays_ids.findIndex((value) => value === action.payload);
+			//
+			// if (exist_index !== -1) {
+			// selected_case.state.selected_overlays_ids.splice(exist_index, 1);
+			// }
+			// return new UpdateCaseAction(selected_case);
+			return;
 		});
 
 
@@ -72,10 +65,12 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
+		.filter(([case_id, state]: [string, ICasesState]) => {
+			return !isEmpty(state.selected_case)
+		})
 		.map(([caseId, state]: [string, ICasesState]) => {
 			const caseSelected: Case = state.selected_case;
- 
+
 			const overlayFilter = {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,
@@ -105,7 +100,7 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SAVE_DEFAULT_CASE)
 		.map(toPayload)
 		.map((default_case: Case) => {
-			
+
 			this.casesService.enhanceDefaultCase(default_case);
 			default_case.owner = "Default Owner"; //TODO: replace with id from authentication service
 
@@ -113,8 +108,8 @@ export class CasesAppEffects {
 		});
 
 	constructor(private actions$: Actions,
-		private store$: Store<IAppState>,
-		private casesService: CasesService,
-		private router: Router) { }
+				private store$: Store<IAppState>,
+				private casesService: CasesService,
+				private router: Router) { }
 
 }

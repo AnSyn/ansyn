@@ -7,7 +7,7 @@ import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction }
 import * as _ from "lodash";
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
-import { defaultMapType } from '../../models/map-state.model';
+import { defaultMapType } from '../../';
 
 const animations_during = '0.2s';
 
@@ -79,7 +79,6 @@ export class EditCaseComponent implements OnInit {
 			owner:'',
 			last_modified: new Date(),
 			state: {
-				selected_overlays_ids: [],
 				selected_context_id: "",
 				maps: {
 					layouts_index: 0,

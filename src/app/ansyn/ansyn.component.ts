@@ -10,6 +10,7 @@ import "@ansyn/core/utils/clone-deep";
 import { ActivatedRoute, Params } from '@angular/router';
 import { LoadCaseAction, LoadDefaultCaseAction } from '../packages/menu-items/cases/actions/cases.actions';
 import { isEmpty, isEqual } from 'lodash';
+import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -26,9 +27,23 @@ export class AnsynComponent implements OnInit{
 		return s_case ? s_case.state.maps : {data: []};
 	}).distinctUntilChanged(isEqual);
 
+	overlays_count$ = this.store.select('overlays').map((state: IOverlayState) => state.overlays.size);
+
+	// single_selected_overlay_name$ = this.store.select('overlays')
+	// 	.map((state: IOverlayState) => {
+	// 		if(state.selectedOverlays.length == 1) {
+	// 			return state.overlays.get(state.selectedOverlays[0]).name;
+	// 		} else {
+	// 			return "";
+	// 		}
+	// 	});
+
 	selected_layout: MapsLayout;
 	selected_case: Case;
-	maps: any[];
+	maps: any;
+	overlays_count: number;
+	active_map;
+	overlay_name = "";
 
 	constructor(private store: Store<IAppState>, public activatedRoute: ActivatedRoute) {}
 
@@ -37,7 +52,14 @@ export class AnsynComponent implements OnInit{
 		this.selected_layout$.subscribe((selected_layout) => {this.selected_layout = selected_layout});
 		this.maps$.subscribe((maps) => {
 			this.maps = maps;
+
+			this.active_map = this.maps.data.find((map) => map.id === this.maps.active_map_id);
+
+			if(this.active_map){
+				this.overlay_name = this.active_map.data.selectedOverlay ? this.active_map.data.selectedOverlay.name : "yairtawil";
+			}
 		});
+		this.overlays_count$.subscribe(_overlays_count => {this.overlays_count = _overlays_count;});
 
 		this.activatedRoute.params.subscribe((params: Params) => {
 			if(isEmpty(params['case_id'])) {

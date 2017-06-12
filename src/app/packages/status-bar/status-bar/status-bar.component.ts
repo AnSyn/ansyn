@@ -15,13 +15,16 @@ export class StatusBarComponent implements OnInit {
 	selected_layout_index$: Observable<number> = this.store.select("status_bar").map((state: IStatusBarState) => state.selected_layout_index).distinctUntilChanged(isEqual);
 	selected_layout_index: number;
 	@Input() selected_case_name: string;
+	@Input() overlays_count: number;
+	@Input('overlay-name') overlayName: number;
+	@Input('hide-overlay-name') hideOverlayName: boolean;
+	@Input('maps') maps: any;
 
 	ngOnInit(): void {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
 		})
 	}
-
 	constructor(private store: Store<IStatusBarState>) { }
 
 	layoutSelectChange(selected_layout_index: number) {

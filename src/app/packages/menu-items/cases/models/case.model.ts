@@ -9,7 +9,6 @@ export type Case = {
 }
 
 export type CaseState = {
-	selected_overlays_ids?: string[];
 	selected_context_id?: string;
 	maps?: CaseMapsState,
 	time: CaseTimeState,
@@ -37,9 +36,10 @@ export type CaseMapsState = {
 export type CaseMapState = {
 	id: string;
 	data: {
-		position: Position
+		position: Position,
+		selectedOverlay?: {id: string, name: string, imageUrl: string, sourceType: string}
 	};
 	mapType: string;
 }
-
-export const BaseSettings = {mapType: "openLayersMap"};
+export const defaultMapType = 'openLayersMap';
+export const BaseSettings = {mapType: defaultMapType};

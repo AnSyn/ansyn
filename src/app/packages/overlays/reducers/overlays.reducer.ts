@@ -69,7 +69,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
-				
+
 				const overlays = action.payload;
 
 				const stateOverlays = new Map(state.overlays);

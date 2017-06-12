@@ -107,7 +107,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
-                    configuration: data.queryParams 
+                    configuration: data.queryParams
                 };
             })
             .subscribe(data => {
@@ -126,7 +126,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 
         this.effects.onRedrawTimeline$.subscribe(() => {
             this.redraw$.next(Math.random());
-        });    
+        });
         //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }
 

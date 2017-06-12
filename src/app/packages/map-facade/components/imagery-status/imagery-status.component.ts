@@ -10,6 +10,7 @@ export class ImageryStatusComponent implements OnInit {
 	constructor() { }
 
 	@Input() map_id;
+	@Input('overlay-name') overlayName;
 	@Input() active;
 
 	ngOnInit() {

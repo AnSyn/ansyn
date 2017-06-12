@@ -24,8 +24,12 @@ export class ImageryCommunicatorService {
 	}
 
 	private createImageryCommunicator(id: string): void {
-		this._communicators[id] = new CommunicatorEntity(id);
-		this.communicatorsChange.emit(this._communicators);
+		this._communicators[id] = new CommunicatorEntity(id)
+		this._communicators[id]['isReady'].subscribe((success:string) => {
+			if(success){
+				this.communicatorsChange.emit(this._communicators);
+			}
+		});
 	}
 
 	public removeCommunicator(id: string) {

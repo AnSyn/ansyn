@@ -142,7 +142,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public startListenToPointerMove(){
 		const communicators = this.imageryCommunicatorService.communicators;
 		const key = Object.keys(communicators)[1];
-		communicators[key].addMouseShadowVectorLayer();
+		communicators[key].toggleMouseShadowVectorLayer();
 	}
 
 	public drawShadowMouse(latLon){

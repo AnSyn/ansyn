@@ -142,7 +142,8 @@ export class Map implements IMap {
 		const index = this._mapLayers.indexOf(layer);
 		if (index > -1) {
 			this._mapLayers = this._mapLayers.slice(layer);
-			this._mapObject.removeLayer(layer);
+	        this._mapObject.removeLayer(layer);
+            this.mapObject.render(); 
 		}
 	}
 
@@ -267,11 +268,11 @@ export class Map implements IMap {
         }
     }
     
-    public toggleMouseShadowVectorLayer(){
+    public startMouseShadowVectorLayer(){
         const layer = this.getLayerById(this._shadowMouselayerId);
         
         if(layer){
-            layer.set('visible',!layer.get('visible'));
+            layer.set('visible',true);
         }
         else{
             const feature = new ol.Feature({
@@ -294,6 +295,14 @@ export class Map implements IMap {
             vectorLayer.set('id',this._shadowMouselayerId);
             this.addLayer(vectorLayer);
         }
+    }
+
+    public stopMouseShadowVectorLayer() {
+        const layer = this.getLayerById(this._shadowMouselayerId);
+        if(layer){
+            //layer.set('visible',false);
+            this.removeLayer(layer);
+        }    
     }
 
     // IMap End

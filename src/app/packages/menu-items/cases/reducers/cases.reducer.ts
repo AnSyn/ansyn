@@ -96,6 +96,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases});
 
 		case CasesActionTypes.SELECT_CASE_BY_ID:
+			
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
 				if(state.unlisted_case && state.unlisted_case.id == action.payload) {

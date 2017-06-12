@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
-import { MapActionTypes } from '../actions/map.actions';
+import { MapActionTypes,CompositeMapShadowAction,CommuincatorsChangeAction } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 
@@ -15,16 +15,17 @@ export class MapEffects{
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
 		.map( () => {
-
+			//@todo move this to service we will need it pass function name and send it to all the maps
 			Object.keys(this.communicatorsService.communicators).forEach((imagery_id: string)=>{
 				this.communicatorsService.provideCommunicator(imagery_id).updateSize();
 			});
 		});
 
-	@Effect({dispatch: false})
-	onCommunicatorChange$: Observable<void> = this.actions$
+
+	@Effect({dispatch:false})
+	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
-		.map((): void => {
+		.map(() => {
 			this.mapFacadeService.initPositionChangedEmitters();
 		});
 
@@ -40,5 +41,11 @@ export class MapEffects{
 		.debug('start')
 		.share();
 
+	@Effect({dispatch:false})
+	onComposeMapShadowMouse$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION)
+		.debug('hello world')
+		.share();		
+	
 	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}	
 }

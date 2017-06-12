@@ -9,11 +9,12 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
-import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction  } from '@ansyn/map-facade/actions/map.actions';
-import { Case, ICasesState, CasesService, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { BaseSourceProvider } from '@ansyn/imagery';
-import { isEmpty } from 'lodash';
+import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,CommuincatorsChangeAction,ActiveMapChangedAction } from '@ansyn/map-facade';
+import { CasesActionTypes,Case, ICasesState, CasesService, UpdateCaseSuccessAction,UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools'; 
+
 
 import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
@@ -25,13 +26,13 @@ export class MapAppEffects {
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
-		.debug('map app effects start')
+		//.debug('map app effects start')
 		.map(() => new StartMapShadowAction());
 		
 	@Effect()
 	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
-		.debug('map app effects stop')
+		//.debug('map app effects stop')
 		.map(() => new StopMapShadowAction());
 
 
@@ -86,21 +87,53 @@ export class MapAppEffects {
 		}).share();
 
 	@Effect()
-	positionChanged$: Observable<UpdateCaseSuccessAction> = this.actions$
+	positionChanged$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, state]: [PositionChangedAction, ICasesState]) => !isEmpty(state.selected_case))
 		.cloneDeep()
-		.switchMap( ([action, state]: [PositionChangedAction, ICasesState]) => {
+		.map( ([action, state]: [PositionChangedAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
 			const selected_map = selected_case.state.maps.data[selected_map_index];
+			
 			selected_map.data.position = action.payload.position;
 			selected_case.state.maps.data[selected_map_index] = selected_map;
-			console.log('position changed effect');
-			return this.casesService.wrapUpdateCase(selected_case).map((updated_case) => {
-				return new UpdateCaseSuccessAction(updated_case);
-			});
+			
+			//console.log('position changed effect');
+			//return this.casesService.wrapUpdateCase(selected_case).map((updated_case) => {
+				return new UpdateCaseAction(selected_case);
+			//});
+		});
+	
+	@Effect()
+	onCommunicatorChange$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
+		.withLatestFrom(this.store$.select("cases"))
+		.map(([action, state]:[CommuincatorsChangeAction,ICasesState]): any => {
+			const communicators = action.payload;
+			if(Object.keys(communicators).length > 1 && Object.keys(communicators).length === state.selected_case.state.maps.data.length) {
+				return new CompositeMapShadowAction(); 
+			}
+			return {type:'x',payload:'tmp'};
+		});	
+		@Effect()
+	
+	onActiveMapChanges$: Observable<Action> = this.actions$
+		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select("cases"))
+		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any => 
+		 	 caseState.selected_case.state.maps.active_map_id !== action.payload 
+		)
+		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
+			console.log('merge map',action,caseState);
+			const updatedCase = cloneDeep(caseState.selected_case);
+			updatedCase.state.maps.active_map_id = action.payload;
+			return [
+				new UpdateCaseAction (updatedCase)
+				//new CompositeMapShadowAction()
+			];
+
 		});
 
 	constructor(

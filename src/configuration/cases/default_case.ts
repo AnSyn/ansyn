@@ -6,10 +6,10 @@ export const defaultCase: Case = {
 	state: {
 		"maps": {
 			"layouts_index": 0,
-			"active_map_id": "imagery1",
+			"active_map_id": "default_imagery1",
 			"data": [
 				{
-					"id": "imagery1",
+					"id": "default_imagery1",
 					"mapType": "openLayersMap",
 					"data": {
 						"position": {

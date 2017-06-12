@@ -20,7 +20,9 @@ export class ImageryComponentManager {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public positionChanged: EventEmitter<MapPosition>;
 	public pointerMove: EventEmitter<any>;
+	public mapComponentInitilaized: EventEmitter<any>;
 	private _plugins: IMapPlugin[];
+	public  _id: string;
 
 	constructor(public id: string,
 				private imageryProviderService: ImageryProviderService,
@@ -30,10 +32,11 @@ export class ImageryComponentManager {
 				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
 				private imageryCommunicator: CommunicatorEntity) {
-		
+		this._id = id;
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();
 		this.pointerMove = new EventEmitter<any>();
+		this.mapComponentInitilaized = new EventEmitter<any>();
 		this._plugins = [];
 	}
 
@@ -46,6 +49,7 @@ export class ImageryComponentManager {
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
+			this.mapComponentInitilaized.next(this._id);
 			mapCreatedSubscribe.unsubscribe();
 		});
 		let releventMapConfig: IMapConfig = null;
@@ -79,6 +83,7 @@ export class ImageryComponentManager {
 		}
 		this.buildCurrentComponent(activeMapType, position);
 		this.buildActiveMapPlugins(activeMapType);
+		return this.mapComponentInitilaized;
 	}
 
 	private buildActiveMapPlugins(activeMapType: string) {

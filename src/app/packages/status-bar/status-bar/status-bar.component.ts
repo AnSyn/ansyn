@@ -23,12 +23,12 @@ export class StatusBarComponent implements OnInit {
 	ngOnInit(): void {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
-		})
+		});
 	}
 	constructor(private store: Store<IStatusBarState>) { }
 
 	layoutSelectChange(selected_layout_index: number) {
-		this.store.dispatch(new ChangeLayoutAction(selected_layout_index))
+		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
 	}
 
 }

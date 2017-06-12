@@ -6,10 +6,19 @@ export const MapActionTypes = {
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	COMMUNICATORS_CHANGE: 'COMMUNICATORS_CHANGE',
 	STOP_MAP_SHADOW_ACTIONS: 'STOP_MAP_SHADOW_ACTIONS',
-	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS'
+	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
+	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
+	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED'
 };
 
 export type MapActions = any;
+
+export class ActiveMapChangedAction implements Action {
+	type = MapActionTypes.ACTIVE_MAP_CHANGED;
+	constructor(public payload?: any) {
+		// code...
+	}
+}
 
 export class PositionChangedAction implements Action{
 	type = MapActionTypes.POSITION_CHANGED;
@@ -36,4 +45,10 @@ export class StopMapShadowAction implements Action{
 export class StartMapShadowAction implements Action{
 	type = MapActionTypes.START_MAP_SHADOW_ACTIONS;
 	constructor(public payload?: any) {}
+}
+
+export class CompositeMapShadowAction implements Action {
+	type = MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION;
+	constructor(public payload?: any) {}
+
 }

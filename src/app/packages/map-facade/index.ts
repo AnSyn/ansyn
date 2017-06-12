@@ -1,3 +1,10 @@
 export { MapFacadeModule } from './map-facade.module';
 export { MapFacadeService } from './services/map-facade.service';
-export { UpdateMapSizeAction,StopMapShadowAction,StartMapShadowAction } from './actions/map.actions';
+export { ActiveMapChangedAction,
+		StopMapShadowAction,
+		StartMapShadowAction,
+		CompositeMapShadowAction,
+		UpdateMapSizeAction,
+		MapActionTypes,
+		PositionChangedAction,
+		CommuincatorsChangeAction } from './actions/map.actions';

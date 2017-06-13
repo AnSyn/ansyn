@@ -13,8 +13,8 @@ export const defaultCase: Case = {
 					"mapType": "openLayersMap",
 					"data": {
 						"selectedOverlay": {
-							"name": "overlays1",
-						},
+							"name": "overlays1"
+						} as any,
 						"position": {
 							"center": {
 								"type": 'Point',

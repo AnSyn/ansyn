@@ -16,6 +16,7 @@ import { BaseSourceProvider } from '@ansyn/imagery';
 import { isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
+import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -23,13 +24,12 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.map(toPayload)
-		.withLatestFrom(this.store$, (overlayId: string, store: IAppState) => {
-			const overlay = store.overlays.overlays.get(overlayId);
-			const active_map_id = store.cases.selected_case.state.maps.active_map_id;
-			return [overlay, active_map_id];
+		.withLatestFrom(this.store$, (action: DisplayOverlayAction, store: IAppState) => {
+			const overlay = store.overlays.overlays.get(action.payload.id);
+			const map_id = action.payload.map_id ? action.payload.map_id : store.cases.selected_case.state.maps.active_map_id;
+			return [overlay, map_id];
 		})
-		.switchMap( ([overlay, active_map_id]:[Overlay, string]) => {
+		.switchMap( ([overlay, map_id]:[Overlay, string]) => {
 			const footprintFeature: GeoJSON.Feature<any> = {
 				"type": 'Feature',
 				"properties": {},
@@ -39,11 +39,11 @@ export class MapAppEffects {
 			const bbox = turf.bbox(footprintFeature);
 			const bboxPolygon = turf.bboxPolygon(bbox);
 			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-			const mapType = this.communicator.provideCommunicator(active_map_id).ActiveMap.mapType;
+			const mapType = this.communicator.provideCommunicator(map_id).ActiveMap.mapType;
 			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
 			sourceLoader.createAsync(overlay).then((layer)=> {
-				this.communicator.provideCommunicator(active_map_id).setLayer(layer, extent);
-				this.communicator.provideCommunicator(active_map_id).setCenter(center.geometry);
+				this.communicator.provideCommunicator(map_id).setLayer(layer, extent);
+				this.communicator.provideCommunicator(map_id).setCenter(center.geometry);
 			});
 
 			return Observable.empty();
@@ -88,7 +88,7 @@ export class MapAppEffects {
 				return new UpdateCaseSuccessAction(updated_case);
 			});
 		});
-		
+
 	constructor(
 		private actions$: Actions,
 		private casesService: CasesService,

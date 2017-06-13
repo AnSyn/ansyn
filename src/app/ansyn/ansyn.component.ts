@@ -47,7 +47,7 @@ export class AnsynComponent implements OnInit{
 			this.active_map = this.maps.data.find((map) => map.id === this.maps.active_map_id);
 
 			if(this.active_map){
-				this.overlay_name = this.active_map.data.selectedOverlay ? this.active_map.data.selectedOverlay.name : "yairtawil";
+				this.overlay_name = this.active_map.data.selectedOverlay ? this.active_map.data.selectedOverlay.name : "";
 			}
 		});
 		this.overlays_count$.subscribe(_overlays_count => {this.overlays_count = _overlays_count;});

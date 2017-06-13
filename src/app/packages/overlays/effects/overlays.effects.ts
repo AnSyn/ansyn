@@ -34,6 +34,9 @@ export class OverlaysEffects {
 					data.forEach(item => {
 						item.date = item.photoTime;
 						item.sourceType = this.config.overlaySource;
+						if(item.footprint.geometry){
+							item.footprint = item.footprint.geometry;
+						}
 					});
 					return new LoadOverlaysSuccessAction(data);
 				});
@@ -48,5 +51,5 @@ export class OverlaysEffects {
 
   	constructor(private actions$: Actions,
 			private overlaysService: OverlaysService,
-			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}		
+			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}
 }

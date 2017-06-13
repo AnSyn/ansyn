@@ -9,6 +9,7 @@ import { ImageryComponentSettings } from '@ansyn/imagery';
 export class ImageryContainerComponent implements OnInit {
 	@Input() mapComponentSettings: ImageryComponentSettings;
 	@Input() active: boolean;
+	@Input('show-status') showStatus: boolean;
 
 	constructor() { }
 

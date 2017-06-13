@@ -6,6 +6,43 @@ div.status-bar{
 	transform: translate(0, -100%);
 	display: flex;
 	justify-content: space-between;
-	padding: 10px;
 	box-sizing: border-box;
+
+	div.left-side{
+
+
+		display: flex;
+		div.mosaic{
+			select{
+				height: 100%;
+			}
+		}
+
+		div.selected-case{
+			padding: 5px;
+			display: inline-block;
+			*{
+				vertical-align: middle;
+			}
+		}
+	}
+
+	div.right-side{
+		padding: 5px;
+
+		display: flex;
+		div{
+			margin: 0 10px;
+		}
+		div.layout-combobox, div.overlays-count, div.timeline-combobox{
+			display: inline-block;
+			*{
+				vertical-align: middle;
+			}
+		}
+	}
+}
+select{
+	background: black;
+	color: white;
 }

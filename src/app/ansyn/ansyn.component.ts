@@ -29,15 +29,6 @@ export class AnsynComponent implements OnInit{
 
 	overlays_count$ = this.store.select('overlays').map((state: IOverlayState) => state.overlays.size);
 
-	// single_selected_overlay_name$ = this.store.select('overlays')
-	// 	.map((state: IOverlayState) => {
-	// 		if(state.selectedOverlays.length == 1) {
-	// 			return state.overlays.get(state.selectedOverlays[0]).name;
-	// 		} else {
-	// 			return "";
-	// 		}
-	// 	});
-
 	selected_layout: MapsLayout;
 	selected_case: Case;
 	maps: any;

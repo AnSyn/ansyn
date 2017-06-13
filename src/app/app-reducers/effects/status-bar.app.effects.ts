@@ -80,10 +80,7 @@ export class StatusBarAppEffects {
 		const mapStateCopy: CaseMapState = {
 			id: `imagery${index}`,
 			data:{
-				position,
-				selectedOverlay: {
-					'name': `overlay${index}`
-				} as any
+				position
 			},
 			mapType: defaultMapType
 		};

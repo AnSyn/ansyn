@@ -8,7 +8,7 @@ describe('ImageriesManagerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active']}) ]
+			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active', 'show-status']}) ]
 		})
 			.compileComponents();
 	}));

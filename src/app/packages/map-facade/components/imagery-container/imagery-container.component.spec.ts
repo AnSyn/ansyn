@@ -8,7 +8,7 @@ describe('ImageryContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ImageryContainerComponent, MockComponent({selector: 'ansyn-imagery-status', inputs: ['map_id', 'active']}), MockComponent({selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings']}) ]
+			declarations: [ ImageryContainerComponent, MockComponent({selector: 'ansyn-imagery-status', inputs: ['map_id', 'active', 'overlay-name']}), MockComponent({selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings']}) ]
 		})
 			.compileComponents();
 	}));

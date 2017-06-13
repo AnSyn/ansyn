@@ -23,16 +23,16 @@ describe('LayersAppEffects', () => {
 		effectsRunner = _effectsRunner;
 	}));
 
-	it('selectCase$', () => {
-		let selectedCaseId = 'asdfasdf';
-
-		effectsRunner.queue(new SelectCaseByIdAction(selectedCaseId));
-		let result: BeginLayerTreeLoadAction ;
-		layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
-			result = _result;
-		});
-
-		expect(result instanceof BeginLayerTreeLoadAction).toBeTruthy();
-		expect(result.payload).toEqual({caseId: selectedCaseId});
-	});
+	// it('selectCase$', () => {
+	// 	let selectedCaseId = 'asdfasdf';
+    //
+	// 	effectsRunner.queue(new SelectCaseByIdAction(selectedCaseId));
+	// 	let result: BeginLayerTreeLoadAction ;
+	// 	layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
+	// 		result = _result;
+	// 	});
+    //
+	// 	expect(result instanceof BeginLayerTreeLoadAction).toBeTruthy();
+	// 	expect(result.payload).toEqual({caseId: selectedCaseId});
+	// });
 });

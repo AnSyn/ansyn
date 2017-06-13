@@ -16,49 +16,44 @@ import { Router } from '@angular/router';
 import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
 import { Overlay } from '../../packages/overlays/models/overlay.model';
+import { CaseMapState } from '../../packages/menu-items/cases/models/case.model';
+import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class CasesAppEffects {
 
+
 	@Effect()
-	selectOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SELECT_OVERLAY)
+	onDisplayOverlay$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
-		.filter(([action, state]: [SelectOverlayAction, IAppState]) => !isEmpty(state.cases.selected_case) )
-		.map(([action, state]: [SelectOverlayAction, IAppState]) => {
+		.filter(([action, state]:[DisplayOverlayAction, IAppState]) => true)
+		.map(([action, state]:[DisplayOverlayAction, IAppState]) => {
 			const selected_case: Case = cloneDeep(state.cases.selected_case);
-			const selected_overlay: Overlay = state.overlays.overlays.get(action.payload);
-			const active_map = selected_case.state.maps.data.find((map) => selected_case.state.maps.active_map_id == map.id);
-			active_map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType}
+			const selected_overlay: Overlay = state.overlays.overlays.get(action.payload.id);
+			const map_id = action.payload.map_id ? action.payload.map_id : state.cases.selected_case.state.maps.active_map_id;
+			const map = selected_case.state.maps.data.find((map) => map_id == map.id);
+			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
 			return new UpdateCaseAction(selected_case);
 		});
 
-	@Effect({dispatch: false})
-	unSelectOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.UNSELECT_OVERLAY)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [SelectOverlayAction, ICasesState]) => !isEmpty(state.selected_case))
-		.cloneDeep()
-		.map(([action, state]: [UnSelectOverlayAction, ICasesState]) => {
-			// const selected_case: Case = state.selected_case;
-			//
-			// if (!selected_case) {
-			// return Observable.empty();
-			// }
-			//
-			// if (!selected_case.state.selected_overlays_ids) {
-			// selected_case.state.selected_overlays_ids = [];
-			// }
-			//
-			// const exist_index = selected_case.state.selected_overlays_ids.findIndex((value) => value === action.payload);
-			//
-			// if (exist_index !== -1) {
-			// selected_case.state.selected_overlays_ids.splice(exist_index, 1);
-			// }
-			// return new UpdateCaseAction(selected_case);
-			return;
-		});
-
+	// @Effect()
+	// displaySelectedOverlay$: Observable<any> = this.actions$
+	// 	.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+	// 	.withLatestFrom(this.store$)
+	// 	.filter(([action, state]:[any, IAppState]) => true)
+	// 	.mergeMap(([action, state]:[any, IAppState]) => {
+	// 		const selected_case: Case = state.cases.selected_case;
+	// 		const displayed_overlays = selected_case
+	// 			.state.maps.data
+	// 			.filter((map: CaseMapState) => map.data.selectedOverlay)
+	// 			.map((map: CaseMapState) => {
+	// 			return {id: map.data.selectedOverlay.id, map_id: map.id}
+	// 		});
+	// 		const result = displayed_overlays.map( overlayIdMapId => new DisplayOverlayAction(overlayIdMapId));
+	// 		console.log(result)
+	// 		return result;
+	// 	});
 
 	@Effect()
 	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$
@@ -79,7 +74,7 @@ export class CasesAppEffects {
 			}
 			return new LoadOverlaysAction(overlayFilter);
 
-		})
+		});
 
 
 	@Effect({ dispatch: false })
@@ -89,7 +84,7 @@ export class CasesAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
 			if (state.default_case && action.payload === state.default_case.id) {
-			return this.router.navigate(['', '']);
+				return this.router.navigate(['', '']);
 			}
 
 			return this.router.navigate(['', action.payload]);

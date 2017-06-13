@@ -60,7 +60,7 @@ export class ClearFilter implements Action {
 
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
-	constructor(public payload: string){}
+	constructor(public payload: {id: string, map_id?:string}){}
 }
 
 export class DemoAction implements Action {

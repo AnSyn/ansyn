@@ -11,8 +11,8 @@ import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { configuration } from "configuration/configuration";
-import { TypeContainerService,TypeContainerModule} from '@ansyn/type-container';
-import { BaseSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
+import { BaseSourceProvider } from '@ansyn/imagery';
 
 class SourceProviderMock1 implements BaseSourceProvider {
 	mapType= 'mapType1';

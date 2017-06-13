@@ -3,6 +3,7 @@
  */
 
 import { BaseSourceProvider } from '@ansyn/imagery';
+import * as ol from 'openlayers';
 
 export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
 	public mapType = 'openLayersMap';

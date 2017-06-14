@@ -3,16 +3,19 @@ import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/laye
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
-import { CasesReducer } from '@ansyn/menu-items/cases';
+import { ICasesState, CasesReducer, Case, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CommuincatorsChangeAction,StopMapShadowAction,StartMapShadowAction,CompositeMapShadowAction,ActiveMapChangedAction,MapActionTypes} from '@ansyn/map-facade';
 import { configuration } from "configuration/configuration";
 import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 import { BaseSourceProvider } from '@ansyn/imagery';
+import { cloneDeep } from 'lodash'; 
+import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools'; 
+
+
 
 class SourceProviderMock1 implements BaseSourceProvider {
 	mapType= 'mapType1';
@@ -38,6 +41,46 @@ describe('MapAppEffects', () => {
 	let imageryCommunicatorServiceMock = {
 		provideCommunicator() { }
 	};
+	let _cases = [{
+			id: 'case1',
+			name: "my test case",
+			owner: 'tester',
+			last_modified: new Date(),
+			state: {
+				selected_overlays_ids: [],
+				selected_context_id: "",
+				time: { type: "",from: new Date(), to: new Date()},
+				facets: { SensorName: "", SansorType: 'SAR', Stereo: false, Resolution:12 },
+				region: { feature: "", geometry:"" },
+				maps: { 
+					layouts_index: 2,
+					active_map_id: 'imagery1',
+					data: [
+						{
+							id: 'imagery1',
+
+							date: {
+								position: {
+									center: "",
+									zoom: 1
+								}
+							},
+							mapType: ""
+						},
+						{
+							id: 'imagery2',
+
+							date: {
+								position: {
+									center: "",
+									zoom: 1
+								}
+							}
+						}
+					]
+				}
+			}
+		}];
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -70,21 +113,10 @@ describe('MapAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const cases = [{
-			id: 'case1',
-			state: {
-				maps: [{
-					position: {
-						center: "",
-						zoom: 1
-					}
-				}]
-			}
-		}];
-
+		
 		icase_state = {
-			cases,
-			selected_case: cases[0]
+			_cases,
+			selected_case: _cases[0]
 		} as any;
 
 		spyOn(store, 'select').and.callFake(() => {
@@ -150,5 +182,62 @@ describe('MapAppEffects', () => {
 		mapAppEffects.removeVectorLayer$.subscribe(() => {
 			expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
 		});
+	});
+
+	it('on communicator changes return action composite map shadow',() => {
+		const communicators:any = {
+			"imagery1": {}
+		};
+		
+		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
+		let result = null;
+		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
+			result = _result;
+		});
+		expect(result).toEqual({type:'x',payload:'tmp'});
+
+		communicators.imagery2 = {};
+		const expectedResult = new CompositeMapShadowAction();
+		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
+		result = null;
+		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
+			result = _result;
+		});
+		
+		expect(result).toEqual(expectedResult);
+
+	});
+
+	it('on active map changes fire update cas action',() => {
+		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
+		let result = null;
+		let _payload = null;
+		mapAppEffects.onActiveMapChanges$.subscribe(_result => {
+			expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
+			_payload = _result.payload;
+			result = _result;
+		});
+		
+		const expectedResult = new UpdateCaseAction(<any>_payload);
+		expect(result).toEqual(expectedResult);
+		
+	});
+
+	it('listen to start map shadow action',() => {
+		effectsRunner.queue(new StartMouseShadow());
+		let result = null;
+		mapAppEffects.onStartMapShadow$.subscribe(_result => {
+			result = _result;
+		});
+		expect(result).toEqual(new StartMapShadowAction());
+	});
+
+	it('listen to stop map shadow action',() => {
+		effectsRunner.queue(new StopMouseShadow());
+		let result = null;
+		mapAppEffects.onEndMapShadow$.subscribe(_result => {
+			result = _result;
+		});
+		expect(result).toEqual(new StopMapShadowAction());
 	});
 });

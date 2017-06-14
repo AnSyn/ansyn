@@ -31,7 +31,6 @@ export class CasesService {
   }
 
   wrapUpdateCase(selected_case: Case): Observable<Case>{
-     console.log('wrap update case');
      return Observable.create( observer => {
          observer.next(Date.now());
      })
@@ -42,7 +41,6 @@ export class CasesService {
   }
 
   updateCase(selected_case: Case): Observable<Case> {
-    console.log('update case ')
     const url:string = `${this.base_url}`;
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const body:string = JSON.stringify(selected_case);

@@ -37,6 +37,8 @@ export class CasesAppEffects {
 			return new UpdateCaseAction(selected_case);
 		});
 
+	//*** displaySelectedOverlay$ effect will display overlays from selected case.
+
 	// @Effect()
 	// displaySelectedOverlay$: Observable<any> = this.actions$
 	// 	.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)

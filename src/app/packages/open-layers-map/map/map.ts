@@ -251,7 +251,7 @@ export class Map implements IMap {
         if(!layer){
             return;
         }
-        const feature = layer['getSource']().getFeatures()[0];
+        const feature = (<any>layer).getSource().getFeatures()[0];
         const lonLatCords = ol.proj.fromLonLat(lonLat);
         feature.setGeometry(new ol.geom.Point(lonLatCords));
         this.mapObject.render();    
@@ -286,7 +286,7 @@ export class Map implements IMap {
                 style: new ol.style.Style({
                     image: new ol.style.Icon({
                         scale: 0.05,
-                        src: 'https://68.media.tumblr.com/avatar_0d505a9b41c3_128.png'
+                        src: '/assets/2877.png' //for further usage either bring from configuration or create svg
                     })
                 })
             });

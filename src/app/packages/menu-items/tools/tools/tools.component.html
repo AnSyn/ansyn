@@ -1,5 +1,5 @@
 <div class='tools-menu-item-container'>
-	<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [ngClass]="{'active': flags.get('shadow_mouse')}">
+	<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled')">
 		<img src='/assets/icons/shadow_mouse.svg'/>
 	</button>
 </div>

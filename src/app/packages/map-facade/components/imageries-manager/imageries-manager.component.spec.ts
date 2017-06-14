@@ -136,6 +136,7 @@ describe('ImageriesManagerComponent', () => {
 
 	it('draw shadow mouse',() => {
 		const latLon = [10,10];
+		component.listenersMouseShadowMapsId = ['imagery2'];
 		component.drawShadowMouse((latLon));
 		expect(communicatorProvider.communicators['imagery2'].drawShadowMouse).toHaveBeenCalledWith(latLon);
 	});

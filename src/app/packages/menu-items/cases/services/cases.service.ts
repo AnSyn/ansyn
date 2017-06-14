@@ -16,6 +16,7 @@ export class CasesService {
 
   constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig) {
     this.base_url = this.config.casesBaseUrl;
+
   }
 
   loadCases(last_id: string = '-1'): Observable<any> {
@@ -34,7 +35,7 @@ export class CasesService {
      return Observable.create( observer => {
          observer.next(Date.now());
      })
-     .debounceTime(1000)
+     .debounceTime(this.config.updateCaseDebounceTime)
         .switchMap(() => {
           return this.updateCase(selected_case);
         }); 

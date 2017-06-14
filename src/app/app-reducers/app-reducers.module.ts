@@ -19,7 +19,7 @@ import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-
+import { IToolsState,ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
@@ -30,6 +30,7 @@ export interface IAppState {
     layers: ILayerState;
     status_bar: IStatusBarState;
     map: IMapState;
+    tools: IToolsState;
 }
 
 
@@ -39,7 +40,8 @@ const reducers = {
     menu: MenuReducer,
     map: MapReducer,
     layers: LayersReducer,
-    status_bar: StatusBarReducer
+    status_bar: StatusBarReducer,
+    tools: ToolsReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);

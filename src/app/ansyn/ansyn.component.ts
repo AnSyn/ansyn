@@ -36,8 +36,8 @@ export class AnsynComponent implements OnInit{
 			const s_case = state.selected_case;
 			return s_case ? s_case.state.maps : {data: []} as any;
 		})
-		.distinctUntilChanged(isEqual)
-		.debug('after string');
+		.distinctUntilChanged(isEqual);
+		
 
 	overlays_count$ = this.store.select('overlays').map((state: IOverlayState) => state.overlays.size);
 

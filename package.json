@@ -42,7 +42,8 @@
 		"rxjs": "^5.1.0",
 		"webpack": "^2.6.1",
 		"webpack-dev-server": "^2.4.5",
-		"zone.js": "^0.8.11"
+		"zone.js": "^0.8.11",
+		"angular2-uuid": "latest"
 	},
 	"devDependencies": {
 		"@angular/cli": "^1.1.0",

@@ -90,7 +90,7 @@ export class ImageriesManagerComponent implements OnInit{
 	}
 
 	startPointerMoveProcess(){
-		if(this.maps_count_range.length < 2){
+		if(this.maps.data.length < 2){
 			return; 
 		}
 		const communicators = this.communicatorProvider.communicators;
@@ -98,7 +98,7 @@ export class ImageriesManagerComponent implements OnInit{
 		this._maps.data.forEach((mapItem: CaseMapState) => {
 			if(mapItem.id === this._maps.active_map_id ){
 				this.publisherMouseShadowMapId = mapItem.id;
-				communicators[mapItem.id].toggleMouseShadowListener();
+				communicators[mapItem.id] && communicators[mapItem.id].toggleMouseShadowListener();
 				//@todo add take until instead of unsubscribe ?? or not todo  
 				this.pointerMoveUnsubscriber = communicators[mapItem.id]['pointerMove'].subscribe( latLon => {
 					this.drawShadowMouse(latLon);
@@ -113,10 +113,8 @@ export class ImageriesManagerComponent implements OnInit{
 
 	drawShadowMouse(latLon){
 		const communicators = this.communicatorProvider.communicators;
-		this._maps.data.forEach((mapItem: CaseMapState) => {
-			if(mapItem.id !== this._maps.active_map_id ){
-				communicators[mapItem.id] && communicators[mapItem.id].drawShadowMouse(latLon);
-			}
+		this.listenersMouseShadowMapsId.forEach(id => {
+				communicators[id] && communicators[id].drawShadowMouse(latLon);
 		});	
 	}
 	

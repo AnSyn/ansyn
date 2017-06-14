@@ -49,7 +49,7 @@ export class ImageryComponentManager {
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
-			this.mapComponentInitilaized.next(this._id);
+			this.mapComponentInitilaized.emit(this._id);
 			mapCreatedSubscribe.unsubscribe();
 		});
 		let releventMapConfig: IMapConfig = null;

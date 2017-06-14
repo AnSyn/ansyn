@@ -3,5 +3,6 @@ import { Case } from './case.model';
 export interface CasesConfig {
 	casesBaseUrl: string,
 	casesPaginationLimit: number,
-	defaultCase: Case
+	defaultCase: Case,
+	updateCaseDebounceTime: number
 }

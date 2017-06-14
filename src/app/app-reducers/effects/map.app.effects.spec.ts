@@ -210,21 +210,19 @@ describe('MapAppEffects', () => {
 
 	it('on active map changes fire update case action',() => {
 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
-		icase_state.selected_case.state.maps.active_map_id = 'imagery2';
-		spyOn(casesService,'wrapUpdateCase').and.returnValue( Observable.create(
-			observer => observer.next(icase_state.selected_case)
-			));
 		
 		let result = null;
 		let _payload = null;
 		
 		mapAppEffects.onActiveMapChanges$.subscribe(_result => {
+			//expect(true).toBe(false);
 			expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
 			_payload = _result.payload;
 			result = _result;
-			const expectedResult = new UpdateCaseSuccessAction(<any>_payload);
-			expect(result).toEqual(expectedResult);
+			
 		});
+		const expectedResult = new UpdateCaseAction(<any>_payload);
+		expect(result).toEqual(expectedResult);
 		
 		
 		

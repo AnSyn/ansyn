@@ -1,7 +1,8 @@
 export const configuration = {
 	production: false,
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost:9001/api/v1/cases'
+		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
+		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {
 		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'

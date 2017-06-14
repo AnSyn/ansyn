@@ -123,13 +123,12 @@ export class MapAppEffects {
 		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any => 
 		 	 caseState.selected_case.state.maps.active_map_id !== action.payload 
 		)
-		.switchMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
+		.map(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
-			 	return this.casesService.wrapUpdateCase(updatedCase)
-			 		.map((updated_case) => {
-						return new UpdateCaseSuccessAction(updated_case);
-					});
+			 	
+			return new UpdateCaseAction(updatedCase);
+					
 		});
 
 	constructor(

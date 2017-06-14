@@ -6,7 +6,8 @@ export const configuration = {
 	CasesConfig: {
 		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
 		casesPaginationLimit: 15,
-		defaultCase
+		defaultCase,
+		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {
 		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'

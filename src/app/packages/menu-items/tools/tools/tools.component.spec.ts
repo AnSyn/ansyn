@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed, inject  } from '@angular/core/testing
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store,StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
+import { ToolsReducer } from '../reducers/tools.reducer';
 
 describe('ToolsComponent', () => {
     let component: ToolsComponent;
@@ -11,7 +12,7 @@ describe('ToolsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
                 declarations: [ToolsComponent],
-                imports: [StoreModule.provideStore({ cases: {}})]
+                imports: [StoreModule.provideStore({ tools: ToolsReducer})]
             })
             .compileComponents();
     }));
@@ -33,13 +34,18 @@ describe('ToolsComponent', () => {
 
     it('check the mouse shadow toggle button',() =>{
     	const button = fixture.debugElement.nativeElement.querySelector('.shadow-mouse-button'); 
-    	expect(component.flags.get('shadow_mouse')).toBe(false);
+        component.flags = new Map();
+        component.flags.set('shadow_mouse',false);
+
+    	//expect(component.flags.get('shadow_mouse')).toBe(false);
     	button.click();
     	expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
-    	expect(component.flags.get('shadow_mouse')).toBe(true);
+    	
+        component.flags.set('shadow_mouse',true);
+        //expect(component.flags.get('shadow_mouse')).toBe(true);
     	button.click();
     	expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
-    	expect(component.flags.get('shadow_mouse')).toBe(false);
+    	//expect(component.flags.get('shadow_mouse')).toBe(false);
     	
     });
 });

@@ -22,7 +22,6 @@ export class AnsynComponent implements OnInit{
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar').map((state: IStatusBarState) => state.layouts[state.selected_layout_index]).distinctUntilChanged(isEqual);
 	selected_case$: Observable<Case> = this.store.select('cases').map((state: ICasesState) => state.selected_case).cloneDeep().distinctUntilChanged(isEqual);
 	maps$: Observable<any[]> = this.store.select('cases').map((state: ICasesState) => {
-
 		const s_case = state.selected_case;
 		return s_case ? s_case.state.maps : {data: []};
 	}).distinctUntilChanged(isEqual);

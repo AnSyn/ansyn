@@ -31,13 +31,15 @@ describe("Overlays Effects ", () => {
 			id: '12',
 			name: 'tmp12',
 			photoTime: new Date(Date.now()),
-			azimuth: 10
+			azimuth: 10,
+			footprint: {}
 		},
 		{
 			id: '13',
 			name: 'tmp13',
 			photoTime: new Date(Date.now()),
-			azimuth: 10
+			azimuth: 10,
+			footprint: {}
 		}
 	];
 

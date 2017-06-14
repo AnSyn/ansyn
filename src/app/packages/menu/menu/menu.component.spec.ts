@@ -49,7 +49,7 @@ describe('MenuComponent', () => {
 		expect(menuComponent.selected_component_ref).toBeUndefined();
 	});
 
-	fit('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
+	it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
 		let fake_factory:ComponentRef<any> = <any>{destroy():void {}};
 		
 		spyOn(menuComponent, 'componentChanges');

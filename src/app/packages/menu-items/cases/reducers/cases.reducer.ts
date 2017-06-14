@@ -105,7 +105,6 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 					s_case = state.default_case;
 				}
 			}
-
 			return Object.assign({}, state, { selected_case: s_case });
 
 		case CasesActionTypes.LOAD_CONTEXTS:

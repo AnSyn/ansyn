@@ -32,7 +32,7 @@ export class UpdateMapSizeAction implements Action{
 
 export class CommuincatorsChangeAction implements Action{
 	type = MapActionTypes.COMMUNICATORS_CHANGE;
-	constructor(public payload: {}) {}
+	constructor(public payload: Array<string>) {}
 }
 
 export class StopMapShadowAction implements Action{

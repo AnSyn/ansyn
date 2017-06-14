@@ -109,11 +109,11 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
 		.withLatestFrom(this.store$.select("cases"))
 		.map(([action, state]:[CommuincatorsChangeAction,ICasesState]): any => {
-			const communicators = action.payload;
-			if(Object.keys(communicators).length > 1 && Object.keys(communicators).length === state.selected_case.state.maps.data.length) {
+			const communicatorsIds = action.payload;
+			if(communicatorsIds.length > 1 && communicatorsIds.length === state.selected_case.state.maps.data.length) {
 				return new CompositeMapShadowAction(); 
 			}
-			return {type:'x',payload:'tmp'};
+			return {type:'undefined-type',payload:'not all communicators initiliazied'};
 		});	
 		
 	@Effect()
@@ -123,13 +123,13 @@ export class MapAppEffects {
 		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any => 
 		 	 caseState.selected_case.state.maps.active_map_id !== action.payload 
 		)
-		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
+		.switchMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
-			return [
-				new UpdateCaseAction (updatedCase)
-			];
-
+			 	return this.casesService.wrapUpdateCase(updatedCase)
+			 		.map((updated_case) => {
+						return new UpdateCaseSuccessAction(updated_case);
+					});
 		});
 
 	constructor(

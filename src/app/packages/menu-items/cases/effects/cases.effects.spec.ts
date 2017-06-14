@@ -16,6 +16,7 @@ import { compose } from '@ngrx/core';
 import { OverlayReducer } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
+
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
@@ -85,11 +86,14 @@ describe('CasesEffects', () => {
 	});
 
 	it('onUpdateCase$ should call casesService.updateCase with action.payload("updated_case"), and return UpdateCaseSuccessAction', () => {
-		let updated_case: Case = { id: 'new_case_id', name: 'new_case_name' };
-		spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(updated_case));
+		let updated_case: Case = { 
+			id: 'new_case_id', 
+			name: 'new_case_name' 
+		};
+		spyOn(casesService, 'wrapUpdateCase').and.callFake(() => Observable.of(updated_case));
 		effectsRunner.queue(new UpdateCaseAction(updated_case));
 		casesEffects.onUpdateCase$.subscribe((result: UpdateCaseSuccessAction) => {
-			expect(casesService.updateCase).toHaveBeenCalledWith(updated_case);
+			expect(casesService.wrapUpdateCase).toHaveBeenCalledWith(updated_case);
 			expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
 			expect(result.payload).toEqual(updated_case);
 		});
@@ -134,7 +138,7 @@ describe('CasesEffects', () => {
 
 		casesEffects.loadCase$.subscribe((result: SelectCaseByIdAction) => {		
 			expect(result instanceof LoadCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem);		
+			expect(result.payload).toEqual(<any>caseItem);		
 		});
 	});
 
@@ -173,7 +177,7 @@ describe('CasesEffects', () => {
 
 		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {		
 			expect(result instanceof LoadDefaultCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem);		
+			expect(result.payload).toEqual(<any>caseItem);		
 		});
 	});
 

@@ -8,8 +8,8 @@ import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
-	styleUrls: ['./imageries-manager.component.less'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	styleUrls: ['./imageries-manager.component.less']
+	,changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ImageriesManagerComponent implements OnInit{
@@ -23,9 +23,16 @@ export class ImageriesManagerComponent implements OnInit{
 	
 	@Input() 
 	set maps(value: any){
-		this._maps = cloneDeep(value);
-		this._activeMapId = this._maps.active_map_id;
+		
+		this._maps = value;
+		
+		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this._maps.active_map_id){
+			this.changeShadowMouseTarget();	
+		}
 	};
+	get maps (){
+		return this._maps;
+	}
 
 	@Input()
 	set selected_layout(value: MapsLayout){
@@ -57,7 +64,6 @@ export class ImageriesManagerComponent implements OnInit{
 
 	initListeners() {
 		this.mapEffects.onComposeMapShadowMouse$.subscribe(res => {
-			console.log('on compose map shadow mouse');
 			this.changeShadowMouseTarget();
 		});
 
@@ -71,11 +77,8 @@ export class ImageriesManagerComponent implements OnInit{
 	}
 
 	changeActiveImagery(value){
-		
-		if(this._activeMapId !== value) {
-			this._activeMapId = value;
+		if(this.maps.active_map_id !== value){
 			this.setActiveImagery.emit(value);
-			this.changeShadowMouseTarget();
 		}
 	}
 
@@ -87,14 +90,13 @@ export class ImageriesManagerComponent implements OnInit{
 	}
 
 	startPointerMoveProcess(){
-		console.log('start pointer move process',this._activeMapId);
 		if(this.maps_count_range.length < 2){
 			return; 
 		}
 		const communicators = this.communicatorProvider.communicators;
 		
 		this._maps.data.forEach((mapItem: CaseMapState) => {
-			if(mapItem.id === this._activeMapId ){
+			if(mapItem.id === this._maps.active_map_id ){
 				this.publisherMouseShadowMapId = mapItem.id;
 				communicators[mapItem.id].toggleMouseShadowListener();
 				//@todo add take until instead of unsubscribe ?? or not todo  
@@ -112,8 +114,8 @@ export class ImageriesManagerComponent implements OnInit{
 	drawShadowMouse(latLon){
 		const communicators = this.communicatorProvider.communicators;
 		this._maps.data.forEach((mapItem: CaseMapState) => {
-			if(mapItem.id !== this._activeMapId ){
-				communicators[mapItem.id].drawShadowMouse(latLon);
+			if(mapItem.id !== this._maps.active_map_id ){
+				communicators[mapItem.id] && communicators[mapItem.id].drawShadowMouse(latLon);
 			}
 		});	
 	}
@@ -121,7 +123,7 @@ export class ImageriesManagerComponent implements OnInit{
 	stopPointerMoveProcess(){
 		const communicators = this.communicatorProvider.communicators;
 			
-		communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
+		communicators[this.publisherMouseShadowMapId] && communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
 		this.pointerMoveUnsubscriber.unsubscribe();		
 		
 		if(this.listenersMouseShadowMapsId.length > 0){

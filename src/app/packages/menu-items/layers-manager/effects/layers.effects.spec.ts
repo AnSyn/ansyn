@@ -10,7 +10,7 @@ import { DataLayersService, LayerRootsBundle } from '../services/data-layers.ser
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from './../actions/layers.actions';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
 
 describe('LayersEffects', () => {
@@ -53,12 +53,13 @@ describe('LayersEffects', () => {
             expect(dataLayersService.getAllLayersInATree).toHaveBeenCalledWith('blabla');
             expect(result instanceof LayerTreeLoadedAction ||
                 result instanceof SelectLayerAction).toBeTruthy();
+            
             if (result instanceof LayerTreeLoadedAction) {
-                expect(result.payload).toEqual(loadedTreeBundle);
+                expect(result.payload).toEqual(<any>loadedTreeBundle);
             }
 
             if (result instanceof SelectLayerAction) {
-                expect(result.payload).toEqual(staticLeaf);
+                expect(result.payload).toEqual(<any>staticLeaf);
             }
         });
     });

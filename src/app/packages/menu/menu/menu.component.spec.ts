@@ -1,3 +1,4 @@
+import { ComponentRef } from '@angular/core';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MenuComponent } from './menu.component';
 import { MenuItem } from "@ansyn/core";
@@ -48,8 +49,9 @@ describe('MenuComponent', () => {
 		expect(menuComponent.selected_component_ref).toBeUndefined();
 	});
 
-	it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
-		let fake_factory = {destroy():void {}};
+	fit('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
+		let fake_factory:ComponentRef<any> = <any>{destroy():void {}};
+		
 		spyOn(menuComponent, 'componentChanges');
 		let mock_menu_item: MenuItem = {
 			name:"one",
@@ -64,8 +66,10 @@ describe('MenuComponent', () => {
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith(fake_factory);
 		expect(menuComponent.selected_component_ref).toEqual(fake_factory);
+		
 		menuComponent.selected_item_index = -1;
 		menuComponent.menu_items = [];
+		
 	});
 
 

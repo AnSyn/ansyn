@@ -26,13 +26,11 @@ export class MapAppEffects {
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
-		//.debug('map app effects start')
 		.map(() => new StartMapShadowAction());
 		
 	@Effect()
 	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
-		//.debug('map app effects stop')
 		.map(() => new StopMapShadowAction());
 
 
@@ -117,8 +115,8 @@ export class MapAppEffects {
 			}
 			return {type:'x',payload:'tmp'};
 		});	
-		@Effect()
-	
+		
+	@Effect()
 	onActiveMapChanges$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select("cases"))
@@ -126,12 +124,10 @@ export class MapAppEffects {
 		 	 caseState.selected_case.state.maps.active_map_id !== action.payload 
 		)
 		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
-			console.log('merge map',action,caseState);
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
 			return [
 				new UpdateCaseAction (updatedCase)
-				//new CompositeMapShadowAction()
 			];
 
 		});

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
 import { range,cloneDeep } from 'lodash';
@@ -12,9 +12,9 @@ import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ImageriesManagerComponent {
+export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
-	private _activeMapId;
+	public _activeMapId;
 	private _maps:any;
 	public maps_count_range = [];
 
@@ -48,7 +48,16 @@ export class ImageriesManagerComponent {
 	 	this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
 
+		
+	}
+
+	ngOnInit(){
+		this.initListeners();
+	}
+
+	initListeners() {
 		this.mapEffects.onComposeMapShadowMouse$.subscribe(res => {
+			console.log('on compose map shadow mouse');
 			this.changeShadowMouseTarget();
 		});
 
@@ -61,10 +70,13 @@ export class ImageriesManagerComponent {
 		});
 	}
 
-	chagngeActiveImagery(value){
-		this.setActiveImagery.emit(value);
-		this._activeMapId = value;
-		this.changeShadowMouseTarget();
+	changeActiveImagery(value){
+		
+		if(this._activeMapId !== value) {
+			this._activeMapId = value;
+			this.setActiveImagery.emit(value);
+			this.changeShadowMouseTarget();
+		}
 	}
 
 	changeShadowMouseTarget(){
@@ -75,6 +87,7 @@ export class ImageriesManagerComponent {
 	}
 
 	startPointerMoveProcess(){
+		console.log('start pointer move process',this._activeMapId);
 		if(this.maps_count_range.length < 2){
 			return; 
 		}

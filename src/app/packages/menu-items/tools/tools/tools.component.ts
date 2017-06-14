@@ -8,11 +8,11 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit {
-	private flags: Map<string,boolean>;
+	public flags: Map<string,boolean>;
 	
 	//@todo display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) { 
-		this.flags = new Map();
+		this.flags  = new Map();
 		this.flags.set('shadow_mouse',false);
 	}
 
@@ -21,7 +21,7 @@ export class ToolsComponent implements OnInit {
 
 	toggleShadowMouse(){
 		const value = this.flags.get('shadow_mouse');
-		console.log('toggle shadow mouse',value);
+		
 		if(value){
 			this.store.dispatch(new StopMouseShadow());		
 		}else{

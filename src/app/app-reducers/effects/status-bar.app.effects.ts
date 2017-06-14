@@ -5,15 +5,12 @@ import { ChangeLayoutAction, StatusBarActionsTypes } from '@ansyn/status-bar/act
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { Case, defaultMapType } from '@ansyn/menu-items/cases/models/case.model';
+import { Case, defaultMapType,CaseMapState } from '@ansyn/menu-items/cases/models/case.model';
 import { CasesActionTypes, UpdateCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseMapState } from '@ansyn/menu-items/cases';
-import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { MapState, defaultMapType } from '@ansyn/menu-items/cases/models/map-state.model';
 import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
@@ -84,13 +81,12 @@ export class StatusBarAppEffects {
 				}
 			}
 		}
-		
 		return selected_case;
 	}
 	
-	createCopyMap(index, position: Position): MapState {
+	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map
-		const mapStateCopy: MapState = {id: UUID.UUID(), data:{position}, mapType: defaultMapType};
+		const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position}, mapType: defaultMapType};
 		return mapStateCopy;
 		
 

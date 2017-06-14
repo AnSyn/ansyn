@@ -6,6 +6,7 @@ export class ImageryCommunicatorService {
 
 	private  _communicators: { [id: string]: CommunicatorEntity };
 	public communicatorsChange = new EventEmitter();
+	public initiliziedCommunicators:Array<string> = [];
 
 	constructor() {
 		this._communicators = {};
@@ -24,10 +25,11 @@ export class ImageryCommunicatorService {
 	}
 
 	private createImageryCommunicator(id: string): void {
-		this._communicators[id] = new CommunicatorEntity(id)
+		this._communicators[id] = new CommunicatorEntity(id);
 		this._communicators[id]['isReady'].subscribe((success:string) => {
 			if(success){
-				this.communicatorsChange.emit(this._communicators);
+				this.initiliziedCommunicators.push(id);
+				this.communicatorsChange.emit(this.initiliziedCommunicators);
 			}
 		});
 	}
@@ -36,6 +38,7 @@ export class ImageryCommunicatorService {
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);
-		this.communicatorsChange.emit(this._communicators);
+		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(id),1);
+		this.communicatorsChange.emit(this.initiliziedCommunicators);
 	}
 }

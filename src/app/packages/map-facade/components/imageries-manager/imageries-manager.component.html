@@ -1,7 +1,23 @@
 <div class="imageries-container" [ngClass]="selected_layout.id">
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
-		<div class='map-container-wrapper' *ngIf="_maps.data[index]" (click)="chagngeActiveImagery(_maps.data[index].id)">
-			<ansyn-imagery-container class="map" [mapComponentSettings]="_maps.data[index]" [active]="_activeMapId == _maps.data[index].id" [show-status]="count"></ansyn-imagery-container>
+		
+
+
+
+		<div class='map-container-wrapper' *ngIf="maps.data[index]" (click)="changeActiveImagery(maps.data[index].id)">
+			<ansyn-imagery-container class="map" [mapComponentSettings]="maps.data[index]" [active]="maps.active_map_id == _maps.data[index].id" [show-status]="count > 1"></ansyn-imagery-container>
 		</div>
+
+
+
+
+
 	</ng-template>
 </div>
+
+
+
+
+
+
+

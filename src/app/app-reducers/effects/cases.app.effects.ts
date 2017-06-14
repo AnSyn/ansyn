@@ -34,11 +34,12 @@ export class CasesAppEffects {
 			const map = selected_case.state.maps.data.find((map) => map_id == map.id);
 			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
 			return new UpdateCaseAction(selected_case);
+		});	
 	
 	/*  
 	// displaySelectedOverlay$ effect will display overlays from selected case.
 	@Effect()
-<<<<<<< HEAD
+
 	displaySelectedOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$)

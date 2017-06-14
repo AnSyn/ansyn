@@ -14,6 +14,7 @@ import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container'
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash'; 
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools'; 
+import { CasesService,UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
 
 
 
@@ -30,7 +31,6 @@ class SourceProviderMock1 implements BaseSourceProvider {
 	}
 }
 
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;
@@ -38,6 +38,7 @@ describe('MapAppEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 	let icase_state: ICasesState;
+	let casesService:CasesService; 	
 	let imageryCommunicatorServiceMock = {
 		provideCommunicator() { }
 	};
@@ -82,6 +83,7 @@ describe('MapAppEffects', () => {
 			}
 		}];
 
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -103,7 +105,7 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: CasesService,
-					useValue: {updateCase: () => null}
+					useValue: {updateCase: () => null,wrapUpdateCase: () => null}
 				}
 			]
 
@@ -111,9 +113,9 @@ describe('MapAppEffects', () => {
 	}));
 
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store,CasesService], (_store: Store<any>,_casesService:CasesService) => {
 		store = _store;
-		
+		casesService = _casesService;
 		icase_state = {
 			_cases,
 			selected_case: _cases[0]
@@ -185,18 +187,16 @@ describe('MapAppEffects', () => {
 	});
 
 	it('on communicator changes return action composite map shadow',() => {
-		const communicators:any = {
-			"imagery1": {}
-		};
+		const communicators:Array<string> = ['imagery1'];
 		
 		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
 		let result = null;
 		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
 			result = _result;
 		});
-		expect(result).toEqual({type:'x',payload:'tmp'});
+		expect(result).toEqual({type:'undefined-type',payload:'not all communicators initiliazied'});
 
-		communicators.imagery2 = {};
+		communicators.push('imagery2');
 		const expectedResult = new CompositeMapShadowAction();
 		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
 		result = null;
@@ -208,18 +208,25 @@ describe('MapAppEffects', () => {
 
 	});
 
-	it('on active map changes fire update cas action',() => {
+	it('on active map changes fire update case action',() => {
 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
+		icase_state.selected_case.state.maps.active_map_id = 'imagery2';
+		spyOn(casesService,'wrapUpdateCase').and.returnValue( Observable.create(
+			observer => observer.next(icase_state.selected_case)
+			));
+		
 		let result = null;
 		let _payload = null;
+		
 		mapAppEffects.onActiveMapChanges$.subscribe(_result => {
 			expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
 			_payload = _result.payload;
 			result = _result;
+			const expectedResult = new UpdateCaseSuccessAction(<any>_payload);
+			expect(result).toEqual(expectedResult);
 		});
 		
-		const expectedResult = new UpdateCaseAction(<any>_payload);
-		expect(result).toEqual(expectedResult);
+		
 		
 	});
 

@@ -12,8 +12,8 @@ export class MapFacadeService {
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {
 		this.initPositionChangedEmitters();
 
-		imageryCommunicatorService.communicatorsChange.subscribe((communicators) => {
-			this.store.dispatch(new CommuincatorsChangeAction(communicators));
+		imageryCommunicatorService.communicatorsChange.subscribe((communicatorsIds) => {
+			this.store.dispatch(new CommuincatorsChangeAction(communicatorsIds));
 		});
 
 	}

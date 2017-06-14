@@ -24,7 +24,7 @@ export class CommunicatorEntity {
 	public isReady: EventEmitter<any>;
 
 	constructor(private _id: string) {
-		
+		this.id = _id
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
 		this.pointerMove = new EventEmitter<any>();
@@ -72,11 +72,9 @@ export class CommunicatorEntity {
 	}
 
 	public get ActiveMap() {
-		if (this._manager)
-		{
-			return this._manager.ActiveMap;
+		if (this._manager){
+				return this._manager.ActiveMap;
 		}
-
 		return null;
 	}
 

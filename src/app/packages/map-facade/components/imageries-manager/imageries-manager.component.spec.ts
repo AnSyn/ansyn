@@ -97,34 +97,22 @@ describe('ImageriesManagerComponent', () => {
 		expect(component.changeShadowMouseTarget).toHaveBeenCalled();
 		expect(component.stopPointerMoveProcess).toHaveBeenCalled();
 		expect(component.startPointerMoveProcess).toHaveBeenCalled();
-//		expect(true).toBe(false);
+
 	});
 
 	it('emit change action event and chagne the active map id ',()=> {
-		spyOn(component,'changeShadowMouseTarget');
+		//spyOn(component,'changeShadowMouseTarget');
 		spyOn(component.setActiveImagery,'emit');
 
 		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll(".map-container-wrapper");
 		expect(wrapperDivs.length).toBe(2);
+		
 		wrapperDivs[0].click();
-		expect(component._activeMapId).toBe('imagery1');
-		expect(component.changeShadowMouseTarget['calls'].any()).toEqual(false);
+		expect(component.maps.active_map_id).toBe('imagery1');
+		expect(component.setActiveImagery.emit['calls'].any()).toBe(false);
 		
 		wrapperDivs[1].click();
-		expect(component._activeMapId).toBe('imagery2');
-		expect(component.changeShadowMouseTarget['calls'].count()).toBe(1);
 		expect(component.setActiveImagery.emit).toHaveBeenCalledWith('imagery2');
-	});
-
-	it('change the shadow mouse target if shadow mouse is active',() => {
-		//spyOn(component,'stopPointerMoveProcess');
-		component.pointerMoveUnsubscriber = {
-			unsubscribe : () => {}
-		};
-		component.publisherMouseShadowMapId = 'imagery1';
-		component.changeActiveImagery('imagery2');
-		expect(component.publisherMouseShadowMapId).toEqual('imagery2');
-		
 	});
 
 	it('activeate shadow mouse',() => {

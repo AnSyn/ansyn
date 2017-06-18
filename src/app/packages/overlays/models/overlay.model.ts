@@ -3,7 +3,7 @@
  */
 
 
-export type  Overlay = {
+export type Overlay = {
 	id: string,
 	footprint?: any,//@todo add type geojson_multipoligon,
 	sensorType?: string,
@@ -16,7 +16,7 @@ export type  Overlay = {
 	thumbnailUrl?: string,
 	photoTime: Date,
 	azimuth: number, //radians
-	aproximateTransform?: any,
+	approximateTransform?: any,
 	csmState?: string,
 	sourceType?:string
-}
+};

@@ -24,7 +24,7 @@ import { OpenLayerOSMSourceProvider } from './app-models/map-source-providers/op
 import { OpenLayerIDAHOSourceProvider } from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
-
+import { LoadingSpinnerModule } from '@ansyn/loading-spinner';
 
 @NgModule({
 	providers:[
@@ -49,6 +49,7 @@ import { TypeContainerModule } from '@ansyn/type-container';
 			type : OpenLayerIDAHOSourceProvider,
 			name : ['openLayersMap','IDAHO'].join(',')
 		}),
+		LoadingSpinnerModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		CesiumMapModule,
@@ -62,7 +63,6 @@ import { TypeContainerModule } from '@ansyn/type-container';
 		OverlaysModule.forRoot(<any>configuration.OverlaysConfig),
 		AppRouter,
 		AppReducersModule,
-		ImageryModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),

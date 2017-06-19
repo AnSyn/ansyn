@@ -44,6 +44,9 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
                 ...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
             return Object.assign({}, state, { selectedLayers: newSelectedArray });
 
+        case LayersActionTypes.ERROR_LOADING_LAYERS:
+            return state;
+
         default:
             return state;
     }

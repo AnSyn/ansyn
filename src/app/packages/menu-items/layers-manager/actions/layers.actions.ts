@@ -7,7 +7,9 @@ export const LayersActionTypes = {
     LAYER_TREE_LOADED: 'LAYER_TREE_LOADED',
 
     SELECT_LAYER: 'SELECT_LAYER',
-    UNSELECT_LAYER: 'UNSELECT_LAYER'
+    UNSELECT_LAYER: 'UNSELECT_LAYER',
+
+    ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS'
 };
 
 export type LayersActions = any;
@@ -33,4 +35,9 @@ export class SelectLayerAction implements Action {
 export class UnselectLayerAction implements Action {
     type = LayersActionTypes.UNSELECT_LAYER;
     constructor(public payload: ILayerTreeNodeLeaf) { }
+}
+
+export class ErrorLoadingLayersAction implements Action {
+    type = LayersActionTypes.ERROR_LOADING_LAYERS;
+    constructor(public payload: string) { }
 }

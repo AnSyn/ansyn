@@ -6,9 +6,9 @@ import { CasesService } from '../services/cases.service';
 import { Store, combineReducers, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../reducers/cases.reducer';
 import {
-	AddCaseAction, AddCaseSuccessAction, CloseModalAction, DeleteCaseAction, DeleteCaseSuccessAction, LoadCasesAction,
-	LoadCasesSuccessAction, UpdateCaseAction, UpdateCaseSuccessAction, SelectCaseByIdAction, LoadCaseAction, LoadCaseSuccessAction,
-	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction
+	AddCaseAction, AddCaseSuccessAction, DeleteCaseAction, DeleteCaseSuccessAction, LoadCasesAction,
+	LoadCasesSuccessAction, UpdateCaseAction, SelectCaseByIdAction, LoadCaseAction, LoadCaseSuccessAction,
+	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
@@ -32,8 +32,8 @@ describe('CasesEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
-			providers: [CasesEffects, 
-			CasesService, 
+			providers: [CasesEffects,
+			CasesService,
 			{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
 		}).compileComponents();
 	}));
@@ -85,25 +85,14 @@ describe('CasesEffects', () => {
 		});
 	});
 
-	it('onUpdateCase$ should call casesService.updateCase with action.payload("updated_case"), and return UpdateCaseSuccessAction', () => {
-		let updated_case: Case = { 
-			id: 'new_case_id', 
-			name: 'new_case_name' 
+	it('onUpdateCase$ should call casesService.updateCase with action.payload("updated_case"), and return UpdateCaseAction', () => {
+		let updated_case: Case = {
+			id: 'new_case_id',
+			name: 'new_case_name'
 		};
-		spyOn(casesService, 'wrapUpdateCase').and.callFake(() => Observable.of(updated_case));
 		effectsRunner.queue(new UpdateCaseAction(updated_case));
-		casesEffects.onUpdateCase$.subscribe((result: UpdateCaseSuccessAction) => {
-			expect(casesService.wrapUpdateCase).toHaveBeenCalledWith(updated_case);
-			expect(result instanceof UpdateCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(updated_case);
-		});
-	});
-
-	it('closeModalAction$ should been called on 3 actions: UPDATE_CASE_SUCCESS, DELETE_CASE_SUCCESS, ADD_CASE_SUCEESS. and return CloseModalAction', () => {
-		let updated_case: Case = { id: 'new_case_id', name: 'new_case_name' };
-		effectsRunner.queue(new UpdateCaseSuccessAction(updated_case));
-		casesEffects.closeModalAction$.subscribe((result: CloseModalAction) => {
-			expect(result instanceof CloseModalAction).toBeTruthy();
+		casesEffects.onUpdateCase$.subscribe((result: UpdateCaseAction) => {
+			expect(result instanceof UpdateCaseBackendAction).toBeTruthy();
 		});
 	});
 
@@ -125,7 +114,7 @@ describe('CasesEffects', () => {
 
 		casesEffects.loadCase$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem.id);			
+			expect(result.payload).toEqual(caseItem.id);
 		});
 	});
 
@@ -136,9 +125,9 @@ describe('CasesEffects', () => {
 		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 		effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
-		casesEffects.loadCase$.subscribe((result: SelectCaseByIdAction) => {		
+		casesEffects.loadCase$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof LoadCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(<any>caseItem);		
+			expect(result.payload).toEqual(<any>caseItem);
 		});
 	});
 
@@ -164,7 +153,7 @@ describe('CasesEffects', () => {
 
 		casesEffects.loadCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem.id);					
+			expect(result.payload).toEqual(caseItem.id);
 		});
 	});
 
@@ -175,9 +164,9 @@ describe('CasesEffects', () => {
 		spyOn(casesService, 'loadDefaultCase').and.callFake(() => Observable.of(caseItem));
 		effectsRunner.queue(new LoadDefaultCaseAction(caseItem.id));
 
-		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {		
+		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof LoadDefaultCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(<any>caseItem);		
+			expect(result.payload).toEqual(<any>caseItem);
 		});
 	});
 
@@ -190,7 +179,7 @@ describe('CasesEffects', () => {
 
 		casesEffects.loadDefaultCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem.id);					
+			expect(result.payload).toEqual(caseItem.id);
 		});
 	});
 });

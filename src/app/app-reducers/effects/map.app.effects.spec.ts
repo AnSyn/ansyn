@@ -3,18 +3,16 @@ import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/laye
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
-import { ICasesState, CasesReducer, Case, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { ICasesState, CasesReducer, UpdateCaseAction, CasesService } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
-import { CommuincatorsChangeAction,StopMapShadowAction,StartMapShadowAction,CompositeMapShadowAction,ActiveMapChangedAction,MapActionTypes} from '@ansyn/map-facade';
+import { CommuincatorsChangeAction, StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { configuration } from "configuration/configuration";
 import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 import { BaseSourceProvider } from '@ansyn/imagery';
-import { cloneDeep } from 'lodash'; 
-import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools'; 
-import { CasesService,UpdateCaseSuccessAction } from '@ansyn/menu-items/cases';
+import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 
 
 
@@ -38,7 +36,7 @@ describe('MapAppEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 	let icase_state: ICasesState;
-	let casesService:CasesService; 	
+	let casesService:CasesService;
 	let imageryCommunicatorServiceMock = {
 		provideCommunicator() { }
 	};
@@ -53,7 +51,7 @@ describe('MapAppEffects', () => {
 				time: { type: "",from: new Date(), to: new Date()},
 				facets: { SensorName: "", SansorType: 'SAR', Stereo: false, Resolution:12 },
 				region: { feature: "", geometry:"" },
-				maps: { 
+				maps: {
 					layouts_index: 2,
 					active_map_id: 'imagery1',
 					data: [
@@ -188,7 +186,7 @@ describe('MapAppEffects', () => {
 
 	it('on communicator changes return action composite map shadow',() => {
 		const communicators:Array<string> = ['imagery1'];
-		
+
 		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
 		let result = null;
 		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
@@ -203,29 +201,29 @@ describe('MapAppEffects', () => {
 		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
 			result = _result;
 		});
-		
+
 		expect(result).toEqual(expectedResult);
 
 	});
 
 	it('on active map changes fire update case action',() => {
 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
-		
+
 		let result = null;
 		let _payload = null;
-		
+
 		mapAppEffects.onActiveMapChanges$.subscribe(_result => {
 			//expect(true).toBe(false);
 			expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
 			_payload = _result.payload;
 			result = _result;
-			
+
 		});
 		const expectedResult = new UpdateCaseAction(<any>_payload);
 		expect(result).toEqual(expectedResult);
-		
-		
-		
+
+
+
 	});
 
 	it('listen to start map shadow action',() => {

@@ -1,6 +1,6 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
-	SelectCaseByIdAction, UpdateCaseSuccessAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction
+	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
@@ -61,7 +61,7 @@ describe('CasesReducer', () => {
 		expect(result.selected_case.id).toEqual('default_case_id');
 	});
 
-	it('UPDATE_CASE_SUCCESS action should update existing case from payload(by "id") ', () => {
+	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
 			{ id: 'id1', name: 'name1' },
@@ -75,7 +75,7 @@ describe('CasesReducer', () => {
 			id: 'id2', name: 'name2 lastname2'
 		};
 
-		let action: UpdateCaseSuccessAction = new UpdateCaseSuccessAction(new_case);
+		let action: UpdateCaseAction = new UpdateCaseAction(new_case);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases[1].name).toEqual('name2 lastname2');
 	});

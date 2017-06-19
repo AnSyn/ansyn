@@ -7,8 +7,7 @@ import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer'
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import {
-	AddCaseSuccessAction, SelectCaseByIdAction,
-	UpdateCaseSuccessAction
+	AddCaseSuccessAction, SelectCaseByIdAction, UpdateCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
@@ -55,10 +54,10 @@ describe('StatusBarAppEffects', () => {
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseSuccessAction | UpdateMapSizeAction)=>{
-			expect((_result instanceof UpdateCaseSuccessAction) || (_result instanceof UpdateMapSizeAction) ).toBeTruthy();
+		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction)=>{
+			expect((_result instanceof UpdateCaseAction) || (_result instanceof UpdateMapSizeAction) ).toBeTruthy();
 
-			if ( _result instanceof UpdateCaseSuccessAction) {
+			if ( _result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);
 			}
 		});
@@ -77,7 +76,7 @@ describe('StatusBarAppEffects', () => {
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
 		store.dispatch(new SelectCaseByIdAction(caseItem.id));
-		
+
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
 			expect(result instanceof ChangeLayoutAction).toBeTruthy();

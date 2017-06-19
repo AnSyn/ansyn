@@ -5,8 +5,8 @@ import { MockComponent } from '@ansyn/core/test/mock-component';
 import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { StoreModule } from '@ngrx/store';
-import { APP_BASE_HREF } from '@angular/common'
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -16,12 +16,12 @@ describe('AnsynComponent', () => {
 	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlays_count', 'overlay-name', 'hide-overlay-name']});
 	const mock_overlays_container = MockComponent({selector: 'overlays-container'});
 	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps']});
+	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnsynComponent, mock_menu, mock_overlays_container, mock_status, mock_imagery_view],
-			imports: [StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer, overlays : OverlayReducer}),AppRouter],
-			providers: [{provide: APP_BASE_HREF, useValue: '/'}]
+			declarations: [AnsynComponent, mock_menu, mock_overlays_container, mock_status, mock_imagery_view, mock_empty_component],
+			imports: [RouterTestingModule, StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer, overlays : OverlayReducer})]
 		})
 			.compileComponents();
 	}));

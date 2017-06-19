@@ -1,11 +1,9 @@
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import { SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
-import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { UpdateCaseAction, UpdateCaseSuccessAction, SelectCaseByIdAction, LoadDefaultCaseSuccessAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
+import { SelectCaseByIdAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
@@ -83,7 +81,7 @@ describe('CasesAppEffects', () => {
     //
 	// 	effectsRunner.queue(new SelectOverlayAction("1234-5678"));
 	// 	let result: UpdateCaseAction;
-	// 	casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseSuccessAction) => {
+	// 	casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {
 	// 		result = _result;
 	// 	});
     //
@@ -142,35 +140,6 @@ describe('CasesAppEffects', () => {
 
 	});
 
-	it('selectCaseUpdateRouter$ route to the (non-default) case being selected', () => {
-		const caseItem: Case =  {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
-		} as any;
-
-		spyOn(router, 'navigate');
-
-		store.dispatch(new AddCaseSuccessAction(caseItem));
-		store.dispatch(new SelectCaseByIdAction(caseItem.id));
-
-		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
-
-		casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
-			expect(router.navigate).toHaveBeenCalledWith(['', caseItem.id]);
-		});
-	});
-
-	it('selectCaseUpdateRouter$ route to the (default) case being selected', () => {
-		spyOn(router, 'navigate');
-
-		store.dispatch(new LoadDefaultCaseSuccessAction(icase_state.default_case));
-		store.dispatch(new SelectCaseByIdAction(icase_state.default_case.id));
-
-		effectsRunner.queue(new SelectCaseByIdAction(icase_state.default_case.id));
-
-		casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
-			expect(router.navigate).toHaveBeenCalledWith(['', '']);
-		});
-	});
 
 	it('saveDefaultCase$ should add a default case', () => {
 		effectsRunner.queue(new SaveDefaultCaseAction(icase_state.default_case));

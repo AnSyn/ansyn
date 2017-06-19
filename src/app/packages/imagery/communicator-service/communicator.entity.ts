@@ -16,30 +16,25 @@ import { Subject } from 'rxjs/Subject';
 export class CommunicatorEntity {
 	private _manager: ImageryComponentManager;
 	private _managerSubscriptions;
-	
-	public id: string;
 	public positionChanged: EventEmitter<{id: string, position: MapPosition}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public pointerMove: EventEmitter<any>;
 	public isReady: EventEmitter<any>;
 
-	constructor(private _id: string) {
-		this.id = _id
+	constructor(public id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
 		this.pointerMove = new EventEmitter<any>();
 		this.isReady = new EventEmitter<any>();
 	}
 
-
-
 	private registerToManagerEvents() {
 		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
-		
+
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition ) => {
-			this.positionChanged.emit({id: this._id, position});
+			this.positionChanged.emit({id: this.id, position});
 		}));
 
 		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {
@@ -152,11 +147,11 @@ export class CommunicatorEntity {
 	}
 
 	public startMouseShadowVectorLayer(){
-		(<any>this.ActiveMap).startMouseShadowVectorLayer();	
+		(<any>this.ActiveMap).startMouseShadowVectorLayer();
 	}
 
 	public stopMouseShadowVectorLayer(){
-		(<any>this.ActiveMap).stopMouseShadowVectorLayer();	
+		(<any>this.ActiveMap).stopMouseShadowVectorLayer();
 	}
 
 	public drawShadowMouse(latLon){

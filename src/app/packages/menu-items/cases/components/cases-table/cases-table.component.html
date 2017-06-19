@@ -17,9 +17,7 @@
 
   <tbody (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
-  <!--<template ngFor [ngForOf]="cases_from_state$ | async" let-case trackBy-case?.id>-->
-
-    <tr *ngFor="let case of cases_from_state$ | async; trackBy:case?.id" (click)="selectCase(case.id)" [class.active]="(active_case_id$ | async) ==  case.id" [class.selected]="(selected_case_id$ | async) ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
+    <tr *ngFor="let case of cases_from_state" (click)="selectCase(case.id)" [class.active]="active_case_id ==  case.id" [class.selected]="selected_case_id ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
 
       <td>
         {{case.name}}
@@ -44,7 +42,6 @@
 
     </tr>
 
-  <!--</template>-->
 
   </tbody>
 </table>

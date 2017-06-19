@@ -4,7 +4,7 @@
 
 	<div class="layer">
 
-		<ansyn-imageries-manager class="map" [selected_layout]="selected_layout" [maps]="maps" (setActiveImagery)="onActiveImagery($event)"></ansyn-imageries-manager>
+		<ansyn-imageries-manager class="map" [selected_layout]="selected_layout" [maps]="maps" (setActiveImagery)="onActiveImagery($event)" (layoutChangeSuccess)="layoutChangeSuccess($event)"></ansyn-imageries-manager>
 
 		<div class="status">
 
@@ -17,3 +17,4 @@
 		</div>
 	</div>
 </div>
+<router-outlet></router-outlet>

@@ -13,7 +13,8 @@ export const CasesActionTypes = {
 	DELETE_CASE_SUCCESS: 'DELETE_CASE_SUCCESS',
 
 	UPDATE_CASE: 'UPDATE_CASE',
-	UPDATE_CASE_SUCCESS: 'UPDATE_CASE_SUCCESS',
+	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
+	UPDATE_CASE_BACKEND_SUCCESS: 'UPDATE_CASE_BACKEND_SUCCESS',
 
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
@@ -57,8 +58,12 @@ export class UpdateCaseAction implements Action{
 	type = CasesActionTypes.UPDATE_CASE;
 	constructor(public payload: Case){}
 }
-export class UpdateCaseSuccessAction implements Action{
-	type = CasesActionTypes.UPDATE_CASE_SUCCESS;
+export class UpdateCaseBackendSuccessAction implements Action{
+	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
+	constructor(public payload: Case){}
+}
+export class UpdateCaseBackendAction implements Action{
+	type = CasesActionTypes.UPDATE_CASE_BACKEND;
 	constructor(public payload: Case){}
 }
 
@@ -103,7 +108,7 @@ export class LoadCaseSuccessAction implements Action{
 }
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor(public payload?: Case) {}
+	constructor(public payload?: any) {}
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;

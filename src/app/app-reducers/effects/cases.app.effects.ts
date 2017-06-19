@@ -21,7 +21,7 @@ import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.a
 
 @Injectable()
 export class CasesAppEffects {
-	
+
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -34,9 +34,9 @@ export class CasesAppEffects {
 			const map = selected_case.state.maps.data.find((map) => map_id == map.id);
 			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
 			return new UpdateCaseAction(selected_case);
-		});	
-	
-	/*  
+		});
+
+	/*
 	// displaySelectedOverlay$ effect will display overlays from selected case.
 	@Effect()
 
@@ -58,7 +58,7 @@ export class CasesAppEffects {
 		});
 	*/
 
-	//@todo move this to overlays.app.effects	
+	//@todo move this to overlays.app.effects
 	@Effect()
 	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
@@ -78,20 +78,6 @@ export class CasesAppEffects {
 			};
 			return new LoadOverlaysAction(overlayFilter);
 
-		});
-
-	@Effect({ dispatch: false })
-	selectCaseUpdateRouter$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.filter(action => !isEmpty(action))
-		.withLatestFrom(this.store$.select('cases'))
-		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
-			if (state.default_case && action.payload === state.default_case.id) {
-				return this.router.navigate(['', '']);
-
-			}
-
-			return this.router.navigate(['', action.payload]);
 		});
 
 	@Effect()

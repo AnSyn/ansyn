@@ -1,4 +1,4 @@
-import { AppRouter } from './../app-routing.module';
+import { AppRouter } from '../app-routing.module';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnsynComponent } from './ansyn.component';
 import { MockComponent } from '@ansyn/core/test/mock-component';

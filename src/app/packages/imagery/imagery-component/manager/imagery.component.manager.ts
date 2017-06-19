@@ -14,31 +14,22 @@ import { TypeContainerService } from '@ansyn/type-container';
  * Created by AsafMasa on 27/04/2017.
  */
 export class ImageryComponentManager {
+
 	private _activeMap: IMap;
 	private _subscriptions = [];
+	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
+	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();;
+	private _plugins: IMapPlugin[] = [];
 
-	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public positionChanged: EventEmitter<MapPosition>;
-	public pointerMove: EventEmitter<any>;
-	public mapComponentInitilaized: EventEmitter<any>;
-	private _plugins: IMapPlugin[];
-	public  _id: string;
-
-	constructor(public id: string,
-				private imageryProviderService: ImageryProviderService,
+	constructor(private imageryProviderService: ImageryProviderService,
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private map_component_elem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
 				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
-				private imageryCommunicator: CommunicatorEntity) {
-		this._id = id;
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<MapPosition>();
-		this.pointerMove = new EventEmitter<any>();
-		this.mapComponentInitilaized = new EventEmitter<any>();
-		this._plugins = [];
-	}
+				private imageryCommunicator: CommunicatorEntity) {}
 
 	private buildCurrentComponent(activeMapType: string, position?: MapPosition): void {
 		const component = this.imageryProviderService.provideMap(activeMapType);
@@ -49,7 +40,7 @@ export class ImageryComponentManager {
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
-			this.mapComponentInitilaized.emit(this._id);
+			this.mapComponentInitilaized.emit(this.imageryCommunicator.id);
 			mapCreatedSubscribe.unsubscribe();
 		});
 		let releventMapConfig: IMapConfig = null;
@@ -116,11 +107,11 @@ export class ImageryComponentManager {
 	}
 
 	private registerToActiveMapEvents() {
-		
+
 		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
 			this.centerChanged.emit(center);
 		}));
-		
+
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: MapPosition) => {
 			this.positionChanged.emit(position);
 		}));
@@ -129,6 +120,14 @@ export class ImageryComponentManager {
 			this.pointerMove.emit(latLon);
 		}));
 
+	}
+
+	public setCommunicatorId(_id: string) {
+		this.imageryCommunicator.id = _id;
+	}
+
+	public getCommunicatorId(): string {
+		return this.imageryCommunicator.id;
 	}
 
 	public get ActiveMap(): IMap {

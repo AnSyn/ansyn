@@ -24,8 +24,7 @@ import {OpenLayerOSMSourceProvider} from './app-models/map-source-providers/open
 import {OpenLayerIDAHOSourceProvider} from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
-
-
+import { EmptyComponent } from './empty/empty.component';
 
 
 @NgModule({
@@ -34,11 +33,12 @@ import { TypeContainerModule } from '@ansyn/type-container';
 	declarations: [
 		AppComponent,
 		AnsynComponent,
+		EmptyComponent,
 	],
 	imports: [
 		TypeContainerModule.register({
 			baseType :BaseSourceProvider,
-			type : OpenLayerTileWMSSourceProvider, 
+			type : OpenLayerTileWMSSourceProvider,
 			name : ['openLayersMap','TileWMS'].join(',')
 		}),
 		TypeContainerModule.register({

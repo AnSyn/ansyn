@@ -79,7 +79,7 @@ export class EditCaseComponent implements OnInit {
 			owner:'',
 			last_modified: new Date(),
 			state: {
-				selected_context_id: "",
+				selected_context_id: undefined,
 				maps: {
 					layouts_index: 0,
 					active_map_id: 'imagery1',
@@ -136,6 +136,7 @@ export class EditCaseComponent implements OnInit {
 		} else {
 			this.store.dispatch(new AddCaseAction(this.case_model));
 		}
+		this.close();
 	}
 
 	setContextValues(case_model: Case) {

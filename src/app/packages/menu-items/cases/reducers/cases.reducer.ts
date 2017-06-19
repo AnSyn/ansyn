@@ -12,6 +12,7 @@ export interface ICasesState {
 	modal: boolean;
 	contexts: Context[];
 	contexts_loaded: boolean;
+	update_backend: boolean;
 }
 
 export const initialCasesState: ICasesState = {
@@ -22,7 +23,8 @@ export const initialCasesState: ICasesState = {
 	active_case_id: "",
 	modal: false,
 	contexts: [],
-	contexts_loaded: false
+	contexts_loaded: false,
+	update_backend: false
 };
 
 
@@ -46,11 +48,8 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.CLOSE_MODAL:
 			return Object.assign({}, state, {active_case_id: null, modal: false});
 
-		// case CasesActionTypes.UPDATE_CASE:
-		// 	return state;
-
 		// reference
-		case CasesActionTypes.UPDATE_CASE_SUCCESS:
+		case CasesActionTypes.UPDATE_CASE:
 			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == action.payload.id);
 			if(!old_case){
 				if(action.payload.id == state.selected_case.id){
@@ -72,6 +71,11 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			];
 			return Object.assign({}, state, {cases: cases_updated});
 
+		case CasesActionTypes.UPDATE_CASE_BACKEND:
+			return Object.assign({}, state, {update_backend: true});
+
+		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS:
+			return Object.assign({}, state, {update_backend: false});
 
 		case CasesActionTypes.LOAD_CASES:
 			return state;
@@ -96,7 +100,6 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases});
 
 		case CasesActionTypes.SELECT_CASE_BY_ID:
-			
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
 				if(state.unlisted_case && state.unlisted_case.id == action.payload) {

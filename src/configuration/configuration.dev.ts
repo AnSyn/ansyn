@@ -48,5 +48,12 @@ export const configuration = {
 			mapSource: 'OSM',
 			mapSourceMetadata: null
 		}]
+	},
+	FiltersConfig: {
+		filters: [
+			{ name: 'Sensor Type', type: 'Enum' },
+			{ name: 'Sensor Name', type: 'Enum' },
+			{ name: 'Some Status', type: 'Enum' }						
+		]
 	}
 };

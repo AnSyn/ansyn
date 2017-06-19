@@ -23,6 +23,7 @@ import { IToolsState,ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterAppEffects } from './effects/router.app.effects';
 import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
+import { RouterStoreHelperService } from './services/router-store-helper.service';
 
 export interface IAppState {
     overlays: IOverlayState;
@@ -66,7 +67,8 @@ export function reducer(state: any, action: any) {
         EffectsModule.run(StatusBarAppEffects),
 		EffectsModule.run(RouterAppEffects),
 		RouterStoreModule.connectRouter()
-    ]
+    ],
+	providers:[RouterStoreHelperService]
 })
 export class AppReducersModule {
 

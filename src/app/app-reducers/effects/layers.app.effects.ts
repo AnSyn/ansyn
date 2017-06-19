@@ -16,8 +16,7 @@ export class LayersAppEffects {
         .ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.filter((action: SelectCaseByIdAction) => !isEmpty(action.payload))
         .map((action: SelectCaseByIdAction) => {
-            //return new BeginLayerTreeLoadAction({ caseId: action.payload });
-            return {type: 'need_improvments',payload:'this is stoping the browser from working ;-('};
+            return new BeginLayerTreeLoadAction({ caseId: action.payload });
     }).share();
 
     constructor(private actions$: Actions, private store$: Store<IAppState>) { }

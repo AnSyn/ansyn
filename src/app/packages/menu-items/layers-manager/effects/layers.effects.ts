@@ -1,7 +1,7 @@
 import { ILayerState } from './../reducers/layers.reducer';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { ILayerTreeNode } from './../models/layer-tree-node';
-import { LayersActions, BeginLayerTreeLoadAction, LayerTreeLoadedAction, LayersActionTypes, SelectLayerAction, UnselectLayerAction } from './../actions/layers.actions';
+import { LayersActions, BeginLayerTreeLoadAction, LayerTreeLoadedAction, LayersActionTypes, SelectLayerAction, UnselectLayerAction, ErrorLoadingLayersAction } from './../actions/layers.actions';
 import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -34,6 +34,9 @@ export class LayersEffects {
             });
             
             return Observable.from(actionsArray);
+        })
+        .catch( error => {
+            return Observable.of(new ErrorLoadingLayersAction(error));
         })
         .share();
 

@@ -68,7 +68,7 @@ export class RouterAppEffects {
 		});
 
 	@Effect()
-	selectCaseById$: Observable<any> = this.actions$
+	selectDefulatCaseById$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, state]: [Action, ICasesState]) => {

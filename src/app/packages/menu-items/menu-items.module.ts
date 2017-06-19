@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "./index";
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
-
+import { filtersConfig } from '@ansyn/menu-items/filters';
 const menuItemsConfig: InjectionToken<MenuItemsConfig> = new InjectionToken('menu-items-config');
 
 @NgModule({
@@ -25,7 +25,8 @@ export class MenuItemsModule {
       ngModule: MenuItemsModule,
       providers: [
         { provide: casesConfig, useValue: config.CasesConfig },
-        { provide: layersConfig, useValue: config.LayersManagerConfig }
+        { provide: layersConfig, useValue: config.LayersManagerConfig },
+        { provide: filtersConfig, useValue: config.FiltersConfig }
       ]
     };
   }

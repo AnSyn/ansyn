@@ -21,7 +21,8 @@ import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState,ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
+import { RouterAppEffects } from './effects/router.app.effects';
+import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
 
 export interface IAppState {
     overlays: IOverlayState;
@@ -31,6 +32,7 @@ export interface IAppState {
     status_bar: IStatusBarState;
     map: IMapState;
     tools: IToolsState;
+    router: RouterState;
 }
 
 
@@ -41,13 +43,13 @@ const reducers = {
     map: MapReducer,
     layers: LayersReducer,
     status_bar: StatusBarReducer,
-    tools: ToolsReducer
+    tools: ToolsReducer,
+	router: routerReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    //console.log(action.type);
     return appReducer(state, action);
 }
 
@@ -61,8 +63,9 @@ export function reducer(state: any, action: any) {
         EffectsModule.run(CasesAppEffects),
         EffectsModule.run(MenuAppEffects),
         EffectsModule.run(LayersAppEffects),
-        EffectsModule.run(StatusBarAppEffects)
-
+        EffectsModule.run(StatusBarAppEffects),
+		EffectsModule.run(RouterAppEffects),
+		RouterStoreModule.connectRouter()
     ]
 })
 export class AppReducersModule {

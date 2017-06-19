@@ -50,6 +50,7 @@ export class DeleteCaseComponent {
 
   onSubmitRemove() {
     this.store.dispatch(new DeleteCaseAction());
+    this.close();
   }
 
 }

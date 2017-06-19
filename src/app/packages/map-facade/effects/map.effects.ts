@@ -29,20 +29,22 @@ export class MapEffects{
 			this.mapFacadeService.initPositionChangedEmitters();
 		});
 
+
+
 	@Effect({dispatch:false})
 	onStopMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.STOP_MAP_SHADOW_ACTIONS)
-		.share();	
+		.share();
 
 	@Effect({dispatch:false})
-	onStartMapShadowMouse$: Observable<any> = this.actions$	
-		.ofType(MapActionTypes.START_MAP_SHADOW_ACTIONS)	
+	onStartMapShadowMouse$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.START_MAP_SHADOW_ACTIONS)
 		.share();
 
 	@Effect({dispatch:false})
 	onComposeMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION)
-		.share();		
-	
-	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}	
+		.share();
+
+	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
 }

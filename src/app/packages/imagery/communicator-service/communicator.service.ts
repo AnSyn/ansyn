@@ -35,6 +35,7 @@ export class ImageryCommunicatorService {
 	}
 
 	public removeCommunicator(id: string) {
+		if(!this._communicators[id]) return;
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);

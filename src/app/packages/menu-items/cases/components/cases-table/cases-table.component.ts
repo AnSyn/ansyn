@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { isEqual } from 'lodash';
 
 const animations: any[] = [
 	trigger("leaveAnim", [
@@ -19,21 +20,48 @@ const animations: any[] = [
 	selector: 'ansyn-cases-table',
 	templateUrl: './cases-table.component.html',
 	styleUrls: ['./cases-table.component.less'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations
 })
 export class CasesTableComponent implements OnInit{
 	@ViewChild("tbody_element") tbody_element: ElementRef;
 
-	cases_from_state$: Observable <Case[]> = this.store.select("cases").map((state: ICasesState ) => state.cases);
-	active_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.active_case_id);
-	selected_case_id$: Observable <string> = this.store.select("cases").map((state: ICasesState ) => state.selected_case ? state.selected_case.id: null);
+	cases_from_state$: Observable <Case[]> = this.store
+			.select("cases")
+			.map((state: ICasesState ) => state.cases)
+			.distinctUntilChanged(isEqual);
+
+	active_case_id$: Observable <string> = this.store
+			.select("cases")
+			.map((state: ICasesState ) => state.active_case_id)
+			.distinctUntilChanged(isEqual);
+
+	selected_case_id$: Observable <string> = this.store
+			.select("cases")
+			.map((state: ICasesState ) => state.selected_case ? state.selected_case.id: null)
+			.distinctUntilChanged(isEqual);
+
+	cases_from_state: Case[];
+	active_case_id: string;
+	selected_case_id: string;
 
 	constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
 		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));
 	}
 
 	ngOnInit(): void {
+
+		this.cases_from_state$.subscribe((_cases_from_state) => {
+			this.cases_from_state = _cases_from_state;
+		});
+
+		this.active_case_id$.subscribe((_active_case_id) => {
+			this.active_case_id = _active_case_id;
+		});
+
+		this.selected_case_id$.subscribe((_selected_case_id) => {
+			this.selected_case_id = _selected_case_id;
+		});
+
 		this.loadCases();
 	}
 

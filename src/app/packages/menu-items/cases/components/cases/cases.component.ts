@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'ansyn-cases',
   templateUrl: './cases.component.html',
-  styleUrls: ['./cases.component.less'],
+  styleUrls: ['./cases.component.less']
 })
 
-export class CasesComponent{}
+export class CasesComponent {}

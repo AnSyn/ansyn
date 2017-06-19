@@ -12,6 +12,7 @@ import { LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases/a
 import { isNil,isEmpty, isEqual } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
+import { UpdateMapSizeAction } from '../packages/map-facade/actions/map.actions';
 
 
 @Component({
@@ -25,19 +26,19 @@ export class AnsynComponent implements OnInit{
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
-	
+
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.map((state: ICasesState) => state.selected_case)
 		.cloneDeep()
 		.distinctUntilChanged(isEqual);
-	
+
 	maps$: Observable<CaseMapsState> = this.store.select('cases')
 		.map((state: ICasesState) => {
 			const s_case = state.selected_case;
 			return s_case ? s_case.state.maps : {data: []} as any;
 		})
 		.distinctUntilChanged(isEqual);
-		
+
 
 	overlays_count$ = this.store.select('overlays').map((state: IOverlayState) => state.overlays.size);
 
@@ -48,12 +49,13 @@ export class AnsynComponent implements OnInit{
 	active_map;
 	overlay_name = "";
 
-	constructor(private store: Store<IAppState>, public activatedRoute: ActivatedRoute) {}
+	constructor(private store: Store<IAppState>) {}
 
 	ngOnInit(): void {
+		console.log("ngOnInit ansyn ")
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
-		
+
 		this.maps$
 		.map((maps:CaseMapsState) => {
 			//this.maps = maps;
@@ -69,14 +71,6 @@ export class AnsynComponent implements OnInit{
 		});
 
 		this.overlays_count$.subscribe(_overlays_count => {this.overlays_count = _overlays_count;});
-
-		this.activatedRoute.params.subscribe((params: Params) => {
-			if(isEmpty(params['case_id'])) {
-				this.store.dispatch(new LoadDefaultCaseAction());
-			} else {
-				this.store.dispatch(new LoadCaseAction(params['case_id']));
-			}
-		});
 	}
 
 	onActiveImagery(active_map_id: string) {
@@ -84,6 +78,9 @@ export class AnsynComponent implements OnInit{
 			//this.selected_case.state.maps.active_map_id = active_map_id;
 			this.store.dispatch(new ActiveMapChangedAction(active_map_id/*this.selected_case*/));
 		}
+	}
+	layoutChangeSuccess() {
+		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
 }

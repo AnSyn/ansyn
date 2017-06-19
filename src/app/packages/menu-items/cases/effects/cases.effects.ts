@@ -2,15 +2,14 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, CloseModalAction, DeleteCaseSuccessAction, LoadCaseAction,
+	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseSuccessAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
-	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, 
-	UpdateCaseSuccessAction
+	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction, UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
@@ -59,15 +58,29 @@ export class CasesEffects {
 	onUpdateCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [action, state.default_case.id])
-		.switchMap(([action, default_case_id]: [UpdateCaseAction, string]) => {
-			if (action.payload.id === default_case_id) {
-				return Observable.of(new UpdateCaseSuccessAction(action.payload));
-			}
-			return this.casesService.wrapUpdateCase(action.payload)
-				.map((updated_case: Case) => {
-					return new UpdateCaseSuccessAction(updated_case);
-				});
+		.filter(([action, default_case_id]: [UpdateCaseAction, string]) => action.payload.id !== default_case_id)
+		.map(([action]: [UpdateCaseAction]) => {
+				return new UpdateCaseBackendAction(action.payload);
 		}).share();
+
+
+	@Effect()
+	onUpdateCaseBackend$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
+		.switchMap((action: UpdateCaseAction) => {
+			return this.casesService.wrapUpdateCase(action.payload).map(updated_case => {
+				return new UpdateCaseBackendSuccessAction(updated_case);
+			});
+		}).share();
+
+	@Effect()
+	onUpdateCaseBackendSuccess$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS)
+		.switchMap((action: UpdateCaseAction) => {
+			return Observable.empty();
+		}).share();
+
+
 
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
@@ -81,15 +94,10 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.CLOSE_MODAL)
 		.share();
 
-	@Effect()
-	closeModalAction$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE_SUCCESS, CasesActionTypes.DELETE_CASE_SUCCESS, CasesActionTypes.ADD_CASE_SUCCESS)
-		.map(() => new CloseModalAction())
-		.share();
 
 	@Effect()
 	addCaseSuccess$: Observable<any> = this.actions$.
-		ofType(CasesActionTypes.ADD_CASE_SUCCESS)
+	ofType(CasesActionTypes.ADD_CASE_SUCCESS)
 		.map((action: AddCaseSuccessAction) => {
 			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
@@ -122,13 +130,13 @@ export class CasesEffects {
 			} else {
 				return this.casesService.loadCase(action.payload)
 					.map(
-					(data) => {
-						if (data) {
-							return new LoadCaseSuccessAction(data);
-						} else {
-							return new LoadDefaultCaseAction();
-						}
-					});
+						(data) => {
+							if (data) {
+								return new LoadCaseSuccessAction(data);
+							} else {
+								return new LoadDefaultCaseAction();
+							}
+						});
 			}
 
 		}).share();
@@ -160,8 +168,8 @@ export class CasesEffects {
 			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
 
-	constructor(private actions$: Actions, 
-	private casesService: CasesService, 
-	private store: Store<ICasesState>) { }
+	constructor(private actions$: Actions,
+				private casesService: CasesService,
+				private store: Store<ICasesState>) { }
 }
 

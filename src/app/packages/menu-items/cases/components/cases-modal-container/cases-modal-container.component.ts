@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
+import { isEqual } from 'lodash';
 
 const animations_during = '0.2s';
 
@@ -24,7 +25,11 @@ const animations: any[] = [
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	@ViewChild("modal_content", {read: ViewContainerRef}) modal_content: ViewContainerRef;
-	modal$: Observable <boolean> = this.store.select("cases").map((state: ICasesState) => state.modal);
+	modal$: Observable <boolean> = this.store.select("cases")
+											 .map((state: ICasesState) => state.modal)
+											 .distinctUntilChanged(isEqual);
+	modal: boolean;
+
 	selected_component_ref;
 
 	constructor(public casesEffects: CasesEffects, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<ICasesState>) {}
@@ -34,6 +39,11 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+		this.modal$.subscribe( (_modal: boolean) => {
+			this.modal = _modal
+		});
+
 		this.casesEffects.openModal$.subscribe(this.buildTemplate.bind(this));
 		this.casesEffects.closeModal$.subscribe(this.destroyTemplate.bind(this));
 	}

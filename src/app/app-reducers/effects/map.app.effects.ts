@@ -11,9 +11,9 @@ import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,CommuincatorsChangeAction,ActiveMapChangedAction } from '@ansyn/map-facade';
-import { CasesActionTypes,Case, ICasesState, CasesService, UpdateCaseSuccessAction,UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { isEmpty,cloneDeep } from 'lodash';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools'; 
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 
 
 import '@ansyn/core/utils/clone-deep';
@@ -27,7 +27,7 @@ export class MapAppEffects {
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
 		.map(() => new StartMapShadowAction());
-		
+
 	@Effect()
 	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
@@ -88,22 +88,21 @@ export class MapAppEffects {
 	positionChanged$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [PositionChangedAction, ICasesState]) => !isEmpty(state.selected_case))
+		.filter(([action, state]: [PositionChangedAction, ICasesState]) => {
+			const selected_map_index = state.selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
+			return !isEmpty(state.selected_case) && selected_map_index !== -1;
+		})
 		.cloneDeep()
 		.map( ([action, state]: [PositionChangedAction, ICasesState]) => {
 			const selected_case: Case = state.selected_case;
 			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
 			const selected_map = selected_case.state.maps.data[selected_map_index];
-			
 			selected_map.data.position = action.payload.position;
 			selected_case.state.maps.data[selected_map_index] = selected_map;
-			
-			//console.log('position changed effect');
-			//return this.casesService.wrapUpdateCase(selected_case).map((updated_case) => {
-				return new UpdateCaseAction(selected_case);
-			//});
+
+			return new UpdateCaseAction(selected_case);
 		});
-	
+
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
@@ -111,24 +110,24 @@ export class MapAppEffects {
 		.map(([action, state]:[CommuincatorsChangeAction,ICasesState]): any => {
 			const communicatorsIds = action.payload;
 			if(communicatorsIds.length > 1 && communicatorsIds.length === state.selected_case.state.maps.data.length) {
-				return new CompositeMapShadowAction(); 
+				return new CompositeMapShadowAction();
 			}
 			return {type:'undefined-type',payload:'not all communicators initiliazied'};
-		});	
-		
+		});
+
 	@Effect()
 	onActiveMapChanges$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select("cases"))
-		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any => 
-		 	 caseState.selected_case.state.maps.active_map_id !== action.payload 
+		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any =>
+			caseState.selected_case.state.maps.active_map_id !== action.payload
 		)
 		.map(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
-			 	
+
 			return new UpdateCaseAction(updatedCase);
-					
+
 		});
 
 	constructor(

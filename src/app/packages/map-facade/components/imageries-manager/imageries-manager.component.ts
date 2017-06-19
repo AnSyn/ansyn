@@ -1,44 +1,47 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import {
+	ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ViewChild,
+	ElementRef
+} from '@angular/core';
 import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
-import { range,cloneDeep } from 'lodash';
+import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
-import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
 	styleUrls: ['./imageries-manager.component.less']
-	,changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
-	public _activeMapId;
 	private _maps:any;
 	public maps_count_range = [];
 
-
+	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 	@Output() public setActiveImagery = new EventEmitter();
-	
-	@Input() 
+	@Output() public layoutChangeSuccess = new EventEmitter();
+
+	@Input()
 	set maps(value: any){
-		
+
 		this._maps = value;
-		
+
 		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this._maps.active_map_id){
-			this.changeShadowMouseTarget();	
+			this.changeShadowMouseTarget();
 		}
 	};
+
 	get maps (){
 		return this._maps;
 	}
 
 	@Input()
 	set selected_layout(value: MapsLayout){
+		this.setClassImageriesContainer(value.id, this._selected_layout && this._selected_layout.id);
 		this._selected_layout = value;
 		this.maps_count_range = range(this.selected_layout.maps_count);
-		
 	};
 
 	get selected_layout(): MapsLayout {
@@ -54,12 +57,17 @@ export class ImageriesManagerComponent implements OnInit{
 	 	this.shadowMouseProcess = false;
 	 	this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
-
-		
 	}
 
 	ngOnInit(){
 		this.initListeners();
+		this.setClassImageriesContainer(this.selected_layout.id);
+	}
+
+	setClassImageriesContainer(new_class, old_class?) {
+		old_class && this.imageriesContainer.nativeElement.classList.remove(old_class);
+		this.imageriesContainer.nativeElement.classList.add(new_class);
+		this.layoutChangeSuccess.emit();
 	}
 
 	initListeners() {
@@ -91,46 +99,46 @@ export class ImageriesManagerComponent implements OnInit{
 
 	startPointerMoveProcess(){
 		if(this.maps.data.length < 2){
-			return; 
+			return;
 		}
 		const communicators = this.communicatorProvider.communicators;
-		
+
 		this._maps.data.forEach((mapItem: CaseMapState) => {
 			if(mapItem.id === this._maps.active_map_id ){
 				this.publisherMouseShadowMapId = mapItem.id;
 				communicators[mapItem.id] && communicators[mapItem.id].toggleMouseShadowListener();
-				//@todo add take until instead of unsubscribe ?? or not todo  
+				//@todo add take until instead of unsubscribe ?? or not todo
 				this.pointerMoveUnsubscriber = communicators[mapItem.id]['pointerMove'].subscribe( latLon => {
 					this.drawShadowMouse(latLon);
-				});		
+				});
 			}else{
 				communicators[mapItem.id] && communicators[mapItem.id].startMouseShadowVectorLayer();
 				this.listenersMouseShadowMapsId.push(mapItem.id);
 			}
 		});
 		this.shadowMouseProcess = true;
-	}	
+	}
 
 	drawShadowMouse(latLon){
 		const communicators = this.communicatorProvider.communicators;
 		this.listenersMouseShadowMapsId.forEach(id => {
 				communicators[id] && communicators[id].drawShadowMouse(latLon);
-		});	
+		});
 	}
-	
+
 	stopPointerMoveProcess(){
 		const communicators = this.communicatorProvider.communicators;
-			
+
 		communicators[this.publisherMouseShadowMapId] && communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
-		this.pointerMoveUnsubscriber.unsubscribe();		
-		
+		this.pointerMoveUnsubscriber.unsubscribe();
+
 		if(this.listenersMouseShadowMapsId.length > 0){
 			this.listenersMouseShadowMapsId.forEach(id => {
 				communicators[id] && communicators[id].stopMouseShadowVectorLayer();
 			});
 			this.listenersMouseShadowMapsId = new Array<string>();
-		}	
-		
+		}
+
 		this.publisherMouseShadowMapId = null;
 		this.shadowMouseProcess = false;
 	}

@@ -12,7 +12,7 @@ export interface ICasesState {
 	modal: boolean;
 	contexts: Context[];
 	contexts_loaded: boolean;
-	update_backend: boolean;
+	updating_backend: boolean;
 }
 
 export const initialCasesState: ICasesState = {
@@ -24,7 +24,7 @@ export const initialCasesState: ICasesState = {
 	modal: false,
 	contexts: [],
 	contexts_loaded: false,
-	update_backend: false
+	updating_backend: false
 };
 
 
@@ -72,10 +72,10 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases: cases_updated});
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND:
-			return Object.assign({}, state, {update_backend: true});
+			return Object.assign({}, state, {updating_backend: true});
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS:
-			return Object.assign({}, state, {update_backend: false});
+			return Object.assign({}, state, {updating_backend: false});
 
 		case CasesActionTypes.LOAD_CASES:
 			return state;

@@ -11,11 +11,10 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
-import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 
 @Injectable()
@@ -45,14 +44,14 @@ export class StatusBarAppEffects {
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.cloneDeep()
-		.mergeMap(
+		.map(
 			([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
 
 
 				selected_case.state.maps.layouts_index = action.payload;
 				selected_case = this.setMapsDataChanges(selected_case, selected_layout);
 
-				return [new UpdateCaseAction(selected_case)];
+				return new UpdateCaseAction(selected_case);
 			})
 		.share();
 

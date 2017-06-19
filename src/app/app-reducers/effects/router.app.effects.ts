@@ -5,12 +5,12 @@ import { Action, Store } from '@ngrx/store';
 import {
 	CasesActionTypes, LoadCaseAction,
 	LoadDefaultCaseAction, SelectCaseByIdAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items/cases';
 import { isEmpty, isEqual } from 'lodash';
 import { IAppState } from '../app-reducers.module';
-import { ICasesState } from '../../packages/menu-items/cases/reducers/cases.reducer';
-import { Router } from '@angular/router';
-import { go, routerActions } from '@ngrx/router-store';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { go, routerActions, RouterState } from '@ngrx/router-store';
+import { RouterStoreHelperService } from '../services/router-store-helper.service';
 
 @Injectable()
 export class RouterAppEffects {
@@ -23,13 +23,13 @@ export class RouterAppEffects {
 		})
 		.filter(
 			([action, state]: any) => {
-				const case_id = action.payload.path.split("/")[1];
+				const case_id = this.routerStoreHelperService.caseIdViaPath(action.payload.path);
 				return (isEmpty(case_id) || case_id[0] === '?')
 					&& (isEmpty(state.selected_case) || isEmpty(state.default_case) || !isEqual(state.selected_case.id, state.default_case.id));
 			}
 		)
 		.map( ([action]: any) => {
-			const q_params = this.router.parseUrl(action.payload.path);
+			const q_params = this.routerStoreHelperService.queryParamsViaPath(action.payload.path);
 			return new LoadDefaultCaseAction(q_params)
 		});
 
@@ -37,14 +37,14 @@ export class RouterAppEffects {
 	onUpdateLocationCase$: Observable<Action> = this.actions$
 		.ofType(routerActions.UPDATE_LOCATION)
 		.withLatestFrom(this.store$.select('cases'), (action, state: ICasesState) => {
-			const case_id = action.payload.path.split("/")[1];
+			const case_id = this.routerStoreHelperService.caseIdViaPath(action.payload.path);
 			return [case_id, state.selected_case]
 		})
 		.filter(
 			([case_id, selected_case]: any) => {
 				return !isEmpty(case_id) &&
-					   case_id[0] !== '?' &&
-					  (isEmpty(selected_case) || !isEqual(case_id, selected_case.id));
+					case_id[0] !== '?' &&
+					(isEmpty(selected_case) || !isEqual(case_id, selected_case.id));
 			}
 		)
 		.map( ([case_id]: any) => {
@@ -54,11 +54,16 @@ export class RouterAppEffects {
 	@Effect()
 	selectCaseUpdateRouter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]:[any, ICasesState]) => {
-			return !isEmpty(action) && !(state.default_case && action.payload === state.default_case.id)
-		})
-		.map(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
+		.withLatestFrom(this.store$,
+			(action: SelectCaseByIdAction, state:IAppState): [SelectCaseByIdAction, ICasesState, RouterState] => [action, state.cases, state.router]
+		)
+		.filter(
+			( [action, cases, router]: [SelectCaseByIdAction, ICasesState, RouterState]) => {
+				const case_id = this.routerStoreHelperService.caseIdViaPath(router.path);
+				return case_id !== cases.selected_case.id &&
+					(!cases.default_case || action.payload !== cases.default_case.id)
+			})
+		.map(([action, cases, router]: [SelectCaseByIdAction, ICasesState, RouterState])=>{
 			return go(['', action.payload]);
 		});
 
@@ -69,10 +74,9 @@ export class RouterAppEffects {
 		.filter(([action, state]: [Action, ICasesState]) => {
 			return isEqual(action.payload, state.default_case.id);
 		})
-		.map(([caseId, state]: [string, ICasesState]) => {
+		.map(() => {
 			return go(['', ''])
 		});
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private router: Router) {
-	}
+	constructor(private actions$: Actions, private store$: Store<IAppState>, private routerStoreHelperService: RouterStoreHelperService) {}
 }

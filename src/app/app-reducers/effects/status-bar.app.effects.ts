@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { ChangeLayoutAction, UpdateStatusFlagsAction ,StatusBarActionsTypes } from '@ansyn/status-bar';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesService, CasesActionTypes } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -22,6 +22,8 @@ import * as turf from '@turf/turf';
 import { OverlaysService } from '../../packages/overlays/services/overlays.service';
 import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
 import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 
 
 @Injectable()
@@ -105,14 +107,29 @@ export class StatusBarAppEffects {
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.cloneDeep()
-		.map(
+		.mergeMap(
 			([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
 
-
 				selected_case.state.maps.layouts_index = action.payload;
+
 				selected_case = this.setMapsDataChanges(selected_case, selected_layout);
 
-				return new UpdateCaseAction(selected_case);
+				//return this.casesService.wrapUpdateCase(selected_case).mergeMap( (updated_case) => {
+					//add here stopShadowMouse
+                const actionsList: Array<Action> = [];
+                actionsList.push(new UpdateCaseAction(selected_case ));
+                actionsList.push(new UpdateMapSizeAction())
+
+                if(selected_case.state.maps.data.length === 1){
+                    actionsList.push(new DisableMouseShadow());
+                    actionsList.push(new StopMouseShadow())
+                }else{
+                    actionsList.push(new EnableMouseShadow());
+                }
+
+                return actionsList;
+            //});
+				//return new UpdateCaseAction(selected_case);
 			})
 		.share();
 

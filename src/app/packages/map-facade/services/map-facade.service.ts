@@ -2,37 +2,46 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { CommuincatorsChangeAction, PositionChangedAction } from '../actions/map.actions';
+import { AddMapInstacneAction,RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 
 @Injectable()
 export class MapFacadeService {
-	private positionChangedSubscribers = [];
+	private _subscribers = [];
 
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {
-		this.initPositionChangedEmitters();
+		this.initEmitters();
 
-		imageryCommunicatorService.communicatorsChange.subscribe((communicatorsIds) => {
-			this.store.dispatch(new CommuincatorsChangeAction(communicatorsIds));
+		imageryCommunicatorService.instanceCreated.subscribe((communicatorsIds) => {
+			this.store.dispatch(new AddMapInstacneAction(communicatorsIds));
+		});
+
+		imageryCommunicatorService.instanceRemoved.subscribe((communicatorsIds) => {
+			this.store.dispatch(new RemoveMapInstanceAction(communicatorsIds));
 		});
 
 	}
 
-	initPositionChangedEmitters() {
+	initEmitters() {
 		this.unsubscribeAll();
 		Object.keys(this.imageryCommunicatorService.communicators).forEach((id)=>{
-			this.positionChangedSubscribers.push(this.imageryCommunicatorService.provideCommunicator(id).positionChanged.subscribe(this.positionChanged.bind(this)));
+			this._subscribers.push(this.imageryCommunicatorService.provide(id).positionChanged.subscribe(this.positionChanged.bind(this)));
+			this._subscribers.push(this.imageryCommunicatorService.provide(id).singleClick.subscribe(this.singleClick.bind(this)));
 		});
 	}
 
 	unsubscribeAll() {
-		this.positionChangedSubscribers.forEach((subscriber)=>{
+		this._subscribers.forEach((subscriber)=>{
 			subscriber.unsubscribe();
 		});
-		this.positionChangedSubscribers = [];
+		this._subscribers = [];
 	}
 
 	positionChanged($event: {id: string, position: Position}) {
 		this.store.dispatch(new PositionChangedAction($event));
+	}
+
+	singleClick(event){
+		this.store.dispatch(new MapSingleClickAction(event));
 	}
 }

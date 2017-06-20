@@ -1,21 +1,20 @@
-import {
-	ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ViewChild,
-	ElementRef
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
-import { range } from 'lodash';
+import { range,cloneDeep } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
 	styleUrls: ['./imageries-manager.component.less']
+	,changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
+	public _activeMapId;
 	private _maps:any;
 	public maps_count_range = [];
 
@@ -42,6 +41,7 @@ export class ImageriesManagerComponent implements OnInit{
 		this.setClassImageriesContainer(value.id, this._selected_layout && this._selected_layout.id);
 		this._selected_layout = value;
 		this.maps_count_range = range(this.selected_layout.maps_count);
+
 	};
 
 	get selected_layout(): MapsLayout {
@@ -57,6 +57,8 @@ export class ImageriesManagerComponent implements OnInit{
 	 	this.shadowMouseProcess = false;
 	 	this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
+
+
 	}
 
 	ngOnInit(){

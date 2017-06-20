@@ -10,6 +10,7 @@ export interface IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
+	singleClick: EventEmitter<any>;
 
 	mapType: string;
 	mapObject: any;
@@ -27,4 +28,5 @@ export interface IMap {
 	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
 	togglePointerMove();
+	removeSingleClickEvent();
 }

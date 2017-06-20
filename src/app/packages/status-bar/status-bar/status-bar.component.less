@@ -1,7 +1,7 @@
 @import "~@ansyn/core/less/common";
 @share-link-padding-bottom: 20px;
 
-div.status-bar{
+div.status-bar {
 	background: @status-color;
 	width: 100%;
 	transform: translate(0, -100%);
@@ -9,8 +9,9 @@ div.status-bar{
 	box-sizing: border-box;
 	padding: 5px;
 	justify-content: flex-end;
+	align-items: center;
 
-	div.left-side{
+	div.left-side {
 		display: flex;
 		width: 50%;
 		button.back-to-world-view {
@@ -24,6 +25,7 @@ div.status-bar{
 		}
 
 	}
+
 	div.middle {
 		width: 100%;
 		text-align: center;
@@ -31,29 +33,29 @@ div.status-bar{
 		justify-content: center;
 		flex-direction: column;
 	}
-	div.right-side{
+	div.right-side {
 		display: flex;
 		width: 50%;
 		justify-content: space-between;
 		border-left: 1px white solid;
-		div.selected-case{
+		div.selected-case {
 			padding: 5px;
 			display: inline-block;
-			*{
+			* {
 				vertical-align: middle;
 			}
 
-			div.pop-hover{
+			div.pop-hover {
 				visibility: hidden;
 				opacity: 0;
 				transition: .4s;
 				background: transparent;
 				position: absolute;
 				transform: translate(0, -100%);
-				top:0;
+				top: 0;
 				padding-bottom: @share-link-padding-bottom;
 
-				button.share-link{
+				button.share-link {
 					transition: .4s;
 					cursor: pointer;
 					padding: 10px;
@@ -65,27 +67,77 @@ div.status-bar{
 				}
 			}
 
-			&:hover{
+			&:hover {
 				background: black;
-				div.pop-hover{
+				div.pop-hover {
 					visibility: visible;
 					opacity: 1;
-					button.share-link{
+					button.share-link {
 						transform: translate(0, 0);
 					}
 				}
 			}
 		}
-		div.layout-combobox, div.overlays-count, div.timeline-combobox{
+		div.layout-combobox, div.overlays-count, div.timeline-combobox {
 			padding-top: 4px;
 			display: inline-block;
-			*{
-				vertical-align: middle;
-			}
+
 		}
 	}
-}
-select{
-	background: black;
-	color: white;
+	div.layout-item {
+		margin: 0 10px;
+		display: flex;
+		* {
+			vertical-align: middle;
+		}
+		&.timeline-combobox {
+			img {
+				margin: 0;
+			}
+			.status-bar-world-icon {
+				margin-right: 5px;
+			}
+			.status-bar-edit-icon {
+				opacity: 0.5;
+				margin: 0px 7px 0px 5px;
+				&.active {
+					opacity: 1;
+				}
+				img {
+					height: 16px;
+				}
+			}
+			.status-bar-eye-icon {
+				opacity: 0.5;
+				&.active {
+					opacity: 1;
+				}
+				img {
+					height: 14px;
+				}
+			}
+			.status-bar-orientation-icon {
+				margin: 0px 7px 0px 0px;
+				img {
+
+				}
+			}
+			.status-bar-calender-icon {
+				margin: 0px 7px 0px 0px;
+				img {
+
+				}
+			}
+		}
+
+		img {
+			margin-right: 7px;
+			background: transparent;
+		}
+	}
+
+	select {
+		background: black;
+		color: white;
+	}
 }

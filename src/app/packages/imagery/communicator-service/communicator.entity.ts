@@ -16,15 +16,19 @@ import { Subject } from 'rxjs/Subject';
 export class CommunicatorEntity {
 	private _manager: ImageryComponentManager;
 	private _managerSubscriptions;
+
+
 	public positionChanged: EventEmitter<{id: string, position: MapPosition}>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public pointerMove: EventEmitter<any>;
+	public singleClick: EventEmitter<any>;
 	public isReady: EventEmitter<any>;
 
 	constructor(public id: string) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
 		this.pointerMove = new EventEmitter<any>();
+		this.singleClick = new EventEmitter<any>();
 		this.isReady = new EventEmitter<any>();
 	}
 
@@ -39,6 +43,10 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {
 			this.pointerMove.emit(latLon);
+		}));
+
+		this._managerSubscriptions.push(this._manager.singleClick.subscribe((event: any) => {
+			this.singleClick.emit(event);
 		}));
 
 	}
@@ -158,4 +166,22 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).drawShadowMouse(latLon);
 	}
 	//======shadow mouse end
+
+	//======pinPointIndicator
+	public createMapSingleClickEvent(){
+		(<any>this.ActiveMap).addSingleClickEvent();
+	}
+
+	public removeSingleClickEvent(){
+		(<any>this.ActiveMap).removeSingleClickEvent();
+	}
+
+	public addPinPointIndicator(latLon:Array<number>){
+		(<any>this.ActiveMap).addPinPointIndicator(latLon);
+	}
+
+	public removePinPointIndicator(){
+		(<any>this.ActiveMap).removePinPointIndicator();
+	}
+	//======end pinPointIndicator
 }

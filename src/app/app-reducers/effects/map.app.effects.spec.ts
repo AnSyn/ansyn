@@ -12,7 +12,9 @@ import { CommuincatorsChangeAction, StopMapShadowAction, StartMapShadowAction, C
 import { configuration } from "configuration/configuration";
 import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 import { BaseSourceProvider } from '@ansyn/imagery';
-import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
+import { cloneDeep } from 'lodash';
+import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools';
+
 
 
 
@@ -38,7 +40,7 @@ describe('MapAppEffects', () => {
 	let icase_state: ICasesState;
 	let casesService:CasesService;
 	let imageryCommunicatorServiceMock = {
-		provideCommunicator() { }
+		provide() { }
 	};
 	let _cases = [{
 			id: 'case1',
@@ -151,7 +153,7 @@ describe('MapAppEffects', () => {
 			}
 		};
 		effectsRunner.queue(action);
-		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => imagery1);
 		spyOn(imagery1, 'addVectorLayer');
 
 		mapAppEffects.addVectorLayer$.subscribe(() => {
@@ -176,7 +178,7 @@ describe('MapAppEffects', () => {
 			}
 		};
 		effectsRunner.queue(action);
-		spyOn(imageryCommunicatorService, 'provideCommunicator').and.callFake(() => imagery1);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => imagery1);
 		spyOn(imagery1, 'removeVectorLayer');
 
 		mapAppEffects.removeVectorLayer$.subscribe(() => {

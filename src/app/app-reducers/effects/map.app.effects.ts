@@ -8,18 +8,62 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { BaseSourceProvider } from '@ansyn/imagery';
-import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,CommuincatorsChangeAction,ActiveMapChangedAction } from '@ansyn/map-facade';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { MapActionTypes,MapSingleClickAction, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,ActiveMapChangedAction } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
+import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
+import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
+import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
+import { CommunicatorEntity } from "@ansyn/imagery/communicator-service/communicator.entity";
+import { UpdateStatusFlagsAction } from "@ansyn/status-bar";
+import { filter } from "rxjs/operator/filter";
+import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
+
 
 @Injectable()
 export class MapAppEffects {
+
+	@Effect()
+	onMapSingleClick$: Observable<any> = this.actions$
+	.ofType(MapActionTypes.MAP_SINGLE_CLICK)
+	.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar') , (action:UpdateStatusFlagsAction,caseState:ICasesState ,statusBarState:IStatusBarState) => [action,caseState,statusBarState])
+		.filter(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]): any => statusBarState.flags.get('pin-point-search'))
+		.mergeMap(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]) => {
+
+		//create the region
+	 	const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
+
+	 	//draw the point on the map // all maps
+		if(statusBarState.flags.get('pin-point-indicator')){
+			//draw on all maps
+			this.communicator.communicatorsAsArray().forEach( communicator => {
+				communicator.addPinPointIndicator(action.payload.lonLat);
+				//this is for the others communicators
+				communicator.removeSingleClickEvent();
+			})
+		}
+
+		const selectedCase = {...caseState.selected_case, state : {...caseState.selected_case.state,region:region}};
+
+		return [
+			//disable the pinpoint search
+			new UpdateStatusFlagsAction({ key : 'pin-point-search',value: false}),
+			//update case
+			new UpdateCaseAction(selectedCase),
+			//load overlays
+			new LoadOverlaysAction({
+				to:selectedCase.state.time.to,
+				from:selectedCase.state.time.from,
+				polygon:selectedCase.state.region,
+				caseId: selectedCase.id
+			})
+		];
+	});
 
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
@@ -30,7 +74,6 @@ export class MapAppEffects {
 	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
 		.map(() => new StopMapShadowAction());
-
 
 	@Effect({ dispatch: false })
 	selectOverlay$: Observable<Action> = this.actions$
@@ -50,11 +93,11 @@ export class MapAppEffects {
 			const bbox = turf.bbox(footprintFeature);
 			const bboxPolygon = turf.bboxPolygon(bbox);
 			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-			const mapType = this.communicator.provideCommunicator(map_id).ActiveMap.mapType;
+			const mapType = this.communicator.provide(map_id).ActiveMap.mapType;
 			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
 			sourceLoader.createAsync(overlay).then((layer)=> {
-				this.communicator.provideCommunicator(map_id).setLayer(layer, extent);
-				this.communicator.provideCommunicator(map_id).setCenter(center.geometry);
+				this.communicator.provide(map_id).setLayer(layer, extent);
+				this.communicator.provide(map_id).setCenter(center.geometry);
 			});
 
 			return Observable.empty();
@@ -68,7 +111,7 @@ export class MapAppEffects {
 			return [action, state.selected_case.state.maps.active_map_id];
 		})
 		.map(([action, active_map_id]: [SelectLayerAction, string]) => {
-			const imagery = this.communicator.provideCommunicator(active_map_id);
+			const imagery = this.communicator.provide(active_map_id);
 			imagery.addVectorLayer(action.payload);
 		}).share();
 
@@ -78,7 +121,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [UnselectLayerAction, ICasesState])=> [action, state.selected_case.state.maps.active_map_id])
 		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
-			let imagery = this.communicator.provideCommunicator(active_map_id);
+			let imagery = this.communicator.provide(active_map_id);
 			imagery.removeVectorLayer(action.payload);
 		}).share();
 
@@ -103,15 +146,32 @@ export class MapAppEffects {
 
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE,MapActionTypes.REMOVE_MAP_INSTACNE)
 		.withLatestFrom(this.store$.select("cases"))
-		.map(([action, state]:[CommuincatorsChangeAction,ICasesState]): any => {
-			const communicatorsIds = action.payload;
-			if(communicatorsIds.length > 1 && communicatorsIds.length === state.selected_case.state.maps.data.length) {
-				return new CompositeMapShadowAction();
+		.filter(([action, caseState]:[Action,ICasesState]) => {
+			const communicatorsIds = action.payload.communicatorsIds;
+			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selected_case.state.maps.data.length;
+		})
+		.map(() => new CompositeMapShadowAction());
+
+	@Effect({dispatch:false})
+	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
+		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get('pin-point-indicator'))
+		.map(([action,caseState,statusBarState]:[any,any,any]) => {
+			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
+
+			if(statusBarState.flags.get('pin-point-indicator')) {
+				const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
+				communicatorHandler.addPinPointIndicator(point.coordinates);
 			}
-			return {type:'undefined-type',payload:'not all communicators initiliazied'};
-		});
+
+			if(statusBarState.flags.get('pin-point-search')) {
+				communicatorHandler.createMapSingleClickEvent();
+			}
+
+		} );
 
 	@Effect()
 	onActiveMapChanges$: Observable<Action> = this.actions$
@@ -133,6 +193,7 @@ export class MapAppEffects {
 		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
-		private typeContainerService: TypeContainerService
+		private typeContainerService: TypeContainerService,
+		private overlaysService: OverlaysService
 	) { }
 }

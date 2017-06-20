@@ -4,11 +4,13 @@ import { Position } from '@ansyn/core';
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
-	COMMUNICATORS_CHANGE: 'COMMUNICATORS_CHANGE',
+	ADD_MAP_INSTANCE: 'ADD_MAP_INSTANCE',
+	REMOVE_MAP_INSTACNE: 'REMOVE_MAP_INSTACNE',
 	STOP_MAP_SHADOW_ACTIONS: 'STOP_MAP_SHADOW_ACTIONS',
 	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
-	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED'
+	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
+	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK'
 };
 
 export type MapActions = any;
@@ -30,16 +32,19 @@ export class UpdateMapSizeAction implements Action{
 	constructor	(public payload?: any) {}
 }
 
-export class CommuincatorsChangeAction implements Action{
-	type = MapActionTypes.COMMUNICATORS_CHANGE;
-	constructor(public payload: Array<string>) {}
+export class AddMapInstacneAction implements Action{
+	type = MapActionTypes.ADD_MAP_INSTANCE;
+	constructor(public payload: any) {}
+}
+
+export class RemoveMapInstanceAction implements Action{
+	type = MapActionTypes.REMOVE_MAP_INSTACNE;
+	constructor(public payload: any) {}
 }
 
 export class StopMapShadowAction implements Action{
 	type = MapActionTypes.STOP_MAP_SHADOW_ACTIONS;
-	constructor	(public payload?: any) {
-		console.log('stopmapshadowaction constructor');
-	}
+	constructor	(public payload?: any) {}
 }
 
 export class StartMapShadowAction implements Action{
@@ -50,5 +55,9 @@ export class StartMapShadowAction implements Action{
 export class CompositeMapShadowAction implements Action {
 	type = MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION;
 	constructor(public payload?: any) {}
+}
 
+export class MapSingleClickAction implements Action {
+	type = MapActionTypes.MAP_SINGLE_CLICK;
+	constructor(public payload: any){}
 }

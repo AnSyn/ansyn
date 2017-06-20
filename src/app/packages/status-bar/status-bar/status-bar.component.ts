@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, Renderer } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout } from '../reducers/status-bar.reducer';
 import { ChangeLayoutAction, SetLinkCopyToastValueAction, ShareSelectedCaseLinkAction } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
+import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -19,11 +20,17 @@ export class StatusBarComponent implements OnInit {
 		.distinctUntilChanged(isEqual);
 
 	selected_layout_index: number;
+	flags =  {
+		pinPointSearch: undefined,
+		pinPointIndicator:undefined
+	};
+
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay-name') overlayName: number;
 	@Input('hide-overlay-name') hideOverlayName: boolean;
 	@Input('maps') maps: any;
+	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
 
 	showLinkCopyToast: boolean;
 
@@ -31,6 +38,20 @@ export class StatusBarComponent implements OnInit {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
 		});
+		this.store.select('status_bar')
+			.distinctUntilChanged(isEqual)
+			.skip(1)
+			.subscribe(store => {
+				if(this.flags.pinPointSearch != store.flags.get('pin-point-search')){
+					this.toggleEditMode.emit();
+				}
+				this.flags.pinPointSearch = store.flags.get('pin-point-search');
+				this.flags.pinPointIndicator = store.flags.get('pin-point-indicator');
+				console.log(store.flags.get('pin-point-search'),'pin-point-search');
+				console.log(store.flags.get('pin-point-indicator'),"pin-point-indicator");
+
+		});
+		this.store.dispatch(new UpdateStatusFlagsAction ({ key : 'pin-point-indicator'}));
 
 		this.showLinkCopyToast$
 			.subscribe((_showLinkCopyToast) =>{
@@ -49,6 +70,17 @@ export class StatusBarComponent implements OnInit {
 	copyText() {
 		this.store.dispatch(new ShareSelectedCaseLinkAction());
 	}
+
+
+	toggleMapPointSearch() {
+		this.store.dispatch(new UpdateStatusFlagsAction ({ key : 'pin-point-search'}));
+
+	}
+
+	togglePinPointIndicatorView() {
+		this.store.dispatch(new UpdateStatusFlagsAction({ key : 'pin-point-indicator'}));
+	}
+
 
 
 }

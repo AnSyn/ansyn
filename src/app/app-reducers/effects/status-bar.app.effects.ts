@@ -1,24 +1,73 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { ChangeLayoutAction, StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ChangeLayoutAction, UpdateStatusFlagsAction ,StatusBarActionsTypes } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
+import { ICasesState,Case, defaultMapType,CaseMapState, CasesService, CasesActionTypes } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case, defaultMapType,CaseMapState } from '@ansyn/menu-items/cases/models/case.model';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
-import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
+
+import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
+import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import * as turf from '@turf/turf';
+import { OverlaysService } from '../../packages/overlays/services/overlays.service';
 import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
 import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
 
 
 @Injectable()
 export class StatusBarAppEffects {
+
+	@Effect({dispatch:false})
+	updatePinPointSearchAction$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.filter(action =>  action.payload.key === 'pin-point-search')
+		.withLatestFrom(this.store.select('status_bar'),this.store.select('cases'))
+		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
+
+			const value = statusBarState.flags.get('pin-point-search');
+
+			const activeMapId = casesState.selected_case.state.maps.active_map_id;
+			console.log('single click event request ',value);
+			if(value){
+				//const communicator =  this.imageryCommunicator.provide(activeMapId);
+				this.imageryCommunicator.communicatorsAsArray().forEach(c => {
+					c.createMapSingleClickEvent();
+				});
+			}
+			return;
+		});
+
+	@Effect({dispatch:false})
+	updatePinPointIndicatorAction$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.filter(action =>  action.payload.key === 'pin-point-indicator')
+		.withLatestFrom(this.store.select('status_bar'),this.store.select('cases'))
+		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
+
+			const value = statusBarState.flags.get('pin-point-indicator');
+
+			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
+				if(value){
+					const point = this.overlaysService.getPointByPolygon(casesState.selected_case.state.region);
+					const latLon = point.coordinates;
+					c.addPinPointIndicator(latLon);
+				}else{
+					c.removePinPointIndicator();
+				}
+
+			});
+			return;
+		});
 
 	@Effect()
 	onShareSelectedCaseLink$ = this.actions$
@@ -67,7 +116,12 @@ export class StatusBarAppEffects {
 			})
 		.share();
 
-	constructor(private actions$: Actions, private store:Store<IAppState>) {}
+	constructor(private actions$: Actions,
+				private store:Store<IAppState>,
+				private casesService: CasesService,
+				public imageryCommunicator: ImageryCommunicatorService,
+				public overlaysService: OverlaysService
+	) {}
 
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;

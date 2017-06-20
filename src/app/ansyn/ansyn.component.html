@@ -4,11 +4,11 @@
 
 	<div class="layer">
 
-		<ansyn-imageries-manager class="map" [selected_layout]="selected_layout" [maps]="maps" (setActiveImagery)="onActiveImagery($event)" (layoutChangeSuccess)="layoutChangeSuccess($event)"></ansyn-imageries-manager>
+		<ansyn-imageries-manager #mapsContainer class="map" [selected_layout]="selected_layout" [maps]="maps" (setActiveImagery)="onActiveImagery($event)" (layoutChangeSuccess)="layoutChangeSuccess($event)"></ansyn-imageries-manager>
 
-		<div class="status">
+        <div class="status">
 
-			<ansyn-status-bar [selected_case_name]="(selected_case)?.name" [overlays_count]="overlays_count" [overlay-name]="overlay_name" [hide-overlay-name]="selected_layout.maps_count > 1"></ansyn-status-bar>
+			<ansyn-status-bar [selected_case_name]="(selected_case)?.name" [overlays_count]="overlays_count" [overlay-name]="overlay_name" (toggleEditMode)="toggleEditMode($event)" [hide-overlay-name]="selected_layout.maps_count > 1"></ansyn-status-bar>
 
 		</div>
 

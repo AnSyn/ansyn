@@ -1,21 +1,25 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
+import { values } from 'lodash';
 
 @Injectable()
 export class ImageryCommunicatorService {
 
 	private  _communicators: { [id: string]: CommunicatorEntity };
-	public communicatorsChange = new EventEmitter();
+	public instanceCreated = new EventEmitter();
+	public instanceRemoved = new EventEmitter();
+
+
 	public initiliziedCommunicators:Array<string> = [];
 
 	constructor() {
 		this._communicators = {};
 	}
 
-	public provideCommunicator(id: string): CommunicatorEntity {
+	public provide(id: string): CommunicatorEntity {
 
 		if (!this._communicators[id]) {
-			this.createImageryCommunicator(id);
+			this.create(id);
 		}
 		return this._communicators[id];
 	}
@@ -24,22 +28,35 @@ export class ImageryCommunicatorService {
 		return this._communicators;
 	}
 
-	private createImageryCommunicator(id: string): void {
+	communicatorsAsArray():Array<CommunicatorEntity>{
+		return values(this._communicators);
+	}
+
+	private create(id: string): void {
 		this._communicators[id] = new CommunicatorEntity(id);
 		this._communicators[id]['isReady'].subscribe((success:string) => {
 			if(success){
 				this.initiliziedCommunicators.push(id);
-				this.communicatorsChange.emit(this.initiliziedCommunicators);
+				this.instanceCreated.emit({
+					communicatorsIds: this.initiliziedCommunicators,
+					currentCommunicatorId: id
+				});
 			}
 		});
 	}
 
-	public removeCommunicator(id: string) {
-		if(!this._communicators[id]) return;
+	public remove(id: string) {
+		if(!this._communicators[id]) {
+			return;
+		}
+
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);
 		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(id),1);
-		this.communicatorsChange.emit(this.initiliziedCommunicators);
+		this.instanceRemoved.emit({
+			communicatorsIds: this.initiliziedCommunicators,
+			currentCommunicatorId: id
+		});
 	}
 }

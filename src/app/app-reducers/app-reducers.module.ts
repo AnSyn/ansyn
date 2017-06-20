@@ -1,3 +1,5 @@
+import { FiltersAppEffects } from './effects/filters.app.effects';
+import { IFiltersState, FiltersReducer } from '@ansyn/menu-items/filters';
 import { LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { OverlayReducer } from '@ansyn/overlays';
@@ -34,6 +36,7 @@ export interface IAppState {
     map: IMapState;
     tools: IToolsState;
     router: RouterState;
+    filters: IFiltersState;
 }
 
 
@@ -45,7 +48,8 @@ const reducers = {
     layers: LayersReducer,
     status_bar: StatusBarReducer,
     tools: ToolsReducer,
-	router: routerReducer
+	router: routerReducer,
+    filters: FiltersReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);
@@ -65,6 +69,7 @@ export function reducer(state: any, action: any) {
         EffectsModule.run(LayersAppEffects),
         EffectsModule.run(StatusBarAppEffects),
 		EffectsModule.run(RouterAppEffects),
+        EffectsModule.run(FiltersAppEffects),
 		RouterStoreModule.connectRouter()
     ],
 	providers:[RouterStoreHelperService]

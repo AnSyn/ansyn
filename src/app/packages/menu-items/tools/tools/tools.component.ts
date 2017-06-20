@@ -14,7 +14,8 @@ export class ToolsComponent implements OnInit {
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
 														.map((tools: IToolsState) => tools.flags);
 	//@todo display the shadow mouse only if there more then one map .
-	constructor(private store: Store<any>) { 
+	constructor(private store: Store<any>) {
+
 	}
 
 	ngOnInit() {
@@ -25,14 +26,14 @@ export class ToolsComponent implements OnInit {
 
 	toggleShadowMouse(){
 		const value = this.flags.get('shadow_mouse');
-		
+
 		if(value){
-			this.store.dispatch(new StopMouseShadow());		
+			this.store.dispatch(new StopMouseShadow());
 		}else{
 			this.store.dispatch(new StartMouseShadow());
 		}
 
-		//this.flags.set('shadow_mouse',!value);	
+		//this.flags.set('shadow_mouse',!value);
 	}
 
 }

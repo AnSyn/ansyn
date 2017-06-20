@@ -4,8 +4,8 @@
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow,ToolsActions } from '../actions/tools.actions';
 
 export interface IToolsState {
-	
-	flags: Map<string,boolean>;	
+
+	flags: Map<string,boolean>;
 };
 
 export const toolsInitialState: IToolsState = {
@@ -13,17 +13,32 @@ export const toolsInitialState: IToolsState = {
 };
 
 export function ToolsReducer(state = toolsInitialState,action: ToolsActions): IToolsState {
+	let tmpMap :Map<string,boolean>;
 	switch(action.type){
-		case  ToolsActionsTypes.START_MOUSE_SHADOW: 
-			const immFlagsStart = new Map(state.flags);
-			immFlagsStart.set('shadow_mouse',true); 	
-			//immFlagsStart.set('shadow_mouse_disabled',true);
-			return {...state,  flags: immFlagsStart };
+		case  ToolsActionsTypes.START_MOUSE_SHADOW:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('shadow_mouse',true);
+			return { ...state,  flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
-			const immFlagsStop = new Map(state.flags);
-			immFlagsStop.set('shadow_mouse',false); 	
-			return {...state,  flags: immFlagsStop };
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('shadow_mouse',false);
+			return { ...state,  flags: tmpMap };
+
+		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('shadow_mouse_disabled',true);
+			return { ...state,flags: tmpMap };
+
+		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('shadow_mouse_disabled',false);
+			return { ...state,flags: tmpMap };
+
 		default:
 		return state;
 

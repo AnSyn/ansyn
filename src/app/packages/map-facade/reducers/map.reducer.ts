@@ -20,8 +20,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			positions[action.payload.id] = action.payload.position;
 			return Object.assign(state, {positions});
 
-		case MapActionTypes.COMMUNICATORS_CHANGE:
-			return Object.assign(state, {communicators: action.payload});
+		case MapActionTypes.ADD_MAP_INSTANCE:
+		case MapActionTypes.REMOVE_MAP_INSTACNE:
+			return Object.assign(state, {communicators: action.payload.communicatorsIds});
 
 		case MapActionTypes.UPDATE_MAP_SIZE:
 			return state;

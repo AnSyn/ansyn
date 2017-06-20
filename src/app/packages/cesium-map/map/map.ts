@@ -9,6 +9,7 @@ export class Map implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
+	singleClick: EventEmitter<any>;
 
 	mapType: string;
 	mapObject: any;
@@ -64,9 +65,11 @@ export class Map implements IMap {
 	}
 
 	togglePointerMove(){
-		
 	}
 
+	removeSingleClickEvent(){
+
+	}
 
 	constructor(element: HTMLElement) {
 		this.mapType = 'cesium';

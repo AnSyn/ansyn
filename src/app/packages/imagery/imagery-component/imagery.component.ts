@@ -2,7 +2,7 @@
  * Created by AsafMasa on 25/04/2017.
  */
 import {
-	Component, Input, OnInit, OnDestroy, ViewChild,
+	Component, Input, OnInit, OnChanges, OnDestroy, ViewChild,
 	ViewContainerRef, ComponentRef, ComponentFactoryResolver, Inject, SimpleChanges
 } from '@angular/core';
 import { ImageryProviderService } from '../provider-service/provider.service';
@@ -64,7 +64,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			console.error('mapComponentSettings is Needed!');
 			return;
 		}
-		const imageryCommunicator = this.imageryCommunicatorService.provideCommunicator(this.mapComponentSettings.id);
+		const imageryCommunicator = this.imageryCommunicatorService.provide(this.mapComponentSettings.id);
 
 		this.init(imageryCommunicator);
 	}
@@ -93,7 +93,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		if (this._manager) {
-			this.imageryCommunicatorService.removeCommunicator(this._manager.getCommunicatorId());
+			this.imageryCommunicatorService.remove(this._manager.getCommunicatorId());
 			this._manager.dispose();
 		}
 	}

@@ -27,30 +27,43 @@
 			</div>
 		</div>
 
-		<div class="timeline-combobox">
-			<img src="/assets/icons/status-bar/orientation.png">
+		<div class="timeline-combobox layout-item">
+			<div class='status-bar-orientation-icon'>
+				<img src="/assets/icons/status-bar/orientation.png">
+			</div>
 			<select name="timeline">
 				<option>Orignal</option>
+			<option>Orignal</option>
 			</select>
 		</div>
 
 
-		<div class="timeline-combobox">
-			<img src="/assets/icons/status-bar/geo.png">
+		<div class="timeline-combobox layout-item">
+			<div class='status-bar-world-icon'>
+				<img src="/assets/icons/status-bar/geo.png">
+			</div>
 			<select name="timeline">
 				<option>Pin Point</option>
 			</select>
+			<div class="status-bar-edit-icon" [class.active]="flags.pinPointSearch">
+				<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="">
+			</div>
+			<div class='status-bar-eye-icon' [class.active]="flags.pinPointIndicator">
+				<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="">
+			</div>
 		</div>
 
 
-		<div class="timeline-combobox">
-			<img src="/assets/icons/status-bar/calendar.png">
+		<div class="timeline-combobox layout-item">
+			<div class="status-bar-calender-icon">
+				<img src="/assets/icons/status-bar/calendar.png">
+			</div>
 			<select name="timeline">
 				<option>Timeline</option>
 			</select>
 		</div>
 
-		<div class="layout-combobox">
+		<div class="layout-combobox layout-item">
 			<img src="/assets/icons/status-bar/screen-icon.png">
 			<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
 				<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
@@ -59,7 +72,7 @@
 			</select>
 		</div>
 
-		<div class="overlays-count">
+		<div class="overlays-count layout-item">
 			<img src="/assets/icons/status-bar/overlays-count.png">
 			{{overlays_count}}
 		</div>

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
-import { MapActionTypes,CompositeMapShadowAction,CommuincatorsChangeAction } from '../actions/map.actions';
+import { MapActionTypes,CompositeMapShadowAction } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 
@@ -17,16 +17,16 @@ export class MapEffects{
 		.map( () => {
 			//@todo move this to service we will need it pass function name and send it to all the maps
 			Object.keys(this.communicatorsService.communicators).forEach((imagery_id: string)=>{
-				this.communicatorsService.provideCommunicator(imagery_id).updateSize();
+				this.communicatorsService.provide(imagery_id).updateSize();
 			});
 		});
 
 
 	@Effect({dispatch:false})
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.COMMUNICATORS_CHANGE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE,MapActionTypes.REMOVE_MAP_INSTACNE)
 		.map(() => {
-			this.mapFacadeService.initPositionChangedEmitters();
+			this.mapFacadeService.initEmitters();
 		});
 
 

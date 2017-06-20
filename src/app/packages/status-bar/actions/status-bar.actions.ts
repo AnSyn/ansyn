@@ -5,11 +5,12 @@ export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	SHARE_SELECTED_CASE_LINK: 'SHARE_SELECTED_CASE_LINK',
 	SET_LINK_COPY_TOAST_VALUE: 'SET_LINK_COPY_TOAST_VALUE'
+	UPDATE_STATUS_FLAGS: "UPDATE_STATUS_FLAGS"
 };
 
-export type StatusActions = ChangeLayoutAction;
+export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
 
-export class ChangeLayoutAction implements Action{
+export class ChangeLayoutAction implements Action {
 	type: string = StatusBarActionsTypes.CHANGE_LAYOUT;
 	constructor(public payload: number) {}
 }
@@ -24,3 +25,10 @@ export class SetLinkCopyToastValueAction implements Action{
 	constructor(public payload: boolean) {}
 }
 
+
+export class UpdateStatusFlagsAction implements Action {
+	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
+	constructor(public payload: any) {
+		// code...
+	}
+}

@@ -1,0 +1,86 @@
+<svg width="34" height="34" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Group 13</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-28155 -4897)">
+<g id="Group 13">
+<g id="icons">
+<g id="pinpoint indicator">
+<g id="Group">
+<g id="Shape">
+<g id="Vector" filter="url(#filter0_f)">
+<use xlink:href="#path0_fill" transform="translate(28156 4898)"/>
+</g>
+<g id="Vector">
+<use xlink:href="#path0_fill" transform="translate(28156 4898)" fill="#F32EE1"/>
+</g>
+</g>
+<g id="Shape">
+<g id="Vector" filter="url(#filter1_f)">
+<use xlink:href="#path1_fill" transform="translate(28178.8 4898)"/>
+</g>
+<g id="Vector">
+<use xlink:href="#path1_fill" transform="translate(28178.8 4898)" fill="#F32EE1"/>
+</g>
+</g>
+<g id="Shape">
+<g id="Vector" filter="url(#filter2_f)">
+<use xlink:href="#path2_fill" transform="translate(28156 4920.78)"/>
+</g>
+<g id="Vector">
+<use xlink:href="#path2_fill" transform="translate(28156 4920.78)" fill="#F32EE1"/>
+</g>
+</g>
+<g id="Shape">
+<g id="Vector" filter="url(#filter3_f)">
+<use xlink:href="#path3_fill" transform="translate(28178.8 4920.78)"/>
+</g>
+<g id="Vector">
+<use xlink:href="#path3_fill" transform="translate(28178.8 4920.78)" fill="#F32EE1"/>
+</g>
+</g>
+<g id="Oval">
+<g id="Vector" filter="url(#filter4_f)">
+<use xlink:href="#path4_fill" transform="translate(28168.1 4910.06)"/>
+</g>
+<g id="Vector">
+<use xlink:href="#path4_fill" transform="translate(28168.1 4910.06)" fill="#F32EE1"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_f" filterUnits="userSpaceOnUse" x="28155" y="4897" width="13" height="13" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter1_f" filterUnits="userSpaceOnUse" x="28176" y="4897" width="13" height="13" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter2_f" filterUnits="userSpaceOnUse" x="28155" y="4918" width="13" height="13" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter3_f" filterUnits="userSpaceOnUse" x="28176" y="4918" width="13" height="13" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter4_f" filterUnits="userSpaceOnUse" x="28166" y="4908" width="12" height="12" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<path id="path0_fill" d="M 2.85228 2.85228L 9.14231 2.85228L 9.14231 0L 0 0L 0 9.14231L 2.85228 9.14231L 2.85228 2.85228Z"/>
+<path id="path1_fill" d="M 9.1424 0L -7.36426e-07 0L -7.36426e-07 2.85228L 6.29012 2.85228L 6.29012 9.14231L 9.1424 9.14231L 9.1424 0Z"/>
+<path id="path2_fill" d="M 0 9.1424L 9.14231 9.1424L 9.14231 6.29012L 2.85228 6.29012L 2.85228 -7.36426e-07L 0 -7.36426e-07L 0 9.1424Z"/>
+<path id="path3_fill" d="M 6.29012 6.29012L -7.36426e-07 6.29012L -7.36426e-07 9.1424L 9.1424 9.1424L 9.1424 -7.36426e-07L 6.29012 -7.36426e-07L 6.29012 6.29012Z"/>
+<path id="path4_fill" d="M 3.90442 7.80885C 6.06078 7.80885 7.80885 6.06078 7.80885 3.90442C 7.80885 1.74807 6.06078 0 3.90442 0C 1.74807 0 0 1.74807 0 3.90442C 0 6.06078 1.74807 7.80885 3.90442 7.80885Z"/>
+</defs>
+</svg>

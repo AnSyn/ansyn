@@ -82,8 +82,8 @@ describe('ImageryComponent', () => {
 	// 		type: 'Point',
 	// 		coordinates: [15.7, 37.9]
 	// 	};
-	// 	imageryCommunicatorService.provideCommunicator(imageryData.mapComponentId).setCenter(geoPoint);
-	// 	const expectedGeoPointCenter = imageryCommunicatorService.provideCommunicator(imageryData.mapComponentId).getCenter();
+	// 	imageryCommunicatorService.provide(imageryData.mapComponentId).setCenter(geoPoint);
+	// 	const expectedGeoPointCenter = imageryCommunicatorService.provide(imageryData.mapComponentId).getCenter();
 	// 	expect(geoPoint).toEqual(expectedGeoPointCenter);
 	// });
 });

@@ -3,6 +3,9 @@ import { defaultCase } from './cases/default_case';
 export const configuration = {
 	env: 'default',
 	production: false,
+	General: {
+		logActions: true
+	},
 	CasesConfig: {
 		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
 		casesPaginationLimit: 15,
@@ -18,7 +21,8 @@ export const configuration = {
 		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',
 		searchByCase: false,
-		overlayeSource: 'IDAHO'
+		overlayeSource: 'IDAHO',
+		polygonGenerationDisatnce: 0.1,//in kilometers
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{

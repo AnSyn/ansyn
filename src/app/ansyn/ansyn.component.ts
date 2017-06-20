@@ -1,6 +1,6 @@
 import { IAppState } from '../app-reducers';
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IStatusBarState, MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -21,6 +21,7 @@ import { SetLinkCopyToastValueAction } from '../packages/status-bar/actions/stat
 })
 
 export class AnsynComponent implements OnInit{
+	@ViewChild('mapsContainer') mapsContainer;
 
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
@@ -80,5 +81,10 @@ export class AnsynComponent implements OnInit{
 	layoutChangeSuccess() {
 		this.store.dispatch(new UpdateMapSizeAction());
 	}
+
+	toggleEditMode($event){
+		this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
+	}
+
 
 }

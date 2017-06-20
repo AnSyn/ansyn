@@ -7,4 +7,7 @@ export { ActiveMapChangedAction,
 		UpdateMapSizeAction,
 		MapActionTypes,
 		PositionChangedAction,
-		CommuincatorsChangeAction } from './actions/map.actions';
+		AddMapInstacneAction,
+		RemoveMapInstanceAction,
+		MapSingleClickAction
+} from './actions/map.actions';

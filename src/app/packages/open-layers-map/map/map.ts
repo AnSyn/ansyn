@@ -17,9 +17,13 @@ export class Map implements IMap {
     public centerChanged: EventEmitter < GeoJSON.Point > ;
     public positionChanged: EventEmitter < MapPosition > ;
     public pointerMove: EventEmitter<any>;
+    public singleClick: EventEmitter<any>;
+
     private _shadowMouselayerId = 'shadowMouse';
+    private _pinPointIndicatorLayerId = 'pinPointIndicator';
     private _flags = {
-        pointerMoveListener: null    
+        pointerMoveListener: null,
+        singleClickHandler: null
     };
 
 
@@ -29,6 +33,8 @@ export class Map implements IMap {
         this.centerChanged = new EventEmitter < GeoJSON.Point > ();
         this.positionChanged = new EventEmitter < MapPosition > ();
         this.pointerMove = new EventEmitter<any>();
+        this.singleClick = new EventEmitter<any>();
+
 		this.initMap(element, layers, position);
     }
 
@@ -143,9 +149,17 @@ export class Map implements IMap {
 		if (index > -1) {
 			this._mapLayers = this._mapLayers.slice(layer);
 	        this._mapObject.removeLayer(layer);
-            this.mapObject.render(); 
+            this.mapObject.render();
 		}
 	}
+
+    public removeLayerById(layerId){
+        const layer = this.getLayerById(layerId);
+        if(layer){
+            //layer.set('visible',false);
+            this.removeLayer(layer);
+        }
+    }
 
     // In the future we'll use @ansyn/map-source-provider
     public addVectorLayer(layer: any): void {
@@ -241,6 +255,65 @@ export class Map implements IMap {
         this.mapObject.addLayer(layer);
     }
 
+//*****--pin point paint on the map--********
+    public addSingleClickEvent() {
+        this._flags.singleClickHandler = this.mapObject.on('singleclick',this.singleClickListener,this);
+	}
+
+	public removeSingleClickEvent(){
+		this.mapObject.un('singleclick',this.singleClickListener,this);
+	}
+
+    public singleClickListener(e) {
+        const lonLat = ol.proj.toLonLat(e.coordinate);
+        this.singleClick.emit({...e,lonLat: lonLat});
+    }
+
+
+    public addPinPointIndicator(lonLat){
+        const layer = this.getLayerById(this._pinPointIndicatorLayerId);
+
+
+        if(layer){
+            layer.set('visible',true);
+			const feature = (<any>layer).getSource().getFeatures()[0];
+			const lonLatCords = ol.proj.fromLonLat(lonLat);
+			feature.setGeometry(new ol.geom.Point(lonLatCords));
+        }
+        else{
+            const lonLatCords = ol.proj.fromLonLat(lonLat);
+
+            const feature = new ol.Feature({
+                geometry: new ol.geom.Point(lonLatCords),
+                id: 'pinPointIndicatorFeature'
+            });
+
+            const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [feature]
+                }),
+                style: new ol.style.Style({
+                    image: new ol.style.Icon({
+                        scale: 1,
+                        src: '/assets/pinpoint_indicator.svg' //for further usage either bring from configuration or create svg
+                    })
+                })
+            });
+
+            vectorLayer.setZIndex(12000);
+            vectorLayer.set('id',this._pinPointIndicatorLayerId);
+
+            this.addLayer(vectorLayer);
+        }
+    }
+
+    public removePinPointIndicator(){
+        this.removeLayerById(this._pinPointIndicatorLayerId);
+    }
+//*****-- pin point paint on the map end --********
+
+//*****-- shadow mouse functionality--********
+
     public onPointerMove (e)   {
             const lonLat = ol.proj.toLonLat(e.coordinate);
             this.pointerMove.emit(lonLat);
@@ -254,12 +327,12 @@ export class Map implements IMap {
         const feature = (<any>layer).getSource().getFeatures()[0];
         const lonLatCords = ol.proj.fromLonLat(lonLat);
         feature.setGeometry(new ol.geom.Point(lonLatCords));
-        this.mapObject.render();    
+        this.mapObject.render();
     }
 
     public togglePointerMove(){
         if (!this._flags.pointerMoveListener) {
-           
+
            this._flags.pointerMoveListener = this.mapObject.on('pointermove',this.onPointerMove,this);
         }
         else{
@@ -267,10 +340,10 @@ export class Map implements IMap {
             this._flags.pointerMoveListener = false;
         }
     }
-    
+
     public startMouseShadowVectorLayer(){
         const layer = this.getLayerById(this._shadowMouselayerId);
-        
+
         if(layer){
             layer.set('visible',true);
         }
@@ -298,13 +371,16 @@ export class Map implements IMap {
     }
 
     public stopMouseShadowVectorLayer() {
-        const layer = this.getLayerById(this._shadowMouselayerId);
-        if(layer){
-            //layer.set('visible',false);
-            this.removeLayer(layer);
-        }    
+        this.removeLayerById(this._shadowMouselayerId);
     }
 
+//*****-- shadow mouse functionality end --********
+
+//*****-- tools ----*****
+
+
+
+//*****-- end tools ---****
     // IMap End
     public dispose() {
 

@@ -1,11 +1,12 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
-	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction
+	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 
-describe('CasesReducer', () => {
+fdescribe('CasesReducer', () => {
 
 	it('CASE_SUCCESS action should add new case to state', () => {
 		let new_case: Case = {
@@ -78,6 +79,22 @@ describe('CasesReducer', () => {
 		let action: UpdateCaseAction = new UpdateCaseAction(new_case);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases[1].name).toEqual('name2 lastname2');
+	});
+
+	it('UPDATE_CASE_BACKEND action should change updating_backend to "true" ', () => {
+		const state: ICasesState = initialCasesState;
+		const case_payload: Case = {id: '6'};
+		let action: UpdateCaseBackendAction = new UpdateCaseBackendAction(case_payload);
+		let result: ICasesState = CasesReducer(state, action);
+		expect(result.updating_backend).toBeTruthy();
+	});
+
+	it('UPDATE_CASE_BACKEND_SUCCESS action should change updating_backend to "false" ', () => {
+		const state: ICasesState = initialCasesState;
+		const case_payload: Case = {id: '6'};
+		let action: UpdateCaseBackendSuccessAction = new UpdateCaseBackendSuccessAction(case_payload);
+		let result: ICasesState = CasesReducer(state, action);
+		expect(result.updating_backend).toBeFalsy();
 	});
 
 	it('LOAD_CASES_SUCCESS action should add cases from payload to state.cases', () => {

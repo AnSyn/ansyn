@@ -13,11 +13,9 @@ import { IAppState } from '../';
 import { isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Router } from '@angular/router';
-import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
-import { Overlay } from '../../packages/overlays/models/overlay.model';
-import { CaseMapState } from '../../packages/menu-items/cases/models/case.model';
-import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class CasesAppEffects {

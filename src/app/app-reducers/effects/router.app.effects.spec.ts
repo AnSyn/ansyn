@@ -1,15 +1,12 @@
-import { SelectMenuItemAction, AddMenuItemAction } from '@ansyn/core';
-import { AddCaseSuccessAction, SelectCaseByIdAction, LoadDefaultCaseSuccessAction, CasesReducer } from '@ansyn/menu-items/cases';
+import { AddCaseSuccessAction, SelectCaseByIdAction, Case, CasesReducer, LoadDefaultCaseSuccessAction  } from '@ansyn/menu-items/cases';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { Store, StoreModule, Action } from '@ngrx/store';
-import { MenuAppEffects } from './menu.app.effects';
-import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
-import { AnimationEndAction } from '@ansyn/core/actions/menu.actions';
-import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { IAppState } from '../';
+import { Store, StoreModule } from '@ngrx/store';
 import { RouterAppEffects } from './router.app.effects';
 import { routerReducer } from '@ngrx/router-store';
+import * as routerActions from '@ngrx/router-store/src/actions';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RouterStoreHelperService } from '../services/router-store-helper.service';
 
 describe('RouterAppEffects', () => {
 	let routerAppEffects: RouterAppEffects;
@@ -18,8 +15,8 @@ describe('RouterAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule, StoreModule.provideStore({ router: routerReducer })],
-			providers: [MenuAppEffects]
+			imports: [RouterTestingModule, EffectsTestingModule, StoreModule.provideStore({ router: routerReducer, cases: CasesReducer })],
+			providers: [RouterAppEffects, RouterStoreHelperService]
 
 		}).compileComponents();
 	}));
@@ -32,35 +29,37 @@ describe('RouterAppEffects', () => {
 	}));
 
 
-	// it('selectCaseUpdateRouter$ route to the (non-default) case being selected', () => {
-	// 	const caseItem: Case =  {
-	// 		"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
-	// 	} as any;
-    //
-	// 	spyOn(router, 'navigate');
-    //
-	// 	store.dispatch(new AddCaseSuccessAction(caseItem));
-	// 	store.dispatch(new SelectCaseByIdAction(caseItem.id));
-    //
-	// 	effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
-    //
-	// 	casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
-	// 		expect(router.navigate).toHaveBeenCalledWith(['', caseItem.id]);
-	// 	});
-	// });
+	it('selectCaseUpdateRouter$ route to the (non-default) case being selected', () => {
+		const caseItem: Case =  {
+			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+		} as any;
 
-	// it('selectCaseUpdateRouter$ route to the (default) case being selected', () => {
-	// 	spyOn(router, 'navigate');
-    //
-	// 	store.dispatch(new LoadDefaultCaseSuccessAction(icase_state.default_case));
-	// 	store.dispatch(new SelectCaseByIdAction(icase_state.default_case.id));
-    //
-	// 	effectsRunner.queue(new SelectCaseByIdAction(icase_state.default_case.id));
-    //
-	// 	casesAppEffects.selectCaseUpdateRouter$.subscribe(() => {
-	// 		expect(router.navigate).toHaveBeenCalledWith(['', '']);
-	// 	});
-	// });
+		spyOn(routerActions, 'go');
+
+		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
+
+		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
+
+		routerAppEffects.selectCaseUpdateRouter$.subscribe(() => {
+			expect(routerActions.go).toHaveBeenCalledWith(['', caseItem.id]);
+		});
+	});
+
+	it('selectDefulatCaseById$ route to the (default) case being selected', () => {
+		spyOn(routerActions, 'go');
+
+		const default_case: Case = {
+			id: '1234-5678',
+		} as any;
+
+		store.dispatch(new LoadDefaultCaseSuccessAction(default_case));
+		effectsRunner.queue(new SelectCaseByIdAction(default_case.id));
+
+		routerAppEffects.selectDefulatCaseById$.subscribe(() => {
+			expect(routerActions.go).toHaveBeenCalledWith(['', '']);
+		});
+	});
 
 
 });

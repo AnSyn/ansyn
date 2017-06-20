@@ -1,4 +1,5 @@
 export interface Filter {
-    name: string;
+    modelName: string;
+    displayName: string;
     type: 'Enum';
 }

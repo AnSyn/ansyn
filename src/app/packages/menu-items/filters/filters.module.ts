@@ -1,3 +1,4 @@
+import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';
 import { FiltersConfig } from './models/filters-config';
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
@@ -9,7 +10,9 @@ import { FiltersService } from './services/filters.service';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 
 @NgModule({
-	imports: [CommonModule, CoreModule],
+	imports: [
+		CommonModule, 
+		CoreModule],
 	declarations: [FiltersCollectionComponent, FilterContainerComponent],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [ FiltersService ]

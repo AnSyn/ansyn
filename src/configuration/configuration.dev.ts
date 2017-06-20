@@ -51,9 +51,7 @@ export const configuration = {
 	},
 	FiltersConfig: {
 		filters: [
-			{ name: 'Sensor Type', type: 'Enum' },
-			{ name: 'Sensor Name', type: 'Enum' },
-			{ name: 'Some Status', type: 'Enum' }						
+			{ modelName: 'sensorType', displayName: 'Sensor Type', type: 'Enum' }
 		]
 	}
 };

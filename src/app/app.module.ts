@@ -1,3 +1,4 @@
+import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -27,7 +28,7 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 import { TypeContainerModule } from '@ansyn/type-container';
 
 @NgModule({
-	providers:[
+	providers: [
 	],
 	declarations: [
 		AppComponent,
@@ -35,24 +36,29 @@ import { TypeContainerModule } from '@ansyn/type-container';
 	],
 	imports: [
 		TypeContainerModule.register({
-			baseType :BaseSourceProvider,
-			type : OpenLayerTileWMSSourceProvider,
-			name : ['openLayersMap','TileWMS'].join(',')
+			baseType: BaseSourceProvider,
+			type: OpenLayerTileWMSSourceProvider,
+			name: ['openLayersMap', 'TileWMS'].join(',')
 		}),
 		TypeContainerModule.register({
-			baseType :BaseSourceProvider,
-			type : OpenLayerOSMSourceProvider,
-			name : ['openLayersMap','OSM'].join(',')
+			baseType: BaseSourceProvider,
+			type: OpenLayerOSMSourceProvider,
+			name: ['openLayersMap', 'OSM'].join(',')
 		}),
 		TypeContainerModule.register({
-			baseType :BaseSourceProvider,
-			type : OpenLayerIDAHOSourceProvider,
-			name : ['openLayersMap','IDAHO'].join(',')
+			baseType: BaseSourceProvider,
+			type: OpenLayerIDAHOSourceProvider,
+			name: ['openLayersMap', 'IDAHO'].join(',')
 		}),
 		TypeContainerModule.register({
-			baseType :BaseSourceProvider,
-			type : OpenLayerBingSourceProvider,
-			name : [OpenLayerBingSourceProvider.s_mapType, OpenLayerBingSourceProvider.s_sourceType].join(',')
+			baseType: BaseSourceProvider,
+			type: OpenLayerBingSourceProvider,
+			name: [OpenLayerBingSourceProvider.s_mapType, OpenLayerBingSourceProvider.s_sourceType].join(',')
+		}),
+		TypeContainerModule.register({
+			baseType: FilterMetadata,
+			type: EnumFilterMetadata,
+			name: 'Enum'
 		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,

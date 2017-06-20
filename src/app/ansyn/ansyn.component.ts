@@ -8,7 +8,7 @@ import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
-import { UpdateMapSizeAction } from '../packages/map-facade/actions/map.actions';
+import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 
 
@@ -49,13 +49,11 @@ export class AnsynComponent implements OnInit{
 	constructor(private store: Store<IAppState>) {}
 
 	ngOnInit(): void {
-		console.log("ngOnInit ansyn ")
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
 
 		this.maps$
 		.map((maps:CaseMapsState) => {
-			//this.maps = maps;
 			this.active_map = maps.data.find((map) => map.id === maps.active_map_id);
 
 			if(this.active_map){

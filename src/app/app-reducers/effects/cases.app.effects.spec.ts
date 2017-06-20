@@ -11,11 +11,6 @@ import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
-
-class MockRouter {
-    navigate(url: string) { return url; }
-}
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -23,7 +18,6 @@ describe('CasesAppEffects', () => {
 	let casesService: CasesService;
 	let store: Store < any > ;
 	let icase_state: ICasesState;
-	let router: Router;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -35,15 +29,13 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { casesBaseUrl: null } },
-				{ provide: Router, useClass: MockRouter }]
+				{ provide: casesConfig, useValue: { casesBaseUrl: null }}]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, casesConfig, Router], (_store: Store<any>, casesConfig:any, _router: Router) => {
+	beforeEach(inject([Store, casesConfig], (_store: Store<any>, casesConfig:any) => {
 		store = _store;
-		router =_router;
 
 		icase_state = {
 			cases: [{

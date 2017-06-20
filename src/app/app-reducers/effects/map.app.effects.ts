@@ -7,18 +7,16 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import * as turf from '@turf/turf';
-import 'rxjs/add/operator/withLatestFrom';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { MapActionTypes, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,CommuincatorsChangeAction,ActiveMapChangedAction } from '@ansyn/map-facade';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
-
-
-import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
-import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import * as turf from '@turf/turf';
+import 'rxjs/add/operator/withLatestFrom';
+import '@ansyn/core/utils/clone-deep';
 
 @Injectable()
 export class MapAppEffects {

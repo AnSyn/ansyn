@@ -19,12 +19,11 @@ import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import {OpenLayerTileWMSSourceProvider} from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
-import {OpenLayerOSMSourceProvider} from './app-models/map-source-providers/open-layers-OSM-source-provider';
-import {OpenLayerIDAHOSourceProvider} from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
+import { OpenLayerTileWMSSourceProvider } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
+import { OpenLayerOSMSourceProvider } from './app-models/map-source-providers/open-layers-OSM-source-provider';
+import { OpenLayerIDAHOSourceProvider } from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
-import { EmptyComponent } from './empty/empty.component';
 
 
 @NgModule({
@@ -32,8 +31,7 @@ import { EmptyComponent } from './empty/empty.component';
 	],
 	declarations: [
 		AppComponent,
-		AnsynComponent,
-		EmptyComponent,
+		AnsynComponent
 	],
 	imports: [
 		TypeContainerModule.register({

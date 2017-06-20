@@ -10,33 +10,33 @@ import { MapPosition } from 'app/packages/imagery/model/map-position';
 
 export class Map implements IMap {
 
-    private _mapType: string;
-    private _mapObject: ol.Map;
-    private _mapLayers = [];
-    private _mapVectorLayers = [];
-    public centerChanged: EventEmitter < GeoJSON.Point > ;
-    public positionChanged: EventEmitter < MapPosition > ;
-    public pointerMove: EventEmitter<any>;
-    public singleClick: EventEmitter<any>;
+	private _mapType: string;
+	private _mapObject: ol.Map;
+	private _mapLayers = [];
+	private _mapVectorLayers = [];
+	public centerChanged: EventEmitter < GeoJSON.Point > ;
+	public positionChanged: EventEmitter < MapPosition > ;
+	public pointerMove: EventEmitter<any>;
+	public singleClick: EventEmitter<any>;
 
-    private _shadowMouselayerId = 'shadowMouse';
-    private _pinPointIndicatorLayerId = 'pinPointIndicator';
-    private _flags = {
-        pointerMoveListener: null,
-        singleClickHandler: null
-    };
+	private _shadowMouselayerId = 'shadowMouse';
+	private _pinPointIndicatorLayerId = 'pinPointIndicator';
+	private _flags = {
+		pointerMoveListener: null,
+		singleClickHandler: null
+	};
 
 
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
-        this._mapType = 'openLayersMap';
-        this.centerChanged = new EventEmitter < GeoJSON.Point > ();
-        this.positionChanged = new EventEmitter < MapPosition > ();
-        this.pointerMove = new EventEmitter<any>();
-        this.singleClick = new EventEmitter<any>();
+		this._mapType = 'openLayersMap';
+		this.centerChanged = new EventEmitter < GeoJSON.Point > ();
+		this.positionChanged = new EventEmitter < MapPosition > ();
+		this.pointerMove = new EventEmitter<any>();
+		this.singleClick = new EventEmitter<any>();
 
 		this.initMap(element, layers, position);
-    }
+	}
 
 	private initMap(element: HTMLElement, layers: any,  position?: MapPosition) {
 
@@ -48,46 +48,47 @@ export class Map implements IMap {
 			zoom = position.zoom;
 			rotation = position.rotation;
 		}
-        this._mapObject = new ol.Map({
-            target: element,
-            layers: layers,
-            renderer: 'canvas',
-            controls: [],
-            view: new ol.View({
+		this._mapObject = new ol.Map({
+			target: element,
+			layers: layers,
+			renderer: 'canvas',
+			controls: [],
+			view: new ol.View({
 				center: ol.proj.fromLonLat([center[0],center[1]]),
 				zoom: zoom,
 				rotation: rotation
-            })
-        });
+			})
+		});
 
-        this._mapLayers = layers;
+		this._mapLayers = layers;
 
-        this._mapObject.on('moveend', (e) => {
+		this._mapObject.on('moveend', (e) => {
 			const mapCenter = this.getCenter();
 			this.centerChanged.emit(mapCenter);
-            this.positionChanged.emit(this.getPosition());
-        });
-    }
+			this.positionChanged.emit(this.getPosition());
+		});
+	}
 
-    // IMap Start
+	// IMap Start
 
 	public setLayer(layer: any, extent?: Extent) {
 		this.setMainLayer(layer);
 		this.fitCurrentView(layer, extent);
 	}
 
-    public getLayerById(id: string){
-        return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id )[0];
-    }
+	public getLayerById(id: string){
+		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id )[0];
+	}
 
 	private setMainLayer(layer: ol.layer.Layer) {
 		this.removeAllLayers();
 
-		const currentZoom = this._mapObject.getView().getZoom();
-		const currentCenter = this._mapObject.getView().getCenter();
-		const currentRotation = this._mapObject.getView().getRotation();
+		const oldview = this._mapObject.getView();
+		const currentZoom = oldview.getZoom();
+		const currentCenter = oldview.getCenter();
+		const currentRotation = oldview.getRotation();
 
-		const projection = this._mapObject.getView().getProjection();
+		const projection = oldview.getProjection();
 		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
 
 		if (!newCenter) {
@@ -127,14 +128,14 @@ export class Map implements IMap {
 				constrainResolution: false
 			});
 		}
-    }
+	}
 
-    public addLayer(layer: any) {
-        this._mapLayers.push(layer);
-        this._mapObject.addLayer(layer);
-    }
+	public addLayer(layer: any) {
+		this._mapLayers.push(layer);
+		this._mapObject.addLayer(layer);
+	}
 
-    public removeAllLayers() {
+	public removeAllLayers() {
 		// TODO: check about other layers (interaction etc.)
 		//this._mapObject.getLayers().clear();
 		this._mapLayers.forEach((existingLayer) => {
@@ -148,230 +149,235 @@ export class Map implements IMap {
 		const index = this._mapLayers.indexOf(layer);
 		if (index > -1) {
 			this._mapLayers = this._mapLayers.slice(layer);
-	        this._mapObject.removeLayer(layer);
-            this.mapObject.render();
+			this._mapObject.removeLayer(layer);
+			this.mapObject.render();
 		}
 	}
 
-    public removeLayerById(layerId){
-        const layer = this.getLayerById(layerId);
-        if(layer){
-            //layer.set('visible',false);
-            this.removeLayer(layer);
-        }
-    }
+	public removeLayerById(layerId){
+		const layer = this.getLayerById(layerId);
+		if(layer){
+			//layer.set('visible',false);
+			this.removeLayer(layer);
+		}
+	}
 
-    // In the future we'll use @ansyn/map-source-provider
-    public addVectorLayer(layer: any): void {
-        const vectorLayer = new ol.layer.Tile({
-            source: new ol.source.OSM({
-                attributions: [
-                    layer.name
-                ],
-                opaque: false,
-                url: layer.url,
-                crossOrigin: null
-            })
-        });
-        this._mapObject.addLayer(vectorLayer);
-        this._mapVectorLayers[layer.id] = vectorLayer;
-    }
+	// In the future we'll use @ansyn/map-source-provider
+	public addVectorLayer(layer: any): void {
+		const vectorLayer = new ol.layer.Tile({
+			source: new ol.source.OSM({
+				attributions: [
+					layer.name
+				],
+				opaque: false,
+				url: layer.url,
+				crossOrigin: null
+			})
+		});
+		this._mapObject.addLayer(vectorLayer);
+		this._mapVectorLayers[layer.id] = vectorLayer;
+	}
 
-    public removeVectorLayer(layer: any): void {
-        this._mapObject.removeLayer(this._mapVectorLayers[layer.id]);
-        delete this._mapVectorLayers[layer.id];
-    }
+	public removeVectorLayer(layer: any): void {
+		this._mapObject.removeLayer(this._mapVectorLayers[layer.id]);
+		delete this._mapVectorLayers[layer.id];
+	}
 
-    public get mapObject() {
-        return this._mapObject;
-    }
+	public get mapObject() {
+		return this._mapObject;
+	}
 
-    public get mapType() {
-        return this._mapType;
-    }
+	public get mapType() {
+		return this._mapType;
+	}
 
-    public set mapType(value) {
-        this._mapType = value;
-    }
+	public set mapType(value) {
+		this._mapType = value;
+	}
 
-    public setCenter(center: GeoJSON.Point, animation: boolean) {
-        const projection = this._mapObject.getView().getProjection();
-        const olCenter = ol.proj.transform([center.coordinates[0], center.coordinates[1]], 'EPSG:4326', projection);
-        if (animation) {
-            this.flyTo(olCenter);
-        } else {
-            this._mapObject.getView().setCenter(olCenter);
-        }
-    }
+	public setCenter(center: GeoJSON.Point, animation: boolean) {
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const olCenter = ol.proj.transform([center.coordinates[0], center.coordinates[1]], 'EPSG:4326', projection);
+		if (animation) {
+			this.flyTo(olCenter);
+		} else {
+			view.setCenter(olCenter);
+		}
+	}
 
-    public updateSize(): void {
-        this._mapObject.updateSize();
-    }
+	public updateSize(): void {
+		this._mapObject.updateSize();
+	}
 
-    public getCenter(): GeoJSON.Point {
-        const projection = this._mapObject.getView().getProjection();
-        const center = this._mapObject.getView().getCenter();
-        const transformedCenter = ol.proj.transform(center, projection, 'EPSG:4326');
-        const geoPoint: GeoJSON.Point = {
-            type: 'Point',
-            coordinates: transformedCenter
-        };
-        return geoPoint;
-    }
+	public getCenter(): GeoJSON.Point {
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const center = view.getCenter();
+		const transformedCenter = ol.proj.transform(center, projection, 'EPSG:4326');
+		const geoPoint: GeoJSON.Point = {
+			type: 'Point',
+			coordinates: transformedCenter
+		};
+		return geoPoint;
+	}
 
 	public setPosition(position: MapPosition): void {
-        this.mapObject.setView(new ol.View( < olx.ViewOptions > {
-			center: ol.proj.fromLonLat(<[number, number]>position.center.coordinates),
-			zoom: position.zoom,
-			rotation: position.rotation
-        }));
-    }
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const olCenter = ol.proj.transform([position.center.coordinates[0], position.center.coordinates[1]], 'EPSG:4326', projection);
+		view.setCenter(olCenter);
+		view.setRotation(position.rotation);
+		view.setZoom(position.zoom);
+	}
 
-    public getPosition(): MapPosition {
-        let center: GeoJSON.Point = this.getCenter();
-        let zoom: number = this.mapObject.getView().getZoom();
-		let rotation: number = this.mapObject.getView().getRotation();
+	public getPosition(): MapPosition {
+		const view = this._mapObject.getView();
+		let center: GeoJSON.Point = this.getCenter();
+		let zoom: number = view.getZoom();
+		let rotation: number = view.getRotation();
+
 		return { center, zoom , rotation};
-    }
+	}
 
-    private flyTo(location) {
-        const view = this._mapObject.getView();
-        view.animate({
-            center: location,
-            duration: 2000
-        });
-    }
+	private flyTo(location) {
+		const view = this._mapObject.getView();
+		view.animate({
+			center: location,
+			duration: 2000
+		});
+	}
 
-    public setBoundingRectangle(rect: GeoJSON.MultiPolygon) {
+	public setBoundingRectangle(rect: GeoJSON.MultiPolygon) {
 
-    }
+	}
 
-    public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
-        let layer: ol.layer.Vector = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: new ol.format.GeoJSON().readFeatures(data)
-            })
-        });
-        this.mapObject.addLayer(layer);
-    }
+	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
+		let layer: ol.layer.Vector = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: new ol.format.GeoJSON().readFeatures(data)
+			})
+		});
+		this.mapObject.addLayer(layer);
+	}
 
 //*****--pin point paint on the map--********
-    public addSingleClickEvent() {
-        this._flags.singleClickHandler = this.mapObject.on('singleclick',this.singleClickListener,this);
+	public addSingleClickEvent() {
+		this._flags.singleClickHandler = this.mapObject.on('singleclick',this.singleClickListener,this);
 	}
 
 	public removeSingleClickEvent(){
 		this.mapObject.un('singleclick',this.singleClickListener,this);
 	}
 
-    public singleClickListener(e) {
-        const lonLat = ol.proj.toLonLat(e.coordinate);
-        this.singleClick.emit({lonLat: lonLat});
-    }
+	public singleClickListener(e) {
+		const lonLat = ol.proj.toLonLat(e.coordinate);
+		this.singleClick.emit({lonLat: lonLat});
+	}
 
 
-    public addPinPointIndicator(lonLat){
-        const layer = this.getLayerById(this._pinPointIndicatorLayerId);
+	public addPinPointIndicator(lonLat){
+		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
 		if(layer){
-            layer.set('visible',true);
+			layer.set('visible',true);
 			const feature = (<any>layer).getSource().getFeatures()[0];
 			const lonLatCords = ol.proj.fromLonLat(lonLat);
 			feature.setGeometry(new ol.geom.Point(lonLatCords));
-        }
-        else{
-            const lonLatCords = ol.proj.fromLonLat(lonLat);
+		}
+		else{
+			const lonLatCords = ol.proj.fromLonLat(lonLat);
 
-            const feature = new ol.Feature({
-                geometry: new ol.geom.Point(lonLatCords),
-                id: 'pinPointIndicatorFeature'
-            });
+			const feature = new ol.Feature({
+				geometry: new ol.geom.Point(lonLatCords),
+				id: 'pinPointIndicatorFeature'
+			});
 
-            const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
-                source: new ol.source.Vector({
-                    features: [feature]
-                }),
-                style: new ol.style.Style({
-                    image: new ol.style.Icon({
-                        scale: 1,
-                        src: '/assets/pinpoint_indicator.svg' //for further usage either bring from configuration or create svg
-                    })
-                })
-            });
+			const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
+				source: new ol.source.Vector({
+					features: [feature]
+				}),
+				style: new ol.style.Style({
+					image: new ol.style.Icon({
+						scale: 1,
+						src: '/assets/pinpoint_indicator.svg' //for further usage either bring from configuration or create svg
+					})
+				})
+			});
 
-            vectorLayer.setZIndex(12000);
-            vectorLayer.set('id',this._pinPointIndicatorLayerId);
+			vectorLayer.setZIndex(12000);
+			vectorLayer.set('id',this._pinPointIndicatorLayerId);
 
-            this.addLayer(vectorLayer);
-        }
-    }
+			this.addLayer(vectorLayer);
+		}
+	}
 
-    public removePinPointIndicator(){
-        this.removeLayerById(this._pinPointIndicatorLayerId);
-    }
+	public removePinPointIndicator(){
+		this.removeLayerById(this._pinPointIndicatorLayerId);
+	}
 //*****-- pin point paint on the map end --********
 
 //*****-- shadow mouse functionality--********
 
-    public onPointerMove (e)   {
-            const lonLat = ol.proj.toLonLat(e.coordinate);
-            this.pointerMove.emit(lonLat);
-    };
+	public onPointerMove (e)   {
+		const lonLat = ol.proj.toLonLat(e.coordinate);
+		this.pointerMove.emit(lonLat);
+	};
 
-    public drawShadowMouse(lonLat){
-        const layer = this.getLayerById(this._shadowMouselayerId);
-        if(!layer){
-            return;
-        }
-        const feature = (<any>layer).getSource().getFeatures()[0];
-        const lonLatCords = ol.proj.fromLonLat(lonLat);
-        feature.setGeometry(new ol.geom.Point(lonLatCords));
-        this.mapObject.render();
-    }
+	public drawShadowMouse(lonLat){
+		const layer = this.getLayerById(this._shadowMouselayerId);
+		if(!layer){
+			return;
+		}
+		const feature = (<any>layer).getSource().getFeatures()[0];
+		const lonLatCords = ol.proj.fromLonLat(lonLat);
+		feature.setGeometry(new ol.geom.Point(lonLatCords));
+		this.mapObject.render();
+	}
 
-    public togglePointerMove(){
-        if (!this._flags.pointerMoveListener) {
+	public togglePointerMove(){
+		if (!this._flags.pointerMoveListener) {
 
-           this._flags.pointerMoveListener = this.mapObject.on('pointermove',this.onPointerMove,this);
-        }
-        else{
-            this.mapObject['un']('pointermove',this.onPointerMove,this);
-            this._flags.pointerMoveListener = false;
-        }
-    }
+			this._flags.pointerMoveListener = this.mapObject.on('pointermove',this.onPointerMove,this);
+		}
+		else{
+			this.mapObject['un']('pointermove',this.onPointerMove,this);
+			this._flags.pointerMoveListener = false;
+		}
+	}
 
-    public startMouseShadowVectorLayer(){
-        const layer = this.getLayerById(this._shadowMouselayerId);
+	public startMouseShadowVectorLayer(){
+		const layer = this.getLayerById(this._shadowMouselayerId);
 
-        if(layer){
-            layer.set('visible',true);
-        }
-        else{
-            const feature = new ol.Feature({
-                id: 'shadowMousePosition'
-            });
+		if(layer){
+			layer.set('visible',true);
+		}
+		else{
+			const feature = new ol.Feature({
+				id: 'shadowMousePosition'
+			});
 
-            const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
-                source: new ol.source.Vector({
-                    features: [feature]
-                }),
-                style: new ol.style.Style({
-                    image: new ol.style.Icon({
-                        scale: 0.05,
-                        src: '/assets/2877.png' //for further usage either bring from configuration or create svg
-                    })
-                })
-            });
+			const vectorLayer: ol.layer.Vector = new ol.layer.Vector({
+				source: new ol.source.Vector({
+					features: [feature]
+				}),
+				style: new ol.style.Style({
+					image: new ol.style.Icon({
+						scale: 0.05,
+						src: '/assets/2877.png' //for further usage either bring from configuration or create svg
+					})
+				})
+			});
 
-            vectorLayer.setZIndex(12000);
-            vectorLayer.set('id',this._shadowMouselayerId);
-            this.addLayer(vectorLayer);
-        }
-    }
+			vectorLayer.setZIndex(12000);
+			vectorLayer.set('id',this._shadowMouselayerId);
+			this.addLayer(vectorLayer);
+		}
+	}
 
-    public stopMouseShadowVectorLayer() {
-        this.removeLayerById(this._shadowMouselayerId);
-    }
+	public stopMouseShadowVectorLayer() {
+		this.removeLayerById(this._shadowMouselayerId);
+	}
 
 //*****-- shadow mouse functionality end --********
 
@@ -380,8 +386,8 @@ export class Map implements IMap {
 
 
 //*****-- end tools ---****
-    // IMap End
-    public dispose() {
+	// IMap End
+	public dispose() {
 
-    }
+	}
 }

@@ -20,13 +20,14 @@ export class FiltersAppEffects {
 
                 filters.forEach((filter: Filter) => {
                     const metaData: FilterMetadata = this.typeContainerService.resolve(FilterMetadata, filter.type);
-                    metaData.resetMetadata();
+                    const clonedMetadata = Object.assign(Object.create(metaData), metaData); //TODO: remove this when a non-singelton resolve will be available
+                    clonedMetadata.resetMetadata();
 
                     overlays.forEach((overlay: Overlay) => {
-                        metaData.updateMetadata(overlay[filter.modelName]);
+                        clonedMetadata.updateMetadata(overlay[filter.modelName]);
                     });
 
-                    filterMetadatas.set(filter, metaData);
+                    filterMetadatas.set(filter, clonedMetadata);
                 });
                 return new InitializeFiltersAction(filterMetadatas);
             });

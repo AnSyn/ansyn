@@ -1,131 +1,140 @@
-span.title {
-    font-family: Open Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 100%;
-
-    color: #FFFFFF;
-}
-
 div.container {
-    margin-top: 25px;
-    margin-left: 10px;
-}
+    width: 350px;
+    padding: 0 0 10px 0;
+    // margin-top: 25px;
+    // margin-left: 10px;
+    div.title-row{
+        padding: 5px 0 10px 0;
+        span.title {
+            font-family: Open Sans;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 100%;
+            color: #FFFFFF;
+        }
+        div.down-arrow {
+            width: 7px;
+            height: 7px;
+            border-bottom: 2px solid #FFFFFF;
+            border-left: 2px solid #FFFFFF;   
+            float: right; 
+            margin-right: 10px;
+            margin-top: 4px;
+            cursor: pointer; 
+        }
 
-div {
-    margin-top: 5px;
-
-    div.down-arrow {
-        width: 7px;
-        height: 7px;
-        border-bottom: 2px solid #FFFFFF;
-        border-left: 2px solid #FFFFFF;   
-        float: right; 
-        margin-right: 13px;
-        margin-top: 7px;
-    }
-
-    div.down-arrow:hover {
-        cursor: pointer;        
-    }
-
-    div.show-all {
-        float: right;  
-        font-size: 12px;
-        font-style: normal;
-        color: rgba(255, 255, 255, 0.75);     
-        margin-right: 7px;  
-    }
-
-    div.show-all:hover {
-        cursor: pointer;
+        div.show-all {
+            float: right;  
+            font-size: 12px;
+            font-style: normal;
+            color: rgba(255, 255, 255, 0.75);     
+            margin-right: 7px;  
+            cursor: pointer;
+        }
     }
     
-    div {
-        div.checkbox {
-            display: inline-block;
-            width: 5%;
+    div.fields{
+        overflow: hidden;
+        height: auto;
 
-            input {
-                label {
-                    display: inline;
+        div.field{
+            display: flex;
+            padding: 2.5px 0;
+            justify-content: space-between;
+
+            div.left-side{
+                display: flex;
+
+                 div.checkbox {
+                    margin-right: 5px;
+
+                    input {
+                        label {
+                            display: inline;
+                        }
+                    }
+
+                    input.regular-checkbox {
+                            display: none;
+                    }
+
+                    input.regular-checkbox + label {
+                        border: 1px solid #C9C9C9;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+                        padding: 9px;
+                        border-radius: 3px;
+                        display: inline-block;
+                        position: relative;
+                    }
+
+                    input.regular-checkbox:hover + label:hover {
+                        border: 1px solid #FFFFFF;
+                    }
+
+                    input.regular-checkbox + label:active {
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+                    }
+
+                    input.regular-checkbox:checked + label {
+                        background-color: #FFFFFF;
+                        border: 1px solid #FFFFFF;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+                        color: #FFFFFF;
+                    }
+
+                    input.regular-checkbox:checked + label:after {
+                        content: '\2714';
+                        font-size: 14px;
+                        position: absolute;
+                        top: 0px;
+                        left: 3px;
+                        color: #27B2CF;
+                    }
+                }
+
+                div.filter-row {
+                    display: inline-block;
+                    position: relative;
+                    bottom: 5px;
+                    margin-left: 5px;
+
+                    
+                    div.field-name-container {
+                        max-width: 150px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: inline-block;
+                        color: #FFFFFF;
+                        top: 4px;
+                        position: relative;
+
+                        span.field-name {
+                            font-size: 14px;
+                            font-style: normal;
+                        }
+                    }
+
+                    span.only-filter {
+                        font-size: 12px;
+                        font-style: normal;
+                        color: rgba(255, 255, 255, 0.75);
+                    }
                 }
             }
+           
 
-            input.regular-checkbox {
-                    display: none;
+            div.count {
+                span {
+                    font-size: 14px;      
+                    font-style: normal;
+                    font-weight: bold;   
+                    color: #FFFFFF;   
+                    text-align: right; 
+                }
+
             }
-
-            input.regular-checkbox + label {
-                border: 1px solid #C9C9C9;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-                padding: 9px;
-                border-radius: 3px;
-                display: inline-block;
-                position: relative;
-            }
-
-            input.regular-checkbox:hover + label:hover {
-                border: 1px solid #FFFFFF;
-            }
-
-            input.regular-checkbox + label:active {
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
-            }
-
-            input.regular-checkbox:checked + label {
-                background-color: #FFFFFF;
-                border: 1px solid #FFFFFF;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
-                color: #FFFFFF;
-            }
-
-            input.regular-checkbox:checked + label:after {
-                content: '\2714';
-                font-size: 14px;
-                position: absolute;
-                top: 0px;
-                left: 3px;
-                color: #27B2CF;
-            }
-        }
-
-        div.filter-row {
-            display: inline-block;
-            position: relative;
-            bottom: 5px;
-            margin-left: 5px;
-
-            span.field-name {
-                font-size: 14px;
-                font-style: normal;
-                color: #FFFFFF;
-            }
-
-            span.only-filter {
-                font-size: 12px;
-                font-style: normal;
-                color: rgba(255, 255, 255, 0.75);
-            }
-        }
-
-        div.count {
-            float: right;
-            position: relative;
-            padding-bottom: 5px;
-            padding-right: 10px;
-
-            span {
-                font-size: 14px;      
-                font-style: normal;
-                font-weight: bold;   
-                color: #FFFFFF;   
-                text-align: right; 
-            }
-
-        }
+        }     
     }
 }
-
-

@@ -1,5 +1,4 @@
 import { ObjectIteratorPipe } from './pipes/object-iterator.pipe';
-import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';
 import { FiltersConfig } from './models/filters-config';
@@ -17,7 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		CommonModule,
 		CoreModule,
 		BrowserAnimationsModule],
-	declarations: [FiltersCollectionComponent, FilterContainerComponent, MapIteratorPipe, ObjectIteratorPipe],
+	declarations: [FiltersCollectionComponent, FilterContainerComponent, ObjectIteratorPipe],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [FiltersService]
 })

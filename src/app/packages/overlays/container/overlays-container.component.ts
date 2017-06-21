@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
@@ -19,7 +19,7 @@ import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-
+import { Spinner } from "@ansyn/core/utils";
 
 @Component({
     selector: 'overlays-container',
@@ -35,13 +35,14 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     public drops: any[] = [];
     public redraw$: BehaviorSubject<number>;
     public configuration: any;
-
+	public spinner:Spinner;
     private errorMessage: string;
 
     public overlays: any;
     public selectedOverlays: Array < string > = [];
     public subscribers: any = {};
 
+    @ViewChild ('overlayContainer') overlayContainer;
 
     constructor(private store: Store <IOverlayState> ,
                 private overlaysService: OverlaysService,
@@ -69,6 +70,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     ngOnInit(): void {
 
         this.init();
+
     }
 
     ngAfterViewInit(): void {
@@ -84,6 +86,8 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                     this.store.dispatch(new SelectOverlayAction(id));
                 }
             });
+		this.spinner = new Spinner(this.overlayContainer.nativeElement);
+		this.spinner.start('hello world','black');
     }
 
     //maybe to move this to the service

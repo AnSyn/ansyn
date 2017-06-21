@@ -45,10 +45,10 @@
 			<select name="timeline">
 				<option>Pin Point</option>
 			</select>
-			<div class="status-bar-edit-icon" [class.active]="flags.pinPointSearch">
+			<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
 				<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="">
 			</div>
-			<div class='status-bar-eye-icon' [class.active]="flags.pinPointIndicator">
+			<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 				<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="">
 			</div>
 		</div>

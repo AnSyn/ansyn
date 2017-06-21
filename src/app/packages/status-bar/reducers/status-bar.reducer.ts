@@ -9,6 +9,11 @@ export interface IStatusBarState {
 	showLinkCopyToast: boolean
 }
 
+export const statusBarFlagsItems  = {
+	pinPointIndicator:"PIN_POINT_INDICATOR",
+	pinPointSearch:"PIN_POINT_SEARCH"
+}
+
 const layouts: MapsLayout[] = [
 	{id: 'layout1', description: 'full screen', maps_count: 1},
 	{id: 'layout2', description: '2 maps full', maps_count: 2},
@@ -17,7 +22,9 @@ const layouts: MapsLayout[] = [
 	{id: 'layout5', description: 'full', maps_count: 3},
 	{id: 'layout6', description: 'full', maps_count: 4}
 ];
+
 const selected_layout_index = 0;
+
 const showLinkCopyToast = false;
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -43,8 +50,12 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
+			if(Object['values'](statusBarFlagsItems).indexOf(action.payload.key) < 0){
+				return state;
+			}
 
 			const newMap = new Map(state.flags);
+
 			if(!newMap.get(action.payload.key)){
 				newMap.set(action.payload.key,false);
 			}

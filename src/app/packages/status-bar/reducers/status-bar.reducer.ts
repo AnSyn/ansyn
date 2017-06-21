@@ -23,7 +23,7 @@ const showLinkCopyToast = false;
 export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selected_layout_index,
-	showLinkCopyToastת
+	showLinkCopyToast,
 	flags: new Map<string,boolean>()
 };
 

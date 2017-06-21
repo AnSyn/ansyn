@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@share-link-padding-bottom: 20px;
 
 div.status-bar{
 	background: @status-color;
@@ -24,7 +25,41 @@ div.status-bar{
 			*{
 				vertical-align: middle;
 			}
+
+			div.pop-hover{
+				visibility: hidden;
+				opacity: 0;
+				transition: .4s;
+				background: transparent;
+				position: absolute;
+				transform: translate(0, -100%);
+				top:0;
+				padding-bottom: @share-link-padding-bottom;
+
+				button.share-link{
+					transition: .4s;
+					cursor: pointer;
+					padding: 10px;
+					background: #fafafa;
+					color: #7c7c7c;
+					border: none;
+					border-radius: 2px;
+					transform: translate(0, @share-link-padding-bottom);
+				}
+			}
+
+			&:hover{
+				background: black;
+				div.pop-hover{
+					visibility: visible;
+					opacity: 1;
+					button.share-link{
+						transform: translate(0, 0);
+					}
+				}
+			}
 		}
+
 	}
 	div.middle {
 		padding: 5px;

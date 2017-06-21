@@ -7,18 +7,30 @@ import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case, defaultMapType,CaseMapState } from '@ansyn/menu-items/cases/models/case.model';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
 import { MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
+import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
 
 
 @Injectable()
 export class StatusBarAppEffects {
+
+	@Effect()
+	onShareSelectedCaseLink$ = this.actions$
+		.ofType(StatusBarActionsTypes.SHARE_SELECTED_CASE_LINK)
+		.withLatestFrom(this.store.select('cases'), (action: ShareSelectedCaseLinkAction, state: ICasesState) => {
+			return state.selected_case.id
+		})
+		.map( (case_id: string) => {
+			return new ShareCaseLinkAction(case_id)
+		});
+
+
 
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
@@ -55,7 +67,7 @@ export class StatusBarAppEffects {
 			})
 		.share();
 
-	constructor(private actions$: Actions, private store:Store<IAppState>, private casesService: CasesService) {}
+	constructor(private actions$: Actions, private store:Store<IAppState>) {}
 
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;
@@ -83,6 +95,7 @@ export class StatusBarAppEffects {
 		}
 		return selected_case;
 	}
+
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

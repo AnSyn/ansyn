@@ -4,16 +4,21 @@ import * as rison  from 'rison';
 
 @Injectable()
 export class RouterStoreHelperService {
+	private _showLinkCopyToast: boolean;
 
-  constructor(private router: Router) {
-  }
+	get showLinkCopyToast() {
+		return this._showLinkCopyToast;
+	}
 
-  queryParamsViaPath(path: string): Params {
-  	return this.router.parseUrl(path).queryParams;
-  }
+	constructor(private router: Router) {
+	}
 
-  caseIdViaPath(path: string): string {
-	  return path.split("/")[1];
-  }
+	queryParamsViaPath(path: string): Params {
+		return this.router.parseUrl(path).queryParams;
+	}
+
+	caseIdViaPath(path: string): string {
+		return path.split("/")[1];
+	}
 
 }

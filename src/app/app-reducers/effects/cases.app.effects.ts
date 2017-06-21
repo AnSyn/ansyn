@@ -2,20 +2,19 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysActionTypes, LoadOverlaysAction, SelectOverlayAction, UnSelectOverlayAction } from '@ansyn/overlays';
+import { OverlaysActionTypes, LoadOverlaysAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
-import { CasesActionTypes, AddCaseAction } from '@ansyn/menu-items/cases';
+import { CasesActionTypes, AddCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import { isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
-import { Router } from '@angular/router';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 
 @Injectable()
 export class CasesAppEffects {
@@ -32,6 +31,14 @@ export class CasesAppEffects {
 			const map = selected_case.state.maps.data.find((map) => map_id == map.id);
 			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
 			return new UpdateCaseAction(selected_case);
+		});
+
+	@Effect()
+	onShareCaseLink$ = this.actions$
+		.ofType(CasesActionTypes.SHARE_CASE_LINK)
+		.map( (action) => {
+			this.casesService.shareCaseLink(action.payload);
+			return new SetLinkCopyToastValueAction(true);
 		});
 
 	/*
@@ -92,7 +99,6 @@ export class CasesAppEffects {
 
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
-				private casesService: CasesService,
-				private router: Router){ }
+				private casesService: CasesService){ }
 
 }

@@ -19,27 +19,20 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       state('false', style({
         transform: 'rotateZ(135deg) translateY(-75%)',
       })),
-      transition('true => false', animate('250ms ease-out')),
-      transition('false => true', animate('250ms ease-out'))
+      transition('true => false', animate('0.1s')),
+      transition('false => true', animate('0.1s'))
     ]),
-    trigger('toggleFields', [
-      state('true', style({
-        opacity: 1,
-      })),
-      state('false', style({
-        opacity: 0,
-        display: 'none'
-      })),
-      transition('true => false', animate('250ms ease-out')),
-      transition('false => true', animate('250ms ease-out'))
-    ])
+    	trigger('toggleFields', [
+        transition(":enter", [style({ maxHeight: 0}), animate('0.25s', style({ maxHeight: '1000px',}))]),
+        transition(":leave", [style({ maxHeight: '1000px'}), animate('0.25s', style({ maxHeight: 0}))]),
+      ])
   ]
 })
 export class FilterContainerComponent {
 
   @Input() filter: Filter;
 
-  show: string = 'true';
+  show: boolean = true;
 
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")

@@ -1,5 +1,7 @@
-<div>
-  <div class="collection" *ngFor="let filter of initialFilters$ | async">
+<div class="collection">
+  
+  <ng-template ngFor let-filter [ngForOf]="initialFilters$ | async">
     <ansyn-filter-container [filter]="filter"></ansyn-filter-container>
-  </div>
+  </ng-template>
+  
 </div>

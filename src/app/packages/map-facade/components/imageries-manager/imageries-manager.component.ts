@@ -132,7 +132,7 @@ export class ImageriesManagerComponent implements OnInit{
 		const communicators = this.communicatorProvider.communicators;
 
 		communicators[this.publisherMouseShadowMapId] && communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
-		this.pointerMoveUnsubscriber.unsubscribe();
+		this.pointerMoveUnsubscriber && this.pointerMoveUnsubscriber.unsubscribe();
 
 		if(this.listenersMouseShadowMapsId.length > 0){
 			this.listenersMouseShadowMapsId.forEach(id => {

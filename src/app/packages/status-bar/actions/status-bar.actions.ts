@@ -5,7 +5,8 @@ export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	SHARE_SELECTED_CASE_LINK: 'SHARE_SELECTED_CASE_LINK',
 	SET_LINK_COPY_TOAST_VALUE: 'SET_LINK_COPY_TOAST_VALUE',
-	UPDATE_STATUS_FLAGS: "UPDATE_STATUS_FLAGS"
+	UPDATE_STATUS_FLAGS: "UPDATE_STATUS_FLAGS",
+	OPEN_SHARE_LINK: 'OPEN_SHARE_LINK'
 };
 
 export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
@@ -32,3 +33,8 @@ export class UpdateStatusFlagsAction implements Action {
 		// code...
 	}
 }
+export class OpenShareLink implements Action{
+	type: string = StatusBarActionsTypes.OPEN_SHARE_LINK;
+	constructor() {}
+}
+

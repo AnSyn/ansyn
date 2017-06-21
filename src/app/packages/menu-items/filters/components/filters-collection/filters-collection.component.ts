@@ -1,5 +1,5 @@
 import { FiltersService } from '../../services/filters.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { Filter } from '../../models/filter';
 
@@ -8,13 +8,10 @@ import { Filter } from '../../models/filter';
   templateUrl: './filters-collection.component.html',
   styleUrls: ['./filters-collection.component.less']
 })
-export class FiltersCollectionComponent implements OnInit {
-  filters: Observable<Filter[]>;
+export class FiltersCollectionComponent {
+
+  initialFilters$: Observable<Filter[]> = this.filtersService.loadFilters();
 
   constructor(private filtersService: FiltersService) { }
-
-  ngOnInit() {
-    this.filters = this.filtersService.loadFilters();
-  }
 
 }

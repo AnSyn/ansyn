@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, MapsLayout,statusBarFlagsItems } from '../reducers/status-bar.reducer';
-import { ChangeLayoutAction, SetLinkCopyToastValueAction, ShareSelectedCaseLinkAction } from '../actions/status-bar.actions';
+import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
+import { ChangeLayoutAction, SetLinkCopyToastValueAction, ShareSelectedCaseLinkAction, OpenShareLink } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
@@ -71,6 +71,9 @@ export class StatusBarComponent implements OnInit {
 
 	copyText() {
 		this.store.dispatch(new ShareSelectedCaseLinkAction());
+	}
+	openLink() {
+		this.store.dispatch(new OpenShareLink());
 	}
 
 	toggleMapPointSearch() {

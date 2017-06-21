@@ -66,7 +66,6 @@ export class StatusBarAppEffects {
 		});
 
 
-
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
@@ -77,6 +76,7 @@ export class StatusBarAppEffects {
 			const layouts_index = selected_case.state.maps.layouts_index;
 			return new ChangeLayoutAction(+layouts_index);
 		});
+
 
 	//move this to map-facade package and create all the login in the server
 	//as metter of conceren the status bar app effects does not need to include any logic just pass
@@ -143,7 +143,6 @@ export class StatusBarAppEffects {
 		}
 		return selected_case;
 	}
-
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

@@ -60,17 +60,31 @@ div.status-bar {
 				transform: translate(0, -100%);
 				top: 0;
 				padding-bottom: @share-link-padding-bottom;
-
-				button.share-link {
-					transition: .4s;
-					cursor: pointer;
-					padding: 10px;
-					background: #fafafa;
-					color: #7c7c7c;
-					border: none;
-					border-radius: 2px;
+				.pop-hover-buttons{
 					transform: translate(0, @share-link-padding-bottom);
+					transition: .4s;
+					display: flex;
+					button.share-link{
+						border: none;
+						border-top: solid white 1px;
+						cursor: pointer;
+						padding: 5px 10px;
+						background: #fafafa;
+						color: #7c7c7c;
+						border-radius: 2px;
+						transition: .3s;
+						&:first-child{
+							border-right: 1px solid gray;
+						}
+						img{
+							height:20px;
+						}
+						&:hover {
+							border-color: #7c7c7c;
+						}
+					}
 				}
+
 			}
 
 			&:hover {
@@ -78,7 +92,7 @@ div.status-bar {
 				div.pop-hover {
 					visibility: visible;
 					opacity: 1;
-					button.share-link {
+					div.pop-hover-buttons{
 						transform: translate(0, 0);
 					}
 				}

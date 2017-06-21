@@ -155,8 +155,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"))
 		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
 		.switchMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
-
-			return this.casesService.loadDefaultCase().map((default_case) => {
+			return this.casesService.loadDefaultCase(action.payload).map((default_case) => {
 				return new LoadDefaultCaseSuccessAction(default_case);
 			});
 		}).share();

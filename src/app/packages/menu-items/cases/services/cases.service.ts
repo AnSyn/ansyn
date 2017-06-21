@@ -1,12 +1,14 @@
 import { CasesConfig } from './../models/cases-config';
-import { Injectable, InjectionToken, Inject, Renderer } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/debounce";
 import { Case } from '../models/case.model';
 import { isEmpty } from 'lodash';
-import { copyFromContent } from '@ansyn/core/utils';
+import { cloneDeep } from 'lodash';
+import * as rison from 'rison';
+import { Params, Router } from '@angular/router';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -15,7 +17,7 @@ export class CasesService {
 	base_url;
 	LIMIT: number = 15;
 
-	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig) {
+	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, private router: Router) {
 		this.base_url = this.config.casesBaseUrl;
 	}
 
@@ -87,15 +89,31 @@ export class CasesService {
 			});
 	}
 
-	loadDefaultCase() {
-		return Observable.of(this.config.defaultCase);
-	}
+	loadDefaultCase(q_params: Params) {
+		console.log(q_params);
+		const defaultCase = cloneDeep(this.config.defaultCase);
+		defaultCase.state.maps = q_params['maps'] ? rison.decode_object(q_params['maps']) : defaultCase.state.maps;
+		defaultCase.state.time = q_params['time'] ? rison.decode_object(q_params['time']) : defaultCase.state.time;
+		defaultCase.state.facets = q_params['facets'] ? rison.decode_object(q_params['facets']) : defaultCase.state.facets;
 
-	shareCaseLink(s_case: Case): boolean {
-		return copyFromContent(<any>s_case);
+		return Observable.of(defaultCase);
 	}
 
 	enhanceDefaultCase(default_case: Case): void {
 		default_case.last_modified = new Date();
+	}
+
+	generateUrlViaCase(s_case: Case): string {
+		let url = `/`;
+		let keys = ['facets', 'time', 'maps'];
+		const queryParams: Params = {};
+		keys = keys.filter( key => s_case.state[key])
+		keys.forEach(key => {
+			const parsedValue = rison.encode_object(s_case.state[key]);
+			queryParams[key] = parsedValue;
+		});
+		const urlTree = this.router.parseUrl(url);
+		urlTree.queryParams = queryParams;
+		return decodeURIComponent(`${location.origin}${urlTree.toString()}`);
 	}
 }

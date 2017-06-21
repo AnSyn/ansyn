@@ -15,6 +15,7 @@ import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools';
 import { AddMapInstacneAction } from '../../packages/map-facade/actions/map.actions';
+import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
 
 
 
@@ -99,6 +100,8 @@ describe('MapAppEffects', () => {
 			providers: [
 				MapAppEffects,
 				TypeContainerService,
+				OverlaysService,
+				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
 				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				{
 					provide: ImageryCommunicatorService,
@@ -192,8 +195,13 @@ describe('MapAppEffects', () => {
 
 		communicators.push('imagery2');
 		const expectedResult = new CompositeMapShadowAction();
-		effectsRunner.queue(new AddMapInstacneAction(communicators));
+		effectsRunner.queue(new AddMapInstacneAction({
+			currentCommunicatorId: 'imagery2',
+			communicatorsIds: communicators
+		}));
+
 		let result = null;
+
 		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
 			result = _result;
 		});

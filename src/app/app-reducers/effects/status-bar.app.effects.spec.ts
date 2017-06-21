@@ -12,6 +12,10 @@ import {
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
+import { ImageryCommunicatorService } from '../../packages/imagery/communicator-service/communicator.service';
+import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { ConnectionBackend, Http, HttpModule, RequestOptions } from '@angular/http';
+import { configuration } from "configuration/configuration";
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -21,8 +25,20 @@ describe('StatusBarAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule, StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})],
-			providers: [StatusBarAppEffects, {provide: CasesService, useValue: {updateCase: () => null}}]
+			imports: [
+				HttpModule,
+				EffectsTestingModule,
+				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})
+			],
+			providers: [
+					StatusBarAppEffects,
+					{provide: CasesService, useValue: {updateCase: () => null}},
+					ImageryCommunicatorService,
+					OverlaysService,
+					Http,
+					ConnectionBackend,
+					{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+				]
 		}).compileComponents();
 	}));
 

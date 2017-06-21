@@ -1,0 +1,4 @@
+<div class="toast" *ngIf="showToast" [@toastAnimation]>
+	{{text}}
+	<span (click)="showToast = false">×</span>
+</div>

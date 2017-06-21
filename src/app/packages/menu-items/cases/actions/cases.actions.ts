@@ -30,7 +30,8 @@ export const CasesActionTypes = {
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
 	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS',
 
-	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE'
+	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE',
+	SHARE_CASE_LINK: 'SHARE_CASE_LINK'
 };
 
 export type CasesActions = any;
@@ -117,4 +118,9 @@ export class LoadDefaultCaseSuccessAction implements Action {
 export class SaveDefaultCaseAction implements Action {
 	type = CasesActionTypes.SAVE_DEFAULT_CASE;
 	constructor(public payload: Case) {}
+}
+
+export class ShareCaseLinkAction implements Action {
+	type = CasesActionTypes.SHARE_CASE_LINK;
+	constructor(public payload: string) {}
 }

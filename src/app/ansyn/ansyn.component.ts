@@ -10,6 +10,8 @@ import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
+import { RouterStoreHelperService } from '../app-reducers/services/router-store-helper.service';
+import { SetLinkCopyToastValueAction } from '../packages/status-bar/actions/status-bar.actions';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class AnsynComponent implements OnInit{
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
+
 
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.map((state: ICasesState) => state.selected_case)

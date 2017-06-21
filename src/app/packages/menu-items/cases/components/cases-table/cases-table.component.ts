@@ -1,8 +1,11 @@
-import { Component, ViewChild, ElementRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
-import { LoadCasesAction, OpenModalAction, SelectCaseByIdAction } from '../../actions/cases.actions';
+import {
+	LoadCasesAction, OpenModalAction, SelectCaseByIdAction,
+	ShareCaseLinkAction
+} from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { ICasesState } from '../../reducers/cases.reducer';
@@ -90,6 +93,11 @@ export class CasesTableComponent implements OnInit{
 		$event.stopPropagation();
 		let component = EditCaseComponent;
 		this.store.dispatch(new OpenModalAction({component, case_id}));
+	}
+
+	shareCase($event: MouseEvent, case_id: string){
+		$event.stopPropagation();
+		this.store.dispatch(new ShareCaseLinkAction(case_id));
 	}
 
 	selectCase(id: string): void {

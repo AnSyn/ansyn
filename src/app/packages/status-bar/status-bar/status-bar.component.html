@@ -13,7 +13,17 @@
 		<div class="selected-case">
 			<img src="/assets/icons/status-bar/folder.png">
 			<span>{{selected_case_name}}</span>
+
+			<div class="pop-hover">
+				<button class="share-link" (click)="copyText()">
+					<img src="/assets/icons/status-bar/folder.png">
+					<span>Share link</span>
+				</button>
+			</div>
+
 		</div>
+
+
 
 	</div>
 
@@ -49,13 +59,10 @@
 		<div class="layout-combobox">
 			<img src="/assets/icons/status-bar/screen-icon.png">
 			<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
-
 				<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
 					{{i + 1}}
 				</option>
-
 			</select>
-
 		</div>
 
 		<div class="overlays-count">
@@ -63,7 +70,8 @@
 			{{overlays_count}}
 		</div>
 
-
 	</div>
 
 </div>
+
+<ansyn-toast [showToast]="showLinkCopyToast" duration="4" (showToastChange)="onShowToastChange($event)"  text="Link copied to clipboard"></ansyn-toast>

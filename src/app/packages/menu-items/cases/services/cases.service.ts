@@ -92,7 +92,6 @@ export class CasesService {
 	}
 
 	shareCaseLink(s_case: Case): boolean {
-		console.log(s_case);
 		return copyFromContent(<any>s_case);
 	}
 

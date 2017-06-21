@@ -1,7 +1,7 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isNil, cloneDeep } from 'lodash';
+import { isNil } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
@@ -129,6 +129,9 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {default_case: action.payload});
 
 		case CasesActionTypes.SAVE_DEFAULT_CASE:
+			return Object.assign({}, state);
+
+		case CasesActionTypes.SHARE_CASE_LINK:
 			return Object.assign({}, state);
 
 		default:

@@ -14,7 +14,7 @@ const animations: any[] = [
 	styleUrls: ['./toast.component.less'],
 	animations
 })
-export class ToastComponent implements OnInit {
+export class ToastComponent {
 	private _showToast;
 	timeoutRef;
 
@@ -42,11 +42,6 @@ export class ToastComponent implements OnInit {
 
 	get showToast() {
 		return this._showToast;
-	}
-
-	constructor() { }
-
-	ngOnInit() {
 	}
 
 }

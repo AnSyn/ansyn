@@ -6,7 +6,7 @@ import {
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 
-fdescribe('CasesReducer', () => {
+describe('CasesReducer', () => {
 
 	it('CASE_SUCCESS action should add new case to state', () => {
 		let new_case: Case = {

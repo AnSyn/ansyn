@@ -5,9 +5,6 @@ import { ChangeLayoutAction, UpdateStatusFlagsAction ,StatusBarActionsTypes } fr
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesService, CasesActionTypes } from '@ansyn/menu-items/cases';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { Case, defaultMapType,CaseMapState } from '@ansyn/menu-items/cases/models/case.model';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
 
@@ -16,15 +13,11 @@ import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade'
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import * as turf from '@turf/turf';
-import { OverlaysService } from '../../packages/overlays/services/overlays.service';
 import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
 import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
-import { EmptyAction } from '../../packages/core/actions/empty.action';
 
 
 @Injectable()

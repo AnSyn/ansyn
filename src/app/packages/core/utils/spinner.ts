@@ -85,12 +85,8 @@ export class Spinner {
 		if(this.text){
 			this.outerDiv.appendChild(textDiv);
 		}
-		//console.log(document.querySelector(this.element));
 		this.element.appendChild(this.outerDiv);
 
-		/*var color = window.getComputedStyle(
-		 document.querySelector('.element'), ':before')
-		 .getPropertyValue('color');*/
 	}
 
 	stop(){
@@ -98,8 +94,6 @@ export class Spinner {
 			console.warn('this.element is not defined',this.element);
 			return;
 		}
-		//let spinner =
-		//console.log('stop',el);
 		this.element.removeChild(this.outerDiv);
 		this.outerDiv = null;
 	}

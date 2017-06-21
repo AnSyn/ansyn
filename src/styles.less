@@ -106,3 +106,51 @@ circle.drop.selected{
   src: local('Open Sans Extrabold Italic'), local('OpenSans-ExtraboldItalic'), url(/assets/fonts/Open_Sans/OpenSans-ExtraboldItalic.ttf) format('truetype');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
+
+.spinner-wrapper{
+	position:absolute;
+	top:0;
+	left:0;
+	height:0px;
+	width:0px;
+}
+
+.spinner-before{
+	background:black;
+	opacity:0.7;
+	position : absolute;
+	justify-content: center;
+	display:flex;
+	align-items:center;
+	z-index:9999999;
+}
+.spinner-before:before{
+	z-index:1000;
+	content: ' ';
+	margin: 0 auto 1rem;
+	width: 50px;
+	height: 50px;
+	border: 2.5px groove white;
+	border-left: 0;
+	border-top: 0;
+	border-radius: 50%;
+	animation-name:spin;
+	animation-duration:1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+//	transform:rotate(360deg);
+}
+.spinner-text {
+	z-index:9999999;
+	color:white;
+	top:50px;
+	justify-content: center;
+	align-items:center;
+	text-align:center;
+	display:flex;
+}
+
+@keyframes spin  {
+	0% { transform: rotate(0deg)}
+	100%{ transform: rotate(360deg)}
+}

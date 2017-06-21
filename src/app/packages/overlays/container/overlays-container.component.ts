@@ -42,8 +42,6 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     public selectedOverlays: Array < string > = [];
     public subscribers: any = {};
 
-    @ViewChild ('overlayContainer') overlayContainer;
-
     constructor(private store: Store <IOverlayState> ,
                 private overlaysService: OverlaysService,
                 private emitter: TimelineEmitterService,
@@ -86,9 +84,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                     this.store.dispatch(new SelectOverlayAction(id));
                 }
             });
-		this.spinner = new Spinner(this.overlayContainer.nativeElement);
-		this.spinner.start('hello world','black');
-    }
+	}
 
     //maybe to move this to the service
     toggleOverlay(id): void {

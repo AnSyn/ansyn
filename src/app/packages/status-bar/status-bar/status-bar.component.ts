@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, MapsLayout } from '../reducers/status-bar.reducer';
+import { IStatusBarState, MapsLayout,statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import { ChangeLayoutAction, SetLinkCopyToastValueAction, ShareSelectedCaseLinkAction } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
+import { log } from 'util';
+
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -20,10 +22,8 @@ export class StatusBarComponent implements OnInit {
 		.distinctUntilChanged(isEqual);
 
 	selected_layout_index: number;
-	flags =  {
-		pinPointSearch: undefined,
-		pinPointIndicator:undefined
-	};
+	statusBarFlagsItems: any = statusBarFlagsItems;
+	flags: Map<string,boolean> = new Map<string,boolean>();
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
@@ -38,17 +38,21 @@ export class StatusBarComponent implements OnInit {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
 		});
+
 		this.store.select('status_bar')
 			.distinctUntilChanged(isEqual)
-			.skip(1)
 			.subscribe(store => {
-				if(this.flags.pinPointSearch != store.flags.get('pin-point-search')){
+				//I want to check that the one that was changing is the pin point search
+				if(this.flags.get(statusBarFlagsItems.pinPointSearch) !=  store.flags.get(statusBarFlagsItems.pinPointSearch)){
+					console.log('toggle edit mode');
 					this.toggleEditMode.emit();
 				}
-				this.flags.pinPointSearch = store.flags.get('pin-point-search');
-				this.flags.pinPointIndicator = store.flags.get('pin-point-indicator');
+				this.flags =new Map(store.flags) as Map<string,boolean>;
+
+
 		});
-		this.store.dispatch(new UpdateStatusFlagsAction ({ key : 'pin-point-indicator'}));
+
+		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator}));
 
 		this.showLinkCopyToast$
 			.subscribe((_showLinkCopyToast) =>{
@@ -56,26 +60,27 @@ export class StatusBarComponent implements OnInit {
 			})
 	}
 
-	constructor(private store: Store<IStatusBarState>) { }
+	constructor(private store: Store<IStatusBarState>) {}
 
 	layoutSelectChange(selected_layout_index: number) {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
 	}
+
 	onShowToastChange(value: boolean) {
 		this.store.dispatch(new SetLinkCopyToastValueAction(value));
 	}
+
 	copyText() {
 		this.store.dispatch(new ShareSelectedCaseLinkAction());
 	}
 
-
 	toggleMapPointSearch() {
-		this.store.dispatch(new UpdateStatusFlagsAction ({ key : 'pin-point-search'}));
+		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointSearch}));
 
 	}
 
 	togglePinPointIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key : 'pin-point-indicator'}));
+		this.store.dispatch(new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointIndicator}));
 	}
 
 

@@ -20,7 +20,7 @@ import '@ansyn/core/utils/clone-deep';
 import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { CommunicatorEntity } from "@ansyn/imagery/communicator-service/communicator.entity";
-import { UpdateStatusFlagsAction } from "@ansyn/status-bar";
+import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { filter } from "rxjs/operator/filter";
 import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
 
@@ -32,14 +32,14 @@ export class MapAppEffects {
 	onMapSingleClick$: Observable<any> = this.actions$
 	.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 	.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar') , (action:UpdateStatusFlagsAction,caseState:ICasesState ,statusBarState:IStatusBarState) => [action,caseState,statusBarState])
-		.filter(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]): any => statusBarState.flags.get('pin-point-search'))
+		.filter(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.mergeMap(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]) => {
 
 		//create the region
 	 	const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
 
 	 	//draw the point on the map // all maps
-		if(statusBarState.flags.get('pin-point-indicator')){
+		if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)){
 			//draw on all maps
 			this.communicator.communicatorsAsArray().forEach( communicator => {
 				communicator.addPinPointIndicator(action.payload.lonLat);
@@ -52,7 +52,7 @@ export class MapAppEffects {
 
 		return [
 			//disable the pinpoint search
-			new UpdateStatusFlagsAction({ key : 'pin-point-search',value: false}),
+			new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch,value: false}),
 			//update case
 			new UpdateCaseAction(selectedCase),
 			//load overlays
@@ -158,16 +158,16 @@ export class MapAppEffects {
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
-		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get('pin-point-indicator'))
+		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action,caseState,statusBarState]:[any,any,any]) => {
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
 
-			if(statusBarState.flags.get('pin-point-indicator')) {
+			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
 				const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
 				communicatorHandler.addPinPointIndicator(point.coordinates);
 			}
 
-			if(statusBarState.flags.get('pin-point-search')) {
+			if(statusBarState.flags.get(statusBarFlagsItems.pinPointSearch)) {
 				communicatorHandler.createMapSingleClickEvent();
 			}
 

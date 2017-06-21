@@ -15,7 +15,7 @@ import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
-import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
+import { ShareSelectedCaseLinkAction,statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 
@@ -26,11 +26,11 @@ export class StatusBarAppEffects {
 	@Effect({dispatch:false})
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action =>  action.payload.key === 'pin-point-search')
+		.filter(action =>  action.payload.key === statusBarFlagsItems.pinPointSearch)
 		.withLatestFrom(this.store.select('status_bar'),this.store.select('cases'))
 		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
 
-			const value = statusBarState.flags.get('pin-point-search');
+			const value:boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointSearch);
 			const activeMapId = casesState.selected_case.state.maps.active_map_id;
 
 			if(value){
@@ -40,18 +40,16 @@ export class StatusBarAppEffects {
 				});
 			}
 
-			return;
 		});
 
 	@Effect({dispatch:false})
 	updatePinPointIndicatorAction$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action =>  action.payload.key === 'pin-point-indicator')
+		.filter(action =>  action.payload.key === statusBarFlagsItems.pinPointIndicator)
 		.withLatestFrom(this.store.select('status_bar'),this.store.select('cases'))
 		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
 
-			const value = statusBarState.flags.get('pin-point-indicator');
-
+			const value:boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
 			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
 				if(value){
 					const point = this.overlaysService.getPointByPolygon(casesState.selected_case.state.region);
@@ -62,7 +60,6 @@ export class StatusBarAppEffects {
 				}
 
 			});
-			return;
 		});
 
 	@Effect()

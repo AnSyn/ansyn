@@ -47,9 +47,6 @@ export class StatusBarComponent implements OnInit {
 				}
 				this.flags.pinPointSearch = store.flags.get('pin-point-search');
 				this.flags.pinPointIndicator = store.flags.get('pin-point-indicator');
-				console.log(store.flags.get('pin-point-search'),'pin-point-search');
-				console.log(store.flags.get('pin-point-indicator'),"pin-point-indicator");
-
 		});
 		this.store.dispatch(new UpdateStatusFlagsAction ({ key : 'pin-point-indicator'}));
 

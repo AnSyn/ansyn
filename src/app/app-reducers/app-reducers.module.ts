@@ -51,16 +51,14 @@ const reducers = {
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    //console.log(action.type);
+    console.log(action.type);
     return appReducer(state, action);
 }
 
 @NgModule({
     imports: [
         StoreModule.provideStore(reducer),
-        StoreDevtoolsModule.instrumentOnlyWithExtension({
-            maxAge: 5
-        }),
+
         EffectsModule.run(MapAppEffects),
         EffectsModule.run(CasesAppEffects),
         EffectsModule.run(MenuAppEffects),

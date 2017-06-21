@@ -24,6 +24,7 @@ import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
 import { ShareSelectedCaseLinkAction } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
+import { EmptyAction } from '../../packages/core/actions/empty.action';
 
 
 @Injectable()
@@ -37,15 +38,15 @@ export class StatusBarAppEffects {
 		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
 
 			const value = statusBarState.flags.get('pin-point-search');
-
 			const activeMapId = casesState.selected_case.state.maps.active_map_id;
-			console.log('single click event request ',value);
+
 			if(value){
 				//const communicator =  this.imageryCommunicator.provide(activeMapId);
 				this.imageryCommunicator.communicatorsAsArray().forEach(c => {
 					c.createMapSingleClickEvent();
 				});
 			}
+
 			return;
 		});
 
@@ -107,17 +108,13 @@ export class StatusBarAppEffects {
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.cloneDeep()
-		.mergeMap(
-			([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
-
+		.mergeMap(([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
 				selected_case.state.maps.layouts_index = action.payload;
 
-				selected_case = this.setMapsDataChanges(selected_case, selected_layout);
+				const updatedCase = this.setMapsDataChanges(selected_case, selected_layout);
 
-				//return this.casesService.wrapUpdateCase(selected_case).mergeMap( (updated_case) => {
-					//add here stopShadowMouse
-                const actionsList: Array<Action> = [];
-                actionsList.push(new UpdateCaseAction(selected_case ));
+				const actionsList: Array<Action> = [];
+                actionsList.push(new UpdateCaseAction(updatedCase));
                 actionsList.push(new UpdateMapSizeAction())
 
                 if(selected_case.state.maps.data.length === 1){
@@ -128,14 +125,11 @@ export class StatusBarAppEffects {
                 }
 
                 return actionsList;
-            //});
-				//return new UpdateCaseAction(selected_case);
-			})
+		})
 		.share();
 
 	constructor(private actions$: Actions,
 				private store:Store<IAppState>,
-				private casesService: CasesService,
 				public imageryCommunicator: ImageryCommunicatorService,
 				public overlaysService: OverlaysService
 	) {}

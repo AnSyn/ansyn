@@ -8,12 +8,13 @@ import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
-import { CommuincatorsChangeAction, StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
+import {  StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { configuration } from "configuration/configuration";
 import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools';
+import { AddMapInstacneAction } from '../../packages/map-facade/actions/map.actions';
 
 
 
@@ -189,17 +190,10 @@ describe('MapAppEffects', () => {
 	it('on communicator changes return action composite map shadow',() => {
 		const communicators:Array<string> = ['imagery1'];
 
-		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
-		let result = null;
-		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
-			result = _result;
-		});
-		expect(result).toEqual({type:'undefined-type',payload:'not all communicators initiliazied'});
-
 		communicators.push('imagery2');
 		const expectedResult = new CompositeMapShadowAction();
-		effectsRunner.queue(new CommuincatorsChangeAction(communicators));
-		result = null;
+		effectsRunner.queue(new AddMapInstacneAction(communicators));
+		let result = null;
 		mapAppEffects.onCommunicatorChange$.subscribe(_result =>{
 			result = _result;
 		});

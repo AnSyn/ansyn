@@ -62,8 +62,8 @@ export const defaultCase: Case = {
 			"to": new Date("2017-06-05T03:55:12.129Z").toISOString()
 		},
 		"facets": {
-			"enumFields": [
-				{ "fieldName": "sensorType", selectedValues: ["WORLDVIEW03_VNIR", "WORLDVIEW02"] }
+			"filters": [
+				{ "fieldName": "sensorType", "metadata": ["WORLDVIEW03_VNIR", "WORLDVIEW02"] }
 			]
 		}
 	}

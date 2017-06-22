@@ -38,7 +38,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	public spinner:Spinner;
     private errorMessage: string;
 
-    public overlays: any;
+    public initialOverlays: any;
     public selectedOverlays: Array < string > = [];
     public subscribers: any = {};
 
@@ -105,7 +105,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             .distinctUntilChanged(this.overlaysService.compareOverlays)
             .filter(data => !isEmpty(data)) //@todo change to isEmpty
             .map((data: any) => {
-
+                this.initialOverlays = data.overlays;   
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
                     configuration: data.queryParams
@@ -127,6 +127,11 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 
         this.effects.onRedrawTimeline$.subscribe(() => {
             this.redraw$.next(Math.random());
+        });
+
+        this.effects.setFilter$.subscribe((action: SetFilter) => {
+            this.drops = this.overlaysService.parseOverlayDataForDispaly(this.initialOverlays, 
+                                [{filteringParams: action.payload.filteringParams, filterFunc: action.payload.filterFunc}]);
         });
         //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }

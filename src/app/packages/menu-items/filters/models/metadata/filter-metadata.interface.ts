@@ -2,6 +2,7 @@ import { Filter } from './../filter';
 
 export abstract class FilterMetadata {
     type: string;    
-    initializeFilter(value: any): void {}
-    updateMetadata(value: any): void {}
+    abstract initializeFilter(value: any): void;
+    abstract updateMetadata(value: any): void;
+    abstract filterFunc(ovrelay: any, filteringParams:any): boolean;
 };

@@ -50,7 +50,7 @@ export class LoadOverlaysFailAction implements Action {
 
 export class SetFilter implements Action {
 	type = OverlaysActionTypes.SET_FILTER;
-	constructor(public payload:any){}
+	constructor(public payload: {filteringParams: any, filterFunc: (ovrelay: any, filteringParams:any) => boolean}){}
 }
 
 export class ClearFilter implements Action {

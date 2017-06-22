@@ -26,6 +26,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class FilterContainerComponent implements OnInit {
 
   @Input() filter: Filter;
+  
   @ViewChild('fields') fields: ElementRef;
   @ViewChild('downArrow') downArrow: ElementRef;
 
@@ -34,7 +35,9 @@ export class FilterContainerComponent implements OnInit {
   
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")
-    .map((state: IFiltersState) => state.filters.get(this.filter))
+    .map((state: IFiltersState) => {
+      return state.filters.get(this.filter);
+    })
     .distinctUntilChanged(isEqual);
 
   metadataFromState: FilterMetadata;

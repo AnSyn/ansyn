@@ -1,8 +1,10 @@
+import { LoadCasesSuccessAction } from './../../../cases/actions/cases.actions';
 import { isNil } from 'lodash';
 import { Filter } from './../filter';
 import { FilterMetadata } from './filter-metadata.interface';
 
 export class EnumFilterMetadata implements FilterMetadata {
+
 
     enumsFields: Map<string, { count: number, isChecked: boolean }>;
     type: string;
@@ -28,5 +30,9 @@ export class EnumFilterMetadata implements FilterMetadata {
                 this.enumsFields.set(key, { count: 0, isChecked: true });
             }
         }
+    }
+
+    filterFunc(overlay: any, filteringParams: { key: string, acceptedValues: string[] }): boolean {
+        return filteringParams.acceptedValues.some((filterParams) => overlay[filteringParams.key] === filterParams);
     }
 }

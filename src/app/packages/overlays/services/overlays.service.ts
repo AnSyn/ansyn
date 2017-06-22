@@ -1,7 +1,7 @@
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
+import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import * as _ from 'lodash';
@@ -60,22 +60,22 @@ export class OverlaysService {
         return this.http.get(url, options).map(this.extractData).catch(this.handleError);
     }
 
-    parseOverlayDataForDispaly(overlays = [], filters = {}): Array<any> {
+    parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
         let result = new Array();
         let overlaysData = new Array();
-        if (!Object.keys(filters).length) {
 
-            //convert the "hash table" to array of objects (very bed performence must think on another way of doing that)
-            //maybe I will do it inside the event drops component itself
-            //so the component will be able to get 2 types Array and Map
-
-            overlays.forEach(value => overlaysData.push({ id: value.id, date: value.date }));
-
-            result.push({
-                name: undefined,
-                data: overlaysData
+        if (!filters || !Array.isArray(filters)) {
+            overlays.forEach(overlay => overlaysData.push({ id: overlay.id, date: overlay.date }));
+        } else {
+            overlays.forEach(overlay => {
+                if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
+                    overlaysData.push({ id: overlay.id, date: overlay.date });
+                }
             });
         }
+
+        result.push({ name: undefined, data: overlaysData });
+
         return result;
     }
 

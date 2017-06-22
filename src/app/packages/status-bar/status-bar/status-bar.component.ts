@@ -61,7 +61,7 @@ export class StatusBarComponent implements OnInit {
 
 	constructor(private store: Store<IStatusBarState>) {}
 
-	layoutSelectChange(selected_layout_index: number) {
+	layoutSelectChange(selected_layout_index: number): void {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
 	}
 
@@ -69,10 +69,11 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new SetLinkCopyToastValueAction(value));
 	}
 
-	copyText() {
+	copyText(): void {
 		this.store.dispatch(new ShareSelectedCaseLinkAction());
 	}
-	openLink() {
+
+	openLink(): void {
 		this.store.dispatch(new OpenShareLink());
 	}
 

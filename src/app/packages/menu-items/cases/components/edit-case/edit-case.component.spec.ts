@@ -53,9 +53,11 @@ describe('EditCaseComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});
 
-	it('onSubmitCase should call dispatch with UpdateCaseAction', () => {
+	it('onSubmitCase should call dispatch with UpdateCaseAction and close()', () => {
+		spyOn(component, 'close');
 		component.onSubmitCase();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
+		expect(component.close).toHaveBeenCalled();
 	});
 	it('distinctUntilChangedActiveCase should compare between active_case_id of prev state and current', () => {
 		let prev_state: ICasesState = { active_case_id: undefined } as any;

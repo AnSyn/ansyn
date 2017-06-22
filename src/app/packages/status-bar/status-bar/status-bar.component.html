@@ -18,7 +18,7 @@
 	<div class="right-side">
 
 		<div class="selected-case layout-item">
-			<img src="/assets/icons/status-bar/folder.png">
+			<img src="/assets/icons/status-bar/folder.png" class="status-bar-image-left">
 			<span>{{selected_case_name}}</span>
 
 			<div class="pop-hover">
@@ -31,7 +31,7 @@
 
 		<div class="timeline-combobox layout-item">
 			<div class='status-bar-orientation-icon'>
-				<img src="/assets/icons/status-bar/orientation.png">
+				<img src="/assets/icons/status-bar/orientation.png" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Orignal</option>
@@ -42,23 +42,23 @@
 
 		<div class="timeline-combobox layout-item">
 			<div class='status-bar-world-icon'>
-				<img src="/assets/icons/status-bar/geo.png">
+				<img src="/assets/icons/status-bar/geo.png" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Pin Point</option>
 			</select>
 			<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-				<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="">
+				<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
 			</div>
 			<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-				<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="">
+				<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="" class="status-bar-image-right">
 			</div>
 		</div>
 
 
 		<div class="timeline-combobox layout-item">
 			<div class="status-bar-calender-icon">
-				<img src="/assets/icons/status-bar/calendar.png">
+				<img src="/assets/icons/status-bar/calendar.png" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Timeline</option>
@@ -66,7 +66,7 @@
 		</div>
 
 		<div class="layout-combobox layout-item">
-			<img src="/assets/icons/status-bar/screen-icon.png">
+			<img src="/assets/icons/status-bar/screen-icon.png" class="status-bar-image-left">
 			<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
 				<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
 					{{i + 1}}
@@ -75,7 +75,7 @@
 		</div>
 
 		<div class="overlays-count layout-item">
-			<img src="/assets/icons/status-bar/overlays-count.png">
+			<img src="/assets/icons/status-bar/overlays-count.png" class="status-bar-image-left">
 			{{overlays_count}}
 		</div>
 

@@ -1,4 +1,4 @@
-import { ObjectIteratorPipe } from './pipes/object-iterator.pipe';
+import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';
 import { FiltersConfig } from './models/filters-config';
@@ -10,13 +10,14 @@ import { Store } from '@ngrx/store';
 import { FiltersService } from './services/filters.service';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
 		BrowserAnimationsModule],
-	declarations: [FiltersCollectionComponent, FilterContainerComponent, ObjectIteratorPipe],
+	declarations: [FiltersCollectionComponent, FilterContainerComponent, MapIteratorPipe, EnumFilterContainerComponent],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [FiltersService]
 })

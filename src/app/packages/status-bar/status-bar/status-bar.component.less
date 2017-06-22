@@ -11,12 +11,13 @@ div.status-bar {
 	justify-content: flex-end;
 	align-items: center;
 	height:35px;
-	font-size:12px;
-
+	font-size:14px;
+	position:absolute;
 	div.left-side {
 		display: flex;
 		width: 50%;
 		position:relative;
+		border-right: 2px white solid;
 		.back-to-world-view {
 			position: absolute;
 			margin-left: 7px;
@@ -44,9 +45,12 @@ div.status-bar {
 		width: 50%;
 		justify-content: space-between;
 		align-items: center;
-		border-left: 1px white solid;
-		div.selected-case {
 
+		div.selected-case {
+			img{
+				height:14px;
+				margin:-1px 4px 0 0;
+			}
 			div.pop-hover {
 				visibility: hidden;
 				opacity: 0;
@@ -91,11 +95,13 @@ div.status-bar {
 				margin: 0;
 			}
 			.status-bar-world-icon {
-				margin-right: 5px;
+				margin-right: 3px;
+				padding-top:5px;
 			}
 			.status-bar-edit-icon {
 				opacity: 0.5;
-				margin: 0px 7px 0px 5px;
+				margin: 0px 2px 0px 3px;
+				padding-top:3px;
 				&.active {
 					opacity: 1;
 				}
@@ -105,6 +111,7 @@ div.status-bar {
 			}
 			.status-bar-eye-icon {
 				opacity: 0.5;
+				padding-top:4px;
 				&.active {
 					opacity: 1;
 				}
@@ -113,16 +120,24 @@ div.status-bar {
 				}
 			}
 			.status-bar-orientation-icon {
-				margin: 0px 7px 0px 0px;
+				img {
+					margin-top:5px;
+					margin-right:4px;
+				}
+			}
+			.status-bar-calender-icon {
+				margin-right:3px;
+				padding-top:6px;
 				img {
 
 				}
 			}
-			.status-bar-calender-icon {
-				margin: 0px 7px 0px 0px;
-				img {
-
+			.layout-combobox {
+				img{
+					hegiht:14px;
+					margin-right:4px;
 				}
+
 			}
 		}
 
@@ -135,5 +150,6 @@ div.status-bar {
 	select {
 		background: black;
 		color: white;
+		font-size:12px;
 	}
 }

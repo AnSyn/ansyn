@@ -2,8 +2,9 @@
 
 	<!--<ng-template>-->
 	<div class="left-side" *ngIf="!hideOverlayName">
-		<button class="back-to-world-view">Back to world view</button>
-
+		<div class="back-to-world-view">
+			<button>Back to world view</button>
+		</div>
 		<div class="middle">
 			<span> {{overlayName || 'World View'}}</span>
 		</div>
@@ -15,7 +16,8 @@
 	<!--</ng-template>-->
 
 	<div class="right-side">
-		<div class="selected-case">
+
+		<div class="selected-case layout-item">
 			<img src="/assets/icons/status-bar/folder.png">
 			<span>{{selected_case_name}}</span>
 

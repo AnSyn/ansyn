@@ -7,23 +7,28 @@ div.status-bar {
 	transform: translate(0, -100%);
 	display: flex;
 	box-sizing: border-box;
-	padding: 5px;
+	padding: 0 5px;
 	justify-content: flex-end;
 	align-items: center;
+	height:35px;
+	font-size:12px;
 
 	div.left-side {
 		display: flex;
 		width: 50%;
-		button.back-to-world-view {
+		position:relative;
+		.back-to-world-view {
 			position: absolute;
-			width: 160px;
-			background: black;
-			color: white;
-			border: none;
-			cursor: pointer;
-			padding: 7px;
+			margin-left: 7px;
+			align-self: center;
+			button {
+				width: 160px;
+				background: black;
+				color: white;
+				border: none;
+				line-height: 20px;
+			}
 		}
-
 	}
 
 	div.middle {
@@ -33,17 +38,14 @@ div.status-bar {
 		justify-content: center;
 		flex-direction: column;
 	}
+
 	div.right-side {
 		display: flex;
 		width: 50%;
 		justify-content: space-between;
+		align-items: center;
 		border-left: 1px white solid;
 		div.selected-case {
-			padding: 5px;
-			display: inline-block;
-			* {
-				vertical-align: middle;
-			}
 
 			div.pop-hover {
 				visibility: hidden;
@@ -78,18 +80,12 @@ div.status-bar {
 				}
 			}
 		}
-		div.layout-combobox, div.overlays-count, div.timeline-combobox {
-			padding-top: 4px;
-			display: inline-block;
-
-		}
 	}
+
 	div.layout-item {
 		margin: 0 10px;
 		display: flex;
-		* {
-			vertical-align: middle;
-		}
+		align-items:center;
 		&.timeline-combobox {
 			img {
 				margin: 0;

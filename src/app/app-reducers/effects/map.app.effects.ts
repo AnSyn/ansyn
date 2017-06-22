@@ -9,7 +9,7 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes,MapSingleClickAction, PositionChangedAction,StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction,ActiveMapChangedAction } from '@ansyn/map-facade';
+import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
@@ -19,10 +19,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
 import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
-import { CommunicatorEntity } from "@ansyn/imagery/communicator-service/communicator.entity";
 import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
-import { filter } from "rxjs/operator/filter";
-import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
+import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -38,23 +36,21 @@ export class MapAppEffects {
 		//create the region
 	 	const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
 
+		//draw on all maps
+		this.communicator.communicatorsAsArray().forEach( communicator => {
+			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+				communicator.addPinPointIndicator(action.payload.lonLat);
+			}
+			//this is for the others communicators
+			communicator.removeSingleClickEvent();
+		});
 
-			//draw on all maps
-			this.communicator.communicatorsAsArray().forEach( communicator => {
-				if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-					communicator.addPinPointIndicator(action.payload.lonLat);
-				}
-				//this is for the others communicators
-				communicator.removeSingleClickEvent();
-			});
-
-
-	 	//draw the point on the map // all maps
-		const selectedCase = {...caseState.selected_case, state : {...caseState.selected_case.state,region:region}};
+		//draw the point on the map // all maps
+		const selectedCase = {...caseState.selected_case, state: {...caseState.selected_case.state, region:region}};
 
 		return [
 			//disable the pinpoint search
-			new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch,value: false}),
+			new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch, value: false}),
 			//update case
 			new UpdateCaseAction(selectedCase),
 			//load overlays

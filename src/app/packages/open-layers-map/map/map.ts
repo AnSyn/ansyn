@@ -266,15 +266,14 @@ export class Map implements IMap {
 
     public singleClickListener(e) {
         const lonLat = ol.proj.toLonLat(e.coordinate);
-        this.singleClick.emit({...e,lonLat: lonLat});
+        this.singleClick.emit({lonLat: lonLat});
     }
 
 
     public addPinPointIndicator(lonLat){
         const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
-
-        if(layer){
+		if(layer){
             layer.set('visible',true);
 			const feature = (<any>layer).getSource().getFeatures()[0];
 			const lonLatCords = ol.proj.fromLonLat(lonLat);

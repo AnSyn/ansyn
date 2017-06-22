@@ -16,12 +16,37 @@ import { ImageryCommunicatorService } from '../../packages/imagery/communicator-
 import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
 import { ConnectionBackend, Http, HttpModule, RequestOptions } from '@angular/http';
 import { configuration } from "configuration/configuration";
+import { UpdateStatusFlagsAction } from '../../packages/status-bar/actions/status-bar.actions';
+import { statusBarFlagsItems } from '../../packages/status-bar/reducers/status-bar.reducer';
+import { ICasesState } from '../../packages/menu-items/cases/reducers/cases.reducer';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
 	let casesService: CasesService;
+	let imageryCommunicatorService: ImageryCommunicatorService;
+	//center of the polygon is { type: 'Feature',
+	//properties: {},
+	//geometry: { type: 'Point', coordinates: [ -70.33666666666667, 25.5 ] } }
+	const caseState = { cases:  [
+		{
+			id: 'case1',
+			state: {
+				region: {
+					type: 'Polygon',
+					coordinates: [
+						[
+							[-64.73, 32.31],
+							[-80.19, 25.76],
+							[-66.09, 18.43],
+							[-64.73, 32.31]
+						]
+					]
+				}
+			}
+		}
+		]} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -43,12 +68,75 @@ describe('StatusBarAppEffects', () => {
 	}));
 
 
-	beforeEach(inject([StatusBarAppEffects, EffectsRunner, Store, CasesService], (_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService) => {
+	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService) => {
 		statusBarAppEffects = _statusBarAppEffects;
 		effectsRunner = _effectsRunner;
 		store = _store;
 		casesService = _casesService;
+		imageryCommunicatorService = _imageryCommunicatorService;
+		store.dispatch(new AddCaseSuccessAction(caseState.cases[0]));
+		store.dispatch(new SelectCaseByIdAction(caseState.cases[0].id));
 	}));
+
+
+
+	it('updatePinPointSearchAction$',() => {
+		const action  = new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch,value: true });
+
+		//mock communicatorsAsArray
+		const imagery1 = {
+			createMapSingleClickEvent: () => {}
+		};
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1]);
+		spyOn (imagery1,'createMapSingleClickEvent');
+
+		effectsRunner.queue(action);
+
+		statusBarAppEffects.updatePinPointSearchAction$.subscribe( _result => {
+			expect(imagery1.createMapSingleClickEvent['calls'].count()).toBe(2);
+		})
+
+	});
+
+	it("updatePinPointIndicatorAction$ - add",() => {
+
+		const action  = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator,value: true });
+		store.dispatch(action);
+		//mock communicatorsAsArray
+		const imagery1 = {
+			addPinPointIndicator: () => {},
+			removePinPointIndicator: () => {}
+		};
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1,imagery1]);
+		spyOn (imagery1,'addPinPointIndicator');
+		spyOn (imagery1,'removePinPointIndicator');
+
+		effectsRunner.queue(action);
+
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( _result => {
+			expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
+		})
+	})
+
+	it("updatePinPointIndicatorAction$ - remove",() => {
+
+		const action  = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator,value: false });
+		store.dispatch(action);
+		//mock communicatorsAsArray
+		const imagery1 = {
+			addPinPointIndicator: () => {},
+			removePinPointIndicator: () => {}
+		};
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1,imagery1]);
+		spyOn (imagery1,'addPinPointIndicator');
+		spyOn (imagery1,'removePinPointIndicator');
+
+		effectsRunner.queue(action);
+
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( _result => {
+			expect(imagery1.removePinPointIndicator['calls'].count()).toBe(3);
+		})
+	})
 
 	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
 		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));

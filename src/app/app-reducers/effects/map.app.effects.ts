@@ -38,16 +38,18 @@ export class MapAppEffects {
 		//create the region
 	 	const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
 
-	 	//draw the point on the map // all maps
-		if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)){
+
 			//draw on all maps
 			this.communicator.communicatorsAsArray().forEach( communicator => {
-				communicator.addPinPointIndicator(action.payload.lonLat);
+				if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+					communicator.addPinPointIndicator(action.payload.lonLat);
+				}
 				//this is for the others communicators
 				communicator.removeSingleClickEvent();
-			})
-		}
+			});
 
+
+	 	//draw the point on the map // all maps
 		const selectedCase = {...caseState.selected_case, state : {...caseState.selected_case.state,region:region}};
 
 		return [
@@ -158,7 +160,7 @@ export class MapAppEffects {
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
-		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action,caseState,statusBarState]:[any,any,any]) => {
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
 

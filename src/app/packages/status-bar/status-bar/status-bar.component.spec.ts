@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, StatusBarReducer } from '../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../reducers/status-bar.reducer';
 import { StatusBarModule } from '../status-bar.module';
-import { ChangeLayoutAction } from '../actions/status-bar.actions';
+import { ChangeLayoutAction, UpdateStatusFlagsAction } from '../actions/status-bar.actions';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -33,5 +33,24 @@ describe('StatusBarComponent', () => {
 		component.layoutSelectChange(5);
 		expect(store.dispatch).toHaveBeenCalledWith(new ChangeLayoutAction(5));
 	});
+
+
+	it('eye indicator should be active',() => {
+		let result = fixture.nativeElement.querySelector('.status-bar-eye-icon').classList.contains('active');
+		expect(result).toBe(true);
+		component.flags.set(statusBarFlagsItems.pinPointIndicator,false);
+		fixture.detectChanges();
+		result = fixture.nativeElement.querySelector('.status-bar-eye-icon').classList.contains('active');
+		expect(result).toBe(false);
+	})
+
+	it("check click on pinPoint flags",() => {
+		spyOn(store,'dispatch');
+		fixture.nativeElement.querySelector('.status-bar-edit-icon img').click();
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointSearch}));
+
+		fixture.nativeElement.querySelector('.status-bar-eye-icon img').click();
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator}));
+	})
 
 });

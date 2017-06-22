@@ -51,7 +51,7 @@ const reducers = {
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    console.log(action.type);
+    //console.log(action.type);
     return appReducer(state, action);
 }
 

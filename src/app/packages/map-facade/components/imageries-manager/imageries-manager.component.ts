@@ -14,7 +14,6 @@ import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
-	public _activeMapId;
 	private _maps:any;
 	public maps_count_range = [];
 

@@ -4,12 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { ChangeLayoutAction, UpdateStatusFlagsAction ,StatusBarActionsTypes } from '@ansyn/status-bar';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
-import { ICasesState,Case, defaultMapType,CaseMapState, CasesService, CasesActionTypes } from '@ansyn/menu-items/cases';
+import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty} from 'lodash';
 
 import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
-import { CompositeMapShadowAction,UpdateMapSizeAction } from '@ansyn/map-facade';
+import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';

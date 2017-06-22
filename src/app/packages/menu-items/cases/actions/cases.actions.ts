@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
+import { Params } from '@angular/router';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -109,7 +110,7 @@ export class LoadCaseSuccessAction implements Action{
 }
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor(public payload?: any) {}
+	constructor(public payload?: Params) {}
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;

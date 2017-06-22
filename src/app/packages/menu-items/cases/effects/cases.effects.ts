@@ -3,7 +3,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseSuccessAction, LoadCaseAction,
@@ -15,7 +15,7 @@ import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 
 @Injectable()
 export class CasesEffects {
@@ -155,7 +155,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"))
 		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
 		.switchMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
-			return this.casesService.loadDefaultCase(action.payload).map((default_case) => {
+			return this.casesService.loadDefaultCase().map((default_case) => {
 				return new LoadDefaultCaseSuccessAction(default_case);
 			});
 		}).share();
@@ -166,6 +166,19 @@ export class CasesEffects {
 		.map((action: LoadCaseSuccessAction) => {
 			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
+
+	@Effect()
+	selectDefaultCase$: Observable<UpdateCaseAction | void> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.map(toPayload)
+		.withLatestFrom(this.store.select('cases'))
+		.filter(([case_id, state]: [string, ICasesState]) => {
+			return isEqual(case_id, state.default_case.id);
+		})
+		.map(([caseId, state]: [string, ICasesState]) => {
+			const updated_case = this.casesService.updateCaseViaQueryParmas(state.selected_case, state.default_case_query_params);
+			return new UpdateCaseAction(updated_case);
+		});
 
 	constructor(private actions$: Actions,
 				private casesService: CasesService,

@@ -1,9 +1,9 @@
 <div class="container">
   <div class="title-row">
     <span class="title">{{ filter.displayName }}</span>
-    
-    <div [@rotateArrow]="show.toString()" class="down-arrow" (click)="show = !show">
-    </div>
+
+    <button [@rotateArrow]="show.toString()" #downArrow class="down-arrow" [disabled]="disabledButton" (click)="show = !show">
+    </button>
 
     <div class="show-all">
       <span>Show all</span>
@@ -11,29 +11,11 @@
   </div>
 
 
-  <div class="fields" *ngIf="show" [@toggleFields]>
+  <div class="fields" #fields>
+
+    <ansyn-enum-filter-container *ngIf="metadataFromState && metadataFromState?.type === 'Enum'" [metadata]="metadataFromState">
+    </ansyn-enum-filter-container>
     
-    <div class="field" *ngFor="let enumValue of metadataFromState && metadataFromState.enumsFields | objectIterator">
-      <div class="left-side">    
-        <div class="checkbox">
-          <input type="checkbox" id="checkbox{{ enumValue.key }}" class="regular-checkbox" /><label for="checkbox{{ enumValue.key }}"></label>
-        </div>
-        <div class="filter-row">
-          <div class="field-name-container">
-            <span class="field-name" [title]="enumValue.key">{{enumValue.key}}</span>
-            </div>
-          <span class="only-filter">only</span>
-        </div>
-      </div>
-
-      <div class="count">
-        <span>{{enumValue.value}}</span>
-      </div>
-
-
-    </div>
-
-
   </div>
   <div *ngIf="!metadataFromState">
     Loading...

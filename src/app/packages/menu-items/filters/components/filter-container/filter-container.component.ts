@@ -4,7 +4,7 @@ import { IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from './../../models/metadata/filter-metadata.interface';
 import { Filter } from './../../models/filter';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -19,21 +19,19 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       state('false', style({
         transform: 'rotateZ(135deg) translateY(-75%)',
       })),
-      transition('true => false', animate('0.1s')),
-      transition('false => true', animate('0.1s'))
-    ]),
-    	trigger('toggleFields', [
-        transition(":enter", [style({ maxHeight: 0}), animate('0.25s', style({ maxHeight: '1000px',}))]),
-        transition(":leave", [style({ maxHeight: '1000px'}), animate('0.25s', style({ maxHeight: 0}))]),
-      ])
+      transition('true <=> false', animate('0.1s')),
+    ])
   ]
 })
-export class FilterContainerComponent {
+export class FilterContainerComponent implements OnInit {
 
   @Input() filter: Filter;
+  @ViewChild('fields') fields: ElementRef;
+  @ViewChild('downArrow') downArrow: ElementRef;
 
-  show: boolean = true;
-
+  private _show = true;
+  private _isAnimatig = false;
+  
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")
     .map((state: IFiltersState) => state.filters.get(this.filter))
@@ -47,4 +45,39 @@ export class FilterContainerComponent {
     });
   }
 
+  set show(value) {
+    this._show = value;
+    this.setFieldsStyle(value);
+  }
+
+  get show() {
+    return this._show;
+  }
+
+  get disabledButton() {
+    return !this.metadataFromState || this._isAnimatig;
+  }
+
+  ngOnInit() {
+    Observable.fromEvent(this.fields.nativeElement, 'transitionend').subscribe(() => {
+      this.setCurrentHeightFields();
+    });
+  }
+
+  setCurrentHeightFields() {
+    this.fields.nativeElement.style.transition = '0';
+    this.fields.nativeElement.style.maxHeight = `${this.fields.nativeElement.offsetHeight}px`;
+    this._isAnimatig = false;
+  }
+
+  setFieldsStyle(show: boolean) {
+    const fieldsStyle = this.fields.nativeElement.style;
+    fieldsStyle.transition = '0.5s';
+    this._isAnimatig = true;
+    if (show) {
+      fieldsStyle.maxHeight = '1000px';
+    } else {
+      fieldsStyle.maxHeight = '0';
+    }
+  }
 }

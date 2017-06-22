@@ -6,6 +6,7 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
 import { InitializeFiltersAction, FilterMetadata, FiltersService, Filter } from '@ansyn/menu-items/filters';
+import { ICasesState } from '@ansyn/menu-items/cases';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -14,14 +15,20 @@ export class FiltersAppEffects {
     initializeFilters$: Observable<InitializeFiltersAction> = this.actions$
         .ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
         .map(toPayload)
-        .switchMap((overlays: Overlay[]) => {
+        .withLatestFrom(this.store$.select('cases'))
+        .switchMap(([overlays, casesState]: [Overlay[], ICasesState]) => {
             return this.filtersService.loadFilters().map((filters: Filter[]) => {
                 let filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
 
                 filters.forEach((filter: Filter) => {
                     const metaData: FilterMetadata = this.typeContainerService.resolve(FilterMetadata, filter.type);
-                    const clonedMetadata = Object.assign(Object.create(metaData), metaData); //TODO: remove this when a non-singelton resolve will be available
-                    clonedMetadata.resetMetadata();
+                    const clonedMetadata: FilterMetadata = Object.assign(Object.create(metaData), metaData); //TODO: remove this when a non-singelton resolve will be available
+
+                    const currentFilterInit = casesState.selected_case.state.facets.enumFields.find(field => {
+                        return field.fieldName === filter.modelName;
+                    });
+
+                    clonedMetadata.initializeFilter(currentFilterInit && currentFilterInit.selectedValues);
 
                     overlays.forEach((overlay: Overlay) => {
                         clonedMetadata.updateMetadata(overlay[filter.modelName]);

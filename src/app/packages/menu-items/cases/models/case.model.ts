@@ -22,11 +22,9 @@ export type CaseTimeState = {
 	to: string
 }
 export type CaseFacetsState = {
-	SensorName: string,
-	SensorType: 'SAR' | 'VIS' | 'IR' | 'Satellite',
-	Stereo: boolean,
-	Resolution: number
+	enumFields: [ {fieldName: string, selectedValues: string[]}]
 }
+
 export type CaseMapsState = {
 	layouts_index: number,
 	active_map_id: string,

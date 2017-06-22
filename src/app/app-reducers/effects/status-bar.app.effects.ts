@@ -27,19 +27,12 @@ export class StatusBarAppEffects {
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action =>  action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select('status_bar'),this.store.select('cases'))
-		.map(([action,statusBarState,casesState]:[UpdateStatusFlagsAction, IStatusBarState,ICasesState]) => {
-
-			const value:boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointSearch);
-			const activeMapId = casesState.selected_case.state.maps.active_map_id;
-
-			if(value){
-				//const communicator =  this.imageryCommunicator.provide(activeMapId);
-				this.imageryCommunicator.communicatorsAsArray().forEach(c => {
-					c.createMapSingleClickEvent();
-				});
-			}
-
+		.withLatestFrom(this.store.select('status_bar'))
+		.filter(([action,statusBarState]:[any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.map(() => {
+			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
+				c.createMapSingleClickEvent();
+			});
 		});
 
 	@Effect({dispatch:false})

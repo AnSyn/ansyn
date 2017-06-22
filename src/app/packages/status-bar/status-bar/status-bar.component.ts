@@ -52,7 +52,7 @@ export class StatusBarComponent implements OnInit {
 
 		});
 
-		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator}));
+		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator,value: true}));
 
 		this.showLinkCopyToast$
 			.subscribe((_showLinkCopyToast) =>{

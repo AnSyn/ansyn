@@ -14,14 +14,14 @@ import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container'
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow } from '@ansyn/menu-items/tools';
-import { AddMapInstacneAction, MapSingleClickAction } from '../../packages/map-facade/actions/map.actions';
-import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { AddMapInstacneAction, MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';
+import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	statusBarFlagsItems, StatusBarInitialState,
 	StatusBarReducer
-} from '../../packages/status-bar/reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction } from '../../packages/status-bar/actions/status-bar.actions';
-import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 
 
 
@@ -40,7 +40,7 @@ class SourceProviderMock1 implements BaseSourceProvider {
 }
 
 
-fdescribe('MapAppEffects', () => {
+describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;
 	let effectsRunner: EffectsRunner;
 	let imageryCommunicatorService: ImageryCommunicatorService;
@@ -151,8 +151,10 @@ fdescribe('MapAppEffects', () => {
 			_cases,
 			selected_case: _cases[0]
 		} as any;
-		statusBarState = StatusBarInitialState;
-	spyOn(store, 'select').and.callFake((type) => {
+
+		statusBarState = cloneDeep(StatusBarInitialState);
+
+		spyOn(store, 'select').and.callFake((type) => {
 			if(type == 'cases'){
 				return Observable.of(icase_state);
 			}

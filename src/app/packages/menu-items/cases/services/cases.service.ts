@@ -89,14 +89,18 @@ export class CasesService {
 			});
 	}
 
-	loadDefaultCase(q_params: Params) {
-		console.log(q_params);
+	loadDefaultCase() {
 		const defaultCase = cloneDeep(this.config.defaultCase);
-		defaultCase.state.maps = q_params['maps'] ? rison.decode_object(q_params['maps']) : defaultCase.state.maps;
-		defaultCase.state.time = q_params['time'] ? rison.decode_object(q_params['time']) : defaultCase.state.time;
-		defaultCase.state.facets = q_params['facets'] ? rison.decode_object(q_params['facets']) : defaultCase.state.facets;
-
 		return Observable.of(defaultCase);
+	}
+
+	updateCaseViaQueryParmas(defaultCase: Case, q_params: Params) {
+		const s_case = cloneDeep(defaultCase);
+		s_case.state.maps = q_params['maps'] ? rison.decode_object(q_params['maps']) : s_case.state.maps;
+		s_case.state.time = q_params['time'] ? rison.decode_object(q_params['time']) : s_case.state.time;
+		s_case.state.facets = q_params['facets'] ? rison.decode_object(q_params['facets']) : s_case.state.facets;
+
+		return s_case;
 	}
 
 	enhanceDefaultCase(default_case: Case): void {

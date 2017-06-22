@@ -10,7 +10,7 @@ import { CasesActionTypes, AddCaseAction, UpdateCaseAction } from '@ansyn/menu-i
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -38,23 +38,21 @@ export class CasesAppEffects {
 		});
 
 	@Effect()
-	onShareCaseLink$ = this.actions$
+	onCopyShareCaseLink$ = this.actions$
 		.ofType(CasesActionTypes.SHARE_CASE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: ShareCaseLinkAction, state: ICasesState) => {
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
-				if(state.unlisted_case && state.unlisted_case.id == action.payload) {
-					s_case = state.unlisted_case;
-				} else if(state.default_case && state.default_case.id == action.payload) {
-					s_case = state.default_case;
+				if(state.selected_case.id == action.payload){
+					s_case = state.selected_case;
 				}
 			}
 			return s_case;
 		})
 		.map( (s_case: Case) => {
 			const shareLink = this.casesService.generateUrlViaCase(s_case);
-			copyFromContent(shareLink);
-			return new SetLinkCopyToastValueAction(true);
+			const result = copyFromContent(shareLink);
+			return new SetLinkCopyToastValueAction(result);
 		});
 
 	@Effect()

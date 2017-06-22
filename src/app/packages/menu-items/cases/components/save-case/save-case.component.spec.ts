@@ -49,8 +49,10 @@ describe('SaveCaseComponent', () => {
     expect(component).toBeTruthy();
   });
 
-	it('onSubmitCase should call dispatch with UpdateCaseAction', () => {
+	it('onSubmitCase should call dispatch with UpdateCaseAction and call close()', () => {
+		spyOn(component, 'close');
 		component.onSubmitCase();
 		expect(store.dispatch).toHaveBeenCalledWith(new SaveDefaultCaseAction(component.case_model));
+		expect(component.close).toHaveBeenCalled();
 	});
 });

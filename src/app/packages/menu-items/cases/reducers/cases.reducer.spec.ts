@@ -1,10 +1,11 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
 	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
-	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { Params } from '@angular/router';
 
 describe('CasesReducer', () => {
 
@@ -133,6 +134,14 @@ describe('CasesReducer', () => {
 		let action: LoadCaseSuccessAction = new LoadCaseSuccessAction(loaded_case);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.unlisted_case.id).toEqual('default_case_id');
+	});
+
+	it('LOAD_DEFAULT_CASE action should get queryParams payload and set on default_case_query_parmas', () => {
+		let state: ICasesState = initialCasesState;
+		const queryParams: Params = {a:'b',c:'d',e:'f'};
+		let action: LoadDefaultCaseAction = new LoadDefaultCaseAction(queryParams);
+		let result: ICasesState = CasesReducer(state, action);
+		expect(result.default_case_query_params).toEqual(queryParams);
 	});
 
 	it('LOAD_DEFAULT_CASE_SUCCESS action should set the loaded case as default_case', () => {

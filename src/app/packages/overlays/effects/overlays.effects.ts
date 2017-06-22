@@ -49,6 +49,11 @@ export class OverlaysEffects {
       			return Observable.empty();
   			});
 
+	@Effect({dispatch: false})
+	setFilter$: Observable<any> = this.actions$
+			.ofType(OverlaysActionTypes.SET_FILTER)
+			.share();
+
   	constructor(private actions$: Actions,
 			private overlaysService: OverlaysService,
 			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}

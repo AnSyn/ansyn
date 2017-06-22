@@ -14,7 +14,6 @@ export const initialFiltersState: IFiltersState = {
 };
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
-
     switch (action.type) {
 
         case FiltersActionTypes.INITIALIZE_FILTERS:

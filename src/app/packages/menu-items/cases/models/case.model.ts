@@ -22,7 +22,7 @@ export type CaseTimeState = {
 	to: string
 }
 export type CaseFacetsState = {
-	enumFields: [ {fieldName: string, selectedValues: string[]}]
+	filters: [ {fieldName: string, metadata: string[]}]
 }
 
 export type CaseMapsState = {

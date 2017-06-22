@@ -1,16 +1,20 @@
 <div class="status-bar">
 
-	<div class="left-side">
+	<!--<ng-template>-->
+	<div class="left-side" *ngIf="!hideOverlayName">
+		<button class="back-to-world-view">Back to world view</button>
 
-		<div class="mosaic">
-			<!--<select>-->
-				<!--<option>World</option>-->
-				<!--<option>Mosaic</option>-->
-				<!--<option>Local mosaic</option>-->
-			<!--</select>-->
-			<button>Back to world view</button>
+		<div class="middle">
+			<span> {{overlayName || 'World View'}}</span>
 		</div>
 
+
+	</div>
+
+
+	<!--</ng-template>-->
+
+	<div class="right-side">
 		<div class="selected-case">
 			<img src="/assets/icons/status-bar/folder.png">
 			<span>{{selected_case_name}}</span>
@@ -21,18 +25,7 @@
 					<span>Share link</span>
 				</button>
 			</div>
-
 		</div>
-
-
-
-	</div>
-
-	<div class="middle" [hidden]="hideOverlayName">
-		<span> {{overlayName || 'World View'}}</span>
-	</div>
-
-	<div class="right-side">
 
 		<div class="timeline-combobox">
 			<img src="/assets/icons/status-bar/orientation.png">

@@ -6,23 +6,36 @@ div.status-bar{
 	width: 100%;
 	transform: translate(0, -100%);
 	display: flex;
-	justify-content: space-between;
 	box-sizing: border-box;
+	padding: 5px;
+	justify-content: flex-end;
 
 	div.left-side{
-
-
 		display: flex;
-		div.mosaic{
-			padding: 4px 0 4px 5px;
-			button{
-				background: black;
-				color: white;
-				border: none;
-				cursor: pointer;
-			}
+		width: 50%;
+		button.back-to-world-view {
+			position: absolute;
+			width: 160px;
+			background: black;
+			color: white;
+			border: none;
+			cursor: pointer;
+			padding: 7px;
 		}
 
+	}
+	div.middle {
+		width: 100%;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+	}
+	div.right-side{
+		display: flex;
+		width: 50%;
+		justify-content: space-between;
+		border-left: 1px white solid;
 		div.selected-case{
 			padding: 5px;
 			display: inline-block;
@@ -63,19 +76,8 @@ div.status-bar{
 				}
 			}
 		}
-
-	}
-	div.middle {
-		padding: 5px;
-	}
-	div.right-side{
-		padding: 5px;
-
-		display: flex;
-		div{
-			margin: 0 10px;
-		}
 		div.layout-combobox, div.overlays-count, div.timeline-combobox{
+			padding-top: 4px;
 			display: inline-block;
 			*{
 				vertical-align: middle;

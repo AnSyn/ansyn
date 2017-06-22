@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/common";
+
 div.status{
 	position: absolute;
 	top: 0;
@@ -5,9 +7,9 @@ div.status{
 	text-align: center;
 	background: rgba(3, 1, 6, 0.36);
 	z-index: 1;
-	padding: 5px;
+	padding: 7px 5px;
 	font-size: 1.1rem;
-	padding:10px 0 10px 0;
+	box-sizing: border-box;
 	&.active{
 		background: rgba(3, 1, 6, 0.66);
 	}
@@ -18,9 +20,16 @@ div.status{
 	display:flex;
 	justify-content: space-between;
 	 .status-bar-title{
-		margin-left:20px;
+		 width: 100%;
  	}
-	 .status-bar-icons{
-		margin-right:20px;
- 	}
+	button.back-to-world-view {
+		position: absolute;
+		width: 160px;
+		background: black;
+		color: white;
+		border: none;
+		cursor: pointer;
+		padding: 5px;
+	}
+
 }

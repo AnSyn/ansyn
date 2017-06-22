@@ -12,13 +12,17 @@ import {
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { ImageryCommunicatorService } from '../../packages/imagery/communicator-service/communicator.service';
-import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend, Http, HttpModule, RequestOptions } from '@angular/http';
 import { configuration } from "configuration/configuration";
-import { UpdateStatusFlagsAction } from '../../packages/status-bar/actions/status-bar.actions';
-import { statusBarFlagsItems } from '../../packages/status-bar/reducers/status-bar.reducer';
-import { ICasesState } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import {
+	DisableMouseShadow, EnableMouseShadow,
+	StopMouseShadow
+} from '../../packages/menu-items/tools/actions/tools.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -43,7 +47,8 @@ describe('StatusBarAppEffects', () => {
 							[-64.73, 32.31]
 						]
 					]
-				}
+				},
+
 			}
 		}
 		]} as any;
@@ -149,17 +154,19 @@ describe('StatusBarAppEffects', () => {
 			id: "31b33526-6447-495f-8b52-83be3f6b55bd",
 			state:{
 				maps:{
-					layouts_index
+					layouts_index,
+					data : [{},{}]
 				}
 			}
 		};
 		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
 
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
 
 		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction)=>{
-			expect((_result instanceof UpdateCaseAction) || (_result instanceof UpdateMapSizeAction) ).toBeTruthy();
+			expect((_result instanceof UpdateCaseAction) || (_result instanceof UpdateMapSizeAction) || (_result instanceof DisableMouseShadow) || (_result instanceof StopMouseShadow) || (_result instanceof EnableMouseShadow)  ).toBeTruthy();
 
 			if ( _result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);

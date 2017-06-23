@@ -13,9 +13,12 @@
 
   <div class="fields" #fields>
 
-    <ansyn-enum-filter-container *ngIf="metadataFromState && metadataFromState?.type === 'Enum'" [metadata]="metadataFromState">
+    <ansyn-enum-filter-container 
+                *ngIf="metadataFromState && metadataFromState?.type === 'Enum'" 
+                [metadata]="metadataFromState"
+                (onMetadataChange)="onMetadataChange($event)">
     </ansyn-enum-filter-container>
-    
+
   </div>
   <div *ngIf="!metadataFromState">
     Loading...

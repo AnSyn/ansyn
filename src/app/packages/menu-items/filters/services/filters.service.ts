@@ -2,7 +2,8 @@ import { Observable } from "rxjs/Observable";
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { FiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
-export const filtersConfig: InjectionToken<FiltersConfig> = new InjectionToken('filters-config');
+
+export const filtersConfig: InjectionToken<FiltersConfig> = new InjectionToken('filtersConfig');
 
 @Injectable()
 export class FiltersService {

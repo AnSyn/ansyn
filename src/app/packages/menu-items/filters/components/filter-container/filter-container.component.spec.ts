@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { StoreModule } from '@ngrx/store';
+import { FiltersReducer } from '../../reducer/filters.reducer';
+import { FiltersModule } from './../../filters.module';
 import { FilterContainerComponent } from './filter-container.component';
 
 describe('FilterContainerComponent', () => {
@@ -8,7 +10,7 @@ describe('FilterContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterContainerComponent ]
+      imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })]
     })
     .compileComponents();
   }));
@@ -16,6 +18,7 @@ describe('FilterContainerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FilterContainerComponent);
     component = fixture.componentInstance;
+    component.filter = {modelName: "string" ,displayName: "string", type: 'Enum'}
     fixture.detectChanges();
   });
 

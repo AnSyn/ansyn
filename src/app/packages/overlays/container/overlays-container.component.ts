@@ -129,7 +129,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             this.redraw$.next(Math.random());
         });
 
-        this.effects.setFilter$.subscribe((action: SetFilter) => {
+        this.effects.setFilter$.subscribe((action: overlaysAction.SetFilter) => {
             this.drops = this.overlaysService.parseOverlayDataForDispaly(this.initialOverlays, 
                                 [{filteringParams: action.payload.filteringParams, filterFunc: action.payload.filterFunc}]);
         });

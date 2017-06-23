@@ -41,7 +41,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.CHANGE_LAYOUT:
 			return Object.assign({},state,{selected_layout_index: action.payload});
 
-		case StatusBarActionsTypes.SHARE_SELECTED_CASE_LINK:
+		case StatusBarActionsTypes.COPY_SELECTED_CASE_LINK:
 			return Object.assign({}, state);
 
 		case StatusBarActionsTypes.SET_LINK_COPY_TOAST_VALUE:

@@ -15,7 +15,7 @@ import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
-import { ShareCaseLinkAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { CopyCaseLinkAction } from '../../packages/menu-items/cases/actions/cases.actions';
 import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '../../packages/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '../../packages/core/utils/clipboard';
@@ -39,8 +39,8 @@ export class CasesAppEffects {
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
-		.ofType(CasesActionTypes.SHARE_CASE_LINK)
-		.withLatestFrom(this.store$.select('cases'), (action: ShareCaseLinkAction, state: ICasesState) => {
+		.ofType(CasesActionTypes.COPY_CASE_LINK)
+		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
 				if(state.selected_case.id == action.payload){
@@ -58,7 +58,7 @@ export class CasesAppEffects {
 	@Effect()
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
-		.withLatestFrom(this.store$.select('cases'), (action: ShareCaseLinkAction, state: ICasesState) => {
+		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			return state.selected_case;
 		})
 		.map( (s_case: Case) => {

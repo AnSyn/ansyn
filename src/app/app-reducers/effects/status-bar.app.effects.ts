@@ -14,8 +14,8 @@ import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
 import { UUID } from 'angular2-uuid';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { UpdateCaseAction, ShareCaseLinkAction } from '@ansyn/menu-items/cases';
-import { ShareSelectedCaseLinkAction,statusBarFlagsItems } from '@ansyn/status-bar';
+import { UpdateCaseAction, CopyCaseLinkAction } from '@ansyn/menu-items/cases';
+import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 
@@ -56,13 +56,13 @@ export class StatusBarAppEffects {
 		});
 
 	@Effect()
-	onShareSelectedCaseLink$ = this.actions$
-		.ofType(StatusBarActionsTypes.SHARE_SELECTED_CASE_LINK)
-		.withLatestFrom(this.store.select('cases'), (action: ShareSelectedCaseLinkAction, state: ICasesState) => {
+	onCopySelectedCaseLink$ = this.actions$
+		.ofType(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
+		.withLatestFrom(this.store.select('cases'), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
 			return state.selected_case.id
 		})
 		.map( (case_id: string) => {
-			return new ShareCaseLinkAction(case_id)
+			return new CopyCaseLinkAction(case_id)
 		});
 
 

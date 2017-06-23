@@ -63,7 +63,8 @@ export const defaultCase: Case = {
 		},
 		"facets": {
 			"filters": [
-				{ "fieldName": "sensorType", "metadata": ["WORLDVIEW03_VNIR", "WORLDVIEW02"] }
+				{ "fieldName": "sensorType", "metadata": ["WORLDVIEW03_VNIR", "WORLDVIEW02"] },
+				{ "fieldName": "sensorName", "metadata": ["Panchromatic"] }
 			]
 		}
 	}

@@ -14,7 +14,11 @@ export class EnumFilterMetadata implements FilterMetadata {
         this.type = 'Enum';
     }
 
-    updateMetadata(value: any): void {
+    updateMetadata(key: string): void {
+        this.enumsFields.get(key).isChecked = !this.enumsFields.get(key).isChecked;
+    }
+
+    accumulateData(value: any): void {
         if (!this.enumsFields.get(value)) {
             this.enumsFields.set(value, { count: 1, isChecked: false });
         } else {
@@ -32,7 +36,14 @@ export class EnumFilterMetadata implements FilterMetadata {
         }
     }
 
-    filterFunc(overlay: any, filteringParams: { key: string, acceptedValues: string[] }): boolean {
-        return filteringParams.acceptedValues.some((filterParams) => overlay[filteringParams.key] === filterParams);
+    filterFunc(overlay: any, filteringParams: { key: string, metadata: EnumFilterMetadata }): boolean {
+        const selectedFields: string[] = [];
+        Array.from(filteringParams.metadata.enumsFields.keys()).forEach((key: string) => {
+            if (filteringParams.metadata.enumsFields.get(key).isChecked){
+                selectedFields.push(key);
+            }
+        });
+        
+        return selectedFields.some((filterParams) => overlay[filteringParams.key] === filterParams);
     }
 }

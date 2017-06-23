@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
-import { InitializeFiltersAction, FilterMetadata, FiltersService, Filter } from '@ansyn/menu-items/filters';
+import { InitializeFiltersAction, FilterMetadata, FiltersService, Filter, FiltersActionTypes } from '@ansyn/menu-items/filters';
 import { ICasesState } from '@ansyn/menu-items/cases';
 
 @Injectable()
@@ -34,13 +34,13 @@ export class FiltersAppEffects {
 
                     if (currentFilterInit) {
                         actionsArray.push(new SetFilter({
-                            filteringParams: { key: currentFilterInit.fieldName, acceptedValues: currentFilterInit.metadata },
+                            filteringParams: { key: currentFilterInit.fieldName, metadata: clonedMetadata },
                             filterFunc: clonedMetadata.filterFunc
                         }));
                     }
 
                     overlays.forEach((overlay: Overlay) => {
-                        clonedMetadata.updateMetadata(overlay[filter.modelName]);
+                        clonedMetadata.accumulateData(overlay[filter.modelName]);
                     });
 
                     filterMetadatas.set(filter, clonedMetadata);
@@ -50,6 +50,19 @@ export class FiltersAppEffects {
                 return Observable.from(actionsArray);
             });
         }).share();
+
+    @Effect()
+    updateFilters$: Observable<any> = this.actions$
+        .ofType(FiltersActionTypes.UPDATE_FILTER_METADATA)
+        .map(toPayload)
+        .map((payload: { filter: Filter, newMetadata: FilterMetadata }) => {
+
+            return new SetFilter({
+                filteringParams: { key: payload.filter.modelName, metadata: payload.newMetadata },
+                filterFunc: payload.newMetadata.filterFunc
+            });
+        })
+        .share();
 
     constructor(private actions$: Actions,
         private store$: Store<IAppState>,

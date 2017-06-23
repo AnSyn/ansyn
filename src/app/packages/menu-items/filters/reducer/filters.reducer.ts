@@ -19,6 +19,14 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
         case FiltersActionTypes.INITIALIZE_FILTERS:
             return Object.assign({}, state, { filters: action.payload, isLoading: false });
 
+        case FiltersActionTypes.UPDATE_FILTER_METADATA:
+            const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
+            const clonedFilters = new Map(state.filters);
+
+            clonedFilters.set(actionPayload.filter,actionPayload.newMetadata);
+
+            return Object.assign({}, state, { filters: clonedFilters });
+            
         default:
             return Object.assign({}, state);
     }

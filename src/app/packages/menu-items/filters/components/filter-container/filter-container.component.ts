@@ -1,3 +1,4 @@
+import { UpdateFilterAction } from './../../actions/filters.actions';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { IFiltersState } from '../../reducer/filters.reducer';
@@ -82,5 +83,9 @@ export class FilterContainerComponent implements OnInit {
     } else {
       fieldsStyle.maxHeight = '0';
     }
+  }
+
+  onMetadataChange(metadeata: any): void {
+    this.store.dispatch(new UpdateFilterAction({filter: this.filter,newMetadata: metadeata}));
   }
 }

@@ -1,6 +1,6 @@
 import { EnumFilterMetadata } from './../../models/metadata/enum-filter-metadata';
 import { Filter } from './../../models/filter';
-import { Component, Input, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'ansyn-enum-filter-container',
@@ -10,16 +10,14 @@ import { Component, Input, ElementRef, SimpleChanges } from '@angular/core';
 export class EnumFilterContainerComponent {
 
   @Input() metadata: EnumFilterMetadata;
+  @Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
   constructor(private myElement: ElementRef) { }
 
-  updateCheckbox(id: string, newValue: boolean) {
-    const inputElement: HTMLInputElement = this.myElement.nativeElement.querySelector(`input[id="checkbox${id}"]`);
-    if (newValue) {
-      inputElement.setAttribute("checked", "checked");
-    } else {
-      inputElement.removeAttribute("checked");
-    }
-  }
+  onInputClicked(key: string){
+    const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
+    clonedMetadata.updateMetadata(key);
 
+    this.onMetadataChange.emit(clonedMetadata);
+  } 
 }

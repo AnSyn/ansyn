@@ -2,8 +2,11 @@
 
   <div class="left-side">
     <div class="checkbox">
-      <input type="checkbox" id="checkbox{{ enumMetadata.key }}" class="regular-checkbox" 
-      [checked]="enumMetadata.value.isChecked ? 'checked' : ''"/>
+      <input type="checkbox" 
+            id="checkbox{{ enumMetadata.key }}" 
+            class="regular-checkbox" 
+            [checked]="enumMetadata.value.isChecked ? 'checked' : ''"
+            (click)='onInputClicked(enumMetadata.key)'/>
       <label for="checkbox{{ enumMetadata.key }}"></label>
     </div>
     <div class="filter-row">

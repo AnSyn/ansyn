@@ -134,7 +134,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.SAVE_DEFAULT_CASE:
 			return Object.assign({}, state);
 
-		case CasesActionTypes.SHARE_CASE_LINK:
+		case CasesActionTypes.COPY_CASE_LINK:
 			return Object.assign({}, state);
 
 		default:

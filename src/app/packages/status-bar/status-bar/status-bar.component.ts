@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
-import { ChangeLayoutAction, SetLinkCopyToastValueAction, ShareSelectedCaseLinkAction, OpenShareLink } from '../actions/status-bar.actions';
+import { ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction, CopySelectedCaseLinkAction } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
-import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
 import { log } from 'util';
 
 
@@ -69,8 +68,8 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new SetLinkCopyToastValueAction(value));
 	}
 
-	copyText(): void {
-		this.store.dispatch(new ShareSelectedCaseLinkAction());
+	copyLink(): void {
+		this.store.dispatch(new CopySelectedCaseLinkAction());
 	}
 
 	openLink(): void {

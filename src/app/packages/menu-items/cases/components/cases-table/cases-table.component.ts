@@ -4,7 +4,7 @@ import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
 import {
 	LoadCasesAction, OpenModalAction, SelectCaseByIdAction,
-	ShareCaseLinkAction
+	CopyCaseLinkAction
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
@@ -97,7 +97,7 @@ export class CasesTableComponent implements OnInit{
 
 	shareCase($event: MouseEvent, case_id: string){
 		$event.stopPropagation();
-		this.store.dispatch(new ShareCaseLinkAction(case_id));
+		this.store.dispatch(new CopyCaseLinkAction(case_id));
 	}
 
 	selectCase(id: string): void {

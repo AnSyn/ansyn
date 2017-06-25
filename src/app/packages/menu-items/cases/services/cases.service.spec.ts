@@ -4,15 +4,25 @@ import { HttpModule } from "@angular/http";
 import { Http, Headers, RequestOptions } from "@angular/http";
 import { Case } from '../models/case.model';
 import { casesConfig } from '@ansyn/menu-items/cases';
+import { UrlSerializer } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
 	let http: Http;
 
+	const defaultCase: Case = {
+		name:'default name',
+		id: 'default id'
+	} as any;
+
+	const casesBaseUrl: string = "fake-cases-url";
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule],
-			providers: [CasesService, { provide: casesConfig, useValue: { casesBaseUrl: null } }]
+			providers: [CasesService, UrlSerializer, { provide: casesConfig, useValue: { casesBaseUrl, defaultCase } }]
 		});
 	});
 
@@ -50,6 +60,25 @@ describe('CasesService', () => {
 		expect(http.delete).toHaveBeenCalledWith(`${casesService.base_url}/${case_id_to_remove}`, new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }));
 	});
 
+	it('loadContexts should send the all contexts from ajax("get")', () => {
+		spyOn(http, 'get').and.returnValue(Observable.of([]));
+		casesService.loadContexts();
+		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/contexts`, casesService.options);
+	});
 
+	it('loadCase should get single case from ajax("get")', () => {
+		const case_id = '12345';
+		spyOn(http, 'get').and.returnValue(Observable.of([]));
+		casesService.loadCase(case_id);
+		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/${case_id}`, casesService.options);
+	});
+
+	it('getDefaultCase should return cloned defaultCase from config ', () => {
+		spyOn(_, 'cloneDeep').and.callFake(a => a);
+		const case_id = '12345';
+		const defaultCaseRes = casesService.getDefaultCase();
+		expect(_.cloneDeep).toHaveBeenCalledWith(defaultCase);
+		expect(defaultCaseRes).toEqual(defaultCase);
+	});
 
 });

@@ -1,7 +1,7 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
 	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
-	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction, SetQueryParams, RemoveQueryParams
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
@@ -136,12 +136,19 @@ describe('CasesReducer', () => {
 		expect(result.unlisted_case.id).toEqual('default_case_id');
 	});
 
-	it('LOAD_DEFAULT_CASE action should get queryParams payload and set on default_case_query_parmas', () => {
+	it('SET_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
 		let state: ICasesState = initialCasesState;
 		const queryParams: Params = {a:'b',c:'d',e:'f'};
-		let action: LoadDefaultCaseAction = new LoadDefaultCaseAction(queryParams);
+		let action: SetQueryParams = new SetQueryParams(queryParams);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.default_case_query_params).toEqual(queryParams);
+	});
+
+	it('REMOVE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
+		let state: ICasesState = initialCasesState;
+		let action: RemoveQueryParams = new RemoveQueryParams();
+		let result: ICasesState = CasesReducer(state, action);
+		expect(result.default_case_query_params).toBeNull();
 	});
 
 	it('LOAD_DEFAULT_CASE_SUCCESS action should set the loaded case as default_case', () => {

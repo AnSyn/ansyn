@@ -11,6 +11,7 @@ import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { go, routerActions, RouterState } from '@ngrx/router-store';
 import { RouterStoreHelperService } from '../services/router-store-helper.service';
+import { SetQueryParams } from '../../packages/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class RouterAppEffects {
@@ -28,9 +29,12 @@ export class RouterAppEffects {
 					&& (isEmpty(state.selected_case) || isEmpty(state.default_case) || !isEqual(state.selected_case.id, state.default_case.id));
 			}
 		)
-		.map( ([action]: any) => {
+		.mergeMap( ([action]: any) => {
 			const q_params = this.routerStoreHelperService.queryParamsViaPath(action.payload.path);
-			return new LoadDefaultCaseAction(q_params)
+			return [
+				new SetQueryParams(q_params),
+				new LoadDefaultCaseAction()
+			];
 		});
 
 	@Effect()

@@ -9,7 +9,8 @@ import {
 	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseSuccessAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
-	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction, UpdateCaseBackendSuccessAction
+	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction,
+	UpdateCaseBackendSuccessAction, RemoveQueryParams
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
@@ -171,14 +172,29 @@ export class CasesEffects {
 	selectDefaultCase$: Observable<UpdateCaseAction | void> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.map(toPayload)
+		.map((defaultCase: Case) => {
+			// const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);
+			return new SelectCaseByIdAction(defaultCase.id);
+		}).share();
+
+	@Effect()
+	updateQueryParamsDefaultCase$: Observable<SelectCaseByIdAction> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.map(toPayload)
 		.withLatestFrom(this.store.select('cases'))
 		.filter(([case_id, state]: [string, ICasesState]) => {
-			return isEqual(case_id, state.default_case.id);
+			const isDefault = case_id == state.default_case.id;
+			const notEmptyQueryParams = !isEmpty(state.default_case_query_params);
+			return isDefault && notEmptyQueryParams;
 		})
-		.map(([caseId, state]: [string, ICasesState]) => {
-			const updated_case = this.casesService.updateCaseViaQueryParmas(state.selected_case, state.default_case_query_params);
-			return new UpdateCaseAction(updated_case);
-		});
+		.mergeMap(([case_id, state]: [string, ICasesState]) => {
+			const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);
+			return [
+				new RemoveQueryParams(),
+				new UpdateCaseAction(updated_case),
+				new SelectCaseByIdAction(case_id),
+			]
+		}).share();
 
 	constructor(private actions$: Actions,
 				private casesService: CasesService,

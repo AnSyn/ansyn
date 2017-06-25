@@ -64,7 +64,7 @@ export class SaveCaseComponent implements OnInit {
 
 	onSubmitCase() {
 		this.store.dispatch(new SaveDefaultCaseAction(this.case_model));
-		close();
+		this.close();
 	}
 }
 

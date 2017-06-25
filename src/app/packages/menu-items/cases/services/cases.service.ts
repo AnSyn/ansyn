@@ -9,6 +9,8 @@ import { isEmpty } from 'lodash';
 import { cloneDeep } from 'lodash';
 import * as rison from 'rison';
 import { Params, Router } from '@angular/router';
+import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
+import { UrlSerializer } from '@angular/router';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -19,6 +21,7 @@ export class CasesService {
 
 	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, private router: Router) {
 		this.base_url = this.config.casesBaseUrl;
+		window['rison'] = rison;
 	}
 
 	loadCases(last_id: string = '-1'): Observable<any> {

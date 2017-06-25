@@ -6,4 +6,5 @@ export abstract class FilterMetadata {
     abstract accumulateData(value: any): void;
     abstract updateMetadata(value: any): void;    
     abstract filterFunc(ovrelay: any, filteringParams:any): boolean;
+    abstract getMetadataForOuterState(): any;
 };

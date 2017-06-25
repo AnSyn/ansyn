@@ -14,10 +14,17 @@ export class EnumFilterContainerComponent {
 
   constructor(private myElement: ElementRef) { }
 
-  onInputClicked(key: string){
+  onInputClicked(key: string) {
     const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
     clonedMetadata.updateMetadata(key);
 
     this.onMetadataChange.emit(clonedMetadata);
-  } 
+  }
+
+  selectOnly(key: any) {
+    const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
+    clonedMetadata.selectOnly(key);
+
+    this.onMetadataChange.emit(clonedMetadata);
+  }
 }

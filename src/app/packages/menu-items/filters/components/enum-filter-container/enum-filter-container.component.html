@@ -1,4 +1,4 @@
-<div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator">
+<div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort">
 
   <div class="left-side">
     <div class="checkbox">
@@ -13,7 +13,7 @@
       <div class="field-name-container">
         <span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
       </div>
-      <span class="only-filter">only</span>
+      <span class="only-filter" (click)="selectOnly(enumMetadata.key)">only</span>
     </div>
   </div>
 

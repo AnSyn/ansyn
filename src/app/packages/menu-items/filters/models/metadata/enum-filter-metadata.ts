@@ -17,6 +17,12 @@ export class EnumFilterMetadata implements FilterMetadata {
         this.enumsFields.get(key).isChecked = !this.enumsFields.get(key).isChecked;
     }
 
+    selectOnly(selectedKey: string): void {
+        Array.from(this.enumsFields.keys()).forEach((key: string) => {
+            this.enumsFields.get(key).isChecked = (key === selectedKey);
+        });
+    }
+
     accumulateData(value: any): void {
         if (!this.enumsFields.get(value)) {
             this.enumsFields.set(value, { count: 1, isChecked: false });

@@ -11,13 +11,19 @@ import { FiltersService } from './services/filters.service';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
+import { SortPipe } from "./pipes/sort.pipe";
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
 		BrowserAnimationsModule],
-	declarations: [FiltersCollectionComponent, FilterContainerComponent, MapIteratorPipe, EnumFilterContainerComponent],
+	declarations: [
+		FiltersCollectionComponent, 
+		FilterContainerComponent, 
+		MapIteratorPipe, 
+		EnumFilterContainerComponent,
+		SortPipe],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [FiltersService]
 })

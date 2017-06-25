@@ -10,7 +10,7 @@ import { CasesActionTypes, AddCaseAction, UpdateCaseAction } from '@ansyn/menu-i
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { isEmpty, cloneDeep, isEqual } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -50,43 +50,42 @@ export class CasesAppEffects {
 			return s_case;
 		})
 		.map( (s_case: Case) => {
-			const shareLink = this.casesService.generateUrlViaCase(s_case);
+			const shareLink = this.casesService.generateQueryParamsViaCase(s_case);
 			const result = copyFromContent(shareLink);
 			return new SetLinkCopyToastValueAction(result);
 		});
 
-	@Effect()
+	@Effect({dispatch: false})
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			return state.selected_case;
 		})
 		.map( (s_case: Case) => {
-			const shareLink = this.casesService.generateUrlViaCase(s_case);
+			const shareLink = this.casesService.generateQueryParamsViaCase(s_case);
 			window.open(shareLink);
 		});
 
 	/*
-	// displaySelectedOverlay$ effect will display overlays from selected case.
-	@Effect()
-
-	displaySelectedOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$)
-		.filter(([action, state]:[any, IAppState]) => true)
-		.mergeMap(([action, state]:[any, IAppState]) => {
-			const selected_case: Case = state.cases.selected_case;
-			const displayed_overlays = selected_case
-				.state.maps.data
-				.filter((map: CaseMapState) => map.data.selectedOverlay)
-				.map((map: CaseMapState) => {
-				return {id: map.data.selectedOverlay.id, map_id: map.id}
-			});
-			const result = displayed_overlays.map( overlayIdMapId => new DisplayOverlayAction(overlayIdMapId));
-			console.log(result)
-			return result;
-		});
-	*/
+	 // displaySelectedOverlay$ effect will display overlays from selected case.
+	 @Effect()
+	 displaySelectedOverlay$: Observable<any> = this.actions$
+	 .ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+	 .withLatestFrom(this.store$)
+	 .filter(([action, state]:[any, IAppState]) => true)
+	 .mergeMap(([action, state]:[any, IAppState]) => {
+	 const selected_case: Case = state.cases.selected_case;
+	 const displayed_overlays = selected_case
+	 .state.maps.data
+	 .filter((map: CaseMapState) => map.data.selectedOverlay)
+	 .map((map: CaseMapState) => {
+	 return {id: map.data.selectedOverlay.id, map_id: map.id}
+	 });
+	 const result = displayed_overlays.map( overlayIdMapId => new DisplayOverlayAction(overlayIdMapId));
+	 console.log(result)
+	 return result;
+	 });
+	 */
 
 	//@todo move this to overlays.app.effects
 	@Effect()

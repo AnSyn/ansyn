@@ -8,7 +8,6 @@ import { Case } from '../models/case.model';
 import { isEmpty } from 'lodash';
 import { cloneDeep } from 'lodash';
 import * as rison from 'rison';
-import { Params, Router } from '@angular/router';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 
@@ -18,22 +17,23 @@ export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('case
 export class CasesService {
 	base_url;
 	LIMIT: number = 15;
+	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
+	options = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
-	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, private router: Router) {
+	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;
 		window['rison'] = rison;
 	}
 
 	loadCases(last_id: string = '-1'): Observable<any> {
-		return this.http.get(`${this.base_url}/pagination/${last_id}?limit=${this.LIMIT}`).map(res => res.json())
+		const url = `${this.base_url}/pagination/${last_id}?limit=${this.LIMIT}`;
+		return this.http.get(url, this.options).map(res => res.json())
 	}
 
 	createCase(selected_case: Case): Observable<Case> {
-		let url: string = `${this.base_url}`;
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let body: string = JSON.stringify(selected_case);
-		let options = new RequestOptions({ headers });
-		return this.http.post(url, body, options).map(res => res.json());
+		const url: string = `${this.base_url}`;
+		const body: string = JSON.stringify(selected_case);
+		return this.http.post(url, body, this.options).map(res => res.json());
 	}
 
 	wrapUpdateCase(selected_case: Case): Observable<Case>{
@@ -48,26 +48,18 @@ export class CasesService {
 
 	updateCase(selected_case: Case): Observable<Case> {
 		const url:string = `${this.base_url}`;
-		const headers = new Headers({ 'Content-Type': 'application/json' });
 		const body:string = JSON.stringify(selected_case);
-		const options = new RequestOptions({ headers});
-		return this.http
-			.put (url, body, options)
-			.map(res => res.json());
+		return this.http.put (url, body, this.options).map(res => res.json());
 	}
 
 	removeCase(selected_case_id: string): Observable<any> {
 		let url: string = `${this.base_url}/${selected_case_id}`;
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
-		return this.http.delete(url, options).map(res => res.json());
+		return this.http.delete(url,  this.options).map(res => res.json());
 	}
 
 	loadContexts(): Observable<any> {
 		let url: string = `${this.base_url}/contexts`;
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
-		return this.http.get(url).map((res) => res.json());
+		return this.http.get(url,  this.options).map((res) => res.json());
 	}
 
 	loadCase(selected_case_id: string): Observable<any> {
@@ -75,9 +67,7 @@ export class CasesService {
 			return Observable.of("");
 		}
 		const url = `${this.base_url}/${selected_case_id}`;
-		const headers = new Headers({ 'Content-Type': 'application/json' });
-		const options = new RequestOptions({ headers });
-		return this.http.get(url, options)
+		return this.http.get(url,  this.options)
 			.map(res => {
 				let response = null;
 
@@ -92,35 +82,29 @@ export class CasesService {
 			});
 	}
 
-	loadDefaultCase() {
-		const defaultCase = cloneDeep(this.config.defaultCase);
-		return Observable.of(defaultCase);
-	}
-
-	updateCaseViaQueryParmas(defaultCase: Case, q_params: Params) {
-		const s_case = cloneDeep(defaultCase);
-		s_case.state.maps = q_params['maps'] ? rison.decode_object(q_params['maps']) : s_case.state.maps;
-		s_case.state.time = q_params['time'] ? rison.decode_object(q_params['time']) : s_case.state.time;
-		s_case.state.facets = q_params['facets'] ? rison.decode_object(q_params['facets']) : s_case.state.facets;
-
-		return s_case;
+	getDefaultCase() {
+		return cloneDeep(this.config.defaultCase);
 	}
 
 	enhanceDefaultCase(default_case: Case): void {
 		default_case.last_modified = new Date();
 	}
 
-	generateUrlViaCase(s_case: Case): string {
-		let url = `/`;
-		let keys = ['facets', 'time', 'maps'];
-		const queryParams: Params = {};
-		keys = keys.filter( key => s_case.state[key])
-		keys.forEach(key => {
-			const parsedValue = rison.encode_object(s_case.state[key]);
-			queryParams[key] = parsedValue;
-		});
-		const urlTree = this.router.parseUrl(url);
-		urlTree.queryParams = queryParams;
-		return decodeURIComponent(`${location.origin}${urlTree.toString()}`);
+	get decodeCaseObjects() {
+		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
 	}
+
+	get encodeCaseObjects() {
+		return this.queryParamsHelper.encodeCaseObjects.bind(this.queryParamsHelper);
+	}
+
+	get generateQueryParamsViaCase() {
+		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
+	}
+
+	get updateCaseViaQueryParmas() {
+		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
+	}
+
+
 }

@@ -22,7 +22,7 @@ export const initialCasesState: ICasesState = {
 	unlisted_case: null,
 	selected_case: null,
 	default_case: {},
-	default_case_query_params: {},
+	default_case_query_params: null,
 	active_case_id: "",
 	modal: false,
 	contexts: [],
@@ -103,11 +103,15 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases});
 
 		case CasesActionTypes.SELECT_CASE_BY_ID:
+			if(state.selected_case && state.selected_case.id == action.payload) {
+				return Object.assign({}, state);
+			}
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
 				if(state.unlisted_case && state.unlisted_case.id == action.payload) {
 					s_case = state.unlisted_case;
-				} else if(state.default_case && state.default_case.id == action.payload) {
+
+				} else if(state.default_case.id == action.payload) {
 					s_case = state.default_case;
 				}
 			}
@@ -126,7 +130,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {unlisted_case: action.payload});
 
 		case CasesActionTypes.LOAD_DEFAULT_CASE:
-			return Object.assign({}, state, {default_case_query_params: action.payload});
+			return Object.assign({}, state);
 
 		case CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS:
 			return Object.assign({}, state, {default_case: action.payload});
@@ -136,6 +140,12 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		case CasesActionTypes.COPY_CASE_LINK:
 			return Object.assign({}, state);
+
+		case CasesActionTypes.SET_QUERY_PARAMS:
+			return Object.assign({}, state, {default_case_query_params: action.payload});
+
+		case CasesActionTypes.REMOVE_QUERY_PARAMS:
+			return Object.assign({}, state, {default_case_query_params: null});
 
 		default:
 			return Object.assign({}, state);

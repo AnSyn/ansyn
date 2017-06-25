@@ -10,8 +10,8 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 
 describe('SaveCaseComponent', () => {
-  let component: SaveCaseComponent;
-  let fixture: ComponentFixture<SaveCaseComponent>;
+	let component: SaveCaseComponent;
+	let fixture: ComponentFixture<SaveCaseComponent>;
 	let store: Store<ICasesState>;
 
 	let fake_iCasesState: ICasesState = {
@@ -27,27 +27,27 @@ describe('SaveCaseComponent', () => {
 		default_case: { id: 'fake_id3', name: 'fake_name3', state: {selected_context_id: null}}
 	} as any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
 			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
-    })
-    .compileComponents();
-  }));
+		})
+			.compileComponents();
+	}));
 
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
-    spyOn(_store, 'dispatch');
+		spyOn(_store, 'dispatch');
 		spyOn(_store, 'select').and.callFake(() => Observable.of(fake_iCasesState));
 
 		fixture = TestBed.createComponent(SaveCaseComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		store = _store;
-  }));
+	}));
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should be created', () => {
+		expect(component).toBeTruthy();
+	});
 
 	it('onSubmitCase should call dispatch with UpdateCaseAction and call close()', () => {
 		spyOn(component, 'close');

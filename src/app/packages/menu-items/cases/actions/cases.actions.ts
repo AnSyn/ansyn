@@ -32,7 +32,10 @@ export const CasesActionTypes = {
 	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS',
 
 	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE',
-	COPY_CASE_LINK: 'COPY_CASE_LINK'
+	COPY_CASE_LINK: 'COPY_CASE_LINK',
+
+	SET_QUERY_PARAMS: 'SET_QUERY_PARAMS',
+	REMOVE_QUERY_PARAMS: 'REMOVE_QUERY_PARAMS'
 };
 
 export type CasesActions = any;
@@ -110,7 +113,7 @@ export class LoadCaseSuccessAction implements Action{
 }
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor(public payload?: Params) {}
+	constructor() {}
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
@@ -123,4 +126,12 @@ export class SaveDefaultCaseAction implements Action {
 export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
 	constructor(public payload: string) {}
+}
+export class SetQueryParams implements Action {
+	type = CasesActionTypes.SET_QUERY_PARAMS;
+	constructor(public payload: Params) {}
+}
+export class RemoveQueryParams implements Action {
+	type = CasesActionTypes.REMOVE_QUERY_PARAMS;
+	constructor() {}
 }

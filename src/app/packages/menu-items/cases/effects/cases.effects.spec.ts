@@ -161,8 +161,8 @@ describe('CasesEffects', () => {
 		const caseItem: Case = {
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
-		spyOn(casesService, 'loadDefaultCase').and.callFake(() => Observable.of(caseItem));
-		effectsRunner.queue(new LoadDefaultCaseAction(caseItem.id));
+		spyOn(casesService, 'getDefaultCase').and.callFake(() => caseItem);
+		effectsRunner.queue(new LoadDefaultCaseAction());
 
 		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof LoadDefaultCaseSuccessAction).toBeTruthy();

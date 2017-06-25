@@ -1,7 +1,8 @@
 <div class="container">
   <div class="title-row">
     <span class="title">{{ filter.displayName }}</span>
-
+    <span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()" 
+    class="filtered">(filtered)</span>
     <button [@rotateArrow]="show.toString()" #downArrow class="down-arrow" [disabled]="disabledButton" (click)="show = !show">
     </button>
 

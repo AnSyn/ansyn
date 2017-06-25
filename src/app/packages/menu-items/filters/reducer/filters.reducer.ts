@@ -23,10 +23,16 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
             const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
             const clonedFilters = new Map(state.filters);
 
-            clonedFilters.set(actionPayload.filter,actionPayload.newMetadata);
+            clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
 
             return Object.assign({}, state, { filters: clonedFilters });
-            
+
+        case FiltersActionTypes.RESET_FILTERS:
+            return Object.assign({}, state, {
+                filters: new Map<Filter, FilterMetadata>(),
+                isLoading: true
+            });
+
         default:
             return Object.assign({}, state);
     }

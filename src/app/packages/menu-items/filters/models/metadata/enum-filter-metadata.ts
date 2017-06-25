@@ -5,7 +5,6 @@ import { FilterMetadata } from './filter-metadata.interface';
 
 export class EnumFilterMetadata implements FilterMetadata {
 
-
     enumsFields: Map<string, { count: number, isChecked: boolean }>;
     type: string;
 
@@ -39,11 +38,23 @@ export class EnumFilterMetadata implements FilterMetadata {
     filterFunc(overlay: any, filteringParams: { key: string, metadata: EnumFilterMetadata }): boolean {
         const selectedFields: string[] = [];
         Array.from(filteringParams.metadata.enumsFields.keys()).forEach((key: string) => {
-            if (filteringParams.metadata.enumsFields.get(key).isChecked){
+            if (filteringParams.metadata.enumsFields.get(key).isChecked) {
                 selectedFields.push(key);
             }
         });
-        
+
         return selectedFields.some((filterParams) => overlay[filteringParams.key] === filterParams);
+    }
+
+    getMetadataForOuterState(): string[] {
+        const returnValue: string[] = [];
+
+        Array.from(this.enumsFields.keys()).forEach((key: string) => {
+            if (this.enumsFields.get(key).isChecked) {
+                returnValue.push(key);
+            }
+        });
+
+        return returnValue;
     }
 }

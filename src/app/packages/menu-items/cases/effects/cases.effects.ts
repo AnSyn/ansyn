@@ -155,22 +155,14 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.withLatestFrom(this.store.select("cases"))
 		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
-		.switchMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
-			return this.casesService.loadDefaultCase().map((default_case) => {
-				return new LoadDefaultCaseSuccessAction(default_case);
-			});
+		.map(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
+			const defaultCase = this.casesService.getDefaultCase();
+			return new LoadDefaultCaseSuccessAction(defaultCase);
 		}).share();
 
 	@Effect()
 	loadDefaultCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS)
-		.map((action: LoadCaseSuccessAction) => {
-			return new SelectCaseByIdAction(action.payload.id);
-		}).share();
-
-	@Effect()
-	selectDefaultCase$: Observable<UpdateCaseAction | void> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.map(toPayload)
 		.map((defaultCase: Case) => {
 			// const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);

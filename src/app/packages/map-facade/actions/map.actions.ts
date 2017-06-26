@@ -18,7 +18,7 @@ export type MapActions = any;
 
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;
-	constructor(public payload: any) {
+	constructor(public payload: any={mapId: undefined}) {
 		// code...
 	}
 }

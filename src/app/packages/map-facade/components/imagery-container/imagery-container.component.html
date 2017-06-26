@@ -1,9 +1,4 @@
-<div class="imagery" >
+<div class="imagery" #imageryViewContainer>
 	<ansyn-imagery-status *ngIf="showStatus" [map_id]="mapComponentSettings.id" [overlay-name]="(mapComponentSettings.data.selectedOverlay)?.name" [active]="active"></ansyn-imagery-status>
 	<ansyn-imagery-view [mapComponentSettings]="mapComponentSettings" class="map" [class.active]="active && showStatus"></ansyn-imagery-view>
-	<!--<div ansynLoadingSpinner active="true"></div>-->
-	<svg *ngIf="showSpinner" class="spinner show" width="65px" height="65px" viewBox="0 0 66 66">
-		<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-	</svg>
-
 </div>

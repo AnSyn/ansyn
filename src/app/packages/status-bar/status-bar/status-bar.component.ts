@@ -13,8 +13,13 @@ import { log } from 'util';
 	styleUrls: ['./status-bar.component.less']
 })
 export class StatusBarComponent implements OnInit {
-	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar").map((state: IStatusBarState) => state.layouts).distinctUntilChanged(isEqual);
-	selected_layout_index$: Observable<number> = this.store.select("status_bar").map((state: IStatusBarState) => state.selected_layout_index).distinctUntilChanged(isEqual);
+	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar")
+		.map((state: IStatusBarState) => state.layouts)
+		.distinctUntilChanged(isEqual);
+
+	selected_layout_index$: Observable<number> = this.store.select("status_bar")
+		.map((state: IStatusBarState) => state.selected_layout_index)
+		.distinctUntilChanged(isEqual);
 
 	showLinkCopyToast$: Observable<boolean> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.showLinkCopyToast)
@@ -30,6 +35,7 @@ export class StatusBarComponent implements OnInit {
 	@Input('hide-overlay-name') hideOverlayName: boolean;
 	@Input('maps') maps: any;
 	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
+	@Output('backToWorldViewClicked')backToWorldViewClicked = new EventEmitter();
 
 	showLinkCopyToast: boolean;
 
@@ -85,6 +91,8 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointIndicator}));
 	}
 
-
+	backToWorldView() {
+		this.backToWorldViewClicked.emit();
+	}
 
 }

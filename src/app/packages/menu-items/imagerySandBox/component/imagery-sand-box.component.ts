@@ -29,34 +29,14 @@ export class ImagerySandBoxComponent implements OnInit {
 				type: 'Point',
 				coordinates: [long, lat]
 			};
-			this.imageryCommunicatorService.provide('imagery1').setCenter(geoPoint, coordinate.animation);
+			this.imageryCommunicatorService.communicatorsAsArray()[0].setCenter(geoPoint, coordinate.animation);
 		} catch (ex) {
 			throw new Error(`setCenter failed ${ex}`);
 		}
 	}
 
 	public setWorldLayer() {
-		console.log(`'setWorldLayer'`);
-
-		//try {
-		const mapTileLayr = new ol.layer.Tile({
-			source: new ol.source.OSM()
-		});
-		const footprint:GeoJSON.MultiPolygon = {"type":"MultiPolygon","coordinates":[[[[35.66132962,32.71470156],[35.84337173,32.71244083],[35.84258139,32.5720059],[35.6607346,32.57504756],[35.66132962,32.71470156]]]],"bbox":[35.6607346,32.5720059,35.84337173,32.71470156]};
-
-		const a: GeoJSON.Feature<any> = {
-			"type": 'Feature',
-			"properties": {},
-			"geometry": footprint
-		};
-		const center = turf.center(a);
-		const bbox = turf.bbox(a);
-		const bboxPolygon = turf.bboxPolygon(bbox);
-		const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-		this.imageryCommunicatorService.provide('imagery1').setLayer(mapTileLayr, extent);
-		// } catch (ex) {
-		// 	throw new Error(`setWorldLayer failed ${ex}`);
-		// }
+		this.imageryCommunicatorService.communicatorsAsArray()[0].loadInitialMapSource();
 	}
 
 	public addImageLayer() {
@@ -64,7 +44,7 @@ export class ImagerySandBoxComponent implements OnInit {
 
 		try {
 			const layer = this.createImageLayer();
-			this.imageryCommunicatorService.provide('imagery1').addLayer(layer);
+			this.imageryCommunicatorService.communicatorsAsArray()[0].addLayer(layer);
 		} catch (ex) {
 			throw new Error(`addImageLayer failed ${ex}`);
 		}
@@ -88,7 +68,7 @@ export class ImagerySandBoxComponent implements OnInit {
 		const bbox = turf.bbox(a);
 		const bboxPolygon = turf.bboxPolygon(bbox);
 		const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-		this.imageryCommunicatorService.provide('imagery1').setLayer(layer, extent);
+		this.imageryCommunicatorService.communicatorsAsArray()[0].setLayer(layer, extent);
 		// } catch (ex) {
 		// 	throw new Error(`setImageLayer failed ${ex}`);
 		// }
@@ -121,11 +101,11 @@ export class ImagerySandBoxComponent implements OnInit {
 	}
 
 	public setActiveMap(mapType: string) {
-		this.imageryCommunicatorService.provide('imagery1').setActiveMap(mapType);
+		this.imageryCommunicatorService.communicatorsAsArray()[0].setActiveMap(mapType);
 	}
 
 	private toggleDrawCenterPluggin() {
-		const plugin: IMapPlugin = this.imageryCommunicatorService.provide('imagery1').getPlugin("openLayerCenterMarker");
+		const plugin: IMapPlugin = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin("openLayerCenterMarker");
 		plugin.isEnabled = !plugin.isEnabled;
 	}
 

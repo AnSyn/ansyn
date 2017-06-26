@@ -8,7 +8,7 @@ import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
-import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
+import { UpdateMapSizeAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 
 
@@ -84,5 +84,7 @@ export class AnsynComponent implements OnInit{
 		this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
 	}
 
-
+	backToWorldView($event) {
+		this.store.dispatch(new BackToWorldAction({ mapId: undefined}));
+	}
 }

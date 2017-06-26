@@ -32,6 +32,33 @@ export class ImageryComponentManager {
 				private config: IImageryConfig,
 				private imageryCommunicator: CommunicatorEntity) {}
 
+	public loadInitialMapSource() {
+		if (this._activeMap) {
+			const sourceProvider = this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+				this._activeMap.setLayer(layers[0]);
+				if (layers.length > 0) {
+					for(let i = 1; i < layers.length; i++) {
+						this._activeMap.addLayer(layers[i]);
+					}
+				}
+			});
+		}
+	}
+
+	private createMapSourceForMapType(mapType: string): Promise<any> {
+		let releventMapConfig: IMapConfig = null;
+		this.config.geoMapsInitialMapSource.forEach((mapConfig) => {
+			if (mapConfig.mapType === mapType) {
+				releventMapConfig = mapConfig;
+			}
+		});
+		if (!releventMapConfig) {
+			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
+		}
+		const sourceProvider = this.typeContainerService.resolve(BaseSourceProvider,[releventMapConfig.mapType, releventMapConfig.mapSource].join(','));
+		return sourceProvider.createAsync(releventMapConfig.mapSourceMetadata);
+	}
+
 	private buildCurrentComponent(activeMapType: string, position?: MapPosition): void {
 		const component = this.imageryProviderService.provideMap(activeMapType);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(component);
@@ -44,18 +71,7 @@ export class ImageryComponentManager {
 			this.mapComponentInitilaized.emit(this.imageryCommunicator.id);
 			mapCreatedSubscribe.unsubscribe();
 		});
-		let releventMapConfig: IMapConfig = null;
-		this.config.geoMapsInitialMapSource.forEach((mapConfig)=>{
-			if (mapConfig.mapType === activeMapType) {
-				releventMapConfig = mapConfig;
-			}
-		});
-		if (!releventMapConfig) {
-			throw new Error(`no config found for ${activeMapType}`);
-		}
-
-		const sourceProvider = this.typeContainerService.resolve(BaseSourceProvider,[releventMapConfig.mapType, releventMapConfig.mapSource].join(','));
-		sourceProvider.createAsync(releventMapConfig.mapSourceMetadata).then((layers)=>{
+		this.createMapSourceForMapType(activeMapType).then((layers)=> {
 			mapComponent.createMap(layers, position);
 		});
 	}

@@ -7,6 +7,20 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
+import { CasesConfig } from '../models/cases-config';
+
+export const MockCasesConfig = {
+	provide: casesConfig,
+	useValue: {
+		defaultCase: {
+			name:'default name',
+			id: 'default id'
+		},
+		casesBaseUrl:  "fake-cases-url",
+		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region']
+
+		}
+} as any;
 
 describe('CasesService', () => {
 	let casesService: CasesService;
@@ -18,11 +32,12 @@ describe('CasesService', () => {
 	} as any;
 
 	const casesBaseUrl: string = "fake-cases-url";
+	const casesQueryParamsKeys: string[] = ['facets', 'time', 'maps', 'region'];
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule],
-			providers: [CasesService, UrlSerializer, { provide: casesConfig, useValue: { casesBaseUrl, defaultCase } }]
+			providers: [CasesService, UrlSerializer, MockCasesConfig]
 		});
 	});
 

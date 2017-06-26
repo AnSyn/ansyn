@@ -8,22 +8,16 @@ import { Case } from '../../models/case.model';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
+import { MockCasesConfig } from '../cases.service.spec';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
 	let http: Http;
 
-	const defaultCase: Case = {
-		name:'default name',
-		id: 'default id'
-	} as any;
-
-	const casesBaseUrl: string = "fake-cases-url";
-
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule],
-			providers: [CasesService, UrlSerializer, { provide: casesConfig, useValue: { casesBaseUrl, defaultCase } }]
+			providers: [CasesService, UrlSerializer, MockCasesConfig]
 		});
 	});
 

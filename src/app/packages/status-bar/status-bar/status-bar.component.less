@@ -47,6 +47,9 @@ div.status-bar {
 		align-items: center;
 
 		div.selected-case {
+			padding: 5px;
+			margin: 0;
+			transition: .4s;
 			img{
 				height:14px;
 				margin:-1px 4px 0 0;
@@ -58,10 +61,11 @@ div.status-bar {
 				background: transparent;
 				position: absolute;
 				transform: translate(0, -100%);
-				top: 0;
+				top: 3px;
 				padding-bottom: @share-link-padding-bottom;
+				margin: 0 -5px;
 				.pop-hover-buttons{
-					transform: translate(0, @share-link-padding-bottom);
+					transform: translate(0, @share-link-padding-bottom );
 					transition: .4s;
 					display: flex;
 					button.share-link{
@@ -72,6 +76,8 @@ div.status-bar {
 						color: #7c7c7c;
 						border-radius: 2px;
 						transition: .3s;
+						display: flex;
+						align-items: center;
 						img{
 							height:20px;
 						}
@@ -91,6 +97,8 @@ div.status-bar {
 					opacity: 1;
 					div.pop-hover-buttons{
 						transform: translate(0, 0);
+						button.share-link{
+						}
 					}
 				}
 			}
@@ -98,7 +106,7 @@ div.status-bar {
 	}
 
 	div.layout-item {
-		margin: 0 10px;
+		margin: 0 5px;
 		display: flex;
 		align-items:center;
 		&.timeline-combobox {

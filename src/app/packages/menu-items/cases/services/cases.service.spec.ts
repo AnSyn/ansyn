@@ -63,14 +63,14 @@ describe('CasesService', () => {
 	it('loadContexts should send the all contexts from ajax("get")', () => {
 		spyOn(http, 'get').and.returnValue(Observable.of([]));
 		casesService.loadContexts();
-		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/contexts`, casesService.options);
+		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/contexts`, casesService.defaultOptions);
 	});
 
 	it('loadCase should get single case from ajax("get")', () => {
 		const case_id = '12345';
 		spyOn(http, 'get').and.returnValue(Observable.of([]));
 		casesService.loadCase(case_id);
-		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/${case_id}`, casesService.options);
+		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/${case_id}`, casesService.defaultOptions);
 	});
 
 	it('getDefaultCase should return cloned defaultCase from config ', () => {

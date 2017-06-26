@@ -1,7 +1,7 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
 	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
-	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction, SetQueryParams, RemoveQueryParams
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction, SetQueryParams, RemoveQueryParamsAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
@@ -146,7 +146,7 @@ describe('CasesReducer', () => {
 
 	it('REMOVE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
 		let state: ICasesState = initialCasesState;
-		let action: RemoveQueryParams = new RemoveQueryParams();
+		let action: RemoveQueryParamsAction = new RemoveQueryParamsAction();
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.default_case_query_params).toBeNull();
 	});

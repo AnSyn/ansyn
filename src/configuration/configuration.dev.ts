@@ -15,6 +15,7 @@ export const configuration = {
 		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
 		casesPaginationLimit: 15,
 		defaultCase,
+		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {

@@ -18,8 +18,8 @@ export type CaseState = {
 
 export type CaseTimeState = {
 	type:string,
-	from: Date,
-	to: Date
+	from: string,
+	to: string
 }
 export type CaseFacetsState = {
 	SensorName: string,

@@ -17,17 +17,17 @@
 	<div class="right-side">
 
 		<div class="selected-case layout-item">
-			<img src="/assets/icons/status-bar/folder.png" class="status-bar-image-left">
+			<img src="/assets/icons/status-bar/case-icon.svg" class="status-bar-image-left">
 			<span>{{selected_case_name}}</span>
 
 			<div class="pop-hover">
 				<div class="pop-hover-buttons">
 
 					<button class="share-link" (click)="copyLink()">
-						<img src="http://www.igualdadycalidadcba.gov.ar/SIPEC-CBA/img-v2/logo-link.png">
+						<img src="/assets/icons/Share.svg">
 						<span>Share link</span>
 					</button>
-
+					<!--http://www.igualdadycalidadcba.gov.ar/SIPEC-CBA/img-v2/logo-link.png-->
 					<!--<button class="share-link" (click)="openLink()">-->
 						<!--<img src="https://cdn4.iconfinder.com/data/icons/social-productivity-line-art-5/128/share-ios2-512.png">-->
 					<!--</button>-->
@@ -38,7 +38,7 @@
 
 		<div class="timeline-combobox layout-item">
 			<div class='status-bar-orientation-icon'>
-				<img src="/assets/icons/status-bar/orientation.png" class="status-bar-image-left">
+				<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Orignal</option>
@@ -49,7 +49,7 @@
 
 		<div class="timeline-combobox layout-item">
 			<div class='status-bar-world-icon'>
-				<img src="/assets/icons/status-bar/geo.png" class="status-bar-image-left">
+				<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Pin Point</option>
@@ -65,7 +65,7 @@
 
 		<div class="timeline-combobox layout-item">
 			<div class="status-bar-calender-icon">
-				<img src="/assets/icons/status-bar/calendar.png" class="status-bar-image-left">
+				<img src="/assets/icons/status-bar/time-filter-icon.svg" class="status-bar-image-left">
 			</div>
 			<select name="timeline">
 				<option>Timeline</option>
@@ -73,7 +73,7 @@
 		</div>
 
 		<div class="layout-combobox layout-item">
-			<img src="/assets/icons/status-bar/screen-icon.png" class="status-bar-image-left">
+			<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left">
 			<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
 				<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
 					{{i + 1}}
@@ -82,7 +82,7 @@
 		</div>
 
 		<div class="overlays-count layout-item">
-			<img src="/assets/icons/status-bar/overlays-count.png" class="status-bar-image-left">
+			<img src="/assets/icons/status-bar/imagery-count-icon.svg" class="status-bar-image-left">
 			{{overlays_count}}
 		</div>
 

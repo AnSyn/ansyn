@@ -48,12 +48,12 @@ export class LoadOverlaysFailAction implements Action {
 	constructor(public payload: Overlay[]){}
 }
 
-export class SetFilter implements Action {
+export class SetFilterAction implements Action {
 	type = OverlaysActionTypes.SET_FILTER;
 	constructor(public payload: {filteringParams: any, filterFunc: (ovrelay: any, filteringParams:any) => boolean}){}
 }
 
-export class ClearFilter implements Action {
+export class ClearFilterAction implements Action {
 	type = OverlaysActionTypes.CLEAR_FILTER;
 	constructor(public payload?: any){}
 }
@@ -82,7 +82,7 @@ export type OverlaysActions
 	| 	LoadOverlaysAction
 	| 	LoadOverlaysSuccessAction
 	| 	LoadOverlaysFailAction
-	|	ClearFilter
-	|	SetFilter
+	|	ClearFilterAction
+	|	SetFilterAction
 	| 	DemoAction
 	| 	RedrawTimelineAction;

@@ -10,7 +10,7 @@ import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable, ObservableInput } from 'rxjs/Observable';
-import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilter, SetFilter } from '../actions/overlays.actions';
+import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilterAction, SetFilterAction } from '../actions/overlays.actions';
 //import * as collection from '../actions/collection';
 
 import { Overlay } from '../models/overlay.model';

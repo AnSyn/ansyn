@@ -1,6 +1,6 @@
 import { cloneDeep, isNil, isEmpty } from 'lodash';
 import { Case, UpdateCaseAction, CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
-import { SetFilter } from '@ansyn/overlays';
+import { SetFilterAction } from '@ansyn/overlays';
 import { TypeContainerService } from '@ansyn/type-container';
 import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -35,7 +35,7 @@ export class FiltersAppEffects {
         .mergeMap(([payload, casesState]: [{ filter: Filter, newMetadata: FilterMetadata }, ICasesState]) => {
             let actionsArray = [];
 
-            actionsArray.push(new SetFilter({
+            actionsArray.push(new SetFilterAction({
                 filteringParams: { key: payload.filter.modelName, metadata: payload.newMetadata },
                 filterFunc: payload.newMetadata.filterFunc
             }));
@@ -53,7 +53,7 @@ export class FiltersAppEffects {
         .ofType(FiltersActionTypes.INITIALIZE_SINGLE_FILTER)
         .map(toPayload)
         .map((payload: { filter: Filter, metadata: FilterMetadata }) => {
-            return new SetFilter({
+            return new SetFilterAction({
                 filteringParams: { key: payload.filter.modelName, metadata: payload.metadata },
                 filterFunc: payload.metadata.filterFunc
             });

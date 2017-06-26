@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as turf from '@turf/turf';
-import { Feature, GeometryObject, Point } from "@types/geojson";
+import { GeometryObject, Point } from "@types/geojson";
 
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');

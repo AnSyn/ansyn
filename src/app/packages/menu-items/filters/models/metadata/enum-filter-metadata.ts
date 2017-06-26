@@ -1,4 +1,3 @@
-import { LoadCasesSuccessAction } from './../../../cases/actions/cases.actions';
 import { isNil } from 'lodash';
 import { Filter } from './../filter';
 import { FilterMetadata } from './filter-metadata.interface';
@@ -67,5 +66,11 @@ export class EnumFilterMetadata implements FilterMetadata {
     isFiltered(): boolean {
         return Array.from(this.enumsFields.values()).
             some((value: { count: number, isChecked: boolean }) => value.isChecked);
+    }
+
+    showAll(): void {
+        Array.from(this.enumsFields.keys()).forEach((key: string) => {
+            this.enumsFields.get(key).isChecked = true;
+        });
     }
 }

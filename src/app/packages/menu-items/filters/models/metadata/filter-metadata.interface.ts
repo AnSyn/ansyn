@@ -8,4 +8,5 @@ export abstract class FilterMetadata {
     abstract filterFunc(ovrelay: any, filteringParams:any): boolean;
     abstract getMetadataForOuterState(): any;
     abstract isFiltered(): boolean;
+    abstract showAll(): void;
 };

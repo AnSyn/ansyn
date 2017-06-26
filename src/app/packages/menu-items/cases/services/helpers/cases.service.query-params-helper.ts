@@ -23,8 +23,7 @@ export class QueryParamsHelper{
 	generateQueryParamsViaCase(s_case: Case): string {
 		const url = `/`;
 		const urlTree = this.casesService.urlSerializer.parse(url);
-		let keys = ['facets', 'time', 'maps', 'region'];
-		keys = keys.filter( key => s_case.state[key]);
+		const keys = this.casesService.queryParamsKeys.filter( key => s_case.state[key]);
 		keys.forEach(key => {
 			const decodedValue = this.encodeCaseObjects(key, s_case.state[key]);
 			urlTree.queryParams[key] = decodedValue;
@@ -37,8 +36,6 @@ export class QueryParamsHelper{
 			case "facets":
 				return rison.encode_object(value);
 			case "time":
-				value.from = JSON.parse(JSON.stringify(value.from));
-				value.to = JSON.parse(JSON.stringify(value.to));
 				return rison.encode_object(value);
 			case "maps":
 				return rison.encode_object(value);

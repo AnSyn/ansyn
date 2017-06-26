@@ -15,25 +15,28 @@ export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('case
 
 @Injectable()
 export class CasesService {
+
+	private queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	base_url;
-	LIMIT: number = 15;
-	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
-	options = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
+	paginationLimit: number = 15;
+	queryParamsKeys;
+	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
 	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;
-		window['rison'] = rison;
+		this.paginationLimit = this.config.casesPaginationLimit;
+		this.queryParamsKeys = this.config.casesQueryParamsKeys
 	}
 
 	loadCases(last_id: string = '-1'): Observable<any> {
-		const url = `${this.base_url}/pagination/${last_id}?limit=${this.LIMIT}`;
-		return this.http.get(url, this.options).map(res => res.json())
+		const url = `${this.base_url}/pagination/${last_id}?limit=${this.paginationLimit}`;
+		return this.http.get(url, this.defaultOptions).map(res => res.json())
 	}
 
 	createCase(selected_case: Case): Observable<Case> {
 		const url: string = `${this.base_url}`;
 		const body: string = JSON.stringify(selected_case);
-		return this.http.post(url, body, this.options).map(res => res.json());
+		return this.http.post(url, body, this.defaultOptions).map(res => res.json());
 	}
 
 	wrapUpdateCase(selected_case: Case): Observable<Case>{
@@ -49,17 +52,17 @@ export class CasesService {
 	updateCase(selected_case: Case): Observable<Case> {
 		const url:string = `${this.base_url}`;
 		const body:string = JSON.stringify(selected_case);
-		return this.http.put (url, body, this.options).map(res => res.json());
+		return this.http.put (url, body, this.defaultOptions).map(res => res.json());
 	}
 
 	removeCase(selected_case_id: string): Observable<any> {
-		let url: string = `${this.base_url}/${selected_case_id}`;
-		return this.http.delete(url,  this.options).map(res => res.json());
+		const url: string = `${this.base_url}/${selected_case_id}`;
+		return this.http.delete(url,  this.defaultOptions).map(res => res.json());
 	}
 
 	loadContexts(): Observable<any> {
-		let url: string = `${this.base_url}/contexts`;
-		return this.http.get(url,  this.options).map((res) => res.json());
+		const url: string = `${this.base_url}/contexts`;
+		return this.http.get(url,  this.defaultOptions).map((res) => res.json());
 	}
 
 	loadCase(selected_case_id: string): Observable<any> {
@@ -67,18 +70,11 @@ export class CasesService {
 			return Observable.of("");
 		}
 		const url = `${this.base_url}/${selected_case_id}`;
-		return this.http.get(url,  this.options)
-			.map(res => {
-				let response = null;
-
-				try {
-					response = res.json();
-				} catch (exception) { }
-
-				return response;
-			})
+		return this.http.get(url,  this.defaultOptions)
+			.map(res => res.json())
 			.catch((error) => {
-				return Observable.of("");
+				console.warn(error);
+				return Observable.empty();
 			});
 	}
 

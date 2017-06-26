@@ -6,7 +6,7 @@ import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import * as ol from 'openlayers';
 import { Extent } from '@ansyn/imagery';
-import { MapPosition } from 'app/packages/imagery/model/map-position';
+import { MapPosition } from '@ansyn/imagery/model/map-position';
 
 export class Map implements IMap {
 

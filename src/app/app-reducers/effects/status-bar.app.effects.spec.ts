@@ -14,15 +14,14 @@ import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ConnectionBackend, Http, HttpModule, RequestOptions } from '@angular/http';
+import { ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { configuration } from "configuration/configuration";
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	DisableMouseShadow, EnableMouseShadow,
 	StopMouseShadow
-} from '../../packages/menu-items/tools/actions/tools.actions';
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;

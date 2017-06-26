@@ -11,7 +11,7 @@ import { IAppState } from '../app-reducers.module';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { go, routerActions, RouterState } from '@ngrx/router-store';
 import { RouterStoreHelperService } from '../services/router-store-helper.service';
-import { SetQueryParams } from '../../packages/menu-items/cases/actions/cases.actions';
+import { SetQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class RouterAppEffects {

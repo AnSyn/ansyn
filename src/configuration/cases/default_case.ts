@@ -58,8 +58,8 @@ export const defaultCase: Case = {
 		},
 		"time": {
 			"type": "absolute",
-			"from": new Date("2017-01-01T08:43:03.624Z"),
-			"to": new Date("2017-06-05T03:55:12.129Z")
+			"from": new Date("2017-01-01T08:43:03.624Z").toISOString(),
+			"to": new Date("2017-06-05T03:55:12.129Z").toISOString()
 		}
 	}
 };

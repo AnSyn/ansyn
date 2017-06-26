@@ -131,7 +131,7 @@ export class SetQueryParams implements Action {
 	type = CasesActionTypes.SET_QUERY_PARAMS;
 	constructor(public payload: Params) {}
 }
-export class RemoveQueryParams implements Action {
+export class RemoveQueryParamsAction implements Action {
 	type = CasesActionTypes.REMOVE_QUERY_PARAMS;
 	constructor() {}
 }

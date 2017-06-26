@@ -15,10 +15,10 @@ import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
-import { CopyCaseLinkAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { isNil } from 'lodash';
-import { StatusBarActionsTypes } from '../../packages/status-bar/actions/status-bar.actions';
-import { copyFromContent } from '../../packages/core/utils/clipboard';
+import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { copyFromContent } from '@ansyn/core/utils/clipboard';
 
 @Injectable()
 export class CasesAppEffects {

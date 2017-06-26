@@ -10,7 +10,7 @@ import {
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
 	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction, RemoveQueryParams
+	UpdateCaseBackendSuccessAction, RemoveQueryParamsAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
@@ -169,6 +169,11 @@ export class CasesEffects {
 			return new SelectCaseByIdAction(defaultCase.id);
 		}).share();
 
+	 /*
+		This effect will subscribe when default case has been selected and queryParams is not empty.
+		To avoid circulation(by SELECT_CASE_BY_ID action), queryParams should be initialized to null.(RemoveQueryParamsAction)
+	 */
+
 	@Effect()
 	updateQueryParamsDefaultCase$: Observable<SelectCaseByIdAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
@@ -182,7 +187,7 @@ export class CasesEffects {
 		.mergeMap(([case_id, state]: [string, ICasesState]) => {
 			const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);
 			return [
-				new RemoveQueryParams(),
+				new RemoveQueryParamsAction(),
 				new UpdateCaseAction(updated_case),
 				new SelectCaseByIdAction(case_id),
 			]

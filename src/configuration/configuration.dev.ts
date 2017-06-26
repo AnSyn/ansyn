@@ -32,9 +32,14 @@ export const configuration = {
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{
+			// mapType: 'openLayersMap',
+			// mapSource: 'OSM',
+			// mapSourceMetadata: null
+
 			mapType: 'openLayersMap',
-			mapSource: 'OSM',
-			mapSourceMetadata: null
+			mapSource: 'BING',
+			mapSourceMetadata: { key: "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", styles: [/*'Road', */'Aerial'/*, 'AerialWithLabels', 'collinsBart', 'ordnanceSurvey'*/]}
+
 			// mapType: 'openLayersMap',
 			// mapSource: 'TileWMS',
 			// mapSourceMetadata: [{url: 'http://localhost:8080/geoserver/ansyn/wms', layerName: 'ansyn:israel_center_1'}]

@@ -17,7 +17,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	private _existingLayer;
 
 	private _isEnabled: boolean;
-	
+
 	public set isEnabled(value: boolean) {
 		if (this._isEnabled !== value) {
 			this._isEnabled = value;
@@ -37,7 +37,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	constructor() {
 		this.pluginType = CenterMarkerPlugin.s_pluginType;
 
-		this._isEnabled = true;
+		this._isEnabled = false;
 
 		this._iconStyle = new ol.style.Style({
 			image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({

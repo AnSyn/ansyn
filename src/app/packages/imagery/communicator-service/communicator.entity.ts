@@ -74,6 +74,10 @@ export class CommunicatorEntity {
 		this._manager.setActiveMap(mapType);
 	}
 
+	public loadInitialMapSource() {
+		this._manager.loadInitialMapSource();
+	}
+
 	public get ActiveMap() {
 		if (this._manager){
 				return this._manager.ActiveMap;

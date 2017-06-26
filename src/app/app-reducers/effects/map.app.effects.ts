@@ -21,6 +21,7 @@ import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 
 
 @Injectable()
@@ -184,6 +185,17 @@ export class MapAppEffects {
 
 			return new UpdateCaseAction(updatedCase);
 
+		});
+
+	/// Back To world
+	@Effect({dispatch: false})
+	backToWorld$ = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, state: ICasesState) => {
+			const maps = state.selected_case.state.maps;
+			let mapId = action.payload.mapId ? action.payload.mapId : maps.active_map_id;
+			const comm = this.communicator.provide(mapId);
+			comm.loadInitialMapSource();
 		});
 
 	constructor(

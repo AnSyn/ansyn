@@ -10,10 +10,18 @@ export const MapActionTypes = {
 	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
 	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK'
+	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
+	BACK_TO_WORLD: 'BACK_TO_WORLD'
 };
 
 export type MapActions = any;
+
+export class BackToWorldAction implements Action {
+	type = MapActionTypes.BACK_TO_WORLD;
+	constructor(public payload: any) {
+		// code...
+	}
+}
 
 export class ActiveMapChangedAction implements Action {
 	type = MapActionTypes.ACTIVE_MAP_CHANGED;

@@ -21,7 +21,8 @@ import { BaseSourceProvider } from '@ansyn/imagery';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerTileWMSSourceProvider } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerOSMSourceProvider } from './app-models/map-source-providers/open-layers-OSM-source-provider';
-import { OpenLayerIDAHOSourceProvider } from './app-models/map-source-providers/open-layers-IDAHO-source-provider'
+import { OpenLayerIDAHOSourceProvider } from './app-models/map-source-providers/open-layers-IDAHO-source-provider';
+import { OpenLayerBingSourceProvider } from './app-models/map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
 
@@ -47,6 +48,11 @@ import { TypeContainerModule } from '@ansyn/type-container';
 			baseType :BaseSourceProvider,
 			type : OpenLayerIDAHOSourceProvider,
 			name : ['openLayersMap','IDAHO'].join(',')
+		}),
+		TypeContainerModule.register({
+			baseType :BaseSourceProvider,
+			type : OpenLayerBingSourceProvider,
+			name : [OpenLayerBingSourceProvider.s_mapType, OpenLayerBingSourceProvider.s_sourceType].join(',')
 		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,

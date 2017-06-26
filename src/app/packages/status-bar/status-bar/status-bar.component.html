@@ -3,7 +3,7 @@
 	<!--<ng-template>-->
 	<div class="left-side" *ngIf="!hideOverlayName">
 		<div class="back-to-world-view">
-			<button>Back to world view</button>
+			<button (click)="backToWorldView()">Back to world view</button>
 		</div>
 		<div class="middle">
 			<span> {{overlayName || 'World View'}}</span>

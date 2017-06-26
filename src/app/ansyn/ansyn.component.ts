@@ -85,6 +85,6 @@ export class AnsynComponent implements OnInit{
 	}
 
 	backToWorldView($event) {
-		this.store.dispatch(new BackToWorldAction({ mapId: undefined}));
+		this.store.dispatch(new BackToWorldAction());
 	}
 }

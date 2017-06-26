@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HttpModule } from '@angular/http';
@@ -26,7 +26,7 @@ import { EffectsModule } from "@ngrx/effects";
     exports: [OverlaysContainer, TimelineComponent],
     providers: [
         OverlaysService,
-        TimelineEmitterService 
+        TimelineEmitterService
     ]
 
 })
@@ -37,7 +37,7 @@ export class OverlaysModule {
             ngModule: OverlaysModule,
             providers: [
                 OverlaysService,
-                TimelineEmitterService, 
+                TimelineEmitterService,
                 { provide: OverlaysConfig, useValue: config }
             ]
         }

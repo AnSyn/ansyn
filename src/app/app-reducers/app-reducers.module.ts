@@ -26,6 +26,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterAppEffects } from './effects/router.app.effects';
 import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
 import { RouterStoreHelperService } from './services/router-store-helper.service';
+import { configuration } from './../../configuration/configuration';
 
 export interface IAppState {
     overlays: IOverlayState;
@@ -55,7 +56,9 @@ const reducers = {
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    //console.log(action.type);
+    if(configuration.General.logActions){
+    	console.log(action);
+	}
     return appReducer(state, action);
 }
 
@@ -74,6 +77,7 @@ export function reducer(state: any, action: any) {
     ],
 	providers:[RouterStoreHelperService]
 })
+
 export class AppReducersModule {
 
 }

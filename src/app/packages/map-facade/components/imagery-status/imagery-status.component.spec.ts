@@ -1,25 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { ImageryStatusComponent } from './imagery-status.component';
+import { Store, StoreModule } from '@ngrx/store';
 
 describe('ImageryStatusComponent', () => {
-  let component: ImageryStatusComponent;
-  let fixture: ComponentFixture<ImageryStatusComponent>;
+	let component: ImageryStatusComponent;
+	let fixture: ComponentFixture<ImageryStatusComponent>;
+	let store: Store<any>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ImageryStatusComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [StoreModule.provideStore({})],
+			declarations: [ ImageryStatusComponent ]
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ImageryStatusComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		fixture = TestBed.createComponent(ImageryStatusComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		store = _store;
+	}));
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should be created', () => {
+		expect(component).toBeTruthy();
+	});
 });

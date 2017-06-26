@@ -12,16 +12,18 @@ import { FilterContainerComponent } from './components/filter-container/filter-c
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
 import { SortPipe } from "./pipes/sort.pipe";
+import { FiltersEffects } from "./effects/filters.effects";
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
-		BrowserAnimationsModule],
+		BrowserAnimationsModule,
+		EffectsModule.run(FiltersEffects),],
 	declarations: [
-		FiltersCollectionComponent, 
-		FilterContainerComponent, 
-		MapIteratorPipe, 
+		FiltersCollectionComponent,
+		FilterContainerComponent,
+		MapIteratorPipe,
 		EnumFilterContainerComponent,
 		SortPipe],
 	entryComponents: [FiltersCollectionComponent],

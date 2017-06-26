@@ -4,7 +4,9 @@ import { Action } from '@ngrx/store';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
+	INITIALIZE_FILTERS_SUCCESS: 'INITIALIZE_FILTERS_SUCCESS',
 
+	INITIALIZE_SINGLE_FILTER: 'INITIALIZE_SINGLE_FILTER',
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
 	RESET_FILTERS: 'RESET_FILTERS'
@@ -14,12 +16,22 @@ export type FiltersActions = any;
 
 export class InitializeFiltersAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS;
+	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] } }) { }
+}
+
+export class InitializeFiltersSuccessAction implements Action {
+	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
 	constructor(public payload?: Map<Filter, FilterMetadata>) { }
 }
 
 export class UpdateFilterAction implements Action {
 	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
 	constructor(public payload?: { filter: Filter, newMetadata: FilterMetadata }) { }
+}
+
+export class InitializeSingleFilterAction implements Action {
+	type = FiltersActionTypes.INITIALIZE_SINGLE_FILTER;
+	constructor(public payload?: { filter: Filter, metadata: FilterMetadata }) { }
 }
 
 export class ResetFiltersAction implements Action {

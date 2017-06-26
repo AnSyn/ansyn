@@ -22,7 +22,7 @@ export type CaseTimeState = {
 	to: string
 }
 export type CaseFacetsState = {
-	filters: [ {fieldName: string, metadata: any}]
+	filters: {fieldName: string, metadata: any}[]
 }
 
 export type CaseMapsState = {

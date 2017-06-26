@@ -16,8 +16,11 @@ export const initialFiltersState: IFiltersState = {
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
     switch (action.type) {
 
-        case FiltersActionTypes.INITIALIZE_FILTERS:
+        case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
             return Object.assign({}, state, { filters: action.payload, isLoading: false });
+
+        case FiltersActionTypes.INITIALIZE_FILTERS:
+            return Object.assign({}, state, { isLoading: true });
 
         case FiltersActionTypes.UPDATE_FILTER_METADATA:
             const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
@@ -32,6 +35,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
                 filters: new Map<Filter, FilterMetadata>(),
                 isLoading: true
             });
+
 
         default:
             return Object.assign({}, state);

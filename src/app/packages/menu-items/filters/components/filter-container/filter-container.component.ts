@@ -42,7 +42,6 @@ export class FilterContainerComponent {
   @ViewChild('fields') fields: ElementRef;
 
   private show = true;
-  private _isAnimatig = false;
 
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")
@@ -60,7 +59,7 @@ export class FilterContainerComponent {
   }
 
   get disabledButton() {
-    return !this.metadataFromState || this._isAnimatig;
+    return !this.metadataFromState;
   }
 
   onMetadataChange(metadeata: any): void {

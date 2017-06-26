@@ -5,7 +5,7 @@ import { IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from './../../models/metadata/filter-metadata.interface';
 import { Filter } from './../../models/filter';
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -21,19 +21,29 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
         transform: 'rotateZ(135deg) translateY(-75%)',
       })),
       transition('true <=> false', animate('0.1s')),
+    ]),
+    trigger('fieldsTrigger', [
+      state('true', style({
+        maxHeight: '500px',
+        opacity: 1
+      })),
+      state('false', style({
+        maxHeight: '0',
+        opacity: 0
+      })),
+      transition('* <=> *', animate('0.2s'))
     ])
   ]
 })
-export class FilterContainerComponent implements OnInit {
+export class FilterContainerComponent {
 
   @Input() filter: Filter;
-  
-  @ViewChild('fields') fields: ElementRef;
-  @ViewChild('downArrow') downArrow: ElementRef;
 
-  private _show = true;
+  @ViewChild('fields') fields: ElementRef;
+
+  private show = true;
   private _isAnimatig = false;
-  
+
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")
     .map((state: IFiltersState) => {
@@ -49,43 +59,20 @@ export class FilterContainerComponent implements OnInit {
     });
   }
 
-  set show(value) {
-    this._show = value;
-    this.setFieldsStyle(value);
-  }
-
-  get show() {
-    return this._show;
-  }
-
   get disabledButton() {
     return !this.metadataFromState || this._isAnimatig;
   }
 
-  ngOnInit() {
-    Observable.fromEvent(this.fields.nativeElement, 'transitionend').subscribe(() => {
-      this.setCurrentHeightFields();
-    });
-  }
-
-  setCurrentHeightFields() {
-    this.fields.nativeElement.style.transition = '0';
-    this.fields.nativeElement.style.maxHeight = `${this.fields.nativeElement.offsetHeight}px`;
-    this._isAnimatig = false;
-  }
-
-  setFieldsStyle(show: boolean) {
-    const fieldsStyle = this.fields.nativeElement.style;
-    fieldsStyle.transition = '0.5s';
-    this._isAnimatig = true;
-    if (show) {
-      fieldsStyle.maxHeight = '1000px';
-    } else {
-      fieldsStyle.maxHeight = '0';
-    }
-  }
-
   onMetadataChange(metadeata: any): void {
-    this.store.dispatch(new UpdateFilterAction({filter: this.filter,newMetadata: metadeata}));
+    this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: metadeata }));
+  }
+
+  showAll(): void {
+    if (this.metadataFromState) {
+      const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
+      clonedMetadata.showAll();
+
+      this.onMetadataChange(clonedMetadata);
+    }
   }
 }

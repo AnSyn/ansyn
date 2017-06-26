@@ -7,12 +7,12 @@
     </button>
 
     <div class="show-all">
-      <span>Show all</span>
+      <span (click)="showAll()">Show all</span>
     </div>
   </div>
 
 
-  <div class="fields" #fields>
+  <div class="fields" #fields [@fieldsTrigger]="show.toString()">
 
     <ansyn-enum-filter-container 
                 *ngIf="metadataFromState && metadataFromState?.type === 'Enum'" 

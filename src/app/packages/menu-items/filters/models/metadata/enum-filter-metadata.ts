@@ -17,8 +17,8 @@ export class EnumFilterMetadata implements FilterMetadata {
     }
 
     selectOnly(selectedKey: string): void {
-        Array.from(this.enumsFields.keys()).forEach((key: string) => {
-            this.enumsFields.get(key).isChecked = (key === selectedKey);
+        this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+            value.isChecked = (key === selectedKey);
         });
     }
 
@@ -42,8 +42,8 @@ export class EnumFilterMetadata implements FilterMetadata {
 
     filterFunc(overlay: any, filteringParams: { key: string, metadata: EnumFilterMetadata }): boolean {
         const selectedFields: string[] = [];
-        Array.from(filteringParams.metadata.enumsFields.keys()).forEach((key: string) => {
-            if (filteringParams.metadata.enumsFields.get(key).isChecked) {
+        filteringParams.metadata.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+            if (value.isChecked) {
                 selectedFields.push(key);
             }
         });
@@ -54,8 +54,8 @@ export class EnumFilterMetadata implements FilterMetadata {
     getMetadataForOuterState(): string[] {
         const returnValue: string[] = [];
 
-        Array.from(this.enumsFields.keys()).forEach((key: string) => {
-            if (this.enumsFields.get(key).isChecked) {
+        this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+            if (value.isChecked) {
                 returnValue.push(key);
             }
         });
@@ -69,8 +69,8 @@ export class EnumFilterMetadata implements FilterMetadata {
     }
 
     showAll(): void {
-        Array.from(this.enumsFields.keys()).forEach((key: string) => {
-            this.enumsFields.get(key).isChecked = true;
+        this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+            value.isChecked = true;
         });
     }
 }

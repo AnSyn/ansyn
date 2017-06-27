@@ -57,7 +57,7 @@ const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
     if(configuration.General.logActions){
-    	console.log(action);
+    	console.log(action.type);
 	}
     return appReducer(state, action);
 }

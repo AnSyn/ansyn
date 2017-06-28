@@ -91,16 +91,21 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {cases: cases_loaded});
 
 		case CasesActionTypes.DELETE_CASE:
-			return state;
-
-		case CasesActionTypes.DELETE_CASE_SUCCESS:
-			let case_to_remove: Case = state.cases.find((case_value: Case) => case_value.id === state.active_case_id);
-			let case_to_remove_index: number = state.cases.indexOf(case_to_remove);
+			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.active_case_id);
+			if(case_to_remove_index == -1) {
+				return state;
+			}
 			let cases: Case[] = [
 				...state.cases.slice(0, case_to_remove_index),
 				...state.cases.slice(case_to_remove_index + 1, state.cases.length),
 			];
 			return Object.assign({}, state, {cases});
+
+		case CasesActionTypes.DELETE_CASE_BACKEND:
+			return Object.assign({}, state, {updating_backend: true});
+
+		case CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS:
+			return Object.assign({}, state, {updating_backend: false});
 
 		case CasesActionTypes.SELECT_CASE_BY_ID:
 			if(state.selected_case && state.selected_case.id == action.payload) {

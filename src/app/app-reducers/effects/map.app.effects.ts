@@ -30,40 +30,40 @@ export class MapAppEffects {
 
 	@Effect()
 	onMapSingleClick$: Observable<any> = this.actions$
-	.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-	.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar') , (action:UpdateStatusFlagsAction,caseState:ICasesState ,statusBarState:IStatusBarState) => [action,caseState,statusBarState])
+		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar') , (action:UpdateStatusFlagsAction,caseState:ICasesState ,statusBarState:IStatusBarState) => [action,caseState,statusBarState])
 		.filter(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.mergeMap(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]) => {
 
-		//create the region
-	 	const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
+			//create the region
+			const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
 
-		//draw on all maps
-		this.communicator.communicatorsAsArray().forEach( communicator => {
-			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				communicator.addPinPointIndicator(action.payload.lonLat);
-			}
-			//this is for the others communicators
-			communicator.removeSingleClickEvent();
+			//draw on all maps
+			this.communicator.communicatorsAsArray().forEach( communicator => {
+				if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+					communicator.addPinPointIndicator(action.payload.lonLat);
+				}
+				//this is for the others communicators
+				communicator.removeSingleClickEvent();
+			});
+
+			//draw the point on the map // all maps
+			const selectedCase = {...caseState.selected_case, state: {...caseState.selected_case.state, region:region}};
+
+			return [
+				//disable the pinpoint search
+				new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch, value: false}),
+				//update case
+				new UpdateCaseAction(selectedCase),
+				//load overlays
+				new LoadOverlaysAction({
+					to:selectedCase.state.time.to,
+					from:selectedCase.state.time.from,
+					polygon:selectedCase.state.region,
+					caseId: selectedCase.id
+				})
+			];
 		});
-
-		//draw the point on the map // all maps
-		const selectedCase = {...caseState.selected_case, state: {...caseState.selected_case.state, region:region}};
-
-		return [
-			//disable the pinpoint search
-			new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch, value: false}),
-			//update case
-			new UpdateCaseAction(selectedCase),
-			//load overlays
-			new LoadOverlaysAction({
-				to:selectedCase.state.time.to,
-				from:selectedCase.state.time.from,
-				polygon:selectedCase.state.region,
-				caseId: selectedCase.id
-			})
-		];
-	});
 
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
@@ -190,6 +190,25 @@ export class MapAppEffects {
 			];
 
 		});
+
+	@Effect()
+	backToWorldView$: Observable<UpdateCaseAction> = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select("cases"))
+		.mergeMap(([action,caseState]:[BackToWorldAction, ICasesState]) => {
+			const updatedCase = cloneDeep(caseState.selected_case);
+			updatedCase.state.maps.data.forEach(
+				(map) => {
+					if(map.id == action.payload.mapId){
+						map.data.selectedOverlay = <any>{}
+					}
+				});
+			return [
+				new UpdateCaseAction(updatedCase),
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+			];
+		});
+
 
 	/// Back To world
 	@Effect({dispatch: false})

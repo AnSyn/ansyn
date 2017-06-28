@@ -6,9 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ImagerySandBoxComponent } from './component/imagery-sand-box.component';
 import { CoreModule, AddMenuItemAction, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [CommonModule, CoreModule],
+	imports: [CommonModule, CoreModule,FormsModule],
 	declarations: [ImagerySandBoxComponent],
 	entryComponents: [ImagerySandBoxComponent]
 })

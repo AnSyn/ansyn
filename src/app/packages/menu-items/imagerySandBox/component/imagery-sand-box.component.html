@@ -22,10 +22,11 @@
 	<button (click)="toggleDrawCenterPluggin()">Toggle openLayers Draw Center Plugin</button>
 	<br>
 	<div>
-
-		<button (click)="drawShadowMouse()">
-			<img src="https://s-media-cache-ak0.pinimg.com/736x/45/ff/5d/45ff5db353a29cbfff34f3815f436360.jpg" height="50"/>
-		</button>
+		from:<input type="date" id="overlaysFrom" [(ngModel)]="overlaysFrom"/>
+		<br />
+		to:<input type="date" id="overlaysTo" [(ngModel)]="overlaysTo"/>
+		<br/>
+		<button (click)="reloadOverlays($event)">reload overalys with new time</button>
 	</div>
 
 </div>

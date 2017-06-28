@@ -9,7 +9,7 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable } from 'rxjs/Observable';
 
-import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '../actions/overlays.actions';
+import { LoadOverlaysSuccessAction, OverlaysActionTypes, overlaysMarkupAction } from '../actions/overlays.actions';
 
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 
@@ -19,8 +19,13 @@ import { IOverlaysConfig } from '../models/overlays.config';
 @Injectable()
 export class OverlaysEffects {
 
+	@Effect({dispatch:false})
+		onOverlaysMarkupChagned$: Observable<overlaysMarkupAction> = this.actions$
+			.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
+			.share();
+
 	@Effect({dispatch: false})
-	onRedrawTimeline$: Observable<boolean> = this.actions$
+	onRedrawTimeline$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
 		.map(() => true)
 		.share();
@@ -42,14 +47,7 @@ export class OverlaysEffects {
 				});
 		});
 
- 	@Effect({ dispatch: false })
- 	demo$: Observable<Action> = this.actions$
-		  	.ofType(OverlaysActionTypes.DEMO)
-		  	.switchMap( action => {
-      			return Observable.empty();
-  			});
-
-	@Effect({dispatch: false})
+ 	@Effect({dispatch: false})
 	setFilter$: Observable<any> = this.actions$
 			.ofType(OverlaysActionTypes.SET_FILTER)
 			.share();

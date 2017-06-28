@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes, LoadOverlaysAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
@@ -19,6 +19,7 @@ import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.action
 import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
+import { overlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class CasesAppEffects {
@@ -28,13 +29,17 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
 		.filter(([action, state]:[DisplayOverlayAction, IAppState]) => true)
-		.map(([action, state]:[DisplayOverlayAction, IAppState]) => {
-			const selected_case: Case = cloneDeep(state.cases.selected_case);
+		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
+			const selectedCase: Case = cloneDeep(state.cases.selected_case);
 			const selected_overlay: Overlay = state.overlays.overlays.get(action.payload.id);
 			const map_id = action.payload.map_id ? action.payload.map_id : state.cases.selected_case.state.maps.active_map_id;
-			const map = selected_case.state.maps.data.find((map) => map_id == map.id);
+			const map = selectedCase.state.maps.data.find((map) => map_id == map.id);
 			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
-			return new UpdateCaseAction(selected_case);
+
+			const result :Action[] = [];
+			result.push(new UpdateCaseAction(selectedCase));
+			result.push(new overlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase)));
+			return result;
 		});
 
 	@Effect()

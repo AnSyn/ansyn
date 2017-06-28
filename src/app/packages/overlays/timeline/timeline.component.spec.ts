@@ -15,6 +15,8 @@ describe('TimelineComponent', () => {
     let fixture: ComponentFixture < TimelineComponent > ;
     let timeLineEmitterService: TimelineEmitterService;
     let de: DebugElement;
+
+
     const dropsData = [{
         "name": "admin-on-rest",
         "data": [{
@@ -75,6 +77,19 @@ describe('TimelineComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('dots markup process',() => {
+    	const moveToFront = { moveToFront: ()=> {} };
+    	spyOn(document,'querySelector').and.callFake(value => document.createElement('circle'));
+    	spyOn(moveToFront,'moveToFront');
+    	spyOn(d3,'select').and.callFake( () => moveToFront );
+
+    	component.markup = [{id : 'eea59ff38abb348fd71ec4716250f21fc94edd0f',class:'active'}];
+
+    	expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]')
+		expect(moveToFront.moveToFront).toHaveBeenCalledTimes(1);
+
+	});
 
     it('should check that click was called instead of double click', fakeAsync(() => {
         const event = component.clickEvent();

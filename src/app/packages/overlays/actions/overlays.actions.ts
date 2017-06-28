@@ -26,7 +26,7 @@ export class SelectOverlayAction implements Action {
 	constructor	(public payload: string){}
 }
 
-export class overlaysMarkupAction implements Action {
+export class OverlaysMarkupAction implements Action {
 	type = OverlaysActionTypes.OVERLAYS_MARKUPS;
 	constructor (public payload?: any){};
 }
@@ -89,4 +89,4 @@ export type OverlaysActions
 	|	SetFilterAction
 	| 	DemoAction
 	| 	RedrawTimelineAction
-	| 	overlaysMarkupAction;
+	| 	OverlaysMarkupAction;

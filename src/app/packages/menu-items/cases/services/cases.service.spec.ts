@@ -50,6 +50,44 @@ describe('CasesService', () => {
 		expect(casesService).toBeDefined();
 	});
 
+	it('function getOveralysMarkup ', ()=> {
+		const testCase = {
+			state : {
+				maps: {
+					active_map_id: "333",
+					data: [
+						{
+							id:"333",
+							data:{
+								selectedOverlay: {
+									id: "333-a"
+								}
+							}
+						},
+						{
+							id:"444",
+							data:{
+								selectedOverlay: {
+									id: "444-a"
+								}
+							}
+						},
+						,
+						{
+							id:"5555",
+							data:{
+							}
+						}
+					]
+				}
+			}
+		} as any;
+		const result = casesService.getOverlaysMarkup(testCase);
+		expect(result.length).toBe(2);
+		expect(result[0].class).toBe('active');
+		expect(result[1].class).toBe('displayed');
+	});
+
 	it('createCase should send the case as body in ajax("post")', () => {
 		let fake_response = { json: () => selected_case };
 		spyOn(http, 'post').and.callFake(() => new Object({ map: (callBack) => callBack(fake_response) }));

@@ -10,7 +10,10 @@ import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable, ObservableInput } from 'rxjs/Observable';
-import { SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilterAction, SetFilterAction } from '../actions/overlays.actions';
+import {
+	SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilterAction,
+	SetFilterAction, OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction
+} from '../actions/overlays.actions';
 //import * as collection from '../actions/collection';
 
 import { Overlay } from '../models/overlay.model';
@@ -58,6 +61,32 @@ describe("Overlays Effects ", () => {
 			overlaysConfig: TestBed.get(OverlaysConfig)
 		};
 	};
+
+	it('effect - onOverlaysMarkupChanged$',() => {
+		const { runner, overlaysEffects } = setup();
+		const action = new OverlaysMarkupAction({});
+		runner.queue(action);
+		let count = 0;
+		overlaysEffects.onOverlaysMarkupChanged$.subscribe((action:Action) =>{
+			count++;
+			expect(action.type).toEqual(OverlaysActionTypes.OVERLAYS_MARKUPS);
+		});
+
+		expect(count).toBe(1)
+	});
+
+
+	it('effect - onRedrawTimeline$',() => {
+		const { runner, overlaysEffects } = setup();
+		const action = new RedrawTimelineAction();
+		runner.queue(action);
+		let count = 0;
+		overlaysEffects.onRedrawTimeline$.subscribe((result:boolean) =>{
+			count++;
+			expect(result).toBe(true);
+		});
+		expect(count).toBe(1)
+	});
 
 	it('it should load all the overlays', () => {
 		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();

@@ -22,7 +22,7 @@ import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
-import { overlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
+import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -186,7 +186,7 @@ export class MapAppEffects {
 
 			return [
 				new UpdateCaseAction(updatedCase),
-				new overlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
 
 		});

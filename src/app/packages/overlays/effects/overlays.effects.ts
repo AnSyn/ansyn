@@ -9,7 +9,7 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable } from 'rxjs/Observable';
 
-import { LoadOverlaysSuccessAction, OverlaysActionTypes, overlaysMarkupAction } from '../actions/overlays.actions';
+import { LoadOverlaysSuccessAction, OverlaysActionTypes, OverlaysMarkupAction } from '../actions/overlays.actions';
 
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 
@@ -20,9 +20,9 @@ import { IOverlaysConfig } from '../models/overlays.config';
 export class OverlaysEffects {
 
 	@Effect({dispatch:false})
-		onOverlaysMarkupChagned$: Observable<overlaysMarkupAction> = this.actions$
-			.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
-			.share();
+	onOverlaysMarkupChanged$: Observable<OverlaysMarkupAction> = this.actions$
+		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
+		.share();
 
 	@Effect({dispatch: false})
 	onRedrawTimeline$: Observable<any> = this.actions$

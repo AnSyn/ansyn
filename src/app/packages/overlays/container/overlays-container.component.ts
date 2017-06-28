@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { overlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
+import { OverlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 
 import { isEmpty,isEqual } from 'lodash';
@@ -132,10 +132,10 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                                 [{filteringParams: action.payload.filteringParams, filterFunc: action.payload.filterFunc}]);
         });
 
-        this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChagned$.subscribe((action:overlaysMarkupAction) => {
+        this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$.subscribe((action:OverlaysMarkupAction) => {
+        	console.log('ccc');
         	this.overlaysMarkup = action.payload;
 		})
-        //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }
 
 }

@@ -9,6 +9,7 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { MapActionTypes } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class OverlaysAppEffects {

@@ -34,7 +34,7 @@ export class CasesService {
 		const activeMapId = caseValue.state.maps.active_map_id;
 
 		caseValue.state.maps.data.forEach( (m :CaseMapState) => {
-			if(m.data.selectedOverlay){
+			if(!isEmpty(m.data.selectedOverlay)){
 				if(m.id === activeMapId){
 					result.push({id : m.data.selectedOverlay.id,class: 'active'});
 				}else{

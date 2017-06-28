@@ -6,7 +6,7 @@ import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { isEqual } from 'lodash';
 import '@ansyn/core/utils/d3extending';
 
 /*d3.selection.prototype.moveToFront = function() {
@@ -29,6 +29,7 @@ import '@ansyn/core/utils/d3extending';
 export class TimelineComponent implements OnInit {
 
     private _drops: any[];
+    private _markup: any[];
     private stream: Observable<any>;
 
     @ViewChild('context') context: ElementRef;
@@ -36,11 +37,11 @@ export class TimelineComponent implements OnInit {
 
     @Input()
     set drops(drops: any[]) {
-        
+
         this._drops = drops || [];
         this.eventDropsHandler();
         //this.stream.next();
-        
+
     }
     get drops() {
         return this._drops;
@@ -50,21 +51,46 @@ export class TimelineComponent implements OnInit {
     @Input() configuration: any;
 
     @Input() redraw$: BehaviorSubject<number>;
-      
+
+    @Input()
+	set markup(value){
+    	if(!isEqual(this._markup,value)){
+			this._markup = value;
+			this.drawMarkup();
+		}
+	}
+
+	drawMarkup() {
+		d3.selectAll('.drop.displayed').classed('displayed ', false);
+		d3.selectAll('.drop.active').classed('active', false);
+		d3.selectAll('.drop.favorites').classed('favorites', false);
+
+		this._markup.forEach(markupItem => {
+			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
+			element.classList.add(markupItem.class);
+			d3.select(element)['moveToFront']();
+		});
+	}
+
+	get markup(){
+		return this._markup;
+	}
+
 
     constructor(private emitter: TimelineEmitterService) {}
 
     ngOnInit(){
         const drops$ = Observable.of(this.drops);
         const configuration$ = Observable.of(this.configuration);
-        
+
         this.redraw$.subscribe(value => {
             if(this.drops){
                 this.eventDropsHandler();
+				this.drawMarkup();
             }
         });
     }
-    
+
     clickEvent() {
         const tolerance = 5;
         let down, wait;
@@ -76,13 +102,13 @@ export class TimelineComponent implements OnInit {
                 wait = window.setTimeout(((e) => () => {
                     wait = null;
                     down = null;
-                    this.toggleDrop(nodes[index]);
+                    //this.toggleDrop(nodes[index]);
                     this.emitter.provide('timeline:click').next({ event: e, element: data, index, nodes });
                 })(d3.event), 300);
             } else {
                 if (dist(down, d3.mouse(document.body)) < tolerance) {
                     this.selectAndShowDrop(nodes[index],d3.event,data,index,nodes);
-                    
+
                 }
                 if (wait) {
                     window.clearTimeout(wait);
@@ -95,14 +121,14 @@ export class TimelineComponent implements OnInit {
     }
 
     selectAndShowDrop(element,event,data,index,nodes) {
-        d3.select(element)['moveToFront']();
-        element.classList.add('selected');
+        //d3.select(element)['moveToFront']();
+        //element.classList.add('selected');
         this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
     }
 
     toggleDrop(element) {
-        d3.select(element)['moveToFront']();
-        element.classList.toggle('selected');
+        //d3.select(element)['moveToFront']();
+        //element.classList.toggle('selected');
 
     }
 

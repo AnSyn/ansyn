@@ -4,7 +4,7 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/debounce";
-import { Case } from '../models/case.model';
+import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
 import { isEmpty } from 'lodash';
 import { cloneDeep } from 'lodash';
 import * as rison from 'rison';
@@ -26,6 +26,24 @@ export class CasesService {
 		this.base_url = this.config.casesBaseUrl;
 		this.paginationLimit = this.config.casesPaginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys
+	}
+
+	getOverlaysMarkup(caseValue:Case){
+		const result = [];
+
+		const activeMapId = caseValue.state.maps.active_map_id;
+
+		caseValue.state.maps.data.forEach( (m :CaseMapState) => {
+			if(m.data.selectedOverlay){
+				if(m.id === activeMapId){
+					result.push({id : m.data.selectedOverlay.id,class: 'active'});
+				}else{
+					result.push({id: m.data.selectedOverlay.id,class: 'displayed'});
+				}
+			}
+		});
+
+		return result;
 	}
 
 	loadCases(last_id: string = '-1'): Observable<any> {

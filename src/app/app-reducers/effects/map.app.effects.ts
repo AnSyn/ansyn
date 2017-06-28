@@ -22,6 +22,7 @@ import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { overlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -179,11 +180,14 @@ export class MapAppEffects {
 		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any =>
 			caseState.selected_case.state.maps.active_map_id !== action.payload
 		)
-		.map(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
+		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
 
-			return new UpdateCaseAction(updatedCase);
+			return [
+				new UpdateCaseAction(updatedCase),
+				new overlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+			];
 
 		});
 

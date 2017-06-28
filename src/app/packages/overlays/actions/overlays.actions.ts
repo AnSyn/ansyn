@@ -16,14 +16,19 @@ export const OverlaysActionTypes = {
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DEMO: type('[Overlay] demo'),
-	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline')
+	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
+	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS')
 
 };
 
 export class SelectOverlayAction implements Action {
 	type = OverlaysActionTypes.SELECT_OVERLAY;
-
 	constructor	(public payload: string){}
+}
+
+export class overlaysMarkupAction implements Action {
+	type = OverlaysActionTypes.OVERLAYS_MARKUPS;
+	constructor (public payload?: any){};
 }
 
 export class UnSelectOverlayAction implements Action {
@@ -33,9 +38,7 @@ export class UnSelectOverlayAction implements Action {
 
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
-	constructor(public payload?: any){
-
-	}
+	constructor(public payload?: any){}
 }
 
 export class LoadOverlaysSuccessAction implements Action {
@@ -85,4 +88,5 @@ export type OverlaysActions
 	|	ClearFilterAction
 	|	SetFilterAction
 	| 	DemoAction
-	| 	RedrawTimelineAction;
+	| 	RedrawTimelineAction
+	| 	overlaysMarkupAction;

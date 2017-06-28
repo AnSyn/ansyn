@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
+import { overlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 
 import { isEmpty,isEqual } from 'lodash';
@@ -41,6 +41,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
     public initialOverlays: any;
     public selectedOverlays: Array < string > = [];
     public subscribers: any = {};
+    public overlaysMarkup: any = [];
 
     constructor(private store: Store <IOverlayState> ,
                 private overlaysService: OverlaysService,
@@ -84,6 +85,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                     this.store.dispatch(new SelectOverlayAction(id));
                 }
             });
+
 	}
 
     //maybe to move this to the service
@@ -95,17 +97,13 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         }
     }
 
-    demo(): void {
-        this.store.dispatch(new overlaysAction.DemoAction('tmp'));
-    }
-
     init(): void {
         this.subscribers.overlays = this.store.select('overlays')
             .skip(1)
             .distinctUntilChanged(this.overlaysService.compareOverlays)
             .filter(data => !isEmpty(data)) //@todo change to isEmpty
             .map((data: any) => {
-                this.initialOverlays = data.overlays;   
+                this.initialOverlays = data.overlays;
                 return {
                     overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
                     configuration: data.queryParams
@@ -125,14 +123,18 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
             .map((data: IOverlayState) => data.selectedOverlays)
             .subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);
 
-        this.effects.onRedrawTimeline$.subscribe(() => {
+        this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
             this.redraw$.next(Math.random());
         });
 
-        this.effects.setFilter$.subscribe((action: overlaysAction.SetFilterAction) => {
-            this.drops = this.overlaysService.parseOverlayDataForDispaly(this.initialOverlays, 
+        this.subscribers.setFilter =  this.effects.setFilter$.subscribe((action: overlaysAction.SetFilterAction) => {
+            this.drops = this.overlaysService.parseOverlayDataForDispaly(this.initialOverlays,
                                 [{filteringParams: action.payload.filteringParams, filterFunc: action.payload.filterFunc}]);
         });
+
+        this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChagned$.subscribe((action:overlaysMarkupAction) => {
+        	this.overlaysMarkup = action.payload;
+		})
         //this.store.dispatch(new overlaysAction.LoadOverlaysAction());
     }
 

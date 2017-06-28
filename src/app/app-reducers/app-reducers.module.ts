@@ -27,6 +27,7 @@ import { RouterAppEffects } from './effects/router.app.effects';
 import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
 import { RouterStoreHelperService } from './services/router-store-helper.service';
 import { configuration } from './../../configuration/configuration';
+import { OverlaysAppEffects } from './effects/overlays.app.effects';
 
 export interface IAppState {
     overlays: IOverlayState;
@@ -65,7 +66,10 @@ export function reducer(state: any, action: any) {
 @NgModule({
     imports: [
         StoreModule.provideStore(reducer),
-
+		StoreDevtoolsModule.instrumentOnlyWithExtension({
+			maxAge: 5
+		}),
+		EffectsModule.run(OverlaysAppEffects),
         EffectsModule.run(MapAppEffects),
         EffectsModule.run(CasesAppEffects),
         EffectsModule.run(MenuAppEffects),

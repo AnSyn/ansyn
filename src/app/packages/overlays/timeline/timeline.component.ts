@@ -64,12 +64,14 @@ export class TimelineComponent implements OnInit {
 		d3.selectAll('.drop.displayed').classed('displayed ', false);
 		d3.selectAll('.drop.active').classed('active', false);
 		d3.selectAll('.drop.favorites').classed('favorites', false);
-
+		const nodes = [];
 		this._markup.forEach(markupItem => {
 			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
 			element.classList.add(markupItem.class);
-			d3.select(element)['moveToFront']();
+			nodes.push(element);
+
 		});
+		(<any>d3.selectAll(nodes)).moveToFront();
 	}
 
 	get markup(){
@@ -80,9 +82,6 @@ export class TimelineComponent implements OnInit {
     constructor(private emitter: TimelineEmitterService) {}
 
     ngOnInit(){
-        const drops$ = Observable.of(this.drops);
-        const configuration$ = Observable.of(this.configuration);
-
         this.redraw$.subscribe(value => {
             if(this.drops){
                 this.eventDropsHandler();

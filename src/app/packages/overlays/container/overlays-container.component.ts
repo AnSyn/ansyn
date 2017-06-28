@@ -133,7 +133,6 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
         });
 
         this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$.subscribe((action:OverlaysMarkupAction) => {
-        	console.log('ccc');
         	this.overlaysMarkup = action.payload;
 		})
     }

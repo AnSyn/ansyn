@@ -12,17 +12,17 @@ export const configuration = {
 		logActions: false
 	},
 	CasesConfig: {
-		casesBaseUrl: 'http://54.201.187.160:9001/api/v1/cases',
+		casesBaseUrl: location.origin + ':9001/api/v1/cases',
 		casesPaginationLimit: 15,
 		defaultCase,
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://54.201.187.160:9001/api/v1/layers'
+		layersByCaseIdUrl: location.origin + ':9001/api/v1/layers'
 	},
 	OverlaysConfig: {
-		baseUrl: 'http://54.201.187.160:9001/api/v1/',
+		baseUrl: location.origin +':9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
 		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',

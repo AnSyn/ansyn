@@ -7,8 +7,3 @@ RUN npm install -g http-server
 COPY ./dist /mnt/app/ansyn
 
 CMD http-server -p 8081
-
-
-
-
-

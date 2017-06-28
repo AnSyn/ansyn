@@ -79,15 +79,16 @@ describe('TimelineComponent', () => {
     });
 
     it('dots markup process',() => {
-    	const moveToFront = { moveToFront: ()=> {} };
+    	const moveToFront = { moveToFront: ()=> {},classed: () => {} };
     	spyOn(document,'querySelector').and.callFake(value => document.createElement('circle'));
     	spyOn(moveToFront,'moveToFront');
-    	spyOn(d3,'select').and.callFake( () => moveToFront );
+    	spyOn(d3,'selectAll').and.callFake( () => moveToFront );
 
-    	component.markup = [{id : 'eea59ff38abb348fd71ec4716250f21fc94edd0f',class:'active'}];
+    	component.markup = [{id : 'eea59ff38abb348fd71ec4716250f21fc94edd0f',class:'active'},{id : '2040299a8fe6c586a702382b50a63d7abb8fcff3',class:'displayed'}];
 
-    	expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]')
-		expect(moveToFront.moveToFront).toHaveBeenCalledTimes(1);
+    	expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]');
+		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="2040299a8fe6c586a702382b50a63d7abb8fcff3"]');
+		//expect(moveToFront.moveToFront).toHaveBeenCalledTimes(1);
 
 	});
 

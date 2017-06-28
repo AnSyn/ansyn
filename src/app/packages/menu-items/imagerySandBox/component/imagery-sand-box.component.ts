@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 import * as turf from '@turf/turf';
-import { IAppState } from '../../../../app-reducers/app-reducers.module';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '../../cases/actions/cases.actions';
 import { LoadOverlaysAction } from '../../../overlays/actions/overlays.actions';
@@ -26,7 +25,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public selectedCase:Case;
 	public overlaysCriteria: OverlaysCriteria;
 
-	constructor(public imageryCommunicatorService: ImageryCommunicatorService,public store:Store<IAppState>) {
+	constructor(public imageryCommunicatorService: ImageryCommunicatorService,public store:Store<ICasesState>) {
 
 	}
 

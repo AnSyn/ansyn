@@ -3,6 +3,7 @@
  */
 
 
+import { GeometryObject } from 'geojson';
 export type Overlay = {
 	id: string,
 	footprint?: any,//@todo add type geojson_multipoligon,
@@ -20,3 +21,10 @@ export type Overlay = {
 	csmState?: string,
 	sourceType?:string
 };
+
+export type OverlaysCriteria = {
+	to : string,
+	from: string,
+	polygon:GeometryObject,
+	caseId?:string
+}

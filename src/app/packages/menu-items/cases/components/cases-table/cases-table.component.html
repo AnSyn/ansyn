@@ -1,47 +1,64 @@
-<table>
-  <thead>
-  <tr>
-    <th>
-      Name
-    </th>
 
-    <th>
-      Owner
-    </th>
+<div class="cases-table" *ngIf="cases_from_state.length > 0; else noCases">
+	<div class="cases-table-head">
+		<div class="cases-table-head-row">
+			<div class="cases-table-head-row-data">
+				<div class="cases-table-head-col">
+					Name
+				</div>
+				<div class="cases-table-head-col">
+					Owner
+				</div>
+				<div class="cases-table-head-col">
+					Last Modified
+				</div>
+			</div>
 
-    <th>
-      Last Modified
-    </th>
-  </tr>
-  </thead>
+		</div>
+	</div>
 
-  <tbody (ansynInfiniteScroll)="loadCases()" #tbody_element>
+	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
-    <tr *ngFor="let case of cases_from_state" (click)="selectCase(case.id)" [class.active]="active_case_id ==  case.id" [class.selected]="selected_case_id ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row  >
+		<ng-template ngFor let-case [ngForOf]="cases_from_state">
 
-      <td>
-        {{case.name}}
-      </td>
+			<div class="cases-table-body-row" (click)="selectCase(case.id)" [class.active]="active_case_id ==  case.id" [class.selected]="selected_case_id ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row>
+				<hr>
+				<div class="cases-table-body-row-data">
+					<hr>
 
-      <td>
-        {{case.owner}}
-      </td>
+					<div class="cases-table-body-col">
+						{{case.name}}
+					</div>
 
-      <td>
-        {{ case.last_modified | date:"MM/dd/yy hh:mm" }}
-      </td>
+					<div class="cases-table-body-col">
+						{{case.owner}}
+					</div>
 
-      <td class="td_case_menu" >
-        <div class="case-menu" (click)="$event.stopPropagation()" #case_menu >
-          <button (click)="removeCase($event, case.id)"><img src="../../../../../assets/icons/Delete.svg"/></button>
-          <button (click)="shareCase($event, case.id)"><img src="../../../../../assets/icons/Share.svg"/></button>
-          <button (click)="editCase($event, case.id)"><img src="../../../../../assets/icons/Edit.svg"/></button>
-        </div>
+					<div class="cases-table-body-col">
+						{{ case.last_modified | date:"MM/dd/yy hh:mm" }}
+					</div>
 
-      </td>
+					<!--menu-->
+					<div class="case_menu-container">
+						<div class="case-menu" (click)="$event.stopPropagation()" #case_menu >
+							<button (click)="removeCase($event, case.id)"><img src="../../../../../assets/icons/Delete.svg"/></button>
+							<button (click)="shareCase($event, case.id)"><img src="../../../../../assets/icons/Share.svg"/></button>
+							<button (click)="editCase($event, case.id)"><img src="../../../../../assets/icons/Edit.svg"/></button>
+						</div>
+					</div>
 
-    </tr>
+				</div>
+
+			</div>
+		</ng-template>
+	</div>
+</div>
 
 
-  </tbody>
-</table>
+<ng-template #noCases>
+
+	<p class="no-cases">
+		No cases
+	</p>
+
+</ng-template>

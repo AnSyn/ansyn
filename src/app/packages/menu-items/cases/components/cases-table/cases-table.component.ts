@@ -15,9 +15,12 @@ import { isEqual } from 'lodash';
 
 const animations: any[] = [
 	trigger("leaveAnim", [
-		transition(":leave", [style({boxShadow: 'inset 382px 0 0 0 rgb(206, 120, 128)'}), animate("0.3s", style({boxShadow: 'inset 0px 0px 0px 0px rgb(206, 120, 128)', color: 'white'}))]),
+		transition(":leave", [style({height: '57px'}), animate("0.2s", style({height: '0'}))])
+
 	])
 ];
+
+
 
 @Component({
 	selector: 'ansyn-cases-table',
@@ -73,7 +76,9 @@ export class CasesTableComponent implements OnInit{
 	}
 
 	onCasesAdded() {
-		this.tbody_element.nativeElement.scrollTop = 0;
+		if(this.tbody_element){
+			this.tbody_element.nativeElement.scrollTop = 0;
+		}
 	}
 
 	calcTopCaseMenu($event:MouseEvent, case_menu: HTMLDivElement) {

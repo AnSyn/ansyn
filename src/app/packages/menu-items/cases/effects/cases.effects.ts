@@ -2,11 +2,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseSuccessAction, LoadCaseAction,
+	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseBackendSuccessAction, DeleteCaseBackendAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
 	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction,
@@ -48,12 +48,40 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => state.active_case_id)
-		.switchMap((active_case_id: string) => {
-			return this.casesService.removeCase(active_case_id).map((deleted_case: Case) => {
-				return new DeleteCaseSuccessAction(deleted_case);
+		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [state.active_case_id, state.selected_case.id])
+		.mergeMap(([active_case_id, selected_case_id]) => {
+			const actions: Action[] = [];
+			if(isEqual(active_case_id, selected_case_id)){
+				actions.push(new LoadDefaultCaseAction())
+			}
+			actions.push(new DeleteCaseBackendAction(active_case_id));
+			return actions;
+		}).share();
+
+	@Effect()
+	onDeleteCaseBackend$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.DELETE_CASE_BACKEND)
+		.map(toPayload)
+		.switchMap((deleted_case_id) => {
+			return this.casesService.removeCase(deleted_case_id).map((deleted_case: Case) => {
+				return new DeleteCaseBackendSuccessAction(deleted_case);
 			});
 		}).share();
+
+	@Effect()
+	onDeleteCaseBackendSuccess$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS)
+		.withLatestFrom(this.store.select('cases'))
+		.filter(([action, state]: [DeleteCaseBackendSuccessAction, ICasesState]) => {
+			const cases_length = state.cases.length;
+			const limit = this.casesService.paginationLimit;
+			return cases_length <= limit;
+		})
+		.map(()=>{
+			return new LoadCasesAction();
+		})
+		.share();
+
 
 	@Effect()
 	onUpdateCase$: Observable<any> = this.actions$
@@ -61,7 +89,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [action, state.default_case.id])
 		.filter(([action, default_case_id]: [UpdateCaseAction, string]) => action.payload.id !== default_case_id)
 		.map(([action]: [UpdateCaseAction]) => {
-				return new UpdateCaseBackendAction(action.payload);
+			return new UpdateCaseBackendAction(action.payload);
 		}).share();
 
 
@@ -154,10 +182,13 @@ export class CasesEffects {
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.withLatestFrom(this.store.select("cases"))
-		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => isEmpty(state.default_case))
 		.map(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
-			const defaultCase = this.casesService.getDefaultCase();
-			return new LoadDefaultCaseSuccessAction(defaultCase);
+			if(isEmpty(state.default_case)){
+				const defaultCase = this.casesService.getDefaultCase();
+				return new LoadDefaultCaseSuccessAction(defaultCase);
+			} else {
+				return new SelectCaseByIdAction(state.default_case.id)
+			}
 		}).share();
 
 	@Effect()
@@ -169,9 +200,9 @@ export class CasesEffects {
 			return new SelectCaseByIdAction(defaultCase.id);
 		}).share();
 
-	 /*
-		This effect will subscribe when default case has been selected and queryParams is not empty.
-		To avoid circulation(by SELECT_CASE_BY_ID action), queryParams should be initialized to null.(RemoveQueryParamsAction)
+	/*
+	 This effect will subscribe when default case has been selected and queryParams is not empty.
+	 To avoid circulation(by SELECT_CASE_BY_ID action), queryParams should be initialized to null.(RemoveQueryParamsAction)
 	 */
 
 	@Effect()

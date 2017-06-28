@@ -11,7 +11,8 @@ export const CasesActionTypes = {
 	ADD_CASE_SUCCESS: 'ADD_CASE_SUCCESS',
 
 	DELETE_CASE: 'DELETE_CASE',
-	DELETE_CASE_SUCCESS: 'DELETE_CASE_SUCCESS',
+	DELETE_CASE_BACKEND: 'DELETE_CASE_BACKEND',
+	DELETE_CASE_BACKEND_SUCCESS: 'DELETE_CASE_BACKEND_SUCCESS',
 
 	UPDATE_CASE: 'UPDATE_CASE',
 	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
@@ -35,7 +36,9 @@ export const CasesActionTypes = {
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
 	SET_QUERY_PARAMS: 'SET_QUERY_PARAMS',
-	REMOVE_QUERY_PARAMS: 'REMOVE_QUERY_PARAMS'
+	REMOVE_QUERY_PARAMS: 'REMOVE_QUERY_PARAMS',
+
+
 };
 
 export type CasesActions = any;
@@ -74,11 +77,16 @@ export class UpdateCaseBackendAction implements Action{
 
 export class DeleteCaseAction implements Action{
 	type = CasesActionTypes.DELETE_CASE;
-	constructor(public payload?: Case){}
+	constructor(public payload?: string){}
 }
 
-export class DeleteCaseSuccessAction implements Action{
-	type = CasesActionTypes.DELETE_CASE_SUCCESS;
+export class DeleteCaseBackendAction implements Action{
+	type = CasesActionTypes.DELETE_CASE_BACKEND;
+	constructor(public payload: string){}
+}
+
+export class DeleteCaseBackendSuccessAction implements Action{
+	type = CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS;
 	constructor(public payload?: any){}
 }
 

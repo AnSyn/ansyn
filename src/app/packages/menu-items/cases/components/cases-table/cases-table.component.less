@@ -1,24 +1,28 @@
-table{
-	width:400px;
+div.cases-table{
+	width:430px;
 	color: white;
 	font-size: 13px;
-
-	tr {
-		position: relative;
-		display:table;
-		width:100%;
-		table-layout:fixed;
-
-		padding: 16px 0;
-		text-align: left;
+	div.cases-table-head{
+		display: flex;
+		div.cases-table-head-row{
+			padding: 0 15px;
+			width: 100%;
+			div.cases-table-head-row-data{
+				display: flex;
+				align-items: center;
+				position: relative;
+				width:100%;
+				height: 57px;
+				text-align: left;
+				box-sizing: border-box;
+				//border-bottom: 1px solid;
+				div.cases-table-head-col{
+					flex:1;
+				}
+			}
+		}
 	}
-
-	thead {
-		display: table;
-		border-bottom: 2px solid white;
-	}
-
-	tbody{
+	div.cases-table-body{
 		direction: rtl;
 		display:block;
 		overflow-y:auto;
@@ -48,24 +52,38 @@ table{
 			background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
 		}
 
+		div.cases-table-body-row:hover + div.cases-table-body-row hr{
+			display: block;
+		}
 
-		tr{
-			direction: ltr;
-			cursor: pointer;
-			box-shadow: 0 0 2px 0px white;
-			transition: background .3s, color .3s, box-shadow .3s;
-			box-shadow: inset 0px 0px 0px 0px #EBF8FA;
-			border-bottom: 1px solid;
+		div.cases-table-body-row:hover + div.cases-table-body-row div.cases-table-body-row-data hr{
+			top: -2px;
+		}
+		div.cases-table-body-row.selected + div.cases-table-body-row div.cases-table-body-row-data hr{
+			top: -2px;
+		}
+
+
+		div.cases-table-body-row:first-child div.cases-table-body-row-data {
+			border-top: 1px solid #EBF8FA;
+		}
+
+		div.cases-table-body-row{
+			padding: 0 15px;
+			transition: background .3s, color .3s;
+			overflow: hidden;
+			height: 57px;
+			position: relative;
 
 			&:hover {
-				background: #9deeff;
-				color: #156879;
-				td.td_case_menu div.case-menu {
+				color:#156879;
+				background: #EBF8FA;
+				div.cases-table-body-row-data div.case_menu-container div.case-menu{
 					transform: translate(-10%, 50%);
 					opacity: 1;
+					visibility: visible;
 				}
 			}
-
 			&.active{
 				background: #9deeff;
 				color:#156879;
@@ -73,36 +91,77 @@ table{
 
 			&.selected{
 				color:#156879;
-				box-shadow: inset 396px 0px 0px 0px #EBF8FA;
+				background: #EBF8FA;
 			}
-
-			td.td_case_menu {
-				width: 0;
+			hr{
+				display:none;
+				position: absolute;
+				margin: 0;
+				width: 100%;
+				border: solid 1px #EBF8FA;
+				top: -1px;
+				left: 0;
+				color: #ebf8fa;
+			}
+			div.cases-table-body-row-data{
+				position: relative;
+				display: flex;
+				align-items: center;
+				text-align: left;
+				direction: ltr;
+				cursor: pointer;
+				//border-top: 1px solid #EBF8FA;
+				box-sizing: border-box;
 				height: 100%;
-
-				div.case-menu {
-					transition: .3s;
-					opacity: 0;
-					z-index: 1;
-					position: fixed;
-					border: 0.5px solid #404040;
-					box-sizing: border-box;
-					box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
-					border-radius: 4px;
-					background: #FFFFFF;
-					transform: translate(-50%, 50%);
-					button {
-						background: transparent;
-						border: 1px solid transparent;
-						&:hover{
-							box-sizing: border-box;
-							border: 1px solid #7b7b7b;
+				hr{
+					display:block;
+					position: absolute;
+					margin: 0;
+					width: 100%;
+					border: solid 1px #EBF8FA;
+					top: -1px;
+					left: 0;
+					color: #ebf8fa;
+				}
+				div.cases-table-body-col {
+					flex: 1;
+				}
+				div.case_menu-container {
+					flex:0;
+					div.case-menu {
+						transition: .3s;
+						opacity: 0;
+						visibility: hidden;
+						z-index: 2;
+						position: fixed;
+						border: 0.5px solid #404040;
+						box-sizing: border-box;
+						box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
+						border-radius: 4px;
+						background: #FFFFFF;
+						transform: translate(-50%, 50%);
+						button {
+							background: transparent;
+							border: 1px solid transparent;
+							&:hover{
+								box-sizing: border-box;
+								border: 1px solid #7b7b7b;
+							}
 						}
 					}
 				}
+
 			}
-
 		}
-
 	}
+}
+
+p.no-cases{
+	width: 430px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	color: white;
+	padding: 20px 0;
 }

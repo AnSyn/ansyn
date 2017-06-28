@@ -105,7 +105,7 @@ export class EditCaseComponent implements OnInit {
 				},
 				time: <any>"",
 				region: <any>"",
-				facets: <any>"",
+				facets: <any>""
 			}
 		};
 	}
@@ -119,6 +119,10 @@ export class EditCaseComponent implements OnInit {
 
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
+			if(!this.case_model.id && this.contexts_list.length > 0 ){
+				this.case_model.state.selected_context_id = this.contexts_list[0].id;
+				this.setContextValues(this.case_model);
+			}
 		});
 
 		this.default_case_id$.subscribe((default_id: string) => {

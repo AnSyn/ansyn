@@ -1,7 +1,7 @@
 import {
-	AddCaseSuccessAction, CloseModalAction, DeleteCaseSuccessAction, LoadCasesSuccessAction, OpenModalAction,
+	AddCaseSuccessAction, CloseModalAction, LoadCasesSuccessAction, OpenModalAction,
 	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
-	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, LoadDefaultCaseAction, SetQueryParams, RemoveQueryParamsAction
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, DeleteCaseAction, SetQueryParams, RemoveQueryParamsAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
@@ -115,7 +115,7 @@ describe('CasesReducer', () => {
 		expect(result.cases.length).toEqual(6);
 	});
 
-	it('DELETE_CASE_SUCCESS action should delete case from state.cases by active_case_id', () => {
+	it('DELETE_CASE action should delete case from state.cases by active_case_id', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
 			{ id: 'id1', name: 'name1' },
@@ -123,7 +123,7 @@ describe('CasesReducer', () => {
 			{ id: 'id3', name: 'name3' }
 		];
 		state.active_case_id = 'id1';
-		let action: DeleteCaseSuccessAction = new DeleteCaseSuccessAction();
+		let action: DeleteCaseAction = new DeleteCaseAction();
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases.length).toEqual(2);
 	});

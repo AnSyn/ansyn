@@ -6,9 +6,9 @@ import { CasesService } from '../services/cases.service';
 import { Store, combineReducers, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../reducers/cases.reducer';
 import {
-	AddCaseAction, AddCaseSuccessAction, DeleteCaseAction, DeleteCaseSuccessAction, LoadCasesAction,
+	AddCaseAction, AddCaseSuccessAction, DeleteCaseAction, DeleteCaseBackendAction, LoadCasesAction,
 	LoadCasesSuccessAction, UpdateCaseAction, SelectCaseByIdAction, LoadCaseAction, LoadCaseSuccessAction,
-	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction
+	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction, OpenModalAction
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
@@ -74,14 +74,19 @@ describe('CasesEffects', () => {
 		});
 	});
 
-	it('onDeleteCase$ should call casesService.removeCase with state.action_case_id, and return DeleteCaseSuccessAction', () => {
+	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
+
 		let deleted_case: Case = { id: 'new_case_id', name: 'new_case_name' };
-		spyOn(casesService, 'removeCase').and.callFake(() => Observable.of(deleted_case));
+		store.dispatch(new AddCaseSuccessAction(deleted_case));
+		store.dispatch(new SelectCaseByIdAction(deleted_case.id));
+		// set active_case_id
+		store.dispatch(new OpenModalAction({component: '', case_id: deleted_case.id}));
 		effectsRunner.queue(new DeleteCaseAction());
 		casesEffects.onDeleteCase$.subscribe((result: AddCaseSuccessAction) => {
-			expect(casesService.removeCase).toHaveBeenCalledWith("");
-			expect(result instanceof DeleteCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(deleted_case);
+			expect((result instanceof DeleteCaseBackendAction) || (result instanceof LoadDefaultCaseAction)).toBeTruthy();
+			if(result instanceof DeleteCaseBackendAction){
+				expect(result.payload).toEqual(deleted_case.id);
+			}
 		});
 	});
 

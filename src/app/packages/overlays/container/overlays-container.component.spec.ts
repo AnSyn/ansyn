@@ -49,7 +49,7 @@ describe('OverlayContainerComponent', () => {
                 ],
                 declarations: [
                     OverlaysContainer,
-                    MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration','redraw$'] })
+                    MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration','redraw$','markup'] })
                 ],
                 imports: [HttpModule, StoreModule.provideStore(OverlayReducer)]
             })
@@ -129,14 +129,7 @@ describe('OverlayContainerComponent', () => {
 
     });
 
-    xit('should call store dispatch on ngOnInit with LoadOverlayAction', () => {
-        spyOn(store, 'dispatch').and.callThrough();
-        component.ngOnInit();
-        const expectedResult = new LoadOverlaysAction();
-        expect(store.dispatch).toHaveBeenCalledWith(expectedResult);
-    });
-
-    it('check the function toglle overlay', () => {
+    it('check the function toggle overlay', () => {
         spyOn(store, 'dispatch');
         const id1 = '32313'
         const expectedResult1 = new SelectOverlayAction(id1);
@@ -147,9 +140,7 @@ describe('OverlayContainerComponent', () => {
         component.selectedOverlays.push(id1);
         component.toggleOverlay(id1);
         expect(store.dispatch).toHaveBeenCalledWith(expectedResult2);
-
-
-    });
+	});
 
 
 
@@ -165,10 +156,10 @@ describe('OverlayContainerComponent', () => {
             photoTime: new Date(Date.now()),
             azimuth: 10
         }]
-        
+
         store.dispatch(new LoadOverlaysAction());
         expect(state.value.loading).toBe(true);
-        
+
         store.dispatch(new LoadOverlaysSuccessAction(overlays));
         expect(state.value.overlays.size).toEqual(2);
         expect(state.value.loading).toBe(false);
@@ -194,7 +185,4 @@ describe('OverlayContainerComponent', () => {
 
     });
 
-    xit("should unsubscribe from subscribers on ngOnDestroy", () => {
-        //spyOn()
-    });
 });

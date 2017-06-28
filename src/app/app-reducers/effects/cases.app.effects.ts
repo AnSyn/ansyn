@@ -19,7 +19,7 @@ import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.action
 import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { overlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class CasesAppEffects {
@@ -28,18 +28,28 @@ export class CasesAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
-		.filter(([action, state]:[DisplayOverlayAction, IAppState]) => true)
 		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
-			const selectedCase: Case = cloneDeep(state.cases.selected_case);
-			const selected_overlay: Overlay = state.overlays.overlays.get(action.payload.id);
-			const map_id = action.payload.map_id ? action.payload.map_id : state.cases.selected_case.state.maps.active_map_id;
-			const map = selectedCase.state.maps.data.find((map) => map_id == map.id);
-			map.data.selectedOverlay = {id: selected_overlay.id, name: selected_overlay.name, imageUrl: selected_overlay.imageUrl, sourceType: selected_overlay.sourceType};
 
-			const result :Action[] = [];
-			result.push(new UpdateCaseAction(selectedCase));
-			result.push(new overlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase)));
-			return result;
+			const selectedCase = cloneDeep(state.cases.selected_case);
+			const overlay: Overlay = state.overlays.overlays.get(action.payload.id) as any;
+			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
+
+			selectedCase.state.maps.data.forEach((map) => {
+				if(mapId == map.id){
+					map.data.selectedOverlay = {
+						id: overlay.id,
+						name: overlay.name,
+						imageUrl: overlay.imageUrl,
+						sourceType: overlay.sourceType
+					};
+				}
+			});
+
+			return[
+				new UpdateCaseAction(selectedCase),
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase))
+			];
+
 		});
 
 	@Effect()

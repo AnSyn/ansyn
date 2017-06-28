@@ -22,6 +22,8 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import { CasesActionTypes } from '../../packages/menu-items/cases/actions/cases.actions';
+import { OverlaysActionTypes } from '../../packages/overlays/actions/overlays.actions';
 
 
 
@@ -136,7 +138,11 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: CasesService,
-					useValue: {updateCase: () => null,wrapUpdateCase: () => null}
+					useValue: {
+							updateCase: () => null,
+							wrapUpdateCase: () => null,
+							getOverlaysMarkup: () => null
+					}
 				}
 			]
 
@@ -317,20 +323,26 @@ describe('MapAppEffects', () => {
 	});
 
 	it('on active map changes fire update case action',() => {
+		spyOn(casesService,'getOverlaysMarkup');
 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
-
 		let result = null;
 		let _payload = null;
-
-		mapAppEffects.onActiveMapChanges$.subscribe(_result => {
+		let count = 0;
+		mapAppEffects.onActiveMapChanges$.subscribe((_result:Action) => {
 			//expect(true).toBe(false);
-			expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
-			_payload = _result.payload;
-			result = _result;
+			count++;
+			if(_result.type == CasesActionTypes.UPDATE_CASE){
+				expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
+			}
+			if(_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS){
+				expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+			}
 
 		});
-		const expectedResult = new UpdateCaseAction(<any>_payload);
-		expect(result).toEqual(expectedResult);
+
+		expect(count).toBe(2);
+
+
 
 
 

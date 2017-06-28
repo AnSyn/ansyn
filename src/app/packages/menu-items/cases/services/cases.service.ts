@@ -28,7 +28,7 @@ export class CasesService {
 		this.queryParamsKeys = this.config.casesQueryParamsKeys
 	}
 
-	getOverlaysMarkup(caseValue:Case){
+	getOverlaysMarkup(caseValue: Case){
 		const result = [];
 
 		const activeMapId = caseValue.state.maps.active_map_id;

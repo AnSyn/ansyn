@@ -6,11 +6,16 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { SelectCaseByIdAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
-import { Store, StoreModule } from '@ngrx/store';
+import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import {
+	DisplayOverlayAction, LoadOverlaysSuccessAction,
+	OverlaysActionTypes
+} from '../../packages/overlays/actions/overlays.actions';
+import { CasesActionTypes } from '../../packages/menu-items/cases/actions/cases.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -40,13 +45,27 @@ describe('CasesAppEffects', () => {
 		icase_state = {
 			cases: [{
 				id: 'case1',
-				state: {
-					selected_overlays_ids: []
+				state:{
+					maps: {
+						active_map_id: '5555',
+						data:[
+							{
+								id: '5555',
+								data: {}
+
+							},
+							{
+								id: '4444',
+								data: {}
+							}
+						]
+					}
 				}
 			}],
 			selected_case:{
 				id: 'case1',
 				index: 0
+
 			},
 			default_case: {
 				id: 'case1',
@@ -58,6 +77,7 @@ describe('CasesAppEffects', () => {
 
 		store.dispatch(new AddCaseSuccessAction(icase_state.cases[0]));
 		store.dispatch(new SelectCaseByIdAction(icase_state.selected_case.id));
+		store.dispatch( new LoadOverlaysSuccessAction([{id: 'tmp',name:'tmp',imageUrl:'tmp',sourceType:"tmp"}] as any));
 	}));
 
 	beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {
@@ -66,21 +86,49 @@ describe('CasesAppEffects', () => {
 		casesService = _casesService;
 	}));
 
-	// it('selectOverlay$ should push overlay.id to selected_overlays_ids on cases', () => {
-	// 	let selected_case: Case = icase_state.cases[0];
-    //
-	// 	spyOn(casesService, 'updateCase').and.callFake(() => Observable.of(selected_case));
-    //
-	// 	effectsRunner.queue(new SelectOverlayAction("1234-5678"));
-	// 	let result: UpdateCaseAction;
-	// 	casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {
-	// 		result = _result;
-	// 	});
-    //
-	// 	expect(result instanceof UpdateCaseAction).toBeTruthy();
-	// 	expect(result.payload).toEqual(selected_case);
-	// 	expect(selected_case.state.selected_overlays_ids).toEqual(["1234-5678"]);
-	// });
+	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
+		const action  = new DisplayOverlayAction({ id: "tmp"});
+
+		effectsRunner.queue(action)
+		let count = 0;
+		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
+			if(_result.type == CasesActionTypes.UPDATE_CASE){
+				expect(_result.payload.state.maps.data[0].data.selectedOverlay.name).toBe('tmp');
+				expect(_result.payload.state.maps.data[0].id).toBe(icase_state.cases[0].state.maps.active_map_id);
+				count++;
+			}
+			if(_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS){
+				expect(_result.payload[0].id == 'tmp');
+				expect(_result.payload[0].class == 'active');
+				count++
+			}
+
+		});
+		expect(count).toBe(2);
+	});
+
+	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
+		const action  = new DisplayOverlayAction({ id: "tmp",map_id: '4444'});
+
+		effectsRunner.queue(action)
+		let count = 0;
+		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
+			if(_result.type == CasesActionTypes.UPDATE_CASE){
+				expect(_result.payload.state.maps.data[1].data.selectedOverlay.name).toBe('tmp');
+				expect(_result.payload.state.maps.data[1].id).not.toBe(icase_state.cases[0].state.maps.active_map_id);
+				count++;
+			}
+			if(_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS){
+				expect(_result.payload[0].id == 'tmp');
+				expect(_result.payload[0].class == 'displayed');
+				count++
+			}
+
+		});
+		expect(count).toBe(2);
+	});
+
+
 
 	it('On selectCase$ call to loadOverlaysAction with case params ', () => {
 

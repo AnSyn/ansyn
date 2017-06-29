@@ -10,7 +10,7 @@ import { MapPosition } from '@ansyn/imagery/model/map-position';
 
 export class Map implements IMap {
 
-	private _mapType: string;
+	public mapType: string;
 	private _mapObject: ol.Map;
 	private _mapLayers = [];
 	private _mapVectorLayers = [];
@@ -29,7 +29,7 @@ export class Map implements IMap {
 
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
-		this._mapType = 'openLayersMap';
+		this.mapType = 'openLayersMap';
 		this.centerChanged = new EventEmitter < GeoJSON.Point > ();
 		this.positionChanged = new EventEmitter < MapPosition > ();
 		this.pointerMove = new EventEmitter<any>();
@@ -137,12 +137,12 @@ export class Map implements IMap {
 
 	public removeAllLayers() {
 		// TODO: check about other layers (interaction etc.)
-		//this._mapObject.getLayers().clear();
-		this._mapLayers.forEach((existingLayer) => {
-			this._mapObject.removeLayer(existingLayer);
-		});
 
-		this._mapLayers = [];
+		this._mapLayers.forEach((existingLayer) => {
+			if(!(existingLayer instanceof ol.layer.Vector)){
+				this.removeLayer(existingLayer);
+			}
+		});
 	}
 
 	public removeLayer(layer: any): void {
@@ -185,14 +185,6 @@ export class Map implements IMap {
 
 	public get mapObject() {
 		return this._mapObject;
-	}
-
-	public get mapType() {
-		return this._mapType;
-	}
-
-	public set mapType(value) {
-		this._mapType = value;
 	}
 
 	public setCenter(center: GeoJSON.Point, animation: boolean) {

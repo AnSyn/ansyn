@@ -28,7 +28,8 @@ export class QueryParamsHelper{
 			const decodedValue = this.encodeCaseObjects(key, s_case.state[key]);
 			urlTree.queryParams[key] = decodedValue;
 		});
-		return decodeURIComponent(`${location.origin}${urlTree.toString()}`);
+		const baseLocation = this.casesService.config.useHash ? `${location.origin}/#` : location.origin ;
+		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);
 	}
 
 	encodeCaseObjects(key, value) {

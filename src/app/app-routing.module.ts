@@ -1,6 +1,7 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
+import { configuration } from '../configuration/configuration';
 
 const host = {"[style.display]":"'none'"};
 const selector = 'empty';
@@ -24,7 +25,7 @@ export const routes: Routes = [
 ];
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routes, {useHash: true})
+		RouterModule.forRoot(routes, {useHash: configuration.CasesConfig.useHash})
 	],
 	declarations:[EmptyComponent],
 	exports:[RouterModule]

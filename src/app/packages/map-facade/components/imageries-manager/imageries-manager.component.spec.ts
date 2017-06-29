@@ -11,6 +11,7 @@ import { Actions } from '@ngrx/effects';
 import { Dispatcher,StoreModule,Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { MapReducer } from '../../reducers/map.reducer';
 
 
 describe('ImageriesManagerComponent', () => {
@@ -28,8 +29,8 @@ describe('ImageriesManagerComponent', () => {
 				Dispatcher,
 				MapFacadeService
 			],
-			imports:[StoreModule.provideStore({key:'value'})],
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active','show-status']}) ],
+			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
+			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active','show-status', 'showSpinner']}) ],
 
 		})
 		.compileComponents();
@@ -44,17 +45,20 @@ describe('ImageriesManagerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
-		
+
 		component.selected_layout = {
-			id: '1', 
-			description: '', 
+			id: '1',
+			description: '',
 			maps_count: 2
 		};
 		component.maps = {
-			active_map_id:'imagery1', 
-			data: [{id: 'imagery1'},{id: 'imagery2'}]
+			active_map_id:'imagery1',
+			data: [
+				{id: 'imagery1', data: {selectedOverlay: {}}},
+				{id: 'imagery2', data: {selectedOverlay: {}}}
+			]
 		};
-		
+
 		fixture.detectChanges();
 	});
 
@@ -106,11 +110,11 @@ describe('ImageriesManagerComponent', () => {
 
 		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll(".map-container-wrapper");
 		expect(wrapperDivs.length).toBe(2);
-		
+
 		wrapperDivs[0].click();
 		expect(component.maps.active_map_id).toBe('imagery1');
 		expect(component.setActiveImagery.emit['calls'].any()).toBe(false);
-		
+
 		wrapperDivs[1].click();
 		expect(component.setActiveImagery.emit).toHaveBeenCalledWith('imagery2');
 	});
@@ -118,11 +122,11 @@ describe('ImageriesManagerComponent', () => {
 	it('activeate shadow mouse',() => {
 		//spyOn(communicatorProvider,'communicators');
 		component.startPointerMoveProcess();
-		
+
 		expect(communicatorProvider.communicators['imagery1']).toBeTruthy();
-		
+
 		expect(component.listenersMouseShadowMapsId.length).toBe(1);
-		
+
 		expect(communicatorProvider.communicators['imagery1']
 				.toggleMouseShadowListener).toHaveBeenCalled();
 

@@ -56,8 +56,6 @@ export class ImageriesManagerComponent implements OnInit{
 	 	this.shadowMouseProcess = false;
 	 	this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
-
-
 	}
 
 	ngOnInit(){

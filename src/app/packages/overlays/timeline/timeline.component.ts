@@ -136,6 +136,7 @@ export class TimelineComponent implements OnInit {
             .mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
             .mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
             .zoomend((a, b, c) => this.emitter.provide('timeline:zoomend').next({ a, b, c }))
+			.zoomStreamCallback( result => this.emitter.provide('timeline:zoomStream').next(result))
             .click(this.clickEvent())
             .dblclick(() => {
                 d3.event.stopPropagation();

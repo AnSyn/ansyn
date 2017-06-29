@@ -1,7 +1,7 @@
 export { OverlaysModule } from './overlays.module';
 export { TimelineEmitterService } from './services/timeline-emitter.service';
 export { OverlaysService,OverlaysConfig } from './services/overlays.service';
-export { RedrawTimelineAction,OverlaysActionTypes,SelectOverlayAction, UnSelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction,	ClearFilterAction, SetFilterAction, DemoAction,DisplayOverlayAction }  from './actions/overlays.actions' ;
+export *  from './actions/overlays.actions' ;
 export { OverlaysEffects } from './effects/overlays.effects';
 export  *  from './models/overlay.model';
 export { IOverlaysConfig } from './models/overlays.config';

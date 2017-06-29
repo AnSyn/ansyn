@@ -47,5 +47,6 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 	}
 
 	ngOnDestroy(): void {
+		this._spinner = null;
 	}
 }

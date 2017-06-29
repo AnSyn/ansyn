@@ -1,6 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { OverlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
+import {
+	OverlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction,
+	UpdateOverlaysCountAction
+} from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 
 import { isEmpty,isEqual } from 'lodash';
@@ -20,6 +23,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { Spinner } from "@ansyn/core/utils";
+
 
 @Component({
     selector: 'overlays-container',
@@ -85,6 +89,15 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
                     this.store.dispatch(new SelectOverlayAction(id));
                 }
             });
+
+        this.subscribers.zoomHandler  = this.emitter.provide('timeline:zoomStream')
+			.throttleTime(100)
+			.subscribe(result => {
+					let sum = 0;
+					result.forEach( i => sum+=i.count);
+					this.store.dispatch(new UpdateOverlaysCountAction(sum));
+
+			})
 
 	}
 

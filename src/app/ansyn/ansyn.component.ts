@@ -39,7 +39,11 @@ export class AnsynComponent implements OnInit{
 		.distinctUntilChanged(isEqual);
 
 
-	overlays_count$ = this.store.select('overlays').map((state: IOverlayState) => state.overlays.size);
+	overlays_count$ = this.store.select('overlays')
+		.map((state: IOverlayState) => {
+			const sum = state.count || state.overlays.size;
+			return sum;
+	});
 
 	selected_layout: MapsLayout;
 	selected_case: Case;
@@ -67,7 +71,9 @@ export class AnsynComponent implements OnInit{
 			this.maps = maps;
 		});
 
-		this.overlays_count$.subscribe(_overlays_count => {this.overlays_count = _overlays_count;});
+		this.overlays_count$.subscribe(_overlays_count => {
+			this.overlays_count = _overlays_count;
+		});
 	}
 
 	onActiveImagery(active_map_id: string) {

@@ -94,6 +94,9 @@ export class Spinner {
 			console.warn('this.element is not defined',this.element);
 			return;
 		}
+		if(!this.outerDiv){
+			return;
+		}
 		this.element.removeChild(this.outerDiv);
 		this.outerDiv = null;
 	}

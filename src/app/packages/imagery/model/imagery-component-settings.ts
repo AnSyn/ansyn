@@ -5,7 +5,8 @@ import { MapPosition } from './map-position';
 export class ImageryComponentSettings {
 	id: string;
 	data: {
-		position: MapPosition
+		position: MapPosition,
+		selectedOverlay?: {id: string, name: string, imageUrl: string, sourceType: string}
 	};
 	mapType: string;
 }

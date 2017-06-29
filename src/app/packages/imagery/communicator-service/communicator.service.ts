@@ -45,6 +45,15 @@ export class ImageryCommunicatorService {
 		});
 	}
 
+	public replaceCommunicatorId(old_id, new_id) {
+		this.communicators[new_id] = this.communicators[old_id];
+		this.communicators[new_id].id = new_id;
+		delete this.communicators[old_id];
+
+		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id),1);
+		this.initiliziedCommunicators.push(new_id);
+	}
+
 	public remove(id: string) {
 		if(!this._communicators[id]) {
 			return;

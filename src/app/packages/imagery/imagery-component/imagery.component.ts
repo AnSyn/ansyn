@@ -14,6 +14,7 @@ import { ConfigurationToken } from '../configuration.token';
 import { TypeContainerService } from '@ansyn/type-container';
 import { isEqual, isNil } from 'lodash';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
+import { isEmpty } from 'lodash';
 
 @Component({
 	selector: 'ansyn-imagery-view',
@@ -38,7 +39,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		//id has been change
 		if(!isEqual(this._mapComponentSettings.id, value.id)){
 			if (this._manager) {
-				this._manager.setCommunicatorId(value.id);
+				this.imageryCommunicatorService.replaceCommunicatorId(this._mapComponentSettings.id, value.id);
 			}
 		}
 
@@ -48,6 +49,12 @@ export class ImageryComponent implements OnInit, OnDestroy {
 				this._manager.ActiveMap.setPosition(value.data.position);
 			}
 		}
+
+		// world view
+		if(isEmpty(this._mapComponentSettings.data.selectedOverlay)){
+			this._manager.loadInitialMapSource();
+		}
+
 		this._mapComponentSettings = value;
 	}
 
@@ -77,7 +84,8 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this._mapComponentRef,
 			this.typeContainerService,
 			this.config,
-			imageryCommunicator);
+			imageryCommunicator
+		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).subscribe(res => {
 			imageryCommunicator.init(this._manager);

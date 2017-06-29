@@ -67,12 +67,12 @@ export class TimelineComponent implements OnInit {
 		const nodes = [];
 		this._markup.forEach(markupItem => {
 			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
-			if(!element) return;
-			element.classList.add(markupItem.class);
-			nodes.push(element);
-
+			if(element) {
+				element.classList.add(markupItem.class);
+				nodes.push(element);
+			}
 		});
-		(<any>d3.selectAll(nodes)).moveToFront();
+		nodes.length > 0 && (<any>d3.selectAll(nodes)).moveToFront();
 	}
 
 	get markup(){

@@ -36,27 +36,8 @@ describe('OverlaysAppEffects',()=> {
 		}).compileComponents();
 	});
 
-
-	beforeEach(inject([Store,CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>,_casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
+	beforeEach(inject([Store, CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>, _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
 		store = _store;
-		casesService = _casesService;
-		overlaysAppEffects = _overalysAppEffects;
-		effectsRunner = _effectsRunner;
-		spyOn(store,'select').and.callFake( type => {
-			switch(type){
-				case "cases":
-					return Observable.of({
-						selected_case : {someFakeData:'tmp'}
-					});
-				default:
-					return Observable.empty();
-			}
-
-		});
-
-	}))
-
-	beforeEach(inject([Store,CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>,_casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
 		casesService = _casesService;
 		overlaysAppEffects = _overalysAppEffects;
 		effectsRunner = _effectsRunner;
@@ -68,6 +49,12 @@ describe('OverlaysAppEffects',()=> {
 	});
 
 	it("onOverlaysMarkupsChanged$",() => {
+		const caseItem: Case =  {
+			"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
+		} as any;
+		store.dispatch(new AddCaseSuccessAction(caseItem));
+		store.dispatch(new SelectCaseByIdAction(caseItem.id));
+
 		spyOn(casesService,'getOverlaysMarkup').and.returnValue({});
 		const action = new LoadOverlaysSuccessAction({} as any);
 		effectsRunner.queue(action);

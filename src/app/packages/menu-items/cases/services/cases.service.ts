@@ -22,7 +22,7 @@ export class CasesService {
 	queryParamsKeys;
 	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
-	constructor(private http: Http, @Inject(casesConfig) private config: CasesConfig, public urlSerializer: UrlSerializer) {
+	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;
 		this.paginationLimit = this.config.casesPaginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys

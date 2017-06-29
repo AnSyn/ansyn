@@ -5,5 +5,6 @@ export interface CasesConfig {
 	casesPaginationLimit: number,
 	casesQueryParamsKeys: string[],
 	defaultCase: Case,
-	updateCaseDebounceTime: number
+	updateCaseDebounceTime: number,
+	useHash: boolean
 }

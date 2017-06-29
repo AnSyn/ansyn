@@ -16,7 +16,8 @@ export const configuration = {
 		casesPaginationLimit: 15,
 		defaultCase,
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
-		updateCaseDebounceTime: 700
+		updateCaseDebounceTime: 700,
+		useHash: true
 	},
 	LayersManagerConfig: {
 		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'

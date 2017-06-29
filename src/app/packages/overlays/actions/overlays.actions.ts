@@ -17,7 +17,8 @@ export const OverlaysActionTypes = {
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
-	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS')
+	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
+	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT')
 
 };
 
@@ -76,6 +77,11 @@ export class DemoAction implements Action {
 export class RedrawTimelineAction implements Action {
 	type = OverlaysActionTypes.REDRAW_TIMELINE;
 	constructor(public payload?: boolean){};
+}
+
+export class UpdateOverlaysCountAction implements Action {
+	type = OverlaysActionTypes.UPDATE_OVERLAYS_COUNT;
+	constructor(public payload: number){}
 }
 
 export type OverlaysActions

@@ -41,6 +41,7 @@ export class TimelineEmitterService {
 	  		this.create('timeline:mouseover');
 	  		this.create('timeline:mouseout');
 	  		this.create('timeline:zoomend');
+	  		this.create('timeline:zoomStream');
 	  	}
 
 		private create(name:string) {

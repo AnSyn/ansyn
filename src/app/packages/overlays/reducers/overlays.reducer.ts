@@ -13,6 +13,7 @@ export interface IOverlayState {
 	demo: number;
 	filters : any;
 	queryParams: any;
+	count: number;
 }
 
 export const overlayInitialState: IOverlayState = {
@@ -23,18 +24,14 @@ export const overlayInitialState: IOverlayState = {
 	demo: 1,
 	//@todo change to Map
 	filters: {},
-	queryParams: {}
+	queryParams: {},
+	count: 0
 }
 
 export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
-		case overlay.OverlaysActionTypes.DEMO:
-			let demo = ++state.demo;
-			let tmp:IOverlayState = Object.assign({}, state, {
-            	demo
-            });
-
-			return tmp;
+		case overlay.OverlaysActionTypes.UPDATE_OVERLAYS_COUNT:
+			return {...state,count:action.payload};
 
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -84,7 +81,8 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				return Object.assign({},state,{
                		loading: false,
                		loaded: true,
-               		overlays: stateOverlays
+               		overlays: stateOverlays,
+					count: 0
 				});
 
 

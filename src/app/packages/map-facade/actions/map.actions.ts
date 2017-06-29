@@ -11,7 +11,8 @@ export const MapActionTypes = {
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
 	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
-	BACK_TO_WORLD: 'BACK_TO_WORLD'
+	BACK_TO_WORLD: 'BACK_TO_WORLD',
+	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS'
 };
 
 export type MapActions = any;
@@ -68,4 +69,9 @@ export class CompositeMapShadowAction implements Action {
 export class MapSingleClickAction implements Action {
 	type = MapActionTypes.MAP_SINGLE_CLICK;
 	constructor(public payload: any){}
+}
+
+export class SetLoadingOverlaysAction implements Action {
+	type = MapActionTypes.SET_LOADING_OVERLAYS;
+	constructor(public payload: string[]){}
 }

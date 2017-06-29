@@ -8,7 +8,7 @@ import * as rison from 'rison';
 
 export class QueryParamsHelper{
 
-	constructor(private casesService: CasesService){}
+	constructor(private casesService: CasesService) {}
 
 	updateCaseViaQueryParmas(defaultCase: Case, q_params: Params) {
 		const s_case = cloneDeep(defaultCase);

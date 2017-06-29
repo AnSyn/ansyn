@@ -1,21 +1,32 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
-import { range,cloneDeep } from 'lodash';
+import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
-import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { isEmpty } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { SetLoadingOverlaysAction } from '../../actions/map.actions';
+import { Store } from '@ngrx/store';
+import { IMapState } from '../../reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
 	styleUrls: ['./imageries-manager.component.less']
-	,changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
 	private _maps:any;
 	public maps_count_range = [];
+
+	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
+		.map((state: IMapState) => {
+			return state.loadingOverlays
+		});
+
+	public loadingOverlaysIds = [];
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 	@Output() public setActiveImagery = new EventEmitter();
@@ -29,7 +40,14 @@ export class ImageriesManagerComponent implements OnInit{
 		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this._maps.active_map_id){
 			this.changeShadowMouseTarget();
 		}
+
 	};
+
+
+	isOverlayLoading(overlayId) {
+		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId == _overlayId);
+		return existIndex != -1;
+	}
 
 	get maps (){
 		return this._maps;
@@ -52,7 +70,7 @@ export class ImageriesManagerComponent implements OnInit{
 	public listenersMouseShadowMapsId: Array<string>;
 	public shadowMouseProcess:boolean;
 
-	constructor(private mapEffects: MapEffects,private communicatorProvider:ImageryCommunicatorService){
+	constructor(private mapEffects: MapEffects,private communicatorProvider:ImageryCommunicatorService, private store: Store<IMapState>){
 	 	this.shadowMouseProcess = false;
 	 	this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
@@ -61,6 +79,9 @@ export class ImageriesManagerComponent implements OnInit{
 	ngOnInit(){
 		this.initListeners();
 		this.setClassImageriesContainer(this.selected_layout.id);
+		this.loadingOverlaysIds$.subscribe((_loadingOverlaysIds) => {
+			this.loadingOverlaysIds = _loadingOverlaysIds;
+		});
 	}
 
 	setClassImageriesContainer(new_class, old_class?) {

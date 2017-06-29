@@ -67,6 +67,7 @@ export class TimelineComponent implements OnInit {
 		const nodes = [];
 		this._markup.forEach(markupItem => {
 			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
+			if(!element) return;
 			element.classList.add(markupItem.class);
 			nodes.push(element);
 

@@ -143,10 +143,6 @@ export class ImageryComponentManager {
 
 	}
 
-	public setCommunicatorId(_id: string) {
-		this.imageryCommunicator.id = _id;
-	}
-
 	public getCommunicatorId(): string {
 		return this.imageryCommunicator.id;
 	}

@@ -81,49 +81,6 @@ export class CasesAppEffects {
 			window.open(shareLink);
 		});
 
-	/*
-	 // displaySelectedOverlay$ effect will display overlays from selected case.
-	 @Effect()
-	 displaySelectedOverlay$: Observable<any> = this.actions$
-	 .ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-	 .withLatestFrom(this.store$)
-	 .filter(([action, state]:[any, IAppState]) => true)
-	 .mergeMap(([action, state]:[any, IAppState]) => {
-	 const selected_case: Case = state.cases.selected_case;
-	 const displayed_overlays = selected_case
-	 .state.maps.data
-	 .filter((map: CaseMapState) => map.data.selectedOverlay)
-	 .map((map: CaseMapState) => {
-	 return {id: map.data.selectedOverlay.id, map_id: map.id}
-	 });
-	 const result = displayed_overlays.map( overlayIdMapId => new DisplayOverlayAction(overlayIdMapId));
-	 console.log(result)
-	 return result;
-	 });
-	 */
-
-	//@todo move this to overlays.app.effects
-	@Effect()
-	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => {
-			return !isEmpty(state.selected_case);
-		})
-		.map(([caseId, state]: [string, ICasesState]) => {
-			const caseSelected: Case = state.selected_case;
-
-			const overlayFilter = {
-				to: caseSelected.state.time.to,
-				from: caseSelected.state.time.from,
-				polygon: caseSelected.state.region,
-				caseId: caseId
-			};
-			return new LoadOverlaysAction(overlayFilter);
-
-		});
-
 	@Effect()
 	saveDefaultCase$: Observable<AddCaseAction> = this.actions$
 		.ofType(CasesActionTypes.SAVE_DEFAULT_CASE)

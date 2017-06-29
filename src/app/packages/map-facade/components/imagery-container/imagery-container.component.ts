@@ -15,16 +15,28 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 	private _showSpinner: boolean;
 
-	public get showSpinner(): boolean {
-		return this._showSpinner;
-	}
-
+	@Input("showSpinner")
 	public set showSpinner(value: boolean) {
 		if (this._showSpinner === value) {
 			return;
 		}
-
 		this._showSpinner = value;
+		this.toggleSpinner();
+	}
+
+	public get showSpinner(): boolean {
+		return this._showSpinner;
+	}
+
+	private _spinner: Spinner;
+	constructor() {
+		this.showSpinner = true;
+	}
+
+	ngOnInit() {
+	}
+
+	toggleSpinner() {
 		if (this._spinner) {
 			if (this._showSpinner) {
 				this._spinner.start("Loading...", 'transparent');//#EDEDED
@@ -34,16 +46,9 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 		}
 	}
 
-	private _spinner: Spinner;
-	constructor() {
-		this.showSpinner = false;
-	}
-
-	ngOnInit() {
-	}
-
 	ngAfterViewInit() {
 		this._spinner = new Spinner(this.imageryViewContainer.nativeElement);
+		this.toggleSpinner();
 	}
 
 	ngOnDestroy(): void {

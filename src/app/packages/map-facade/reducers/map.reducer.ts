@@ -4,12 +4,14 @@ import { cloneDeep } from 'lodash';
 
 export interface IMapState {
 	positions: Position
-	communicators: {}
+	communicators: {},
+	loadingOverlays: string[]
 }
 
 export const initialMapState: IMapState = {
 	positions: {} as any,
-	communicators: {}
+	communicators: {},
+	loadingOverlays: []
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
@@ -27,6 +29,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.UPDATE_MAP_SIZE:
 			return state;
 
+		case MapActionTypes.SET_LOADING_OVERLAYS:
+			return  {...state, loadingOverlays: action.payload};
 
 		default:
 			return state;

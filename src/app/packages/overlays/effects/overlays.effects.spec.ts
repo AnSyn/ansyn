@@ -3,10 +3,10 @@ import { empty } from 'rxjs/observable/empty';
 
 
 import { EffectsTestingModule, EffectsRunner } from '@ngrx/effects/testing';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, inject } from '@angular/core/testing';
 
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
+import { Action, Store, StoreModule } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { Observable, ObservableInput } from 'rxjs/Observable';
@@ -21,6 +21,10 @@ import * as overlay from '../actions/overlays.actions';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
 import { configuration } from '../../../../configuration/configuration';
+import { OverlayReducer } from '../reducers/overlays.reducer';
+import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
+import { IAppState } from '../../../app-reducers/app-reducers.module';
+import { AddCaseSuccessAction, SelectCaseByIdAction } from '../../menu-items/cases/actions/cases.actions';
 
 describe("Overlays Effects ", () => {
 	const overlays = <Overlay[]>[
@@ -39,10 +43,11 @@ describe("Overlays Effects ", () => {
 			footprint: {}
 		}
 	];
-
+	let store: Store<IAppState>;
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
-			EffectsTestingModule
+			EffectsTestingModule,
+			StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer })
 		],
 		providers: [
 			OverlaysEffects, {
@@ -51,6 +56,17 @@ describe("Overlays Effects ", () => {
 			},
 			{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
 		]
+	}));
+
+	beforeEach(inject([Store],(_store: Store<any>) =>{
+		store = _store;
+	/*	spyOn(store, 'select').and.returnValue((type)=>{
+			if(type == "cases"){
+				return Observable.of({
+					selected_case : {}
+				} as any);
+			}
+		} );*/
 	}));
 
 	function setup() {
@@ -65,6 +81,7 @@ describe("Overlays Effects ", () => {
 	it('effect - onOverlaysMarkupChanged$',() => {
 		const { runner, overlaysEffects } = setup();
 		const action = new OverlaysMarkupAction({});
+
 		runner.queue(action);
 		let count = 0;
 		overlaysEffects.onOverlaysMarkupChanged$.subscribe((action:Action) =>{

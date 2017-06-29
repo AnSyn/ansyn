@@ -12,7 +12,9 @@ describe('OverlaysAppEffects',()=> {
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
 	let casesService: CasesService;
-	let cases: any[];
+	let cases: any = {
+		selected_case : {tmp:'1'}
+	};
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -34,20 +36,27 @@ describe('OverlaysAppEffects',()=> {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store,CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>,_casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
-		store = _store,
-		casesService = _casesService;
-		overlaysAppEffects = _overalysAppEffects;
-		effectsRunner = _effectsRunner;
+	beforeEach(inject([Store],(_store:Store<any>) => {
+		store = _store;
 		spyOn(store,'select').and.callFake( type => {
 			switch(type){
 				case "cases":
-					return Observable.of(cases);
+					return Observable.of({
+						selected_case : {someFakeData:'tmp'}
+					});
 				default:
 					return Observable.empty();
 			}
 
 		});
+
+	}))
+
+	beforeEach(inject([Store,CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>,_casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
+		casesService = _casesService;
+		overlaysAppEffects = _overalysAppEffects;
+		effectsRunner = _effectsRunner;
+
 	}));
 
 	it('should be defined', () => {

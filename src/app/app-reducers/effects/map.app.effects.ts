@@ -180,14 +180,10 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
 		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action,caseState,statusBarState]:[any,any,any]) => {
-
-			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				//const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
-				const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
-				this.communicator.communicatorsAsArray().forEach(c => {
-					c.addPinPointIndicator(point.coordinates);
-				})
-			}
+			const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
+			this.communicator.communicatorsAsArray().forEach(c => {
+				c.addPinPointIndicator(point.coordinates);
+			})
 		});
 
 	@Effect()

@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as turf from '@turf/turf';
-import { GeometryObject, Point } from "@types/geojson";
+import { FeatureCollection, GeometryObject, Point } from "@types/geojson";
 
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
@@ -29,8 +29,13 @@ export class OverlaysService {
        return region;
     }
 
-    getPointByPolygon(geometry :GeometryObject) : Point{
-    	return <Point>turf.centerOfMass(turf.feature(geometry)).geometry;
+    getPointByPolygon(geometry :GeometryObject|FeatureCollection<any>) : Point{
+    	if(geometry.type === 'FeatureCollection'){
+			return <Point>turf.centerOfMass(<FeatureCollection<any>>geometry).geometry;
+		}
+		else {
+			return <Point>turf.centerOfMass(turf.feature(<GeometryObject>geometry)).geometry;
+		}
 	}
 
     //@todo move to cases

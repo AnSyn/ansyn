@@ -23,6 +23,7 @@ import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
+import { CasesActionTypes } from '../../packages/menu-items/cases/actions/cases.actions';
 
 
 @Injectable()
@@ -172,6 +173,22 @@ export class MapAppEffects {
 			}
 
 		} );
+
+	@Effect({dispatch:false})
+	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
+		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+		.map(([action,caseState,statusBarState]:[any,any,any]) => {
+
+			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+				//const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
+				const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
+				this.communicator.communicatorsAsArray().forEach(c => {
+					c.addPinPointIndicator(point.coordinates);
+				})
+			}
+		});
 
 	@Effect()
 	onActiveMapChanges$: Observable<Action> = this.actions$

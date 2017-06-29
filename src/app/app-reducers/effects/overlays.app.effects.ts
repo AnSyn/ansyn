@@ -10,6 +10,8 @@ import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.acti
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { isEmpty } from 'lodash';
+
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -18,6 +20,7 @@ export class OverlaysAppEffects {
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,OverlaysActionTypes.REDRAW_TIMELINE)
 		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case) )
 		.map(([action,cases]:[Action,ICasesState])=> {
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(cases.selected_case);
 			return new OverlaysMarkupAction(overlaysMarkup);

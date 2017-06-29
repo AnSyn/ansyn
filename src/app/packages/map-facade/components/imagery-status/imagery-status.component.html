@@ -1,7 +1,7 @@
 <div class="status" [class.active]="active">
 	<div class='status-container'>
 
-		<button (click)="backToWorldView()" class="back-to-world-view">Back to world view</button>
+		<button *ngIf="overlayName" (click)="backToWorldView()" class="back-to-world-view">Back to world view</button>
 
 
 		<div class='status-bar-title' data-title='{{map_id}}'> {{overlayName || 'World View'}}

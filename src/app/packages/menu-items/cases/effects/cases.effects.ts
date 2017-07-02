@@ -190,13 +190,14 @@ export class CasesEffects {
 			actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
 
 			if(isEmpty(state.default_case)){
-				actions.unshift(new LoadDefaultCaseSuccessAction(defaultCase));
+				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
 				actions.push(new SelectCaseByIdAction(state.default_case.id))
 			}
 			return actions;
 
 		}).share();
+
 
 	@Effect()
 	loadDefaultCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$

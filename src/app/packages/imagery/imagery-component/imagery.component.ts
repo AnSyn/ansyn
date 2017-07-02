@@ -71,12 +71,11 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			console.error('mapComponentSettings is Needed!');
 			return;
 		}
-		const imageryCommunicator = this.imageryCommunicatorService.provide(this.mapComponentSettings.id);
 
-		this.init(imageryCommunicator);
+		this.init();
 	}
 
-	private init(imageryCommunicator: CommunicatorEntity) {
+	private init() {
 		this._manager = new ImageryComponentManager(
 			this.imageryProviderService,
 			this.componentFactoryResolver,
@@ -88,7 +87,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).subscribe(res => {
-			imageryCommunicator.init(this._manager);
+			this.imageryCommunicatorService.createCommunicator(this._manager);
 		});
 	}
 
@@ -101,7 +100,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		if (this._manager) {
-			this.imageryCommunicatorService.remove(this._manager.getCommunicatorId());
+			this.imageryCommunicatorService.remove(this._manager.Id);
 			this._manager.dispose();
 		}
 	}

@@ -143,7 +143,7 @@ export class ImageryComponentManager {
 
 	}
 
-	public getCommunicatorId(): string {
+	public get Id(): string {
 		return this.id;
 	}
 

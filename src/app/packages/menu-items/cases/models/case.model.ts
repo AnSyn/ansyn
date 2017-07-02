@@ -35,7 +35,7 @@ export type CaseMapState = {
 	id: string;
 	data: {
 		position: Position,
-		selectedOverlay?: {id: string, name: string, imageUrl: string, sourceType: string}
+		selectedOverlay?: {id: string, name: string}
 	};
 	mapType: string;
 }

@@ -59,8 +59,8 @@ export class OverlaysAppEffects {
 					.filter((map: CaseMapState) =>{
 						return !isEmpty(map.data.selectedOverlay);
 					}).forEach((map: CaseMapState) => {
-					loadingOverlays.push(map.data.selectedOverlay.id);
-				});
+						loadingOverlays.push(map.data.selectedOverlay.id);
+					});
 				return new SetLoadingOverlaysAction(loadingOverlays);
 			}
 		).share();
@@ -81,9 +81,11 @@ export class OverlaysAppEffects {
 					}).map((map: CaseMapState) => {
 						const id = map.data.selectedOverlay.id;
 						const map_id = map.id;
+						const unsetExtent = true;
 						const OIndex = loadingOverlays.findIndex((_overlayId) => id == _overlayId);
 						loadingOverlays.splice(OIndex, 1);
-						return new DisplayOverlayAction({id, map_id})
+
+						return new DisplayOverlayAction({id, map_id, unsetExtent})
 					});
 				return [new SetLoadingOverlaysAction(loadingOverlays), ...displayOverlayActions];
 			}

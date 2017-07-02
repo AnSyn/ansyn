@@ -38,9 +38,7 @@ export class CasesAppEffects {
 				if(mapId == map.id){
 					map.data.selectedOverlay = {
 						id: overlay.id,
-						name: overlay.name,
-						imageUrl: overlay.imageUrl,
-						sourceType: overlay.sourceType
+						name: overlay.name
 					};
 				}
 			});

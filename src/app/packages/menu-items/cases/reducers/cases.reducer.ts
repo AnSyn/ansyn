@@ -8,7 +8,7 @@ export interface ICasesState {
 	cases: Case[];
 	unlisted_case: Case;
 	default_case: Case;
-	default_case_query_params: Params;
+	default_case_query_params: Case;
 	selected_case: Case;
 	active_case_id: string;
 	modal: boolean;
@@ -22,7 +22,7 @@ export const initialCasesState: ICasesState = {
 	unlisted_case: null,
 	selected_case: null,
 	default_case: {},
-	default_case_query_params: null,
+	default_case_query_params: {},
 	active_case_id: "",
 	modal: false,
 	contexts: [],
@@ -117,7 +117,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 					s_case = state.unlisted_case;
 
 				} else if(state.default_case.id == action.payload) {
-					s_case = state.default_case;
+					s_case = state.default_case_query_params ? state.default_case_query_params : state.default_case;
 				}
 			}
 			return Object.assign({}, state, { selected_case: s_case });
@@ -146,10 +146,10 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.COPY_CASE_LINK:
 			return Object.assign({}, state);
 
-		case CasesActionTypes.SET_QUERY_PARAMS:
+		case CasesActionTypes.SET_DEFAULT_CASE_QUERY_PARAMS:
 			return Object.assign({}, state, {default_case_query_params: action.payload});
 
-		case CasesActionTypes.REMOVE_QUERY_PARAMS:
+		case CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS:
 			return Object.assign({}, state, {default_case_query_params: null});
 
 		default:

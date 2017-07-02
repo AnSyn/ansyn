@@ -77,7 +77,7 @@ export class MapAppEffects {
 		.map(() => new StopMapShadowAction());
 
 	@Effect({ dispatch: false })
-	DisplayOverlay$: Observable<void> = this.actions$
+	onDisplayOverlay$: Observable<void> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$, (action: DisplayOverlayAction, store: IAppState) => {
 			const overlay = store.overlays.overlays.get(action.payload.id);

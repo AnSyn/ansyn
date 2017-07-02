@@ -8,7 +8,8 @@ import { CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction, AddCaseSuccessAction, DeleteCaseAction, DeleteCaseBackendAction, LoadCasesAction,
 	LoadCasesSuccessAction, UpdateCaseAction, SelectCaseByIdAction, LoadCaseAction, LoadCaseSuccessAction,
-	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction, OpenModalAction
+	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction, OpenModalAction,
+	SetDefaultCaseQueryParams
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
@@ -16,6 +17,7 @@ import { compose } from '@ngrx/core';
 import { OverlayReducer } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
+import { isEqual } from 'lodash';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -162,17 +164,37 @@ describe('CasesEffects', () => {
 		});
 	});
 
-	it('loadDefaultCase$ should load the default case and dispatch LoadDefaultCaseSuccessAction', () => {
-		const caseItem: Case = {
+	it('loadDefaultCase$ should dispatch LoadDefaultCaseSuccessAction if default_case is empty, and call setDefaultCaseQueryParams too(mergeMap)', () => {
+		const defaultCase: Case = {
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
-		spyOn(casesService, 'getDefaultCase').and.callFake(() => caseItem);
-		effectsRunner.queue(new LoadDefaultCaseAction());
 
+		const defaultCaseWithQueryParmas: Case = {
+			"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
+			"name":"queryParamsDefaultCase"
+		} as any;
+
+		spyOn(casesService, 'getDefaultCase').and.callFake(() => defaultCase);
+
+		spyOn((<any>casesService).queryParamsHelper, 'updateCaseViaQueryParmas').and.callFake(() => defaultCaseWithQueryParmas);
+
+		effectsRunner.queue(new LoadDefaultCaseAction());
+		//mergeMap
+		let count = 0;
 		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {
-			expect(result instanceof LoadDefaultCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(<any>caseItem);
+			count = count + 1;
+			if(result instanceof SetDefaultCaseQueryParams) {
+				expect(isEqual(result.payload, defaultCaseWithQueryParmas)).toBeTruthy()
+			}
+			if(result instanceof LoadDefaultCaseSuccessAction) {
+				expect(isEqual(result.payload, defaultCase)).toBeTruthy()
+			}
+			if(result instanceof SelectCaseByIdAction) {
+				expect(result.payload).toEqual(defaultCase.id);
+			}
+
 		});
+		expect(count).toEqual(2);
 	});
 
 	it('loadDefaultCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {

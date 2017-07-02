@@ -185,15 +185,13 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"))
 		.mergeMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
 			const actions = [];
+			const defaultCase = this.casesService.getDefaultCase();
+			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
+			actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
 
 			if(isEmpty(state.default_case)){
-				const defaultCase: Case = this.casesService.getDefaultCase();
-				const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
-				actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
-				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
+				actions.unshift(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
-				const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, state.default_case);
-				actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
 				actions.push(new SelectCaseByIdAction(state.default_case.id))
 			}
 			return actions;

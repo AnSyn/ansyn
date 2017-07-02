@@ -44,7 +44,7 @@ describe('CasesService', () => {
 				state: {}
 			} as any;
 
-			fake_case = queryParamsHelper.updateCaseViaQueryParmas(fake_case, fake_q_params);
+			fake_case = queryParamsHelper.updateCaseViaQueryParmas(fake_q_params, fake_case);
 			expect(queryParamsHelper.decodeCaseObjects).toHaveBeenCalledTimes(2);
 			expect(fake_case.state['a']).toEqual(fake_q_params['a']);
 			expect(fake_case.state['c']).toEqual(fake_q_params['c']);

@@ -1,8 +1,7 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isNil } from 'lodash';
-import { Params } from '@angular/router';
+import { isNil, isEmpty } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
@@ -117,7 +116,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 					s_case = state.unlisted_case;
 
 				} else if(state.default_case.id == action.payload) {
-					s_case = state.default_case_query_params ? state.default_case_query_params : state.default_case;
+					s_case = isEmpty(state.default_case_query_params) ? state.default_case : state.default_case_query_params;
 				}
 			}
 			return Object.assign({}, state, { selected_case: s_case });

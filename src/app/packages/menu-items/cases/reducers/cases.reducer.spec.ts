@@ -1,11 +1,10 @@
 import {
 	AddCaseSuccessAction, CloseModalAction, LoadCasesSuccessAction, OpenModalAction,
 	SelectCaseByIdAction, LoadCaseSuccessAction, LoadDefaultCaseSuccessAction, UpdateCaseAction,
-	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, DeleteCaseAction, SetQueryParams, RemoveQueryParamsAction
+	UpdateCaseBackendAction, UpdateCaseBackendSuccessAction, DeleteCaseAction, SetDefaultCaseQueryParams, RemoveDefaultCaseQueryParamsAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { Params } from '@angular/router';
 
 describe('CasesReducer', () => {
 
@@ -138,15 +137,15 @@ describe('CasesReducer', () => {
 
 	it('SET_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
 		let state: ICasesState = initialCasesState;
-		const queryParams: Params = {a:'b',c:'d',e:'f'};
-		let action: SetQueryParams = new SetQueryParams(queryParams);
+		const case_value: Case = {id: '12354', region: 'any region', facets: []} as any;
+		let action: SetDefaultCaseQueryParams = new SetDefaultCaseQueryParams(case_value);
 		let result: ICasesState = CasesReducer(state, action);
-		expect(result.default_case_query_params).toEqual(queryParams);
+		expect(result.default_case_query_params).toEqual(case_value);
 	});
 
 	it('REMOVE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
 		let state: ICasesState = initialCasesState;
-		let action: RemoveQueryParamsAction = new RemoveQueryParamsAction();
+		let action: RemoveDefaultCaseQueryParamsAction = new RemoveDefaultCaseQueryParamsAction();
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.default_case_query_params).toBeNull();
 	});

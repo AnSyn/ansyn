@@ -6,15 +6,12 @@ import { IMapPlugin } from '../model/imap-plugin';
 import { Extent } from '../model/extent';
 import { IMap } from '../model/imap';
 import { MapPosition } from '../model/map-position';
-import { Subject } from 'rxjs/Subject';
-
 
 /**
  * Created by AsafMasa on 27/04/2017.
  */
 
 export class CommunicatorEntity {
-	private _manager: ImageryComponentManager;
 	private _managerSubscriptions;
 
 
@@ -22,14 +19,15 @@ export class CommunicatorEntity {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public pointerMove: EventEmitter<any>;
 	public singleClick: EventEmitter<any>;
-	public isReady: EventEmitter<any>;
 
-	constructor(public id: string) {
+	constructor(private _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
-		this.isReady = new EventEmitter<any>();
+
+		this._managerSubscriptions = [];
+		this.registerToManagerEvents();
 	}
 
 	private registerToManagerEvents() {
@@ -38,7 +36,7 @@ export class CommunicatorEntity {
 		}));
 
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition ) => {
-			this.positionChanged.emit({id: this.id, position});
+			this.positionChanged.emit({id: this._manager.Id, position});
 		}));
 
 		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {
@@ -64,12 +62,6 @@ export class CommunicatorEntity {
 
 	//CommunicatorEntity methods begin
 
-	public init(manager: ImageryComponentManager) {
-		this._manager = manager;
-		this._managerSubscriptions = [];
-		this.registerToManagerEvents();
-		this.isReady.next(true);
-	}
 	public setActiveMap(mapType: string) {
 		this._manager.setActiveMap(mapType);
 	}

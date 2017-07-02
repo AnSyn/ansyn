@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
 import { values } from 'lodash';
+import { ImageryComponentManager } from '../imagery-component/manager/imagery.component.manager';
 
 @Injectable()
 export class ImageryCommunicatorService {
@@ -19,7 +20,7 @@ export class ImageryCommunicatorService {
 	public provide(id: string): CommunicatorEntity {
 
 		if (!this._communicators[id]) {
-			this.create(id);
+			return null;
 		}
 		return this._communicators[id];
 	}
@@ -32,16 +33,16 @@ export class ImageryCommunicatorService {
 		return values(this._communicators);
 	}
 
-	private create(id: string): void {
-		this._communicators[id] = new CommunicatorEntity(id);
-		this._communicators[id]['isReady'].subscribe((success:string) => {
-			if(success){
-				this.initiliziedCommunicators.push(id);
-				this.instanceCreated.emit({
-					communicatorsIds: this.initiliziedCommunicators,
-					currentCommunicatorId: id
-				});
-			}
+	public createCommunicator(componentManager: ImageryComponentManager): void {
+		if (this._communicators[componentManager.Id]) {
+			throw new Error(`'Can't create communicator ${componentManager.Id}, already exists!'`);
+		}
+
+		this._communicators[componentManager.Id] = new CommunicatorEntity(componentManager);
+		this.initiliziedCommunicators.push(componentManager.Id);
+		this.instanceCreated.emit({
+			communicatorsIds: this.initiliziedCommunicators,
+			currentCommunicatorId: componentManager.Id
 		});
 	}
 

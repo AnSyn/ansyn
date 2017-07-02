@@ -126,8 +126,11 @@ export class ImagerySandBoxComponent implements OnInit {
 	}
 
 	private toggleDrawCenterPluggin() {
-		const plugin: IMapPlugin = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin("openLayerCenterMarker");
-		plugin.isEnabled = !plugin.isEnabled;
+		const comms = this.imageryCommunicatorService.communicatorsAsArray();
+		comms.forEach((comm)=>{
+			const plugin: IMapPlugin = comm.getPlugin("openLayerCenterMarker");
+			plugin.isEnabled = !plugin.isEnabled;
+		});
 	}
 
 	public togglePointerMoveEvent() {

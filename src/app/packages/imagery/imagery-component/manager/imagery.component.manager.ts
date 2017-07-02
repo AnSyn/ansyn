@@ -30,7 +30,7 @@ export class ImageryComponentManager {
 				private _mapComponentRef: ComponentRef<any>,
 				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
-				private imageryCommunicator: CommunicatorEntity) {}
+				private id) {}
 
 	public loadInitialMapSource() {
 		if (this._activeMap) {
@@ -68,7 +68,8 @@ export class ImageryComponentManager {
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
-			this.mapComponentInitilaized.emit(this.imageryCommunicator.id);
+			this.buildActiveMapPlugins(activeMapType);
+			this.mapComponentInitilaized.emit(this.id);
 			mapCreatedSubscribe.unsubscribe();
 		});
 		this.createMapSourceForMapType(activeMapType).then((layers)=> {
@@ -77,6 +78,7 @@ export class ImageryComponentManager {
 	}
 
 	private destroyCurrentComponent(): void {
+		this.destroyActiveMapPlugins();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
@@ -87,17 +89,15 @@ export class ImageryComponentManager {
 		// console.log(`'${this.id} setActiveMap ${mapType} map'`);
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
-			this.destroyActiveMapPlugins();
 		}
 		this.buildCurrentComponent(activeMapType, position);
-		this.buildActiveMapPlugins(activeMapType);
 		return this.mapComponentInitilaized;
 	}
 
 	private buildActiveMapPlugins(activeMapType: string) {
 		// Create Map plugin's
 
-		const mapPlugins: IMapPlugin[] = this.imageryProviderService.createPlugins(activeMapType, this.imageryCommunicator);
+		const mapPlugins: IMapPlugin[] = this.imageryProviderService.createPlugins(activeMapType);
 		if (mapPlugins) {
 			this._plugins = mapPlugins;
 		} else {
@@ -144,7 +144,7 @@ export class ImageryComponentManager {
 	}
 
 	public getCommunicatorId(): string {
-		return this.imageryCommunicator.id;
+		return this.id;
 	}
 
 	public get ActiveMap(): IMap {

@@ -20,11 +20,12 @@ import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 
 @Injectable()
 export class MapAppEffects {
@@ -169,6 +170,18 @@ export class MapAppEffects {
 		} );
 
 	@Effect({dispatch:false})
+	onAddCommunicatorInitPluggin$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.map((action: AddMapInstacneAction)=> {
+			// Init CenterMarkerPlugin
+			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
+			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.s_pluginType);
+			if (centerMarkerPluggin) {
+				centerMarkerPluggin.init(communicatorHandler);
+			}
+		});
+
+	@Effect({dispatch:false})
 	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
@@ -177,7 +190,7 @@ export class MapAppEffects {
 			const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
 			this.communicator.communicatorsAsArray().forEach(c => {
 				c.addPinPointIndicator(point.coordinates);
-			})
+			});
 		});
 
 	@Effect()
@@ -207,7 +220,7 @@ export class MapAppEffects {
 			updatedCase.state.maps.data.forEach(
 				(map) => {
 					if(map.id == action.payload.mapId){
-						map.data.selectedOverlay = <any>{}
+						map.data.selectedOverlay = <any>{};
 					}
 				});
 			return [

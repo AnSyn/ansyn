@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ImageryModule, BaseSourceProvider } from '@ansyn/imagery';
 import { CesiumMapModule } from '@ansyn/cesium-map';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
@@ -18,7 +18,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
-import { BaseSourceProvider } from '@ansyn/imagery';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerTileWMSSourceProvider } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerOSMSourceProvider } from './app-models/map-source-providers/open-layers-OSM-source-provider';
@@ -38,17 +37,17 @@ import { TypeContainerModule } from '@ansyn/type-container';
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerTileWMSSourceProvider,
-			name: ['openLayersMap', 'TileWMS'].join(',')
+			name: [OpenLayerTileWMSSourceProvider.s_mapType, OpenLayerTileWMSSourceProvider.s_sourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerOSMSourceProvider,
-			name: ['openLayersMap', 'OSM'].join(',')
+			name: [OpenLayerOSMSourceProvider.s_mapType, OpenLayerOSMSourceProvider.s_sourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerIDAHOSourceProvider,
-			name: ['openLayersMap', 'IDAHO'].join(',')
+			name: [OpenLayerIDAHOSourceProvider.s_mapType, OpenLayerIDAHOSourceProvider.s_sourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,

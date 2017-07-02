@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
-import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 /**
  * Created by AsafMasa on 24/04/2017.
  */
@@ -42,7 +41,7 @@ export class ImageryProviderService {
 		return providedMap;
 	}
 
-	public createPlugins(mapType: string, imageryCommunicator: CommunicatorEntity): IMapPlugin[] {
+	public createPlugins(mapType: string): IMapPlugin[] {
 		const mapPluginProviders = this._mapPluginProviders[mapType];
 		if (!mapPluginProviders) {
 			return null;
@@ -51,7 +50,6 @@ export class ImageryProviderService {
 		const plugins: IMapPlugin[] = [];
 		mapPluginProviders.forEach(provider => {
 			const providedPlugin: IMapPlugin = new provider.pluginClass();
-			providedPlugin.init(imageryCommunicator);
 			plugins.push(providedPlugin);
 		});
 

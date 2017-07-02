@@ -6,11 +6,17 @@ import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export class OpenLayerIDAHOSourceProvider extends BaseSourceProvider {
-	public mapType = 'openLayersMap';
-	public sourceType = 'IDAHO';
+	static s_mapType = 'openLayersMap';
+	static s_sourceType = 'IDAHO';
+
+	public mapType;
+	public sourceType;
 
 	constructor() {
 		super();
+
+		this.mapType = OpenLayerIDAHOSourceProvider.s_mapType;
+		this.sourceType = OpenLayerIDAHOSourceProvider.s_sourceType;
 	}
 
 	create(metaData: any): any {

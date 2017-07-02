@@ -69,11 +69,14 @@ export class Map implements IMap {
 		});
 	}
 
+
 	// IMap Start
 
 	public setLayer(layer: any, extent?: Extent) {
 		this.setMainLayer(layer);
-		this.fitCurrentView(layer, extent);
+		if(extent) {
+			this.fitCurrentView(layer, extent);
+		}
 	}
 
 	public getLayerById(id: string){

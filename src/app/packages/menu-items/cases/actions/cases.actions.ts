@@ -35,8 +35,8 @@ export const CasesActionTypes = {
 	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE',
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
-	SET_QUERY_PARAMS: 'SET_QUERY_PARAMS',
-	REMOVE_QUERY_PARAMS: 'REMOVE_QUERY_PARAMS',
+	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
+	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
 
 
 };
@@ -121,7 +121,7 @@ export class LoadCaseSuccessAction implements Action{
 }
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor() {}
+	constructor(public payload?: Params) {}
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
@@ -135,11 +135,11 @@ export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
 	constructor(public payload: string) {}
 }
-export class SetQueryParams implements Action {
-	type = CasesActionTypes.SET_QUERY_PARAMS;
-	constructor(public payload: Params) {}
+export class SetDefaultCaseQueryParams implements Action {
+	type = CasesActionTypes.SET_DEFAULT_CASE_QUERY_PARAMS;
+	constructor(public payload: Case) {}
 }
-export class RemoveQueryParamsAction implements Action {
-	type = CasesActionTypes.REMOVE_QUERY_PARAMS;
+export class RemoveDefaultCaseQueryParamsAction implements Action {
+	type = CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS;
 	constructor() {}
 }

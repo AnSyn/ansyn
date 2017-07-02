@@ -1,4 +1,3 @@
-
 import { Case } from '../../models/case.model';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
@@ -10,7 +9,7 @@ export class QueryParamsHelper{
 
 	constructor(private casesService: CasesService) {}
 
-	updateCaseViaQueryParmas(defaultCase: Case, q_params: Params) {
+	updateCaseViaQueryParmas(q_params: Params = {}, defaultCase: Case = this.casesService.config.defaultCase) {
 		const s_case = cloneDeep(defaultCase);
 		const q_params_keys = Object.keys(q_params);
 		q_params_keys.forEach((key) => {

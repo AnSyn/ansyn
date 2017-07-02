@@ -6,11 +6,12 @@ import { Action, Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseBackendSuccessAction, DeleteCaseBackendAction, LoadCaseAction,
+	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseBackendSuccessAction, DeleteCaseBackendAction,
+	LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
-	SelectCaseByIdAction, UpdateCaseAction, LoadDefaultCaseAction, UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction, RemoveQueryParamsAction
+	SelectCaseByIdAction, UpdateCaseAction, UpdateCaseBackendAction,
+	UpdateCaseBackendSuccessAction, SetDefaultCaseQueryParams, LoadDefaultCaseAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
@@ -182,13 +183,21 @@ export class CasesEffects {
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.withLatestFrom(this.store.select("cases"))
-		.map(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
+		.mergeMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
+			const actions = [];
+
 			if(isEmpty(state.default_case)){
-				const defaultCase = this.casesService.getDefaultCase();
-				return new LoadDefaultCaseSuccessAction(defaultCase);
+				const defaultCase: Case = this.casesService.getDefaultCase();
+				const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
+				actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
+				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
-				return new SelectCaseByIdAction(state.default_case.id)
+				const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, state.default_case);
+				actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
+				actions.push(new SelectCaseByIdAction(state.default_case.id))
 			}
+			return actions;
+
 		}).share();
 
 	@Effect()
@@ -196,32 +205,7 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS)
 		.map(toPayload)
 		.map((defaultCase: Case) => {
-			// const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);
 			return new SelectCaseByIdAction(defaultCase.id);
-		}).share();
-
-	/*
-	 This effect will subscribe when default case has been selected and queryParams is not empty.
-	 To avoid circulation(by SELECT_CASE_BY_ID action), queryParams should be initialized to null.(RemoveQueryParamsAction)
-	 */
-
-	@Effect()
-	updateQueryParamsDefaultCase$: Observable<SelectCaseByIdAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.map(toPayload)
-		.withLatestFrom(this.store.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => {
-			const isDefault = case_id == state.default_case.id;
-			const notEmptyQueryParams = !isEmpty(state.default_case_query_params);
-			return isDefault && notEmptyQueryParams;
-		})
-		.mergeMap(([case_id, state]: [string, ICasesState]) => {
-			const updated_case = this.casesService.updateCaseViaQueryParmas(state.default_case, state.default_case_query_params);
-			return [
-				new RemoveQueryParamsAction(),
-				new UpdateCaseAction(updated_case),
-				new SelectCaseByIdAction(case_id),
-			]
 		}).share();
 
 	constructor(private actions$: Actions,

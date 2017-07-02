@@ -6,7 +6,7 @@ export class ImageryComponentSettings {
 	id: string;
 	data: {
 		position: MapPosition,
-		selectedOverlay?: {id: string, name: string, imageUrl: string, sourceType: string}
+		selectedOverlay?: {id: string, name: string}
 	};
 	mapType: string;
 }

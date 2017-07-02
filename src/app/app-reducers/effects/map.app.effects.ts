@@ -23,8 +23,8 @@ import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
-import { CasesActionTypes } from '../../packages/menu-items/cases/actions/cases.actions';
-
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { calcGeoJSONExtent } from '@ansyn/core/utils';
 
 @Injectable()
 export class MapAppEffects {
@@ -77,31 +77,26 @@ export class MapAppEffects {
 		.map(() => new StopMapShadowAction());
 
 	@Effect({ dispatch: false })
-	selectOverlay$: Observable<Action> = this.actions$
+	DisplayOverlay$: Observable<void> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$, (action: DisplayOverlayAction, store: IAppState) => {
 			const overlay = store.overlays.overlays.get(action.payload.id);
 			const map_id = action.payload.map_id ? action.payload.map_id : store.cases.selected_case.state.maps.active_map_id;
-			return [overlay, map_id];
+			const unsetExtent = action.payload.unsetExtent;
+			return [overlay, map_id, unsetExtent];
 		})
-		.switchMap( ([overlay, map_id]:[Overlay, string]) => {
-			const footprintFeature: GeoJSON.Feature<any> = {
-				"type": 'Feature',
-				"properties": {},
-				"geometry": overlay.footprint
-			};
-			const center = turf.center(footprintFeature);
-			const bbox = turf.bbox(footprintFeature);
-			const bboxPolygon = turf.bboxPolygon(bbox);
-			const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
+		.map( ([overlay, map_id, unsetExtent]:[Overlay, string, boolean]) => {
+			let extent;
+			if(!unsetExtent){
+				extent = calcGeoJSONExtent(overlay.footprint);
+			}
 			const mapType = this.communicator.provide(map_id).ActiveMap.mapType;
 			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				this.communicator.provide(map_id).setLayer(layer, extent);
-				this.communicator.provide(map_id).setCenter(center.geometry);
 			});
 
-			return Observable.empty();
+			return;
 		});
 
 	@Effect({ dispatch: false })

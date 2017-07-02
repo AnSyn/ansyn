@@ -6,11 +6,17 @@ import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
-	public mapType = 'openLayersMap';
-	public sourceType = 'TileWMS';
+	static s_mapType = 'openLayersMap';
+	static s_sourceType = 'TileWMS';
+
+	public mapType;
+	public sourceType;
 
 	constructor() {
 		super();
+
+		this.mapType = OpenLayerTileWMSSourceProvider.s_mapType;
+		this.sourceType = OpenLayerTileWMSSourceProvider.s_sourceType;
 	}
 
 	create(metaData: any): any {

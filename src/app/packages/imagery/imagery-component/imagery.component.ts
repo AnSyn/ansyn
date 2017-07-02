@@ -84,7 +84,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this._mapComponentRef,
 			this.typeContainerService,
 			this.config,
-			imageryCommunicator
+			this._mapComponentSettings.id
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).subscribe(res => {

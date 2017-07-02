@@ -336,6 +336,30 @@ describe('MapAppEffects', () => {
 		});
 	});
 
+	describe('onAddCommunicatorInitPluggin$', () => {
+		it('on add communicator set pluggin with data' ,() => {
+			const plugin = {
+				init: () => {},
+			}
+
+			const communicator = {
+				getPlugin: () => {},
+			}
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(communicator, 'getPlugin').and.callFake(() => plugin);
+			spyOn(plugin, 'init');
+
+			const action = new AddMapInstacneAction({
+				communicatorsIds: ['tmpId1'],
+				currentCommunicatorId: 'tmpId1'
+			});
+			effectsRunner.queue(action);
+			mapAppEffects.onAddCommunicatorInitPluggin$.subscribe();
+			expect(communicator.getPlugin).toHaveBeenCalled();
+			expect(plugin.init).toHaveBeenCalled();
+		});
+	});
+
 	describe('onDisplayOverlay$ communicator should set Layer on map, calcGeoJSONExtent depended on ignoreExtent value', () => {
 
 		const fake_layer = {};

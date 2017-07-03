@@ -25,11 +25,12 @@ import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IAppState } from '../app-reducers.module';
-import { IOverlayState, overlayInitialState } from '../../packages/overlays/reducers/overlays.reducer';
+import { IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-
+import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import * as utils from '@ansyn/core/utils';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 
 
 
@@ -54,11 +55,13 @@ describe('MapAppEffects', () => {
 	let icaseState: ICasesState;
 	let statusBarState: IStatusBarState;
 	let overlaysState: IOverlayState;
-	let casesService:CasesService;
+	let casesService: CasesService;
+	let typeContainerService: TypeContainerService;
 	let imageryCommunicatorServiceMock = {
 		provide:() => {},
 		communicatorsAsArray:() => {}
 	};
+	let fake_overlay: Overlay;
 
 	const cases: Case[] = [{
 		state: {
@@ -125,6 +128,9 @@ describe('MapAppEffects', () => {
 		icaseState = {cases, selected_case} as any;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		overlaysState = cloneDeep(overlayInitialState);
+		fake_overlay = <any>{id: 'overlayId'};
+		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
+
 		const fakeStore = {cases: icaseState, status_bar: statusBarState, overlays: overlaysState};
 
 		spyOn(store, 'select').and.callFake(type => {
@@ -132,11 +138,12 @@ describe('MapAppEffects', () => {
 		});
 	}));
 
-	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService) => {
+	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService, TypeContainerService], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _typeContainerService: TypeContainerService) => {
 		mapAppEffects = _mapAppEffects;
 		effectsRunner = _effectsRunner;
 		imageryCommunicatorService = _imageryCommunicatorService;
 		casesService = _casesService;
+		typeContainerService = _typeContainerService;
 	}));
 
 	it('should be defined', () => {
@@ -329,22 +336,46 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	xdescribe('onDisplayOverlay', () => {
-		let store;
+	describe('onDisplayOverlay$ communicator should set Layer on map, calcGeoJSONExtent depended on ignoreExtent value', () => {
 
-		beforeEach(inject([Store], (_store: Store<IAppState>) => {
-			store = _store;
+		const fake_layer = {};
+		const fake_extent = [1,2,3,4];
+		let fakeCommuincator: CommunicatorEntity;
+		beforeEach(()=> {
+			fakeCommuincator = <any> {
+				ActiveMap: {MapType: 'ol'},
+				setLayer: () => {}
+			};
+			const fakeSourceLoader = {
+				createAsync: () => {
+					return {
+						then: (callback) => callback(fake_layer)
+					}
+				}
+			};
+			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
+			spyOn(typeContainerService, 'resolve').and.returnValue(fakeSourceLoader);
+			spyOn(fakeCommuincator, 'setLayer');
+		});
 
-		}));
-
-		it('onDisplayOverlay$ communicator should set Layer on map, calcGeoJSONExtent should have been call only when ignoreExtent is not true', ()=> {
-			const mapId = 'mapId';
-			const overlayId = 'overlayId';
-			let ignoreExtent;
-			effectsRunner.queue(new DisplayOverlayAction({id: overlayId, map_id: mapId, ignoreExtent}));
+		it('ignoreExtent is "undefined"', ()=> {
+			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'mapId'}));
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
 				/*void*/
 				expect(result).toBeUndefined();
+				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, fake_extent);
+			});
+		});
+
+
+		it('ignoreExtent is "true"', ()=> {
+			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'mapId', ignoreExtent: true}));
+			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
+				/*void*/
+				expect(result).toBeUndefined();
+				expect(utils.calcGeoJSONExtent).not.toHaveBeenCalled();
+				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, undefined);
 			});
 
 		});

@@ -1,90 +1,105 @@
-<div class="status-bar">
+<div class="status-bar-container">
+	<div class="status-bar">
+		<div class="left-side" *ngIf="!hideOverlayName">
+			<div class="back-to-world-view">
+				<button (click)="backToWorldView()">Back to world view</button>
+			</div>
+			<div class="middle">
+				<span> {{overlayName || 'World View'}}</span>
+			</div>
 
-	<!--<ng-template>-->
-	<div class="left-side" *ngIf="!hideOverlayName">
-		<div class="back-to-world-view">
-			<button (click)="backToWorldView()">Back to world view</button>
 		</div>
-		<div class="middle">
-			<span> {{overlayName || 'World View'}}</span>
+
+		<div class="right-side">
+
+			<div class="selected-case layout-item">
+				<img src="/assets/icons/status-bar/case-icon.svg" class="status-bar-image-left">
+				<span>{{selected_case_name}}</span>
+
+				<div class="pop-hover">
+					<div class="pop-hover-buttons">
+
+						<button class="share-link" (click)="copyLink()">
+							<img src="/assets/icons/status-bar/share-link-icon.svg">
+							<span>Share link</span>
+						</button>
+						<!--<button class="share-link" (click)="openLink()">-->
+						<!--<img src="">-->
+						<!--</button>-->
+					</div>
+
+				</div>
+			</div>
+
+			<div class="timeline-combobox layout-item">
+				<div class='status-bar-orientation-icon'>
+					<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
+				</div>
+				<select name="timeline">
+					<option>Orignal</option>
+					<option>Orignal</option>
+				</select>
+			</div>
+
+
+			<div class="timeline-combobox layout-item">
+				<div class='status-bar-world-icon'>
+					<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
+				</div>
+				<select name="timeline">
+					<option>Pin Point</option>
+				</select>
+				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
+					<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
+				</div>
+				<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="" class="status-bar-image-right">
+				</div>
+			</div>
+
+
+			<div class="timeline-combobox layout-item">
+				<div class="status-bar-calender-icon">
+					<img src="/assets/icons/status-bar/time-filter-icon.svg" class="status-bar-image-left">
+				</div>
+				<select name="timeline">
+					<option>Timeline</option>
+				</select>
+			</div>
+
+			<div class="layout-combobox layout-item">
+				<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left">
+				<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
+					<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
+						{{i + 1}}
+					</option>
+				</select>
+			</div>
+
+			<div class="overlays-count layout-item">
+				<img src="/assets/icons/status-bar/imagery-count-icon.svg" class="status-bar-image-left">
+				{{overlays_count}}
+			</div>
+
 		</div>
 
 	</div>
+	<div class="navigation-area">
+		<button>
+			<img src="../../../../assets/icons/status-bar/prev-icon.svg"/>
+		</button>
 
+		<button>
+			<img src="../../../../assets/icons/status-bar/star-icon.svg"/>
+		</button>
 
-	<!--</ng-template>-->
+		<button>
+			<img src="../../../../assets/icons/status-bar/next-icon.svg"/>
+		</button>
 
-	<div class="right-side">
-
-		<div class="selected-case layout-item">
-			<img src="/assets/icons/status-bar/case-icon.svg" class="status-bar-image-left">
-			<span>{{selected_case_name}}</span>
-
-			<div class="pop-hover">
-				<div class="pop-hover-buttons">
-
-					<button class="share-link" (click)="copyLink()">
-						<img src="/assets/icons/status-bar/share-link-icon.svg">
-						<span>Share link</span>
-					</button>
-					<!--<button class="share-link" (click)="openLink()">-->
-						<!--<img src="">-->
-					<!--</button>-->
-				</div>
-
-			</div>
-		</div>
-
-		<div class="timeline-combobox layout-item">
-			<div class='status-bar-orientation-icon'>
-				<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
-			</div>
-			<select name="timeline">
-				<option>Orignal</option>
-			<option>Orignal</option>
-			</select>
-		</div>
-
-
-		<div class="timeline-combobox layout-item">
-			<div class='status-bar-world-icon'>
-				<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
-			</div>
-			<select name="timeline">
-				<option>Pin Point</option>
-			</select>
-			<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-				<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
-			</div>
-			<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-				<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="" class="status-bar-image-right">
-			</div>
-		</div>
-
-
-		<div class="timeline-combobox layout-item">
-			<div class="status-bar-calender-icon">
-				<img src="/assets/icons/status-bar/time-filter-icon.svg" class="status-bar-image-left">
-			</div>
-			<select name="timeline">
-				<option>Timeline</option>
-			</select>
-		</div>
-
-		<div class="layout-combobox layout-item">
-			<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left">
-			<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
-				<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
-					{{i + 1}}
-				</option>
-			</select>
-		</div>
-
-		<div class="overlays-count layout-item">
-			<img src="/assets/icons/status-bar/imagery-count-icon.svg" class="status-bar-image-left">
-			{{overlays_count}}
-		</div>
-
+		<button class="expand">
+			<img src="../../../../assets/icons/status-bar/expand-icon.svg"/>
+		</button>
 	</div>
 
 </div>

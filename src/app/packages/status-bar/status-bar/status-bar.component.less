@@ -1,183 +1,213 @@
 @import "~@ansyn/core/less/common";
 @share-link-padding-bottom: 20px;
-
-div.status-bar {
-	background: @status-color;
-	width: 100%;
-	transform: translate(0, -100%);
+div.status-bar-container{
+	position: relative;
 	display: flex;
-	box-sizing: border-box;
-	padding: 0 5px;
-	justify-content: flex-end;
-	align-items: center;
+	width: 100%;
 	height:35px;
-	font-size:14px;
-	position:absolute;
-	div.left-side {
-		display: flex;
-		width: 50%;
-		position:relative;
-		.back-to-world-view {
-			position: absolute;
-			margin-left: 7px;
-			align-self: center;
-			button {
-				width: 160px;
-				background: black;
-				color: white;
-				border: none;
-				line-height: 20px;
-			}
-		}
-	}
+	transform: translate(0, -100%);
+	justify-content: flex-end;
 
-	div.middle {
-		width: 100%;
-		text-align: center;
+	div.navigation-area{
+		background: white;
+		width: 144px;
+		height: 100%;
 		display: flex;
-		justify-content: center;
-		flex-direction: column;
-	}
-
-	div.right-side {
-		display: flex;
-		width: 50%;
-		height: 70%;
 		justify-content: space-between;
 		align-items: center;
-		border-left: 2px white solid;
-
-		div.selected-case {
-			padding: 5px;
-			margin: 0;
-			transition: .4s;
-
-			span{
-				max-width: 100px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-
-			img{
-				height:14px;
-				margin:-1px 4px 0 0;
-			}
-			div.pop-hover {
-				visibility: hidden;
-				opacity: 0;
-				transition: .4s;
+		padding: 0 10px;
+		box-sizing: border-box;
+		button{
+			outline: none;
+			width: 24px;
+			height: 24px;
+			background: #D8D8D8;
+			border: none;
+			padding: 0;
+			&.expand{
 				background: transparent;
-				position: absolute;
-				transform: translate(0, -100%);
-				top: 3px;
-				padding-bottom: @share-link-padding-bottom;
-				margin: 0 -5px;
-				.pop-hover-buttons{
-					transform: translate(0, @share-link-padding-bottom );
-					transition: .4s;
-					display: flex;
-					button.share-link{
-						border: solid white 1px;
-						cursor: pointer;
-						padding: 5px 10px;
-						background: #fafafa;
-						color: #727272;
-						border-radius: 2px;
-						transition: .3s;
-						display: flex;
-						align-items: center;
-						img{
-							height:20px;
-						}
-						&:hover {
-							border-top-color: #727272;
-							border-bottom-color: #727272;
-						}
-					}
-				}
-
-			}
-
-			&:hover {
-				background: black;
-				div.pop-hover {
-					visibility: visible;
-					opacity: 1;
-					div.pop-hover-buttons{
-						transform: translate(0, 0);
-						button.share-link{
-						}
-					}
-				}
 			}
 		}
 	}
 
-	div.layout-item {
-		margin: 0 5px;
+
+	div.status-bar {
+		background: @status-color;
+		height:100%;
+		width: 100%;
 		display: flex;
-		align-items:center;
-		&.timeline-combobox {
-			img {
+		box-sizing: border-box;
+		padding: 0 5px;
+		justify-content: flex-end;
+		align-items: center;
+		font-size:14px;
+
+		div.left-side {
+			display: flex;
+			width: 50%;
+			position:relative;
+			.back-to-world-view {
+				position: absolute;
+				margin-left: 7px;
+				align-self: center;
+				button {
+					width: 160px;
+					background: black;
+					color: white;
+					border: none;
+					line-height: 20px;
+				}
+			}
+		}
+
+		div.middle {
+			width: 100%;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+
+		div.right-side {
+			display: flex;
+			width: 50%;
+			height: 70%;
+			justify-content: space-between;
+			align-items: center;
+			border-left: 2px white solid;
+
+			div.selected-case {
+				padding: 5px;
 				margin: 0;
-			}
-			.status-bar-world-icon {
-				margin-right: 3px;
-				padding-top:5px;
-			}
-			.status-bar-edit-icon {
-				opacity: 0.5;
-				margin: 0px 2px 0px 3px;
-				padding-top:3px;
-				&.active {
-					opacity: 1;
-				}
-				img {
-					height: 16px;
-				}
-			}
-			.status-bar-eye-icon {
-				opacity: 0.5;
-				padding-top:4px;
-				&.active {
-					opacity: 1;
-				}
-				img {
-					height: 14px;
-				}
-			}
-			.status-bar-orientation-icon {
-				img {
-					margin-top:5px;
-					margin-right:4px;
-				}
-			}
-			.status-bar-calender-icon {
-				margin-right:3px;
-				padding-top:6px;
-				img {
+				transition: .4s;
 
+				span{
+					max-width: 100px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
-			}
-			.layout-combobox {
+
 				img{
-					hegiht:14px;
-					margin-right:4px;
+					height:14px;
+					margin:-1px 4px 0 0;
+				}
+				div.pop-hover {
+					visibility: hidden;
+					opacity: 0;
+					transition: .4s;
+					background: transparent;
+					position: absolute;
+					transform: translate(0, -100%);
+					top: 3px;
+					padding-bottom: @share-link-padding-bottom;
+					margin: 0 -5px;
+					.pop-hover-buttons{
+						transform: translate(0, @share-link-padding-bottom );
+						transition: .4s;
+						display: flex;
+						button.share-link{
+							border: solid white 1px;
+							cursor: pointer;
+							padding: 5px 10px;
+							background: #fafafa;
+							color: #727272;
+							border-radius: 2px;
+							transition: .3s;
+							display: flex;
+							align-items: center;
+							img{
+								height:20px;
+							}
+							&:hover {
+								border-top-color: #727272;
+								border-bottom-color: #727272;
+							}
+						}
+					}
+
 				}
 
+				&:hover {
+					background: black;
+					div.pop-hover {
+						visibility: visible;
+						opacity: 1;
+						div.pop-hover-buttons{
+							transform: translate(0, 0);
+							button.share-link{
+							}
+						}
+					}
+				}
 			}
 		}
 
-		img {
-			margin-right: 7px;
-			background: transparent;
-		}
-	}
+		div.layout-item {
+			margin: 0 5px;
+			display: flex;
+			align-items:center;
+			&.timeline-combobox {
+				img {
+					margin: 0;
+				}
+				.status-bar-world-icon {
+					margin-right: 3px;
+					padding-top:5px;
+				}
+				.status-bar-edit-icon {
+					opacity: 0.5;
+					margin: 0px 2px 0px 3px;
+					padding-top:3px;
+					&.active {
+						opacity: 1;
+					}
+					img {
+						height: 16px;
+					}
+				}
+				.status-bar-eye-icon {
+					opacity: 0.5;
+					padding-top:4px;
+					&.active {
+						opacity: 1;
+					}
+					img {
+						height: 14px;
+					}
+				}
+				.status-bar-orientation-icon {
+					img {
+						margin-top:5px;
+						margin-right:4px;
+					}
+				}
+				.status-bar-calender-icon {
+					margin-right:3px;
+					padding-top:6px;
+					img {
 
-	select {
-		background: black;
-		color: white;
-		font-size:12px;
+					}
+				}
+				.layout-combobox {
+					img{
+						hegiht:14px;
+						margin-right:4px;
+					}
+
+				}
+			}
+
+			img {
+				margin-right: 7px;
+				background: transparent;
+			}
+		}
+
+		select {
+			background: black;
+			color: white;
+			font-size:12px;
+		}
 	}
 }

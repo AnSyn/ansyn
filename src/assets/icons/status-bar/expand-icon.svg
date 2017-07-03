@@ -1,0 +1,21 @@
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Frame 19</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-27646 -5012)">
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M 27646 5012L 27670 5012L 27670 5036L 27646 5036L 27646 5012Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="Frame 19" clip-path="url(#clip-0)">
+<g id="arrows-expand" opacity="0.75">
+<g id="Capa_1">
+<g id="Shape">
+<use xlink:href="#path0_fill" transform="translate(27649 5015)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 17.9785 7.30322L 17.9785 0L 10.6758 0L 13.4844 2.80908L 10.1133 6.17969L 11.7988 7.86523L 15.1699 4.49414L 17.9785 7.30322ZM 7.30273 17.9775L 4.49414 15.1685L 7.86523 11.7979L 6.17969 10.1123L 2.80859 13.4829L 0 10.6743L 0 17.9775L 7.30273 17.9775Z"/>
+</defs>
+</svg>

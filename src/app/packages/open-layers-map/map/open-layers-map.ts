@@ -8,7 +8,7 @@ import * as ol from 'openlayers';
 import { Extent } from '@ansyn/imagery';
 import { MapPosition } from '@ansyn/imagery/model/map-position';
 
-export class Map implements IMap {
+export class OpenLayersMap implements IMap {
 
 	public mapType: string;
 	private _mapObject: ol.Map;

@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Map } from '../map/map';
+import { OpenLayersMap } from '../map/open-layers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { MapPosition } from '../../imagery/model/map-position';
 /**
@@ -23,7 +23,7 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	@ViewChild('olMap') mapElement: ElementRef;
 
-	private _map: Map;
+	private _map: OpenLayersMap;
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
@@ -34,7 +34,7 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 	}
 
 	createMap(layers: any, position?: MapPosition): void {
-		this._map = new Map(this.mapElement.nativeElement, layers, position);
+		this._map = new OpenLayersMap(this.mapElement.nativeElement, layers, position);
 		this.mapCreated.emit(this._map);
 	}
 

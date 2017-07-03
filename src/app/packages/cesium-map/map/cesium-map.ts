@@ -5,7 +5,7 @@ import { IMap, MapPosition } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 
-export class Map implements IMap {
+export class CesiumMap implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;

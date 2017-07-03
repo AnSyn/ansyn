@@ -2,20 +2,19 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
-import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { SelectCaseByIdAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
 import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
-import { OverlayReducer, LoadOverlaysAction } from '@ansyn/overlays';
+import { OverlayReducer} from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
 	DisplayOverlayAction, LoadOverlaysSuccessAction,
 	OverlaysActionTypes
-} from '../../packages/overlays/actions/overlays.actions';
-import { CasesActionTypes } from '../../packages/menu-items/cases/actions/cases.actions';
+} from '@ansyn/overlays/actions/overlays.actions';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

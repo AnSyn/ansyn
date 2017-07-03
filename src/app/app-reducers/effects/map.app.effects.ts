@@ -24,6 +24,7 @@ import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent } from '@ansyn/core/utils';
+import { IOverlayState } from '@asnyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -78,9 +79,9 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onDisplayOverlay$: Observable<void> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$, (action: DisplayOverlayAction, store: IAppState) => {
-			const overlay = store.overlays.overlays.get(action.payload.id);
-			const map_id = action.payload.map_id ? action.payload.map_id : store.cases.selected_case.state.maps.active_map_id;
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
+			const overlay = overlaysState.overlays.get(action.payload.id);
+			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
 			const ignoreExtent = action.payload.ignoreExtent;
 			return [overlay, map_id, ignoreExtent];
 		})

@@ -1,6 +1,7 @@
 import { OverlayReducer, overlayInitialState, IOverlayState } from './overlays.reducer';
 import { UnSelectOverlayAction, SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilterAction, SetFilterAction } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
+import { cloneDeep } from 'lodash';
 
 describe('Overlay Reducer', () => {
 
@@ -8,12 +9,10 @@ describe('Overlay Reducer', () => {
         it("should activate load_overlay reducer", () => {
             const queryParams = { search: '9399ejf' };
             const action = new LoadOverlaysAction(queryParams);
-            
-            overlayInitialState.overlays.set('tmp', 'value');
-            expect(overlayInitialState.overlays.size).toBe(1);
-
-            const result = OverlayReducer(overlayInitialState, action);
-            
+            const mockOverlayInitialState = cloneDeep(overlayInitialState);
+			mockOverlayInitialState.overlays.set('tmp', 'value');
+            expect(mockOverlayInitialState.overlays.size).toBe(1);
+            const result = OverlayReducer(mockOverlayInitialState, action);
             expect(result.loading).toBe(true);
             expect(result.overlays.size).toBe(0);
             expect(result.queryParams).toEqual(queryParams)

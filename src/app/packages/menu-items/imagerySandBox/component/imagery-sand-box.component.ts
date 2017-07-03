@@ -6,11 +6,11 @@ import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 import * as turf from '@turf/turf';
 import { Store } from '@ngrx/store';
-import { UpdateCaseAction } from '../../cases/actions/cases.actions';
-import { LoadOverlaysAction } from '../../../overlays/actions/overlays.actions';
-import { Case } from "app/packages/menu-items/cases";
-import { OverlaysCriteria } from '../../../overlays/models/overlay.model';
-import { ICasesState } from '../../cases/reducers/cases.reducer';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoadOverlaysAction } from '@ansyn//overlays/actions/overlays.actions';
+import { Case } from "@ansyn/menu-items/cases";
+import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { isEqual,cloneDeep } from 'lodash';
 
 @Component({

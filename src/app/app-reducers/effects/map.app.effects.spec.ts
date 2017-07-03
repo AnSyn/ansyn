@@ -27,8 +27,8 @@ import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actio
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app-reducers.module';
 import { IOverlayState, overlayInitialState } from '../../packages/overlays/reducers/overlays.reducer';
-import { IStatusBarState } from '../../packages/status-bar/reducers/status-bar.reducer';
-import { Case } from '../../packages/menu-items/cases/models/case.model';
+import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { Case } from '@ansyn/menu-items/cases/models/case.model';
 
 
 

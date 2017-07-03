@@ -82,12 +82,12 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$, (action: DisplayOverlayAction, store: IAppState) => {
 			const overlay = store.overlays.overlays.get(action.payload.id);
 			const map_id = action.payload.map_id ? action.payload.map_id : store.cases.selected_case.state.maps.active_map_id;
-			const unsetExtent = action.payload.unsetExtent;
-			return [overlay, map_id, unsetExtent];
+			const ignoreExtent = action.payload.ignoreExtent;
+			return [overlay, map_id, ignoreExtent];
 		})
-		.map( ([overlay, map_id, unsetExtent]:[Overlay, string, boolean]) => {
+		.map( ([overlay, map_id, ignoreExtent]:[Overlay, string, boolean]) => {
 			let extent;
-			if(!unsetExtent){
+			if(!ignoreExtent){
 				extent = calcGeoJSONExtent(overlay.footprint);
 			}
 			const mapType = this.communicator.provide(map_id).ActiveMap.mapType;
@@ -95,8 +95,6 @@ export class MapAppEffects {
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				this.communicator.provide(map_id).setLayer(layer, extent);
 			});
-
-			return;
 		});
 
 	@Effect({ dispatch: false })

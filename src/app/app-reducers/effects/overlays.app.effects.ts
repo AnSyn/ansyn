@@ -81,11 +81,11 @@ export class OverlaysAppEffects {
 					}).map((map: CaseMapState) => {
 						const id = map.data.selectedOverlay.id;
 						const map_id = map.id;
-						const unsetExtent = true;
+						const ignoreExtent = true;
 						const OIndex = loadingOverlays.findIndex((_overlayId) => id == _overlayId);
 						loadingOverlays.splice(OIndex, 1);
 
-						return new DisplayOverlayAction({id, map_id, unsetExtent})
+						return new DisplayOverlayAction({id, map_id, ignoreExtent})
 					});
 				return [new SetLoadingOverlaysAction(loadingOverlays), ...displayOverlayActions];
 			}
@@ -95,25 +95,3 @@ export class OverlaysAppEffects {
 	constructor(public actions$: Actions, public store$: Store<IAppState>,public casesService : CasesService)
 	{}
 }
-
-
-/*
- // displaySelectedOverlay$ effect will display overlays from selected case.
- @Effect()
- displaySelectedOverlay$: Observable<any> = this.actions$
- .ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
- .withLatestFrom(this.store$)
- .filter(([action, state]:[any, IAppState]) => true)
- .mergeMap(([action, state]:[any, IAppState]) => {
- const selected_case: Case = state.cases.selected_case;
- const displayed_overlays = selected_case
- .state.maps.data
- .filter((map: CaseMapState) => map.data.selectedOverlay)
- .map((map: CaseMapState) => {
- return {id: map.data.selectedOverlay.id, map_id: map.id}
- });
- const result = displayed_overlays.map( overlayIdMapId => new DisplayOverlayAction(overlayIdMapId));
- console.log(result)
- return result;
- });
- */

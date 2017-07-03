@@ -135,7 +135,7 @@ describe('CasesReducer', () => {
 		expect(result.unlisted_case.id).toEqual('default_case_id');
 	});
 
-	it('SET_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
+	it('SET_DEFAULT_CASE_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
 		let state: ICasesState = initialCasesState;
 		const case_value: Case = {id: '12354', region: 'any region', facets: []} as any;
 		let action: SetDefaultCaseQueryParams = new SetDefaultCaseQueryParams(case_value);
@@ -143,7 +143,7 @@ describe('CasesReducer', () => {
 		expect(result.default_case_query_params).toEqual(case_value);
 	});
 
-	it('REMOVE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
+	it('REMOVE_DEFAULT_CASE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
 		let state: ICasesState = initialCasesState;
 		let action: RemoveDefaultCaseQueryParamsAction = new RemoveDefaultCaseQueryParamsAction();
 		let result: ICasesState = CasesReducer(state, action);

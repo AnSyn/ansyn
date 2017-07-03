@@ -90,10 +90,11 @@ export class MapAppEffects {
 			if(!ignoreExtent){
 				extent = calcGeoJSONExtent(overlay.footprint);
 			}
-			const mapType = this.communicator.provide(map_id).ActiveMap.mapType;
+			const communicator = this.communicator.provide(map_id);
+			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
 			sourceLoader.createAsync(overlay).then((layer)=> {
-				this.communicator.provide(map_id).setLayer(layer, extent);
+				communicator.setLayer(layer, extent);
 			});
 		});
 
@@ -151,9 +152,9 @@ export class MapAppEffects {
 	@Effect({dispatch:false})
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
-		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
-		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
-		.map(([action,caseState,statusBarState]:[any,any,any]) => {
+		.withLatestFrom(this.store$.select("cases"), this.store$.select("status_bar"))
+		.filter(([action, caseState, statusBarState]:[any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.map(([action, caseState, statusBarState]:[any, any, any]) => {
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
 
 			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {

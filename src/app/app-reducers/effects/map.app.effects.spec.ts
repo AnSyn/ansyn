@@ -62,6 +62,7 @@ describe('MapAppEffects', () => {
 
 	const cases: Case[] = [{
 		state: {
+			time: { type: "",from: new Date(), to: new Date()},
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -143,8 +144,8 @@ describe('MapAppEffects', () => {
 	});
 
 	it('onMapSingleClick$ effect',() => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch,true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator,true);
+		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
 		//mock communicatorsAsArray
 		const imagery1 = {
 			addPinPointIndicator: () => {},

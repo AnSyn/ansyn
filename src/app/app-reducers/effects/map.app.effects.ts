@@ -14,7 +14,6 @@ import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import { TypeContainerService } from "@ansyn/type-container";
-import * as turf from '@turf/turf';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
 import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
@@ -53,14 +52,14 @@ export class MapAppEffects {
 
 			return [
 				//disable the pinpoint search
-				new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointSearch, value: false}),
+				new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch, value: false}),
 				//update case
 				new UpdateCaseAction(selectedCase),
 				//load overlays
 				new LoadOverlaysAction({
-					to:selectedCase.state.time.to,
-					from:selectedCase.state.time.from,
-					polygon:selectedCase.state.region,
+					to: selectedCase.state.time.to,
+					from: selectedCase.state.time.from,
+					polygon: selectedCase.state.region,
 					caseId: selectedCase.id
 				})
 			];

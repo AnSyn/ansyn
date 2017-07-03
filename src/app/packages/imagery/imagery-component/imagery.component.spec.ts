@@ -63,27 +63,4 @@ describe('ImageryComponent', () => {
 	}));
 
 	it('should create', () => {expect(component).toBeTruthy(); });
-
-	// it('Create OpenLayersMap', () => {
-	// 	component.mapComponentSettings = imageryData;
-	// 	imageryProviderService.registerMapProvider()
-	// 	component.ngOnInit();
-	// 	const div = fixture.nativeElement.querySelector('#openLayersMap');
-	// 	expect(div).toBeDefined();
-	// 	const olOverlaycontainer = div.querySelector('.ol-overlaycontainer');
-	// 	expect(olOverlaycontainer).toBeDefined();
-	// });
-
-	// it('Check setCenter and getCenter API', () => {
-	// 	component.mapComponentSettings = imageryData;
-	// 	component.ngOnInit();
-	//
-	// 	const geoPoint: GeoJSON.Point = {
-	// 		type: 'Point',
-	// 		coordinates: [15.7, 37.9]
-	// 	};
-	// 	imageryCommunicatorService.provide(imageryData.mapComponentId).setCenter(geoPoint);
-	// 	const expectedGeoPointCenter = imageryCommunicatorService.provide(imageryData.mapComponentId).getCenter();
-	// 	expect(geoPoint).toEqual(expectedGeoPointCenter);
-	// });
 });

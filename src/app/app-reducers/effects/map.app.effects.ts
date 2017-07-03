@@ -24,7 +24,7 @@ import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent } from '@ansyn/core/utils';
-import { IOverlayState } from '@asnyn/overlays/reducers/overlays.reducer';
+import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class MapAppEffects {

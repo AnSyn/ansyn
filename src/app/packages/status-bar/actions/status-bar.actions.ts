@@ -6,7 +6,14 @@ export const StatusBarActionsTypes = {
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
 	SET_LINK_COPY_TOAST_VALUE: 'SET_LINK_COPY_TOAST_VALUE',
 	UPDATE_STATUS_FLAGS: "UPDATE_STATUS_FLAGS",
-	OPEN_SHARE_LINK: 'OPEN_SHARE_LINK'
+	OPEN_SHARE_LINK: 'OPEN_SHARE_LINK',
+
+	GO_PREV: 'GO_PREV',
+	GO_NEXT: 'GO_NEXT',
+	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
+	FAVORITE: 'FAVORITE',
+	EXPAND: 'EXPAND'
+
 };
 
 export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
@@ -37,4 +44,30 @@ export class OpenShareLink implements Action{
 	type: string = StatusBarActionsTypes.OPEN_SHARE_LINK;
 	constructor() {}
 }
+
+export class GoPrevAction implements Action{
+	type: string = StatusBarActionsTypes.GO_PREV;
+	constructor() {}
+}
+
+export class GoNextAction implements Action{
+	type: string = StatusBarActionsTypes.GO_NEXT;
+	constructor() {}
+}
+
+export class ExpandAction implements Action{
+	type: string = StatusBarActionsTypes.EXPAND;
+	constructor() {}
+}
+
+export class FavoriteAction implements Action{
+	type: string = StatusBarActionsTypes.FAVORITE;
+	constructor() {}
+}
+
+export class BackToWorldViewAction implements Action{
+	type: string = StatusBarActionsTypes.BACK_TO_WORLD_VIEW;
+	constructor() {}
+}
+
 

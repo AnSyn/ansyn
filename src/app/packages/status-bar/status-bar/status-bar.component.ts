@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
-import { ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction, CopySelectedCaseLinkAction } from '../actions/status-bar.actions';
+import {
+	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
+	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction
+} from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
-import { log } from 'util';
-
+import { BackToWorldAction } from '../../map-facade/actions/map.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -34,8 +36,9 @@ export class StatusBarComponent implements OnInit {
 	@Input('overlay-name') overlayName: number;
 	@Input('hide-overlay-name') hideOverlayName: boolean;
 	@Input('maps') maps: any;
+
 	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
-	@Output('backToWorldViewClicked')backToWorldViewClicked = new EventEmitter();
+
 
 	showLinkCopyToast: boolean;
 
@@ -64,7 +67,7 @@ export class StatusBarComponent implements OnInit {
 			})
 	}
 
-	constructor(private store: Store<IStatusBarState>) {}
+	constructor(public store: Store<IStatusBarState>) {}
 
 	layoutSelectChange(selected_layout_index: number): void {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
@@ -91,8 +94,25 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointIndicator}));
 	}
 
-	backToWorldView() {
-		this.backToWorldViewClicked.emit();
+
+	clickGoPrev(): void {
+		this.store.dispatch(new GoPrevAction());
+	}
+
+	clickGoNext(): void {
+		this.store.dispatch(new GoNextAction());
+	}
+
+	clickExpand(): void {
+		this.store.dispatch(new ExpandAction());
+	}
+
+	clickFavorite(): void {
+		this.store.dispatch(new FavoriteAction());
+	}
+
+	clickBackToWorldView(): void {
+		this.store.dispatch(new BackToWorldViewAction());
 	}
 
 }

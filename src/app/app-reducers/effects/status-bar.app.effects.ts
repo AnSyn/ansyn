@@ -18,6 +18,7 @@ import { UpdateCaseAction, CopyCaseLinkAction } from '@ansyn/menu-items/cases';
 import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
+import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
 
 
 @Injectable()
@@ -143,6 +144,86 @@ export class StatusBarAppEffects {
 		}
 		return selected_case;
 	}
+
+	@Effect()
+	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
+		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
+		.map(() => {
+			return new BackToWorldAction();
+		});
+
+	@Effect()
+	onFavorite$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.FAVORITE)
+		.map(() => {
+			console.log("onFavorite$")
+		});
+
+
+	@Effect()
+	onExpand$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.EXPAND)
+		.map(() => {
+			console.log("onExpand$")
+		});
+
+	@Effect()
+	onGoNext$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.GO_NEXT)
+		.map(() => {
+			console.log("onGoNext$")
+		});
+
+
+	@Effect()
+	onGoPrev$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.GO_PREV)
+		.map(() => {
+			console.log("onGoPrev$")
+		});
+
+
+
+/*
+	 backToWorldView($event) {
+	 this.store.dispatch(new BackToWorldAction());
+	 }
+
+	@Effect({dispatch: false})
+	onGoPrev$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.GO_PREV)
+		.map(action => {
+			console.log({action})
+		})
+		.share();
+
+	@Effect({dispatch: false})
+	onGoNext$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.GO_NEXT)
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'))
+		.map(([action, casesState, overlaysState]: [any, any, any]) => {
+
+			const activeMap = casesState.selected_case.state.maps.data.find(map => {
+				return casesState.selected_case.state.maps.active_map_id == map.id
+			});
+
+			if(!isEmpty(activeMap.data.selectedOverlay)){
+				const overlayArray: Overlay[] = <any>Array.from(overlaysState.overlays);
+				const overlayId = activeMap.data.selectedOverlay.id;
+				const overlayIndex = overlayArray.findIndex(overlay => overlay.id == overlayId);
+				const nextOverlayIndex = overlayIndex + 1;
+				let nextOverlayId;
+				if (nextOverlayIndex < overlayArray.length){
+					nextOverlayId = (<any>overlayArray[nextOverlayIndex]).id;
+				}
+			}
+
+		})
+		.share();
+
+
+*/
+
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

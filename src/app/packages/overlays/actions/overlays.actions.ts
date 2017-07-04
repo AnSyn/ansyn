@@ -69,9 +69,7 @@ export class DisplayOverlayAction implements Action {
 
 export class DemoAction implements Action {
 	type = OverlaysActionTypes.DEMO;
-	constructor(public payload: any) {
-    	console.log(payload);
-    }
+	constructor(public payload: any) {}
 }
 
 export class RedrawTimelineAction implements Action {

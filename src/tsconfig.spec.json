@@ -20,7 +20,8 @@
     ]
   },
   "files": [
-    "test.ts"
+    "test.ts",
+	"typings.d.ts"
   ],
   "include": [
     "**/*.spec.ts"

@@ -19,10 +19,10 @@ import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import { OpenLayerTileWMSSourceProvider } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
-import { OpenLayerOSMSourceProvider } from './app-models/map-source-providers/open-layers-OSM-source-provider';
-import { OpenLayerIDAHOSourceProvider } from './app-models/map-source-providers/open-layers-IDAHO-source-provider';
-import { OpenLayerBingSourceProvider } from './app-models/map-source-providers/open-layers-BING-source-provider';
+import { OpenLayerTileWMSSourceProvider, OpenLayerTileWMSSourceProviderMapType, OpenLayerTileWMSSourceProviderSourceType } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
+import { OpenLayerOSMSourceProvider, OpenLayerOSMSourceProviderMapType, OpenLayerOSMSourceProviderSourceType } from './app-models/map-source-providers/open-layers-OSM-source-provider';
+import { OpenLayerIDAHOSourceProvider, OpenLayerIDAHOSourceProviderMapType, OpenLayerIDAHOSourceProviderSourceType } from './app-models/map-source-providers/open-layers-IDAHO-source-provider';
+import { OpenLayerBingSourceProvider, OpenLayerBingSourceProviderMapType, OpenLayerBingSourceProviderSourceType } from './app-models/map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
 
@@ -37,22 +37,22 @@ import { TypeContainerModule } from '@ansyn/type-container';
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerTileWMSSourceProvider,
-			name: [OpenLayerTileWMSSourceProvider.s_mapType, OpenLayerTileWMSSourceProvider.s_sourceType].join(',')
+			name: [OpenLayerTileWMSSourceProviderMapType, OpenLayerTileWMSSourceProviderSourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerOSMSourceProvider,
-			name: [OpenLayerOSMSourceProvider.s_mapType, OpenLayerOSMSourceProvider.s_sourceType].join(',')
+			name: [OpenLayerOSMSourceProviderMapType, OpenLayerOSMSourceProviderSourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerIDAHOSourceProvider,
-			name: [OpenLayerIDAHOSourceProvider.s_mapType, OpenLayerIDAHOSourceProvider.s_sourceType].join(',')
+			name: [OpenLayerIDAHOSourceProviderMapType, OpenLayerIDAHOSourceProviderSourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: BaseSourceProvider,
 			type: OpenLayerBingSourceProvider,
-			name: [OpenLayerBingSourceProvider.s_mapType, OpenLayerBingSourceProvider.s_sourceType].join(',')
+			name: [OpenLayerBingSourceProviderMapType, OpenLayerBingSourceProviderSourceType].join(',')
 		}),
 		TypeContainerModule.register({
 			baseType: FilterMetadata,

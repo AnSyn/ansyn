@@ -34,21 +34,21 @@ export class ImageryCommunicatorService {
 	}
 
 	public createCommunicator(componentManager: ImageryComponentManager): void {
-		if (this._communicators[componentManager.Id]) {
-			throw new Error(`'Can't create communicator ${componentManager.Id}, already exists!'`);
+		if (this._communicators[componentManager.id]) {
+			throw new Error(`'Can't create communicator ${componentManager.id}, already exists!'`);
 		}
 
-		this._communicators[componentManager.Id] = new CommunicatorEntity(componentManager);
-		this.initiliziedCommunicators.push(componentManager.Id);
+		this._communicators[componentManager.id] = new CommunicatorEntity(componentManager);
+		this.initiliziedCommunicators.push(componentManager.id);
 		this.instanceCreated.emit({
 			communicatorsIds: this.initiliziedCommunicators,
-			currentCommunicatorId: componentManager.Id
+			currentCommunicatorId: componentManager.id
 		});
 	}
 
 	public replaceCommunicatorId(old_id, new_id) {
 		this.communicators[new_id] = this.communicators[old_id];
-		this.communicators[new_id]._manager.Id = new_id;
+		this.communicators[new_id]._manager.id = new_id;
 		delete this.communicators[old_id];
 
 		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id),1);

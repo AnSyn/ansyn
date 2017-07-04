@@ -1,14 +1,16 @@
+/**
+ * Created by AsafMas on 11/05/2017.
+ */
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { OpenLayersMap } from '../map/open-layers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
-import { MapPosition } from '../../imagery/model/map-position';
+import { CesiumMap } from './cesium-map';
 /**
  * Created by AsafMas on 07/05/2017.
  */
 @Component({
-	selector: 'ansyn-ol-component',
+	selector: 'ansyn-cesium-component',
 	template: `
-		<div #olMap></div>
+		<div #cesiumMap>Working!</div>
 	`,
 	styles: [
 			`div{
@@ -19,27 +21,26 @@ import { MapPosition } from '../../imagery/model/map-position';
 
 export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapType = 'openLayersMap';
+	static mapType = 'cesiumMap';
+	@ViewChild('cesiumMap') mapElement: ElementRef;
 
-	@ViewChild('olMap') mapElement: ElementRef;
-
-	private _map: OpenLayersMap;
+	private _map: CesiumMap;
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
 		this.mapCreated = new EventEmitter<IMap>();
 	}
 
-	ngOnInit(): void {
-	}
-
-	createMap(layers: any, position?: MapPosition): void {
-		this._map = new OpenLayersMap(this.mapElement.nativeElement, layers, position);
+	createMap(layers: any) {
+		this._map = new CesiumMap(this.mapElement.nativeElement);
 		this.mapCreated.emit(this._map);
 	}
 
+	ngOnInit(): void {
+	}
+
 	ngOnDestroy(): void {
-		this._map.dispose();
+		// this._map.dispose();
 	}
 
 }

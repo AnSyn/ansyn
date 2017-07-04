@@ -20,28 +20,28 @@ describe('ImageryProviderService', () => {
 		expect(ImageryProviderService).toBeTruthy();
 	});
 
-	it('should register and provide a map', () => {
+	it('ImageryProviderService should registerMapProvider and provideMap by map type', () => {
 
-		const mapComponent = { Id: "test"};
+		const mapComponent = { id: "test"};
 
 		imageryProviderService.registerMapProvider("map1", mapComponent);
-		imageryProviderService.registerMapProvider("map2", { Id: "test2"});
+		imageryProviderService.registerMapProvider("map2", { id: "test2"});
 
 		expect(imageryProviderService.provideMap("map1")).toEqual(mapComponent);
 	});
 
 	class Plugin1 {
-		Id = "test1";
+		id = "test1";
 	}
 
 	class Plugin2 {
-		Id = "test2";
+		id = "test2";
 	}
 
 	class Plugin3 {
-		Id = "test3";
+		id = "test3";
 	}
-	it('should register and createPlugins plugins by map type', () => {
+	it('ImageryProviderService should registerPlugin and createPlugins by map type', () => {
 
 		imageryProviderService.registerPlugin("map1", "plugin1", Plugin1);
 		imageryProviderService.registerPlugin("map1", "plugin2", Plugin2);
@@ -49,7 +49,7 @@ describe('ImageryProviderService', () => {
 
 		const pluggins = imageryProviderService.createPlugins("map1");
 		expect(pluggins.length).toEqual(2);
-		expect((<any>pluggins[0]).Id).toEqual(new Plugin1().Id);
-		expect((<any>pluggins[1]).Id).toEqual(new Plugin2().Id);
+		expect((<any>pluggins[0]).id).toEqual(new Plugin1().id);
+		expect((<any>pluggins[1]).id).toEqual(new Plugin2().id);
 	});
 });

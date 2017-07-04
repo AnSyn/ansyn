@@ -1,0 +1,48 @@
+.combo-container{
+	position: relative;
+
+	button.trigger{
+		outline: none;
+		background: black;
+		color: white;
+		border-style: solid;
+		border-width: 1px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 6px;
+		img{
+			height: 16px;
+		}
+		span.arrow{
+			margin-left: 5px;
+			font-size: 7px;
+		}
+	}
+	.options-container{
+		width: 100%;
+		&.show{
+			visibility: visible;
+		}
+		visibility: hidden;
+		position: absolute;
+		top: 0;
+		transform: translate(0,-100%);
+		.option{
+			display: flex;
+			justify-content: center;
+			background: black;
+			padding: 1px 6px;
+			color: white;
+			cursor: pointer;
+			img{
+				opacity: .8;
+			}
+			&:hover{
+				img{
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

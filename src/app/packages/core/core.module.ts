@@ -4,7 +4,7 @@ import { ToastModule } from './utils/toast/toast.module';
 
 @NgModule({
 	imports: [CommonModule, ToastModule],
-	exports:[ToastModule]
+	exports: [ToastModule]
 })
 
 export class CoreModule { }

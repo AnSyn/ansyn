@@ -17,6 +17,7 @@ div.status-bar-container{
 		align-items: center;
 		padding: 0 10px;
 		box-sizing: border-box;
+		z-index: 1;
 		button{
 			outline: none;
 			width: 24px;
@@ -208,6 +209,18 @@ div.status-bar-container{
 			background: black;
 			color: white;
 			font-size:12px;
+			option{
+				&:before{
+					content: "";
+					position: fixed;
+					width: 200px;
+					height: 200px;
+					background: red;
+				}
+				div{
+
+				}
+			}
 		}
 	}
 }

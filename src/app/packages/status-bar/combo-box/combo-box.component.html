@@ -1,0 +1,23 @@
+
+<div class="combo-container">
+
+	<button class="trigger" (click)="toggleShow($event)">
+		<img [src]="'/assets/icons/status-bar/screen/' + (selectedIndex + 1) + '.svg'"/>
+
+		<span class="arrow" *ngIf="!show; else close">
+				▼
+			</span>
+		<ng-template #close>
+				<span class="arrow">
+				▲
+				</span>
+		</ng-template>
+
+	</button>
+
+	<div class="options-container" #container [class.show]="show" (clickOutside)="show = false">
+		<div class="option" *ngFor="let option of options; index as index" (click)="selectedIndex = index; show = false">
+			<img [src]="'/assets/icons/status-bar/screen/' + (index + 1) + '.svg'"/>
+		</div>
+	</div>
+</div>

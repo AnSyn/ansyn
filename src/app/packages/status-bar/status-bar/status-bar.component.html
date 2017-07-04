@@ -68,12 +68,18 @@
 			</div>
 
 			<div class="layout-combobox layout-item">
-				<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left">
-				<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">
-					<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">
-						{{i + 1}}
-					</option>
-				</select>
+				<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left" hidden>
+
+				<ansyn-combo-box [options]="layouts$ | async" [(selectedIndex)]="selected_layout_index" (selectedIndexChange)="layoutSelectChange(selected_layout_index)">
+
+				</ansyn-combo-box>
+
+				<!--<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">-->
+					<!--<option *ngFor="let layout of layouts$ | async ; index as i;" [value]="+i">-->
+						<!--<img [src]="'/assets/icons/status-bar/screen/' + (1 + i) + '.svg'"/>-->
+						<!--{{(1 + i)}}-->
+					<!--</option>-->
+				<!--</select>-->
 			</div>
 
 			<div class="overlays-count layout-item">

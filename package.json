@@ -40,6 +40,8 @@
     "debounce": "^1.0.0",
     "event-drops": "github:osadan/EventDrops#51a2075e3653e7b073e8fcf54c27b9ec743bfda3",
     "lodash": "^4.17.4",
+    "ng-click-outside": "^2.3.5",
+    "ng-select": "^1.0.0-beta.5",
     "ng2-destroy-subscribers": "0.0.28",
     "openlayers": "^4.1.1",
     "reselect": "^3.0.0",

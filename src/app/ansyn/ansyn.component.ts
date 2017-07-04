@@ -11,6 +11,8 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 
+declare function require(moduleName: string): any;
+const packageJson = require("../../../package.json");
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -51,8 +53,11 @@ export class AnsynComponent implements OnInit{
 	overlays_count: number;
 	active_map;
 	overlay_name = "";
+	public version;
 
-	constructor(private store: Store<IAppState>) {}
+	constructor(private store: Store<IAppState>) {
+		this.version = packageJson.version;
+	}
 
 	ngOnInit(): void {
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);

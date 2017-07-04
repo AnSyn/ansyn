@@ -145,14 +145,14 @@ export class StatusBarAppEffects {
 		return selected_case;
 	}
 
-	@Effect()
+	@Effect({dispatch: false})
 	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
 		.map(() => {
 			return new BackToWorldAction();
 		});
 
-	@Effect()
+	@Effect({dispatch: false})
 	onFavorite$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.FAVORITE)
 		.map(() => {
@@ -160,14 +160,14 @@ export class StatusBarAppEffects {
 		});
 
 
-	@Effect()
+	@Effect({dispatch: false})
 	onExpand$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.EXPAND)
 		.map(() => {
 			console.log("onExpand$")
 		});
 
-	@Effect()
+	@Effect({dispatch: false})
 	onGoNext$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT)
 		.map(() => {
@@ -175,7 +175,7 @@ export class StatusBarAppEffects {
 		});
 
 
-	@Effect()
+	@Effect({dispatch: false})
 	onGoPrev$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_PREV)
 		.map(() => {

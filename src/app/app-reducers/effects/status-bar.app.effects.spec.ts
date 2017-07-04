@@ -205,24 +205,28 @@ describe('StatusBarAppEffects', () => {
 	it('onGoNext$', () => {
 		effectsRunner.queue(new GoNextAction());
 		statusBarAppEffects.onGoNext$.subscribe(() => {
+			console.log("onGoNext$")
 		});
 	});
 
 	it('onGoPrev$', () => {
 		effectsRunner.queue(new GoPrevAction());
 		statusBarAppEffects.onGoPrev$.subscribe(() => {
+			console.log("onGoPrev$")
 		});
 	});
 
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());
 		statusBarAppEffects.onExpand$.subscribe(() => {
+			console.log("onExpand$")
 		});
 	});
 
 	it('onFavorite$', () => {
 		effectsRunner.queue(new FavoriteAction());
 		statusBarAppEffects.onFavorite$.subscribe(() => {
+			console.log("onFavorite$")
 		});
 	});
 

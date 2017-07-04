@@ -11,6 +11,7 @@ import { isEmpty, cloneDeep } from 'lodash';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -19,7 +20,7 @@ export class OverlaysAppEffects {
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'))
-	 	.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case) )
+		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case) )
 		.map(([action,cases]:[Action,ICasesState])=> {
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(cases.selected_case);
 			return new OverlaysMarkupAction(overlaysMarkup);
@@ -59,8 +60,8 @@ export class OverlaysAppEffects {
 					.filter((map: CaseMapState) =>{
 						return !isEmpty(map.data.selectedOverlay);
 					}).forEach((map: CaseMapState) => {
-						loadingOverlays.push(map.data.selectedOverlay.id);
-					});
+					loadingOverlays.push(map.data.selectedOverlay.id);
+				});
 				return new SetLoadingOverlaysAction(loadingOverlays);
 			}
 		).share();
@@ -90,6 +91,7 @@ export class OverlaysAppEffects {
 				return [new SetLoadingOverlaysAction(loadingOverlays), ...displayOverlayActions];
 			}
 		).share();
+
 
 
 	constructor(public actions$: Actions, public store$: Store<IAppState>,public casesService : CasesService)

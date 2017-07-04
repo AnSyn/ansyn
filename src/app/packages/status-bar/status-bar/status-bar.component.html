@@ -2,7 +2,7 @@
 	<div class="status-bar">
 		<div class="left-side" *ngIf="!hideOverlayName">
 			<div class="back-to-world-view">
-				<button (click)="backToWorldView()">Back to world view</button>
+				<button (click)="clickBackToWorldView()">Back to world view</button>
 			</div>
 			<div class="middle">
 				<span> {{overlayName || 'World View'}}</span>
@@ -84,21 +84,22 @@
 		</div>
 
 	</div>
+
 	<div class="navigation-area">
-		<button>
-			<img src="../../../../assets/icons/status-bar/prev-icon.svg"/>
+		<button (click)="clickGoPrev()">
+			<img src="/assets/icons/status-bar/prev-icon.svg"/>
 		</button>
 
-		<button>
-			<img src="../../../../assets/icons/status-bar/star-icon.svg"/>
+		<button (click)="clickFavorite()">
+			<img src="/assets/icons/status-bar/star-icon.svg"/>
 		</button>
 
-		<button>
-			<img src="../../../../assets/icons/status-bar/next-icon.svg"/>
+		<button (click)="clickGoNext()">
+			<img src="/assets/icons/status-bar/next-icon.svg"/>
 		</button>
 
-		<button class="expand">
-			<img src="../../../../assets/icons/status-bar/expand-icon.svg"/>
+		<button class="expand" (click)="clickExpand()">
+			<img src="/assets/icons/status-bar/expand-icon.svg"/>
 		</button>
 	</div>
 

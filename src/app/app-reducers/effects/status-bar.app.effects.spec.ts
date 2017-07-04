@@ -22,6 +22,11 @@ import {
 	DisableMouseShadow, EnableMouseShadow,
 	StopMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
+import {
+	BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction,
+	GoPrevAction
+} from '../../packages/status-bar/actions/status-bar.actions';
+import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -29,11 +34,35 @@ describe('StatusBarAppEffects', () => {
 	let store: Store<any>;
 	let casesService: CasesService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	//center of the polygon is { type: 'Feature',
-	//properties: {},
-	//geometry: { type: 'Point', coordinates: [ -70.33666666666667, 25.5 ] } }
-	const caseState = { cases:  [
-		{
+
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [
+				HttpModule,
+				EffectsTestingModule,
+				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})
+			],
+			providers: [
+				StatusBarAppEffects,
+				{provide: CasesService, useValue: {updateCase: () => null}},
+				ImageryCommunicatorService,
+				OverlaysService,
+				Http,
+				ConnectionBackend,
+				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+			]
+		}).compileComponents();
+	}));
+
+
+	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService) => {
+		statusBarAppEffects = _statusBarAppEffects;
+		effectsRunner = _effectsRunner;
+		store = _store;
+		casesService = _casesService;
+		imageryCommunicatorService = _imageryCommunicatorService;
+
+		const fakeCase: Case = {
 			id: 'case1',
 			state: {
 				region: {
@@ -47,39 +76,11 @@ describe('StatusBarAppEffects', () => {
 						]
 					]
 				},
+            }
+		} as any;
 
-			}
-		}
-		]} as any;
-
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			imports: [
-				HttpModule,
-				EffectsTestingModule,
-				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})
-			],
-			providers: [
-					StatusBarAppEffects,
-					{provide: CasesService, useValue: {updateCase: () => null}},
-					ImageryCommunicatorService,
-					OverlaysService,
-					Http,
-					ConnectionBackend,
-					{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
-				]
-		}).compileComponents();
-	}));
-
-
-	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService) => {
-		statusBarAppEffects = _statusBarAppEffects;
-		effectsRunner = _effectsRunner;
-		store = _store;
-		casesService = _casesService;
-		imageryCommunicatorService = _imageryCommunicatorService;
-		store.dispatch(new AddCaseSuccessAction(caseState.cases[0]));
-		store.dispatch(new SelectCaseByIdAction(caseState.cases[0].id));
+		store.dispatch(new AddCaseSuccessAction(fakeCase));
+		store.dispatch(new SelectCaseByIdAction(fakeCase.id));
 	}));
 
 
@@ -96,7 +97,7 @@ describe('StatusBarAppEffects', () => {
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointSearchAction$.subscribe( _result => {
+		statusBarAppEffects.updatePinPointSearchAction$.subscribe( () => {
 			expect(imagery1.createMapSingleClickEvent['calls'].count()).toBe(2);
 		})
 
@@ -117,7 +118,7 @@ describe('StatusBarAppEffects', () => {
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( _result => {
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( () => {
 			expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
 		})
 	})
@@ -137,7 +138,7 @@ describe('StatusBarAppEffects', () => {
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( _result => {
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( () => {
 			expect(imagery1.removePinPointIndicator['calls'].count()).toBe(3);
 		})
 	})
@@ -191,6 +192,37 @@ describe('StatusBarAppEffects', () => {
 		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
 			expect(result instanceof ChangeLayoutAction).toBeTruthy();
 			expect(result.payload).toEqual(layouts_index);
+		});
+	});
+
+	it('onBackToWorldView$$ should return BackToWorldAction with no args', () => {
+		effectsRunner.queue(new BackToWorldViewAction());
+		statusBarAppEffects.onBackToWorldView$.subscribe((result: ChangeLayoutAction)=>{
+			expect(result instanceof BackToWorldAction).toBeTruthy();
+		});
+	});
+
+	it('onGoNext$', () => {
+		effectsRunner.queue(new GoNextAction());
+		statusBarAppEffects.onGoNext$.subscribe(() => {
+		});
+	});
+
+	it('onGoPrev$', () => {
+		effectsRunner.queue(new GoPrevAction());
+		statusBarAppEffects.onGoPrev$.subscribe(() => {
+		});
+	});
+
+	it('onExpand$', () => {
+		effectsRunner.queue(new ExpandAction());
+		statusBarAppEffects.onExpand$.subscribe(() => {
+		});
+	});
+
+	it('onFavorite$', () => {
+		effectsRunner.queue(new FavoriteAction());
+		statusBarAppEffects.onFavorite$.subscribe(() => {
 		});
 	});
 

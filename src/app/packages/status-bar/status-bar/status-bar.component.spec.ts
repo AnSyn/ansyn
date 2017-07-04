@@ -3,7 +3,7 @@ import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../reducers/status-bar.reducer';
 import { StatusBarModule } from '../status-bar.module';
-import { ChangeLayoutAction, UpdateStatusFlagsAction } from '../actions/status-bar.actions';
+import { BackToWorldViewAction, ChangeLayoutAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction, UpdateStatusFlagsAction } from '../actions/status-bar.actions';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -42,7 +42,7 @@ describe('StatusBarComponent', () => {
 		fixture.detectChanges();
 		result = fixture.nativeElement.querySelector('.status-bar-eye-icon').classList.contains('active');
 		expect(result).toBe(false);
-	})
+	});
 
 	it("check click on pinPoint flags",() => {
 		spyOn(store,'dispatch');
@@ -51,6 +51,34 @@ describe('StatusBarComponent', () => {
 
 		fixture.nativeElement.querySelector('.status-bar-eye-icon img').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator}));
-	})
+	});
+	describe('clicks', () => {
+		it('clickBackToWorldView should dispatch action BackToWorldView', ()=>{
+			spyOn(component.store, 'dispatch');
+			component.clickBackToWorldView();
+			expect(component.store.dispatch).toHaveBeenCalledWith(new BackToWorldViewAction());
+		});
+		it('clickGoPrev should dispatch action GoPrevAction', ()=>{
+			spyOn(component.store, 'dispatch');
+			component.clickGoPrev();
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoPrevAction());
+		});
+		it('clickGoNext should dispatch action GoNextAction', ()=>{
+			spyOn(component.store, 'dispatch');
+			component.clickGoNext();
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoNextAction());
+		});
+		it('clickExpand should dispatch action ExpandAction', ()=>{
+			spyOn(component.store, 'dispatch');
+			component.clickExpand();
+			expect(component.store.dispatch).toHaveBeenCalledWith(new ExpandAction());
+		});
+
+		it('clickFavorite should dispatch action FavoriteAction', ()=>{
+			spyOn(component.store, 'dispatch');
+			component.clickFavorite();
+			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction());
+		});
+	});
 
 });

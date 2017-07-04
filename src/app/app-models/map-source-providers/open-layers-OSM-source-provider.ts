@@ -5,18 +5,18 @@
 import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
-export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
-	static s_mapType = 'openLayersMap';
-	static s_sourceType = 'OSM';
+export const OpenLayerOSMSourceProviderMapType = 'openLayersMap';
+export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
+export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
 	public mapType;
 	public sourceType;
 
 	constructor() {
 		super();
 
-		this.mapType = OpenLayerOSMSourceProvider.s_mapType;
-		this.sourceType = OpenLayerOSMSourceProvider.s_sourceType;
+		this.mapType = OpenLayerOSMSourceProviderMapType;
+		this.sourceType = OpenLayerOSMSourceProviderSourceType;
 	}
 
 	create(metaData: any): any {

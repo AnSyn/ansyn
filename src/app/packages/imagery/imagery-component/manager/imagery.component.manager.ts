@@ -30,7 +30,7 @@ export class ImageryComponentManager {
 				private _mapComponentRef: ComponentRef<any>,
 				private typeContainerService: TypeContainerService,
 				private config: IImageryConfig,
-				private id: string) {}
+				private _id: string) {}
 
 	public loadInitialMapSource() {
 		if (this._activeMap) {
@@ -143,12 +143,12 @@ export class ImageryComponentManager {
 
 	}
 
-	public get Id(): string {
-		return this.id;
+	public get id(): string {
+		return this._id;
 	}
 
-	public set Id(value: string ){
-		this.id = value;
+	public set id(value: string ){
+		this._id = value;
 	}
 
 	public get ActiveMap(): IMap {

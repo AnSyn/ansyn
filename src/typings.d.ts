@@ -2,8 +2,9 @@
 /*declare var module: {
  id: string;
  };
-
- declare module "package.json"{
- version: string
- }
  */
+
+declare module "*.json" {
+	const value: any;
+	export default value;
+}

@@ -4,17 +4,17 @@
 import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
-export class OpenLayerBingSourceProvider extends BaseSourceProvider {
-	static s_sourceType = 'BING';
-	static s_mapType = 'openLayersMap';
+export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
+export const OpenLayerBingSourceProviderSourceType = 'BING';
 
+export class OpenLayerBingSourceProvider extends BaseSourceProvider {
 	public mapType;
 	public sourceType;
 
 	constructor() {
 		super();
-		this.sourceType = OpenLayerBingSourceProvider.s_sourceType;
-		this.mapType = OpenLayerBingSourceProvider.s_mapType;
+		this.sourceType = OpenLayerBingSourceProviderMapType;
+		this.mapType = OpenLayerBingSourceProviderMapType;
 	}
 
 	create(metaData: any): any {

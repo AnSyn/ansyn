@@ -36,7 +36,7 @@ export class CommunicatorEntity {
 		}));
 
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition ) => {
-			this.positionChanged.emit({id: this._manager.Id, position});
+			this.positionChanged.emit({id: this._manager.id, position});
 		}));
 
 		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {

@@ -11,8 +11,7 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 
-declare function require(moduleName: string): any;
-const packageJson = require("../../../package.json");
+import * as packageJson from '../../../package.json';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -56,7 +55,7 @@ export class AnsynComponent implements OnInit{
 	public version;
 
 	constructor(private store: Store<IAppState>) {
-		this.version = packageJson.version;
+		this.version = (<any>packageJson).version;
 	}
 
 	ngOnInit(): void {

@@ -5,18 +5,18 @@
 import { BaseSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
-export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
-	static s_mapType = 'openLayersMap';
-	static s_sourceType = 'TileWMS';
+export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
+export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
+export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
 	public mapType;
 	public sourceType;
 
 	constructor() {
 		super();
 
-		this.mapType = OpenLayerTileWMSSourceProvider.s_mapType;
-		this.sourceType = OpenLayerTileWMSSourceProvider.s_sourceType;
+		this.mapType = OpenLayerTileWMSSourceProviderMapType;
+		this.sourceType = OpenLayerTileWMSSourceProviderSourceType;
 	}
 
 	create(metaData: any): any {

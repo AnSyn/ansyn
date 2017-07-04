@@ -100,7 +100,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		if (this._manager) {
-			this.imageryCommunicatorService.remove(this._manager.Id);
+			this.imageryCommunicatorService.remove(this._manager.id);
 			this._manager.dispose();
 		}
 	}

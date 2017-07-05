@@ -29,11 +29,6 @@ export class UpdateFilterAction implements Action {
 	constructor(public payload?: { filter: Filter, newMetadata: FilterMetadata }) { }
 }
 
-export class InitializeSingleFilterAction implements Action {
-	type = FiltersActionTypes.INITIALIZE_SINGLE_FILTER;
-	constructor(public payload?: { filter: Filter, metadata: FilterMetadata }) { }
-}
-
 export class ResetFiltersAction implements Action {
 	type = FiltersActionTypes.RESET_FILTERS;
 	constructor(public payload?: any) { }

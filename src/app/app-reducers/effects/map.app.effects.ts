@@ -214,8 +214,14 @@ export class MapAppEffects {
 	@Effect()
 	backToWorldView$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select("cases"))
-		.mergeMap(([action,caseState]:[BackToWorldAction, ICasesState]) => {
+		.withLatestFrom(this.store$.select("cases"), (action: BackToWorldAction, casesState: ICasesState) => {
+			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
+			return [action, casesState, mapId];
+		})
+		.mergeMap(([action, caseState, mapId]:[BackToWorldAction, ICasesState, string]) => {
+			const comm = this.communicator.provide(mapId);
+			comm.loadInitialMapSource();
+
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.data.forEach(
 				(map) => {
@@ -227,18 +233,6 @@ export class MapAppEffects {
 				new UpdateCaseAction(updatedCase),
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
-		});
-
-
-	/// Back To world
-	@Effect({dispatch: false})
-	backToWorld$ = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, state: ICasesState) => {
-			const maps = state.selected_case.state.maps;
-			let mapId = action.payload.mapId ? action.payload.mapId : maps.active_map_id;
-			const comm = this.communicator.provide(mapId);
-			comm.loadInitialMapSource();
 		});
 
 	constructor(

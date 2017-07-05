@@ -6,7 +6,7 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep , isEmpty} from 'lodash';
+import { cloneDeep , isEmpty } from 'lodash';
 
 import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
@@ -19,6 +19,9 @@ import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-b
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
+import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
+import { Overlay } from '../../packages/overlays/models/overlay.model';
+import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -145,7 +148,7 @@ export class StatusBarAppEffects {
 		return selected_case;
 	}
 
-	@Effect({dispatch: false})
+	@Effect()
 	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
 		.map(() => {
@@ -168,62 +171,20 @@ export class StatusBarAppEffects {
 		});
 
 	@Effect({dispatch: false})
-	onGoNext$: Observable<void> = this.actions$
+	onGoNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT)
-		.map(() => {
-			console.log("onGoNext$")
+		.withLatestFrom(this.store.select('cases'))
+		.map(([action, activeMapId, overlayIndex]: [any, string, number]) => {
 		});
 
-
-	@Effect({dispatch: false})
-	onGoPrev$: Observable<void> = this.actions$
-		.ofType(StatusBarActionsTypes.GO_PREV)
-		.map(() => {
-			console.log("onGoPrev$")
-		});
-
-
-
-/*
-	 backToWorldView($event) {
-	 this.store.dispatch(new BackToWorldAction());
-	 }
 
 	@Effect({dispatch: false})
 	onGoPrev$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.GO_PREV)
-		.map(action => {
-			console.log({action})
-		})
-		.share();
-
-	@Effect({dispatch: false})
-	onGoNext$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.GO_NEXT)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'))
-		.map(([action, casesState, overlaysState]: [any, any, any]) => {
-
-			const activeMap = casesState.selected_case.state.maps.data.find(map => {
-				return casesState.selected_case.state.maps.active_map_id == map.id
-			});
-
-			if(!isEmpty(activeMap.data.selectedOverlay)){
-				const overlayArray: Overlay[] = <any>Array.from(overlaysState.overlays);
-				const overlayId = activeMap.data.selectedOverlay.id;
-				const overlayIndex = overlayArray.findIndex(overlay => overlay.id == overlayId);
-				const nextOverlayIndex = overlayIndex + 1;
-				let nextOverlayId;
-				if (nextOverlayIndex < overlayArray.length){
-					nextOverlayId = (<any>overlayArray[nextOverlayIndex]).id;
-				}
-			}
-
-		})
-		.share();
-
-
-*/
-
+		.ofType(StatusBarActionsTypes.GO_PREV)
+		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'))
+		.map(([action, casesState, overlaysState]: [any, ICasesState, IOverlayState]) => {
+			// return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMap.id});
+		});
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

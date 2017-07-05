@@ -1,6 +1,5 @@
 import { cloneDeep, isNil, isEmpty } from 'lodash';
-import { Case, UpdateCaseAction, CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
-import { SetFilterAction } from '@ansyn/overlays';
+import { Case, UpdateCaseAction, ICasesState } from '@ansyn/menu-items/cases';
 import { TypeContainerService } from '@ansyn/type-container';
 import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -12,16 +11,38 @@ import {
     InitializeFiltersAction, ResetFiltersAction, FilterMetadata, FiltersService,
     Filter, FiltersActionTypes
 } from '@ansyn/menu-items/filters';
+import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { SetFiltersAction } from "@ansyn/overlays/actions/overlays.actions";
+import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class FiltersAppEffects {
 
+	@Effect()
+	updateOverlayFilters$ : Observable<SetFiltersAction> = this.actions$
+		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS)
+		.withLatestFrom(this.store$.select('filters'))
+		.map(([action, filtersState]: [any, IFiltersState]) => {
+			const parsedFilters = [];
+			filtersState.filters.forEach((value: any, key: any) => {
+				parsedFilters.push({
+					filteringParams: { key: key.modelName, metadata: value},
+					filterFunc: value.filterFunc
+				})
+			});
+			return new SetFiltersAction(parsedFilters)
+		}).share();
+
+
     @Effect()
     initializeFilters$: Observable<any> = this.actions$
         .ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-        .map(toPayload)
-        .withLatestFrom(this.store$.select('cases'), (overlays: Overlay[], casesState: ICasesState): any => {
-            return [overlays, casesState.selected_case.state.facets];
+        .withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
+			const overlaysArray: Overlay[] = [];
+        	overlaysState.overlays.forEach((value, key) => {
+				overlaysArray.push(value);
+			});
+            return [overlaysArray, casesState.selected_case.state.facets];
         })
         .map(([overlays, facets]: [Overlay[], any]) => {
             return new InitializeFiltersAction({ overlays: overlays, facets: facets });
@@ -32,31 +53,9 @@ export class FiltersAppEffects {
         .ofType(FiltersActionTypes.UPDATE_FILTER_METADATA)
         .map(toPayload)
         .withLatestFrom(this.store$.select('cases'))
-        .mergeMap(([payload, casesState]: [{ filter: Filter, newMetadata: FilterMetadata }, ICasesState]) => {
-            let actionsArray = [];
-
-            actionsArray.push(new SetFilterAction({
-                filteringParams: { key: payload.filter.modelName, metadata: payload.newMetadata },
-                filterFunc: payload.newMetadata.filterFunc
-            }));
-
+        .map(([payload, casesState]: [{ filter: Filter, newMetadata: FilterMetadata }, ICasesState]) => {
             const selected_case: Case = this.updateSelectedCase(payload.filter, payload.newMetadata, casesState);
-
-            actionsArray.push(new UpdateCaseAction(selected_case));
-
-            return Observable.from(actionsArray);
-        })
-        .share();
-
-    @Effect()
-    initializeSingleFilter$: Observable<any> = this.actions$
-        .ofType(FiltersActionTypes.INITIALIZE_SINGLE_FILTER)
-        .map(toPayload)
-        .map((payload: { filter: Filter, metadata: FilterMetadata }) => {
-            return new SetFilterAction({
-                filteringParams: { key: payload.filter.modelName, metadata: payload.metadata },
-                filterFunc: payload.metadata.filterFunc
-            });
+            return new UpdateCaseAction(selected_case);
         })
         .share();
 

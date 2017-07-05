@@ -11,7 +11,7 @@ export interface IOverlayState {
 	overlays: any; //Map
 	selectedOverlays: string[];
 	demo: number;
-	filters : any;
+	filters : any[];
 	queryParams: any;
 	count: number;
 }
@@ -23,7 +23,7 @@ export const overlayInitialState: IOverlayState = {
 	selectedOverlays: [],
 	demo: 1,
 	//@todo change to Map
-	filters: {},
+	filters: [],
 	queryParams: {},
 	count: 0
 }
@@ -58,38 +58,43 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			}
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
-				const queryParams = action.payload || {};
-				return Object.assign({},state,{
-					loading: true,
-					queryParams,
-					overlays: new Map()
-				});
+			const queryParams = action.payload || {};
+			return Object.assign({},state,{
+				loading: true,
+				queryParams,
+				overlays: new Map()
+			});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 
-				const overlays = action.payload;
+			const overlays = action.payload;
 
-				const stateOverlays = new Map(state.overlays);
+			const stateOverlays = new Map(state.overlays);
 
-				overlays.forEach(overlay => {
-					if(!stateOverlays.has(overlay.id)){
-						stateOverlays.set(overlay.id,overlay);
-					}
-				});
+			overlays.forEach(overlay => {
+				if(!stateOverlays.has(overlay.id)){
+					stateOverlays.set(overlay.id,overlay);
+				}
+			});
 
-				//we already initiliazing the state
-				return Object.assign({},state,{
-               		loading: false,
-               		loaded: true,
-               		overlays: stateOverlays,
-					count: 0
-				});
+			//we already initiliazing the state
+			return Object.assign({},state,{
+				loading: false,
+				loaded: true,
+				overlays: stateOverlays,
+				count: 0
+			});
 
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
-				return Object.assign({},state,{
-					loading: false
-				});
+			return Object.assign({},state,{
+				loading: false
+			});
+
+		case overlay.OverlaysActionTypes.SET_FILTERS:
+			return Object.assign({},state,{
+				filters: action.payload
+			});
 
 
 		default: return state;

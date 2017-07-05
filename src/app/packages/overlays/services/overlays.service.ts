@@ -17,9 +17,37 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
-    constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {
+	public sortedDropsMap = [new Map<string, number>()];
 
-    }
+    constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {}
+
+	setSortedDropsMap(drops: any[]) {
+		const indexesIdsArray = drops[0].data.map((o: Overlay, index: number) => {
+			return {id: o.id, index}
+		});
+		indexesIdsArray.sort((o1, o2) => {
+				const o1Date = new Date(o1.photoTime);
+				const o2Date = new Date(o2.photoTime);
+				if(o2Date < o1Date) {
+					return 1;
+				}
+				if(o1Date < o2Date){
+					return -1;
+				}
+				return 0;
+		});
+		// return drops.data.sort((o1: Overlay, o2: Overlay) => {
+		// 	const o1Date = new Date(o1.photoTime);
+		// 	const o2Date = new Date(o2.photoTime);
+		// 	if(o2Date < o1Date) {
+		// 		return 1;
+		// 	}
+		// 	if(o1Date < o2Date){
+		// 		return -1;
+		// 	}
+		// 	return 0;
+		// });
+	}
 
     getPolygonByPoint(lonLat){
        //cordinates lon,lat
@@ -66,7 +94,12 @@ export class OverlaysService {
     }
 
     parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
-        let result = new Array();
+
+
+
+
+
+    	let result = new Array();
         let overlaysData = new Array();
 
         if (!filters || !Array.isArray(filters)) {
@@ -90,7 +123,7 @@ export class OverlaysService {
     }
 
     compareOverlays(data: IOverlayState, data1: IOverlayState) {
-        const result = _.isEqual(data.overlays, data1.overlays);
+        const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
         return result;
     }
 

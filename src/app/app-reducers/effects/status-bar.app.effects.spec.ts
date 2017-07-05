@@ -197,7 +197,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('onBackToWorldView$$ should return BackToWorldAction with no args', () => {
 		effectsRunner.queue(new BackToWorldViewAction());
-		statusBarAppEffects.onBackToWorldView$.subscribe((result: ChangeLayoutAction)=>{
+		statusBarAppEffects.onBackToWorldView$.subscribe((result: BackToWorldAction)=>{
 			expect(result instanceof BackToWorldAction).toBeTruthy();
 		});
 	});

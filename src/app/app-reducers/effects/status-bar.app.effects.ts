@@ -7,7 +7,6 @@ import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty } from 'lodash';
-
 import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
@@ -18,10 +17,8 @@ import { UpdateCaseAction, CopyCaseLinkAction } from '@ansyn/menu-items/cases';
 import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
-import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
-import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
-import { Overlay } from '../../packages/overlays/models/overlay.model';
-import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
+import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -126,20 +123,16 @@ export class StatusBarAppEffects {
 
 		if(selected_layout.maps_count !== case_maps_count){
 			if(case_maps_count < selected_layout.maps_count){
-
 				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
 					const active_map_position = cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
 					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position));
 				}
 			}
 			else if( selected_layout.maps_count < case_maps_count){
-
 				for (let i = selected_layout.maps_count; i < case_maps_count; i++){
 					selected_case.state.maps.data.pop();
 				}
-
 				const exist = selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id);
-
 				if(!exist) {
 					selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
 				}
@@ -170,21 +163,45 @@ export class StatusBarAppEffects {
 			console.log("onExpand$")
 		});
 
-	@Effect({dispatch: false})
+
+	@Effect()
 	onGoNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT)
-		.withLatestFrom(this.store.select('cases'))
-		.map(([action, activeMapId, overlayIndex]: [any, string, number]) => {
+		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+			const activeMapId = casesState.selected_case.state.maps.active_map_id;
+			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
+			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
+			const overlayIdIndex = this.overlaysService.sortedDropsIds.indexOf(overlayId);
+			const nextOverlayIdIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex + 1;
+			const nextOverlayId = this.overlaysService.sortedDropsIds[nextOverlayIdIndex];
+			return [action, activeMapId, nextOverlayId]
+		})
+		.filter(([action, activeMapId, nextOverlayId]) => {
+			return !isEmpty(nextOverlayId);
+		})
+		.map(([action, activeMapId, nextOverlayId]: [any, string, string]) => {
+			return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMapId});
 		});
 
-
-	@Effect({dispatch: false})
+	@Effect()
 	onGoPrev$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'))
-		.map(([action, casesState, overlaysState]: [any, ICasesState, IOverlayState]) => {
-			// return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMap.id});
+		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+			const activeMapId = casesState.selected_case.state.maps.active_map_id;
+			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
+			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
+			const overlayIdIndex = this.overlaysService.sortedDropsIds.indexOf(overlayId);
+			const nextOverlayIdIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex - 1;
+			const nextOverlayId = this.overlaysService.sortedDropsIds[nextOverlayIdIndex];
+			return [action, activeMapId, nextOverlayId]
+		})
+		.filter(([action, activeMapId, nextOverlayId]) => {
+			return !isEmpty(nextOverlayId);
+		})
+		.map(([action, activeMapId, nextOverlayId]: [any, string, string]) => {
+			return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMapId});
 		});
+
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

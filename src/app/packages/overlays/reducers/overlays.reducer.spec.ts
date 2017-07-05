@@ -1,5 +1,5 @@
 import { OverlayReducer, overlayInitialState, IOverlayState } from './overlays.reducer';
-import { UnSelectOverlayAction, SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, LoadOverlaysFailAction, ClearFilterAction, SetFilterAction } from '../actions/overlays.actions';
+import { UnSelectOverlayAction, SelectOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { cloneDeep } from 'lodash';
 

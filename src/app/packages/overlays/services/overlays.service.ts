@@ -17,48 +17,31 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
-	public sortedDropsMap = [new Map<string, number>()];
+	public sortedDropsIds = [];
 
-    constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {}
+	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {}
 
 	setSortedDropsMap(drops: any[]) {
-		const indexesIdsArray = drops[0].data.map((o: Overlay, index: number) => {
-			return {id: o.id, index}
-		});
-		indexesIdsArray.sort((o1, o2) => {
-				const o1Date = new Date(o1.photoTime);
-				const o2Date = new Date(o2.photoTime);
-				if(o2Date < o1Date) {
-					return 1;
-				}
-				if(o1Date < o2Date){
-					return -1;
-				}
+		this.sortedDropsIds = drops[0].data
+			.sort((o1, o2) => {
+				if(o2.date < o1.date) return 1;
+				if(o1.date < o2.date) return -1;
 				return 0;
-		});
-		// return drops.data.sort((o1: Overlay, o2: Overlay) => {
-		// 	const o1Date = new Date(o1.photoTime);
-		// 	const o2Date = new Date(o2.photoTime);
-		// 	if(o2Date < o1Date) {
-		// 		return 1;
-		// 	}
-		// 	if(o1Date < o2Date){
-		// 		return -1;
-		// 	}
-		// 	return 0;
-		// });
+			}).map((o: Overlay) => {
+				return o.id;
+			});
 	}
 
-    getPolygonByPoint(lonLat){
-       //cordinates lon,lat
-       const point = turf.point(lonLat);
-       const radius = this.config.polygonGenerationDisatnce;
-       const region = turf.circle(point,radius);
-       return region;
-    }
+	getPolygonByPoint(lonLat){
+		//cordinates lon,lat
+		const point = turf.point(lonLat);
+		const radius = this.config.polygonGenerationDisatnce;
+		const region = turf.circle(point,radius);
+		return region;
+	}
 
-    getPointByPolygon(geometry :GeometryObject|FeatureCollection<any>) : Point{
-    	if(geometry.type === 'FeatureCollection'){
+	getPointByPolygon(geometry :GeometryObject|FeatureCollection<any>) : Point{
+		if(geometry.type === 'FeatureCollection'){
 			return <Point>turf.centerOfMass(<FeatureCollection<any>>geometry).geometry;
 		}
 		else {
@@ -66,78 +49,78 @@ export class OverlaysService {
 		}
 	}
 
-    //@todo move to cases
-    getByCase(url = "", params: any = { caseId: ':' }): Observable<any[]> {
-        return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));
-    }
+	//@todo move to cases
+	getByCase(url = "", params: any = { caseId: ':' }): Observable<any[]> {
+		return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));
+	}
 
-    search(url = "", params: any = {}): Observable<any[]> {
-        let bbox = turf.bbox(params.polygon);
-        let bboxFeature = turf.bboxPolygon(bbox);
-        return this.fetch(url || this.config.overlaysByTimeAndPolygon, {
-            region: bboxFeature.geometry,
-            timeRange: {
-                start: params.from,
-                end: params.to
-            }
-        });
-    }
+	search(url = "", params: any = {}): Observable<any[]> {
+		let bbox = turf.bbox(params.polygon);
+		let bboxFeature = turf.bboxPolygon(bbox);
+		return this.fetch(url || this.config.overlaysByTimeAndPolygon, {
+			region: bboxFeature.geometry,
+			timeRange: {
+				start: params.from,
+				end: params.to
+			}
+		});
+	}
 
-    fetch(url, params = undefined) {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers });
-        url = this.config.baseUrl.concat(url);
-        if (params) {
-            return this.http.post(url, params, options).map(this.extractData).catch(this.handleError);
-        }
-        return this.http.get(url, options).map(this.extractData).catch(this.handleError);
-    }
+	fetch(url, params = undefined) {
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers });
+		url = this.config.baseUrl.concat(url);
+		if (params) {
+			return this.http.post(url, params, options).map(this.extractData).catch(this.handleError);
+		}
+		return this.http.get(url, options).map(this.extractData).catch(this.handleError);
+	}
 
-    parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
-
-
+	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
 
 
 
-    	let result = new Array();
-        let overlaysData = new Array();
 
-        if (!filters || !Array.isArray(filters)) {
-            overlays.forEach(overlay => overlaysData.push({ id: overlay.id, date: overlay.date }));
-        } else {
-            overlays.forEach(overlay => {
-                if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
-                    overlaysData.push({ id: overlay.id, date: overlay.date });
-                }
-            });
-        }
 
-        result.push({ name: undefined, data: overlaysData });
+		let result = new Array();
+		let overlaysData = new Array();
 
-        return result;
-    }
+		if (!filters || !Array.isArray(filters)) {
+			overlays.forEach(overlay => overlaysData.push({ id: overlay.id, date: overlay.date }));
+		} else {
+			overlays.forEach(overlay => {
+				if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
+					overlaysData.push({ id: overlay.id, date: overlay.date });
+				}
+			});
+		}
 
-    extractData(response: Response) {
-        const data = response.json();
-        return data || [];
-    }
+		result.push({ name: undefined, data: overlaysData });
 
-    compareOverlays(data: IOverlayState, data1: IOverlayState) {
-        const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
-        return result;
-    }
+		return result;
+	}
 
-    handleError(error: Response | any): any {
-        let errorMessage: string;
-        const _error = error;
-        if (error instanceof Response) {
-            const body = _error.json() || '';
-            const error = body.error || JSON.stringify(body);
-            errorMessage = `${error.status} - ${error.statusText || ''} ${error}`;
-        } else {
-            errorMessage = error.message ? error.message : error.toString();
-        }
-        console.warn(errorMessage);
-        return Observable.empty();
-    }
+	extractData(response: Response) {
+		const data = response.json();
+		return data || [];
+	}
+
+	compareOverlays(data: IOverlayState, data1: IOverlayState) {
+		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
+		return result;
+	}
+
+	handleError(error: Response | any): any {
+		let errorMessage: string;
+		const _error = error;
+		if (error instanceof Response) {
+			const body = _error.json() || '';
+			const error = body.error || JSON.stringify(body);
+			errorMessage = `${error.status} - ${error.statusText || ''} ${error}`;
+		} else {
+			errorMessage = error.message ? error.message : error.toString();
+		}
+		console.warn(errorMessage);
+		return Observable.empty();
+	}
 }

@@ -5,25 +5,20 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
-
 import { isEmpty,isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
-
 import { Store } from '@ngrx/store';
 import * as overlaysAction from '../actions/overlays.actions';
 import { IOverlayState } from '../reducers/overlays.reducer';
-
 import * as d3 from 'd3';
 import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-
 import { Spinner } from "@ansyn/core/utils";
-
+import { cloneDeep } from 'lodash';
 
 @Component({
 	selector: 'overlays-container',
@@ -41,7 +36,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		return this._drops;
 	}
 	set drops(value) {
-		this.overlaysService.setSortedDropsMap(value)
+		this.overlaysService.setSortedDropsMap(cloneDeep(value));
 		this._drops = value;
 	}
 	public redraw$: BehaviorSubject<number>;

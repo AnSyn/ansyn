@@ -27,6 +27,7 @@ import {
 	GoPrevAction
 } from '../../packages/status-bar/actions/status-bar.actions';
 import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
+import { LoadCaseSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -203,6 +204,10 @@ describe('StatusBarAppEffects', () => {
 	});
 
 	it('onGoNext$', () => {
+		const cases = [{
+			id: 'case1'
+		}];
+		store.dispatch(new LoadCaseSuccessAction(cases))
 		effectsRunner.queue(new GoNextAction());
 		statusBarAppEffects.onGoNext$.subscribe(() => {
 			console.log("onGoNext$")

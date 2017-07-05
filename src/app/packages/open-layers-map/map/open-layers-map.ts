@@ -266,7 +266,9 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public singleClickListener(e) {
-		const lonLat = ol.proj.toLonLat(e.coordinate);
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const lonLat = ol.proj.toLonLat(e.coordinate, projection);
 		this.singleClick.emit({lonLat: lonLat});
 	}
 
@@ -274,15 +276,15 @@ export class OpenLayersMap implements IMap {
 	public addPinPointIndicator(lonLat){
 		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const lonLatCords = ol.proj.fromLonLat(lonLat, projection);
 		if(layer){
 			layer.set('visible',true);
 			const feature = (<any>layer).getSource().getFeatures()[0];
-			const lonLatCords = ol.proj.fromLonLat(lonLat);
 			feature.setGeometry(new ol.geom.Point(lonLatCords));
 		}
 		else{
-			const lonLatCords = ol.proj.fromLonLat(lonLat);
-
 			const feature = new ol.Feature({
 				geometry: new ol.geom.Point(lonLatCords),
 				id: 'pinPointIndicatorFeature'
@@ -315,7 +317,9 @@ export class OpenLayersMap implements IMap {
 //*****-- shadow mouse functionality--********
 
 	public onPointerMove (e)   {
-		const lonLat = ol.proj.toLonLat(e.coordinate);
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const lonLat = ol.proj.toLonLat(e.coordinate, projection);
 		this.pointerMove.emit(lonLat);
 	};
 
@@ -325,7 +329,9 @@ export class OpenLayersMap implements IMap {
 			return;
 		}
 		const feature = (<any>layer).getSource().getFeatures()[0];
-		const lonLatCords = ol.proj.fromLonLat(lonLat);
+		const view = this._mapObject.getView();
+		const projection = view.getProjection();
+		const lonLatCords = ol.proj.fromLonLat(lonLat, projection);
 		feature.setGeometry(new ol.geom.Point(lonLatCords));
 		this.mapObject.render();
 	}

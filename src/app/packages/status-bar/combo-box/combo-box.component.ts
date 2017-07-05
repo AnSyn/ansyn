@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -7,10 +7,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ComboBoxComponent implements OnInit {
 	private _selectedIndex: number;
-	show = false;
-	@Input() options: any[];
+	@ViewChild('optionsContainer') optionsContainer: ElementRef;
+	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
 
+	@Input() options: any[];
 	@Input('selectedIndex')
+
 	set selectedIndex(value){
 		this._selectedIndex = value;
 		this.selectedChange.emit(value);
@@ -19,17 +21,31 @@ export class ComboBoxComponent implements OnInit {
 	get selectedIndex() {
 		return this._selectedIndex;
 	}
-	toggleShow($event) {
-		$event.stopPropagation();
-		this.show = !this.show;
+
+	toggleShow() {
+		if(this.optionsContainer.nativeElement.style.visibility !== 'visible' ) {
+			this.optionsContainer.nativeElement.style.visibility = 'visible';
+			this.optionsContainer.nativeElement.focus();
+		} else {
+			this.optionsContainer.nativeElement.style.visibility = 'hidden';
+		}
 	}
+
+	onBlurOptionsContainer($event: FocusEvent){
+		if($event.relatedTarget !== this.optionsTrigger.nativeElement){
+			this.optionsContainer.nativeElement.style.visibility = 'hidden';
+		}
+	}
+	selectOption(index) {
+		this.selectedIndex = index;
+		this.optionsContainer.nativeElement.style.visibility = 'hidden';
+	}
+
 	get selected() {
 		return this.options[this.selectedIndex];
 	}
 
 	@Output('selectedIndexChange') selectedChange = new EventEmitter();
-
-	constructor() { }
 
 	ngOnInit() {
 		this.selectedIndex = 0;

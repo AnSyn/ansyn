@@ -21,8 +21,14 @@
 	}
 	.options-container{
 		width: 100%;
+		background: black;
+
 		&.show{
 			visibility: visible;
+		}
+		&:focus{
+			visibility: visible;
+			outline: none;
 		}
 		visibility: hidden;
 		position: absolute;
@@ -31,14 +37,16 @@
 		.option{
 			display: flex;
 			justify-content: center;
-			background: black;
 			padding: 1px 6px;
 			color: white;
 			cursor: pointer;
+			border-bottom: 1px solid black;
+			box-sizing: border-box;
 			img{
 				opacity: .8;
 			}
 			&:hover{
+				border-color: white;
 				img{
 					opacity: 1;
 				}

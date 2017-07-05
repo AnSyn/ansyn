@@ -28,6 +28,7 @@ import {
 } from '../../packages/status-bar/actions/status-bar.actions';
 import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
 import { LoadCaseSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -35,6 +36,7 @@ describe('StatusBarAppEffects', () => {
 	let store: Store<any>;
 	let casesService: CasesService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
+	let overlaysService: OverlaysService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -44,6 +46,7 @@ describe('StatusBarAppEffects', () => {
 				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})
 			],
 			providers: [
+				OverlaysService,
 				StatusBarAppEffects,
 				{provide: CasesService, useValue: {updateCase: () => null}},
 				ImageryCommunicatorService,
@@ -56,12 +59,13 @@ describe('StatusBarAppEffects', () => {
 	}));
 
 
-	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService) => {
+	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService, OverlaysService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService, _overlaysService: OverlaysService) => {
 		statusBarAppEffects = _statusBarAppEffects;
 		effectsRunner = _effectsRunner;
 		store = _store;
 		casesService = _casesService;
 		imageryCommunicatorService = _imageryCommunicatorService;
+		overlaysService = _overlaysService;
 
 		const fakeCase: Case = {
 			id: 'case1',
@@ -77,7 +81,16 @@ describe('StatusBarAppEffects', () => {
 						]
 					]
 				},
-            }
+				maps: {
+					active_map_id: "active_map_id",
+					data: [
+						{
+							id: 'active_map_id',
+							data: {selectedOverlay: {id :'overlayId'}}
+						}
+					]
+				}
+			}
 		} as any;
 
 		store.dispatch(new AddCaseSuccessAction(fakeCase));
@@ -204,20 +217,22 @@ describe('StatusBarAppEffects', () => {
 	});
 
 	it('onGoNext$', () => {
-		const cases = [{
-			id: 'case1'
-		}];
-		store.dispatch(new LoadCaseSuccessAction(cases))
+		overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
 		effectsRunner.queue(new GoNextAction());
-		statusBarAppEffects.onGoNext$.subscribe(() => {
-			console.log("onGoNext$")
+		statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+			expect(result instanceof DisplayOverlayAction).toBeTruthy();
+			expect(result.payload.id).toEqual("overlayId1");
+			expect(result.payload.map_id).toEqual("active_map_id");
 		});
 	});
 
 	it('onGoPrev$', () => {
+		overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
 		effectsRunner.queue(new GoPrevAction());
-		statusBarAppEffects.onGoPrev$.subscribe(() => {
-			console.log("onGoPrev$")
+		statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
+			expect(result instanceof DisplayOverlayAction).toBeTruthy();
+			expect(result.payload.id).toEqual("firstOverlayId");
+			expect(result.payload.map_id).toEqual("active_map_id");
 		});
 	});
 

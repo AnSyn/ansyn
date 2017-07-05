@@ -12,14 +12,13 @@ export const OverlaysActionTypes = {
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
-	SET_FILTER: type('[Overlay] Set Filter'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
-	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT')
-
+	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
+	SET_FILTERS: type('SET_FILTERS')
 };
 
 export class SelectOverlayAction implements Action {
@@ -52,11 +51,6 @@ export class LoadOverlaysFailAction implements Action {
 	constructor(public payload: Overlay[]){}
 }
 
-export class SetFilterAction implements Action {
-	type = OverlaysActionTypes.SET_FILTER;
-	constructor(public payload: {filteringParams: any, filterFunc: (ovrelay: any, filteringParams:any) => boolean}){}
-}
-
 export class ClearFilterAction implements Action {
 	type = OverlaysActionTypes.CLEAR_FILTER;
 	constructor(public payload?: any){}
@@ -82,6 +76,11 @@ export class UpdateOverlaysCountAction implements Action {
 	constructor(public payload: number){}
 }
 
+export class SetFiltersAction implements Action {
+	type = OverlaysActionTypes.SET_FILTERS;
+	constructor(public payload: any[]){}
+}
+
 export type OverlaysActions
 	= 	DisplayOverlayAction
 	|  	SelectOverlayAction
@@ -90,7 +89,7 @@ export type OverlaysActions
 	| 	LoadOverlaysSuccessAction
 	| 	LoadOverlaysFailAction
 	|	ClearFilterAction
-	|	SetFilterAction
 	| 	DemoAction
 	| 	RedrawTimelineAction
-	| 	OverlaysMarkupAction;
+	| 	OverlaysMarkupAction
+	| 	SetFiltersAction;

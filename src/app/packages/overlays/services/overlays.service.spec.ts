@@ -13,6 +13,7 @@ import { Observable, Observer } from 'rxjs';
 import * as turf from '@turf/turf';
 
 import { configuration } from '../../../../configuration/configuration'
+import { Overlay } from '../models/overlay.model';
 
 describe('OverlaysService', () => {
     let overlaysService, mockBackend, lastConnection, http;
@@ -67,7 +68,19 @@ describe('OverlaysService', () => {
         }];
 
     }));
-
+	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
+		let overlayArray: Overlay = <any>[
+			{photoTime: new Date(1000)},
+			{photoTime: new Date(3000)},
+			{photoTime: new Date(7000)},
+			{photoTime: new Date(2000)}
+		];
+		overlayArray = overlaysService.sortDropsByDates(overlayArray);
+		expect(overlayArray[0].photoTime).toEqual(new Date(1000));
+		expect(overlayArray[1].photoTime).toEqual(new Date(2000));
+		expect(overlayArray[2].photoTime).toEqual(new Date(3000));
+		expect(overlayArray[3].photoTime).toEqual(new Date(7000));
+	});
     it('check all dependencies are defined properly', () => {
         expect(overlaysService).toBeTruthy();
 
@@ -139,19 +152,19 @@ describe('OverlaysService', () => {
     })
 
     it('check the method searchOverlay with spyOn',() => {
-      
+
        let response = new Response(new ResponseOptions({
             body: JSON.stringify({ key: 'value' })
         }));
 
         var calls = spyOn(http, 'post').and.callFake(function() {
             return Observable.create((observer: Observer < any > ) => {
-             
+
                 observer.next(response);
             });
         }).calls;
 
-        
+
         let params =  {
                 polygon:{
                     "type": "Polygon",
@@ -202,8 +215,8 @@ describe('OverlaysService', () => {
                 }));
             expect(result.key).toBe('value');
         });
-        
-        
+
+
         //var requestBody = spyOn(http,'post').calls.first();
 
     })

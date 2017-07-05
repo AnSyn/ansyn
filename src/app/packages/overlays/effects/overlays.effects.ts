@@ -2,17 +2,11 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
-
 import { Injectable,Inject } from '@angular/core';
-import { Action } from '@ngrx/store';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
-
+import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-
 import { LoadOverlaysSuccessAction, OverlaysActionTypes, OverlaysMarkupAction } from '../actions/overlays.actions';
-
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
-
 import { IOverlaysConfig } from '../models/overlays.config';
 
 
@@ -46,11 +40,6 @@ export class OverlaysEffects {
 					return new LoadOverlaysSuccessAction(data);
 				});
 		});
-
- 	@Effect({dispatch: false})
-	setFilter$: Observable<any> = this.actions$
-			.ofType(OverlaysActionTypes.SET_FILTER)
-			.share();
 
   	constructor(private actions$: Actions,
 			private overlaysService: OverlaysService,

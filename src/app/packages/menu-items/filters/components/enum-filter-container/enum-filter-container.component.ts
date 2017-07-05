@@ -1,6 +1,5 @@
 import { EnumFilterMetadata } from './../../models/metadata/enum-filter-metadata';
-import { Filter } from './../../models/filter';
-import { Component, Input, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'ansyn-enum-filter-container',

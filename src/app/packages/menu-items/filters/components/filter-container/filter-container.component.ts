@@ -1,6 +1,6 @@
 import { UpdateFilterAction } from './../../actions/filters.actions';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
+import { isEqual, cloneDeep } from 'lodash';
 import { IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from './../../models/metadata/filter-metadata.interface';
@@ -54,7 +54,7 @@ export class FilterContainerComponent {
 
   constructor(private store: Store<IFiltersState>) {
     this.metadataFromState$.subscribe((metadata: FilterMetadata) => {
-      this.metadataFromState = metadata;
+      this.metadataFromState = cloneDeep(metadata);
     });
   }
 

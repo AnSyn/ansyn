@@ -1,7 +1,7 @@
 <div class="status-bar-container">
 	<div class="status-bar">
 		<div class="left-side" *ngIf="!hideOverlayName">
-			<div class="back-to-world-view">
+			<div class="back-to-world-view" [hidden]="!overlayName">
 				<button (click)="clickBackToWorldView()">Back to world view</button>
 			</div>
 			<div class="middle">

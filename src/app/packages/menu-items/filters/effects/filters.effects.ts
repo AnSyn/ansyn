@@ -1,6 +1,6 @@
 import { TypeContainerService } from '@ansyn/type-container';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { FiltersActionTypes, InitializeFiltersAction, InitializeFiltersSuccessAction, InitializeSingleFilterAction } from '../actions/filters.actions';
+import { FiltersActionTypes, InitializeFiltersAction, InitializeFiltersSuccessAction } from '../actions/filters.actions';
 import { IFiltersState } from '../reducer/filters.reducer';
 import { FiltersService } from '../services/filters.service';
 import { Filter } from '../models/filter';
@@ -19,24 +19,16 @@ export class FiltersEffects {
     initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
         .ofType(FiltersActionTypes.INITIALIZE_FILTERS)
         .switchMap((action: InitializeFiltersAction) => {
-            return this.filtersService.loadFilters().mergeMap((filters: Filter[]) => {
-                const actionsArray = [];
+            return this.filtersService.loadFilters().map((filters: Filter[]) => {
                 const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
-
                 filters.forEach((filter: Filter) => {
                     const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
-
-                    actionsArray.push(new InitializeSingleFilterAction({ filter: filter, metadata: metadata }));
-
                     action.payload.overlays.forEach((overlay: any) => {
                         metadata.accumulateData(overlay[filter.modelName]);
                     });
-                    
                     filterMetadatas.set(filter, metadata);
                 });
-
-                actionsArray.push(new InitializeFiltersSuccessAction(filterMetadatas));
-                return Observable.from(actionsArray);
+                return new InitializeFiltersSuccessAction(filterMetadatas);
             });
         }).share();
 

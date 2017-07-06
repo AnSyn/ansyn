@@ -4,10 +4,9 @@ import { StatusBarComponent } from './status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
 import { ComboBoxComponent } from './combo-box/combo-box.component';
-import { ClickOutsideModule } from 'ng-click-outside';
 
 @NgModule({
-	imports: [FormsModule, CommonModule, CoreModule, ClickOutsideModule],
+	imports: [FormsModule, CommonModule, CoreModule],
 	declarations: [StatusBarComponent, ComboBoxComponent],
 	exports: [StatusBarComponent]
 })

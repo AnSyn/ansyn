@@ -3,9 +3,12 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable,Inject } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { LoadOverlaysSuccessAction, OverlaysActionTypes, OverlaysMarkupAction } from '../actions/overlays.actions';
+import {
+	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
+	OverlaysMarkupAction, SetTimelineStateAction
+} from '../actions/overlays.actions';
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 import { IOverlaysConfig } from '../models/overlays.config';
 
@@ -41,7 +44,16 @@ export class OverlaysEffects {
 				});
 		});
 
-  	constructor(private actions$: Actions,
-			private overlaysService: OverlaysService,
-			@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}
+	@Effect()
+	initTimelineStata$: Observable<SetTimelineStateAction> = this.actions$
+		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
+		.map((action: LoadOverlaysAction) => {
+			const from = new Date(action.payload.from);
+			const to = new Date(action.payload.to);
+			return new SetTimelineStateAction({from, to})
+		});
+
+	constructor(private actions$: Actions,
+				private overlaysService: OverlaysService,
+				@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}
 }

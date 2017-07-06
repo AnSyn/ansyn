@@ -27,9 +27,7 @@ export class OverlaysService {
 				if(o2.date < o1.date) return 1;
 				if(o1.date < o2.date) return -1;
 				return 0;
-			}).map((o: Overlay) => {
-				return o.id;
-			});
+			})
 	}
 
 	getPolygonByPoint(lonLat){
@@ -106,7 +104,7 @@ export class OverlaysService {
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
+		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters) && _.isEqual(data.timelineState, data1.timelineState) ;
 		return result;
 	}
 

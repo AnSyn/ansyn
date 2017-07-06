@@ -19,6 +19,8 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
+import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 
 @Injectable()
@@ -167,39 +169,65 @@ export class StatusBarAppEffects {
 	@Effect()
 	onGoNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT)
-		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'), (action, casesState: ICasesState, overlayState: IOverlayState) => {
 			const activeMapId = casesState.selected_case.state.maps.active_map_id;
 			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
 			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
-			const overlayIdIndex = this.overlaysService.sortedDropsIds.indexOf(overlayId);
-			const nextOverlayIdIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex + 1;
-			const nextOverlayId = this.overlaysService.sortedDropsIds[nextOverlayIdIndex];
-			return [action, activeMapId, nextOverlayId]
+			const overlayIdIndex = this.overlaysService.sortedDropsIds.findIndex((overlay) => overlay.id == overlayId);
+			const nextOverlayIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex + 1;
+			const nextOverlay = this.overlaysService.sortedDropsIds[nextOverlayIndex];
+			return [action, activeMapId, nextOverlay, overlayState.timelineState];
 		})
-		.filter(([action, activeMapId, nextOverlayId]) => {
-			return !isEmpty(nextOverlayId);
+		.filter(([action, activeMapId, nextOverlay, timelineState]) => {
+			return !isEmpty(nextOverlay);
 		})
-		.map(([action, activeMapId, nextOverlayId]: [any, string, string]) => {
-			return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMapId});
+		.mergeMap(([action, activeMapId, nextOverlay, timelineState]: [any, string, any, {from: Date, to: Date}]) => {
+			const actions: Action[] = [];
+			if(timelineState.to < new Date(nextOverlay.date)) {
+				let to: Date = new Date(nextOverlay.date);
+				const deltaNumber: number = timelineState.to.getTime() - timelineState.from.getTime();
+				const deltaTenth: number = (deltaNumber) * 0.1;
+				const fromNumber: number = to.getTime() - deltaNumber;
+				let from = new Date(fromNumber);
+
+				to = new Date(to.getTime()  + deltaTenth);
+				from = new Date(from.getTime() + deltaTenth);
+				actions.push(new SetTimelineStateAction({from, to}));
+			}
+			actions.push(new DisplayOverlayAction({id: nextOverlay.id, map_id: activeMapId}));
+			return actions;
 		});
 
 	@Effect()
 	onGoPrev$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'), (action, casesState: ICasesState, overlayState: IOverlayState) => {
 			const activeMapId = casesState.selected_case.state.maps.active_map_id;
 			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
 			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
-			const overlayIdIndex = this.overlaysService.sortedDropsIds.indexOf(overlayId);
-			const nextOverlayIdIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex - 1;
-			const nextOverlayId = this.overlaysService.sortedDropsIds[nextOverlayIdIndex];
-			return [action, activeMapId, nextOverlayId]
+			const overlayIdIndex = this.overlaysService.sortedDropsIds.findIndex((overlay) => overlay.id == overlayId);
+			const prevOverlayIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex - 1;
+			const prevOverlay = this.overlaysService.sortedDropsIds[prevOverlayIndex];
+			return [action, activeMapId, prevOverlay, overlayState.timelineState];
 		})
-		.filter(([action, activeMapId, nextOverlayId]) => {
-			return !isEmpty(nextOverlayId);
+		.filter(([action, activeMapId, prevOverlay, timelineState]) => {
+			return !isEmpty(prevOverlay);
 		})
-		.map(([action, activeMapId, nextOverlayId]: [any, string, string]) => {
-			return new DisplayOverlayAction({id: nextOverlayId, map_id: activeMapId});
+		.mergeMap(([action, activeMapId, prevOverlay, timelineState]: [any, string, any, {from: Date, to: Date}]) => {
+			const actions: Action[] = [];
+			if(new Date(prevOverlay.date) < timelineState.from) {
+				let from: Date = new Date(prevOverlay.date);
+				const deltaNumber: number = timelineState.to.getTime() - timelineState.from.getTime();
+				const deltaTenth = (deltaNumber)*0.1;
+				const toNumber: number = from.getTime() + deltaNumber;
+				let to = new Date(toNumber);
+				to = new Date(to.getTime()  - deltaTenth);
+
+				from = new Date(from.getTime() - deltaTenth);
+				actions.push(new SetTimelineStateAction({from, to}));
+			}
+			actions.push(new DisplayOverlayAction({id: prevOverlay.id, map_id: activeMapId}));
+			return actions;
 		});
 
 

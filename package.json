@@ -38,7 +38,7 @@
     "core-js": "^2.4.1",
     "d3": "4.7.0",
     "debounce": "^1.0.0",
-    "event-drops": "github:osadan/EventDrops#51a2075e3653e7b073e8fcf54c27b9ec743bfda3",
+    "event-drops": "github:yairtawil/EventDrops#99f4505c4cb08effc7a5ee6ffa8a4e4970101552",
     "lodash": "^4.17.4",
     "ng-select": "^1.0.0-beta.5",
     "ng2-destroy-subscribers": "0.0.28",

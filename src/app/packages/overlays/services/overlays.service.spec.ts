@@ -79,10 +79,10 @@ describe('OverlaysService', () => {
 				]}
 		];
 		overlaysService.setSortedDropsMap(overlayArray);
-		expect(overlaysService.sortedDropsIds[0]).toEqual('id1');
-		expect(overlaysService.sortedDropsIds[1]).toEqual('id4');
-		expect(overlaysService.sortedDropsIds[2]).toEqual('id2');
-		expect(overlaysService.sortedDropsIds[3]).toEqual('id3');
+		expect(overlaysService.sortedDropsIds[0]).toEqual({id: 'id1', date: new Date(1000)});
+		expect(overlaysService.sortedDropsIds[1]).toEqual({id: 'id4', date: new Date(2000)});
+		expect(overlaysService.sortedDropsIds[2]).toEqual({id: 'id2', date: new Date(3000)});
+		expect(overlaysService.sortedDropsIds[3]).toEqual({id: 'id3', date: new Date(7000)});
 	});
 
 	it('check all dependencies are defined properly', () => {

@@ -30,6 +30,7 @@ export class StatusBarComponent implements OnInit {
 	selected_layout_index: number;
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	flags: Map<string,boolean> = new Map<string,boolean>();
+	layouts: MapsLayout[] = [];
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
@@ -46,7 +47,9 @@ export class StatusBarComponent implements OnInit {
 		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
 		});
-
+		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
+			this.layouts = _layouts;
+		})
 		this.store.select('status_bar')
 			.distinctUntilChanged(isEqual)
 			.subscribe(store => {

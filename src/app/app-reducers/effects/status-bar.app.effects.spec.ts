@@ -18,17 +18,11 @@ import { ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { configuration } from "configuration/configuration";
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import {
-	DisableMouseShadow, EnableMouseShadow,
-	StopMouseShadow
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import {
-	BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction,
-	GoPrevAction
-} from '../../packages/status-bar/actions/status-bar.actions';
-import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
-import { LoadCaseSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
-import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
+import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlayAction, SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -43,7 +37,7 @@ describe('StatusBarAppEffects', () => {
 			imports: [
 				HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer})
+				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer, overlays: OverlayReducer})
 			],
 			providers: [
 				OverlaysService,
@@ -216,25 +210,89 @@ describe('StatusBarAppEffects', () => {
 		});
 	});
 
-	it('onGoNext$', () => {
-		overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
-		effectsRunner.queue(new GoNextAction());
-		statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
-			expect(result instanceof DisplayOverlayAction).toBeTruthy();
-			expect(result.payload.id).toEqual("overlayId1");
-			expect(result.payload.map_id).toEqual("active_map_id");
+	describe('onGoNext$', () => {
+		it('should skip to next overlay from sortedDropsIds', () => {
+			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
+			effectsRunner.queue(new GoNextAction());
+			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+				expect(result instanceof DisplayOverlayAction).toBeTruthy();
+				expect(result.payload.id).toEqual("overlayId1");
+				expect(result.payload.map_id).toEqual("active_map_id");
+			});
+		});
+
+		it('should set new timelineState when date is bigger then "timelineState.to" ', () => {
+
+			const timelineState = {
+				to: new Date(1000), /* 1000 < 2000 */
+				from: new Date(0)
+			};
+			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1", date: new Date(2000)}, {id: "overlayId2"}];
+			store.dispatch(new SetTimelineStateAction(timelineState));
+			effectsRunner.queue(new GoNextAction());
+			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+				expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
+				if(result instanceof DisplayOverlayAction) {
+					expect(result.payload.id).toEqual("overlayId1");
+					expect(result.payload.map_id).toEqual("active_map_id");
+				}
+
+				if(result instanceof SetTimelineStateAction) {
+					const delta = timelineState.to.getTime() - timelineState.from.getTime();
+					const deltaTenth: number = delta *0.1;
+					expect(result.payload.to).toEqual(new Date(2000 + deltaTenth));
+				}
+			});
 		});
 	});
 
-	it('onGoPrev$', () => {
-		overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
-		effectsRunner.queue(new GoPrevAction());
-		statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
-			expect(result instanceof DisplayOverlayAction).toBeTruthy();
-			expect(result.payload.id).toEqual("firstOverlayId");
-			expect(result.payload.map_id).toEqual("active_map_id");
+
+	describe('onGoPrev$', () => {
+		it('should skip to prev overlay from sortedDropsIds', () => {
+			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
+			effectsRunner.queue(new GoPrevAction());
+			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+				expect(result instanceof DisplayOverlayAction).toBeTruthy();
+				expect(result.payload.id).toEqual("firstOverlayId");
+				expect(result.payload.map_id).toEqual("active_map_id");
+			});
+		});
+
+		it('should set new timelineState when date is smaller then "timelineState.from" ', () => {
+
+			const timelineState = {
+				to: new Date(4000),
+				from: new Date(2000) /* 1000 < 2000 */
+			};
+			overlaysService.sortedDropsIds = [{id: "firstOverlayId", date: new Date(1000)}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
+			store.dispatch(new SetTimelineStateAction(timelineState));
+			effectsRunner.queue(new GoPrevAction());
+			statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
+				expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
+				if(result instanceof DisplayOverlayAction) {
+					expect(result.payload.id).toEqual("firstOverlayId");
+					expect(result.payload.map_id).toEqual("active_map_id");
+				}
+
+				if(result instanceof SetTimelineStateAction) {
+					const delta = timelineState.to.getTime() - timelineState.from.getTime();
+					const deltaTenth: number = delta *0.1;
+					expect(result.payload.from).toEqual(new Date(1000 - deltaTenth));
+				}
+			});
 		});
 	});
+
+
+	// it('onGoPrev$ should skip to next overlay from sortedDropsIds', () => {
+	// 	overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
+	// 	effectsRunner.queue(new GoPrevAction());
+	// 	statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
+	// 		expect(result instanceof DisplayOverlayAction).toBeTruthy();
+	// 		expect(result.payload.id).toEqual("firstOverlayId");
+	// 		expect(result.payload.map_id).toEqual("active_map_id");
+	// 	});
+	// });
 
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());

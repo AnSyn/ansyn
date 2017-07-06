@@ -13,6 +13,7 @@ export interface IOverlayState {
 	demo: number;
 	filters : any[];
 	queryParams: any;
+	timelineState: {from: Date, to: Date}
 	count: number;
 }
 
@@ -25,6 +26,7 @@ export const overlayInitialState: IOverlayState = {
 	//@todo change to Map
 	filters: [],
 	queryParams: {},
+	timelineState: {from: new Date(), to: new Date()},
 	count: 0
 }
 
@@ -96,6 +98,10 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				filters: action.payload
 			});
 
+		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
+			return Object.assign({}, state, {
+				timelineState: action.payload
+			});
 
 		default: return state;
 	}

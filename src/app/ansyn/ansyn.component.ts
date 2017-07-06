@@ -8,7 +8,7 @@ import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
-import { UpdateMapSizeAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 
 import * as packageJson from '../../../package.json';

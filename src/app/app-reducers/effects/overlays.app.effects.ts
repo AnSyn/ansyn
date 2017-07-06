@@ -11,7 +11,6 @@ import { isEmpty, cloneDeep } from 'lodash';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {

@@ -18,7 +18,8 @@ export const OverlaysActionTypes = {
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
 	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
-	SET_FILTERS: type('SET_FILTERS')
+	SET_FILTERS: type('SET_FILTERS'),
+	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE')
 };
 
 export class SelectOverlayAction implements Action {
@@ -79,6 +80,11 @@ export class UpdateOverlaysCountAction implements Action {
 export class SetFiltersAction implements Action {
 	type = OverlaysActionTypes.SET_FILTERS;
 	constructor(public payload: any[]){}
+}
+
+export class SetTimelineStateAction implements Action {
+	type = OverlaysActionTypes.SET_TIMELINE_STATE;
+	constructor(public payload: {from: Date, to: Date} ){}
 }
 
 export type OverlaysActions

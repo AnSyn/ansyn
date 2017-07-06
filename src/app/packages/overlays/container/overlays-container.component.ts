@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import {
-	OverlaysMarkupAction, SelectOverlayAction, UnSelectOverlayAction,
+	OverlaysMarkupAction, SelectOverlayAction, SetTimelineStateAction, UnSelectOverlayAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
@@ -41,6 +41,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 	public redraw$: BehaviorSubject<number>;
 	public configuration: any;
+	public currentTimelineState;
 	public spinner:Spinner;
 	private errorMessage: string;
 
@@ -96,8 +97,10 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			.throttleTime(100)
 			.subscribe(result => {
 				let sum = 0;
-				result.forEach( i => sum+=i.count);
+				result.counts.forEach( i => sum+=i.count);
+				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
 				this.store.dispatch(new UpdateOverlaysCountAction(sum));
+				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
 
 			})
 
@@ -116,16 +119,18 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		this.subscribers.overlays = this.store.select('overlays')
 			.skip(1)
 			.distinctUntilChanged(this.overlaysService.compareOverlays)
-			.filter(data => !isEmpty(data)) //@todo change to isEmpty
-			.map((data: IOverlayState) => {
+			.filter((overlaysState: IOverlayState) => {
+				return !isEmpty(overlaysState) && !isEqual(overlaysState.timelineState, this.currentTimelineState);
+			})
+			.map((overlaysState: IOverlayState) => {
 				return {
-					overlay: this.overlaysService.parseOverlayDataForDispaly(data.overlays, data.filters),
-					configuration: data.queryParams
+					overlay: this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters),
+					timelineState: overlaysState.timelineState
 				};
 			})
 			.subscribe(data => {
-				this.configuration.start = new Date(data.configuration.from);
-				this.configuration.end = new Date(data.configuration.to);
+				this.configuration.start = data.timelineState.from;
+				this.configuration.end = data.timelineState.to;
 				this.drops = data.overlay;
 			});
 

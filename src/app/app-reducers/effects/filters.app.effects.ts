@@ -13,7 +13,7 @@ import {
 } from '@ansyn/menu-items/filters';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from "@ansyn/overlays/actions/overlays.actions";
-import { IOverlayState } from '../../packages/overlays/reducers/overlays.reducer';
+import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class FiltersAppEffects {

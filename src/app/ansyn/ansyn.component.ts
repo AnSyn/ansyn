@@ -82,29 +82,9 @@ export class AnsynComponent implements OnInit{
 
 	onActiveImagery(active_map_id: string) {
 		if(this.selected_case.state.maps.active_map_id !== active_map_id ){
-			//this.selected_case.state.maps.active_map_id = active_map_id;
 			this.store.dispatch(new ActiveMapChangedAction(active_map_id/*this.selected_case*/));
 		}
 	}
-
-	// statusBarClickEvents($event) {
-	// 	switch ($event) {
-	// 		case StatusBarClickEvents.BackToWorldView:
-	// 			this.store.dispatch(new BackToWorldAction());
-	// 			break;
-	// 		case StatusBarClickEvents.GoNext:
-	// 			this.store.dispatch(new GoNextAction());
-	// 			break;
-	// 		case StatusBarClickEvents.GoPrev:
-	// 			this.store.dispatch(new GoPrevAction());
-	// 			break;
-	// 		case StatusBarClickEvents.Favorite:
-	// 			break;
-	// 		case StatusBarClickEvents.Expand:
-	// 			break;
-    //
-	// 	}
-	// }
 
 	layoutChangeSuccess() {
 		this.store.dispatch(new UpdateMapSizeAction());

@@ -40,7 +40,6 @@
     "debounce": "^1.0.0",
     "event-drops": "github:yairtawil/EventDrops#99f4505c4cb08effc7a5ee6ffa8a4e4970101552",
     "lodash": "^4.17.4",
-    "ng-select": "^1.0.0-beta.5",
     "ng2-destroy-subscribers": "0.0.28",
     "openlayers": "^4.1.1",
     "reselect": "^3.0.0",

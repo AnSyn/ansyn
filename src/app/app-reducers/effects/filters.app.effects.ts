@@ -1,7 +1,6 @@
 import { cloneDeep, isNil, isEmpty } from 'lodash';
 
 import { Case, UpdateCaseAction, CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
-import { SetFilterAction } from '@ansyn/overlays';
 import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';

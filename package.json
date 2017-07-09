@@ -37,7 +37,7 @@
     "core-js": "^2.4.1",
     "d3": "4.7.0",
     "debounce": "^1.0.0",
-    "event-drops": "github:osadan/EventDrops#51a2075e3653e7b073e8fcf54c27b9ec743bfda3",
+    "event-drops": "github:osadan/EventDrops#3ec0352524c3bff40c2a3161d1a5d7880ea160f7",
 	"lodash": "^4.17.4",
     "ng2-destroy-subscribers": "0.0.28",
     "openlayers": "^4.1.1",

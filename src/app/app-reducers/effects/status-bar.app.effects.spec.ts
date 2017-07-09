@@ -21,13 +21,10 @@ import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reduc
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayAction, SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	GoNextDisplayAction, GoPrevDisplayAction,
-	LoadOverlaysSuccessAction
-} from '../../packages/overlays/actions/overlays.actions';
-import { Overlay } from '../../packages/overlays/models/overlay.model';
+	GoNextDisplayAction, GoPrevDisplayAction
+} from '@ansyn/overlays/actions/overlays.actions';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;

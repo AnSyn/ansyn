@@ -115,7 +115,7 @@ describe("Overlays Effects ", () => {
 	});
 
 	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
-		it('should be moved forward', () => {
+		it('should be moved forwards', () => {
 			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 			const getTimeStateByOverlayResult = {from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
@@ -140,7 +140,7 @@ describe("Overlays Effects ", () => {
 			})
 		});
 
-		it('should be moved backards', () => {
+		it('should be moved backwards', () => {
 
 			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 			const getTimeStateByOverlayResult = {from: new Date(1500), to: new Date(6500) };
@@ -166,22 +166,5 @@ describe("Overlays Effects ", () => {
 			})
 		});
 	});
-	// @Effect()
-	// displayOverlaySetTimeline$ = this.actions$
-	// 	.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-	// 	.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlayState, cases: ICasesState) => {
-	// 		const displayedOverlay = overlays.overlays.get(action.payload.id);
-	// 		const timelineState = overlays.timelineState;
-	// 		const isActiveMap: boolean = _.isNil(action.payload.map_id) || _.isEqual(cases.selected_case.state.maps.active_map_id, action.payload.map_id);
-	// 		return [isActiveMap, displayedOverlay, timelineState];
-	// 	})
-	// 	.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {
-	// 		return isActiveMap && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
-	// 	})
-	// 	.map(([isActiveMap, displayedOverlay, timelineState]:[Overlay, Overlay, any]) => {
-	// 		const timeState = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-	// 		return new SetTimelineStateAction(timeState);
-	// 	})
-	// 	.share();
 
 });

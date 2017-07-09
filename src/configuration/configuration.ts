@@ -38,7 +38,12 @@ export const configuration = {
 
 			// mapType: 'openLayersMap',
 			// mapSource: 'TileWMS',
-			// mapSourceMetadata: [{url: 'http://localhost:8080/geoserver/ansyn/wms', layerName: 'ansyn:israel_center_1'}]
+			// mapSourceMetadata: {
+			// 	url: 'http://localhost:8080/geoserver/ansyn/wms',
+			// 	projection: 'EPSG:4326',
+			// 	layers: ['ansyn:israel_center_1',
+			// 			 'ansyn:israel_center_2'
+			// 	]}
 		}, {
 			mapType: 'cesiumMap',
 			mapSource: 'OSM',

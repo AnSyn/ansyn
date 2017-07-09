@@ -15,7 +15,8 @@ export type Overlay = {
 	name: string,
 	imageUrl?: string,
 	thumbnailUrl?: string,
-	photoTime: Date,
+	photoTime: string,
+	date: Date,
 	azimuth: number, //radians
 	approximateTransform?: any,
 	csmState?: string,

@@ -19,7 +19,9 @@ export const OverlaysActionTypes = {
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
 	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
 	SET_FILTERS: type('SET_FILTERS'),
-	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE')
+	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
+	GO_NEXT_DISPLAY: type('GO_NEXT_DISPLAY'),
+	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY')
 };
 
 export class SelectOverlayAction implements Action {
@@ -87,6 +89,16 @@ export class SetTimelineStateAction implements Action {
 	constructor(public payload: {from: Date, to: Date} ){}
 }
 
+export class GoNextDisplayAction implements Action {
+	type = OverlaysActionTypes.GO_NEXT_DISPLAY;
+	constructor(public payload: string){}
+}
+
+export class GoPrevDisplayAction implements Action {
+	type = OverlaysActionTypes.GO_PREV_DISPLAY;
+	constructor(public payload: string){}
+}
+
 export type OverlaysActions
 	= 	DisplayOverlayAction
 	|  	SelectOverlayAction
@@ -98,4 +110,6 @@ export type OverlaysActions
 	| 	DemoAction
 	| 	RedrawTimelineAction
 	| 	OverlaysMarkupAction
-	| 	SetFiltersAction;
+	| 	SetFiltersAction
+	| 	GoNextDisplayAction
+	|	GoPrevDisplayAction;

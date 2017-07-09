@@ -1,6 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import {
+	DisplayOverlayAction,
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
 	OverlaysMarkupAction, SelectOverlayAction, SetTimelineStateAction, UnSelectOverlayAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
@@ -31,14 +34,7 @@ import { cloneDeep } from 'lodash';
 })
 
 export class OverlaysContainer implements OnInit, AfterViewInit {
-	private _drops: any[] = [];
-	get drops() {
-		return this._drops;
-	}
-	set drops(value) {
-		this.overlaysService.setSortedDropsMap(cloneDeep(value));
-		this._drops = value;
-	}
+	public drops: any[] = [];
 	public redraw$: BehaviorSubject<number>;
 	public configuration: any;
 	public currentTimelineState;
@@ -148,6 +144,21 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 
 		this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$.subscribe((action:OverlaysMarkupAction) => {
 			this.overlaysMarkup = action.payload;
-		})
+		});
+
+		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
+			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
+			const indexPrevOverlay = indexCurrentOverlay - 1;
+			const prevOverlayId = this.drops[0].data[indexPrevOverlay].id;
+			this.store.dispatch(new DisplayOverlayAction({id: prevOverlayId}))
+		});
+
+		this.subscribers.goNextDisplay= this.effects.goNextDisplay$.subscribe((action: GoNextDisplayAction): any => {
+			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
+			const indexNextOverlay = indexCurrentOverlay + 1;
+			const nextOverlayId = this.drops[0].data[indexNextOverlay].id;
+			this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}))
+		});
+
 	}
 }

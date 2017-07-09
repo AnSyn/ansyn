@@ -16,7 +16,7 @@ import { configuration } from '../../../../configuration/configuration'
 import { Overlay } from '../models/overlay.model';
 
 describe('OverlaysService', () => {
-	let overlaysService, mockBackend, lastConnection, http;
+	let overlaysService: OverlaysService, mockBackend, lastConnection, http;
 	let overlaysTmpData: any[];
 	let response = {
 		data: [
@@ -70,19 +70,16 @@ describe('OverlaysService', () => {
 	}));
 	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
 		let overlayArray: Overlay = <any>[
-			{
-				data:[
-					{id: 'id1', date: new Date(1000)},
-					{id: 'id2', date: new Date(3000)},
-					{id: 'id3', date: new Date(7000)},
-					{id: 'id4', date: new Date(2000)}
-				]}
+			{id: 'id1', date: new Date(1000)},
+			{id: 'id2', date: new Date(3000)},
+			{id: 'id3', date: new Date(7000)},
+			{id: 'id4', date: new Date(2000)}
 		];
-		overlaysService.setSortedDropsMap(overlayArray);
-		expect(overlaysService.sortedDropsIds[0]).toEqual({id: 'id1', date: new Date(1000)});
-		expect(overlaysService.sortedDropsIds[1]).toEqual({id: 'id4', date: new Date(2000)});
-		expect(overlaysService.sortedDropsIds[2]).toEqual({id: 'id2', date: new Date(3000)});
-		expect(overlaysService.sortedDropsIds[3]).toEqual({id: 'id3', date: new Date(7000)});
+		overlayArray = <any> overlaysService.setSortedDropsMap(<any>overlayArray);
+		expect(overlayArray[0]).toEqual({id: 'id1', date: new Date(1000)});
+		expect(overlayArray[1]).toEqual({id: 'id4', date: new Date(2000)});
+		expect(overlayArray[2]).toEqual({id: 'id2', date: new Date(3000)});
+		expect(overlayArray[3]).toEqual({id: 'id3', date: new Date(7000)});
 	});
 
 	it('check all dependencies are defined properly', () => {
@@ -92,7 +89,7 @@ describe('OverlaysService', () => {
 
 	it('check the method fetchData with mock data', () => {
 
-		overlaysService.getByCase().subscribe(result => {
+		overlaysService.getByCase().subscribe((result: any) => {
 			expect(result.data.length).toBe(2);
 		});
 
@@ -108,7 +105,7 @@ describe('OverlaysService', () => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays, mockData.filters);
+		const result = overlaysService.parseOverlayDataForDispaly(<any>mockData.overlays, <any>mockData.filters);
 		expect(result[0].name).toBe(undefined);
 		expect(result[0].data.length).toBe(overlaysTmpData.length);
 	});
@@ -142,7 +139,7 @@ describe('OverlaysService', () => {
 			});
 		});
 
-		overlaysService.getByCase('tmp').subscribe(result => {
+		overlaysService.getByCase('tmp').subscribe((result: any)=> {
 			expect(result.key).toBe('value');
 		});
 
@@ -150,7 +147,7 @@ describe('OverlaysService', () => {
 			body: JSON.stringify({ key: 'value2' })
 		}));
 
-		overlaysService.getByCase('tmp').subscribe(result => {
+		overlaysService.getByCase('tmp').subscribe((result: any) => {
 			expect(result.key).toBe('value2');
 		});
 	})
@@ -203,7 +200,7 @@ describe('OverlaysService', () => {
 		overlaysService.search(
 			"",
 			params
-		).subscribe(result => {
+		).subscribe((result: any) => {
 			let requestBody = calls.allArgs()[0][1];
 			let bbox = turf.bbox({type: 'Feature', geometry: params.polygon, properties: {}});
 			let bboxFeature = turf.bboxPolygon(bbox);
@@ -273,8 +270,8 @@ describe('OverlaysService', () => {
 
 		overlaysService.getByCase('error').subscribe(result => {
 
-		}, error => {
-			expect(overlaysService.handleError.calls.any()).toEqual(true);
+		}, (error: any) => {
+			expect(overlaysService.handleError).toHaveBeenCalled();
 		})
 	});
 
@@ -294,7 +291,37 @@ describe('OverlaysService', () => {
 		overlaysService.getByCase('tmp').subscribe(result => {
 
 		}, error => {
-			expect(overlaysService.handleError.calls.any()).toEqual(true);
+			expect(overlaysService.handleError).toHaveBeenCalled();
 		})
 	});
+
+	describe('getTimeStateByOverlay should calc delta and return new timelineState via overlay.date', () => {
+
+		it('timelineState should go forwards', ()=>{
+			const displayedOverlay = {
+				date: new Date(6000)
+			} as any;
+			const timelineState = {
+				from: new Date(0),
+				to: new Date(5000)			//delta tenth is 500 ms
+			};
+			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			expect(from).toEqual(new Date(1500));
+			expect(to).toEqual(new Date(6500));
+		});
+
+		it('timelineState should go backwards', ()=>{
+			const displayedOverlay = {
+				date: new Date(1000)
+			} as any;
+			const timelineState = {
+				from: new Date(2000),
+				to: new Date(7000)  //delta tenth is 500 ms
+			};
+			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			expect(from).toEqual(new Date(500));
+			expect(to).toEqual(new Date(5500));
+		})
+
+	})
 });

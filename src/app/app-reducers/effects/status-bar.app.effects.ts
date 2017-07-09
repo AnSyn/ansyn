@@ -6,7 +6,7 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep , isEmpty } from 'lodash';
+import { cloneDeep , isEmpty, get } from 'lodash';
 import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
@@ -18,9 +18,7 @@ import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-b
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { GoNextDisplayAction, GoPrevDisplayAction } from '../../packages/overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -167,69 +165,24 @@ export class StatusBarAppEffects {
 
 
 	@Effect()
-	onGoNext$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.GO_NEXT)
-		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'), (action, casesState: ICasesState, overlayState: IOverlayState) => {
-			const activeMapId = casesState.selected_case.state.maps.active_map_id;
-			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
-			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
-			const overlayIdIndex = this.overlaysService.sortedDropsIds.findIndex((overlay) => overlay.id == overlayId);
-			const nextOverlayIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex + 1;
-			const nextOverlay = this.overlaysService.sortedDropsIds[nextOverlayIndex];
-			return [action, activeMapId, nextOverlay, overlayState.timelineState];
+	onGoPrevNext$: Observable<any> = this.actions$
+		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
+		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+			const activeMap = casesState.selected_case.state.maps.data.find(map => casesState.selected_case.state.maps.active_map_id== map.id);
+			const overlayId = get(activeMap.data.selectedOverlay, "id");
+			return [action.type, overlayId];
 		})
-		.filter(([action, activeMapId, nextOverlay, timelineState]) => {
-			return !isEmpty(nextOverlay);
+		.filter(([actionType, overlayId]) => {
+			return !isEmpty(overlayId);
 		})
-		.mergeMap(([action, activeMapId, nextOverlay, timelineState]: [any, string, any, {from: Date, to: Date}]) => {
-			const actions: Action[] = [];
-			if(timelineState.to < new Date(nextOverlay.date)) {
-				let to: Date = new Date(nextOverlay.date);
-				const deltaNumber: number = timelineState.to.getTime() - timelineState.from.getTime();
-				const deltaTenth: number = (deltaNumber) * 0.1;
-				const fromNumber: number = to.getTime() - deltaNumber;
-				let from = new Date(fromNumber);
-
-				to = new Date(to.getTime()  + deltaTenth);
-				from = new Date(from.getTime() + deltaTenth);
-				actions.push(new SetTimelineStateAction({from, to}));
+		.map(([actionType, currentOverlayId]: [string, string]) => {
+			switch (actionType) {
+				case StatusBarActionsTypes.GO_NEXT:
+					return new GoNextDisplayAction(currentOverlayId);
+				case StatusBarActionsTypes.GO_PREV:
+					return new GoPrevDisplayAction(currentOverlayId);
 			}
-			actions.push(new DisplayOverlayAction({id: nextOverlay.id, map_id: activeMapId}));
-			return actions;
 		});
-
-	@Effect()
-	onGoPrev$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select('cases'), this.store.select('overlays'), (action, casesState: ICasesState, overlayState: IOverlayState) => {
-			const activeMapId = casesState.selected_case.state.maps.active_map_id;
-			const activeMap = casesState.selected_case.state.maps.data.find(map => activeMapId == map.id);
-			const overlayId = activeMap.data.selectedOverlay && activeMap.data.selectedOverlay.id;
-			const overlayIdIndex = this.overlaysService.sortedDropsIds.findIndex((overlay) => overlay.id == overlayId);
-			const prevOverlayIndex = overlayIdIndex == -1 ? -1 : overlayIdIndex - 1;
-			const prevOverlay = this.overlaysService.sortedDropsIds[prevOverlayIndex];
-			return [action, activeMapId, prevOverlay, overlayState.timelineState];
-		})
-		.filter(([action, activeMapId, prevOverlay, timelineState]) => {
-			return !isEmpty(prevOverlay);
-		})
-		.mergeMap(([action, activeMapId, prevOverlay, timelineState]: [any, string, any, {from: Date, to: Date}]) => {
-			const actions: Action[] = [];
-			if(new Date(prevOverlay.date) < timelineState.from) {
-				let from: Date = new Date(prevOverlay.date);
-				const deltaNumber: number = timelineState.to.getTime() - timelineState.from.getTime();
-				const deltaTenth = (deltaNumber)*0.1;
-				const toNumber: number = from.getTime() + deltaNumber;
-				let to = new Date(toNumber);
-				to = new Date(to.getTime()  - deltaTenth);
-
-				from = new Date(from.getTime() - deltaTenth);
-				actions.push(new SetTimelineStateAction({from, to}));
-			}
-			actions.push(new DisplayOverlayAction({id: prevOverlay.id, map_id: activeMapId}));
-			return actions;
-		});
-
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map

@@ -23,6 +23,11 @@ import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPr
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlayAction, SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	GoNextDisplayAction, GoPrevDisplayAction,
+	LoadOverlaysSuccessAction
+} from '../../packages/overlays/actions/overlays.actions';
+import { Overlay } from '../../packages/overlays/models/overlay.model';
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -80,7 +85,7 @@ describe('StatusBarAppEffects', () => {
 					data: [
 						{
 							id: 'active_map_id',
-							data: {selectedOverlay: {id :'overlayId'}}
+							data: {selectedOverlay: {id :'overlayId1'}}
 						}
 					]
 				}
@@ -210,89 +215,45 @@ describe('StatusBarAppEffects', () => {
 		});
 	});
 
-	describe('onGoNext$', () => {
-		it('should skip to next overlay from sortedDropsIds', () => {
-			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
-			effectsRunner.queue(new GoNextAction());
-			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
-				expect(result instanceof DisplayOverlayAction).toBeTruthy();
-				expect(result.payload.id).toEqual("overlayId1");
-				expect(result.payload.map_id).toEqual("active_map_id");
-			});
+	describe('onGoPrevNext$', () => {
+		it('should return onGoNextDisplayAction (type of action is GoNextAction) with current overlayId ', () => {
+			effectsRunner.queue(new GoNextAction()); // current overlay overlayId1
+			statusBarAppEffects.onGoPrevNext$.subscribe((result: GoNextDisplayAction) => {
+				expect(result instanceof GoNextDisplayAction).toBeTruthy();
+				expect(result.payload).toEqual('overlayId1');
+			}).unsubscribe();
 		});
-
-		it('should set new timelineState when date is bigger then "timelineState.to" ', () => {
-
-			const timelineState = {
-				to: new Date(1000), /* 1000 < 2000 */
-				from: new Date(0)
-			};
-			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1", date: new Date(2000)}, {id: "overlayId2"}];
-			store.dispatch(new SetTimelineStateAction(timelineState));
-			effectsRunner.queue(new GoNextAction());
-			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
-				expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
-				if(result instanceof DisplayOverlayAction) {
-					expect(result.payload.id).toEqual("overlayId1");
-					expect(result.payload.map_id).toEqual("active_map_id");
-				}
-
-				if(result instanceof SetTimelineStateAction) {
-					const delta = timelineState.to.getTime() - timelineState.from.getTime();
-					const deltaTenth: number = delta *0.1;
-					expect(result.payload.to).toEqual(new Date(2000 + deltaTenth));
-				}
-			});
+		it('should return onGoPrevDisplayAction (type of action is GoPrevAction) with current overlayId', () => {
+			effectsRunner.queue(new GoPrevAction()); // current overlay overlayId1
+			statusBarAppEffects.onGoPrevNext$.subscribe((result: GoPrevDisplayAction) => {
+				expect(result instanceof GoPrevDisplayAction).toBeTruthy();
+				expect(result.payload).toEqual('overlayId1');
+			}).unsubscribe();
 		});
 	});
-
-
-	describe('onGoPrev$', () => {
-		it('should skip to prev overlay from sortedDropsIds', () => {
-			overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
-			effectsRunner.queue(new GoPrevAction());
-			statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
-				expect(result instanceof DisplayOverlayAction).toBeTruthy();
-				expect(result.payload.id).toEqual("firstOverlayId");
-				expect(result.payload.map_id).toEqual("active_map_id");
-			});
-		});
-
-		it('should set new timelineState when date is smaller then "timelineState.from" ', () => {
-
-			const timelineState = {
-				to: new Date(4000),
-				from: new Date(2000) /* 1000 < 2000 */
-			};
-			overlaysService.sortedDropsIds = [{id: "firstOverlayId", date: new Date(1000)}, {id: "overlayId"}, {id: "overlayId1"}, {id: "overlayId2"}];
-			store.dispatch(new SetTimelineStateAction(timelineState));
-			effectsRunner.queue(new GoPrevAction());
-			statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
-				expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
-				if(result instanceof DisplayOverlayAction) {
-					expect(result.payload.id).toEqual("firstOverlayId");
-					expect(result.payload.map_id).toEqual("active_map_id");
-				}
-
-				if(result instanceof SetTimelineStateAction) {
-					const delta = timelineState.to.getTime() - timelineState.from.getTime();
-					const deltaTenth: number = delta *0.1;
-					expect(result.payload.from).toEqual(new Date(1000 - deltaTenth));
-				}
-			});
-		});
-	});
-
-
-	// it('onGoPrev$ should skip to next overlay from sortedDropsIds', () => {
-	// 	overlaysService.sortedDropsIds = ["firstOverlayId", "overlayId", "overlayId1", "overlayId2"];
-	// 	effectsRunner.queue(new GoPrevAction());
-	// 	statusBarAppEffects.onGoPrev$.subscribe((result: DisplayOverlayAction) => {
-	// 		expect(result instanceof DisplayOverlayAction).toBeTruthy();
-	// 		expect(result.payload.id).toEqual("firstOverlayId");
-	// 		expect(result.payload.map_id).toEqual("active_map_id");
-	// 	});
-	// });
+		// it('should set new timelineState when date is bigger then "timelineState.to" ', () => {
+        //
+		// 	const timelineState = {
+		// 		to: new Date(1000), /* 1000 < 2000 */
+		// 		from: new Date(0)
+		// 	};
+		// 	overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1", date: new Date(2000)}, {id: "overlayId2"}];
+		// 	store.dispatch(new SetTimelineStateAction(timelineState));
+		// 	effectsRunner.queue(new GoNextAction());
+		// 	statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+		// 		expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
+		// 		if(result instanceof DisplayOverlayAction) {
+		// 			expect(result.payload.id).toEqual("overlayId1");
+		// 			expect(result.payload.map_id).toEqual("active_map_id");
+		// 		}
+        //
+		// 		if(result instanceof SetTimelineStateAction) {
+		// 			const delta = timelineState.to.getTime() - timelineState.from.getTime();
+		// 			const deltaTenth: number = delta *0.1;
+		// 			expect(result.payload.to).toEqual(new Date(2000 + deltaTenth));
+		// 		}
+		// 	});
+		// });
 
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());

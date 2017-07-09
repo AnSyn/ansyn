@@ -20,38 +20,19 @@ export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
 	}
 
 	create(metaData: any): any {
-		const resultLayers = [];
-		metaData.forEach(layerData=> {
-			const tiledLayer = this.createImageLayer(layerData.url, layerData.layerName);
-			resultLayers.push(tiledLayer);
-		});
-		return resultLayers;
-	}
-
-	private createImageLayer(url, layerName): ol.layer.Tile {
-		const projection = new ol.proj.Projection({
-			code: 'EPSG:4326',
-			units: 'degrees',
-			axisOrientation: 'neu',
-			global: true
-		});
-
+		const layers = metaData.layers.join(',');
 		const tiled = new ol.layer.Tile({
 			visible: true,
 			source: new ol.source.TileWMS({
-				url: url,
+				url: metaData.url,
 				params: {
-					'FORMAT': 'image/png',
 					'VERSION': '1.1.1',
-					tiled: true,
-					STYLES: '',
-					LAYERS: layerName,
-					tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
+					LAYERS: layers
 				},
-				projection: projection
+				projection: metaData.projection
 			})
 		});
-		return tiled;
+		return [tiled];
 	}
 
 	createAsync(metaData: any): Promise<any> {

@@ -42,6 +42,7 @@ export class OverlaysEffects {
 				.map(data => {
 					data.forEach(item => {
 						item.date = new Date(item.photoTime);
+						item.name = item.name ? item.name : item.id;
 						item.sourceType = this.config.overlaySource;
 						if(item.footprint.geometry){
 							item.footprint = item.footprint.geometry;

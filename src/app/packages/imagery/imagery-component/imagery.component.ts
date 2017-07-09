@@ -1,3 +1,4 @@
+import {BaseSourceProvider} from '../model/base-source-provider.model';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
@@ -11,7 +12,6 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
-import { TypeContainerService } from '@ansyn/type-container';
 import { isEqual, isNil } from 'lodash';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { isEmpty } from 'lodash';
@@ -81,7 +81,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this.componentFactoryResolver,
 			this.map_component_elem,
 			this._mapComponentRef,
-			this.typeContainerService,
+			this.baseSourceProviders,
 			this.config,
 			this._mapComponentSettings.id
 		);
@@ -94,7 +94,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private imageryProviderService: ImageryProviderService,
-		private typeContainerService: TypeContainerService,
+		@Inject(BaseSourceProvider) private baseSourceProviders: BaseSourceProvider[],
 		@Inject(ConfigurationToken) private config: IImageryConfig) {
 	}
 

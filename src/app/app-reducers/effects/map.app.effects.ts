@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable,Inject } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -13,7 +13,6 @@ import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapSha
 import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
-import { TypeContainerService } from "@ansyn/type-container";
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
 import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
@@ -93,7 +92,7 @@ export class MapAppEffects {
 			}
 			const communicator = this.communicator.provide(map_id);
 			const mapType = communicator.ActiveMap.mapType;
-			const sourceLoader = this.typeContainerService.resolve(BaseSourceProvider,[mapType, overlay.sourceType].join(','));
+			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				communicator.setLayer(layer, extent);
 			});
@@ -240,7 +239,7 @@ export class MapAppEffects {
 		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
-		private typeContainerService: TypeContainerService,
+		@Inject(BaseSourceProvider) private baseSourceProviders: BaseSourceProvider[],
 		private overlaysService: OverlaysService
 	) { }
 }

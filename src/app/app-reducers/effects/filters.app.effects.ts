@@ -1,6 +1,7 @@
 import { cloneDeep, isNil, isEmpty } from 'lodash';
-import { Case, UpdateCaseAction, ICasesState } from '@ansyn/menu-items/cases';
-import { TypeContainerService } from '@ansyn/type-container';
+
+import { Case, UpdateCaseAction, CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
+import { SetFilterAction } from '@ansyn/overlays';
 import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -68,8 +69,7 @@ export class FiltersAppEffects {
 
     constructor(private actions$: Actions,
         private store$: Store<IAppState>,
-        private filtersService: FiltersService,
-        private typeContainerService: TypeContainerService) { }
+        private filtersService: FiltersService) { }
 
     updateSelectedCase(filter: Filter, newMetadata: FilterMetadata, casesState: ICasesState): Case {
         const selected_case: Case = cloneDeep(casesState.selected_case);

@@ -10,7 +10,6 @@ import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
 import {  StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { configuration } from "configuration/configuration";
-import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
@@ -56,7 +55,7 @@ describe('MapAppEffects', () => {
 	let statusBarState: IStatusBarState;
 	let overlaysState: IOverlayState;
 	let casesService: CasesService;
-	let typeContainerService: TypeContainerService;
+	let baseSourceProviders: BaseSourceProvider[];
 	let imageryCommunicatorServiceMock = {
 		provide:() => {},
 		communicatorsAsArray:() => {}
@@ -92,16 +91,11 @@ describe('MapAppEffects', () => {
 			imports: [
 				HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer,status_bar: StatusBarReducer ,overlays: OverlayReducer }),
-				TypeContainerModule.register({
-					baseType : BaseSourceProvider,
-					type: SourceProviderMock1,
-					name : ['mapType1','sourceType1'].join(",")
-				})],
+				StoreModule.provideStore({ cases: CasesReducer,status_bar: StatusBarReducer ,overlays: OverlayReducer })],
 			providers: [
 				MapAppEffects,
-				TypeContainerService,
 				OverlaysService,
+				{ provide: BaseSourceProvider, useClass: SourceProviderMock1 , multi: true},
 				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
 				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				{
@@ -138,12 +132,12 @@ describe('MapAppEffects', () => {
 		});
 	}));
 
-	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService, TypeContainerService], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _typeContainerService: TypeContainerService) => {
+	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService, BaseSourceProvider], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseSourceProvider[]) => {
 		mapAppEffects = _mapAppEffects;
 		effectsRunner = _effectsRunner;
 		imageryCommunicatorService = _imageryCommunicatorService;
 		casesService = _casesService;
-		typeContainerService = _typeContainerService;
+		baseSourceProviders = _baseSourceProviders;
 	}));
 
 	it('should be defined', () => {
@@ -379,7 +373,7 @@ describe('MapAppEffects', () => {
 			};
 			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
-			spyOn(typeContainerService, 'resolve').and.returnValue(fakeSourceLoader);
+			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommuincator, 'setLayer');
 		});
 

@@ -8,7 +8,6 @@ import { ImageryProviderService } from '../../provider-service/provider.service'
 import { ImageryComponentSettings } from '../../model/imagery-component-settings';
 import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
 import { MapPosition } from '../../model/map-position';
-import { TypeContainerService } from '@ansyn/type-container';
 
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -28,7 +27,7 @@ export class ImageryComponentManager {
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private map_component_elem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
-				private typeContainerService: TypeContainerService,
+				private _baseSourceProviders: BaseSourceProvider[],
 				private config: IImageryConfig,
 				private _id: string) {}
 
@@ -55,7 +54,7 @@ export class ImageryComponentManager {
 		if (!releventMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this.typeContainerService.resolve(BaseSourceProvider,[releventMapConfig.mapType, releventMapConfig.mapSource].join(','));
+		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === releventMapConfig.mapType && item.sourceType ===  releventMapConfig.mapSource);
 		return sourceProvider.createAsync(releventMapConfig.mapSourceMetadata);
 	}
 

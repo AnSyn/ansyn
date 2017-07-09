@@ -84,11 +84,11 @@ describe('StatusBarComponent', () => {
 		spyOn(component, 'clickGoPrev');
 		spyOn(component, 'clickGoNext');
 		const $event = {
-			keycode: 39
+			keyCode: 39
 		};
 		component.onkeydown(<any>$event);
 		expect(component.clickGoNext).toHaveBeenCalled();
-		$event.keycode = 37;
+		$event.keyCode = 37;
 		component.onkeydown(<any>$event);
 		expect(component.clickGoPrev).toHaveBeenCalled();
 

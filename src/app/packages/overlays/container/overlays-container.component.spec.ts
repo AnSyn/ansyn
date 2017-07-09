@@ -148,12 +148,12 @@ describe('OverlayContainerComponent', () => {
         const overlays = < Overlay[] > [{
             id: '12',
             name: 'tmp12',
-            photoTime: new Date(Date.now()),
+            photoTime: new Date(Date.now()).toISOString(),
             azimuth: 10
         }, {
             id: '13',
             name: 'tmp13',
-            photoTime: new Date(Date.now()),
+            photoTime: new Date(Date.now()).toISOString(),
             azimuth: 10
         }]
 

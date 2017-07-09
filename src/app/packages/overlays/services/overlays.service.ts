@@ -10,6 +10,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as turf from '@turf/turf';
 import { FeatureCollection, GeometryObject, Point } from "@types/geojson";
+import { SetTimelineStateAction } from '../actions/overlays.actions';
 
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
@@ -17,12 +18,11 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
-	public sortedDropsIds = [];
 
 	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {}
 
-	setSortedDropsMap(drops: any[]) {
-		this.sortedDropsIds = drops[0].data
+	setSortedDropsMap(dropsData: any[]) {
+		return dropsData
 			.sort((o1, o2) => {
 				if(o2.date < o1.date) return 1;
 				if(o1.date < o2.date) return -1;
@@ -75,11 +75,6 @@ export class OverlaysService {
 	}
 
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
-
-
-
-
-
 		let result = new Array();
 		let overlaysData = new Array();
 
@@ -92,6 +87,8 @@ export class OverlaysService {
 				}
 			});
 		}
+
+		overlaysData = this.setSortedDropsMap(overlaysData);
 
 		result.push({ name: undefined, data: overlaysData });
 
@@ -121,4 +118,19 @@ export class OverlaysService {
 		console.warn(errorMessage);
 		return Observable.empty();
 	}
+
+	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: {from: Date, to: Date}): {from: Date, to: Date} {
+		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
+		const deltaTenth: number = (delta) * 0.1;
+		let from: Date, to: Date;
+		if(displayedOverlay.date < timelineState.from){
+			from = new Date(displayedOverlay.date.getTime() - deltaTenth);
+			to = new Date(from.getTime() + delta);
+		} else if(timelineState.to < displayedOverlay.date) {
+			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
+			from = new Date(to.getTime() - delta);
+		}
+		return {from, to}
+	}
+
 }

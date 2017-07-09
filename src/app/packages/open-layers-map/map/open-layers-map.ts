@@ -84,6 +84,7 @@ export class OpenLayersMap implements IMap {
 	}
 
 	private setMainLayer(layer: ol.layer.Layer) {
+		const beforeArgs = this.internalBeforeSetMainLayer();
 		this.removeAllLayers();
 
 		const oldview = this._mapObject.getView();
@@ -107,6 +108,27 @@ export class OpenLayersMap implements IMap {
 
 		this._mapObject.setView(view);
 		this.addLayer(layer);
+
+		this.internalAfterSetMainLayer(beforeArgs);
+	}
+
+	private internalBeforeSetMainLayer(): {pinPointLonLatGeo} {
+		const pinPointIndicatorLayer: ol.layer.Layer = <ol.layer.Layer>this.getLayerById(this._pinPointIndicatorLayerId);
+		let lonLatCords;
+		if (pinPointIndicatorLayer) {
+			let pinPointGeometry = (<any>pinPointIndicatorLayer).getSource().getFeatures()[0].getGeometry();
+			const oldView = this._mapObject.getView();
+			const oldViewProjection = oldView.getProjection();
+			const layerCords = pinPointGeometry.getCoordinates();
+			lonLatCords = ol.proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
+		}
+		return {pinPointLonLatGeo: lonLatCords};
+	}
+
+	private internalAfterSetMainLayer(args: {pinPointLonLatGeo}) {
+		if (args.pinPointLonLatGeo) {
+			this.addPinPointIndicator(args.pinPointLonLatGeo);
+		}
 	}
 
 	private fitCurrentView(layer: ol.layer.Layer, extent?: Extent) {
@@ -139,12 +161,8 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public removeAllLayers() {
-		// TODO: check about other layers (interaction etc.)
-
 		this._mapLayers.forEach((existingLayer) => {
-			if(!(existingLayer instanceof ol.layer.Vector)){
-				this.removeLayer(existingLayer);
-			}
+			this.removeLayer(existingLayer);
 		});
 	}
 

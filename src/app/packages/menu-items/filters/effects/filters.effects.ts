@@ -1,4 +1,3 @@
-import { TypeContainerService } from '@ansyn/type-container';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActionTypes, InitializeFiltersAction, InitializeFiltersSuccessAction } from '../actions/filters.actions';
 import { IFiltersState } from '../reducer/filters.reducer';
@@ -7,7 +6,7 @@ import { Filter } from '../models/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
-import { Injectable } from '@angular/core';
+import { Injectable,Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -35,10 +34,10 @@ export class FiltersEffects {
     constructor(private actions$: Actions,
         private filtersService: FiltersService,
         private store: Store<IFiltersState>,
-        private typeContainerService: TypeContainerService) { }
+        @Inject(FilterMetadata) private filtersMetadata: FilterMetadata[]) { }
 
     initializeMetadata(filter: Filter, facets: { filters: { fieldName: string, metadata: any }[] }): FilterMetadata {
-        const metaData: FilterMetadata = this.typeContainerService.resolve(FilterMetadata, filter.type);
+        const metaData: FilterMetadata = this.filtersMetadata.find((item) => item.type === filter.type);
         const clonedMetadata: FilterMetadata = Object.assign(Object.create(metaData), metaData); //TODO: remove this when a non-singelton resolve will be available
 
         const currentFilterInit = facets

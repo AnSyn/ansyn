@@ -7,7 +7,6 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseSourceProvider } from '../model/base-source-provider.model';
-import { TypeContainerService,TypeContainerModule } from '@ansyn/type-container';
 
 import { configuration } from '../../../../configuration/configuration';
 import { ConfigurationToken } from '../configuration.token';
@@ -40,16 +39,10 @@ describe('ImageryComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[
-				TypeContainerModule.register({
-					baseType : BaseSourceProvider,
-					type: SourceProviderMock1,
-					name : ['mapType1','sourceType1'].join(",")
-				})
-			],
+			imports:[],
 			declarations: [ ImageryComponent ],
 			providers: [
-				TypeContainerService,
+				{ provide: BaseSourceProvider , useClass: SourceProviderMock1 , multi: true },
 				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));

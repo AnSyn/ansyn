@@ -13,7 +13,7 @@ export class OpenLayerBingSourceProvider extends BaseSourceProvider {
 
 	constructor() {
 		super();
-		this.sourceType = OpenLayerBingSourceProviderMapType;
+		this.sourceType = OpenLayerBingSourceProviderSourceType;
 		this.mapType = OpenLayerBingSourceProviderMapType;
 	}
 

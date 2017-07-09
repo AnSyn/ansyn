@@ -28,37 +28,17 @@ import { TypeContainerModule } from '@ansyn/type-container';
 
 @NgModule({
 	providers: [
+		{ provide: BaseSourceProvider , useClass: OpenLayerTileWMSSourceProvider, multi:true},
+		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true},
+		{ provide: BaseSourceProvider , useClass: OpenLayerIDAHOSourceProvider, multi:true},
+		{ provide: BaseSourceProvider , useClass: OpenLayerBingSourceProvider, multi: true},
+		{ provide: FilterMetadata, useClass:EnumFilterMetadata, multi: true }
 	],
 	declarations: [
 		AppComponent,
 		AnsynComponent
 	],
 	imports: [
-		TypeContainerModule.register({
-			baseType: BaseSourceProvider,
-			type: OpenLayerTileWMSSourceProvider,
-			name: [OpenLayerTileWMSSourceProviderMapType, OpenLayerTileWMSSourceProviderSourceType].join(',')
-		}),
-		TypeContainerModule.register({
-			baseType: BaseSourceProvider,
-			type: OpenLayerOSMSourceProvider,
-			name: [OpenLayerOSMSourceProviderMapType, OpenLayerOSMSourceProviderSourceType].join(',')
-		}),
-		TypeContainerModule.register({
-			baseType: BaseSourceProvider,
-			type: OpenLayerIDAHOSourceProvider,
-			name: [OpenLayerIDAHOSourceProviderMapType, OpenLayerIDAHOSourceProviderSourceType].join(',')
-		}),
-		TypeContainerModule.register({
-			baseType: BaseSourceProvider,
-			type: OpenLayerBingSourceProvider,
-			name: [OpenLayerBingSourceProviderMapType, OpenLayerBingSourceProviderSourceType].join(',')
-		}),
-		TypeContainerModule.register({
-			baseType: FilterMetadata,
-			type: EnumFilterMetadata,
-			name: 'Enum'
-		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		CesiumMapModule,

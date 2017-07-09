@@ -80,5 +80,17 @@ describe('StatusBarComponent', () => {
 			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction());
 		});
 	});
+	it('onkeydown should call goNext when keycode = "39" and clickGoPrev when keycode = "37"', ()=>{
+		spyOn(component, 'clickGoPrev');
+		spyOn(component, 'clickGoNext');
+		const $event = {
+			keycode: 39
+		};
+		component.onkeydown(<any>$event);
+		expect(component.clickGoNext).toHaveBeenCalled();
+		$event.keycode = 37;
+		component.onkeydown(<any>$event);
+		expect(component.clickGoPrev).toHaveBeenCalled();
 
+	})
 });

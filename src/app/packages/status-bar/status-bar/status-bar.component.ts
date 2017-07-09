@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
@@ -37,9 +37,15 @@ export class StatusBarComponent implements OnInit {
 	@Input('overlay-name') overlayName: number;
 	@Input('hide-overlay-name') hideOverlayName: boolean;
 	@Input('maps') maps: any;
-
 	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
 
+	@HostListener("window:keydown", ['$event']) onkeydown($event: KeyboardEvent) {
+		if($event.keyCode == 39) {
+			this.clickGoNext();
+		} else if($event.keyCode == 37)  {
+			this.clickGoPrev();
+		}
+	}
 
 	showLinkCopyToast: boolean;
 

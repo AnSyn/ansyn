@@ -8,7 +8,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
-import { isEmpty, isEqual, get } from 'lodash';
+import { isEmpty, isEqual, get, isNil } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/store-element';
@@ -149,7 +149,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
 			const indexPrevOverlay = indexCurrentOverlay - 1;
 			const prevOverlayId : any = get(this.drops[0].data[indexPrevOverlay], 'id');
-			if (!isEmpty(prevOverlayId)){
+			if (!isNil(prevOverlayId)){
 				this.store.dispatch(new DisplayOverlayAction({id: prevOverlayId}));
 			}
 		});
@@ -158,7 +158,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
 			const indexNextOverlay = indexCurrentOverlay + 1;
 			const nextOverlayId: any = get(this.drops[0].data[indexNextOverlay], 'id');
-			if(!isEmpty(nextOverlayId)){
+			if(!isNil(nextOverlayId)){
 				this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}))
 			}
 		});

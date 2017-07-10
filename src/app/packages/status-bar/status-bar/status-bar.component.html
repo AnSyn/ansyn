@@ -1,11 +1,26 @@
 <div class="status-bar-container">
 	<div class="status-bar">
-		<div class="left-side" *ngIf="!hideOverlayName">
-			<div class="back-to-world-view" [hidden]="!overlayName">
+		<div class="left-side" *ngIf="!hideOverlay">
+			<div class="back-to-world-view" [hidden]="!overlay">
 				<button (click)="clickBackToWorldView()">Back to world view</button>
 			</div>
 			<div class="middle">
-				<span> {{overlayName || 'World View'}}</span>
+
+				<ng-template [ngIf]="overlay" [ngIfElse]="noOverlay">
+					<div class="sensor-and-date">
+						<span class="sensor-name" [title]="overlay.sensorName">
+							{{overlay.sensorName}}&nbsp;
+						</span>
+						<span class="date">
+							{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}}
+						</span>
+					</div>
+				</ng-template>
+
+				<ng-template #noOverlay>
+					<span>World View</span>
+				</ng-template>
+
 			</div>
 
 		</div>
@@ -74,9 +89,9 @@
 				</ansyn-combo-box>
 
 				<!--<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">-->
-					<!--<option *ngFor="let layout of layouts; index as i;" [value]="+i">-->
-						<!--{{(1 + i)}}-->
-					<!--</option>-->
+				<!--<option *ngFor="let layout of layouts; index as i;" [value]="+i">-->
+				<!--{{(1 + i)}}-->
+				<!--</option>-->
 				<!--</select>-->
 			</div>
 

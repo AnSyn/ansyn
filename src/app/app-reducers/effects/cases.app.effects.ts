@@ -48,7 +48,7 @@ export class CasesAppEffects {
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase))
 			];
 
-		});
+		}).share();
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$

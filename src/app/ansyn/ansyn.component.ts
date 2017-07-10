@@ -5,12 +5,11 @@ import { IStatusBarState, MapsLayout } from '@ansyn/status-bar/reducers/status-b
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
-import { isEqual } from 'lodash';
+import { isEqual, get, isNil, isEmpty } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
-
 import * as packageJson from '../../../package.json';
 
 @Component({
@@ -44,40 +43,61 @@ export class AnsynComponent implements OnInit{
 		.map((state: IOverlayState) => {
 			const sum = state.count || state.overlays.size;
 			return sum;
-	});
+		});
 
+	displayedOverlays$ = this.store.select('cases')
+		.filter((cases: ICasesState) => !isNil(cases.selected_case))
+		.withLatestFrom(this.store.select('overlays'))
+		.map(([cases, overlays]:[ICasesState, IOverlayState]) => {
+			const displayedOverlays = [];
+			cases.selected_case.state.maps.data.forEach((map) => {
+				const overlayId = get(map.data.selectedOverlay, "id");
+				const overlay = overlays.overlays.get(overlayId);
+				if(!isNil(overlay)){
+					displayedOverlays.push(overlay);
+				}
+				if(map.id == cases.selected_case.state.maps.active_map_id){
+					this.displayed_overlay = overlay;
+				}
+			});
+			return displayedOverlays;
+		});
+
+	displayedOverlays: any[] = [];
 	selected_layout: MapsLayout;
 	selected_case: Case;
 	maps: CaseMapsState;
 	overlays_count: number;
-	active_map;
-	overlay_name = "";
+	displayed_overlay;
 	public version;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
 	}
 
+	get activeOverlay() {
+		if(!isEmpty(this.selected_case) && !isEmpty(this.displayedOverlays)){
+			const activeMap = this.selected_case.state.maps.data.find((map) => map.id == this.selected_case.state.maps.active_map_id);
+			const overlayId = get(activeMap.data.selectedOverlay, 'id');
+			return this.displayedOverlays.find((o) => o.id == overlayId);
+		}
+	}
+
 	ngOnInit(): void {
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
 
-		this.maps$
-		.map((maps:CaseMapsState) => {
-			this.active_map = maps.data.find((map) => map.id === maps.active_map_id);
-
-			if(this.active_map){
-				this.overlay_name = this.active_map.data.selectedOverlay ? this.active_map.data.selectedOverlay.name : "";
-			}
-			return maps;
-		})
-		.subscribe(maps => {
+		this.maps$.subscribe(maps => {
 			this.maps = maps;
 		});
 
 		this.overlays_count$.subscribe(_overlays_count => {
 			this.overlays_count = _overlays_count;
 		});
+
+		this.displayedOverlays$ .subscribe((_displayedOverlays) => {
+			this.displayedOverlays = _displayedOverlays;
+		})
 	}
 
 	onActiveImagery(active_map_id: string) {

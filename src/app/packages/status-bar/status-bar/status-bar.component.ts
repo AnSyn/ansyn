@@ -34,8 +34,8 @@ export class StatusBarComponent implements OnInit {
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
-	@Input('overlay-name') overlayName: number;
-	@Input('hide-overlay-name') hideOverlayName: boolean;
+	@Input('overlay') overlay: any;
+	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
 	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
 

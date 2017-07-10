@@ -10,7 +10,7 @@ import { BackToWorldAction } from '../../actions/map.actions';
 export class ImageryStatusComponent implements OnInit {
 
 	@Input() map_id;
-	@Input('overlay-name') overlayName;
+	@Input() overlay;
 	@Input() active;
 
 	//if not active show button follow

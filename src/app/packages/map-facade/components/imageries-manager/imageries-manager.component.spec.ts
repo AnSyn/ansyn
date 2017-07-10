@@ -1,16 +1,12 @@
 import { async, ComponentFixture, TestBed,inject } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
-
 import { MockComponent } from '@ansyn/core/test';
-import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
-
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
-import { MapActionTypes } from '../../actions/map.actions';
 import { Actions } from '@ngrx/effects';
-import { Dispatcher,StoreModule,Store } from '@ngrx/store';
+import { Dispatcher, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { MapReducer } from '../../reducers/map.reducer';
 
 
@@ -30,7 +26,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active','show-status', 'showSpinner']}) ],
+			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['mapComponentSettings', 'active','show-status', 'showSpinner', 'overlay']}) ],
 
 		})
 		.compileComponents();

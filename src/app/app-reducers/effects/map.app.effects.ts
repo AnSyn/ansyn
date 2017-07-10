@@ -224,7 +224,7 @@ export class MapAppEffects {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.data.forEach(
 				(map) => {
-					if(map.id == action.payload.mapId){
+					if(map.id == mapId){
 						map.data.selectedOverlay = <any>{};
 					}
 				});

@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
 import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { isEmpty } from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { SetLoadingOverlaysAction } from '../../actions/map.actions';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 
@@ -18,7 +16,7 @@ import { IMapState } from '../../reducers/map.reducer';
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
-	private _maps:any;
+	private _maps: any;
 	public maps_count_range = [];
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
@@ -43,6 +41,11 @@ export class ImageriesManagerComponent implements OnInit{
 
 	};
 
+	@Input() public displayedOverlays: any[] = [];
+
+	overlayById(id){
+		return this.displayedOverlays.find((o) => o.id == id);
+	}
 
 	isOverlayLoading(overlayId) {
 		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId == _overlayId);

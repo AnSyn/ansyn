@@ -1,4 +1,10 @@
 <div class="imagery" #imageryViewContainer>
-	<ansyn-imagery-status *ngIf="showStatus" [map_id]="mapComponentSettings.id" [overlay-name]="(mapComponentSettings.data.selectedOverlay)?.name" [active]="active"></ansyn-imagery-status>
+
+	<ansyn-imagery-status *ngIf="showStatus"
+						  [map_id]="mapComponentSettings.id"
+						  [overlay]="overlay"
+						  [active]="active">
+	</ansyn-imagery-status>
+
 	<ansyn-imagery-view [mapComponentSettings]="mapComponentSettings" class="map" [class.active]="active && showStatus"></ansyn-imagery-view>
 </div>

@@ -80,17 +80,34 @@ describe('StatusBarComponent', () => {
 			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction());
 		});
 	});
-	it('onkeydown should call goNext when keycode = "39" and clickGoPrev when keycode = "37"', ()=>{
+	it('onkeyup should call goNext when keycode = "39" and clickGoPrev when keycode = "37", and remove "active" class from next,prev buttons', ()=>{
+		spyOn(component.goPrev.nativeElement.classList, 'remove');
+		spyOn(component.goNext.nativeElement.classList, 'remove');
+
 		spyOn(component, 'clickGoPrev');
 		spyOn(component, 'clickGoNext');
 		const $event = {
 			keyCode: 39
 		};
-		component.onkeydown(<any>$event);
+		component.onkeyup(<any>$event);
+		expect(component.goNext.nativeElement.classList.remove).toHaveBeenCalledWith('active');
 		expect(component.clickGoNext).toHaveBeenCalled();
 		$event.keyCode = 37;
-		component.onkeydown(<any>$event);
+		component.onkeyup(<any>$event);
+		expect(component.goPrev.nativeElement.classList.remove).toHaveBeenCalledWith('active');
 		expect(component.clickGoPrev).toHaveBeenCalled();
+	});
 
+	it('onkeydown should add "active" class to goNext or goPrev according to keyCode', ()=>{
+		spyOn(component.goPrev.nativeElement.classList, 'add');
+		spyOn(component.goNext.nativeElement.classList, 'add');
+		const $event = {
+			keyCode: 39
+		};
+		component.onkeydown(<any>$event);
+		expect(component.goNext.nativeElement.classList.add).toHaveBeenCalledWith('active');
+		$event.keyCode = 37;
+		component.onkeydown(<any>$event);
+		expect(component.goPrev.nativeElement.classList.add).toHaveBeenCalledWith('active');
 	})
 });

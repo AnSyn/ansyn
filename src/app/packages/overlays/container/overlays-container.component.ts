@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import {
 	DisplayOverlayAction,
@@ -8,7 +8,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from "ng2-destroy-subscribers";
-import { isEmpty,isEqual } from 'lodash';
+import { isEmpty, isEqual, get } from 'lodash';
 import 'rxjs/add/operator/filter';
 import '@ansyn/core/utils/debug';
 import '@ansyn/core/utils/store-element';
@@ -21,7 +21,6 @@ import * as d3 from 'd3';
 import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Spinner } from "@ansyn/core/utils";
-import { cloneDeep } from 'lodash';
 
 @Component({
 	selector: 'overlays-container',
@@ -149,15 +148,19 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
 			const indexPrevOverlay = indexCurrentOverlay - 1;
-			const prevOverlayId = this.drops[0].data[indexPrevOverlay].id;
-			this.store.dispatch(new DisplayOverlayAction({id: prevOverlayId}))
+			const prevOverlayId : any = get(this.drops[0].data[indexPrevOverlay], 'id');
+			if (!isEmpty(prevOverlayId)){
+				this.store.dispatch(new DisplayOverlayAction({id: prevOverlayId}));
+			}
 		});
 
-		this.subscribers.goNextDisplay= this.effects.goNextDisplay$.subscribe((action: GoNextDisplayAction): any => {
+		this.subscribers.goNextDisplay = this.effects.goNextDisplay$.subscribe((action: GoNextDisplayAction): any => {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
 			const indexNextOverlay = indexCurrentOverlay + 1;
-			const nextOverlayId = this.drops[0].data[indexNextOverlay].id;
-			this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}))
+			const nextOverlayId: any = get(this.drops[0].data[indexNextOverlay], 'id');
+			if(!isEmpty(nextOverlayId)){
+				this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}))
+			}
 		});
 
 	}

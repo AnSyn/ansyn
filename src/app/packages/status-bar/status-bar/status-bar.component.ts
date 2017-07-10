@@ -43,6 +43,7 @@ export class StatusBarComponent implements OnInit {
 	@ViewChild('goNext') goNext: ElementRef;
 
 	@HostListener("window:keydown", ['$event']) onkeydown($event: KeyboardEvent) {
+		if((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) return;
 		if($event.keyCode == 39) {
 			this.goNext.nativeElement.classList.add('active');
 		} else if($event.keyCode == 37)  {
@@ -51,6 +52,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	@HostListener("window:keyup", ['$event']) onkeyup($event: KeyboardEvent) {
+		if((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) return;
 		if($event.keyCode == 39) {
 			this.clickGoNext();
 			this.goNext.nativeElement.classList.remove('active');

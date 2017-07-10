@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
@@ -39,11 +39,24 @@ export class StatusBarComponent implements OnInit {
 	@Input('maps') maps: any;
 	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
 
+	@ViewChild('goPrev') goPrev: ElementRef;
+	@ViewChild('goNext') goNext: ElementRef;
+
 	@HostListener("window:keydown", ['$event']) onkeydown($event: KeyboardEvent) {
 		if($event.keyCode == 39) {
+			this.goNext.nativeElement.classList.add('active');
+		} else if($event.keyCode == 37)  {
+			this.goPrev.nativeElement.classList.add('active');
+		}
+	}
+
+	@HostListener("window:keyup", ['$event']) onkeyup($event: KeyboardEvent) {
+		if($event.keyCode == 39) {
 			this.clickGoNext();
+			this.goNext.nativeElement.classList.remove('active');
 		} else if($event.keyCode == 37)  {
 			this.clickGoPrev();
+			this.goPrev.nativeElement.classList.remove('active');
 		}
 	}
 

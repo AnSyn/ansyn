@@ -5,7 +5,7 @@ import { IStatusBarState, MapsLayout } from '@ansyn/status-bar/reducers/status-b
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
-import { isEqual, get, isNil, isEmpty } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';

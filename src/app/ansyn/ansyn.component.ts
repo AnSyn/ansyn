@@ -1,7 +1,7 @@
 import { IAppState } from '../app-reducers';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IStatusBarState, MapsLayout } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
@@ -11,7 +11,7 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../package.json';
-import { CaseMapState, Overlay } from '@ansyn/core/models';
+import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -51,7 +51,7 @@ export class AnsynComponent implements OnInit{
 		.filter((cases: ICasesState) => !isNil(cases.selected_case))
 		.map((cases: ICasesState) => {
 			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
-			return activeMap.data.selectedOverlay;
+			return activeMap.data.overlay;
 		});
 
 	displayedOverlay: Overlay;

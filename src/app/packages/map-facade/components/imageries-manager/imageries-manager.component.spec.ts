@@ -26,7 +26,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'overlay']}) ],
+			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner']}) ],
 
 		})
 		.compileComponents();
@@ -50,8 +50,8 @@ describe('ImageriesManagerComponent', () => {
 		component.maps = {
 			active_map_id:'imagery1',
 			data: [
-				{id: 'imagery1', data: {selectedOverlay: {}}},
-				{id: 'imagery2', data: {selectedOverlay: {}}}
+				{id: 'imagery1', data: {overlay: {}}},
+				{id: 'imagery2', data: {overlay: {}}}
 			]
 		};
 

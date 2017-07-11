@@ -225,7 +225,7 @@ export class MapAppEffects {
 			updatedCase.state.maps.data.forEach(
 				(map) => {
 					if(map.id == mapId){
-						map.data.selectedOverlay = null;
+						map.data.overlay = null;
 					}
 				});
 			return [

@@ -92,7 +92,7 @@ describe('CasesAppEffects', () => {
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
 			if(_result.type == CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[0].data.selectedOverlay.name).toBe('tmp');
+				expect(_result.payload.state.maps.data[0].data.overlay.name).toBe('tmp');
 				expect(_result.payload.state.maps.data[0].id).toBe(icase_state.cases[0].state.maps.active_map_id);
 				count++;
 			}
@@ -113,7 +113,7 @@ describe('CasesAppEffects', () => {
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
 			if(_result.type == CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[1].data.selectedOverlay.name).toBe('tmp');
+				expect(_result.payload.state.maps.data[1].data.overlay.name).toBe('tmp');
 				expect(_result.payload.state.maps.data[1].id).not.toBe(icase_state.cases[0].state.maps.active_map_id);
 				count++;
 			}

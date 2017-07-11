@@ -7,7 +7,7 @@ import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep , isEmpty, get } from 'lodash';
-import { MapsLayout, IStatusBarState } from '@ansyn/status-bar';
+import { IStatusBarState } from '@ansyn/status-bar';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
 import "@ansyn/core/utils/clone-deep";
@@ -19,7 +19,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
-
+import { MapsLayout } from '@ansyn/core';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -169,7 +169,7 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
 		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
 			const activeMap = casesState.selected_case.state.maps.data.find(map => casesState.selected_case.state.maps.active_map_id== map.id);
-			const overlayId = get(activeMap.data.selectedOverlay, "id");
+			const overlayId = get(activeMap.data.overlay, "id");
 			return [action.type, overlayId];
 		})
 		.filter(([actionType, overlayId]) => {

@@ -14,7 +14,6 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 	private _showSpinner: boolean;
-	@Input() overlay;
 
 	@Input("showSpinner")
 	public set showSpinner(value: boolean) {
@@ -27,6 +26,10 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 
 	public get showSpinner(): boolean {
 		return this._showSpinner;
+	}
+
+	get overlay() {
+		return this.mapState.data.overlay;
 	}
 
 	private _spinner: Spinner;

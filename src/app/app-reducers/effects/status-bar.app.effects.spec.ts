@@ -82,7 +82,7 @@ describe('StatusBarAppEffects', () => {
 					data: [
 						{
 							id: 'active_map_id',
-							data: {selectedOverlay: {id :'overlayId1'}}
+							data: {overlay: {id :'overlayId1'}}
 						}
 					]
 				}

@@ -36,7 +36,7 @@ export interface CaseMapState {
 	id: string;
 	data: {
 		position: Position,
-		selectedOverlay?: Overlay
+		overlay?: Overlay
 	};
 	mapType: string;
 }

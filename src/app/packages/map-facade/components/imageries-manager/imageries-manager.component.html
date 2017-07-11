@@ -6,8 +6,7 @@
 									 [map-state]="maps.data[index]"
 									 [active]="maps.active_map_id == maps.data[index].id"
 									 [show-status]="count > 1"
-									 [overlay]="maps.data[index].data.selectedOverlay"
-									 [showSpinner]="isOverlayLoading((maps.data[index].data.selectedOverlay)?.id)" >
+									 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)" >
 			</ansyn-imagery-container>
 		</div>
 

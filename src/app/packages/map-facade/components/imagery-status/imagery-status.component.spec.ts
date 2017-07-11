@@ -2,6 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { ImageryStatusComponent } from './imagery-status.component';
 import { Store, StoreModule } from '@ngrx/store';
+import { CoreModule } from '@ansyn/core';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -10,7 +11,7 @@ describe('ImageryStatusComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.provideStore({})],
+			imports: [CoreModule, StoreModule.provideStore({})],
 			declarations: [ ImageryStatusComponent ]
 		})
 			.compileComponents();

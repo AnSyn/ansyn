@@ -7,6 +7,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
+import { CaseMapsState } from '../../../core/models/case.model';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -16,7 +17,7 @@ import { IMapState } from '../../reducers/map.reducer';
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
-	private _maps: any;
+	private _maps: CaseMapsState;
 	public maps_count_range = [];
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
@@ -32,20 +33,11 @@ export class ImageriesManagerComponent implements OnInit{
 
 	@Input()
 	set maps(value: any){
-
 		this._maps = value;
-
 		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this._maps.active_map_id){
 			this.changeShadowMouseTarget();
 		}
-
 	};
-
-	@Input() public displayedOverlays: any[] = [];
-
-	overlayById(id){
-		return this.displayedOverlays.find((o) => o.id == id);
-	}
 
 	isOverlayLoading(overlayId) {
 		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId == _overlayId);

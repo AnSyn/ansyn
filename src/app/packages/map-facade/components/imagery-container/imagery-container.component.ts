@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, AfterViewInit, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { ImageryComponentSettings } from '@ansyn/imagery';
 import { Spinner } from '@ansyn/core/utils/spinner';
+import { CaseMapState } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -8,7 +8,7 @@ import { Spinner } from '@ansyn/core/utils/spinner';
 	styleUrls: ['./imagery-container.component.less']
 })
 export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestroy {
-	@Input() mapComponentSettings: ImageryComponentSettings;
+	@Input('map-state') mapState: CaseMapState;
 	@Input() active: boolean;
 	@Input('show-status') showStatus: boolean;
 

@@ -1,4 +1,5 @@
-import { Position } from '@ansyn/core';
+import { Position } from './position.model';
+import { Overlay } from './overlay.model';
 
 export type Case = {
 	readonly id?:string;
@@ -31,13 +32,12 @@ export type CaseMapsState = {
 	data: CaseMapState[]
 }
 
-export type CaseMapState = {
+export interface CaseMapState {
 	id: string;
 	data: {
 		position: Position,
-		selectedOverlay?: {id: string, name: string}
+		selectedOverlay?: Overlay
 	};
 	mapType: string;
 }
 export const defaultMapType = 'openLayersMap';
-export const BaseSettings = {mapType: defaultMapType};

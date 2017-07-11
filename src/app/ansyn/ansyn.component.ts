@@ -11,6 +11,7 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../package.json';
+import { CaseMapState, Overlay } from '@ansyn/core/models';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -45,42 +46,23 @@ export class AnsynComponent implements OnInit{
 			return sum;
 		});
 
-	displayedOverlays$ = this.store.select('cases')
+
+	displayedOverlay$ = this.store.select('cases')
 		.filter((cases: ICasesState) => !isNil(cases.selected_case))
-		.withLatestFrom(this.store.select('overlays'))
-		.map(([cases, overlays]:[ICasesState, IOverlayState]) => {
-			const displayedOverlays = [];
-			cases.selected_case.state.maps.data.forEach((map) => {
-				const overlayId = get(map.data.selectedOverlay, "id");
-				const overlay = overlays.overlays.get(overlayId);
-				if(!isNil(overlay)){
-					displayedOverlays.push(overlay);
-				}
-				if(map.id == cases.selected_case.state.maps.active_map_id){
-					this.displayed_overlay = overlay;
-				}
-			});
-			return displayedOverlays;
+		.map((cases: ICasesState) => {
+			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
+			return activeMap.data.selectedOverlay;
 		});
 
-	displayedOverlays: any[] = [];
+	displayedOverlay: Overlay;
 	selected_layout: MapsLayout;
 	selected_case: Case;
 	maps: CaseMapsState;
 	overlays_count: number;
-	displayed_overlay;
 	public version;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
-	}
-
-	get activeOverlay() {
-		if(!isEmpty(this.selected_case) && !isEmpty(this.displayedOverlays)){
-			const activeMap = this.selected_case.state.maps.data.find((map) => map.id == this.selected_case.state.maps.active_map_id);
-			const overlayId = get(activeMap.data.selectedOverlay, 'id');
-			return this.displayedOverlays.find((o) => o.id == overlayId);
-		}
 	}
 
 	ngOnInit(): void {
@@ -95,8 +77,8 @@ export class AnsynComponent implements OnInit{
 			this.overlays_count = _overlays_count;
 		});
 
-		this.displayedOverlays$ .subscribe((_displayedOverlays) => {
-			this.displayedOverlays = _displayedOverlays;
+		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
+			this.displayedOverlay = _displayedOverlay;
 		})
 	}
 

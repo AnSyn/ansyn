@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
+import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 
 export class QueryParamsHelper{
 
@@ -38,7 +39,13 @@ export class QueryParamsHelper{
 			case "time":
 				return rison.encode_object(value);
 			case "maps":
-				return rison.encode_object(value);
+				const clonedvalue: CaseMapsState = cloneDeep(value);
+				clonedvalue.data.forEach((caseMapState: CaseMapState )=> {
+					if(caseMapState.data.selectedOverlay ){
+						caseMapState.data.selectedOverlay = <any>{id: caseMapState.data.selectedOverlay.id}
+					}
+				});
+				return rison.encode_object(clonedvalue);
 			case "region":
 				return wellknown.stringify(value);
 			default:

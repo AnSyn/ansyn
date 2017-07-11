@@ -16,7 +16,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryContainerComponent);
 		component = fixture.componentInstance;
-		component.mapComponentSettings = {} as any;
+		component.mapState = {} as any;
 		fixture.detectChanges();
 	});
 

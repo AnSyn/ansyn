@@ -76,8 +76,8 @@ describe('CasesService', () => {
 			queryParamsHelper.encodeCaseObjects("time",{from: 'from', to: 'to'});
 			expect(rison.encode_object).toHaveBeenCalledWith({from: 'from', to: 'to'});
 
-			queryParamsHelper.encodeCaseObjects("maps","maps_value");
-			expect(rison.encode_object).toHaveBeenCalledWith("maps_value");
+			queryParamsHelper.encodeCaseObjects("maps",{data: []});
+			expect(rison.encode_object).toHaveBeenCalledWith({data: []});
 
 			queryParamsHelper.encodeCaseObjects("region","region_value");
 			expect(wellknown.stringify).toHaveBeenCalledWith("region_value");

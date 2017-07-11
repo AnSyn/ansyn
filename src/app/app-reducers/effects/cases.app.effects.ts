@@ -36,10 +36,7 @@ export class CasesAppEffects {
 
 			selectedCase.state.maps.data.forEach((map) => {
 				if(mapId == map.id){
-					map.data.selectedOverlay = {
-						id: overlay.id,
-						name: overlay.name
-					};
+					map.data.selectedOverlay = overlay
 				}
 			});
 

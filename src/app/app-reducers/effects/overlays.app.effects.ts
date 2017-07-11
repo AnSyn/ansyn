@@ -57,9 +57,9 @@ export class OverlaysAppEffects {
 			([LoadOverlaysAction, loadingOverlays, maps_data]: [Overlay[], string[], CaseMapState[]]) => {
 				maps_data
 					.filter((map: CaseMapState) =>{
-						return !isEmpty(map.data.selectedOverlay);
+						return !isEmpty(map.data.overlay);
 					}).forEach((map: CaseMapState) => {
-					loadingOverlays.push(map.data.selectedOverlay.id);
+					loadingOverlays.push(map.data.overlay.id);
 				});
 				return new SetLoadingOverlaysAction(loadingOverlays);
 			}
@@ -77,9 +77,9 @@ export class OverlaysAppEffects {
 			([overlays, loadingOverlays, maps_data]: [Overlay[], string[], CaseMapState[]]) => {
 				const displayOverlayActions = maps_data
 					.filter((map: CaseMapState) =>{
-						return !isEmpty(map.data.selectedOverlay);
+						return !isEmpty(map.data.overlay);
 					}).map((map: CaseMapState) => {
-						const id = map.data.selectedOverlay.id;
+						const id = map.data.overlay.id;
 						const map_id = map.id;
 						const ignoreExtent = true;
 						const OIndex = loadingOverlays.findIndex((_overlayId) => id == _overlayId);

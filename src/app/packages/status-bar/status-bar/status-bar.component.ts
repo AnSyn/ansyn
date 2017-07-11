@@ -1,13 +1,13 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, MapsLayout, statusBarFlagsItems } from '../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
-import { BackToWorldAction } from '../../map-facade/actions/map.actions';
+import { MapsLayout } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-status-bar',

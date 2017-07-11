@@ -41,8 +41,8 @@ export class QueryParamsHelper{
 			case "maps":
 				const clonedvalue: CaseMapsState = cloneDeep(value);
 				clonedvalue.data.forEach((caseMapState: CaseMapState )=> {
-					if(caseMapState.data.selectedOverlay ){
-						caseMapState.data.selectedOverlay = <any>{id: caseMapState.data.selectedOverlay.id}
+					if(caseMapState.data.overlay){
+						caseMapState.data.overlay= <any>{id: caseMapState.data.overlay.id}
 					}
 				});
 				return rison.encode_object(clonedvalue);

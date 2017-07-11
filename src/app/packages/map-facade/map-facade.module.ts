@@ -7,9 +7,10 @@ import { ImageryModule } from '../imagery/imagery.module';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+import { CoreModule } from '@ansyn/core';
 
 @NgModule({
-	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule],
+	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule],
 	providers: [MapFacadeService],
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent],
 	exports:[ImageriesManagerComponent]

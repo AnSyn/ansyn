@@ -4,7 +4,7 @@ import { MenuComponent } from './menu.component';
 import { MenuItem } from "@ansyn/core";
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../../core/actions/menu.actions';
+import { SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core/actions/menu.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MenuComponent', () => {
@@ -51,7 +51,7 @@ describe('MenuComponent', () => {
 
 	it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
 		let fake_factory:ComponentRef<any> = <any>{destroy():void {}};
-		
+
 		spyOn(menuComponent, 'componentChanges');
 		let mock_menu_item: MenuItem = {
 			name:"one",
@@ -66,10 +66,10 @@ describe('MenuComponent', () => {
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith(fake_factory);
 		expect(menuComponent.selected_component_ref).toEqual(fake_factory);
-		
+
 		menuComponent.selected_item_index = -1;
 		menuComponent.menu_items = [];
-		
+
 	});
 
 

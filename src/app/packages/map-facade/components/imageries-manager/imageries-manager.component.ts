@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MapsLayout } from '@ansyn/status-bar';
 import { CaseMapState } from '@ansyn/menu-items/cases';
 import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
@@ -7,7 +6,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
-import { CaseMapsState } from '../../../core/models/case.model';
+import { CaseMapsState, MapsLayout } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-imageries-manager',

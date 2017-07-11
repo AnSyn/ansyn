@@ -59,7 +59,7 @@ describe('CasesService', () => {
 						{
 							id:"333",
 							data:{
-								selectedOverlay: {
+								overlay: {
 									id: "333-a"
 								}
 							}
@@ -67,7 +67,7 @@ describe('CasesService', () => {
 						{
 							id:"444",
 							data:{
-								selectedOverlay: {
+								overlay: {
 									id: "444-a"
 								}
 							}

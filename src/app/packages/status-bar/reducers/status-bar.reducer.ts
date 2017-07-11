@@ -1,6 +1,5 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
-
-export type MapsLayout = {id:string, description:string, maps_count: number};
+import { MapsLayout } from '@ansyn/core';
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];

@@ -44,5 +44,22 @@ export const configuration = {
 			mapSource: 'OSM',
 			mapSourceMetadata: null
 		}]
+	},
+	ContextConfig: {
+		contextSources: [{
+			type: 'Elastic',
+			uri: 'localhost:9200',
+			bucket: 'context',
+			available: false,
+			log: 'trace',
+			auth: "elastic:changeme"
+		},
+			{
+				uri: 'http://localhost:9001/api/v1/',
+				bucket: 'contexts',
+				type: "Proxy",
+				available: true
+
+			}]
 	}
 };

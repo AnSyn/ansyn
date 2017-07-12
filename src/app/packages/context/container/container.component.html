@@ -1,0 +1,20 @@
+<p>
+  container works!
+</p>
+<h4>context</h4>
+<div  class="sources-list">
+	<button *ngFor="let key of contextProviders" (click)="changeSourceProvider(key)">{{key}}</button>
+</div>
+<textarea rows="10" cols="45" [(ngModel)]="contextBody">
+
+</textarea>
+<br>
+<input type="text" />
+<button (click)="find($event)">Find</button>
+<button (click)="update($event)">Update</button>
+
+<button (click)="create($event)">Create</button>
+<div>{{contextBody}}</div>
+<ul *ngFor="let hit of result.hits.hits">
+	<li>{{hit._source.title}} <a (click)="edit(hit._id)">edit</a>&nbsp;&nbsp;<a (click)="delete(hit._id)">delete</a></li>
+</ul>

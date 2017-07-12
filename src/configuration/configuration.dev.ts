@@ -55,5 +55,24 @@ export const configuration = {
 			{ modelName: 'sensorType', displayName: 'Sensor Type', type: 'Enum' },
 			{ modelName: 'sensorName', displayName: 'Sensor Name', type: 'Enum' }
 		]
+	},
+	ContextConfig: {
+		contextSources: [
+			{
+			type: 'Elastic',
+			uri: 'localhost:9200',
+			bucket: 'context',
+			available: true,
+			log: 'trace',
+			auth: "elastic:changeme"
+		},
+			{
+				uri: 'http://localhost:9001/api/v1/',
+				bucket: 'contexts',
+				type: "Proxy",
+				available: true
+
+			}]
 	}
+
 };

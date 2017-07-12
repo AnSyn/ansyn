@@ -2,7 +2,7 @@ import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from './container/container.component';
 import { FormsModule } from '@angular/forms';
-import { ContextProviderService } from './providers/ContextProviderService';
+import { ContextProviderService } from './providers/context-provider.service';
 
 import { ContextEleasticSource } from './providers/context-elastic-source';
 import { ContextProxySource } from './providers/context-proxy-source';

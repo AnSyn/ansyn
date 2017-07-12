@@ -25,6 +25,7 @@ import { OpenLayerIDAHOSourceProvider, OpenLayerIDAHOSourceProviderMapType, Open
 import { OpenLayerBingSourceProvider, OpenLayerBingSourceProviderMapType, OpenLayerBingSourceProviderSourceType } from './app-models/map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { TypeContainerModule } from '@ansyn/type-container';
+import { ContextModule } from '@ansyn/context/context.module';
 
 @NgModule({
 	providers: [
@@ -55,7 +56,8 @@ import { TypeContainerModule } from '@ansyn/type-container';
 		ImagerySandBoxModule,
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
-		StatusBarModule
+		StatusBarModule,
+		ContextModule.forRoot(configuration.ContextConfig)
 	],
 	bootstrap: [AppComponent]
 })

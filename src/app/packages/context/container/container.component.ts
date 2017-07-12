@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ContextProviderService } from '../providers/ContextProviderService';
+import { ContextProviderService } from '../providers/context-provider.service';
 import { ContextCriteria } from '../context.interface';
 import 'rxjs/add/observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
@@ -15,9 +15,10 @@ import 'rxjs/add/operator/delay';
 	templateUrl: './container.component.html',
 	styleUrls: ['./container.component.css']
 })
+
 export class ContainerComponent implements OnInit {
 
-	public providerType = 'Proxy';
+	public providerType: string;
 	public contextProviders: string[];
 	public contextBody: string;
 	public findStream: Subject<any>;
@@ -26,8 +27,6 @@ export class ContainerComponent implements OnInit {
 
 	constructor(public contextProviderService: ContextProviderService) {
 		this.contextProviders = this.contextProviderService.keys();
-
-
 
 		this.findStream = new Subject();
 
@@ -46,6 +45,7 @@ export class ContainerComponent implements OnInit {
 
 
 	ngOnInit() {
+	 	this.providerType = 'Proxy';
 		this.find();
 	}
 

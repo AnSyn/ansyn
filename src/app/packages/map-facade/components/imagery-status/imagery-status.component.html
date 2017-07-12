@@ -1,7 +1,7 @@
 <div class="status" [class.active]="active" style="width: calc(100% - 4px);">
 	<div class='status-container'>
 
-		<button [hidden]="!overlay" (click)="backToWorldView()" class="back-to-world-view">Back to world view</button>
+		<button [hidden]="!overlay" (click)="backToWorldView($event)" class="back-to-world-view">Back to world view</button>
 
 		<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
 		<div class='status-bar-link-maps-icon'>

@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-
 import { ImageryStatusComponent } from './imagery-status.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { CoreModule } from '@ansyn/core';
 import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
+
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -41,4 +41,12 @@ describe('ImageryStatusComponent', () => {
 		fixture.nativeElement.querySelector('.status-bar-link-maps-icon img').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction (null));
 	});
+
+	it('expect backToWorldView get event, call stopPropagation and call dispatch with backToWorldViewAction', () => {
+		spyOn(store, 'dispatch');
+		const $event: any = jasmine.createSpyObj({stopPropagation: () => {}});
+		component.backToWorldView($event);
+		expect($event.stopPropagation).toHaveBeenCalled();
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction());
+	})
 });

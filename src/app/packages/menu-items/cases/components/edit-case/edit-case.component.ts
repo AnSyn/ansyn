@@ -147,6 +147,15 @@ export class EditCaseComponent implements OnInit {
 		let selected_context: Context = _.cloneDeep(this.contexts_list.find((context: Context) => context.id === case_model.state.selected_context_id));
 		let [facets, region, time] = [selected_context.facets, selected_context.region, selected_context.time];
 		case_model.state = Object.assign(case_model.state, {facets, region ,time});
+
+		if(selected_context.layout_index) {
+			case_model.state.maps.layouts_index = selected_context.layout_index;
+		}
+
+		if(selected_context.zoom) {
+			case_model.state.maps.data.forEach((map) => map.data.position.zoom = selected_context.zoom);
+		}
+
 	}
 
 }

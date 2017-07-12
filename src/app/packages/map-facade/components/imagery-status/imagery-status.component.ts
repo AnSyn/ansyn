@@ -14,11 +14,11 @@ export class ImageryStatusComponent  {
 	@Input() active;
 	@Input() histogramActive;
 
-	//if not active show button follow
 	constructor(private store: Store<any>) { }
 
 
-	backToWorldView() {
+	backToWorldView($event) {
+		$event.stopPropagation();
 		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id}));
 	}
 
@@ -27,6 +27,6 @@ export class ImageryStatusComponent  {
 	}
 
 	toggleHistogramEqualization() {
-		this.store.dispatch(new ToggleHistogramAction({mapId: this.map_id}));		
+		this.store.dispatch(new ToggleHistogramAction({mapId: this.map_id}));
 	}
 }

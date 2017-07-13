@@ -20,6 +20,10 @@ import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadContextsSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { Context } from '../../packages/core/models/context.model';
+import { ContextProviderService } from '../../packages/context/providers/context-provider.service';
+import { ContextCriteria } from '../../packages/context/context.interface';
 
 @Injectable()
 export class CasesAppEffects {
@@ -88,8 +92,28 @@ export class CasesAppEffects {
 			return new AddCaseAction(default_case);
 		});
 
+	@Effect()
+	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
+		.ofType(CasesActionTypes.LOAD_CONTEXTS)
+		.withLatestFrom(this.store$.select("cases"))
+		.switchMap(([action, state]: [any, ICasesState]) => {
+			let observable: Observable<Context[]>;
+			if (state.contexts_loaded) {
+				observable = Observable.of(state.contexts);
+			} else {
+				const criteria = new ContextCriteria({start: 0, limit: 200});
+				observable = this.contextProviderService.provide('Proxy').find(criteria);
+				// observable = this.casesService.loadContexts();
+			}
+			return observable.map((contexts: Context[]) => {
+				return new LoadContextsSuccessAction(contexts);
+			});
+		}).share();
+
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
-				private casesService: CasesService){ }
+				private casesService: CasesService,
+				public contextProviderService: ContextProviderService
+	){ }
 
 }

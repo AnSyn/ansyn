@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
@@ -8,6 +8,8 @@ import * as _ from "lodash";
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
 import { defaultMapType } from '../../';
+import { CasesService } from '../../services/cases.service';
+import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 
 const animations_during = '0.2s';
 
@@ -31,7 +33,6 @@ const host = {
 	selector: 'ansyn-edit-case',
 	templateUrl: './edit-case.component.html',
 	styleUrls: ['./edit-case.component.less'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations,
 	host
 })
@@ -56,7 +57,7 @@ export class EditCaseComponent implements OnInit {
 		this.name_input.nativeElement.select();
 	}
 
-	constructor(private store: Store<ICasesState>) { }
+	constructor(private store: Store<ICasesState>, private casesService: CasesService) { }
 
 	distinctUntilChangedActiveCase(state_prev: ICasesState, state_current: ICasesState) {
 		return _.isEqual(state_prev.active_case_id, state_current.active_case_id);
@@ -93,8 +94,8 @@ export class EditCaseComponent implements OnInit {
 									center: {
 										type: "Point",
 										coordinates: [
-											-1032.6339954767493,
-											-24.489491521255573
+											0,
+											0
 										]
 									}
 								}
@@ -103,25 +104,27 @@ export class EditCaseComponent implements OnInit {
 						},
 					]
 				},
-				time: <any>"",
-				region: <any>"",
-				facets: <any>""
+				time: {
+					type: 'absulote',
+					from: new Date(0).toISOString(),
+					to: new Date().toISOString()
+				},
+				region: getPolygonByPoint([0, 0]).geometry,
+				facets: <any> ""
 			}
 		};
 	}
 
 	ngOnInit(): void {
 		this.store.dispatch(new LoadContextsAction());
-
 		this.active_case$.subscribe((active_case: Case)=>{
 			this.case_model = active_case;
 		});
-
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
 			if(!this.case_model.id && this.contexts_list.length > 0 ){
 				this.case_model.state.selected_context_id = this.contexts_list[0].id;
-				this.setContextValues(this.case_model);
+				this.setContextOnCase();
 			}
 		});
 
@@ -143,19 +146,12 @@ export class EditCaseComponent implements OnInit {
 		this.close();
 	}
 
-	setContextValues(case_model: Case) {
-		let selected_context: Context = _.cloneDeep(this.contexts_list.find((context: Context) => context.id === case_model.state.selected_context_id));
-		let [facets, region, time] = [selected_context.facets, selected_context.region, selected_context.time];
-		case_model.state = Object.assign(case_model.state, {facets, region ,time});
+	setContextOnCase() {
+		return this.casesService.setContextOnCase(this.case_model, this.selected_context);
+	}
 
-		if(selected_context.layout_index) {
-			case_model.state.maps.layouts_index = selected_context.layout_index;
-		}
-
-		if(selected_context.zoom) {
-			case_model.state.maps.data.forEach((map) => map.data.position.zoom = selected_context.zoom);
-		}
-
+	get selected_context() {
+		return _.cloneDeep(this.contexts_list.find((context: Context) => context.id === this.case_model.state.selected_context_id));
 	}
 
 }

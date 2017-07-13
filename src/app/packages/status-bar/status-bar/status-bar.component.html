@@ -29,18 +29,21 @@
 						<!--<img src="">-->
 						<!--</button>-->
 					</div>
-
 				</div>
 			</div>
 
+
 			<div class="selection-combobox layout-item type-selection">
+
 				<div class='status-bar-orientation-icon'>
 					<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
 				</div>
-				<select name="query-type">
-					<option>Orignal</option>
-					<option>Orignal</option>
+
+				<select name="orientation" [(ngModel)]="orientation" (ngModelChange)="orientationChange(orientation)">
+					<option value="original">{{'original' | titlecase}}</option>
+					<option value="other orientation">{{'other orientation' | titlecase}}</option>
 				</select>
+
 			</div>
 
 
@@ -48,9 +51,12 @@
 				<div class='status-bar-world-icon'>
 					<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
 				</div>
-				<select name="query-region">
-					<option>Pin Point</option>
+
+
+				<select name="timeline" name="geoFilter" ([ngModel])="geoFilter">
+					<option *ngFor="let geo of geoFilters">{{geo | titlecase}}</option>
 				</select>
+
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
 					<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
 				</div>
@@ -80,15 +86,11 @@
 
 			<div class="layout-combobox layout-item">
 				<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left" hidden>
-
-				<ansyn-combo-box [options]="layouts" [(selectedIndex)]="selected_layout_index" (selectedIndexChange)="layoutSelectChange(selected_layout_index)">
+				<ansyn-combo-box
+					[options]="layouts"
+					[(selectedIndex)]="selected_layout_index"
+					(selectedIndexChange)="layoutSelectChange(selected_layout_index)">
 				</ansyn-combo-box>
-
-				<!--<select name="layout" [(ngModel)]="selected_layout_index" (ngModelChange)="layoutSelectChange(selected_layout_index)">-->
-				<!--<option *ngFor="let layout of layouts; index as i;" [value]="+i">-->
-				<!--{{(1 + i)}}-->
-				<!--</option>-->
-				<!--</select>-->
 			</div>
 
 			<div class="overlays-count layout-item">

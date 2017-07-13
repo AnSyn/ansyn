@@ -39,13 +39,19 @@ export class ContextProxySource implements IContextSource {
 			.catch(this.handleError);
 	}
 
-	parseToSource(data) {
+	parseToSource(data): any{
 		return data;
 	}
 
-	parseFromSource(data) {
-		return data;
-	}
+	parseFromSource(data): Context[]  {
+		return data.hits.hits.map((contextElastic: any): Context => {
+			let context: any = {};
+			context.id = contextElastic._id;
+			Object.keys(contextElastic._source).forEach((key) => {
+				context[key] = contextElastic._source[key];
+			});
+			return context;
+		})}
 
 	private handleError (error: Response | any) {
 		// In a real world app, you might use a remote logging infrastructure

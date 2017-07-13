@@ -6,16 +6,12 @@ import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import * as _ from 'lodash';
-
+import { getPointByPolygon, getPolygonByPoint } from '@ansyn/core/utils';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as turf from '@turf/turf';
-import { FeatureCollection, GeometryObject, Point } from "@types/geojson";
-import { SetTimelineStateAction } from '../actions/overlays.actions';
-
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
-
 
 @Injectable()
 export class OverlaysService {
@@ -30,22 +26,11 @@ export class OverlaysService {
 				return 0;
 			})
 	}
-
-	getPolygonByPoint(lonLat){
-		//cordinates lon,lat
-		const point = turf.point(lonLat);
-		const radius = this.config.polygonGenerationDisatnce;
-		const region = turf.circle(point,radius);
-		return region;
+	get getPolygonByPoint() {
+		return getPolygonByPoint;
 	}
-
-	getPointByPolygon(geometry :GeometryObject|FeatureCollection<any>) : Point{
-		if(geometry.type === 'FeatureCollection'){
-			return <Point>turf.centerOfMass(<FeatureCollection<any>>geometry).geometry;
-		}
-		else {
-			return <Point>turf.centerOfMass(turf.feature(<GeometryObject>geometry)).geometry;
-		}
+	get getPointByPolygon() {
+		return getPointByPolygon;
 	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {

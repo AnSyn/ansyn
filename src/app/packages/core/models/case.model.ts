@@ -14,13 +14,15 @@ export type CaseState = {
 	maps?: CaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
-	region: GeoJSON.Point | GeoJSON.Polygon
+	region: CaseRegionState
 }
 
+	export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
+
 export type CaseTimeState = {
-	type:string,
-	from: string,
-	to: string
+	type: string;
+	from: string;
+	to: string;
 }
 export type CaseFacetsState = {
 	filters: {fieldName: string, metadata: any}[]

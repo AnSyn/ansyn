@@ -15,8 +15,7 @@ import {
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
-import { Case } from '../models/case.model';
-import { Context } from '../models/context.model';
+import { Case, Context } from '@ansyn/core';
 import { isEmpty, isEqual } from 'lodash';
 
 @Injectable()

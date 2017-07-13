@@ -4,7 +4,8 @@ import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.red
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
-	ToggleHistogramStatusBarAction
+	ToggleHistogramStatusBarAction,
+	SetOrientationAction, SetGeoFilterAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
@@ -16,28 +17,29 @@ import { MapsLayout } from '@ansyn/core';
 	styleUrls: ['./status-bar.component.less']
 })
 export class StatusBarComponent implements OnInit {
-	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar")
-		.map((state: IStatusBarState) => state.layouts)
-		.distinctUntilChanged(isEqual);
 
-	selectedLayoutIndex$: Observable<number> = this.store.select("status_bar")
-		.map((state: IStatusBarState) => state.selected_layout_index)
-		.distinctUntilChanged(isEqual);
-
-	showLinkCopyToast$: Observable<boolean> = this.store.select('status_bar')
-		.map((state: IStatusBarState) => state.showLinkCopyToast)
-		.distinctUntilChanged(isEqual);
+	layouts$: Observable<MapsLayout[]> = this.getSelector('layouts');
+	selected_layout_index$: Observable<number> = this.getSelector('selected_layout_index');
+	showLinkCopyToast$: Observable<boolean> = this.getSelector('showLinkCopyToast');
+	orientations$: Observable<string> = this.getSelector('orientations');
+	orientation$: Observable<string> = this.getSelector('orientation');
+	geoFilters$: Observable<string> = this.getSelector('geoFilters');
+	geoFilter$: Observable<string> = this.getSelector('geoFilter');
 
 	flags$ = this.store.select('status_bar')
 		.map( (state: IStatusBarState) => state.flags)
 		.distinctUntilChanged(isEqual);
 
-
+	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
+	showLinkCopyToast: boolean;
+	orientations: string[] = [];
+	orientation: string;
+	geoFilters: string[] = [];
+	geoFilter: string;
+
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	flags: Map<string, boolean> = new Map<string, boolean>();
-	layouts: MapsLayout[] = [];
-	showLinkCopyToast: boolean;
 	timeSelectionEditIcon = false;
 
 	date1: Date;
@@ -46,11 +48,10 @@ export class StatusBarComponent implements OnInit {
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay') overlay: any;
-	@Input() histogramActive: boolean;	
+	@Input() histogramActive: boolean;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
-
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
 
@@ -102,7 +103,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	setSubscribers() {
-		this.selectedLayoutIndex$.subscribe((_selected_layout_index: number) => {
+		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
 			this.selected_layout_index = _selected_layout_index;
 		});
 
@@ -138,6 +139,12 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
 	}
 
+	orientationChange(_orientation) {
+		this.store.dispatch(new SetOrientationAction(_orientation));
+	}
+	geoFilterChange(_geoFilter) {
+		this.store.dispatch(new SetGeoFilterAction(_geoFilter));
+	}
 	onShowToastChange(value: boolean) {
 		this.store.dispatch(new SetLinkCopyToastValueAction(value));
 	}
@@ -157,7 +164,6 @@ export class StatusBarComponent implements OnInit {
 	togglePinPointIndicatorView() {
 		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointIndicator}));
 	}
-
 
 	clickGoPrev(): void {
 		this.store.dispatch(new GoPrevAction());
@@ -180,6 +186,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleHistogramEqualization() {
-		this.store.dispatch(new ToggleHistogramStatusBarAction());		
+		this.store.dispatch(new ToggleHistogramStatusBarAction());
 	}
 }

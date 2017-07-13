@@ -12,9 +12,9 @@
 <input type="text" />
 <button (click)="find($event)">Find</button>
 <button (click)="update($event)">Update</button>
-
 <button (click)="create($event)">Create</button>
-<div>{{contextBody}}</div>
-<ul *ngFor="let hit of result.hits.hits">
-	<li>{{hit._source.title}} <a (click)="edit(hit._id)">edit</a>&nbsp;&nbsp;<a (click)="delete(hit._id)">delete</a></li>
+<ul>
+	<ng-template ngFor let-hit [ngForOf]="result">
+		<li>{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;<a (click)="delete(hit.id)">delete</a></li>
+	</ng-template>
 </ul>

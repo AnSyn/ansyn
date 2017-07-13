@@ -1,3 +1,17 @@
 .sources-list{
 	display:flex;
 }
+ul {
+	max-height: 100px;
+	overflow: auto;
+}
+ul li a{
+	color: blue;
+	cursor: pointer;
+}
+
+
+
+textarea{
+	height: 50px;
+}

@@ -4,7 +4,6 @@ import { MapPosition } from './model/map-position';
  */
 
 export { MapPosition } from './model/map-position';
-export { Extent } from './model/extent';
 export { IMap } from './model/imap';
 export { BaseSourceProvider } from './model/base-source-provider.model'
 export { IMapPlugin } from './model/imap-plugin';

@@ -15,16 +15,17 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
-import { OverlaysService,DisplayOverlayAction } from "@ansyn/overlays";
+import { OverlaysService, DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
-import { UpdateStatusFlagsAction,statusBarFlagsItems } from "@ansyn/status-bar";
+import { UpdateStatusFlagsAction, statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction, AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { calcGeoJSONExtent } from '@ansyn/core/utils';
+import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
+import { Position } from '@ansyn/core';
 
 @Injectable()
 export class MapAppEffects {
@@ -82,14 +83,19 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
 			const overlay = overlaysState.overlays.get(action.payload.id);
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
-			const ignoreExtent = action.payload.ignoreExtent;
-			return [overlay, map_id, ignoreExtent];
+			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
+			return [overlay, map_id, active_map.data.position];
 		})
-		.map( ([overlay, map_id, ignoreExtent]:[Overlay, string, boolean]) => {
+		.map( ([overlay, map_id, position]:[Overlay, string, Position]) => {
+
 			let extent;
-			if(!ignoreExtent){
+			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
+			if(isInside) {
+				extent = position.boundingBox;
+			} else {
 				extent = calcGeoJSONExtent(overlay.footprint);
 			}
+
 			const communicator = this.communicator.provide(map_id);
 			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
@@ -218,13 +224,14 @@ export class MapAppEffects {
 			return [action, casesState, mapId];
 		})
 		.mergeMap(([action, caseState, mapId]:[BackToWorldAction, ICasesState, string]) => {
+			const active_map = caseState.selected_case.state.maps.data.find((map)=> map.id === mapId);
 			const comm = this.communicator.provide(mapId);
-			comm.loadInitialMapSource();
+			comm.loadInitialMapSource(active_map.data.position.boundingBox);
 
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.data.forEach(
 				(map) => {
-					if(map.id == mapId){
+					if(map.id === mapId){
 						map.data.overlay = null;
 					}
 				});

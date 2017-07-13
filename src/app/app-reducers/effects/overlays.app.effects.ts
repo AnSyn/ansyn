@@ -81,11 +81,10 @@ export class OverlaysAppEffects {
 					}).map((map: CaseMapState) => {
 						const id = map.data.overlay.id;
 						const map_id = map.id;
-						const ignoreExtent = true;
-						const OIndex = loadingOverlays.findIndex((_overlayId) => id == _overlayId);
+						const OIndex = loadingOverlays.findIndex((_overlayId) => id === _overlayId);
 						loadingOverlays.splice(OIndex, 1);
 
-						return new DisplayOverlayAction({id, map_id, ignoreExtent})
+						return new DisplayOverlayAction({id, map_id});
 					});
 				return [new SetLoadingOverlaysAction(loadingOverlays), ...displayOverlayActions];
 			}
@@ -93,6 +92,6 @@ export class OverlaysAppEffects {
 
 
 
-	constructor(public actions$: Actions, public store$: Store<IAppState>,public casesService : CasesService)
-	{}
+	constructor(public actions$: Actions, public store$: Store<IAppState>,public casesService: CasesService) {
+	}
 }

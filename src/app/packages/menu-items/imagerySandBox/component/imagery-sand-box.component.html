@@ -11,9 +11,9 @@
 	<button (click)="setCenter({lat :latInput.value, long: longInput.value, animation: animationInput.checked})">set center to lat: {{latInput.value}}, long: {{longInput.value}})</button>
 
 	<h3>load image source</h3>
-	<button (click)="setImageLayer()">Set Image Layer (remove other layers)</button>
+	<!--<button (click)="setImageLayer()">Set Image Layer (remove other layers)</button>-->
 	<button (click)="setWorldLayer()">Set  World Layer (remove other layers)</button>
-	<button (click)="addImageLayer()">add Image Layer (on top of other layers)</button>
+	<!--<button (click)="addImageLayer()">add Image Layer (on top of other layers)</button>-->
 
 	<h3>Toggle maps</h3>
 	<input #mapTypeInput type="string" (keyup)="0">

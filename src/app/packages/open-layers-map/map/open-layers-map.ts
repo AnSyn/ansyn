@@ -5,8 +5,9 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import * as ol from 'openlayers';
-import { Extent } from '@ansyn/imagery';
 import { MapPosition } from '@ansyn/imagery/model/map-position';
+//import { configuration } from './../../../../configuration/configuration';
+import { Utils } from './utils';
 
 export class OpenLayersMap implements IMap {
 
@@ -62,6 +63,10 @@ export class OpenLayersMap implements IMap {
 
 		this._mapLayers = layers;
 
+		if (position && position.boundingBox) {
+			this.setBoundingBox(position.boundingBox);
+		}
+
 		this._mapObject.on('moveend', (e) => {
 			const mapCenter = this.getCenter();
 			this.centerChanged.emit(mapCenter);
@@ -72,7 +77,7 @@ export class OpenLayersMap implements IMap {
 
 	// IMap Start
 
-	public setLayer(layer: any, extent?: Extent) {
+	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
 		this.setMainLayer(layer);
 		if(extent) {
 			this.fitCurrentView(layer, extent);
@@ -131,28 +136,37 @@ export class OpenLayersMap implements IMap {
 		}
 	}
 
-	private fitCurrentView(layer: ol.layer.Layer, extent?: Extent) {
+	private fitCurrentView(layer: ol.layer.Layer, extent?: GeoJSON.Point[]) {
 		const view = this._mapObject.getView();
+		const viewProjection = view.getProjection();
 		const layerExtent = layer.getExtent();
-		if (layerExtent) {
-			view.setCenter(ol.extent.getCenter(layerExtent));
-			view.fit(layerExtent, {
-				size: this._mapObject.getSize(),
-				constrainResolution: false
-			});
+		let projectedViewExtent;
+
+		if (layerExtent && extent) {
+			const positionExtent = Utils.BoundingBoxToOLExtent(extent);
+			projectedViewExtent = ol.proj.transformExtent(positionExtent, 'EPSG:4326', viewProjection);
+			const intersects = ol.extent.intersects(layerExtent, projectedViewExtent);
+			if (intersects) {
+				this.fitToExtent(projectedViewExtent);
+			} else {
+				this.fitToExtent(layerExtent);
+			}
+		} else if (layerExtent) {
+			this.fitToExtent(layerExtent);
 		}
 		else if (extent) {
-			const layerProjection = layer.getSource().getProjection();
-			const topLeft = ol.proj.transform([extent.topLeft[0],extent.topLeft[1]], 'EPSG:4326', layerProjection);
-			const topRight = ol.proj.transform([extent.topRight[0],extent.topRight[1]], 'EPSG:4326', layerProjection);
-			const bottomLeft = ol.proj.transform([extent.bottomLeft[0],extent.bottomLeft[1]], 'EPSG:4326', layerProjection);
-			const bottomRight = ol.proj.transform([extent.bottomRight[0],extent.bottomRight[1]], 'EPSG:4326', layerProjection);
-			const viewExtent = ol.extent.boundingExtent([topLeft, topRight, bottomLeft, bottomRight]);
-			view.fit(viewExtent, {
-				size: this._mapObject.getSize(),
-				constrainResolution: false
-			});
+			const positionExtent = Utils.BoundingBoxToOLExtent(extent);
+			projectedViewExtent = ol.proj.transformExtent(positionExtent, 'EPSG:4326', viewProjection);
+			this.fitToExtent(projectedViewExtent);
 		}
+	}
+
+	private fitToExtent(extent: ol.Extent) {
+		const view = this._mapObject.getView();
+		view.fit(extent, {
+			size: this._mapObject.getSize(),
+			constrainResolution: false
+		});
 	}
 
 	public addLayer(layer: any) {
@@ -242,6 +256,9 @@ export class OpenLayersMap implements IMap {
 		view.setCenter(olCenter);
 		view.setRotation(position.rotation);
 		view.setZoom(position.zoom);
+		if (position.boundingBox) {
+			this.setBoundingBox(position.boundingBox);
+		}
 	}
 
 	public getPosition(): MapPosition {
@@ -249,8 +266,22 @@ export class OpenLayersMap implements IMap {
 		let center: GeoJSON.Point = this.getCenter();
 		let zoom: number = view.getZoom();
 		let rotation: number = view.getRotation();
+		let boundingBox = this.getMapExtentInGeo();
 
-		return { center, zoom , rotation};
+		const result: MapPosition = { center, zoom , rotation, boundingBox};
+		//if(configuration.General.logActions ){
+		//	console.log(`'Get Map Extent : ${JSON.stringify(boundingBox)}'`);
+		//}
+		return result;
+	}
+
+	private getMapExtentInGeo() {
+		const view = this._mapObject.getView();
+		const viewProjection = view.getProjection();
+		const viewExtent = view.calculateExtent(this._mapObject.getSize());
+		const viewExtentGeo = ol.proj.transformExtent(viewExtent, viewProjection, 'EPSG:4326');
+		const bbox = Utils.OLExtentToBoundingBox(viewExtentGeo);
+		return bbox;
 	}
 
 	private flyTo(location) {
@@ -261,8 +292,15 @@ export class OpenLayersMap implements IMap {
 		});
 	}
 
-	public setBoundingRectangle(rect: GeoJSON.MultiPolygon) {
-
+	public setBoundingBox(bbox: GeoJSON.Point[]) {
+		//if(configuration.General.logActions ){
+		//	console.log(`'Set Map extent to: ${JSON.stringify(bbox)}'`);
+		//}
+		const geoViewExtent: ol.Extent = Utils.BoundingBoxToOLExtent(bbox);
+		const view = this._mapObject.getView();
+		const viewProjection = view.getProjection();
+		const projectedViewExtent = ol.proj.transformExtent(geoViewExtent, 'EPSG:4326', viewProjection);
+		this.fitToExtent(projectedViewExtent);
 	}
 
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {

@@ -22,9 +22,7 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
-	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
-	setBoundingRectangle(rect: any) {
+	setBoundingBox(bbox: GeoJSON.Point[]) {
 		throw new Error('Method not implemented.');
 	}
 

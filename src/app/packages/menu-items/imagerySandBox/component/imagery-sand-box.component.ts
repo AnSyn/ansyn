@@ -60,66 +60,66 @@ export class ImagerySandBoxComponent implements OnInit {
 		this.imageryCommunicatorService.communicatorsAsArray()[0].loadInitialMapSource();
 	}
 
-	public addImageLayer() {
-		console.log(`addImageLayer`);
+	// public addImageLayer() {
+	// 	console.log(`addImageLayer`);
+    //
+	// 	try {
+	// 		const layer = this.createImageLayer();
+	// 		this.imageryCommunicatorService.communicatorsAsArray()[0].addLayer(layer);
+	// 	} catch (ex) {
+	// 		throw new Error(`addImageLayer failed ${ex}`);
+	// 	}
+	// }
 
-		try {
-			const layer = this.createImageLayer();
-			this.imageryCommunicatorService.communicatorsAsArray()[0].addLayer(layer);
-		} catch (ex) {
-			throw new Error(`addImageLayer failed ${ex}`);
-		}
-	}
+	// public setImageLayer() {
+	// 	console.log(`setImageLayer`);
+    //
+	// 	// try {
+	// 	const layer = this.createImageLayer();
+    //
+	// 	const footprint:GeoJSON.MultiPolygon = {"type":"MultiPolygon","coordinates":[[[[35.66132962,32.71470156],[35.84337173,32.71244083],[35.84258139,32.5720059],[35.6607346,32.57504756],[35.66132962,32.71470156]]]],"bbox":[35.6607346,32.5720059,35.84337173,32.71470156]};
+    //
+	// 	const a: GeoJSON.Feature<any> = {
+	// 		"type": 'Feature',
+	// 		"properties": {},
+	// 		"geometry": footprint
+	// 	};
+    //
+	// 	const center = turf.center(a);
+	// 	const bbox = turf.bbox(a);
+	// 	const bboxPolygon = turf.bboxPolygon(bbox);
+	// 	const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
+	// 	this.imageryCommunicatorService.communicatorsAsArray()[0].setLayer(layer, extent);
+	// 	// } catch (ex) {
+	// 	// 	throw new Error(`setImageLayer failed ${ex}`);
+	// 	// }
+	// }
 
-	public setImageLayer() {
-		console.log(`setImageLayer`);
-
-		// try {
-		const layer = this.createImageLayer();
-
-		const footprint:GeoJSON.MultiPolygon = {"type":"MultiPolygon","coordinates":[[[[35.66132962,32.71470156],[35.84337173,32.71244083],[35.84258139,32.5720059],[35.6607346,32.57504756],[35.66132962,32.71470156]]]],"bbox":[35.6607346,32.5720059,35.84337173,32.71470156]};
-
-		const a: GeoJSON.Feature<any> = {
-			"type": 'Feature',
-			"properties": {},
-			"geometry": footprint
-		};
-
-		const center = turf.center(a);
-		const bbox = turf.bbox(a);
-		const bboxPolygon = turf.bboxPolygon(bbox);
-		const extent = {topLeft: bboxPolygon.geometry.coordinates[0][0], topRight: bboxPolygon.geometry.coordinates[0][1], bottomLeft: bboxPolygon.geometry.coordinates[0][2], bottomRight:bboxPolygon.geometry.coordinates[0][3]};
-		this.imageryCommunicatorService.communicatorsAsArray()[0].setLayer(layer, extent);
-		// } catch (ex) {
-		// 	throw new Error(`setImageLayer failed ${ex}`);
-		// }
-	}
-
-	private createImageLayer(): ol.layer.Tile {
-		const projection = new ol.proj.Projection({
-			code: 'EPSG:4326',
-			units: 'degrees',
-			axisOrientation: 'neu',
-			global: true
-		});
-
-		const tiled = new ol.layer.Tile({
-			visible: true,
-			source: new ol.source.TileWMS({
-				url: 'http://localhost:8080/geoserver/ansyn/wms',
-				params: {
-					'FORMAT': 'image/png',
-					'VERSION': '1.1.1',
-					tiled: true,
-					STYLES: '',
-					LAYERS: 'ansyn:israel_center_1',
-					tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
-				},
-				projection: projection
-			})
-		});
-		return tiled;
-	}
+	// private createImageLayer(): ol.layer.Tile {
+	// 	const projection = new ol.proj.Projection({
+	// 		code: 'EPSG:4326',
+	// 		units: 'degrees',
+	// 		axisOrientation: 'neu',
+	// 		global: true
+	// 	});
+    //
+	// 	const tiled = new ol.layer.Tile({
+	// 		visible: true,
+	// 		source: new ol.source.TileWMS({
+	// 			url: 'http://localhost:8080/geoserver/ansyn/wms',
+	// 			params: {
+	// 				'FORMAT': 'image/png',
+	// 				'VERSION': '1.1.1',
+	// 				tiled: true,
+	// 				STYLES: '',
+	// 				LAYERS: 'ansyn:israel_center_1',
+	// 				tilesOrigin: 34.19140208322269 + ',' + 30.666856822816754
+	// 			},
+	// 			projection: projection
+	// 		})
+	// 	});
+	// 	return tiled;
+	// }
 
 	public setActiveMap(mapType: string) {
 		this.imageryCommunicatorService.communicatorsAsArray()[0].setActiveMap(mapType);

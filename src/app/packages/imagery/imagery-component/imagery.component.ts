@@ -52,7 +52,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 		// world view
 		if(!isEmpty(this._mapComponentSettings.data.overlay) && isEmpty(value.data.overlay)){
-			this._manager.loadInitialMapSource();
+			this._manager.loadInitialMapSource(value.data.position.boundingBox);
 		}
 
 		this._mapComponentSettings = value;

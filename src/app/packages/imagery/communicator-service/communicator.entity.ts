@@ -3,7 +3,6 @@ import { ImageryComponentManager } from '../imagery-component/manager/imagery.co
 
 import * as _ from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
-import { Extent } from '../model/extent';
 import { IMap } from '../model/imap';
 import { MapPosition } from '../model/map-position';
 
@@ -66,8 +65,8 @@ export class CommunicatorEntity {
 		this._manager.setActiveMap(mapType);
 	}
 
-	public loadInitialMapSource() {
-		this._manager.loadInitialMapSource();
+	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
+		this._manager.loadInitialMapSource(extent);
 	}
 
 	public get ActiveMap() {
@@ -83,6 +82,7 @@ export class CommunicatorEntity {
 		}
 		return null;
 	}
+
 	public updateSize(): void {
 		if (this.ActiveMap) {
 			this.ActiveMap.updateSize();
@@ -114,7 +114,7 @@ export class CommunicatorEntity {
 		return pluginResult;
 	}
 
-	public setLayer(layer: any, extent?: Extent) {
+	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
 		if (this.ActiveMap) {
 			this.ActiveMap.setLayer(layer, extent);
 		}

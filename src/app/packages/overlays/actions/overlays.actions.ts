@@ -61,7 +61,7 @@ export class ClearFilterAction implements Action {
 
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
-	constructor(public payload: {id: string, map_id?:string, ignoreExtent?:boolean}){}
+	constructor(public payload: {id: string, map_id?:string}){}
 }
 
 export class DemoAction implements Action {

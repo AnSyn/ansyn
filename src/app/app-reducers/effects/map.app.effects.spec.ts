@@ -30,7 +30,8 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-
+import { Position } from '@ansyn/core';
+import { before } from 'selenium-webdriver/testing';
 
 
 class SourceProviderMock1 implements BaseSourceProvider {
@@ -62,6 +63,8 @@ describe('MapAppEffects', () => {
 	};
 	let fake_overlay: Overlay;
 
+	const imagery1PositionBoundingBox = {test: 1};
+
 	const cases: Case[] = [{
 		state: {
 			time: { type: "",from: new Date(), to: new Date()},
@@ -78,10 +81,11 @@ describe('MapAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1'},
-					{id: 'imagery2'},
-					{id: 'imagery3'}
-				]
+					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
+					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+				],
+				active_map_id: 'imagery1'
 			}
 		} as any
 	}];
@@ -354,8 +358,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('onDisplayOverlay$ communicator should set Layer on map, calcGeoJSONExtent depended on ignoreExtent value', () => {
-
+	describe('onDisplayOverlay$ communicator should set Layer on map, by isExtentContainedInPolygon', () => {
 		const fake_layer = {};
 		const fake_extent = [1,2,3,4];
 		let fakeCommuincator: CommunicatorEntity;
@@ -368,7 +371,7 @@ describe('MapAppEffects', () => {
 				createAsync: () => {
 					return {
 						then: (callback) => callback(fake_layer)
-					}
+					};
 				}
 			};
 			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
@@ -377,23 +380,25 @@ describe('MapAppEffects', () => {
 			spyOn(fakeCommuincator, 'setLayer');
 		});
 
-		it('ignoreExtent is "undefined"', ()=> {
-			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'mapId'}));
+		it('isExtentContainedInPolygon "false"', ()=> {
+			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(false);
+			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'imagery1'}));
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
 				/*void*/
 				expect(result).toBeUndefined();
+				expect(utils.calcGeoJSONExtent).toHaveBeenCalled();
 				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, fake_extent);
 			});
 		});
 
-
-		it('ignoreExtent is "true"', ()=> {
-			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'mapId', ignoreExtent: true}));
+		it('isExtentContainedInPolygon "true"', ()=> {
+			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(true);
+			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'imagery1'}));
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
 				/*void*/
 				expect(result).toBeUndefined();
 				expect(utils.calcGeoJSONExtent).not.toHaveBeenCalled();
-				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, undefined);
+				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, imagery1PositionBoundingBox);
 			});
 
 		});

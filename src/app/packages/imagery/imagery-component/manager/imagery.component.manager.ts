@@ -31,10 +31,10 @@ export class ImageryComponentManager {
 				private config: IImageryConfig,
 				private _id: string) {}
 
-	public loadInitialMapSource() {
+	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
 		if (this._activeMap) {
 			const sourceProvider = this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
-				this._activeMap.setLayer(layers[0]);
+				this._activeMap.setLayer(layers[0], extent);
 				if (layers.length > 0) {
 					for(let i = 1; i < layers.length; i++) {
 						this._activeMap.addLayer(layers[i]);

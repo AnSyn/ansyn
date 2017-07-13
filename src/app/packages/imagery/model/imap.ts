@@ -1,5 +1,4 @@
 import { EventEmitter } from '@angular/core';
-import { Extent } from './extent';
 import { MapPosition } from './map-position';
 
 /**
@@ -16,8 +15,8 @@ export interface IMap {
 	mapObject: any;
 	getCenter(): GeoJSON.Point;
 	setCenter(center: GeoJSON.Point, animation: boolean);
-	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
-	setLayer(layer: any, extent?: Extent): void;
+	setBoundingBox(bbox: GeoJSON.Point[]);
+	setLayer(layer: any, extent?: GeoJSON.Point[]): void;
 	addLayer(layer: any): void;
 	removeLayer(layer: any): void;
 	addVectorLayer(layer: any): void;
@@ -25,7 +24,6 @@ export interface IMap {
 	setPosition(MapPosition): void;
 	getPosition(): MapPosition;
 	updateSize(): void;
-	setBoundingRectangle(rect: GeoJSON.MultiPolygon);
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
 	togglePointerMove();
 	removeSingleClickEvent();

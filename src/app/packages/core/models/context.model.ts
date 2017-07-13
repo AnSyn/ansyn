@@ -1,24 +1,18 @@
+import { CaseTimeState, CaseFacetsState, CaseRegionState } from './case.model';
+
 export type Context = {
-	id: string,
-	name: string,
-
-	layout_index?: number,
-	zoom?: number,
-	imageryCount?: number,
-	timeFilter?: string,
-	geoFilter?: string
-	orientation: string,
-
-	time: {
-		type:string,
-		from: Date,
-		to: Date
-	},
-	facets: {
-		SensorName: string,
-		SensorType: 'SAR' | 'VIS' | 'IR' | 'Satellite',
-		Stereo: boolean,
-		Resolution: number
-	},
-	region: {}
+	id: string;
+	name: string;
+	
+	/* optionals */
+	layout_index?: number;
+	zoom?: number;
+	imageryCount?: number;
+	timeFilter?: string;
+	geoFilter?: string;
+	orientation?: string;
+	time?: CaseTimeState;
+	facets: CaseFacetsState;
+	region?: CaseRegionState;
+	requires?: string[]
 }

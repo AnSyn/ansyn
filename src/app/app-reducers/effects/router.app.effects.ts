@@ -18,21 +18,15 @@ export class RouterAppEffects {
 	@Effect()
 	onUpdateLocationDefaultCase: Observable<Action> = this.actions$
 		.ofType(routerActions.UPDATE_LOCATION)
-		.withLatestFrom(this.store$.select('cases'), (action, state: ICasesState) => {
-			return [action, state]
-		})
-		.filter(
-			([action, state]: any) => {
+		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, state]: any) => {
 				const case_id = this.routerStoreHelperService.caseIdViaPath(action.payload.path);
 				return (isEmpty(case_id) || case_id[0] === '?')
 					&& (isEmpty(state.selected_case) || isEmpty(state.default_case) || !isEqual(state.selected_case.id, state.default_case.id));
-			}
-		)
-		.mergeMap( ([action]: any) => {
+		})
+		.map( ([action]: [any]) => {
 			const q_params = this.routerStoreHelperService.queryParamsViaPath(action.payload.path);
-			return [
-				new LoadDefaultCaseAction(q_params)
-			];
+			return new LoadDefaultCaseAction(q_params);
 		});
 
 	@Effect()

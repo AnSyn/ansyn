@@ -5,13 +5,17 @@ export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selected_layout_index: number;
 	flags: Map<string,boolean>;
-	showLinkCopyToast: boolean
+	showLinkCopyToast: boolean;
+	orientations: string[],
+	geoFilters: string[],
+	orientation: string;
+	geoFilter: string;
 }
 
 export const statusBarFlagsItems  = {
 	pinPointIndicator:"PIN_POINT_INDICATOR",
 	pinPointSearch:"PIN_POINT_SEARCH"
-}
+};
 
 const layouts: MapsLayout[] = [
 	{id: 'layout1', description: 'full screen', maps_count: 1},
@@ -30,7 +34,11 @@ export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selected_layout_index,
 	showLinkCopyToast,
-	flags: new Map<string,boolean>()
+	flags: new Map<string,boolean>(),
+	orientations: ['original', 'other orientation'],
+	geoFilters: ['pin-point', 'other geoFilter'],
+	orientation: 'original',
+	geoFilter: 'pin-point'
 };
 
 
@@ -45,8 +53,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_LINK_COPY_TOAST_VALUE:
 			return Object.assign({},state,{showLinkCopyToast: action.payload});
-
-
 
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
 			if(Object['values'](statusBarFlagsItems).indexOf(action.payload.key) < 0){
@@ -64,6 +70,12 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			newMap.set(action.payload.key,value);
 
 			return {...state,flags: newMap };
+
+		case StatusBarActionsTypes.SET_ORIENTATION:
+			return {...state, orientation: action.payload};
+
+		case StatusBarActionsTypes.SET_GEO_FILTER:
+			return {...state, geoFilter: action.payload};
 
 		default: return state;
 

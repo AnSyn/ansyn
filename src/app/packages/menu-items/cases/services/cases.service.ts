@@ -5,11 +5,11 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/debounce";
 import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
-import { isEmpty } from 'lodash';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import * as rison from 'rison';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
+import { Context } from '@ansyn/core/models';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -96,6 +96,30 @@ export class CasesService {
 			});
 	}
 
+	setContextOnCase(case_model: Case, selected_context: Context) {
+		
+		if(selected_context.region) {
+			case_model.state.region = selected_context.region;
+		}
+		
+		if(selected_context.facets) {
+			case_model.state.facets = selected_context.facets;
+		}
+		
+		if(selected_context.time) {
+			case_model.state.time = selected_context.time;
+		}
+		
+		if(selected_context.layout_index) {
+			case_model.state.maps.layouts_index = selected_context.layout_index;
+		}
+		
+		if(selected_context.zoom) {
+			case_model.state.maps.data.forEach((map) => map.data.position.zoom = selected_context.zoom);
+		}
+
+	}
+	
 	getDefaultCase() {
 		return cloneDeep(this.config.defaultCase);
 	}
@@ -103,7 +127,6 @@ export class CasesService {
 	enhanceDefaultCase(default_case: Case): void {
 		default_case.last_modified = new Date();
 	}
-
 	get decodeCaseObjects() {
 		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
 	}

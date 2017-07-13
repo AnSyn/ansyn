@@ -13,7 +13,9 @@ export const StatusBarActionsTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	FAVORITE: 'FAVORITE',
 	EXPAND: 'EXPAND',
-	TOGGLE_HISTOGRAM_STATUS_BAR: 'TOGGLE_HISTOGRAM_STATUS_BAR'
+	TOGGLE_HISTOGRAM_STATUS_BAR: 'TOGGLE_HISTOGRAM_STATUS_BAR',
+	SET_ORIENTATION: 'SET_ORIENTATION',
+	SET_GEO_FILTER: 'SET_GEO_FILTER'
 
 };
 
@@ -76,4 +78,13 @@ export class ToggleHistogramStatusBarAction implements Action{
 	constructor() {}
 }
 
+export class SetOrientationAction implements Action{
+	type: string = StatusBarActionsTypes.SET_ORIENTATION;
+	constructor(public payload: string) {}
+}
+
+export class SetGeoFilterAction implements Action{
+	type: string = StatusBarActionsTypes.SET_GEO_FILTER;
+	constructor(public payload: string) {}
+}
 

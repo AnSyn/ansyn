@@ -10,6 +10,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/delay';
 import { logger } from 'codelyzer/util/logger';
+import { Context } from '../';
 
 @Component({
 	selector: 'ansyn-context-container',
@@ -24,7 +25,7 @@ export class ContainerComponent implements OnInit {
 	public contextBody: string;
 	public findStream: Subject<any>;
 	public editItem: any;
-	public result: any = {hits: [{hit: {}}]};
+	public result: Context[] = [];
 
 	constructor(public contextProviderService: ContextProviderService) {
 		this.contextProviders = this.contextProviderService.keys();
@@ -46,12 +47,12 @@ export class ContainerComponent implements OnInit {
 
 	changeSourceProvider(key) {
 		this.providerType = key;
-		this.result = {hits: [{hit: {}}]};
+		this.result = [];
 	}
 
 
 	ngOnInit() {
-	 	this.providerType = 'Proxy';
+		this.providerType = 'Proxy';
 		this.find();
 	}
 
@@ -79,8 +80,12 @@ export class ContainerComponent implements OnInit {
 
 	edit(id) {
 		console.log('edit', id);
-		this.editItem = this.result.hits.hits.find((hit: any) => hit._id === id);
-		this.contextBody = JSON.stringify({title: this.editItem._source.title});
+		this.editItem = this.result.find((context: any) => context.id === id);
+		const contextBody = {};
+		Object.keys(this.editItem._source).forEach((key) => {
+			contextBody[key] = this.editItem._source[key];
+		});
+		this.contextBody = JSON.stringify(contextBody);
 	}
 
 	delete(id) {
@@ -97,7 +102,6 @@ export class ContainerComponent implements OnInit {
 			.update(this.editItem._id, JSON.parse(this.contextBody))
 			.switchMap(() => this.find$()));
 		this.clear();
-
 	}
 
 

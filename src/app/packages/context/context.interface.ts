@@ -11,7 +11,6 @@ export interface IContextSource {
 }
 
 
-
 export interface IContextSourceConfig {
 	type: string;
 	uri: string;
@@ -31,8 +30,4 @@ export class ContextCriteria {
 	}
 }
 
-export interface Context {
-	id: string;
-	title: string;
-}
-
+export { Context } from '@ansyn/core';

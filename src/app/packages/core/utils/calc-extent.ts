@@ -23,9 +23,16 @@ export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Poin
 export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): boolean {
 
 	const coordinates = [];
-	extent.forEach((p: GeoJSON.Point)=> {
-		coordinates.push(p.coordinates);
-	});
+	if (extent.length === 2) {
+		coordinates.push(extent[0].coordinates);
+		coordinates.push([extent[0].coordinates[0], extent[1].coordinates[1]]);
+		coordinates.push([extent[1].coordinates[0], extent[0].coordinates[1]]);
+		coordinates.push(extent[1].coordinates);
+	} else {
+		extent.forEach((p: GeoJSON.Point)=> {
+			coordinates.push(p.coordinates);
+		});
+	}
 
 	coordinates.push(extent[0].coordinates);
 

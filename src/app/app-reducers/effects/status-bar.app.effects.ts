@@ -85,7 +85,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	onLayoutsChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store, (action, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
+		.withLatestFrom(this.store, (action: ChangeLayoutAction, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
 			const selected_case = state.cases.selected_case;
 			const selected_layout = cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
 			return [action, selected_case, selected_layout];
@@ -99,11 +99,11 @@ export class StatusBarAppEffects {
 
 				const actionsList: Array<Action> = [];
                 actionsList.push(new UpdateCaseAction(updatedCase));
-                actionsList.push(new UpdateMapSizeAction())
+                actionsList.push(new UpdateMapSizeAction());
 
                 if(selected_case.state.maps.data.length === 1){
                     actionsList.push(new DisableMouseShadow());
-                    actionsList.push(new StopMouseShadow())
+                    actionsList.push(new StopMouseShadow());
                 }else{
                     actionsList.push(new EnableMouseShadow());
                 }
@@ -152,7 +152,7 @@ export class StatusBarAppEffects {
 	onFavorite$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.FAVORITE)
 		.map(() => {
-			console.log("onFavorite$")
+			console.log("onFavorite$");
 		});
 
 
@@ -160,7 +160,7 @@ export class StatusBarAppEffects {
 	onExpand$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.EXPAND)
 		.map(() => {
-			console.log("onExpand$")
+			console.log("onExpand$");
 		});
 
 

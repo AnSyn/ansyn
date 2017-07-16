@@ -14,23 +14,26 @@ import {
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from "@ansyn/overlays/actions/overlays.actions";
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	InitializeFiltersSuccessAction, UpdateFilterAction
+} from '@ansyn/menu-items/filters/actions/filters.actions';
 
 @Injectable()
 export class FiltersAppEffects {
 
 	@Effect()
-	updateOverlayFilters$ : Observable<SetFiltersAction> = this.actions$
+	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS)
 		.withLatestFrom(this.store$.select('filters'))
-		.map(([action, filtersState]: [any, IFiltersState]) => {
+		.map(([action, filtersState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState]) => {
 			const parsedFilters = [];
 			filtersState.filters.forEach((value: any, key: any) => {
 				parsedFilters.push({
 					filteringParams: { key: key.modelName, metadata: value},
 					filterFunc: value.filterFunc
-				})
+				});
 			});
-			return new SetFiltersAction(parsedFilters)
+			return new SetFiltersAction(parsedFilters);
 		}).share();
 
 

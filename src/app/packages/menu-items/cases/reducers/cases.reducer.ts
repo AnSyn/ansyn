@@ -52,9 +52,9 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		// reference
 		case CasesActionTypes.UPDATE_CASE:
-			let old_case: Case = state.cases.find((case_value: Case) => case_value.id == action.payload.id);
+			let old_case: Case = state.cases.find((case_value: Case) => case_value.id === action.payload.id);
 			if(!old_case){
-				if(action.payload.id == state.selected_case.id){
+				if(action.payload.id === state.selected_case.id){
 					return {...state, selected_case: action.payload};
 				}
 			}
@@ -91,7 +91,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		case CasesActionTypes.DELETE_CASE:
 			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.active_case_id);
-			if(case_to_remove_index == -1) {
+			if(case_to_remove_index === -1) {
 				return state;
 			}
 			let cases: Case[] = [
@@ -107,15 +107,15 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			return Object.assign({}, state, {updating_backend: false});
 
 		case CasesActionTypes.SELECT_CASE_BY_ID:
-			if(state.selected_case && state.selected_case.id == action.payload) {
+			if(state.selected_case && state.selected_case.id === action.payload) {
 				return Object.assign({}, state);
 			}
-			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
+			let s_case = state.cases.find((case_value: Case) => case_value.id === action.payload);
 			if(isNil(s_case)){
-				if(state.unlisted_case && state.unlisted_case.id == action.payload) {
+				if(state.unlisted_case && state.unlisted_case.id === action.payload) {
 					s_case = state.unlisted_case;
 
-				} else if(state.default_case.id == action.payload) {
+				} else if(state.default_case.id === action.payload) {
 					s_case = isEmpty(state.default_case_query_params) ? state.default_case : state.default_case_query_params;
 				}
 			}

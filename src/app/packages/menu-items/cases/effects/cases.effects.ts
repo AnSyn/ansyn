@@ -11,7 +11,7 @@ import {
 	LoadCasesAction,
 	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
 	SelectCaseByIdAction, UpdateCaseAction, UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction, SetDefaultCaseQueryParams, LoadDefaultCaseAction
+	UpdateCaseBackendSuccessAction, SetDefaultCaseQueryParams, LoadDefaultCaseAction, LoadContextsAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
@@ -136,7 +136,7 @@ export class CasesEffects {
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)
 		.withLatestFrom(this.store.select("cases"))
-		.switchMap(([action, state]: [any, ICasesState]) => {
+		.switchMap(([action, state]: [LoadContextsAction, ICasesState]) => {
 			let observable: Observable<Context[]>;
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);

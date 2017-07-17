@@ -41,7 +41,8 @@ export class OverlaysService {
 			timeRange: {
 				start: params.from,
 				end: params.to
-			}
+			},
+			limit: params.limit
 		});
 	}
 	

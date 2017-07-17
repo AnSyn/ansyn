@@ -14,7 +14,9 @@ export type CaseState = {
 	maps?: CaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
-	region: CaseRegionState
+	region: CaseRegionState,
+	orientation: string,
+	geoFilter: string,
 }
 
 	export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;

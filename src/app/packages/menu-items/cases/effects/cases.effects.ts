@@ -182,12 +182,19 @@ export class CasesEffects {
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.withLatestFrom(this.store.select("cases"))
+		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => !action.payload['context'])
 		.mergeMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
 			const actions = [];
 			const defaultCase = this.casesService.getDefaultCase();
-			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
+			const contextName = action.payload['context'];
+			let defaultCaseQueryParams: Case;
+			if (contextName) {
+				const context = state.contexts.find(c => c.name === contextName);
+				defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, defaultCase);
+			} else {
+				defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
+			}
 			actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
-
 			if(isEmpty(state.default_case)){
 				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
@@ -197,6 +204,36 @@ export class CasesEffects {
 
 		}).share();
 
+	@Effect()
+	loadDefaultCaseContext$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
+		.filter((action: LoadDefaultCaseAction) => action.payload['context'])
+		.switchMap(
+			(action: LoadDefaultCaseAction) => {
+				return this.actions$
+					.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
+					.withLatestFrom(this.store.select("cases"), (action, cases) => cases)
+					.mergeMap((state: ICasesState) => {
+						const actions = [];
+						const defaultCase = this.casesService.getDefaultCase();
+						const contextName = action.payload['context'];
+						let defaultCaseQueryParams: Case;
+						if (contextName) {
+							const context = state.contexts.find(c => c.name === contextName);
+							defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, defaultCase, action.payload);
+
+						} else {
+							defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, defaultCase);
+						}
+						actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
+						if(isEmpty(state.default_case)){
+							actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
+						} else {
+							actions.push(new SelectCaseByIdAction(state.default_case.id))
+						}
+						return actions;
+					});
+			});
 
 	@Effect()
 	loadDefaultCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$

@@ -4,11 +4,10 @@ export const defaultCase: Case = {
 	id: '1234-5678',
 	name: 'Default case',
 	state: {
-		"maps": {
-			"layouts_index": 0,
-			"active_map_id": "default_imagery1",
-			"data": [
-				{
+		maps: {
+			layouts_index: 0,
+			active_map_id: "default_imagery1",
+			data: [{
 					"id": "default_imagery1",
 					"mapType": "openLayersMap",
 					"data": {
@@ -27,8 +26,6 @@ export const defaultCase: Case = {
 				}
 			]
 		},
-
-
 		"region": {
 			"type": "Polygon",
 			"coordinates": [
@@ -61,11 +58,10 @@ export const defaultCase: Case = {
 			"from": new Date(new Date().getTime() - 3600000 * 24 * 365).toISOString(),
 			"to": new Date().toISOString()
 		},
-		"facets": {
-			"filters": [
-				{ "fieldName": "sensorType", "metadata": ["WORLDVIEW03_VNIR", "WORLDVIEW02"] },
-				{ "fieldName": "sensorName", "metadata": ["Panchromatic"] }
-			]
-		}
+		facets: {
+			filters: []
+		},
+		geoFilter: 'pin-point',
+		orientation: 'original'
 	}
 };

@@ -38,11 +38,11 @@ export class ContainerComponent implements OnInit {
 				return result;
 			})
 			.subscribe((res: any) => {
-			console.log(res);
-			if (res.hits) {
-				this.result = res;
-			}
-		});
+				console.log(res);
+				if (res.hits) {
+					this.result = res;
+				}
+			});
 	}
 
 	changeSourceProvider(key) {
@@ -82,8 +82,10 @@ export class ContainerComponent implements OnInit {
 		console.log('edit', id);
 		this.editItem = this.result.find((context: any) => context.id === id);
 		const contextBody = {};
-		Object.keys(this.editItem._source).forEach((key) => {
-			contextBody[key] = this.editItem._source[key];
+		Object.keys(this.editItem).forEach((key) => {
+			if(key !== 'id'){
+				contextBody[key] = this.editItem[key];
+			}
 		});
 		this.contextBody = JSON.stringify(contextBody);
 	}
@@ -99,7 +101,7 @@ export class ContainerComponent implements OnInit {
 	update() {
 		this.findStream.next(this.contextProviderService
 			.provide(this.providerType)
-			.update(this.editItem._id, JSON.parse(this.contextBody))
+			.update(this.editItem.id, JSON.parse(this.contextBody))
 			.switchMap(() => this.find$()));
 		this.clear();
 	}

@@ -29,13 +29,13 @@ export class ContextProxySource implements IContextSource {
 
 	create(payload: Context) {
 		return this.http.post(this.uri, this.parseToSource(payload), this.options)
-			.map(res =>  this.parseFromSource(res.json() || {}))
+			// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
 	update (id, payload: Context) {
 		return this.http.put(this.uri + '/' + id, this.parseToSource(payload), this.options)
-			.map(res =>  this.parseFromSource(res.json() || {}))
+			// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 

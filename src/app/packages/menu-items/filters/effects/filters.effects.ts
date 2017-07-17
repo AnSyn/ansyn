@@ -46,7 +46,7 @@ export class FiltersEffects {
             });
 
         clonedMetadata.initializeFilter(currentFilterInit && currentFilterInit.metadata);
-
+		debugger;
         return clonedMetadata;
     }
 }

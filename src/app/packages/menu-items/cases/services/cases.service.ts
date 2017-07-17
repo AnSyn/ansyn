@@ -10,6 +10,8 @@ import * as rison from 'rison';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { Context } from '@ansyn/core/models';
+import { getPointByPolygon } from '@ansyn/core/utils/geo';
+import { Point } from 'geojson';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -96,30 +98,7 @@ export class CasesService {
 			});
 	}
 
-	setContextOnCase(case_model: Case, selected_context: Context) {
-		
-		if(selected_context.region) {
-			case_model.state.region = selected_context.region;
-		}
-		
-		if(selected_context.facets) {
-			case_model.state.facets = selected_context.facets;
-		}
-		
-		if(selected_context.time) {
-			case_model.state.time = selected_context.time;
-		}
-		
-		if(selected_context.layout_index) {
-			case_model.state.maps.layouts_index = selected_context.layout_index;
-		}
-		
-		if(selected_context.zoom) {
-			case_model.state.maps.data.forEach((map) => map.data.position.zoom = selected_context.zoom);
-		}
 
-	}
-	
 	getDefaultCase() {
 		return cloneDeep(this.config.defaultCase);
 	}
@@ -143,5 +122,8 @@ export class CasesService {
 		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
 	}
 
+	get updateCaseViaContext() {
+		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
+	}
 
 }

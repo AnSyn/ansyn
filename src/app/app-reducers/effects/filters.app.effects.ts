@@ -45,10 +45,11 @@ export class FiltersAppEffects {
         	overlaysState.overlays.forEach((value, key) => {
 				overlaysArray.push(value);
 			});
-            return [overlaysArray, casesState.selected_case.state.facets];
+        	const showAll: boolean = casesState.selected_case.id === casesState.default_case.id;
+			return [overlaysArray, casesState.selected_case.state.facets, showAll];
         })
-        .map(([overlays, facets]: [Overlay[], any]) => {
-            return new InitializeFiltersAction({ overlays: overlays, facets: facets });
+        .map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
+            return new InitializeFiltersAction({ overlays, facets, showAll });
         }).share();
 
     @Effect()

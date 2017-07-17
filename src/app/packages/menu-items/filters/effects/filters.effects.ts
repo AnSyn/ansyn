@@ -21,11 +21,17 @@ export class FiltersEffects {
             return this.filtersService.loadFilters().map((filters: Filter[]) => {
                 const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
                 filters.forEach((filter: Filter) => {
-                    const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
-                    action.payload.overlays.forEach((overlay: any) => {
+                	const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
+
+					action.payload.overlays.forEach((overlay: any) => {
                         metadata.accumulateData(overlay[filter.modelName]);
                     });
-                    filterMetadatas.set(filter, metadata);
+
+					if(action.payload.showAll) {
+						metadata.showAll();
+					}
+
+					filterMetadatas.set(filter, metadata);
                 });
                 return new InitializeFiltersSuccessAction(filterMetadatas);
             });
@@ -46,7 +52,7 @@ export class FiltersEffects {
             });
 
         clonedMetadata.initializeFilter(currentFilterInit && currentFilterInit.metadata);
-		debugger;
+
         return clonedMetadata;
     }
 }

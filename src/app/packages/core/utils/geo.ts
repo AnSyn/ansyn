@@ -1,7 +1,7 @@
 import { FeatureCollection, GeometryObject, Point, Polygon } from 'geojson';
 import * as turf from '@turf/turf';
 
-export function getPolygonByPoint(lonLat: [number, number], radius=0.1) : GeoJSON.Feature<GeoJSON.Polygon>{
+export function getPolygonByPoint(lonLat: number[], radius=0.1) : GeoJSON.Feature<GeoJSON.Polygon>{
 	const point = turf.point(lonLat);
 	const region = turf.circle(point,radius);
 	return region;

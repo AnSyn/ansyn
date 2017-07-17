@@ -12,6 +12,7 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../package.json';
 import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
+import { LoadContextsAction } from '../packages/menu-items/cases/actions/cases.actions';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -74,6 +75,7 @@ export class AnsynComponent implements OnInit{
 	}
 
 	ngOnInit(): void {
+		this.store.dispatch(new LoadContextsAction());
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
 

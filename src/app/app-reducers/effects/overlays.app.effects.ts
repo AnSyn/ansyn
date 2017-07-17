@@ -42,6 +42,7 @@ export class OverlaysAppEffects {
 				polygon: caseSelected.state.region,
 				caseId: caseId
 			};
+
 			return new LoadOverlaysAction(overlayFilter);
 
 		});

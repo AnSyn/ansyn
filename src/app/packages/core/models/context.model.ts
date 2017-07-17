@@ -3,7 +3,7 @@ import { CaseTimeState, CaseFacetsState, CaseRegionState } from './case.model';
 export type Context = {
 	id: string;
 	name: string;
-	
+
 	/* optionals */
 	layout_index?: number;
 	zoom?: number;
@@ -15,4 +15,6 @@ export type Context = {
 	facets: CaseFacetsState;
 	region?: CaseRegionState;
 	requires?: string[]
+	defaultOverlay?: string;
+	requirements?: string[];
 }

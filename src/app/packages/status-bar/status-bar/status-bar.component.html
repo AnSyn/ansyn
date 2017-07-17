@@ -53,8 +53,8 @@
 				</div>
 
 
-				<select name="timeline" name="geoFilter" ([ngModel])="geoFilter">
-					<option *ngFor="let geo of geoFilters">{{geo | titlecase}}</option>
+				<select name="timeline" name="geoFilter" [(ngModel)]="geoFilter" (ngModelChange)="geoFilterChange(geoFilter)">
+					<option *ngFor="let geo of geoFilters" [value]="geo">{{geo | titlecase}}</option>
 				</select>
 
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">

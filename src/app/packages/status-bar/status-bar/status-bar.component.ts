@@ -31,7 +31,7 @@ export class StatusBarComponent implements OnInit {
 		.map((state: IStatusBarState) => state.showLinkCopyToast)
 		.distinctUntilChanged(isEqual);
 
-	statusBar$ = this.store.select('status_bar')
+	flags$ = this.store.select('status_bar')
 		.map( (state: IStatusBarState) => state.flags)
 		.distinctUntilChanged(isEqual);
 
@@ -119,7 +119,7 @@ export class StatusBarComponent implements OnInit {
 			this.showLinkCopyToast = _showLinkCopyToast;
 		});
 
-		this.statusBar$.subscribe(flags => {
+		this.flags$.subscribe(flags => {
 			//I want to check that the one that was changing is the pin point search
 			if (this.flags.get(statusBarFlagsItems.pinPointSearch) !== flags.get(statusBarFlagsItems.pinPointSearch)) {
 				this.toggleEditMode.emit();

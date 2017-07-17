@@ -42,6 +42,9 @@ export class StatusBarComponent implements OnInit {
 	showLinkCopyToast: boolean;
 	timeSelectionEditIcon = false;
 
+	date1: Date;
+	date2: Date;
+
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
@@ -124,20 +127,16 @@ export class StatusBarComponent implements OnInit {
 		});
 	}
 
-	endDatePickerOpen(){
-
-	}
-
 	toggleTimelineStartEndSearch(event) {
-
 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
-		document.querySelector('.selection-combobox.time-selection .pop-hover').classList.toggle('visible');
-		if (!this.timeSelectionEditIcon){
-			return;
-		}
 	}
 
+	applyTimelinePickerResult(result){
+		console.log(result);
+		//apply here your dispathces
+		this.toggleTimelineStartEndSearch({});
 
+	}
 
 	layoutSelectChange(selected_layout_index: number): void {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
@@ -157,7 +156,6 @@ export class StatusBarComponent implements OnInit {
 
 	toggleMapPointSearch() {
 		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch}));
-
 	}
 
 	togglePinPointIndicatorView() {
@@ -184,5 +182,4 @@ export class StatusBarComponent implements OnInit {
 	clickBackToWorldView(): void {
 		this.store.dispatch(new BackToWorldViewAction());
 	}
-
 }

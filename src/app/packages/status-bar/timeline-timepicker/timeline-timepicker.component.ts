@@ -17,7 +17,7 @@ import * as flatpickr from 'flatpickr';
 })
 
 export class TimelineTimepickerComponent implements OnInit {
-
+	_close = false;
 	endDatePickerInstance: flatpickr;
 	startDatePickerInstance: flatpickr;
 	error: string;
@@ -26,16 +26,17 @@ export class TimelineTimepickerComponent implements OnInit {
 	@ViewChild("endDatePicker") endDatePicker: ElementRef;
 
 	@Output('applyDate') applyDate = new EventEmitter();
-	@Output('cancelDateSelection') cancelDateSelection = new EventEmitter();
+	@Output('closeComponent') closeComponent= new EventEmitter();
+
 	@Input () startDatePickerValue:Date = new Date(new Date().getTime() - 3600000 * 24 * 365);
 	@Input () endDatePickerValue:Date =  new Date();
 
-	constructor(){
 
-	}
+
+
+	constructor(){}
 
 	ngOnInit(): void {
-
 		this.endDatePickerInstance = new flatpickr(this.endDatePicker.nativeElement,{
 			id: 'end',
 			time_24hr: true,
@@ -58,8 +59,6 @@ export class TimelineTimepickerComponent implements OnInit {
 	}
 
 	selectedDateChanged(date: Date,dateString: string,instance: flatpickr){
-		//debugger;
-		console.log('x',date[0].getTime());
 		this.error = '';
 		if(instance.config.id === 'start'){
 			this.startDatePickerValue = new Date(date[0]);
@@ -120,9 +119,7 @@ export class TimelineTimepickerComponent implements OnInit {
 		};
 	}
 
-	cancelTimepickerEvent(){
-		this.cancelDateSelection.emit();
-	}
+
 
 	applyTimepickerEvent(){
 		if(this.startDatePickerValue.getTime() >= this.endDatePickerValue.getTime()){

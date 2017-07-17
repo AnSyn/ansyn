@@ -68,9 +68,9 @@
 				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
 					<img (click)="toggleTimelineStartEndSearch('click')" src="/assets/edit.svg" alt="" class="status-bar-image-right">
 				</div>
-				<div class="pop-hover">
+				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">
-						<ansyn-timeline-timepicker (cancelDateSelection)="toggleTimelineStartEndSearch()" ></ansyn-timeline-timepicker>
+						<ansyn-timeline-timepicker (closeComponent)="toggleTimelineStartEndSearch()" (applyDate)="applyTimelinePickerResult($event)" ></ansyn-timeline-timepicker>
 					</div>
 				</div>
 
@@ -119,3 +119,18 @@
 </div>
 
 <ansyn-toast [showToast]="showLinkCopyToast" duration="4" (showToastChange)="onShowToastChange($event)"  text="Link copied to clipboard"></ansyn-toast>
+
+<!--<&#45;&#45;!aba&ndash;&gt;-->
+
+<!--<ben [(showMe)]="showMe">-->
+
+<!--</ben>-->
+
+<!--<ben [showMe]="showMe" (showMeChange)="showMe = $event"></ben>-->
+
+<!--prov _show-->
+<!--set show(vcalu) {-->
+	<!--showMe.change.emit(value)-->
+<!--}-->
+
+<!--this.show = false;-->

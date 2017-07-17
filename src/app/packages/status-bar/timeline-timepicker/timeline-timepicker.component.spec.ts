@@ -4,7 +4,7 @@ import { StatusBarModule } from '../status-bar.module';
 import { isEqual } from 'lodash';
 
 
-fdescribe('TimelineTimepickerComponent',() => {
+describe('TimelineTimepickerComponent',() => {
 	//const FlatpickrService = new  InjectionToken<Flatpickr>("flickr");
 	let component: TimelineTimepickerComponent;
 	let fixture: ComponentFixture<TimelineTimepickerComponent>;
@@ -56,9 +56,9 @@ fdescribe('TimelineTimepickerComponent',() => {
 	});
 
 	it("cancelTimepickerEvent click on cancel",() => {
-		spyOn(component,'cancelTimepickerEvent');
+		spyOn(component.closeComponent,'emit');
 		fixture.nativeElement.querySelector(".timelinepicker-cancel").click();
-		expect(component.cancelTimepickerEvent['calls'].count()).toEqual(1);
+		expect(component.closeComponent.emit).toHaveBeenCalled();
 	});
 
 	it("applyTimepickerEvent click on apply when start date is later then end date",() => {

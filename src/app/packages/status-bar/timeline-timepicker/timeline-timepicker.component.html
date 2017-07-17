@@ -1,0 +1,28 @@
+
+<div class="time-row">
+	<input  #startDatePicker style="">
+	<span>Start time:</span>
+	<button class="time-row-button" (click)="startDatePickerInstance.open()">
+		<div>{{startDatePickerValue|date:'HH:mm  dd/MM/y'}}</div>
+		<img src="/assets/icons/timepicker.svg">
+	</button>
+</div>
+
+<div class="time-row">
+	<input #endDatePicker (selectedChanged)="selectedDateChanged('end')">
+	<span>End time:</span>
+	<button class="time-row-button" (click)="endDatePickerInstance.open()">
+		<div>{{endDatePickerValue |date:'HH:mm  dd/MM/y'}}</div>
+		<img src="/assets/icons/timepicker.svg">
+	</button>
+</div>
+
+<div class="control-buttons">
+	<div class="error">
+		{{error}}
+	</div>
+	<div>
+	<a (click)="cancelTimepickerEvent()" class="timelinepicker-cancel">Cancel</a>
+	<a  (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+	</div>
+</div>

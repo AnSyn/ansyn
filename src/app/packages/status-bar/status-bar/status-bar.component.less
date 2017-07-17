@@ -74,6 +74,43 @@ div.status-bar-container{
 			justify-content: center;
 			flex-direction: column;
 		}
+		.layout-item {
+			div.pop-hover {
+				visibility: hidden;
+				opacity: 0;
+				transition: .4s;
+				background: transparent;
+				position: absolute;
+				transform: translate(0, -100%);
+				top: 3px;
+				padding-bottom: @share-link-padding-bottom;
+				margin: 0 -5px;
+				.pop-hover-content {
+					transform: translate(0, @share-link-padding-bottom);
+					transition: .4s;
+					display: flex;
+				}
+				&.visible{
+					visibility: visible;
+					opacity: 1;
+					div.pop-hover-content {
+						transform: translate(0, 0);
+					}
+				}
+
+			}
+			&.pop-on-hover:hover{
+				div.pop-hover {
+					visibility: visible;
+					opacity: 1;
+					div.pop-hover-content {
+						transform: translate(0, 0);
+					}
+				}
+			}
+		}
+
+
 
 		div.right-side {
 			display: flex;
@@ -100,19 +137,9 @@ div.status-bar-container{
 					margin:-1px 4px 0 0;
 				}
 				div.pop-hover {
-					visibility: hidden;
-					opacity: 0;
-					transition: .4s;
-					background: transparent;
-					position: absolute;
-					transform: translate(0, -100%);
-					top: 3px;
-					padding-bottom: @share-link-padding-bottom;
-					margin: 0 -5px;
-					.pop-hover-buttons{
-						transform: translate(0, @share-link-padding-bottom );
-						transition: .4s;
-						display: flex;
+
+					.pop-hover-content{
+
 						button.share-link{
 							border: solid white 1px;
 							cursor: pointer;
@@ -137,15 +164,7 @@ div.status-bar-container{
 
 				&:hover {
 					background: black;
-					div.pop-hover {
-						visibility: visible;
-						opacity: 1;
-						div.pop-hover-buttons{
-							transform: translate(0, 0);
-							button.share-link{
-							}
-						}
-					}
+
 				}
 			}
 		}
@@ -154,7 +173,7 @@ div.status-bar-container{
 			margin: 0 5px;
 			display: flex;
 			align-items:center;
-			&.timeline-combobox {
+			&.selection-combobox {
 				img {
 					margin: 0;
 				}
@@ -164,8 +183,8 @@ div.status-bar-container{
 				}
 				.status-bar-edit-icon {
 					opacity: 0.5;
-					margin: 0px 2px 0px 3px;
-					padding-top:3px;
+
+
 					&.active {
 						opacity: 1;
 					}
@@ -202,6 +221,30 @@ div.status-bar-container{
 						margin-right:4px;
 					}
 
+				}
+				&.type-selection{
+
+				}
+				&.geo-selection {
+					.status-bar-edit-icon{
+						padding-top:3px;
+						margin: 0px 2px 0px 3px;
+					}
+				}
+				&.time-selection{
+					.status-bar-edit-icon{
+						padding-top:4px;
+						margin:  0px 0px 0px 8px;
+					}
+					.pop-hover-content{
+						background: white;
+						width:230px;
+						height:97px;
+						padding:8px 12px 13px;
+						flex-direction: column;
+						border:1px solid dimgray;
+
+					}
 				}
 			}
 

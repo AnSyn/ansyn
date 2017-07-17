@@ -17,7 +17,7 @@ import * as flatpickr from 'flatpickr';
 })
 
 export class TimelineTimepickerComponent implements OnInit {
-	_close = false;
+
 	endDatePickerInstance: flatpickr;
 	startDatePickerInstance: flatpickr;
 	error: string;
@@ -63,7 +63,7 @@ export class TimelineTimepickerComponent implements OnInit {
 		if(instance.config.id === 'start'){
 			this.startDatePickerValue = new Date(date[0]);
 		} else{
-			this.endDatePickerValue = date[0];
+			this.endDatePickerValue = new Date(date[0]);
 		}
 	}
 

@@ -32,6 +32,7 @@ export class StatusBarComponent implements OnInit {
 		.distinctUntilChanged(isEqual);
 
 	statusBar$ = this.store.select('status_bar')
+		.map( (state: IStatusBarState) => state.flags)
 		.distinctUntilChanged(isEqual);
 
 

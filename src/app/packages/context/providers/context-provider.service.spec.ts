@@ -33,9 +33,7 @@ describe("Context Provider Service" ,() => {
 
 	it("Func Name: register", () => {
 		contextProviderService.register('demo',mockContextSourceObject);
-
 		expect(contextProviderService.keys().length).toBe(1);
-
 	});
 
 	it("Func Name: provide", () => {

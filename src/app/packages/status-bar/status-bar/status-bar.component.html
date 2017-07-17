@@ -12,12 +12,12 @@
 
 		<div class="right-side">
 
-			<div class="selected-case layout-item">
+			<div class="selected-case layout-item pop-on-hover">
 				<img src="/assets/icons/status-bar/case-icon.svg" class="status-bar-image-left">
 				<span>{{selected_case_name}}</span>
 
 				<div class="pop-hover">
-					<div class="pop-hover-buttons">
+					<div class="pop-hover-content">
 
 						<button class="share-link" (click)="copyLink()">
 							<img src="/assets/icons/status-bar/share-link-icon.svg">
@@ -31,22 +31,22 @@
 				</div>
 			</div>
 
-			<div class="timeline-combobox layout-item">
+			<div class="selection-combobox layout-item type-selection">
 				<div class='status-bar-orientation-icon'>
 					<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
 				</div>
-				<select name="timeline">
+				<select name="query-type">
 					<option>Orignal</option>
 					<option>Orignal</option>
 				</select>
 			</div>
 
 
-			<div class="timeline-combobox layout-item">
+			<div class="selection-combobox layout-item geo-selection">
 				<div class='status-bar-world-icon'>
 					<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
 				</div>
-				<select name="timeline">
+				<select name="query-region">
 					<option>Pin Point</option>
 				</select>
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
@@ -58,13 +58,22 @@
 			</div>
 
 
-			<div class="timeline-combobox layout-item">
+			<div class="selection-combobox layout-item time-selection">
 				<div class="status-bar-calender-icon">
 					<img src="/assets/icons/status-bar/time-filter-icon.svg" class="status-bar-image-left">
 				</div>
-				<select name="timeline">
-					<option>Timeline</option>
+				<select name="guery-timeline">
+					<option>Start - End</option>
 				</select>
+				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
+					<img (click)="toggleTimelineStartEndSearch('click')" src="/assets/edit.svg" alt="" class="status-bar-image-right">
+				</div>
+				<div class="pop-hover">
+					<div class="pop-hover-content">
+						<ansyn-timeline-timepicker (cancelDateSelection)="toggleTimelineStartEndSearch()" ></ansyn-timeline-timepicker>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="layout-combobox layout-item">

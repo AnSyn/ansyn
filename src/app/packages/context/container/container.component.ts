@@ -9,6 +9,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/delay';
+import { logger } from 'codelyzer/util/logger';
 
 @Component({
 	selector: 'ansyn-context-container',
@@ -30,7 +31,12 @@ export class ContainerComponent implements OnInit {
 
 		this.findStream = new Subject();
 
-		this.findStream.flatMap(result => result).subscribe((res: any) => {
+		this.findStream
+			.switchMap(result =>{
+				console.log('flat map ',result);
+				return result;
+			})
+			.subscribe((res: any) => {
 			console.log(res);
 			if (res.hits) {
 				this.result = res;
@@ -50,18 +56,17 @@ export class ContainerComponent implements OnInit {
 	}
 
 	create() {
-
 		const context = JSON.parse(this.contextBody);
 		this.findStream.next(this.contextProviderService
 			.provide(this.providerType)
 			.create(context)
 			.delay(1000)
-			.mergeMap(() => this.find$()));
+			.switchMap(() => this.find$()));
 
 		this.clear();
 	}
 
-	find() {
+	find(): void {
 		this.findStream.next(this.find$());
 		this.clear();
 	}
@@ -83,14 +88,14 @@ export class ContainerComponent implements OnInit {
 		this.findStream.next((this.contextProviderService
 			.provide(this.providerType)
 			.remove(id)
-			.mergeMap(() => this.find$())));
+			.switchMap(() => this.find$())));
 	}
 
 	update() {
 		this.findStream.next(this.contextProviderService
 			.provide(this.providerType)
 			.update(this.editItem._id, JSON.parse(this.contextBody))
-			.mergeMap(() => this.find$()));
+			.switchMap(() => this.find$()));
 		this.clear();
 
 	}

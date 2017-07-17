@@ -9,6 +9,10 @@ import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 
+
+
+
+
 @Component({
 	selector: 'ansyn-status-bar',
 	templateUrl: './status-bar.component.html',
@@ -19,7 +23,7 @@ export class StatusBarComponent implements OnInit {
 		.map((state: IStatusBarState) => state.layouts)
 		.distinctUntilChanged(isEqual);
 
-	selected_layout_index$: Observable<number> = this.store.select("status_bar")
+	selectedLayoutIndex$: Observable<number> = this.store.select("status_bar")
 		.map((state: IStatusBarState) => state.selected_layout_index)
 		.distinctUntilChanged(isEqual);
 
@@ -27,71 +31,113 @@ export class StatusBarComponent implements OnInit {
 		.map((state: IStatusBarState) => state.showLinkCopyToast)
 		.distinctUntilChanged(isEqual);
 
+	statusBar$ = this.store.select('status_bar')
+		.distinctUntilChanged(isEqual);
+
+
 	selected_layout_index: number;
 	statusBarFlagsItems: any = statusBarFlagsItems;
-	flags: Map<string,boolean> = new Map<string,boolean>();
+	flags: Map<string, boolean> = new Map<string, boolean>();
 	layouts: MapsLayout[] = [];
+	showLinkCopyToast: boolean;
+	timeSelectionEditIcon = false;
+
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay') overlay: any;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
-	@Output('toggleEditMode')toggleEditMode = new EventEmitter();
+	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
 
-	@HostListener("window:keydown", ['$event']) onkeydown($event: KeyboardEvent) {
-		if((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) return;
-		if($event.code == "ArrowRight") {
+
+
+	@HostListener("window:keydown", ['$event'])
+
+	onkeydown($event: KeyboardEvent) {
+		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+			return;
+		}
+
+		if ($event.code === "ArrowRight") {
 			this.goNext.nativeElement.classList.add('active');
-		} else if($event.code == "ArrowLeft")  {
+		}
+		else if ($event.code === "ArrowLeft") {
 			this.goPrev.nativeElement.classList.add('active');
 		}
 	}
 
-	@HostListener("window:keyup", ['$event']) onkeyup($event: KeyboardEvent) {
-		if((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) return;
-		if($event.code == "ArrowRight") {
+	@HostListener("window:keyup", ['$event'])
+	onkeyup($event: KeyboardEvent) {
+		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+			return;
+		}
+
+		if ($event.code === "ArrowRight") {
 			this.clickGoNext();
 			this.goNext.nativeElement.classList.remove('active');
-		} else if($event.code == "ArrowLeft")  {
+		}
+		else if ($event.code === "ArrowLeft") {
 			this.clickGoPrev();
 			this.goPrev.nativeElement.classList.remove('active');
 		}
 	}
 
-	showLinkCopyToast: boolean;
+	constructor(public store: Store<IStatusBarState>) {
 
-	ngOnInit(): void {
-		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
-			this.selected_layout_index = _selected_layout_index;
-		});
-		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
-			this.layouts = _layouts;
-		})
-		this.store.select('status_bar')
-			.distinctUntilChanged(isEqual)
-			.subscribe(store => {
-				//I want to check that the one that was changing is the pin point search
-				if(this.flags.get(statusBarFlagsItems.pinPointSearch) !=  store.flags.get(statusBarFlagsItems.pinPointSearch)){
-					this.toggleEditMode.emit();
-				}
-				this.flags =new Map(store.flags) as Map<string,boolean>;
-
-
-		});
-
-		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointIndicator,value: true}));
-
-		this.showLinkCopyToast$
-			.subscribe((_showLinkCopyToast) =>{
-				this.showLinkCopyToast = _showLinkCopyToast;
-			})
 	}
 
-	constructor(public store: Store<IStatusBarState>) {}
+	ngOnInit(): void {
+
+		this.setSubscribers();
+
+		this.store.dispatch(new UpdateStatusFlagsAction({
+			key: statusBarFlagsItems.pinPointIndicator,
+			value: true
+		}));
+
+
+	}
+
+	setSubscribers() {
+		this.selectedLayoutIndex$.subscribe((_selected_layout_index: number) => {
+			this.selected_layout_index = _selected_layout_index;
+		});
+
+		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
+			this.layouts = _layouts;
+		});
+
+		this.showLinkCopyToast$.subscribe((_showLinkCopyToast) => {
+			this.showLinkCopyToast = _showLinkCopyToast;
+		});
+
+		this.statusBar$.subscribe(store => {
+			//I want to check that the one that was changing is the pin point search
+			if (this.flags.get(statusBarFlagsItems.pinPointSearch) !== store.flags.get(statusBarFlagsItems.pinPointSearch)) {
+				this.toggleEditMode.emit();
+			}
+			this.flags = new Map(store.flags) as Map<string, boolean>;
+		});
+	}
+
+	endDatePickerOpen(){
+
+	}
+
+	toggleTimelineStartEndSearch(event) {
+
+		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
+		document.querySelector('.selection-combobox.time-selection .pop-hover').classList.toggle('visible');
+		if (!this.timeSelectionEditIcon){
+			return;
+		}
+	}
+
+
 
 	layoutSelectChange(selected_layout_index: number): void {
 		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
@@ -110,12 +156,12 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapPointSearch() {
-		this.store.dispatch(new UpdateStatusFlagsAction ({ key : statusBarFlagsItems.pinPointSearch}));
+		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch}));
 
 	}
 
 	togglePinPointIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key : statusBarFlagsItems.pinPointIndicator}));
+		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointIndicator}));
 	}
 
 

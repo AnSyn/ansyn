@@ -8,7 +8,6 @@ import {
 	SetOrientationAction, SetGeoFilterAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
-import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 import { createSelector } from '@ansyn/core';
 
@@ -22,14 +21,11 @@ export class StatusBarComponent implements OnInit {
 	layouts$: Observable<MapsLayout[]> = createSelector(this.store, 'status_bar', 'layouts');
 	selected_layout_index$: Observable<number> = createSelector(this.store, 'status_bar', 'selected_layout_index');
 	showLinkCopyToast$: Observable<boolean> = createSelector(this.store, 'status_bar', 'showLinkCopyToast');
-	orientations$: Observable<string> = createSelector(this.store, 'status_bar', 'orientations');
+	orientations$: Observable<string[]> = createSelector(this.store, 'status_bar', 'orientations');
 	orientation$: Observable<string> = createSelector(this.store, 'status_bar', 'orientation');
-	geoFilters$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilters');
+	geoFilters$: Observable<string[]> = createSelector(this.store, 'status_bar', 'geoFilters');
 	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
-
-	flags$ = this.store.select('status_bar')
-		.map( (state: IStatusBarState) => state.flags)
-		.distinctUntilChanged(isEqual);
+	flags$ = createSelector(this.store, 'status_bar', 'flags');
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
@@ -38,9 +34,9 @@ export class StatusBarComponent implements OnInit {
 	orientation: string;
 	geoFilters: string[] = [];
 	geoFilter: string;
+	flags: Map<string, boolean> = new Map<string, boolean>();
 
 	statusBarFlagsItems: any = statusBarFlagsItems;
-	flags: Map<string, boolean> = new Map<string, boolean>();
 	timeSelectionEditIcon = false;
 
 	date1: Date;
@@ -114,6 +110,26 @@ export class StatusBarComponent implements OnInit {
 
 		this.showLinkCopyToast$.subscribe((_showLinkCopyToast) => {
 			this.showLinkCopyToast = _showLinkCopyToast;
+		});
+
+		this.orientations$.subscribe((_orientations) => {
+			this.orientations = _orientations;
+		});
+
+		this.geoFilters$.subscribe((_geoFilters) => {
+			this.geoFilters = _geoFilters;
+		});
+
+		this.orientations$.subscribe((_orientations) => {
+			this.orientations = _orientations;
+		});
+
+		this.orientation$.subscribe((_orientation)=>{
+			this.orientation = _orientation;
+		});
+
+		this.geoFilter$.subscribe((_geoFilter)=>{
+			this.geoFilter = _geoFilter;
 		});
 
 		this.flags$.subscribe(flags => {

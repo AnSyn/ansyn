@@ -10,6 +10,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
+import { createSelector } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -18,13 +19,13 @@ import { MapsLayout } from '@ansyn/core';
 })
 export class StatusBarComponent implements OnInit {
 
-	layouts$: Observable<MapsLayout[]> = this.getSelector('layouts');
-	selected_layout_index$: Observable<number> = this.getSelector('selected_layout_index');
-	showLinkCopyToast$: Observable<boolean> = this.getSelector('showLinkCopyToast');
-	orientations$: Observable<string> = this.getSelector('orientations');
-	orientation$: Observable<string> = this.getSelector('orientation');
-	geoFilters$: Observable<string> = this.getSelector('geoFilters');
-	geoFilter$: Observable<string> = this.getSelector('geoFilter');
+	layouts$: Observable<MapsLayout[]> = createSelector(this.store, 'status_bar', 'layouts');
+	selected_layout_index$: Observable<number> = createSelector(this.store, 'status_bar', 'selected_layout_index');
+	showLinkCopyToast$: Observable<boolean> = createSelector(this.store, 'status_bar', 'showLinkCopyToast');
+	orientations$: Observable<string> = createSelector(this.store, 'status_bar', 'orientations');
+	orientation$: Observable<string> = createSelector(this.store, 'status_bar', 'orientation');
+	geoFilters$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilters');
+	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
 
 	flags$ = this.store.select('status_bar')
 		.map( (state: IStatusBarState) => state.flags)

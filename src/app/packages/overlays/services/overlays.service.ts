@@ -1,3 +1,4 @@
+import {BaseOverlaySourceProvider} from '../models/base-overlay-source-provider.model';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +20,7 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig) {}
+	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider : BaseOverlaySourceProvider) {}
 
 	setSortedDropsMap(dropsData: any[]) {
 		return dropsData
@@ -47,15 +48,10 @@ export class OverlaysService {
 		}
 	}
 
-	//@todo move to cases
-	getByCase(url = "", params: any = { caseId: ':' }): Observable<any[]> {
-		return this.fetch(url || this.config.overlaysByCaseId.replace(':id', params.caseId));
-	}
-
-	search(url = "", params: any = {}): Observable<any[]> {
+	search(params: any = {}): Observable<Array<Overlay>> {
 		let bbox = turf.bbox(params.polygon);
 		let bboxFeature = turf.bboxPolygon(bbox);
-		return this.fetch(url || this.config.overlaysByTimeAndPolygon, {
+		return this._overlaySourceProvider.fetch({
 			region: bboxFeature.geometry,
 			timeRange: {
 				start: params.from,
@@ -63,17 +59,7 @@ export class OverlaysService {
 			}
 		});
 	}
-
-	fetch(url, params = undefined) {
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
-		url = this.config.baseUrl.concat(url);
-		if (params) {
-			return this.http.post(url, params, options).map(this.extractData).catch(this.handleError);
-		}
-		return this.http.get(url, options).map(this.extractData).catch(this.handleError);
-	}
-
+	
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
 		let result = new Array();
 		let overlaysData = new Array();
@@ -93,11 +79,6 @@ export class OverlaysService {
 		result.push({ name: undefined, data: overlaysData });
 
 		return result;
-	}
-
-	extractData(response: Response) {
-		const data = response.json();
-		return data || [];
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {

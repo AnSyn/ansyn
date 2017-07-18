@@ -7,7 +7,7 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
@@ -262,7 +262,7 @@ export class MapAppEffects {
 		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
-		@Inject(BaseSourceProvider) private baseSourceProviders: BaseSourceProvider[],
+		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],
 		private overlaysService: OverlaysService
 	) { }
 }

@@ -1,13 +1,13 @@
 /**
  * Created by AsafMas on 26/06/2017.
  */
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
-export class OpenLayerBingSourceProvider extends BaseSourceProvider {
+export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public mapType;
 	public sourceType;
 

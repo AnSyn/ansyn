@@ -2,13 +2,13 @@
  * Created by EldadCohen on 22/05/2017.
  */
 
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
-export class OpenLayerIDAHOSourceProvider extends BaseSourceProvider {
+export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 	public mapType;
 	public sourceType;

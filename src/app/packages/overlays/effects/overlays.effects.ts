@@ -38,12 +38,9 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
-			return this.overlaysService[this.config.searchByCase ? "getByCase" : "search" ]("",action.payload) //this.overlaysService.fetchData("",action.payload)
+			return this.overlaysService.search(action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					data.forEach(item => {
-						item.date = new Date(item.photoTime);
-						item.name = item.name ? item.name : item.id;
-						item.sourceType = this.config.overlaySource;
 						if(item.footprint.geometry){
 							item.footprint = item.footprint.geometry;
 						}

@@ -492,7 +492,12 @@ function yCbCr2RGB(yCbCr) {
 }
 
 function buildHistogramLut(imageData) {
-    const totalHistLut = [];
+	const totalHistLut = [];
+	
+	for (let index = 16; index < 236; index++) {
+		totalHistLut[index] = 0;
+	}
+
     for (let index = 0; index < imageData.data.length; index += 4) {
         const r = imageData.data[index];
         const g = imageData.data[index + 1];

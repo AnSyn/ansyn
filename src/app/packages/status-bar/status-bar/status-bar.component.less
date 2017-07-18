@@ -53,8 +53,8 @@ div.status-bar-container{
 			display: flex;
 			width: 50%;
 			position:relative;
+			justify-content: space-between;
 			.back-to-world-view {
-				position: absolute;
 				margin-left: 7px;
 				align-self: center;
 				button {
@@ -64,6 +64,22 @@ div.status-bar-container{
 					border: none;
 					line-height: 20px;
 				}
+			}
+
+			button.histogram {
+				width: 200px;
+				background: black;
+				border: none;
+				color: white;
+				cursor: pointer;
+				padding: 5px;
+				margin-right: 7px;				
+				outline: none;  
+				transition: box-shadow 0.3s;
+			}
+
+			button.active {
+				box-shadow:	inset 0 0 2px #FFFFFF;
 			}
 		}
 

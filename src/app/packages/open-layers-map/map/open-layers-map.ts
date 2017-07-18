@@ -98,7 +98,7 @@ export class OpenLayersMap implements IMap {
 		const currentRotation = oldview.getRotation();
 
 		const projection = oldview.getProjection();
-		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
+		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, 'EPSG:3857');
 
 		if (!newCenter) {
 			newCenter = [0, 0];
@@ -108,7 +108,7 @@ export class OpenLayersMap implements IMap {
 			center: newCenter,
 			zoom: currentZoom,
 			rotation: currentRotation,
-			projection: layer.getSource().getProjection()
+			projection: 'EPSG:3857'
 		});
 
 		this._mapObject.setView(view);
@@ -310,6 +310,10 @@ export class OpenLayersMap implements IMap {
 			})
 		});
 		this.mapObject.addLayer(layer);
+	}
+
+	public toggleHistogram(): void {
+		console.log('Toggle histogram from open layers map wrapper!!!');
 	}
 
 //*****--pin point paint on the map--********

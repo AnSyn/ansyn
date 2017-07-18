@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
+import { BackToWorldAction, SynchronizeMapsAction, ToggleHistogramAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -13,6 +13,8 @@ export class ImageryStatusComponent implements OnInit {
 	@Input() overlay;
 	@Input() active;
 
+	histogramActive = false;
+	
 	//if not active show button follow
 	constructor(private store: Store<any>) { }
 
@@ -26,5 +28,10 @@ export class ImageryStatusComponent implements OnInit {
 
 	toggleMapSyncroniztion() {
 		this.store.dispatch(new SynchronizeMapsAction(null));
+	}
+
+	toggleHistogramEqualization() {
+		this.histogramActive = !this.histogramActive;
+		this.store.dispatch(new ToggleHistogramAction({ mapId: this.map_id}));
 	}
 }

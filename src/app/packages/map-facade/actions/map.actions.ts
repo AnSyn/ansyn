@@ -13,10 +13,18 @@ export const MapActionTypes = {
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
-	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS'
+	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
+	TOGGLE_HISTOGRAM: 'TOGGLE_HISTOGRAM'
 };
 
 export type MapActions = any;
+
+export class ToggleHistogramAction implements Action {
+	type = MapActionTypes.TOGGLE_HISTOGRAM;
+	constructor(public payload: {mapId: string} = {mapId: undefined}) {
+		// code...
+	}
+}
 
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;

@@ -17,7 +17,7 @@ import { UpdateCaseAction, CopyCaseLinkAction } from '@ansyn/menu-items/cases';
 import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapsLayout } from '@ansyn/core';
 
@@ -146,6 +146,13 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
 		.map(() => {
 			return new BackToWorldAction();
+		});
+
+		@Effect()
+	onToggleHistogram$: Observable<ToggleHistogramAction> = this.actions$
+		.ofType(StatusBarActionsTypes.TOGGLE_HISTOGRAM)
+		.map(() => {
+			return new ToggleHistogramAction();
 		});
 
 	@Effect({dispatch: false})

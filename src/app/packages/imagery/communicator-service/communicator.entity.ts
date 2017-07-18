@@ -143,6 +143,12 @@ export class CommunicatorEntity {
 			this.ActiveMap.removeVectorLayer(layer);
 		}
 	}
+
+	public toggleHistogram(): void {
+		if (this.ActiveMap) {
+			this.ActiveMap.toggleHistogram();
+		}
+	}
 	//CommunicatorEntity methods end
 
 	//======shadow mouse start

@@ -7,6 +7,8 @@
 			<div class="middle">
 				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 			</div>
+			
+		<button [hidden]="!overlay" (click)="toggleHistogramEqualization()" class="histogram" [class.active]="histogramActive">Histogram</button>
 
 		</div>
 

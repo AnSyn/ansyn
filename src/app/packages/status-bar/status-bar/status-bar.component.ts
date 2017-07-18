@@ -8,9 +8,10 @@ import {
 	SetOrientationAction, SetGeoFilterAction, SetTimeAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
+import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 import { createSelector } from '@ansyn/core';
-import { CaseTimeState } from '../../core/models/case.model';
+import { CaseTimeState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -148,14 +149,14 @@ export class StatusBarComponent implements OnInit {
 		})
 	}
 
-	toggleTimelineStartEndSearch(event) {
+	toggleTimelineStartEndSearch() {
 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
 	}
 
 	applyTimelinePickerResult(result){
-		console.log(result);
+		//apply here your dispathces
 		this.store.dispatch(new SetTimeAction({from: result.start, to: result.end}));
-		this.toggleTimelineStartEndSearch({});
+		this.toggleTimelineStartEndSearch();
 	}
 
 	layoutSelectChange(selected_layout_index: number): void {

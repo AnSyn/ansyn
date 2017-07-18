@@ -49,7 +49,7 @@ export class AnsynComponent implements OnInit{
 	displayedOverlay$ = this.store.select('cases')
 		.filter((cases: ICasesState) => !isNil(cases.selected_case))
 		.map((cases: ICasesState) => {
-			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
+			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id === cases.selected_case.state.maps.active_map_id);
 			return activeMap.data.overlay;
 		});
 

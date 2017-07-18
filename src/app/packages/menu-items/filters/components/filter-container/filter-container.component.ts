@@ -41,7 +41,7 @@ export class FilterContainerComponent {
 
   @ViewChild('fields') fields: ElementRef;
 
-  private show = true;
+  public show = true;
 
   metadataFromState$: Observable<FilterMetadata> = this.store
     .select("filters")

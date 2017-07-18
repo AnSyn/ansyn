@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 
 export class LayerTreeComponent implements OnInit, AfterViewInit {
 
-  private options;
+  public options;
 
   @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
@@ -38,7 +38,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     this.treeComponent.treeModel.virtualScroll.setViewport( this.myElement.nativeElement );
   }
 
-  private onDivClicked(event, node: TreeNode): void {
+  public onDivClicked(event, node: TreeNode): void {
     if (event.target.type === 'checkbox') {
       return;
     }
@@ -46,12 +46,12 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     event.stopPropagation();
   }
 
-  private onSpanClicked(event, node: TreeNode): void {
+  public onSpanClicked(event, node: TreeNode): void {
     this.onCheckboxClicked(null, node);
     event.stopPropagation();
   }
 
-  private onCheckboxClicked(event, node: TreeNode): void {
+  public onCheckboxClicked(event, node: TreeNode): void {
     let newCheckValue: boolean = !node.data.isChecked;
     let parentNode: TreeNode = node.realParent;
 
@@ -65,7 +65,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     this.bubbleIndeterminate(node.realParent);
   }
 
-  private bubbleActivationDown(node: TreeNode, activationValue: boolean) {
+  public bubbleActivationDown(node: TreeNode, activationValue: boolean) {
 
     node.children.filter(child => child.data.isChecked !== activationValue).forEach(child => {
       child.data.isChecked = activationValue;
@@ -80,7 +80,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private bubbleActivationUp(node: TreeNode, newValue: boolean): void {
+  public bubbleActivationUp(node: TreeNode, newValue: boolean): void {
     if (!node) {
       return;
     }
@@ -92,7 +92,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private bubbleIndeterminate(node: TreeNode): void {
+  public bubbleIndeterminate(node: TreeNode): void {
     if (!node) {
       return;
     }
@@ -102,7 +102,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private isNodeIndeterminate(node: TreeNode): boolean {
+  public isNodeIndeterminate(node: TreeNode): boolean {
     if (!node.hasChildren) {
       return false;
     }

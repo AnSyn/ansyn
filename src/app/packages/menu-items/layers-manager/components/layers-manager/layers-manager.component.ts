@@ -15,11 +15,11 @@ import { Store } from '@ngrx/store';
 })
 export class LayersManagerComponent {
 
-  private nodes: Observable<ILayerTreeNode[]> = this.store.select("layers").map((state: ILayerState) => state.layers);
+  public nodes: Observable<ILayerTreeNode[]> = this.store.select("layers").map((state: ILayerState) => state.layers);
 
   constructor(private store: Store<ILayerState>) { }
 
-  private onNodeActivationChanged(args: NodeActivationChangedEventArgs){
+  public onNodeActivationChanged(args: NodeActivationChangedEventArgs){
     if (args.newState){
       this.store.dispatch(new SelectLayerAction(args.node));
     }

@@ -15,15 +15,13 @@
 		</ansyn-imageries-manager>
 
         <div class="status">
-
-			<ansyn-status-bar 
-			[selected_case_name]="(selected_case)?.name" 
-			[overlays_count]="overlays_count" 
-			[overlay]="displayedOverlay" 
-			(toggleEditMode)="toggleEditMode($event)" 
+			<ansyn-status-bar
+			[selected_case_name]="(selected_case)?.name"
+			[overlays_count]="overlays_count"
+			[overlay]="displayedOverlay"
+			(toggleEditMode)="toggleEditMode($event)"
 			[hide-overlay]="selected_layout.maps_count > 1"
 			[histogramActive]="histogramActive"></ansyn-status-bar>
-
 		</div>
 
 		<div class="app-timeline-container">

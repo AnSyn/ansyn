@@ -10,6 +10,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
 import { createSelector } from '@ansyn/core';
+import { CaseTimeState } from '../../core/models/case.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -39,8 +40,12 @@ export class StatusBarComponent implements OnInit {
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
 
-	date1: Date;
-	date2: Date;
+	get from(){
+		return new Date(this.time.from);
+	}
+	get to(){
+		return	new Date(this.time.to);
+	}
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
@@ -48,6 +53,8 @@ export class StatusBarComponent implements OnInit {
 	@Input() histogramActive: boolean;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
+	@Input('time') time: CaseTimeState;
+
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;

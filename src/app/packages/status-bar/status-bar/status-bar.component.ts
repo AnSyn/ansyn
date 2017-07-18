@@ -1,10 +1,10 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild, OnChanges, SimpleChange } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
-	ToggleHistogramAction
+	ToggleHistogramStatusBarAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
@@ -19,7 +19,7 @@ import { MapsLayout } from '@ansyn/core';
 	templateUrl: './status-bar.component.html',
 	styleUrls: ['./status-bar.component.less']
 })
-export class StatusBarComponent implements OnInit {
+export class StatusBarComponent implements OnInit, OnChanges {
 	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar")
 		.map((state: IStatusBarState) => state.layouts)
 		.distinctUntilChanged(isEqual);
@@ -105,8 +105,12 @@ export class StatusBarComponent implements OnInit {
 			key: statusBarFlagsItems.pinPointIndicator,
 			value: true
 		}));
+	}
 
-
+	ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
+		if(changes["overlay"].currentValue !== changes["overlay"].previousValue) {
+			this.histogramActive = false;
+		}
 	}
 
 	setSubscribers() {
@@ -184,11 +188,12 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickBackToWorldView(): void {
+		this.histogramActive = false;
 		this.store.dispatch(new BackToWorldViewAction());
 	}
 
 	toggleHistogramEqualization() {
 		this.histogramActive = !this.histogramActive;
-		this.store.dispatch(new ToggleHistogramAction());		
+		this.store.dispatch(new ToggleHistogramStatusBarAction(this.histogramActive));		
 	}
 }

@@ -267,7 +267,7 @@ export class MapAppEffects {
 		.map(([action, caseState, mapId]:[ToggleHistogramAction, ICasesState, string]) => {
 			const active_map = caseState.selected_case.state.maps.data.find((map)=> map.id === mapId);
 			const comm = this.communicator.provide(mapId);
-			comm.toggleHistogram();
+			comm.shouldPerformHistogram(action.payload.shouldPerform);
 		});
 
 	constructor(

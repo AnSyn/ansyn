@@ -30,7 +30,8 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 				})],
 				operation: function (pixels, data) {
 					return pixels[0];
-				}
+				},
+				operationType: 'image'
 			})
 		});
 		return osmLayer;

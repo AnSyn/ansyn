@@ -15,8 +15,8 @@ export class OpenLayersMap implements IMap {
 	private _mapObject: ol.Map;
 	private _mapLayers = [];
 	private _mapVectorLayers = [];
-	public centerChanged: EventEmitter < GeoJSON.Point > ;
-	public positionChanged: EventEmitter < MapPosition > ;
+	public centerChanged: EventEmitter<GeoJSON.Point>;
+	public positionChanged: EventEmitter<MapPosition>;
 	public pointerMove: EventEmitter<any>;
 	public singleClick: EventEmitter<any>;
 
@@ -27,19 +27,17 @@ export class OpenLayersMap implements IMap {
 		singleClickHandler: null
 	};
 
-
-
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
 		this.mapType = 'openLayersMap';
-		this.centerChanged = new EventEmitter < GeoJSON.Point > ();
-		this.positionChanged = new EventEmitter < MapPosition > ();
+		this.centerChanged = new EventEmitter<GeoJSON.Point>();
+		this.positionChanged = new EventEmitter<MapPosition>();
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 
 		this.initMap(element, layers, position);
 	}
 
-	private initMap(element: HTMLElement, layers: any,  position?: MapPosition) {
+	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
 
 		let center = [16, 38];
 		let zoom = 12;
@@ -55,7 +53,7 @@ export class OpenLayersMap implements IMap {
 			renderer: 'canvas',
 			controls: [],
 			view: new ol.View({
-				center: ol.proj.fromLonLat([center[0],center[1]]),
+				center: ol.proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,
 				rotation: rotation
 			})
@@ -79,13 +77,13 @@ export class OpenLayersMap implements IMap {
 
 	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
 		this.setMainLayer(layer);
-		if(extent) {
+		if (extent) {
 			this.fitCurrentView(layer, extent);
 		}
 	}
 
-	public getLayerById(id: string){
-		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id )[0];
+	public getLayerById(id: string) {
+		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id)[0];
 	}
 
 	private setMainLayer(layer: ol.layer.Layer) {
@@ -117,7 +115,7 @@ export class OpenLayersMap implements IMap {
 		this.internalAfterSetMainLayer(beforeArgs);
 	}
 
-	private internalBeforeSetMainLayer(): {pinPointLonLatGeo} {
+	private internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
 		const pinPointIndicatorLayer: ol.layer.Layer = <ol.layer.Layer>this.getLayerById(this._pinPointIndicatorLayerId);
 		let lonLatCords;
 		if (pinPointIndicatorLayer) {
@@ -127,10 +125,10 @@ export class OpenLayersMap implements IMap {
 			const layerCords = pinPointGeometry.getCoordinates();
 			lonLatCords = ol.proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
 		}
-		return {pinPointLonLatGeo: lonLatCords};
+		return { pinPointLonLatGeo: lonLatCords };
 	}
 
-	private internalAfterSetMainLayer(args: {pinPointLonLatGeo}) {
+	private internalAfterSetMainLayer(args: { pinPointLonLatGeo }) {
 		if (args.pinPointLonLatGeo) {
 			this.addPinPointIndicator(args.pinPointLonLatGeo);
 		}
@@ -178,6 +176,8 @@ export class OpenLayersMap implements IMap {
 		this._mapLayers.forEach((existingLayer) => {
 			this.removeLayer(existingLayer);
 		});
+
+		this._mapLayers = [];
 	}
 
 	public removeLayer(layer: any): void {
@@ -185,13 +185,13 @@ export class OpenLayersMap implements IMap {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
-			this.mapObject.render();
+			this._mapObject.render();
 		}
 	}
 
-	public removeLayerById(layerId){
+	public removeLayerById(layerId) {
 		const layer = this.getLayerById(layerId);
-		if(layer){
+		if (layer) {
 			//layer.set('visible',false);
 			this.removeLayer(layer);
 		}
@@ -268,7 +268,7 @@ export class OpenLayersMap implements IMap {
 		let rotation: number = view.getRotation();
 		let boundingBox = this.getMapExtentInGeo();
 
-		const result: MapPosition = { center, zoom , rotation, boundingBox};
+		const result: MapPosition = { center, zoom, rotation, boundingBox };
 		//if(configuration.General.logActions ){
 		//	console.log(`'Get Map Extent : ${JSON.stringify(boundingBox)}'`);
 		//}
@@ -312,39 +312,57 @@ export class OpenLayersMap implements IMap {
 		this.mapObject.addLayer(layer);
 	}
 
-	public toggleHistogram(): void {
-		console.log('Toggle histogram from open layers map wrapper!!!');
+	public shouldPerformHistogram(shouldPerform: boolean): void {
+		let imageLayer: ol.layer.Image = this._mapLayers.find((layer) => layer instanceof ol.layer.Image);
+		let rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
+
+		if (shouldPerform) {
+			rasterSource.setOperation(function (pixels, data) {
+				let imageData = pixels[0];
+				let histLut = buildHistogramLut(imageData);
+				return performHistogram(imageData, histLut);
+			}, {
+				buildHistogramLut: buildHistogramLut,
+				performHistogram: performHistogram,
+				rgb2YCbCr: rgb2YCbCr,
+				yCbCr2RGB: yCbCr2RGB
+			});
+		} else {
+			rasterSource.setOperation(function (pixels, data) {
+				return pixels[0];
+			});
+		}
 	}
 
-//*****--pin point paint on the map--********
+	//*****--pin point paint on the map--********
 	public addSingleClickEvent() {
-		this._flags.singleClickHandler = this.mapObject.on('singleclick',this.singleClickListener,this);
+		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);
 	}
 
-	public removeSingleClickEvent(){
-		this.mapObject.un('singleclick',this.singleClickListener,this);
+	public removeSingleClickEvent() {
+		this.mapObject.un('singleclick', this.singleClickListener, this);
 	}
 
 	public singleClickListener(e) {
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLat = ol.proj.toLonLat(e.coordinate, projection);
-		this.singleClick.emit({lonLat: lonLat});
+		this.singleClick.emit({ lonLat: lonLat });
 	}
 
 
-	public addPinPointIndicator(lonLat){
+	public addPinPointIndicator(lonLat) {
 		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLatCords = ol.proj.fromLonLat(lonLat, projection);
-		if(layer){
-			layer.set('visible',true);
+		if (layer) {
+			layer.set('visible', true);
 			const feature = (<any>layer).getSource().getFeatures()[0];
 			feature.setGeometry(new ol.geom.Point(lonLatCords));
 		}
-		else{
+		else {
 			const feature = new ol.Feature({
 				geometry: new ol.geom.Point(lonLatCords),
 				id: 'pinPointIndicatorFeature'
@@ -363,29 +381,29 @@ export class OpenLayersMap implements IMap {
 			});
 
 			vectorLayer.setZIndex(12000);
-			vectorLayer.set('id',this._pinPointIndicatorLayerId);
+			vectorLayer.set('id', this._pinPointIndicatorLayerId);
 
 			this.addLayer(vectorLayer);
 		}
 	}
 
-	public removePinPointIndicator(){
+	public removePinPointIndicator() {
 		this.removeLayerById(this._pinPointIndicatorLayerId);
 	}
-//*****-- pin point paint on the map end --********
+	//*****-- pin point paint on the map end --********
 
-//*****-- shadow mouse functionality--********
+	//*****-- shadow mouse functionality--********
 
-	public onPointerMove (e)   {
+	public onPointerMove(e) {
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLat = ol.proj.toLonLat(e.coordinate, projection);
 		this.pointerMove.emit(lonLat);
 	};
 
-	public drawShadowMouse(lonLat){
+	public drawShadowMouse(lonLat) {
 		const layer = this.getLayerById(this._shadowMouselayerId);
-		if(!layer){
+		if (!layer) {
 			return;
 		}
 		const feature = (<any>layer).getSource().getFeatures()[0];
@@ -396,24 +414,24 @@ export class OpenLayersMap implements IMap {
 		this.mapObject.render();
 	}
 
-	public togglePointerMove(){
+	public togglePointerMove() {
 		if (!this._flags.pointerMoveListener) {
 
-			this._flags.pointerMoveListener = this.mapObject.on('pointermove',this.onPointerMove,this);
+			this._flags.pointerMoveListener = this.mapObject.on('pointermove', this.onPointerMove, this);
 		}
-		else{
-			this.mapObject['un']('pointermove',this.onPointerMove,this);
+		else {
+			this.mapObject['un']('pointermove', this.onPointerMove, this);
 			this._flags.pointerMoveListener = false;
 		}
 	}
 
-	public startMouseShadowVectorLayer(){
+	public startMouseShadowVectorLayer() {
 		const layer = this.getLayerById(this._shadowMouselayerId);
 
-		if(layer){
-			layer.set('visible',true);
+		if (layer) {
+			layer.set('visible', true);
 		}
-		else{
+		else {
 			const feature = new ol.Feature({
 				id: 'shadowMousePosition'
 			});
@@ -431,7 +449,7 @@ export class OpenLayersMap implements IMap {
 			});
 
 			vectorLayer.setZIndex(12000);
-			vectorLayer.set('id',this._shadowMouselayerId);
+			vectorLayer.set('id', this._shadowMouselayerId);
 			this.addLayer(vectorLayer);
 		}
 	}
@@ -440,15 +458,98 @@ export class OpenLayersMap implements IMap {
 		this.removeLayerById(this._shadowMouselayerId);
 	}
 
-//*****-- shadow mouse functionality end --********
+	//*****-- shadow mouse functionality end --********
 
-//*****-- tools ----*****
+	//*****-- tools ----*****
 
 
 
-//*****-- end tools ---****
+	//*****-- end tools ---****
 	// IMap End
 	public dispose() {
 
 	}
+}
+
+function rgb2YCbCr(rgb) {
+    const y = 16 + 0.257 * rgb.r + 0.504 * rgb.g + 0.098 * rgb.b;
+    const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
+    const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
+
+    return { y, cb, cr };
+}
+
+function yCbCr2RGB(yCbCr) {
+    const yNorm = yCbCr.y - 16;
+    const cbNorm = yCbCr.cb - 128;
+    const crNorm = yCbCr.cr - 128;
+
+    const r = 1.164 * yNorm + 0 * cbNorm + 1.596 * crNorm;
+    const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
+    const b = 1.164 * yNorm + 2.017 * cbNorm + 0 * crNorm;
+
+    return { r, g, b };
+}
+
+function buildHistogramLut(imageData) {
+    const totalHistLut = [];
+    for (let index = 0; index < imageData.data.length; index += 4) {
+        const r = imageData.data[index];
+        const g = imageData.data[index + 1];
+        const b = imageData.data[index + 2];
+
+        const yCbCr = rgb2YCbCr({ r, g, b });
+
+        const val = Math.floor(yCbCr.y);
+        if (totalHistLut[val] === undefined) {
+            totalHistLut[val] = 1;
+        } else {
+            totalHistLut[val] = totalHistLut[val] + 1;
+        }
+    }
+
+    const cumulativeHist = [];
+
+    cumulativeHist[16] = totalHistLut[16];
+
+    for (let index = 17; index < totalHistLut.length; index++) {
+        let tempTotalHist = totalHistLut[index] === undefined ? 0 : totalHistLut[index];
+        cumulativeHist[index] = cumulativeHist[index - 1] + tempTotalHist;
+    }
+
+    let pixelsNum = 0;
+    totalHistLut.forEach((hist) => pixelsNum += hist);
+
+    const minCumProbability = cumulativeHist[16];
+    const finalHist = [];
+
+    for (let index = 16; index < cumulativeHist.length; index++) {
+        const diff = cumulativeHist[index] - minCumProbability;
+
+        finalHist[index] = Math.floor((diff / (pixelsNum - 1)) * (235 - 16 - 1) + 16);
+    }
+
+    return finalHist;
+}
+
+function performHistogram(imageData, histogramLut) {
+    for (let index = 0; index < imageData.data.length; index += 4) {
+        const r = imageData.data[index];
+        const g = imageData.data[index + 1];
+        const b = imageData.data[index + 2];
+        const a = imageData.data[index + 3];
+
+        const yCbCr = rgb2YCbCr({ r, g, b });
+
+        yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
+
+        const rgb = this.yCbCr2RGB(yCbCr);
+
+        imageData.data[index + 0] = rgb.r;	// Red
+        imageData.data[index + 1] = rgb.g;	// Green
+        imageData.data[index + 2] = rgb.b;	// Blue
+        imageData.data[index + 3] = a;	// Alpha        
+    }
+
+    return imageData;
 }

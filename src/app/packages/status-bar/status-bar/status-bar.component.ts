@@ -5,7 +5,7 @@ import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
 	ToggleHistogramStatusBarAction,
-	SetOrientationAction, SetGeoFilterAction
+	SetOrientationAction, SetGeoFilterAction, SetTimeAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
@@ -27,6 +27,8 @@ export class StatusBarComponent implements OnInit {
 	geoFilters$: Observable<string[]> = createSelector(this.store, 'status_bar', 'geoFilters');
 	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
 	flags$ = createSelector(this.store, 'status_bar', 'flags');
+	time$ = createSelector(this.store, 'status_bar', 'time');
+
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
@@ -36,16 +38,10 @@ export class StatusBarComponent implements OnInit {
 	geoFilters: string[] = [];
 	geoFilter: string;
 	flags: Map<string, boolean> = new Map<string, boolean>();
+	time: {from: Date, to: Date};
 
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
-
-	get from(){
-		return new Date(this.time.from);
-	}
-	get to(){
-		return	new Date(this.time.to);
-	}
 
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
@@ -53,7 +49,7 @@ export class StatusBarComponent implements OnInit {
 	@Input() histogramActive: boolean;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
-	@Input('time') time: CaseTimeState;
+	// @Input('time') time: CaseTimeState;
 
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 	@ViewChild('goPrev') goPrev: ElementRef;
@@ -146,6 +142,10 @@ export class StatusBarComponent implements OnInit {
 			}
 			this.flags = new Map(flags) as Map<string, boolean>;
 		});
+
+		this.time$.subscribe((_time) => {
+			this.time = _time;
+		})
 	}
 
 	toggleTimelineStartEndSearch(event) {
@@ -154,9 +154,8 @@ export class StatusBarComponent implements OnInit {
 
 	applyTimelinePickerResult(result){
 		console.log(result);
-		//apply here your dispathces
+		this.store.dispatch(new SetTimeAction({from: result.start, to: result.end}));
 		this.toggleTimelineStartEndSearch({});
-
 	}
 
 	layoutSelectChange(selected_layout_index: number): void {

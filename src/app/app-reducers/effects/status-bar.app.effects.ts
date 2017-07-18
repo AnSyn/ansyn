@@ -20,7 +20,10 @@ import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/m
 import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapsLayout } from '@ansyn/core';
-import { SetGeoFilterAction, SetOrientationAction } from '../../packages/status-bar/actions/status-bar.actions';
+import {
+	SetGeoFilterAction, SetOrientationAction,
+	SetTimeAction
+} from '../../packages/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -79,22 +82,29 @@ export class StatusBarAppEffects {
 			return [
 				new ChangeLayoutAction(+layouts_index),
 				new SetOrientationAction(selected_case.state.orientation),
-				new SetGeoFilterAction(selected_case.state.geoFilter)
+				new SetGeoFilterAction(selected_case.state.geoFilter),
+				new SetTimeAction({from: new Date(selected_case.state.time.from), to: new Date(selected_case.state.time.to)})
 			];
 		});
 
 	@Effect()
 	statusBarChanges$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER)
+		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER, StatusBarActionsTypes.SET_TIME)
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState): any[] => [action, state.selected_case])
 		.filter(([action, selected_case]) => !isEmpty(selected_case))
-		.map(([action, selected_case]: [SetOrientationAction | SetGeoFilterAction , Case]) =>  {
+		.map(([action, selected_case]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) =>  {
 			const updatedCase = cloneDeep(selected_case);
-			if(action instanceof SetOrientationAction) {
-				updatedCase.state.orientation = action.payload;
-			}
-			if(action instanceof SetGeoFilterAction) {
-				updatedCase.state.geoFilter = action.payload;
+			switch (action.constructor) {
+				case SetOrientationAction:
+					updatedCase.state.orientation = action.payload;
+					break;
+				case SetGeoFilterAction:
+					updatedCase.state.geoFilter = action.payload;
+					break;
+				case SetTimeAction:
+					updatedCase.state.time.from = action.payload.from.toISOString();
+					updatedCase.state.time.to = action.payload.to.toISOString();
+					break;
 			}
 			return new UpdateCaseAction(updatedCase);
 		});

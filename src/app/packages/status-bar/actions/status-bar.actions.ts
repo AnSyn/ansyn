@@ -15,7 +15,8 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	TOGGLE_HISTOGRAM_STATUS_BAR: 'TOGGLE_HISTOGRAM_STATUS_BAR',
 	SET_ORIENTATION: 'SET_ORIENTATION',
-	SET_GEO_FILTER: 'SET_GEO_FILTER'
+	SET_GEO_FILTER: 'SET_GEO_FILTER',
+	SET_TIME: 'SET_TIME'
 
 };
 
@@ -88,3 +89,7 @@ export class SetGeoFilterAction implements Action{
 	constructor(public payload: string) {}
 }
 
+export class SetTimeAction implements Action{
+	type: string = StatusBarActionsTypes.SET_TIME;
+	constructor(public payload: {from: Date, to: Date}) {}
+}

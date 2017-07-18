@@ -10,6 +10,7 @@ export interface IStatusBarState {
 	geoFilters: string[],
 	orientation: string;
 	geoFilter: string;
+	time: {from: Date, to: Date}
 }
 
 export const statusBarFlagsItems  = {
@@ -38,7 +39,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	orientations: ['original', 'othero'],
 	geoFilters: ['pin-point', 'otherg'],
 	orientation: 'original',
-	geoFilter: 'pin-point'
+	geoFilter: 'pin-point',
+	time: {from: new Date(0), to: new Date()}
 };
 
 
@@ -76,6 +78,9 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_GEO_FILTER:
 			return {...state, geoFilter: action.payload};
+
+		case StatusBarActionsTypes.SET_TIME:
+			return {...state, time: action.payload};
 
 		default: return state;
 

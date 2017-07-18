@@ -18,6 +18,9 @@ import * as flatpickr from 'flatpickr';
 
 export class TimelineTimepickerComponent implements OnInit {
 
+	private _startDatePickerValue = new Date(new Date().getTime() - 3600000 * 24 * 365);;
+	private _endDatePickerValue =  new Date();
+
 	endDatePickerInstance: flatpickr;
 	startDatePickerInstance: flatpickr;
 	error: string;
@@ -28,10 +31,27 @@ export class TimelineTimepickerComponent implements OnInit {
 	@Output('applyDate') applyDate = new EventEmitter();
 	@Output('closeComponent') closeComponent= new EventEmitter();
 
-	@Input () startDatePickerValue:Date = new Date(new Date().getTime() - 3600000 * 24 * 365);
-	@Input () endDatePickerValue:Date =  new Date();
+	@Input() set startDatePickerValue(value: Date){
+		this._startDatePickerValue = value;
+		if (this.startDatePickerInstance) {
+			this.startDatePickerInstance.setDate(this.startDatePickerValue,false);
+		}
+	}
 
+	@Input() set endDatePickerValue(value: Date){
+		this._endDatePickerValue = value;
+		if(this.endDatePickerInstance){
+			this.endDatePickerInstance.setDate(this.endDatePickerValue,false);
+		}
+	}
 
+	get startDatePickerValue(){
+		return this._startDatePickerValue;
+	}
+
+	get endDatePickerValue(){
+		return this._endDatePickerValue;
+	}
 
 
 	constructor(){}

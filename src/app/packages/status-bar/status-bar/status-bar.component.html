@@ -78,8 +78,8 @@
 				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">
 						<ansyn-timeline-timepicker
-							[startDatePickerValue]="from"
-							[endDatePickerValue]="to"
+							[startDatePickerValue]="(time)?.from"
+							[endDatePickerValue]="(time)?.to"
 							(closeComponent)="toggleTimelineStartEndSearch()"
 							(applyDate)="applyTimelinePickerResult($event)">
 

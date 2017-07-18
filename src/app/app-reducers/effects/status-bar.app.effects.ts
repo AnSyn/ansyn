@@ -24,6 +24,7 @@ import {
 	SetGeoFilterAction, SetOrientationAction,
 	SetTimeAction
 } from '../../packages/status-bar/actions/status-bar.actions';
+import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -92,8 +93,10 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER, StatusBarActionsTypes.SET_TIME)
 		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState): any[] => [action, state.selected_case])
 		.filter(([action, selected_case]) => !isEmpty(selected_case))
-		.map(([action, selected_case]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) =>  {
+		.mergeMap(([action, selected_case]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) =>  {
 			const updatedCase = cloneDeep(selected_case);
+			const actions: Action[] = [new UpdateCaseAction(updatedCase)];
+
 			switch (action.constructor) {
 				case SetOrientationAction:
 					updatedCase.state.orientation = action.payload;
@@ -102,11 +105,22 @@ export class StatusBarAppEffects {
 					updatedCase.state.geoFilter = action.payload;
 					break;
 				case SetTimeAction:
-					updatedCase.state.time.from = action.payload.from.toISOString();
-					updatedCase.state.time.to = action.payload.to.toISOString();
+					const fromChange = updatedCase.state.time.from !== action.payload.from.toISOString();
+					const toChange = updatedCase.state.time.to !== action.payload.to.toISOString();
+					const someTimeChanges = fromChange || toChange;
+					if (someTimeChanges) {
+						updatedCase.state.time.from = action.payload.from.toISOString();
+						updatedCase.state.time.to = action.payload.to.toISOString();
+						actions.push(new LoadOverlaysAction({
+							to: updatedCase.state.time.to,
+							from: updatedCase.state.time.from,
+							polygon: updatedCase.state.region,
+							caseId: updatedCase.id
+						}));
+					}
 					break;
 			}
-			return new UpdateCaseAction(updatedCase);
+			return actions;
 		});
 
 
@@ -124,22 +138,22 @@ export class StatusBarAppEffects {
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.cloneDeep()
 		.mergeMap(([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
-				selected_case.state.maps.layouts_index = action.payload;
+			selected_case.state.maps.layouts_index = action.payload;
 
-				const updatedCase = this.setMapsDataChanges(selected_case, selected_layout);
+			const updatedCase = this.setMapsDataChanges(selected_case, selected_layout);
 
-				const actionsList: Array<Action> = [];
-                actionsList.push(new UpdateCaseAction(updatedCase));
-                actionsList.push(new UpdateMapSizeAction());
+			const actionsList: Array<Action> = [];
+			actionsList.push(new UpdateCaseAction(updatedCase));
+			actionsList.push(new UpdateMapSizeAction());
 
-                if(selected_case.state.maps.data.length === 1){
-                    actionsList.push(new DisableMouseShadow());
-                    actionsList.push(new StopMouseShadow());
-                }else{
-                    actionsList.push(new EnableMouseShadow());
-                }
+			if(selected_case.state.maps.data.length === 1){
+				actionsList.push(new DisableMouseShadow());
+				actionsList.push(new StopMouseShadow());
+			}else{
+				actionsList.push(new EnableMouseShadow());
+			}
 
-                return actionsList;
+			return actionsList;
 		})
 		.share();
 

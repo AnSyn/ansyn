@@ -15,6 +15,11 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
+	public loadOverlaysValues = {
+		imageryCount: -1,
+		displayOverlay: ''
+	};
+
 
 	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider : BaseOverlaySourceProvider) {}
 
@@ -41,11 +46,10 @@ export class OverlaysService {
 			timeRange: {
 				start: params.from,
 				end: params.to
-			},
-			limit: params.limit
+			}
 		});
 	}
-	
+
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
 		let result = new Array();
 		let overlaysData = new Array();

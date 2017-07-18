@@ -9,7 +9,7 @@ export const configuration = {
 	env: 'dev',
 	production: false,
 	General: {
-		logActions: true
+		logActions: false
 	},
 	CasesConfig: {
 		casesBaseUrl: 'http://localhost:9001/api/v1/cases',

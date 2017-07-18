@@ -40,8 +40,7 @@
 				</div>
 
 				<select name="orientation" [(ngModel)]="orientation" (ngModelChange)="orientationChange(orientation)">
-					<option value="original">{{'original' | titlecase}}</option>
-					<option value="other orientation">{{'other orientation' | titlecase}}</option>
+					<option [value]="o" *ngFor="let o of orientations">{{o | titlecase}}</option>
 				</select>
 
 			</div>

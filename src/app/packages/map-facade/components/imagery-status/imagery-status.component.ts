@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BackToWorldAction, SynchronizeMapsAction, ToggleHistogramAction } from '../../actions/map.actions';
 
@@ -7,7 +7,7 @@ import { BackToWorldAction, SynchronizeMapsAction, ToggleHistogramAction } from 
 	templateUrl: './imagery-status.component.html',
 	styleUrls: ['./imagery-status.component.less']
 })
-export class ImageryStatusComponent implements OnInit {
+export class ImageryStatusComponent implements OnChanges  {
 
 	@Input() map_id;
 	@Input() overlay;
@@ -18,11 +18,15 @@ export class ImageryStatusComponent implements OnInit {
 	//if not active show button follow
 	constructor(private store: Store<any>) { }
 
-	ngOnInit() {
+	ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
+		if(changes["overlay"].currentValue !== changes["overlay"].previousValue) {
+			this.histogramActive = false;
+		}
 	}
 
 
 	backToWorldView() {
+		this.histogramActive = false;
 		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id}));
 	}
 
@@ -32,6 +36,6 @@ export class ImageryStatusComponent implements OnInit {
 
 	toggleHistogramEqualization() {
 		this.histogramActive = !this.histogramActive;
-		this.store.dispatch(new ToggleHistogramAction({ mapId: this.map_id}));
+		this.store.dispatch(new ToggleHistogramAction({shouldPerform: this.histogramActive, mapId: this.map_id}));		
 	}
 }

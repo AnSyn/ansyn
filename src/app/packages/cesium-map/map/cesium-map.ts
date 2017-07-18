@@ -62,7 +62,7 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	toggleHistogram(): void {
+	shouldPerformHistogram(shouldPerform: boolean): void {
 		throw new Error('Method not implemented.');		
 	}
 

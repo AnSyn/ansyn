@@ -144,9 +144,9 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public toggleHistogram(): void {
+	public shouldPerformHistogram(shouldPerform: boolean): void {
 		if (this.ActiveMap) {
-			this.ActiveMap.toggleHistogram();
+			this.ActiveMap.shouldPerformHistogram(shouldPerform);
 		}
 	}
 	//CommunicatorEntity methods end

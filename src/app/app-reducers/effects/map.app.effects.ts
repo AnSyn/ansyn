@@ -19,7 +19,7 @@ import { OverlaysService, DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
@@ -255,6 +255,19 @@ export class MapAppEffects {
 				new UpdateCaseAction(updatedCase),
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
+		});
+
+	@Effect({dispatch:false})
+	toggleHistogram$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TOGGLE_HISTOGRAM)
+		.withLatestFrom(this.store$.select("cases"), (action: ToggleHistogramAction, casesState: ICasesState) => {
+			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
+			return [action, casesState, mapId];
+		})
+		.map(([action, caseState, mapId]:[ToggleHistogramAction, ICasesState, string]) => {
+			const active_map = caseState.selected_case.state.maps.data.find((map)=> map.id === mapId);
+			const comm = this.communicator.provide(mapId);
+			comm.toggleHistogram();
 		});
 
 	constructor(

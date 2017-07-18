@@ -3,7 +3,8 @@ import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
-	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction
+	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
+	ToggleHistogramAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
@@ -45,6 +46,8 @@ export class StatusBarComponent implements OnInit {
 
 	date1: Date;
 	date2: Date;
+
+	histogramActive = false;
 
 
 	@Input() selected_case_name: string;
@@ -182,5 +185,10 @@ export class StatusBarComponent implements OnInit {
 
 	clickBackToWorldView(): void {
 		this.store.dispatch(new BackToWorldViewAction());
+	}
+
+	toggleHistogramEqualization() {
+		this.histogramActive = !this.histogramActive;
+		this.store.dispatch(new ToggleHistogramAction());		
 	}
 }

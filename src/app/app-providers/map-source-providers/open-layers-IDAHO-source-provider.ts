@@ -21,11 +21,18 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	}
 
 	create(metaData: any): any {
-		const osmLayer = new ol.layer.Tile({
-            source: new ol.source.OSM({
-                url: metaData.imageUrl
-            })
-        });
+		const osmLayer = new ol.layer.Image({
+			source: new ol.source.Raster({
+				sources: [new ol.source.XYZ({
+					url: metaData.imageUrl,
+					crossOrigin: 'Anonymous',
+					projection: 'EPSG:3857'
+				})],
+				operation: function (pixels, data) {
+					return pixels[0];
+				}
+			})
+		});
 		return osmLayer;
 	}
 

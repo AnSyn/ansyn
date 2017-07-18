@@ -1,4 +1,4 @@
-export abstract class BaseSourceProvider {
+export abstract class BaseMapSourceProvider {
 	mapType: string;
 	sourceType:  string;
 	create(metaData: any): any {};

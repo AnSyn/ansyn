@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { ImageryModule, BaseSourceProvider } from '@ansyn/imagery';
+import { ImageryModule} from '@ansyn/imagery';
 import { CesiumMapModule } from '@ansyn/cesium-map';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
@@ -17,22 +17,14 @@ import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { AppReducersModule } from './app-reducers/app-reducers.module';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import { OpenLayerTileWMSSourceProvider, OpenLayerTileWMSSourceProviderMapType, OpenLayerTileWMSSourceProviderSourceType } from './app-models/map-source-providers/open-layers-TileWMS-source-provider';
-import { OpenLayerOSMSourceProvider, OpenLayerOSMSourceProviderMapType, OpenLayerOSMSourceProviderSourceType } from './app-models/map-source-providers/open-layers-OSM-source-provider';
-import { OpenLayerIDAHOSourceProvider, OpenLayerIDAHOSourceProviderMapType, OpenLayerIDAHOSourceProviderSourceType } from './app-models/map-source-providers/open-layers-IDAHO-source-provider';
-import { OpenLayerBingSourceProvider, OpenLayerBingSourceProviderMapType, OpenLayerBingSourceProviderSourceType } from './app-models/map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
-import { TypeContainerModule } from '@ansyn/type-container';
 import { ContextModule } from '@ansyn/context/context.module';
+import { AppProvidersModule } from "./app-providers/app-providers.module";
+import { AppReducersModule } from './app-reducers/app-reducers.module';
 
 @NgModule({
 	providers: [
-		{ provide: BaseSourceProvider , useClass: OpenLayerTileWMSSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerIDAHOSourceProvider, multi:true},
-		{ provide: BaseSourceProvider , useClass: OpenLayerBingSourceProvider, multi: true},
 		{ provide: FilterMetadata, useClass:EnumFilterMetadata, multi: true }
 	],
 	declarations: [
@@ -40,6 +32,10 @@ import { ContextModule } from '@ansyn/context/context.module';
 		AnsynComponent
 	],
 	imports: [
+		AppProvidersModule.forRoot({
+			baseUrl :configuration.OverlaysConfig.baseUrl,
+			overlaysByTimeAndPolygon : configuration.OverlaysConfig.overlaysByTimeAndPolygon
+		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		CesiumMapModule,
@@ -55,7 +51,7 @@ import { ContextModule } from '@ansyn/context/context.module';
 		AppReducersModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule.forRoot(configuration.ImageryConfig),
+		ImageryModule.forRoot(configuration.ImageryConfig), 
 		StatusBarModule,
 		ContextModule.forRoot(configuration.ContextConfig)
 	],

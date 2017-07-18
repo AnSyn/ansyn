@@ -249,10 +249,6 @@ describe('OverlaysService', () => {
 
 		spyOn(overlaysService, "extractData");
 
-		overlaysService.getByCase('tmp').subscribe(result => {
-			expect(overlaysService.extractData).toHaveBeenCalled();
-		})
-
 	});
 
 	it('check the function handle error', () => {

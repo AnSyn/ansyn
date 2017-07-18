@@ -2,13 +2,13 @@
  * Created by AsafMas on 21/05/2017.
  */
 
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export const OpenLayerOSMSourceProviderMapType = 'openLayersMap';
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
-export class OpenLayerOSMSourceProvider extends BaseSourceProvider {
+export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 	public mapType;
 	public sourceType;
 

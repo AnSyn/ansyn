@@ -47,6 +47,7 @@
     "reselect": "^3.0.0",
     "rison": "^0.1.1",
     "rxjs": "^5.1.0",
+    "terraformer-wkt-parser": "^1.1.2",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5",
     "wellknown": "^0.5.0",

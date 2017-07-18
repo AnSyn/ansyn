@@ -2,13 +2,13 @@
  * Created by AsafMas on 21/05/2017.
  */
 
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 
 export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
-export class OpenLayerTileWMSSourceProvider extends BaseSourceProvider {
+export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 	public mapType;
 	public sourceType;
 

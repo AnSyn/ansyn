@@ -1,4 +1,4 @@
-import {BaseSourceProvider} from '../model/base-source-provider.model';
+import {BaseMapSourceProvider} from '../model/base-source-provider.model';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
@@ -94,7 +94,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private imageryProviderService: ImageryProviderService,
-		@Inject(BaseSourceProvider) private baseSourceProviders: BaseSourceProvider[],
+		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],
 		@Inject(ConfigurationToken) private config: IImageryConfig) {
 	}
 

@@ -1,4 +1,5 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import {BaseOverlaySourceProvider} from './models/base-overlay-source-provider.model';
+import { NgModule, ModuleWithProviders, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HttpModule } from '@angular/http';
@@ -32,14 +33,18 @@ import { EffectsModule } from "@ngrx/effects";
 })
 
 export class OverlaysModule {
-    static forRoot(config: IOverlaysConfig): ModuleWithProviders {
-        return {
-            ngModule: OverlaysModule,
-            providers: [
+    static forRoot(config: IOverlaysConfig,overlaySourceProviderType?: Type<BaseOverlaySourceProvider>): ModuleWithProviders {
+        let providers : Array<any> = [
                 OverlaysService,
                 TimelineEmitterService,
-                { provide: OverlaysConfig, useValue: config }
-            ]
+                { provide : OverlaysConfig, useValue: config }
+            ];
+        if (overlaySourceProviderType && overlaySourceProviderType !== null){
+            providers.push({ provide : BaseOverlaySourceProvider, useClass: overlaySourceProviderType })
+        }
+        return {
+            ngModule: OverlaysModule,
+            providers: providers
         }
     }
 }

@@ -2,7 +2,7 @@ import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { IMapComponent } from '../../model/imap-component';
 import { IMapPlugin } from '../../model/imap-plugin';
-import { BaseSourceProvider } from '../../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../../provider-service/provider.service';
 import { ImageryComponentSettings } from '../../model/imagery-component-settings';
@@ -27,7 +27,7 @@ export class ImageryComponentManager {
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private map_component_elem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
-				private _baseSourceProviders: BaseSourceProvider[],
+				private _baseSourceProviders: BaseMapSourceProvider[],
 				private config: IImageryConfig,
 				private _id: string) {}
 

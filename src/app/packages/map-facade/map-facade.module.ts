@@ -15,4 +15,7 @@ import { CoreModule } from '@ansyn/core';
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent],
 	exports:[ImageriesManagerComponent]
 })
-export class MapFacadeModule { }
+
+export class MapFacadeModule {
+	constructor(){}
+}

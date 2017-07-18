@@ -1,11 +1,11 @@
 import { Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction, AnimationStartAction, AnimationEndAction } from "@ansyn/core";
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
-import * as _ from 'lodash';
+import { isNil,isEqual } from 'lodash';
 
 const DEFAULT_WIDTH = 90;
 
@@ -32,29 +32,29 @@ const animations: any[] = [
 
 export class MenuComponent implements AfterViewInit{
 
-	@Input("width") private width: number = DEFAULT_WIDTH;
+	@Input("width") width: number = DEFAULT_WIDTH;
 	@ViewChild("container") container: ElementRef;
 	@ViewChild("selected_component_elem", { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
 	menu_items$: Observable<MenuItem[]> = this.store.select("menu")
 		.map((state: IMenuState) => state.menu_items)
-		.distinctUntilChanged(_.isEqual);
+		.distinctUntilChanged(isEqual);
 
 	menu_items: MenuItem[];
 
 	selected_menu_item_index$: Observable<number> =
-	this.store.select("menu")
-		.map((state: IMenuState) => state.selected_menu_item_index)
-		.distinctUntilChanged(_.isEqual);
+		this.store.select("menu")
+			.map((state: IMenuState) => state.selected_menu_item_index)
+			.distinctUntilChanged(isEqual);
 
 	selected_item_index: number;
 
 	selected_component_ref: ComponentRef<any>;
 
-	private animation$: Observable<boolean> = this.store.select("menu").map((store: IMenuState) => store.animation).distinctUntilChanged(_.isEqual);
-	private animation: boolean;
+	public animation$: Observable<boolean> = this.store.select("menu").map((store: IMenuState) => store.animation).distinctUntilChanged(isEqual);
+	public animation: boolean;
 
-	private expand: boolean = false;
+	public expand = false;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 		private store: Store<IMenuState>) {
@@ -97,18 +97,18 @@ export class MenuComponent implements AfterViewInit{
 	}
 
 	isActive(index: number): boolean {
-		return this.selected_item_index == index;
+		return this.selected_item_index === index;
 	}
 
 	buildCurrentComponent(): void {
 		if (this.itemSelected() && this.selected_component_elem) {
-			let factory = this.componentFactoryResolver.resolveComponentFactory(this.selected_item.component);
+			const factory = this.componentFactoryResolver.resolveComponentFactory(this.selected_item.component);
 			this.selected_component_ref = this.selected_component_elem.createComponent(factory);
 		}
 	}
 
 	toggleItem(index: number): void {
-		if (this.selected_item_index == index) {
+		if (this.selected_item_index === index) {
 			this.closeMenu();
 		} else {
 			this.openMenu(index);
@@ -116,7 +116,7 @@ export class MenuComponent implements AfterViewInit{
 	}
 
 	itemNotSelected(): boolean {
-		return _.isNil(this.selected_item);
+		return isNil(this.selected_item);
 	}
 
 	itemSelected(): boolean {
@@ -133,7 +133,7 @@ export class MenuComponent implements AfterViewInit{
 
 	onStartAnimation(): void {
 		if (this.itemSelected()) {
-			this.store.dispatch(new AnimationStartAction())
+			this.store.dispatch(new AnimationStartAction());
 		}
 	}
 

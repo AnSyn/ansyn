@@ -54,7 +54,7 @@
     "zone.js": "^0.8.11"
   },
   "devDependencies": {
-    "@angular/cli": "^1.1.0",
+    "@angular/cli": "git+https://github.com/angular/angular-cli.git#416303576f67731312118f3a605ae884992944b9",
     "@angular/compiler-cli": "^4.1.3",
     "@types/d3": "^4.9.0",
     "@types/jasmine": "latest",

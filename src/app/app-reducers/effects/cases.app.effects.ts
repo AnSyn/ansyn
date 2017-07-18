@@ -20,13 +20,31 @@ import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
-import { LoadContextsSuccessAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import {
+	LoadContextsSuccessAction,
+	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams
+} from '../../packages/menu-items/cases/actions/cases.actions';
 import { Context } from '../../packages/core/models/context.model';
 import { ContextProviderService } from '../../packages/context/providers/context-provider.service';
 import { ContextCriteria } from '../../packages/context/context.interface';
+import { OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { SetTimelineStateAction } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class CasesAppEffects {
+
+	@Effect()
+	onImageryCountUpdateCaseTimeState$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.SET_TIMELINE_STATE)
+		.filter(() => this.overlaysService.loadOverlaysValues.imageryCount !== -1)
+		.withLatestFrom(this.store$.select('cases'), (action: SetTimelineStateAction, cases: ICasesState) => [action, cloneDeep(cases.selected_case)])
+		.map(([action, selected_case]: [SetTimelineStateAction, Case]) => {
+			selected_case.state.time.from = action.payload.from.toISOString();
+			selected_case.state.time.to = action.payload.to.toISOString();
+			this.overlaysService.loadOverlaysValues.imageryCount = -1;
+			return new UpdateCaseAction(selected_case);
+		});
+
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
@@ -101,19 +119,55 @@ export class CasesAppEffects {
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				const criteria = new ContextCriteria({start: 0, limit: 200});
-				observable = this.contextProviderService.provide('Proxy').find(criteria);
-				// observable = this.casesService.loadContexts();
+				// const criteria = new ContextCriteria({start: 0, limit: 200});
+				// observable = this.contextProviderService.provide('Proxy').find(criteria);
+				observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts: Context[]) => {
 				return new LoadContextsSuccessAction(contexts);
 			});
 		}).share();
 
+
+	@Effect()
+	loadDefaultCaseContext$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
+		.filter((action: LoadDefaultCaseAction) => action.payload['context'])
+		.switchMap(
+			(action: LoadDefaultCaseAction) => {
+				return this.actions$
+					.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
+					.withLatestFrom(this.store$.select("cases"), (action, cases) => cases)
+					.mergeMap((state: ICasesState) => {
+						const actions = [];
+						const defaultCase = this.casesService.getDefaultCase();
+						const contextName = action.payload['context'];
+						let defaultCaseQueryParams: Case;
+						const context = state.contexts.find(c => c.name === contextName);
+						if (context) {
+							defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, defaultCase, action.payload);
+							this.overlaysService.loadOverlaysValues.imageryCount = +context.imageryCount;
+							this.overlaysService.loadOverlaysValues.displayOverlay = context.defaultOverlay;
+						} else {
+							defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, defaultCase);
+						}
+						actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
+						if(isEmpty(state.default_case)){
+							actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
+						} else {
+							actions.push(new SelectCaseByIdAction(state.default_case.id))
+						}
+						return actions;
+					});
+			});
+
+
+
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private casesService: CasesService,
-				public contextProviderService: ContextProviderService
+				public contextProviderService: ContextProviderService,
+				public overlaysService: OverlaysService
 	){ }
 
 }

@@ -43,14 +43,6 @@ export class QueryParamsHelper{
 		if(selected_context.orientation) {
 			case_model.state.orientation = selected_context.orientation;
 		}
-		if(selected_context.defaultOverlay){
-			switch 	(selected_context.defaultOverlay){
-				case 'latest':
-					case_model.state.time.to = new Date().toISOString();
-					break;
-			}
-		}
-
 
 		if(selected_context.requirements) {
 			selected_context.requirements.forEach((requireKey: string) => {

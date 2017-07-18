@@ -35,8 +35,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	selected_layout_index,
 	showLinkCopyToast,
 	flags: new Map<string,boolean>(),
-	orientations: ['original', 'other orientation'],
-	geoFilters: ['pin-point', 'other geoFilter'],
+	orientations: ['original', 'othero'],
+	geoFilters: ['pin-point', 'otherg'],
 	orientation: 'original',
 	geoFilter: 'pin-point'
 };

@@ -7,10 +7,11 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState, Case, CaseMapState, CasesService } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty, cloneDeep, get } from 'lodash';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -30,17 +31,15 @@ export class OverlaysAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => {
-			return !isEmpty(state.selected_case);
-		})
+		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
 		.map(([caseId, state]: [string, ICasesState]) => {
 			const caseSelected: Case = state.selected_case;
 
-			const overlayFilter = {
+			const overlayFilter: any = {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,
 				polygon: caseSelected.state.region,
-				caseId: caseId
+				caseId: caseId,
 			};
 
 			return new LoadOverlaysAction(overlayFilter);

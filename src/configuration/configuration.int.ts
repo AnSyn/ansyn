@@ -32,7 +32,7 @@ export const configuration = {
 			type: 'Elastic',
 			uri: 'localhost:9200',
 			bucket: 'context',
-			available: false,
+			available: true,
 			log: 'trace',
 			auth: "elastic:changeme"
 		},

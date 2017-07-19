@@ -3,6 +3,11 @@
 
 		<button [hidden]="!overlay" (click)="backToWorldView()" class="back-to-world-view">Back to world view</button>
 
+		<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
+		<div class='status-bar-link-maps-icon' [class.active]="true">
+			<img (click)="toggleMapSyncroniztion()" src="/assets/icons/sync_icon.svg" alt="">
+		</div>
+
 		<div class='status-bar-title' data-title='{{map_id}}'>
 			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 		</div>

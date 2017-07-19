@@ -183,7 +183,7 @@ export class OpenLayersMap implements IMap {
 	public removeLayer(layer: any): void {
 		const index = this._mapLayers.indexOf(layer);
 		if (index > -1) {
-			this._mapLayers = this._mapLayers.slice(layer);
+			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
 			this.mapObject.render();
 		}

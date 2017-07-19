@@ -6,14 +6,14 @@ import { HttpModule } from '@angular/http';
 import { ICasesState, CasesReducer, UpdateCaseAction, CasesService } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService, ConfigurationToken } from "@ansyn/imagery";
+import { ImageryCommunicatorService, ConfigurationToken } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import {  StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
-import { configuration } from "configuration/configuration";
+import { configuration } from 'configuration/configuration';
 import { BaseSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
-import { AddMapInstacneAction, MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstacneAction, MapSingleClickAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	statusBarFlagsItems, StatusBarInitialState,
@@ -67,7 +67,7 @@ describe('MapAppEffects', () => {
 
 	const cases: Case[] = [{
 		state: {
-			time: { type: "",from: new Date(), to: new Date()},
+			time: { type: '',from: new Date(), to: new Date()},
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -195,7 +195,7 @@ describe('MapAppEffects', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: "fake_url",
+			url: 'fake_url',
 			isIndeterminate: false,
 			children: []
 		};
@@ -220,7 +220,7 @@ describe('MapAppEffects', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: "fake_url",
+			url: 'fake_url',
 			isIndeterminate: false,
 			children: []
 		};
@@ -355,6 +355,30 @@ describe('MapAppEffects', () => {
 			mapAppEffects.onAddCommunicatorInitPluggin$.subscribe();
 			expect(communicator.getPlugin).toHaveBeenCalled();
 			expect(plugin.init).toHaveBeenCalled();
+		});
+	});
+
+	describe('onSynchronizeAppMaps$', () => {
+		it('listen to SynchronizeMapsAction',() => {
+			const communicator = {
+				setPosition: () => {},
+			};
+
+			effectsRunner.queue(new SynchronizeMapsAction());
+			mapAppEffects.onSynchronizeAppMaps$.subscribe();
+			expect(communicator.setPosition).toHaveBeenCalled();
+		});
+	});
+
+	describe('backToWorldView$', () => {
+		it('listen to BackToWorldAction',() => {
+			const communicator = {
+				loadInitialMapSource: () => {},
+			};
+
+			effectsRunner.queue(new SynchronizeMapsAction());
+			mapAppEffects.backToWorldView$.subscribe();
+			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});
 	});
 

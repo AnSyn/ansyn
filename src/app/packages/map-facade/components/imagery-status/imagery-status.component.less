@@ -18,30 +18,47 @@ div.status{
 .status-container{
 	display:flex;
 	justify-content: space-between;
-	 .status-bar-title{
-		 display: flex;
-		 width: 100%;
-		 justify-content: center;
-		 div.sensor-and-date{
-			 display: flex;
-			 justify-content: center;
-			 span.sensor-name{
-				 display: block;
-				 max-width: 100px;
-				 white-space: nowrap;
-				 overflow: hidden;
-				 text-overflow: ellipsis;
-			 }
-		 }
- 	}
+	.status-bar-title{
+		display: flex;
+		width: 100%;
+		justify-content: center;
+		div.sensor-and-date{
+			display: flex;
+			justify-content: center;
+			span.sensor-name{
+				display: block;
+				max-width: 100px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+	}
 	button.back-to-world-view {
-		position: absolute;
 		width: 160px;
 		background: black;
 		color: white;
 		border: none;
 		cursor: pointer;
 		padding: 5px;
+	}
+
+	.status-bar-link-maps-icon {
+		opacity: 0.5;
+		padding-top:4px;
+		margin-left: 2px;
+
+		&.active {
+			opacity: 1;
+		}
+
+
+		img {
+			height: 16px;
+			&:hover {
+				height: 18px;
+			}
+		}
 	}
 
 }

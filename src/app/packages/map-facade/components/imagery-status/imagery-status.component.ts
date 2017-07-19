@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BackToWorldAction } from '../../actions/map.actions';
+import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -22,5 +22,9 @@ export class ImageryStatusComponent implements OnInit {
 
 	backToWorldView() {
 		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id}));
+	}
+
+	toggleMapSyncroniztion() {
+		this.store.dispatch(new SynchronizeMapsAction(null));
 	}
 }

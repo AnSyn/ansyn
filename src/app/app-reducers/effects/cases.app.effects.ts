@@ -37,7 +37,6 @@ export class CasesAppEffects {
 			selectedCase.state.maps.data.forEach((map) => {
 				if(mapId == map.id){
 					map.data.overlay = overlay;
-					map.data.isHistogramActive = false;
 				}
 			});
 

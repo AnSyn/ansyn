@@ -60,13 +60,6 @@ export class OverlaysEffects {
 		.share();
 
 	@Effect({dispatch: false})
-	imageryCountSetTime$: Observable<void> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.filter(action => this.overlaysService.loadOverlaysValues.imageryCount !== -1)
-		.share();
-
-
-	@Effect({dispatch: false})
 	goPrevDisplay$: Observable<GoPrevDisplayAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
 		.share();

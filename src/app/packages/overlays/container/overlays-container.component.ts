@@ -169,12 +169,6 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			this.overlaysService.loadOverlaysValues.displayOverlay = '';
 			this.store.dispatch(new DisplayOverlayAction({id: lastOverlayId}))
 		});
-		this.subscribers.imageryCountSetTime$ = this.effects.displayLatestOverlay$.subscribe(() => {
-			const overlays = this.drops[0].data;
-			const from = overlays[0].date;
-			const to = overlays[overlays.length - 1].date;
-			this.store.dispatch(new SetTimelineStateAction({from, to}));
-		});
 
 	}
 }

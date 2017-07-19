@@ -233,7 +233,7 @@ export class MapAppEffects {
 		});
 
 	@Effect()
-	backToWorldView$: Observable<UpdateCaseAction> = this.actions$
+	backToWorldView$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select("cases"), (action: BackToWorldAction, casesState: ICasesState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;

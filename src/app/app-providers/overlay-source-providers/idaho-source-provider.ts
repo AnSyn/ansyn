@@ -30,7 +30,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
         let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers });
         let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
-        return this.http.post(url, fetchParams, options).map(this.extractData.bind(this)).catch(this.handleError);
+        return this.http.post(url, fetchParams, options)
+						.map(this.extractData.bind(this))
+						.catch(this.handleError);
        
     }
 

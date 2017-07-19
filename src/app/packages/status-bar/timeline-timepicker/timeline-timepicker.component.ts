@@ -1,14 +1,6 @@
-
-import {
-	Component, ElementRef, EventEmitter, Inject, InjectionToken, Input, OnInit, Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import * as flatpickr from 'flatpickr';
-
-
-//export const FlatpickrService = new InjectionToken<Flatpickr>('flatpickr');
-
 
 @Component({
 	selector: 'ansyn-timeline-timepicker',

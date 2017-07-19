@@ -16,8 +16,9 @@ import { IOverlaysConfig } from '../models/overlays.config';
 import { Store } from '@ngrx/store';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
-import * as _ from 'lodash';
 import { Overlay } from '../models/overlay.model';
+import { isNil, isEqual} from 'lodash';
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class OverlaysEffects {
@@ -68,7 +69,7 @@ export class OverlaysEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlayState, cases: ICasesState) => {
 			const displayedOverlay = overlays.overlays.get(action.payload.id);
 			const timelineState = overlays.timelineState;
-			const isActiveMap: boolean = _.isNil(action.payload.map_id) || _.isEqual(cases.selected_case.state.maps.active_map_id, action.payload.map_id);
+			const isActiveMap: boolean =  isNil(action.payload.map_id) ||  isEqual(cases.selected_case.state.maps.active_map_id, action.payload.map_id);
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {

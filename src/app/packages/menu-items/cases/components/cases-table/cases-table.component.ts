@@ -7,11 +7,12 @@ import {
 	CopyCaseLinkAction
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { isEqual } from 'lodash';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations: any[] = [
 	trigger("leaveAnim", [

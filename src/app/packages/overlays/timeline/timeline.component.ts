@@ -1,5 +1,6 @@
 import { ViewEncapsulation, Component, OnInit, ViewChild, ElementRef, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
-import * as d3 from 'd3';
+import { selectAll, mouse, event, select } from 'd3';
+
 
 import { eventDrops } from 'event-drops';
 
@@ -61,9 +62,9 @@ export class TimelineComponent implements OnInit {
 	}
 
 	drawMarkup() {
-		d3.selectAll('.drop.displayed').classed('displayed ', false);
-		d3.selectAll('.drop.active').classed('active', false);
-		d3.selectAll('.drop.favorites').classed('favorites', false);
+		selectAll('.drop.displayed').classed('displayed ', false);
+		selectAll('.drop.active').classed('active', false);
+		selectAll('.drop.favorites').classed('favorites', false);
 		const nodes = [];
 		this._markup.forEach(markupItem => {
 			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
@@ -72,7 +73,7 @@ export class TimelineComponent implements OnInit {
 				nodes.push(element);
 			}
 		});
-		nodes.length > 0 && (<any>d3.selectAll(nodes)).moveToFront();
+		nodes.length > 0 && (<any>selectAll(nodes)).moveToFront();
 	}
 
 	get markup(){
@@ -98,16 +99,16 @@ export class TimelineComponent implements OnInit {
 
         return (data, index, nodes) => {
             if (!down) {
-                down = d3.mouse(document.body);
+                down = mouse(document.body);
                 wait = window.setTimeout(((e) => () => {
                     wait = null;
                     down = null;
                     //this.toggleDrop(nodes[index]);
                     this.emitter.provide('timeline:click').next({ event: e, element: data, index, nodes });
-                })(d3.event), 300);
+                })(event), 300);
             } else {
-                if (dist(down, d3.mouse(document.body)) < tolerance) {
-                    this.selectAndShowDrop(nodes[index],d3.event,data,index,nodes);
+                if (dist(down, mouse(document.body)) < tolerance) {
+                    this.selectAndShowDrop(nodes[index],event,data,index,nodes);
 
                 }
                 if (wait) {
@@ -140,7 +141,7 @@ export class TimelineComponent implements OnInit {
 			.zoomStreamCallback( result => this.emitter.provide('timeline:zoomStream').next(result))
             .click(this.clickEvent())
             .dblclick(() => {
-                d3.event.stopPropagation();
+                event.stopPropagation();
             });
 
         const dataSet = this.drops.map(entities => ({
@@ -148,7 +149,7 @@ export class TimelineComponent implements OnInit {
             data: entities.data,
         }));
 
-        const element = d3.select(this.context.nativeElement)
+        const element = select(this.context.nativeElement)
             .datum(dataSet);
 
         chart(element);

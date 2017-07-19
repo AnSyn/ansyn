@@ -1,7 +1,7 @@
-import {BaseMapSourceProvider} from '../model/base-source-provider.model';
 /**
  * Created by AsafMasa on 25/04/2017.
  */
+import {BaseMapSourceProvider} from '../model/base-source-provider.model';
 import {
 	Component, Input, OnInit, OnChanges, OnDestroy, ViewChild,
 	ViewContainerRef, ComponentRef, ComponentFactoryResolver, Inject, SimpleChanges
@@ -12,9 +12,9 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
-import { isEqual, isNil } from 'lodash';
+import { isEqual, isNil, isEmpty} from 'lodash';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-import { isEmpty } from 'lodash';
+
 
 @Component({
 	selector: 'ansyn-imagery-view',

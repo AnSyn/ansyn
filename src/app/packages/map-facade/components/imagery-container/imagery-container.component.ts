@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, AfterViewInit, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { Spinner } from '@ansyn/core/utils/spinner';
+import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState } from '@ansyn/core';
 
 @Component({

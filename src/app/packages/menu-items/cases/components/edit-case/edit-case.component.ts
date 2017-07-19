@@ -4,9 +4,11 @@ import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction } from '../../actions/cases.actions';
-import * as _ from "lodash";
+import { isEqual, cloneDeep } from 'lodash';
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
+import { defaultMapType } from '../../';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 
 const animations_during = '0.2s';
@@ -47,7 +49,7 @@ export class EditCaseComponent implements OnInit {
 
 	default_case_id$: Observable<string> = this.store.select("cases").map((state: ICasesState) => state.default_case.id);
 
-	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(_.isEqual);
+	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(isEqual);
 	contexts_list: Context[];
 
 	case_model:Case;
@@ -66,10 +68,10 @@ export class EditCaseComponent implements OnInit {
 	getCloneActiveCase(case_state: ICasesState): Case {
 		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.active_case_id);
 		if(s_case && s_case.id !== case_state.default_case.id) {
-			s_case = _.cloneDeep(s_case);
+			s_case =  cloneDeep(s_case);
 			this.on_edit_case = true;
 		} else {
-			const selectedCase = _.cloneDeep(case_state.selected_case);
+			const selectedCase = cloneDeep(case_state.selected_case);
 			s_case = this.getEmptyCase(selectedCase);
 		}
 		return s_case;
@@ -101,9 +103,11 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
 		this.active_case$.subscribe((active_case: Case)=>{
 			this.case_model = active_case;
 		});
+
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
 			if(!this.case_model.id && this.contexts_list.length > 0 ){

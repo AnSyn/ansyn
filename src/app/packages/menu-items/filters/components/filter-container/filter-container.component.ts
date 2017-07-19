@@ -7,6 +7,7 @@ import { FilterMetadata } from './../../models/metadata/filter-metadata.interfac
 import { Filter } from './../../models/filter';
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
   selector: 'ansyn-filter-container',

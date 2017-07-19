@@ -13,7 +13,7 @@ export const toolsInitialState: IToolsState = {
 };
 
 export function ToolsReducer(state = toolsInitialState,action: ToolsActions): IToolsState {
-	let tmpMap :Map<string,boolean>;
+	let tmpMap: Map<string,boolean>;
 	switch(action.type){
 		case  ToolsActionsTypes.START_MOUSE_SHADOW:
 

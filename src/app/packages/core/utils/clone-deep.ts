@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 
 Observable.prototype.cloneDeep = function () {
@@ -11,6 +11,6 @@ Observable.prototype.cloneDeep = function () {
 
 declare module 'rxjs/Observable' {
 	interface Observable<T> {
-		cloneDeep: (...any) => Observable<T>
+		cloneDeep: (...any) => Observable<T>;
 	}
 }

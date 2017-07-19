@@ -39,8 +39,8 @@ export class ImageriesManagerComponent implements OnInit{
 	};
 
 	isOverlayLoading(overlayId) {
-		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId == _overlayId);
-		return existIndex != -1;
+		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId === _overlayId);
+		return existIndex !== -1;
 	}
 
 	get maps (){

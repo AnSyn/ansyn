@@ -8,8 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { ImageryModule} from '@ansyn/imagery';
-import { CesiumMapModule } from '@ansyn/cesium-map';
+import { ImageryModule, BaseSourceProvider } from '@ansyn/imagery';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -38,7 +37,6 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
-		CesiumMapModule,
 		BrowserModule,
 		FormsModule,
 		HttpModule,
@@ -51,7 +49,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		AppReducersModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule.forRoot(configuration.ImageryConfig), 
+		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
 		ContextModule.forRoot(configuration.ContextConfig)
 	],

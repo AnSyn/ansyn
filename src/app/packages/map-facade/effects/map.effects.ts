@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Observable';
 import { MapActionTypes,CompositeMapShadowAction } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
+import 'rxjs/add/operator/share';
+
 
 @Injectable()
 export class MapEffects{

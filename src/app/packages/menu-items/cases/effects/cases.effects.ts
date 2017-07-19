@@ -18,6 +18,9 @@ import { ICasesState } from '../reducers/cases.reducer';
 import { Case, Context } from '@ansyn/core';
 import { isEmpty, isEqual } from 'lodash';
 
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/of';
+
 @Injectable()
 export class CasesEffects {
 

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { isNil,isEqual } from 'lodash';
 

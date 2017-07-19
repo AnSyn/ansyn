@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes, LoadOverlaysAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
@@ -23,27 +23,13 @@ import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	LoadContextsSuccessAction,
 	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams
-} from '../../packages/menu-items/cases/actions/cases.actions';
-import { Context } from '../../packages/core/models/context.model';
-import { ContextProviderService } from '../../packages/context/providers/context-provider.service';
-import { ContextCriteria } from '../../packages/context/context.interface';
-import { OverlaysService } from '../../packages/overlays/services/overlays.service';
-import { SetTimelineStateAction } from '../../packages/overlays/actions/overlays.actions';
+} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Context } from '@ansyn/core';
+import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Injectable()
 export class CasesAppEffects {
-
-	@Effect()
-	onImageryCountUpdateCaseTimeState$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_TIMELINE_STATE)
-		.filter(() => this.overlaysService.loadOverlaysValues.imageryCount !== -1)
-		.withLatestFrom(this.store$.select('cases'), (action: SetTimelineStateAction, cases: ICasesState) => [action, cloneDeep(cases.selected_case)])
-		.map(([action, selected_case]: [SetTimelineStateAction, Case]) => {
-			selected_case.state.time.from = action.payload.from.toISOString();
-			selected_case.state.time.to = action.payload.to.toISOString();
-			this.overlaysService.loadOverlaysValues.imageryCount = -1;
-			return new UpdateCaseAction(selected_case);
-		});
 
 
 	@Effect()
@@ -168,6 +154,7 @@ export class CasesAppEffects {
 				private casesService: CasesService,
 				public contextProviderService: ContextProviderService,
 				public overlaysService: OverlaysService
-	){ }
+	){
+	}
 
 }

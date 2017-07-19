@@ -12,7 +12,7 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../package.json';
 import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
-import { LoadContextsAction } from '../packages/menu-items/cases/actions/cases.actions';
+import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Component({
 	selector: 'ansyn-ansyn',

@@ -20,11 +20,8 @@ import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/m
 import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapsLayout } from '@ansyn/core';
-import {
-	SetGeoFilterAction, SetOrientationAction,
-	SetTimeAction
-} from '../../packages/status-bar/actions/status-bar.actions';
-import { LoadOverlaysAction } from '../../packages/overlays/actions/overlays.actions';
+import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class StatusBarAppEffects {

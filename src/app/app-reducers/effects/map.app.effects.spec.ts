@@ -32,6 +32,9 @@ import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { Position } from '@ansyn/core';
 import { before } from 'selenium-webdriver/testing';
+import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
+import { assertNotNull } from '@angular/compiler/src/output/output_ast';
+import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
 
 
 class SourceProviderMock1 implements BaseSourceProvider {
@@ -364,6 +367,8 @@ describe('MapAppEffects', () => {
 				setPosition: () => {},
 			};
 
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(communicator, 'setPosition');
 			effectsRunner.queue(new SynchronizeMapsAction());
 			mapAppEffects.onSynchronizeAppMaps$.subscribe();
 			expect(communicator.setPosition).toHaveBeenCalled();
@@ -371,13 +376,35 @@ describe('MapAppEffects', () => {
 	});
 
 	describe('backToWorldView$', () => {
-		it('listen to BackToWorldAction',() => {
+		it('listen to BackToWorldAction with overlay',() => {
+
+			// data: [
+			// 	{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
+			// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+			// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+			// ],
+			const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 			const communicator = {
 				loadInitialMapSource: () => {},
 			};
 
-			effectsRunner.queue(new SynchronizeMapsAction());
-			mapAppEffects.backToWorldView$.subscribe();
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(communicator, 'loadInitialMapSource');
+			spyOn(casesService, 'getOverlaysMarkup');
+			effectsRunner.queue(new BackToWorldAction({mapId: 'imagery1'}));
+			mapAppEffects.backToWorldView$.subscribe(_result => {
+				let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
+				expect(result).toBe(true);
+
+				if(_result instanceof OverlaysMarkupAction){
+					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+				}
+				if(_result instanceof UpdateCaseAction ){
+					const resultCase: Case = _result.payload;
+					expect(resultCase.state.maps.data[0].data.overlay).toEqual(null);
+				}
+			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});
 	});

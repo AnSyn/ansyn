@@ -12,7 +12,8 @@ export const MapActionTypes = {
 	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
-	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS'
+	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
+	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS'
 };
 
 export type MapActions = any;
@@ -58,6 +59,11 @@ export class StopMapShadowAction implements Action{
 
 export class StartMapShadowAction implements Action{
 	type = MapActionTypes.START_MAP_SHADOW_ACTIONS;
+	constructor(public payload?: any) {}
+}
+
+export class SynchronizeMapsAction implements Action{
+	type = MapActionTypes.SYNCHRONIZE_MAPS;
 	constructor(public payload?: any) {}
 }
 

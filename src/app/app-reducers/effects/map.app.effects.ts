@@ -19,13 +19,13 @@ import { OverlaysService, DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from "@ansyn/status-bar";
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
-import { Position } from '@ansyn/core';
+import { Position, CaseMapState } from '@ansyn/core';
 
 @Injectable()
 export class MapAppEffects {
@@ -214,6 +214,22 @@ export class MapAppEffects {
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
 
+		});
+
+	@Effect({dispatch:false})
+	onSynchronizeAppMaps$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
+		.withLatestFrom(this.store$.select("cases"), (action: SynchronizeMapsAction, casesState: ICasesState) => {
+			return [casesState];
+		})
+		.map(([casesState]: [ICasesState]) => {
+			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === casesState.selected_case.state.maps.active_map_id);
+			casesState.selected_case.state.maps.data.forEach((mapItem: CaseMapState)=> {
+				if (active_map.id !== mapItem.id) {
+					const comm = this.communicator.provide(mapItem.id);
+					comm.setPosition(active_map.data.position);
+				}
+			});
 		});
 
 	@Effect()

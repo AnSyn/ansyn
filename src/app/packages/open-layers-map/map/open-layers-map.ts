@@ -8,6 +8,7 @@ import * as ol from 'openlayers';
 import { MapPosition } from '@ansyn/imagery/model/map-position';
 //import { configuration } from './../../../../configuration/configuration';
 import { Utils } from './utils';
+import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 
 export class OpenLayersMap implements IMap {
 
@@ -27,12 +28,15 @@ export class OpenLayersMap implements IMap {
 		singleClickHandler: null
 	};
 
+	private _imageProcessing: OpenLayersImageProcessing;
+
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
 		this.mapType = 'openLayersMap';
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
+		this._imageProcessing = new OpenLayersImageProcessing();
 
 		this.initMap(element, layers, position);
 	}
@@ -170,6 +174,11 @@ export class OpenLayersMap implements IMap {
 	public addLayer(layer: any) {
 		this._mapLayers.push(layer);
 		this._mapObject.addLayer(layer);
+
+		const source = layer.getSource();
+		if (source instanceof ol.source.Raster) {
+			this._imageProcessing.initializeRasterOperations(source);
+		}
 	}
 
 	public removeAllLayers() {
@@ -187,6 +196,11 @@ export class OpenLayersMap implements IMap {
 			this._mapObject.removeLayer(layer);
 			this._mapObject.render();
 		}
+
+		if (layer.getSource() instanceof ol.source.Raster) {
+			this._imageProcessing.removeAllRasterOperations(layer.getSource());
+		}
+
 	}
 
 	public removeLayerById(layerId) {
@@ -317,20 +331,9 @@ export class OpenLayersMap implements IMap {
 		let rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
 
 		if (shouldPerform) {
-			rasterSource.setOperation(function (pixels, data) {
-				let imageData = pixels[0];
-				let histLut = buildHistogramLut(imageData);
-				return performHistogram(imageData, histLut);
-			}, {
-				buildHistogramLut: buildHistogramLut,
-				performHistogram: performHistogram,
-				rgb2YCbCr: rgb2YCbCr,
-				yCbCr2RGB: yCbCr2RGB
-			});
+			this._imageProcessing.addOperation(rasterSource, 'Histogram');
 		} else {
-			rasterSource.setOperation(function (pixels, data) {
-				return pixels[0];
-			});
+			this._imageProcessing.removeOperation(rasterSource, 'Histogram');
 		}
 	}
 
@@ -469,92 +472,4 @@ export class OpenLayersMap implements IMap {
 	public dispose() {
 
 	}
-}
-
-function rgb2YCbCr(rgb) {
-    const y = 16 + 0.257 * rgb.r + 0.504 * rgb.g + 0.098 * rgb.b;
-    const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
-    const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
-
-    return { y, cb, cr };
-}
-
-function yCbCr2RGB(yCbCr) {
-    const yNorm = yCbCr.y - 16;
-    const cbNorm = yCbCr.cb - 128;
-    const crNorm = yCbCr.cr - 128;
-
-    const r = 1.164 * yNorm + 0 * cbNorm + 1.596 * crNorm;
-    const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
-    const b = 1.164 * yNorm + 2.017 * cbNorm + 0 * crNorm;
-
-    return { r, g, b };
-}
-
-function buildHistogramLut(imageData) {
-	const totalHistLut = [];
-	
-	for (let index = 16; index < 236; index++) {
-		totalHistLut[index] = 0;
-	}
-
-    for (let index = 0; index < imageData.data.length; index += 4) {
-        const r = imageData.data[index];
-        const g = imageData.data[index + 1];
-        const b = imageData.data[index + 2];
-
-        const yCbCr = rgb2YCbCr({ r, g, b });
-
-        const val = Math.floor(yCbCr.y);
-        if (totalHistLut[val] === undefined) {
-            totalHistLut[val] = 1;
-        } else {
-            totalHistLut[val] = totalHistLut[val] + 1;
-        }
-    }
-
-    const cumulativeHist = [];
-
-    cumulativeHist[16] = totalHistLut[16];
-
-    for (let index = 17; index < totalHistLut.length; index++) {
-        let tempTotalHist = totalHistLut[index] === undefined ? 0 : totalHistLut[index];
-        cumulativeHist[index] = cumulativeHist[index - 1] + tempTotalHist;
-    }
-
-    let pixelsNum = 0;
-    totalHistLut.forEach((hist) => pixelsNum += hist);
-
-    const minCumProbability = cumulativeHist[16];
-    const finalHist = [];
-
-    for (let index = 16; index < cumulativeHist.length; index++) {
-        const diff = cumulativeHist[index] - minCumProbability;
-
-        finalHist[index] = Math.floor((diff / (pixelsNum - 1)) * (235 - 16 - 1) + 16);
-    }
-
-    return finalHist;
-}
-
-function performHistogram(imageData, histogramLut) {
-    for (let index = 0; index < imageData.data.length; index += 4) {
-        const r = imageData.data[index];
-        const g = imageData.data[index + 1];
-        const b = imageData.data[index + 2];
-        const a = imageData.data[index + 3];
-
-        const yCbCr = rgb2YCbCr({ r, g, b });
-
-        yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
-
-        const rgb = this.yCbCr2RGB(yCbCr);
-
-        imageData.data[index + 0] = rgb.r;	// Red
-        imageData.data[index + 1] = rgb.g;	// Green
-        imageData.data[index + 2] = rgb.b;	// Blue
-        imageData.data[index + 3] = a;	// Alpha        
-    }
-
-    return imageData;
 }

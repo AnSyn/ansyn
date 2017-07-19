@@ -84,9 +84,9 @@ export class MapAppEffects {
 			const overlay = overlaysState.overlays.get(action.payload.id);
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
 			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
-			return [overlay, map_id, active_map.data.position];
+			return [overlay, map_id, active_map.data.position, active_map.data.isHistogramActive];
 		})
-		.map( ([overlay, map_id, position]:[Overlay, string, Position]) => {
+		.map( ([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
 
 			let extent;
 			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
@@ -101,6 +101,7 @@ export class MapAppEffects {
 			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				communicator.setLayer(layer, extent);
+				communicator.shouldPerformHistogram(!!isHistogramActive);
 			});
 		});
 

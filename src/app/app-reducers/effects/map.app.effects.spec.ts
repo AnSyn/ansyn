@@ -425,7 +425,8 @@ describe('MapAppEffects', () => {
 		beforeEach(()=> {
 			fakeCommuincator = <any> {
 				ActiveMap: {MapType: 'ol'},
-				setLayer: () => {}
+				setLayer: () => {},
+				shouldPerformHistogram: () => {}
 			};
 			const fakeSourceLoader = {
 				createAsync: () => {
@@ -438,6 +439,7 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommuincator, 'setLayer');
+			spyOn(fakeCommuincator, 'shouldPerformHistogram');			
 		});
 
 		it('isExtentContainedInPolygon "false"', ()=> {

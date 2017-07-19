@@ -249,6 +249,7 @@ export class MapAppEffects {
 				(map) => {
 					if(map.id === mapId){
 						map.data.overlay = null;
+						map.data.isHistogramActive = false;
 					}
 				});
 			return [
@@ -257,7 +258,7 @@ export class MapAppEffects {
 			];
 		});
 
-	@Effect({dispatch:false})
+	@Effect()
 	toggleHistogram$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TOGGLE_HISTOGRAM)
 		.withLatestFrom(this.store$.select("cases"), (action: ToggleHistogramAction, casesState: ICasesState) => {
@@ -265,9 +266,20 @@ export class MapAppEffects {
 			return [action, casesState, mapId];
 		})
 		.map(([action, caseState, mapId]:[ToggleHistogramAction, ICasesState, string]) => {
-			const active_map = caseState.selected_case.state.maps.data.find((map)=> map.id === mapId);
-			const comm = this.communicator.provide(mapId);
-			comm.shouldPerformHistogram(action.payload.shouldPerform);
+			let shouldPerformHist;
+			const updatedCase = cloneDeep(caseState.selected_case);
+			updatedCase.state.maps.data.forEach(
+				(map) => {
+					if(map.id === mapId){
+						map.data.isHistogramActive = !map.data.isHistogramActive;
+						shouldPerformHist = map.data.isHistogramActive;
+					}
+				});
+
+			const comm = this.communicator.provide(mapId);			
+			comm.shouldPerformHistogram(shouldPerformHist);
+
+			return new UpdateCaseAction(updatedCase);
 		});
 
 	constructor(

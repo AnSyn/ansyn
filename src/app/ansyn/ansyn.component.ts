@@ -54,11 +54,19 @@ export class AnsynComponent implements OnInit{
 			return activeMap.data.overlay;
 		});
 
+	histogramActive$ = this.store.select('cases')
+		.filter((cases: ICasesState) => !isNil(cases.selected_case))
+		.map((cases: ICasesState) => {
+			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
+			return activeMap.data.isHistogramActive;
+		});
+
 	displayedOverlay: Overlay;
 	selected_layout: MapsLayout;
 	selected_case: Case;
 	maps: CaseMapsState;
 	overlays_count: number;
+	histogramActive: boolean;
 	public version;
 
 	constructor(private store: Store<IAppState>) {
@@ -79,7 +87,11 @@ export class AnsynComponent implements OnInit{
 
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
 			this.displayedOverlay = _displayedOverlay;
-		})
+		});
+
+		this.histogramActive$.subscribe((histogramActive: boolean) => {
+			this.histogramActive = histogramActive;
+		});
 	}
 
 	onActiveImagery(active_map_id: string) {

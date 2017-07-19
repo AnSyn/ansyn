@@ -36,7 +36,8 @@ export interface CaseMapState {
 	id: string;
 	data: {
 		position: Position,
-		overlay?: Overlay
+		overlay?: Overlay,
+		isHistogramActive?: boolean
 	};
 	mapType: string;
 }

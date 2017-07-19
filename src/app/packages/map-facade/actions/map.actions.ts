@@ -21,7 +21,7 @@ export type MapActions = any;
 
 export class ToggleHistogramAction implements Action {
 	type = MapActionTypes.TOGGLE_HISTOGRAM;
-	constructor(public payload: {shouldPerform: boolean, mapId: string}) {
+	constructor(public payload: {mapId: string}) {
 		// code...
 	}
 }

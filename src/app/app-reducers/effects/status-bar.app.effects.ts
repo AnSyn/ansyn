@@ -152,7 +152,7 @@ export class StatusBarAppEffects {
 	onToggleHistogram$: Observable<ToggleHistogramAction> = this.actions$
 		.ofType(StatusBarActionsTypes.TOGGLE_HISTOGRAM_STATUS_BAR)
 		.map((action: ToggleHistogramStatusBarAction) => {
-			return new ToggleHistogramAction({shouldPerform: action.payload, mapId: undefined});
+			return new ToggleHistogramAction({mapId: undefined});
 		});
 
 	@Effect({dispatch: false})

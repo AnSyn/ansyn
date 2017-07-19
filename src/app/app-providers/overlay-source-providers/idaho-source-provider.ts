@@ -30,14 +30,14 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
         let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers });
         let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
-        return this.http.post(url, fetchParams, options).map((response) => this.extractData(response,this.parseData)).catch(this.handleError);
+        return this.http.post(url, fetchParams, options).map(this.extractData.bind(this)).catch(this.handleError);
        
     }
 
-    private extractData(response: Response, parserDelegate : Function) : Array<Overlay>{
+    private extractData(response: Response) : Array<Overlay>{
         const data : IdahoResponse = response.json(); 
 		return data ?  data.idahoResult.map((element) => {
-            return parserDelegate(element,data.token);
+            return this.parseData(element,data.token);
         }) : [];
     }
     
@@ -55,22 +55,23 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return Observable.empty();
     }
     
-    private  parseData(idahoElement : any , token :string) : Overlay {
-        var overlay : Overlay = (new Object()) as Overlay;
-
-        overlay.id= idahoElement.identifier;
-        overlay.footprint= wellknown.parse(idahoElement.properties.footprintWkt);//@todo add type geojson_multipoligon;
-        overlay.sensorType= idahoElement.properties.platformName;
-        overlay.sensorName= idahoElement.properties.sensorName;
-        overlay.channel= idahoElement.properties.numBands;
-        overlay.bestResolution= idahoElement.properties.groundSampleDistanceMeters;
-        overlay.name= idahoElement.properties.catalogID;
-        overlay.imageUrl= "http://idaho.geobigdata.io/v1/tile/idaho-images/" + idahoElement.identifier + '/{z}/{x}/{y}?bands=0&token=' + token;
-        overlay.thumbnailUrl= "https://geobigdata.io/thumbnails/v1/browse/" + idahoElement.properties.catalogID + ".large.png";
-        overlay.date= idahoElement.properties.acquisitionDate;
+    private  parseData(idahoElement: any , token:string): Overlay {
+        let overlay: Overlay = (new Object()) as Overlay;
+        const footprint: any =wellknown.parse(idahoElement.properties.footprintWkt);
+        
+        overlay.id = idahoElement.identifier;
+        overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
+        overlay.sensorType = idahoElement.properties.platformName;
+        overlay.sensorName = idahoElement.properties.sensorName;
+        overlay.channel = idahoElement.properties.numBands;
+        overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
+        overlay.name = idahoElement.properties.catalogID;
+        overlay.imageUrl = "http://idaho.geobigdata.io/v1/tile/idaho-images/" + idahoElement.identifier + '/{z}/{x}/{y}?bands=0&token=' + token;
+        overlay.thumbnailUrl = "https://geobigdata.io/thumbnails/v1/browse/" + idahoElement.properties.catalogID + ".large.png";
+        overlay.date = idahoElement.properties.acquisitionDate;
         overlay.photoTime =  idahoElement.properties.acquisitionDate;
-        overlay.azimuth= 0;
-        overlay.sourceType= IdahoOverlaySourceType;
+        overlay.azimuth = 0;
+        overlay.sourceType = IdahoOverlaySourceType;
 
         return overlay;
         

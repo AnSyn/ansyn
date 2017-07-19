@@ -6,12 +6,12 @@ import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
-import { BaseSourceProvider } from '../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 
 import { configuration } from '../../../../configuration/configuration';
 import { ConfigurationToken } from '../configuration.token';
 
-class SourceProviderMock1 implements BaseSourceProvider {
+class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
 	sourceType = 'sourceType1';
 
@@ -42,7 +42,7 @@ describe('ImageryComponent', () => {
 			imports:[],
 			declarations: [ ImageryComponent ],
 			providers: [
-				{ provide: BaseSourceProvider , useClass: SourceProviderMock1 , multi: true },
+				{ provide: BaseMapSourceProvider , useClass: SourceProviderMock1 , multi: true },
 				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
 				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));

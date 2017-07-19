@@ -46,7 +46,7 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		CoreModule,
 		MenuModule,
 		MenuItemsModule.forRoot(<any>configuration),
-		OverlaysModule.forRoot(<any>configuration.OverlaysConfig),
+		OverlaysModule.forRoot(configuration.OverlaysConfig),
 		AppRouter,
 		AppReducersModule,
 		ImagerySandBoxModule,

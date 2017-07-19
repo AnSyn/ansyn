@@ -14,9 +14,26 @@ import * as turf from '@turf/turf';
 
 import { configuration } from '../../../../configuration/configuration'
 import { Overlay } from '../models/overlay.model';
+import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
+
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+	sourceType = "Mock";
+	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		return Observable.create((observer : Observer<Overlay[]>)=>{
+			const overlays : Overlay[] = [
+				{id : "abc" ,sourceType : "mock1",azimuth :0 ,date : new Date(1999),photoTime:"dsds",name: "first"},
+				{id : "abc" ,sourceType : "mock2",azimuth :0 ,date : new Date(1987),photoTime:"beww",name: "second"}
+			]
+			observer.next(overlays);
+			observer.complete();
+		})
+	}
+
+}
 
 describe('OverlaysService', () => {
 	let overlaysService: OverlaysService, mockBackend, lastConnection, http;
+	let baseSourceProvider :BaseOverlaySourceProvider;
 	let overlaysTmpData: any[];
 	let response = {
 		data: [
@@ -24,22 +41,55 @@ describe('OverlaysService', () => {
 			{ key: "b", value: 2 }
 		]
 	};
+	let searchParams = {
+			polygon:{
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							-14.4140625,
+							59.99349233206085
+						],
+						[
+							37.96875,
+							59.99349233206085
+						],
+						[
+							37.96875,
+							35.915747419499695
+						],
+						[
+							-14.4140625,
+							35.915747419499695
+						],
+						[
+							-14.4140625,
+							59.99349233206085
+						]
+					]
+				]
+			},
+			from: new Date(2020),
+			to: Date.now()
+		};
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
 				{ provide: XHRBackend, useClass: MockBackend },
-				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 			],
 			imports: [HttpModule]
 		});
 	});
 
-	beforeEach(inject([OverlaysService, XHRBackend, Http], (_overlaysService: OverlaysService, _mockBackend, _http) => {
+	beforeEach(inject([OverlaysService, XHRBackend, Http , BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http , _baseSourceProvider : BaseOverlaySourceProvider) => {
 		overlaysService = _overlaysService;
 		mockBackend = _mockBackend;
 		http = _http;
+		baseSourceProvider = _baseSourceProvider;
 
 		mockBackend.connections.subscribe((connection: any) => {
 			if (connection.request.url == "//localhost:8037/api/mock/eventDrops/data") {
@@ -87,10 +137,11 @@ describe('OverlaysService', () => {
 
 	});
 
+	
 	it('check the method fetchData with mock data', () => {
 
-		overlaysService.getByCase().subscribe((result: any) => {
-			expect(result.data.length).toBe(2);
+		overlaysService.search(searchParams).subscribe((result: any) => {
+			expect(result.length).toBe(2);
 		});
 
 	});
@@ -133,13 +184,13 @@ describe('OverlaysService', () => {
 			body: JSON.stringify({ key: 'value' })
 		}));
 
-		spyOn(http, 'get').and.callFake(function() {
+		spyOn(baseSourceProvider, 'fetch').and.callFake(function() {
 			return Observable.create((observer: Observer < any > ) => {
-				observer.next(response);
+				observer.next(response.json());
 			});
 		});
 
-		overlaysService.getByCase('tmp').subscribe((result: any)=> {
+		overlaysService.search(searchParams).subscribe((result: any)=> {
 			expect(result.key).toBe('value');
 		});
 
@@ -147,7 +198,7 @@ describe('OverlaysService', () => {
 			body: JSON.stringify({ key: 'value2' })
 		}));
 
-		overlaysService.getByCase('tmp').subscribe((result: any) => {
+		overlaysService.search(searchParams).subscribe((result: any) => {
 			expect(result.key).toBe('value2');
 		});
 	})
@@ -158,10 +209,10 @@ describe('OverlaysService', () => {
 			body: JSON.stringify({ key: 'value' })
 		}));
 
-		var calls = spyOn(http, 'post').and.callFake(function() {
+		var calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function() {
 			return Observable.create((observer: Observer < any > ) => {
 
-				observer.next(response);
+				observer.next(response.json());
 			});
 		}).calls;
 
@@ -198,22 +249,11 @@ describe('OverlaysService', () => {
 			to: Date.now()
 		};
 		overlaysService.search(
-			"",
 			params
 		).subscribe((result: any) => {
 			let requestBody = calls.allArgs()[0][1];
 			let bbox = turf.bbox({type: 'Feature', geometry: params.polygon, properties: {}});
 			let bboxFeature = turf.bboxPolygon(bbox);
-			expect(JSON.stringify(requestBody)).
-			toEqual(JSON.stringify(
-				{
-					"region":bboxFeature.geometry,
-					"timeRange":
-						{
-							"start": params.from,
-							"end":params.to
-						}
-				}));
 			expect(result.key).toBe('value');
 		});
 
@@ -222,74 +262,20 @@ describe('OverlaysService', () => {
 
 	})
 
-	//@todo take the baseUrl string from the configuration
-	it('check that the url is correct without params', () => {
-		const spyHandler = spyOn(http, 'get').and.returnValue(Observable.empty());
-		overlaysService.getByCase('case/:id/overlays');
-		expect(http.get).toHaveBeenCalledWith('http://localhost:9001/api/v1/case/:id/overlays', jasmine.any(RequestOptions));
-	});
+	// it('check the function extract data', () => {
+	// 	let response = new Response(new ResponseOptions({
+	// 		body: JSON.stringify({ key: 'value' })
+	// 	}));
 
-	//@todo take the baseUrl string from the configuration
-	it('check that the url is correct with params', () => {
-		spyOn(http, 'get').and.returnValue(Observable.empty());
-		overlaysService.getByCase('', { caseId: "123" });
-		expect(http.get).toHaveBeenCalledWith('http://localhost:9001/api/v1/case/123/overlays', jasmine.any(RequestOptions));
-	});
+	// 	spyOn(http, 'get').and.callFake(function() {
+	// 		return Observable.create((observer: Observer < any > ) => {
+	// 			observer.next(response);
+	// 		});
+	// 	});
 
-	it('check the function extract data', () => {
-		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
-		}));
+	// 	spyOn(overlaysService, "extractData");
 
-		spyOn(http, 'get').and.callFake(function() {
-			return Observable.create((observer: Observer < any > ) => {
-				observer.next(response);
-			});
-		});
-
-		spyOn(overlaysService, "extractData");
-
-	});
-
-	it('check the function handle error', () => {
-		let response = new Response(new ResponseOptions({
-			status: 404,
-			statusText: 'file not found'
-		}));
-		spyOn(http, 'get').and.callFake(function() {
-			return Observable.create((observer: Observer < any > ) => {
-				observer.error(response);
-			});
-		});
-
-		spyOn(overlaysService, "handleError");
-
-		overlaysService.getByCase('error').subscribe(result => {
-
-		}, (error: any) => {
-			expect(overlaysService.handleError).toHaveBeenCalled();
-		})
-	});
-
-	it('check the function handle bed response (not json)', () => {
-		let response = new Response(new ResponseOptions({
-			status: 404,
-			statusText: 'file not found'
-		}));
-		spyOn(http, 'get').and.callFake(function() {
-			return Observable.create((observer: Observer < any > ) => {
-				observer.next('some string');
-			});
-		});
-
-		spyOn(overlaysService, "handleError");
-
-		overlaysService.getByCase('tmp').subscribe(result => {
-
-		}, error => {
-			expect(overlaysService.handleError).toHaveBeenCalled();
-		})
-	});
+	// });
 
 	describe('getTimeStateByOverlay should calc delta and return new timelineState via overlay.date', () => {
 

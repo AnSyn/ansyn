@@ -96,7 +96,7 @@ export class OpenLayersMap implements IMap {
 		const currentRotation = oldview.getRotation();
 
 		const projection = oldview.getProjection();
-		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, 'EPSG:3857');
+		let newCenter = ol.proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
 
 		if (!newCenter) {
 			newCenter = [0, 0];
@@ -106,7 +106,7 @@ export class OpenLayersMap implements IMap {
 			center: newCenter,
 			zoom: currentZoom,
 			rotation: currentRotation,
-			projection: 'EPSG:3857'
+			projection: layer.getSource().getProjection()
 		});
 
 		this._mapObject.setView(view);

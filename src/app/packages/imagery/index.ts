@@ -8,6 +8,7 @@ export { IMap } from './model/imap';
 export { BaseMapSourceProvider } from './model/base-source-provider.model'
 export { IMapPlugin } from './model/imap-plugin';
 export { IMapComponent } from './model/imap-component';
+export { ProjectableRaster } from './model/projectableRaster';
 export { CommunicatorEntity } from './communicator-service/communicator.entity';
 export { ImageryProviderService } from './provider-service/provider.service';
 export { ImageryModule } from './imagery.module';

@@ -13,7 +13,7 @@ describe('AnsynComponent', () => {
 	let fixture: ComponentFixture<AnsynComponent>;
 
 	const mock_menu = MockComponent({selector: 'ansyn-menu'});
-	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay']});
+	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay', 'histogramActive']});
 	const mock_overlays_container = MockComponent({selector: 'overlays-container'});
 	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps', 'displayedOverlays']});
 	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});

@@ -1,4 +1,8 @@
-import * as turf from '@turf/turf';
+import * as  bbox from '@turf/bbox';
+import * as  bboxPolygon from '@turf/bbox-polygon';
+import * as center from '@turf/center';
+import * as inside from '@turf/inside';
+import { polygon } from '@turf/helpers';
 
 export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Point[] {
 	const footprintFeature: GeoJSON.Feature<any> = {
@@ -7,10 +11,10 @@ export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Poin
 		'geometry': footprint
 	};
 
-	const bbox = turf.bbox(footprintFeature);
-	const bboxPolygon = turf.bboxPolygon(bbox);
+	const bboxResult = bbox(footprintFeature);
+	const bboxPolygonResult = bboxPolygon(bboxResult);
 	let boundingBox: GeoJSON.Point[] = [];
-	bboxPolygon.geometry.coordinates[0].forEach((p)=> {
+	bboxPolygonResult.geometry.coordinates[0].forEach((p)=> {
 		const coord: GeoJSON.Point = {
 			coordinates: [p[0], p[1], p.length > 2 ? p[2] : 0],
 			type: 'Point'
@@ -36,7 +40,7 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 
 	coordinates.push(extent[0].coordinates);
 
-	const extentPoly = turf.polygon([coordinates]);
+	const extentPoly = polygon([coordinates]);
 
 	const footprintFeature: GeoJSON.Feature<any> = {
 		'type': 'Feature',
@@ -44,7 +48,7 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 		'geometry': footprint
 	};
 
-	const centerPoint = turf.center(extentPoly);
-	const isInside = turf.inside(centerPoint, footprintFeature);
+	const centerPoint = center(extentPoly);
+	const isInside = inside(centerPoint, footprintFeature);
 	return isInside;
 }

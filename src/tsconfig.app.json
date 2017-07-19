@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
+	  "allowJs": true,
 	  "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es6",
     "lib": [
       "es6",
+		"es7",
       "dom",
 		"es2015"
     ],

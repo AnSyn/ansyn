@@ -14,9 +14,8 @@ import {
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from "@ansyn/overlays/actions/overlays.actions";
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	InitializeFiltersSuccessAction, UpdateFilterAction
-} from '@ansyn/menu-items/filters/actions/filters.actions';
+import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import 'rxjs/add/operator/share';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Injectable()

@@ -5,11 +5,21 @@ import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 import { getPointByPolygon, getPolygonByPoint } from '@ansyn/core/utils';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import * as turf from '@turf/turf';
+
+
+import { point, feature } from '@turf/helpers';
+import * as centerOfMass from '@turf/center-of-mass';
+import * as circle from '@turf/circle';
+import * as bbox from '@turf/bbox';
+import * as bboxPolygon from '@turf/bbox-polygon';
+
+import { FeatureCollection, GeometryObject, Point } from "@types/geojson";
+
+
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
@@ -24,14 +34,14 @@ export class OverlaysService {
 				if(o2.date < o1.date) return 1;
 				if(o1.date < o2.date) return -1;
 				return 0;
-			})
+			});
 	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {
-		let bbox = turf.bbox(params.polygon);
-		let bboxFeature = turf.bboxPolygon(bbox);
+		let tBbox = bbox(params.polygon);
+		let tBboxFeature = bboxPolygon(tBbox);
 		return this._overlaySourceProvider.fetch({
-			region: bboxFeature.geometry,
+			region: tBboxFeature.geometry,
 			timeRange: {
 				start: params.from,
 				end: params.to
@@ -42,6 +52,7 @@ export class OverlaysService {
 	getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
+
 
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
 		let result = new Array();
@@ -65,7 +76,7 @@ export class OverlaysService {
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
+		const result =   isEqual(data.overlays, data1.overlays) &&   isEqual(data.filters, data1.filters) &&   isEqual(data.timelineState, data1.timelineState) ;
 		return result;
 	}
 
@@ -94,7 +105,7 @@ export class OverlaysService {
 			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
 			from = new Date(to.getTime() - delta);
 		}
-		return {from, to}
+		return {from, to};
 	}
 
 	extractData(response: Response) {

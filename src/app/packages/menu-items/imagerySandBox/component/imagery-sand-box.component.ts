@@ -3,8 +3,6 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
-import * as ol from 'openlayers';
-import * as turf from '@turf/turf';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction } from '@ansyn//overlays/actions/overlays.actions';
@@ -12,6 +10,8 @@ import { Case } from "@ansyn/menu-items/cases";
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { isEqual,cloneDeep } from 'lodash';
+
+import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
 	selector: 'ansyn-map-sand-box',

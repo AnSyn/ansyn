@@ -6,6 +6,7 @@ import { Filter } from '../models/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/share';
 import { Injectable,Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';

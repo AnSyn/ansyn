@@ -17,6 +17,7 @@
 			"test": "test.ts",
 			"tsconfig": "tsconfig.app.json",
 			"testTsconfig": "tsconfig.spec.json",
+			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
 				"styles.less",

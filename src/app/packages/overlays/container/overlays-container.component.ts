@@ -10,14 +10,15 @@ import {
 import { DestroySubscribers } from "ng2-destroy-subscribers";
 import { isEmpty, isEqual, get, isNil } from 'lodash';
 import 'rxjs/add/operator/filter';
-import '@ansyn/core/utils/debug';
+import 'rxjs/add/operator/throttleTime';
+import 'rxjs/add/operator/skip';
 import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import * as overlaysAction from '../actions/overlays.actions';
 import { IOverlayState } from '../reducers/overlays.reducer';
-import * as d3 from 'd3';
+import { schemeCategory10 } from 'd3';
 import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Spinner } from "@ansyn/core/utils";
@@ -78,7 +79,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 				right: 50,
 			},
 			end: new Date(),
-			eventLineColor: (d, i) => d3.schemeCategory10[i],
+			eventLineColor: (d, i) => schemeCategory10[i],
 			date: d => new Date(d.date),
 			displayLabels: false
 
@@ -158,7 +159,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			});
 
 		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
-			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
+			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id === action.payload);
 			const indexPrevOverlay = indexCurrentOverlay - 1;
 			const prevOverlayId : any = get(this.drops[0].data[indexPrevOverlay], 'id');
 			if (!isNil(prevOverlayId)){
@@ -167,11 +168,11 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		});
 
 		this.subscribers.goNextDisplay = this.effects.goNextDisplay$.subscribe((action: GoNextDisplayAction): any => {
-			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);
+			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id === action.payload);
 			const indexNextOverlay = indexCurrentOverlay + 1;
 			const nextOverlayId: any = get(this.drops[0].data[indexNextOverlay], 'id');
 			if(!isNil(nextOverlayId)){
-				this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}))
+				this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}));
 			}
 		});
 

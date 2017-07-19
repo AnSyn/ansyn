@@ -1,5 +1,5 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Output} from '@angular/core';
-import * as _ from 'lodash';
+import { debounce } from 'lodash';
 
 @Directive({
   selector: '[ansynInfiniteScroll]'
@@ -9,7 +9,7 @@ export class InfiniteScrollDirective {
   @Output("ansynInfiniteScroll") ansynInfiniteScroll = new EventEmitter();
 
   constructor(private elementRef:ElementRef) {
-    elementRef.nativeElement.addEventListener("scroll", _.debounce(this.onScroll.bind(this), 300));
+    elementRef.nativeElement.addEventListener("scroll", debounce(this.onScroll.bind(this), 300));
   }
 
   onScroll($event) {

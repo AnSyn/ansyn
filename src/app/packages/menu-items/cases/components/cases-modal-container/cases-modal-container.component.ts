@@ -2,11 +2,13 @@ import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angu
 import { trigger, transition, style, animate } from "@angular/animations";
 import { ComponentFactoryResolver } from "@angular/core";
 import { CasesEffects } from '../../effects/cases.effects';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 import { isEqual } from 'lodash';
+
+import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations_during = '0.2s';
 

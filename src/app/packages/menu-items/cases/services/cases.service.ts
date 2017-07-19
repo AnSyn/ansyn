@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/debounce";
+import 'rxjs/add/operator/of';
 import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
 import { cloneDeep, isEmpty } from 'lodash';
 import * as rison from 'rison';
@@ -20,7 +21,7 @@ export class CasesService {
 
 	private queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	base_url;
-	paginationLimit: number = 15;
+	paginationLimit = 15;
 	queryParamsKeys;
 	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
@@ -33,7 +34,7 @@ export class CasesService {
 	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;
 		this.paginationLimit = this.config.casesPaginationLimit;
-		this.queryParamsKeys = this.config.casesQueryParamsKeys
+		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 
 	getOverlaysMarkup(caseValue: Case){
@@ -60,8 +61,8 @@ export class CasesService {
 	}
 
 	createCase(selected_case: Case): Observable<Case> {
-		const url: string = `${this.base_url}`;
-		const body: string = JSON.stringify(selected_case);
+		const url = `${this.base_url}`;
+		const body = JSON.stringify(selected_case);
 		return this.http.post(url, body, this.defaultOptions).map(res => res.json());
 	}
 

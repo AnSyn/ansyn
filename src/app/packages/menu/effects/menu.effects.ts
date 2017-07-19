@@ -1,6 +1,7 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/share';
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +15,7 @@ export class MenuEffects {
 	onSelectMenuItem$: Observable<any> = this.actions$
 		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
 		.map((action) => {
-			return action
+			return action;
 		}).share();
 
 

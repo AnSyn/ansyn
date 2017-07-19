@@ -73,7 +73,7 @@ export class BackToWorldViewAction implements Action{
 
 export class ToggleHistogramStatusBarAction implements Action{
 	type: string = StatusBarActionsTypes.TOGGLE_HISTOGRAM_STATUS_BAR;
-	constructor(public payload: boolean) {}
+	constructor() {}
 }
 
 

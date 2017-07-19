@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild, OnChanges, SimpleChange } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
@@ -10,16 +10,12 @@ import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 
-
-
-
-
 @Component({
 	selector: 'ansyn-status-bar',
 	templateUrl: './status-bar.component.html',
 	styleUrls: ['./status-bar.component.less']
 })
-export class StatusBarComponent implements OnInit, OnChanges {
+export class StatusBarComponent implements OnInit {
 	layouts$: Observable<MapsLayout[]> = this.store.select("status_bar")
 		.map((state: IStatusBarState) => state.layouts)
 		.distinctUntilChanged(isEqual);
@@ -47,12 +43,10 @@ export class StatusBarComponent implements OnInit, OnChanges {
 	date1: Date;
 	date2: Date;
 
-	histogramActive = false;
-
-
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay') overlay: any;
+	@Input() histogramActive: boolean;	
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
@@ -105,12 +99,6 @@ export class StatusBarComponent implements OnInit, OnChanges {
 			key: statusBarFlagsItems.pinPointIndicator,
 			value: true
 		}));
-	}
-
-	ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
-		if(changes["overlay"].currentValue !== changes["overlay"].previousValue) {
-			this.histogramActive = false;
-		}
 	}
 
 	setSubscribers() {
@@ -188,12 +176,10 @@ export class StatusBarComponent implements OnInit, OnChanges {
 	}
 
 	clickBackToWorldView(): void {
-		this.histogramActive = false;
 		this.store.dispatch(new BackToWorldViewAction());
 	}
 
 	toggleHistogramEqualization() {
-		this.histogramActive = !this.histogramActive;
-		this.store.dispatch(new ToggleHistogramStatusBarAction(this.histogramActive));		
+		this.store.dispatch(new ToggleHistogramStatusBarAction());		
 	}
 }

@@ -13,6 +13,16 @@ import { configuration } from '../../../../configuration/configuration';
 import { OverlayReducer } from '../reducers/overlays.reducer';
 import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';
+import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
+
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+	sourceType = "Mock";
+	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		return Observable.empty();
+	}
+
+}
+
 
 describe("Overlays Effects ", () => {
 	const overlays = <Overlay[]>[
@@ -42,7 +52,8 @@ describe("Overlays Effects ", () => {
 				provide: OverlaysService,
 				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search', 'getTimeStateByOverlay'])
 			},
-			{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+			{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+			{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 		]
 	}));
 
@@ -97,12 +108,11 @@ describe("Overlays Effects ", () => {
 		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 		let tmp = <Overlay[]>[];
 		overlays.forEach(i => tmp.push(Object.assign({}, i,{
-			date: new Date(i.photoTime),
-			sourceType: overlaysConfig.overlaySource
+			//date: new Date(i.photoTime),
+			//sourceType: overlaysConfig.overlaySource
 		})));
 		const expectedResult = new LoadOverlaysSuccessAction(tmp);
 
-		overlaysService.getByCase.and.returnValue(Observable.of(overlays));
 		overlaysService.search.and.returnValue(Observable.of(overlays));
 
 		runner.queue(new LoadOverlaysAction());

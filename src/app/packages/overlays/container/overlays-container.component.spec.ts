@@ -21,7 +21,15 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { configuration } from '../../../../configuration/configuration'
 
+import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
 
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+	sourceType = "Mock";
+	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		return Observable.empty();
+	}
+
+}
 
 
 describe('OverlayContainerComponent', () => {
@@ -45,7 +53,8 @@ describe('OverlayContainerComponent', () => {
                     TimelineEmitterService,
                     OverlaysEffects,
                     Actions,
-                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig },                    
+				    { provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
                 ],
                 declarations: [
                     OverlaysContainer,
@@ -168,15 +177,15 @@ describe('OverlayContainerComponent', () => {
     /*
     	this is nice test I am keeping it as an example
      */
-    xit('check that fetchData has been called', () => {
-        spyOn(overlaysService, 'getByCase').and.callFake(() => {
-            return Observable.create((observer: Observer < any > ) => {
-                observer.next({ key: 'value' });
-            });
-        });
-        component.ngOnInit();
-        expect(overlaysService.getByCase).toHaveBeenCalled();
-    })
+    // xit('check that fetchData has been called', () => {
+    //     spyOn(overlaysService, 'getByCase').and.callFake(() => {
+    //         return Observable.create((observer: Observer < any > ) => {
+    //             observer.next({ key: 'value' });
+    //         });
+    //     });
+    //     component.ngOnInit();
+    //     expect(overlaysService.getByCase).toHaveBeenCalled();
+    // })
 
 
     it('check that the container div is in he\'s place', () => {

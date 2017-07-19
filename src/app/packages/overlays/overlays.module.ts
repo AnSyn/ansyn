@@ -31,20 +31,17 @@ import { EffectsModule } from "@ngrx/effects";
     ]
 
 })
-
 export class OverlaysModule {
-    static forRoot(config: IOverlaysConfig,overlaySourceProviderType?: Type<BaseOverlaySourceProvider>): ModuleWithProviders {
-        let providers : Array<any> = [
-                OverlaysService,
-                TimelineEmitterService,
-                { provide : OverlaysConfig, useValue: config }
-            ];
-        if (overlaySourceProviderType && overlaySourceProviderType !== null){
-            providers.push({ provide : BaseOverlaySourceProvider, useClass: overlaySourceProviderType })
-        }
+    static forRoot(config : IOverlaysConfig ): ModuleWithProviders {
         return {
-            ngModule: OverlaysModule,
-            providers: providers
-        }
+                ngModule: OverlaysModule,
+                providers: [
+                    OverlaysService,
+                    TimelineEmitterService,
+                    { provide : OverlaysConfig, useValue: config }
+                ]
+        };
     }
 }
+
+

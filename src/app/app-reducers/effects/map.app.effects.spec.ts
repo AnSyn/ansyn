@@ -6,15 +6,16 @@ import { HttpModule } from '@angular/http';
 import { ICasesState, CasesReducer, UpdateCaseAction, CasesService } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService, ConfigurationToken } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ConfigurationToken} from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
 import {  StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
-import { configuration } from 'configuration/configuration';
-import { BaseSourceProvider } from '@ansyn/imagery';
+import { configuration } from "configuration/configuration";
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { AddMapInstacneAction, MapSingleClickAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
 import {
 	statusBarFlagsItems, StatusBarInitialState,
 	StatusBarReducer
@@ -33,11 +34,10 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { Position } from '@ansyn/core';
 import { before } from 'selenium-webdriver/testing';
 import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
-import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
 
 
-class SourceProviderMock1 implements BaseSourceProvider {
+class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
 	sourceType = 'sourceType1';
 
@@ -50,6 +50,14 @@ class SourceProviderMock1 implements BaseSourceProvider {
 	}
 }
 
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+	sourceType = "Mock";
+	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		return Observable.empty();
+	}
+
+}
+
 describe('MapAppEffects', () => {
 	let mapAppEffects: MapAppEffects;
 	let effectsRunner: EffectsRunner;
@@ -59,7 +67,7 @@ describe('MapAppEffects', () => {
 	let statusBarState: IStatusBarState;
 	let overlaysState: IOverlayState;
 	let casesService: CasesService;
-	let baseSourceProviders: BaseSourceProvider[];
+	let baseSourceProviders: BaseMapSourceProvider[];
 	let imageryCommunicatorServiceMock = {
 		provide:() => {},
 		communicatorsAsArray:() => {}
@@ -102,9 +110,10 @@ describe('MapAppEffects', () => {
 			providers: [
 				MapAppEffects,
 				OverlaysService,
-				{ provide: BaseSourceProvider, useClass: SourceProviderMock1 , multi: true},
+				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1 , multi: true},
 				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
 				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
+				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock},
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
@@ -139,7 +148,7 @@ describe('MapAppEffects', () => {
 		});
 	}));
 
-	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService, BaseSourceProvider], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseSourceProvider[]) => {
+	beforeEach(inject([MapAppEffects, EffectsRunner, ImageryCommunicatorService, CasesService, BaseMapSourceProvider], (_mapAppEffects: MapAppEffects, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseMapSourceProvider[]) => {
 		mapAppEffects = _mapAppEffects;
 		effectsRunner = _effectsRunner;
 		imageryCommunicatorService = _imageryCommunicatorService;

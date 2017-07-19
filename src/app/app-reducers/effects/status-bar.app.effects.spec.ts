@@ -25,6 +25,15 @@ import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	GoNextDisplayAction, GoPrevDisplayAction
 } from '@ansyn/overlays/actions/overlays.actions';
+import {BaseOverlaySourceProvider, IFetchParams,Overlay} from '@ansyn/overlays';
+
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+	sourceType = "Mock";
+	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		return Observable.empty();
+	}
+
+}
 
 describe('StatusBarAppEffects', () => {
 	let statusBarAppEffects: StatusBarAppEffects;
@@ -49,7 +58,8 @@ describe('StatusBarAppEffects', () => {
 				OverlaysService,
 				Http,
 				ConnectionBackend,
-				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig }
+				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 			]
 		}).compileComponents();
 	}));

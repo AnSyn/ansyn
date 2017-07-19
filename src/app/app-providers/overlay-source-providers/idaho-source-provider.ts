@@ -2,7 +2,6 @@ import {BaseOverlaySourceProvider,IFetchParams} from '@ansyn/overlays'
 import { Overlay } from '@ansyn/core'
 import { Observable } from "rxjs/Observable";
 import { RequestOptions ,Headers ,Http,Response} from "@angular/http";
-import * as wktParser from  'terraformer-wkt-parser';
 import * as wellknown from 'wellknown';
 import { InjectionToken,Inject,Injectable } from "@angular/core";
 
@@ -60,7 +59,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
         var overlay : Overlay = (new Object()) as Overlay;
 
         overlay.id= idahoElement.identifier;
-        overlay.footprint= wktParser.parse(idahoElement.properties.footprintWkt);//@todo add type geojson_multipoligon;
+        overlay.footprint= wellknown.parse(idahoElement.properties.footprintWkt);//@todo add type geojson_multipoligon;
         overlay.sensorType= idahoElement.properties.platformName;
         overlay.sensorName= idahoElement.properties.sensorName;
         overlay.channel= idahoElement.properties.numBands;

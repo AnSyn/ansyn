@@ -40,11 +40,6 @@ export class OverlaysEffects {
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
-					data.forEach(item => {
-						if(item.footprint.geometry){
-							item.footprint = item.footprint.geometry;
-						}
-					});
 					return new LoadOverlaysSuccessAction(data);
 				});
 		});

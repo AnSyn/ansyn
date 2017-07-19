@@ -1,1 +1,1 @@
-export { AppProvidersModule } from './app-providers.module'
+export { AppProvidersModule } from './app-providers.module';

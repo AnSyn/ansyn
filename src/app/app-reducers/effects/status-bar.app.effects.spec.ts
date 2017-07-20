@@ -19,8 +19,8 @@ import { configuration } from "configuration/configuration";
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction, ToggleHistogramStatusBarAction } from '@ansyn/status-bar';
+import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	GoNextDisplayAction, GoPrevDisplayAction
@@ -219,6 +219,13 @@ describe('StatusBarAppEffects', () => {
 		effectsRunner.queue(new BackToWorldViewAction());
 		statusBarAppEffects.onBackToWorldView$.subscribe((result: BackToWorldAction)=>{
 			expect(result instanceof BackToWorldAction).toBeTruthy();
+		});
+	});
+
+	it('onToggleHistogram$$ should call ToggleHistogramAction with undifined map id', () => {
+		effectsRunner.queue(new ToggleHistogramStatusBarAction());
+		statusBarAppEffects.onToggleHistogram$.subscribe((result: ToggleHistogramAction)=>{
+			expect(result instanceof ToggleHistogramAction).toBeTruthy();
 		});
 	});
 

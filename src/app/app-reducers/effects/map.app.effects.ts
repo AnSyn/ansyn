@@ -101,7 +101,7 @@ export class MapAppEffects {
 			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
 			sourceLoader.createAsync(overlay).then((layer)=> {
 				communicator.setLayer(layer, extent);
-				communicator.shouldPerformHistogram(!!isHistogramActive);
+				communicator.shouldPerformHistogram(isHistogramActive);
 			});
 		});
 

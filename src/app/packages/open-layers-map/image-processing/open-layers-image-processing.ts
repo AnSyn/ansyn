@@ -104,11 +104,6 @@ export class OpenLayersImageProcessing {
             raster.setOperation(basicOperation);
         }
     }
-
-    initializeRasterOperations(raster: ol.source.Raster) {
-        raster.setOperation(basicOperation);
-
-    }
 }
 
 // ------ General Operation Start ------ //

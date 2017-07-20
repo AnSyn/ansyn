@@ -34,7 +34,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { Position } from '@ansyn/core';
 import { before } from 'selenium-webdriver/testing';
 import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
-import { BackToWorldAction } from '../../packages/map-facade/actions/map.actions';
+import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade';
 
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
@@ -92,7 +92,7 @@ describe('MapAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
+					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}, isHistogramActive: false}},
 					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
 					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
@@ -415,6 +415,25 @@ describe('MapAppEffects', () => {
 				}
 			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
+		});
+	});
+
+	describe('toggleHistogram$', () => {
+		it('toggleHistogram should call communicator and update case',() => {
+			const communicator = {
+				shouldPerformHistogram: () => {},
+			};
+
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(communicator, 'shouldPerformHistogram');
+			effectsRunner.queue(new ToggleHistogramAction({mapId: 'imagery1'}));
+			mapAppEffects.toggleHistogram$.subscribe(_result => {
+				let result = _result instanceof UpdateCaseAction;
+				expect(result).toBe(true);
+				const resultCase: Case = _result.payload;
+				expect(resultCase.state.maps.data[0].data.isHistogramActive).toEqual(true);
+				expect(communicator.shouldPerformHistogram).toHaveBeenCalledWith(true);				
+			});
 		});
 	});
 

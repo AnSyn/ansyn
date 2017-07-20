@@ -174,11 +174,6 @@ export class OpenLayersMap implements IMap {
 	public addLayer(layer: any) {
 		this._mapLayers.push(layer);
 		this._mapObject.addLayer(layer);
-
-		const source = layer.getSource();
-		if (source instanceof ol.source.Raster) {
-			this._imageProcessing.initializeRasterOperations(source);
-		}
 	}
 
 	public removeAllLayers() {

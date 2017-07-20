@@ -89,11 +89,13 @@ export class OpenLayersImageProcessing {
                     }
                 }
             });
-            
+
             let operationsFunctionsString = '[';
             operationsArray.forEach((func) => {
-                operationsFunctionsString += func.toString();
+                operationsFunctionsString += func.toString() + ',';
             });
+
+            operationsFunctionsString = operationsFunctionsString.replace(/,\s*$/, "");
 
             operationsFunctionsString += ']';
 
@@ -207,7 +209,7 @@ function performHistogram(imageData, histogramLut) {
 
         yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
 
-        const rgb = this.yCbCr2RGB(yCbCr);
+        const rgb = yCbCr2RGB(yCbCr);
 
         imageData.data[index + 0] = rgb.r;	// Red
         imageData.data[index + 1] = rgb.g;	// Green
@@ -218,4 +220,4 @@ function performHistogram(imageData, histogramLut) {
     return imageData;
 }
 
-// ------ Histogram Equalization Start ------ //
+// ------ Histogram Equalization End ------ //

@@ -2,6 +2,7 @@ import { Component, HostBinding, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { configuration } from '../configuration/configuration';
+import { AppSettings } from './app-models/settings';
 
 const selector = 'empty';
 const template = '<div></div>';
@@ -11,7 +12,7 @@ export class EmptyComponent {
 	@HostBinding('style.display') display= "none";
 }
 
-export const routes: Routes = [
+export const routes: Routes = [ 
 
 	{
 		path: '',

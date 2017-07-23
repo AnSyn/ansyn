@@ -25,7 +25,7 @@
 				"../node_modules/ol/ol.css",
 				"../node_modules/flatpickr/dist/flatpickr.css"
 			],
-			"scripts": [],
+			"scripts": ["assets/config/app.config.js"],
 			"environmentSource": "configuration/configuration.ts",
 			"environments": {
 				"dev": "configuration/configuration.dev.ts",

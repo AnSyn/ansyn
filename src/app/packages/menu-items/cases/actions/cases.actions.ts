@@ -121,7 +121,7 @@ export class LoadCaseSuccessAction implements Action{
 }
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor(public payload?: Params) {}
+	constructor(public payload: Params = {}) {}
 }
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;

@@ -15,8 +15,8 @@ export const defaultCase: Case = {
 							"center": {
 								"type": 'Point',
 								"coordinates": [
-									17.1432839938,
-									47.800388503457015
+									-74.07608662469286,
+									40.71400637493053
 								]
 							},
 							"zoom": 4,

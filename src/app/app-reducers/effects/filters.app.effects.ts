@@ -17,6 +17,7 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	InitializeFiltersSuccessAction, UpdateFilterAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -45,10 +46,14 @@ export class FiltersAppEffects {
         	overlaysState.overlays.forEach((value, key) => {
 				overlaysArray.push(value);
 			});
-        	const showAll: boolean = casesState.selected_case.id === casesState.default_case.id;
+        	const showAll: boolean = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValus.imageryCount === -1;
+        	if (this.casesService.contextValus.imageryCount !== -1){
+				this.casesService.contextValus.imageryCount = -1;
+			}
 			return [overlaysArray, casesState.selected_case.state.facets, showAll];
         })
         .map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
+
             return new InitializeFiltersAction({ overlays, facets, showAll });
         }).share();
 
@@ -71,8 +76,7 @@ export class FiltersAppEffects {
         });
 
     constructor(private actions$: Actions,
-        private store$: Store<IAppState>,
-        private filtersService: FiltersService) { }
+        private store$: Store<IAppState>, private casesService: CasesService, private filtersService: FiltersService) { }
 
     updateSelectedCase(filter: Filter, newMetadata: FilterMetadata, casesState: ICasesState): Case {
         const selected_case: Case = cloneDeep(casesState.selected_case);

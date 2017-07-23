@@ -24,6 +24,12 @@ export class CasesService {
 	queryParamsKeys;
 	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
+	public contextValus = {
+		imageryCount: -1,
+		displayOverlay: ''
+	};
+
+
 	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;
 		this.paginationLimit = this.config.casesPaginationLimit;

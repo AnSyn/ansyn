@@ -86,6 +86,7 @@ export class MapAppEffects {
 			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
 			return [overlay, map_id, active_map.data.position, active_map.data.isHistogramActive];
 		})
+		.filter(([overlay]) => !isEmpty(overlay))
 		.map( ([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
 
 			let extent;
@@ -277,7 +278,7 @@ export class MapAppEffects {
 					}
 				});
 
-			const comm = this.communicator.provide(mapId);			
+			const comm = this.communicator.provide(mapId);
 			comm.shouldPerformHistogram(shouldPerformHist);
 
 			return new UpdateCaseAction(updatedCase);

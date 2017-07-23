@@ -1,4 +1,3 @@
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -54,12 +53,6 @@ export class OverlaysEffects {
 		});
 
 	@Effect({dispatch: false})
-	displayLatestOverlay$: Observable<void> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.filter(action => this.overlaysService.loadOverlaysValues.displayOverlay === 'latest')
-		.share();
-
-	@Effect({dispatch: false})
 	goPrevDisplay$: Observable<GoPrevDisplayAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
 		.share();
@@ -79,7 +72,7 @@ export class OverlaysEffects {
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {
-			return isActiveMap && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
+			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
 		})
 		.map(([isActiveMap, displayedOverlay, timelineState]:[Overlay, Overlay, any]) => {
 			const timeState = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);

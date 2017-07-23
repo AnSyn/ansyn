@@ -30,9 +30,11 @@ export class OverlaysAppEffects {
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
+
 	@Effect()
 	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.filter(() => this.casesService.contextValus.imageryCount === -1)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
@@ -43,11 +45,56 @@ export class OverlaysAppEffects {
 				to: caseSelected.state.time.to,
 				from: caseSelected.state.time.from,
 				polygon: caseSelected.state.region,
-				caseId: caseId,
+				caseId: caseId
 			};
-
 			return new LoadOverlaysAction(overlayFilter);
+		});
 
+	@Effect()
+	selectCaseWithImageryCount$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.filter(() => this.casesService.contextValus.imageryCount !== -1)
+		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => cases.selected_case)
+		.filter(selected_case => !isEmpty(selected_case))
+		.switchMap((selected_case: Case) => {
+			return this.overlaysService.getStartDateViaLimitFasets({
+				region: selected_case.state.region,
+				limit: this.casesService.contextValus.imageryCount,
+				facets: selected_case.state.facets
+			})
+				.mergeMap((data: {startDate, endDate}) => {
+					const from = new Date(data.startDate);
+					const to = new Date(data.endDate);
+					selected_case.state.time.from = from.toISOString();
+					selected_case.state.time.to = to.toISOString();
+
+					const overlayFilter: any = {
+						to: selected_case.state.time.to,
+						from: selected_case.state.time.from,
+						polygon: selected_case.state.region,
+						caseId: selected_case.id
+					};
+
+					return[
+						new UpdateCaseAction(selected_case),
+						new SetTimeAction({from, to}),
+						new LoadOverlaysAction(overlayFilter)
+					];
+				})
+		});
+
+
+
+	@Effect()
+	initTimelineStata$: Observable<SetTimelineStateAction> = this.actions$
+		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+		.filter(() => this.casesService.contextValus.imageryCount !== -1)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlay: IOverlayState) => overlay.timelineState)
+		.map((timelineState) => {
+			const tenth = (timelineState.to.getTime() - timelineState.from.getTime()) / 10;
+			const fromTenth = new Date(timelineState.from.getTime() - tenth);
+			const toTenth = new Date(timelineState.to.getTime() + tenth);
+			return new SetTimelineStateAction({from: fromTenth, to: toTenth});
 		});
 
 
@@ -95,31 +142,21 @@ export class OverlaysAppEffects {
 		).share();
 
 	@Effect()
-	loadOverlaysImageryCountState$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.filter(() => this.overlaysService.loadOverlaysValues.imageryCount !== -1)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action, cases: ICasesState, overlays: IOverlayState) => {
+	displayLatestOverlay$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.filter(action => this.casesService.contextValus.displayOverlay === 'latest')
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
 			const drops = this.overlaysService.parseOverlayDataForDispaly(overlays.overlays, overlays.filters);
-			const selectedCase = cloneDeep(cases.selected_case);
-			return {displayedOverlays: <any[]>drops[0].data, selectedCase}
+			return drops[0].data;
 		})
-		.mergeMap((data: {displayedOverlays: any[], selectedCase: Case}) => {
-			const from = data.displayedOverlays[0].date;
-			const to = data.displayedOverlays[data.displayedOverlays.length - 1].date;
-			data.selectedCase.state.time.from = from.toISOString();
-			data.selectedCase.state.time.to = to.toISOString();
+		.filter((displayedOverlays) => !isEmpty(displayedOverlays))
+		.map((displayedOverlays: any[]) => {
+			const lastOverlayId = displayedOverlays[displayedOverlays.length - 1].id;
+			this.casesService.contextValus.displayOverlay = '';
+			return new DisplayOverlayAction({id: lastOverlayId});
+		})
+		.share();
 
-			const tenth = (to.getTime() - from.getTime()) / 10;
-			const fromTenth = new Date(from.getTime() - tenth);
-			const toTenth = new Date(to.getTime() + tenth);
-			this.overlaysService.loadOverlaysValues.imageryCount = -1;
-
-			return [
-				new UpdateCaseAction(data.selectedCase),
-				new SetTimelineStateAction({from: fromTenth,to: toTenth}),
-				new SetTimeAction({from, to})
-			];
-		});
 
 	constructor(public actions$: Actions, public store$: Store<IAppState>, public casesService: CasesService, public overlaysService: OverlaysService) {}
 }

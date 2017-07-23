@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysActionTypes, LoadOverlaysAction } from '@ansyn/overlays';
+import { OverlaysActionTypes } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
@@ -20,13 +20,9 @@ import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	LoadContextsSuccessAction,
-	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Context } from '@ansyn/core';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Injectable()
 export class CasesAppEffects {
@@ -37,7 +33,6 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
 		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
-
 			const selectedCase = cloneDeep(state.cases.selected_case);
 			const overlay: Overlay = state.overlays.overlays.get(action.payload.id) as any;
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
@@ -132,8 +127,6 @@ export class CasesAppEffects {
 						const context = state.contexts.find(c => c.name === contextName);
 						if (context) {
 							defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, defaultCase, action.payload);
-							this.overlaysService.loadOverlaysValues.imageryCount = +context.imageryCount;
-							this.overlaysService.loadOverlaysValues.displayOverlay = context.defaultOverlay;
 						} else {
 							defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, defaultCase);
 						}
@@ -152,8 +145,7 @@ export class CasesAppEffects {
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private casesService: CasesService,
-				public contextProviderService: ContextProviderService,
-				public overlaysService: OverlaysService
+				public contextProviderService: ContextProviderService
 	){
 	}
 

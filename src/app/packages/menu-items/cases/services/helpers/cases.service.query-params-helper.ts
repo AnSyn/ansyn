@@ -24,7 +24,7 @@ export class QueryParamsHelper{
 		return s_case;
 	}
 
-	updateCaseViaContext(selected_context: Context, case_model: Case, q_params?: Params) {
+	updateCaseViaContext(selected_context: Context, case_model: Case, q_params: Params = {}) {
 		if(selected_context.region) {
 			case_model.state.region = selected_context.region;
 		}
@@ -49,13 +49,17 @@ export class QueryParamsHelper{
 				switch (requireKey) {
 					case 'geopoint':
 						const geopointStr = q_params['geopoint'];
-						if(!geopointStr){
-							return;
+						if(geopointStr){
+							const coordinates = geopointStr.split(',').map(strToNum => +strToNum);
+							const geoPoint: Point = {type:'Point', coordinates};
+							case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+							case_model.state.region = getPolygonByPoint(coordinates).geometry;
+						} else {
+							const coordinates = getPointByPolygon(case_model.state.region).coordinates;
+							const geoPoint: Point = {type:'Point', coordinates};
+							case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+							case_model.state.region = getPolygonByPoint(coordinates).geometry;
 						}
-						const coordinates = geopointStr.split(',').map(strToNum => +strToNum);
-						const geoPoint: Point = {type:'Point', coordinates};
-						case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
-						case_model.state.region = getPolygonByPoint(coordinates).geometry;
 						break;
 				}
 			})
@@ -69,8 +73,11 @@ export class QueryParamsHelper{
 			case_model.state.maps.data.forEach((map) => map.data.position.zoom = selected_context.zoom);
 		}
 
-		// if(selected_context.)
+		if(selected_context.imageryCount){
+			this.casesService.contextValus.imageryCount = +selected_context.imageryCount;
+		}
 
+		this.casesService.contextValus.displayOverlay = selected_context.defaultOverlay;
 	}
 
 	generateQueryParamsViaCase(s_case: Case): string {

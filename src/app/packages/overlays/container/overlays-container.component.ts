@@ -21,6 +21,7 @@ import * as d3 from 'd3';
 import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Spinner } from "@ansyn/core/utils";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'overlays-container',
@@ -33,6 +34,17 @@ import { Spinner } from "@ansyn/core/utils";
 })
 
 export class OverlaysContainer implements OnInit, AfterViewInit {
+	public drops$: Observable<any[]> = this.store.select('overlays')
+		.skip(1)
+		.distinctUntilChanged(this.overlaysService.compareOverlays)
+		.map((overlaysState: IOverlayState) => {
+			return this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters)
+		});
+
+	public timelineState$: Observable<any> = this.store.select('overlays')
+		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
+		.distinctUntilChanged(isEqual);
+
 	public drops: any[] = [];
 	public redraw$: BehaviorSubject<number>;
 	public configuration: any;
@@ -93,10 +105,14 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			.subscribe(result => {
 				let sum = 0;
 				result.counts.forEach( i => sum+=i.count);
-				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
 				this.store.dispatch(new UpdateOverlaysCountAction(sum));
-				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
+			});
 
+
+		this.subscribers.zoomEnd  = this.emitter.provide('timeline:zoomend')
+			.subscribe(result => {
+				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
+				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
 			})
 
 	}
@@ -111,25 +127,16 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 
 	init(): void {
-		this.subscribers.overlays = this.store.select('overlays')
-			.skip(1)
-			.distinctUntilChanged(this.overlaysService.compareOverlays)
-			.filter((overlaysState: IOverlayState) => {
-				return !isEmpty(overlaysState) && !isEqual(overlaysState.timelineState, this.currentTimelineState);
-			})
-			.map((overlaysState: IOverlayState) => {
-				return {
-					overlay: this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters),
-					timelineState: overlaysState.timelineState
-				};
-			})
-			.subscribe(data => {
-				this.configuration.start = data.timelineState.from;
-				this.configuration.end = data.timelineState.to;
-				this.drops = data.overlay;
-			});
+		this.subscribers.overlays = this.drops$.subscribe(_drops=> {
+			const count = this.calcOverlayCountViaDrops(_drops);
+			this.store.dispatch(new UpdateOverlaysCountAction(count));
+			this.drops = _drops;
+		});
 
-
+		this.subscribers.timelineState = this.timelineState$.subscribe(timelineState => {
+			this.configuration.start = timelineState.from;
+			this.configuration.end = timelineState.to;
+		});
 
 		this.subscribers.selected = this.store.select('overlays')
 			.skip(1)
@@ -163,12 +170,16 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			}
 		});
 
-		this.subscribers.displayLatestOverlay$ = this.effects.displayLatestOverlay$.subscribe(() => {
-			const overlays = this.drops[0].data;
-			const lastOverlayId = overlays[overlays.length - 1].id;
-			this.overlaysService.loadOverlaysValues.displayOverlay = '';
-			this.store.dispatch(new DisplayOverlayAction({id: lastOverlayId}))
-		});
-
 	}
+
+	calcOverlayCountViaDrops(drops) {
+		if(isEmpty(drops)) return 0;
+		return drops[0].data.reduce((count, overlays) => {
+			if(this.configuration.start <= overlays.date && overlays.date <= this.configuration.end) {
+				return count+ 1;
+			}
+			return count;
+		}, 0);
+	}
+
 }

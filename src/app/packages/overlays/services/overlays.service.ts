@@ -15,11 +15,6 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
-	public loadOverlaysValues = {
-		imageryCount: -1,
-		displayOverlay: ''
-	};
-
 
 	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider : BaseOverlaySourceProvider) {}
 
@@ -50,6 +45,13 @@ export class OverlaysService {
 		});
 	}
 
+	getStartDateViaLimitFasets(params: {facets, limit, region}) {
+		const url = this.config.baseUrl.concat('overlays/findDate');
+		return this.http.post(url, params)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
 		let result = new Array();
 		let overlaysData = new Array();
@@ -72,7 +74,7 @@ export class OverlaysService {
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters) && _.isEqual(data.timelineState, data1.timelineState) ;
+		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters) && _.isEqual(data.timelineState, data1.timelineState);
 		return result;
 	}
 
@@ -102,6 +104,11 @@ export class OverlaysService {
 			from = new Date(to.getTime() - delta);
 		}
 		return {from, to}
+	}
+
+	extractData(response: Response) {
+		const data = response.json();
+		return data || [];
 	}
 
 }

@@ -133,10 +133,10 @@ export class TimelineComponent implements OnInit {
     }
 
     eventDropsHandler(): void {
-        const chart = eventDrops(this.configuration)
+		const chart = eventDrops(this.configuration)
             .mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
             .mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
-            .zoomend((a, b, c) => this.emitter.provide('timeline:zoomend').next({ a, b, c }))
+            .zoomend((result) => this.emitter.provide('timeline:zoomend').next(result))
 			.zoomStreamCallback( result => this.emitter.provide('timeline:zoomStream').next(result))
             .click(this.clickEvent())
             .dblclick(() => {
@@ -152,5 +152,10 @@ export class TimelineComponent implements OnInit {
             .datum(dataSet);
 
         chart(element);
+
+		if(this._markup){
+			this.drawMarkup();
+		}
+
     }
 }

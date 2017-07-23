@@ -1,5 +1,5 @@
 import { ViewEncapsulation, Component, OnInit, ViewChild, ElementRef, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
-import { selectAll, mouse, event, select } from 'd3';
+import { selectAll, mouse, event, select, selection } from 'd3';
 
 
 import { eventDrops } from 'event-drops';
@@ -8,14 +8,12 @@ import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { isEqual } from 'lodash';
-import '@ansyn/core/utils/d3extending';
 
-/*d3.selection.prototype.moveToFront = function() {
+selection.prototype.moveToFront = function() {
       return this.each(function(){
         this.parentNode.appendChild(this);
       });
-    };*/
-
+    };
 
 @Component({
     selector: 'ansyn-timeline',
@@ -73,7 +71,10 @@ export class TimelineComponent implements OnInit {
 				nodes.push(element);
 			}
 		});
-		nodes.length > 0 && (<any>selectAll(nodes)).moveToFront();
+		if(nodes.length > 0) {
+			const selection = (<any>selectAll(nodes));
+			selection.moveToFront();
+		}
 	}
 
 	get markup(){

@@ -48,6 +48,7 @@ export class AppComponent implements  AfterViewInit {
 	displayedOverlay: Overlay;
 	selected_layout: MapsLayout = {id:"", description:"", maps_count: 0};
 	selected_case: Case;
+	editMode = false;
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any,public store: Store<IAppState> ){
 	}
@@ -68,6 +69,8 @@ export class AppComponent implements  AfterViewInit {
 	}
 
 	toggleEditMode($event){
-		this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
+		this.editMode = !this.editMode;
+		//debugger;
+		//this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
 	}
 }

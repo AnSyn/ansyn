@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { ImageryModule, BaseSourceProvider } from '@ansyn/imagery';
+import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
 import { MapFacadeModule } from '@ansyn/map-facade';

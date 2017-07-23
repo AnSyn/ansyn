@@ -26,7 +26,7 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider : BaseOverlaySourceProvider) {}
+	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
 
 	setSortedDropsMap(dropsData: any[]) {
 		return dropsData

@@ -4,7 +4,7 @@
 
 	<div class="layer">
 
-		<div #mapsContainer class="maps-container">
+		<div #mapsContainer class="maps-container" [class.edit-mode]="editMode">
 			<router-outlet></router-outlet>
 		</div>
 

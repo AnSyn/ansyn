@@ -38,7 +38,7 @@ export class CasesAppEffects {
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
 
 			selectedCase.state.maps.data.forEach((map) => {
-				if(mapId == map.id){
+				if(mapId === map.id){
 					map.data.overlay = overlay;
 				}
 			});
@@ -56,7 +56,7 @@ export class CasesAppEffects {
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
 			if(isNil(s_case)){
-				if(state.selected_case.id == action.payload){
+				if(state.selected_case.id === action.payload){
 					s_case = state.selected_case;
 				}
 			}

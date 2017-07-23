@@ -4,7 +4,7 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/debounce";
-import 'rxjs/add/operator/of';
+  import 'rxjs/add/observable/of';
 import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
 import { cloneDeep, isEmpty } from 'lodash';
 import * as rison from 'rison';
@@ -13,6 +13,8 @@ import { UrlSerializer } from '@angular/router';
 import { Context } from '@ansyn/core/models';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { Point } from 'geojson';
+
+import { get as _get} from 'lodash';
 
 export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
 
@@ -105,9 +107,17 @@ export class CasesService {
 			});
 	}
 
+	getDefaultCase(): Case {
+		//this is because of a bug in the aot that does not compile javascript in configuration
+		const startDate: string = <string>_get(this,'config.defatulCase.state.time.from') || (new Date(new Date().getTime() - 3600000 * 24 * 365)).toISOString();
+		const endDate: string = <string>_get(this,'config.defatulCase.state.time.to') || new Date().toISOString() ;
+		const defaultCase =  cloneDeep(this.config.defaultCase);
 
-	getDefaultCase() {
-		return cloneDeep(this.config.defaultCase);
+		defaultCase.state.time.to = endDate;
+		defaultCase.state.time.from = startDate ;
+
+		return defaultCase;
+
 	}
 
 	enhanceDefaultCase(default_case: Case): void {

@@ -1,27 +1,12 @@
 
 		<ansyn-imageries-manager
 			class="map"
-			#mapsContainer
 			[selected_layout]="selected_layout"
 			[maps]="maps"
 			(setActiveImagery)="onActiveImagery($event)"
 			(layoutChangeSuccess)="layoutChangeSuccess()">
 		</ansyn-imageries-manager>
 
-        <div class="status">
-			<ansyn-status-bar
-			[selected_case_name]="(selected_case)?.name"
-			[overlays_count]="overlays_count"
-			[overlay]="displayedOverlay"
-			(toggleEditMode)="toggleEditMode($event)"
-			[hide-overlay]="selected_layout.maps_count > 1"
-			[histogramActive]="histogramActive">
-			</ansyn-status-bar>
 
-		</div>
-
-		<div class="app-timeline-container">
-			<overlays-container></overlays-container>
-		</div>
 
 <router-outlet></router-outlet>

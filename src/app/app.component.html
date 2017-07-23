@@ -4,6 +4,31 @@
 
 	<div class="layer">
 
-		<router-outlet></router-outlet>
+		<div #mapsContainer class="maps-container">
+			<router-outlet></router-outlet>
+		</div>
+
+		<div class="status">
+			<!--
+
+
+
+			-->
+			<ansyn-status-bar
+				[selected_case_name]="(selected_case)?.name"
+				[overlay]="displayedOverlay"
+				(toggleEditMode)="toggleEditMode($event)"
+				[hide-overlay]="selected_layout.maps_count > 1"
+				[overlays_count]="overlays_count"
+
+			>
+
+			</ansyn-status-bar>
+		</div>
+
+		<div class="app-timeline-container">
+			<overlays-container></overlays-container>
+		</div>
+
 	</div>
 </div>

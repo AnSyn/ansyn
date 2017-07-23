@@ -12,7 +12,10 @@ export class FiltersService {
   constructor(@Inject(filtersConfig) private config: FiltersConfig) { }
 
   loadFilters(): Observable<Filter[]> {
-    return Observable.of(this.config.filters);
+    if(!this.config){
+    	return Observable.of([] as any);
+	}
+  	return Observable.of(this.config.filters);
   }
 
 }

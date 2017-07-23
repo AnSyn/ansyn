@@ -22,12 +22,10 @@ import 'rxjs/add/operator/distinctUntilChanged';
 })
 
 export class AnsynComponent implements OnInit{
-	@ViewChild('mapsContainer') mapsContainer;
 
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
-
 
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.map((state: ICasesState) => state.selected_case)
@@ -41,7 +39,7 @@ export class AnsynComponent implements OnInit{
 		})
 		.distinctUntilChanged(isEqual);
 
-
+//move to app.comp
 	overlays_count$ = this.store.select('overlays')
 		.map((state: IOverlayState) => state.count)
 		.distinctUntilChanged(isEqual);
@@ -53,7 +51,7 @@ export class AnsynComponent implements OnInit{
 			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id === cases.selected_case.state.maps.active_map_id);
 			return activeMap.data.overlay;
 		});
-
+//end move to app.comp
 	histogramActive$ = this.store.select('cases')
 		.filter((cases: ICasesState) => !isNil(cases.selected_case))
 		.map((cases: ICasesState) => {
@@ -61,33 +59,29 @@ export class AnsynComponent implements OnInit{
 			return activeMap.data.isHistogramActive;
 		});
 
-	displayedOverlay: Overlay;
-	selected_layout: MapsLayout;
-	selected_case: Case;
-	maps: CaseMapsState;
-	overlays_count: number;
-	histogramActive: boolean;
+	public maps: CaseMapsState;
+	public selected_layout: MapsLayout;
+	public selected_case: Case;
 	public version;
+	histogramActive: boolean;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
 	}
 
 	ngOnInit(): void {
+		//move to app.comp
 		this.store.dispatch(new LoadContextsAction());
+
+		this.maps$.subscribe(maps => this.maps = maps);
+
+
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
+
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
 
 		this.maps$.subscribe(maps => {
 			this.maps = maps;
-		});
-
-		this.overlays_count$.subscribe(_overlays_count => {
-			this.overlays_count = _overlays_count;
-		});
-
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
-			this.displayedOverlay = _displayedOverlay;
 		});
 
 		this.histogramActive$.subscribe((histogramActive: boolean) => {
@@ -105,7 +99,5 @@ export class AnsynComponent implements OnInit{
 		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
-	toggleEditMode($event){
-		this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
-	}
+
 }

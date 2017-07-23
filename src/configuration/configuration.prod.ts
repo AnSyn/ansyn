@@ -8,6 +8,9 @@ import { defaultCase } from './cases/default_case';
 export const configuration = {
 	env: 'production',
 	production: false,
+	MetaConfig: {
+
+	},
 	General: {
 		logActions: false
 	},

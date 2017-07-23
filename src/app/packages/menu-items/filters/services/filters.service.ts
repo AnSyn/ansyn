@@ -3,7 +3,7 @@ import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { FiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
 
-import 'rxjs/add/operator/of';
+import 'rxjs/add/observable/of';
 
 export const filtersConfig: InjectionToken<FiltersConfig> = new InjectionToken('filtersConfig');
 

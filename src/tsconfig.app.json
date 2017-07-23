@@ -26,5 +26,9 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+	"angularCompilerOptions": {
+
+	}
+
 }

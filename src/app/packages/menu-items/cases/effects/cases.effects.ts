@@ -19,7 +19,7 @@ import { Case, Context } from '@ansyn/core';
 import { isEmpty, isEqual } from 'lodash';
 
 import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/of';
+  import 'rxjs/add/observable/of';
 
 @Injectable()
 export class CasesEffects {
@@ -186,7 +186,7 @@ export class CasesEffects {
 			if(isEmpty(state.default_case)){
 				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
-				actions.push(new SelectCaseByIdAction(state.default_case.id))
+				actions.push(new SelectCaseByIdAction(state.default_case.id));
 			}
 			return actions;
 

@@ -55,4 +55,5 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {}

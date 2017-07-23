@@ -3,6 +3,9 @@ import { defaultCase } from './cases/default_case';
 export const configuration = {
 	env: 'default',
 	production: false,
+	MetaConfig: {
+
+	},
 	General: {
 		logActions: false
 	},

@@ -39,7 +39,7 @@
     "d3": "4.7.0",
     "debounce": "^1.0.0",
     "elasticsearch": "^13.2.0",
-    "event-drops": "github:osadan/EventDrops#3ec0352524c3bff40c2a3161d1a5d7880ea160f7",
+    "event-drops": "github:yairtawil/EventDrops#504295e3bb4f3569a37338ec01b0241375ed4dbb",
     "flatpickr": "^3.0.6",
     "jsdoc": "3.4.3",
     "lodash": "^4.17.4",

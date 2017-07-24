@@ -82,6 +82,5 @@ export class OverlaysEffects {
 
 	constructor(private actions$: Actions,
 				private store$: Store<IOverlayState>,
-				private overlaysService: OverlaysService,
-				@Inject(OverlaysConfig) private config: IOverlaysConfig ) {}
+				private overlaysService: OverlaysService) {}
 }

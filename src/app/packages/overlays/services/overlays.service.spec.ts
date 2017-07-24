@@ -1,20 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { OverlaysService, OverlaysConfig } from './overlays.service';
-
 import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
-
-import { HttpModule, XHRBackend, Response, ResponseOptions, Http, RequestOptions, Headers } from '@angular/http';
-
+import { HttpModule, XHRBackend, Response, ResponseOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-
 import { Observable, Observer } from 'rxjs';
-
 import * as turf from '@turf/turf';
-
-import { configuration } from '../../../../configuration/configuration'
 import { Overlay } from '../models/overlay.model';
-import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 	sourceType = "Mock";
@@ -78,7 +70,7 @@ describe('OverlaysService', () => {
 			providers: [
 				OverlaysService,
 				{ provide: XHRBackend, useClass: MockBackend },
-				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 			],
 			imports: [HttpModule]

@@ -137,7 +137,7 @@ describe('CasesService', () => {
 		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/${case_id}`, casesService.defaultOptions);
 	});
 
-	fit('getDefaultCase should return cloned defaultCase from config ', () => {
+	it('getDefaultCase should return cloned defaultCase from config ', () => {
 		const defaultCaseRes = casesService.getDefaultCase();
 		expect(defaultCaseRes.id).toEqual(defaultCase.id);
 		expect(defaultCaseRes.name).toEqual(defaultCase.name);

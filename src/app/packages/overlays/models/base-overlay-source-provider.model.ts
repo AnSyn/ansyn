@@ -14,4 +14,7 @@ export abstract class BaseOverlaySourceProvider {
     public fetch(fetchParams : IFetchParams) : Observable<Array<Overlay>> {
         return Observable.empty();
     };
+	public getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+		return Observable.empty();
+	};
 }

@@ -24,7 +24,7 @@ export class CasesService {
 	queryParamsKeys;
 	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
 
-	public contextValus = {
+	public contextValues = {
 		imageryCount: -1,
 		displayOverlay: ''
 	};

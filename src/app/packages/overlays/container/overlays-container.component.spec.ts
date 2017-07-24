@@ -41,7 +41,7 @@ describe('OverlayContainerComponent', () => {
 
     let storeFixture: StoreFixture < IOverlayState > ;
     let store: Store < IOverlayState > ;
-    let state: State < IOverlayState > ;
+    let state: State <{overlays: IOverlayState}> ;
     let getState: () => IOverlayState;
 
     let timelineEmitterService: TimelineEmitterService;
@@ -53,14 +53,14 @@ describe('OverlayContainerComponent', () => {
                     TimelineEmitterService,
                     OverlaysEffects,
                     Actions,
-                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig },                    
+                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
 				    { provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
                 ],
                 declarations: [
                     OverlaysContainer,
                     MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration','redraw$','markup'] })
                 ],
-                imports: [HttpModule, StoreModule.provideStore(OverlayReducer)]
+                imports: [HttpModule, StoreModule.provideStore({overlays: OverlayReducer})]
             })
             .compileComponents();
 
@@ -83,14 +83,6 @@ describe('OverlayContainerComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should call store.select("overlays") on ngOnInit', () => {
-        spyOn(store, 'select').and.callFake(() => {
-            return Observable.of({ key: 'value' });
-        });
-        component.ngOnInit();
-        expect(store.select).toHaveBeenCalledWith('overlays');
     });
 
     it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data', () => {
@@ -132,10 +124,9 @@ describe('OverlayContainerComponent', () => {
     });
 
     it('check that we subscribing for both overlays and selected overlays', () => {
-        spyOn(store, 'select').and.returnValue(Observable.of(overlayInitialState))
         component.ngOnInit();
-        expect(store.select).toHaveBeenCalledTimes(2);
-
+		component.ngAfterViewInit();
+        expect(Object.keys(component.subscribers).length).toEqual(11);
     });
 
     it('check the function toggle overlay', () => {
@@ -167,11 +158,11 @@ describe('OverlayContainerComponent', () => {
         }]
 
         store.dispatch(new LoadOverlaysAction());
-        expect(state.value.loading).toBe(true);
+        expect(state.value.overlays.loading).toBe(true);
 
         store.dispatch(new LoadOverlaysSuccessAction(overlays));
-        expect(state.value.overlays.size).toEqual(2);
-        expect(state.value.loading).toBe(false);
+        expect(state.value.overlays.overlays.size).toEqual(2);
+        expect(state.value.overlays.loading).toBe(false);
 
     });
     /*

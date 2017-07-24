@@ -74,10 +74,10 @@ export class QueryParamsHelper{
 		}
 
 		if(selected_context.imageryCount){
-			this.casesService.contextValus.imageryCount = +selected_context.imageryCount;
+			this.casesService.contextValues.imageryCount = +selected_context.imageryCount;
 		}
 
-		this.casesService.contextValus.displayOverlay = selected_context.defaultOverlay;
+		this.casesService.contextValues.displayOverlay = selected_context.defaultOverlay;
 	}
 
 	generateQueryParamsViaCase(s_case: Case): string {

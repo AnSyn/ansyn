@@ -15,6 +15,7 @@ import {
 	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ContextProviderService } from '../../packages/context/providers/context-provider.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -33,7 +34,9 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { casesBaseUrl: null }}]
+				{ provide: casesConfig, useValue: { casesBaseUrl: null }},
+				ContextProviderService
+			]
 
 		}).compileComponents();
 	}));

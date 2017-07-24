@@ -16,7 +16,7 @@ import { configuration } from '../../../../configuration/configuration'
 import { Overlay } from '../models/overlay.model';
 import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
 
-class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+export class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 	sourceType = "Mock";
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.create((observer : Observer<Overlay[]>)=>{
@@ -137,7 +137,7 @@ describe('OverlaysService', () => {
 
 	});
 
-	
+
 	it('check the method fetchData with mock data', () => {
 
 		overlaysService.search(searchParams).subscribe((result: any) => {

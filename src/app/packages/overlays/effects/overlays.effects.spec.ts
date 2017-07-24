@@ -9,7 +9,6 @@ import {
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
-import { configuration } from '../../../../configuration/configuration';
 import { OverlayReducer } from '../reducers/overlays.reducer';
 import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';
@@ -52,7 +51,7 @@ describe("Overlays Effects ", () => {
 				provide: OverlaysService,
 				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search', 'getTimeStateByOverlay'])
 			},
-			{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+			{ provide: OverlaysConfig, useValue: {} },
 			{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 		]
 	}));

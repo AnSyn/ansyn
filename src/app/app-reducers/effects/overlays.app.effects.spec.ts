@@ -6,13 +6,13 @@ import { Observable } from 'rxjs/Observable';
 import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { HttpModule } from '@angular/http';
 import { configuration } from '../../../configuration/configuration';
-import { BaseOverlaySourceProvider } from '../../packages/overlays/models/base-overlay-source-provider.model';
-import { OverlaySourceProviderMock } from '../../packages/overlays/services/overlays.service.spec';
-import { DisplayOverlayAction, SetFiltersAction } from '../../packages/overlays/actions/overlays.actions';
-import { OverlayReducer } from '../../packages/overlays/reducers/overlays.reducer';
+import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
+import { DisplayOverlayAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;

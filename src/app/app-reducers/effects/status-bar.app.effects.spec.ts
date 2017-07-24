@@ -29,7 +29,7 @@ import {BaseOverlaySourceProvider, IFetchParams,Overlay} from '@ansyn/overlays';
 import {
 	SetGeoFilterAction, SetOrientationAction,
 	SetTimeAction
-} from '../../packages/status-bar/actions/status-bar.actions';
+} from '@ansyn/status-bar/actions/status-bar.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 	sourceType = "Mock";

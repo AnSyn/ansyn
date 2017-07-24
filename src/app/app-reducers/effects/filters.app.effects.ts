@@ -17,7 +17,7 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	InitializeFiltersSuccessAction, UpdateFilterAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Injectable()
 export class FiltersAppEffects {

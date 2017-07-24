@@ -15,7 +15,7 @@ import {
 	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ContextProviderService } from '../../packages/context/providers/context-provider.service';
+import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

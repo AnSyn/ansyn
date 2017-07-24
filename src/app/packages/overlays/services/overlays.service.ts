@@ -17,7 +17,7 @@ import * as circle from '@turf/circle';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 
-import { FeatureCollection, GeometryObject, Point } from "@types/geojson";
+import { FeatureCollection, GeometryObject, Point } from "geojson";
 
 
 

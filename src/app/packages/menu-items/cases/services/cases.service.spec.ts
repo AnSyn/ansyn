@@ -7,14 +7,19 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
-import { CasesConfig } from '../models/cases-config';
+//import { CasesConfig } from '../models/cases-config';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
 	useValue: {
 		defaultCase: {
 			name:'default name',
-			id: 'default id'
+			id: 'default id',
+			state: {
+				time: {
+
+				}
+			}
 		},
 		casesBaseUrl:  "fake-cases-url",
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region']
@@ -28,7 +33,13 @@ describe('CasesService', () => {
 
 	const defaultCase: Case = {
 		name:'default name',
-		id: 'default id'
+		id: 'default id',
+		state: {
+			time: {
+
+			}
+		}
+
 	} as any;
 
 	const casesBaseUrl: string = "fake-cases-url";
@@ -126,12 +137,12 @@ describe('CasesService', () => {
 		expect(http.get).toHaveBeenCalledWith(`${casesService.base_url}/${case_id}`, casesService.defaultOptions);
 	});
 
-	it('getDefaultCase should return cloned defaultCase from config ', () => {
-		spyOn(_, 'cloneDeep').and.callFake(a => a);
-		const case_id = '12345';
+	fit('getDefaultCase should return cloned defaultCase from config ', () => {
 		const defaultCaseRes = casesService.getDefaultCase();
-		expect(_.cloneDeep).toHaveBeenCalledWith(defaultCase);
-		expect(defaultCaseRes).toEqual(defaultCase);
+		expect(defaultCaseRes.id).toEqual(defaultCase.id);
+		expect(defaultCaseRes.name).toEqual(defaultCase.name);
+		expect(defaultCaseRes.state.time.to).toBeTruthy();
+		expect(defaultCaseRes.state.time.from).toBeTruthy();
 	});
 
 });

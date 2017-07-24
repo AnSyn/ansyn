@@ -439,12 +439,15 @@ describe('MapAppEffects', () => {
 		const fake_layer = {};
 		const fake_extent = [1,2,3,4];
 		let fakeCommuincator: CommunicatorEntity;
+
 		beforeEach(()=> {
+
 			fakeCommuincator = <any> {
 				ActiveMap: {MapType: 'ol'},
 				setLayer: () => {},
 				shouldPerformHistogram: () => {}
 			};
+
 			const fakeSourceLoader = {
 				createAsync: () => {
 					return {
@@ -452,6 +455,14 @@ describe('MapAppEffects', () => {
 					};
 				}
 			};
+
+
+			Object.defineProperty(utils,'calcGeoJSONExtent',{
+				writable: true,
+				configurable: true,
+				value: () => {}
+			});
+
 			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
@@ -460,6 +471,12 @@ describe('MapAppEffects', () => {
 		});
 
 		it('isExtentContainedInPolygon "false"', ()=> {
+
+			Object.defineProperty(utils,'isExtentContainedInPolygon',{
+				writable: true,
+				configurable: true,
+				value: () => {}
+			});
 			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(false);
 			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'imagery1'}));
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {

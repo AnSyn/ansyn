@@ -95,7 +95,7 @@ export class CasesAppEffects {
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)
 		.withLatestFrom(this.store$.select("cases"))
-		.switchMap(([action, state]: [any, ICasesState]) => {
+		.switchMap(([action, state]: any[]) => {
 			let observable: Observable<Context[]>;
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);

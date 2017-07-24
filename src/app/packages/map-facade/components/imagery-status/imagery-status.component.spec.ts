@@ -47,6 +47,6 @@ describe('ImageryStatusComponent', () => {
 		const $event: any = jasmine.createSpyObj({stopPropagation: () => {}});
 		component.backToWorldView($event);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction());
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({mapId: component.map_id}));
 	})
 });

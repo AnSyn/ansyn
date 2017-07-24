@@ -26,6 +26,10 @@ import {
 	GoNextDisplayAction, GoPrevDisplayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import {BaseOverlaySourceProvider, IFetchParams,Overlay} from '@ansyn/overlays';
+import {
+	SetGeoFilterAction, SetOrientationAction,
+	SetTimeAction
+} from '../../packages/status-bar/actions/status-bar.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 	sourceType = "Mock";
@@ -194,14 +198,17 @@ describe('StatusBarAppEffects', () => {
 		});
 	});
 
-	it('selectCase$ should get layers_index from selected_case and return ChangeLayoutAction with result', () => {
+	it('selectCase$ should get layers_index, orientation, geoFilter and time from selected_case and return all update status-bar actions', () => {
 		const layouts_index = 2;
 		const caseItem: Case = <any> {
 			id: "31b33526-6447-495f-8b52-83be3f6b55bd",
 			state:{
 				maps:{
 					layouts_index
-				}
+				},
+				orientation: 'orientation',
+				geoFilter: 'geoFilter',
+				time: {from: 0, to: 100}
 			}
 		};
 
@@ -209,9 +216,21 @@ describe('StatusBarAppEffects', () => {
 		store.dispatch(new SelectCaseByIdAction(caseItem.id));
 
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
-		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction)=>{
-			expect(result instanceof ChangeLayoutAction).toBeTruthy();
-			expect(result.payload).toEqual(layouts_index);
+		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction | SetOrientationAction | SetGeoFilterAction | SetTimeAction)=>{
+			switch (result.constructor) {
+				case ChangeLayoutAction:
+					expect(result.payload).toEqual(layouts_index);
+					break;
+				case SetOrientationAction:
+					expect(result.payload).toEqual('orientation');
+					break;
+				case SetGeoFilterAction:
+					expect(result.payload).toEqual('geoFilter');
+					break;
+				case SetTimeAction:
+					expect(result.payload).toEqual({from: new Date(0), to: new Date(100)});
+					break;
+			}
 		});
 	});
 
@@ -245,29 +264,29 @@ describe('StatusBarAppEffects', () => {
 			}).unsubscribe();
 		});
 	});
-		// it('should set new timelineState when date is bigger then "timelineState.to" ', () => {
-        //
-		// 	const timelineState = {
-		// 		to: new Date(1000), /* 1000 < 2000 */
-		// 		from: new Date(0)
-		// 	};
-		// 	overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1", date: new Date(2000)}, {id: "overlayId2"}];
-		// 	store.dispatch(new SetTimelineStateAction(timelineState));
-		// 	effectsRunner.queue(new GoNextAction());
-		// 	statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
-		// 		expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
-		// 		if(result instanceof DisplayOverlayAction) {
-		// 			expect(result.payload.id).toEqual("overlayId1");
-		// 			expect(result.payload.map_id).toEqual("active_map_id");
-		// 		}
-        //
-		// 		if(result instanceof SetTimelineStateAction) {
-		// 			const delta = timelineState.to.getTime() - timelineState.from.getTime();
-		// 			const deltaTenth: number = delta *0.1;
-		// 			expect(result.payload.to).toEqual(new Date(2000 + deltaTenth));
-		// 		}
-		// 	});
-		// });
+	// it('should set new timelineState when date is bigger then "timelineState.to" ', () => {
+	//
+	// 	const timelineState = {
+	// 		to: new Date(1000), /* 1000 < 2000 */
+	// 		from: new Date(0)
+	// 	};
+	// 	overlaysService.sortedDropsIds = [{id: "firstOverlayId"}, {id: "overlayId"}, {id: "overlayId1", date: new Date(2000)}, {id: "overlayId2"}];
+	// 	store.dispatch(new SetTimelineStateAction(timelineState));
+	// 	effectsRunner.queue(new GoNextAction());
+	// 	statusBarAppEffects.onGoNext$.subscribe((result: DisplayOverlayAction) => {
+	// 		expect((result instanceof DisplayOverlayAction) || (result instanceof SetTimelineStateAction)).toBeTruthy();
+	// 		if(result instanceof DisplayOverlayAction) {
+	// 			expect(result.payload.id).toEqual("overlayId1");
+	// 			expect(result.payload.map_id).toEqual("active_map_id");
+	// 		}
+	//
+	// 		if(result instanceof SetTimelineStateAction) {
+	// 			const delta = timelineState.to.getTime() - timelineState.from.getTime();
+	// 			const deltaTenth: number = delta *0.1;
+	// 			expect(result.payload.to).toEqual(new Date(2000 + deltaTenth));
+	// 		}
+	// 	});
+	// });
 
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());

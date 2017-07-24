@@ -59,15 +59,6 @@ describe('EditCaseComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
 		expect(component.close).toHaveBeenCalled();
 	});
-	it('distinctUntilChangedActiveCase should compare between active_case_id of prev state and current', () => {
-		let prev_state: ICasesState = { active_case_id: undefined } as any;
-		let current_state: ICasesState = { active_case_id: undefined } as any;
-		let result: boolean = component.distinctUntilChangedActiveCase(prev_state, current_state);
-		expect(result).toBeTruthy();
-		current_state.active_case_id = '1234-56789-1011-1213';
-		result = component.distinctUntilChangedActiveCase(prev_state, current_state);
-		expect(result).toBeFalsy();
-	});
 
 	describe("template", () => {
 		let template: any;

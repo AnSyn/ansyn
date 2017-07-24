@@ -45,6 +45,11 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
 		.distinctUntilChanged(isEqual);
 
+	public selectedOverlays$ = this.store.select('overlays')
+		.skip(1)
+		.distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
+		.map((data: IOverlayState) => data.selectedOverlays);
+
 	public drops: any[] = [];
 	public redraw$: BehaviorSubject<number>;
 	public configuration: any;
@@ -127,30 +132,30 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 
 	init(): void {
-		this.subscribers.overlays = this.drops$.subscribe(_drops=> {
+
+		this.subscribers.overlays = this.drops$.subscribe(_drops => {
 			const count = this.calcOverlayCountViaDrops(_drops);
 			this.store.dispatch(new UpdateOverlaysCountAction(count));
 			this.drops = _drops;
 		});
 
-		this.subscribers.timelineState = this.timelineState$.subscribe(timelineState => {
-			this.configuration.start = timelineState.from;
-			this.configuration.end = timelineState.to;
-		});
+		this.subscribers.timelineState = this.timelineState$
+			.subscribe(timelineState => {
+				this.configuration.start = timelineState.from;
+				this.configuration.end = timelineState.to;
+			});
 
-		this.subscribers.selected = this.store.select('overlays')
-			.skip(1)
-			.distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
-			.map((data: IOverlayState) => data.selectedOverlays)
+		this.subscribers.selected = this.selectedOverlays$
 			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);
 
 		this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
 			this.redraw$.next(Math.random());
 		});
 
-		this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$.subscribe((action:OverlaysMarkupAction) => {
-			this.overlaysMarkup = action.payload;
-		});
+		this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$
+			.subscribe((action:OverlaysMarkupAction) => {
+				this.overlaysMarkup = action.payload;
+			});
 
 		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id == action.payload);

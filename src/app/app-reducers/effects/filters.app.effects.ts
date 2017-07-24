@@ -46,9 +46,9 @@ export class FiltersAppEffects {
         	overlaysState.overlays.forEach((value, key) => {
 				overlaysArray.push(value);
 			});
-        	const showAll: boolean = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValus.imageryCount === -1;
-        	if (this.casesService.contextValus.imageryCount !== -1){
-				this.casesService.contextValus.imageryCount = -1;
+        	const showAll: boolean = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValues.imageryCount === -1;
+        	if (this.casesService.contextValues.imageryCount !== -1){
+				this.casesService.contextValues.imageryCount = -1;
 			}
 			return [overlaysArray, casesState.selected_case.state.facets, showAll];
         })

@@ -6,29 +6,45 @@ import { Observable } from 'rxjs/Observable';
 import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysConfig, OverlaysService } from '../../packages/overlays/services/overlays.service';
+import { HttpModule } from '@angular/http';
+import { configuration } from '../../../configuration/configuration';
+import { BaseOverlaySourceProvider } from '../../packages/overlays/models/base-overlay-source-provider.model';
+import { OverlaySourceProviderMock } from '../../packages/overlays/services/overlays.service.spec';
+import { DisplayOverlayAction, SetFiltersAction } from '../../packages/overlays/actions/overlays.actions';
+import { OverlayReducer } from '../../packages/overlays/reducers/overlays.reducer';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
 	let casesService: CasesService;
+	let overlaysService: OverlaysService;
+
 	let cases: any = {
 		selected_case : {tmp:'1'}
 	};
+
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer}),
+				HttpModule,
+
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer}),
 
 			],
 			providers:[
 				OverlaysAppEffects,
+				OverlaysService,
+				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock},
+				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
 				{
 					provide: CasesService,
 					useValue: {
-						getOverlaysMarkup: () => null
+						getOverlaysMarkup: () => null,
+						contextValues: {imageryCount: -1}
 					}
 				}
 			]
@@ -36,12 +52,12 @@ describe('OverlaysAppEffects',()=> {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store, CasesService,EffectsRunner,OverlaysAppEffects],(_store: Store<any>, _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects) => {
+	beforeEach(inject([Store, CasesService, EffectsRunner, OverlaysAppEffects, OverlaysService],(_store: Store<any>, _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
 		store = _store;
 		casesService = _casesService;
 		overlaysAppEffects = _overalysAppEffects;
 		effectsRunner = _effectsRunner;
-
+		overlaysService = _overlaysService;
 	}));
 
 	it('should be defined', () => {
@@ -116,4 +132,16 @@ describe('OverlaysAppEffects',()=> {
 		});
 	});
 
+	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
+		let result;
+		const drops = [{name:'name', data: [{id: 'first'}, {id: 'last'}]}];
+		spyOn(overlaysService, 'parseOverlayDataForDispaly').and.callFake(() => drops);
+		casesService.contextValues.displayOverlay = 'latest';
+		effectsRunner.queue(new SetFiltersAction([]));
+		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
+			result = _result;
+		});
+		expect(result.constructor).toEqual(DisplayOverlayAction);
+		expect(result.payload.id).toEqual('last');
+	});
 });

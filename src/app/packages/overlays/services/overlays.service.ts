@@ -45,11 +45,8 @@ export class OverlaysService {
 		});
 	}
 
-	getStartDateViaLimitFasets(params: {facets, limit, region}) {
-		const url = this.config.baseUrl.concat('overlays/findDate');
-		return this.http.post(url, params)
-			.map(this.extractData)
-			.catch(this.handleError);
+	getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
 
 	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
@@ -74,7 +71,7 @@ export class OverlaysService {
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters) && _.isEqual(data.timelineState, data1.timelineState);
+		const result = _.isEqual(data.overlays, data1.overlays) && _.isEqual(data.filters, data1.filters);
 		return result;
 	}
 

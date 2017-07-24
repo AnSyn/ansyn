@@ -43,10 +43,8 @@ export class AnsynComponent implements OnInit{
 
 
 	overlays_count$ = this.store.select('overlays')
-		.map((state: IOverlayState) => {
-			const sum = state.count;
-			return sum;
-		});
+		.map((state: IOverlayState) => state.count)
+		.distinctUntilChanged(isEqual);
 
 
 	displayedOverlay$ = this.store.select('cases')

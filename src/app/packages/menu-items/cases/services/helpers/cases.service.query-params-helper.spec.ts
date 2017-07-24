@@ -67,34 +67,34 @@ describe('CasesService', () => {
 		});
 
 		it('encodeCaseObjects should switch between keys, "region" should encode by "wellknown" and other keys by "rison"' , ()=> {
-			spyOn(rison, 'encode_object');
+			spyOn(rison, 'encode');
 			spyOn(wellknown, 'stringify');
 
 			queryParamsHelper.encodeCaseObjects("facets","facets_value");
-			expect(rison.encode_object).toHaveBeenCalledWith("facets_value");
+			expect(rison.encode).toHaveBeenCalledWith("facets_value");
 
 			queryParamsHelper.encodeCaseObjects("time",{from: 'from', to: 'to'});
-			expect(rison.encode_object).toHaveBeenCalledWith({from: 'from', to: 'to'});
+			expect(rison.encode).toHaveBeenCalledWith({from: 'from', to: 'to'});
 
 			queryParamsHelper.encodeCaseObjects("maps",{data: []});
-			expect(rison.encode_object).toHaveBeenCalledWith({data: []});
+			expect(rison.encode).toHaveBeenCalledWith({data: []});
 
 			queryParamsHelper.encodeCaseObjects("region","region_value");
 			expect(wellknown.stringify).toHaveBeenCalledWith("region_value");
 		});
 
 		it('decodeCaseObjects should switch between keys, "region" should decode by "wellknown" and other keys by "rison"' , ()=> {
-			spyOn(rison, 'decode_object');
+			spyOn(rison, 'decode');
 			spyOn(wellknown, 'parse');
 
 			queryParamsHelper.decodeCaseObjects("facets","facets_value");
-			expect(rison.decode_object).toHaveBeenCalledWith("facets_value");
+			expect(rison.decode).toHaveBeenCalledWith("facets_value");
 
 			queryParamsHelper.decodeCaseObjects("time",{from: 'from', to: 'to'});
-			expect(rison.decode_object).toHaveBeenCalledWith({from: 'from', to: 'to'});
+			expect(rison.decode).toHaveBeenCalledWith({from: 'from', to: 'to'});
 
 			queryParamsHelper.decodeCaseObjects("maps","maps_value");
-			expect(rison.decode_object).toHaveBeenCalledWith("maps_value");
+			expect(rison.decode).toHaveBeenCalledWith("maps_value");
 
 			queryParamsHelper.decodeCaseObjects("region","region_value");
 			expect(wellknown.parse).toHaveBeenCalledWith("region_value");

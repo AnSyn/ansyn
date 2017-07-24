@@ -13,7 +13,6 @@ import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../package.json';
 import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { getPointByPolygon } from '../packages/core/utils/geo';
 
 @Component({
 	selector: 'ansyn-ansyn',

@@ -31,9 +31,7 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { Position } from '@ansyn/core';
-import { before } from 'selenium-webdriver/testing';
-import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
+import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade';
 
 
@@ -432,7 +430,7 @@ describe('MapAppEffects', () => {
 				expect(result).toBe(true);
 				const resultCase: Case = _result.payload;
 				expect(resultCase.state.maps.data[0].data.isHistogramActive).toEqual(true);
-				expect(communicator.shouldPerformHistogram).toHaveBeenCalledWith(true);				
+				expect(communicator.shouldPerformHistogram).toHaveBeenCalledWith(true);
 			});
 		});
 	});
@@ -458,7 +456,7 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommuincator, 'setLayer');
-			spyOn(fakeCommuincator, 'shouldPerformHistogram');			
+			spyOn(fakeCommuincator, 'shouldPerformHistogram');
 		});
 
 		it('isExtentContainedInPolygon "false"', ()=> {

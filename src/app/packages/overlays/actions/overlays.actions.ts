@@ -13,7 +13,9 @@ export const OverlaysActionTypes = {
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
+	DISPLAY_OVERLAY_FROM_STORE: type('[Overlay] Display Overlay From Store'),
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
+	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
 	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
@@ -59,9 +61,19 @@ export class ClearFilterAction implements Action {
 	constructor(public payload?: any){}
 }
 
+export class DisplayOverlayFromStoreAction implements Action {
+	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
+	constructor(public payload: {id: string, map_id?:string}){}
+}
+
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
-	constructor(public payload: {id: string, map_id?:string}){}
+	constructor(public payload: {overlay: Overlay, map_id?:string}){}
+}
+
+export class DisplayOverlaySuccessAction implements Action {
+	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+	constructor(public payload: {id: string}){}
 }
 
 export class DemoAction implements Action {
@@ -100,7 +112,9 @@ export class GoPrevDisplayAction implements Action {
 }
 
 export type OverlaysActions
-	= 	DisplayOverlayAction
+	= 	DisplayOverlayFromStoreAction
+	|   DisplayOverlayAction
+	|   DisplayOverlaySuccessAction
 	|  	SelectOverlayAction
 	|	UnSelectOverlayAction
 	| 	LoadOverlaysAction

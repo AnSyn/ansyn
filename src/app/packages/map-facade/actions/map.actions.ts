@@ -13,6 +13,8 @@ export const MapActionTypes = {
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
+	ADD_OVERLAY_TO_LOADING_OVERLAYS: 'ADD_OVERLAY_TO_LOADING_OVERLAYS',
+	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
 	TOGGLE_HISTOGRAM: 'TOGGLE_HISTOGRAM'
 };
@@ -89,3 +91,15 @@ export class SetLoadingOverlaysAction implements Action {
 	type = MapActionTypes.SET_LOADING_OVERLAYS;
 	constructor(public payload: string[]){}
 }
+
+export class AddOverlayToLoadingOverlaysAction implements Action {
+	type = MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS;
+	constructor(public payload: string){}
+}
+
+export class RemoveOverlayFromLoadingOverlaysAction implements Action {
+	type = MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS;
+	constructor(public payload: string){}
+}
+
+

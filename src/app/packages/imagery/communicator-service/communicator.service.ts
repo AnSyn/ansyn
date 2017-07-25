@@ -50,9 +50,17 @@ export class ImageryCommunicatorService {
 		this.communicators[new_id] = this.communicators[old_id];
 		this.communicators[new_id]._manager.id = new_id;
 		delete this.communicators[old_id];
+		this.instanceRemoved.emit({
+			communicatorsIds: this.initiliziedCommunicators,
+			currentCommunicatorId: old_id
+		});
 
 		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id),1);
 		this.initiliziedCommunicators.push(new_id);
+		this.instanceCreated.emit({
+			communicatorsIds: this.initiliziedCommunicators,
+			currentCommunicatorId: new_id
+		});
 	}
 
 	public remove(id: string) {

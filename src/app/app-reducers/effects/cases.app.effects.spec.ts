@@ -11,7 +11,7 @@ import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-	DisplayOverlayAction, LoadOverlaysSuccessAction,
+	DisplayOverlayFromStoreAction, LoadOverlaysSuccessAction,
 	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -89,20 +89,20 @@ describe('CasesAppEffects', () => {
 	}));
 
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const action  = new DisplayOverlayAction({ id: "tmp"});
+		const action  = new DisplayOverlayFromStoreAction({ id: "tmp"});
 
 		effectsRunner.queue(action)
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
-			if(_result.type == CasesActionTypes.UPDATE_CASE){
+			if(_result.type === CasesActionTypes.UPDATE_CASE){
 				expect(_result.payload.state.maps.data[0].data.overlay.name).toBe('tmp');
 				expect(_result.payload.state.maps.data[0].id).toBe(icase_state.cases[0].state.maps.active_map_id);
 				count++;
 			}
-			if(_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS){
-				expect(_result.payload[0].id == 'tmp');
-				expect(_result.payload[0].class == 'active');
-				count++
+			if(_result.type === OverlaysActionTypes.DISPLAY_OVERLAY){
+				expect(_result.payload.overlay.id === 'tmp');
+				expect(_result.payload.map_id === icase_state.cases[0].state.maps.active_map_id);
+				count++;
 			}
 
 		});
@@ -110,22 +110,21 @@ describe('CasesAppEffects', () => {
 	});
 
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const action  = new DisplayOverlayAction({ id: "tmp",map_id: '4444'});
+		const action  = new DisplayOverlayFromStoreAction({ id: "tmp", map_id: '4444'});
 
 		effectsRunner.queue(action)
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
-			if(_result.type == CasesActionTypes.UPDATE_CASE){
+			if(_result.type === CasesActionTypes.UPDATE_CASE){
 				expect(_result.payload.state.maps.data[1].data.overlay.name).toBe('tmp');
 				expect(_result.payload.state.maps.data[1].id).not.toBe(icase_state.cases[0].state.maps.active_map_id);
 				count++;
 			}
-			if(_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS){
-				expect(_result.payload[0].id == 'tmp');
-				expect(_result.payload[0].class == 'displayed');
-				count++
+			if(_result.type === OverlaysActionTypes.DISPLAY_OVERLAY){
+				expect(_result.payload.overlay.id === 'tmp');
+				expect(_result.payload.map_id === '4444');
+				count++;
 			}
-
 		});
 		expect(count).toBe(2);
 	});

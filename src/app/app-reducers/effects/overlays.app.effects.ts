@@ -98,50 +98,6 @@ export class OverlaysAppEffects {
 			return new SetTimelineStateAction({from: fromTenth, to: toTenth});
 		});
 
-
-	@Effect()
-	beforeDisplaySelectedOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
-		.withLatestFrom(this.store$.select('map'), this.store$.select('cases'), (action: LoadOverlaysAction, mapState: IMapState, casesState: ICasesState): any => {
-			return [action, cloneDeep(mapState.loadingOverlays), casesState.selected_case.state.maps.data];
-		})
-		.map(
-			([LoadOverlaysAction, loadingOverlays, maps_data]: [Overlay[], string[], CaseMapState[]]) => {
-				maps_data
-					.filter((map: CaseMapState) =>{
-						return !isEmpty(map.data.overlay);
-					}).forEach((map: CaseMapState) => {
-					loadingOverlays.push(map.data.overlay.id);
-				});
-				return new SetLoadingOverlaysAction(loadingOverlays);
-			}
-		).share();
-
-
-	@Effect()
-	displaySelectedOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('map'), this.store$.select('cases'), (overlays: Overlay[], mapState: IMapState, casesState: ICasesState): any => {
-			return [overlays, cloneDeep(mapState.loadingOverlays), casesState.selected_case.state.maps.data];
-		})
-		.mergeMap(
-			([overlays, loadingOverlays, maps_data]: [Overlay[], string[], CaseMapState[]]) => {
-				const displayOverlayActions = maps_data
-					.filter((map: CaseMapState) =>{
-						return !isEmpty(map.data.overlay);
-					}).map((map: CaseMapState) => {
-						const id = map.data.overlay.id;
-						const map_id = map.id;
-						const OIndex = loadingOverlays.findIndex((_overlayId) => id === _overlayId);
-						loadingOverlays.splice(OIndex, 1);
-
-						return new DisplayOverlayAction({id, map_id});
-					});
-				return [new SetLoadingOverlaysAction(loadingOverlays), ...displayOverlayActions];
-			}
-		).share();
-
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS)

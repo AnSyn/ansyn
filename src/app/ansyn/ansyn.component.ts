@@ -40,30 +40,17 @@ export class AnsynComponent implements OnInit{
 		.distinctUntilChanged(isEqual);
 
 //move to app.comp
-	overlays_count$ = this.store.select('overlays')
-		.map((state: IOverlayState) => state.count)
-		.distinctUntilChanged(isEqual);
 
 
-	displayedOverlay$ = this.store.select('cases')
-		.filter((cases: ICasesState) => !isNil(cases.selected_case))
-		.map((cases: ICasesState) => {
-			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id === cases.selected_case.state.maps.active_map_id);
-			return activeMap.data.overlay;
-		});
+
+
 //end move to app.comp
-	histogramActive$ = this.store.select('cases')
-		.filter((cases: ICasesState) => !isNil(cases.selected_case))
-		.map((cases: ICasesState) => {
-			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
-			return activeMap.data.isHistogramActive;
-		});
+
 
 	public maps: CaseMapsState;
 	public selected_layout: MapsLayout;
 	public selected_case: Case;
 	public version;
-	histogramActive: boolean;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
@@ -84,9 +71,7 @@ export class AnsynComponent implements OnInit{
 			this.maps = maps;
 		});
 
-		this.histogramActive$.subscribe((histogramActive: boolean) => {
-			this.histogramActive = histogramActive;
-		});
+
 	}
 
 	onActiveImagery(active_map_id: string) {

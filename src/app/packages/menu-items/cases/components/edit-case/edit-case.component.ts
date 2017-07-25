@@ -40,12 +40,12 @@ const host = {
 export class EditCaseComponent implements OnInit {
 
 	active_case$: Observable<Case> = this.store.select("cases")
-		.distinctUntilChanged(_.isEqual)
+		.distinctUntilChanged(isEqual)
 		.map(this.getCloneActiveCase.bind(this));
 
 	selectedCase$: Observable<Case> = this.store.select("cases")
 		.map((state: ICasesState) => state.selected_case)
-		.distinctUntilChanged(_.isEqual);
+		.distinctUntilChanged(isEqual);
 
 	default_case_id$: Observable<string> = this.store.select("cases").map((state: ICasesState) => state.default_case.id);
 
@@ -139,7 +139,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	get selected_context() {
-		return _.cloneDeep(this.contexts_list.find((context: Context) => context.id === this.case_model.state.selected_context_id));
+		return cloneDeep(this.contexts_list.find((context: Context) => context.id === this.case_model.state.selected_context_id));
 	}
 
 }

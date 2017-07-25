@@ -181,13 +181,13 @@ describe('CasesEffects', () => {
 		effectsRunner.queue(new LoadDefaultCaseAction());
 		//mergeMap
 		let count = 0;
-		casesEffects.loadDefaultCase$.subscribe((result: SelectCaseByIdAction) => {
+		casesEffects.loadDefaultCase$.subscribe((result: any) => {
 			count = count + 1;
 			if(result instanceof SetDefaultCaseQueryParams) {
-				expect(isEqual(result.payload, defaultCaseWithQueryParmas)).toBeTruthy()
+				expect(isEqual(result.payload, defaultCaseWithQueryParmas)).toBeTruthy();
 			}
 			if(result instanceof LoadDefaultCaseSuccessAction) {
-				expect(isEqual(result.payload, defaultCase)).toBeTruthy()
+				expect(isEqual(result.payload, defaultCase)).toBeTruthy();
 			}
 			if(result instanceof SelectCaseByIdAction) {
 				expect(result.payload).toEqual(defaultCase.id);
@@ -202,7 +202,7 @@ describe('CasesEffects', () => {
 			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
 		} as any;
 
-		effectsRunner.queue(new LoadCaseSuccessAction(caseItem.id));
+		effectsRunner.queue(new LoadCaseSuccessAction(caseItem));
 
 		casesEffects.loadDefaultCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof SelectCaseByIdAction).toBeTruthy();

@@ -1,5 +1,10 @@
 <div class='tools-menu-item-container'>
 	<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled')">
-		<img src='/assets/icons/shadow_mouse.svg'/>
+		<img src='/assets/icons/tools/shadow_mouse.svg'/>
 	</button>
+
+	<button>
+		<img src='/assets/icons/tools/go-to.svg'/>
+	</button>
+
 </div>

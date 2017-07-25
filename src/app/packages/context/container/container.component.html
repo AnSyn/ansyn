@@ -10,9 +10,9 @@
 </textarea>
 <br>
 <input type="text" />
-<button (click)="find($event)">Find</button>
-<button (click)="update($event)">Update</button>
-<button (click)="create($event)">Create</button>
+<button (click)="find()">Find</button>
+<button (click)="update()">Update</button>
+<button (click)="create()">Create</button>
 <ul>
 	<ng-template ngFor let-hit [ngForOf]="result">
 		<li>{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;<a (click)="delete(hit.id)">delete</a></li>

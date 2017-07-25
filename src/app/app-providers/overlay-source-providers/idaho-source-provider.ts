@@ -38,7 +38,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<Array<Overlay>> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
 		return this.http.post(url, params)
-			.map(this.extractData)
+			.map(res => res.json())
 			.catch(this.handleError);
     }
 

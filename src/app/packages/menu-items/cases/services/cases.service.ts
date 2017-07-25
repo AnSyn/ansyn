@@ -26,7 +26,7 @@ export class CasesService {
 
 	public contextValues = {
 		imageryCount: -1,
-		displayOverlay: ''
+		defaultOverlay: ''
 	};
 
 

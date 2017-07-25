@@ -26,12 +26,6 @@ export class OverlaysService {
 				return 0;
 			})
 	}
-	get getPolygonByPoint() {
-		return getPolygonByPoint;
-	}
-	get getPointByPolygon() {
-		return getPointByPolygon;
-	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {
 		let bbox = turf.bbox(params.polygon);

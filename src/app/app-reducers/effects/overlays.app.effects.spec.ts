@@ -134,7 +134,7 @@ describe('OverlaysAppEffects',()=> {
 		let result;
 		const drops = [{name:'name', data: [{id: 'first'}, {id: 'last'}]}];
 		spyOn(overlaysService, 'parseOverlayDataForDispaly').and.callFake(() => drops);
-		casesService.contextValues.displayOverlay = 'latest';
+		casesService.contextValues.defaultOverlay = 'latest';
 		effectsRunner.queue(new SetFiltersAction([]));
 		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
 			result = _result;

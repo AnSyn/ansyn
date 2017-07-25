@@ -25,7 +25,7 @@ import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
-import { Position, CaseMapState } from '@ansyn/core';
+import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
 
 @Injectable()
 export class MapAppEffects {
@@ -38,7 +38,7 @@ export class MapAppEffects {
 		.mergeMap(([action,caseState,statusBarState]:[UpdateStatusFlagsAction,ICasesState ,IStatusBarState]) => {
 
 			//create the region
-			const region = this.overlaysService.getPolygonByPoint(action.payload.lonLat).geometry;
+			const region = getPolygonByPoint(action.payload.lonLat).geometry;
 
 			//draw on all maps
 			this.communicator.communicatorsAsArray().forEach( communicator => {
@@ -166,7 +166,7 @@ export class MapAppEffects {
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
 
 			if(statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
+				const point = getPointByPolygon(caseState.selected_case.state.region);
 				communicatorHandler.addPinPointIndicator(point.coordinates);
 			}
 
@@ -194,7 +194,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
 		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action,caseState,statusBarState]:[any,any,any]) => {
-			const point = this.overlaysService.getPointByPolygon(caseState.selected_case.state.region);
+			const point = getPointByPolygon(caseState.selected_case.state.region);
 			this.communicator.communicatorsAsArray().forEach(c => {
 				c.addPinPointIndicator(point.coordinates);
 			});

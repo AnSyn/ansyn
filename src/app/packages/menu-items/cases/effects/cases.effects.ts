@@ -131,21 +131,6 @@ export class CasesEffects {
 			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
 
-	// @Effect()
-	// onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
-	// 	.ofType(CasesActionTypes.LOAD_CONTEXTS)
-	// 	.withLatestFrom(this.store.select("cases"))
-	// 	.switchMap(([action, state]: [LoadContextsAction, ICasesState]) => {
-	// 		let observable: Observable<Context[]>;
-	// 		if (state.contexts_loaded) {
-	// 			observable = Observable.of(state.contexts);
-	// 		} else {
-	// 			observable = this.casesService.loadContexts();
-	// 		}
-	// 		return observable.map((contexts) => {
-	// 			return new LoadContextsSuccessAction(contexts);
-	// 		});
-	// 	}).share();
 
 	@Effect()
 	loadCase$: Observable<any> = this.actions$

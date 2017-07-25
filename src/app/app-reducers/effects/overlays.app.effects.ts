@@ -16,6 +16,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { last } from 'lodash';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -144,15 +145,15 @@ export class OverlaysAppEffects {
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS)
-		.filter(action => this.casesService.contextValues.displayOverlay === 'latest')
+		.filter(action => this.casesService.contextValues.defaultOverlay === 'latest')
 		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
 			const drops = this.overlaysService.parseOverlayDataForDispaly(overlays.overlays, overlays.filters);
 			return drops[0].data;
 		})
 		.filter((displayedOverlays) => !isEmpty(displayedOverlays))
 		.map((displayedOverlays: any[]) => {
-			const lastOverlayId = displayedOverlays[displayedOverlays.length - 1].id;
-			this.casesService.contextValues.displayOverlay = '';
+			const lastOverlayId = last(displayedOverlays).id;
+			this.casesService.contextValues.defaultOverlay = '';
 			return new DisplayOverlayAction({id: lastOverlayId});
 		})
 		.share();

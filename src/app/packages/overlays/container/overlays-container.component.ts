@@ -178,7 +178,17 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 
 	calcOverlayCountViaDrops(drops) {
-		if(isEmpty(drops)) return 0;
+		drops.reduce((count, row) => {
+			return count + row.data.reduce((rowCount, overlays) => {
+				const isIn = this.configuration.start <= overlays.date && overlays.date <= this.configuration.end;
+				if(isIn) {
+					return rowCount + 1;
+				} else {
+					return rowCount;
+				}
+			}, 0)
+		}, 0);
+
 		return drops[0].data.reduce((count, overlays) => {
 			if(this.configuration.start <= overlays.date && overlays.date <= this.configuration.end) {
 				return count+ 1;

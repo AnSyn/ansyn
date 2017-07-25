@@ -3,83 +3,83 @@ import { OverlaysService, OverlaysConfig } from './overlays.service';
 import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
 import { HttpModule, XHRBackend, Response, ResponseOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { Observable, Observer } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 import * as turf from '@turf/turf';
-
-import { configuration } from '../../../../configuration/configuration';
 import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
-export class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
+export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = "Mock";
+
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		return Observable.create((observer : Observer<Overlay[]>)=>{
-			const overlays : Overlay[] = [
-				{id : "abc" ,sourceType : "mock1",azimuth :0 ,date : new Date(1999),photoTime:"dsds",name: "first"},
-				{id : "abc" ,sourceType : "mock2",azimuth :0 ,date : new Date(1987),photoTime:"beww",name: "second"}
+		return Observable.create((observer: Observer<Overlay[]>) => {
+			const overlays: Overlay[] = [
+				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first"},
+				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second"}
 			]
 			observer.next(overlays);
 			observer.complete();
-		})
+		});
 	}
 
 }
 
 describe('OverlaysService', () => {
 	let overlaysService: OverlaysService, mockBackend, lastConnection, http;
-	let baseSourceProvider :BaseOverlaySourceProvider;
+	let baseSourceProvider: BaseOverlaySourceProvider;
 	let overlaysTmpData: any[];
 	let response = {
 		data: [
-			{ key: "a", value: 1 },
-			{ key: "b", value: 2 }
+			{key: "a", value: 1},
+			{key: "b", value: 2}
 		]
 	};
 	let searchParams = {
-			polygon:{
-				"type": "Polygon",
-				"coordinates": [
+		polygon: {
+			"type": "Polygon",
+			"coordinates": [
+				[
 					[
-						[
-							-14.4140625,
-							59.99349233206085
-						],
-						[
-							37.96875,
-							59.99349233206085
-						],
-						[
-							37.96875,
-							35.915747419499695
-						],
-						[
-							-14.4140625,
-							35.915747419499695
-						],
-						[
-							-14.4140625,
-							59.99349233206085
-						]
+						-14.4140625,
+						59.99349233206085
+					],
+					[
+						37.96875,
+						59.99349233206085
+					],
+					[
+						37.96875,
+						35.915747419499695
+					],
+					[
+						-14.4140625,
+						35.915747419499695
+					],
+					[
+						-14.4140625,
+						59.99349233206085
 					]
 				]
-			},
-			from: new Date(2020),
-			to: Date.now()
-		};
+			]
+		},
+		from: new Date(2020),
+		to: Date.now()
+	};
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
-				{ provide: XHRBackend, useClass: MockBackend },
-				{ provide: OverlaysConfig, useValue: {} },
-				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
+				{provide: XHRBackend, useClass: MockBackend},
+				{provide: OverlaysConfig, useValue: {}},
+				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock}
 			],
 			imports: [HttpModule]
 		});
 	});
 
-	beforeEach(inject([OverlaysService, XHRBackend, Http , BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http , _baseSourceProvider : BaseOverlaySourceProvider) => {
+	beforeEach(inject([OverlaysService, XHRBackend, Http, BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _baseSourceProvider: BaseOverlaySourceProvider) => {
 		overlaysService = _overlaysService;
 		mockBackend = _mockBackend;
 		http = _http;
@@ -175,21 +175,21 @@ describe('OverlaysService', () => {
 
 	it('check the method fetchData with spyOn', () => {
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
+			body: JSON.stringify({key: 'value'})
 		}));
 
-		spyOn(baseSourceProvider, 'fetch').and.callFake(function() {
-			return Observable.create((observer: Observer < any > ) => {
+		spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
+			return Observable.create((observer: Observer<any>) => {
 				observer.next(response.json());
 			});
 		});
 
-		overlaysService.search(searchParams).subscribe((result: any)=> {
+		overlaysService.search(searchParams).subscribe((result: any) => {
 			expect(result.key).toBe('value');
 		});
 
 		response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value2' })
+			body: JSON.stringify({key: 'value2'})
 		}));
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
@@ -197,22 +197,22 @@ describe('OverlaysService', () => {
 		});
 	})
 
-	it('check the method searchOverlay with spyOn',() => {
+	it('check the method searchOverlay with spyOn', () => {
 
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
+			body: JSON.stringify({key: 'value'})
 		}));
 
-		var calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function() {
-			return Observable.create((observer: Observer < any > ) => {
+		var calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
+			return Observable.create((observer: Observer<any>) => {
 
 				observer.next(response.json());
 			});
 		}).calls;
 
 
-		let params =  {
-			polygon:{
+		let params = {
+			polygon: {
 				"type": "Polygon",
 				"coordinates": [
 					[
@@ -273,7 +273,7 @@ describe('OverlaysService', () => {
 
 	describe('getTimeStateByOverlay should calc delta and return new timelineState via overlay.date', () => {
 
-		it('timelineState should go forwards', ()=>{
+		it('timelineState should go forwards', () => {
 			const displayedOverlay = {
 				date: new Date(6000)
 			} as any;
@@ -286,7 +286,7 @@ describe('OverlaysService', () => {
 			expect(to).toEqual(new Date(6500));
 		});
 
-		it('timelineState should go backwards', ()=>{
+		it('timelineState should go backwards', () => {
 			const displayedOverlay = {
 				date: new Date(1000)
 			} as any;

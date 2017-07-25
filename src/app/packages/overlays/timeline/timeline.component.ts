@@ -39,6 +39,9 @@ export class TimelineComponent implements OnInit {
 
         this._drops = drops || [];
         this.eventDropsHandler();
+        if (this._drops.length > 0 && this._markup) {
+			this.drawMarkup();
+		}
         //this.stream.next();
 
     }

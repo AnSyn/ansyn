@@ -13,7 +13,7 @@ import { IAppState } from '../';
 import { isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { isNil } from 'lodash';
@@ -30,9 +30,10 @@ export class CasesAppEffects {
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$)
-		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
+		.mergeMap(([action, state]:[DisplayOverlayFromStoreAction, IAppState]) => {
+
 			const selectedCase = cloneDeep(state.cases.selected_case);
 			const overlay: Overlay = state.overlays.overlays.get(action.payload.id) as any;
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
@@ -45,7 +46,7 @@ export class CasesAppEffects {
 
 			return[
 				new UpdateCaseAction(selectedCase),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase))
+			    new DisplayOverlayAction({overlay: overlay, map_id: mapId})
 			];
 
 		}).share();
@@ -54,7 +55,7 @@ export class CasesAppEffects {
 	onCopyShareCaseLink$ = this.actions$
 		.ofType(CasesActionTypes.COPY_CASE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
-			let s_case = state.cases.find((case_value: Case) => case_value.id == action.payload);
+			let s_case = state.cases.find((case_value: Case) => case_value.id === action.payload);
 			if(isNil(s_case)){
 				if(state.selected_case.id === action.payload){
 					s_case = state.selected_case;

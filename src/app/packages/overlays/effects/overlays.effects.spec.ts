@@ -4,7 +4,7 @@ import { Action, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
 	LoadOverlaysAction, LoadOverlaysSuccessAction,
-	OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction, DisplayOverlayAction, SetTimelineStateAction
+	OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction, DisplayOverlayFromStoreAction, SetTimelineStateAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
@@ -139,7 +139,7 @@ describe("Overlays Effects ", () => {
 			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
 			store.dispatch(new SetTimelineStateAction(timelineState));
 
-			const action = new DisplayOverlayAction({id: '1234'});
+			const action = new DisplayOverlayFromStoreAction({id: '1234'});
 			runner.queue(action);
 
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
@@ -165,7 +165,7 @@ describe("Overlays Effects ", () => {
 			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
 			store.dispatch(new SetTimelineStateAction(timelineState));
 
-			const action = new DisplayOverlayAction({id: '5678'});
+			const action = new DisplayOverlayFromStoreAction({id: '5678'});
 			runner.queue(action);
 
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {

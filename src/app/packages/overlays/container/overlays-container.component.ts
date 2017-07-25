@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import {
-	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
 	GoNextDisplayAction,
 	GoPrevDisplayAction,
 	OverlaysMarkupAction, SelectOverlayAction, SetTimelineStateAction, UnSelectOverlayAction,
@@ -100,7 +100,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
 			.subscribe(data => {
 				const id = data.element.id;
-				this.store.dispatch(new overlaysAction.DisplayOverlayAction({id: id}));
+				this.store.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({id: id}));
 				if (this.selectedOverlays.indexOf(id) === -1) {
 					this.store.dispatch(new SelectOverlayAction(id));
 				}
@@ -119,7 +119,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			.subscribe(result => {
 				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
 				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
-			})
+			});
 
 	}
 
@@ -161,9 +161,9 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
 			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id === action.payload);
 			const indexPrevOverlay = indexCurrentOverlay - 1;
-			const prevOverlayId : any = get(this.drops[0].data[indexPrevOverlay], 'id');
+			const prevOverlayId: any = get(this.drops[0].data[indexPrevOverlay], 'id');
 			if (!isNil(prevOverlayId)){
-				this.store.dispatch(new DisplayOverlayAction({id: prevOverlayId}));
+				this.store.dispatch(new DisplayOverlayFromStoreAction({id: prevOverlayId}));
 			}
 		});
 
@@ -172,10 +172,9 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 			const indexNextOverlay = indexCurrentOverlay + 1;
 			const nextOverlayId: any = get(this.drops[0].data[indexNextOverlay], 'id');
 			if(!isNil(nextOverlayId)){
-				this.store.dispatch(new DisplayOverlayAction({id: nextOverlayId}));
+				this.store.dispatch(new DisplayOverlayFromStoreAction({id: nextOverlayId}));
 			}
 		});
-
 	}
 
 	calcOverlayCountViaDrops(drops) {

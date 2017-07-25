@@ -18,14 +18,14 @@ import '@ansyn/core/utils/clone-deep';
 import { OverlaysService, DisplayOverlayAction } from "@ansyn/overlays";
 import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from "@ansyn/status-bar";
-import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
-import { OverlaysMarkupAction } from '@ansyn//overlays/actions/overlays.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
+import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
+import { EmptyAction } from '@ansyn/core/actions/empty.action';
 
 @Injectable()
 export class MapAppEffects {
@@ -77,17 +77,17 @@ export class MapAppEffects {
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
 		.map(() => new StopMapShadowAction());
 
-	@Effect({ dispatch: false })
-	onDisplayOverlay$: Observable<void> = this.actions$
+	@Effect()
+	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
-			const overlay = overlaysState.overlays.get(action.payload.id);
+			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
 			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
 			return [overlay, map_id, active_map.data.position, active_map.data.isHistogramActive];
 		})
 		.filter(([overlay]) => !isEmpty(overlay))
-		.map( ([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
+		.flatMap(([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
 
 			let extent;
 			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
@@ -100,10 +100,68 @@ export class MapAppEffects {
 			const communicator = this.communicator.provide(map_id);
 			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
-			sourceLoader.createAsync(overlay).then((layer)=> {
+			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
 				communicator.setLayer(layer, extent);
 				communicator.shouldPerformHistogram(isHistogramActive);
+				return new DisplayOverlaySuccessAction({id: overlay.id});
 			});
+		});
+
+	@Effect()
+	onAddCommunicatorAddOverlayFromCase$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.withLatestFrom(this.store$.select("cases"))
+		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
+			const currentCase = state.selected_case;
+			let result: any = new EmptyAction();
+			if (currentCase) {
+				currentCase.state.maps.data.every(value => {
+					if (value.data.overlay && value.id === action.payload.currentCommunicatorId) {
+						result = new DisplayOverlayAction({overlay: value.data.overlay, map_id: value.id});
+						return false;
+					}
+					return true;
+				});
+			}
+			return result;
+		});
+
+	@Effect()
+	selectCaseByIdAction$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.withLatestFrom(this.store$.select("cases"))
+		.mergeMap(([action, state]: [ SelectCaseByIdAction, ICasesState]) => {
+			const currentCase = state.selected_case;
+			const displayedOverlays = [];
+			currentCase.state.maps.data.forEach((data: CaseMapState)=> {
+				if (data.data.overlay) {
+					const communicatorHandler = this.communicator.provide(data.id);
+					if (communicatorHandler) {
+						displayedOverlays.push(new DisplayOverlayAction({overlay: data.data.overlay, map_id: data.id}));
+					}
+				}
+			});
+			return displayedOverlays;
+		});
+
+	@Effect()
+	setOverlayAsLoading$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.map((action: DisplayOverlayAction)=>
+			new AddOverlayToLoadingOverlaysAction(action.payload.overlay.id));
+
+	@Effect()
+	setOverlayAsLoadingSuccess$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select("cases"))
+		.map(([action, state]: [DisplayOverlaySuccessAction, ICasesState]) => {
+			return [action, state.selected_case];
+		})
+		.mergeMap(([action, selectedCase]: [DisplayOverlaySuccessAction, Case])=> {
+			return [
+				new RemoveOverlayFromLoadingOverlaysAction(action.payload.id),
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase))
+			];
 		});
 
 	@Effect({ dispatch: false })

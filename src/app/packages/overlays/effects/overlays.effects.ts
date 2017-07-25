@@ -63,11 +63,12 @@ export class OverlaysEffects {
 		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
 		.share();
 
+	// this method moves the timeline to active displayed overlay if exists in timeline
 	@Effect()
 	displayOverlaySetTimeline$ = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlayState, cases: ICasesState) => {
-			const displayedOverlay = overlays.overlays.get(action.payload.id);
+			const displayedOverlay = overlays.overlays.get(action.payload.overlay.id);
 			const timelineState = overlays.timelineState;
 			const isActiveMap: boolean =  isNil(action.payload.map_id) ||  isEqual(cases.selected_case.state.maps.active_map_id, action.payload.map_id);
 			return [isActiveMap, displayedOverlay, timelineState];

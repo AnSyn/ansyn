@@ -13,7 +13,7 @@ import { configuration } from "configuration/configuration";
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
-import { AddMapInstacneAction, MapSingleClickAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstacneAction, MapSingleClickAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
 import {
@@ -21,9 +21,8 @@ import {
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadOverlaysAction, DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysMarkupAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -31,8 +30,7 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade';
+import { ToggleHistogramAction } from '@ansyn/map-facade';
 
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
@@ -478,27 +476,40 @@ describe('MapAppEffects', () => {
 				value: () => {}
 			});
 			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(false);
-			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'imagery1'}));
+			effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery1'}));
+
+			let subscribeResult = undefined;
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
-				/*void*/
-				expect(result).toBeUndefined();
+				subscribeResult = result;
 				expect(utils.calcGeoJSONExtent).toHaveBeenCalled();
 				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, fake_extent);
 			});
+			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({id: fake_overlay.id}));
 		});
 
 		it('isExtentContainedInPolygon "true"', ()=> {
 			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(true);
-			effectsRunner.queue(new DisplayOverlayAction({id: fake_overlay.id, map_id: 'imagery1'}));
+			effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery1'}));
+			let subscribeResult = undefined;
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
-				/*void*/
-				expect(result).toBeUndefined();
+				subscribeResult = result;
 				expect(utils.calcGeoJSONExtent).not.toHaveBeenCalled();
 				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, imagery1PositionBoundingBox);
 			});
+			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({id: fake_overlay.id}));
+		});
 
+		it('setOverlayAsLoading$ is called', ()=> {
+			effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery1'}));
+			let subscribeResult = undefined;
+			mapAppEffects.setOverlayAsLoading$.subscribe(result=> {
+				subscribeResult = result;
+			});
+			expect(subscribeResult).toEqual(new AddOverlayToLoadingOverlaysAction(fake_overlay.id));
 		});
 	});
 
-
+	//TODO add setOverlayAsLoadingSuccess$ tests
+	//TODO: add onAddCommunicatorAddOverlayFromCase$
+	//TODO: add selectCaseByIdAction$
 });

@@ -13,7 +13,7 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';
@@ -50,16 +50,16 @@ export class OverlaysEffects {
 		.map((action: LoadOverlaysAction) => {
 			const from = new Date(action.payload.from);
 			const to = new Date(action.payload.to);
-			return new SetTimelineStateAction({from, to})
+			return new SetTimelineStateAction({from, to});
 		});
 
 	@Effect({dispatch: false})
-	goPrevDisplay$: Observable<GoPrevDisplayAction> = this.actions$
+	goPrevDisplay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
 		.share();
 
 	@Effect({dispatch: false})
-	goNextDisplay$: Observable<GoNextDisplayAction> = this.actions$
+	goNextDisplay$: Observable<Action> = this.actions$
 		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
 		.share();
 

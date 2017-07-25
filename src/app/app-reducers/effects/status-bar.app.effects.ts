@@ -22,6 +22,7 @@ import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/action
 import { MapsLayout } from '@ansyn/core';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import { getPointByPolygon } from '@ansyn/core/utils/geo';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -48,7 +49,7 @@ export class StatusBarAppEffects {
 			const value:boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
 			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
 				if(value){
-					const point = this.overlaysService.getPointByPolygon(casesState.selected_case.state.region);
+					const point = getPointByPolygon(casesState.selected_case.state.region);
 					const latLon = point.coordinates;
 					c.addPinPointIndicator(latLon);
 				}else{

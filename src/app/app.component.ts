@@ -27,10 +27,8 @@ export class AppComponent implements  AfterViewInit {
 		.distinctUntilChanged(isEqual);
 
 	overlays_count$ = this.store.select('overlays')
-		.map((state: IOverlayState) => {
-			const sum = state.count || state.overlays.size;
-			return sum;
-		});
+		.map((state: IOverlayState) => state.count)
+		.distinctUntilChanged(isEqual);
 
 	displayedOverlay$ = this.store.select('cases')
 		.filter((cases: ICasesState) => !isNil(cases.selected_case))
@@ -43,12 +41,20 @@ export class AppComponent implements  AfterViewInit {
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
 
+	histogramActive$ = this.store.select('cases')
+		.filter((cases: ICasesState) => !isNil(cases.selected_case))
+		.map((cases: ICasesState) => {
+			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
+			return activeMap.data.isHistogramActive;
+		});
 
 	overlays_count = 0;
 	displayedOverlay: Overlay;
 	selected_layout: MapsLayout = {id:"", description:"", maps_count: 0};
 	selected_case: Case;
 	editMode = false;
+	histogramActive: boolean;
+
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any,public store: Store<IAppState> ){
 	}
@@ -66,11 +72,11 @@ export class AppComponent implements  AfterViewInit {
 
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => this.displayedOverlay = _displayedOverlay);
 
+		this.histogramActive$.subscribe((histogramActive: boolean) => this.histogramActive = histogramActive);
+
 	}
 
 	toggleEditMode($event){
 		this.editMode = !this.editMode;
-		//debugger;
-		//this.mapsContainer.imageriesContainer.nativeElement.classList.toggle('edit-mode');
 	}
 }

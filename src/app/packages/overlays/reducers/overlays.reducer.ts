@@ -11,9 +11,9 @@ export interface IOverlayState {
 	overlays: any; //Map
 	selectedOverlays: string[];
 	demo: number;
-	filters : any[];
+	filters: any[];
 	queryParams: any;
-	timelineState: {from: Date, to: Date}
+	timelineState: {from: Date, to: Date};
 	count: number;
 }
 

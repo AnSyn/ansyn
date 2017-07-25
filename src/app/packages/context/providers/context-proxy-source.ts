@@ -2,18 +2,19 @@
 import { ContextCriteria, IContextSourceConfig, IContextSource, Context } from '../context.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
-import { Http, RequestOptions, RequestOptionsArgs } from '@angular/http';
+import { Http, RequestOptions, RequestOptionsArgs,Headers } from '@angular/http';
 import 'rxjs/add/operator/catch';
 
 export class ContextProxySource implements IContextSource {
 	public providerType;
 	public uri;
 	public headers = new Headers({ 'Content-Type': 'application/json' });
-	public options = new RequestOptions({ headers: this.headers } as RequestOptionsArgs);
+	public options = new RequestOptions();
 
 	constructor(public config: IContextSourceConfig, public http: Http ) {
 		this.uri = `${this.config.uri}${this.config.bucket}`;
 		this.providerType = config.type;
+		this.options.headers = this.headers;
 
 	}
 

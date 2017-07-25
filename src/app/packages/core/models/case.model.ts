@@ -7,7 +7,7 @@ export type Case = {
 	owner?:string;
 	last_modified?:Date;
 	state?: CaseState
-}
+};
 
 export type CaseState = {
 	selected_context_id?: string;
@@ -17,7 +17,7 @@ export type CaseState = {
 	region: CaseRegionState,
 	orientation: string,
 	geoFilter: string,
-}
+};
 
 	export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
 
@@ -25,7 +25,8 @@ export type CaseTimeState = {
 	type: string,
 	from: string,
 	to: string
-}
+};
+
 export type CaseFacetsState = {
 	filters: {fieldName: string, metadata: any}[];
 }
@@ -34,7 +35,7 @@ export type CaseMapsState = {
 	layouts_index: number,
 	active_map_id: string,
 	data: CaseMapState[]
-}
+};
 
 export interface CaseMapState {
 	id: string;
@@ -44,5 +45,6 @@ export interface CaseMapState {
 		isHistogramActive?: boolean
 	};
 	mapType: string;
-}
+};
+
 export const defaultMapType = 'openLayersMap';

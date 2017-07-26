@@ -1,15 +1,30 @@
 .tools-menu-item-container {
-	padding:12px;
-	.tool-item:first-child{
-		margin-top:15px;
-	};
-	.shadow-mouse-button{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 36px 12px;
+	button {
+		margin: 0;
 		border: none;
-		&:focus{
-			outline:none;
-		};
+		width: 24px;
+		height: 24px;
+		background: rgba(255, 255, 255, 0.25);
+		padding: 3px;
+		box-sizing: content-box;
+		margin: 5px 0;
+		outline:none;
+		&:disabled {
+			opacity: .6;
+		}
 		&.active{
-			background-color: black;
+			background-color: rgb(41, 127, 155);
 		}
 	}
+
+	//.tool-item:first-child{
+	//	margin-top:15px;
+	//};
+	//.shadow-mouse-button{
+
+	//}
 }

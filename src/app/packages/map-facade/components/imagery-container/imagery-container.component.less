@@ -2,17 +2,21 @@ div.imagery{
 	position: relative;
 	width: 100%;
 	height: 100%;
-
-	ansyn-imagery-view{
-		display: block;
-		width: 100%;
-		height: 100%;
-		border: solid black 2px;
-		box-sizing: border-box;
-		&.active{
-			border-color: #e38ef1;
-		}
-		background: black;
-	}
 }
 
+ansyn-imagery-view{
+
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: solid black 2px;
+	background: black;
+	display: flex;
+	justify-content: center;
+	box-sizing: border-box;
+}
+
+ansyn-imagery-view.active{
+	border-color: #e38ef1;
+}

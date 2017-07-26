@@ -53,6 +53,12 @@ export const configuration = {
 			mapSourceMetadata: null
 		}]
 	},
+	FiltersConfig: {
+		filters: [
+			{ modelName: 'sensorType', displayName: 'Sensor Type', type: 'Enum' },
+			{ modelName: 'sensorName', displayName: 'Sensor Name', type: 'Enum' }
+		]
+	},
 	ContextConfig: {
 		contextSources: [{
 			type: 'Elastic',

@@ -62,7 +62,7 @@
     "@types/openlayers": "^4.1.1",
     "codelyzer": "~2.0.0",
     "jasmine": "latest",
-    "jasmine-core": "latest",
+    "jasmine-core": "2.5.2",
     "jasmine-spec-reporter": "latest",
     "karma": "~1.4.1",
     "karma-chrome-launcher": "~2.1.1",

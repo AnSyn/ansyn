@@ -2,14 +2,13 @@ import { inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
-import { LoadOverlaysSuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadOverlaysSuccessAction, OverlaysActionTypes, LoadOverlaysAction,
+	DisplayOverlayAction, DisplayOverlayFromStoreAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
-import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { DisplayOverlayAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('OverlaysAppEffects',()=> {
@@ -139,7 +138,7 @@ describe('OverlaysAppEffects',()=> {
 		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
 			result = _result;
 		});
-		expect(result.constructor).toEqual(DisplayOverlayAction);
+		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('last');
 	});
 });

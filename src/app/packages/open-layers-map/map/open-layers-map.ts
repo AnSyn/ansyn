@@ -177,9 +177,9 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public removeAllLayers() {
-		this._mapLayers.forEach((existingLayer) => {
-			this.removeLayer(existingLayer);
-		});
+		while(this._mapLayers.length > 0) {
+			this.removeLayer(this._mapLayers[0]);
+		}
 
 		this._mapLayers = [];
 	}

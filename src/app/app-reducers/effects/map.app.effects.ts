@@ -222,14 +222,14 @@ export class MapAppEffects {
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
 		.withLatestFrom(this.store$.select("cases"), (action: SynchronizeMapsAction, casesState: ICasesState) => {
-			return [casesState];
+			return [action, casesState];
 		})
-		.map(([casesState]: [ICasesState]) => {
-			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === casesState.selected_case.state.maps.active_map_id);
+		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
+			const mapToSyncTo = casesState.selected_case.state.maps.data.find((map)=> map.id === action.payload.mapId);
 			casesState.selected_case.state.maps.data.forEach((mapItem: CaseMapState)=> {
-				if (active_map.id !== mapItem.id) {
+				if (mapToSyncTo.id !== mapItem.id) {
 					const comm = this.communicator.provide(mapItem.id);
-					comm.setPosition(active_map.data.position);
+					comm.setPosition(mapToSyncTo.data.position);
 				}
 			});
 		});

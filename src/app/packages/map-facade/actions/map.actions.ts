@@ -72,7 +72,7 @@ export class StartMapShadowAction implements Action{
 
 export class SynchronizeMapsAction implements Action{
 	type = MapActionTypes.SYNCHRONIZE_MAPS;
-	constructor(public payload?: any) {}
+	constructor(public payload: {mapId: string}) {}
 }
 
 export class CompositeMapShadowAction implements Action {

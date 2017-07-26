@@ -19,6 +19,5 @@ export class GoToComponent {
 	constructor() { }
 
 	submitGoTo() {
-		console.log("asjsjsjsjsjs")
 	}
 }

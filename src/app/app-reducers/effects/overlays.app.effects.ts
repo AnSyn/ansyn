@@ -1,20 +1,19 @@
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysActionTypes,OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysActionTypes, OverlaysMarkupAction,
+	DisplayOverlayFromStoreAction, SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState, Case, CaseMapState, CasesService } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
 import { isEmpty, cloneDeep } from 'lodash';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
 
@@ -110,7 +109,7 @@ export class OverlaysAppEffects {
 		.map((displayedOverlays: any[]) => {
 			const lastOverlayId = last(displayedOverlays).id;
 			this.casesService.contextValues.defaultOverlay = '';
-			return new DisplayOverlayAction({id: lastOverlayId});
+			return new DisplayOverlayFromStoreAction({id: lastOverlayId});
 		})
 		.share();
 

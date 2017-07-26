@@ -21,7 +21,7 @@ import {
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysMarkupAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -31,7 +31,8 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ToggleHistogramAction } from '@ansyn/map-facade';
-
+import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { EmptyAction } from '@ansyn/core/actions/empty.action';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
@@ -509,7 +510,84 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	//TODO add setOverlayAsLoadingSuccess$ tests
-	//TODO: add onAddCommunicatorAddOverlayFromCase$
-	//TODO: add selectCaseByIdAction$
+	describe('setOverlayAsLoadingSuccess$', () => {
+		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+			effectsRunner.queue(new DisplayOverlaySuccessAction({id: 'test_overlay_id'}));
+			mapAppEffects.setOverlayAsLoadingSuccess$.subscribe(_result => {
+				mapAppEffects.backToWorldView$.subscribe(_result => {
+					let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
+					expect(result).toBe(true);
+
+					if(_result instanceof RemoveOverlayFromLoadingOverlaysAction){
+						//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
+						expect(_result.payload).toEqual('test_overlay_id');
+					}
+					if(_result instanceof OverlaysMarkupAction ){
+						expect(_result.payload).toEqual([{id : 'test_overlay_id', class: 'active'}]);
+					}
+				});
+			});
+		});
+	});
+
+	describe('onAddCommunicatorAddOverlayFromCase$', () => {
+		it('should dispatch DisplayOverlayAction when communicator added that contains overlay',() => {
+
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+
+			const communicators: Array<string> = ['imagery1'];
+
+			effectsRunner.queue(new AddMapInstacneAction({
+				currentCommunicatorId: 'imagery1',
+				communicatorsIds: communicators
+			}));
+
+			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
+				let result = _result instanceof DisplayOverlayAction;
+				expect(result).toBe(true);
+				expect(_result.payload.overlay.id).toEqual('test_overlay_id');
+				expect(_result.payload.map_id).toEqual('imagery1');
+			});
+		});
+
+		it('should dispatch EmptyAction when communicator added that doesnt contain overlay',() => {
+
+			icaseState.selected_case.state.maps.data[1].data.overlay = null;
+
+			const communicators: Array<string> = ['imagery2'];
+
+			effectsRunner.queue(new AddMapInstacneAction({
+				currentCommunicatorId: 'imagery2',
+				communicatorsIds: communicators
+			}));
+
+			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
+				let result = _result instanceof EmptyAction;
+				expect(result).toBe(true);
+			});
+		});
+	});
+
+	describe('selectCaseByIdAction$', () => {
+		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+			icaseState.selected_case.state.maps.data[1].data.overlay = testOverlay;
+
+			const fakeCommuincator = {id: 'test'};
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
+
+			effectsRunner.queue(new SelectCaseByIdAction(icaseState.selected_case.id));
+			const displayActions = [];
+			mapAppEffects.selectCaseByIdAction$.subscribe(_result => {
+				let result = _result instanceof DisplayOverlayAction;
+				expect(result).toBe(true);
+				displayActions.push(result);
+			});
+			expect(displayActions.length).toEqual(2);
+		});
+	});
 });

@@ -75,6 +75,10 @@ export class OpenLayersImageProcessing {
         this.syncOperations(raster);
     }
 
+    getAllProcessedLayer(): Array<ol.source.Raster> {
+        return Array.from(this._rasterToOperations.keys());
+    }
+
     syncOperations(raster: ol.source.Raster) {
         const currentOperations = this._rasterToOperations.get(raster);
         if (currentOperations) {

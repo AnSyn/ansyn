@@ -376,7 +376,7 @@ describe('MapAppEffects', () => {
 
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'setPosition');
-			effectsRunner.queue(new SynchronizeMapsAction());
+			effectsRunner.queue(new SynchronizeMapsAction({mapId: "imagery1"}));
 			mapAppEffects.onSynchronizeAppMaps$.subscribe();
 			expect(communicator.setPosition).toHaveBeenCalled();
 		});

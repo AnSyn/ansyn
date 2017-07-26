@@ -23,7 +23,7 @@ export class ImageryStatusComponent  {
 	}
 
 	toggleMapSyncroniztion() {
-		this.store.dispatch(new SynchronizeMapsAction(null));
+		this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
 	}
 
 	toggleHistogramEqualization() {

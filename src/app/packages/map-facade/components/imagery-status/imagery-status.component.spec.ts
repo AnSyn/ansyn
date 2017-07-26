@@ -39,7 +39,7 @@ describe('ImageryStatusComponent', () => {
 	it("check click on toggleMapSyncroniztion",() => {
 		spyOn(store,'dispatch');
 		fixture.nativeElement.querySelector('.status-bar-link-maps-icon img').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction (null));
+		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction ({mapId: "test"}));
 	});
 
 	it('expect backToWorldView get event, call stopPropagation and call dispatch with backToWorldViewAction', () => {

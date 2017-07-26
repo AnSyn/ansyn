@@ -1,10 +1,16 @@
 <div class='tools-menu-item-container'>
-	<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled')">
-		<img src='/assets/icons/tools/shadow_mouse.svg'/>
-	</button>
+	<div>
+		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled')">
+			<img src='/assets/icons/tools/shadow_mouse.svg'/>
+		</button>
+	</div>
+	<div>
+		<button (click)="expandGoTo = !expandGoTo ">
+			<img src='/assets/icons/tools/go-to.svg'/>
+		</button>
+		<ansyn-go-to [(expand)]="expandGoTo" ></ansyn-go-to>
+	</div>
 
-	<button>
-		<img src='/assets/icons/tools/go-to.svg'/>
-	</button>
 
 </div>
+

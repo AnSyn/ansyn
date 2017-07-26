@@ -10,6 +10,7 @@ import { IToolsState } from '../reducers/tools.reducer';
   styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit {
+	public expandGoTo: boolean;
 	public flags: Map<string,boolean>;
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
 														.map((tools: IToolsState) => tools.flags);

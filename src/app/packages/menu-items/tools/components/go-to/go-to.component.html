@@ -1,0 +1,23 @@
+<button class="close" (click)="expand = false">×</button>
+
+<form (ngSubmit)="submitGoTo()">
+
+	<div class="geo-input">
+		<label>Geo WGS84</label>
+		<input/>
+	</div>
+
+	<div class="utm-input">
+		<label>UTM ED50</label>
+		<input/>
+	</div>
+
+	<div class="buttons-area">
+		<button type="submit">Go</button>
+		<button class="pin-location" type="button">
+			<span>Pin location</span>
+			<img src="/assets/icons/tools/pin-location.svg">
+		</button>
+	</div>
+
+</form>

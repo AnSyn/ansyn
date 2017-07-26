@@ -135,6 +135,7 @@ export class TimelineComponent implements OnInit {
     }
 
     eventDropsHandler(): void {
+
 		const chart = eventDrops(this.configuration)
             .mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
             .mouseover(data => this.emitter.provide('timeline:mouseover').next(data))

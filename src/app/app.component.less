@@ -2,27 +2,29 @@
 
 div.app{
 	display: flex;
-
+	height:100vh;
 	.layer{
 		width: 100%;
-		height: 100vh;
+		height: 100%;
 		color: white;
 		display:flex;
 		flex-direction:column;
 		overflow: hidden;
+		position: relative;
 		.maps-container{
-			background: black;
-			height: 80%;
+			position: relative;
+			flex: 1;
 			&.edit-mode{
 				cursor: pointer;
 			}
 		}
 		.status{
 			position: relative;
+			height: 0;
 		}
 		.app-timeline-container{
+			height: 140px;
 		}
-
-
 	}
+
 }

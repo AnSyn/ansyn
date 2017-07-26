@@ -1,7 +1,12 @@
+// The file contents for the current environment will overwrite these during build.
+// The build system defaults to the dev environment which uses `environment.ts`, but if you do
+// `ng build --env=prod` then `environment.prod.ts` will be used instead.
+// The list of which env maps to which file can be found in `.angular-cli.json`.
+
 import { defaultCase } from './cases/default_case';
 
 export const configuration = {
-	env: 'default',
+	env: 'dev',
 	production: false,
 	MetaConfig: {
 
@@ -18,7 +23,7 @@ export const configuration = {
 		useHash: true
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
+		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'
 	},
 	OverlaysConfig: {
 		baseUrl: 'http://localhost:9001/api/v1/',
@@ -27,7 +32,7 @@ export const configuration = {
 		defaultApi: 'overlays',
 		searchByCase: false,
 		overlaySource: 'IDAHO',
-		polygonGenerationDisatnce: 0.1,//in kilometers
+		polygonGenerationDisatnce: 0.1,
 	},
 	ImageryConfig: {
 		geoMapsInitialMapSource: [{
@@ -60,7 +65,8 @@ export const configuration = {
 		]
 	},
 	ContextConfig: {
-		contextSources: [{
+		contextSources: [
+			{
 			type: 'Elastic',
 			uri: 'localhost:9200',
 			bucket: 'context',
@@ -76,4 +82,5 @@ export const configuration = {
 
 			}]
 	}
+
 };

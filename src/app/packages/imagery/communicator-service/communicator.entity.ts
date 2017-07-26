@@ -149,6 +149,12 @@ export class CommunicatorEntity {
 			this.ActiveMap.shouldPerformHistogram(shouldPerform);
 		}
 	}
+
+	public isHistogramActive(): boolean {
+		if (this.ActiveMap) {
+			return this.ActiveMap.isHistogramActive();
+		}
+	}
 	//CommunicatorEntity methods end
 
 	//======shadow mouse start

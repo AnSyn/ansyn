@@ -28,4 +28,5 @@ export interface IMap {
 	togglePointerMove();
 	removeSingleClickEvent();
 	shouldPerformHistogram(shouldPerform: boolean): void;
+	isHistogramActive(): boolean;
 }

@@ -332,6 +332,26 @@ export class OpenLayersMap implements IMap {
 		}
 	}
 
+	public isHistogramActive(): boolean {
+		const processedLayers = this._imageProcessing.getAllProcessedLayer();
+		const isHistogramActive = false;
+
+		const imageLayers: ol.layer.Image[] = <ol.layer.Image[]>this._mapObject.getLayers().getArray().
+												filter((mapBaseLayer) => mapBaseLayer instanceof ol.layer.Image);
+
+		for (let index = 0; index < imageLayers.length; index++) {
+			const imageLayer = imageLayers[index];
+			
+			const rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
+
+			if (processedLayers.indexOf(rasterSource) > -1) {
+				return true;
+			}
+		}
+
+		return isHistogramActive;
+	}
+
 	//*****--pin point paint on the map--********
 	public addSingleClickEvent() {
 		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);

@@ -7,7 +7,7 @@ export class GenericTypeResolver {
         const resolvedValue = injector.get(token);
 
         if (!Array.isArray(resolvedValue)) {
-            return resolvedValue;
+            return isSingelton ? resolvedValue : this.cloneObject(resolvedValue);
         } else {
             return isSingelton ? filterFunction(resolvedValue) : this.cloneObject(filterFunction(resolvedValue));
         }

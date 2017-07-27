@@ -32,7 +32,6 @@ import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ToggleHistogramAction } from '@ansyn/map-facade';
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { EmptyAction } from '@ansyn/core/actions/empty.action';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
@@ -515,20 +514,23 @@ describe('MapAppEffects', () => {
 			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 			effectsRunner.queue(new DisplayOverlaySuccessAction({id: 'test_overlay_id'}));
-			mapAppEffects.setOverlayAsLoadingSuccess$.subscribe(_result => {
-				mapAppEffects.backToWorldView$.subscribe(_result => {
-					let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
-					expect(result).toBe(true);
 
-					if(_result instanceof RemoveOverlayFromLoadingOverlaysAction){
-						//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
-						expect(_result.payload).toEqual('test_overlay_id');
-					}
-					if(_result instanceof OverlaysMarkupAction ){
-						expect(_result.payload).toEqual([{id : 'test_overlay_id', class: 'active'}]);
-					}
-				});
+			const resultActions = [];
+			spyOn(casesService, 'getOverlaysMarkup');
+			mapAppEffects.setOverlayAsLoadingSuccess$.subscribe(_result => {
+				let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
+				expect(result).toBe(true);
+
+				if(_result instanceof RemoveOverlayFromLoadingOverlaysAction){
+					//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
+					expect(_result.payload).toEqual('test_overlay_id');
+				}
+				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
+					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+				}
+				resultActions.push(_result);
 			});
+			expect(resultActions.length).toEqual(2);
 		});
 	});
 
@@ -545,15 +547,18 @@ describe('MapAppEffects', () => {
 				communicatorsIds: communicators
 			}));
 
+			const resultActions = [];
 			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;
 				expect(result).toBe(true);
 				expect(_result.payload.overlay.id).toEqual('test_overlay_id');
 				expect(_result.payload.map_id).toEqual('imagery1');
+				resultActions.push(_result);
 			});
+			expect(resultActions.length).toEqual(1);
 		});
 
-		it('should dispatch EmptyAction when communicator added that doesnt contain overlay',() => {
+		it('should not dispatch DisplayOverlayAction when communicator added that doesnt contain overlay',() => {
 
 			icaseState.selected_case.state.maps.data[1].data.overlay = null;
 
@@ -564,14 +569,15 @@ describe('MapAppEffects', () => {
 				communicatorsIds: communicators
 			}));
 
+			const displayActions = [];
 			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
-				let result = _result instanceof EmptyAction;
-				expect(result).toBe(true);
+				displayActions.push(_result);
 			});
+			expect(displayActions.length).toEqual(0);
 		});
 	});
 
-	describe('selectCaseByIdAction$', () => {
+	describe('onCaseSelectedDisplayCaseOverlaysIfNeeded$', () => {
 		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay',() => {
 			const testOverlay: Overlay = {id: 'test_overlay_id1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
@@ -582,7 +588,7 @@ describe('MapAppEffects', () => {
 
 			effectsRunner.queue(new SelectCaseByIdAction(icaseState.selected_case.id));
 			const displayActions = [];
-			mapAppEffects.selectCaseByIdAction$.subscribe(_result => {
+			mapAppEffects.onCaseSelectedDisplayCaseOverlaysIfNeeded$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;
 				expect(result).toBe(true);
 				displayActions.push(result);

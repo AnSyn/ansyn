@@ -3,8 +3,10 @@ export type Resolver = {
     get: (any) => any;
 };
 
+export type Type = Function;
+
 export class GenericTypeResolver {
-    static resolveMultiInjection(injector: Resolver, token: any, filterFunction: InjectionResolverFilter = null, isSingelton: boolean = false): any {
+    static resolveMultiInjection(injector: Resolver, token: Type, filterFunction: InjectionResolverFilter = null, isSingelton: boolean = false): any {
         const resolvedValue = injector.get(token);
 
         if (!Array.isArray(resolvedValue) || filterFunction === null) {

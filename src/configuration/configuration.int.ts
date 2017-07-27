@@ -9,7 +9,7 @@ export const configuration = {
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
+		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'
 	},
 	OverlaysConfig: {
 		baseUrl: 'http://localhost:9001/api/v1/',

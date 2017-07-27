@@ -25,7 +25,7 @@ import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
-import { EmptyAction } from '@ansyn/core/actions/empty.action';
+import { isNullOrUndefined } from 'util';
 
 @Injectable()
 export class MapAppEffects {
@@ -111,36 +111,38 @@ export class MapAppEffects {
 	onAddCommunicatorAddOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select("cases"))
+		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => {
+			const currentCase = state.selected_case;
+			if (currentCase) {
+				const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData) => {
+					return (mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
+				});
+				return !isNullOrUndefined(mapDataOfOverlayToDisplay);
+			}
+			return false;
+		})
 		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
 			const currentCase = state.selected_case;
-			let result: any = new EmptyAction();
-			if (currentCase) {
-				currentCase.state.maps.data.every(value => {
-					if (value.data.overlay && value.id === action.payload.currentCommunicatorId) {
-						result = new DisplayOverlayAction({overlay: value.data.overlay, map_id: value.id});
-						return false;
-					}
-					return true;
-				});
-			}
-			return result;
+			const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData) => {
+				return (mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
+			});
+			return new DisplayOverlayAction({overlay: mapDataOfOverlayToDisplay.data.overlay, map_id: mapDataOfOverlayToDisplay.id});
 		});
 
 	@Effect()
-	selectCaseByIdAction$: Observable<any> = this.actions$
+	onCaseSelectedDisplayCaseOverlaysIfNeeded$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select("cases"))
 		.mergeMap(([action, state]: [ SelectCaseByIdAction, ICasesState]) => {
 			const currentCase = state.selected_case;
-			const displayedOverlays = [];
-			currentCase.state.maps.data.forEach((data: CaseMapState)=> {
-				if (data.data.overlay) {
-					const communicatorHandler = this.communicator.provide(data.id);
-					if (communicatorHandler) {
-						displayedOverlays.push(new DisplayOverlayAction({overlay: data.data.overlay, map_id: data.id}));
-					}
+			const displayedOverlays = currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
+				const communicatorHandler = this.communicator.provide(data.id);
+				//if overlay exists and map is loaded
+				if (data.data.overlay && communicatorHandler) {
+					previusResult.push(new DisplayOverlayAction({overlay: data.data.overlay, map_id: data.id}));
 				}
-			});
+				return previusResult;
+			}, []);
 			return displayedOverlays;
 		});
 

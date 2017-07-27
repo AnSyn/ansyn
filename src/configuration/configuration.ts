@@ -18,7 +18,7 @@ export const configuration = {
 		useHash: true
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
+		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'
 	},
 	OverlaysConfig: {
 		baseUrl: 'http://localhost:9001/api/v1/',

@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
 import { Injectable, Injector } from '@angular/core';
-import { GenericTypeResolver, injectionResolverFilter } from '@ansyn/generic-type-resolver';
+import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -42,19 +42,19 @@ export class FiltersEffects {
     constructor(private actions$: Actions,
         private filtersService: FiltersService,
         private store: Store<IFiltersState>,
-        private injector: Injector) { }
+        private genericTypeResolverService: GenericTypeResolverService) { }
 
     initializeMetadata(filter: Filter, facets: { filters: { fieldName: string, metadata: any }[] }): FilterMetadata {
-        const resolveFilterFunction: injectionResolverFilter = (function wrapperFunction() {
+        const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
             const filterType = filter.type;
 
             return function resolverFilteringFunction(FilterMetadatas: FilterMetadata[]): FilterMetadata {
-                return FilterMetadatas.find((item) => item.type === filter.type);
+                return FilterMetadatas.find((item) => item.type === filterType);
             };
         }
         )();
         const metaData: FilterMetadata =
-            GenericTypeResolver.resolveMultiInjection(this.injector, FilterMetadata, resolveFilterFunction, false);
+            this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
         const currentFilterInit = facets
             && facets.filters.find(field => {

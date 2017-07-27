@@ -1,4 +1,4 @@
-import { GenericTypeResolver, injectionResolverFilter } from './generic-type-resolver';
+import { GenericTypeResolver, InjectionResolverFilter } from './generic-type-resolver';
 import { TestBed, inject } from '@angular/core/testing';
 import { Injector } from '@angular/core';
 
@@ -99,7 +99,7 @@ describe('GenericTypeResolver multi', () => {
             }));
 
     it('resolveMultiInjection with multi injection should return the class by the filter function', () => {
-        const resolveFilterFunction: injectionResolverFilter = (function wrapperFunction() {
+        const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
             const field1 = 'Class1:field1';
 
             return function resolverFilteringFunction(mockBaseClasses: MockBaseClass[]): MockBaseClass {
@@ -113,7 +113,7 @@ describe('GenericTypeResolver multi', () => {
     });
 
     it('resolveMultiInjection with multi injection should and singelton should return the same instace', () => {
-        const resolveFilterFunction: injectionResolverFilter = (function wrapperFunction() {
+        const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
             const field1 = 'Class1:field1';
 
             return function resolverFilteringFunction(mockBaseClasses: MockBaseClass[]): MockBaseClass {
@@ -128,7 +128,7 @@ describe('GenericTypeResolver multi', () => {
     });
 
     it('resolveMultiInjection with multi injection should and singelton should return the same instace', () => {
-        const resolveFilterFunction: injectionResolverFilter = (function wrapperFunction() {
+        const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
             const field1 = 'Class1:field1';
 
             return function resolverFilteringFunction(mockBaseClasses: MockBaseClass[]): MockBaseClass {
@@ -143,4 +143,3 @@ describe('GenericTypeResolver multi', () => {
     });
 
 });
-

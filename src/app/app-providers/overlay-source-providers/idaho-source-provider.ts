@@ -84,22 +84,26 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	private parseData(idahoElement: any, token:string): Overlay {
+
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
-
-		overlay.id = idahoElement.identifier;
-		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
-		overlay.sensorType = idahoElement.properties.platformName;
-		overlay.sensorName = idahoElement.properties.sensorName;
-		overlay.channel = idahoElement.properties.numBands;
-		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
-		overlay.name = idahoElement.properties.catalogID;
-		overlay.imageUrl = "http://idaho.geobigdata.io/v1/tile/idaho-images/" + idahoElement.identifier + '/{z}/{x}/{y}?bands=0&token=' + token;
-		overlay.thumbnailUrl = "https://geobigdata.io/thumbnails/v1/browse/" + idahoElement.properties.catalogID + ".large.png";
-		overlay.date = new Date(idahoElement.properties.acquisitionDate);
-		overlay.photoTime =  idahoElement.properties.acquisitionDate;
-		overlay.azimuth = 0;
-		overlay.sourceType = IdahoOverlaySourceType;
+        overlay.id = idahoElement.identifier;
+        overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
+		let bands = "0";
+		if (idahoElement.properties.numBands > 1){
+			bands= "2,1,0";
+		}
+        overlay.sensorType = idahoElement.properties.platformName;
+        overlay.sensorName = idahoElement.properties.sensorName;
+        overlay.channel = idahoElement.properties.numBands;
+        overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
+        overlay.name = idahoElement.properties.catalogID;
+        overlay.imageUrl = "http://idaho.geobigdata.io/v1/tile/idaho-images/" + idahoElement.identifier + '/{z}/{x}/{y}?bands=' + bands + '&token=' + token;
+        overlay.thumbnailUrl = "https://geobigdata.io/thumbnails/v1/browse/" + idahoElement.properties.catalogID + ".large.png";
+        overlay.date = new Date(idahoElement.properties.acquisitionDate);
+        overlay.photoTime =  idahoElement.properties.acquisitionDate;
+        overlay.azimuth = 0;
+        overlay.sourceType = IdahoOverlaySourceType;
 		overlay.isFullOverlay = true;
 
 		return overlay;

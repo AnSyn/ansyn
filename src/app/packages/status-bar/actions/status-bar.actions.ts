@@ -13,7 +13,6 @@ export const StatusBarActionsTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	FAVORITE: 'FAVORITE',
 	EXPAND: 'EXPAND',
-	TOGGLE_HISTOGRAM_STATUS_BAR: 'TOGGLE_HISTOGRAM_STATUS_BAR',
 	SET_ORIENTATION: 'SET_ORIENTATION',
 	SET_GEO_FILTER: 'SET_GEO_FILTER',
 	SET_TIME: 'SET_TIME'
@@ -71,11 +70,6 @@ export class FavoriteAction implements Action{
 
 export class BackToWorldViewAction implements Action{
 	type: string = StatusBarActionsTypes.BACK_TO_WORLD_VIEW;
-	constructor() {}
-}
-
-export class ToggleHistogramStatusBarAction implements Action{
-	type: string = StatusBarActionsTypes.TOGGLE_HISTOGRAM_STATUS_BAR;
 	constructor() {}
 }
 

@@ -3,8 +3,7 @@
 	<ansyn-imagery-status *ngIf="showStatus"
 						  [map_id]="mapState.id"
 						  [overlay]="overlay"
-						  [active]="active"
-						  [histogramActive]="mapState.data.isHistogramActive">
+						  [active]="active">
 	</ansyn-imagery-status>
 
 	<ansyn-imagery-view [mapComponentSettings]="mapState" class="map" [class.active]="active && showStatus"></ansyn-imagery-view>

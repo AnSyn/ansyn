@@ -4,7 +4,6 @@ import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.red
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
-	ToggleHistogramStatusBarAction,
 	SetOrientationAction, SetGeoFilterAction, SetTimeAction
 } from '../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
@@ -47,7 +46,6 @@ export class StatusBarComponent implements OnInit {
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay') overlay: any;
-	@Input() histogramActive: boolean;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
 	// @Input('time') time: CaseTimeState;
@@ -207,9 +205,5 @@ export class StatusBarComponent implements OnInit {
 
 	clickBackToWorldView(): void {
 		this.store.dispatch(new BackToWorldViewAction());
-	}
-
-	toggleHistogramEqualization() {
-		this.store.dispatch(new ToggleHistogramStatusBarAction());
 	}
 }

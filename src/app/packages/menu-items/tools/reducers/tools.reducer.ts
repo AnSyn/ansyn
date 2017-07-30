@@ -50,6 +50,23 @@ export function ToolsReducer(state = toolsInitialState,action: ToolsActions): IT
 
 		case ToolsActionsTypes.GO_TO:
 			return { ...state};
+		case ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING_END:
+
+			tmpMap = new Map(state.flags);			
+			tmpMap.set('image_processing',action.payload);
+			return { ...state,flags: tmpMap };
+
+		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('image_processing_disabled',false);
+			return { ...state,flags: tmpMap };
+
+		case ToolsActionsTypes.DISABLE_IMAGE_PROCESSING:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('image_processing_disabled',true);
+			return { ...state,flags: tmpMap };
 
 		default:
 		return state;

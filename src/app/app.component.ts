@@ -41,13 +41,6 @@ export class AppComponent implements  AfterViewInit {
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
 
-	histogramActive$ = this.store.select('cases')
-		.filter((cases: ICasesState) => !isNil(cases.selected_case))
-		.map((cases: ICasesState) => {
-			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id == cases.selected_case.state.maps.active_map_id);
-			return activeMap.data.isHistogramActive;
-		});
-
 	overlays_count = 0;
 	displayedOverlay: Overlay;
 	selected_layout: MapsLayout = {id:"", description:"", maps_count: 0};
@@ -71,8 +64,6 @@ export class AppComponent implements  AfterViewInit {
 		this.overlays_count$.subscribe(_overlays_count => this.overlays_count = _overlays_count);
 
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => this.displayedOverlay = _displayedOverlay);
-
-		this.histogramActive$.subscribe((histogramActive: boolean) => this.histogramActive = histogramActive);
 
 	}
 

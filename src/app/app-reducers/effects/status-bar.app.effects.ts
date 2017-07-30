@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { ChangeLayoutAction, UpdateStatusFlagsAction, StatusBarActionsTypes, ToggleHistogramStatusBarAction } from '@ansyn/status-bar';
+import { ChangeLayoutAction, UpdateStatusFlagsAction, StatusBarActionsTypes } from '@ansyn/status-bar';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
@@ -189,13 +189,6 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
 		.map(() => {
 			return new BackToWorldAction();
-		});
-
-		@Effect()
-	onToggleHistogram$: Observable<ToggleHistogramAction> = this.actions$
-		.ofType(StatusBarActionsTypes.TOGGLE_HISTOGRAM_STATUS_BAR)
-		.map((action: ToggleHistogramStatusBarAction) => {
-			return new ToggleHistogramAction({mapId: undefined});
 		});
 
 	@Effect({dispatch: false})

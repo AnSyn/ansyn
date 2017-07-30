@@ -25,7 +25,7 @@ import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
-import { isNullOrUndefined } from 'util';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class MapAppEffects {
@@ -108,29 +108,26 @@ export class MapAppEffects {
 		});
 
 	@Effect()
-	onAddCommunicatorAddOverlayFromCase$: Observable<any> = this.actions$
+	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => {
-			const currentCase = state.selected_case;
-			if (currentCase) {
-				const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData) => {
-					return (mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
-				});
-				return !isNullOrUndefined(mapDataOfOverlayToDisplay);
-			}
-			return false;
-		})
+		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => !isNil(state.selected_case))
 		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
 			const currentCase = state.selected_case;
-			const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData) => {
-				return (mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
+			const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData)=> {
+				return mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId;
 			});
-			return new DisplayOverlayAction({overlay: mapDataOfOverlayToDisplay.data.overlay, map_id: mapDataOfOverlayToDisplay.id});
+			return mapDataOfOverlayToDisplay;
+		})
+		.filter((caseMapState: CaseMapState)=> {
+			return !isNil(caseMapState);
+		})
+		.map((caseMapState: CaseMapState) => {
+			return new DisplayOverlayAction({overlay: caseMapState.data.overlay, map_id: caseMapState.id});
 		});
 
 	@Effect()
-	onCaseSelectedDisplayCaseOverlaysIfNeeded$: Observable<any> = this.actions$
+	displayOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
 		.mergeMap(([action, state]: [ SelectCaseByIdAction, ICasesState]) => {

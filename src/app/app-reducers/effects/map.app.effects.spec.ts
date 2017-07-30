@@ -578,7 +578,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('onAddCommunicatorAddOverlayFromCase$', () => {
+	describe('displayOverlayOnNewMapInstance$', () => {
 		it('should dispatch DisplayOverlayAction when communicator added that contains overlay',() => {
 
 			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
@@ -592,7 +592,7 @@ describe('MapAppEffects', () => {
 			}));
 
 			const resultActions = [];
-			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
+			mapAppEffects.displayOverlayOnNewMapInstance$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;
 				expect(result).toBe(true);
 				expect(_result.payload.overlay.id).toEqual('test_overlay_id');
@@ -614,14 +614,14 @@ describe('MapAppEffects', () => {
 			}));
 
 			const displayActions = [];
-			mapAppEffects.onAddCommunicatorAddOverlayFromCase$.subscribe(_result => {
+			mapAppEffects.displayOverlayOnNewMapInstance$.subscribe(_result => {
 				displayActions.push(_result);
 			});
 			expect(displayActions.length).toEqual(0);
 		});
 	});
 
-	describe('onCaseSelectedDisplayCaseOverlaysIfNeeded$', () => {
+	describe('displayOverlayFromCase$', () => {
 		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay',() => {
 			const testOverlay: Overlay = {id: 'test_overlay_id1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
@@ -632,7 +632,7 @@ describe('MapAppEffects', () => {
 
 			effectsRunner.queue(new SelectCaseByIdAction(icaseState.selected_case.id));
 			const displayActions = [];
-			mapAppEffects.onCaseSelectedDisplayCaseOverlaysIfNeeded$.subscribe(_result => {
+			mapAppEffects.displayOverlayFromCase$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;
 				expect(result).toBe(true);
 				displayActions.push(result);

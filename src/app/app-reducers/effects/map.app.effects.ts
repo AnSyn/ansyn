@@ -15,10 +15,10 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import '@ansyn/core/utils/clone-deep';
-import { OverlaysService, DisplayOverlayAction } from "@ansyn/overlays";
-import { IStatusBarState } from "@ansyn/status-bar/reducers/status-bar.reducer";
-import { UpdateStatusFlagsAction, statusBarFlagsItems } from "@ansyn/status-bar";
-import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysService, DisplayOverlayAction } from '@ansyn/overlays';
+import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { UpdateStatusFlagsAction, statusBarFlagsItems } from '@ansyn/status-bar';
+import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
@@ -86,7 +86,7 @@ export class MapAppEffects {
 			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
 			return [overlay, map_id, active_map.data.position, active_map.data.isHistogramActive];
 		})
-		.filter(([overlay]) => !isEmpty(overlay))
+		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.flatMap(([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
 
 			let extent;
@@ -110,7 +110,7 @@ export class MapAppEffects {
 	@Effect()
 	onAddCommunicatorAddOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => {
 			const currentCase = state.selected_case;
 			if (currentCase) {
@@ -132,7 +132,7 @@ export class MapAppEffects {
 	@Effect()
 	onCaseSelectedDisplayCaseOverlaysIfNeeded$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.mergeMap(([action, state]: [ SelectCaseByIdAction, ICasesState]) => {
 			const currentCase = state.selected_case;
 			const displayedOverlays = currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
@@ -153,9 +153,16 @@ export class MapAppEffects {
 			new AddOverlayToLoadingOverlaysAction(action.payload.overlay.id));
 
 	@Effect()
+	onOverlayFromURL$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.filter((action: DisplayOverlayAction)=> !action.payload.overlay.isFullOverlay)
+		.map((action: DisplayOverlayAction)=>
+			new RequestOverlayByIDFromBackendAction({overlayId: action.payload.overlay.id, map_id: action.payload.map_id}));
+
+	@Effect()
 	setOverlayAsLoadingSuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [DisplayOverlaySuccessAction, ICasesState]) => {
 			return [action, state.selected_case];
 		})
@@ -169,7 +176,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [SelectLayerAction, ICasesState]) => {
 			return [action, state.selected_case.state.maps.active_map_id];
 		})
@@ -210,7 +217,7 @@ export class MapAppEffects {
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE,MapActionTypes.REMOVE_MAP_INSTACNE)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[Action,ICasesState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
 			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selected_case.state.maps.data.length;
@@ -220,7 +227,7 @@ export class MapAppEffects {
 	@Effect({dispatch:false})
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
-		.withLatestFrom(this.store$.select("cases"), this.store$.select("status_bar"))
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
 		.filter(([action, caseState, statusBarState]:[any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action, caseState, statusBarState]:[any, any, any]) => {
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
@@ -251,7 +258,7 @@ export class MapAppEffects {
 	@Effect({dispatch:false})
 	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select("cases"),this.store$.select("status_bar"))
+		.withLatestFrom(this.store$.select('cases'),this.store$.select('status_bar'))
 		.filter(([action,caseState,statusBarState]:[any,any,any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action,caseState,statusBarState]:[any,any,any]) => {
 			const point = getPointByPolygon(caseState.selected_case.state.region);
@@ -263,7 +270,7 @@ export class MapAppEffects {
 	@Effect()
 	onActiveMapChanges$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[ActiveMapChangedAction,ICasesState]): any =>
 			caseState.selected_case.state.maps.active_map_id !== action.payload
 		)
@@ -281,7 +288,7 @@ export class MapAppEffects {
 	@Effect({dispatch:false})
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select("cases"), (action: SynchronizeMapsAction, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select('cases'), (action: SynchronizeMapsAction, casesState: ICasesState) => {
 			return [action, casesState];
 		})
 		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
@@ -297,7 +304,7 @@ export class MapAppEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select("cases"), (action: BackToWorldAction, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, casesState: ICasesState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
 			return [action, casesState, mapId];
 		})
@@ -323,7 +330,7 @@ export class MapAppEffects {
 	@Effect()
 	toggleHistogram$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TOGGLE_HISTOGRAM)
-		.withLatestFrom(this.store$.select("cases"), (action: ToggleHistogramAction, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select('cases'), (action: ToggleHistogramAction, casesState: ICasesState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
 			return [action, casesState, mapId];
 		})

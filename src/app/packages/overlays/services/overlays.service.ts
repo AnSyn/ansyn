@@ -1,4 +1,4 @@
-import {BaseOverlaySourceProvider} from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -31,8 +31,12 @@ export class OverlaysService {
 	setSortedDropsMap(dropsData: any[]) {
 		return dropsData
 			.sort((o1, o2) => {
-				if(o2.date < o1.date) return 1;
-				if(o1.date < o2.date) return -1;
+				if (o2.date < o1.date) {
+					return 1;
+				}
+				if (o1.date < o2.date) {
+					return -1;
+				}
 				return 0;
 			});
 	}
@@ -47,6 +51,10 @@ export class OverlaysService {
 				end: params.to
 			}
 		});
+	}
+
+	getOverlayById(id: string): Observable<Overlay> {
+		return this._overlaySourceProvider.getById(id);
 	}
 
 	getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
@@ -80,20 +88,6 @@ export class OverlaysService {
 		return result;
 	}
 
-	handleError(error: Response | any): any {
-		let errorMessage: string;
-		const _error = error;
-		if (error instanceof Response) {
-			const body = _error.json() || '';
-			const error = body.error || JSON.stringify(body);
-			errorMessage = `${error.status} - ${error.statusText || ''} ${error}`;
-		} else {
-			errorMessage = error.message ? error.message : error.toString();
-		}
-		console.warn(errorMessage);
-		return Observable.empty();
-	}
-
 	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: {from: Date, to: Date}): {from: Date, to: Date} {
 		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
 		const deltaTenth: number = (delta) * 0.1;
@@ -107,10 +101,4 @@ export class OverlaysService {
 		}
 		return {from, to};
 	}
-
-	extractData(response: Response) {
-		const data = response.json();
-		return data || [];
-	}
-
 }

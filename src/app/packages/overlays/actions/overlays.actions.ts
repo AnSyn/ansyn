@@ -10,6 +10,7 @@ export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
+	REQUEST_OVERLAY_FROM_BACKEND: type('[Overlay] Load Overlay By Id'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
@@ -44,6 +45,11 @@ export class UnSelectOverlayAction implements Action {
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 	constructor(public payload?: any){}
+}
+
+export class RequestOverlayByIDFromBackendAction implements Action {
+	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
+	constructor(public payload: {overlayId: string, map_id?:string}){}
 }
 
 export class LoadOverlaysSuccessAction implements Action {
@@ -117,6 +123,7 @@ export type OverlaysActions
 	|   DisplayOverlaySuccessAction
 	|  	SelectOverlayAction
 	|	UnSelectOverlayAction
+	|	RequestOverlayByIDFromBackendAction
 	| 	LoadOverlaysAction
 	| 	LoadOverlaysSuccessAction
 	| 	LoadOverlaysFailAction

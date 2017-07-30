@@ -15,14 +15,21 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.create((observer: Observer<Overlay[]>) => {
 			const overlays: Overlay[] = [
-				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first"},
-				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second"}
+				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true},
+				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second", isFullOverlay: true}
 			]
 			observer.next(overlays);
 			observer.complete();
 		});
 	}
 
+	getOverlayById(id: string): Observable<Overlay> {
+		return Observable.create((observer: Observer<Overlay>) => {
+			const overlay =	{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true};
+			observer.next(overlay);
+			observer.complete();
+		});
+	}
 }
 
 describe('OverlaysService', () => {
@@ -255,6 +262,12 @@ describe('OverlaysService', () => {
 		//var requestBody = spyOn(http,'post').calls.first();
 
 	})
+
+	it('check the method getOverlayById with mock data', () => {
+		overlaysService.getOverlayById("test").subscribe((result: any) => {
+			expect(result).toBeTruthy();
+		});
+	});
 
 	// it('check the function extract data', () => {
 	// 	let response = new Response(new ResponseOptions({

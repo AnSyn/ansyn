@@ -4,7 +4,8 @@ import { Action, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
 	LoadOverlaysAction, LoadOverlaysSuccessAction,
-	OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction, DisplayOverlayFromStoreAction, SetTimelineStateAction
+	OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction, DisplayOverlayFromStoreAction, SetTimelineStateAction,
+	DisplayOverlayAction, RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
@@ -49,7 +50,7 @@ describe("Overlays Effects ", () => {
 		providers: [
 			OverlaysEffects, {
 				provide: OverlaysService,
-				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search', 'getTimeStateByOverlay'])
+				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search', 'getTimeStateByOverlay', 'getOverlayById'])
 			},
 			{ provide: OverlaysConfig, useValue: {} },
 			{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
@@ -118,6 +119,24 @@ describe("Overlays Effects ", () => {
 
 		let result = null;
 		overlaysEffects.loadOverlays$.subscribe(_result => {
+			result = _result;
+		});
+		expect(result).toEqual(expectedResult);
+	});
+
+	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {
+		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
+
+		const fakeOverlay = new Overlay();
+		fakeOverlay.id = 'test';
+
+		const expectedResult = new DisplayOverlayAction(<any>{overlay: fakeOverlay, map_id: 'testMapId'});
+		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
+
+		runner.queue(new RequestOverlayByIDFromBackendAction({overlayId: 'test', map_id: 'testMapId'}));
+
+		let result = null;
+		overlaysEffects.onRequestOverlayByID$.subscribe(_result => {
 			result = _result;
 		});
 		expect(result).toEqual(expectedResult);

@@ -22,7 +22,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { LoadOverlaysAction, DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysMarkupAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadOverlaysAction, DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysMarkupAction, RequestOverlayByIDFromBackendAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -134,7 +134,7 @@ describe('MapAppEffects', () => {
 		icaseState = {cases, selected_case} as any;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		overlaysState = cloneDeep(overlayInitialState);
-		fake_overlay = <any>{id: 'overlayId'};
+		fake_overlay = <any>{id: 'overlayId', isFullOverlay: true};
 		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
 
 		const fakeStore = {cases: icaseState, status_bar: statusBarState, overlays: overlaysState};
@@ -388,7 +388,7 @@ describe('MapAppEffects', () => {
 			// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
 			// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 			// ],
-			const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 			const communicator = {
 				loadInitialMapSource: () => {},
@@ -507,11 +507,55 @@ describe('MapAppEffects', () => {
 			});
 			expect(subscribeResult).toEqual(new AddOverlayToLoadingOverlaysAction(fake_overlay.id));
 		});
+
+		it('should NOT dispatch/do anything if "overlay.isFullOverlay = false"',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: false};
+			effectsRunner.queue(new DisplayOverlayAction({overlay: testOverlay, map_id: 'imagery1'}));
+
+			const resultActions = [];
+			mapAppEffects.onDisplayOverlay$.subscribe(_result => {
+				resultActions.push(_result);
+			});
+			expect(resultActions.length).toEqual(0);
+		});
 	});
+
+	describe('onOverlayFromURL$', () => {
+		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay.isFullOverlay = false"',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: false};
+			effectsRunner.queue(new DisplayOverlayAction({overlay: testOverlay, map_id: 'imagery1'}));
+
+			const resultActions = [];
+			mapAppEffects.onOverlayFromURL$.subscribe(_result => {
+				let result = _result instanceof RequestOverlayByIDFromBackendAction;
+				expect(result).toBe(true);
+
+				if (_result.type === OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND) {
+					//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
+					expect(_result.payload).toEqual({overlayId: testOverlay.id, map_id: 'imagery1'});
+				}
+				resultActions.push(_result);
+			});
+			expect(resultActions.length).toEqual(1);
+		});
+
+		it('should NOT dispatch anything if "overlay.isFullOverlay = true"',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
+			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+			effectsRunner.queue(new DisplayOverlayAction({overlay: testOverlay, map_id: 'imagery1'}));
+
+			const resultActions = [];
+			mapAppEffects.onOverlayFromURL$.subscribe(_result => {
+				resultActions.push(_result);
+			});
+			expect(resultActions.length).toEqual(0);
+		});
+	});
+
 
 	describe('setOverlayAsLoadingSuccess$', () => {
 		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction',() => {
-			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 			effectsRunner.queue(new DisplayOverlaySuccessAction({id: 'test_overlay_id'}));
 
@@ -537,7 +581,7 @@ describe('MapAppEffects', () => {
 	describe('onAddCommunicatorAddOverlayFromCase$', () => {
 		it('should dispatch DisplayOverlayAction when communicator added that contains overlay',() => {
 
-			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 
 			const communicators: Array<string> = ['imagery1'];
@@ -579,7 +623,7 @@ describe('MapAppEffects', () => {
 
 	describe('onCaseSelectedDisplayCaseOverlaysIfNeeded$', () => {
 		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay',() => {
-			const testOverlay: Overlay = {id: 'test_overlay_id1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0};
+			const testOverlay: Overlay = {id: 'test_overlay_id1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 			icaseState.selected_case.state.maps.data[1].data.overlay = testOverlay;
 

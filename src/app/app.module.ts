@@ -33,7 +33,8 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 	imports: [
 		AppProvidersModule.forRoot({
 			baseUrl :configuration.OverlaysConfig.baseUrl,
-			overlaysByTimeAndPolygon : configuration.OverlaysConfig.overlaysByTimeAndPolygon
+			overlaysByTimeAndPolygon : configuration.OverlaysConfig.overlaysByTimeAndPolygon,
+			defaultApi: configuration.OverlaysConfig.defaultApi
 		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,

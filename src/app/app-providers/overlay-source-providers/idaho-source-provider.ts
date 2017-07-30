@@ -14,9 +14,15 @@ interface IdahoResponse {
 	token: string;
 }
 
+interface IdahoResponseForGetById {
+	idahoResult: any;
+	token: string;
+}
+
 export interface IIdahoOverlaySourceConfig {
 	baseUrl: string;
 	overlaysByTimeAndPolygon: string;
+	defaultApi: string;
 }
 
 @Injectable()
@@ -26,12 +32,21 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		this.sourceType = IdahoOverlaySourceType;
 	}
 
+	public getById(id: string): Observable<Overlay>{
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers });
+		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
+		return <Observable<Overlay>>this.http.get(url, options)
+			.map(this.extractData.bind(this) )
+			.catch(this.handleError);
+	};
+
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers });
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
 		return <Observable<Overlay[]>>this.http.post(url, fetchParams, options)
-			.map(this.extractData.bind(this) )
+			.map(this.extractArrayData.bind(this) )
 			.catch(this.handleError);
 
 	}
@@ -42,11 +57,16 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			.catch(this.handleError);
 	}
 
-	private extractData(response: Response) : Array<Overlay>{
+	private extractArrayData(response: Response): Array<Overlay>{
 		const data: IdahoResponse = response.json();
 		return data ?  data.idahoResult.map((element) => {
 			return this.parseData(element,data.token);
 		}) : [];
+	}
+
+	private extractData(response: Response): Overlay {
+		const data: IdahoResponseForGetById = response.json();
+		return this.parseData(data.idahoResult, data.token);
 	}
 
 	private handleError(error: Response | any): any {
@@ -63,7 +83,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	private  parseData(idahoElement: any, token:string): Overlay {
+	private parseData(idahoElement: any, token:string): Overlay {
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 
@@ -80,6 +100,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.photoTime =  idahoElement.properties.acquisitionDate;
 		overlay.azimuth = 0;
 		overlay.sourceType = IdahoOverlaySourceType;
+		overlay.isFullOverlay = true;
 
 		return overlay;
 	}

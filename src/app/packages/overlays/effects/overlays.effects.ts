@@ -9,7 +9,7 @@ import {
 	GoNextDisplayAction,
 	GoPrevDisplayAction,
 	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
-	OverlaysMarkupAction, SetTimelineStateAction
+	OverlaysMarkupAction, RequestOverlayByIDFromBackendAction, SetTimelineStateAction
 } from '../actions/overlays.actions';
 import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 import { IOverlaysConfig } from '../models/overlays.config';
@@ -41,6 +41,16 @@ export class OverlaysEffects {
 			return this.overlaysService.search(action.payload) //this.overlaysService.fetchData("",action.payload)
 				.map(data => {
 					return new LoadOverlaysSuccessAction(data);
+				});
+		});
+
+	@Effect()
+	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$
+		.ofType(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
+		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
+			return this.overlaysService.getOverlayById(action.payload.overlayId) //this.overlaysService.fetchData("",action.payload)
+				.map((overlay: Overlay)=> {
+					return new DisplayOverlayAction({overlay, map_id: action.payload.map_id});
 				});
 		});
 

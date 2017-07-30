@@ -3,7 +3,7 @@ import * as ol from 'openlayers';
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 export type rasterOperation = { name: string, operation: pixelOperation, lib: {} };
 
-export type supportedOperations = 'Histogram';
+export type supportedOperations = 'Histogram' | 'Sharpness';
 
 export const operations = [];
 

@@ -11,7 +11,7 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
+import { ToolsActionsTypes, DisableImageProcessing } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -345,13 +345,14 @@ export class MapAppEffects {
 				});
 			return [
 				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase)),
+				new DisableImageProcessing()
 			];
 		});
 
 	@Effect()
 	toggleHistogram$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TOGGLE_HISTOGRAM)
+		.ofType(ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING)
 		.withLatestFrom(this.store$.select('cases'), (action: ToggleHistogramAction, casesState: ICasesState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
 			return [action, casesState, mapId];

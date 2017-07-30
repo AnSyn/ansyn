@@ -12,7 +12,6 @@ export class ImageryStatusComponent  {
 	@Input() map_id;
 	@Input() overlay;
 	@Input() active;
-	@Input() histogramActive;
 
 	constructor(private store: Store<any>) { }
 
@@ -24,9 +23,5 @@ export class ImageryStatusComponent  {
 
 	toggleMapSyncroniztion() {
 		this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
-	}
-
-	toggleHistogramEqualization() {
-		this.store.dispatch(new ToggleHistogramAction({mapId: this.map_id}));
 	}
 }

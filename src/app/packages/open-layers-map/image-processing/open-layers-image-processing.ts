@@ -116,11 +116,10 @@ function basicOperation(pixels, data) {
 
 function cascadeOperations(pixels, data) {
     let imageData = pixels[0];
-    operations.forEach((operation) => {
-        imageData = operation(imageData);
-    });
-
-    return imageData;
+    this['operations'].forEach((operation) => {
+		imageData = operation(imageData);
+	});
+	return imageData;
 }
 
 // ------ General Operation End ------ //
@@ -128,8 +127,8 @@ function cascadeOperations(pixels, data) {
 // ------ Histogram Equalization Start ------ //
 
 function histogramEqualization(imageData, data) {
-    let histLut = buildHistogramLut(imageData);
-    return performHistogram(imageData, histLut);
+    let histLut = this['buildHistogramLut'](imageData);
+    return this['performHistogram'](imageData, histLut);
 }
 
 function rgb2YCbCr(rgb) {
@@ -164,7 +163,7 @@ function buildHistogramLut(imageData) {
         const g = imageData.data[index + 1];
         const b = imageData.data[index + 2];
 
-        const yCbCr = rgb2YCbCr({ r, g, b });
+        const yCbCr = this['rgb2YCbCr']({ r, g, b });
 
         const val = Math.floor(yCbCr.y);
         if (totalHistLut[val] === undefined) {
@@ -205,16 +204,16 @@ function performHistogram(imageData, histogramLut) {
         const b = imageData.data[index + 2];
         const a = imageData.data[index + 3];
 
-        const yCbCr = rgb2YCbCr({ r, g, b });
+        const yCbCr = this['rgb2YCbCr']({ r, g, b });
 
         yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
 
-        const rgb = yCbCr2RGB(yCbCr);
+        const rgb = this['yCbCr2RGB'](yCbCr);
 
         imageData.data[index + 0] = rgb.r;	// Red
         imageData.data[index + 1] = rgb.g;	// Green
         imageData.data[index + 2] = rgb.b;	// Blue
-        imageData.data[index + 3] = a;	// Alpha        
+        imageData.data[index + 3] = a;	// Alpha
     }
 
     return imageData;

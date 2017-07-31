@@ -4,11 +4,12 @@
 			<img src='/assets/icons/tools/shadow_mouse.svg'/>
 		</button>
 	</div>
+
 	<div>
 		<button (click)="expandGoTo = !expandGoTo ">
 			<img src='/assets/icons/tools/go-to.svg'/>
 		</button>
-		<ansyn-go-to [(expand)]="expandGoTo" ></ansyn-go-to>
+		<ansyn-go-to [(expand)]="expandGoTo" (onGoTo)="submitGoTo($event)"></ansyn-go-to>
 	</div>
 
 

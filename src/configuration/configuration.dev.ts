@@ -81,6 +81,18 @@ export const configuration = {
 				available: true
 
 			}]
+	},
+	ToolsConfig: {
+		GoTo: {
+			from: {
+				datum: 'wgs84',
+				projection: 'geo'
+			},
+			to: {
+				datum: 'ed50',
+				projection: 'utm'
+			},
+		}
 	}
 
 };

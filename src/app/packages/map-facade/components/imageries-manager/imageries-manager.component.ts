@@ -30,6 +30,8 @@ export class ImageriesManagerComponent implements OnInit{
 	@Output() public setActiveImagery = new EventEmitter();
 	@Output() public layoutChangeSuccess = new EventEmitter();
 
+	@Input('pin-location') pinLocation;
+
 	@Input()
 	set maps(value: any){
 		this._maps = value;

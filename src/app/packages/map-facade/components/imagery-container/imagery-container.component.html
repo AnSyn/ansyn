@@ -1,4 +1,4 @@
-<div class="imagery" #imageryViewContainer>
+<div class="imagery" #imageryViewContainer [class.pin-location]="pinLocationMode">
 
 	<ansyn-imagery-status *ngIf="showStatus"
 						  [map_id]="mapState.id"

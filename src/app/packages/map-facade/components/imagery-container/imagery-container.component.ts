@@ -11,6 +11,7 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 	@Input('map-state') mapState: CaseMapState;
 	@Input() active: boolean;
 	@Input('show-status') showStatus: boolean;
+	@Input('pin-location-mode') pinLocationMode;
 
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 	private _showSpinner: boolean;

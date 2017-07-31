@@ -1,17 +1,32 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
 import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
-import { GoToComponent } from './components/go-to/go-to.component';
-import { FormsModule } from '@angular/forms';
+import { GoToModule } from './go-to/go-to.module';
+import { ToolsConfig } from './models/tools-config';
+import { toolsConfig, ToolsService } from './services/tools.service';
 
 @NgModule({
-	imports: [CommonModule, CoreModule, FormsModule],
-	declarations: [ToolsComponent, GoToComponent],
+	imports: [CommonModule, CoreModule, GoToModule],
+	declarations: [ToolsComponent],
 	entryComponents: [ToolsComponent],
 })
 export class ToolsModule {
+
+
+	static forRoot(config: ToolsConfig): ModuleWithProviders {
+		return {
+			ngModule: ToolsModule,
+			providers: [
+				ToolsService,
+				{ provide: toolsConfig, useValue: config }
+			]
+		};
+	}
+
+
+
 	constructor(store: Store <any>) {
 		let menu_item: MenuItem = {
 			name:"Tools",

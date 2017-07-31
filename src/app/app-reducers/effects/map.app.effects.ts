@@ -26,6 +26,8 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
 import { isNil } from 'lodash';
+import { IToolsState } from '../../packages/menu-items/tools/reducers/tools.reducer';
+import { SetActiveCenter, SetPinLocationModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -66,6 +68,19 @@ export class MapAppEffects {
 				})
 			];
 		});
+
+
+	@Effect()
+	onMapSingleClickPinLocation$: Observable<SetActiveCenter> = this.actions$
+		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
+		.withLatestFrom(this.store$.select('tools'), (action ,state: IToolsState): any => new Object({action, pin_location: state.flags.get('pin_location')}))
+		.filter(({action, pin_location}) => pin_location)
+		.mergeMap(({action, pin_location}) => {
+			return [
+				new SetPinLocationModeAction(false),
+				new SetActiveCenter(action.payload.lonLat)
+			]
+	});
 
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$

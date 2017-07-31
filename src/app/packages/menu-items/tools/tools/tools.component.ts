@@ -3,6 +3,7 @@ import { StartMouseShadow,StopMouseShadow } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'ansyn-tools',
@@ -13,7 +14,9 @@ export class ToolsComponent implements OnInit {
 	public expandGoTo: boolean;
 	public flags: Map<string,boolean>;
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
-														.map((tools: IToolsState) => tools.flags);
+														.map((tools: IToolsState) => tools.flags)
+														.distinctUntilChanged(isEqual);
+
 	//@todo display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) {
 
@@ -33,8 +36,10 @@ export class ToolsComponent implements OnInit {
 		}else{
 			this.store.dispatch(new StartMouseShadow());
 		}
+	}
 
-		//this.flags.set('shadow_mouse',!value);
+	submitGoTo(data:{utm: string, ws84: string}) {
+		console.log("data ", data);
 	}
 
 }

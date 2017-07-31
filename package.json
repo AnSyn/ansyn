@@ -45,6 +45,7 @@
     "lodash": "^4.17.4",
     "ng2-destroy-subscribers": "0.0.28",
     "openlayers": "github:openlayers/openlayers",
+    "proj4": "^2.4.3",
     "reselect": "^3.0.0",
     "rison": "^0.1.1",
     "rxjs": "^5.1.0",

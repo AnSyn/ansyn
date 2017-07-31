@@ -6,6 +6,10 @@ export const ToolsActionsTypes = {
 	STOP_MOUSE_SHADOW: type('[Tools] stop mouse shadow'),
 	DISABLE_MOUSE_SHADOW: type('DISABLE_MOUSE_SHADOW'),
 	ENABLE_MOUSE_SHADOW: type('ENABLE_MOUSE_SHADOW'),
+	PULL_ACTIVE_CENTER: type('PULL_ACTIVE_CENTER'),
+	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
+	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
+	GO_TO: type('GO_TO')
 };
 
 export class StartMouseShadow implements Action {
@@ -32,4 +36,24 @@ export class EnableMouseShadow implements  Action {
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow;
+export class PullActiveCenter implements  Action {
+	type = ToolsActionsTypes.PULL_ACTIVE_CENTER;
+	constructor(public payload?:any){};
+}
+export class SetActiveCenter implements  Action {
+	type = ToolsActionsTypes.SET_ACTIVE_CENTER;
+	constructor(public payload: number[]){};
+}
+export class SetPinLocationModeAction implements  Action {
+	type = ToolsActionsTypes.SET_PIN_LOCATION_MODE;
+	constructor(public payload: boolean) {};
+}
+
+export class GoToAction implements  Action {
+	type = ToolsActionsTypes.GO_TO;
+	constructor(public payload: number[]) {};
+}
+
+
+
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter | SetActiveCenter ;

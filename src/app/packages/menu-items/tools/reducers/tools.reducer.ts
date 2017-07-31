@@ -4,12 +4,13 @@
 import { ToolsActionsTypes,StartMouseShadow,StopMouseShadow,ToolsActions } from '../actions/tools.actions';
 
 export interface IToolsState {
-
 	flags: Map<string,boolean>;
+	activeCenter: number[];
 };
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<string,boolean>()
+	flags: new Map<string,boolean>(),
+	activeCenter: [0, 0]
 };
 
 export function ToolsReducer(state = toolsInitialState,action: ToolsActions): IToolsState {
@@ -38,6 +39,17 @@ export function ToolsReducer(state = toolsInitialState,action: ToolsActions): IT
 			tmpMap = new Map(state.flags);
 			tmpMap.set('shadow_mouse_disabled',false);
 			return { ...state,flags: tmpMap };
+
+		case ToolsActionsTypes.SET_ACTIVE_CENTER:
+			return { ...state, activeCenter: action.payload};
+
+		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
+			tmpMap = new Map(state.flags);
+			tmpMap.set('pin_location', action.payload);
+			return { ...state,  flags: tmpMap };
+
+		case ToolsActionsTypes.GO_TO:
+			return { ...state};
 
 		default:
 		return state;

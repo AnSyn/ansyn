@@ -5,29 +5,32 @@ import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, Algorithm
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { filtersConfig } from '@ansyn/menu-items/filters';
+import { toolsConfig } from '@ansyn/menu-items/tools';
+
 const menuItemsConfig: InjectionToken<MenuItemsConfig> = new InjectionToken('menu-items-config');
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CasesModule,
-    FiltersModule,
-    LayersManagerModule,
-    ToolsModule,
-    AlgorithmsModule,
-    SettingsModule
-  ]
+	imports: [
+		CommonModule,
+		CasesModule,
+		FiltersModule,
+		LayersManagerModule,
+		ToolsModule,
+		AlgorithmsModule,
+		SettingsModule
+	]
 })
 
 export class MenuItemsModule {
-  static forRoot(config: MenuItemsConfig): ModuleWithProviders {
-    return {
-      ngModule: MenuItemsModule,
-      providers: [
-        { provide: casesConfig, useValue: config.CasesConfig },
-        { provide: layersConfig, useValue: config.LayersManagerConfig },
-        { provide: filtersConfig, useValue: config.FiltersConfig }
-      ]
-    };
-  }
+	static forRoot(config: MenuItemsConfig): ModuleWithProviders {
+		return {
+			ngModule: MenuItemsModule,
+			providers: [
+				{ provide: casesConfig, useValue: config.CasesConfig },
+				{ provide: layersConfig, useValue: config.LayersManagerConfig },
+				{ provide: filtersConfig, useValue: config.FiltersConfig },
+				{ provide: toolsConfig, useValue: config.ToolsConfig }
+			]
+		};
+	}
 }

@@ -14,6 +14,7 @@ import * as packageJson from '../../../package.json';
 import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { IToolsState } from '../packages/menu-items/tools/reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -37,6 +38,10 @@ export class AnsynComponent implements OnInit{
 			const s_case = state.selected_case;
 			return s_case ? s_case.state.maps : {data: []} as any;
 		})
+		.distinctUntilChanged(isEqual);
+
+	pinLocation$: Observable<CaseMapsState> = this.store.select('tools')
+		.map((state: IToolsState) => state.flags.get('pin_location'))
 		.distinctUntilChanged(isEqual);
 
 //move to app.comp

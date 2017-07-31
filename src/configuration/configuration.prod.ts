@@ -15,7 +15,7 @@ export const configuration = {
 		logActions: false
 	},
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost' + ':9001/api/v1/cases',
+		casesBaseUrl: 'http://ansyn.io' + ':9001/api/v1/cases',
 		casesPaginationLimit: 15,
 		defaultCase,
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
@@ -23,10 +23,10 @@ export const configuration = {
 		useHash: true
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://localhost' + ':9001/api/v1/layers'
+		layersByCaseIdUrl: 'http://ansyn.io' + ':9001/api/v1/layers'
 	},
 	OverlaysConfig: {
-		baseUrl: 'http://localhost' +':9001/api/v1/',
+		baseUrl: 'http://ansyn.io' +':9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
 		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',
@@ -47,7 +47,7 @@ export const configuration = {
 			// mapType: 'openLayersMap',
 			// mapSource: 'TileWMS',
 			// mapSourceMetadata: {
-			// 	url: 'http://localhost:8080/geoserver/ansyn/wms',
+			// 	url: 'http://ansyn.io:8080/geoserver/ansyn/wms',
 			// 	projection: 'EPSG:4326',
 			// 	layers: ['ansyn:israel_center_1',
 			// 			 'ansyn:israel_center_2'
@@ -67,14 +67,14 @@ export const configuration = {
 	ContextConfig: {
 		contextSources: [{
 			type: 'Elastic',
-			uri: 'localhost:9200',
+			uri: 'ansyn.io:9200',
 			bucket: 'context',
 			available: true,
 			log: 'trace',
 			auth: "elastic:changeme"
 		},
 			{
-				uri: 'http://localhost:9001/api/v1/',
+				uri: 'http://ansyn.io:9001/api/v1/',
 				bucket: 'contexts',
 				type: "Proxy",
 				available: true
@@ -89,14 +89,14 @@ export const configuration = {
 export const configuration = {
 	production: false,
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
+		casesBaseUrl: 'http://ansyn.io:9001/api/v1/cases',
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {
-		layersByCaseIdUrl: 'http://localhost:9001/api/v1/cases'
+		layersByCaseIdUrl: 'http://ansyn.io:9001/api/v1/cases'
 	},
 	OverlaysConfig: {
-		baseUrl: 'http://localhost:9001/api/v1/',
+		baseUrl: 'http://ansyn.io:9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
 		overlaysByTimeAndPolygon : 'overlays/find',
 		defaultApi: 'overlays',

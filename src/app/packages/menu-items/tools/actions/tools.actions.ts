@@ -65,7 +65,7 @@ export class ToggleAutoImageProcessing implements Action {
 	}
 }
 
-export class ToggleImageProcessingSuccess implements Action {
+export class ToggleAutoImageProcessingSuccess implements Action {
 	type = ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS;
 	constructor(public payload: boolean) {
 		// code...
@@ -83,4 +83,4 @@ export class EnableImageProcessing implements  Action {
 }
 
 export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | ToggleAutoImageProcessing |
-							DisableImageProcessing | EnableImageProcessing | ToggleImageProcessingSuccess;
+							DisableImageProcessing | EnableImageProcessing | ToggleAutoImageProcessingSuccess;

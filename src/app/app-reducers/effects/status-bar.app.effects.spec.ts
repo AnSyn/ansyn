@@ -20,7 +20,7 @@ import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.ac
 import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
-import { BackToWorldAction, ToggleHistogramAction } from '@ansyn/map-facade';
+import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	GoNextDisplayAction, GoPrevDisplayAction

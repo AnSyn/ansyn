@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { StartMouseShadow,StopMouseShadow } from '../actions/tools.actions';
+import { StartMouseShadow,StopMouseShadow, ToggleImageProcessing } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
@@ -40,6 +40,10 @@ export class ToolsComponent implements OnInit {
 
 	toggleExpandGoTo() {
 		this.expandGoTo = !this.expandGoTo;
+	}
+
+	toggleImageProcessing() {
+		this.store.dispatch(new ToggleImageProcessing);
 	}
 
 }

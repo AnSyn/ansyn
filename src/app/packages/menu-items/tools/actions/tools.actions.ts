@@ -11,7 +11,7 @@ export const ToolsActionsTypes = {
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'),
 	TOGGLE_IMAGE_PROCESSING: type('TOGGLE_IMAGE_PROCESSING'),
-	TOGGLE_IMAGE_PROCESSING_END: type('TOGGLE_IMAGE_PROCESSING_END'),	
+	TOGGLE_IMAGE_PROCESSING_SUCCESS: type('TOGGLE_IMAGE_PROCESSING_SUCCESS'),	
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),		
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING')	
 };
@@ -65,8 +65,8 @@ export class ToggleImageProcessing implements Action {
 	}
 }
 
-export class ToggleImageProcessingEnd implements Action {
-	type = ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING_END;
+export class ToggleImageProcessingSuccess implements Action {
+	type = ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING_SUCCESS;
 	constructor(public payload: boolean) {
 		// code...
 	}
@@ -82,6 +82,5 @@ export class EnableImageProcessing implements  Action {
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter | SetActiveCenter  | ToggleImageProcessing |
-							DisableImageProcessing | EnableImageProcessing | ToggleImageProcessingEnd;
-
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | ToggleImageProcessing |
+							DisableImageProcessing | EnableImageProcessing | ToggleImageProcessingSuccess;

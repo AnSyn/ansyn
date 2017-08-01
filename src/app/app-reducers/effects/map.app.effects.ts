@@ -11,7 +11,7 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
-import { ToolsActionsTypes, DisableImageProcessing } from '@ansyn/menu-items/tools';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -20,7 +20,7 @@ import { OverlaysService, DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction, ToggleHistogramAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -100,11 +100,11 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
 			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
-			const currentMap = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
-			return [overlay, map_id, currentMap.data.position, currentMap.data.isHistogramActive];
+			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
+			return [overlay, map_id, active_map.data.position];
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.flatMap(([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
+		.flatMap(([overlay, map_id, position]:[Overlay, string, Position]) => {
 
 			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
 
@@ -124,7 +124,6 @@ export class MapAppEffects {
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
 				communicator.setLayer(layer, extent);
-				communicator.shouldPerformHistogram(isHistogramActive);
 				return new DisplayOverlaySuccessAction({id: overlay.id});
 			});
 		});
@@ -345,33 +344,8 @@ export class MapAppEffects {
 				});
 			return [
 				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase)),
-				new DisableImageProcessing()
+				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
-		});
-
-	@Effect()
-	toggleHistogram$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select('cases'), (action: ToggleHistogramAction, casesState: ICasesState) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
-			return [action, casesState, mapId];
-		})
-		.map(([action, caseState, mapId]:[ToggleHistogramAction, ICasesState, string]) => {
-			let shouldPerformHist;
-			const updatedCase = cloneDeep(caseState.selected_case);
-			updatedCase.state.maps.data.forEach(
-				(map) => {
-					if(map.id === mapId){
-						map.data.isHistogramActive = !map.data.isHistogramActive;
-						shouldPerformHist = map.data.isHistogramActive;
-					}
-				});
-
-			const comm = this.communicator.provide(mapId);
-			comm.shouldPerformHistogram(shouldPerformHist);
-
-			return new UpdateCaseAction(updatedCase);
 		});
 
 	constructor(

@@ -16,17 +16,10 @@ export const MapActionTypes = {
 	ADD_OVERLAY_TO_LOADING_OVERLAYS: 'ADD_OVERLAY_TO_LOADING_OVERLAYS',
 	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
-	TOGGLE_HISTOGRAM: 'TOGGLE_HISTOGRAM'
+	TOGGLE_MAP_IMAGE_PROCESSING: 'TOGGLE_MAP_IMAGE_PROCESSING'
 };
 
 export type MapActions = any;
-
-export class ToggleHistogramAction implements Action {
-	type = MapActionTypes.TOGGLE_HISTOGRAM;
-	constructor(public payload: {mapId: string}) {
-		// code...
-	}
-}
 
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;
@@ -100,6 +93,11 @@ export class AddOverlayToLoadingOverlaysAction implements Action {
 export class RemoveOverlayFromLoadingOverlaysAction implements Action {
 	type = MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS;
 	constructor(public payload: string){}
+}
+
+export class ToggleMapImageProcessing implements Action {
+	type = MapActionTypes.TOGGLE_MAP_IMAGE_PROCESSING;
+	constructor(public payload: { mapId: string, toggle_value: boolean }) { }	
 }
 
 

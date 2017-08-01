@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BackToWorldAction, SynchronizeMapsAction, ToggleHistogramAction } from '../../actions/map.actions';
+import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-status',

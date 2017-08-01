@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
-import { MapActionTypes,CompositeMapShadowAction } from '../actions/map.actions';
+import 'rxjs/add/operator/do';
+import { MapActionTypes,CompositeMapShadowAction, ToggleMapImageProcessing } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 import 'rxjs/add/operator/share';
@@ -47,6 +48,14 @@ export class MapEffects{
 	onComposeMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION)
 		.share();
+
+	@Effect({dispatch:false})
+	onToggleImageProcessing$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TOGGLE_MAP_IMAGE_PROCESSING)
+		.do((action: ToggleMapImageProcessing) => {
+			const comm = this.communicatorsService.provide(action.payload.mapId);
+			comm.shouldPerformHistogram(action.payload.toggle_value);
+		});
 
 	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
 }

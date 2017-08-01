@@ -1,4 +1,4 @@
-window.settings = Object.freeze({
+var config = Object.freeze({
     	casesConfig: {
             baseUrl: "{{ getv "/ansyn/cases/baseurl" }}",
             paginationLimit: 15,
@@ -122,4 +122,6 @@ window.settings = Object.freeze({
 
 			}]
 	}
-})
+});
+
+module.exports = config;

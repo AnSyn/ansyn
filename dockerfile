@@ -6,6 +6,9 @@ RUN npm install -g http-server
 
 COPY ./dist /opt/ansyn/app
 
+COPY ./confd/*.toml /etc/confd/conf.d/
+COPY ./confd/*.tmpl /etc/confd/templates/
+
 ADD ./run.sh /opt/ansyn/app
 
 RUN chmod +x /opt/ansyn/app/run.sh

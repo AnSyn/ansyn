@@ -46,8 +46,6 @@ export class AppComponent implements  AfterViewInit {
 	selected_layout: MapsLayout = {id:"", description:"", maps_count: 0};
 	selected_case: Case;
 	editMode = false;
-	histogramActive: boolean;
-
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any,public store: Store<IAppState> ){
 	}

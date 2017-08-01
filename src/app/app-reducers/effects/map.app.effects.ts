@@ -339,7 +339,7 @@ export class MapAppEffects {
 				(map) => {
 					if(map.id === mapId){
 						map.data.overlay = null;
-						map.data.isHistogramActive = false;
+						map.data.isAutoImageProcessingActive = false;
 					}
 				});
 			return [

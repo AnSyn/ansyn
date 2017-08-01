@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../';
 import { CasesActionTypes, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
-import { ToolsActionsTypes, DisableImageProcessing, EnableImageProcessing, ToggleImageProcessing, ToggleImageProcessingSuccess } from '@ansyn/menu-items/tools';
+import { ToolsActionsTypes, DisableImageProcessing, EnableImageProcessing, ToggleAutoImageProcessing, ToggleImageProcessingSuccess } from '@ansyn/menu-items/tools';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { cloneDeep } from 'lodash';
-import { MapActionTypes, ToggleMapImageProcessing, BackToWorldAction } from '@ansyn/map-facade';
+import { MapActionTypes, ToggleMapAutoImageProcessing, BackToWorldAction } from '@ansyn/map-facade';
 import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
 
 @Injectable()
@@ -24,12 +24,12 @@ export class ToolsAppEffects {
         .withLatestFrom(this.store$.select('cases'), (action: DisplayOverlaySuccessAction, casesState: ICasesState) => {
             const mapId = casesState.selected_case.state.maps.active_map_id;
             const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === mapId);
-            return [mapId, active_map.data.isHistogramActive];
+            return [mapId, active_map.data.isAutoImageProcessingActive];
         })
-        .mergeMap(([mapId, isHistogramActive]: [string, boolean]) => {
+        .mergeMap(([mapId, isAutoImageProcessingActive]: [string, boolean]) => {
             return [
-                new ToggleMapImageProcessing({ mapId: mapId, toggle_value: isHistogramActive }),
-                new ToggleImageProcessingSuccess(isHistogramActive)
+                new ToggleMapAutoImageProcessing({ mapId: mapId, toggle_value: isAutoImageProcessingActive }),
+                new ToggleImageProcessingSuccess(isAutoImageProcessingActive)
             ];
         });
 
@@ -45,27 +45,27 @@ export class ToolsAppEffects {
         .map(() => new DisableImageProcessing());
 
     @Effect()
-    toggleHistogram$: Observable<any> = this.actions$
-        .ofType(ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING)
-        .withLatestFrom(this.store$.select('cases'), (action: ToggleImageProcessing, casesState: ICasesState) => {
+    toggleAutoImageProcessing$: Observable<any> = this.actions$
+        .ofType(ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING)
+        .withLatestFrom(this.store$.select('cases'), (action: ToggleAutoImageProcessing, casesState: ICasesState) => {
             const mapId = casesState.selected_case.state.maps.active_map_id;
             return [action, casesState, mapId];
         })
-        .mergeMap(([action, caseState, mapId]: [ToggleImageProcessing, ICasesState, string]) => {
-            let shouldPerformHist;
+        .mergeMap(([action, caseState, mapId]: [ToggleAutoImageProcessing, ICasesState, string]) => {
+            let shouldAutoImageProcessing;
             const updatedCase = cloneDeep(caseState.selected_case);
             updatedCase.state.maps.data.forEach(
                 (map) => {
                     if (map.id === mapId) {
-                        map.data.isHistogramActive = !map.data.isHistogramActive;
-                        shouldPerformHist = map.data.isHistogramActive;
+                        map.data.isAutoImageProcessingActive = !map.data.isAutoImageProcessingActive;
+                        shouldAutoImageProcessing = map.data.isAutoImageProcessingActive;
                     }
                 });
 
             return [
-                new ToggleMapImageProcessing({ mapId: mapId, toggle_value: shouldPerformHist }),
+                new ToggleMapAutoImageProcessing({ mapId: mapId, toggle_value: shouldAutoImageProcessing }),
                 new UpdateCaseAction(updatedCase),
-                new ToggleImageProcessingSuccess(shouldPerformHist)
+                new ToggleImageProcessingSuccess(shouldAutoImageProcessing)
             ];
         });
 

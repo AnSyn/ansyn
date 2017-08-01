@@ -27,5 +27,5 @@ export interface IMap {
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
 	togglePointerMove();
 	removeSingleClickEvent();
-	shouldPerformHistogram(shouldPerform: boolean): void;
+	performAutoImageProcessing(shouldPerform: boolean): void;
 }

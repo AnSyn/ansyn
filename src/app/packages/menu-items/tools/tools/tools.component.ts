@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { StartMouseShadow,StopMouseShadow, ToggleImageProcessing } from '../actions/tools.actions';
+import { StartMouseShadow,StopMouseShadow, ToggleAutoImageProcessing } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
@@ -43,7 +43,7 @@ export class ToolsComponent implements OnInit {
 	}
 
 	toggleImageProcessing() {
-		this.store.dispatch(new ToggleImageProcessing);
+		this.store.dispatch(new ToggleAutoImageProcessing);
 	}
 
 }

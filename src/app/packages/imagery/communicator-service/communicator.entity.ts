@@ -144,9 +144,9 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public shouldPerformHistogram(shouldPerform: boolean): void {
+	public performAutoImageProcessing(shouldPerform: boolean): void {
 		if (this.ActiveMap) {
-			this.ActiveMap.shouldPerformHistogram(shouldPerform);
+			this.ActiveMap.performAutoImageProcessing(shouldPerform);
 		}
 	}
 	//CommunicatorEntity methods end

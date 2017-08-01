@@ -10,10 +10,10 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'),
-	TOGGLE_IMAGE_PROCESSING: type('TOGGLE_IMAGE_PROCESSING'),
-	TOGGLE_IMAGE_PROCESSING_SUCCESS: type('TOGGLE_IMAGE_PROCESSING_SUCCESS'),	
-	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),		
-	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING')	
+	TOGGLE_AUTO_IMAGE_PROCESSING: type('TOGGLE_AUTO_IMAGE_PROCESSING'),
+	TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS: type('TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS'),	
+	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),		
+	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING')	
 };
 
 export class StartMouseShadow implements Action {
@@ -58,29 +58,29 @@ export class GoToAction implements  Action {
 	constructor(public payload: number[]) {};
 }
 
-export class ToggleImageProcessing implements Action {
-	type = ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING;
+export class ToggleAutoImageProcessing implements Action {
+	type = ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?: any) {
 		// code...
 	}
 }
 
 export class ToggleImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.TOGGLE_IMAGE_PROCESSING_SUCCESS;
+	type = ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS;
 	constructor(public payload: boolean) {
 		// code...
 	}
 }
 
 export class DisableImageProcessing implements  Action {
-	type = ToolsActionsTypes.DISABLE_IMAGE_PROCESSING;
+	type = ToolsActionsTypes.DISABLE_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?:any){};
 }
 
 export class EnableImageProcessing implements  Action {
-	type = ToolsActionsTypes.ENABLE_IMAGE_PROCESSING;
+	type = ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | ToggleImageProcessing |
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | ToggleAutoImageProcessing |
 							DisableImageProcessing | EnableImageProcessing | ToggleImageProcessingSuccess;

@@ -42,7 +42,7 @@ export interface CaseMapState {
 	data: {
 		position: Position,
 		overlay?: Overlay,
-		isHistogramActive?: boolean
+		isAutoImageProcessingActive?: boolean
 	};
 	mapType: string;
 };

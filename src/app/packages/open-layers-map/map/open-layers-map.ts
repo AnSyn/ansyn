@@ -321,7 +321,7 @@ export class OpenLayersMap implements IMap {
 		this.mapObject.addLayer(layer);
 	}
 
-	public shouldPerformHistogram(shouldPerform: boolean = false): void {
+	public performAutoImageProcessing(shouldPerform: boolean = false): void {
 		let imageLayer: ol.layer.Image = this._mapLayers.find((layer) => layer instanceof ol.layer.Image);
 		let rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
 

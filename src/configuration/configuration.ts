@@ -1,11 +1,10 @@
 import { defaultCase } from './cases/default_case';
 import { AppSettings } from "../app/app-models/settings";
+// export function appSettings(): AppSettings {
+// 	return <AppSettings>window['settings'];
+// }
 
-export function appSettings(): AppSettings {
-	return <AppSettings>window['settings'];
-}
-
-export const config: AppSettings = appSettings();
+// export const config: AppSettings = appSettings();
 
 export const configuration = {
 	env: 'default',

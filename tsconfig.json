@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "target": "es6",
     "skipLibCheck": true,
+    "allowJs": true,
     "typeRoots": [
       "node_modules/@types"
     ],

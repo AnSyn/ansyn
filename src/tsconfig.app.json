@@ -16,6 +16,7 @@
 		"outDir": "../out-tsc/app",
 		"module": "es2015",
 		"baseUrl": "",
+		"allowJs": true,
 		"types": [
 			"d3",
 			"dom",

@@ -1,7 +1,7 @@
-window.settings = Object.freeze({
+var config = Object.freeze( {
     	casesConfig: {
-            baseUrl: "{{ getv "/ansyn/cases/baseurl" }}",
-            paginationLimit: 15,
+            baseUrl: 'http://localhost:9001/api/v1/cases',
+            paginationLimit: 16,
             defaultCase: {
                 id: '1234-5678',
                 name: 'Default case',
@@ -76,22 +76,35 @@ window.settings = Object.freeze({
             useHash: true
 	},
 	layersManagerConfig: {
-		layersByCaseIdUrl: "{{ getv "/ansyn/layers/baseurl"}}"
+		layersByCaseIdUrl: 'http://localhost:9001/api/v1/layers'
 	},
 	overlaysConfig: {
-		baseUrl: "{{ getv "/ansyn/overlay/baseurl"}}",
+		baseUrl: 'http://localhost:9001/api/v1/',
 		overlaysByCaseId:  'case/:id/overlays',
-		overlaysByTimeAndPolygon : "{{ getv "/ansyn/overlay/api/find"}}",
-		defaultApi: "{{getv "/ansyn/overlay/api/default"}}",
+		overlaysByTimeAndPolygon : 'overlays/find',
+		defaultApi: 'overlays',
 		searchByCase: false,
 		overlaySource: 'IDAHO',
 		polygonGenerationDisatnce: 0.1,
 	},
 	imageryConfig: {
 		geoMapsInitialMapSource: [{
+			// mapType: 'openLayersMap',
+			// mapSource: 'OSM',
+			// mapSourceMetadata: null
+
 			mapType: 'openLayersMap',
 			mapSource: 'BING',
-			mapSourceMetadata: { key: "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", styles: ['Aerial']}
+			mapSourceMetadata: { key: "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", styles: [/*'Road', */'Aerial'/*, 'AerialWithLabels', 'collinsBart', 'ordnanceSurvey'*/]}
+
+			// mapType: 'openLayersMap',
+			// mapSource: 'TileWMS',
+			// mapSourceMetadata: {
+			// 	url: 'http://localhost:8080/geoserver/ansyn/wms',
+			// 	projection: 'EPSG:4326',
+			// 	layers: ['ansyn:israel_center_1',
+			// 			 'ansyn:israel_center_2'
+			// 	]}
 		}, {
 			mapType: 'cesiumMap',
 			mapSource: 'OSM',
@@ -108,7 +121,7 @@ window.settings = Object.freeze({
 		contextSources: [
 			{
 			type: 'Elastic',
-			uri: "{{getv "/ansyn/context/db/elastic/url"}}",
+			uri: 'localhost:9200',
 			bucket: 'context',
 			available: true,
 			log: 'trace',
@@ -121,5 +134,7 @@ window.settings = Object.freeze({
 				available: true
 
 			}]
-	}
-})
+    }
+});
+
+module.exports = config;

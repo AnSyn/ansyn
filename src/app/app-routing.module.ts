@@ -27,7 +27,7 @@ export const routes: Routes = [
 ];
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routes, {useHash: configuration.CasesConfig.useHash})
+		RouterModule.forRoot(routes, {useHash: config.casesConfig.useHash})
 	],
 	declarations:[EmptyComponent],
 	exports:[RouterModule]

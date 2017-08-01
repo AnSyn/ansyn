@@ -24,7 +24,7 @@ describe('LayersAppEffects', () => {
 	}));
 
 
-	xit('selectCase$', () => {
+	it('selectCase$', () => {
 		let selectedCaseId = 'asdfasdf';
 
 		effectsRunner.queue(new SelectCaseByIdAction(selectedCaseId));

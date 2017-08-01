@@ -4,14 +4,32 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../';
 import { CasesActionTypes, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
-import { ToolsActionsTypes, DisableImageProcessing, EnableImageProcessing, ToggleAutoImageProcessing, ToggleImageProcessingSuccess } from '@ansyn/menu-items/tools';
+import { ToolsActionsTypes, DisableImageProcessing, EnableImageProcessing, ToggleAutoImageProcessing, ToggleAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
 import { ICasesState } from '@ansyn/menu-items/cases';
 import { cloneDeep } from 'lodash';
-import { MapActionTypes, ToggleMapAutoImageProcessing, BackToWorldAction } from '@ansyn/map-facade';
+import { MapActionTypes, ToggleMapAutoImageProcessing, BackToWorldAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
 
 @Injectable()
 export class ToolsAppEffects {
+
+    @Effect()
+    onActiveMapChanges$: Observable<ActiveMapChangedAction> = this.actions$
+        .ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
+        .withLatestFrom(this.store$.select('cases'))
+        .mergeMap(([action, casesState]: [ActiveMapChangedAction, ICasesState]) => {
+            const mapId = casesState.selected_case.state.maps.active_map_id;
+            const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
+
+            if (active_map.data.overlay == null) {
+                return [new DisableImageProcessing()];
+            } else {
+                return [
+                    new EnableImageProcessing(),
+                    new ToggleAutoImageProcessingSuccess(active_map.data.isAutoImageProcessingActive)
+                ];                
+            }
+        });
 
     @Effect()
     onDisplayOverlay$: Observable<any> = this.actions$
@@ -23,13 +41,13 @@ export class ToolsAppEffects {
         .ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
         .withLatestFrom(this.store$.select('cases'), (action: DisplayOverlaySuccessAction, casesState: ICasesState) => {
             const mapId = casesState.selected_case.state.maps.active_map_id;
-            const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === mapId);
+            const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
             return [mapId, active_map.data.isAutoImageProcessingActive];
         })
         .mergeMap(([mapId, isAutoImageProcessingActive]: [string, boolean]) => {
             return [
                 new ToggleMapAutoImageProcessing({ mapId: mapId, toggle_value: isAutoImageProcessingActive }),
-                new ToggleImageProcessingSuccess(isAutoImageProcessingActive)
+                new ToggleAutoImageProcessingSuccess(isAutoImageProcessingActive)
             ];
         });
 
@@ -65,7 +83,7 @@ export class ToolsAppEffects {
             return [
                 new ToggleMapAutoImageProcessing({ mapId: mapId, toggle_value: shouldAutoImageProcessing }),
                 new UpdateCaseAction(updatedCase),
-                new ToggleImageProcessingSuccess(shouldAutoImageProcessing)
+                new ToggleAutoImageProcessingSuccess(shouldAutoImageProcessing)
             ];
         });
 

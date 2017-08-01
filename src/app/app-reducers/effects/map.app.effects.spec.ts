@@ -30,7 +30,6 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ToggleHistogramAction } from '@ansyn/map-facade';
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
@@ -93,7 +92,7 @@ describe('MapAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}, isHistogramActive: false}},
+					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
 					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
 					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
@@ -419,25 +418,6 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('toggleHistogram$', () => {
-		it('toggleHistogram should call communicator and update case',() => {
-			const communicator = {
-				shouldPerformHistogram: () => {},
-			};
-
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'shouldPerformHistogram');
-			effectsRunner.queue(new ToggleHistogramAction({mapId: 'imagery1'}));
-			mapAppEffects.toggleHistogram$.subscribe(_result => {
-				let result = _result instanceof UpdateCaseAction;
-				expect(result).toBe(true);
-				const resultCase: Case = _result.payload;
-				expect(resultCase.state.maps.data[0].data.isHistogramActive).toEqual(true);
-				expect(communicator.shouldPerformHistogram).toHaveBeenCalledWith(true);
-			});
-		});
-	});
-
 	describe('onDisplayOverlay$ communicator should set Layer on map, by isExtentContainedInPolygon', () => {
 		const fake_layer = {};
 		const fake_extent = [1,2,3,4];
@@ -447,8 +427,7 @@ describe('MapAppEffects', () => {
 
 			fakeCommuincator = <any> {
 				ActiveMap: {MapType: 'ol'},
-				setLayer: () => {},
-				shouldPerformHistogram: () => {}
+				setLayer: () => {}
 			};
 
 			const fakeSourceLoader = {
@@ -470,7 +449,6 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommuincator, 'setLayer');
-			spyOn(fakeCommuincator, 'shouldPerformHistogram');
 		});
 
 		it('isExtentContainedInPolygon "false"', ()=> {

@@ -10,12 +10,12 @@ describe('ToolsComponent', () => {
     let fixture: ComponentFixture <ToolsComponent> ;
     let store: Store <any> ;
 
-	const mock_imagery_view = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
+	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
                 imports: [StoreModule.provideStore({ tools: ToolsReducer})],
-				declarations: [ToolsComponent, mock_imagery_view]
+				declarations: [ToolsComponent, mock_go_to]
             })
             .compileComponents();
     }));
@@ -51,4 +51,13 @@ describe('ToolsComponent', () => {
     	//expect(component.flags.get('shadow_mouse')).toBe(false);
 
     });
+
+    it('toggleExpandGoTo should toggle expandGoTo', () => {
+		component.expandGoTo = true;
+    	component.toggleExpandGoTo();
+		expect(component.expandGoTo).toBeFalsy();
+		component.toggleExpandGoTo();
+		expect(component.expandGoTo).toBeTruthy();
+	});
+
 });

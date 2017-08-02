@@ -2,7 +2,7 @@
 	class="map"
 	[selected_layout]="selected_layout"
 	[maps]="maps"
-	[pin-location]="pinLocation$ | async"
+	[pin-location]="pinLocation"
 	(setActiveImagery)="onActiveImagery($event)"
 	(layoutChangeSuccess)="layoutChangeSuccess()">
 </ansyn-imageries-manager>

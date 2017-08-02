@@ -4,8 +4,9 @@ import { ToolsComponent } from './tools/tools.component';
 import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
-import { ToolsConfig } from './models/tools-config';
-import { toolsConfig, ToolsService } from './services/tools.service';
+import { ToolsConfig, toolsConfig } from './models/tools-config';
+
+
 
 @NgModule({
 	imports: [CommonModule, CoreModule, GoToModule],
@@ -19,7 +20,6 @@ export class ToolsModule {
 		return {
 			ngModule: ToolsModule,
 			providers: [
-				ToolsService,
 				{ provide: toolsConfig, useValue: config }
 			]
 		};

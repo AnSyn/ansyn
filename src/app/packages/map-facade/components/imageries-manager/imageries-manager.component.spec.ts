@@ -26,7 +26,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'pin-location-mode']}) ],
+			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner']}) ],
 
 		})
 		.compileComponents();

@@ -53,22 +53,36 @@ describe('ToolsAppEffects', () => {
 		};
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 		effectsRunner.queue(new PullActiveCenter());
-		toolsAppEffects.getActiveCenter$.subscribe((result) => {
-			expect(result.constructor).toEqual(SetActiveCenter);
-			expect(result.payload).toEqual([0,0])
-		})
+		let result = null;
+		toolsAppEffects.getActiveCenter$.subscribe(_result => result = _result);
+		expect(result.constructor).toEqual(SetActiveCenter);
+		expect(result.payload).toEqual([0,0])
 	});
 
-	it('updatePinLocationAction$ should createMapSingleClickEvent or removeSingleClickEvent on active communicator', () => {
-		const activeCommunicator = jasmine.createSpyObj({
+	describe('updatePinLocationAction$ should createMapSingleClickEvent or removeSingleClickEvent on ', () => {
+		const activeCommunicator = {
 			createMapSingleClickEvent: () => {},
 			removeSingleClickEvent: () => {}
+		};
+
+		beforeEach(() => {
+			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [activeCommunicator, activeCommunicator]);
 		});
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
-		effectsRunner.queue(new SetPinLocationModeAction(true));
-		toolsAppEffects.updatePinLocationAction$.subscribe(() => {
-			expect(activeCommunicator.createMapSingleClickEvent).toHaveBeenCalled();
-		})
+
+		it('should call createMapSingleClickEvent per communicator ( action.payload equal "true") ', () => {
+			spyOn(activeCommunicator, 'createMapSingleClickEvent');
+			effectsRunner.queue(new SetPinLocationModeAction(true));
+			toolsAppEffects.updatePinLocationAction$.subscribe();
+			expect(activeCommunicator.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
+		});
+
+		it('should call removeSingleClickEvent per communicator ( action.payload equal "false") ', () => {
+			spyOn(activeCommunicator, 'removeSingleClickEvent');
+			effectsRunner.queue(new SetPinLocationModeAction(false));
+			toolsAppEffects.updatePinLocationAction$.subscribe();
+			expect(activeCommunicator.removeSingleClickEvent).toHaveBeenCalled();
+		});
+
 	});
 
 	it('onGoTo$ should call SetCenter on active communicator with action.payload', () => {
@@ -77,12 +91,11 @@ describe('ToolsAppEffects', () => {
 		});
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 		effectsRunner.queue(new GoToAction([0,0]));
-		toolsAppEffects.onGoTo$.subscribe(() => {
-			const point = {
-				type:'Point',
-				coordinates: [0,0]
-			};
-			expect(activeCommunicator.setCenter).toHaveBeenCalledWith(point);
-		})
+		toolsAppEffects.onGoTo$.subscribe();
+		const point = {
+			type:'Point',
+			coordinates: [0,0]
+		};
+		expect(activeCommunicator.setCenter).toHaveBeenCalledWith(point);
 	});
 });

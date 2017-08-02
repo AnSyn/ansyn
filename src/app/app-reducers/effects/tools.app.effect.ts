@@ -9,6 +9,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import 'rxjs/add/operator/withLatestFrom';
 import { get as _get, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { SetPinLocationModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -17,10 +18,12 @@ export class ToolsAppEffects {
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => {
-			return _get(cases.selected_case, "state.maps.active_map_id");
+			const activeMapId: string = <string> _get(cases.selected_case, "state.maps.active_map_id");
+			return this.imageryCommunicatorService.provide(activeMapId);
 		})
-		.map( (active_map_id: string) => {
-			const activeMapCenter = this.imageryCommunicatorService.provide(active_map_id).getCenter();
+		.filter( communicator => !_isNil(communicator))
+		.map( (communicator: CommunicatorEntity) => {
+			const activeMapCenter = communicator.getCenter();
 			return new SetActiveCenter(activeMapCenter.coordinates);
 		});
 
@@ -28,21 +31,18 @@ export class ToolsAppEffects {
 	@Effect({dispatch:false})
 	updatePinLocationAction$: Observable<void> = this.actions$
 		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState): any[] => {
-			const activeMapId: string = <any> _get(cases.selected_case, "state.maps.active_map_id");
-			return [action, this.imageryCommunicatorService.provide(activeMapId)];
-		})
-		.filter(([action, communicator]) => !_isNil(communicator))
-		.map(([action, communicator]: [any, CommunicatorEntity]) => {
-			if (action.payload){
-				communicator.createMapSingleClickEvent();
-			} else {
-				communicator.removeSingleClickEvent();
-			}
+		.map((action: SetPinLocationModeAction) => {
+			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator) => {
+				if (action.payload){
+					communicator.createMapSingleClickEvent();
+				} else {
+					communicator.removeSingleClickEvent();
+				}
+			})
 		});
 
-	@Effect({dispatch:false})
-	onGoTo$: Observable<void> = this.actions$
+	@Effect()
+	onGoTo$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState): any => {
 			const activeMapId: string = <any> _get(cases.selected_case, "state.maps.active_map_id");
@@ -55,6 +55,7 @@ export class ToolsAppEffects {
 				coordinates: action.payload
 			};
 			communicator.setCenter(center);
+			return new SetActiveCenter(action.payload);
 		});
 
 

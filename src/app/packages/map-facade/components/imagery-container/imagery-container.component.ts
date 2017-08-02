@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, AfterViewInit, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { Spinner } from '@ansyn/core/utils';
-import { CaseMapState } from '@ansyn/core';
+import { CaseMapState, Overlay} from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -11,7 +11,6 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 	@Input('map-state') mapState: CaseMapState;
 	@Input() active: boolean;
 	@Input('show-status') showStatus: boolean;
-	@Input('pin-location-mode') pinLocationMode;
 
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 	private _showSpinner: boolean;
@@ -29,7 +28,7 @@ export class ImageryContainerComponent implements OnInit, AfterViewInit, OnDestr
 		return this._showSpinner;
 	}
 
-	get overlay() {
+	get overlay(): Overlay {
 		return this.mapState.data.overlay;
 	}
 

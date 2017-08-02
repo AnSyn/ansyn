@@ -14,7 +14,7 @@ import * as packageJson from '../../../package.json';
 import { CaseMapState, Overlay, MapsLayout} from '@ansyn/core/models';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { IToolsState } from '../packages/menu-items/tools/reducers/tools.reducer';
+import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-ansyn',

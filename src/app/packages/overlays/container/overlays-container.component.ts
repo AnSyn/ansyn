@@ -23,6 +23,7 @@ import { OverlaysService } from "../services/overlays.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Spinner } from "@ansyn/core/utils";
 import { Observable } from 'rxjs/Observable';
+import { startTimingLog } from '@ansyn/core/utils';
 
 @Component({
 	selector: 'overlays-container',
@@ -100,6 +101,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
 			.subscribe(data => {
 				const id = data.element.id;
+			 	startTimingLog(`LOAD_OVERLAY_${id}`)
 				this.store.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({id: id}));
 				if (this.selectedOverlays.indexOf(id) === -1) {
 					this.store.dispatch(new SelectOverlayAction(id));

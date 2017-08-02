@@ -1,7 +1,15 @@
 export function startTimingLog(key){
-	console.time('ansyn ' + key);
+	if(window && window.localStorage) {
+		if(localStorage.getItem('ansyn-logTimerOn')) {
+			console.time(key);
+		}
+	}
 }
 
 export function endTimingLog(key){
-	console.timeEnd('ansyn ' +  key);
+	if(window && window.localStorage) {
+		if (localStorage.getItem('ansyn-logTimerOn')) {
+			console.timeEnd(key);
+		}
+	}
 }

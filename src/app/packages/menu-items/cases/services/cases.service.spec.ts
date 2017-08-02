@@ -21,7 +21,7 @@ export const MockCasesConfig = {
 				}
 			}
 		},
-		casesBaseUrl:  "fake-cases-url",
+		baseUrl:  "fake-cases-url",
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region']
 
 		}
@@ -42,7 +42,7 @@ describe('CasesService', () => {
 
 	} as any;
 
-	const casesBaseUrl: string = "fake-cases-url";
+	const baseUrl: string = "fake-cases-url";
 	const casesQueryParamsKeys: string[] = ['facets', 'time', 'maps', 'region'];
 
 	beforeEach(() => {

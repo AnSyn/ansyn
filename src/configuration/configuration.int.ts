@@ -5,7 +5,7 @@ export const configuration = {
 
 	},
 	CasesConfig: {
-		casesBaseUrl: 'http://localhost:9001/api/v1/cases',
+		baseUrl: 'http://localhost:9001/api/v1/cases',
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {

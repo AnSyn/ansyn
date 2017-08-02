@@ -1,4 +1,4 @@
-var config = Object.freeze( {
+window.config = Object.freeze( {
     	casesConfig: {
             baseUrl: 'http://localhost:9001/api/v1/cases',
             paginationLimit: 16,
@@ -123,7 +123,7 @@ var config = Object.freeze( {
 			type: 'Elastic',
 			uri: 'localhost:9200',
 			bucket: 'context',
-			available: true,
+			available: false,
 			log: 'trace',
 			auth: "elastic:changeme"
 		},
@@ -148,5 +148,3 @@ var config = Object.freeze( {
 		}
 	}
 });
-
-module.exports = config;

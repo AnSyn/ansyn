@@ -6,12 +6,13 @@ import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToolsReducer } from '../packages/menu-items/tools/reducers/tools.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
 	let fixture: ComponentFixture<AnsynComponent>;
 
-	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps']});
+	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps', 'pin-location']});
 
 
 	beforeEach(() => {
@@ -27,7 +28,8 @@ describe('AnsynComponent', () => {
 				StoreModule.provideStore({
 					status_bar: StatusBarReducer,
 					cases: CasesReducer,
-					overlays : OverlayReducer
+					overlays : OverlayReducer,
+					tools: ToolsReducer
 				})]
 		})
 			.compileComponents();

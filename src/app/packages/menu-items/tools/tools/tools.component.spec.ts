@@ -3,16 +3,19 @@ import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store,StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { ToolsReducer } from '../reducers/tools.reducer';
-import { ToolsModule } from '../tools.module';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 
 describe('ToolsComponent', () => {
     let component: ToolsComponent;
     let fixture: ComponentFixture <ToolsComponent> ;
     let store: Store <any> ;
 
+	const mock_imagery_view = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-                imports: [ToolsModule, StoreModule.provideStore({ tools: ToolsReducer})]
+                imports: [StoreModule.provideStore({ tools: ToolsReducer})],
+				declarations: [ToolsComponent, mock_imagery_view]
             })
             .compileComponents();
     }));

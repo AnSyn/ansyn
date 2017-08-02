@@ -17,7 +17,7 @@ export class ToolsAppEffects {
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => {
-			return cases.selected_case.state.maps.active_map_id;
+			return _get(cases.selected_case, "state.maps.active_map_id");
 		})
 		.map( (active_map_id: string) => {
 			const activeMapCenter = this.imageryCommunicatorService.provide(active_map_id).getCenter();

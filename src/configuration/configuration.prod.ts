@@ -15,8 +15,8 @@ export const configuration = {
 		logActions: false
 	},
 	CasesConfig: {
-		casesBaseUrl: 'http://ansyn.io' + ':9001/api/v1/cases',
-		casesPaginationLimit: 15,
+		baseUrl: 'http://ansyn.io' + ':9001/api/v1/cases',
+		paginationLimit: 15,
 		defaultCase,
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
 		updateCaseDebounceTime: 700,
@@ -103,7 +103,7 @@ export const configuration = {
 export const configuration = {
 	production: false,
 	CasesConfig: {
-		casesBaseUrl: 'http://ansyn.io:9001/api/v1/cases',
+		baseUrl: 'http://ansyn.io:9001/api/v1/cases',
 		updateCaseDebounceTime: 700
 	},
 	LayersManagerConfig: {

@@ -41,8 +41,8 @@ export class CasesService {
 	}
 
 	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
-		this.base_url = this.config.casesBaseUrl;
-		this.paginationLimit = this.config.casesPaginationLimit;
+		this.base_url = this.config.baseUrl;
+		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 

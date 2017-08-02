@@ -36,7 +36,7 @@ describe('CasesEffects', () => {
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
 			providers: [CasesEffects,
 			CasesService,
-			{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
+			{ provide: casesConfig, useValue: { baseUrl: null } }]
 		}).compileComponents();
 	}));
 

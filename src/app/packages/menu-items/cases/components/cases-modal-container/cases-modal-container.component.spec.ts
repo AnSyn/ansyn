@@ -17,7 +17,7 @@ describe('ModalContainerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }),RouterTestingModule],
-			providers: [{ provide: casesConfig, useValue: { casesBaseUrl: null } }]
+			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();
 	}));

@@ -9,7 +9,8 @@ export class CesiumMap implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any>;
+	singleClick: EventEmitter<any>= new EventEmitter<any>();
+	contextMenu: EventEmitter<any>= new EventEmitter<any>();
 
 	mapType: string;
 	mapObject: any;
@@ -63,7 +64,7 @@ export class CesiumMap implements IMap {
 	}
 
 	setAutoImageProcessing(shouldPerform: boolean): void {
-		throw new Error('Method not implemented.');		
+		throw new Error('Method not implemented.');
 	}
 
 	togglePointerMove(){

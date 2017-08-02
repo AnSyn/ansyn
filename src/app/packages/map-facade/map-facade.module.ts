@@ -8,11 +8,12 @@ import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { CoreModule } from '@ansyn/core';
+import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 
 @NgModule({
 	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule],
 	providers: [MapFacadeService],
-	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent],
+	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent, ContextMenuComponent],
 	exports:[ImageriesManagerComponent]
 })
 

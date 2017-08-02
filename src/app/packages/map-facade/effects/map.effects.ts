@@ -57,5 +57,9 @@ export class MapEffects{
 			comm.setAutoImageProcessing(action.payload.toggle_value);
 		});
 
+	onMapContextMenu$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.MAP_CONTEXT_MENU)
+		.share();
+
 	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
 }

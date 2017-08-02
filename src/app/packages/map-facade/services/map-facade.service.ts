@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { AddMapInstacneAction,RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction } from '../actions/map.actions';
+import {
+	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
+	MapContextMenuAction
+} from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 
 @Injectable()
@@ -27,6 +30,7 @@ export class MapFacadeService {
 		Object.keys(this.imageryCommunicatorService.communicators).forEach((id)=>{
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).positionChanged.subscribe(this.positionChanged.bind(this)));
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).singleClick.subscribe(this.singleClick.bind(this)));
+			this._subscribers.push(this.imageryCommunicatorService.provide(id).contextMenu.subscribe(this.contextMenu.bind(this)));
 		});
 	}
 
@@ -44,4 +48,9 @@ export class MapFacadeService {
 	singleClick(event){
 		this.store.dispatch(new MapSingleClickAction(event));
 	}
+
+	contextMenu(event){
+		this.store.dispatch(new MapContextMenuAction(event));
+	}
+
 }

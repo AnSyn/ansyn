@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 import { GoToAction, PullActiveCenter, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { createSelector } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
-import * as proj4 from 'proj4';
 import { ToolsConfig } from '../../models/tools-config';
 import { toolsConfig } from '../../services/tools.service';
 import { isEqual } from 'lodash';

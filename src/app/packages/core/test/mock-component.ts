@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 
 /**
  * Examples:
@@ -13,11 +13,20 @@ class Name {
 }
 
 export function MockComponent (options: Component): Component{
-	let metadata: Component = {
+	const metadata: Component = {
     	selector: options.selector,
     	template: options.template || '',
     	inputs: options.inputs,
     	outputs: options.outputs
     };
-    return Component(metadata)(class Name2 {} as any);
+    return Component(metadata)(
+    	class Name2 {
+			constructor(){
+				if(options.outputs) {
+					options.outputs.forEach((output: string) => {
+						this[output] = new EventEmitter();
+					})
+				}
+			}
+	} as any);
 }

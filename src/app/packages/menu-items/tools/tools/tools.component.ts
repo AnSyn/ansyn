@@ -38,8 +38,4 @@ export class ToolsComponent implements OnInit {
 		}
 	}
 
-	submitGoTo(data:{utm: string, ws84: string}) {
-		console.log("data ", data);
-	}
-
 }

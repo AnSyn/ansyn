@@ -40,7 +40,7 @@ export class AnsynComponent implements OnInit{
 		})
 		.distinctUntilChanged(isEqual);
 
-	pinLocation$: Observable<CaseMapsState> = this.store.select('tools')
+	pinLocation$: Observable<boolean> = this.store.select('tools')
 		.map((state: IToolsState) => state.flags.get('pin_location'))
 		.distinctUntilChanged(isEqual);
 
@@ -56,6 +56,7 @@ export class AnsynComponent implements OnInit{
 	public selected_layout: MapsLayout;
 	public selected_case: Case;
 	public version;
+	public pinLocation: boolean;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
@@ -64,19 +65,10 @@ export class AnsynComponent implements OnInit{
 	ngOnInit(): void {
 		//move to app.comp
 		this.store.dispatch(new LoadContextsAction());
-
 		this.maps$.subscribe(maps => this.maps = maps);
-
-
 		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
-
 		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
-
-		this.maps$.subscribe(maps => {
-			this.maps = maps;
-		});
-
-
+		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);
 	}
 
 	onActiveImagery(active_map_id: string) {

@@ -1,16 +1,13 @@
-import {
-	Component, EventEmitter, HostBinding, Inject, Input, OnInit,
-	Output
-} from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnInit, Output } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { GoToAction, PullActiveCenter, SetPinLocationModeAction } from '../../actions/tools.actions';
-import { createSelector } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
 import { ToolsConfig } from '../../models/tools-config';
-import { toolsConfig } from '../../services/tools.service';
 import { isEqual } from 'lodash';
-import { GoToService } from '../../services/go-to.service';
+import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
+import { toolsConfig } from '../../models/tools-config';
+import "rxjs/add/operator/pluck";
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -18,10 +15,11 @@ import { GoToService } from '../../services/go-to.service';
 	styleUrls: ['./go-to.component.less']
 })
 export class GoToComponent implements OnInit {
-	_expand;
-	activeCenter$: Observable<number[]> = createSelector(this.store$, 'tools', 'activeCenter');
-	activeCenter: number[];
-	activeCenterProjDatum = {datum: 'wgs84', projection: 'geo'};
+	private _expand: boolean;
+	public activeCenter: number[];
+	activeCenter$: Observable<number[]> = this.store$.select('tools').pluck('activeCenter');
+
+	activeCenterProjDatum: CoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
 
 	inputs = {
 		from: [],
@@ -34,7 +32,7 @@ export class GoToComponent implements OnInit {
 
 	pin_location_mode: boolean;
 
-	@Output() expandChange= new EventEmitter();
+	@Output() expandChange = new EventEmitter();
 	@HostBinding('class.expand') @Input() set expand(value) {
 		this._expand = value;
 		if (value) {
@@ -46,37 +44,44 @@ export class GoToComponent implements OnInit {
 		return this._expand
 	}
 
-	get from() {
+	get from(): CoordinatesSystem {
 		return this.config.GoTo.from;
 	}
 
-	get to() {
+	get to(): CoordinatesSystem {
 		return this.config.GoTo.to;
 	}
 
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
-			this.activeCenter = [..._activeCenter.map(num => +num.toFixed(5))];
-			this.inputs.from = this.goToService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
-			this.inputs.to = this.goToService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+			this.activeCenter = _activeCenter;
+			this.inputs.from = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
+			this.inputs.to = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
 		});
+
 		this.pin_location_mode$.subscribe((_pin_location_mode) => {
 			this.pin_location_mode = _pin_location_mode;
 		});
+
 		this.store$.dispatch(new PullActiveCenter())
 	}
 
-	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: ToolsConfig, private goToService: GoToService) { }
+	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: ToolsConfig) { }
 
 	submitGoTo(): void {
-		this.store$.dispatch(new GoToAction(this.activeCenter));
+		const goToInput = convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
+		this.store$.dispatch(new GoToAction(goToInput));
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
-		this.inputs[inputKey] = this.goToService.convertByProjectionDatum(coords, convertFrom, convertTo)
+		this.inputs[inputKey] = convertByProjectionDatum(coords, convertFrom, convertTo)
 	}
 
 	togglePinLocation() {
 		this.store$.dispatch(new SetPinLocationModeAction(!this.pin_location_mode))
+	}
+
+	close() {
+		this.expand = false;
 	}
 }

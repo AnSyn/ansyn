@@ -1,12 +1,11 @@
+import { CoordinatesSystem } from '@ansyn/core/utils/covert-projections';
+import { InjectionToken } from '@angular/core';
+
 export interface ToolsConfig  {
 	GoTo: {
-		from: {
-			datum: string,
-			projection: string
-		},
-		to: {
-			datum: string,
-			projection: string
-		},
+		from: CoordinatesSystem;
+		to: CoordinatesSystem;
 	}
 }
+
+export const toolsConfig: InjectionToken<ToolsConfig> = new InjectionToken('toolsConfig');

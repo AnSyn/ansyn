@@ -1,11 +1,10 @@
-<div class="imageries-container" #imageriesContainer>
+<div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
 		<div class='map-container-wrapper' *ngIf="maps.data[index]" (click)="changeActiveImagery(maps.data[index].id)">
 			<ansyn-imagery-container class="map"
 									 [map-state]="maps.data[index]"
 									 [active]="maps.active_map_id == maps.data[index].id"
-									 [pin-location-mode]="maps.active_map_id == maps.data[index].id && pinLocation"
 									 [show-status]="count > 1"
 									 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)" >
 			</ansyn-imagery-container>

@@ -38,4 +38,8 @@ export class ToolsComponent implements OnInit {
 		}
 	}
 
+	toggleExpandGoTo() {
+		this.expandGoTo = !this.expandGoTo;
+	}
+
 }

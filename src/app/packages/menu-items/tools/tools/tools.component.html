@@ -6,10 +6,10 @@
 	</div>
 
 	<div>
-		<button (click)="expandGoTo = !expandGoTo ">
+		<button (click)="toggleExpandGoTo()">
 			<img src='/assets/icons/tools/go-to.svg'/>
 		</button>
-		<ansyn-go-to [(expand)]="expandGoTo" (onGoTo)="submitGoTo($event)"></ansyn-go-to>
+		<ansyn-go-to [(expand)]="expandGoTo"></ansyn-go-to>
 	</div>
 
 

@@ -24,4 +24,11 @@ describe('GeoComponent', () => {
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
+
+	it('onChanges should call coordinatesChange.emit with new coordinates value', () => {
+		spyOn(component.coordinatesChange,'emit');
+		component.onChanges();
+		expect(component.coordinatesChange.emit).toHaveBeenCalledWith(component.coordinates);
+	});
+
 });

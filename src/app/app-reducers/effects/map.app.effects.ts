@@ -26,8 +26,8 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
 import { isNil } from 'lodash';
-import { IToolsState } from '../../packages/menu-items/tools/reducers/tools.reducer';
-import { SetActiveCenter, SetPinLocationModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {

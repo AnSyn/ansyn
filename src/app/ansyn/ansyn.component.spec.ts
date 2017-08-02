@@ -6,7 +6,7 @@ import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ToolsReducer } from '../packages/menu-items/tools/reducers/tools.reducer';
+import { ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;

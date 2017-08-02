@@ -9,9 +9,9 @@ import {
 	GoToAction,
 	PullActiveCenter, SetActiveCenter,
 	SetPinLocationModeAction
-} from '../../packages/menu-items/tools/actions/tools.actions';
-import { Case } from '../../packages/core/models/case.model';
-import { AddCaseSuccessAction, SelectCaseByIdAction } from '../../packages/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { Case } from '@ansyn/core/models/case.model';
+import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

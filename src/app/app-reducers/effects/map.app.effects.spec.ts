@@ -44,6 +44,11 @@ class SourceProviderMock1 implements BaseMapSourceProvider {
 	createAsync(metaData: any): Promise<any> {
 		return Promise.resolve();
 	}
+
+	startTimingLog = key => {};
+
+	endTimingLog = key => {};
+
 }
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
@@ -194,8 +199,8 @@ describe('MapAppEffects', () => {
 			}
 		});
 
-		expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3)
-		expect(imagery1.removeSingleClickEvent['calls'].count()).toBe(3)
+		expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
+		expect(imagery1.removeSingleClickEvent['calls'].count()).toBe(3);
 	});
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {
@@ -342,7 +347,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('onAddCommunicatorInitPluggin$', () => {
+	describe('onAddCommunicatorInitPlugin$', () => {
 		it('on add communicator set pluggin with data' ,() => {
 			const plugin = {
 				init: () => {},
@@ -360,7 +365,7 @@ describe('MapAppEffects', () => {
 				currentCommunicatorId: 'tmpId1'
 			});
 			effectsRunner.queue(action);
-			mapAppEffects.onAddCommunicatorInitPluggin$.subscribe();
+			mapAppEffects.onAddCommunicatorInitPlugin$.subscribe();
 			expect(communicator.getPlugin).toHaveBeenCalled();
 			expect(plugin.init).toHaveBeenCalled();
 		});
@@ -553,7 +558,7 @@ describe('MapAppEffects', () => {
 	});
 
 
-	describe('setOverlayAsLoadingSuccess$', () => {
+	describe('overlayLoadingSuccess$', () => {
 		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction',() => {
 			const testOverlay: Overlay = {id: 'test_overlay_id', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true};
 			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
@@ -561,7 +566,7 @@ describe('MapAppEffects', () => {
 
 			const resultActions = [];
 			spyOn(casesService, 'getOverlaysMarkup');
-			mapAppEffects.setOverlayAsLoadingSuccess$.subscribe(_result => {
+			mapAppEffects.overlayLoadingSuccess$.subscribe(_result => {
 				let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
 				expect(result).toBe(true);
 

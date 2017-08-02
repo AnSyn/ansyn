@@ -22,6 +22,13 @@ class SourceProviderMock1 implements BaseMapSourceProvider {
 	createAsync(metaData: any): Promise<any> {
 		return Promise.resolve();
 	}
+
+	startTimingLog(key) {
+
+	}
+	endTimingLog(key){
+
+	}
 }
 
 describe('ImageryComponent', () => {

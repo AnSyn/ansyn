@@ -10,7 +10,7 @@ export interface IMap {
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any>;
-
+	contextMenu: EventEmitter<any>;
 	mapType: string;
 	mapObject: any;
 	getCenter(): GeoJSON.Point;

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';
+import { MapContextMenuAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -18,6 +19,7 @@ export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
 	private _maps: CaseMapsState;
 	public maps_count_range = [];
+	public contextMenuStyle = {visibility: 'hidden', top:`0`, left: `0`};
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
@@ -78,6 +80,11 @@ export class ImageriesManagerComponent implements OnInit{
 		this.loadingOverlaysIds$.subscribe((_loadingOverlaysIds) => {
 			this.loadingOverlaysIds = _loadingOverlaysIds;
 		});
+		this.mapEffects.onMapContextMenu$.subscribe((action: MapContextMenuAction) => {
+			this.contextMenuStyle.top = `${action.payload.e.y}px`;
+			this.contextMenuStyle.left = `${action.payload.e.x}px`;
+			this.contextMenuStyle.visibility = 'visible';
+		})
 	}
 
 	setClassImageriesContainer(new_class, old_class?) {

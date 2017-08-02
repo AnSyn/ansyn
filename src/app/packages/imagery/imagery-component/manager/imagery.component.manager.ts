@@ -21,6 +21,8 @@ export class ImageryComponentManager {
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
+	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
+
 	private _plugins: IMapPlugin[] = [];
 
 	constructor(private imageryProviderService: ImageryProviderService,
@@ -138,6 +140,10 @@ export class ImageryComponentManager {
 
 		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {
 			this.singleClick.emit(event);
+		}));
+
+		this._subscriptions.push(this._activeMap.contextMenu.subscribe((event: Array<any>) => {
+			this.contextMenu.emit(event);
 		}));
 
 	}

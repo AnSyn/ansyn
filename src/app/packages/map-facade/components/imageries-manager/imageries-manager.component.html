@@ -1,4 +1,7 @@
-<div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
+<div class="imageries-container" #imageriesContainer>
+
+	<ansyn-context-menu [(visibility)]="contextMenuStyle.visibility" [left]="contextMenuStyle.left" [top]="contextMenuStyle.top"></ansyn-context-menu>
+
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
 		<div class='map-container-wrapper' *ngIf="maps.data[index]" (click)="changeActiveImagery(maps.data[index].id)">

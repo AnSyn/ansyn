@@ -21,6 +21,7 @@ export class OpenLayersImageProcessing {
 
     initializeOperations() {
         this.initializeHistogramEqualization();
+        this.initializeSharpness();
     }
 
     initializeHistogramEqualization() {
@@ -32,6 +33,18 @@ export class OpenLayersImageProcessing {
         };
 
         this._operations.set('Histogram', { name: 'Histogram', operation: histogramEqualization, lib: lib });
+    }
+
+    initializeSharpness() {
+        const lib = {
+            weights: `[0, -1, 0,
+                -1, 5, -1,
+                0, -1, 0]`,
+            normalizeColor: normalizeColor
+        };
+
+        this._operations.set('Sharpness', { name: 'Sharpness', operation: performSharpness, lib: lib });
+
     }
 
     addOperation(raster: ol.source.Raster, name: supportedOperations) {
@@ -117,9 +130,9 @@ function basicOperation(pixels, data) {
 function cascadeOperations(pixels, data) {
     let imageData = pixels[0];
     this['operations'].forEach((operation) => {
-		imageData = operation(imageData);
-	});
-	return imageData;
+        imageData = operation(imageData);
+    });
+    return imageData;
 }
 
 // ------ General Operation End ------ //
@@ -220,3 +233,58 @@ function performHistogram(imageData, histogramLut) {
 }
 
 // ------ Histogram Equalization End ------ //
+
+// ------ Sharpness Start ------ //
+
+function performSharpness(imageData, data) {
+    const side = Math.round(Math.sqrt(this['weights'].length));
+    const halfSide = Math.floor(side / 2);
+    const pixels = imageData.data;
+    const imageWidth = imageData.width;
+    const imageHeight = imageData.height;
+    
+    const destPixels = [];
+
+    for (let y = 0; y < imageHeight; y++) {
+        for (let x = 0; x < imageWidth; x++) {
+            const dstOff = (y * imageWidth + x) * 4;
+
+            let r = 0, g = 0, b = 0, a = 0;
+            for (let cy = 0; cy < side; cy++) {
+                for (let cx = 0; cx < side; cx++) {
+                    const scy = y + cy - halfSide;
+                    const scx = x + cx - halfSide;
+                    if (scy >= 0 && scy < imageHeight && scx >= 0 && scx < imageWidth) {
+                        const srcOff = (scy * imageWidth + scx) * 4;
+                        const wt = this['weights'][cy * side + cx];
+                        r += pixels[srcOff] * wt;
+                        g += pixels[srcOff + 1] * wt;
+                        b += pixels[srcOff + 2] * wt;
+                    }
+                }
+            }
+
+            destPixels[dstOff] = this['normalizeColor'](r);
+            destPixels[dstOff + 1] = this['normalizeColor'](g);
+            destPixels[dstOff + 2] = this['normalizeColor'](b);
+            destPixels[dstOff + 3] = pixels[dstOff + 3];
+        }
+    }
+
+    for (let index = 0; index < imageData.data.length; index++) {
+        imageData.data[index] = destPixels[index];       
+    }
+    return imageData;
+}
+
+function normalizeColor(color) {
+    if (color < 0) {
+        return 0;
+    } else if (color > 255) {
+        return 255;
+    } else {
+        return color;
+    }
+}
+
+// ------ Sharpness End ------ //

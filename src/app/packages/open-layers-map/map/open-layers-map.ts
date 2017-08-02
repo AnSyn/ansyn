@@ -326,9 +326,10 @@ export class OpenLayersMap implements IMap {
 		let rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
 
 		if (shouldPerform) {
-			this._imageProcessing.addOperation(rasterSource, 'Histogram');
+			this._imageProcessing.addOperation(rasterSource, 'Sharpness');
+			this._imageProcessing.addOperation(rasterSource, 'Histogram');			
 		} else {
-			this._imageProcessing.removeOperation(rasterSource, 'Histogram');
+			this._imageProcessing.removeAllRasterOperations(rasterSource);
 		}
 	}
 

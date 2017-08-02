@@ -14,6 +14,7 @@ import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/clone-deep';
 import { OverlaysService, DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -26,6 +27,7 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
 import { isNil } from 'lodash';
+import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
@@ -98,14 +100,15 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
 			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
-			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
-			return [overlay, map_id, active_map.data.position, active_map.data.isHistogramActive];
+			const currentMap = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
+			return [overlay, map_id, currentMap.data.position, currentMap.data.isHistogramActive];
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.flatMap(([overlay, map_id, position, isHistogramActive]:[Overlay, string, Position, boolean]) => {
 
-			let extent;
 			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
+
+			let extent;
 			if(isInside) {
 				extent = position.boundingBox;
 			} else {
@@ -113,8 +116,12 @@ export class MapAppEffects {
 			}
 
 			const communicator = this.communicator.provide(map_id);
+
 			const mapType = communicator.ActiveMap.mapType;
-			const sourceLoader = this.baseSourceProviders.find((item) => {return (item.mapType===mapType && item.sourceType === overlay.sourceType)}); // assuming that there is one provider
+
+			// assuming that there is one provider
+			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
+
 			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
 				communicator.setLayer(layer, extent);
 				communicator.shouldPerformHistogram(isHistogramActive);
@@ -138,6 +145,7 @@ export class MapAppEffects {
 			return !isNil(caseMapState);
 		})
 		.map((caseMapState: CaseMapState) => {
+			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 			return new DisplayOverlayAction({overlay: caseMapState.data.overlay, map_id: caseMapState.id});
 		});
 
@@ -151,6 +159,7 @@ export class MapAppEffects {
 				const communicatorHandler = this.communicator.provide(data.id);
 				//if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
+					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
 					previusResult.push(new DisplayOverlayAction({overlay: data.data.overlay, map_id: data.id}));
 				}
 				return previusResult;
@@ -172,8 +181,9 @@ export class MapAppEffects {
 			new RequestOverlayByIDFromBackendAction({overlayId: action.payload.overlay.id, map_id: action.payload.map_id}));
 
 	@Effect()
-	setOverlayAsLoadingSuccess$: Observable<any> = this.actions$
+	overlayLoadingSuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.do((action: Action) =>  endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [DisplayOverlaySuccessAction, ICasesState]) => {
 			return [action, state.selected_case];
@@ -256,7 +266,7 @@ export class MapAppEffects {
 		} );
 
 	@Effect({dispatch:false})
-	onAddCommunicatorInitPluggin$: Observable<any> = this.actions$
+	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.map((action: AddMapInstacneAction)=> {
 			// Init CenterMarkerPlugin

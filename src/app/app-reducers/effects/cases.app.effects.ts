@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases';
@@ -8,21 +8,21 @@ import { ICasesState } from '@ansyn/menu-items/cases';
 import { Case } from '@ansyn/menu-items/cases';
 import { CasesActionTypes, AddCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isNil, isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { isNil } from 'lodash';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Context } from '@ansyn/core';
-import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
+import { ContextProviderService, ContextCriteria } from '@ansyn/context';
 
 @Injectable()
 export class CasesAppEffects {
@@ -46,7 +46,7 @@ export class CasesAppEffects {
 
 			return[
 				new UpdateCaseAction(selectedCase),
-			    new DisplayOverlayAction({overlay: overlay, map_id: mapId})
+				new DisplayOverlayAction({overlay: overlay, map_id: mapId})
 			];
 
 		}).share();
@@ -101,9 +101,9 @@ export class CasesAppEffects {
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				// const criteria = new ContextCriteria({start: 0, limit: 200});
-				// observable = this.contextProviderService.provide('Proxy').find(criteria);
-				observable = this.casesService.loadContexts();
+				const criteria = new ContextCriteria({start: 0, limit: 200});
+				observable = this.contextProviderService.provide('Proxy').find(criteria);
+				//observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts: Context[]) => {
 				return new LoadContextsSuccessAction(contexts);

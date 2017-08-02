@@ -5,3 +5,4 @@ export { calcGeoJSONExtent, isExtentContainedInPolygon } from './calc-extent';
 export * from './geo';
 export * from './store-helpers';
 export * from './covert-projections';
+export * from './log';

@@ -4,7 +4,7 @@ import { ToolsComponent } from './tools/tools.component';
 import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
-import { ToolsConfig, toolsConfig } from './models/tools-config';
+import { ToolsConfig, toolsConfig } from './models';
 
 
 

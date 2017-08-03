@@ -3,10 +3,9 @@ import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { GoToAction, PullActiveCenter, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
-import { ToolsConfig } from '../../models/tools-config';
+import { ToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
 import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
-import { toolsConfig } from '../../models/tools-config';
 import "rxjs/add/operator/pluck";
 
 @Component({
@@ -22,7 +21,7 @@ export class GoToComponent implements OnInit {
 	activeCenterProjDatum: CoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
 
 	inputs = {
-		from: [],
+		from: [0,0],
 		to: []
 	};
 

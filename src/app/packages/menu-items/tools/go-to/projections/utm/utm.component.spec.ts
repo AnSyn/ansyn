@@ -24,4 +24,14 @@ describe('UtmComponent', () => {
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
+
+	it('validate should return error if some of coordinates values is empty', () => {
+		const fakeController: any = {value: [1,2,null]};
+		let result = component.validate(fakeController);
+		expect(result).toEqual({empty: true});
+		fakeController.value = [1,2,3];
+		result = component.validate(fakeController);
+		expect(result).toBeNull();
+	});
+
 });

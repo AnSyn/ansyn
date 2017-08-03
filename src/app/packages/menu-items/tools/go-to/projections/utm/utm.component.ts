@@ -1,25 +1,56 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { isEqual as _isEqual} from 'lodash';
+
+const providers = [
+	{
+		provide: NG_VALUE_ACCESSOR,
+		useExisting: forwardRef(() => UtmComponent),
+		multi: true
+	},
+	{
+		provide: NG_VALIDATORS,
+		useExisting: forwardRef(() => UtmComponent),
+		multi: true
+	}
+];
 
 @Component({
 	selector: 'ansyn-utm',
 	templateUrl: './utm.component.html',
-	styleUrls: ['./utm.component.less']
+	styleUrls: ['./utm.component.less'],
+	providers
 })
-export class UtmComponent {
-	private _coordinates: number[];
-	@Output() coordinatesChange = new EventEmitter();
+export class UtmComponent implements ControlValueAccessor, Validator{
+	coordinates: number[] = [0,0,0];
+	onChanges = (value)  => {}
+	onBlur = () => {}
 
-	@Input('coordinates') set coordinates(value) {
-		this._coordinates = value.map((num) => Math.floor(num));
+	writeValue(newValue: number[]): void {
+		if(newValue && !_isEqual(newValue, this.coordinates)){
+			this.coordinates =newValue.map((num) => Math.floor(num));
+		}
 	}
 
-	get coordinates() {
-		return this._coordinates;
+	registerOnChange(fn: any): void {
+		this.onChanges = fn;
 	}
 
-	onChanges() {
-		this.coordinatesChange.emit(this.coordinates);
+	registerOnTouched(fn: any): void {
+		this.onBlur = fn;
 	}
 
+	onInputs(value) {
+		this.onChanges([...value]);
+	}
+
+
+	validate(c: AbstractControl): {[key: string]: any;} {
+		const someEmpty = c.value.some(empty => !empty);
+		if (someEmpty) {
+			return {empty: true}
+		}
+		return null;
+	}
 
 }

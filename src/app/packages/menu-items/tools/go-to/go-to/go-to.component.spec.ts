@@ -1,11 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { GoToComponent } from './go-to.component';
-import { toolsConfig } from '../../models/tools-config';
+import { toolsConfig } from '../../models';
 import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import * as utilcovertProjectionss from '../../../../core/utils/covert-projections';
+import * as utilcovertProjectionss from '@ansyn/core/utils/covert-projections';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;

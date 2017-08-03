@@ -1,4 +1,7 @@
-import { ViewEncapsulation, Component, OnInit, ViewChild, ElementRef, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import {
+	ViewEncapsulation, Component, OnInit, ViewChild, ElementRef, Input, OnChanges, ChangeDetectionStrategy,
+	HostListener
+} from '@angular/core';
 import { selectAll, mouse, event, select, selection } from 'd3';
 
 
@@ -30,6 +33,10 @@ export class TimelineComponent implements OnInit {
     private _drops: any[];
     private _markup: any[];
     private stream: Observable<any>;
+
+    @HostListener('window:resize') onresize() {
+		this.redraw$.next(0);
+	}
 
     @ViewChild('context') context: ElementRef;
 

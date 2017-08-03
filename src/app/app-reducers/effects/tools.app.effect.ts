@@ -9,7 +9,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import 'rxjs/add/operator/withLatestFrom';
 import { get as _get, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { SetPinLocationModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {

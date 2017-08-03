@@ -46,6 +46,9 @@ export class UtmComponent implements ControlValueAccessor, Validator{
 
 
 	validate(c: AbstractControl): {[key: string]: any;} {
+		if(!c.value) {
+			return {empty: true}
+		}
 		const someEmpty = c.value.some(empty => !empty);
 		if (someEmpty) {
 			return {empty: true}

@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, ValidationErrors, AbstractControl, Validator } from '@angular/forms';
-import { isEqual as _isEqual} from 'lodash';
+import { isEqual as _isEqual, isNil as _isNil} from 'lodash';
 
 const providers = [
 	{
@@ -47,11 +47,14 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 	}
 
 	validate(c: AbstractControl): ValidationErrors {
+		if(!c.value) {
+			return {empty: true}
+		}
 		const lng = c.value[0];
 		const lat = c.value[1];
-		if (!lng || !lat) {
+		if (_isNil(lng) || _isNil(lat)) {
 			return {empty: true}
-		} else if( ( lng < -180 || 180 < lng ) ||  ( lat < -90 || 90 < lat )) {
+		} else if( ( -180 < lng && lng < 180 ) ||  ( -90 < lat && lat < 90)) {
 			return {invalid: true}
 		}
 		return null;

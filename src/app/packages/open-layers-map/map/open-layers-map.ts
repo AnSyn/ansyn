@@ -177,7 +177,7 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public removeAllLayers() {
-		while(this._mapLayers.length > 0) {
+		while (this._mapLayers.length > 0) {
 			this.removeLayer(this._mapLayers[0]);
 		}
 
@@ -323,11 +323,18 @@ export class OpenLayersMap implements IMap {
 
 	public performAutoImageProcessing(shouldPerform: boolean = false): void {
 		let imageLayer: ol.layer.Image = this._mapLayers.find((layer) => layer instanceof ol.layer.Image);
+		if (!imageLayer) {
+			return;
+		}
+
 		let rasterSource: ol.source.Raster = <ol.source.Raster>imageLayer.getSource();
+		if (!rasterSource) {
+			return;
+		}
 
 		if (shouldPerform) {
 			this._imageProcessing.addOperation(rasterSource, 'Sharpness');
-			this._imageProcessing.addOperation(rasterSource, 'Histogram');			
+			this._imageProcessing.addOperation(rasterSource, 'Histogram');
 		} else {
 			this._imageProcessing.removeAllRasterOperations(rasterSource);
 		}

@@ -10,6 +10,15 @@
 			(ngModelChange)="convert($event, from, to, 'to')"
 			required>
 		</ansyn-geo>
+
+		<ansyn-utm
+			*ngSwitchCase="'utm'"
+			name="to"
+			[(ngModel)]="inputs.from"
+			(ngModelChange)="convert($event, from, to, 'to')"
+			required>
+		</ansyn-utm>
+
 	</div>
 
 
@@ -21,6 +30,15 @@
 			(ngModelChange)="convert($event, to, from, 'from')"
 			required>
 		</ansyn-utm>
+
+		<ansyn-geo
+			*ngSwitchCase="'geo'"
+			name="from"
+			[(ngModel)]="inputs.to"
+			(ngModelChange)="convert($event, to, from, 'from')"
+			required>
+		</ansyn-geo>
+
 	</div>
 
 	<div class="buttons-area">

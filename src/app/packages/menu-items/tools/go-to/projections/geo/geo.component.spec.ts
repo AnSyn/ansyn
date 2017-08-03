@@ -25,10 +25,10 @@ describe('GeoComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('onChanges should call coordinatesChange.emit with new coordinates value', () => {
-		spyOn(component.coordinatesChange,'emit');
-		component.onChanges();
-		expect(component.coordinatesChange.emit).toHaveBeenCalledWith(component.coordinates);
+	it('onInputs should call onChanges with copy values', () => {
+		spyOn(component, 'onChanges');
+		component.onInputs(component.coordinates);
+		expect(component.onChanges).toHaveBeenCalledWith(component.coordinates);
 	});
 
 });

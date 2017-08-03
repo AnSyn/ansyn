@@ -8,6 +8,6 @@ import { UtmComponent } from './projections/utm/utm.component';
 @NgModule({
 	imports: [CommonModule, FormsModule],
 	declarations: [GoToComponent, GeoComponent, UtmComponent],
-	exports: [GoToComponent]
+	exports: [GoToComponent, FormsModule]
 })
 export class GoToModule { }

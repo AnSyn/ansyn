@@ -1,1 +1,1 @@
-export { toolsConfig, ToolsConfig } from './tools-config';
+export { ToolsConfig, toolsConfig } from './tools-config';

@@ -73,7 +73,7 @@ export class MapAppEffects {
 
 
 	@Effect()
-	onMapSingleClickPinLocation$: Observable<SetActiveCenter> = this.actions$
+	onMapSingleClickPinLocation$: Observable<SetActiveCenter | SetPinLocationModeAction> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select('tools'), (action ,state: IToolsState): any => new Object({action, pin_location: state.flags.get('pin_location')}))
 		.filter(({action, pin_location}) => pin_location)
@@ -81,7 +81,7 @@ export class MapAppEffects {
 			return [
 				new SetPinLocationModeAction(false),
 				new SetActiveCenter(action.payload.lonLat)
-			]
+			];
 	});
 
 	@Effect()

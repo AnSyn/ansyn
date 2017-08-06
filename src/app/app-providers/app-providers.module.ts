@@ -5,7 +5,7 @@ import {OpenLayerIDAHOSourceProvider} from './map-source-providers/open-layers-I
 import {OpenLayerOSMSourceProvider} from './map-source-providers/open-layers-OSM-source-provider';
 import {OpenLayerTileWMSSourceProvider} from './map-source-providers/open-layers-TileWMS-source-provider';
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { BaseMapSourceProvider } from '@ansyn/imagery'
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 
 
 @NgModule({
@@ -16,14 +16,14 @@ import { BaseMapSourceProvider } from '@ansyn/imagery'
         { provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider}]
 })
 export class AppProvidersModule {
-    static forRoot(idahoOverlaySourceConfig : IIdahoOverlaySourceConfig) : ModuleWithProviders
+    static forRoot(idahoOverlaySourceConfig: IIdahoOverlaySourceConfig): ModuleWithProviders
     {
        return {
             ngModule: AppProvidersModule,
             providers: [
-                { provide : IdahoOverlaysSourceConfig, useValue: idahoOverlaySourceConfig }
+                {provide: IdahoOverlaysSourceConfig, useValue: idahoOverlaySourceConfig}
             ]
-        }
+        };
     }
 }
 

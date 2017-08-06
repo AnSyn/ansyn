@@ -31,19 +31,21 @@ export const configuration = {
 		}]
 	},
 	ContextConfig: {
-		contextSources: [{
+		contextSources: [	{
 			type: 'Elastic',
 			uri: 'localhost:9200',
 			bucket: 'context',
 			available: true,
 			log: 'trace',
-			auth: "elastic:changeme"
+			auth: "elastic:changeme",
+			apiObject: 'direct'
 		},
 			{
 				uri: 'http://localhost:9001/api/v1/',
 				bucket: 'contexts',
 				type: "Proxy",
-				available: true
+				available: true,
+				apiObject: "Http"
 
 			}]
 	}

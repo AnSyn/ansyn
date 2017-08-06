@@ -32,7 +32,7 @@ import { EffectsModule } from "@ngrx/effects";
 
 })
 export class OverlaysModule {
-    static forRoot(config : IOverlaysConfig ): ModuleWithProviders {
+    static forRoot(config: IOverlaysConfig ): ModuleWithProviders {
         return {
                 ngModule: OverlaysModule,
                 providers: [

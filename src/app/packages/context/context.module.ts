@@ -1,11 +1,8 @@
-import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, InjectionToken, ModuleWithProviders, NgModule, ReflectiveInjector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from './container/container.component';
 import { FormsModule } from '@angular/forms';
 import { ContextProviderService } from './providers/context-provider.service';
-
-import { ContextEleasticSource } from './providers/context-elastic-source';
-import { ContextProxySource } from './providers/context-proxy-source';
 import { Http, HttpModule } from '@angular/http';
 import { IContextSource, IContextSourceConfig } from './context.interface';
 
@@ -14,7 +11,7 @@ export interface IContextConfig  {
 	contextSources: IContextSourceConfig[];
 }
 
-export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken('config');
+export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken('ContextConfig');
 
 @NgModule({
 	imports: [
@@ -23,41 +20,45 @@ export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken(
 		HttpModule
 	],
 	exports: [ContainerComponent],
-	declarations: [ContainerComponent]
+	declarations: [ContainerComponent],
+	providers: [
+		ContextProviderService
+	]
 })
-
 export class ContextModule {
-
-	static forRoot(config: IContextConfig): ModuleWithProviders {
+	static forRoot(config: IContextConfig, sources: Map<string,any>): ModuleWithProviders {
 		return {
 			ngModule: ContextModule,
 			providers: [
+				ContextProviderService,
 				{provide: ContextConfig, useValue: config},
-				ContextProviderService
+				{provide: 'ContextSources' ,useValue: sources}
 			]
-
 		};
 	}
 
-	constructor(private contextProvidersService: ContextProviderService,
-				@Inject(ContextConfig) private contextConfig: IContextConfig,
-				public http: Http) {
+	constructor(public contextProviderService: ContextProviderService, @Inject('ContextSources')sources, @Inject(ContextConfig)config:IContextConfig,private http: Http){
+		this.register(config,sources);
 
-		this.contextConfig.contextSources.forEach( (itemConfig: IContextSourceConfig) => {
+	}
+
+	register(config,sources){
+		config.contextSources.forEach(( itemConfig: IContextSourceConfig ) => {
 			if (!itemConfig.available) {
 				return;
 			}
-			const instance: IContextSource = this.factory(itemConfig);
-			contextProvidersService.register(itemConfig.type, instance);
+			const object: IContextSource = sources.get(itemConfig.type);
+			const gateway = this.getGateway(itemConfig.apiObject);
+			const instance: IContextSource = new  (<any>object)(itemConfig,gateway );
+			this.contextProviderService.register(itemConfig.type, instance);
 		});
 	}
 
-	factory(config: IContextSourceConfig): IContextSource {
-		switch (config.type) {
-			case 'Elastic' :
-				return new ContextEleasticSource(config);
-			case 'Proxy' :
-				return new ContextProxySource(config, this.http);
+	getGateway(apiObject){
+		if(apiObject === "Http"){
+			return this.http;
 		}
+		return undefined;
+
 	}
 }

@@ -1,9 +1,9 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { Http, HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
@@ -21,6 +21,13 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 import { ContextModule } from '@ansyn/context/context.module';
 import { AppProvidersModule } from "./app-providers/app-providers.module";
 import { AppReducersModule } from './app-reducers/app-reducers.module';
+import { ContextElasticSource } from '@ansyn/context/';
+import { ContextProxySource } from '@ansyn/context';
+
+
+export const contextSources: Map<string,any> = new Map();
+contextSources.set('Proxy',ContextProxySource);
+contextSources.set("Elastic",ContextElasticSource);
 
 @NgModule({
 	providers: [
@@ -52,9 +59,10 @@ import { AppReducersModule } from './app-reducers/app-reducers.module';
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig)
+		ContextModule.forRoot(configuration.ContextConfig,contextSources)
+
 	],
 	bootstrap: [AppComponent]
 })
-
+// configuration.ContextConfig,contextSources,apiLibs
 export class AppModule {}

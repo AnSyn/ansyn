@@ -71,13 +71,15 @@ export const configuration = {
 			bucket: 'context',
 			available: true,
 			log: 'trace',
-			auth: "elastic:changeme"
+			auth: "elastic:changeme",
+			apiObject: 'none'
 		},
 			{
 				uri: 'http://ansyn.io:9001/api/v1/',
 				bucket: 'contexts',
 				type: "Proxy",
-				available: true
+				available: true,
+				apiObject: "Http"
 
 			}]
 	}

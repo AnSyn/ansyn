@@ -16,4 +16,5 @@ export { ImageryModule } from './imagery.module';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
 export { ImageryComponentSettings } from './model/imagery-component-settings';
 export { ConfigurationToken } from './configuration.token';
+export { IImageryConfig , IMapConfig} from './model/iimagery-config';
 

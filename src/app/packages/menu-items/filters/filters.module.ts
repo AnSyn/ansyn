@@ -1,7 +1,7 @@
 import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';
-import { FiltersConfig } from './models/filters-config';
+import { IFiltersConfig } from './models/filters-config';
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FiltersCollectionComponent } from "./components/filters-collection/filters-collection.component";
@@ -32,7 +32,7 @@ import { FiltersEffects } from "./effects/filters.effects";
 })
 export class FiltersModule {
 
-	static forRoot(config: FiltersConfig): ModuleWithProviders {
+	static forRoot(config: IFiltersConfig): ModuleWithProviders {
 		return {
 			ngModule: FiltersModule,
 			providers: [

@@ -1,4 +1,4 @@
-import { CasesConfig } from './models/cases-config';
+import { ICasesConfig } from './models/cases-config';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
@@ -31,7 +31,7 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 	providers: [CasesService]
 })
 export class CasesModule {
-	static forRoot(config: CasesConfig): ModuleWithProviders {
+	static forRoot(config: ICasesConfig): ModuleWithProviders {
 		return {
 			ngModule: CasesModule,
 			providers: [

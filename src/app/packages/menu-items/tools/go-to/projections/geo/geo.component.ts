@@ -54,7 +54,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 		const lat = c.value[1];
 		if (_isNil(lng) || _isNil(lat)) {
 			return {empty: true}
-		} else if( ( -180 < lng && lng < 180 ) ||  ( -90 < lat && lat < 90)) {
+		} else if( !( -180 < lng && lng < 180 ) ||  !( -90 < lat && lat < 90)) {
 			return {invalid: true}
 		}
 		return null;

@@ -1,6 +1,4 @@
-<div class="imageries-container" #imageriesContainer>
-
-	<ansyn-context-menu [(show)]="contextMenu.show" [left]="contextMenu.left" [top]="contextMenu.top"></ansyn-context-menu>
+<div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
 
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
@@ -17,6 +15,11 @@
 </div>
 
 
+<ansyn-context-menu
+	[(show)]="contextMenu.show"
+	[left]="contextMenu.left"
+	[top]="contextMenu.top">
+</ansyn-context-menu>
 
 
 

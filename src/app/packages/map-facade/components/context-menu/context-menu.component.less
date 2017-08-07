@@ -27,6 +27,29 @@
 		input.menu-open {
 			display: none;
 			&:checked {
+				+ button.menu-open-button {
+
+					&:hover{
+						background: #0dc5c1;
+						.hamburger{
+							background: #FFFFFF;
+						}
+					}
+
+					transition-timing-function: linear;
+					transition-duration: 200ms;
+					transform: scale(0.5715) translate(0, 0);
+
+					.hamburger-1 {
+						transform: translate3d(0, 0, 0) rotate(45deg);
+					}
+					.hamburger-2 {
+						transform: translate3d(0, 0, 0) scale(0.1, 1);
+					}
+					.hamburger-3 {
+						transform: translate3d(0, 0, 0) rotate(-45deg);
+					}
+				}
 				~ .buttons-area {
 					.menu-item {
 						transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
@@ -103,34 +126,13 @@
 
 					}
 				}
-				+ label.menu-open-button {
-
-					&:hover{
-						background: #0dc5c1;
-						.hamburger{
-							background: #FFFFFF;
-						}
-					}
-
-					transition-timing-function: linear;
-					transition-duration: 200ms;
-					transform: scale(0.5715) translate(0, 0);
-
-					.hamburger-1 {
-						transform: translate3d(0, 0, 0) rotate(45deg);
-					}
-					.hamburger-2 {
-						transform: translate3d(0, 0, 0) scale(0.1, 1);
-					}
-					.hamburger-3 {
-						transform: translate3d(0, 0, 0) rotate(-45deg);
-					}
-				}
 			}
 		}
 
-		label.menu-open-button {
+		button.menu-open-button {
 			border-radius: 100%;
+			border: none;
+			outline:none;
 			width: 56px;
 			height: 56px;
 			position: absolute;
@@ -145,7 +147,6 @@
 			background: #FFFFFF;
 			color: #30A2C6;
 			box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
-			pointer-events: none;
 			&:hover{
 				transform: scale(1.2, 1.2) translate3d(0, 0, 0);
 			}
@@ -192,11 +193,11 @@
 					background: white url(/assets/icons/context-menu/angle-hover.svg) no-repeat center 8px;
 				}
 
-				input:checked ~ .list-buttons {
+				input:checked ~ div.sub-buttons-list {
 					visibility: visible;
 				}
 
-				input:not(:checked) ~ .list-buttons button{
+				input:not(:checked) ~ div.sub-buttons-list button{
 					visibility: hidden;
 					transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
 					transition: visibility ease-out 200ms, transform ease-out 200ms;
@@ -220,7 +221,7 @@
 				z-index: 3;
 			}
 
-			.list-buttons {
+			div.sub-buttons-list {
 				position: absolute;
 				width: 100%;
 				height: 100%;

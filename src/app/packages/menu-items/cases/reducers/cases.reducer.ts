@@ -159,6 +159,6 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 
 		default:
-			return Object.assign({}, state);
+			return state;
 	}
 }

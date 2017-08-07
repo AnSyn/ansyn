@@ -78,7 +78,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getEmptyCase(selectedCase: Case): Case {
-		const activeMap = selectedCase.state.maps.data.find(map => map.id == selectedCase.state.maps.active_map_id);
+		const activeMap = selectedCase.state.maps.data.find(map => map.id === selectedCase.state.maps.active_map_id);
 
 		return {
 			name:'',

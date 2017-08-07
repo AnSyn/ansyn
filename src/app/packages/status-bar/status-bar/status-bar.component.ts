@@ -11,6 +11,7 @@ import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 import { createSelector } from '@ansyn/core';
 import { CaseTimeState } from '@ansyn/core/models/case.model';
+import { color } from 'd3-color';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -48,11 +49,22 @@ export class StatusBarComponent implements OnInit {
 	@Input('overlay') overlay: any;
 	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
+	@Input()
+	set isFavoriteOverlayDisplayed(value){
+		const colorComponent = this.starColor.nativeElement.getElementById("Shape").firstElementChild;
+		if(value){
+			colorComponent.style.fill = "gold";
+		}else{
+			colorComponent.style.fill = "initial";
+		}
+	}
+
 	// @Input('time') time: CaseTimeState;
 
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
+	@ViewChild('starColor') starColor: ElementRef;
 
 
 

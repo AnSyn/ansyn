@@ -171,7 +171,7 @@ export class StatusBarAppEffects {
 		});
 
 	@Effect()
-	onFavorite$: Observable<UpdateCaseAction> = this.actions$
+	onFavorite$: Observable<Action> = this.actions$
 		.ofType(StatusBarActionsTypes.FAVORITE)
 		.withLatestFrom(this.store.select('cases') ,(action: Action,cases: ICasesState): Case => cloneDeep(cases.selected_case))
 		.filter((selectedCase: Case) => {
@@ -194,6 +194,7 @@ export class StatusBarAppEffects {
 			}
 
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(selectedCase);
+			console.log(selectedCase.state.favoritesOverlays);
 			return [
 				new OverlaysMarkupAction(overlaysMarkup),
 				new UpdateCaseAction(selectedCase)

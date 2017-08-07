@@ -5,11 +5,17 @@
 	<nav class="menu" [ngStyle]="contextMenuStyle">
 		<input type="checkbox" class="menu-open" name="menu-open" id="menu-open" [(ngModel)]="show"/>
 
-		<label class="menu-open-button" for="menu-open">
+		<button class="menu-open-button" type="reset">
 			<span class="hamburger hamburger-1"></span>
 			<span class="hamburger hamburger-2"></span>
 			<span class="hamburger hamburger-3"></span>
-		</label>
+		</button>
+
+		<!--<label class="menu-open-button" for="menu-open">-->
+			<!--<span class="hamburger hamburger-1"></span>-->
+			<!--<span class="hamburger hamburger-2"></span>-->
+			<!--<span class="hamburger hamburger-3"></span>-->
+		<!--</label>-->
 
 		<div class="buttons-area">
 			<div>
@@ -17,7 +23,7 @@
 				<label class="menu-item best" for="best">
 					<span>Best</span>
 				</label>
-				<div class="list-buttons">
+				<div class="sub-buttons-list">
 					<button>VIS</button>
 					<button>IR</button>
 					<button>SAR</button>
@@ -36,7 +42,7 @@
 					<span>Angle</span>
 				</label>
 
-				<div class="list-buttons left">
+				<div class="sub-buttons-list left">
 					<button>Draw</button>
 					<button>Turn</button>
 					<button>Show</button>

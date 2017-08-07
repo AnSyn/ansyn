@@ -28,6 +28,4 @@ export class ContextMenuComponent {
 	@Input() left = 0;
 	@Output() showChange = new EventEmitter();
 
-
-
 }

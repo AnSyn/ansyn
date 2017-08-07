@@ -78,10 +78,14 @@ export class OpenLayersMap implements IMap {
 			this.positionChanged.emit(this.getPosition());
 		});
 
-		this._mapObject.getViewport().addEventListener('contextmenu', (e: MouseEvent) => {
+		const containerElem = <HTMLElement> this._mapObject.getViewport();
+
+		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
 			let coords = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY])
-			coords = ol.proj.transform(coords, 'EPSG:3857', 'EPSG:4326');
+			const projection = this._mapObject.getView().getProjection();
+			coords = ol.proj.transform(coords, projection, 'EPSG:4326');
+			containerElem.click();
 			this.contextMenu.emit({coords, view: this._mapObject.getViewport(), e});
 		});
 

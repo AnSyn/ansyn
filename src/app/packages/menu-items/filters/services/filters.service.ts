@@ -1,15 +1,15 @@
 import { Observable } from "rxjs/Observable";
 import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { FiltersConfig } from '../models/filters-config';
+import { IFiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
 
 import 'rxjs/add/observable/of';
 
-export const filtersConfig: InjectionToken<FiltersConfig> = new InjectionToken('filtersConfig');
+export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 
 @Injectable()
 export class FiltersService {
-  constructor(@Inject(filtersConfig) private config: FiltersConfig) { }
+  constructor(@Inject(filtersConfig) private config: IFiltersConfig) { }
 
   loadFilters(): Observable<Filter[]> {
 

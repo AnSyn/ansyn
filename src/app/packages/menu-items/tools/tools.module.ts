@@ -4,7 +4,7 @@ import { ToolsComponent } from './tools/tools.component';
 import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
-import { ToolsConfig, toolsConfig } from './models';
+import { IToolsConfig, toolsConfig } from './models';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 
 
@@ -17,7 +17,7 @@ import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-d
 export class ToolsModule {
 
 
-	static forRoot(config: ToolsConfig): ModuleWithProviders {
+	static forRoot(config: IToolsConfig): ModuleWithProviders {
 		return {
 			ngModule: ToolsModule,
 			providers: [

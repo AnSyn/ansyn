@@ -1,4 +1,4 @@
-import { CasesConfig } from './../models/cases-config';
+import { ICasesConfig } from './../models/cases-config';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
@@ -16,7 +16,7 @@ import { Point } from 'geojson';
 
 import { get as _get} from 'lodash';
 
-export const casesConfig: InjectionToken<CasesConfig> = new InjectionToken('cases-config');
+export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
 @Injectable()
 export class CasesService {
@@ -40,7 +40,7 @@ export class CasesService {
 		return selectedCase.state.maps.data.find(map => map.id === id);
 	}
 
-	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
+	constructor(private http: Http, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;

@@ -1,9 +1,9 @@
 import { CoordinatesSystem } from '@ansyn/core/utils/covert-projections';
 import { InjectionToken } from '@angular/core';
 
-export const toolsConfig: InjectionToken<ToolsConfig> = new InjectionToken('toolsConfig');
+export const toolsConfig: InjectionToken<IToolsConfig> = new InjectionToken('toolsConfig');
 
-export interface ToolsConfig  {
+export interface IToolsConfig  {
 	GoTo: {
 		from: CoordinatesSystem;
 		to: CoordinatesSystem;

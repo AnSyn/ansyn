@@ -1,4 +1,4 @@
-import { LayersManagerConfig } from './models/layers-manager-config';
+import { ILayersManagerConfig } from './models/layers-manager-config';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { DataLayersService, layersConfig } from './services/data-layers.service';
@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 })
 
 export class LayersManagerModule {
-	static forRoot(config: LayersManagerConfig): ModuleWithProviders {
+	static forRoot(config: ILayersManagerConfig): ModuleWithProviders {
 		return {
 			ngModule: LayersManagerModule,
 			providers: [

@@ -1,5 +1,5 @@
 import { Filter } from './filter';
 
-export interface FiltersConfig  {
+export interface IFiltersConfig  {
     filters: Filter[];
 }

@@ -1,4 +1,4 @@
-import { LayersManagerConfig } from './../models/layers-manager-config';
+import { ILayersManagerConfig } from './../models/layers-manager-config';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
 import { IServerDataLayerContainerRoot } from './../models/server-data-layer-container-root';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-export const layersConfig: InjectionToken<LayersManagerConfig> = new InjectionToken('layers-config');
+export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
 export type LayerRootsBundle = { layers: ILayerTreeNodeRoot[], selectedLayers: ILayerTreeNodeLeaf[] };
 type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNodeLeaf[] };
@@ -23,7 +23,7 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(private http: Http, @Inject(layersConfig) private config: LayersManagerConfig) {
+	constructor(private http: Http, @Inject(layersConfig) private config: ILayersManagerConfig) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 

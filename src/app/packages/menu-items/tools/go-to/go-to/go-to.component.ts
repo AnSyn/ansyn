@@ -3,7 +3,7 @@ import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { GoToAction, PullActiveCenter, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
-import { ToolsConfig, toolsConfig } from '../../models';
+import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
 import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
 import "rxjs/add/operator/pluck";
@@ -65,7 +65,7 @@ export class GoToComponent implements OnInit {
 		this.store$.dispatch(new PullActiveCenter());
 	}
 
-	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: ToolsConfig) { }
+	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) { }
 
 	submitGoTo(): void {
 		const goToInput = convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);

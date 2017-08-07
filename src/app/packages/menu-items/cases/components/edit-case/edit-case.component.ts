@@ -97,7 +97,8 @@ export class EditCaseComponent implements OnInit {
 				},
 				region: selectedCase.state.region,
 				orientation: selectedCase.state.orientation,
-				geoFilter: selectedCase.state.geoFilter
+				geoFilter: selectedCase.state.geoFilter,
+				favoritesOverlays: []
 			}
 		};
 	}

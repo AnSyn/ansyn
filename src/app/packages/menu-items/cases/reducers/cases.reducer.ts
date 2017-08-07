@@ -1,7 +1,7 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isNil, isEmpty } from 'lodash';
+import { isNil, isEmpty, cloneDeep,pull } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
@@ -150,6 +150,13 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		case CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS:
 			return Object.assign({}, state, {default_case_query_params: null});
+
+		case CasesActionTypes.TOGGLE_FAVORITE_OVERLAY:
+			const selectedCase = cloneDeep(state.selected_case);
+
+
+
+
 
 		default:
 			return Object.assign({}, state);

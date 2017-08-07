@@ -37,6 +37,7 @@ export const CasesActionTypes = {
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
 	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
+	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY'
 
 
 };
@@ -143,3 +144,4 @@ export class RemoveDefaultCaseQueryParamsAction implements Action {
 	type = CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS;
 	constructor() {}
 }
+

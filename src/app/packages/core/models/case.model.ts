@@ -17,9 +17,10 @@ export type CaseState = {
 	region: CaseRegionState,
 	orientation: string,
 	geoFilter: string,
+	favoritesOverlays?: string[]
 };
 
-	export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
+export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
 
 export type CaseTimeState = {
 	type: string,

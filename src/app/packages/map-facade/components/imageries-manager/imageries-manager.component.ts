@@ -19,7 +19,12 @@ export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
 	private _maps: CaseMapsState;
 	public maps_count_range = [];
-	public contextMenuStyle = {visibility: 'hidden', top:`0`, left: `0`};
+
+	contextMenu = {
+		show: false,
+		top: 0,
+		left: 0
+	};
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
@@ -77,14 +82,17 @@ export class ImageriesManagerComponent implements OnInit{
 	ngOnInit(){
 		this.initListeners();
 		this.setClassImageriesContainer(this.selected_layout.id);
+
 		this.loadingOverlaysIds$.subscribe((_loadingOverlaysIds) => {
 			this.loadingOverlaysIds = _loadingOverlaysIds;
 		});
+
 		this.mapEffects.onMapContextMenu$.subscribe((action: MapContextMenuAction) => {
-			this.contextMenuStyle.top = `${action.payload.e.y}px`;
-			this.contextMenuStyle.left = `${action.payload.e.x}px`;
-			this.contextMenuStyle.visibility = 'visible';
+			this.contextMenu.top = action.payload.e.y;
+			this.contextMenu.left = action.payload.e.x;
+			this.contextMenu.show = true;
 		})
+
 	}
 
 	setClassImageriesContainer(new_class, old_class?) {

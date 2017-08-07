@@ -1,7 +1,4 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
-import { MapFacadeService } from '../../services/map-facade.service';
-import { MapEffects } from '../../effects/map.effects';
-import { MapContextMenuAction } from '../../actions/map.actions';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-context-menu',
@@ -9,41 +6,27 @@ import { MapContextMenuAction } from '../../actions/map.actions';
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent {
-	private _visibility;
+	private _show;
 
-	@HostBinding('style.visibility') @Input() set visibility(value) {
-		this.visibilityChange.emit(value);
-		this._visibility = value;
+	@HostBinding('class.visible') @Input() set show(value) {
+		this.showChange.emit(value);
+		this._show = value;
 	}
 
-	get visibility() {
-		return this._visibility;
-	}
-
-	@HostListener('click', ['$event']) onClick($event) {
-		$event.stopPropagation();
-		this.visibility = 'hidden';
+	get show() {
+		return this._show;
 	}
 
 	get contextMenuStyle() {
-		console.log({
-			top: this.top,
-			left: this.left
-		});
 		return {
-			top: this.top,
-			left: this.left
+			top: `${this.top}px`,
+			left: `${this.left}px`
 		}
 	}
 
-
-	constructor(private mapEffects: MapEffects) { }
-
-
-	@Output() visibilityChange = new EventEmitter();
-
-	@Input() top = `0px`;
-	@Input() left = `0px`;
+	@Input() top = 0;
+	@Input() left = 0;
+	@Output() showChange = new EventEmitter();
 
 
 

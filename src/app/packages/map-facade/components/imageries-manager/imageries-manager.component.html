@@ -1,6 +1,6 @@
 <div class="imageries-container" #imageriesContainer>
 
-	<ansyn-context-menu [(visibility)]="contextMenuStyle.visibility" [left]="contextMenuStyle.left" [top]="contextMenuStyle.top"></ansyn-context-menu>
+	<ansyn-context-menu [(show)]="contextMenu.show" [left]="contextMenu.left" [top]="contextMenu.top"></ansyn-context-menu>
 
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
@@ -15,7 +15,6 @@
 
 	</ng-template>
 </div>
-
 
 
 

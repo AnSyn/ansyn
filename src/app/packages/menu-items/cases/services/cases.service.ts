@@ -44,15 +44,16 @@ export class CasesService {
 
 		const activeMapId = caseValue.state.maps.active_map_id;
 
-		caseValue.state.maps.data.forEach( (m :CaseMapState) => {
-			if(!isEmpty(m.data.overlay)){
-				if(m.id === activeMapId){
-					result.push({id : m.data.overlay.id,class: 'active'});
+		caseValue.state.maps.data.forEach( (map:CaseMapState) => {
+			if(!isEmpty(map.data.overlay)){
+				if(map.id === activeMapId){
+					result.push({id : map.data.overlay.id,class: 'active'});
 				}else{
-					result.push({id: m.data.overlay.id,class: 'displayed'});
+					result.push({id: map.data.overlay.id,class: 'displayed'});
 				}
 			}
 		});
+		caseValue.state.favoritesOverlays && caseValue.state.favoritesOverlays.forEach(item => result.push({id: item,class: 'favorites'}));
 
 		return result;
 	}

@@ -9,7 +9,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapsLayout } from '@ansyn/core/models/maps-layout';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { isEqual, isNil} from 'lodash';
+import { isEqual, isNil, isEmpty, get as _get} from 'lodash';
 import { Store } from '@ngrx/store';
 import { IAppState } from './app-reducers/app-reducers.module';
 
@@ -41,11 +41,23 @@ export class AppComponent implements  AfterViewInit {
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
 
+	favoritesOverlays$ = this.store.select('cases')
+		.map((cases:ICasesState) => cases.selected_case)
+		.filter((selectedCase: Case) => !isEmpty(selectedCase) &&  !isNil(selectedCase.state.favoritesOverlays) )
+		.map((selectedCase: Case) => {
+			const activeMap = selectedCase.state.maps.data.find( mapItem => mapItem.id === selectedCase.state.maps.active_map_id);
+			return activeMap.data.overlay && (  selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);
+		});
+
+
+
 	overlays_count = 0;
 	displayedOverlay: Overlay;
 	selected_layout: MapsLayout = {id:"", description:"", maps_count: 0};
 	selected_case: Case;
 	editMode = false;
+	isFavoriteOverlay: boolean;
+	counter = 0;
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any,public store: Store<IAppState> ){
 	}
@@ -55,13 +67,19 @@ export class AppComponent implements  AfterViewInit {
 		metaTag.setAttribute('version',<any>packageJson['version']);
 		this.renderer.appendChild(this.document.head,metaTag);
 
-		this.selected_case$.subscribe( selected_case => this.selected_case = selected_case);
+		this.selected_case$.subscribe( selected_case => { this.selected_case = selected_case; console.log('c',++this.counter); });
 
-		this.selected_layout$.subscribe( selected_layout => this.selected_layout = selected_layout);
+		this.selected_layout$.subscribe( selected_layout => { this.selected_layout = selected_layout; console.log('l',++this.counter); });
 
-		this.overlays_count$.subscribe(_overlays_count => this.overlays_count = _overlays_count);
+		this.overlays_count$.subscribe(_overlays_count => { this.overlays_count = _overlays_count; console.log('oc',++this.counter); });
 
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => this.displayedOverlay = _displayedOverlay);
+		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay; console.log('do',++this.counter); });
+
+		this.favoritesOverlays$.subscribe((isFavorite: boolean) => {
+			//debugger;
+			this.isFavoriteOverlay = isFavorite;
+		});
+
 
 	}
 

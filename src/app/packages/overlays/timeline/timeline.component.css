@@ -8,4 +8,13 @@
 	fill: crimson;
 }
 
+:host /deep/ circle.favorites{
+	r:8;
+	fill: gold;
+}
+
+:host /deep/ circle.favorites.active{
+	fill:#763893;
+}
+
 

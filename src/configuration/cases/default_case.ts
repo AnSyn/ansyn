@@ -62,6 +62,7 @@ export const defaultCase = {
 			filters: []
 		},
 		geoFilter: 'pin-point',
-		orientation: 'original'
+		orientation: 'original',
+		favoritesOverlays: []
 	}
 };

@@ -8,14 +8,15 @@ import { ImageryComponentManager } from '../imagery-component/manager/imagery.co
 import { EventEmitter } from '@angular/core';
 import { MapPosition } from '../model/map-position';
 
-describe('CommunicatorEntity', () => {
+describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: ImageryComponentManager = <any>{
 		id: "1",
 		centerChanged: new EventEmitter<GeoJSON.Point>(),
 		positionChanged: new EventEmitter<{id: string, position: MapPosition}>(),
 		pointerMove: new EventEmitter<any>(),
-		singleClick: new EventEmitter<any>()
+		singleClick: new EventEmitter<any>(),
+		contextMenu: new EventEmitter<any>()
 	};
 
 	const componentManager2: ImageryComponentManager = <any>{
@@ -23,7 +24,8 @@ describe('CommunicatorEntity', () => {
 		centerChanged: new EventEmitter<GeoJSON.Point>(),
 		positionChanged: new EventEmitter<{id: string, position: MapPosition}>(),
 		pointerMove: new EventEmitter<any>(),
-		singleClick: new EventEmitter<any>()
+		singleClick: new EventEmitter<any>(),
+		contextMenu: new EventEmitter<any>()
 	};
 
 	beforeEach(async(() => {

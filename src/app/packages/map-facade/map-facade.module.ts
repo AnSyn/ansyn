@@ -9,9 +9,10 @@ import { ImageryContainerComponent } from './components/imagery-container/imager
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { CoreModule } from '@ansyn/core';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule],
+	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule, FormsModule],
 	providers: [MapFacadeService],
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent, ContextMenuComponent],
 	exports:[ImageriesManagerComponent]

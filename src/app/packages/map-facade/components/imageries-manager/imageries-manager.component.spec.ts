@@ -9,6 +9,8 @@ import { Dispatcher, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { MapReducer } from '../../reducers/map.reducer';
 
+const mock_ansyn_context_menu = MockComponent({selector: 'ansyn-context-menu', inputs: ['show', 'top', 'left'], outputs: ['showChange']});
+const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner']});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
@@ -26,7 +28,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
-			declarations: [ ImageriesManagerComponent, MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner']}) ],
+			declarations: [ ImageriesManagerComponent, mock_ansyn_context_menu, mock_ansyn_imagery_container],
 
 		})
 		.compileComponents();
@@ -163,3 +165,4 @@ describe('ImageriesManagerComponent', () => {
 
 
 });
+

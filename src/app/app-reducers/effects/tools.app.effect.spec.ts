@@ -91,7 +91,7 @@ describe('ToolsAppEffects', () => {
 		let result = null;
 		toolsAppEffects.getActiveCenter$.subscribe(_result => result = _result);
 		expect(result.constructor).toEqual(SetActiveCenter);
-		expect(result.payload).toEqual([0, 0])
+		expect(result.payload).toEqual([0, 0]);
 	});
 
 	describe('updatePinLocationAction$ should createMapSingleClickEvent or removeSingleClickEvent on ', () => {

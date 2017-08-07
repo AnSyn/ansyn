@@ -118,7 +118,7 @@ export class ToolsAppEffects {
 				} else {
 					communicator.removeSingleClickEvent();
 				}
-			})
+			});
 		});
 
 	@Effect()

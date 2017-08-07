@@ -6,7 +6,8 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState,Case, defaultMapType,CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep , isEmpty, get } from 'lodash';
+import 'rxjs/add/operator/pluck';
+import { cloneDeep , isEmpty, get, pull } from 'lodash';
 import { IStatusBarState } from '@ansyn/status-bar';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Position } from '@ansyn/core/models/position.model';
@@ -23,6 +24,11 @@ import { MapsLayout } from '@ansyn/core';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
+import { Overlay } from "app/packages/core/models";
+import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
+import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
+
+
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -63,10 +69,10 @@ export class StatusBarAppEffects {
 	onCopySelectedCaseLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
 		.withLatestFrom(this.store.select('cases'), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
-			return state.selected_case.id
+			return state.selected_case.id;
 		})
 		.map( (case_id: string) => {
-			return new CopyCaseLinkAction(case_id)
+			return new CopyCaseLinkAction(case_id);
 		});
 
 
@@ -155,11 +161,85 @@ export class StatusBarAppEffects {
 		})
 		.share();
 
+
+
+	@Effect()
+	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
+		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
+		.map(() => {
+			return new BackToWorldAction();
+		});
+
+	@Effect()
+	onFavorite$: Observable<UpdateCaseAction> = this.actions$
+		.ofType(StatusBarActionsTypes.FAVORITE)
+		.withLatestFrom(this.store.select('cases') ,(action: Action,cases: ICasesState): Case => cloneDeep(cases.selected_case))
+		.filter((selectedCase: Case) => {
+			const activeMap = selectedCase.state.maps.data.find( item => item.id === selectedCase.state.maps.active_map_id);
+			return !isEmpty(activeMap.data.overlay);
+		})
+
+		.mergeMap((selectedCase: Case) => {
+			const activeMap = selectedCase.state.maps.data.find( item => item.id === selectedCase.state.maps.active_map_id);
+
+			//lagecy support
+			if(!selectedCase.state.favoritesOverlays){
+				selectedCase.state.favoritesOverlays = [];
+			}
+
+			if(selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1 ){
+				pull(selectedCase.state.favoritesOverlays,activeMap.data.overlay.id);
+			}else{
+				selectedCase.state.favoritesOverlays.push(activeMap.data.overlay.id);
+			}
+
+			const overlaysMarkup = this.casesService.getOverlaysMarkup(selectedCase);
+			return [
+				new OverlaysMarkupAction(overlaysMarkup),
+				new UpdateCaseAction(selectedCase)
+			];
+		});
+
+	@Effect({dispatch: false})
+	onExpand$: Observable<void> = this.actions$
+		.ofType(StatusBarActionsTypes.EXPAND)
+		.map(() => {
+			console.log("onExpand$");
+		});
+
+
+	@Effect()
+	onGoPrevNext$: Observable<any> = this.actions$
+		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
+		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+			const activeMap = casesState.selected_case.state.maps.data.find(map => casesState.selected_case.state.maps.active_map_id === map.id);
+			const overlayId = get(activeMap.data.overlay, "id");
+			return [action.type, overlayId];
+		})
+		.filter(([actionType, overlayId]) => {
+			return !isEmpty(overlayId);
+		})
+		.map(([actionType, currentOverlayId]: [string, string]) => {
+			switch (actionType) {
+				case StatusBarActionsTypes.GO_NEXT:
+					return new GoNextDisplayAction(currentOverlayId);
+				case StatusBarActionsTypes.GO_PREV:
+					return new GoPrevDisplayAction(currentOverlayId);
+			}
+		});
+
 	constructor(private actions$: Actions,
 				private store:Store<IAppState>,
 				public imageryCommunicator: ImageryCommunicatorService,
-				public overlaysService: OverlaysService
+				public overlaysService: OverlaysService,
+				public casesService: CasesService
 	) {}
+
+	createCopyMap(index, position: Position): CaseMapState {
+		// TODO: Need to get the real map Type from store instead of default map
+		const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position}, mapType: defaultMapType};
+		return mapStateCopy;
+	}
 
 	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
 		const case_maps_count = selected_case.state.maps.data.length;
@@ -182,56 +262,5 @@ export class StatusBarAppEffects {
 			}
 		}
 		return selected_case;
-	}
-
-	@Effect()
-	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
-		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
-		.map(() => {
-			return new BackToWorldAction();
-		});
-
-	@Effect({dispatch: false})
-	onFavorite$: Observable<void> = this.actions$
-		.ofType(StatusBarActionsTypes.FAVORITE)
-		.map(() => {
-			console.log("onFavorite$");
-		});
-
-
-	@Effect({dispatch: false})
-	onExpand$: Observable<void> = this.actions$
-		.ofType(StatusBarActionsTypes.EXPAND)
-		.map(() => {
-			console.log("onExpand$");
-		});
-
-
-	@Effect()
-	onGoPrevNext$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
-			const activeMap = casesState.selected_case.state.maps.data.find(map => casesState.selected_case.state.maps.active_map_id== map.id);
-			const overlayId = get(activeMap.data.overlay, "id");
-			return [action.type, overlayId];
-		})
-		.filter(([actionType, overlayId]) => {
-			return !isEmpty(overlayId);
-		})
-		.map(([actionType, currentOverlayId]: [string, string]) => {
-			switch (actionType) {
-				case StatusBarActionsTypes.GO_NEXT:
-					return new GoNextDisplayAction(currentOverlayId);
-				case StatusBarActionsTypes.GO_PREV:
-					return new GoPrevDisplayAction(currentOverlayId);
-			}
-		});
-
-	createCopyMap(index, position: Position): CaseMapState {
-		// TODO: Need to get the real map Type from store instead of default map
-		const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position}, mapType: defaultMapType};
-		return mapStateCopy;
-
-
 	}
 }

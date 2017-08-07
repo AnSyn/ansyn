@@ -40,7 +40,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		.skip(1)
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
-			return this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters)
+			return this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters);
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')

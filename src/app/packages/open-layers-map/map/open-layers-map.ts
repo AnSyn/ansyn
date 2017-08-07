@@ -82,7 +82,6 @@ export class OpenLayersMap implements IMap {
 			e.preventDefault();
 			let coords = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY])
 			coords = ol.proj.transform(coords, 'EPSG:3857', 'EPSG:4326');
-			console.log("e ", coords);
 			this.contextMenu.emit({coords, view: this._mapObject.getViewport(), e});
 		});
 

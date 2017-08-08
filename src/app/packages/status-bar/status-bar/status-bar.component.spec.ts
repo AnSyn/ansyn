@@ -111,5 +111,12 @@ describe('StatusBarComponent', () => {
 		$event.code = "ArrowLeft";
 		component.onkeydown(<any>$event);
 		expect(component.goPrev.nativeElement.classList.add).toHaveBeenCalledWith('active');
-	})
+	});
+
+	fit("check isFavoriteOverlayDisplayed changes",() => {
+		component.isFavoriteOverlayDisplayed = true;
+		expect(component.starColor.nativeElement.style.fill).toBe("gold");
+		component.isFavoriteOverlayDisplayed = false;
+		expect(component.starColor.nativeElement.style.fill).not.toBe('gold');
+	});
 });

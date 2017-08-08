@@ -194,7 +194,7 @@ export class StatusBarAppEffects {
 			}
 
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(selectedCase);
-			console.log(selectedCase.state.favoritesOverlays);
+
 			return [
 				new OverlaysMarkupAction(overlaysMarkup),
 				new UpdateCaseAction(selectedCase)

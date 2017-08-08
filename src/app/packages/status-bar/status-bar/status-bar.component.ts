@@ -1,4 +1,7 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+	Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2,
+	ViewChild
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
 import {
@@ -51,11 +54,10 @@ export class StatusBarComponent implements OnInit {
 	@Input('maps') maps: any;
 	@Input()
 	set isFavoriteOverlayDisplayed(value){
-		const colorComponent = this.starColor.nativeElement.getElementById("Shape").firstElementChild;
 		if(value){
-			colorComponent.style.fill = "gold";
+			this.renderer.setStyle(this.starColor.nativeElement,'fill','gold');
 		}else{
-			colorComponent.style.fill = "initial";
+			this.renderer.setStyle(this.starColor.nativeElement,'fill','initial');
 		}
 	}
 
@@ -99,7 +101,7 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	constructor(public store: Store<IStatusBarState>) {
+	constructor(public store: Store<IStatusBarState>,public renderer: Renderer2) {
 
 	}
 

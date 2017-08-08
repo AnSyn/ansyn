@@ -144,9 +144,9 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public performAutoImageProcessing(shouldPerform: boolean): void {
+	public setAutoImageProcessing(shouldPerform: boolean): void {
 		if (this.ActiveMap) {
-			this.ActiveMap.performAutoImageProcessing(shouldPerform);
+			this.ActiveMap.setAutoImageProcessing(shouldPerform);
 		}
 	}
 	//CommunicatorEntity methods end

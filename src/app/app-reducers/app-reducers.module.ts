@@ -28,7 +28,7 @@ import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-stor
 import { RouterStoreHelperService } from './services/router-store-helper.service';
 import { configuration } from './../../configuration/configuration';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
-import { ToolsAppEffects } from './effects/tools.app.effect';
+import { ToolsAppEffects } from './effects/tools.app.effects';
 
 export interface IAppState {
     overlays: IOverlayState;

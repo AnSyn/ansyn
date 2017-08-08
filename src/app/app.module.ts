@@ -1,9 +1,9 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
-import { Inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Http, HttpModule } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
@@ -59,10 +59,10 @@ contextSources.set("Elastic",ContextElasticSource);
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig,contextSources)
+		ContextModule.forRoot(configuration.ContextConfig, contextSources)
 
 	],
 	bootstrap: [AppComponent]
 })
-// configuration.ContextConfig,contextSources,apiLibs
+
 export class AppModule {}

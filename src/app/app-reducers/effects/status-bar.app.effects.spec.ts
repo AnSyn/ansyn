@@ -57,7 +57,7 @@ describe('StatusBarAppEffects', () => {
 			providers: [
 				OverlaysService,
 				StatusBarAppEffects,
-				{provide: CasesService, useValue: {updateCase: () => null}},
+				{provide: CasesService, useValue: {updateCase: () => null, getOverlaysMarkup: () => null }},
 				ImageryCommunicatorService,
 				OverlaysService,
 				Http,
@@ -99,7 +99,8 @@ describe('StatusBarAppEffects', () => {
 							data: {overlay: {id :'overlayId1'}}
 						}
 					]
-				}
+				},
+				favoritesOverlays: []
 			}
 		} as any;
 
@@ -284,15 +285,22 @@ describe('StatusBarAppEffects', () => {
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());
 		statusBarAppEffects.onExpand$.subscribe(() => {
-			console.log("onExpand$")
+			console.log("onExpand$");
 		});
 	});
 
 	it('onFavorite$', () => {
 		effectsRunner.queue(new FavoriteAction());
-		statusBarAppEffects.onFavorite$.subscribe(() => {
-			console.log("onFavorite$")
+		let counter = 0;
+		statusBarAppEffects.onFavorite$.subscribe((result) => {
+			console.log(result);
+			counter++;
+			if (result instanceof  UpdateCaseAction){
+				expect(result.payload.state.favoritesOverlays[0]).toBe("overlayId1");
+			}
+
 		});
+		expect(counter).toBe(2);
 	});
 
 });

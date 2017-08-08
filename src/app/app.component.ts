@@ -12,6 +12,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { isEqual, isNil, isEmpty, get as _get} from 'lodash';
 import { Store } from '@ngrx/store';
 import { IAppState } from './app-reducers/app-reducers.module';
+import '@ansyn/core/utils/clone-deep';
 
 @Component({
 	selector: 'app-root',
@@ -75,10 +76,7 @@ export class AppComponent implements  AfterViewInit {
 
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay; console.log('do',++this.counter); });
 
-		this.favoritesOverlays$.subscribe((isFavorite: boolean) => {
-			//debugger;
-			this.isFavoriteOverlay = isFavorite;
-		});
+		this.favoritesOverlays$.subscribe((isFavorite: boolean) => { this.isFavoriteOverlay = isFavorite; console.log("fo",++this.counter );});
 
 
 	}

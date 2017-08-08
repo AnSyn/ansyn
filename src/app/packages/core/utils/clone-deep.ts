@@ -6,7 +6,7 @@ Observable.prototype.cloneDeep = function () {
 		nextValue => {
 			return cloneDeep(nextValue);
 		}
-	)
+	);
 };
 
 declare module 'rxjs/Observable' {

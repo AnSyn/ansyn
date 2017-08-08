@@ -1,5 +1,4 @@
-document.querySelector('app-root')
-	.innerHTML = `<div class="skeleton-wrapper">
+document.write(`<div class="skeleton-wrapper">
 					<div class="skeleton-menu"></div>
 					<div class="skeleton-container">
 						<div class="skeleton-map">
@@ -56,4 +55,4 @@ document.querySelector('app-root')
 						</div>
 						<div class="skeleton-timeline"></div>
 					</div>
-				</div>`;
+				</div>`);

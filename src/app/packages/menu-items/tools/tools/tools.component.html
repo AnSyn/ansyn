@@ -9,15 +9,17 @@
 		<button (click)="toggleExpandGoTo()">
 			<img src='/assets/icons/tools/go-to.svg'/>
 		</button>
+		<span class="tooltiptext">Go To</span>
 		<ansyn-go-to [(expand)]="expandGoTo"></ansyn-go-to>
 	</div>
+
 	<div class='image-processing'>
-		<button (click)='toggleImageProcessing()' 
-		[class.active]="flags.get('auto_image_processing')" 
+		<button (click)='toggleImageProcessing()'
+		[class.active]="flags.get('auto_image_processing')"
 		[disabled]="flags.get('auto_image_processing_disabled')">
 			<img src='/assets/icons/tools/automatic-processing.svg'/>
 		</button>
-		<span class="tooltiptext">Automatic Image Enhancement</span>		
+		<span class="tooltiptext">Automatic Image Enhancement</span>
 	</div>
 
 </div>

@@ -4,6 +4,7 @@
 		display: flex;
 		flex-direction: column;
 		padding: 36px 0;
+
 		div {
 			position: relative;
 			padding: 0 12px;
@@ -24,6 +25,10 @@
 				&.active{
 					background-color: rgb(41, 127, 155);
 				}
+				&:hover ~ span.tooltiptext{
+					visibility: visible;
+					opacity: 1;
+				}
 			}
 
 			span.tooltiptext {
@@ -38,16 +43,12 @@
 
 				transition: 0.5s;
 				top: -5px;
-				left: 105%; 
+				left: 105%;
 				position: absolute;
 				z-index: 2;
 
 			}
 
-			&:hover span.tooltiptext{
-				visibility: visible;
-				opacity: 1;				
-			}
 		}
 
 

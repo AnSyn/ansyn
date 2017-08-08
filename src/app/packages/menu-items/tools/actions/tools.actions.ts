@@ -10,8 +10,8 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'),
-	TOGGLE_AUTO_IMAGE_PROCESSING: type('TOGGLE_AUTO_IMAGE_PROCESSING'),
-	TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS: type('TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS'),	
+	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
+	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),	
 	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),		
 	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING')	
 };
@@ -58,15 +58,15 @@ export class GoToAction implements  Action {
 	constructor(public payload: number[]) {};
 }
 
-export class ToggleAutoImageProcessing implements Action {
-	type = ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING;
+export class SetAutoImageProcessing implements Action {
+	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?: any) {
 		// code...
 	}
 }
 
-export class ToggleAutoImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.TOGGLE_AUTO_IMAGE_PROCESSING_SUCCESS;
+export class SetAutoImageProcessingSuccess implements Action {
+	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
 	constructor(public payload: boolean) {
 		// code...
 	}
@@ -82,5 +82,5 @@ export class EnableImageProcessing implements  Action {
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | ToggleAutoImageProcessing |
-							DisableImageProcessing | EnableImageProcessing | ToggleAutoImageProcessingSuccess;
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | SetAutoImageProcessing |
+							DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;

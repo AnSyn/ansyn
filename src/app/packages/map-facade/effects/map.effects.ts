@@ -5,7 +5,7 @@ import { IMapState } from '../reducers/map.reducer';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { MapActionTypes,CompositeMapShadowAction, ToggleMapAutoImageProcessing } from '../actions/map.actions';
+import { MapActionTypes,CompositeMapShadowAction, SetMapAutoImageProcessing } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 import 'rxjs/add/operator/share';
@@ -51,10 +51,10 @@ export class MapEffects{
 
 	@Effect({dispatch:false})
 	onToggleImageProcessing$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TOGGLE_MAP_AUTO_IMAGE_PROCESSING)
-		.do((action: ToggleMapAutoImageProcessing) => {
+		.ofType(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
+		.map((action: SetMapAutoImageProcessing) => {
 			const comm = this.communicatorsService.provide(action.payload.mapId);
-			comm.performAutoImageProcessing(action.payload.toggle_value);
+			comm.setAutoImageProcessing(action.payload.toggle_value);
 		});
 
 	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}

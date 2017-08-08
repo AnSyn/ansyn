@@ -321,7 +321,7 @@ export class OpenLayersMap implements IMap {
 		this.mapObject.addLayer(layer);
 	}
 
-	public performAutoImageProcessing(shouldPerform: boolean = false): void {
+	public setAutoImageProcessing(shouldPerform: boolean = false): void {
 		let imageLayer: ol.layer.Image = this._mapLayers.find((layer) => layer instanceof ol.layer.Image);
 		if (!imageLayer) {
 			return;

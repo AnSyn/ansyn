@@ -1,10 +1,8 @@
 import { ContextCriteria, IContextSourceConfig, IContextSource, Context } from '../context.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
-import { Http, RequestOptions, RequestOptionsArgs,Headers } from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
 import 'rxjs/add/operator/catch';
-import { Inject, Injectable } from '@angular/core';
-import { ContextConfig } from '../context.module';
 
 export class ContextProxySource implements IContextSource {
 	public providerType: string;

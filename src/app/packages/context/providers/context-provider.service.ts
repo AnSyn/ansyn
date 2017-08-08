@@ -2,8 +2,8 @@
  * Created by sadan on 04.07.2017.
  */
 
-import { Injectable, Injector, ReflectiveInjector } from '@angular/core';
-import { IContextSource, IContextSourceConfig } from '../context.interface';
+import { Injectable } from '@angular/core';
+import { IContextSource } from '../context.interface';
 
 @Injectable()
 export class ContextProviderService {

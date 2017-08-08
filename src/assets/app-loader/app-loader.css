@@ -5,15 +5,15 @@
 }
 .digit {
 	display: inline-block;
-	font-size: 20px;
-	color: black;
-	height: 18px;
+	font-size: 14px;
+	color: white;
+	height: 12px;
 	line-height: 1;
 	margin: 0;
 }
 .time-part {
 	text-align: center;
-	height: 18px;
+	height: 12px;
 	overflow: hidden;
 	display: inline-block;
 	box-sizing: border-box;
@@ -59,34 +59,34 @@
 }
 @keyframes hundredths-ones {
 	10% {
-		transform: translateY(-18px);
+		transform: translateY(-12px);
 	}
 	20% {
-		transform: translateY(-36px);
+		transform: translateY(-24px);
 	}
 	30% {
-		transform: translateY(-54px);
+		transform: translateY(-36px);
 	}
 	40% {
-		transform: translateY(-72px);
+		transform: translateY(-48px);
 	}
 	50% {
-		transform: translateY(-90px);
+		transform: translateY(-60px);
 	}
 	60% {
-		transform: translateY(-108px);
+		transform: translateY(-72px);
 	}
 	70% {
-		transform: translateY(-126px);
+		transform: translateY(-84px);
 	}
 	80% {
-		transform: translateY(-144px);
+		transform: translateY(-96px);
 	}
 	90% {
-		transform: translateY(-162px);
+		transform: translateY(-108px);
 	}
 	100% {
-		transform: translateY(-180px);
+		transform: translateY(-120px);
 	}
 }
 
@@ -150,7 +150,7 @@
 	position: absolute;
 	left: calc(50% - 41.5px);
 	border-radius: 50%;
-	font-size: 20px;
+	font-size: 16px;
 	display: flex;
 	justify-content: center;
 	align-items: center;

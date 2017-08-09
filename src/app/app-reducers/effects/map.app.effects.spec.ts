@@ -31,6 +31,7 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { ToolsActionsTypes } from '../../packages/menu-items/tools/actions/tools.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
@@ -93,7 +94,7 @@ describe('MapAppEffects', () => {
 			maps: {
 				data: [
 					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
-					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayVisualizerType: 'Hitmap'}},
 					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
 				active_map_id: 'imagery1'
@@ -312,15 +313,18 @@ describe('MapAppEffects', () => {
 			mapAppEffects.onActiveMapChanges$.subscribe((_result: Action) => {
 				//expect(true).toBe(false);
 				count++;
-				if (_result.type == CasesActionTypes.UPDATE_CASE) {
+				if (_result.type === CasesActionTypes.UPDATE_CASE) {
 					expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
 				}
-				if (_result.type == OverlaysActionTypes.OVERLAYS_MARKUPS) {
+				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
 					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 
+				if (_result.type === ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE) {
+					expect(_result.payload).toEqual('Hitmap');
+				}
 			});
-			expect(count).toBe(2);
+			expect(count).toBe(3);
 		});
 	});
 

@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { OverlayVisualizerMode } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Component({
 	selector: 'ansyn-visualizers',
@@ -16,10 +15,9 @@ export class VisualizersComponent implements OnInit {
 	private _visualizersChecked: boolean;
 	public _visualizerType: OverlayVisualizerMode;
 
-	private selectedMapVisualizerMode$: Observable<OverlayVisualizerMode> = this.casesStore$.select('cases')
-		.map((state: ICasesState) => {
-			const activeMap = state.selected_case.state.maps.data.find(map => map.id === state.selected_case.state.maps.active_map_id);
-			return activeMap.data.overlayVisualizerType;
+	private selectedMapVisualizerMode$: Observable<OverlayVisualizerMode> = this.store$.select('tools')
+		.map((state: IToolsState) => {
+			return state.activeOverlaysFootprintMode;
 		});
 
 	private needToDispatchAction = true;
@@ -63,7 +61,7 @@ export class VisualizersComponent implements OnInit {
 
 	ngOnInit(): void { }
 
-	constructor(private store$: Store<IToolsState>, private casesStore$: Store<ICasesState>) {
+	constructor(private store$: Store<IToolsState>) {
 		this.needToDispatchAction = false;
 		this.visualizerType = 'None';
 		this.needToDispatchAction = true;

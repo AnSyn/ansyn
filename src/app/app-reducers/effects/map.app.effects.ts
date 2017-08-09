@@ -29,7 +29,7 @@ import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@a
 import { isNil } from 'lodash';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -298,8 +298,10 @@ export class MapAppEffects {
 		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
+			const newActiveMap: CaseMapState = updatedCase.state.maps.data.find((map) => map.id === updatedCase.state.maps.active_map_id);
 
 			return [
+				new SetActiveOverlaysFootprintModeAction(newActiveMap.data.overlayVisualizerType),
 				new UpdateCaseAction(updatedCase),
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];

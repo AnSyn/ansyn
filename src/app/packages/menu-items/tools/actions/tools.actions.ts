@@ -12,6 +12,7 @@ export const ToolsActionsTypes = {
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'),
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
+	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
@@ -65,6 +66,11 @@ export class ShowOverlaysFootprintAction implements  Action {
 	constructor(public payload: OverlayVisualizerMode) {};
 }
 
+export class SetActiveOverlaysFootprintModeAction implements  Action {
+	type = ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE;
+	constructor(public payload: OverlayVisualizerMode) {};
+}
+
 export class SetAutoImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?: any) {
@@ -89,6 +95,6 @@ export class EnableImageProcessing implements  Action {
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow |
-	                        PullActiveCenter | SetActiveCenter | SetPinLocationModeAction | GoToAction | ShowOverlaysFootprintAction |
-	                        SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter |
+	SetActiveCenter | SetPinLocationModeAction | GoToAction | ShowOverlaysFootprintAction | SetActiveOverlaysFootprintModeAction |
+	SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;

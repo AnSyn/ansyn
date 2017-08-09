@@ -100,6 +100,21 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}*/
 
+	parseOverlayDataForFootprintDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
+		let overlaysData = new Array();
+
+		if (!filters || !Array.isArray(filters)) {
+			overlays.forEach(overlay => overlaysData.push({ id: overlay.id, name: overlay.name, footprint: overlay.footprint }));
+		} else {
+			overlays.forEach(overlay => {
+				if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
+					overlaysData.push({ id: overlay.id, name: overlay.name, footprint: overlay.footprint });
+				}
+			});
+		}
+		return overlaysData;
+	}
+
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
 		const result = isEqual(data.filteredOverlays,data1.filteredOverlays) &&  isEqual(data.filters, data1.filters) &&  isEqual(data.timelineState, data1.timelineState) ;
 		return result;

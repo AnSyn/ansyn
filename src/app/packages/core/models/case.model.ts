@@ -37,12 +37,15 @@ export type CaseMapsState = {
 	data: CaseMapState[]
 };
 
+export type OverlayVisualizerMode = 'Hitmap' | 'Polygon' | 'None';
+
 export interface CaseMapState {
 	id: string;
 	data: {
 		position: Position,
 		overlay?: Overlay,
-		isAutoImageProcessingActive?: boolean
+		isAutoImageProcessingActive?: boolean,
+		overlayVisualizerType?: OverlayVisualizerMode
 	};
 	mapType: string;
 };

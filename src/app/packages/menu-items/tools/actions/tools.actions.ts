@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
+import { OverlayVisualizerMode } from '@ansyn/core/models/case.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -10,10 +11,11 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'),
+	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
-	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),	
-	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),		
-	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING')	
+	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
+	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
+	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING')
 };
 
 export class StartMouseShadow implements Action {
@@ -58,6 +60,11 @@ export class GoToAction implements  Action {
 	constructor(public payload: number[]) {};
 }
 
+export class ShowOverlaysFootprintAction implements  Action {
+	type = ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT;
+	constructor(public payload: OverlayVisualizerMode) {};
+}
+
 export class SetAutoImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?: any) {
@@ -82,5 +89,6 @@ export class EnableImageProcessing implements  Action {
 	constructor(public payload?:any){};
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | SetAutoImageProcessing |
-							DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;
+export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow |
+	                        PullActiveCenter | SetActiveCenter | SetPinLocationModeAction | GoToAction | ShowOverlaysFootprintAction |
+	                        SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;

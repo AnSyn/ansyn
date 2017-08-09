@@ -8,6 +8,7 @@ import { ImageryProviderService } from '../../provider-service/provider.service'
 import { ImageryComponentSettings } from '../../model/imagery-component-settings';
 import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
 import { MapPosition } from '../../model/map-position';
+import { IMapVisualizer } from '../../model/imap-visualizer';
 
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -24,6 +25,7 @@ export class ImageryComponentManager {
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
 	private _plugins: IMapPlugin[] = [];
+	private _visualizers: IMapVisualizer[] = [];
 
 	constructor(private imageryProviderService: ImageryProviderService,
 				private componentFactoryResolver: ComponentFactoryResolver,
@@ -35,13 +37,17 @@ export class ImageryComponentManager {
 
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
 		if (this._activeMap) {
-			const sourceProvider = this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+				const existingVisualizers = this.getVisualizers();
 				this._activeMap.setLayer(layers[0], extent);
 				if (layers.length > 0) {
 					for(let i = 1; i < layers.length; i++) {
 						this._activeMap.addLayer(layers[i]);
 					}
 				}
+				existingVisualizers.forEach((visualizer)=>{
+					visualizer.onSetView();
+				});
 			});
 		}
 	}
@@ -70,6 +76,7 @@ export class ImageryComponentManager {
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
 			this.buildActiveMapPlugins(activeMapType);
+			this.buildActiveMapVisualizers(activeMapType, map);
 			this.mapComponentInitilaized.emit(this.id);
 			mapCreatedSubscribe.unsubscribe();
 		});
@@ -79,6 +86,7 @@ export class ImageryComponentManager {
 	}
 
 	private destroyCurrentComponent(): void {
+		this.destroyActiveMapVisualizers();
 		this.destroyActiveMapPlugins();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
@@ -117,6 +125,48 @@ export class ImageryComponentManager {
 
 	public getPlugins() {
 		return this._plugins;
+	}
+
+	private buildActiveMapVisualizers(activeMapType: string, map: IMap) {
+		// Create Map visualizer's
+
+		const mapVisualizersConfig: [{visualizerClass: any, args: any}] = this.imageryProviderService.getVisualizersConfig(activeMapType);
+		if (!mapVisualizersConfig) {
+			this._visualizers = [];
+			return;
+		}
+
+		const mapVisualizers: IMapVisualizer[] = this.createVisualizers(mapVisualizersConfig, map);
+		if (mapVisualizers) {
+			this._visualizers = mapVisualizers;
+		} else {
+			this._visualizers = [];
+		}
+	}
+
+	public createVisualizers(existingVisualizersConfig: [{visualizerClass: any, args: any}], map: IMap): IMapVisualizer[] {
+		const visualizers: IMapVisualizer[] = [];
+
+		existingVisualizersConfig.forEach(provider => {
+			const providedVisualizers: IMapVisualizer = new provider.visualizerClass(provider.args);
+			providedVisualizers.onInit(this._id, map);
+			visualizers.push(providedVisualizers);
+		});
+
+		return visualizers;
+	}
+
+	private destroyActiveMapVisualizers() {
+		if (this._visualizers) {
+			this._visualizers.forEach((visualizer: IMapVisualizer) => {
+				visualizer.dispose();
+			});
+		}
+		this._visualizers = [];
+	}
+
+	public getVisualizers() {
+		return this._visualizers;
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {

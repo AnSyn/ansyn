@@ -15,6 +15,7 @@ import {
 	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
 
 describe('CasesAppEffects', () => {
@@ -87,6 +88,18 @@ describe('CasesAppEffects', () => {
 		effectsRunner = _effectsRunner;
 		casesService = _casesService;
 	}));
+
+	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"' ,() => {
+		effectsRunner.queue(new ShowOverlaysFootprintAction('Hitmap'));
+		let count = 0;
+		casesAppEffects.updateCaseFromTools$.subscribe((_result:Action)=>{
+			if(_result.type === CasesActionTypes.UPDATE_CASE){
+				expect(_result.payload.state.maps.data[0].data.overlayVisualizerType).toBe('Hitmap');
+				count++;
+			}
+		});
+		expect(count).toBe(1);
+	});
 
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
 		const action  = new DisplayOverlayFromStoreAction({ id: "tmp"});

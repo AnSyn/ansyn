@@ -1,0 +1,97 @@
+:host{
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(100%);
+	background: #27b2cf;
+	visibility: hidden;
+	transition: .2s;
+	z-index: 2;
+	overflow: hidden;
+	&.expand{
+		form{
+			visibility: visible;
+			display: flex;
+			opacity: 1;
+		}
+		visibility: visible;
+		width: 165px;
+		height: 65px;
+	}
+	button.close {
+		position: absolute;
+		right: 0;
+		color: white;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		outline: none;
+		z-index: 1;
+		&:hover {
+			color: #2e2d46;
+		}
+	}
+
+	.switch-field {
+		font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+		overflow: hidden;
+	}
+
+	.switch-title {
+		color: white;
+		margin-bottom: 6px;
+	}
+
+	.switch-field input {
+		position: absolute !important;
+		clip: rect(0, 0, 0, 0);
+		height: 1px;
+		width: 1px;
+		border: 0;
+		overflow: hidden;
+	}
+
+	.switch-field label {
+		float: left;
+	}
+
+	.switch-field label {
+		display: inline-block;
+		//width: 60px;
+		//background-color: #e4e4e4;
+		color: rgba(0, 0, 0, 0.6);
+		font-size: 14px;
+		font-weight: normal;
+		text-align: center;
+		text-shadow: none;
+		padding: 3px 14px;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+		box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+		-webkit-transition: all 0.1s ease-in-out;
+		-moz-transition:    all 0.1s ease-in-out;
+		-ms-transition:     all 0.1s ease-in-out;
+		-o-transition:      all 0.1s ease-in-out;
+		transition:         all 0.1s ease-in-out;
+	}
+
+	.switch-field label:hover {
+		cursor: pointer;
+	}
+
+	.switch-field input:checked + label {
+		background-color: royalblue;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+
+	.switch-field label:first-of-type {
+		border-radius: 4px 0 0 4px;
+	}
+
+	.switch-field label:last-of-type {
+		border-radius: 0 4px 4px 0;
+	}
+}

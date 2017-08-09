@@ -5,12 +5,13 @@ import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
 import { ToolsConfig, toolsConfig } from './models';
+import { VisualizersComponent } from './visualizers/visualizers.component';
 
 
 
 @NgModule({
 	imports: [CommonModule, CoreModule, GoToModule],
-	declarations: [ToolsComponent],
+	declarations: [ToolsComponent, VisualizersComponent],
 	entryComponents: [ToolsComponent],
 })
 export class ToolsModule {

@@ -21,6 +21,7 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 import { ContextModule } from '@ansyn/context/context.module';
 import { AppProvidersModule } from "./app-providers/app-providers.module";
 import { AppReducersModule } from './app-reducers/app-reducers.module';
+import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 
@@ -59,8 +60,8 @@ contextSources.set("Elastic",ContextElasticSource);
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig, contextSources)
-
+		ContextModule.forRoot(configuration.ContextConfig, contextSources),
+		OpenLayerVisualizersModule
 	],
 	bootstrap: [AppComponent]
 })

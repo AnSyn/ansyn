@@ -1,0 +1,19 @@
+<button class="close" (click)="close()">×</button>
+
+<form class="form">
+	<div class="switch-field">
+		<div class="switch-title">Overlays</div>
+		<input type="radio" id="switchNone" name="switchOverlays" [(ngModel)]="visualizerType" value="None" [checked]="visualizerType === 'None'"/>
+		<label for="switchNone">
+			<img src='/assets/icons/tools/none.svg'/>
+		</label>
+		<input type="radio" id="switchHitMap" name="switchOverlays" [(ngModel)]="visualizerType" value="Hitmap" [checked]="visualizerType === 'Hitmap'"/>
+		<label for="switchHitMap">
+			<img src='/assets/icons/tools/heatmap.svg'/>
+		</label>
+		<input type="radio" id="switchFootprint" name="switchOverlays" [(ngModel)]="visualizerType" value="Polygon" [checked]="visualizerType === 'Polygon'"/>
+		<label for="switchFootprint">
+			<img src='/assets/icons/tools/polygons.svg'/>
+		</label>
+	</div>
+</form>

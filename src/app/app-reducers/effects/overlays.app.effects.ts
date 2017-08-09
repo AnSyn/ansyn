@@ -8,17 +8,84 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { ICasesState, Case, CaseMapState, CasesService } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
-import { isEmpty, cloneDeep } from 'lodash';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { isEmpty, cloneDeep, isNil } from 'lodash';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddMapInstacneAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
+import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
+import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layers-visualizers';
+import { OverlayVisualizerMode } from '@ansyn/core';
 
 @Injectable()
 export class OverlaysAppEffects {
+
+	@Effect({dispatch:false})
+	drawFootprintsFromCommunicatorAdded$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: AddMapInstacneAction, overlaysState: IOverlayState, casesState: ICasesState) => {
+			const activeMap: CaseMapState = casesState.selected_case.state.maps.data.find(map => map.id === action.payload.currentCommunicatorId);
+			return [activeMap ,overlaysState];
+		})
+		.map(([caseMapState ,overlaysState]: [CaseMapState, IOverlayState])=> {
+			this.drawOverlaysOnMap(caseMapState, overlaysState.overlays, overlaysState.filters);
+		});
+
+	@Effect({ dispatch: false })
+	drawFootprintsFromFilteredOverlays$: Observable<void> = this.actions$
+		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS, OverlaysActionTypes.SET_FILTERS, OverlaysActionTypes.SET_TIMELINE_STATE, CasesActionTypes.UPDATE_CASE)
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
+			return [overlaysState, casesState.selected_case];
+		})
+		.map(([overlaysState, selectedCase]: [IOverlayState, Case])=> {
+			selectedCase.state.maps.data.forEach((mapData: CaseMapState)=>{
+				this.drawOverlaysOnMap(mapData, overlaysState.overlays, overlaysState.filters);
+			});
+		});
+
+	private drawOverlaysOnMap(mapData: CaseMapState, overlays, filters) {
+		const communicator = this.communicatorService.provide(mapData.id);
+		if (communicator && mapData.data.overlayVisualizerType) {
+			const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
+			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
+			const overlayVisualizerType: OverlayVisualizerMode = mapData.data.overlayVisualizerType;
+			switch (overlayVisualizerType) {
+				case 'Hitmap': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlays, filters);
+					hitMapvisualizer.setEntities(entitiesToDraw);
+					polygonVisualizer.clearEntities();
+					break;
+				}
+				case 'Polygon': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlays, filters);
+					polygonVisualizer.setEntities(entitiesToDraw);
+					hitMapvisualizer.clearEntities();
+					break;
+				}
+				case 'None':
+				default: {
+					polygonVisualizer.clearEntities();
+					hitMapvisualizer.clearEntities();
+				}
+			}
+		}
+	}
+
+	private getEntitiesToDraw(overlays, filters): IVisualizerEntity[] {
+		const overlaysToDraw = this.overlaysService.parseOverlayDataForFootprintDispaly(overlays, filters);
+		const entitiesToDraw: IVisualizerEntity[] = [];
+		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
+			const feature: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: entity.footprint,
+				properties: {}
+			};
+			entitiesToDraw.push({id: entity.id, featureJson: feature});
+		});
+		return entitiesToDraw;
+	}
 
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
@@ -80,7 +147,7 @@ export class OverlaysAppEffects {
 						new SetTimeAction({from, to}),
 						new LoadOverlaysAction(overlayFilter)
 					];
-				})
+				});
 		});
 
 
@@ -113,5 +180,10 @@ export class OverlaysAppEffects {
 		.share();
 
 
-	constructor(public actions$: Actions, public store$: Store<IAppState>, public casesService: CasesService, public overlaysService: OverlaysService) {}
+	constructor(
+		public actions$: Actions,
+		public store$: Store<IAppState>,
+		public casesService: CasesService,
+		public overlaysService: OverlaysService,
+		private communicatorService: ImageryCommunicatorService) {}
 }

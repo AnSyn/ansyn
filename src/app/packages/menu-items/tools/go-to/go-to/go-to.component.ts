@@ -40,7 +40,7 @@ export class GoToComponent implements OnInit {
 		this.expandChange.emit(value);
 	};
 	get expand() {
-		return this._expand
+		return this._expand;
 	}
 
 	get from(): CoordinatesSystem {
@@ -62,7 +62,7 @@ export class GoToComponent implements OnInit {
 			this.pin_location_mode = _pin_location_mode;
 		});
 
-		this.store$.dispatch(new PullActiveCenter())
+		this.store$.dispatch(new PullActiveCenter());
 	}
 
 	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: ToolsConfig) { }
@@ -73,11 +73,11 @@ export class GoToComponent implements OnInit {
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
-		this.inputs[inputKey] = convertByProjectionDatum(coords, convertFrom, convertTo)
+		this.inputs[inputKey] = convertByProjectionDatum(coords, convertFrom, convertTo);
 	}
 
 	togglePinLocation() {
-		this.store$.dispatch(new SetPinLocationModeAction(!this.pin_location_mode))
+		this.store$.dispatch(new SetPinLocationModeAction(!this.pin_location_mode));
 	}
 
 	close() {

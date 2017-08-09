@@ -18,15 +18,27 @@ import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '@ansyn/over
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Context } from '@ansyn/core';
+import { Context, OverlayVisualizerMode } from '@ansyn/core';
 import { ContextProviderService, ContextCriteria } from '@ansyn/context';
 
 @Injectable()
 export class CasesAppEffects {
 
+	@Effect()
+	updateCaseFromTools$: Observable<any> = this.actions$
+		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
+		.map(toPayload)
+		.withLatestFrom(this.store$.select('cases'))
+		.map(([payload, casesState]: [OverlayVisualizerMode, ICasesState]) => {
+			const updatedCase = cloneDeep(casesState.selected_case);
+			const activeMap = updatedCase.state.maps.data.find(map => map.id === updatedCase.state.maps.active_map_id);
+			activeMap.data.overlayVisualizerType = payload;
+			return new UpdateCaseAction(updatedCase);
+		});
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$

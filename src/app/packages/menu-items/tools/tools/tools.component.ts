@@ -61,4 +61,5 @@ export class ToolsComponent implements OnInit {
 	toggleImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing);
 	}
+
 }

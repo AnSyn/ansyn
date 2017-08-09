@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { StartMouseShadow,StopMouseShadow, SetAutoImageProcessing } from '../actions/tools.actions';
+import { StartMouseShadow, StopMouseShadow, SetAutoImageProcessing } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
@@ -12,6 +12,8 @@ import { isEqual } from 'lodash';
 })
 export class ToolsComponent implements OnInit {
 	public expandGoTo: boolean;
+	public expandVisualizers: boolean;
+	private _visualizersOn: boolean;
 	public flags: Map<string,boolean>;
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
 														.map((tools: IToolsState) => tools.flags)
@@ -21,6 +23,14 @@ export class ToolsComponent implements OnInit {
 	constructor(private store: Store<any>) {
 
 	}
+
+	public set visualizersOn(value) {
+		this._visualizersOn = value;
+	};
+
+	public get visualizersOn() {
+		return this._visualizersOn;
+	};
 
 	ngOnInit() {
 		this.flags$.subscribe(_flags => {
@@ -39,11 +49,16 @@ export class ToolsComponent implements OnInit {
 	}
 
 	toggleExpandGoTo() {
+		this.expandVisualizers = false;
 		this.expandGoTo = !this.expandGoTo;
+	}
+
+	toggleExpandVisualizers() {
+		this.expandGoTo = false;
+		this.expandVisualizers = !this.expandVisualizers;
 	}
 
 	toggleImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing);
 	}
-
 }

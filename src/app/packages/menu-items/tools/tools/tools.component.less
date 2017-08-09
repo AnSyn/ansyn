@@ -46,12 +46,20 @@
 				left: 105%;
 				position: absolute;
 				z-index: 2;
-
 			}
 
+			&.display-overlay-visualizer{
+				button {
+					opacity: 0.6;
+					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat 100%;
+					background-position: center center;
+				}
+				&.active{
+					button{
+						opacity: 1;
+					}
+				}
+			}
 		}
-
-
 	}
-
 }

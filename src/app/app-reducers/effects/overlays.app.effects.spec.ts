@@ -3,14 +3,19 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import { LoadOverlaysSuccessAction, OverlaysActionTypes, LoadOverlaysAction,
-	DisplayOverlayAction, DisplayOverlayFromStoreAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
+	DisplayOverlayFromStoreAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
+import { cloneDeep } from 'lodash';
+import { IToolsState, ToolsReducer, toolsInitialState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { AddMapInstacneAction } from '../../packages/map-facade/actions/map.actions';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -18,9 +23,13 @@ describe('OverlaysAppEffects',()=> {
 	let store: Store<any>;
 	let casesService: CasesService;
 	let overlaysService: OverlaysService;
+	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	let cases: any = {
-		selected_case : {tmp:'1'}
+	let icaseState: ICasesState;
+	let toolsState: IToolsState;
+	let overlaysState: IOverlayState;
+	let imageryCommunicatorServiceMock = {
+		provide:() => {}
 	};
 
 	const caseItem: Case =  {
@@ -51,6 +60,14 @@ describe('OverlaysAppEffects',()=> {
 				"type": "absolute",
 				"from": new Date("2013-06-27T08:43:03.624Z"),
 				"to": new Date("2015-04-17T03:55:12.129Z")
+			},
+			maps: {
+				data: [
+					{id: 'imagery1', data: {overlayVisualizerType: 'Hitmap'}},
+					{id: 'imagery2', data: {overlayVisualizerType: 'None'}},
+					{id: 'imagery3', data: {}},
+				],
+				active_map_id: 'imagery1'
 			}
 		}
 	} as any;
@@ -61,8 +78,7 @@ describe('OverlaysAppEffects',()=> {
 				EffectsTestingModule,
 				HttpModule,
 
-				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer}),
-
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer}),
 			],
 			providers:[
 				OverlaysAppEffects,
@@ -75,6 +91,10 @@ describe('OverlaysAppEffects',()=> {
 						getOverlaysMarkup: () => null,
 						contextValues: {imageryCount: -1}
 					}
+				},
+				{
+					provide: ImageryCommunicatorService,
+					useValue: imageryCommunicatorServiceMock
 				}
 			]
 
@@ -96,15 +116,20 @@ describe('OverlaysAppEffects',()=> {
 					cases: [ caseItem ]
 				});
 			}
+			if(type === 'tools'){
+				toolsState = cloneDeep(toolsInitialState);
+				return Observable.of(toolsState);
+			}
 			return Observable.empty();
 		});
 	}));
 
-	beforeEach(inject([ CasesService, EffectsRunner, OverlaysAppEffects, OverlaysService],( _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([ CasesService, EffectsRunner, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService],(_casesService:CasesService,_effectsRunner:EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
 		casesService = _casesService;
 		overlaysAppEffects = _overalysAppEffects;
 		effectsRunner = _effectsRunner;
 		overlaysService = _overlaysService;
+		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
 
 	it('should be defined', () => {
@@ -153,5 +178,83 @@ describe('OverlaysAppEffects',()=> {
 
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('last');
+	});
+
+	it('drawFootprintsFromCommunicatorAdded$ effect should use draw overlays visualizers if added communicator has "overlayVisualizerType" Hitmap in case', () => {
+		effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery1'}));
+
+		const commEntitiy = {
+			getVisualizer:(visType) => {}
+		};
+		const visEntitiy = {
+			setEntities:(entities) => {},
+			clearEntities:() => {}
+		};
+
+		const drops = [{id: 'id', name: 'name', footprint: {}}];
+		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
+		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
+
+		spyOn(visEntitiy, 'setEntities');
+		spyOn(visEntitiy, 'clearEntities');
+
+		overlaysAppEffects.drawFootprintsFromCommunicatorAdded$.subscribe();
+
+		expect(visEntitiy.setEntities).toHaveBeenCalled();
+		expect(visEntitiy.clearEntities).toHaveBeenCalled();
+	});
+
+	it('drawFootprintsFromCommunicatorAdded$ effect should NOT draw overlays visualizers if added communicator has "overlayVisualizerType" = None in case', () => {
+		effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery2'}));
+
+		const commEntitiy = {
+			getVisualizer:(visType) => {}
+		};
+		const visEntitiy = {
+			setEntities:(entities) => {},
+			clearEntities:() => {}
+		};
+
+		const drops = [{id: 'id', name: 'name', footprint: {}}];
+		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
+		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
+
+		spyOn(visEntitiy, 'setEntities');
+		spyOn(visEntitiy, 'clearEntities');
+
+		overlaysAppEffects.drawFootprintsFromCommunicatorAdded$.subscribe();
+
+		expect(visEntitiy.setEntities).not.toHaveBeenCalled();
+		expect(visEntitiy.clearEntities).toHaveBeenCalledTimes(2);
+	});
+
+	it('drawFootprintsFromFilteredOverlays$ effect should draw overlays visualizers if selected case/active map has overlayVisualizerType="Hitmap"', () => {
+		effectsRunner.queue(new LoadOverlaysSuccessAction([]));
+
+		const commEntitiy = {
+			getVisualizer:(visType) => {}
+		};
+		const visEntitiy = {
+			setEntities:(entities) => {},
+			clearEntities:() => {}
+		};
+
+		const drops = [{id: 'id', name: 'name', footprint: {}}];
+		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
+		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
+
+		spyOn(visEntitiy, 'setEntities');
+		spyOn(visEntitiy, 'clearEntities');
+
+		overlaysAppEffects.drawFootprintsFromFilteredOverlays$.subscribe();
+
+		expect(visEntitiy.setEntities).toHaveBeenCalled();
+		expect(visEntitiy.clearEntities).toHaveBeenCalled();
 	});
 });

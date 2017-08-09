@@ -11,11 +11,12 @@ describe('ToolsComponent', () => {
     let store: Store <any> ;
 
 	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
+	const mock_visualizer = MockComponent({selector: 'ansyn-visualizers', inputs: ['expand', 'visualizersChecked'], outputs: ['expandChange', 'visualizersCheckedChange']});
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
                 imports: [StoreModule.provideStore({ tools: ToolsReducer})],
-				declarations: [ToolsComponent, mock_go_to]
+				declarations: [ToolsComponent, mock_go_to, mock_visualizer]
             })
             .compileComponents();
     }));
@@ -52,12 +53,23 @@ describe('ToolsComponent', () => {
 
     });
 
-    it('toggleExpandGoTo should toggle expandGoTo', () => {
+    it('toggleExpandGoTo should toggle expandGoTo and close expandVisualizers', () => {
 		component.expandGoTo = true;
     	component.toggleExpandGoTo();
 		expect(component.expandGoTo).toBeFalsy();
+		component.expandVisualizers = true;
 		component.toggleExpandGoTo();
 		expect(component.expandGoTo).toBeTruthy();
+		expect(component.expandVisualizers).toBeFalsy();
 	});
 
+	it('toggleExpandVisualizers should toggle expandVisualizers and close expandGoTo', () => {
+		component.expandVisualizers = true;
+		component.toggleExpandVisualizers();
+		expect(component.expandVisualizers).toBeFalsy();
+		component.expandGoTo = true;
+		component.toggleExpandVisualizers();
+		expect(component.expandVisualizers).toBeTruthy();
+		expect(component.expandGoTo).toBeFalsy();
+	});
 });

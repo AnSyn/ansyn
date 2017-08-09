@@ -28,7 +28,7 @@ export class ImageriesManagerComponent implements OnInit{
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
-			return state.loadingOverlays
+			return state.loadingOverlays;
 		});
 
 	public loadingOverlaysIds = [];

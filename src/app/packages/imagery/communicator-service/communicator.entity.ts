@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
 import { IMap } from '../model/imap';
 import { MapPosition } from '../model/map-position';
+import { IMapVisualizer } from '../model/imap-visualizer';
 
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -121,9 +122,19 @@ export class CommunicatorEntity {
 		return pluginResult;
 	}
 
+	public getVisualizer(visualizerType: string): IMapVisualizer {
+		const existingVisualizers = this._manager.getVisualizers();
+		let visualizerResult: IMapVisualizer = existingVisualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
+		return visualizerResult;
+	}
+
 	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
 		if (this.ActiveMap) {
+			const existingVisualizers = this._manager.getVisualizers();
 			this.ActiveMap.setLayer(layer, extent);
+			existingVisualizers.forEach((visualizer=> {
+				visualizer.onSetView();
+			}));
 		}
 	}
 

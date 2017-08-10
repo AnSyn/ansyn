@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { MockComponent } from '@ansyn/core/test';
 import { StoreFixture, createStore } from '@ansyn/core/test';
-import { OverlaysContainer } from './overlays-container.component';
+import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable, Observer } from 'rxjs/Rx';
@@ -33,8 +33,8 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 
 
 describe('OverlayContainerComponent', () => {
-    let component: OverlaysContainer;
-    let fixture: ComponentFixture < OverlaysContainer > ;
+    let component: OverlaysContainerComponent;
+    let fixture: ComponentFixture < OverlaysContainerComponent > ;
     let overlaysService: OverlaysService;
     let overlaysEffects: OverlaysEffects;
     let de: DebugElement;
@@ -57,7 +57,7 @@ describe('OverlayContainerComponent', () => {
 				    { provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
                 ],
                 declarations: [
-                    OverlaysContainer,
+                    OverlaysContainerComponent,
                     MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration','redraw$','markup'] })
                 ],
                 imports: [HttpModule, StoreModule.provideStore({overlays: OverlayReducer})]
@@ -72,7 +72,7 @@ describe('OverlayContainerComponent', () => {
     }));
 
     beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {
-        fixture = TestBed.createComponent(OverlaysContainer);
+        fixture = TestBed.createComponent(OverlaysContainerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         overlaysService = fixture.debugElement.injector.get(OverlaysService);

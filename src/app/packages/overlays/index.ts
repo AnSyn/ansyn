@@ -6,5 +6,5 @@ export { OverlaysEffects } from './effects/overlays.effects';
 export  *  from './models/overlay.model';
 export { IOverlaysConfig } from './models/overlays.config';
 export { IOverlayState,overlayInitialState,OverlayReducer }  from './reducers/overlays.reducer';
-export { OverlaysContainer } from './container/overlays-container.component';
+export { OverlaysContainerComponent } from './container/overlays-container.component';
 export * from './models/base-overlay-source-provider.model';

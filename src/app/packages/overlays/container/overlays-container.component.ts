@@ -26,7 +26,7 @@ import { Observable } from 'rxjs/Observable';
 import { startTimingLog } from '@ansyn/core/utils';
 
 @Component({
-	selector: 'overlays-container',
+	selector: 'ansyn-overlays-container',
 	templateUrl: './overlays-container.component.html',
 	styleUrls: ['./overlays-container.component.less']
 })
@@ -35,42 +35,45 @@ import { startTimingLog } from '@ansyn/core/utils';
 	destroyFunc: 'ngOnDestroy',
 })
 
-export class OverlaysContainer implements OnInit, AfterViewInit {
+export class OverlaysContainerComponent implements OnInit, AfterViewInit {
+	public drops: any[] = [];
+	public redraw$: BehaviorSubject<number>;
+	public configuration: any;
+	public currentTimelineState;
+	public selectedOverlays: Array < string > = [];
+	public subscribers: any = {};
+	public overlaysMarkup: any = [];
+
 	public drops$: Observable<any[]> = this.store.select('overlays')
 		.skip(1)
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
-			return this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filters);
+			const tmp = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays,overlaysState.filteredOverlays);
+			console.timeEnd('tmp');
+			return tmp;
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')
 		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
 		.distinctUntilChanged(isEqual);
 
-	public selectedOverlays$ = this.store.select('overlays')
+	/*
+		// this is not needed for now maybe will be needed for later use
+		public selectedOverlays$ = this.store.select('overlays')
 		.skip(1)
 		.distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
 		.map((data: IOverlayState) => data.selectedOverlays);
-
-	public drops: any[] = [];
-	public redraw$: BehaviorSubject<number>;
-	public configuration: any;
-	public currentTimelineState;
-	public spinner:Spinner;
-	private errorMessage: string;
-
-	public initialOverlays: any;
-	public selectedOverlays: Array < string > = [];
-	public subscribers: any = {};
-	public overlaysMarkup: any = [];
+	*/
 
 	constructor(private store: Store <IOverlayState> ,
 				private overlaysService: OverlaysService,
 				private emitter: TimelineEmitterService,
 				private effects: OverlaysEffects
 	)
+
 	{
 		this.redraw$ = new BehaviorSubject(0);
+
 		this.configuration = {
 			start: new Date(new Date().getTime() - 3600000 * 24 * 365),
 			margin: {
@@ -88,9 +91,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
-
-		this.init();
-
+		this.setSubscribers();
 	}
 
 	ngAfterViewInit(): void {
@@ -134,7 +135,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 		}
 	}
 
-	init(): void {
+	setSubscribers(): void {
 
 		this.subscribers.overlays = this.drops$.subscribe(_drops => {
 			const count = this.calcOverlayCountViaDrops(_drops);
@@ -148,8 +149,8 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 				this.configuration.end = timelineState.to;
 			});
 
-		this.subscribers.selected = this.selectedOverlays$
-			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);
+		/*this.subscribers.selected = this.selectedOverlays$
+			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);*/
 
 		this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
 			this.redraw$.next(Math.random());
@@ -180,7 +181,7 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 	}
 
 	calcOverlayCountViaDrops(drops) {
-		drops.reduce((count, row) => {
+		return drops.reduce((count, row) => {
 			return count + row.data.reduce((rowCount, overlays) => {
 				const isIn = this.configuration.start <= overlays.date && overlays.date <= this.configuration.end;
 				if(isIn) {
@@ -188,15 +189,15 @@ export class OverlaysContainer implements OnInit, AfterViewInit {
 				} else {
 					return rowCount;
 				}
-			}, 0)
+			}, 0);
 		}, 0);
 
-		return drops[0].data.reduce((count, overlays) => {
+		/*return drops[0].data.reduce((count, overlays) => {
 			if(this.configuration.start <= overlays.date && overlays.date <= this.configuration.end) {
 				return count+ 1;
 			}
 			return count;
-		}, 0);
+		}, 0);*/
 	}
 
 }

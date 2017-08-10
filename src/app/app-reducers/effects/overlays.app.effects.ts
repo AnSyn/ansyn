@@ -16,9 +16,9 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
-import { EntitiesVisualizerType } from '@ansyn/open-layers-visualizers';
 import { OverlayDisplayMode } from '@ansyn/core';
-import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layers-visualizers';
+import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
+import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -31,7 +31,7 @@ export class OverlaysAppEffects {
 			return [activeMap ,overlaysState];
 		})
 		.map(([caseMapState ,overlaysState]: [CaseMapState, IOverlayState])=> {
-			this.drawOverlaysOnMap(caseMapState, overlaysState.overlays, overlaysState.filters);
+			this.drawOverlaysOnMap(caseMapState, overlaysState);
 		});
 
 	@Effect({ dispatch: false })
@@ -42,12 +42,12 @@ export class OverlaysAppEffects {
 		})
 		.map(([overlaysState, selectedCase]: [IOverlayState, Case])=> {
 			selectedCase.state.maps.data.forEach((mapData: CaseMapState)=>{
-				this.drawOverlaysOnMap(mapData, overlaysState.overlays, overlaysState.filters);
+				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
 		});
 
 	// TODO:change this after #475 is solved (new filtered data from store)
-	private drawOverlaysOnMap(mapData: CaseMapState, overlays, filters) {
+	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
 		const communicator = this.communicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
@@ -55,13 +55,13 @@ export class OverlaysAppEffects {
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
 				case 'Hitmap': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlays, filters);
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					hitMapvisualizer.setEntities(entitiesToDraw);
 					polygonVisualizer.clearEntities();
 					break;
 				}
 				case 'Polygon': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlays, filters);
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					polygonVisualizer.setEntities(entitiesToDraw);
 					hitMapvisualizer.clearEntities();
 					break;
@@ -75,8 +75,8 @@ export class OverlaysAppEffects {
 		}
 	}
 
-	private getEntitiesToDraw(overlays, filters): IVisualizerEntity[] {
-		const overlaysToDraw = this.overlaysService.parseOverlayDataForFootprintDispaly(overlays, filters);
+	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
+		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"])
 		const entitiesToDraw: IVisualizerEntity[] = [];
 		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
 			const feature: GeoJSON.Feature<any> = {
@@ -89,6 +89,19 @@ export class OverlaysAppEffects {
 		return entitiesToDraw;
 	}
 
+	// effect fixed bug when opening the tools bar before overlays were loaded
+	@Effect()
+	setActiveOverlaysModeFromLoadSuccess$: Observable<OverlaysMarkupAction> = this.actions$
+		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case))
+		.map(([action,cases]:[Action,ICasesState])=> {
+			const selectedMap = cases.selected_case.state.maps.data.find((mapData)=> {
+				return mapData.id === cases.selected_case.state.maps.active_map_id;
+			});
+			return new SetActiveOverlaysFootprintModeAction(selectedMap.data.overlayDisplayMode);
+		});
+
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -98,7 +111,6 @@ export class OverlaysAppEffects {
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(cases.selected_case);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
-
 
 	@Effect()
 	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$

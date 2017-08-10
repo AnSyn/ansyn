@@ -3,7 +3,9 @@
  */
 import * as overlay from '../actions/overlays.actions';
 import { Overlay } from "../models/overlay.model";
-import { createSelector } from 'reselect';
+import { isNil } from 'lodash';
+import { OverlaysService } from '../services/overlays.service';
+
 
 export interface IOverlayState {
 	loaded: boolean;
@@ -12,6 +14,7 @@ export interface IOverlayState {
 	selectedOverlays: string[];
 	demo: number;
 	filters: any[];
+	filteredOverlays: string[];
 	queryParams: any;
 	timelineState: {from: Date, to: Date};
 	count: number;
@@ -27,6 +30,7 @@ export const overlayInitialState: IOverlayState = {
 	filters: [],
 	queryParams: {},
 	timelineState: {from: new Date(), to: new Date()},
+	filteredOverlays: [],
 	count: 0
 }
 
@@ -64,12 +68,14 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			return Object.assign({},state,{
 				loading: true,
 				queryParams,
-				overlays: new Map()
+				overlays: new Map(),
+				filters: [],
+				filteredOverlays: []
 			});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 
-			const overlays = action.payload;
+			const overlays = OverlaysService.sort(action.payload);
 
 			const stateOverlays = new Map(state.overlays);
 
@@ -94,8 +100,12 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			});
 
 		case overlay.OverlaysActionTypes.SET_FILTERS:
+			console.time('tmp');
+
+			const res =  OverlaysService.filter(state.overlays,action.payload);
 			return Object.assign({},state,{
-				filters: action.payload
+				filters: action.payload,
+				filteredOverlays: res
 			});
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:

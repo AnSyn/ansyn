@@ -1,23 +1,18 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { isEqual } from 'lodash';
-import { getPointByPolygon, getPolygonByPoint } from '@ansyn/core/utils';
+import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 
-import { point, feature } from '@turf/helpers';
-import * as centerOfMass from '@turf/center-of-mass';
-import * as circle from '@turf/circle';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 
-import { FeatureCollection, GeometryObject, Point } from "geojson";
 
 
 
@@ -26,10 +21,31 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
+	static filter(overlays: Map<string,Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Overlay[]{
+		if(isNil(overlays)){
+			return [] as Overlay[];
+		}
 
-	setSortedDropsMap(dropsData: any[]) {
-		return dropsData
+		const overlaysData = [];
+
+		if (!filters || !Array.isArray(filters)) {
+			overlays.forEach( o => overlaysData.push(o.id));
+
+		}
+		overlays.forEach(overlay => {
+			if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
+				overlaysData.push(overlay.id);
+			}
+		});
+
+		return overlaysData;
+	}
+
+	static sort(overlays: any[]): Overlay[] {
+		if(isNil(overlays)){
+			return [] as Overlay[];
+		}
+		return overlays
 			.sort((o1, o2) => {
 				if (o2.date < o1.date) {
 					return 1;
@@ -40,6 +56,18 @@ export class OverlaysService {
 				return 0;
 			});
 	}
+
+	static pluck(overlays,ids,properties){
+		return ids.map( id => {
+			const overlay = overlays.get(id);
+			return 	properties.reduce( (obj,property) =>{
+				obj[property] = overlay[property];
+				return obj;
+			},{});
+		});
+	}
+
+	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
 
 	search(params: any = {}): Observable<Array<Overlay>> {
 		let tBbox = bbox(params.polygon);
@@ -62,29 +90,19 @@ export class OverlaysService {
 	}
 
 
-	parseOverlayDataForDispaly(overlays = [], filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Array<any> {
-		let result = new Array();
-		let overlaysData = new Array();
 
-		if (!filters || !Array.isArray(filters)) {
-			overlays.forEach(overlay => overlaysData.push({ id: overlay.id, date: overlay.date }));
-		} else {
-			overlays.forEach(overlay => {
-				if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
-					overlaysData.push({ id: overlay.id, date: overlay.date });
-				}
-			});
-		}
-
-		overlaysData = this.setSortedDropsMap(overlaysData);
-
-		result.push({ name: undefined, data: overlaysData });
-
-		return result;
+	parseOverlayDataForDispaly(overlays = [],ids): Array<any> {
+		const overlaysData =  OverlaysService.pluck(overlays,ids,["id","date"]);
+		return [{ name: undefined, data: overlaysData }];
 	}
 
+	/*parseOverlayDataForDispalyWithFilters(overlays , filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]){
+		const overlaysData = OverlaysService.pluck(OverlaysService.sort(OverlaysService.filter(overlays,filters)),["id","date"]);
+		return [{ name: undefined, data: overlaysData }];
+	}*/
+
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result =   isEqual(data.overlays, data1.overlays) &&   isEqual(data.filters, data1.filters) &&   isEqual(data.timelineState, data1.timelineState) ;
+		const result =   isEqual(data.filters, data1.filters) &&  isEqual(data.timelineState, data1.timelineState) ;
 		return result;
 	}
 

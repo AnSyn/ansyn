@@ -35,7 +35,7 @@ export class FiltersAppEffects {
 				});
 			});
 			return new SetFiltersAction(parsedFilters);
-		}).share();
+		});
 
 
     @Effect()
@@ -55,7 +55,7 @@ export class FiltersAppEffects {
         .map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
 
             return new InitializeFiltersAction({ overlays, facets, showAll });
-        }).share();
+        });
 
     @Effect()
     updateFilters$: Observable<any> = this.actions$

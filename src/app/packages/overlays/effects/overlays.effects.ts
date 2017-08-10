@@ -5,7 +5,7 @@ import { Injectable,Inject } from '@angular/core';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction,
+	DisplayOverlayAction, DisplayOverlayFromStoreAction,
 	GoNextDisplayAction,
 	GoPrevDisplayAction,
 	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
@@ -22,6 +22,16 @@ import 'rxjs/add/operator/share';
 
 @Injectable()
 export class OverlaysEffects {
+
+	@Effect()
+	onDisplayOverlay$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
+		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlayState): any => {
+			return {overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id};
+		})
+		.map( ({overlay, map_id}: any) => {
+			return new DisplayOverlayAction({overlay, map_id});
+		}).share();
 
 	@Effect({dispatch:false})
 	onOverlaysMarkupChanged$: Observable<OverlaysMarkupAction> = this.actions$

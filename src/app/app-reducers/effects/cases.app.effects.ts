@@ -42,23 +42,22 @@ export class CasesAppEffects {
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
-		.mergeMap(([action, state]:[DisplayOverlayFromStoreAction, IAppState]) => {
+		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
 
 			const selectedCase = cloneDeep(state.cases.selected_case);
-			const overlay: Overlay = state.overlays.overlays.get(action.payload.id) as any;
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
 
 			selectedCase.state.maps.data.forEach((map) => {
 				if(mapId === map.id){
-					map.data.overlay = overlay;
+					map.data.overlay = action.payload.overlay;
 				}
 			});
 
 			return[
 				new UpdateCaseAction(selectedCase),
-				new DisplayOverlayAction({overlay: overlay, map_id: mapId})
+			// 	// new DisplayOverlayAction({overlay: overlay, map_id: mapId})
 			];
 
 		}).share();

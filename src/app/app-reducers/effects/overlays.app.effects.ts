@@ -18,7 +18,7 @@ import { last } from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
-import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class OverlaysAppEffects {

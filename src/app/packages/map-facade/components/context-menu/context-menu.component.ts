@@ -18,9 +18,6 @@ import {
 	host: {"tabindex": "0"}
 })
 export class ContextMenuComponent implements OnInit {
-	@HostBinding('style.top.px') top;
-	@HostBinding('style.left.px') left;
-
 	contextFilters$: Observable<string[]> = this.store.select('map').map((state: IMapState) => state.contextMenuFilters).distinctUntilChanged(_isEqual);
 	contextFilters: string[];
 
@@ -40,8 +37,8 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	show(top, left) {
-		this.top = top;
-		this.left = left;
+		this.renderer.setStyle(this.elem.nativeElement, 'top', `${top}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'left', `${left}px`);
 		this.elem.nativeElement.focus();
 	}
 

@@ -30,6 +30,7 @@ import { isNil } from 'lodash';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetContextMenuFiltersAction } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -349,6 +350,18 @@ export class MapAppEffects {
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];
 		});
+
+	@Effect()
+	setContextFilter$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
+			return overlays.filters;
+		})
+		.map(filters => {
+			const sensorName = filters.find(a => a.filteringParams.key === "sensorName");
+			return new SetContextMenuFiltersAction((sensorName && sensorName.filteringParams )|| [])
+		});
+
 
 	constructor(
 		private actions$: Actions,

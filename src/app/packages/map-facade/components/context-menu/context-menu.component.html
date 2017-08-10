@@ -1,52 +1,56 @@
-<form>
 
-	<button class="background" type="reset"></button>
+<nav class="menu">
 
-	<nav class="menu" [ngStyle]="contextMenuStyle">
-		<input type="checkbox" class="menu-open" name="menu-open" id="menu-open" [(ngModel)]="show"/>
+	<button class="menu-open-button">
+		<span class="hamburger hamburger-1"></span>
+		<span class="hamburger hamburger-2"></span>
+		<span class="hamburger hamburger-3"></span>
+	</button>
 
-		<button class="menu-open-button" type="reset">
-			<span class="hamburger hamburger-1"></span>
-			<span class="hamburger hamburger-2"></span>
-			<span class="hamburger hamburger-3"></span>
+	<div class="buttons-area">
+		<button class="menu-item best" (click)="clickBest()">
+			<span>Best</span>
+			<div class="sub-buttons-list">
+				<ng-template let-filter ngFor [ngForOf]="contextFilters">
+					<button>{{filter}}</button>
+				</ng-template>
+			</div>
 		</button>
 
+		<button class="menu-item first" (click)="clickFirst()">
+			<span>First</span>
+		</button>
 
-		<div class="buttons-area">
-			<button class="menu-item best">
-				<span>Best</span>
-				<div class="sub-buttons-list">
-					<button>VIS</button>
-					<button>IR</button>
-					<button>SAR</button>
-					<button>Vertical</button>
-					<button>Stereo</button>
-				</div>
-			</button>
+		<button class="menu-item angle left">
+			<span>Angle</span>
+			<div class="sub-buttons-list left">
+				<button>Draw</button>
+				<button>Turn</button>
+				<button>Show</button>
+			</div>
+		</button>
 
-			<button class="menu-item first">
-				<span>First</span>
-			</button>
+		<button class="menu-item last" (click)="clickLast()">
+			<span>Last</span>
+		</button>
 
-			<button class="menu-item angle left">
-				<span>Angle</span>
-				<div class="sub-buttons-list left">
-					<button>Draw</button>
-					<button>Turn</button>
-					<button>Show</button>
-				</div>
-			</button>
+		<button class="menu-item next" (click)="clickNext($event)">
+			<div class="sub-buttons-list">
+				<ng-template let-filter ngFor [ngForOf]="contextFilters">
+					<button (click)="clickNext($event, filter)">{{filter}}</button>
+				</ng-template>
+			</div>
+			<span>Next</span>
+		</button>
 
-			<button class="menu-item last">
-				<span>Last</span>
-			</button>
+		<button class="menu-item prev left" (click)="clickPrev($event)">
+			<div class="sub-buttons-list">
+				<ng-template let-filter ngFor [ngForOf]="contextFilters">
+					<button>{{filter}}</button>
+				</ng-template>
+			</div>
+			<span>Prev</span>
+		</button>
 
-			<button class="menu-item next">
-				<span>Next</span>
-			</button>
-			<button class="menu-item prev">
-				<span>Prev</span>
-			</button>
-		</div>
-	</nav>
-</form>
+	</div>
+</nav>

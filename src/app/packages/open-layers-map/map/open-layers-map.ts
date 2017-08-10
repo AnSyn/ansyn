@@ -94,7 +94,7 @@ export class OpenLayersMap implements IMap {
 
 	// IMap Start
 
-	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
+	public resetView(layer: any, extent?: GeoJSON.Point[]) {
 		this.setMainLayer(layer);
 		if (extent) {
 			this.fitCurrentView(layer, extent);

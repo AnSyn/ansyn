@@ -94,7 +94,7 @@ describe('CasesAppEffects', () => {
 		let count = 0;
 		casesAppEffects.updateCaseFromTools$.subscribe((_result:Action)=>{
 			if(_result.type === CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[0].data.overlayVisualizerType).toBe('Hitmap');
+				expect(_result.payload.state.maps.data[0].data.overlayDisplayMode).toBe('Hitmap');
 				count++;
 			}
 		});
@@ -104,7 +104,7 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
 		const action  = new DisplayOverlayFromStoreAction({ id: "tmp"});
 
-		effectsRunner.queue(action)
+		effectsRunner.queue(action);
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
 			if(_result.type === CasesActionTypes.UPDATE_CASE){
@@ -125,7 +125,7 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
 		const action  = new DisplayOverlayFromStoreAction({ id: "tmp", map_id: '4444'});
 
-		effectsRunner.queue(action)
+		effectsRunner.queue(action);
 		let count = 0;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
 			if(_result.type === CasesActionTypes.UPDATE_CASE){

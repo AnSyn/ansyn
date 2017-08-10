@@ -38,18 +38,27 @@ export class ImageryComponentManager {
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
 		if (this._activeMap) {
 			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
-				const existingVisualizers = this.getVisualizers();
-				this._activeMap.setLayer(layers[0], extent);
+				this.resetView(layers[0], extent);
 				if (layers.length > 0) {
 					for(let i = 1; i < layers.length; i++) {
 						this._activeMap.addLayer(layers[i]);
 					}
 				}
-				existingVisualizers.forEach((visualizer)=>{
-					visualizer.onSetView();
-				});
 			});
 		}
+	}
+
+	public resetView(layer: any, extent?: GeoJSON.Point[]) {
+		if (this._activeMap) {
+			this._activeMap.resetView(layer, extent);
+			this.resetVisualizers();
+		}
+	}
+
+	private resetVisualizers() {
+		this.visualizers.forEach((visualizer)=>{
+			visualizer.onResetView();
+		});
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
@@ -123,7 +132,7 @@ export class ImageryComponentManager {
 		this._plugins = [];
 	}
 
-	public getPlugins() {
+	public get plugins() {
 		return this._plugins;
 	}
 
@@ -165,7 +174,7 @@ export class ImageryComponentManager {
 		this._visualizers = [];
 	}
 
-	public getVisualizers() {
+	public get visualizers() {
 		return this._visualizers;
 	}
 

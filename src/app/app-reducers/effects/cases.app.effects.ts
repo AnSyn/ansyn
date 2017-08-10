@@ -22,7 +22,7 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Context, OverlayVisualizerMode } from '@ansyn/core';
+import { Context, OverlayDisplayMode } from '@ansyn/core';
 import { ContextProviderService, ContextCriteria } from '@ansyn/context';
 
 @Injectable()
@@ -33,10 +33,10 @@ export class CasesAppEffects {
 		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases'))
-		.map(([payload, casesState]: [OverlayVisualizerMode, ICasesState]) => {
+		.map(([payload, casesState]: [OverlayDisplayMode, ICasesState]) => {
 			const updatedCase = cloneDeep(casesState.selected_case);
 			const activeMap = updatedCase.state.maps.data.find(map => map.id === updatedCase.state.maps.active_map_id);
-			activeMap.data.overlayVisualizerType = payload;
+			activeMap.data.overlayDisplayMode = payload;
 			return new UpdateCaseAction(updatedCase);
 		});
 

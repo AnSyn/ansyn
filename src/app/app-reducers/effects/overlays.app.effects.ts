@@ -16,8 +16,9 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
+import { EntitiesVisualizerType } from '@ansyn/open-layers-visualizers';
+import { OverlayDisplayMode } from '@ansyn/core';
 import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layers-visualizers';
-import { OverlayVisualizerMode } from '@ansyn/core';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -35,7 +36,7 @@ export class OverlaysAppEffects {
 
 	@Effect({ dispatch: false })
 	drawFootprintsFromFilteredOverlays$: Observable<void> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS, OverlaysActionTypes.SET_FILTERS, OverlaysActionTypes.SET_TIMELINE_STATE, CasesActionTypes.UPDATE_CASE)
+		.ofType(OverlaysActionTypes.SET_FILTERS, OverlaysActionTypes.SET_TIMELINE_STATE, CasesActionTypes.UPDATE_CASE)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selected_case];
 		})
@@ -45,13 +46,14 @@ export class OverlaysAppEffects {
 			});
 		});
 
+	// TODO:change this after #475 is solved (new filtered data from store)
 	private drawOverlaysOnMap(mapData: CaseMapState, overlays, filters) {
 		const communicator = this.communicatorService.provide(mapData.id);
-		if (communicator && mapData.data.overlayVisualizerType) {
+		if (communicator && mapData.data.overlayDisplayMode) {
 			const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
 			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
-			const overlayVisualizerType: OverlayVisualizerMode = mapData.data.overlayVisualizerType;
-			switch (overlayVisualizerType) {
+			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
+			switch (overlayDisplayMode) {
 				case 'Hitmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlays, filters);
 					hitMapvisualizer.setEntities(entitiesToDraw);

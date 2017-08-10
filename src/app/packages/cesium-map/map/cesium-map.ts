@@ -27,7 +27,7 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setLayer(layer: any): void {
+	resetView(layer: any): void {
 		throw new Error('Method not implemented.');
 	}
 

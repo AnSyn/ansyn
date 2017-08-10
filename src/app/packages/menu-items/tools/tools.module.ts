@@ -5,13 +5,13 @@ import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
 import { ToolsConfig, toolsConfig } from './models';
-import { VisualizersComponent } from './visualizers/visualizers.component';
+import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 
 
 
 @NgModule({
 	imports: [CommonModule, CoreModule, GoToModule],
-	declarations: [ToolsComponent, VisualizersComponent],
+	declarations: [ToolsComponent, OverlaysDisplayModeComponent],
 	entryComponents: [ToolsComponent],
 })
 export class ToolsModule {

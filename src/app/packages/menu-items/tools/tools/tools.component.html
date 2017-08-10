@@ -22,10 +22,10 @@
 		<span class="tooltiptext">Automatic Image Enhancement</span>
 	</div>
 
-	<div class="display-overlay-visualizer" [class.active]="visualizersOn">
+	<div #displayOverlayDiv class="display-overlay-visualizer" [class.active]="displayModeOn">
 		<button (click)="toggleExpandVisualizers()">
 		</button>
 		<span class="tooltiptext">Display Overlays</span>
-		<ansyn-visualizers [(expand)]="expandVisualizers" [(visualizersChecked)]="visualizersOn"></ansyn-visualizers>
+		<ansyn-overlays-display-mode [(expand)]="expandOverlaysDisplayMode" [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
 	</div>
 </div>

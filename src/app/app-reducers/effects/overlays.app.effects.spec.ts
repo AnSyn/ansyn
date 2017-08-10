@@ -63,8 +63,8 @@ describe('OverlaysAppEffects',()=> {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {overlayVisualizerType: 'Hitmap'}},
-					{id: 'imagery2', data: {overlayVisualizerType: 'None'}},
+					{id: 'imagery1', data: {overlayDisplayMode: 'Hitmap'}},
+					{id: 'imagery2', data: {overlayDisplayMode: 'None'}},
 					{id: 'imagery3', data: {}},
 				],
 				active_map_id: 'imagery1'
@@ -180,7 +180,7 @@ describe('OverlaysAppEffects',()=> {
 		expect(result.payload.id).toEqual('last');
 	});
 
-	it('drawFootprintsFromCommunicatorAdded$ effect should use draw overlays visualizers if added communicator has "overlayVisualizerType" Hitmap in case', () => {
+	it('drawFootprintsFromCommunicatorAdded$ effect should use draw overlays overlays-display-mode if added communicator has "overlayDisplayMode" Hitmap in case', () => {
 		effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery1'}));
 
 		const commEntitiy = {
@@ -206,7 +206,7 @@ describe('OverlaysAppEffects',()=> {
 		expect(visEntitiy.clearEntities).toHaveBeenCalled();
 	});
 
-	it('drawFootprintsFromCommunicatorAdded$ effect should NOT draw overlays visualizers if added communicator has "overlayVisualizerType" = None in case', () => {
+	it('drawFootprintsFromCommunicatorAdded$ effect should NOT draw overlays overlays-display-mode if added communicator has "overlayDisplayMode" = None in case', () => {
 		effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery2'}));
 
 		const commEntitiy = {
@@ -232,8 +232,8 @@ describe('OverlaysAppEffects',()=> {
 		expect(visEntitiy.clearEntities).toHaveBeenCalledTimes(2);
 	});
 
-	it('drawFootprintsFromFilteredOverlays$ effect should draw overlays visualizers if selected case/active map has overlayVisualizerType="Hitmap"', () => {
-		effectsRunner.queue(new LoadOverlaysSuccessAction([]));
+	it('drawFootprintsFromFilteredOverlays$ effect should draw overlays overlays-display-mode if selected case/active map has overlayDisplayMode="Hitmap"', () => {
+		effectsRunner.queue(new SetFiltersAction([]));
 
 		const commEntitiy = {
 			getVisualizer:(visType) => {}

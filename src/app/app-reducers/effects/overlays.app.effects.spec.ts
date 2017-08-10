@@ -16,6 +16,7 @@ import { cloneDeep } from 'lodash';
 import { IToolsState, ToolsReducer, toolsInitialState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { AddMapInstacneAction } from '../../packages/map-facade/actions/map.actions';
+import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -175,7 +176,7 @@ describe('OverlaysAppEffects',()=> {
 		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
 			result = _result;
 		});
-
+		expect(result).toBeTruthy();
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('last');
 	});
@@ -192,7 +193,7 @@ describe('OverlaysAppEffects',()=> {
 		};
 
 		const drops = [{id: 'id', name: 'name', footprint: {}}];
-		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+		spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
 
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
 		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
@@ -218,7 +219,7 @@ describe('OverlaysAppEffects',()=> {
 		};
 
 		const drops = [{id: 'id', name: 'name', footprint: {}}];
-		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+		spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
 
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
 		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
@@ -244,7 +245,7 @@ describe('OverlaysAppEffects',()=> {
 		};
 
 		const drops = [{id: 'id', name: 'name', footprint: {}}];
-		spyOn(overlaysService, 'parseOverlayDataForFootprintDispaly').and.callFake(() => drops);
+		spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
 
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
 		spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
@@ -256,5 +257,16 @@ describe('OverlaysAppEffects',()=> {
 
 		expect(visEntitiy.setEntities).toHaveBeenCalled();
 		expect(visEntitiy.clearEntities).toHaveBeenCalled();
+	});
+
+	it('setActiveOverlaysModeFromLoadSuccess$ effect should dispatch SetActiveOverlaysFootprintModeAction when overlays are loaded', () => {
+		effectsRunner.queue(new SetFiltersAction([]));
+		let result = null;
+		overlaysAppEffects.setActiveOverlaysModeFromLoadSuccess$.subscribe((_result) => {
+			result = _result;
+		});
+		expect(result).toBeTruthy();
+		expect(result.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
+		expect(result.payload).toEqual('Hitmap');
 	});
 });

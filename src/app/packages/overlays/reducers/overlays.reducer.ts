@@ -100,8 +100,6 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			});
 
 		case overlay.OverlaysActionTypes.SET_FILTERS:
-			console.time('tmp');
-
 			const res =  OverlaysService.filter(state.overlays,action.payload);
 			return Object.assign({},state,{
 				filters: action.payload,

@@ -1,6 +1,5 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';
@@ -21,15 +20,15 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string,Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): Overlay[]{
+	static filter(overlays: Map<string,Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): string[]{
 		if(isNil(overlays)){
-			return [] as Overlay[];
+			return [] ;
 		}
 
 		const overlaysData = [];
 
 		if (!filters || !Array.isArray(filters)) {
-			overlays.forEach( o => overlaysData.push(o.id));
+			return Array.from(overlays.keys());
 
 		}
 		overlays.forEach(overlay => {
@@ -57,7 +56,7 @@ export class OverlaysService {
 			});
 	}
 
-	static pluck(overlays,ids,properties){
+	static pluck(overlays: Map<any,any>,ids,properties){
 		return ids.map( id => {
 			const overlay = overlays.get(id);
 			return 	properties.reduce( (obj,property) =>{
@@ -67,7 +66,7 @@ export class OverlaysService {
 		});
 	}
 
-	constructor(private http: Http, @Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
+	constructor(@Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
 
 	search(params: any = {}): Observable<Array<Overlay>> {
 		let tBbox = bbox(params.polygon);
@@ -91,7 +90,7 @@ export class OverlaysService {
 
 
 
-	parseOverlayDataForDispaly(overlays = [],ids): Array<any> {
+	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids): Array<any> {
 		const overlaysData =  OverlaysService.pluck(overlays,ids,["id","date"]);
 		return [{ name: undefined, data: overlaysData }];
 	}
@@ -102,7 +101,7 @@ export class OverlaysService {
 	}*/
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result =   isEqual(data.filters, data1.filters) &&  isEqual(data.timelineState, data1.timelineState) ;
+		const result = isEqual(data.filteredOverlays,data1.filteredOverlays) &&  isEqual(data.filters, data1.filters) &&  isEqual(data.timelineState, data1.timelineState) ;
 		return result;
 	}
 

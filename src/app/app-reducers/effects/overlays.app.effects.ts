@@ -102,13 +102,11 @@ export class OverlaysAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERS)
 		.filter(action => this.casesService.contextValues.defaultOverlay === 'latest')
 		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
-			//const drops = this.overlaysService.parseOverlayDataForDispaly(overlays.overlays, overlays.filters);
-			//return drops[0].data;
 			return overlays.filteredOverlays;
 		})
 		.filter((displayedOverlays) => !isEmpty(displayedOverlays))
 		.map((displayedOverlays: any[]) => {
-			const lastOverlayId = last(displayedOverlays).id;
+			const lastOverlayId = last(displayedOverlays);
 			this.casesService.contextValues.defaultOverlay = '';
 			return new DisplayOverlayFromStoreAction({id: lastOverlayId});
 		})

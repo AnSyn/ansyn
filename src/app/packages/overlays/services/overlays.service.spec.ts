@@ -119,6 +119,7 @@ describe('OverlaysService', () => {
 		}];
 
 	}));
+
 	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
 		let overlayArray: Overlay = <any>[
 			{id: 'id1', date: new Date(1000)},
@@ -126,12 +127,26 @@ describe('OverlaysService', () => {
 			{id: 'id3', date: new Date(7000)},
 			{id: 'id4', date: new Date(2000)}
 		];
-		overlayArray = <any> overlaysService.setSortedDropsMap(<any>overlayArray);
+		overlayArray = <any> OverlaysService.sort(<any>overlayArray);
 		expect(overlayArray[0]).toEqual({id: 'id1', date: new Date(1000)});
 		expect(overlayArray[1]).toEqual({id: 'id4', date: new Date(2000)});
 		expect(overlayArray[2]).toEqual({id: 'id2', date: new Date(3000)});
 		expect(overlayArray[3]).toEqual({id: 'id3', date: new Date(7000)});
 	});
+
+	it("pluck check that pluck function returns smaller object from overlays",() => {
+		const objectMap = new Map([
+			['1',{id: '1',name: 'tmp1',value: '2'}],
+			['2',{id: '2',name: 'tmp1',value: '2'}],
+			['3',{id: '3',name: 'tmp1',value: '2'}],
+			['4',{id: '4',name: 'tmp1',value: '2'}],
+			['5',{id: '5',name: 'tmp1',value: '2'}],
+			['6',{id: '6',name: 'tmp1',value: '2'}]
+		]);
+		const result = OverlaysService.pluck(objectMap,['1','2','6'],['id','name']);
+		expect(result.length).toBe(3);
+		expect(Object.keys(result[0]).length).toBe(2);
+	})
 
 	it('check all dependencies are defined properly', () => {
 		expect(overlaysService).toBeTruthy();
@@ -157,25 +172,26 @@ describe('OverlaysService', () => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = overlaysService.parseOverlayDataForDispaly(<any>mockData.overlays, <any>mockData.filters);
-		expect(result[0].name).toBe(undefined);
-		expect(result[0].data.length).toBe(overlaysTmpData.length);
+		const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters);
+		expect(result.length).toBe(overlaysTmpData.length);
 	});
 
 	it('compare overlay ', () => {
 		const mockData = {
 			filters: {},
-			overlays: new Map()
+			overlays: new Map(),
+			filteredOverlays: []
 		};
 		overlaysTmpData.forEach(item => {
 			mockData.overlays.set(item.id, item);
+			mockData.filteredOverlays.push(item.id);
 		});
 
 		const overlayState1: IOverlayState = Object.assign({}, overlayInitialState);
 		const overlayState2: IOverlayState = Object.assign({}, overlayInitialState);
 		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeTruthy();
 
-		overlayState1.overlays = mockData;
+		overlayState1.filteredOverlays = mockData.filteredOverlays;
 		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeFalsy();
 
 	})

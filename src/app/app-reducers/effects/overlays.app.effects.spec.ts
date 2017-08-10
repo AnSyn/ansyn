@@ -10,6 +10,7 @@ import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { Observable } from 'rxjs/Observable';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -22,6 +23,37 @@ describe('OverlaysAppEffects',()=> {
 		selected_case : {tmp:'1'}
 	};
 
+	const caseItem: Case =  {
+		"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
+		"state": {
+			"region": {
+				"type": "FeatureCollection",
+				"features": [{
+					"type": "Feature",
+					"properties": {
+						"MUN_HEB": "Hasharon",
+						"MUN_ENG": "Hasharon"
+					},
+					"geometry": {
+						"type": "Polygon",
+						"coordinates": [
+							[
+								[35.71991824722275, 32.709192409794866],
+								[35.54566531753454, 32.393992011030576]
+							]
+
+
+						]
+					}
+				}]
+			},
+			"time": {
+				"type": "absolute",
+				"from": new Date("2013-06-27T08:43:03.624Z"),
+				"to": new Date("2015-04-17T03:55:12.129Z")
+			}
+		}
+	} as any;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -49,8 +81,26 @@ describe('OverlaysAppEffects',()=> {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store, CasesService, EffectsRunner, OverlaysAppEffects, OverlaysService],(_store: Store<any>, _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([Store],(_store) => {
 		store = _store;
+		spyOn(store, 'select').and.callFake((type) => {
+			console.log(type,'x');
+			if(type === 'overlays') {
+				return Observable.of({
+					filteredOverlays: ['first', 'last']
+				});
+			}
+			if(type === 'cases'){
+				return Observable.of({
+					selected_case: caseItem,
+					cases: [ caseItem ]
+				});
+			}
+			return Observable.empty();
+		});
+	}));
+
+	beforeEach(inject([ CasesService, EffectsRunner, OverlaysAppEffects, OverlaysService],( _casesService:CasesService,_effectsRunner:EffectsRunner,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
 		casesService = _casesService;
 		overlaysAppEffects = _overalysAppEffects;
 		effectsRunner = _effectsRunner;
@@ -62,12 +112,6 @@ describe('OverlaysAppEffects',()=> {
 	});
 
 	it("onOverlaysMarkupsChanged$",() => {
-		const caseItem: Case =  {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
-		} as any;
-		store.dispatch(new AddCaseSuccessAction(caseItem));
-		store.dispatch(new SelectCaseByIdAction(caseItem.id));
-
 		spyOn(casesService,'getOverlaysMarkup').and.returnValue({});
 		const action = new LoadOverlaysSuccessAction({} as any);
 		effectsRunner.queue(action);
@@ -81,42 +125,6 @@ describe('OverlaysAppEffects',()=> {
 	});
 
 	it('On selectCase$ call to loadOverlaysAction with case params ', () => {
-
-		const caseItem: Case =  {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
-			"state": {
-				"region": {
-					"type": "FeatureCollection",
-					"features": [{
-						"type": "Feature",
-						"properties": {
-							"MUN_HEB": "Hasharon",
-							"MUN_ENG": "Hasharon"
-						},
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [
-								[
-									[35.71991824722275, 32.709192409794866],
-									[35.54566531753454, 32.393992011030576]
-								]
-
-
-							]
-						}
-					}]
-				},
-				"time": {
-					"type": "absolute",
-					"from": new Date("2013-06-27T08:43:03.624Z"),
-					"to": new Date("2015-04-17T03:55:12.129Z")
-				},
-				"selected_overlay_id": "a8289e70-523a-4dbd-9b8f-0d6b0a0d0411"
-			}
-		} as any;
-
-		store.dispatch(new AddCaseSuccessAction(caseItem));
-		store.dispatch(new SelectCaseByIdAction(caseItem.id));
 
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
 
@@ -132,12 +140,17 @@ describe('OverlaysAppEffects',()=> {
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		let result;
 		const drops = [{name:'name', data: [{id: 'first'}, {id: 'last'}]}];
-		spyOn(overlaysService, 'parseOverlayDataForDispaly').and.callFake(() => drops);
+
+
+
 		casesService.contextValues.defaultOverlay = 'latest';
+
 		effectsRunner.queue(new SetFiltersAction([]));
+
 		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
 			result = _result;
 		});
+
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('last');
 	});

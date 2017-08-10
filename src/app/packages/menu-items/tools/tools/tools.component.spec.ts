@@ -11,12 +11,12 @@ describe('ToolsComponent', () => {
     let store: Store <any> ;
 
 	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
-	const mock_visualizer = MockComponent({selector: 'ansyn-visualizers', inputs: ['expand', 'visualizersChecked'], outputs: ['expandChange', 'visualizersCheckedChange']});
+	const mock_overlays_display_mode = MockComponent({selector: 'ansyn-overlays-display-mode', inputs: ['expand', 'modeOn'], outputs: ['expandChange', 'modeOnChange']});
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
                 imports: [StoreModule.provideStore({ tools: ToolsReducer})],
-				declarations: [ToolsComponent, mock_go_to, mock_visualizer]
+				declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode]
             })
             .compileComponents();
     }));
@@ -53,23 +53,32 @@ describe('ToolsComponent', () => {
 
     });
 
-    it('toggleExpandGoTo should toggle expandGoTo and close expandVisualizers', () => {
+    it('toggleExpandGoTo should toggle expandGoTo and close expandOverlaysDisplayMode', () => {
 		component.expandGoTo = true;
     	component.toggleExpandGoTo();
 		expect(component.expandGoTo).toBeFalsy();
-		component.expandVisualizers = true;
+		component.expandOverlaysDisplayMode = true;
 		component.toggleExpandGoTo();
 		expect(component.expandGoTo).toBeTruthy();
-		expect(component.expandVisualizers).toBeFalsy();
+		expect(component.expandOverlaysDisplayMode).toBeFalsy();
 	});
 
-	it('toggleExpandVisualizers should toggle expandVisualizers and close expandGoTo', () => {
-		component.expandVisualizers = true;
+	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {
+		component.expandOverlaysDisplayMode = true;
 		component.toggleExpandVisualizers();
-		expect(component.expandVisualizers).toBeFalsy();
+		expect(component.expandOverlaysDisplayMode).toBeFalsy();
 		component.expandGoTo = true;
 		component.toggleExpandVisualizers();
-		expect(component.expandVisualizers).toBeTruthy();
+		expect(component.expandOverlaysDisplayMode).toBeTruthy();
 		expect(component.expandGoTo).toBeFalsy();
+	});
+
+	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {
+		component.displayModeOn = true;
+		fixture.detectChanges();
+		expect(component.displayOverlayDiv.nativeElement.classList.contains('active')).toBeTruthy();
+		component.displayModeOn = false;
+		fixture.detectChanges();
+		expect(component.displayOverlayDiv.nativeElement.classList.contains('active')).toBeFalsy();
 	});
 });

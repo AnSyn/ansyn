@@ -2,12 +2,12 @@
  * Created by ohad1 on 02/04/2017.
  */
 import { ToolsActionsTypes, ToolsActions } from '../actions/tools.actions';
-import { OverlayVisualizerMode } from '@ansyn/core';
+import { OverlayDisplayMode } from '@ansyn/core';
 
 export interface IToolsState {
 	flags: Map<string, boolean>;
 	activeCenter: number[];
-	activeOverlaysFootprintMode?: OverlayVisualizerMode;
+	activeOverlaysFootprintMode?: OverlayDisplayMode;
 };
 
 export const toolsInitialState: IToolsState = {

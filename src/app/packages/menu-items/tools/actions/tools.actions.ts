@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { OverlayVisualizerMode } from '@ansyn/core/models/case.model';
+import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -63,12 +63,12 @@ export class GoToAction implements  Action {
 
 export class ShowOverlaysFootprintAction implements  Action {
 	type = ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT;
-	constructor(public payload: OverlayVisualizerMode) {};
+	constructor(public payload: OverlayDisplayMode) {};
 }
 
 export class SetActiveOverlaysFootprintModeAction implements  Action {
 	type = ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE;
-	constructor(public payload: OverlayVisualizerMode) {};
+	constructor(public payload: OverlayDisplayMode) {};
 }
 
 export class SetAutoImageProcessing implements Action {

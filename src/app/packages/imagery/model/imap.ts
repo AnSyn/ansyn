@@ -16,7 +16,13 @@ export interface IMap {
 	getCenter(): GeoJSON.Point;
 	setCenter(center: GeoJSON.Point, animation: boolean);
 	setBoundingBox(bbox: GeoJSON.Point[]);
-	setLayer(layer: any, extent?: GeoJSON.Point[]): void;
+
+	/**
+	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
+	 * @param The new layer to set the view with. this layer projection will be the views projection
+	 * @param {Point[]} the extent (bounding box points) of the map at ESPG:4326
+	 */
+	resetView(layer: any, extent?: GeoJSON.Point[]): void;
 	addLayer(layer: any): void;
 	removeLayer(layer: any): void;
 	addVectorLayer(layer: any): void;

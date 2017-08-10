@@ -11,27 +11,51 @@ export interface IVisualizerEntity {
 export interface IMapVisualizer {
 	type: string;
 
-	// happens after constructor
+	/**
+	 * @description This function is called after constructor and gives those args to the visualizer
+	 * @param {string} mapId
+	 * @param {IMap} map
+	 */
 	onInit(mapId: string, map: IMap);
 
-	// happens after Map View is set (usally needs to reproject your entities if in different projection)
-	onSetView();
+	/**
+	 * @description This function is called after map resetView() is called. use this method to:
+	 * 1. re-add the layer
+	 * 2. reproject your entities
+	 */
+	onResetView();
 
-	///Replace all existing entities (CRUD)
+	/**
+	 * @description Replace all existing entities (CRUD)
+	 * @param {IVisualizerEntity[]} logicalEntities
+	 */
 	setEntities(logicalEntities: IVisualizerEntity[]);
 
-	///ADD Or Update Entities (CRU)
+	/**
+	 * @description ADD Or Update Entities (CRU)
+	 * @param {IVisualizerEntity[]} logicalEntities
+	 */
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]);
 
-	///Delete Single Entity (D)
+	/**
+	 * @description Delete Single Entity (D)
+	 * @param {string} logicalEntityId
+	 */
 	removeEntity(logicalEntityId: string);
 
-	///Delete All Entities (D)
+	/**
+	 * @description Delete All Entities (D)
+	 */
 	clearEntities();
 
-	///Get All Entities
+	/**
+	 * @description Get All Entities
+	 * @returns {IVisualizerEntity[]}
+	 */
 	getEntites(): IVisualizerEntity[];
 
-	///Dispose
+	/**
+	 * @description This function is called before the map is destroyed
+	 */
 	dispose();
 }

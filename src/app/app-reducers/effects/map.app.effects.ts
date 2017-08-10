@@ -123,7 +123,7 @@ export class MapAppEffects {
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
-				communicator.setLayer(layer, extent);
+				communicator.resetView(layer, extent);
 				return new DisplayOverlaySuccessAction({id: overlay.id});
 			});
 		});
@@ -301,7 +301,7 @@ export class MapAppEffects {
 			const newActiveMap: CaseMapState = updatedCase.state.maps.data.find((map) => map.id === updatedCase.state.maps.active_map_id);
 
 			return [
-				new SetActiveOverlaysFootprintModeAction(newActiveMap.data.overlayVisualizerType),
+				new SetActiveOverlaysFootprintModeAction(newActiveMap.data.overlayDisplayMode),
 				new UpdateCaseAction(updatedCase),
 				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
 			];

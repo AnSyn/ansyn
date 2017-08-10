@@ -31,7 +31,7 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { ToolsActionsTypes } from '../../packages/menu-items/tools/actions/tools.actions';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
@@ -94,7 +94,7 @@ describe('MapAppEffects', () => {
 			maps: {
 				data: [
 					{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
-					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayVisualizerType: 'Hitmap'}},
+					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayDisplayMode: 'Hitmap'}},
 					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
 				active_map_id: 'imagery1'
@@ -431,7 +431,7 @@ describe('MapAppEffects', () => {
 
 			fakeCommuincator = <any> {
 				ActiveMap: {MapType: 'ol'},
-				setLayer: () => {}
+				resetView: () => {}
 			};
 
 			const fakeSourceLoader = {
@@ -452,7 +452,7 @@ describe('MapAppEffects', () => {
 			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
-			spyOn(fakeCommuincator, 'setLayer');
+			spyOn(fakeCommuincator, 'resetView');
 		});
 
 		it('isExtentContainedInPolygon "false"', ()=> {
@@ -469,7 +469,7 @@ describe('MapAppEffects', () => {
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
 				subscribeResult = result;
 				expect(utils.calcGeoJSONExtent).toHaveBeenCalled();
-				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, fake_extent);
+				expect(fakeCommuincator.resetView).toHaveBeenCalledWith(fake_layer, fake_extent);
 			});
 			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({id: fake_overlay.id}));
 		});
@@ -481,7 +481,7 @@ describe('MapAppEffects', () => {
 			mapAppEffects.onDisplayOverlay$.subscribe(result=> {
 				subscribeResult = result;
 				expect(utils.calcGeoJSONExtent).not.toHaveBeenCalled();
-				expect(fakeCommuincator.setLayer).toHaveBeenCalledWith(fake_layer, imagery1PositionBoundingBox);
+				expect(fakeCommuincator.resetView).toHaveBeenCalledWith(fake_layer, imagery1PositionBoundingBox);
 			});
 			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({id: fake_overlay.id}));
 		});

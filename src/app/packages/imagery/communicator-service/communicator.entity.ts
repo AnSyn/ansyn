@@ -117,24 +117,18 @@ export class CommunicatorEntity {
 	}
 
 	public getPlugin(pluginName: string): IMapPlugin {
-		const existingPlugins = this._manager.getPlugins();
-		let pluginResult: IMapPlugin = existingPlugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
+		let pluginResult: IMapPlugin = this._manager.plugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
 		return pluginResult;
 	}
 
 	public getVisualizer(visualizerType: string): IMapVisualizer {
-		const existingVisualizers = this._manager.getVisualizers();
-		let visualizerResult: IMapVisualizer = existingVisualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
+		let visualizerResult: IMapVisualizer = this._manager.visualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
 		return visualizerResult;
 	}
 
-	public setLayer(layer: any, extent?: GeoJSON.Point[]) {
-		if (this.ActiveMap) {
-			const existingVisualizers = this._manager.getVisualizers();
-			this.ActiveMap.setLayer(layer, extent);
-			existingVisualizers.forEach((visualizer=> {
-				visualizer.onSetView();
-			}));
+	public resetView(layer: any, extent?: GeoJSON.Point[]) {
+		if (this._manager){
+			this._manager.resetView(layer, extent);
 		}
 	}
 

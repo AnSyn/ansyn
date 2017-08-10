@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef, ComponentFactory } from '@angular/core';
 import { CaseMapState } from '@ansyn/menu-items/cases';
 import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';
 import { MapContextMenuAction } from '../../actions/map.actions';
+import { ContextMenuComponent } from '../context-menu/context-menu.component';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -19,12 +20,7 @@ export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
 	private _maps: CaseMapsState;
 	public maps_count_range = [];
-
-	contextMenu = {
-		show: false,
-		top: 0,
-		left: 0
-	};
+	@ViewChild('contextMenu') contextMenu: ContextMenuComponent;
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
@@ -88,10 +84,8 @@ export class ImageriesManagerComponent implements OnInit{
 		});
 
 		this.mapEffects.onMapContextMenu$.subscribe((action: MapContextMenuAction) => {
-			this.contextMenu.top = action.payload.e.y;
-			this.contextMenu.left = action.payload.e.x;
-			this.contextMenu.show = true;
-		})
+			this.contextMenu.show(action.payload.e.y, action.payload.e.x);
+		});
 
 	}
 

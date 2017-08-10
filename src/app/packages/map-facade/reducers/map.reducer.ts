@@ -5,13 +5,15 @@ import { cloneDeep } from 'lodash';
 export interface IMapState {
 	positions: Position
 	communicators: {},
-	loadingOverlays: string[]
+	loadingOverlays: string[],
+	contextMenuFilters: string[]
 }
 
 export const initialMapState: IMapState = {
 	positions: {} as any,
 	communicators: {},
-	loadingOverlays: []
+	loadingOverlays: [],
+	contextMenuFilters: []
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
@@ -48,6 +50,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				return  {...state, loadingOverlays: loadingOverlays};
 			}
 			break;
+
+		case MapActionTypes.SET_CONTEXT_MENU_FILTERS:
+			return  {...state, contextMenuFilters: action.payload};
+
 		default:
 			return state;
 	}

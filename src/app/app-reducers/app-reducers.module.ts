@@ -29,6 +29,7 @@ import { RouterStoreHelperService } from './services/router-store-helper.service
 import { configuration } from './../../configuration/configuration';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
+import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
 
 export interface IAppState {
     overlays: IOverlayState;
@@ -80,6 +81,7 @@ export function reducer(state: any, action: any) {
 		EffectsModule.run(RouterAppEffects),
         EffectsModule.run(FiltersAppEffects),
 		EffectsModule.run(ToolsAppEffects),
+		EffectsModule.run(ContextMenuAppEffects),
 		RouterStoreModule.connectRouter()
     ],
 	providers:[RouterStoreHelperService]

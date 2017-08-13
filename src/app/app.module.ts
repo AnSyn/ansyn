@@ -26,9 +26,13 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 
 
-export const contextSources: Map<string,any> = new Map();
+/*export const contextSources: Map<string,any> = new Map();
 contextSources.set('Proxy',ContextProxySource);
-contextSources.set("Elastic",ContextElasticSource);
+contextSources.set("Elastic",ContextElasticSource);*/
+ export const contextSources = {
+	 'Proxy': ContextProxySource,
+	 "Elastic": ContextElasticSource
+ }
 
 @NgModule({
 	providers: [
@@ -60,7 +64,7 @@ contextSources.set("Elastic",ContextElasticSource);
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig, contextSources),
+		ContextModule.forRoot(configuration.ContextConfig, { sources: contextSources as any}),
 		OpenLayerVisualizersModule
 	],
 	bootstrap: [AppComponent]

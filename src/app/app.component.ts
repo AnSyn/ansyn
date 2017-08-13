@@ -23,32 +23,37 @@ export class AppComponent implements  AfterViewInit {
 	@ViewChild('mapsContainer') mapsContainer;
 
 	selected_case$: Observable<Case> = this.store.select('cases')
+		.skip(1)
+		.filter((cases: ICasesState) => !isNil(cases.selected_case))
 		.map((state: ICasesState) => state.selected_case)
 		.cloneDeep()
 		.distinctUntilChanged(isEqual);
 
 	overlays_count$ = this.store.select('overlays')
+		.skip(1)
 		.map((state: IOverlayState) => state.count)
 		.distinctUntilChanged(isEqual);
 
-	displayedOverlay$ = this.store.select('cases')
-		.filter((cases: ICasesState) => !isNil(cases.selected_case))
-		.map((cases: ICasesState) => {
-			const activeMap: CaseMapState = cases.selected_case.state.maps.data.find((map) => map.id === cases.selected_case.state.maps.active_map_id);
+	activeMap$ = this.selected_case$.map((selected_case: Case) => {
+		return selected_case.state.maps.data.find((map) => map.id === selected_case.state.maps.active_map_id);
+	})
+
+	displayedOverlay$: any = this.activeMap$.map((activeMap: CaseMapState) => {
 			return activeMap.data.overlay;
 		});
 
 	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
+		.skip(1)
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
 		.distinctUntilChanged(isEqual);
 
-	favoritesOverlays$ = this.store.select('cases')
-		.map((cases:ICasesState) => cases.selected_case)
-		.filter((selectedCase: Case) => !isEmpty(selectedCase) &&  !isNil(selectedCase.state.favoritesOverlays) )
-		.map((selectedCase: Case) => {
+	favoritesOverlays$ = this.selected_case$.map((selectedCase: Case) => {
+			if(isNil(selectedCase.state.favoritesOverlays)){
+				return;
+			}
 			const activeMap = selectedCase.state.maps.data.find( mapItem => mapItem.id === selectedCase.state.maps.active_map_id);
 			return activeMap.data.overlay && (  selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);
-		});
+	});
 
 
 

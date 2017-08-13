@@ -14,4 +14,8 @@ export class FiltersCollectionComponent {
 
   constructor(private filtersService: FiltersService) { }
 
+  showOnlyFavorites(data){
+  	console.log(data);
+  }
+
 }

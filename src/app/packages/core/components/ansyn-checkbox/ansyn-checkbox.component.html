@@ -1,0 +1,11 @@
+<div>
+	<input type="checkbox"
+	   id="checkbox_{{ id }}"
+	   class="regular-checkbox"
+	   [checked]="checked ? 'checked' : ''"
+	   (click)='onInputClicked(id)'/>
+	<label for="checkbox_{{ id }}"></label>
+</div>
+<div class="ansyn-checkbox-text">
+	<span>{{text}}</span>
+</div>

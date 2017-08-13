@@ -1,7 +1,8 @@
 <div class="container">
-  <div class="title-row">
+
+	<div class="title-row">
     <span class="title">{{ filter.displayName }}</span>
-    <span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()" 
+    <span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"
     class="filtered">(filtered)</span>
     <button [@rotateArrow]="show.toString()" #downArrow class="down-arrow" [disabled]="disabledButton" (click)="show = !show">
     </button>
@@ -11,17 +12,17 @@
     </div>
   </div>
 
+	<div class="fields" #fields [@fieldsTrigger]="show.toString()">
 
-  <div class="fields" #fields [@fieldsTrigger]="show.toString()">
+	<ansyn-enum-filter-container
+				*ngIf="metadataFromState && metadataFromState?.type === 'Enum'"
+				[metadata]="metadataFromState"
+				(onMetadataChange)="onMetadataChange($event)">
+	</ansyn-enum-filter-container>
 
-    <ansyn-enum-filter-container 
-                *ngIf="metadataFromState && metadataFromState?.type === 'Enum'" 
-                [metadata]="metadataFromState"
-                (onMetadataChange)="onMetadataChange($event)">
-    </ansyn-enum-filter-container>
+	</div>
 
-  </div>
-  <div *ngIf="!metadataFromState">
-    Loading...
-  </div>
+	<div *ngIf="!metadataFromState">
+	Loading...
+	</div>
 </div>

@@ -113,7 +113,7 @@ describe('StatusBarComponent', () => {
 		expect(component.goPrev.nativeElement.classList.add).toHaveBeenCalledWith('active');
 	});
 
-	fit("check isFavoriteOverlayDisplayed changes",() => {
+	it("check isFavoriteOverlayDisplayed changes",() => {
 		component.isFavoriteOverlayDisplayed = true;
 		expect(component.starColor.nativeElement.style.fill).toBe("gold");
 		component.isFavoriteOverlayDisplayed = false;

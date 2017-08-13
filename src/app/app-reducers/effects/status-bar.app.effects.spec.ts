@@ -293,7 +293,6 @@ describe('StatusBarAppEffects', () => {
 		effectsRunner.queue(new FavoriteAction());
 		let counter = 0;
 		statusBarAppEffects.onFavorite$.subscribe((result) => {
-			console.log(result);
 			counter++;
 			if (result instanceof  UpdateCaseAction){
 				expect(result.payload.state.favoritesOverlays[0]).toBe("overlayId1");

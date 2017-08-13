@@ -24,8 +24,7 @@ import { MapsLayout } from '@ansyn/core';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
-import { Overlay } from "app/packages/core/models";
-import { OverlaysMarkupAction } from '../../packages/overlays/actions/overlays.actions';
+import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
 
 

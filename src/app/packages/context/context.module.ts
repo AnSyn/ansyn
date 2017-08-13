@@ -11,7 +11,12 @@ export interface IContextConfig  {
 	contextSources: IContextSourceConfig[];
 }
 
+export interface  IContextSources {
+	sources: any;
+}
+
 export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken('ContextConfig');
+export const ContextSources: InjectionToken<IContextSources> = new InjectionToken('ContextSources');
 
 @NgModule({
 	imports: [
@@ -26,28 +31,28 @@ export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken(
 	]
 })
 export class ContextModule {
-	static forRoot(config: IContextConfig, sources: Map<string,any>): ModuleWithProviders {
+	static forRoot(config: IContextConfig, sources: IContextSources): ModuleWithProviders {
 		return {
 			ngModule: ContextModule,
 			providers: [
 				ContextProviderService,
 				{provide: ContextConfig, useValue: config},
-				{provide: 'ContextSources' ,useValue: sources}
+				{provide: ContextSources ,useValue: sources}
 			]
 		};
 	}
 
-	constructor(public contextProviderService: ContextProviderService, @Inject('ContextSources')sources, @Inject(ContextConfig)config:IContextConfig,private http: Http){
-		this.register(config,sources);
+	constructor(public contextProviderService: ContextProviderService, @Inject(ContextSources)sourcesHandler, @Inject(ContextConfig)config:IContextConfig,private http: Http){
+		this.register(config,sourcesHandler);
 
 	}
 
-	register(config,sources){
+	register(config,sourcesHandler){
 		config.contextSources.forEach(( itemConfig: IContextSourceConfig ) => {
 			if (!itemConfig.available) {
 				return;
 			}
-			const object: IContextSource = sources.get(itemConfig.type);
+			const object: IContextSource = sourcesHandler.sources[itemConfig.type];
 			const gateway = this.getGateway(itemConfig.apiObject);
 			const instance: IContextSource = new  (<any>object)(itemConfig,gateway );
 			this.contextProviderService.register(itemConfig.type, instance);

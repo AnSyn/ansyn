@@ -13,8 +13,6 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import * as inside from '@turf/inside';
 
-
-
 @Injectable()
 export class ContextMenuAppEffects {
 

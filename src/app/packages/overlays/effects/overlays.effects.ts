@@ -24,7 +24,7 @@ import 'rxjs/add/operator/share';
 export class OverlaysEffects {
 
 	@Effect()
-	onDisplayOverlay$: Observable<any> = this.actions$
+	onDisplayOverlayFromStore$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlayState): any => {
 			return {overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id};

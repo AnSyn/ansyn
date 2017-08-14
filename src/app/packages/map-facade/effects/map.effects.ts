@@ -62,5 +62,5 @@ export class MapEffects{
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.share();
 
-	constructor(private actions$: Actions, private store: Store<IMapState>, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
+	constructor(private actions$: Actions, private mapFacadeService: MapFacadeService, private communicatorsService: ImageryCommunicatorService) {}
 }

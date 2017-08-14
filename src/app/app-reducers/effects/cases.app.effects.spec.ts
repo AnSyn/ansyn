@@ -10,13 +10,13 @@ import { OverlayReducer} from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-	DisplayOverlayFromStoreAction, LoadOverlaysSuccessAction,
-	OverlaysActionTypes
-} from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, LoadOverlaysSuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
+import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
+import { Overlay } from '../../packages/core/models/overlay.model';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -102,47 +102,13 @@ describe('CasesAppEffects', () => {
 	});
 
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const action  = new DisplayOverlayFromStoreAction({ id: "tmp"});
-
+		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
 		effectsRunner.queue(action);
-		let count = 0;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
-			if(_result.type === CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[0].data.overlay.name).toBe('tmp');
-				expect(_result.payload.state.maps.data[0].id).toBe(icase_state.cases[0].state.maps.active_map_id);
-				count++;
-			}
-			if(_result.type === OverlaysActionTypes.DISPLAY_OVERLAY){
-				expect(_result.payload.overlay.id === 'tmp');
-				expect(_result.payload.map_id === icase_state.cases[0].state.maps.active_map_id);
-				count++;
-			}
-
-		});
-		expect(count).toBe(2);
+		let result: UpdateCaseAction;
+		casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {result = _result;});
+		expect(result.constructor).toEqual(UpdateCaseAction);
+		expect(CasesService.activeMap(result.payload).data.overlay.id).toEqual('tmp');
 	});
-
-	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const action  = new DisplayOverlayFromStoreAction({ id: "tmp", map_id: '4444'});
-
-		effectsRunner.queue(action);
-		let count = 0;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
-			if(_result.type === CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[1].data.overlay.name).toBe('tmp');
-				expect(_result.payload.state.maps.data[1].id).not.toBe(icase_state.cases[0].state.maps.active_map_id);
-				count++;
-			}
-			if(_result.type === OverlaysActionTypes.DISPLAY_OVERLAY){
-				expect(_result.payload.overlay.id === 'tmp');
-				expect(_result.payload.map_id === '4444');
-				count++;
-			}
-		});
-		expect(count).toBe(2);
-	});
-
-
 
 	it('saveDefaultCase$ should add a default case', () => {
 		effectsRunner.queue(new SaveDefaultCaseAction(icase_state.default_case));

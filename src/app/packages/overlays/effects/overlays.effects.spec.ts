@@ -59,13 +59,6 @@ describe("Overlays Effects ", () => {
 
 	beforeEach(inject([Store],(_store: Store<any>) =>{
 		store = _store;
-	/*	spyOn(store, 'select').and.returnValue((type)=>{
-			if(type == "cases"){
-				return Observable.of({
-					selected_case : {}
-				} as any);
-			}
-		} );*/
 	}));
 
 	function setup() {
@@ -75,7 +68,7 @@ describe("Overlays Effects ", () => {
 			overlaysService: TestBed.get(OverlaysService),
 			overlaysConfig: TestBed.get(OverlaysConfig)
 		};
-	};
+	}
 
 	it('effect - onOverlaysMarkupChanged$',() => {
 		const { runner, overlaysEffects } = setup();
@@ -90,7 +83,6 @@ describe("Overlays Effects ", () => {
 
 		expect(count).toBe(1)
 	});
-
 
 	it('effect - onRedrawTimeline$',() => {
 		const { runner, overlaysEffects } = setup();
@@ -174,14 +166,14 @@ describe("Overlays Effects ", () => {
 			const getTimeStateByOverlayResult = {from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
 
-			const overlays = [
+			const loadedOverlays = [
 				{id: '5678', date: new Date(4000)}
 			];
 			const timelineState = {
 				from: new Date(5000),
 				to: new Date(10000)
 			};
-			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
+			store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
 			store.dispatch(new SetTimelineStateAction(timelineState));
 
 			const action = new DisplayOverlayFromStoreAction({id: '5678'});
@@ -191,8 +183,23 @@ describe("Overlays Effects ", () => {
 				expect(result instanceof SetTimelineStateAction).toBeTruthy();
 				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
 				expect(result.payload).toEqual(getTimeStateByOverlayResult);
-			})
+			});
 		});
 	});
 
+	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store' ,() => {
+		const { runner, overlaysEffects } = setup();
+		const loadedOverlays = [
+			{id: 'tmp', image:'tmp_img'},
+			{id: 'tmp2', image:'tmp_img2'}
+		];
+		store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
+		const action  = new DisplayOverlayFromStoreAction({ id: "tmp", map_id: '4444'});
+		runner.queue(action);
+		let result: DisplayOverlayAction;
+		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => { result = _result;});
+		expect(result.constructor).toEqual(DisplayOverlayAction);
+		expect(result.payload.overlay).toEqual(loadedOverlays[0] as any);
+		expect(result.payload.map_id).toEqual('4444');
+	});
 });

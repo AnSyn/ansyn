@@ -16,7 +16,7 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/clone-deep';
-import { OverlaysService, DisplayOverlayAction } from '@ansyn/overlays';
+import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -30,7 +30,6 @@ import { isNil } from 'lodash';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetContextMenuFiltersAction } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -78,7 +77,7 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select('tools'), (action ,state: IToolsState): any => new Object({action, pin_location: state.flags.get('pin_location')}))
 		.filter(({action, pin_location}) => pin_location)
-		.mergeMap(({action, pin_location}) => {
+		.mergeMap(({action}) => {
 			return [
 				new SetPinLocationModeAction(false),
 				new SetActiveCenter(action.payload.lonLat)
@@ -351,24 +350,11 @@ export class MapAppEffects {
 			];
 		});
 
-	@Effect()
-	setContextFilter$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS)
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
-			return overlays.filters;
-		})
-		.map(filters => {
-			const sensorName = filters.find(a => a.filteringParams.key === "sensorName");
-			return new SetContextMenuFiltersAction((sensorName && sensorName.filteringParams )|| [])
-		});
-
-
 	constructor(
 		private actions$: Actions,
 		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
-		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],
-		private overlaysService: OverlaysService
+		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]
 	) { }
 }

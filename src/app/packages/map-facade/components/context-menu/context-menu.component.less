@@ -2,13 +2,18 @@
 	outline: none;
 	position: fixed;
 	transform: translate(-32px, -32px);
+	width: 0;
+	height: 0;
 
 	&:focus {
 		nav.menu {
 			visibility: visible;
 			div.buttons-area {
 				.menu-item{
-					&:hover{
+					&:hover:not(:disabled){
+						span{
+							color: #27B2CF;
+						}
 						div.sub-buttons-list {
 							visibility: visible;
 							button{
@@ -20,10 +25,10 @@
 			}
 
 			button.menu-open-button {
-				//transform: scale(0.8, 0.8) translate3d(0, 0, 0);
-
 				&:hover{
 					background: #0dc5c1;
+					transform: scale(0.6715);
+
 					.hamburger{
 						background: #FFFFFF;
 					}
@@ -31,9 +36,7 @@
 				transition-timing-function: linear;
 				transition-duration: 200ms;
 				transform: scale(0.5715) translate(0, 0);
-				//&:hover {
-				//	transform: scale(1) translate(0, 0);
-				//}
+
 				span.hamburger {
 					&.hamburger-1 {
 						transform: translate3d(0, 0, 0) rotate(45deg);
@@ -48,22 +51,14 @@
 				}
 			}
 			.buttons-area {
-
 				.menu-item {
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
-
-					&:hover{
-						span{
-							color: #27B2CF;
-						}
-					}
-
 					&.best {
 						transition-duration: 180ms;
 						left: 66px;
 						top: 0;
 						background: #0dc5c1 url(/assets/icons/context-menu/best.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/best-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -73,7 +68,7 @@
 						left: -33px;
 						top: 59px;
 						background: #0dc5c1 url(/assets/icons/context-menu/first.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/first-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -83,7 +78,7 @@
 						left: -66px;
 						top: 0;
 						background: #0dc5c1 url(/assets/icons/context-menu/angle.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/angle-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -93,7 +88,7 @@
 						left: 33px;
 						top: 59px;
 						background: #0dc5c1 url(/assets/icons/context-menu/last.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/last-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -103,7 +98,7 @@
 						left: 33px;
 						top: -59px;
 						background: #0dc5c1 url(/assets/icons/context-menu/next.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/next-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -113,7 +108,7 @@
 						left: -33px;
 						top: -59px;
 						background: #0dc5c1 url(/assets/icons/context-menu/prev.svg) no-repeat center 8px;
-						&:hover{
+						&:hover:not(:disabled){
 							background: white url(/assets/icons/context-menu/prev-hover.svg) no-repeat center 8px;
 						}
 					}
@@ -194,7 +189,11 @@
 				box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
 				transition: top ease-out 200ms, left ease-out 200ms;
 
-				&.left{
+				&:disabled{
+					opacity: .6;
+				}
+
+				&.first, &.prev, &.angle{
 					div.sub-buttons-list {
 						left: initial;
 						right: 0;
@@ -208,7 +207,7 @@
 								margin-left: 5.5px;
 								margin-right: 66px;
 							}
-							&:last-child {
+							&:last-child:not(:first-child) {
 								margin-right: 0;
 								margin-left: 0;
 							}
@@ -275,20 +274,9 @@
 						.loop(1);
                     }
 				}
-
 			}
-
-
-
-
 		}
-
-
 	}
-
-
-
-
 }
 
 

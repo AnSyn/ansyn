@@ -160,24 +160,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe((action:OverlaysMarkupAction) => {
 				this.overlaysMarkup = action.payload;
 			});
-
-		this.subscribers.goPrevDisplay = this.effects.goPrevDisplay$.subscribe((action: GoPrevDisplayAction): any => {
-			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id === action.payload);
-			const indexPrevOverlay = indexCurrentOverlay - 1;
-			const prevOverlayId: any = get(this.drops[0].data[indexPrevOverlay], 'id');
-			if (!isNil(prevOverlayId)){
-				this.store.dispatch(new DisplayOverlayFromStoreAction({id: prevOverlayId}));
-			}
-		});
-
-		this.subscribers.goNextDisplay = this.effects.goNextDisplay$.subscribe((action: GoNextDisplayAction): any => {
-			const indexCurrentOverlay = this.drops[0].data.findIndex((overlay) =>  overlay.id === action.payload);
-			const indexNextOverlay = indexCurrentOverlay + 1;
-			const nextOverlayId: any = get(this.drops[0].data[indexNextOverlay], 'id');
-			if(!isNil(nextOverlayId)){
-				this.store.dispatch(new DisplayOverlayFromStoreAction({id: nextOverlayId}));
-			}
-		});
 	}
 
 	calcOverlayCountViaDrops(drops) {

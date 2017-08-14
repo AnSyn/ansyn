@@ -44,7 +44,7 @@ export class CasesAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
-		.mergeMap(([action, state]:[DisplayOverlayAction, IAppState]) => {
+		.map(([action, state]:[DisplayOverlayAction, IAppState]) => {
 
 			const selectedCase = cloneDeep(state.cases.selected_case);
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
@@ -55,12 +55,9 @@ export class CasesAppEffects {
 				}
 			});
 
-			return[
-				new UpdateCaseAction(selectedCase),
-			// 	// new DisplayOverlayAction({overlay: overlay, map_id: mapId})
-			];
+			return new UpdateCaseAction(selectedCase);
 
-		}).share();
+	}).share();
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$

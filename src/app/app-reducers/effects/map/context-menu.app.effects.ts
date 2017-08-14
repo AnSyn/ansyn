@@ -1,43 +1,45 @@
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { IOverlayState } from '../../../packages/overlays/reducers/overlays.reducer';
-import { OverlaysService } from '../../../packages/overlays/services/overlays.service';
-import { ICasesState } from '../../../packages/menu-items/cases/reducers/cases.reducer';
-import { DisplayOverlayAction } from '../../../packages/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { get as _get } from 'lodash';
+import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { SetContextMenuFiltersAction, ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import * as inside from '@turf/inside';
+
+
 
 @Injectable()
 export class ContextMenuAppEffects {
 
-	constructor(
-		private actions$: Actions,
-		private store$: Store<IAppState>,
-		private  overlaysService: OverlaysService
-	){}
+	@Effect()
+	setContextFilter$: Observable<SetContextMenuFiltersAction> = this.actions$
+		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'))
+		.map(([action, overlays, cases]: [ContextMenuShowAction, IOverlayState, ICasesState]) => {
+			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date']);
+			filteredOverlays = filteredOverlays.filter(({footprint}) => inside(action.payload.point, footprint));
+			const activeMap = CasesService.activeMap(cases.selected_case);
+			return new SetContextMenuFiltersAction({filteredOverlays, displayedOverlay: <any>_get(activeMap.data, 'overlay')});
+		});
 
 	@Effect()
-	$clickNext: Observable<any> = this.actions$
-		.ofType(MapActionTypes.CONTEXT_MENU_NEXT)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlays: IOverlayState, cases: ICasesState): any[] => {
-			let overlaysData = [];
-			const activeMap = cases.selected_case.state.maps.data.find(map => map.id === cases.selected_case.state.maps.active_map_id);
-			const currentOverlayId = activeMap.data.overlay.id;
+	onContextMenuDisplayAction$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.CONTEXT_MENU.DISPLAY)
+		.map(toPayload)
+		.map(id => {
+			return new DisplayOverlayFromStoreAction({id});
+		});
 
-			overlays.overlays.forEach(overlay => {
-				if (overlays.filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
-					overlaysData.push(overlay);
-				}
-			});
-			overlaysData = this.overlaysService.setSortedDropsMap(overlaysData);
-			const currentIndex = overlaysData.findIndex(o => o.id === currentOverlayId);
-			return [overlaysData, currentIndex];
-		})
-		.map(([overlaysData, currentIndex]: [any, number] )=> {
-			console.log({currentIndex});
-			const nextOverlay = overlaysData[currentIndex + 1];
-			return new DisplayOverlayAction({overlay: nextOverlay});
-		})
+	constructor(
+		private actions$: Actions,
+		private store$: Store<IAppState>
+	){}
+
 }

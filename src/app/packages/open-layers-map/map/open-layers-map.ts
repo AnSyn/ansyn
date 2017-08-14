@@ -23,6 +23,7 @@ export class OpenLayersMap implements IMap {
 	public contextMenu: EventEmitter<any>;
 
 
+
 	private _shadowMouselayerId = 'shadowMouse';
 	private _pinPointIndicatorLayerId = 'pinPointIndicator';
 	private _flags = {
@@ -40,6 +41,7 @@ export class OpenLayersMap implements IMap {
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
 		this._imageProcessing = new OpenLayersImageProcessing();
+
 
 		this.initMap(element, layers, position);
 	}
@@ -78,15 +80,18 @@ export class OpenLayersMap implements IMap {
 			this.positionChanged.emit(this.getPosition());
 		});
 
+
 		const containerElem = <HTMLElement> this._mapObject.getViewport();
 
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
-			let coords = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY])
+			const view = this._mapObject.getViewport();
+			let coordinates = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY]);
 			const projection = this._mapObject.getView().getProjection();
-			coords = ol.proj.transform(coords, projection, 'EPSG:4326');
+			coordinates = ol.proj.transform(coordinates, projection, 'EPSG:4326');
+			const point: GeoJSON.Point = {type: 'Point', coordinates};
 			containerElem.click();
-			this.contextMenu.emit({coords, view: this._mapObject.getViewport(), e});
+			this.contextMenu.emit({point, view, e});
 		});
 
 	}

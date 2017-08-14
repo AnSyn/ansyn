@@ -17,16 +17,11 @@ export const MapActionTypes = {
 	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
 	SET_MAP_AUTO_IMAGE_PROCESSING: 'SET_MAP_AUTO_IMAGE_PROCESSING',
-	MAP_CONTEXT_MENU: 'MAP_CONTEXT_MENU',
-	SET_CONTEXT_MENU_FILTERS: 'SET_CONTEXT_MENU_FILTERS',
-
-	CONTEXT_MENU_NEXT: 'CONTEXT_MENU_NEXT',
-	CONTEXT_MENU_PREV: 'CONTEXT_MENU_PREV',
-	CONTEXT_MENU_BEST: 'CONTEXT_MENU_BEST',
-	CONTEXT_MENU_FIRST: 'CONTEXT_MENU_FIRST',
-	CONTEXT_MENU_LAST: 'CONTEXT_MENU_LAST'
-
-
+	CONTEXT_MENU: {
+		SHOW: 'CONTEXT_MENU_SHOW',
+		SET_FILTERED_OVERLAYS: 'SET_FILTERED_OVERLAYS',
+		DISPLAY: 'DISPLAY'
+	}
 };
 
 export type MapActions = any;
@@ -110,33 +105,15 @@ export class SetMapAutoImageProcessing implements Action {
 	constructor(public payload: { mapId: string, toggle_value: boolean }) { }
 }
 
-export class MapContextMenuAction implements Action {
-	type = MapActionTypes.MAP_CONTEXT_MENU;
+export class ContextMenuShowAction implements Action {
+	type = MapActionTypes.CONTEXT_MENU.SHOW;
 	constructor(public payload: any){}
 }
-
 export class SetContextMenuFiltersAction implements Action {
-	type = MapActionTypes.SET_CONTEXT_MENU_FILTERS;
-	constructor(public payload: any){}
+	type = MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS;
+	constructor(public payload: {filteredOverlays: any[], displayedOverlay: any}){}
 }
-
-export class ContextMenuNextAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU_NEXT;
-	constructor(public payload: any){}
-}
-export class ContextMenuPrevAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU_PREV;
-	constructor(public payload: any){}
-}
-export class ContextMenuBestAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU_BEST;
-	constructor(public payload: any){}
-}
-export class ContextMenuFirstAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU_FIRST;
-	constructor(public payload: any){}
-}
-export class ContextMenuLastAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU_LAST;
-	constructor(public payload: any){}
+export class ContextMenuDisplayAction implements Action {
+	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
+	constructor(public payload: string){}
 }

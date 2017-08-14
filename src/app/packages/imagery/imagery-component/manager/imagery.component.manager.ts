@@ -205,6 +205,8 @@ export class ImageryComponentManager {
 			this.contextMenu.emit(event);
 		}));
 
+
+
 	}
 
 	public get id(): string {

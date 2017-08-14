@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import {
-	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	MapContextMenuAction
-} from '../actions/map.actions';
+import { AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction, ContextMenuShowAction } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 
 @Injectable()
@@ -50,7 +47,8 @@ export class MapFacadeService {
 	}
 
 	contextMenu(event){
-		this.store.dispatch(new MapContextMenuAction(event));
+		this.store.dispatch(new ContextMenuShowAction(event));
 	}
+
 
 }

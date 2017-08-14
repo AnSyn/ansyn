@@ -1,68 +1,123 @@
-import {
-	Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnInit, Output, Renderer2,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { isEqual as _isEqual } from 'lodash';
-import {
-	ContextMenuBestAction, ContextMenuFirstAction, ContextMenuLastAction, ContextMenuNextAction,
-	ContextMenuPrevAction
-} from '../../actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
+import { MapEffects } from '../../effects/map.effects';
+import { isEqual as _isEqual, isEmpty as _isEmpty, get as _get, isNil as _isNil} from 'lodash';
+
 
 @Component({
 	selector: 'ansyn-context-menu',
 	templateUrl: './context-menu.component.html',
-	styleUrls: ['./context-menu.component.less'],
-	host: {"tabindex": "0"}
+	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
-	contextFilters$: Observable<string[]> = this.store.select('map').map((state: IMapState) => state.contextMenuFilters).distinctUntilChanged(_isEqual);
-	contextFilters: string[];
+	filteredOverlays$: Observable<any[]> = this.store.select('map').map((state: IMapState) => state.filteredOverlays).distinctUntilChanged(_isEqual);
+	filteredOverlays: any[];
+	displayedOverlay$: Observable<any> = this.store.select('map').map((state: IMapState) => state.displayedOverlay).distinctUntilChanged(_isEqual);
+	displayedOverlay: any;
+	displayedOverlayIndex: number;
 
-	constructor(private store: Store<IMapState>, private elem: ElementRef, private renderer: Renderer2) {}
+	nextSensors = [];
+	prevSensors = [];
+	allSensors = [];
 
-	ngOnInit(): void {
-		this.contextFilters$.subscribe((_contextFilters: any) => {
-			const arr = [];
-			if(!_contextFilters || !_contextFilters.metadata) return;
-			_contextFilters.metadata.enumsFields.forEach(({isChecked}, key) => {
-				if(isChecked) {
-					arr.push(key);
-				}
-			});
-			this.contextFilters = arr
-		});
+	contextMenuShowAction: ContextMenuShowAction;
+
+
+	@HostBinding('attr.tabindex') get tabindex() {
+		return 0;
 	}
 
-	show(top, left) {
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `${top}px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `${left}px`);
+	@HostListener('window:mousewheel') get onmousewheel() {
+		return this.hide;
+	}
+
+	@HostListener('contextmenu', ['$event']) contextmenu($event) {
+		$event.preventDefault();
+	}
+
+	get _isEmpty () {
+		return _isEmpty;
+	}
+
+	constructor(private store: Store<IMapState>,
+				private mapEffects: MapEffects,
+				private elem: ElementRef,
+				private renderer: Renderer2) {}
+
+	ngOnInit(): void {
+		this.filteredOverlays$.subscribe(_filteredOverlays => {this.filteredOverlays = _filteredOverlays;});
+		this.displayedOverlay$.subscribe(_displayedOverlay => {this.displayedOverlay = _displayedOverlay;});
+		this.mapEffects.onContextMenuShow$.subscribe(this.show.bind(this));
+	}
+
+	show(action: ContextMenuShowAction) {
+		this.contextMenuShowAction = action;
+		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.e.y}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.e.x}px`);
 		this.elem.nativeElement.focus();
+		this.initializeSensors();
+	}
+
+	initializeSensors() {
+		const sensorsOnly = this.filteredOverlays.map(o => o.sensorName);
+		this.allSensors = [...new Set(sensorsOnly)];
+		this.displayedOverlayIndex = this.filteredOverlays.findIndex((overlay) => overlay.id === _get(this.displayedOverlay, 'id'));
+
+		if(this.displayedOverlayIndex === -1) {
+			if(_isNil(this.displayedOverlay)) {
+				this.prevSensors = [];
+				this.nextSensors = [...this.allSensors];
+			}
+		} else {
+			this.prevSensors = [...new Set(sensorsOnly.slice(0, this.displayedOverlayIndex))];
+			this.nextSensors = [...new Set(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length))];
+		}
+
+	}
+
+	hide() {
+		this.elem.nativeElement.blur();
 	}
 
 	clickNext (event$, subFilter?: string) {
 		event$.stopPropagation();
-		this.store.dispatch(new ContextMenuNextAction(subFilter));
+		const nextOverlay = subFilter ? this.filteredOverlays
+				.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
+				.find(({id, sensorName}) => sensorName === subFilter) :
+				this.filteredOverlays[this.displayedOverlayIndex + 1];
+		this.store.dispatch(new ContextMenuDisplayAction(nextOverlay.id));
 	}
+
 	clickPrev (event$, subFilter?: string) {
 		event$.stopPropagation();
-		this.store.dispatch(new ContextMenuPrevAction(subFilter));
+		const nextOverlay = subFilter ? this.filteredOverlays
+				.slice(0, this.displayedOverlayIndex)
+				.find(({sensorName}) => sensorName === subFilter) :
+			this.filteredOverlays[this.displayedOverlayIndex - 1];
+		this.store.dispatch(new ContextMenuDisplayAction(nextOverlay.id));
 	}
+
 	clickBest (event$, subFilter?: string) {
 		event$.stopPropagation();
-		this.store.dispatch(new ContextMenuBestAction(subFilter));
 	}
+
 	clickFirst (event$, subFilter?: string) {
 		event$.stopPropagation();
-		this.store.dispatch(new ContextMenuFirstAction(subFilter));
+		const firstOverlay = subFilter ? this.filteredOverlays
+				.find(({sensorName}) => sensorName === subFilter) :
+			this.filteredOverlays[0];
+		this.store.dispatch(new ContextMenuDisplayAction(firstOverlay.id));
 	}
+
 	clickLast (event$, subFilter?: string) {
 		event$.stopPropagation();
-		this.store.dispatch(new ContextMenuLastAction(subFilter));
+		const lastOverlay = subFilter ? this.filteredOverlays.reverse()
+				.find(({sensorName}) => sensorName === subFilter) :
+			this.filteredOverlays[this.filteredOverlays.length - 1];
+		this.store.dispatch(new ContextMenuDisplayAction(lastOverlay.id));
 	}
-
-
 
 }

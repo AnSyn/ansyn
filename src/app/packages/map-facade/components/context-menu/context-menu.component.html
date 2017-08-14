@@ -8,49 +8,110 @@
 	</button>
 
 	<div class="buttons-area">
-		<button class="menu-item best" (click)="clickBest()">
-			<span>Best</span>
+
+		<button
+			class="menu-item next"
+			[disabled]="_isEmpty(nextSensors)"
+			(mousedown)="clickNext($event)">
+			<span>Next</span>
 			<div class="sub-buttons-list">
-				<ng-template let-filter ngFor [ngForOf]="contextFilters">
-					<button>{{filter}}</button>
-				</ng-template>
+				<button
+					*ngFor="let filter of nextSensors"
+					(mousedown)="clickNext($event, filter)"
+					[title]="filter">
+					{{filter}}
+				</button>
 			</div>
 		</button>
 
-		<button class="menu-item first" (click)="clickFirst()">
-			<span>First</span>
+		<button
+			class="menu-item prev"
+			[disabled]="_isEmpty(prevSensors)"
+			(mousedown)="clickPrev($event)">
+			<span>Prev</span>
+			<div class="sub-buttons-list">
+				<button
+					*ngFor="let filter of prevSensors"
+					(mousedown)="clickPrev($event, filter)"
+					[title]="filter">
+					{{filter}}
+				</button>
+			</div>
 		</button>
 
-		<button class="menu-item angle left">
+		<button
+			class="menu-item first"
+			[disabled]="_isEmpty(prevSensors)"
+			(mousedown)="clickFirst($event)">
+			<span>First</span>
+			<div class="sub-buttons-list">
+				<button
+					*ngFor="let filter of prevSensors"
+					(mousedown)="clickFirst($event, filter)"
+					[title]="filter">
+					{{filter}}
+				</button>
+			</div>
+		</button>
+
+
+		<button
+			class="menu-item last"
+			[disabled]="_isEmpty(nextSensors)"
+			(mousedown)="clickLast($event)">
+			<span>Last</span>
+			<div class="sub-buttons-list">
+				<button
+					*ngFor="let filter of nextSensors"
+					(mousedown)="clickLast($event, filter)"
+					[title]="filter">
+					{{filter}}
+				</button>
+			</div>
+		</button>
+
+
+		<button
+			class="menu-item best"
+			[disabled]="_isEmpty(allSensors)"
+			(mousedown)="clickBest($event)">
+			<span>Best</span>
+			<div class="sub-buttons-list">
+				<button
+					*ngFor="let filter of allSensors"
+					(mousedown)="clickBest($event, filter)"
+					[title]="filter">
+					{{filter}}
+				</button>
+			</div>
+		</button>
+
+		<!--<button-->
+			<!--*ngFor="let button of buttons"-->
+			<!--class="menu-item {{button.name}}"-->
+			<!--[disabled]="isEmptyContextFilters()"-->
+			<!--(mousedown)="button.action($event)">-->
+			<!--<span>{{button.name}}</span>-->
+			<!--<div class="sub-buttons-list">-->
+				<!--<button-->
+					<!--(mousedown)="button.action($event, filter)"-->
+					<!--*ngFor="let filter of filtersList"-->
+					<!--[title]="filter">-->
+					<!--{{filter}}-->
+				<!--</button>-->
+			<!--</div>-->
+		<!--</button>-->
+
+		<button class="menu-item angle">
 			<span>Angle</span>
-			<div class="sub-buttons-list left">
+			<div class="sub-buttons-list">
 				<button>Draw</button>
 				<button>Turn</button>
 				<button>Show</button>
 			</div>
 		</button>
 
-		<button class="menu-item last" (click)="clickLast()">
-			<span>Last</span>
-		</button>
 
-		<button class="menu-item next" (click)="clickNext($event)">
-			<div class="sub-buttons-list">
-				<ng-template let-filter ngFor [ngForOf]="contextFilters">
-					<button (click)="clickNext($event, filter)">{{filter}}</button>
-				</ng-template>
-			</div>
-			<span>Next</span>
-		</button>
-
-		<button class="menu-item prev left" (click)="clickPrev($event)">
-			<div class="sub-buttons-list">
-				<ng-template let-filter ngFor [ngForOf]="contextFilters">
-					<button>{{filter}}</button>
-				</ng-template>
-			</div>
-			<span>Prev</span>
-		</button>
 
 	</div>
 </nav>

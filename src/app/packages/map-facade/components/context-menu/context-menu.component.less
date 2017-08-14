@@ -190,7 +190,9 @@
 				transition: top ease-out 200ms, left ease-out 200ms;
 
 				&:disabled{
-					opacity: .6;
+					&.first, &.prev, &.angle, &.next, &.last, &.best{
+						background-color: #83b5c3;
+					}
 				}
 
 				&.first, &.prev, &.angle{

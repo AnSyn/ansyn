@@ -86,23 +86,9 @@
 			</div>
 		</button>
 
-		<!--<button-->
-			<!--*ngFor="let button of buttons"-->
-			<!--class="menu-item {{button.name}}"-->
-			<!--[disabled]="isEmptyContextFilters()"-->
-			<!--(mousedown)="button.action($event)">-->
-			<!--<span>{{button.name}}</span>-->
-			<!--<div class="sub-buttons-list">-->
-				<!--<button-->
-					<!--(mousedown)="button.action($event, filter)"-->
-					<!--*ngFor="let filter of filtersList"-->
-					<!--[title]="filter">-->
-					<!--{{filter}}-->
-				<!--</button>-->
-			<!--</div>-->
-		<!--</button>-->
-
-		<button class="menu-item angle">
+		<button
+			class="menu-item angle"
+			disabled>
 			<span>Angle</span>
 			<div class="sub-buttons-list">
 				<button>Draw</button>

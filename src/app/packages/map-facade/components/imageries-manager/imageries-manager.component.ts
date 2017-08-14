@@ -7,8 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';
-import { MapContextMenuAction } from '../../actions/map.actions';
-import { ContextMenuComponent } from '../context-menu/context-menu.component';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -20,7 +18,10 @@ export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
 	private _maps: CaseMapsState;
 	public maps_count_range = [];
-	@ViewChild('contextMenu') contextMenu: ContextMenuComponent;
+	public pointerMoveUnsubscriber: any;
+	public publisherMouseShadowMapId: string;
+	public listenersMouseShadowMapsId: Array<string>;
+	public shadowMouseProcess:boolean;
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
@@ -64,11 +65,6 @@ export class ImageriesManagerComponent implements OnInit{
 		return this._selected_layout;
 	}
 
-	public pointerMoveUnsubscriber: any;
-	public publisherMouseShadowMapId: string;
-	public listenersMouseShadowMapsId: Array<string>;
-	public shadowMouseProcess:boolean;
-
 	constructor(private mapEffects: MapEffects,private communicatorProvider:ImageryCommunicatorService, private store: Store<IMapState>){
 	 	this.shadowMouseProcess = false;
 	 	this.publisherMouseShadowMapId = null;
@@ -81,10 +77,6 @@ export class ImageriesManagerComponent implements OnInit{
 
 		this.loadingOverlaysIds$.subscribe((_loadingOverlaysIds) => {
 			this.loadingOverlaysIds = _loadingOverlaysIds;
-		});
-
-		this.mapEffects.onMapContextMenu$.subscribe((action: MapContextMenuAction) => {
-			this.contextMenu.show(action.payload.e.y, action.payload.e.x);
 		});
 
 	}

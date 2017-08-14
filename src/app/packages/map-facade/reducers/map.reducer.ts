@@ -3,17 +3,19 @@ import { Position } from '@ansyn/core'
 import { cloneDeep } from 'lodash';
 
 export interface IMapState {
-	positions: Position
-	communicators: {},
-	loadingOverlays: string[],
-	contextMenuFilters: string[]
+	positions: Position;
+	communicators: {};
+	loadingOverlays: string[];
+	filteredOverlays: string[];
+	displayedOverlay: string;
 }
 
 export const initialMapState: IMapState = {
 	positions: {} as any,
 	communicators: {},
 	loadingOverlays: [],
-	contextMenuFilters: []
+	filteredOverlays: [],
+	displayedOverlay: null
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
@@ -51,8 +53,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}
 			break;
 
-		case MapActionTypes.SET_CONTEXT_MENU_FILTERS:
-			return  {...state, contextMenuFilters: action.payload};
+		case MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS:
+			return  {...state, ...action.payload};
 
 		default:
 			return state;

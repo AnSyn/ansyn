@@ -56,7 +56,7 @@ export class OverlaysService {
 			});
 	}
 
-	static pluck(overlays: Map<any,any>,ids,properties){
+	static pluck(overlays: Map<any,any>, ids: string[], properties: string[]){
 		return ids.map( id => {
 			const overlay = overlays.get(id);
 			return 	properties.reduce( (obj,property) =>{

@@ -2,6 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContextMenuComponent } from './context-menu.component';
 import { FormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { MapReducer } from '../../reducers/map.reducer';
+import { MapEffects } from '../../effects/map.effects';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -9,10 +12,10 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule],
-			declarations: [ ContextMenuComponent ]
-		})
-			.compileComponents();
+			imports: [FormsModule, StoreModule.provideStore({map: MapReducer})],
+			declarations: [ ContextMenuComponent ],
+			providers: [MapEffects]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
@@ -26,13 +29,6 @@ describe('ContextMenuComponent', () => {
 	});
 
 	it('get contextMenuStyle should return object with {top, left} from input', () => {
-		component.top = 20;
-		component.left = 10;
-
-		expect(component.contextMenuStyle).toEqual( {
-			top: '20px',
-			left: '10px'
-		});
 
 	});
 

@@ -9,7 +9,8 @@ export const FiltersActionTypes = {
 	INITIALIZE_SINGLE_FILTER: 'INITIALIZE_SINGLE_FILTER',
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
-	RESET_FILTERS: 'RESET_FILTERS'
+	RESET_FILTERS: 'RESET_FILTERS',
+	TOGGLE_ONLY_FAVORITES: 'TOGGLE_ONLY_FAVORITES'
 };
 
 export type FiltersActions = any;
@@ -34,4 +35,8 @@ export class ResetFiltersAction implements Action {
 	constructor(public payload?: any) { }
 }
 
+export class ToggleOnlyFavoriteAction implements Action {
+	type = FiltersActionTypes.TOGGLE_ONLY_FAVORITES;
+	constructor(public payload?: any){}
+}
 

@@ -25,11 +25,7 @@ import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 
-
-/*export const contextSources: Map<string,any> = new Map();
-contextSources.set('Proxy',ContextProxySource);
-contextSources.set("Elastic",ContextElasticSource);*/
- export const contextSources = {
+export const contextSources = {
 	 'Proxy': ContextProxySource,
 	 "Elastic": ContextElasticSource
  }
@@ -64,7 +60,7 @@ contextSources.set("Elastic",ContextElasticSource);*/
 		MapFacadeModule,
 		ImageryModule.forRoot(configuration.ImageryConfig),
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig, { sources: contextSources as any}),
+		ContextModule.forRoot(configuration.ContextConfig, { sources: contextSources}),
 		OpenLayerVisualizersModule
 	],
 	bootstrap: [AppComponent]

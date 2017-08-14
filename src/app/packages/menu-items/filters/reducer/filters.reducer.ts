@@ -6,11 +6,13 @@ import { FiltersActions } from '../actions/filters.actions';
 export interface IFiltersState {
     filters: Map<Filter, FilterMetadata>;
     isLoading: boolean;
+    showOnlyFavorites: boolean;
 }
 
 export const initialFiltersState: IFiltersState = {
     filters: new Map<Filter, FilterMetadata>(),
-    isLoading: true
+    isLoading: true,
+	showOnlyFavorites: false
 };
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
@@ -35,6 +37,9 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
                 filters: new Map<Filter, FilterMetadata>(),
                 isLoading: true
             });
+
+		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
+			return Object.assign({},state,{showOnlyFavorites : !state.showOnlyFavorites });
 
 
         default:

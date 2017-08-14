@@ -99,7 +99,7 @@ export class UpdateOverlaysCountAction implements Action {
 
 export class SetFiltersAction implements Action {
 	type = OverlaysActionTypes.SET_FILTERS;
-	constructor(public payload: any[]){}
+	constructor(public payload: any){}
 }
 
 export class SetTimelineStateAction implements Action {

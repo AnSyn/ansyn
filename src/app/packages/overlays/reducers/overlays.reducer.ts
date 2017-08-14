@@ -32,7 +32,7 @@ export const overlayInitialState: IOverlayState = {
 	timelineState: {from: new Date(), to: new Date()},
 	filteredOverlays: [],
 	count: 0
-}
+};
 
 export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
@@ -100,9 +100,20 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			});
 
 		case overlay.OverlaysActionTypes.SET_FILTERS:
-			const res =  OverlaysService.filter(state.overlays,action.payload);
+			let overlaysToFilter = state.overlays;
+
+			if(action.payload.showOnlyFavorites && action.payload.favorites.length ){
+				overlaysToFilter = new Map<string,Overlay>();
+
+				action.payload.favorites.forEach(id => {
+					overlaysToFilter.set(id,state.overlays.get(id));
+				});
+			}
+
+			const res =  OverlaysService.filter(overlaysToFilter,action.payload);
+
 			return Object.assign({},state,{
-				filters: action.payload,
+				filters: action.payload.parsedFilters,
 				filteredOverlays: res
 			});
 

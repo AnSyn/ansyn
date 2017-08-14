@@ -37,6 +37,7 @@ export type CaseTimeState = {
 
 export type CaseFacetsState = {
 	filters: {fieldName: string, metadata: any}[];
+	showOnlyFavorites?: boolean;
 }
 
 export type CaseMapsState = {

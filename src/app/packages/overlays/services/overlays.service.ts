@@ -56,13 +56,23 @@ export class OverlaysService {
 			});
 	}
 
+	/**
+	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
+	 * @param {Map<any, any>} overlays
+	 * @param ids
+	 * @param properties
+	 */
+
 	static pluck(overlays: Map<any,any>, ids: string[], properties: string[]){
 		return ids.map( id => {
 			const overlay = overlays.get(id);
-			return 	properties.reduce( (obj,property) =>{
+			if(!properties.length ) {
+				return overlay;
+			}
+			return properties.reduce((obj, property) => {
 				obj[property] = overlay[property];
 				return obj;
-			},{});
+			}, {});
 		});
 	}
 

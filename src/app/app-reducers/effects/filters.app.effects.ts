@@ -3,7 +3,7 @@ import { cloneDeep, isNil, isEmpty } from 'lodash';
 import { Case, UpdateCaseAction, CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
 import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
@@ -24,18 +24,38 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
-		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS)
-		.withLatestFrom(this.store$.select('filters'))
-		.map(([action, filtersState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState]) => {
+		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS,FiltersActionTypes.TOGGLE_ONLY_FAVORITES)
+		.withLatestFrom(this.store$.select('filters'),this.store$.select('cases'))
+		.map(([action, filtersState,casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState,ICasesState]) => {
 			const parsedFilters = [];
+			const favorites = casesState.selected_case.state.favoritesOverlays;
 			filtersState.filters.forEach((value: any, key: any) => {
 				parsedFilters.push({
 					filteringParams: { key: key.modelName, metadata: value},
 					filterFunc: value.filterFunc
 				});
 			});
-			return new SetFiltersAction(parsedFilters);
+			return new SetFiltersAction({
+				parsedFilters,
+				showOnlyFavorites: filtersState.showOnlyFavorites,
+				favorites
+			});
 		});
+
+	@Effect()
+	showOnlyFavorites$: Observable<any> = this.actions$
+		.ofType(FiltersActionTypes.TOGGLE_ONLY_FAVORITES)
+		.withLatestFrom(this.store$.select('filters'),this.store$.select('cases'))
+		.map(([action,filters,cases]: [Action,IFiltersState,ICasesState]) => {
+
+			const selectedCase = cases.selected_case;
+
+			selectedCase.state.facets.showOnlyFavorites = filters.showOnlyFavorites;
+
+			return new UpdateCaseAction(selectedCase);
+
+	});
+
 
 
     @Effect()

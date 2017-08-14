@@ -23,7 +23,7 @@ export class ContextMenuAppEffects {
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'))
 		.map(([action, overlays, cases]: [ContextMenuShowAction, IOverlayState, ICasesState]) => {
-			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date']);
+			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date', 'bestResolution']);
 			filteredOverlays = filteredOverlays.filter(({footprint}) => inside(action.payload.point, footprint));
 			const activeMap = CasesService.activeMap(cases.selected_case);
 			return new SetContextMenuFiltersAction({filteredOverlays, displayedOverlay: <any>_get(activeMap.data, 'overlay')});

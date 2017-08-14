@@ -84,43 +84,47 @@ export class ContextMenuComponent implements OnInit {
 		this.elem.nativeElement.blur();
 	}
 
-	clickNext (event$, subFilter?: string) {
-		event$.stopPropagation();
+	clickNext ($event: MouseEvent, subFilter?: string) {
 		const nextOverlay = this.filteredOverlays
-				.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
-				.find(({id, sensorName}) => !subFilter || subFilter === subFilter);
-		this.store.dispatch(new ContextMenuDisplayAction(nextOverlay.id));
+			.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
+			.find(({id, sensorName}) => !subFilter || subFilter === sensorName);
+		this.displayOverlayEvent($event, nextOverlay);
 	}
 
-	clickPrev (event$, subFilter?: string) {
-		event$.stopPropagation();
-		const nextOverlay = this.filteredOverlays
-				.slice(0, this.displayedOverlayIndex)
-				.find(({sensorName}) => !subFilter || subFilter === sensorName);
-		this.store.dispatch(new ContextMenuDisplayAction(nextOverlay.id));
+	clickPrev ($event: MouseEvent, subFilter?: string) {
+		const prevOverlay = this.filteredOverlays
+			.slice(0, this.displayedOverlayIndex)
+			.reverse()
+			.find(({sensorName}) => !subFilter || subFilter === sensorName);
+		this.displayOverlayEvent($event, prevOverlay);
 	}
 
-	clickBest (event$, subFilter?: string) {
-		event$.stopPropagation();
+	clickBest ($event: MouseEvent, subFilter?: string) {
 		const sensorOnly = this.filteredOverlays.filter(({sensorName}) => !subFilter || subFilter === sensorName);
 		const bestOverlay = sensorOnly.reduce((minValue, value) => {
 			return value.bestResolution < minValue.bestResolution ? value : minValue;
 		});
-		this.store.dispatch(new ContextMenuDisplayAction(bestOverlay.id));
+		this.displayOverlayEvent($event, bestOverlay);
 	}
 
-	clickFirst (event$, subFilter?: string) {
-		event$.stopPropagation();
+	clickFirst ($event: MouseEvent, subFilter?: string) {
 		const firstOverlay = this.filteredOverlays
 			.find(({sensorName}) => !subFilter || subFilter === sensorName);
-		this.store.dispatch(new ContextMenuDisplayAction(firstOverlay.id));
+		this.displayOverlayEvent($event, firstOverlay);
 	}
 
-	clickLast (event$, subFilter?: string) {
+	clickLast ($event: MouseEvent, subFilter?: string) {
+		const lastOverlay = [...this.filteredOverlays]
+			.reverse()
+			.find(({sensorName}) => !subFilter || subFilter === sensorName );
+		this.displayOverlayEvent($event, lastOverlay);
+	}
+
+	displayOverlayEvent(event$: MouseEvent, overlay?) {
 		event$.stopPropagation();
-		const lastOverlay = this.filteredOverlays.reverse()
-				.find(({sensorName}) => !subFilter || subFilter === sensorName );
-		this.store.dispatch(new ContextMenuDisplayAction(lastOverlay.id));
+		if(overlay){
+			this.store.dispatch(new ContextMenuDisplayAction(overlay.id));
+		}
 	}
 
 }

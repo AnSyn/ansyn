@@ -59,6 +59,8 @@ describe('ContextMenuComponent', () => {
 		const elem = fixture.nativeElement;
 		spyOn(elem, 'focus');
 		spyOn(component, 'initializeSensors');
+		expect(elem.style.top).not.toEqual('2px');
+		expect(elem.style.left).not.toEqual('1px');
 		const action = <ContextMenuShowAction> {payload: {e: {x: 1, y: 2}}};
 		component.show(action);
 		expect(component.initializeSensors).toHaveBeenCalled();

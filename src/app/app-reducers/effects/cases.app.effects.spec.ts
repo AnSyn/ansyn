@@ -10,13 +10,13 @@ import { OverlayReducer} from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DisplayOverlayFromStoreAction, LoadOverlaysSuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
-import { UpdateCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
-import { DisplayOverlayAction } from '../../packages/overlays/actions/overlays.actions';
-import { Overlay } from '../../packages/core/models/overlay.model';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

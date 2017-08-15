@@ -9,14 +9,14 @@ import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overla
 import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer, IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import { IToolsState, ToolsReducer, toolsInitialState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { AddMapInstacneAction } from '../../packages/map-facade/actions/map.actions';
-import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
+import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('OverlaysAppEffects',()=> {
 	let overlaysAppEffects: OverlaysAppEffects;

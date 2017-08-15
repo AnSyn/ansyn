@@ -3,7 +3,7 @@
 //  */
 // import { EventEmitter } from '@angular/core';
 // import { IMapVisualizer, ImageryCommunicatorService, IMap, IVisualizerEntity } from '@ansyn/imagery';
-// import * as ol from 'openlayers';
+// import * as ol from 'ol';
 //
 // export const FootprintClusterPolygonVisualizerType = 'FootprintClusterPolygonVisualizer';
 //

@@ -1,5 +1,5 @@
-import {BaseOverlaySourceProvider,IFetchParams} from '@ansyn/overlays'
-import { Overlay } from '@ansyn/core'
+import {BaseOverlaySourceProvider,IFetchParams} from '@ansyn/overlays';
+import { Overlay } from '@ansyn/core';
 import { Observable } from "rxjs/Observable";
 import { RequestOptions ,Headers ,Http,Response} from "@angular/http";
 import * as wellknown from 'wellknown';

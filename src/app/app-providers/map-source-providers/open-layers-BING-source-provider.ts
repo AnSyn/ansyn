@@ -2,7 +2,8 @@
  * Created by AsafMas on 26/06/2017.
  */
 import { BaseMapSourceProvider } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+import TileLayer from 'ol/layer/tile';
+import BingMaps from 'ol/source/bingmaps';
 
 export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
 export const OpenLayerBingSourceProviderSourceType = 'BING';
@@ -21,10 +22,10 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 		const bingLayers = [];
 		let i, ii;
 		for (i = 0, ii = metaData.styles.length; i < ii; ++i) {
-			bingLayers.push(new ol.layer.Tile({
+			bingLayers.push(new TileLayer({
 				visible: true,
 				preload: Infinity,
-				source: new ol.source.BingMaps({
+				source: new BingMaps({
 					key: metaData.key,
 					imagerySet: metaData.styles[i]
 					// use maxZoom 19 to see stretched tiles instead of the BingMaps

@@ -92,9 +92,9 @@ export class OverlaysAppEffects {
 	// effect fixed bug when opening the tools bar before overlays were loaded
 	@Effect()
 	setActiveOverlaysModeFromLoadSuccess$: Observable<OverlaysMarkupAction> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.ofType(OverlaysActionTypes.SET_FILTERS, OverlaysActionTypes.DISPLAY_OVERLAY, MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case))
+		.filter(([action,cases]:[Action, ICasesState]) => !isEmpty(cases.selected_case))
 		.map(([action,cases]:[Action,ICasesState])=> {
 			const selectedMap = cases.selected_case.state.maps.data.find((mapData)=> {
 				return mapData.id === cases.selected_case.state.maps.active_map_id;

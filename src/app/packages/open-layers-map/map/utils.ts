@@ -1,22 +1,23 @@
 /**
  * Created by AsafMas on 12/07/2017.
  */
-import * as ol from 'openlayers';
+import Extent from 'ol/extent';
+import Coordinate from 'ol/coordinate';
 
 export class Utils {
-	static BoundingBoxToOLExtent(bbox: GeoJSON.Point[]): ol.Extent | any {
-		const coordinates: ol.Coordinate[] = [];
+	static BoundingBoxToOLExtent(bbox: GeoJSON.Point[]): Extent | any {
+		const coordinates: Coordinate[] = [];
 
 		bbox.forEach((p)=> {
 			coordinates.push([p.coordinates[0], p.coordinates[1]]);
 		});
-		const geoViewExtent: ol.Extent = ol.extent.boundingExtent(coordinates);
+		const geoViewExtent: Extent = Extent.boundingExtent(coordinates);
 		return geoViewExtent;
 	}
 
-	static OLExtentToBoundingBox(extent: ol.Extent): GeoJSON.Point[] {
-		const topLeft = ol.extent.getTopLeft(extent);
-		const bottomRight = ol.extent.getBottomRight(extent);
+	static OLExtentToBoundingBox(extent: Extent): GeoJSON.Point[] {
+		const topLeft = Extent.getTopLeft(extent);
+		const bottomRight = Extent.getBottomRight(extent);
 
 		let boundingBox: GeoJSON.Point[] = [];
 		[topLeft, bottomRight].forEach((p)=> {

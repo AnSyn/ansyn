@@ -1,4 +1,4 @@
-import * as ol from 'openlayers';
+import Raster from 'ol/source/raster';
 
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 export type rasterOperation = { name: string, operation: pixelOperation, lib: {} };
@@ -9,11 +9,11 @@ export const operations = [];
 
 export class OpenLayersImageProcessing {
 
-    _rasterToOperations: Map<ol.source.Raster, rasterOperation[]>;
+    _rasterToOperations: Map<Raster, rasterOperation[]>;
     _operations: Map<string, rasterOperation>;
 
     constructor() {
-        this._rasterToOperations = new Map<ol.source.Raster, rasterOperation[]>();
+        this._rasterToOperations = new Map<Raster, rasterOperation[]>();
         this._operations = new Map<string, rasterOperation>();
 
         this.initializeOperations();
@@ -47,7 +47,7 @@ export class OpenLayersImageProcessing {
 
     }
 
-    addOperation(raster: ol.source.Raster, name: supportedOperations) {
+    addOperation(raster: Raster, name: supportedOperations) {
         const currentOperations = this._rasterToOperations.get(raster);
         const requestedOperation = this._operations.get(name);
 
@@ -64,7 +64,7 @@ export class OpenLayersImageProcessing {
         this.syncOperations(raster);
     }
 
-    removeOperation(raster: ol.source.Raster, name: supportedOperations) {
+    removeOperation(raster: Raster, name: supportedOperations) {
         const currentOperations = this._rasterToOperations.get(raster);
         if (currentOperations) {
             const operationToRemove = currentOperations.find((operation) => operation.name === name);
@@ -82,13 +82,13 @@ export class OpenLayersImageProcessing {
         this.syncOperations(raster);
     }
 
-    removeAllRasterOperations(raster: ol.source.Raster) {
+    removeAllRasterOperations(raster: Raster) {
         this._rasterToOperations.delete(raster);
 
         this.syncOperations(raster);
     }
 
-    syncOperations(raster: ol.source.Raster) {
+    syncOperations(raster: Raster) {
         const currentOperations = this._rasterToOperations.get(raster);
         if (currentOperations) {
             let globalLib = {};
@@ -242,7 +242,7 @@ function performSharpness(imageData, data) {
     const pixels = imageData.data;
     const imageWidth = imageData.width;
     const imageHeight = imageData.height;
-    
+
     const destPixels = [];
 
     for (let y = 0; y < imageHeight; y++) {
@@ -272,7 +272,7 @@ function performSharpness(imageData, data) {
     }
 
     for (let index = 0; index < imageData.data.length; index++) {
-        imageData.data[index] = destPixels[index];       
+        imageData.data[index] = destPixels[index];
     }
     return imageData;
 }

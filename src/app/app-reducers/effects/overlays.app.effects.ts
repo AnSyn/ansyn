@@ -76,7 +76,7 @@ export class OverlaysAppEffects {
 	}
 
 	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
-		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"])
+		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"]);
 		const entitiesToDraw: IVisualizerEntity[] = [];
 		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
 			const feature: GeoJSON.Feature<any> = {

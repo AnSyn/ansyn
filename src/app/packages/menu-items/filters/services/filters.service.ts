@@ -12,7 +12,8 @@ export class FiltersService {
   constructor(@Inject(filtersConfig) private config: FiltersConfig) { }
 
   loadFilters(): Observable<Filter[]> {
-    if(!this.config){
+
+  	if(!this.config){
     	return Observable.of([] as any);
 	}
   	return Observable.of(this.config.filters);

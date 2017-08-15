@@ -1,6 +1,6 @@
 <div class="collection">
-	<ansyn-checkbox id="tmp" [checked]="false" (inputClicked)="showOnlyFavorites($event)"  text="Show only favorites"></ansyn-checkbox>
-	<ng-template ngFor let-filter [ngForOf]="initialFilters$ | async">
+	<ansyn-checkbox id="tmp" [checked]="false" (inputClicked)="showOnlyFavorites($event)"  text="Show only favorites" [disabled]="disableShowOnlyFavoritesSelection"></ansyn-checkbox>
+	<ng-template ngFor let-filter [ngForOf]="filters">
 		<ansyn-filter-container [filter]="filter"></ansyn-filter-container>
 	</ng-template>
 </div>

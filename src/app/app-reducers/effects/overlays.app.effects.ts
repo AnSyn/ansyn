@@ -46,50 +46,11 @@ export class OverlaysAppEffects {
 			});
 		});
 
-	// TODO:change this after #475 is solved (new filtered data from store)
-	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
-		const communicator = this.communicatorService.provide(mapData.id);
-		if (communicator && mapData.data.overlayDisplayMode) {
-			const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
-			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
-			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
-			switch (overlayDisplayMode) {
-				case 'Hitmap': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					hitMapvisualizer.setEntities(entitiesToDraw);
-					polygonVisualizer.clearEntities();
-					break;
-				}
-				case 'Polygon': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					polygonVisualizer.setEntities(entitiesToDraw);
-					hitMapvisualizer.clearEntities();
-					break;
-				}
-				case 'None':
-				default: {
-					polygonVisualizer.clearEntities();
-					hitMapvisualizer.clearEntities();
-				}
-			}
-		}
-	}
 
-	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
-		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"]);
-		const entitiesToDraw: IVisualizerEntity[] = [];
-		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
-			const feature: GeoJSON.Feature<any> = {
-				type: 'Feature',
-				geometry: entity.footprint,
-				properties: {}
-			};
-			entitiesToDraw.push({id: entity.id, featureJson: feature});
-		});
-		return entitiesToDraw;
-	}
-
-	// effect fixed bug when opening the tools bar before overlays were loaded
+	/** effect fixed bug when opening the tools bar before overlays were loaded
+	 *
+	 * @type {Observable<SetActiveOverlaysFootprintModeAction>}
+	 */
 	@Effect()
 	setActiveOverlaysModeFromLoadSuccess$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, OverlaysActionTypes.DISPLAY_OVERLAY, MapActionTypes.BACK_TO_WORLD)
@@ -200,4 +161,47 @@ export class OverlaysAppEffects {
 		public casesService: CasesService,
 		public overlaysService: OverlaysService,
 		private communicatorService: ImageryCommunicatorService) {}
+
+	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
+		const communicator = this.communicatorService.provide(mapData.id);
+		if (communicator && mapData.data.overlayDisplayMode) {
+			const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
+			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
+			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
+			switch (overlayDisplayMode) {
+				case 'Hitmap': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
+					hitMapvisualizer.setEntities(entitiesToDraw);
+					polygonVisualizer.clearEntities();
+					break;
+				}
+				case 'Polygon': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
+					polygonVisualizer.setEntities(entitiesToDraw);
+					hitMapvisualizer.clearEntities();
+					break;
+				}
+				case 'None':
+				default: {
+					polygonVisualizer.clearEntities();
+					hitMapvisualizer.clearEntities();
+				}
+			}
+		}
+	}
+
+	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
+		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"])
+		const entitiesToDraw: IVisualizerEntity[] = [];
+		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
+			const feature: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: entity.footprint,
+				properties: {}
+			};
+			entitiesToDraw.push({id: entity.id, featureJson: feature});
+		});
+		return entitiesToDraw;
+	}
+
 }

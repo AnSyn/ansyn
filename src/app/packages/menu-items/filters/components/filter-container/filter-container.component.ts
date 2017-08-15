@@ -5,74 +5,78 @@ import { IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from './../../models/metadata/filter-metadata.interface';
 import { Filter } from './../../models/filter';
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+	Component, Input, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy,
+	ChangeDetectorRef, OnInit
+} from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
-  selector: 'ansyn-filter-container',
-  templateUrl: './filter-container.component.html',
-  styleUrls: ['./filter-container.component.less'],
-  animations: [
-    trigger('rotateArrow', [
-      state('true', style({
-        transform: 'rotateZ(-45deg) translateY(35%) translateX(50%)',
-      })),
-      state('false', style({
-        transform: 'rotateZ(135deg) translateY(-75%)',
-      })),
-      transition('true <=> false', animate('0.1s')),
-    ]),
-    trigger('fieldsTrigger', [
-      state('true', style({
-        maxHeight: '500px',
-        opacity: 1
-      })),
-      state('false', style({
-        maxHeight: '0',
-        opacity: 0
-      })),
-      transition('* <=> *', animate('0.2s'))
-    ])
-  ]
+	selector: 'ansyn-filter-container',
+	templateUrl: './filter-container.component.html',
+	styleUrls: ['./filter-container.component.less'],
+	animations: [
+		trigger('rotateArrow', [
+			state('true', style({
+				transform: 'rotateZ(-45deg) translateY(35%) translateX(50%)',
+			})),
+			state('false', style({
+				transform: 'rotateZ(135deg) translateY(-75%)',
+			})),
+			transition('true <=> false', animate('0.1s')),
+		]),
+		trigger('fieldsTrigger', [
+			state('true', style({
+				maxHeight: '500px',
+				opacity: 1
+			})),
+			state('false', style({
+				maxHeight: '0',
+				opacity: 0
+			})),
+			transition('* <=> *', animate('0.2s'))
+		])
+	]
 })
-export class FilterContainerComponent {
+export class FilterContainerComponent implements OnInit{
 
-  @Input() filter: Filter;
+	public show = true;
+	public metadataFromState: FilterMetadata ;
 
-  @ViewChild('fields') fields: ElementRef;
+	@Input() filter;
+	@ViewChild('fields') fields: ElementRef;
 
-  public show = true;
 
-  metadataFromState$: Observable<FilterMetadata> = this.store
-    .select("filters")
-    .map((state: IFiltersState) => {
-      return state.filters.get(this.filter);
-    })
-    .distinctUntilChanged(isEqual);
+	metadataFromState$: Observable<any> = this.store
+		.select("filters")
+		.distinctUntilChanged(isEqual)
+		.map((state: IFiltersState) => {
+			return state.filters;
+		});
 
-  metadataFromState: FilterMetadata;
+	constructor(private store: Store<IFiltersState>) {}
 
-  constructor(private store: Store<IFiltersState>) {
-    this.metadataFromState$.subscribe((metadata: FilterMetadata) => {
-      this.metadataFromState = cloneDeep(metadata);
-    });
-  }
+	get disabledButton() {
+		return !this.metadataFromState;
+	}
 
-  get disabledButton() {
-    return !this.metadataFromState;
-  }
+	ngOnInit(){
+		this.metadataFromState$.subscribe((filters) => {
+			const metadata = cloneDeep(filters.get(this.filter));
+			this.metadataFromState = metadata;
+		});
+	}
 
-  onMetadataChange(metadeata: any): void {
-    this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: metadeata }));
-  }
+	onMetadataChange(metadeata: any): void {
+		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata: metadeata}));
+	}
 
-  showAll(): void {
-    if (this.metadataFromState) {
-      const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
-      clonedMetadata.showAll();
-
-      this.onMetadataChange(clonedMetadata);
-    }
-  }
+	showAll(): void {
+		if (this.metadataFromState) {
+			const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
+			clonedMetadata.showAll();
+			this.onMetadataChange(clonedMetadata);
+		}
+	}
 }

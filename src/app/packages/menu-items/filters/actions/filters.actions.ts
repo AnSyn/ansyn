@@ -10,7 +10,8 @@ export const FiltersActionTypes = {
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
 	RESET_FILTERS: 'RESET_FILTERS',
-	TOGGLE_ONLY_FAVORITES: 'TOGGLE_ONLY_FAVORITES'
+	TOGGLE_ONLY_FAVORITES: 'TOGGLE_ONLY_FAVORITES',
+	DISPLAY_ONLY_FAVORITES_SELECTION: 'DISPLAY_ONLY_FAVORITES_SELECTION'
 };
 
 export type FiltersActions = any;
@@ -37,6 +38,11 @@ export class ResetFiltersAction implements Action {
 
 export class ToggleOnlyFavoriteAction implements Action {
 	type = FiltersActionTypes.TOGGLE_ONLY_FAVORITES;
+	constructor(public payload?: any){}
+}
+
+export class DisplayOnlyFavortiesSelectionAction implements Action{
+	type = FiltersActionTypes.DISPLAY_ONLY_FAVORITES_SELECTION;
 	constructor(public payload?: any){}
 }
 

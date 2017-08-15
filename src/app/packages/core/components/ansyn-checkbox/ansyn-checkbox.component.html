@@ -3,7 +3,9 @@
 	   id="checkbox_{{ id }}"
 	   class="regular-checkbox"
 	   [checked]="checked ? 'checked' : ''"
-	   (click)='onInputClicked(id)'/>
+	   (click)='onInputClicked(id)'
+		[disabled]=" disabled ? 'disabled' : '' "
+	/>
 	<label for="checkbox_{{ id }}"></label>
 </div>
 <div class="ansyn-checkbox-text">

@@ -26,6 +26,7 @@ import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
+import { DisplayOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 
 
 
@@ -196,7 +197,8 @@ export class StatusBarAppEffects {
 
 			return [
 				new OverlaysMarkupAction(overlaysMarkup),
-				new UpdateCaseAction(selectedCase)
+				new UpdateCaseAction(selectedCase),
+				new DisplayOnlyFavortiesSelectionAction(!!selectedCase.state.favoritesOverlays.length)
 			];
 		});
 

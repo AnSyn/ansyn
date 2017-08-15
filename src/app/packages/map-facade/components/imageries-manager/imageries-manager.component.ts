@@ -22,6 +22,11 @@ export class ImageriesManagerComponent implements OnInit{
 	public publisherMouseShadowMapId: string;
 	public listenersMouseShadowMapsId: Array<string>;
 	public shadowMouseProcess:boolean;
+	public contextMenu = {
+		show: false,
+		top: 0,
+		left: 0
+	};
 
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
@@ -43,12 +48,6 @@ export class ImageriesManagerComponent implements OnInit{
 			this.changeShadowMouseTarget();
 		}
 	};
-
-	isOverlayLoading(overlayId) {
-		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId === _overlayId);
-		return existIndex !== -1;
-	}
-
 	get maps (){
 		return this._maps;
 	}
@@ -79,6 +78,11 @@ export class ImageriesManagerComponent implements OnInit{
 			this.loadingOverlaysIds = _loadingOverlaysIds;
 		});
 
+	}
+
+	isOverlayLoading(overlayId) {
+		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId === _overlayId);
+		return existIndex !== -1;
 	}
 
 	setClassImageriesContainer(new_class, old_class?) {

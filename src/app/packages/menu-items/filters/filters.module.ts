@@ -19,7 +19,8 @@ import { FiltersEffects } from "./effects/filters.effects";
 		CommonModule,
 		CoreModule,
 		BrowserAnimationsModule,
-		EffectsModule.run(FiltersEffects),],
+		EffectsModule.run(FiltersEffects)
+	],
 	declarations: [
 		FiltersCollectionComponent,
 		FilterContainerComponent,

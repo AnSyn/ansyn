@@ -13,9 +13,9 @@ import { isEqual as _isEqual, isEmpty as _isEmpty, get as _get, isNil as _isNil}
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
-	filteredOverlays$: Observable<any[]> = this.store.select('map').map((state: IMapState) => state.filteredOverlays).distinctUntilChanged(_isEqual);
+	filteredOverlays$: Observable<any[]> = this.mapState.map((state: IMapState) => state.filteredOverlays).distinctUntilChanged(_isEqual);
 	filteredOverlays: any[];
-	displayedOverlay$: Observable<any> = this.store.select('map').map((state: IMapState) => state.displayedOverlay).distinctUntilChanged(_isEqual);
+	displayedOverlay$: Observable<any> = this.mapState.map((state: IMapState) => state.displayedOverlay).distinctUntilChanged(_isEqual);
 	displayedOverlay: any;
 	displayedOverlayIndex: number;
 
@@ -40,6 +40,10 @@ export class ContextMenuComponent implements OnInit {
 
 	get _isEmpty () {
 		return _isEmpty;
+	}
+
+	get mapState(): Observable<IMapState> {
+		return this.store.select('map');
 	}
 
 	constructor(private store: Store<IMapState>,

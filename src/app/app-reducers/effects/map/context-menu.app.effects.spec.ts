@@ -2,16 +2,13 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer } from '../../../packages/menu-items/cases/reducers/cases.reducer';
-import { OverlayReducer } from '../../../packages/overlays/reducers/overlays.reducer';
-import {
-	ContextMenuDisplayAction, ContextMenuShowAction,
-	SetContextMenuFiltersAction
-} from '../../../packages/map-facade/actions/map.actions';
-import { DisplayOverlayFromStoreAction } from '../../../packages/overlays/actions/overlays.actions';
-import { OverlaysService } from '../../../packages/overlays/services/overlays.service';
+import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { ContextMenuDisplayAction, ContextMenuShowAction, SetContextMenuFiltersAction } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
-import { CasesService } from '../../../packages/menu-items/cases/services/cases.service';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;

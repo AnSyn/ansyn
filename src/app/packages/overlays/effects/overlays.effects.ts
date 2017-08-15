@@ -1,19 +1,16 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
-import { Injectable,Inject } from '@angular/core';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Injectable } from '@angular/core';
+import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
 	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
 	OverlaysMarkupAction, RequestOverlayByIDFromBackendAction, SetTimelineStateAction
 } from '../actions/overlays.actions';
-import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
-import { IOverlaysConfig } from '../models/overlays.config';
-import { Action, Store } from '@ngrx/store';
+import { OverlaysService } from '../services/overlays.service';
+import { Store } from '@ngrx/store';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';

@@ -3,7 +3,8 @@
  */
 
 import { BaseMapSourceProvider, ProjectableRaster } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+import XYZ from 'ol/source/xyz';
+import ImageLayer from 'ol/layer/image';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
@@ -25,7 +26,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		const source = layer.getSource();
 
 		 */
-		const source = new ol.source.XYZ({
+		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
@@ -43,7 +44,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		});
 
 
-		const osmLayer = new ol.layer.Image({
+		const idahoLayer = new ImageLayer({
 			source: new ProjectableRaster({
 				sources: [source],
 				operation: function (pixels, data) {
@@ -52,7 +53,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 				operationType: 'image'
 			})
 		});
-		return osmLayer;
+		return idahoLayer;
 	}
 
 	createAsync(metaData: any): Promise<any> {

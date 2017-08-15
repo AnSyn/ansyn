@@ -3,7 +3,8 @@
  */
 
 import { BaseMapSourceProvider } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+import TileLayer from 'ol/layer/tile';
+import TileWMS from 'ol/source/tilewms';
 
 export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
@@ -21,9 +22,9 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any): any {
 		const layers = metaData.layers.join(',');
-		const tiled = new ol.layer.Tile({
+		const tiled = new TileLayer({
 			visible: true,
-			source: new ol.source.TileWMS({
+			source: new TileWMS({
 				url: metaData.url,
 				params: {
 					'VERSION': '1.1.1',

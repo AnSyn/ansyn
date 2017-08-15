@@ -3,7 +3,12 @@
  */
 
 import { CommunicatorEntity, IMap, IMapPlugin } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+import Vector from 'ol/source/vector';
+import Feature from 'ol/feature';
+import Point from 'ol/geom/point';
+import Style from 'ol/style/style';
+import Icon from 'ol/style/icon';
+import VectorLayer from 'ol/layer/vector';
 import { MapPosition } from '../../imagery/model/map-position';
 
 export class CenterMarkerPlugin implements IMapPlugin {
@@ -13,7 +18,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	private _imageryCommunicator: CommunicatorEntity;
 
 
-	private _iconStyle: ol.style.Style;
+	private _iconStyle: Style;
 	private _existingLayer;
 
 	private _isEnabled: boolean;
@@ -39,8 +44,8 @@ export class CenterMarkerPlugin implements IMapPlugin {
 
 		this._isEnabled = false;
 
-		this._iconStyle = new ol.style.Style({
-			image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+		this._iconStyle = new Style({
+			image: new Icon(/** @type {olx.style.IconOptions} */ ({
 				anchor: [0.5, 46],
 				anchorXUnits: 'fraction',
 				anchorYUnits: 'pixels',
@@ -97,18 +102,18 @@ export class CenterMarkerPlugin implements IMapPlugin {
 
 		const center = map.mapObject.getView().getCenter();
 
-		const iconFeature = new ol.Feature({
-			geometry: new ol.geom.Point(center),
+		const iconFeature = new Feature({
+			geometry: new Point(center),
 			name: 'Center'
 		});
 
 		iconFeature.setStyle(this._iconStyle);
 
-		const vectorSource = new ol.source.Vector({
+		const vectorSource = new Vector({
 			features: [iconFeature]
 		});
 
-		const vectorLayer = new ol.layer.Vector({
+		const vectorLayer = new VectorLayer({
 			source: vectorSource,
 		});
 		this._existingLayer = vectorLayer;

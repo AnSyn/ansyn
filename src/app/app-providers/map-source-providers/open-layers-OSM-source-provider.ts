@@ -3,7 +3,8 @@
  */
 
 import { BaseMapSourceProvider } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+import OSM from 'ol/source/osm';
+import TileLayer from 'ol/layer/tile';
 
 export const OpenLayerOSMSourceProviderMapType = 'openLayersMap';
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
@@ -20,14 +21,14 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 	}
 
 	create(metaData: any): any {
-		const osmLayer = new ol.layer.Tile({
-			source: new ol.source.OSM()
+		const osmLayer = new TileLayer({
+			source: new OSM()
 		});
-		const openSeaMapLayer = new ol.layer.Tile({
-			source: new ol.source.OSM(<any>{
+		const openSeaMapLayer = new TileLayer({
+			source: new OSM(<any>{
 				attributions: [
 					'All maps © <a href="http://www.openseamap.org/">OpenSeaMap</a>',
-					ol.source.OSM.ATTRIBUTION
+					OSM.ATTRIBUTION
 				],
 				opaque: false,
 				url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'

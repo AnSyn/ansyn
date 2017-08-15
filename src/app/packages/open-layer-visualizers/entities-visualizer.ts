@@ -2,7 +2,14 @@
  * Created by AsafMas on 02/08/2017.
  */
 import { IMapVisualizer, IMap, IVisualizerEntity } from '@ansyn/imagery';
-import * as ol from 'openlayers';
+
+import Vector from 'ol/source/vector';
+import Feature from 'ol/feature';
+import GeoJSON from 'ol/format/geojson';
+import Style from 'ol/style/style';
+import Stroke from 'ol/style/stroke';
+import Fill from 'ol/style/fill';
+import VectorLayer from 'ol/layer/vector';
 
 export const EntitiesVisualizerType = 'EntitiesVisualizerType';
 
@@ -12,13 +19,13 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	_imap: IMap;
 	_mapId: string;
-	_source: ol.source.Vector;
-	_featuresCollection:ol.Feature[];
-	_footprintsVector: ol.layer.Vector;
+	_source: Vector;
+	_featuresCollection:Feature[];
+	_footprintsVector: VectorLayer;
 	_styleCache: any;
 
-	_default4326GeoJSONFormat: ol.format.GeoJSON;
-	_idToEntity: Map<string, {feature: ol.Feature, originalEntity: IVisualizerEntity}>;
+	_default4326GeoJSONFormat: GeoJSON;
+	_idToEntity: Map<string, {feature: Feature, originalEntity: IVisualizerEntity}>;
 
 	strokeColor = 'blue';
 	fillColor = 'transparent';
@@ -27,7 +34,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	constructor(visualizerType: string ,args: any) {
 		this.type = visualizerType;
 
-		this._default4326GeoJSONFormat = new ol.format.GeoJSON({
+		this._default4326GeoJSONFormat = new GeoJSON({
 			defaultDataProjection: 'EPSG:4326',
 			featureProjection: 'EPSG:4326'
 		});
@@ -44,12 +51,12 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	createLayer() {
 		this._featuresCollection = new Array();
-		this._source = new ol.source.Vector({
+		this._source = new Vector({
 			features: this._featuresCollection
 		});
 
 		this._styleCache = {};
-		this._footprintsVector = new ol.layer.Vector({
+		this._footprintsVector = new VectorLayer({
 			source: this._source,
 			style: this.featureStyle.bind(this),
 			opacity: this.containerLayerOpacity
@@ -58,17 +65,17 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._imap.addLayer(this._footprintsVector);
 	}
 
-	featureStyle(feature: ol.Feature, resolution) {
+	featureStyle(feature: Feature, resolution) {
 		const featureId = feature.getId();
 
 		let style = this._styleCache[featureId];
 		if (!style) {
-			style = new ol.style.Style({
-				stroke: new ol.style.Stroke({
+			style = new Style({
+				stroke: new Stroke({
 					color: this.strokeColor,
 					width: 3
 				}),
-				fill: new ol.style.Fill({
+				fill: new Fill({
 					color: this.fillColor
 				})
 				//,add text here
@@ -112,7 +119,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 			featureProjection: projection.getCode()
 		});
 
-		features.forEach((feature: ol.Feature)=>{
+		features.forEach((feature: Feature)=>{
 			const id: string = <string>feature.getId();
 			const existingEntity = this._idToEntity.get(id);
 			this._idToEntity.set(id, {...existingEntity, feature: feature});

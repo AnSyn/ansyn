@@ -3,7 +3,8 @@
  */
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
-import * as ol from 'openlayers';
+import TileLayer from 'ol/layer/tile';
+import OSM from 'ol/source/osm';
 
 describe('openLayersMap Component spec', () => {
 	let component: MapComponent;
@@ -25,8 +26,8 @@ describe('openLayersMap Component spec', () => {
 
 	it('createMap should raise mapCreated event', () => {
 
-		const osmLayer = new ol.layer.Tile({
-			source: new ol.source.OSM()
+		const osmLayer = new TileLayer({
+			source: new OSM()
 		});
 
 		spyOn(component.mapCreated, 'emit');

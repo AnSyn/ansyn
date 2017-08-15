@@ -1,15 +1,17 @@
-import * as ol from 'openlayers';
+import Raster from 'ol/source/raster';
+import Source from 'ol/source/source';
+import Projection from 'ol/proj/projection';
 
-export class ProjectableRaster extends ol.source.Raster {
+export class ProjectableRaster extends Raster {
 
-    sources: ol.source.Source[];
+    sources: Source[];
 
-    constructor(options: olx.source.RasterOptions) {
+    constructor(options: any) {
         super(options);
         this.sources = options.sources;
     }
 
-    getProjection(): ol.proj.Projection {
+    getProjection(): Projection {
         if (this.sources.length === 1) {
             return this.sources[0].getProjection();
         } else {

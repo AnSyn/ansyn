@@ -1,5 +1,5 @@
 // import { IVisualizerEntity } from '@ansyn/imagery';
-// import * as ol from 'openlayers';
+// import * as ol from 'ol';
 // import { BaseVisualizer } from '../base-visualizer';
 //
 // export const FootprintHitmapVisualizerType = 'FootprintHitmapVisualizer';

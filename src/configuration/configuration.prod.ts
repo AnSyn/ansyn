@@ -82,6 +82,18 @@ export const configuration = {
 				apiObject: "Http"
 
 			}]
+	},
+	ToolsConfig: {
+		GoTo: {
+			from: {
+				datum: 'wgs84',
+				projection: 'geo'
+			},
+			to: {
+				datum: 'ed50',
+				projection: 'utm'
+			},
+		}
 	}
 };
 

@@ -49,7 +49,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
 			const tmp = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays,overlaysState.filteredOverlays);
-			console.timeEnd('tmp');
 			return tmp;
 		});
 
@@ -174,12 +173,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			}, 0);
 		}, 0);
 
-		/*return drops[0].data.reduce((count, overlays) => {
-			if(this.configuration.start <= overlays.date && overlays.date <= this.configuration.end) {
-				return count+ 1;
-			}
-			return count;
-		}, 0);*/
 	}
 
 }

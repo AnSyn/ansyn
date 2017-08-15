@@ -11,7 +11,7 @@ import { SetContextMenuFiltersAction, ContextMenuShowAction } from '@ansyn/map-f
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import * as inside from '@turf/inside';
+import { inside } from '@turf/turf';
 
 @Injectable()
 export class ContextMenuAppEffects {

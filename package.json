@@ -8,6 +8,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+	"startAOT": "ng s --aot true",
+    "buildAOT": "ng build --aot true",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -39,6 +41,7 @@
     "d3": "4.7.0",
     "debounce": "^1.0.0",
     "elasticsearch": "^13.2.0",
+    "enhanced-resolve": "^3.3.0",
     "event-drops": "github:yairtawil/EventDrops#504295e3bb4f3569a37338ec01b0241375ed4dbb",
     "flatpickr": "^3.0.6",
     "jsdoc": "3.4.3",

@@ -13,18 +13,16 @@ import { isEqual as _isEqual, isEmpty as _isEmpty, get as _get, isNil as _isNil}
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
+	mapState = this.store.select('map');
 	filteredOverlays$: Observable<any[]> = this.mapState.map((state: IMapState) => state.filteredOverlays).distinctUntilChanged(_isEqual);
 	filteredOverlays: any[];
 	displayedOverlay$: Observable<any> = this.mapState.map((state: IMapState) => state.displayedOverlay).distinctUntilChanged(_isEqual);
 	displayedOverlay: any;
 	displayedOverlayIndex: number;
-
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
-
 	contextMenuShowAction: ContextMenuShowAction;
-
 
 	@HostBinding('attr.tabindex') get tabindex() {
 		return 0;
@@ -40,10 +38,6 @@ export class ContextMenuComponent implements OnInit {
 
 	get _isEmpty () {
 		return _isEmpty;
-	}
-
-	get mapState(): Observable<IMapState> {
-		return this.store.select('map');
 	}
 
 	constructor(private store: Store<IMapState>,
@@ -81,7 +75,6 @@ export class ContextMenuComponent implements OnInit {
 			this.prevSensors = [...new Set(sensorsOnly.slice(0, this.displayedOverlayIndex))];
 			this.nextSensors = [...new Set(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length))];
 		}
-
 	}
 
 	hide() {

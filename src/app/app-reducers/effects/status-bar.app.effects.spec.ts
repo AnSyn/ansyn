@@ -299,7 +299,7 @@ describe('StatusBarAppEffects', () => {
 			}
 
 		});
-		expect(counter).toBe(2);
+		expect(counter).toBe(3);
 	});
 
 });

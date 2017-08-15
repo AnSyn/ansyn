@@ -17,6 +17,7 @@ import { ContextProviderService } from '@ansyn/context/providers/context-provide
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { FiltersActionTypes } from '../../packages/menu-items/filters/actions/filters.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -62,7 +63,8 @@ describe('CasesAppEffects', () => {
 								data: {}
 							}
 						]
-					}
+					},
+					favoritesOverlays: ['2']
 				}
 			}],
 			selected_case:{
@@ -88,6 +90,18 @@ describe('CasesAppEffects', () => {
 		effectsRunner = _effectsRunner;
 		casesService = _casesService;
 	}));
+
+	it("setShowFavoritesFlagOnFilters$",() => {
+		effectsRunner.queue(new SelectCaseByIdAction(icase_state.selected_case.id));
+		let count = 0;
+		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe( (result: Action) => {
+			expect(result.type === FiltersActionTypes.DISPLAY_ONLY_FAVORITES_SELECTION);
+			expect(result.payload === true );
+			count++;
+		});
+		expect(count).toBe(1);
+
+	})
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"' ,() => {
 		effectsRunner.queue(new ShowOverlaysFootprintAction('Hitmap'));

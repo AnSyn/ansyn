@@ -19,6 +19,7 @@ import { DestroySubscribers } from 'ng2-destroy-subscribers';
 export class FiltersCollectionComponent implements OnDestroy {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public filters: any[];
+
 	public subscribers = {
 		filters: undefined
 	} as any;

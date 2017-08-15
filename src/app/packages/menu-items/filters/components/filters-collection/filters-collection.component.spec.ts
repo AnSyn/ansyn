@@ -1,29 +1,72 @@
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { FiltersModule } from './../../filters.module';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
+import { MockComponent } from '../../../../core/test/mock-component';
+import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
+import { Subject } from 'rxjs/Subject';
 
 describe('FiltersCollectionComponent', () => {
-  let component: FiltersCollectionComponent;
-  let fixture: ComponentFixture<FiltersCollectionComponent>;
+	let component: FiltersCollectionComponent;
+	let fixture: ComponentFixture<FiltersCollectionComponent>;
+	let store;
+	let handler: Subject<any>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })],
-      providers: [{ provide: filtersConfig, useValue: { filters: null } }]
-    })
-      .compileComponents();
-  }));
+	const mock_ansyn_checkbox = MockComponent({
+		selector: "ansyn-checkbox",
+		inputs: ['id', 'checked', 'disabled', 'text'],
+		outputs: ['click']
+	});
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FiltersCollectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	const mock_anysn_filter_container = MockComponent({
+		selector: "ansyn-filter-container",
+		inputs: ['filter']
+	});
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [
+				mock_ansyn_checkbox,
+				mock_anysn_filter_container
+			],
+			imports: [FiltersModule, StoreModule.provideStore({filters: FiltersReducer})],
+			providers: [{provide: filtersConfig, useValue: {filters: null}}]
+		})
+			.compileComponents();
+	}));
+	beforeEach(inject([Store],(_store: Store<any>) => {
+		store = _store;
+		handler = new Subject();
+		spyOn(store,'select').and.returnValue(handler);
+	} ))
+
+	beforeEach(() => {
+		fixture = TestBed.createComponent(FiltersCollectionComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+
+	it('showOnlyFavorites call to Action ToggleOnlyFavoriteAction',() => {
+		spyOn(store,'dispatch');
+		component.showOnlyFavorites({});
+		const result = new ToggleOnlyFavoriteAction();
+		expect(store.dispatch).toHaveBeenCalledWith(result);
+	});
+
+	it('check that disableShowOnlyFavoritesSelection is been set in subscribe',() => {
+		expect(component.disableShowOnlyFavoritesSelection).toBeFalsy();
+		handler.next({displayOnlyFavoritesSelection: true});
+		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
+		handler.next({displayOnlyFavoritesSelection: false});
+		expect(component.disableShowOnlyFavoritesSelection).toBe(true);
+	});
+
+
+
 });

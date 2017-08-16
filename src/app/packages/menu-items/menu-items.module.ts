@@ -1,11 +1,16 @@
-import { MenuItemsConfig } from './models/menu-items-config';
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "./index";
-import { casesConfig } from '@ansyn/menu-items/cases';
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
-import { filtersConfig } from '@ansyn/menu-items/filters';
-import { toolsConfig } from '@ansyn/menu-items/tools';
+import { MenuItemsConfig } from './models/menu-items-config';
+import { CasesModule } from './cases/cases.module';
+import { FiltersModule } from './filters/filters.module';
+import { LayersManagerModule } from './layers-manager/layers-manager.module';
+import { ToolsModule } from './tools/tools.module';
+import { AlgorithmsModule } from './algorithms/algorithms.module';
+import { SettingsModule } from './settings/settings.module';
+import { casesConfig } from './cases/services/cases.service';
+import { layersConfig } from './layers-manager/services/data-layers.service';
+import { filtersConfig } from './filters/services/filters.service';
+import { toolsConfig } from './tools/models/tools-config';
 
 const menuItemsConfig: InjectionToken<MenuItemsConfig> = new InjectionToken('menu-items-config');
 

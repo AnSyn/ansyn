@@ -6,6 +6,7 @@ import { MapPosition } from './model/map-position';
 export { MapPosition } from './model/map-position';
 export { IMap } from './model/imap';
 export { BaseMapSourceProvider } from './model/base-source-provider.model'
+export { BaseMapVectorLayerProvider } from './model/base-map-vector-layer-provider.model'
 export { IMapPlugin } from './model/imap-plugin';
 export { IMapComponent } from './model/imap-component';
 export { IMapVisualizer, IVisualizerEntity } from './model/imap-visualizer';

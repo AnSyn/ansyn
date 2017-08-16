@@ -1,13 +1,14 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { OnInit, SimpleChanges, AfterViewInit } from '@angular/core';
+import { OnInit, AfterViewInit } from '@angular/core';
 import { NodeActivationChangedEventArgs } from '../../event-args/node-activation-changed-event-args';
 import { TreeActionMappingService } from '../../services/tree-action-mapping.service';
 import { TreeNode, TreeComponent } from 'angular-tree-component';
-import { ILayerTreeNode } from '../../models/layer-tree-node';
+import { ILayerTreeNode } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
+import { findNodesByFilterFunc, leafFilterFunction } from '../../utils/layers.utils';
 
 @Component({
-  selector: 'app-layer-tree',
+  selector: 'ansyn-layer-tree',
   templateUrl: './layer-tree.component.html',
   styleUrls: ['./layer-tree.component.less'],
   providers: [TreeActionMappingService]
@@ -15,13 +16,13 @@ import { Observable } from 'rxjs/Observable';
 
 export class LayerTreeComponent implements OnInit, AfterViewInit {
 
-  public options;
+  options;
 
   @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
   @Input() source: Observable<ILayerTreeNode[]>;
 
-  @Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
+  @Output() nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
   constructor(private actionMappingService: TreeActionMappingService, private myElement: ElementRef) { }
 
@@ -35,7 +36,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.treeComponent.treeModel.virtualScroll.setViewport( this.myElement.nativeElement );
+    this.treeComponent.treeModel.virtualScroll.setViewport(this.myElement.nativeElement);
   }
 
   public onDivClicked(event, node: TreeNode): void {
@@ -55,63 +56,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
     let newCheckValue: boolean = !node.data.isChecked;
     let parentNode: TreeNode = node.realParent;
 
-    node.data.isChecked = newCheckValue;
-    if (node.isLeaf) {
-      this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node.data, newCheckValue));
-    }
-
-    this.bubbleActivationDown(node, newCheckValue);
-    this.bubbleActivationUp(parentNode, newCheckValue);
-    this.bubbleIndeterminate(node.realParent);
-  }
-
-  public bubbleActivationDown(node: TreeNode, activationValue: boolean) {
-
-    node.children.filter(child => child.data.isChecked !== activationValue).forEach(child => {
-      child.data.isChecked = activationValue;
-      if (child.isLeaf) {
-        this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(child.data, activationValue));
-      }
-      this.bubbleActivationDown(child, activationValue);
-    });
-
-    if (node.isLeaf) {
-      this.bubbleIndeterminate(node.realParent);
-    }
-  }
-
-  public bubbleActivationUp(node: TreeNode, newValue: boolean): void {
-    if (!node) {
-      return;
-    }
-
-    if ((newValue && node.children.every(child => child.data.isChecked === newValue)) ||
-      (!newValue && node.children.some(child => child.data.isChecked === newValue))) {
-      node.data.isChecked = newValue;
-      this.bubbleActivationUp(node.realParent, newValue);
-    }
-  }
-
-  public bubbleIndeterminate(node: TreeNode): void {
-    if (!node) {
-      return;
-    }
-    node.data.isIndeterminate = this.isNodeIndeterminate(node);
-    if (node.realParent) {
-      this.bubbleIndeterminate(node.realParent);
-    }
-  }
-
-  public isNodeIndeterminate(node: TreeNode): boolean {
-    if (!node.hasChildren) {
-      return false;
-    }
-
-    if (node.children.every(child => child.data.isChecked) || node.children.every(child => !child.data.isChecked)) {
-      return false;
-    } else {
-      return true;
-    }
+    this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(node.data, newCheckValue));
   }
 };
 

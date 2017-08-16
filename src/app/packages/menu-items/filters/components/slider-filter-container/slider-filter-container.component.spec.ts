@@ -1,14 +1,14 @@
-import { EnumFilterMetadata } from './../../models/metadata/enum-filter-metadata';
+import { SliderFilterMetadata } from './../../models/metadata/slider-filter-metadata';
 import { StoreModule } from '@ngrx/store';
 import { FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersModule } from './../../filters.module';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { filtersConfig } from '../../services/filters.service';
-import { EnumFilterContainerComponent } from './enum-filter-container.component';
+import { SliderFilterContainerComponent } from './slider-filter-container.component';
 
 describe('EnumFilterContainerComponent', () => {
-  let component: EnumFilterContainerComponent;
-  let fixture: ComponentFixture<EnumFilterContainerComponent>;
+  let component: SliderFilterContainerComponent;
+  let fixture: ComponentFixture<SliderFilterContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,9 +21,9 @@ describe('EnumFilterContainerComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EnumFilterContainerComponent);
+    fixture = TestBed.createComponent(SliderFilterContainerComponent);
     component = fixture.componentInstance;
-    component.metadata = new EnumFilterMetadata();
+    component.metadata = new SliderFilterMetadata();
     
     fixture.detectChanges();
   });

@@ -5,3 +5,4 @@ export { IGeneralConfig } from './general.config';
 export { Case, CaseState, CaseTimeState, CaseFacetsState, CaseMapsState, CaseMapState, defaultMapType, OverlayDisplayMode } from './case.model';
 export { MapsLayout } from './maps-layout';
 export { Context } from './context.model';
+export * from './layers';

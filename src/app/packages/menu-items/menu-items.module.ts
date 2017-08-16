@@ -8,7 +8,6 @@ import { ToolsModule } from './tools/tools.module';
 import { AlgorithmsModule } from './algorithms/algorithms.module';
 import { SettingsModule } from './settings/settings.module';
 import { casesConfig } from './cases/services/cases.service';
-import { layersConfig } from './layers-manager/services/data-layers.service';
 import { filtersConfig } from './filters/services/filters.service';
 import { toolsConfig } from './tools/models/tools-config';
 
@@ -32,7 +31,6 @@ export class MenuItemsModule {
 			ngModule: MenuItemsModule,
 			providers: [
 				{ provide: casesConfig, useValue: config.CasesConfig },
-				{ provide: layersConfig, useValue: config.LayersManagerConfig },
 				{ provide: filtersConfig, useValue: config.FiltersConfig },
 				{ provide: toolsConfig, useValue: config.ToolsConfig }
 			]

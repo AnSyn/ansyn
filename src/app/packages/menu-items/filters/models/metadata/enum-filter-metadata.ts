@@ -13,7 +13,9 @@ export class EnumFilterMetadata implements FilterMetadata {
     }
 
     updateMetadata(key: string): void {
-        this.enumsFields.get(key).isChecked = !this.enumsFields.get(key).isChecked;
+        if (this.enumsFields.get(key)) {
+            this.enumsFields.get(key).isChecked = !this.enumsFields.get(key).isChecked;
+        }
     }
 
     selectOnly(selectedKey: string): void {

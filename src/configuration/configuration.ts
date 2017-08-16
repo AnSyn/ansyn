@@ -56,7 +56,8 @@ export const configuration = {
 	FiltersConfig: {
 		filters: [
 			{ modelName: 'sensorType', displayName: 'Sensor Type', type: 'Enum' },
-			{ modelName: 'sensorName', displayName: 'Sensor Name', type: 'Enum' }
+			{ modelName: 'sensorName', displayName: 'Sensor Name', type: 'Enum' },
+			{ modelName: 'bestResolution', displayName: 'Resolution', type: 'Slider' }		
 		]
 	},
 	ContextConfig: {

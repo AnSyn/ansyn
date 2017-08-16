@@ -1,4 +1,3 @@
-import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -35,9 +34,6 @@ contextSources.set("Elastic",ContextElasticSource);*/
  }
 
 @NgModule({
-	providers: [
-		{ provide: FilterMetadata, useClass:EnumFilterMetadata, multi: true }
-	],
 	declarations: [
 		AppComponent,
 		AnsynComponent

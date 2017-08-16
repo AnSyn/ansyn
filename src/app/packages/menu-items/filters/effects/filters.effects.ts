@@ -23,13 +23,18 @@ export class FiltersEffects {
             return this.filtersService.loadFilters().map((filters: Filter[]) => {
                 const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
                 filters.forEach((filter: Filter) => {
-                    const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
+
+                    const currentFilterInit = action.payload.facets
+                        && action.payload.facets.filters.find(field => {
+                            return field.fieldName === filter.modelName;
+                        });
+                    const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets, currentFilterInit);
 
                     action.payload.overlays.forEach((overlay: any) => {
                         metadata.accumulateData(overlay[filter.modelName]);
                     });
 
-                    if (action.payload.showAll) {
+                    if (action.payload.showAll || !currentFilterInit) {
                         metadata.showAll();
                     }
 
@@ -44,7 +49,7 @@ export class FiltersEffects {
         private store: Store<IFiltersState>,
         private genericTypeResolverService: GenericTypeResolverService) { }
 
-    initializeMetadata(filter: Filter, facets: { filters: { fieldName: string, metadata: any }[] }): FilterMetadata {
+    initializeMetadata(filter: Filter, facets: { filters: { fieldName: string, metadata: any }[] }, currentFilterInit: any): FilterMetadata {
         const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
             const filterType = filter.type;
 
@@ -55,11 +60,6 @@ export class FiltersEffects {
         )();
         const metaData: FilterMetadata =
             this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
-
-        const currentFilterInit = facets
-            && facets.filters.find(field => {
-                return field.fieldName === filter.modelName;
-            });
 
         metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata);
 

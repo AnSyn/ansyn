@@ -1,5 +1,6 @@
 import { Position } from './position.model';
 import { Overlay } from './overlay.model';
+import { ILayerTreeNodeRoot } from './layers/layer-tree-node-root';
 
 export type Case = {
 	readonly id?:string;
@@ -17,7 +18,8 @@ export type CaseState = {
 	region: CaseRegionState,
 	orientation: string,
 	geoFilter: string,
-	favoritesOverlays?: string[]
+	favoritesOverlays?: string[],
+	dataLayers?: ILayerTreeNodeRoot[]	
 };
 
 export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;

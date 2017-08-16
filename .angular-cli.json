@@ -22,8 +22,11 @@
 			"styles": [
 				"styles.less",
 				"../node_modules/event-drops/src/style.css",
-				"../node_modules/openlayers/css/ol.css",
-				"../node_modules/flatpickr/dist/flatpickr.css"
+				"../node_modules/ol/ol.css",
+				"../node_modules/flatpickr/dist/flatpickr.css",
+				"../node_modules/font-awesome/css/font-awesome.min.css",
+ 			     "../node_modules/primeng/resources/primeng.min.css",
+ 		    	 "../node_modules/primeng/resources/themes/omega/theme.css"
 			],
 			"scripts": [],
 			"environmentSource": "configuration/configuration.ts",

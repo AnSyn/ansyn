@@ -20,6 +20,12 @@
                 (onMetadataChange)="onMetadataChange($event)">
     </ansyn-enum-filter-container>
 
+    <ansyn-slider-filter-container
+                *ngIf="metadataFromState && metadataFromState?.type === 'Slider'" 
+                [metadata]="metadataFromState"
+                (onMetadataChange)="onMetadataChange($event)">
+    </ansyn-slider-filter-container>
+
   </div>
   <div *ngIf="!metadataFromState">
     Loading...

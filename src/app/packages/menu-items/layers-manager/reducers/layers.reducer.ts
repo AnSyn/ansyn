@@ -1,48 +1,60 @@
 import { ILayerState } from './layers.reducer';
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNodeRoot } from '@ansyn/core';
 import { LayersActionTypes, LayersActions } from '../actions/layers.actions';
+import { cloneDeep } from 'lodash';
+import { findNodesByFilterFunc, idFilterFunc, connectParents, 
+    turnIndeterminateOff, bubbleIndeterminateUp, bubbleActivationDown, bubbleActivationUp } from '../utils/layers.utils';
 
 export interface ILayerState {
     layers: ILayerTreeNodeRoot[];
-    selectedLayers: ILayerTreeNodeLeaf[];
 }
 
 export const initialLayersState: ILayerState = {
-    layers: [],
-    selectedLayers: []
+    layers: []
 };
 
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions) {
     switch (action.type) {
 
-        case LayersActionTypes.BEGIN_LAYER_TREE_LOAD:
-            return state;
-
         case LayersActionTypes.LAYER_TREE_LOADED:
-            return Object.assign({}, state, {
-                layers: action.payload.layers,
-                selectedLayers: action.payload.selectedLayers
-            });
+            {
+                const layers = cloneDeep(action.payload.layers);
+                connectParents(layers);
 
-        case LayersActionTypes.SELECT_LAYER:
-            let selectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
-            if (selectedLayerIndex > -1){
-                return state;
+                return Object.assign({}, state, {
+                    layers: layers
+                });
             }
 
-            return Object.assign({}, state, { selectedLayers: state.selectedLayers.concat([action.payload]) });
+        case LayersActionTypes.SELECT_LEAF_LAYER:
+            {
+                const layers = cloneDeep(state.layers);
+                const selectedLayer = findNodesByFilterFunc(layers, idFilterFunc, action.payload.id);
 
-        case LayersActionTypes.UNSELECT_LAYER:
-            let unselectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
-            if(unselectedLayerIndex === -1){
-                return state;
+                selectedLayer[0].isChecked = true;
+
+                bubbleActivationDown(selectedLayer[0], true);
+                bubbleActivationUp(selectedLayer[0].parent, true);                
+                turnIndeterminateOff(selectedLayer[0]);
+                bubbleIndeterminateUp(selectedLayer[0]);
+
+                return Object.assign({}, state, { layers });
             }
 
-            let newSelectedArray: ILayerTreeNodeLeaf[] = [
-                ...state.selectedLayers.slice(0, unselectedLayerIndex),
-                ...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
-            return Object.assign({}, state, { selectedLayers: newSelectedArray });
+        case LayersActionTypes.UNSELECT_LEAF_LAYER:
+            {
+                const layers = cloneDeep(state.layers);
+                const selectedLayer = findNodesByFilterFunc(layers, idFilterFunc, action.payload.id);
+
+                selectedLayer[0].isChecked = false;
+
+                bubbleActivationDown(selectedLayer[0], false);
+                bubbleActivationUp(selectedLayer[0].parent, false);     
+                turnIndeterminateOff(selectedLayer[0]);
+                bubbleIndeterminateUp(selectedLayer[0]);
+
+                return Object.assign({}, state, { layers });
+            }
 
         case LayersActionTypes.ERROR_LOADING_LAYERS:
             return state;

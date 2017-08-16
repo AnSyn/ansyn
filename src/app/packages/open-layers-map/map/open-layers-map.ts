@@ -99,7 +99,7 @@ export class OpenLayersMap implements IMap {
 			this.positionChanged.emit(this.getPosition());
 		});
 
-		const containerElem = <HTMLElement> this._mapObject.getViewport();
+		const containerElem = <HTMLElement>this._mapObject.getViewport();
 
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
@@ -107,9 +107,9 @@ export class OpenLayersMap implements IMap {
 			let coordinates = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY]);
 			const projection = this._mapObject.getView().getProjection();
 			coordinates = proj.transform(coordinates, projection, 'EPSG:4326');
-			const point: GeoJSON.Point = {type: 'Point', coordinates};
+			const point: GeoJSON.Point = { type: 'Point', coordinates };
 			containerElem.click();
-			this.contextMenu.emit({point, view, e});
+			this.contextMenu.emit({ point, view, e });
 		});
 
 	}
@@ -244,25 +244,22 @@ export class OpenLayersMap implements IMap {
 		}
 	}
 
-	// In the future we'll use @ansyn/map-source-provider
-	public addVectorLayer(layer: any): void {
-		const vectorLayer = new TileLayer({
-			source: new OSM({
-				attributions: [
-					layer.name
-				],
-				opaque: false,
-				url: layer.url,
-				crossOrigin: null
-			})
-		});
-		this._mapObject.addLayer(vectorLayer);
-		this._mapVectorLayers[layer.id] = vectorLayer;
+	public addVectorLayer(vectorParams: { layer: Layer, id: string }): void {
+		if (this._mapVectorLayers[vectorParams.id]) {
+			return;
+		}
+
+		vectorParams.layer.setZIndex(100);
+		this._mapObject.addLayer(vectorParams.layer);
+		this._mapVectorLayers[vectorParams.id] = vectorParams.layer;
 	}
 
-	public removeVectorLayer(layer: any): void {
-		this._mapObject.removeLayer(this._mapVectorLayers[layer.id]);
-		delete this._mapVectorLayers[layer.id];
+	public removeVectorLayer(vectorParams: any): void {
+		if (!this._mapVectorLayers[vectorParams.id]) {
+			return;
+		}
+		this._mapObject.removeLayer(this._mapVectorLayers[vectorParams.id]);
+		delete this._mapVectorLayers[vectorParams.id];
 	}
 
 	public get mapObject() {

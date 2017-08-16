@@ -1,4 +1,4 @@
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNodeLeaf } from '@ansyn/core';
 
 export class NodeActivationChangedEventArgs {
     public node: ILayerTreeNodeLeaf;

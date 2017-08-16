@@ -1,5 +1,5 @@
-import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
+import { SelectLeafLayerAction, UnselectLeafLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayerTreeNodeLeaf } from '@ansyn/core';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
@@ -210,10 +210,11 @@ describe('MapAppEffects', () => {
 			isChecked: false,
 			url: 'fake_url',
 			isIndeterminate: false,
-			children: []
+			children: [],
+			source: null
 		};
 
-		const action: SelectLayerAction = new SelectLayerAction(staticLeaf);
+		const action: SelectLeafLayerAction = new SelectLeafLayerAction(staticLeaf);
 		const imagery1 = {
 			addVectorLayer: () => {
 
@@ -235,10 +236,11 @@ describe('MapAppEffects', () => {
 			isChecked: false,
 			url: 'fake_url',
 			isIndeterminate: false,
-			children: []
+			children: [],
+			source: null
 		};
 
-		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
+		let action: UnselectLeafLayerAction = new UnselectLeafLayerAction(staticLeaf);
 		let imagery1 = {
 			removeVectorLayer: () => {
 

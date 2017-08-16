@@ -2,12 +2,18 @@ import { Position } from './position.model';
 import { Overlay } from './overlay.model';
 
 export type Case = {
-	readonly id?:string;
-	name?:string;
-	owner?:string;
-	last_modified?:Date;
-	state?: CaseState
+	readonly id?: string;
+	name?: string;
+	owner?: string;
+	last_modified?: Date;
+	state?: CaseState;
 };
+
+export interface IContextEntity {
+	id: string;
+	footprint: GeoJSON.Feature<any>;
+	date: Date;
+}
 
 export type CaseState = {
 	selected_context_id?: string;
@@ -15,6 +21,7 @@ export type CaseState = {
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
 	region: CaseRegionState,
+	contextEntities?: IContextEntity[],
 	orientation: string,
 	geoFilter: string,
 	favoritesOverlays?: string[]

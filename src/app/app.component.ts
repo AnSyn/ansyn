@@ -68,15 +68,15 @@ export class AppComponent implements  AfterViewInit {
 		metaTag.setAttribute('version',<any>packageJson['version']);
 		this.renderer.appendChild(this.document.head,metaTag);
 
-		this.selected_case$.subscribe( selected_case => { this.selected_case = selected_case; console.log('c',++this.counter); });
+		this.selected_case$.subscribe( selected_case => { this.selected_case = selected_case});//; console.log('c',++this.counter); });
 
-		this.selected_layout$.subscribe( selected_layout => { this.selected_layout = selected_layout; console.log('l',++this.counter); });
+		this.selected_layout$.subscribe( selected_layout => { this.selected_layout = selected_layout});//; console.log('l',++this.counter); });
 
-		this.overlays_count$.subscribe(_overlays_count => { this.overlays_count = _overlays_count; console.log('oc',++this.counter); });
+		this.overlays_count$.subscribe(_overlays_count => { this.overlays_count = _overlays_count});//; console.log('oc',++this.counter); });
 
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay; console.log('do',++this.counter); });
+		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});//; console.log('do',++this.counter);
 
-		this.favoritesOverlays$.subscribe((isFavorite: boolean) => { this.isFavoriteOverlay = isFavorite; console.log("fo",++this.counter );});
+		this.favoritesOverlays$.subscribe((isFavorite: boolean) => { this.isFavoriteOverlay = isFavorite});//; console.log("fo",++this.counter );
 
 
 	}

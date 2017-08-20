@@ -11,7 +11,7 @@ export const FiltersActionTypes = {
 
 	RESET_FILTERS: 'RESET_FILTERS',
 	TOGGLE_ONLY_FAVORITES: 'TOGGLE_ONLY_FAVORITES',
-	DISPLAY_ONLY_FAVORITES_SELECTION: 'DISPLAY_ONLY_FAVORITES_SELECTION'
+	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION'
 };
 
 export type FiltersActions = any;
@@ -41,8 +41,8 @@ export class ToggleOnlyFavoriteAction implements Action {
 	constructor(public payload?: any){}
 }
 
-export class DisplayOnlyFavortiesSelectionAction implements Action{
-	type = FiltersActionTypes.DISPLAY_ONLY_FAVORITES_SELECTION;
+export class EnableOnlyFavortiesSelectionAction implements Action{
+	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
 	constructor(public payload?: any){}
 }
 

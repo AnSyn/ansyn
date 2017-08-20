@@ -24,7 +24,7 @@ import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Context, OverlayDisplayMode } from '@ansyn/core';
 import { ContextProviderService, ContextCriteria } from '@ansyn/context';
-import { DisplayOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
+import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 
 
 @Injectable()
@@ -34,7 +34,7 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action,cases]: [Action,ICasesState]) => {
-			return new DisplayOnlyFavortiesSelectionAction(!!cases.selected_case.state.favoritesOverlays.length);
+			return new EnableOnlyFavortiesSelectionAction(!!cases.selected_case.state.favoritesOverlays.length);
 		});
 
 	@Effect()

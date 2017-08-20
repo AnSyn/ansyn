@@ -7,14 +7,14 @@ export interface IFiltersState {
     filters: Map<Filter, FilterMetadata>;
     isLoading: boolean;
     showOnlyFavorites: boolean;
-	displayOnlyFavoritesSelection: boolean;
+	enableOnlyFavoritesSelection: boolean;
 }
 
 export const initialFiltersState: IFiltersState = {
     filters: new Map<Filter, FilterMetadata>(),
     isLoading: true,
 	showOnlyFavorites: false,
-	displayOnlyFavoritesSelection: false
+	enableOnlyFavoritesSelection: false
 };
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
@@ -43,8 +43,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
 			return Object.assign({},state,{showOnlyFavorites : !state.showOnlyFavorites });
 
-		case FiltersActionTypes.DISPLAY_ONLY_FAVORITES_SELECTION:
-			return Object.assign({},state,{displayOnlyFavoritesSelection: action.payload});
+		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
+			return Object.assign({},state,{enableOnlyFavoritesSelection: action.payload});
 
         default:
             return  state; //Object.assign({},state);

@@ -24,7 +24,8 @@ export const OverlaysActionTypes = {
 	SET_FILTERS: type('SET_FILTERS'),
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	GO_NEXT_DISPLAY: type('GO_NEXT_DISPLAY'),
-	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY')
+	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY'),
+	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS')
 };
 
 export class SelectOverlayAction implements Action {
@@ -115,6 +116,11 @@ export class GoNextDisplayAction implements Action {
 export class GoPrevDisplayAction implements Action {
 	type = OverlaysActionTypes.GO_PREV_DISPLAY;
 	constructor(public payload: string){}
+}
+
+export class SyncFilteredOverlays implements Action {
+	type = OverlaysActionTypes.SYNC_FILTERED_OVERLAYS;
+	constructor(){}
 }
 
 export type OverlaysActions

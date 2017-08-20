@@ -61,10 +61,41 @@ describe('FiltersCollectionComponent', () => {
 
 	it('check that disableShowOnlyFavoritesSelection is been set in subscribe',() => {
 		expect(component.disableShowOnlyFavoritesSelection).toBeFalsy();
-		handler.next({displayOnlyFavoritesSelection: true});
+
+		handler.next({
+			showOnlyFavorites: false,
+			enableOnlyFavoritesSelection: true
+		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
-		handler.next({displayOnlyFavoritesSelection: false});
+
+		handler.next({
+			showOnlyFavorites: true,
+			enableOnlyFavoritesSelection: true
+		});
+		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
+
+		//we don't want disableShowOnlyFavoritesSelection to change
+		component.disableShowOnlyFavoritesSelection = false;
+		handler.next({
+			showOnlyFavorites: true,
+			enableOnlyFavoritesSelection: false
+		});
+		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
+
+		component.disableShowOnlyFavoritesSelection = true;
+		handler.next({
+			showOnlyFavorites: true,
+			enableOnlyFavoritesSelection: false
+		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(true);
+
+		handler.next({
+			showOnlyFavorites: false,
+			enableOnlyFavoritesSelection: false
+		});
+		expect(component.disableShowOnlyFavoritesSelection).toBe(true);
+
+
 	});
 
 

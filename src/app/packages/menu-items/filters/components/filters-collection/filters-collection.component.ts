@@ -29,10 +29,16 @@ export class FiltersCollectionComponent implements OnDestroy {
 
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
 		this.subscribers.filters =  this.store.select('filters').subscribe((result: IFiltersState) => {
+			// don't let the checkbox to be disabled if it is checked;
+			// onlyFavorite is true after ToggleOnlyFavoriteAction;
+			// enableOnlyFavoritesSelection is true when there are favorites in the system
+			// there is a situation where enableOnlyFavoritesSelection is false but the input is checked
+			// and therefore can never be unchecked
 			this.onlyFavorite = result.showOnlyFavorites;
 			if(this.onlyFavorite && !result.enableOnlyFavoritesSelection){
 				return;
 			}
+
 			this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
 		});
 

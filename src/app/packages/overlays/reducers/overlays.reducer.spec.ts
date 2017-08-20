@@ -3,13 +3,47 @@ import {
 	UnSelectOverlayAction,
 	SelectOverlayAction,
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction
+	LoadOverlaysSuccessAction, SetFiltersAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { cloneDeep } from 'lodash';
+import { before } from 'selenium-webdriver/testing';
 
 describe('Overlay Reducer', () => {
+	let o1,o2,o3,o4;
+	beforeEach(()=>{
+		 o1 = {
+			id: "12",
+			name: "tmp12",
+			date: new Date(2017, 7, 30),
+			photoTime: new Date(2017, 7, 30).toISOString(),
+			azimuth: 10
+		};
 
+		 o2 = {
+			id: "13",
+			name: "tmp13",
+			date: new Date(2017, 6, 30),
+			photoTime: new Date(2017, 6, 30).toISOString(),
+			azimuth: 10
+		};
+
+		 o3 = {
+			 id: "14",
+			 name: "tmp14",
+			 date: new Date(2017, 7, 30),
+			 photoTime: new Date(2017, 7, 30).toISOString(),
+			 azimuth: 12
+		 };
+
+		 o4 = {
+			 id: "15",
+			 name: "tmp15",
+			 date: new Date(2017, 7, 30),
+			 photoTime: new Date(2017, 7, 30).toISOString(),
+			 azimuth: 104
+		 };
+	})
 	describe("Load Overlays", () => {
 		it("should activate load_overlay reducer", () => {
 			const queryParams = {search: '9399ejf'};
@@ -53,23 +87,10 @@ describe('Overlay Reducer', () => {
 	});
 
 	describe("Load Overlays Success", () => {
+
 		it('should load all overlays', () => {
 			overlayInitialState.overlays = new Map();
-			const o1 = {
-				id: "12",
-				name: "tmp12",
-				date: new Date(2017, 7, 30),
-				photoTime: new Date(2017, 7, 30).toISOString(),
-				azimuth: 10
-			};
 
-			const o2 = {
-				id: "13",
-				name: "tmp13",
-				date: new Date(2017, 6, 30),
-				photoTime: new Date(2017, 6, 30).toISOString(),
-				azimuth: 10
-			};
 
 			const overlays = [o1, o2] as any;
 
@@ -85,7 +106,38 @@ describe('Overlay Reducer', () => {
 
 	describe("Set Filters actions",() => {
 		it("Set Filters actions",() => {
-			//todo add test (check how filters are working)
+
+
+			const action = new LoadOverlaysSuccessAction( [o1, o2, o3, o4] as any);
+			const result = OverlayReducer(overlayInitialState, action);
+
+			const actionTestA = new SetFiltersAction({
+				showOnlyFavorites: false,
+				favorites: ['15'],
+				parsedFilters:{}
+
+			});
+			const resultTestA = OverlayReducer(result,actionTestA);
+			expect(resultTestA.filteredOverlays.length).toBe(4);
+
+			const actionTestB = new SetFiltersAction({
+				showOnlyFavorites: true,
+				favorites: ['15'],
+				parsedFilters:{}
+
+			});
+			const resultTestB = OverlayReducer(result,actionTestB);
+			expect(resultTestB.filteredOverlays.length).toBe(1);
+
+			const actionTestC = new SetFiltersAction({
+				showOnlyFavorites: true,
+				favorites: [],
+				parsedFilters:{}
+
+			});
+			const resultTestC = OverlayReducer(result,actionTestC);
+			expect(resultTestC.filteredOverlays.length).toBe(0);
+
 		});
 	});
 });

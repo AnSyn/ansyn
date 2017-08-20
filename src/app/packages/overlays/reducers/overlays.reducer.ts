@@ -102,7 +102,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 		case overlay.OverlaysActionTypes.SET_FILTERS:
 			let overlaysToFilter = state.overlays;
 
-			if(action.payload.showOnlyFavorites && action.payload.favorites.length ){
+			if(action.payload.showOnlyFavorites ){
 				overlaysToFilter = new Map<string,Overlay>();
 
 				action.payload.favorites.forEach(id => {
@@ -110,12 +110,13 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				});
 			}
 
-			const res =  OverlaysService.filter(overlaysToFilter,action.payload);
+			const res =  OverlaysService.filter(overlaysToFilter,action.payload.parsedFilters);
 
 			return Object.assign({},state,{
 				filters: action.payload.parsedFilters,
 				filteredOverlays: res
 			});
+
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
 			return Object.assign({}, state, {

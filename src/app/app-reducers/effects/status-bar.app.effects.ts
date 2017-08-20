@@ -26,7 +26,8 @@ import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
-import { DisplayOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
+import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
+import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
 
 
 
@@ -180,6 +181,7 @@ export class StatusBarAppEffects {
 		})
 
 		.mergeMap((selectedCase: Case) => {
+			const actions = [];
 			const activeMap = selectedCase.state.maps.data.find( item => item.id === selectedCase.state.maps.active_map_id);
 
 			//lagecy support
@@ -189,17 +191,21 @@ export class StatusBarAppEffects {
 
 			if(selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1 ){
 				pull(selectedCase.state.favoritesOverlays,activeMap.data.overlay.id);
+				if(selectedCase.state.facets.showOnlyFavorites){
+					actions.push(new SyncFilteredOverlays());
+				}
 			}else{
 				selectedCase.state.favoritesOverlays.push(activeMap.data.overlay.id);
 			}
 
 			const overlaysMarkup = this.casesService.getOverlaysMarkup(selectedCase);
 
-			return [
-				new OverlaysMarkupAction(overlaysMarkup),
-				new UpdateCaseAction(selectedCase),
-				new DisplayOnlyFavortiesSelectionAction(!!selectedCase.state.favoritesOverlays.length)
-			];
+			//order does metter update case must be the first actions since all other relays on him
+			actions.unshift(new UpdateCaseAction(selectedCase))
+			actions.push(new OverlaysMarkupAction(overlaysMarkup))
+			actions.push(new EnableOnlyFavortiesSelectionAction(!!selectedCase.state.favoritesOverlays.length))
+
+			return actions;
 		});
 
 	@Effect({dispatch: false})

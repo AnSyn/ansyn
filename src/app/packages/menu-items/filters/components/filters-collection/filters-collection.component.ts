@@ -18,6 +18,7 @@ import { DestroySubscribers } from 'ng2-destroy-subscribers';
 })
 export class FiltersCollectionComponent implements OnDestroy {
 	public disableShowOnlyFavoritesSelection: boolean;
+	public onlyFavorite: boolean;
 	public filters: any[];
 
 	public subscribers = {
@@ -28,7 +29,11 @@ export class FiltersCollectionComponent implements OnDestroy {
 
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
 		this.subscribers.filters =  this.store.select('filters').subscribe((result: IFiltersState) => {
-			this.disableShowOnlyFavoritesSelection = !result.displayOnlyFavoritesSelection;
+			this.onlyFavorite = result.showOnlyFavorites;
+			if(this.onlyFavorite && !result.enableOnlyFavoritesSelection){
+				return;
+			}
+			this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
 		});
 
 		this.subscribers.intialFilters = this.initialFilters$.subscribe(filters => {

@@ -24,7 +24,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
-		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS,FiltersActionTypes.TOGGLE_ONLY_FAVORITES)
+		.ofType(FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS,FiltersActionTypes.TOGGLE_ONLY_FAVORITES,OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select('filters'),this.store$.select('cases'))
 		.map(([action, filtersState,casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState,ICasesState]) => {
 			const parsedFilters = [];
@@ -48,7 +48,7 @@ export class FiltersAppEffects {
 		.withLatestFrom(this.store$.select('filters'),this.store$.select('cases'))
 		.map(([action,filters,cases]: [Action,IFiltersState,ICasesState]) => {
 
-			const selectedCase = cases.selected_case;
+			const selectedCase =  cloneDeep(cases.selected_case);
 
 			selectedCase.state.facets.showOnlyFavorites = filters.showOnlyFavorites;
 

@@ -17,8 +17,9 @@ import { ContextProviderService } from '@ansyn/context/providers/context-provide
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { FiltersActionTypes } from '../../packages/menu-items/filters/actions/filters.actions';
+
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -119,21 +120,10 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
 		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
 		effectsRunner.queue(action);
-		let count = 0;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result:Action)=>{
-			if(_result.type === CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[0].data.overlay.name).toBe('tmp');
-				expect(_result.payload.state.maps.data[0].id).toBe(icase_state.cases[0].state.maps.active_map_id);
-				count++;
-			}
-			if(_result.type === OverlaysActionTypes.DISPLAY_OVERLAY){
-				expect(_result.payload.overlay.id).toBe('tmp');
-				expect(_result.payload.map_id === icase_state.cases[0].state.maps.active_map_id).toBeTruthy();
-				count++;
-			}
-
-		});
-		expect(count).toBe(2);
+		let result: UpdateCaseAction;
+		casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {result = _result;});
+		expect(result.constructor).toEqual(UpdateCaseAction);
+		expect(CasesService.activeMap(result.payload).data.overlay.id).toEqual('tmp');
 	});
 
 	it('saveDefaultCase$ should add a default case', () => {

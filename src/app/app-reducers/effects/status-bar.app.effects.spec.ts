@@ -6,9 +6,7 @@ import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions
 import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import {
-	AddCaseSuccessAction, SelectCaseByIdAction, UpdateCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseSuccessAction, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
@@ -22,14 +20,10 @@ import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/m
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	GoNextDisplayAction, GoPrevDisplayAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import {BaseOverlaySourceProvider, IFetchParams,Overlay} from '@ansyn/overlays';
-import {
-	SetGeoFilterAction, SetOrientationAction,
-	SetTimeAction
-} from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { cloneDeep } from 'lodash';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 	sourceType = "Mock";
@@ -46,6 +40,7 @@ describe('StatusBarAppEffects', () => {
 	let casesService: CasesService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let overlaysService: OverlaysService;
+	let fakeCase: Case;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -77,9 +72,10 @@ describe('StatusBarAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		overlaysService = _overlaysService;
 
-		const fakeCase: Case = {
+			fakeCase = {
 			id: 'case1',
 			state: {
+				facets:{},
 				region: {
 					type: 'Polygon',
 					coordinates: [
@@ -289,7 +285,7 @@ describe('StatusBarAppEffects', () => {
 		});
 	});
 
-	it('onFavorite$', () => {
+	it('onFavorite$ with favorites and showOnlyFavorites off', () => {
 		effectsRunner.queue(new FavoriteAction());
 		let counter = 0;
 		statusBarAppEffects.onFavorite$.subscribe((result) => {
@@ -302,4 +298,21 @@ describe('StatusBarAppEffects', () => {
 		expect(counter).toBe(3);
 	});
 
+	it('onFavorite$ with favorites and showOnlyFavorites on (unfavorite)',() => {
+		const testCase = cloneDeep(fakeCase);
+		testCase.state.facets.showOnlyFavorites = true;
+		testCase.state.favoritesOverlays.push("overlayId1");
+		store.dispatch(new UpdateCaseAction( testCase));
+		effectsRunner.queue(new FavoriteAction());
+		let count =0;
+		statusBarAppEffects.onFavorite$.subscribe((result) => {
+			count++;
+			if (result instanceof UpdateCaseAction){
+				expect(count).toBe(1);
+				expect(result.payload.state.favoritesOverlays.length).toBe(0);
+			}
+
+		});
+		expect(count).toBe(4);
+	});
 });

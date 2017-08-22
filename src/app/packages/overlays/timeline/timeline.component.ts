@@ -63,9 +63,10 @@ export class TimelineComponent implements OnInit {
 	}
 
 	drawMarkup() {
+
 		selectAll('.drop.displayed').classed('displayed ', false);
 		selectAll('.drop.active').classed('active', false);
-		selectAll('.drop.favorites').classed('favorites', false);
+		selectAll('.drop.favorites').classed('favorites',false).style('filter','none');
 		selectAll('.drop.hover').classed('hover', false);
 
 		const nodes = [];
@@ -80,6 +81,8 @@ export class TimelineComponent implements OnInit {
 			const selection = (<any>selectAll(nodes));
 			selection.moveToFront();
 		}
+
+		selectAll('.drop.favorites').style('filter','url(#highlight)');
 	}
 
 	get markup(){
@@ -157,8 +160,8 @@ export class TimelineComponent implements OnInit {
 			data: entities.data,
 		}));
 
-		const element = select(this.context.nativeElement)
-			.datum(dataSet);
+        const element = select(this.context.nativeElement)
+            .datum(dataSet);
 
 		chart(element);
 

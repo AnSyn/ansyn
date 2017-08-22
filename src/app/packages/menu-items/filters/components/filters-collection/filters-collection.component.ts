@@ -5,8 +5,8 @@ import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
 import { IFiltersState } from '../../reducer/filters.reducer';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
-import { FiltersEffects } from '../../effects/filters.effects';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-filters',
@@ -16,6 +16,7 @@ import { DestroySubscribers } from 'ng2-destroy-subscribers';
 @DestroySubscribers({
 	destroyFunc: 'ngOnDestroy',
 })
+
 export class FiltersCollectionComponent implements OnDestroy {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
@@ -28,7 +29,15 @@ export class FiltersCollectionComponent implements OnDestroy {
 	initialFilters$: Observable<Filter[]> = this.filtersService.loadFilters();
 
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
-		this.subscribers.filters =  this.store.select('filters').subscribe((result: IFiltersState) => {
+		this.subscribers.filters =  this.store.select('filters')
+			.distinctUntilChanged(isEqual)
+			.map( (state: IFiltersState) => {
+				return {
+					showOnlyFavorites: state.showOnlyFavorites,
+					enableOnlyFavoritesSelection: state.enableOnlyFavoritesSelection
+				};
+			})
+			.subscribe( result => {
 			// don't let the checkbox to be disabled if it is checked;
 			// onlyFavorite is true after ToggleOnlyFavoriteAction;
 			// enableOnlyFavoritesSelection is true when there are favorites in the system

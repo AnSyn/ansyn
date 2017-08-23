@@ -5,6 +5,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
+import { OverlaySpecialObject } from "@ansyn/core/models";
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -25,7 +26,8 @@ export const OverlaysActionTypes = {
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	GO_NEXT_DISPLAY: type('GO_NEXT_DISPLAY'),
 	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY'),
-	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS')
+	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS'),
+	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS')
 };
 
 export class SelectOverlayAction implements Action {
@@ -121,6 +123,11 @@ export class GoPrevDisplayAction implements Action {
 export class SyncFilteredOverlays implements Action {
 	type = OverlaysActionTypes.SYNC_FILTERED_OVERLAYS;
 	constructor(){}
+}
+
+export class SetSpecialObjectsActionStore implements  Action{
+	type = OverlaysActionTypes.SET_SPECIAL_OBJECTS;
+	constructor(public payload: Array<OverlaySpecialObject>){};
 }
 
 export type OverlaysActions

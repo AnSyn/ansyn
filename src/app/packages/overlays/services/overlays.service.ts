@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
+import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 
 
@@ -62,15 +63,14 @@ export class OverlaysService {
 	 * @param ids
 	 * @param properties
 	 */
-
-	static pluck(overlays: Map<any,any>, ids: string[], properties: string[]){
+	static pluck<T>(items: Map<string,T >, ids: string[], properties: string[]){
 		return ids.map( id => {
-			const overlay = overlays.get(id);
+			const item = items.get(id);
 			if(!properties.length ) {
-				return overlay;
+				return item;
 			}
 			return properties.reduce((obj, property) => {
-				obj[property] = overlay[property];
+				obj[property] = item[property];
 				return obj;
 			}, {});
 		});
@@ -100,8 +100,13 @@ export class OverlaysService {
 
 
 
-	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids): Array<any> {
+	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids,specialObject: Map<string,OverlaySpecialObject>): Array<any> {
 		const overlaysData =  OverlaysService.pluck(overlays,ids,["id","date"]);
+
+		specialObject.forEach( (value) => {
+			overlaysData.push(value);
+		})
+
 		return [{ name: undefined, data: overlaysData }];
 	}
 
@@ -111,7 +116,9 @@ export class OverlaysService {
 	}*/
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = isEqual(data.filteredOverlays,data1.filteredOverlays) &&  isEqual(data.filters, data1.filters) ;
+		const result = isEqual(data.filteredOverlays,data1.filteredOverlays)
+					&& isEqual(data.filters, data1.filters)
+					&& isEqual(data.specialObjects,data1.specialObjects) ;
 		return result;
 	}
 

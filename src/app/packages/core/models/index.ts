@@ -1,4 +1,4 @@
-export { Overlay, OverlaysCriteria } from './overlay.model';
+export  *  from './overlay.model';
 export { Position } from './position.model';
 export { MenuItem } from './menu-item.model';
 export { IGeneralConfig } from './general.config';

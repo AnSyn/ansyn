@@ -4,6 +4,7 @@
 
 
 import { GeometryObject } from 'geojson';
+
 export class Overlay {
 	id: string;
 	footprint?: any;//@todo add type geojson_multipoligon,
@@ -24,9 +25,15 @@ export class Overlay {
 	isFullOverlay: boolean;
 }
 
-export type OverlaysCriteria = {
-	to : string,
-	from: string,
-	polygon:GeometryObject,
-	caseId?:string
+export interface OverlaysCriteria  {
+	to: string;
+	from: string;
+	polygon:GeometryObject;
+	caseId?:string;
 };
+
+export class OverlaySpecialObject {
+	id: string;
+	date: Date;
+	shape: string; //this will be type soon or I will add another property for shapeType
+}

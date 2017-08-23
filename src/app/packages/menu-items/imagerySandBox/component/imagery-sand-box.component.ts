@@ -13,6 +13,8 @@ import { isEqual,cloneDeep } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import { SelectCaseByIdAction } from '../../cases/actions/cases.actions';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -25,6 +27,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public overlaysTo;
 	public selectedCase:Case;
 	public overlaysCriteria: OverlaysCriteria;
+	public isSpecialDisplayed = false;
 
 	constructor(public imageryCommunicatorService: ImageryCommunicatorService,public store:Store<ICasesState>) {
 
@@ -111,6 +114,11 @@ export class ImagerySandBoxComponent implements OnInit {
 		} ;
 		this.store.dispatch(new LoadOverlaysAction(this.overlaysCriteria));
 	}
+	public toggleSpecialObject(){
+		const specialObject: OverlaySpecialObject = { id: "abcd", date: new Date(2016,6,12),shape:'star' } as  OverlaySpecialObject;
+		this.store.dispatch(new SetSpecialObjectsActionStore([specialObject]));
+	}
+
 
 	public insertContextEntity(){
 		this.selectedCase.state.contextEntities = [];

@@ -5,6 +5,7 @@ import * as overlay from '../actions/overlays.actions';
 import { Overlay } from "../models/overlay.model";
 import { isNil } from 'lodash';
 import { OverlaysService } from '../services/overlays.service';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 
 export interface IOverlayState {
@@ -12,6 +13,7 @@ export interface IOverlayState {
 	loading: boolean;
 	overlays: any; //Map
 	selectedOverlays: string[];
+	specialObjects: Map<string,OverlaySpecialObject>;
 	demo: number;
 	filters: any[];
 	filteredOverlays: string[];
@@ -25,6 +27,7 @@ export const overlayInitialState: IOverlayState = {
 	loading: false,
 	overlays: new Map(),
 	selectedOverlays: [],
+	specialObjects: new Map<string,OverlaySpecialObject>(),
 	demo: 1,
 	//@todo change to Map
 	filters: [],
@@ -36,8 +39,9 @@ export const overlayInitialState: IOverlayState = {
 
 export function OverlayReducer(state = overlayInitialState,action: overlay.OverlaysActions): IOverlayState {
 	switch(action.type){
+
 		case overlay.OverlaysActionTypes.UPDATE_OVERLAYS_COUNT:
-			return {...state,count:action.payload};
+			return {...state, count: action.payload};
 
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -48,7 +52,6 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			return Object.assign({},state,{
 				selectedOverlays: selected
 			});
-
 
 		case overlay.OverlaysActionTypes.UNSELECT_OVERLAY:
 			const selected1 = state.selectedOverlays.slice();
@@ -93,7 +96,6 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				count: 0
 			});
 
-
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({},state,{
 				loading: false
@@ -117,6 +119,16 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 				filteredOverlays: res
 			});
 
+		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
+			const specialObjectsData = OverlaysService.sort(action.payload);
+
+			const specialObjects= new Map();
+			specialObjectsData.forEach(i => {
+
+				specialObjects.set(i.id,i);
+			});
+
+			return {...state,	specialObjects } ;
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
 			return Object.assign({}, state, {

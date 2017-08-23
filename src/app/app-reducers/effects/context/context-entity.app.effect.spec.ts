@@ -8,6 +8,8 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
+import { DisplayOverlayAction } from '../../../packages/overlays/actions/overlays.actions';
+import { BackToWorldAction } from '../../../packages/map-facade/actions/map.actions';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -21,7 +23,8 @@ describe('ContextEntityAppEffects', () => {
 		getVisualizer: () => {}
 	};
 	const visualizer = {
-		setEntities: () => {}
+		setEntities: () => {},
+		setReferenceDate: () => {}
 	};
 
 	const feature: GeoJSON.Feature<any> = {
@@ -52,9 +55,9 @@ describe('ContextEntityAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1'},
-					{id: 'imagery2'},
-					{id: 'imagery3'}
+					{id: 'imagery1', data: {overlay: {date: new Date()}}},
+					{id: 'imagery2', data: {overlay: {date: new Date()}}},
+					{id: 'imagery3', data: {overlay: {date: new Date()}}}
 				],
 				active_map_id: 'imagery1'
 			}
@@ -140,6 +143,51 @@ describe('ContextEntityAppEffects', () => {
 		}));
 
 		contextEntityAppEffects.displayEntityFromNewMap$.subscribe();
+		expect(visualizer.setEntities).not.toHaveBeenCalled();
+	});
+
+	it('displayEntityTimeFromOverlay$ should display set overlay date to context visualizer', () => {
+		cases[0].state.contextEntities = fakeContextEntities;
+
+		spyOn(visualizer, 'setReferenceDate');
+		let fake_overlay = <any>{id: 'overlayId', isFullOverlay: true};
+		effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery2'}));
+
+		contextEntityAppEffects.displayEntityTimeFromOverlay$.subscribe();
+		expect(visualizer.setReferenceDate).toHaveBeenCalled();
+		expect(visualizer.setEntities).not.toHaveBeenCalled();
+	});
+
+	it('displayEntityTimeFromOverlay$ should NOT display set overlay date to context visualizer', () => {
+		cases[0].state.contextEntities = null;
+		spyOn(visualizer, 'setReferenceDate');
+		let fake_overlay = <any>{id: 'overlayId', isFullOverlay: true};
+		effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery2'}));
+
+		contextEntityAppEffects.displayEntityTimeFromOverlay$.subscribe();
+		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();
+		expect(visualizer.setEntities).not.toHaveBeenCalled();
+	});
+
+	it('displayEntityTimeFromBackToWorld$ should display set overlay date to context visualizer', () => {
+		cases[0].state.contextEntities = fakeContextEntities;
+
+		spyOn(visualizer, 'setReferenceDate');
+		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery2'}));
+
+		contextEntityAppEffects.displayEntityTimeFromBackToWorld$.subscribe();
+		expect(visualizer.setReferenceDate).toHaveBeenCalled();
+		expect(visualizer.setEntities).not.toHaveBeenCalled();
+	});
+
+	it('displayEntityTimeFromBackToWorld$ should NOT display set overlay date to context visualizer', () => {
+		cases[0].state.contextEntities = null;
+
+		spyOn(visualizer, 'setReferenceDate');
+		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery2'}));
+
+		contextEntityAppEffects.displayEntityTimeFromBackToWorld$.subscribe();
+		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 });

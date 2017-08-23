@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed,inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
 import { MockComponent } from '@ansyn/core/test';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -102,7 +102,7 @@ describe('ImageriesManagerComponent', () => {
 
 	});
 
-	it('emit change action event and chagne the active map id ',()=> {
+	it('emit change action event and chagne the active map id ',fakeAsync(()=> {
 		//spyOn(component,'changeShadowMouseTarget');
 		spyOn(component.setActiveImagery,'emit');
 
@@ -110,12 +110,14 @@ describe('ImageriesManagerComponent', () => {
 		expect(wrapperDivs.length).toBe(2);
 
 		wrapperDivs[0].click();
+		tick(500);
 		expect(component.maps.active_map_id).toBe('imagery1');
-		expect(component.setActiveImagery.emit['calls'].any()).toBe(false);
+		expect(component.setActiveImagery.emit['calls'].any()).toBeFalsy();
 
 		wrapperDivs[1].click();
+		tick(500);
 		expect(component.setActiveImagery.emit).toHaveBeenCalledWith('imagery2');
-	});
+	}));
 
 	it('activeate shadow mouse',() => {
 		//spyOn(communicatorProvider,'communicators');

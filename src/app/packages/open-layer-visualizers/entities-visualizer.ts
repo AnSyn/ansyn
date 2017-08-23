@@ -32,6 +32,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	onDisposedEvent: EventEmitter<any> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
+	onDoubleClickFeature: EventEmitter<any> = new EventEmitter();
 
 	constructor(visualizerType: string ,args: any) {
 		this.type = visualizerType;

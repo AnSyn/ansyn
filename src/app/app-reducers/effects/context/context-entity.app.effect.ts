@@ -9,14 +9,14 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { isNil as _isNil} from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CaseMapState } from 'app/packages/core';
+import { CaseMapState } from '@ansyn/core';
 import { ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
 
 @Injectable()
 export class ContextEntityAppEffects {
 
 	@Effect({dispatch:false})
-	diplayEntityFromCase$: Observable<any> = this.actions$
+	displayEntityFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[SelectCaseByIdAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
@@ -28,7 +28,7 @@ export class ContextEntityAppEffects {
 		});
 
 	@Effect({dispatch:false})
-	diplayEntityFromNewMap$: Observable<any> = this.actions$
+	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[AddMapInstacneAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))

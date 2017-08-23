@@ -63,6 +63,6 @@ export interface IMapVisualizer {
 
 	onDisposedEvent: EventEmitter<any>;
 	onHoverFeature: EventEmitter<any>;
-
+	onDoubleClickFeature: EventEmitter<any>;
 	dispose();
 }

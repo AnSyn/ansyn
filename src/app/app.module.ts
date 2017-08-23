@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { MenuItemsModule } from '@ansyn/menu-items';
-import { ImageryModule } from '@ansyn/imagery';
+import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -21,9 +21,10 @@ import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-mark
 import { ContextModule } from '@ansyn/context/context.module';
 import { AppProvidersModule } from "./app-providers/app-providers.module";
 import { AppReducersModule } from './app-reducers/app-reducers.module';
-import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
+import { OpenLayerVisualizersModule, OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
+import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 
 export const contextSources = {
 	 'Proxy': ContextProxySource,
@@ -66,4 +67,8 @@ export const contextSources = {
 	bootstrap: [AppComponent]
 })
 
-export class AppModule {}
+export class AppModule {
+	constructor(imageryProviderService: ImageryProviderService) {
+		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, ContextEntityVisualizer);
+	}
+}

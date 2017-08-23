@@ -4,13 +4,16 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
+import { CaseMapState } from '@ansyn/core';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 import { isNil as _isNil} from 'lodash';
-import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
-import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CaseMapState } from '@ansyn/core';
-import { ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
+import { ImageryCommunicatorService, IVisualizerEntity, CommunicatorEntity } from '@ansyn/imagery';
+import { ContextEntityVisualizerType, ContextEntityVisualizer } from 'app/app-visualizers/context-entity.visualizer';
+import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class ContextEntityAppEffects {
@@ -23,7 +26,8 @@ export class ContextEntityAppEffects {
 		.map(([action, caseState]:[SelectCaseByIdAction, ICasesState]) => {
 			const currentCase = caseState.selected_case;
 			currentCase.state.maps.data.forEach((mapState: CaseMapState)=>{
-				this.displayEntity(mapState.id, caseState.selected_case.state.contextEntities);
+				const overlayDate =  mapState.data.overlay ? mapState.data.overlay.date : null;
+				this.setContextEntity(mapState.id, overlayDate, caseState.selected_case.state.contextEntities);
 			});
 		});
 
@@ -33,7 +37,32 @@ export class ContextEntityAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[AddMapInstacneAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
 		.map(([action, caseState]:[AddMapInstacneAction, ICasesState]) => {
-			this.displayEntity(action.payload.currentCommunicatorId, caseState.selected_case.state.contextEntities);
+			const mapState: CaseMapState = CasesService.mapById(caseState.selected_case, action.payload.currentCommunicatorId);
+			const overlayDate =  mapState.data.overlay ? mapState.data.overlay.date : null;
+			this.setContextEntity(mapState.id, overlayDate, caseState.selected_case.state.contextEntities);
+		});
+
+	@Effect({dispatch:false})
+	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, caseState]:[DisplayOverlayAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.map(([action, caseState]:[DisplayOverlayAction, ICasesState]) => {
+			const mapId = action.payload.map_id ? action.payload.map_id : caseState.selected_case.state.maps.active_map_id;
+			const mapState: CaseMapState = CasesService.mapById(caseState.selected_case, mapId);
+			const communicatorHandler = this.communicatorService.provide(mapId);
+			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
+		});
+
+	@Effect({dispatch:false})
+	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select('cases'))
+		.filter(([action, caseState]:[BackToWorldAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.map(([action, caseState]:[BackToWorldAction, ICasesState]) => {
+			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selected_case.state.maps.active_map_id;
+			const communicatorHandler = this.communicatorService.provide(mapId);
+			this.setContextOverlayDate(communicatorHandler, null);
 		});
 
 	constructor(
@@ -42,11 +71,17 @@ export class ContextEntityAppEffects {
 		private communicatorService: ImageryCommunicatorService
 	){}
 
-	private displayEntity(mapId: string, contextEntities: IVisualizerEntity[]) {
+	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
-			const vis = communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			vis.setReferenceDate(overlayDate);
 			vis.setEntities(contextEntities);
 		}
+	}
+
+	private setContextOverlayDate(communicatorHandler: CommunicatorEntity, overlayDate: Date) {
+		const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+		vis.setReferenceDate(overlayDate);
 	}
 }

@@ -2,19 +2,25 @@ import { EntitiesVisualizer } from '@ansyn/open-layer-visualizers/entities-visua
 import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
+import Stroke from 'ol/style/stroke';
+import Fill from 'ol/style/fill';
+import Text from 'ol/style/text';
 
 import proj from 'ol/proj';
 import Point from 'ol/geom/point';
 
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
+import { getTimeDiff, TimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
+import { IContextEntity } from '@ansyn/core/models/case.model';
 
 export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
 
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 
-	private iconStyle: Style;
-	_idToCachedCenter: Map<string, Point>;
+	iconStyle: Style;
+	referenceDate: Date;
+	idToCachedCenter: Map<string, Point>;
 
 	constructor(args: any) {
 		super(ContextEntityVisualizerType, args);
@@ -23,21 +29,43 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			scale: 1,
 			src: '/assets/icons/map/entity-marker.svg'
 		});
-		this._idToCachedCenter = new Map<string, Point>();
+		this.idToCachedCenter = new Map<string, Point>();
 	}
 
 	featureStyle(feature: Feature, resolution) {
-		const superStyle = super.featureStyle(feature, resolution);
 		const featureId = `${feature.getId()}_context`;
 		let style = this._styleCache[featureId];
 		if (!style) {
+			const superStyle = super.featureStyle(feature, resolution);
+			const textStyle = new Text({
+				font: '12px Calibri,sans-serif',
+				fill: new Fill({
+					color: '#fff'
+				}),
+				stroke: new Stroke({
+					color: '#000',
+					width: 3
+				}),
+				offsetY: 30
+			});
+
 			style = [
 				superStyle,
 				new Style({
 					image: this.iconStyle,
-					geometry: this.getGeometry.bind(this)
+					geometry: this.getGeometry.bind(this),
+					text: textStyle
 				})
 			];
+			if (!this.referenceDate) {
+				textStyle.setText("");
+			} else {
+				const originalEntity = this._idToEntity.get(feature.getId()).originalEntity;
+				const entityDate = (<IContextEntity>originalEntity).date;
+				const timeDiff = getTimeDiff(this.referenceDate, entityDate);
+				const timeFormat = getTimeDiffFormat(timeDiff);
+				textStyle.setText(timeFormat);
+			}
 			this._styleCache[featureId] = style;
 		}
 		return style;
@@ -45,8 +73,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	getGeometry(originalFeature) {
 		const featureId = originalFeature.getId();
-		if (this._idToCachedCenter.has(featureId)) {
-			return this._idToCachedCenter.get(featureId);
+		if (this.idToCachedCenter.has(featureId)) {
+			return this.idToCachedCenter.get(featureId);
 		}
 
 		const entityMap = this._idToEntity.get(featureId);
@@ -55,16 +83,21 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const projection = view.getProjection();
 		const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
 		const point = new Point(lonLatCords);
-		this._idToCachedCenter.set(featureId, point);
+		this.idToCachedCenter.set(featureId, point);
 		return point;
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		logicalEntities.forEach((entity)=>{
-			if (this._idToCachedCenter.has(entity.id)){
-				this._idToCachedCenter.delete(entity.id);
+			if (this.idToCachedCenter.has(entity.id)){
+				this.idToCachedCenter.delete(entity.id);
 			}
 		});
 		super.addOrUpdateEntities(logicalEntities);
+	}
+
+	setReferenceDate(date: Date) {
+		this.referenceDate = date;
+		this._styleCache = {};
 	}
 }

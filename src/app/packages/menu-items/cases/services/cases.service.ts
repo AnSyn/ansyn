@@ -36,6 +36,9 @@ export class CasesService {
 		return selectedCase.state.maps.data.find(map => map.id === selectedCase.state.maps.active_map_id);
 	}
 
+	static mapById(selectedCase: Case, id: string): CaseMapState {
+		return selectedCase.state.maps.data.find(map => map.id === id);
+	}
 
 	constructor(private http: Http, @Inject(casesConfig) public config: CasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.casesBaseUrl;

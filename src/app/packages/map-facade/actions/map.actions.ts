@@ -120,7 +120,7 @@ export class ContextMenuDisplayAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 	constructor(public payload: string){}
 }
-export class HoverFeatureTriggerAction implements Action {
+export class HoverFeatureChangedTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
-	constructor(public payload: string){}
+	constructor(public payload?: string){}
 }

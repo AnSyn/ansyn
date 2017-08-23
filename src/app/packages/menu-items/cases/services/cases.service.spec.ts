@@ -93,7 +93,7 @@ describe('CasesService', () => {
 				}
 			}
 		} as any;
-		const result = casesService.getOverlaysMarkup(testCase);
+		const result = CasesService.getOverlaysMarkup(testCase);
 		expect(result.length).toBe(2);
 		expect(result[0].class).toBe('active');
 		expect(result[1].class).toBe('displayed');

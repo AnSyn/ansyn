@@ -113,9 +113,6 @@ export class ImageriesManagerComponent implements OnInit{
 	clickMapContainer(value){
 		this.clickTimeout = window.setTimeout(() => {
 			if (!this.preventDbClick){
-				if(this.maps.active_map_id !== value){
-					this.setActiveImagery.emit(value);
-				}
 				this.changeActiveImagery(value);
 			}
 			this.preventDbClick = false;

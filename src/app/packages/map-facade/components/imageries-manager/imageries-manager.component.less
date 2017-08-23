@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/common";
+@height-minus-status: calc(~"100% - @{status-bar-height}");
 
 div.imageries-container{
 	position: relative;
@@ -44,7 +46,7 @@ div.imageries-container{
 			width: 50%;
 			height: 100%;
 			div.active-border{
-				height: calc(~"100% - 35px");;
+				height: @height-minus-status;
 			}
 		}
 
@@ -57,7 +59,7 @@ div.imageries-container{
 			height: 50%;
 			&:last-child{
 				div.active-border{
-					height: calc(~"100% - 35px");;
+					height: @height-minus-status;
 				}
 			}
 		}
@@ -73,7 +75,7 @@ div.imageries-container{
 			}
 			&:not(:first-child) {
 				div.active-border{
-					height: calc(~"100% - 35px");;
+					height: @height-minus-status;
 				}
 			}
 		}
@@ -90,7 +92,7 @@ div.imageries-container{
 			}
 			&:first-child, &:last-child {
 				div.active-border{
-					height: calc(~"100% - 35px");;
+					height: @height-minus-status;
 				}
 			}
 		}
@@ -103,7 +105,7 @@ div.imageries-container{
 			height: 50%;
 			&:nth-child(3), &:nth-child(4)  {
 				div.active-border{
-					height: calc(~"100% - 35px");;
+					height: @height-minus-status;
 				}
 			}
 		}

@@ -198,7 +198,7 @@ export class StatusBarAppEffects {
 				selectedCase.state.favoritesOverlays.push(activeMap.data.overlay.id);
 			}
 
-			const overlaysMarkup = this.casesService.getOverlaysMarkup(selectedCase);
+			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
 
 			//order does metter update case must be the first actions since all other relays on him
 			actions.unshift(new UpdateCaseAction(selectedCase))

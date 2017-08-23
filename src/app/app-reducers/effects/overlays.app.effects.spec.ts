@@ -138,14 +138,14 @@ describe('OverlaysAppEffects',()=> {
 	});
 
 	it("onOverlaysMarkupsChanged$",() => {
-		spyOn(casesService,'getOverlaysMarkup').and.returnValue({});
+		spyOn(CasesService,'getOverlaysMarkup').and.returnValue({});
 		const action = new LoadOverlaysSuccessAction({} as any);
 		effectsRunner.queue(action);
 		let count = 0;
 		overlaysAppEffects.onOverlaysMarkupsChanged$.subscribe((_result:Action) => {
 			count++;
 			expect(_result.type).toEqual(OverlaysActionTypes.OVERLAYS_MARKUPS);
-			expect(casesService.getOverlaysMarkup).toHaveBeenCalledTimes(1);
+			expect(CasesService.getOverlaysMarkup).toHaveBeenCalledTimes(1);
 		});
 		expect(count).toBe(1);
 	});

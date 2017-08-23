@@ -36,6 +36,12 @@ export class ContextEntityAppEffects {
 			this.displayEntity(action.payload.currentCommunicatorId, caseState.selected_case.state.contextEntities);
 		});
 
+	constructor(
+		private actions$: Actions,
+		private store$: Store<IAppState>,
+		private communicatorService: ImageryCommunicatorService
+	){}
+
 	private displayEntity(mapId: string, contextEntities: IVisualizerEntity[]) {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
@@ -43,10 +49,4 @@ export class ContextEntityAppEffects {
 			vis.setEntities(contextEntities);
 		}
 	}
-
-	constructor(
-		private actions$: Actions,
-		private store$: Store<IAppState>,
-		private communicatorService: ImageryCommunicatorService
-	){}
 }

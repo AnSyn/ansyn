@@ -11,7 +11,7 @@ export type Case = {
 
 export interface IContextEntity {
 	id: string;
-	footprint: GeoJSON.Feature<any>;
+	featureJson: GeoJSON.Feature<any>;
 	date: Date;
 }
 

@@ -12,6 +12,7 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { isEqual,cloneDeep } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
+import { SelectCaseByIdAction } from '../../cases/actions/cases.actions';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -36,7 +37,7 @@ export class ImagerySandBoxComponent implements OnInit {
 				this.selectedCase = cloneDeep(cases.selected_case);
 				this.overlaysFrom = this.selectedCase.state.time.from.split('T')[0];
 				this.overlaysTo = this.selectedCase.state.time.to.split('T')[0];
-		});
+			});
 	}
 
 	public setCenter(coordinate) {
@@ -111,4 +112,40 @@ export class ImagerySandBoxComponent implements OnInit {
 		this.store.dispatch(new LoadOverlaysAction(this.overlaysCriteria));
 	}
 
+	public insertContextEntity(){
+		this.selectedCase.state.contextEntities = [];
+
+		const feature: GeoJSON.Feature<any> = {
+			"type": "Feature",
+			"properties": {
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							35.71991824722275,
+							32.709192409794866
+						],
+						[
+							35.64566531753454,
+							32.093992011030576
+						],
+						[
+							36,
+							32.093992011030576
+						],
+						[
+							35.71991824722275,
+							32.709192409794866
+						]
+					]
+				]
+			}
+		};
+
+		this.selectedCase.state.contextEntities.push({id: '1', date: new Date("2015-04-17T03:55:12.129Z"), featureJson: feature});
+		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
+		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
+	}
 }

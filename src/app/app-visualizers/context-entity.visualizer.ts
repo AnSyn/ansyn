@@ -6,7 +6,10 @@ import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 
 import Point from 'ol/geom/point';
+import Circle from 'ol/geom/circle';
+
 import Geometry from 'ol/geom/geometry';
+import Extent from 'ol/extent';
 import Polygon from 'ol/geom/polygon';
 import MultiPolygon from 'ol/geom/multipolygon';
 
@@ -67,9 +70,16 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			const multyPolygonGeom = <MultiPolygon>geom;
 			const polygonGeom = <Polygon>multyPolygonGeom.getPolygon(0);
 			result = polygonGeom.getInteriorPoint();
+		} else if (geomType === 'Circle') {
+			const circleGeom = <Circle>geom;
+			const geomCenter = circleGeom.getCenter();
+			result = new Point(geomCenter);
 		}
 		else {
-			console.error(`'context entity visualizer (getPointGeometry) Not supported Geom Type for ${geomType}'`);
+			// TODO: not accurate as getInteriorPoint
+			const geomExtent = geom.getExtent();
+			const geomCenter = Extent.getCenter(geomExtent);
+			result = new Point(geomCenter);
 		}
 		return result;
 	}

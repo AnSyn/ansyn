@@ -47,11 +47,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	public subscribers: any = {};
 	public overlaysMarkup: any = [];
 
-	public drops$: Observable<any[]> = this.store.select('overlays')
+	public drops$: Observable<any> = this.store.select('overlays')
 		.skip(1)
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
-			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays,overlaysState.filteredOverlays);
+			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filteredOverlays, overlaysState.specialObjects);
 			return drops;
 		});
 
@@ -93,7 +93,14 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			end: new Date(),
 			eventLineColor: (d, i) => schemeCategory10[i],
 			date: d => new Date(d.date),
-			displayLabels: false
+			displayLabels: false,
+			shapes: {
+				star : {
+					fill: 'green',
+					offsetY: 20,
+				}
+
+			}
 
 		};
 	}
@@ -156,10 +163,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	setSubscribers(): void {
 
-		this.subscribers.overlays = this.drops$.subscribe(_drops => {
-			const count = this.calcOverlayCountViaDrops(_drops);
+		this.subscribers.overlays = this.drops$.subscribe((data) => {
+			const count = this.calcOverlayCountViaDrops(data);
 			this.store.dispatch(new UpdateOverlaysCountAction(count));
-			this.drops = _drops;
+
+			this.drops =  data;
 		});
 
 		this.subscribers.timelineState = this.timelineState$
@@ -185,9 +193,9 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	calcOverlayCountViaDrops(drops) {
 		return drops.reduce((count, row) => {
-			return count + row.data.reduce((rowCount, overlays) => {
-				const isIn = this.configuration.start <= overlays.date && overlays.date <= this.configuration.end;
-				if(isIn) {
+			return count + row.data.reduce((rowCount, overlay) => {
+				const isIn = this.configuration.start <= overlay.date && overlay.date <= this.configuration.end;
+				if(isIn && !overlay.shape) {
 					return rowCount + 1;
 				} else {
 					return rowCount;

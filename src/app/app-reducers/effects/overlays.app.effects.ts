@@ -19,6 +19,7 @@ import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { FootprintPolylineVisualizerType } from '../../packages/open-layer-visualizers/overlays/polyline-visualizer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -46,6 +47,58 @@ export class OverlaysAppEffects {
 			});
 		});
 
+
+	// TODO:change this after #475 is solved (new filtered data from store)
+	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
+		const communicator = this.communicatorService.provide(mapData.id);
+		if (communicator && mapData.data.overlayDisplayMode) {
+			// const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
+			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
+			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
+
+			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
+			switch (overlayDisplayMode) {
+				case 'Hitmap': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
+					hitMapvisualizer.setEntities(entitiesToDraw);
+					polylineVisualizer.clearEntities();
+					break;
+				}
+				case 'Polygon': {
+					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
+					polylineVisualizer.setEntities(entitiesToDraw);
+					hitMapvisualizer.clearEntities();
+					break;
+				}
+				// case 'Polygon': {
+				// 	const entitiesToDraw = this.getEntitiesToDraw(overlayState);
+				// 	polygonVisualizer.setEntities(entitiesToDraw);
+				// 	hitMapvisualizer.clearEntities();
+				// 	break;
+				// }
+
+				case 'None':
+				default: {
+					polylineVisualizer.clearEntities();
+					hitMapvisualizer.clearEntities();
+				}
+			}
+		}
+	}
+
+	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
+		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"]);
+		const entitiesToDraw: IVisualizerEntity[] = [];
+		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
+			const feature: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: entity.footprint,
+				properties: {}
+			};
+			entitiesToDraw.push({id: entity.id, featureJson: feature});
+		});
+		return entitiesToDraw;
+	}
 
 	/** effect fixed bug when opening the tools bar before overlays were loaded
 	 *

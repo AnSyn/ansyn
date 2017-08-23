@@ -2,6 +2,7 @@
  * Created by AsafMas on 02/08/2017.
  */
 import { IMapVisualizer, IMap, IVisualizerEntity } from '@ansyn/imagery';
+import { EventEmitter } from '@angular/core';
 
 import Vector from 'ol/source/vector';
 import Feature from 'ol/feature';
@@ -23,13 +24,14 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	_featuresCollection:Feature[];
 	_footprintsVector: VectorLayer;
 	_styleCache: any;
-
 	_default4326GeoJSONFormat: GeoJSON;
 	_idToEntity: Map<string, {feature: Feature, originalEntity: IVisualizerEntity}>;
-
 	strokeColor = 'blue';
 	fillColor = 'transparent';
 	containerLayerOpacity = 1;
+
+	onDisposedEvent: EventEmitter<any> = new EventEmitter();
+	onHoverFeature: EventEmitter<any> = new EventEmitter();
 
 	constructor(visualizerType: string ,args: any) {
 		this.type = visualizerType;
@@ -45,7 +47,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	onInit(mapId: string, map: IMap) {
 		this._imap = map;
 		this._mapId = mapId;
-
 		this.createLayer();
 	}
 
@@ -127,6 +128,8 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._source.addFeatures(features);
 	}
 
+
+
 	setEntities(logicalEntities: IVisualizerEntity[]) {
 		const removedEntities = [];
 		this._idToEntity.forEach(((value, key: string) => {
@@ -170,7 +173,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	dispose() {
-
+		this.onDisposedEvent.emit();
 	}
 
 	setStyleOptions(strokeColor: string, fillColor: string, containerLayerOpacity: number) {

@@ -101,7 +101,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
 			.subscribe(data => {
 				const id = data.element.id;
-			 	startTimingLog(`LOAD_OVERLAY_${id}`)
+				startTimingLog(`LOAD_OVERLAY_${id}`)
 				this.store.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({id: id}));
 				if (this.selectedOverlays.indexOf(id) === -1) {
 					this.store.dispatch(new SelectOverlayAction(id));
@@ -121,6 +121,17 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe(result => {
 				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
 				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
+			});
+
+
+		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')
+			.subscribe(result => {
+				console.log("result mouseover", result );
+			});
+
+		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')
+			.subscribe(result => {
+				console.log("result mouseout", result );
 			});
 
 	}
@@ -156,7 +167,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		});
 
 		this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$
-			.subscribe((action:OverlaysMarkupAction) => {
+			.subscribe((action: OverlaysMarkupAction) => {
 				this.overlaysMarkup = action.payload;
 			});
 	}

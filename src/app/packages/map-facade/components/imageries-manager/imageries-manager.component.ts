@@ -28,6 +28,9 @@ export class ImageriesManagerComponent implements OnInit{
 		left: 0
 	};
 
+	clickTimeout: number;
+	preventDbClick: boolean;
+
 	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
 		.map((state: IMapState) => {
 			return state.loadingOverlays;
@@ -86,7 +89,9 @@ export class ImageriesManagerComponent implements OnInit{
 	}
 
 	setClassImageriesContainer(new_class, old_class?) {
-		old_class && this.imageriesContainer.nativeElement.classList.remove(old_class);
+		if(old_class){
+			this.imageriesContainer.nativeElement.classList.remove(old_class);
+		}
 		this.imageriesContainer.nativeElement.classList.add(new_class);
 		this.layoutChangeSuccess.emit();
 	}
@@ -105,7 +110,19 @@ export class ImageriesManagerComponent implements OnInit{
 		});
 	}
 
-	changeActiveImagery(value){
+	clickMapContainer(value){
+		this.clickTimeout = window.setTimeout(() => {
+			if (!this.preventDbClick){
+				if(this.maps.active_map_id !== value){
+					this.setActiveImagery.emit(value);
+				}
+				this.changeActiveImagery(value);
+			}
+			this.preventDbClick = false;
+		}, 200);
+	}
+
+	changeActiveImagery(value) {
 		if(this.maps.active_map_id !== value){
 			this.setActiveImagery.emit(value);
 		}
@@ -127,13 +144,17 @@ export class ImageriesManagerComponent implements OnInit{
 		this._maps.data.forEach((mapItem: CaseMapState) => {
 			if(mapItem.id === this._maps.active_map_id ){
 				this.publisherMouseShadowMapId = mapItem.id;
-				communicators[mapItem.id] && communicators[mapItem.id].toggleMouseShadowListener();
+				if (communicators[mapItem.id]) {
+					communicators[mapItem.id].toggleMouseShadowListener();
+				}
 				//@todo add take until instead of unsubscribe ?? or not todo
 				this.pointerMoveUnsubscriber = communicators[mapItem.id]['pointerMove'].subscribe( latLon => {
 					this.drawShadowMouse(latLon);
 				});
 			}else{
-				communicators[mapItem.id] && communicators[mapItem.id].startMouseShadowVectorLayer();
+				if (communicators[mapItem.id]) {
+					communicators[mapItem.id].startMouseShadowVectorLayer();
+				}
 				this.listenersMouseShadowMapsId.push(mapItem.id);
 			}
 		});
@@ -143,19 +164,27 @@ export class ImageriesManagerComponent implements OnInit{
 	drawShadowMouse(latLon){
 		const communicators = this.communicatorProvider.communicators;
 		this.listenersMouseShadowMapsId.forEach(id => {
-				communicators[id] && communicators[id].drawShadowMouse(latLon);
+			if(communicators[id]) {
+				communicators[id].drawShadowMouse(latLon);
+			}
 		});
 	}
 
 	stopPointerMoveProcess(){
 		const communicators = this.communicatorProvider.communicators;
 
-		communicators[this.publisherMouseShadowMapId] && communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
-		this.pointerMoveUnsubscriber && this.pointerMoveUnsubscriber.unsubscribe();
+		if (communicators[this.publisherMouseShadowMapId]) {
+			communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
+		}
+		if(this.pointerMoveUnsubscriber) {
+			this.pointerMoveUnsubscriber.unsubscribe();
+		}
 
 		if(this.listenersMouseShadowMapsId.length > 0){
 			this.listenersMouseShadowMapsId.forEach(id => {
-				communicators[id] && communicators[id].stopMouseShadowVectorLayer();
+				if (communicators[id]){
+					communicators[id].stopMouseShadowVectorLayer();
+				}
 			});
 			this.listenersMouseShadowMapsId = new Array<string>();
 		}
@@ -163,4 +192,10 @@ export class ImageriesManagerComponent implements OnInit{
 		this.publisherMouseShadowMapId = null;
 		this.shadowMouseProcess = false;
 	}
+
+	dbclick() {
+		window.clearTimeout(this.clickTimeout);
+		this.preventDbClick = true;
+	}
+
 }

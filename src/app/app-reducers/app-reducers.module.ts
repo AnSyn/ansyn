@@ -30,8 +30,9 @@ import { configuration } from './../../configuration/configuration';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
-import { ContextEntityAppEffects } from './effects/map/context-entity.app.effect';
+import { ContextEntityAppEffects } from './effects/context/context-entity.app.effect';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
+
 
 export interface IAppState {
     overlays: IOverlayState;

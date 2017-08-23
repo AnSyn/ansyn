@@ -3,16 +3,10 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { ContextEntityAppEffects } from './context-entity.app.effect';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ContextMenuDisplayAction, ContextMenuShowAction, SetContextMenuFiltersAction } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import * as turf from '@turf/turf';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SelectCaseByIdAction } from '../../../packages/menu-items/cases/actions/cases.actions';
-import { ImageryCommunicatorService } from '../../../packages/imagery/communicator-service/communicator.service';
-import { Case } from '../../../packages/core/models/case.model';
-import { AddMapInstacneAction } from '../../../packages/map-facade/actions/map.actions';
+import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { Case } from '@ansyn/core/models/case.model';
+import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 
 describe('ContextEntityAppEffects', () => {
@@ -110,22 +104,22 @@ describe('ContextEntityAppEffects', () => {
 		expect(contextEntityAppEffects).toBeTruthy();
 	});
 
-	it('diplayEntityFromCase$ display context entity from selected case', () => {
+	it('displayEntityFromCase$ display context entity from selected case', () => {
 		effectsRunner.queue(new SelectCaseByIdAction('fakeCaseId'));
 
-		contextEntityAppEffects.diplayEntityFromCase$.subscribe();
+		contextEntityAppEffects.displayEntityFromCase$.subscribe();
 		expect(visualizer.setEntities['calls'].count()).toBe(3);
 	});
 
-	it("diplayEntityFromCase$ DOESN'T display context entity from selected case if context entity isn't provided", () => {
+	it("displayEntityFromCase$ DOESN'T display context entity from selected case if context entity isn't provided", () => {
 		cases[0].state.contextEntities = null;
 		effectsRunner.queue(new SelectCaseByIdAction('fakeCaseId'));
 
-		contextEntityAppEffects.diplayEntityFromCase$.subscribe();
+		contextEntityAppEffects.displayEntityFromCase$.subscribe();
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 
-	it('diplayEntityFromNewMap$ should display context entity from selected case on new map', () => {
+	it('displayEntityFromNewMap$ should display context entity from selected case on new map', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		const communicators: Array<string> = ['imagery2'];
 		effectsRunner.queue(new AddMapInstacneAction({
@@ -133,11 +127,11 @@ describe('ContextEntityAppEffects', () => {
 			communicatorsIds: [communicators]
 		}));
 
-		contextEntityAppEffects.diplayEntityFromNewMap$.subscribe();
+		contextEntityAppEffects.displayEntityFromNewMap$.subscribe();
 		expect(visualizer.setEntities).toHaveBeenCalled();
 	});
 
-	it("diplayEntityFromNewMap$ should NOT display on new map if doesn't exist in case", () => {
+	it("displayEntityFromNewMap$ should NOT display on new map if doesn't exist in case", () => {
 		cases[0].state.contextEntities = null;
 		const communicators: Array<string> = ['imagery2'];
 		effectsRunner.queue(new AddMapInstacneAction({
@@ -145,7 +139,7 @@ describe('ContextEntityAppEffects', () => {
 			communicatorsIds: [communicators]
 		}));
 
-		contextEntityAppEffects.diplayEntityFromNewMap$.subscribe();
+		contextEntityAppEffects.displayEntityFromNewMap$.subscribe();
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 });

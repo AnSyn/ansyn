@@ -46,6 +46,12 @@ export class TimelineComponent implements OnInit {
 
 	}
 
+
+    get drops() {
+        return this._drops;
+    }
+
+
 	@Input() configuration: any;
 
 	@Input() redraw$: BehaviorSubject<number>;
@@ -56,10 +62,6 @@ export class TimelineComponent implements OnInit {
 			this._markup = value;
 			this.drawMarkup();
 		}
-	}
-
-	get drops() {
-		return this._drops;
 	}
 
 	drawMarkup() {
@@ -130,11 +132,9 @@ export class TimelineComponent implements OnInit {
 		};
 	}
 
-	selectAndShowDrop(element,event,data,index,nodes) {
-		//d3.select(element)['moveToFront']();
-		//element.classList.add('selected');
-		this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
-	}
+    selectAndShowDrop(element,event,data,index,nodes) {
+        this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
+    }
 
 	toggleDrop(element) {
 		//d3.select(element)['moveToFront']();

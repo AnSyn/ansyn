@@ -111,7 +111,7 @@ export class OverlaysService {
 	}*/
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = isEqual(data.filteredOverlays,data1.filteredOverlays) &&  isEqual(data.filters, data1.filters) &&  isEqual(data.timelineState, data1.timelineState) ;
+		const result = isEqual(data.filteredOverlays,data1.filteredOverlays) &&  isEqual(data.filters, data1.filters) ;
 		return result;
 	}
 

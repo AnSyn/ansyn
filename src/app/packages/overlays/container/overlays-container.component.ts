@@ -39,7 +39,10 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	public drops: any[] = [];
 	public redraw$: BehaviorSubject<number>;
 	public configuration: any;
-	public currentTimelineState;
+	public currentTimelineState = {
+		from: undefined,
+		to: undefined
+	};
 	public selectedOverlays: Array < string > = [];
 	public subscribers: any = {};
 	public overlaysMarkup: any = [];
@@ -48,13 +51,19 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		.skip(1)
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
-			const tmp = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays,overlaysState.filteredOverlays);
-			return tmp;
+			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays,overlaysState.filteredOverlays);
+			return drops;
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')
 		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged(isEqual)
+		.filter(timelineState => {
+			return timelineState && timelineState.to && timelineState.from &&  this.currentTimelineState.from &&  this.currentTimelineState.to;
+		})
+		.filter( timelineState  => {
+			return (timelineState.from.getTime() !== this.currentTimelineState.from.getTime() || timelineState.to.getTime() !== this.currentTimelineState.to.getTime());
+		})
 
 	/*
 		// this is not needed for now maybe will be needed for later use
@@ -154,7 +163,9 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		});
 
 		this.subscribers.timelineState = this.timelineState$
+
 			.subscribe(timelineState => {
+				console.log(timelineState);
 				this.configuration.start = timelineState.from;
 				this.configuration.end = timelineState.to;
 			});

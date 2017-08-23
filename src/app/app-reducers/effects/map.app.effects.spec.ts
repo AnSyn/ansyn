@@ -307,7 +307,7 @@ describe('MapAppEffects', () => {
 	describe('onActiveMapChanges$', () => {
 
 		it('on active map changes fire update case action', () => {
-			spyOn(casesService, 'getOverlaysMarkup');
+			spyOn(CasesService, 'getOverlaysMarkup');
 			effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
 			let count = 0;
 			mapAppEffects.onActiveMapChanges$.subscribe((_result: Action) => {
@@ -317,7 +317,7 @@ describe('MapAppEffects', () => {
 					expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
 				}
 				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
-					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 
 				if (_result.type === ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE) {
@@ -404,14 +404,14 @@ describe('MapAppEffects', () => {
 
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'loadInitialMapSource');
-			spyOn(casesService, 'getOverlaysMarkup');
+			spyOn(CasesService, 'getOverlaysMarkup');
 			effectsRunner.queue(new BackToWorldAction({mapId: 'imagery1'}));
 			mapAppEffects.backToWorldView$.subscribe(_result => {
 				let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
 				expect(result).toBe(true);
 
 				if(_result instanceof OverlaysMarkupAction){
-					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 				if(_result instanceof UpdateCaseAction ){
 					const resultCase: Case = _result.payload;
@@ -547,7 +547,7 @@ describe('MapAppEffects', () => {
 			effectsRunner.queue(new DisplayOverlaySuccessAction({id: 'test_overlay_id'}));
 
 			const resultActions = [];
-			spyOn(casesService, 'getOverlaysMarkup');
+			spyOn(CasesService, 'getOverlaysMarkup');
 			mapAppEffects.overlayLoadingSuccess$.subscribe(_result => {
 				let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
 				expect(result).toBe(true);
@@ -557,7 +557,7 @@ describe('MapAppEffects', () => {
 					expect(_result.payload).toEqual('test_overlay_id');
 				}
 				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
-					expect(casesService.getOverlaysMarkup).toHaveBeenCalled();
+					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 				resultActions.push(_result);
 			});

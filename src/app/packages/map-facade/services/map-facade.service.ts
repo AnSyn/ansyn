@@ -4,7 +4,7 @@ import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	ContextMenuShowAction, HoverFeatureTriggerAction
+	ContextMenuShowAction, HoverFeatureChangedTriggerAction
 } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { FootprintPolylineVisualizerType } from '../../open-layer-visualizers/overlays/polyline-visualizer';
@@ -56,7 +56,7 @@ export class MapFacadeService {
 	}
 
 	hoverFeature(event) {
-		this.store.dispatch(new HoverFeatureTriggerAction(event))
+		this.store.dispatch(new HoverFeatureChangedTriggerAction(event))
 	}
 
 }

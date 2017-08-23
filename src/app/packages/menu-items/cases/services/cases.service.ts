@@ -43,7 +43,7 @@ export class CasesService {
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 
-	getOverlaysMarkup(caseValue: Case, hoverId?:string){
+	static getOverlaysMarkup(caseValue: Case, hoverId?:string){
 		const result = [];
 
 		const activeMapId = caseValue.state.maps.active_map_id;

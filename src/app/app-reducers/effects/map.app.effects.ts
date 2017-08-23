@@ -190,7 +190,7 @@ export class MapAppEffects {
 		.mergeMap(([action, selectedCase]: [DisplayOverlaySuccessAction, Case])=> {
 			return [
 				new RemoveOverlayFromLoadingOverlaysAction(action.payload.id),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(selectedCase))
+				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(selectedCase))
 			];
 		});
 
@@ -303,7 +303,7 @@ export class MapAppEffects {
 			return [
 				new SetActiveOverlaysFootprintModeAction(newActiveMap.data.overlayDisplayMode),
 				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(updatedCase))
 			];
 
 		});
@@ -346,7 +346,7 @@ export class MapAppEffects {
 				});
 			return [
 				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(this.casesService.getOverlaysMarkup(updatedCase))
+				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(updatedCase))
 			];
 		});
 

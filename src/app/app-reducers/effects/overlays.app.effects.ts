@@ -17,9 +17,9 @@ import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '@ansyn/core';
-import { FootprintPolygonVisualizerType, FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
+import { FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { FootprintPolylineVisualizerType } from '../../packages/open-layer-visualizers/overlays/polyline-visualizer';
+import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -70,7 +70,7 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case) )
 		.map(([action,cases]:[Action,ICasesState])=> {
-			const overlaysMarkup = this.casesService.getOverlaysMarkup(cases.selected_case);
+			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selected_case);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
@@ -166,7 +166,6 @@ export class OverlaysAppEffects {
 	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
 		const communicator = this.communicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
-			// const polygonVisualizer = communicator.getVisualizer(FootprintPolygonVisualizerType);
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;

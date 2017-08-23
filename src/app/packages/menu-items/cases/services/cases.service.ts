@@ -43,7 +43,7 @@ export class CasesService {
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 
-	getOverlaysMarkup(caseValue: Case){
+	getOverlaysMarkup(caseValue: Case, hoverId?:string){
 		const result = [];
 
 		const activeMapId = caseValue.state.maps.active_map_id;
@@ -57,7 +57,14 @@ export class CasesService {
 				}
 			}
 		});
-		caseValue.state.favoritesOverlays && caseValue.state.favoritesOverlays.forEach(item => result.push({id: item,class: 'favorites'}));
+
+		if (caseValue.state.favoritesOverlays) {
+		 	caseValue.state.favoritesOverlays.forEach(item => result.push({id: item,class: 'favorites'}));
+		}
+
+		if (hoverId) {
+			result.push({id: hoverId, class: 'hover'});
+		}
 
 		return result;
 	}

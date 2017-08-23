@@ -10,7 +10,7 @@ import * as flatpickr from 'flatpickr';
 
 export class TimelineTimepickerComponent implements OnInit {
 
-	private _startDatePickerValue = new Date(new Date().getTime() - 3600000 * 24 * 365);;
+	private _startDatePickerValue = new Date(new Date().getTime() - 3600000 * 24 * 365);
 	private _endDatePickerValue =  new Date();
 
 	endDatePickerInstance: flatpickr;

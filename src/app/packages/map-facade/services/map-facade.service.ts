@@ -2,8 +2,12 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction, ContextMenuShowAction } from '../actions/map.actions';
+import {
+	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
+	ContextMenuShowAction, HoverFeatureTriggerAction
+} from '../actions/map.actions';
 import { Position } from '@ansyn/core';
+import { FootprintPolylineVisualizerType } from '../../open-layer-visualizers/overlays/polyline-visualizer';
 
 @Injectable()
 export class MapFacadeService {
@@ -28,6 +32,7 @@ export class MapFacadeService {
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).positionChanged.subscribe(this.positionChanged.bind(this)));
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).singleClick.subscribe(this.singleClick.bind(this)));
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).contextMenu.subscribe(this.contextMenu.bind(this)));
+			this._subscribers.push(this.imageryCommunicatorService.provide(id).getVisualizer(FootprintPolylineVisualizerType).onHoverFeature.subscribe(this.hoverFeature.bind(this)));
 		});
 	}
 
@@ -50,5 +55,8 @@ export class MapFacadeService {
 		this.store.dispatch(new ContextMenuShowAction(event));
 	}
 
+	hoverFeature(event) {
+		this.store.dispatch(new HoverFeatureTriggerAction(event))
+	}
 
 }

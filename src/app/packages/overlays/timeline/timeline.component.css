@@ -1,11 +1,19 @@
 :host /deep/ circle.active{
-	r:7;
-	fill:#763893;
+	r:8;
+	fill:#27b2cf;
+	stroke: white;
 }
 
  :host /deep/ circle.displayed{
 	r:8;
-	fill: crimson;
+}
+
+:host /deep/ circle:hover:not(.active){
+	fill:#bd0fe2;
+}
+
+:host /deep/ circle.hover:not(.active){
+	fill:#bd0fe2;
 }
 
 :host /deep/ circle.favorites{
@@ -13,7 +21,7 @@
 	fill: gold;
 }
 
-:host /deep/ circle.favorites.active{
+:host /deep/ circle.favorites.active {
 	fill:#763893;
 }
 

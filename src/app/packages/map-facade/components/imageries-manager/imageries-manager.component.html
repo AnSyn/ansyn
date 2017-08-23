@@ -2,13 +2,23 @@
 
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
-		<div class='map-container-wrapper' *ngIf="maps.data[index]" (click)="changeActiveImagery(maps.data[index].id)">
+		<div
+			*ngIf="maps.data[index]"
+			class='map-container-wrapper'
+			(click)="clickMapContainer(maps.data[index].id)"
+			(dblclick)="dbclick()">
 			<ansyn-imagery-container class="map"
 									 [map-state]="maps.data[index]"
 									 [active]="maps.active_map_id == maps.data[index].id"
 									 [show-status]="count > 1"
 									 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)" >
 			</ansyn-imagery-container>
+
+			<div class="active-border"
+				 [class.active]="maps.active_map_id === maps.data[index].id">
+
+			</div>
+
 		</div>
 
 	</ng-template>

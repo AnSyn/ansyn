@@ -2,10 +2,12 @@
  * Created by AsafMas on 02/08/2017.
  */
 import { IMap } from './imap';
+import { EventEmitter } from '@angular/core';
 
 export interface IVisualizerEntity {
 	id: string;
 	featureJson: GeoJSON.Feature<any>;
+	state?: 'static' | 'activeDisplad'
 }
 
 export interface IMapVisualizer {
@@ -57,5 +59,10 @@ export interface IMapVisualizer {
 	/**
 	 * @description This function is called before the map is destroyed
 	 */
+
+
+	onDisposedEvent: EventEmitter<any>;
+	onHoverFeature: EventEmitter<any>;
+
 	dispose();
 }

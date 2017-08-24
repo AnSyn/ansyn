@@ -9,7 +9,6 @@ import { MapAppEffects } from './map.app.effects';
 import { ImageryCommunicatorService, ConfigurationToken} from "@ansyn/imagery";
 import { Observable } from 'rxjs/Observable';
 import {  StopMapShadowAction, StartMapShadowAction, CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
-import { configuration } from "configuration/configuration";
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
@@ -112,8 +111,26 @@ describe('MapAppEffects', () => {
 				MapAppEffects,
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1 , multi: true},
-				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
-				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
+				{ provide: OverlaysConfig, useValue:{
+					"baseUrl": "http://localhost:9001/api/v1/",
+					"overlaysByCaseId": "case/:id/overlays",
+					"overlaysByTimeAndPolygon": "overlays/find",
+					"defaultApi": "overlays",
+					"searchByCase": false,
+					"overlaySource": "IDAHO",
+					"polygonGenerationDisatnce": 0.1
+				} },
+				{ provide: ConfigurationToken, useValue: {
+					"geoMapsInitialMapSource": [{
+							"mapType": "openLayersMap",
+							"mapSource": "BING",
+							"mapSourceMetadata": { "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", "styles": [ "Aerial"] }
+						}, {
+							"mapType": "cesiumMap",
+							"mapSource": "OSM",
+							"mapSourceMetadata": null
+						}]
+				} },
 				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock},
 				{
 					provide: ImageryCommunicatorService,

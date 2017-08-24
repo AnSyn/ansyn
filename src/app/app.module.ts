@@ -26,12 +26,6 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 
-export interface IXConfig{
-	version:string;
-}
-
-export const TmpConfig: InjectionToken<IXConfig> = new InjectionToken('TmpConfig');
-
 export const contextSources = {
 	 'Proxy': ContextProxySource,
 	 "Elastic": ContextElasticSource
@@ -74,8 +68,7 @@ export const contextSources = {
 })
 
 export class AppModule {
-	constructor(imageryProviderService: ImageryProviderService,@Inject(TmpConfig)config) {
-		console.log(config.version);
+	constructor(imageryProviderService: ImageryProviderService) {
 		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, ContextEntityVisualizer);
 	}
 }

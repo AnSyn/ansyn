@@ -1,14 +1,16 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, HostBinding, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { configuration } from '../configuration/configuration';
 
 const host = {"[style.display]":"'none'"};
 const selector = 'empty';
-const template = '';
+const template = '<div></div>';
 
-@Component({selector, host, template})
-export class EmptyComponent {}
+@Component({selector, template})
+export class EmptyComponent {
+	@HostBinding('style.display') display= "none";
+}
 
 export const routes: Routes = [
 

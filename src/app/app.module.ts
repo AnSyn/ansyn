@@ -1,7 +1,7 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Inject, InjectionToken, NgModule, OpaqueToken } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
@@ -26,10 +26,16 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 
+export interface IXConfig{
+	version:string;
+}
+
+export const TmpConfig: InjectionToken<IXConfig> = new InjectionToken('TmpConfig');
+
 export const contextSources = {
 	 'Proxy': ContextProxySource,
 	 "Elastic": ContextElasticSource
- }
+ };
 
 @NgModule({
 	providers: [
@@ -68,7 +74,8 @@ export const contextSources = {
 })
 
 export class AppModule {
-	constructor(imageryProviderService: ImageryProviderService) {
+	constructor(imageryProviderService: ImageryProviderService,@Inject(TmpConfig)config) {
+		console.log(config.version);
 		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, ContextEntityVisualizer);
 	}
 }

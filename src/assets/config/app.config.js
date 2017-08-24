@@ -1,7 +1,4 @@
-define(["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.appConfig = Object.freeze({
+var config = Object.freeze({
         casesConfig: {
             baseUrl: 'http://localhost:9001/api/v1/cases',
             paginationLimit: 16,
@@ -145,4 +142,5 @@ define(["require", "exports"], function (require, exports) {
             }
         }
     });
-});
+
+module.exports = config;

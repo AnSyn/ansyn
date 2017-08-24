@@ -18,9 +18,6 @@ import { StoreModule, Store, State, ActionReducer } from '@ngrx/store';
 import { IOverlayState, OverlayReducer, overlayInitialState } from '../reducers/overlays.reducer';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction, UnSelectOverlayAction } from '../actions/overlays.actions';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-
-import { configuration } from '../../../../configuration/configuration'
-
 import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
@@ -53,7 +50,15 @@ describe('OverlayContainerComponent', () => {
                     TimelineEmitterService,
                     OverlaysEffects,
                     Actions,
-                    { provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+                    { provide: OverlaysConfig, useValue: {
+                        "baseUrl": "http://localhost:9001/api/v1/",
+                        "overlaysByCaseId": "case/:id/overlays",
+                        "overlaysByTimeAndPolygon": "overlays/find",
+                        "defaultApi": "overlays",
+                        "searchByCase": false,
+                        "overlaySource": "IDAHO",
+                        "polygonGenerationDisatnce": 0.1
+                    } },
 				    { provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
                 ],
                 declarations: [

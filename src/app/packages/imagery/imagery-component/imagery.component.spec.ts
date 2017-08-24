@@ -7,8 +7,6 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
-
-import { configuration } from '../../../../configuration/configuration';
 import { ConfigurationToken } from '../configuration.token';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
@@ -50,7 +48,17 @@ describe('ImageryComponent', () => {
 			declarations: [ ImageryComponent ],
 			providers: [
 				{ provide: BaseMapSourceProvider , useClass: SourceProviderMock1 , multi: true },
-				{ provide: ConfigurationToken, useValue: configuration.ImageryConfig },
+				{ provide: ConfigurationToken, useValue: {
+					"geoMapsInitialMapSource": [{
+							"mapType": "openLayersMap",
+							"mapSource": "BING",
+							"mapSourceMetadata": { "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", "styles": [ "Aerial"] }
+						}, {
+							"mapType": "cesiumMap",
+							"mapSource": "OSM",
+							"mapSourceMetadata": null
+						}]
+				} },
 				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
 	}));
 

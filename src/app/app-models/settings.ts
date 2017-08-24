@@ -11,6 +11,7 @@ import { IToolsConfig } from '@ansyn/menu-items/tools';
 export const AppSettingsToken: InjectionToken = new InjectionToken("app-settings");
 
 export class AppSettings  {
+    production: boolean;
     casesConfig: ICasesConfig;
     layersManagerConfig: ILayersManagerConfig;
     overlaysConfig: IOverlaysConfig;

@@ -4,14 +4,6 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 import { defaultCase } from './cases/default_case';
-import { AppSettings } from "../app/app-models/settings";
-import * as config from '../assets/config/app.config';
-
-// export function appSettings(): AppSettings {
-// 	return <AppSettings>window['settings'];
-// }
-
-// export const config: AppSettings = appSettings();
 
 export const configuration = {
 	env: 'default',
@@ -21,12 +13,5 @@ export const configuration = {
 	},
 	General: {
 		logActions: false
-	},
-	CasesConfig: config.casesConfig,
-	LayersManagerConfig: config.layersManagerConfig,
-	OverlaysConfig: config.overlaysConfig,
-	ImageryConfig: config.imageryConfig,
-	ContextConfig: config.contextConfig,
-	FiltersConfig: config.filtersConfig,
-	ToolsConfig: config.toolsConfig
+	}
 };

@@ -26,7 +26,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterAppEffects } from './effects/router.app.effects';
 import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
 import { RouterStoreHelperService } from './services/router-store-helper.service';
-import { configuration } from './../../configuration/configuration';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
@@ -62,10 +61,10 @@ const reducers = {
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    if(configuration.General.logActions ){
-    	const date = new Date();
-    	console.log(action.type,date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
-	}
+    // if(configuration.General.logActions ){
+    // 	const date = new Date();
+    // 	console.log(action.type,date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
+	// }
     return appReducer(state, action);
 }
 

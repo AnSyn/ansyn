@@ -26,8 +26,6 @@
 				"../node_modules/flatpickr/dist/flatpickr.css"
 			],
 			"scripts": [
-				"assets/config/app.config.module.js",
-				"assets/config/app.config.js"
 			],
 			"environmentSource": "configuration/configuration.ts",
 			"environments": {

@@ -13,7 +13,6 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend, Http, HttpModule } from '@angular/http';
-import { configuration } from "configuration/configuration";
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -57,7 +56,15 @@ describe('StatusBarAppEffects', () => {
 				OverlaysService,
 				Http,
 				ConnectionBackend,
-				{ provide: OverlaysConfig, useValue: configuration.OverlaysConfig },
+				{ provide: OverlaysConfig, useValue: {
+					"baseUrl": "http://localhost:9001/api/v1/",
+					"overlaysByCaseId": "case/:id/overlays",
+					"overlaysByTimeAndPolygon": "overlays/find",
+					"defaultApi": "overlays",
+					"searchByCase": false,
+					"overlaySource": "IDAHO",
+					"polygonGenerationDisatnce": 0.1
+				} },
 				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
 			]
 		}).compileComponents();

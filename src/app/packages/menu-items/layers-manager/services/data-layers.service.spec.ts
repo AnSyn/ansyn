@@ -5,7 +5,6 @@ import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
 import { HttpModule, Http, Headers, RequestOptions } from "@angular/http";
 import { DataLayersService, LayerRootsBundle } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
-import { configuration } from '../../../../../configuration/configuration';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -16,7 +15,10 @@ describe('DataLayersService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule],
-            providers: [DataLayersService,{ provide: layersConfig, useValue: configuration.LayersManagerConfig }]
+            providers: [DataLayersService,{ provide: layersConfig, 
+                useValue: {
+                    "layersByCaseIdUrl": "http://localhost:9001/api/v1/layers"
+                } }]
         });
     });
 

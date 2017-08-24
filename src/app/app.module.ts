@@ -1,6 +1,4 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
-import { configuration } from './../configuration/configuration';
-import * as config from '../assets/config/app.config';
 import { BrowserModule } from '@angular/platform-browser';
 import {  NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -44,11 +42,8 @@ export const contextSources = {
 		AnsynComponent
 	],
 	imports: [
-		AppProvidersModule.forRoot({
-			baseUrl : config.overlaysConfig.baseUrl,
-			overlaysByTimeAndPolygon : config.overlaysConfig.overlaysByTimeAndPolygon,
-			defaultApi: config.overlaysConfig.defaultApi
-		}),
+		ContextModule,
+		AppProvidersModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		BrowserModule,
@@ -57,21 +52,20 @@ export const contextSources = {
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule,
-		CasesModule.forRoot(<any>config.casesConfig),
-		FiltersModule.forRoot(<any>config.filtersConfig),
-		LayersManagerModule.forRoot(<any>config.filtersConfig),
-		ToolsModule.forRoot(<any>config.toolsConfig),
+		CasesModule,
+		FiltersModule,
+		LayersManagerModule,
+		ToolsModule,
 		AlgorithmsModule,
 		SettingsModule,
-		//MenuItemsModule.forRoot(<any>{CasesConfig : config.casesConfig,FiltersConfig:config.filtersConfig,LayersManagerConfig: config.layersManagerConfig,ToolsConfig:config.toolsConfig}),
-		OverlaysModule.forRoot(config.overlaysConfig),
+		OverlaysModule,
 		AppRouter,
 		AppReducersModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule.forRoot(config.imageryConfig), 
+		ImageryModule, 
 		StatusBarModule,
-		ContextModule.forRoot(configuration.ContextConfig, { sources: contextSources}),
+		ContextModule,
 		OpenLayerVisualizersModule
 	],
 	bootstrap: [AppComponent]

@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { configuration } from '../configuration/configuration';
 
-const host = {"[style.display]":"'none'"};
 const selector = 'empty';
 const template = '<div></div>';
 

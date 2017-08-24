@@ -25,6 +25,12 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
+import { LoginComponent } from './packages/login/login/login.component';
+
+export const contextSources = {
+	 'Proxy': ContextProxySource,
+	 "Elastic": ContextElasticSource
+ };
 
 @NgModule({
 	providers: [
@@ -32,7 +38,8 @@ import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, Algorithm
 	],
 	declarations: [
 		AppComponent,
-		AnsynComponent
+		AnsynComponent,
+		LoginComponent
 	],
 	imports: [
 		AppProvidersModule,
@@ -56,7 +63,7 @@ import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, Algorithm
 		AppReducersModule,
 		ImagerySandBoxModule,
 		MapFacadeModule,
-		ImageryModule, 
+		ImageryModule,
 		StatusBarModule,
 		ContextModule,
 		OpenLayerVisualizersModule

@@ -8,4 +8,6 @@ if (configuration.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(AppModule,[
+
+]);

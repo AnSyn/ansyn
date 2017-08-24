@@ -100,12 +100,14 @@ export class OverlaysService {
 
 
 
-	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids,specialObject: Map<string,OverlaySpecialObject>): Array<any> {
+	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids,specialObject?: Map<string,OverlaySpecialObject>): Array<any> {
 		const overlaysData =  OverlaysService.pluck(overlays,ids,["id","date"]);
 
-		specialObject.forEach( (value) => {
-			overlaysData.push(value);
-		})
+		if(specialObject) {
+			specialObject.forEach((value) => {
+				overlaysData.push(value);
+			});
+		}
 
 		return [{ name: undefined, data: overlaysData }];
 	}

@@ -79,7 +79,11 @@ describe('TimelineComponent', () => {
     });
 
     it('dots markup process',() => {
-    	const moveToFront = { moveToFront: ()=> {},classed: () => {} };
+
+    	const moveToFront = { moveToFront: ()=> {},classed: () => {
+    		return {style: () => {}}
+		},style: () => {} };
+
     	spyOn(document,'querySelector').and.callFake(value => document.createElement('circle'));
     	spyOn(moveToFront,'moveToFront');
     	spyOn(d3,'selectAll').and.callFake( () => moveToFront );

@@ -32,7 +32,7 @@ export interface OverlaysCriteria  {
 	caseId?:string;
 };
 
-export class OverlaySpecialObject {
+export interface OverlaySpecialObject {
 	id: string;
 	date: Date;
 	shape: string; //this will be type soon or I will add another property for shapeType

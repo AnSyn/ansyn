@@ -8,7 +8,7 @@ import {
 import { Overlay } from '../models/overlay.model';
 import { cloneDeep } from 'lodash';
 import { before } from 'selenium-webdriver/testing';
-import { OverlaySpecialObject } from '../../core/models/overlay.model';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 describe('Overlay Reducer', () => {
 	let o1,o2,o3,o4;

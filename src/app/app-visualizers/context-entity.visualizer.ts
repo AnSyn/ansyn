@@ -24,6 +24,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	constructor(args: any) {
 		super(ContextEntityVisualizerType, args);
+		this.fillColor = 'transparent';
+		this.strokeColor = '#3DCC33';
 
 		this.iconStyle = new Icon({
 			scale: 1,

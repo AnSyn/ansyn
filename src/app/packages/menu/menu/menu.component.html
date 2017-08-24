@@ -1,21 +1,25 @@
 <div class="menu-wrapper">
 
-  <div class="menu" [style.width.px]="width">
-    <div
-      class="menu-btn"
-      *ngFor="let menu_item of menu_items; let index = index"
-		[class.active]="isActive(index)"
-		(click)="toggleItem(index)">
-      <img [src]="menu_item.icon_url"/>
-      {{menu_item.name}}
-    </div>
-  </div>
+	<div class="menu" [style.width.px]="width">
+		<div
+			class="menu-btn"
+			*ngFor="let menu_item of menu_items; let index = index"
+			[class.active]="isActive(index)"
+			(click)="toggleItem(index)">
+			<img [src]="menu_item.icon_url"/>
+			{{menu_item.name}}
+		</div>
+		<div class="logo">
+			<img src="/assets/logo.svg" alt="">
+		</div>
+	</div>
 
 
-  <div class="container" #container [@expand]="expand.toString()" (@expand.done)="onFinishAnimation(expand)" (@expand.start)="onStartAnimation()">
-    <button class="close" (click)="closeMenu()">×</button>
-    <ng-template #selected_component_elem></ng-template>
-  </div>
+	<div class="container" #container [@expand]="expand.toString()" (@expand.done)="onFinishAnimation(expand)"
+		 (@expand.start)="onStartAnimation()">
+		<button class="close" (click)="closeMenu()">×</button>
+		<ng-template #selected_component_elem></ng-template>
+	</div>
 
 
 </div>

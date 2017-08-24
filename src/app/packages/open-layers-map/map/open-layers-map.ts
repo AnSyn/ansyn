@@ -12,6 +12,7 @@ import Map from 'ol/map';
 import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
+import Rotate from 'ol/control/rotate';
 
 import Feature from 'ol/feature';
 import GeoJSON from 'ol/format/geojson';
@@ -79,7 +80,9 @@ export class OpenLayersMap implements IMap {
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
-			controls: [],
+			controls: [new Rotate({
+				autoHide: false
+			})],
 			view: new View({
 				center: proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,

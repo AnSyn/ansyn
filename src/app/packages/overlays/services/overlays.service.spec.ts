@@ -8,6 +8,7 @@ import { Observer } from 'rxjs/Observer';
 import * as turf from '@turf/turf';
 import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = "Mock";
@@ -99,7 +100,7 @@ describe('OverlaysService', () => {
 				})));
 			}
 
-			if (connection.request.url == "error") {
+			if (connection.request.url === "error") {
 				connection.mockError(new Error('Username or password is incorrect'));
 			}
 		});
@@ -162,7 +163,7 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check parseOverlayDataForDisplay', () => {
+	it('check Overlay service filters', () => {
 
 		const mockData = {
 			filters: {},
@@ -174,6 +175,27 @@ describe('OverlaysService', () => {
 
 		const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters);
 		expect(result.length).toBe(overlaysTmpData.length);
+	});
+
+
+	it('parseOverlayDataForDisplay function with special objects', () => {
+
+		const mockData = {
+			overlays: new Map()
+		};
+
+		overlaysTmpData.forEach(item => {
+			mockData.overlays.set(item.id, item);
+		});
+
+		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays,['13']);
+		expect(result[0].data.length).toBe(1);
+
+		const specialObjects = new Map<string,OverlaySpecialObject>();
+		specialObjects.set('15',{id: '15',shape:'star',date: new Date()});
+
+		const result2 = overlaysService.parseOverlayDataForDispaly(mockData.overlays,['13'],specialObjects);
+		expect(result2[0].data.length).toBe(2);
 	});
 
 	it('compare overlay ', () => {

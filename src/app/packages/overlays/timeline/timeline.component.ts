@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { selectAll, mouse, event, select, selection } from 'd3';
+import { selectAll, mouse, event, select, selection,style } from 'd3';
 import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Observable';
@@ -34,12 +34,11 @@ export class TimelineComponent implements OnInit {
 	@ViewChild('context') context: ElementRef;
 
 
-	@Input()
-	set drops(drops: any[]) {
-
-		this._drops = drops || [];
-		this.eventDropsHandler();
-		if (this._drops.length > 0 && this._markup) {
+    @Input()
+    set drops(drops: any[]) {
+        this._drops = drops || [];
+        this.eventDropsHandler();
+        if (this._drops.length > 0 && this._markup) {
 			this.drawMarkup();
 		}
 		//this.stream.next();

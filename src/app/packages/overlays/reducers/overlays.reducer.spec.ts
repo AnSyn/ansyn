@@ -3,11 +3,12 @@ import {
 	UnSelectOverlayAction,
 	SelectOverlayAction,
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction, SetFiltersAction
+	LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { cloneDeep } from 'lodash';
 import { before } from 'selenium-webdriver/testing';
+import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 describe('Overlay Reducer', () => {
 	let o1,o2,o3,o4;
@@ -44,21 +45,23 @@ describe('Overlay Reducer', () => {
 			 azimuth: 104
 		 };
 	})
-	describe("Load Overlays", () => {
-		it("should activate load_overlay reducer", () => {
-			const queryParams = {search: '9399ejf'};
-			const action = new LoadOverlaysAction(queryParams);
-			const mockOverlayInitialState = cloneDeep(overlayInitialState);
-			mockOverlayInitialState.overlays.set('tmp', 'value');
-			expect(mockOverlayInitialState.overlays.size).toBe(1);
-			const result = OverlayReducer(mockOverlayInitialState, action);
-			expect(result.loading).toBe(true);
-			expect(result.overlays.size).toBe(0);
-			expect(result.queryParams).toEqual(queryParams);
-		});
+
+	it("should activate load_overlay reducer", () => {
+
+		const queryParams = {search: '9399ejf'};
+		const action = new LoadOverlaysAction(queryParams);
+		const mockOverlayInitialState = cloneDeep(overlayInitialState);
+
+		mockOverlayInitialState.overlays.set('tmp', 'value');
+		expect(mockOverlayInitialState.overlays.size).toBe(1);
+		const result = OverlayReducer(mockOverlayInitialState, action);
+
+		expect(result.loading).toBe(true);
+		expect(result.overlays.size).toBe(0);
+		expect(result.queryParams).toEqual(queryParams);
 	});
 
-	describe("Selected Overlay", () => {
+
 		it('should add overaly id to seleced overlays array\'s', () => {
 			const fakeId = 'iu34-2322';
 			const action = new SelectOverlayAction(fakeId);
@@ -67,9 +70,7 @@ describe('Overlay Reducer', () => {
 			expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
 
 		});
-	});
 
-	describe("UnSelected Overlay", () => {
 		it('should remove overaly id from the seleced overlays array\'s', () => {
 			const fakeId = 'iu34-2322';
 			const action = new SelectOverlayAction(fakeId);
@@ -84,9 +85,9 @@ describe('Overlay Reducer', () => {
 
 			expect(result.selectedOverlays.length).toBe(0);
 		});
-	});
 
-	describe("Load Overlays Success", () => {
+
+
 
 		it('should load all overlays', () => {
 			overlayInitialState.overlays = new Map();
@@ -102,9 +103,9 @@ describe('Overlay Reducer', () => {
 			expect(result.loading).toBe(false);
 			expect(result.loaded).toBe(true);
 		});
-	});
 
-	describe("Set Filters actions",() => {
+
+
 		it("Set Filters actions",() => {
 
 
@@ -139,5 +140,15 @@ describe('Overlay Reducer', () => {
 			expect(resultTestC.filteredOverlays.length).toBe(0);
 
 		});
-	});
+
+		it("Set Special Objects",() => {
+			let data: OverlaySpecialObject[] = new Array<OverlaySpecialObject>();
+			data.push({id: 'fkdsjl',date: new Date(),shape: 'star'});
+			const action = new SetSpecialObjectsActionStore(data);
+
+			const result  = OverlayReducer(overlayInitialState,action);
+			expect(result.specialObjects.size).toBe(1);
+			expect(result.specialObjects.get('fkdsjl'))
+		});
+
 });

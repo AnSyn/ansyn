@@ -120,11 +120,10 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 			});
 
 		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
-			const specialObjectsData = OverlaysService.sort(action.payload);
+			const specialObjectsData =  OverlaysService.sort(action.payload) as any ;
 
-			const specialObjects= new Map();
-			specialObjectsData.forEach(i => {
-
+			const specialObjects= new Map<string,OverlaySpecialObject>();
+			specialObjectsData.forEach( (i: OverlaySpecialObject) => {
 				specialObjects.set(i.id,i);
 			});
 

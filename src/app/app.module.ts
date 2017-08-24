@@ -1,7 +1,7 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
 import { BrowserModule } from '@angular/platform-browser';
-import { Inject, InjectionToken, NgModule, OpaqueToken } from '@angular/core';
+import {  NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';

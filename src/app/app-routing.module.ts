@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { configuration } from '../configuration/configuration';
 import { AppSettings } from './app-models/settings';
+import * as config from '../assets/config/app.config';
 
 const selector = 'empty';
 const template = '<div></div>';

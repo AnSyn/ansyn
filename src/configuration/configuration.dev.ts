@@ -5,6 +5,7 @@
 
 import { defaultCase } from './cases/default_case';
 import { AppSettings } from "../app/app-models/settings";
+import * as config from '../assets/config/app.config';
 
 // export function appSettings(): AppSettings {
 // 	return <AppSettings>window['settings'];

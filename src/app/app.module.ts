@@ -1,5 +1,6 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { configuration } from './../configuration/configuration';
+import * as config from '../assets/config/app.config';
 import { BrowserModule } from '@angular/platform-browser';
 import {  NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +27,8 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 import { AppSettings } from './app-models/settings';
+import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
+
 
 export const contextSources = {
 	 'Proxy': ContextProxySource,
@@ -42,9 +45,9 @@ export const contextSources = {
 	],
 	imports: [
 		AppProvidersModule.forRoot({
-			baseUrl :configuration.OverlaysConfig.baseUrl,
-			overlaysByTimeAndPolygon : configuration.OverlaysConfig.overlaysByTimeAndPolygon,
-			defaultApi: configuration.OverlaysConfig.defaultApi
+			baseUrl : config.overlaysConfig.baseUrl,
+			overlaysByTimeAndPolygon : config.overlaysConfig.overlaysByTimeAndPolygon,
+			defaultApi: config.overlaysConfig.defaultApi
 		}),
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
@@ -54,7 +57,13 @@ export const contextSources = {
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule,
-		MenuItemsModule.forRoot(<any>configuration),
+		CasesModule.forRoot(<any>config.casesConfig),
+		FiltersModule.forRoot(<any>config.filtersConfig),
+		LayersManagerModule.forRoot(<any>config.filtersConfig),
+		ToolsModule.forRoot(<any>config.toolsConfig),
+		AlgorithmsModule,
+		SettingsModule,
+		//MenuItemsModule.forRoot(<any>{CasesConfig : config.casesConfig,FiltersConfig:config.filtersConfig,LayersManagerConfig: config.layersManagerConfig,ToolsConfig:config.toolsConfig}),
 		OverlaysModule.forRoot(config.overlaysConfig),
 		AppRouter,
 		AppReducersModule,

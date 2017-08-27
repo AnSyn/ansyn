@@ -311,7 +311,6 @@ describe('MapAppEffects', () => {
 			effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
 			let count = 0;
 			mapAppEffects.onActiveMapChanges$.subscribe((_result: Action) => {
-				//expect(true).toBe(false);
 				count++;
 				if (_result.type === CasesActionTypes.UPDATE_CASE) {
 					expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
@@ -319,12 +318,8 @@ describe('MapAppEffects', () => {
 				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
 					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
-
-				if (_result.type === ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE) {
-					expect(_result.payload).toEqual('Hitmap');
-				}
 			});
-			expect(count).toBe(3);
+			expect(count).toBe(2);
 		});
 	});
 

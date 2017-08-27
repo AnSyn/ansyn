@@ -9,7 +9,7 @@ import Fill from 'ol/style/fill';
 import MultiPolygon from 'ol/geom/multipolygon';
 import Feature from 'ol/feature';
 import { IVisualizerEntity } from '../../imagery/model/imap-visualizer';
-import {cloneDeep as _cloneDeep, get as _get} from 'lodash';
+import {cloneDeep as _cloneDeep, get as _get, isNil as _isNil} from 'lodash';
 import { IMap } from '../../imagery/model/imap';
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
 
@@ -106,10 +106,10 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature($event) {
 		if($event.selected.length > 0) {
-			const selectedFeature = $event.selected[0];
-			const hoverFeature = this.hoverLayerSource.getFeatureById(selectedFeature.getId());
-			if (!hoverFeature || hoverFeature.getId() !== selectedFeature.id_ ) {
-				this.onHoverFeature.emit(selectedFeature.id_);
+			const selectedFeatureId = $event.selected[0].getId()
+			const hoverFeature = this.hoverLayerSource.getFeatureById(selectedFeatureId);
+			if (!hoverFeature || hoverFeature.getId() !== selectedFeatureId) {
+				this.onHoverFeature.emit(selectedFeatureId);
 			}
 		} else {
 			this.onHoverFeature.emit();
@@ -150,12 +150,12 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return clonedLogicalEntities;
 	}
 
-	onSyncHoverFeature({id, isIn}) {
-		if(!isIn) {
+	onSyncHoverFeature(id) {
+		if(_isNil(id)) {
 			this.hoverLayerSource.clear();
 		} else {
 			const polyline = this._source.getFeatureById(id);
-			if (polyline) {
+			if (!_isNil(polyline)) {
 				this.createHoverFeature(polyline);
 			}
 		}

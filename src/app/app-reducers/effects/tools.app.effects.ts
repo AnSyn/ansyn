@@ -23,22 +23,31 @@ import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/
 @Injectable()
 export class ToolsAppEffects {
 
+
 	@Effect()
 	onActiveMapChanges$: Observable<ActiveMapChangedAction> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
-		.mergeMap(([action, selectedCase]: [ActiveMapChangedAction, Case]) => {
-			const actions = [];
-			const activeMap = CasesService.activeMap(selectedCase);
-			actions.push(new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
-			if (activeMap.data.overlay == null) {
-				actions.push(new DisableImageProcessing());
+		.withLatestFrom(this.store$.select('cases'))
+		.mergeMap(([action, casesState]: [ActiveMapChangedAction, ICasesState]) => {
+			const mapId = casesState.selected_case.state.maps.active_map_id;
+			const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
+
+			if (active_map.data.overlay == null) {
+				return [new DisableImageProcessing()];
 			} else {
-				actions.push(new EnableImageProcessing());
-				actions.push(new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive));
+				return [
+					new EnableImageProcessing(),
+					new SetAutoImageProcessingSuccess(active_map.data.isAutoImageProcessingActive)
+				];
 			}
-			return actions;
 		});
+
+	@Effect()
+	onActiveMapChangesSetOverlaysFootprintMode$: Observable<SetActiveOverlaysFootprintModeAction> = this.actions$
+		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
+		.map(([action, selected_case]) => CasesService.activeMap(selected_case))
+		.map(activeMap => new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode))
 
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$

@@ -11,18 +11,13 @@ export interface IVisualizerEntity {
 	state?: 'static' | 'activeDisplad'
 }
 
-export interface ISyncHoverEvent {
-	id: string;
-	isIn: boolean;
-}
-
 export type IMarkupEvent = {id: string, class: boolean}[];
 
 export interface IMapVisualizer {
 	type: string;
 	onDisposedEvent: EventEmitter<any>;
 	onHoverFeature: EventEmitter<any>;
-	syncHoverFeature: EventEmitter<ISyncHoverEvent>;
+	syncHoverFeature: EventEmitter<any>;
 	doubleClickFeature: EventEmitter<any>;
 	markupFeatures: EventEmitter<any>;
 	subscribers: Subscriber<any>[]

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { IMapState } from '../reducers/map.reducer';
+import { Actions, Effect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { MapActionTypes,CompositeMapShadowAction, SetMapAutoImageProcessing } from '../actions/map.actions';
+import { MapActionTypes, SetMapAutoImageProcessing } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 import 'rxjs/add/operator/share';

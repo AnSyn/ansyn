@@ -7,6 +7,8 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import { HoverFeatureChangedTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '../../../packages/overlays/actions/overlays.actions';
+import { dbclickFeatureTriggerAction } from '../../../packages/map-facade/actions/map.actions';
 
 describe('ContextMenuAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -32,14 +34,20 @@ describe('ContextMenuAppEffects', () => {
 		effectsRunner = _effectsRunner;
 	}));
 
-	it('onContextMenuDisplayAction$ should return OverlaysMarkupAction with markup result', () => {
-		spyOn(CasesService, 'getOverlaysMarkup').and.returnValue([{id:'1234-5678', class: 'hover'}]);
-		effectsRunner.queue(new HoverFeatureChangedTriggerAction('1234-5678'));
-		let result;
-		visualizersAppEffects.onContextMenuDisplayAction$.subscribe(_result => result = _result);
-		expect(result.constructor).toEqual(OverlaysMarkupAction);
-		expect(result.payload).toEqual([{id: '1234-5678', class: 'hover'}])
+	// it('onContextMenuDisplayAction$ should return OverlaysMarkupAction with markup result', () => {
+	// 	spyOn(CasesService, 'getOverlaysMarkup').and.returnValue([{id:'1234-5678', class: 'hover'}]);
+	// 	effectsRunner.queue(new HoverFeatureChangedTriggerAction('1234-5678'));
+	// 	let result;
+	// 	visualizersAppEffects.onContextMenuDisplayAction$.subscribe(_result => result = _result);
+	// 	expect(result.constructor).toEqual(OverlaysMarkupAction);
+	// 	expect(result.payload).toEqual([{id: '1234-5678', class: 'hover'}])
+	// });
+
+	it('onDbclickFeatureDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
+		effectsRunner.queue(new dbclickFeatureTriggerAction('fakeId'));
+		let result: DisplayOverlayFromStoreAction;
+		visualizersAppEffects.onDbclickFeatureDisplayAction$.subscribe(_result => result = _result);
+		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
+		expect(result.payload.id).toEqual('fakeId');
 	});
-
-
 });

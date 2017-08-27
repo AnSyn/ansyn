@@ -3,6 +3,7 @@
  */
 import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
+import { Subscriber } from 'rxjs/Subscriber';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -10,9 +11,21 @@ export interface IVisualizerEntity {
 	state?: 'static' | 'activeDisplad'
 }
 
+export interface ISyncHoverEvent {
+	id: string;
+	isIn: boolean;
+}
+
+export type IMarkupEvent = {id: string, class: boolean}[];
+
 export interface IMapVisualizer {
 	type: string;
-
+	onDisposedEvent: EventEmitter<any>;
+	onHoverFeature: EventEmitter<any>;
+	syncHoverFeature: EventEmitter<ISyncHoverEvent>;
+	doubleClickFeature: EventEmitter<any>;
+	markupFeatures: EventEmitter<any>;
+	subscribers: Subscriber<any>[]
 	/**
 	 * @description This function is called after constructor and gives those args to the visualizer
 	 * @param {string} mapId
@@ -60,9 +73,5 @@ export interface IMapVisualizer {
 	 * @description This function is called before the map is destroyed
 	 */
 
-
-	onDisposedEvent: EventEmitter<any>;
-	onHoverFeature: EventEmitter<any>;
-	onDoubleClickFeature: EventEmitter<any>;
 	dispose();
 }

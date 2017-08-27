@@ -4,7 +4,7 @@ import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	ContextMenuShowAction, HoverFeatureChangedTriggerAction
+	ContextMenuShowAction, HoverFeatureChangedTriggerAction, dbclickFeatureTriggerAction
 } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { FootprintPolylineVisualizerType } from '../../open-layer-visualizers/overlays/polyline-visualizer';
@@ -33,6 +33,7 @@ export class MapFacadeService {
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).singleClick.subscribe(this.singleClick.bind(this)));
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).contextMenu.subscribe(this.contextMenu.bind(this)));
 			this._subscribers.push(this.imageryCommunicatorService.provide(id).getVisualizer(FootprintPolylineVisualizerType).onHoverFeature.subscribe(this.hoverFeature.bind(this)));
+			this._subscribers.push(this.imageryCommunicatorService.provide(id).getVisualizer(FootprintPolylineVisualizerType).doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
 		});
 	}
 
@@ -57,6 +58,10 @@ export class MapFacadeService {
 
 	hoverFeature(event) {
 		this.store.dispatch(new HoverFeatureChangedTriggerAction(event))
+	}
+
+	dbclickFeature(event) {
+		this.store.dispatch(new dbclickFeatureTriggerAction(event))
 	}
 
 }

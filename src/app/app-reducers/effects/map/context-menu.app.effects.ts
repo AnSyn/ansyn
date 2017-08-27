@@ -31,9 +31,7 @@ export class ContextMenuAppEffects {
 	onContextMenuDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.DISPLAY)
 		.map(toPayload)
-		.map(id => {
-			return new DisplayOverlayFromStoreAction({id});
-		});
+		.map(id => new DisplayOverlayFromStoreAction({id}));
 
 	constructor(
 		private actions$: Actions,

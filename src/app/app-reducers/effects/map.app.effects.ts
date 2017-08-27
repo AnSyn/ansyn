@@ -298,10 +298,7 @@ export class MapAppEffects {
 		.mergeMap(([action,caseState]:[ActiveMapChangedAction,ICasesState]) => {
 			const updatedCase = cloneDeep(caseState.selected_case);
 			updatedCase.state.maps.active_map_id = action.payload;
-			const newActiveMap: CaseMapState = updatedCase.state.maps.data.find((map) => map.id === updatedCase.state.maps.active_map_id);
-
 			return [
-				new SetActiveOverlaysFootprintModeAction(newActiveMap.data.overlayDisplayMode),
 				new UpdateCaseAction(updatedCase),
 				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(updatedCase))
 			];

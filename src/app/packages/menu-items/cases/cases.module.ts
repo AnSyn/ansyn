@@ -41,7 +41,7 @@ export class CasesModule {
 		};
 	}
 
-	constructor(store: Store<any>) {
+	constructor(store: Store<any>, casesService: CasesService) {
 		let menu_item: MenuItem = {
 			name: "Cases",
 			component: CasesComponent,

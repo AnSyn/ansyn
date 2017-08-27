@@ -27,7 +27,9 @@ export const OverlaysActionTypes = {
 	GO_NEXT_DISPLAY: type('GO_NEXT_DISPLAY'),
 	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY'),
 	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS'),
-	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS')
+	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
+	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
+	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
 };
 
 export class SelectOverlayAction implements Action {
@@ -130,6 +132,16 @@ export class SetSpecialObjectsActionStore implements  Action{
 	constructor(public payload: Array<OverlaySpecialObject>){};
 }
 
+export class MouseOverDropAction implements Action {
+	type = OverlaysActionTypes.MOUSE_OVER_DROP;
+	constructor(public payload: string){}
+}
+export class MouseOutDropAction implements Action {
+	type = OverlaysActionTypes.MOUSE_OUT_DROP;
+	constructor(public payload: string){}
+}
+
+
 export type OverlaysActions
 	= 	DisplayOverlayFromStoreAction
 	|   DisplayOverlayAction
@@ -146,4 +158,6 @@ export type OverlaysActions
 	| 	OverlaysMarkupAction
 	| 	SetFiltersAction
 	| 	GoNextDisplayAction
-	|	GoPrevDisplayAction;
+	|	GoPrevDisplayAction
+	|	MouseOverDropAction
+	|	MouseOutDropAction;

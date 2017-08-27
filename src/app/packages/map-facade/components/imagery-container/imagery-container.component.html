@@ -1,12 +1,11 @@
 <div class="imagery" #imageryViewContainer>
 
-	<div class="status-wrapper">
-		<ansyn-imagery-status *ngIf="showStatus"
-							  [map_id]="mapState.id"
-							  [overlay]="overlay"
-							  [active]="active">
-		</ansyn-imagery-status>
-	</div>
+	<ansyn-imagery-status *ngIf="showStatus"
+						  [map_id]="mapState.id"
+						  [overlay]="overlay"
+						  [active]="active">
+	</ansyn-imagery-status>
+
 
 	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
 </div>

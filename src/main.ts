@@ -1,5 +1,5 @@
 import { AppSettings } from './app/app-models/settings';
-import { ContextConfig } from '@ansyn/context/context.module';
+import { ContextConfig, ContextSources } from '@ansyn/context/context.module';
 import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
@@ -12,6 +12,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { configuration } from './configuration/configuration';
+import { ContextElasticSource,ContextProxySource } from "@ansyn/context";
 
 // if (configuration.production) {
 //   enableProdMode();
@@ -55,7 +56,13 @@ fetch("/assets/config/app.config.json").then(response => {
       {
         provide: ContextConfig, 
         useValue: conf.contextConfig
+      },{
+        provide:ContextSources,
+        useValue: {
+          "Proxy": ContextProxySource,
+          "Elastic": ContextElasticSource
       }
+    }
   ]).bootstrapModule(AppModule);
 });
 

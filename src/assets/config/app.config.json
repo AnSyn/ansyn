@@ -115,7 +115,8 @@
                 "uri": "http://localhost:9001/api/v1/",
                 "bucket": "contexts",
                 "type": "Proxy",
-                "available": true
+                "available": true,
+                "apiObject" : "Http"
             }
         ]
     },

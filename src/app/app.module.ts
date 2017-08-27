@@ -42,13 +42,13 @@ export const contextSources = {
 		AnsynComponent
 	],
 	imports: [
-		ContextModule,
 		AppProvidersModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		BrowserModule,
 		FormsModule,
 		HttpModule,
+		ContextModule,
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule,

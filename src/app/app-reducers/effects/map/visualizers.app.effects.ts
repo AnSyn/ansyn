@@ -12,7 +12,6 @@ import { MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes } from '@a
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { ISyncHoverEvent } from '@ansyn/imagery/model/imap-visualizer';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
@@ -37,30 +36,18 @@ export class VisualizersAppEffects {
 			return new OverlaysMarkupAction(markups);
 		});
 
+	@Effect()
+	onMouseOverDropAction$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
+		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
+		.map((payload: string | undefined) => new HoverFeatureChangedTriggerAction(payload));
+
 	@Effect({dispatch: false})
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.map((action): void => {
-			const event: ISyncHoverEvent = {
-				id: action.payload,
-				isIn: !!action.payload
-			};
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).syncHoverFeature.emit(event);
-			});
-		});
-
-
-	@Effect({dispatch: false})
-	onMouseOverDropAction$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
-		.map((action: MouseOverDropAction | MouseOutDropAction) => {
-			const event: ISyncHoverEvent = {
-				id: action.payload,
-				isIn: action instanceof MouseOverDropAction
-			};
-			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).syncHoverFeature.emit(event);
+				communicator.getVisualizer(FootprintPolylineVisualizerType).syncHoverFeature.emit(action.payload);
 			});
 		});
 
@@ -102,7 +89,7 @@ export class VisualizersAppEffects {
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
 	@Effect({ dispatch: false })
-	drawFootprintsFromFilteredOverlays$: Observable<void> = this.actions$
+	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selected_case];
@@ -120,7 +107,7 @@ export class VisualizersAppEffects {
 		private imageryCommunicatorService: ImageryCommunicatorService
 	){}
 
-	private drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
+	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
@@ -147,19 +134,17 @@ export class VisualizersAppEffects {
 			}
 		}
 	}
-	private getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
-		const overlaysToDraw = OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,["id", "name", "footprint"])
-		const entitiesToDraw: IVisualizerEntity[] = [];
-		overlaysToDraw.forEach((entity: {id: string, name: string, footprint: GeoJSON.Polygon}) => {
-			const feature: GeoJSON.Feature<any> = {
+
+	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
+		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,['id', 'footprint']);
+		return overlaysToDraw.map(({id, footprint}) => {
+			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
-				geometry: entity.footprint,
+				geometry: footprint,
 				properties: {}
 			};
-			entitiesToDraw.push({id: entity.id, featureJson: feature});
+			return {id, featureJson};
 		});
-		return entitiesToDraw;
 	}
-
 
 }

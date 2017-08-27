@@ -102,20 +102,8 @@ describe('CasesAppEffects', () => {
 			count++;
 		});
 		expect(count).toBe(1);
-
-	})
-
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"' ,() => {
-		effectsRunner.queue(new ShowOverlaysFootprintAction('Hitmap'));
-		let count = 0;
-		casesAppEffects.updateCaseFromTools$.subscribe((_result:Action)=>{
-			if(_result.type === CasesActionTypes.UPDATE_CASE){
-				expect(_result.payload.state.maps.data[0].data.overlayDisplayMode).toBe('Hitmap');
-				count++;
-			}
-		});
-		expect(count).toBe(1);
 	});
+
 
 	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
 		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
@@ -125,6 +113,7 @@ describe('CasesAppEffects', () => {
 		expect(result.constructor).toEqual(UpdateCaseAction);
 		expect(CasesService.activeMap(result.payload).data.overlay.id).toEqual('tmp');
 	});
+
 
 	it('saveDefaultCase$ should add a default case', () => {
 		effectsRunner.queue(new SaveDefaultCaseAction(icase_state.default_case));

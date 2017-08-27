@@ -16,6 +16,8 @@ import { CasesReducer, ICasesState, AddCaseSuccessAction, SelectCaseByIdAction, 
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
 import { DisplayOverlayAction, DisplayOverlaySuccessAction } from '@ansyn/overlays';
+import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
+import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -205,6 +207,16 @@ describe('ToolsAppEffects', () => {
 		});
 	});
 
+	it('onActiveMapChangesSetOverlaysFootprintMode$ should change footprint mode', () => {
+		const active_map = CasesService.activeMap(icaseState.selected_case);
+		active_map.data.overlayDisplayMode = <any> 'whatever';
+		effectsRunner.queue(new ActiveMapChangedAction());
+		let result;
+		toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$.subscribe(_result => {result = _result;});
+		expect(result.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
+		expect(result.payload).toEqual('whatever');
+	});
+
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 		const mapId = icaseState.selected_case.state.maps.active_map_id;
 		const active_map = icaseState.selected_case.state.maps.data.find((map) => map.id === mapId);
@@ -229,7 +241,6 @@ describe('ToolsAppEffects', () => {
 			expect(toggleMapResult.payload.toggle_value).toBeFalsy();
 		}
 	});
-
 
 	describe('backToWorldView', () => {
 		it('backToWorldView should raise DisableImageProcessing', () => {

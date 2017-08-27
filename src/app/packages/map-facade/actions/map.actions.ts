@@ -23,8 +23,10 @@ export const MapActionTypes = {
 		DISPLAY: 'DISPLAY'
 	},
 	VISUALIZERS: {
-		HOVER_FEATURE: 'HOVER_FEATURE'
-	}
+		HOVER_FEATURE: 'HOVER_FEATURE',
+		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
+	},
+	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP'
 };
 
 export type MapActions = any;
@@ -123,4 +125,12 @@ export class ContextMenuDisplayAction implements Action {
 export class HoverFeatureChangedTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
 	constructor(public payload?: string){}
+}
+export class dbclickFeatureTriggerAction implements Action {
+	type = MapActionTypes.VISUALIZERS.DBCLICK_FEATURE;
+	constructor(public payload: string){}
+}
+export class DrawOverlaysOnMapTriggerAction implements Action {
+	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
+	constructor(){}
 }

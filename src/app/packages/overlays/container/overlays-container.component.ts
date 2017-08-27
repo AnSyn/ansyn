@@ -3,7 +3,7 @@ import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import {
 	DisplayOverlayFromStoreAction,
 	GoNextDisplayAction,
-	GoPrevDisplayAction,
+	GoPrevDisplayAction, MouseOutDropAction, MouseOverDropAction,
 	OverlaysMarkupAction, SelectOverlayAction, SetTimelineStateAction, UnSelectOverlayAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
@@ -142,12 +142,12 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')
 			.subscribe(result => {
-				console.log("result mouseover", result );
+				this.store.dispatch(new MouseOverDropAction(result.id))
 			});
 
 		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')
 			.subscribe(result => {
-				console.log("result mouseout", result );
+				this.store.dispatch(new MouseOutDropAction(result.id))
 			});
 
 	}

@@ -16,6 +16,9 @@ import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.
 import { MapActionTypes, SetMapAutoImageProcessing, BackToWorldAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
+import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
+import { Case } from '../../packages/core/models/case.model';
+import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -23,25 +26,24 @@ export class ToolsAppEffects {
 	@Effect()
 	onActiveMapChanges$: Observable<ActiveMapChangedAction> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('cases'))
-		.mergeMap(([action, casesState]: [ActiveMapChangedAction, ICasesState]) => {
-			const mapId = casesState.selected_case.state.maps.active_map_id;
-			const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
-
-			if (active_map.data.overlay == null) {
-				return [new DisableImageProcessing()];
+		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
+		.mergeMap(([action, selectedCase]: [ActiveMapChangedAction, Case]) => {
+			const actions = [];
+			const activeMap = CasesService.activeMap(selectedCase);
+			actions.push(new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
+			if (activeMap.data.overlay == null) {
+				actions.push(new DisableImageProcessing());
 			} else {
-				return [
-					new EnableImageProcessing(),
-					new SetAutoImageProcessingSuccess(active_map.data.isAutoImageProcessingActive)
-				];
+				actions.push(new EnableImageProcessing());
+				actions.push(new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive));
 			}
+			return actions;
 		});
 
-	// @Effect()
-	// onDisplayOverlay$: Observable<any> = this.actions$
-	// 	.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-	// 	.map(() => new EnableImageProcessing());
+	@Effect()
+	onShowOverlayFootprint$: Observable<any> = this.actions$
+		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
+		.map((action) => new SetActiveOverlaysFootprintModeAction(action.payload));
 
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$

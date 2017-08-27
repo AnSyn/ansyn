@@ -11,6 +11,8 @@ import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
 import VectorLayer from 'ol/layer/vector';
+import { IMarkupEvent } from '../imagery/model/imap-visualizer';
+import { Subscriber } from 'rxjs/Subscriber';
 
 export const EntitiesVisualizerType = 'EntitiesVisualizerType';
 
@@ -32,7 +34,11 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	onDisposedEvent: EventEmitter<any> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
-	onDoubleClickFeature: EventEmitter<any> = new EventEmitter();
+	syncHoverFeature: EventEmitter<any> = new EventEmitter();
+	markupFeatures: EventEmitter<any> = new EventEmitter();
+	markups = [];
+	doubleClickFeature: EventEmitter<any> = new EventEmitter();
+	subscribers: Subscriber<any>[] = [];
 
 	constructor(visualizerType: string ,args: any) {
 		this.type = visualizerType;
@@ -49,6 +55,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._imap = map;
 		this._mapId = mapId;
 		this.createLayer();
+		this.markupFeatures.subscribe(this.onMarkupFeatures.bind(this));
 	}
 
 	createLayer() {
@@ -61,13 +68,14 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._footprintsVector = new VectorLayer({
 			source: this._source,
 			style: this.featureStyle.bind(this),
-			opacity: this.containerLayerOpacity
+			opacity: this.containerLayerOpacity,
+			zIndex: 50000
 		});
-
+		this._footprintsVector.setZIndex(10000)
 		this._imap.addLayer(this._footprintsVector);
 	}
 
-	featureStyle(feature: Feature, resolution) {
+	featureStyle(feature: Feature, resolution?) {
 		const featureId = feature.getId();
 
 		let style = this._styleCache[featureId];
@@ -129,8 +137,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._source.addFeatures(features);
 	}
 
-
-
 	setEntities(logicalEntities: IVisualizerEntity[]) {
 		const removedEntities = [];
 		this._idToEntity.forEach(((value, key: string) => {
@@ -175,6 +181,12 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	dispose() {
 		this.onDisposedEvent.emit();
+		this.subscribers.forEach(sub => sub.unsubscribe());
+		this.subscribers = [];
+	}
+
+	onMarkupFeatures(markups: IMarkupEvent) {
+		this.markups = markups;
 	}
 
 	setStyleOptions(strokeColor: string, fillColor: string, containerLayerOpacity: number) {

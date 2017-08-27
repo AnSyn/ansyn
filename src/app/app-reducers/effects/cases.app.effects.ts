@@ -13,16 +13,13 @@ import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import { isNil, isEmpty, cloneDeep } from 'lodash';
 import "@ansyn/core/utils/clone-deep";
-import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Context, OverlayDisplayMode } from '@ansyn/core';
+import { Context } from '@ansyn/core';
 import { ContextProviderService, ContextCriteria } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 
@@ -34,19 +31,7 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action,cases]: [Action,ICasesState]) => {
-			return new EnableOnlyFavortiesSelectionAction(!!cases.selected_case.state.favoritesOverlays.length);
-		});
-
-	@Effect()
-	updateCaseFromTools$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases'))
-		.map(([payload, casesState]: [OverlayDisplayMode, ICasesState]) => {
-			const updatedCase = cloneDeep(casesState.selected_case);
-			const activeMap = updatedCase.state.maps.data.find(map => map.id === updatedCase.state.maps.active_map_id);
-			activeMap.data.overlayDisplayMode = payload;
-			return new UpdateCaseAction(updatedCase);
+			return new EnableOnlyFavortiesSelectionAction(cases.selected_case.state.favoritesOverlays && !!cases.selected_case.state.favoritesOverlays.length);
 		});
 
 	@Effect()

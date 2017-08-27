@@ -52,7 +52,7 @@ export class ContextModule {
 			if (!itemConfig.available) {
 				return;
 			}
-			const object: IContextSource = sourcesHandler.sources[itemConfig.type];
+			const object: IContextSource = sourcesHandler[itemConfig.type];
 			const gateway = this.getGateway(itemConfig.apiObject);
 			const instance: IContextSource = new  (<any>object)(itemConfig,gateway );
 			this.contextProviderService.register(itemConfig.type, instance);

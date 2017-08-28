@@ -6,21 +6,15 @@ import { OverlaysActionTypes, OverlaysMarkupAction,
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
-import { ICasesState, Case, CaseMapState, CasesService } from '@ansyn/menu-items/cases';
-import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
-import { isEmpty, cloneDeep, isNil } from 'lodash';
+import { ICasesState, Case, CasesService } from '@ansyn/menu-items/cases';
+import { LoadOverlaysAction } from '@ansyn/overlays';
+import { isEmpty } from 'lodash';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { AddMapInstacneAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { last } from 'lodash';
-import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
-import { OverlayDisplayMode } from '@ansyn/core';
-import { FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers';
-import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { ToolsActionsTypes } from '../../packages/menu-items/tools/actions/tools.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Injectable()
 export class OverlaysAppEffects {

@@ -1,6 +1,7 @@
 import { Component, HostBinding, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
+import { LoginModule ,AuthGuard } from '@ansyn/login';
 
 const selector = 'empty';
 const template = '<div></div>';
@@ -10,11 +11,11 @@ export class EmptyComponent {
 	@HostBinding('style.display') display= "none";
 }
 
-export const routes: Routes = [ 
-
+export const routes: Routes = [
 	{
 		path: '',
 		component: AnsynComponent,
+		// canActivate: [AuthGuard],
 		children: [
 			{
 				path: ':case_id',
@@ -23,10 +24,9 @@ export const routes: Routes = [
 		]
 	}
 ];
+
 @NgModule({
-	imports: [
-		RouterModule.forRoot(routes, {useHash: true})
-	],
+	imports: [RouterModule.forRoot(routes, {useHash: true})],
 	declarations:[EmptyComponent],
 	exports:[RouterModule]
 })

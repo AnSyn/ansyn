@@ -25,7 +25,7 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
-import { LoginComponent } from './packages/login/login/login.component';
+import { LoginModule } from '@ansyn/login';
 
 export const contextSources = {
 	 'Proxy': ContextProxySource,
@@ -38,11 +38,11 @@ export const contextSources = {
 	],
 	declarations: [
 		AppComponent,
-		AnsynComponent,
-		LoginComponent
+		AnsynComponent
 	],
 	imports: [
 		AppProvidersModule,
+		LoginModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		BrowserModule,

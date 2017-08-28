@@ -122,13 +122,13 @@ export class ContextMenuDisplayAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 	constructor(public payload: string){}
 }
-export class HoverFeatureChangedTriggerAction implements Action {
+export class HoverFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
-	constructor(public payload?: string){}
+	constructor(public payload: {visualizerType: string, id?: string}){}
 }
-export class dbclickFeatureTriggerAction implements Action {
+export class DbclickFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.DBCLICK_FEATURE;
-	constructor(public payload: string){}
+	constructor(public payload: {visualizerType: string, id: string}){}
 }
 export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;

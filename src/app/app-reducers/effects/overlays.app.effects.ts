@@ -116,7 +116,6 @@ export class OverlaysAppEffects {
 		public actions$: Actions,
 		public store$: Store<IAppState>,
 		public casesService: CasesService,
-		public overlaysService: OverlaysService,
-		private communicatorService: ImageryCommunicatorService) {}
+		public overlaysService: OverlaysService) {}
 
 }

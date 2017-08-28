@@ -34,8 +34,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	onDisposedEvent: EventEmitter<any> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
-	syncHoverFeature: EventEmitter<any> = new EventEmitter();
-	markupFeatures: EventEmitter<any> = new EventEmitter();
 	markups = [];
 	doubleClickFeature: EventEmitter<any> = new EventEmitter();
 	subscribers: Subscriber<any>[] = [];
@@ -55,7 +53,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._imap = map;
 		this._mapId = mapId;
 		this.createLayer();
-		this.markupFeatures.subscribe(this.onMarkupFeatures.bind(this));
 	}
 
 	createLayer() {
@@ -68,10 +65,8 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this._footprintsVector = new VectorLayer({
 			source: this._source,
 			style: this.featureStyle.bind(this),
-			opacity: this.containerLayerOpacity,
-			zIndex: 50000
+			opacity: this.containerLayerOpacity
 		});
-		this._footprintsVector.setZIndex(10000)
 		this._imap.addLayer(this._footprintsVector);
 	}
 
@@ -187,6 +182,10 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	onMarkupFeatures(markups: IMarkupEvent) {
 		this.markups = markups;
+	}
+
+	setHoverFeature(id: string){
+
 	}
 
 	setStyleOptions(strokeColor: string, fillColor: string, containerLayerOpacity: number) {

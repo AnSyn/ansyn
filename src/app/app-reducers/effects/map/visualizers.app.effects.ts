@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { HoverFeatureChangedTriggerAction } from '@ansyn/map-facade/actions/map.actions';
+import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -31,8 +31,8 @@ export class VisualizersAppEffects {
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
-		.map(([action, selectedCase]: [HoverFeatureChangedTriggerAction, Case]) => {
-			const markups = CasesService.getOverlaysMarkup(selectedCase, action.payload);
+		.map(([action, selectedCase]: [HoverFeatureTriggerAction, Case]) => {
+			const markups = CasesService.getOverlaysMarkup(selectedCase, action.payload.id);
 			return new OverlaysMarkupAction(markups);
 		});
 
@@ -40,30 +40,30 @@ export class VisualizersAppEffects {
 	onMouseOverDropAction$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
 		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
-		.map((payload: string | undefined) => new HoverFeatureChangedTriggerAction(payload));
+		.map((payload: string | undefined) => new HoverFeatureTriggerAction({id: payload, visualizerType: FootprintPolylineVisualizerType}));
 
 	@Effect({dispatch: false})
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.map((action): void => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).syncHoverFeature.emit(action.payload);
+				communicator.getVisualizer(FootprintPolylineVisualizerType).setHoverFeature(action.payload.id);
 			});
 		});
 
 	@Effect()
-	onDbclickFeatureDisplayAction$: Observable<any> = this.actions$
+	onDbclickFeaturePolylineDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
 		.map(toPayload)
-		.map(id => new DisplayOverlayFromStoreAction({id}));
-
+		.filter(({visualizerType}) => visualizerType === FootprintPolylineVisualizerType)
+		.map(({id}) => new DisplayOverlayFromStoreAction({id}));
 
 	@Effect({dispatch: false})
 	markupVisualizer$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).markupFeatures.emit(action.payload);
+				communicator.getVisualizer(FootprintPolylineVisualizerType).onMarkupFeatures(action.payload);
 			});
 		});
 
@@ -137,7 +137,7 @@ export class VisualizersAppEffects {
 
 	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,['id', 'footprint']);
-		return overlaysToDraw.map(({id, footprint}) => {
+		const  parsedPverlaysToDraw = overlaysToDraw.map(({id, footprint}) => {
 			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
 				geometry: footprint,
@@ -145,6 +145,7 @@ export class VisualizersAppEffects {
 			};
 			return {id, featureJson};
 		});
+		return parsedPverlaysToDraw;
 	}
 
 }

@@ -4,24 +4,10 @@
 	stroke: white;
 }
 
- :host /deep/ circle.displayed{
+:host /deep/ circle.displayed{
 	r:8;
-}
-
-:host /deep/ circle:hover:not(.active){
-	fill:#bd0fe2;
 }
 
 :host /deep/ circle.hover:not(.active){
 	fill:#bd0fe2;
 }
-
-:host /deep/ circle.favorites{
-
-}
-
-:host /deep/ circle.favorites.active {
-	fill:#763893;
-}
-
-

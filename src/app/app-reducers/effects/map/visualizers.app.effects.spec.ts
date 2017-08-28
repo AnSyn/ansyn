@@ -5,14 +5,14 @@ import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
-import { HoverFeatureChangedTriggerAction } from '@ansyn/map-facade/actions/map.actions';
+import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	DisplayOverlayFromStoreAction, MouseOutDropAction,
 	MouseOverDropAction, SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	dbclickFeatureTriggerAction, DrawOverlaysOnMapTriggerAction,
+	DbclickFeatureTriggerAction, DrawOverlaysOnMapTriggerAction,
 	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -84,7 +84,7 @@ describe('VisualizersAppEffects', () => {
 	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
 		const markup = [{id: '1234', class: 'active'}];
 		spyOn(CasesService, 'getOverlaysMarkup').and.callFake(() => markup);
-		effectsRunner.queue(new HoverFeatureChangedTriggerAction('fakeId'));
+		effectsRunner.queue(new HoverFeatureTriggerAction('fakeId'));
 		let result;
 		visualizersAppEffects.onHoverFeatureSetMarkup$.subscribe(_result => {result = _result;});
 		expect(result.constructor).toEqual(OverlaysMarkupAction);
@@ -100,18 +100,18 @@ describe('VisualizersAppEffects', () => {
 		};
 		spyOn(fakeVisualizer.syncHoverFeature, 'emit');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator ]);
-		effectsRunner.queue(new HoverFeatureChangedTriggerAction('fakeId'));
+		effectsRunner.queue(new HoverFeatureTriggerAction('fakeId'));
 		visualizersAppEffects.onHoverFeatureEmitSyncHoverFeature$.subscribe();
 		expect(fakeCommunicator.getVisualizer().syncHoverFeature.emit).toHaveBeenCalledTimes(2);
 	});
 
-	describe('onMouseOverDropAction$ should return HoverFeatureChangedTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
+	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
 
 		it('with "id" if MouseOverDropAction',  () => {
 			effectsRunner.queue(new MouseOverDropAction('fakeId'));
 			let result;
 			visualizersAppEffects.onMouseOverDropAction$ .subscribe((_result) => {result = _result;});
-			expect(result.constructor).toEqual(HoverFeatureChangedTriggerAction);
+			expect(result.constructor).toEqual(HoverFeatureTriggerAction);
 			expect(result.payload).toEqual('fakeId')
 		});
 
@@ -119,16 +119,16 @@ describe('VisualizersAppEffects', () => {
 			effectsRunner.queue(new MouseOutDropAction('fakeId'));
 			let result;
 			visualizersAppEffects.onMouseOverDropAction$ .subscribe((_result) => {result = _result;});
-			expect(result.constructor).toEqual(HoverFeatureChangedTriggerAction);
+			expect(result.constructor).toEqual(HoverFeatureTriggerAction);
 			expect(result.payload).toBeUndefined();
 		});
 
 	});
 
-	it('onDbclickFeatureDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-		effectsRunner.queue(new dbclickFeatureTriggerAction('fakeId'));
+	it('onDbclickFeaturePolylineDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
+		effectsRunner.queue(new DbclickFeatureTriggerAction('fakeId'));
 		let result: DisplayOverlayFromStoreAction;
-		visualizersAppEffects.onDbclickFeatureDisplayAction$.subscribe(_result => result = _result);
+		visualizersAppEffects.onDbclickFeaturePolylineDisplayAction$.subscribe(_result => result = _result);
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('fakeId');
 	});
@@ -176,93 +176,6 @@ describe('VisualizersAppEffects', () => {
 		expect(visualizersAppEffects.drawOverlaysOnMap).toHaveBeenCalledTimes(3);
 	});
 
-	// it('drawFootprintsFromCommunicatorAdded$ effect should use draw overlays overlays-display-mode if added communicator has "overlayDisplayMode" Hitmap in case', () => {
-	// 	effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery1'}));
-	//
-	// 	const commEntitiy = {
-	// 		getVisualizer:(visType) => {}
-	// 	};
-	// 	const visEntitiy = {
-	// 		setEntities:(entities) => {},
-	// 		clearEntities:() => {}
-	// 	};
-	//
-	// 	const drops = [{id: 'id', name: 'name', footprint: {}}];
-	// 	spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
-	//
-	// 	spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
-	// 	spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
-	//
-	// 	spyOn(visEntitiy, 'setEntities');
-	// 	spyOn(visEntitiy, 'clearEntities');
-	//
-	// 	overlaysAppEffects.drawFootprintsFromCommunicatorAdded$.subscribe();
-	//
-	// 	expect(visEntitiy.setEntities).toHaveBeenCalled();
-	// 	expect(visEntitiy.clearEntities).toHaveBeenCalled();
-	// });
-	//
-	// it('drawFootprintsFromCommunicatorAdded$ effect should NOT draw overlays overlays-display-mode if added communicator has "overlayDisplayMode" = None in case', () => {
-	// 	effectsRunner.queue(new AddMapInstacneAction({currentCommunicatorId: 'imagery2'}));
-	//
-	// 	const commEntitiy = {
-	// 		getVisualizer:(visType) => {}
-	// 	};
-	// 	const visEntitiy = {
-	// 		setEntities:(entities) => {},
-	// 		clearEntities:() => {}
-	// 	};
-	//
-	// 	const drops = [{id: 'id', name: 'name', footprint: {}}];
-	// 	spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
-	//
-	// 	spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
-	// 	spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
-	//
-	// 	spyOn(visEntitiy, 'setEntities');
-	// 	spyOn(visEntitiy, 'clearEntities');
-	//
-	// 	overlaysAppEffects.drawFootprintsFromCommunicatorAdded$.subscribe();
-	//
-	// 	expect(visEntitiy.setEntities).not.toHaveBeenCalled();
-	// 	expect(visEntitiy.clearEntities).toHaveBeenCalledTimes(2);
-	// });
-	//
-	// it('drawFootprintsFromFilteredOverlays$ effect should draw overlays overlays-display-mode if selected case/active map has overlayDisplayMode="Hitmap"', () => {
-	// 	effectsRunner.queue(new SetFiltersAction([]));
-	//
-	// 	const commEntitiy = {
-	// 		getVisualizer:(visType) => {}
-	// 	};
-	// 	const visEntitiy = {
-	// 		setEntities:(entities) => {},
-	// 		clearEntities:() => {}
-	// 	};
-	//
-	// 	const drops = [{id: 'id', name: 'name', footprint: {}}];
-	// 	spyOn(OverlaysService, 'pluck').and.callFake(() => drops);
-	//
-	// 	spyOn(imageryCommunicatorService, 'provide').and.returnValue(commEntitiy);
-	// 	spyOn(commEntitiy, 'getVisualizer').and.returnValue(visEntitiy);
-	//
-	// 	spyOn(visEntitiy, 'setEntities');
-	// 	spyOn(visEntitiy, 'clearEntities');
-	//
-	// 	overlaysAppEffects.drawFootprintsFromFilteredOverlays$.subscribe();
-	//
-	// 	expect(visEntitiy.setEntities).toHaveBeenCalled();
-	// 	expect(visEntitiy.clearEntities).toHaveBeenCalled();
-	// });
-	//
-	// it('setActiveOverlaysModeFromLoadSuccess$ effect should dispatch SetActiveOverlaysFootprintModeAction when overlays are loaded', () => {
-	// 	effectsRunner.queue(new SetFiltersAction([]));
-	// 	let result = null;
-	// 	overlaysAppEffects.setActiveOverlaysModeFromLoadSuccess$.subscribe((_result) => {
-	// 		result = _result;
-	// 	});
-	// 	expect(result).toBeTruthy();
-	// 	expect(result.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
-	// 	expect(result.payload).toEqual('Hitmap');
-	// });
+
 
 });

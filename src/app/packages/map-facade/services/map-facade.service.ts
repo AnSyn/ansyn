@@ -4,10 +4,12 @@ import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	ContextMenuShowAction, HoverFeatureChangedTriggerAction, dbclickFeatureTriggerAction
+	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction
 } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { FootprintPolylineVisualizerType } from '../../open-layer-visualizers/overlays/polyline-visualizer';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { IMapVisualizer } from '@ansyn/imagery/model/imap-visualizer';
 
 @Injectable()
 export class MapFacadeService {
@@ -28,13 +30,17 @@ export class MapFacadeService {
 
 	initEmitters() {
 		this.unsubscribeAll();
-		Object.keys(this.imageryCommunicatorService.communicators).forEach((id)=>{
-			this._subscribers.push(this.imageryCommunicatorService.provide(id).positionChanged.subscribe(this.positionChanged.bind(this)));
-			this._subscribers.push(this.imageryCommunicatorService.provide(id).singleClick.subscribe(this.singleClick.bind(this)));
-			this._subscribers.push(this.imageryCommunicatorService.provide(id).contextMenu.subscribe(this.contextMenu.bind(this)));
-			this._subscribers.push(this.imageryCommunicatorService.provide(id).getVisualizer(FootprintPolylineVisualizerType).onHoverFeature.subscribe(this.hoverFeature.bind(this)));
-			this._subscribers.push(this.imageryCommunicatorService.provide(id).getVisualizer(FootprintPolylineVisualizerType).doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
+
+		this.imageryCommunicatorService.communicatorsAsArray().forEach( (communicator): void => {
+			this._subscribers.push(communicator.positionChanged.subscribe(this.positionChanged.bind(this)));
+			this._subscribers.push(communicator.singleClick.subscribe(this.singleClick.bind(this)));
+			this._subscribers.push(communicator.contextMenu.subscribe(this.contextMenu.bind(this)));
+			communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
+				this._subscribers.push(visualizer.onHoverFeature.subscribe(this.hoverFeature.bind(this)));
+				this._subscribers.push(visualizer.doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
+			});
 		});
+
 	}
 
 	unsubscribeAll() {
@@ -57,11 +63,11 @@ export class MapFacadeService {
 	}
 
 	hoverFeature(event) {
-		this.store.dispatch(new HoverFeatureChangedTriggerAction(event))
+		this.store.dispatch(new HoverFeatureTriggerAction(event))
 	}
 
 	dbclickFeature(event) {
-		this.store.dispatch(new dbclickFeatureTriggerAction(event))
+		this.store.dispatch(new DbclickFeatureTriggerAction(event))
 	}
 
 }

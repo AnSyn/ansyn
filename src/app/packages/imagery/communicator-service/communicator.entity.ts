@@ -126,6 +126,10 @@ export class CommunicatorEntity {
 		return visualizerResult;
 	}
 
+	public getAllVisualizers() {
+		return this._manager.visualizers;
+	}
+
 	public resetView(layer: any, extent?: GeoJSON.Point[]) {
 		if (this._manager){
 			this._manager.resetView(layer, extent);

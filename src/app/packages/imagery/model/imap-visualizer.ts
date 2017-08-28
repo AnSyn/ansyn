@@ -17,9 +17,7 @@ export interface IMapVisualizer {
 	type: string;
 	onDisposedEvent: EventEmitter<any>;
 	onHoverFeature: EventEmitter<any>;
-	syncHoverFeature: EventEmitter<any>;
 	doubleClickFeature: EventEmitter<any>;
-	markupFeatures: EventEmitter<any>;
 	subscribers: Subscriber<any>[]
 	/**
 	 * @description This function is called after constructor and gives those args to the visualizer
@@ -69,4 +67,18 @@ export interface IMapVisualizer {
 	 */
 
 	dispose();
+
+	/**
+	 * @description This function is called for Manually hover
+	 *  @param {string} id
+	 */
+
+	setHoverFeature(id: string);
+
+	/**
+	 * @description This function is called for style changes
+	 *  @param {IMarkupEvent[]} markups
+	 */
+
+	onMarkupFeatures(markups: IMarkupEvent);
 }

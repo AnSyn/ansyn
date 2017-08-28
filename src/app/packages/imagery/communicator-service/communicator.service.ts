@@ -29,8 +29,8 @@ export class ImageryCommunicatorService {
 		return this._communicators;
 	}
 
-	communicatorsAsArray():Array<CommunicatorEntity>{
-		return values(this._communicators);
+	communicatorsAsArray(): CommunicatorEntity[]{
+		return values(this._communicators) as CommunicatorEntity[];
 	}
 
 	public createCommunicator(componentManager: ImageryComponentManager): void {

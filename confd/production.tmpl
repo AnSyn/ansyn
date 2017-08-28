@@ -1,127 +1,135 @@
-window.config = Object.freeze({
-    	casesConfig: {
-            baseUrl: "{{ getv "/ansyn/cases/baseurl" }}",
-            paginationLimit: 15,
-            defaultCase: {
-                id: '1234-5678',
-                name: 'Default case',
-                state: {
-                    "maps": {
-                        "layouts_index": 0,
-                        "active_map_id": "default_imagery1",
-                        "data": [
-                            {
-                                "id": "default_imagery1",
-                                "mapType": "openLayersMap",
-                                "data": {
-                                    "position": {
-                                        "center": {
-                                            "type": 'Point',
-                                            "coordinates": [
-                                                17.1432839938,
-                                                47.800388503457015
-                                            ]
-                                        },
-                                        "zoom": 4,
-                                        "rotation": 6.287545840111019
-                                    }
+{
+    "production": false,
+    "casesConfig": {
+        "baseUrl": "{{ getv "/ansyn/cases/baseurl" }}",
+        "paginationLimit": 16,
+        "defaultCase": {
+            "id": "1234-5678",
+            "name": "Default case",
+            "state": {
+                "maps": {
+                    "layouts_index": 0,
+                    "active_map_id": "default_imagery1",
+                    "data": [{
+                            "id": "default_imagery1",
+                            "mapType": "openLayersMap",
+                            "data": {
+                                "position": {
+                                    "center": {
+                                        "type": "Point",
+                                        "coordinates": [
+                                            -74.07608662469286,
+                                            40.71400637493053
+                                        ]
+                                    },
+                                    "zoom": 4,
+                                    "rotation": 6.287545840111019
                                 }
                             }
-                        ]
-                    },
-
-
-                    "region": {
-                        "type": "Polygon",
-                        "coordinates": [
+                        }
+                    ]
+                },
+                "region": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
                             [
-                                [
-                                    -74.09214019775389,
-                                    40.73386046245138
-                                ],
-                                [
-                                    -74.10080909729004,
-                                    40.69573721839922
-                                ],
-                                [
-                                    -74.05600547790527,
-                                    40.694956309550584
-                                ],
-                                [
-                                    -74.05540466308594,
-                                    40.73405557647634
-                                ],
-                                [
-                                    -74.09214019775389,
-                                    40.73386046245138
-                                ]
+                                -74.09214019775389,
+                                40.73386046245138
+                            ],
+                            [
+                                -74.10080909729004,
+                                40.69573721839922
+                            ],
+                            [
+                                -74.05600547790527,
+                                40.694956309550584
+                            ],
+                            [
+                                -74.05540466308594,
+                                40.73405557647634
+                            ],
+                            [
+                                -74.09214019775389,
+                                40.73386046245138
                             ]
                         ]
-                    },
-                    "time": {
-                        "type": "absolute",
-                        "from": new Date(new Date().getTime() - 3600000 * 24 * 365).toISOString(),
-                        "to": new Date().toISOString()
-                    },
-                    "facets": {
-                        "filters": [
-                            { "fieldName": "sensorType", "metadata": ["WORLDVIEW03_VNIR", "WORLDVIEW02"] },
-                            { "fieldName": "sensorName", "metadata": ["Panchromatic"] }
-                        ]
-                    }
-                }
+                    ]
+                },
+                "time": {
+                    "type": "absolute",
+                    "from": "2016-08-24T10:31:10.560Z",
+                    "to": "2017-08-24T10:31:30.142Z"
+                },
+                "facets": {
+                    "filters": []
+                },
+                "geoFilter": "pin-point",
+                "orientation": "original"
+            }
+        },
+        "casesQueryParamsKeys": ["facets", "time", "maps", "region"],
+        "updateCaseDebounceTime": 700,
+        "useHash": true
+    },
+    "layersManagerConfig": {
+        "layersByCaseIdUrl": "{{ getv "/ansyn/layers/baseurl"}}"
+    },
+    "overlaysConfig": {
+        "baseUrl": "{{ getv "/ansyn/overlay/baseurl"}}",
+        "overlaysByCaseId": "case/:id/overlays",
+        "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find"}}",
+        "defaultApi": "{{getv "/ansyn/overlay/api/default"}}",
+        "searchByCase": false,
+        "overlaySource": "IDAHO",
+        "polygonGenerationDisatnce": 0.1
+    },
+    "imageryConfig": {
+        "geoMapsInitialMapSource": [{
+                "mapType": "openLayersMap",
+                "mapSource": "BING",
+                "mapSourceMetadata": { "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", "styles": [ "Aerial"] }
+            }, {
+                "mapType": "cesiumMap",
+                "mapSource": "OSM",
+                "mapSourceMetadata": null
+            }]
+    },
+    "filtersConfig": {
+        "filters": [
+            { "modelName": "sensorType", "displayName": "Sensor Type", "type": "Enum" },
+            { "modelName": "sensorName", "displayName": "Sensor Name", "type": "Enum" }
+        ]
+    },
+    "contextConfig": {
+        "contextSources": [
+            {
+                "type": "Elastic",
+                "uri": "{{getv "/ansyn/context/db/elastic/url"}}",
+                "bucket": "context",
+                "available": false,
+                "log": "trace",
+                "auth": "elastic:changeme"
             },
-            casesQueryParamsKeys: ['facets', 'time', 'maps', 'region'],
-            updateCaseDebounceTime: 700,
-            useHash: true
-	},
-	layersManagerConfig: {
-		layersByCaseIdUrl: "{{ getv "/ansyn/layers/baseurl"}}"
-	},
-	overlaysConfig: {
-		baseUrl: "{{ getv "/ansyn/overlay/baseurl"}}",
-		overlaysByCaseId:  'case/:id/overlays',
-		overlaysByTimeAndPolygon : "{{ getv "/ansyn/overlay/api/find"}}",
-		defaultApi: "{{getv "/ansyn/overlay/api/default"}}",
-		searchByCase: false,
-		overlaySource: 'IDAHO',
-		polygonGenerationDisatnce: 0.1,
-	},
-	imageryConfig: {
-		geoMapsInitialMapSource: [{
-			mapType: 'openLayersMap',
-			mapSource: 'BING',
-			mapSourceMetadata: { key: "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", styles: ['Aerial']}
-		}, {
-			mapType: 'cesiumMap',
-			mapSource: 'OSM',
-			mapSourceMetadata: null
-		}]
-	},
-	filtersConfig: {
-		filters: [
-			{ modelName: 'sensorType', displayName: 'Sensor Type', type: 'Enum' },
-			{ modelName: 'sensorName', displayName: 'Sensor Name', type: 'Enum' }
-		]
-	},
-	contextConfig: {
-		contextSources: [
-			{
-			type: 'Elastic',
-			uri: "{{getv "/ansyn/context/db/elastic/url"}}",
-			bucket: 'context',
-			available: true,
-			log: 'trace',
-			auth: "elastic:changeme"
-		},
-			{
-				uri: 'http://localhost:9001/api/v1/',
-				bucket: 'contexts',
-				type: "Proxy",
-				available: true
-
-			}]
-	}
-});
-
-module.exports = config;
+            {
+                "uri": "{{getv "/ansyn/context/db/proxy/url"}}",
+                "bucket": "contexts",
+                "type": "Proxy",
+                "available": true,
+                "apiObject" : "Http"
+            }
+        ]
+    },
+    "toolsConfig": {
+        "GoTo": {
+            "from": {
+                "datum": "wgs84",
+                "projection": "geo"
+            },
+            "to": {
+                "datum": "ed50",
+                "projection": "utm"
+            }
+        }
+    }
+}

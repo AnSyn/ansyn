@@ -24,14 +24,7 @@ import { OpenLayerVisualizersModule, OpenLayersVisualizerMapType } from '@ansyn/
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
-import { AppSettings } from './app-models/settings';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
-
-
-export const contextSources = {
-	 'Proxy': ContextProxySource,
-	 "Elastic": ContextElasticSource
- };
 
 @NgModule({
 	providers: [

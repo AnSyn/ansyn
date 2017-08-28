@@ -12,11 +12,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { configuration } from './configuration/configuration';
-import { ContextElasticSource,ContextProxySource } from "@ansyn/context";
-
-// if (configuration.production) {
-//   enableProdMode();
-// }
+import { ContextElasticSource , ContextProxySource } from "@ansyn/context";
 
 fetch("/assets/config/app.config.json").then(response => {
   return response.json();

@@ -23,6 +23,7 @@ export class Overlay {
 	csmState?: string;
 	sourceType?:string;
 	isFullOverlay: boolean;
+	isGeoRegistered: boolean;
 }
 
 export interface OverlaysCriteria  {

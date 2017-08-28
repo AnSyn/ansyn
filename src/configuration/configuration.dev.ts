@@ -6,7 +6,7 @@
 import { defaultCase } from './cases/default_case';
 
 export const configuration = {
-	env: 'default',
+	env: 'dev',
 	production: false,
 	MetaConfig: {
 

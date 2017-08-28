@@ -1,7 +1,6 @@
 import { Component, HostBinding, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { AppSettings } from './app-models/settings';
 
 const selector = 'empty';
 const template = '<div></div>';

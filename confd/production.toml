@@ -1,11 +1,12 @@
 [template]
 src = "production.tmpl"
-dest = "/opt/ansyn/app/assets/config/app.config.module.js"
+dest = "/opt/ansyn/app/assets/config/app.config.json"
 keys = [
     "/ansyn/cases/baseurl",
     "/ansyn/layers/baseurl",
     "/ansyn/overlay/baseurl",
     "/ansyn/overlay/api/find",
     "/ansyn/overlay/api/default",
-    "/ansyn/context/db/elastic/url"
+    "/ansyn/context/db/elastic/url",
+    "/ansyn/context/db/proxy/url"
 ]

@@ -1,16 +1,20 @@
 <div class="status" [class.active]="active">
 	<div class='status-container'>
 
-		<button [hidden]="!overlay" (click)="backToWorldView($event)" class="back-to-world-view">Back to world view</button>
+		<div class="left-buttons-container">
+			<button [hidden]="!overlay" (click)="backToWorldView($event)" class="back-to-world-view">Back to world view</button>
 
-		<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
-		<div class='status-bar-link-maps-icon'>
-			<img (click)="toggleMapSyncroniztion()" src="/assets/icons/sync_icon.svg" alt="">
+			<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
+			<div class='status-bar-link-maps-icon'>
+				<img (click)="toggleMapSyncroniztion()" src="/assets/icons/sync_icon.svg" alt="">
+			</div>
 		</div>
 
 		<div class='status-bar-title' data-title='{{map_id}}'>
 			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 		</div>
+
+		<ansyn-overlay-geo-registration-error [overlay]="overlay"></ansyn-overlay-geo-registration-error>
 
 		<!--<div class='status-bar-icons'>-->
 		<!-- maybe the will change that later

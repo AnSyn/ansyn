@@ -35,32 +35,41 @@ div.status{
 			}
 		}
 	}
-	button.back-to-world-view {
-		width: 160px;
-		width: 200px;
-		background: black;
-		color: white;
-		border: none;
-		cursor: pointer;
-		padding: 5px;
-	}
 
-	.status-bar-link-maps-icon {
-		opacity: 0.8;
-		padding-top:4px;
-		margin-left: 2px;
+	.left-buttons-container{
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		display: flex;
+		height: 100%;
+		align-items: center;
 
-		&:hover {
-			opacity: 1;
+		button.back-to-world-view {
+			width: 160px;
+			background: black;
+			color: white;
+			border: none;
 			cursor: pointer;
+			align-self: center;
 		}
 
-		img {
-			height: 16px;
-		}
-	}
+		.status-bar-link-maps-icon {
+			opacity: 0.8;
+			align-self: center;
+			margin-left: 2px;
 
-	button.active {
-    	box-shadow:	inset 0 0 2px #FFFFFF;
+			&:hover {
+				opacity: 1;
+				cursor: pointer;
+			}
+
+			img {
+				height: 16px;
+			}
+		}
+
+		button.active {
+			box-shadow:	inset 0 0 2px #FFFFFF;
+		}
 	}
 }

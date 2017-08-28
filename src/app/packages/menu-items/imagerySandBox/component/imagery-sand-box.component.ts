@@ -4,17 +4,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { LoadOverlaysAction } from '@ansyn//overlays/actions/overlays.actions';
+import { UpdateCaseAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn//overlays/actions/overlays.actions';
 import { Case } from "@ansyn/menu-items/cases";
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { isEqual,cloneDeep } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SelectCaseByIdAction } from '../../cases/actions/cases.actions';
-import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -153,6 +152,16 @@ export class ImagerySandBoxComponent implements OnInit {
 		};
 
 		this.selectedCase.state.contextEntities.push({id: '1', date: new Date("2015-04-17T03:55:12.129Z"), featureJson: feature});
+		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
+		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
+	}
+
+	public setCaseOverlaysAsNotGeoRegistered() {
+		this.selectedCase.state.maps.data.forEach((mapData: CaseMapState)=>{
+			if (mapData.data.overlay) {
+				mapData.data.overlay.isGeoRegistered = false;
+			}
+		});
 		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
 		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
 	}

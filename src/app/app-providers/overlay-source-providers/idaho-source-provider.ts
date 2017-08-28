@@ -92,7 +92,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		let bands = "0";
 		if (idahoElement.properties.numBands > 1 && idahoElement.properties.numBands < 5){
 			bands= "2,1,0";
-		} else if (idahoElement.properties.numBands >= 5){ 
+		} else if (idahoElement.properties.numBands >= 5){
 			bands = "4,2,1";
 		}
         overlay.sensorType = idahoElement.properties.platformName;
@@ -107,6 +107,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
         overlay.azimuth = 0;
         overlay.sourceType = IdahoOverlaySourceType;
 		overlay.isFullOverlay = true;
+		overlay.isGeoRegistered = true;
 
 		return overlay;
 	}

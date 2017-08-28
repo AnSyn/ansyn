@@ -10,19 +10,19 @@ import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	DisplayOverlayFromStoreAction, MouseOutDropAction,
 	MouseOverDropAction, SetFiltersAction
-} from '../../../packages/overlays/actions/overlays.actions';
+} from '@ansyn/overlays/actions/overlays.actions';
 import {
 	dbclickFeatureTriggerAction, DrawOverlaysOnMapTriggerAction,
 	MapActionTypes
-} from '../../../packages/map-facade/actions/map.actions';
-import { ImageryCommunicatorService } from '../../../packages/imagery/communicator-service/communicator.service';
+} from '@ansyn/map-facade/actions/map.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
 	AddCaseSuccessAction, CasesActionTypes,
 	SelectCaseByIdAction
-} from '../../../packages/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { EventEmitter } from '@angular/core';
-import { ShowOverlaysFootprintAction } from '../../../packages/menu-items/tools/actions/tools.actions';
+import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

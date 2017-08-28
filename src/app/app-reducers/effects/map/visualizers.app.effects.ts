@@ -22,7 +22,7 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { DrawOverlaysOnMapTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayFromStoreAction } from '../../../packages/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class VisualizersAppEffects {

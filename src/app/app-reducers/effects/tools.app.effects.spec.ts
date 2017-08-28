@@ -12,12 +12,12 @@ import {
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { CasesReducer, ICasesState, AddCaseSuccessAction, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { CasesReducer, ICasesState, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
-import { DisplayOverlayAction, DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
-import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

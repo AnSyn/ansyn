@@ -16,9 +16,9 @@ import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.
 import { MapActionTypes, SetMapAutoImageProcessing, BackToWorldAction, ActiveMapChangedAction } from '@ansyn/map-facade';
 import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
-import { CasesService } from '../../packages/menu-items/cases/services/cases.service';
-import { Case } from '../../packages/core/models/case.model';
-import { SetActiveOverlaysFootprintModeAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { Case } from '@ansyn/core/models/case.model';
+import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {

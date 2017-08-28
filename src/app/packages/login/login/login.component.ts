@@ -4,7 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {  AuthService } from '../auth.service';
 
 @Component({
-	moduleId: module.id,
+	selector: 'ansyn-login',
+	styleUrls: ['./login.component.less'],
 	templateUrl: 'login.component.html'
 })
 

@@ -15,7 +15,7 @@ import { Context } from '../';
 @Component({
 	selector: 'ansyn-context-container',
 	templateUrl: './container.component.html',
-	styleUrls: ['./container.component.css']
+	styleUrls: ['./container.component.less']
 })
 
 export class ContainerComponent implements OnInit {

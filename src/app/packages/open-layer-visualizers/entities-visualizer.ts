@@ -34,7 +34,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 
 	onDisposedEvent: EventEmitter<any> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
-	markups = [];
 	doubleClickFeature: EventEmitter<any> = new EventEmitter();
 	subscribers: Subscriber<any>[] = [];
 
@@ -178,10 +177,6 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this.onDisposedEvent.emit();
 		this.subscribers.forEach(sub => sub.unsubscribe());
 		this.subscribers = [];
-	}
-
-	onMarkupFeatures(markups: IMarkupEvent) {
-		this.markups = markups;
 	}
 
 	setHoverFeature(id: string){

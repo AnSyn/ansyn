@@ -75,10 +75,4 @@ export interface IMapVisualizer {
 
 	setHoverFeature(id: string);
 
-	/**
-	 * @description This function is called for style changes
-	 *  @param {IMarkupEvent[]} markups
-	 */
-
-	onMarkupFeatures(markups: IMarkupEvent);
 }

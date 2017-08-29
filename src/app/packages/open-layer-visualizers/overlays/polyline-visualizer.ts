@@ -19,6 +19,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	hoverLayer: Vector;
 	selectPointerMove: Select;
 	selectDoubleClick: Select;
+	markups: any[] = [];
 
 	styleProperties = {
 		hoverFeature: {
@@ -205,8 +206,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return this.getFeatureStyles(markClasses, this.styleProperties.staticFeature);
 	}
 
-	onMarkupFeatures(markup: IMarkupEvent) {
-		super.onMarkupFeatures(markup);
+	setMarkupFeatures(markups: IMarkupEvent) {
+		this.markups = markups;
 		this.hoverLayerSource.refresh();
 		if (this._source) {
 			this._source.refresh();

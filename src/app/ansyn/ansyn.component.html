@@ -1,9 +1,31 @@
-<ansyn-imageries-manager
-	class="map"
-	[selected_layout]="selected_layout"
-	[maps]="maps"
-	[pin-location]="pinLocation"
-	(setActiveImagery)="onActiveImagery($event)"
-	(layoutChangeSuccess)="layoutChangeSuccess()">
-</ansyn-imageries-manager>
+<div class="app">
+	<ansyn-menu></ansyn-menu>
+
+	<div class="layer">
+		<div #mapsContainer class="maps-container" [class.edit-mode]="editMode">
+			<ansyn-imageries-manager
+				[selected_layout]="selected_layout"
+				[maps]="maps"
+				[pin-location]="pinLocation"
+				(setActiveImagery)="setActiveImagery($event)"
+				(layoutChangeSuccess)="layoutChangeSuccess()">
+			</ansyn-imageries-manager>
+		</div>
+
+			<div class="status">
+			<ansyn-status-bar
+				[selected_case_name]="selectedCaseName"
+				[overlay]="displayedOverlay"
+				(toggleEditMode)="toggleEditMode($event)"
+				[hide-overlay]="selected_layout.maps_count > 1"
+				[overlays_count]="overlays_count"
+				[isFavoriteOverlayDisplayed]="isFavoriteOverlay">
+			</ansyn-status-bar>
+		</div>
+		<div class="app-timeline-container">
+			<ansyn-overlays-container></ansyn-overlays-container>
+		</div>
+	</div>
+</div>
+
 <router-outlet></router-outlet>

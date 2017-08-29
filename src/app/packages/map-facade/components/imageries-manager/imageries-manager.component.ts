@@ -24,11 +24,6 @@ export class ImageriesManagerComponent implements OnInit{
 	public publisherMouseShadowMapId: string;
 	public listenersMouseShadowMapsId: Array<string>;
 	public shadowMouseProcess:boolean;
-	public contextMenu = {
-		show: false,
-		top: 0,
-		left: 0
-	};
 
 	clickTimeout: number;
 	preventDbClick: boolean;
@@ -47,10 +42,11 @@ export class ImageriesManagerComponent implements OnInit{
 	@Input()
 	set maps(value: any){
 		this._maps = value;
-		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this._maps.active_map_id){
+		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.maps.active_map_id){
 			this.changeShadowMouseTarget();
 		}
 	};
+
 	get maps (){
 		return this._maps;
 	}

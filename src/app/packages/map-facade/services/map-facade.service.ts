@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
 	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction
 } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
-import { FootprintPolylineVisualizerType } from '../../open-layer-visualizers/overlays/polyline-visualizer';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { IMapVisualizer } from '@ansyn/imagery/model/imap-visualizer';
 
 @Injectable()
 export class MapFacadeService {

@@ -23,6 +23,7 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { DrawOverlaysOnMapTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -63,7 +64,8 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).onMarkupFeatures(action.payload);
+				const footprintPolyline = <FootprintPolylineVisualizer> communicator.getVisualizer(FootprintPolylineVisualizerType);
+				footprintPolyline.setMarkupFeatures(action.payload);
 			});
 		});
 

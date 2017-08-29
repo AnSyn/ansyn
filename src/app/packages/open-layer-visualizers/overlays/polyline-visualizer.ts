@@ -38,7 +38,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			stroke: {
 				colors: {
 					active: `#27b2cf`,
-					displayed: `rgb(211, 147, 225)`,
+					displayed: `#9524ad`,
 					hover: `rgb(211, 147, 225)`,
 					favorites: 'yellow',
 					'': `rgb(211, 147, 225)`
@@ -65,7 +65,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	getFeatureStyles(classes, featureStyle) {
 		const isFavorites = classes.includes('favorites');
 		const isActive = classes.includes('active');
-		const baseHoverStyle = this.baseFeatureStyle(isActive, isFavorites, featureStyle);
+		const isDisplayed = classes.includes('displayed');
+		const baseHoverStyle = this.baseFeatureStyle(isActive, isFavorites, isDisplayed, featureStyle);
 		return isFavorites ? [this.baseFavoritesStyle(featureStyle), baseHoverStyle] : [baseHoverStyle];
 	}
 
@@ -73,10 +74,9 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return this.getStyleWithStroke(stroke.width, stroke.colors['favorites'], fill);
 	}
 
-	private baseFeatureStyle(isActive, isFavorites, {stroke, fill}) {
-		let [ colors, width ] = [stroke.colors, stroke.width ];
-		width = isFavorites ? (width * 0.6) : width;
-		const color = isActive ? colors['active'] : colors[''];
+	private baseFeatureStyle(isActive, isFavorites, isDisplayed, {stroke, fill}) {
+		const [colors, width] = isFavorites ? [stroke.colors, stroke.width * 0.6] : [stroke.colors, stroke.width];
+		const color = isActive ? colors['active'] : isDisplayed ? colors['displayed'] : colors[''];
 		return this.getStyleWithStroke(width, color, fill);
 	}
 

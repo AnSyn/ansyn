@@ -16,13 +16,10 @@ import {
 	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import {
-	AddCaseSuccessAction, CasesActionTypes,
-	SelectCaseByIdAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseSuccessAction, CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { EventEmitter } from '@angular/core';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -84,25 +81,25 @@ describe('VisualizersAppEffects', () => {
 	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
 		const markup = [{id: '1234', class: 'active'}];
 		spyOn(CasesService, 'getOverlaysMarkup').and.callFake(() => markup);
-		effectsRunner.queue(new HoverFeatureTriggerAction('fakeId'));
+		effectsRunner.queue(new HoverFeatureTriggerAction({id: 'fakeId', visualizerType: FootprintPolylineVisualizerType}));
 		let result;
 		visualizersAppEffects.onHoverFeatureSetMarkup$.subscribe(_result => {result = _result;});
 		expect(result.constructor).toEqual(OverlaysMarkupAction);
 		expect(result.payload).toEqual(markup);
 	});
 
-	it('onHoverFeatureEmitSyncHoverFeature$ should send syncHoverFeature.emit per communicator FootprintPolylineVisualizerType', () => {
+	it('onHoverFeatureEmitSyncHoverFeature$ should call setHoverFeature per communicator FootprintPolylineVisualizerType', () => {
 		const fakeVisualizer = {
-			syncHoverFeature: new EventEmitter()
+			setHoverFeature: () => {}
 		};
 		const fakeCommunicator = {
 			getVisualizer: (): any => fakeVisualizer
 		};
-		spyOn(fakeVisualizer.syncHoverFeature, 'emit');
+		spyOn(fakeVisualizer, 'setHoverFeature');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator ]);
-		effectsRunner.queue(new HoverFeatureTriggerAction('fakeId'));
+		effectsRunner.queue(new HoverFeatureTriggerAction({id: 'fakeId', visualizerType: FootprintPolylineVisualizerType}));
 		visualizersAppEffects.onHoverFeatureEmitSyncHoverFeature$.subscribe();
-		expect(fakeCommunicator.getVisualizer().syncHoverFeature.emit).toHaveBeenCalledTimes(2);
+		expect(fakeCommunicator.getVisualizer().setHoverFeature).toHaveBeenCalledTimes(2);
 	});
 
 	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
@@ -112,7 +109,7 @@ describe('VisualizersAppEffects', () => {
 			let result;
 			visualizersAppEffects.onMouseOverDropAction$ .subscribe((_result) => {result = _result;});
 			expect(result.constructor).toEqual(HoverFeatureTriggerAction);
-			expect(result.payload).toEqual('fakeId')
+			expect(result.payload.id).toEqual('fakeId')
 		});
 
 		it('with "undefined" if not MouseOverDropAction', () => {
@@ -120,32 +117,32 @@ describe('VisualizersAppEffects', () => {
 			let result;
 			visualizersAppEffects.onMouseOverDropAction$ .subscribe((_result) => {result = _result;});
 			expect(result.constructor).toEqual(HoverFeatureTriggerAction);
-			expect(result.payload).toBeUndefined();
+			expect(result.payload.id).toBeUndefined();
 		});
 
 	});
 
 	it('onDbclickFeaturePolylineDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-		effectsRunner.queue(new DbclickFeatureTriggerAction('fakeId'));
+		effectsRunner.queue(new DbclickFeatureTriggerAction({id: 'fakeId', visualizerType: FootprintPolylineVisualizerType}));
 		let result: DisplayOverlayFromStoreAction;
 		visualizersAppEffects.onDbclickFeaturePolylineDisplayAction$.subscribe(_result => result = _result);
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('fakeId');
 	});
 
-	it('markupVisualizer$ should send markupFeatures.emit per communicator', () => {
+	it('markupVisualizer$ should call onMarkupFeatures per communicator', () => {
 		const fakeVisualizer = {
-			markupFeatures: new EventEmitter()
+			onMarkupFeatures: () => {}
 		};
 		const fakeCommunicator = {
 			getVisualizer: (): any => fakeVisualizer
 		};
-		spyOn(fakeVisualizer.markupFeatures, 'emit');
+		spyOn(fakeVisualizer, 'onMarkupFeatures');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator, fakeCommunicator ]);
 		effectsRunner.queue(new OverlaysMarkupAction([1,2,3,4]));
 		visualizersAppEffects.markupVisualizer$.subscribe();
-		expect(fakeCommunicator.getVisualizer().markupFeatures.emit).toHaveBeenCalledWith([1,2,3,4]);
-		expect(fakeCommunicator.getVisualizer().markupFeatures.emit).toHaveBeenCalledTimes(3);
+		expect(fakeCommunicator.getVisualizer().onMarkupFeatures).toHaveBeenCalledWith([1,2,3,4]);
+		expect(fakeCommunicator.getVisualizer().onMarkupFeatures).toHaveBeenCalledTimes(3);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"' ,() => {
@@ -175,7 +172,5 @@ describe('VisualizersAppEffects', () => {
 		visualizersAppEffects.drawOverlaysOnMap$.subscribe();
 		expect(visualizersAppEffects.drawOverlaysOnMap).toHaveBeenCalledTimes(3);
 	});
-
-
 
 });

@@ -9,68 +9,43 @@ import Fill from 'ol/style/fill';
 import MultiPolygon from 'ol/geom/multipolygon';
 import Feature from 'ol/feature';
 import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
-import {cloneDeep as _cloneDeep, get as _get, isNil as _isNil} from 'lodash';
+import {cloneDeep as _cloneDeep, isNil as _isNil} from 'lodash';
 import { IMap } from '@ansyn/imagery/model/imap';
 
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
 
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
-	hoverLayerSource;
+	hoverLayerSource: SourceVector;
 	hoverLayer: Vector;
 	selectPointerMove: Select;
 	selectDoubleClick: Select;
 
-	strokeColors = {
-		active: `#27b2cf`,
-		displayed: `#9524ad`,
-		hover: `rgb(211, 147, 225)`,
-		favorites: 'yellow',
-		'': `rgb(211, 147, 225)`
-	};
-
-	hoverStrokeColors = {
-		active: `#27b2cf`,
-		displayed: `#9524ad`,
-		hover: `#9524ad`,
-		favorites: 'yellow',
-		'': `#9524ad`
-	};
-
-	hoverStyles = {
-		active: new Style({
-			stroke: new Stroke({
-				width: 5,
-				color: '#27b2cf'
-			}),
+	styleProperties = {
+		hoverFeature: {
+			stroke: {
+				colors: {
+					active: `#27b2cf`,
+					displayed: `#9524ad`,
+					hover: `#9524ad`,
+					favorites: 'yellow',
+					'': `#9524ad`
+				},
+				width: 5
+			},
 			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
-		}),
-		displayed: new Style({
-			stroke: new Stroke({
-				width: 5,
-				color: '#bd0fe2'
-			}),
-			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
-		}),
-		hover: new Style({
-			stroke: new Stroke({
-				width: 5,
-				color: '#bd0fe2'
-			}),
-			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
-		}),
-		'': new Style({
-			stroke: new Stroke({
-				width: 5,
-				color: '#bd0fe2'
-			}),
-			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
-		}),
-		favorites: new Style({
-			stroke: new Stroke({
-				width: 5,
-				color: 'yellow'
-			})
-		}),
+		},
+		staticFeature: {
+			stroke: {
+				colors: {
+					active: `#27b2cf`,
+					displayed: `rgb(211, 147, 225)`,
+					hover: `rgb(211, 147, 225)`,
+					favorites: 'yellow',
+					'': `rgb(211, 147, 225)`
+				},
+				width: 3
+			}
+		}
 	};
 
 	interactionsStyle =  new Style({
@@ -87,30 +62,28 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		this.containerLayerOpacity = 0.5;
 	}
 
-	getFeatureStyles(classes, colors) {
-		const fill = new Fill({color: 'rgba(255,255,255,0.4)'});
+	getFeatureStyles(classes, featureStyle) {
 		const isFavorites = classes.includes('favorites');
 		const isActive = classes.includes('active');
-		const baseHoverStyle = this.baseFeatureStyle(isActive, isFavorites, colors, fill);
-		return isFavorites ? [this.baseFavoritesStyle(colors, fill), baseHoverStyle] : [baseHoverStyle];
+		const baseHoverStyle = this.baseFeatureStyle(isActive, isFavorites, featureStyle);
+		return isFavorites ? [this.baseFavoritesStyle(featureStyle), baseHoverStyle] : [baseHoverStyle];
 	}
 
-	private baseFavoritesStyle(colors, fill?) {
-		return this.getStyleWithStroke(5, colors['favorites'], fill);
+	private baseFavoritesStyle({stroke, fill}) {
+		return this.getStyleWithStroke(stroke.width, stroke.colors['favorites'], fill);
 	}
 
-	private baseFeatureStyle(isActive, isFavorites, colors, fill) {
-		const width = isFavorites ? 3.5 : 5;
+	private baseFeatureStyle(isActive, isFavorites, {stroke, fill}) {
+		let [ colors, width ] = [stroke.colors, stroke.width ];
+		width = isFavorites ? (width * 0.6) : width;
 		const color = isActive ? colors['active'] : colors[''];
 		return this.getStyleWithStroke(width, color, fill);
 	}
 
-	private getStyleWithStroke(width, color, fill) {
-		return new Style({
-			stroke: new Stroke({
-				width, color
-			}), fill
-		});
+	private getStyleWithStroke(width, color, fill?) {
+		const stroke = new Stroke({width, color});
+		const styleObj = fill ? {stroke, fill} : {stroke};
+		return new Style(styleObj)
 	}
 
 	onInit(mapId: string, map: IMap) {
@@ -126,7 +99,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	resetInteractions(): void {
 		this._imap.mapObject.removeInteraction(this.selectDoubleClick);
 		this._imap.mapObject.removeInteraction(this.selectPointerMove);
-		this.addSelectInteraction();
+		this.addPointerMoveInteraction();
 		this.addDoubleClickInteraction();
 	}
 
@@ -136,7 +109,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			source: this.hoverLayerSource,
 			style: (feature: Feature) => {
 				const markClass = this.getMarkClass(feature.getId());
-				return this.getFeatureStyles(markClass, this.hoverStrokeColors);
+				return this.getFeatureStyles(markClass, this.styleProperties.hoverFeature);
 			}
 		});
 		this.hoverLayer.setZIndex(100000)
@@ -149,7 +122,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			.map(mark => mark.class)
 	}
 
-	addSelectInteraction() {
+	addPointerMoveInteraction() {
 		this.selectPointerMove = new Select({
 			condition: condition.pointerMove,
 			style: () => this.interactionsStyle,
@@ -229,7 +202,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	featureStyle(feature: Feature, resolution?) {
 		const markClasses = this.getMarkClass(feature.getId());
-		return this.getFeatureStyles(markClasses, this.strokeColors);
+		return this.getFeatureStyles(markClasses, this.styleProperties.staticFeature);
 	}
 
 	onMarkupFeatures(markup: IMarkupEvent) {

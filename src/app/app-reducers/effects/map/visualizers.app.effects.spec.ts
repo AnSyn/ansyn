@@ -130,19 +130,19 @@ describe('VisualizersAppEffects', () => {
 		expect(result.payload.id).toEqual('fakeId');
 	});
 
-	it('markupVisualizer$ should call onMarkupFeatures per communicator', () => {
+	it('markupVisualizer$ should call setMarkupFeatures per communicator', () => {
 		const fakeVisualizer = {
-			onMarkupFeatures: () => {}
+			setMarkupFeatures: () => {}
 		};
 		const fakeCommunicator = {
 			getVisualizer: (): any => fakeVisualizer
 		};
-		spyOn(fakeVisualizer, 'onMarkupFeatures');
+		spyOn(fakeVisualizer, 'setMarkupFeatures');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator, fakeCommunicator ]);
 		effectsRunner.queue(new OverlaysMarkupAction([1,2,3,4]));
 		visualizersAppEffects.markupVisualizer$.subscribe();
-		expect(fakeCommunicator.getVisualizer().onMarkupFeatures).toHaveBeenCalledWith([1,2,3,4]);
-		expect(fakeCommunicator.getVisualizer().onMarkupFeatures).toHaveBeenCalledTimes(3);
+		expect(fakeCommunicator.getVisualizer().setMarkupFeatures).toHaveBeenCalledWith([1,2,3,4]);
+		expect(fakeCommunicator.getVisualizer().setMarkupFeatures).toHaveBeenCalledTimes(3);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"' ,() => {

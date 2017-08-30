@@ -15,6 +15,7 @@ export class ToolsComponent implements OnInit {
 	public expandOverlaysDisplayMode: boolean;
 	public displayModeOn: boolean;
 	public flags: Map<string,boolean>;
+	public isGeoOptionsDisabled: boolean;
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
 														.map((tools: IToolsState) => tools.flags)
 														.distinctUntilChanged(isEqual);
@@ -30,6 +31,7 @@ export class ToolsComponent implements OnInit {
 	ngOnInit() {
 		this.flags$.subscribe(_flags => {
 			this.flags = _flags;
+			this.isGeoOptionsDisabled = !this.flags.get('geo_registered_options_enabled');
 		});
 	}
 

@@ -15,10 +15,18 @@ export const toolsInitialState: IToolsState = {
 	activeCenter: [0, 0]
 };
 
+toolsInitialState.flags.set('geo_registered_options_enabled', true);
+
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<string,boolean>;
 	switch(action.type){
-		case  ToolsActionsTypes.START_MOUSE_SHADOW:
+		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('geo_registered_options_enabled', action.payload);
+			return { ...state, flags: tmpMap };
+
+		case ToolsActionsTypes.START_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
 			tmpMap.set('shadow_mouse',true);

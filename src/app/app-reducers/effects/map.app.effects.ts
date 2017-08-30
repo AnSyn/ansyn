@@ -9,7 +9,7 @@ import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansy
 import { IAppState } from '../';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction } from '@ansyn/map-facade';
+import { MapActionTypes, PositionChangedAction, StartMapShadowAction ,StopMapShadowAction ,CompositeMapShadowAction, ActiveMapChangedAction, MapFacadeService } from '@ansyn/map-facade';
 import { isEmpty,cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
@@ -20,7 +20,7 @@ import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { LoadOverlaysAction, OverlaysMarkupAction, DisplayOverlaySuccessAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, AddMapInstacneAction, SynchronizeMapsAction, AddOverlayToLoadingOverlaysAction, RemoveOverlayFromLoadingOverlaysAction, EnableMapGeoOptionsActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -29,7 +29,9 @@ import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@a
 import { isNil } from 'lodash';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction, SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -82,7 +84,7 @@ export class MapAppEffects {
 				new SetPinLocationModeAction(false),
 				new SetActiveCenter(action.payload.lonLat)
 			];
-	});
+		});
 
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
@@ -204,7 +206,7 @@ export class MapAppEffects {
 		.map(([action, active_map_id]: [SelectLayerAction, string]) => {
 			const imagery = this.communicator.provide(active_map_id);
 			imagery.addVectorLayer(action.payload);
-		}).share();
+		});
 
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<void> = this.actions$
@@ -214,7 +216,7 @@ export class MapAppEffects {
 		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
 			let imagery = this.communicator.provide(active_map_id);
 			imagery.removeVectorLayer(action.payload);
-		}).share();
+		});
 
 	@Effect()
 	positionChanged$: Observable<UpdateCaseAction> = this.actions$
@@ -347,9 +349,43 @@ export class MapAppEffects {
 			];
 		});
 
+	@Effect()
+	activeMapGeoRegistartionChanged$: Observable<any> = this.actions$
+		.ofType(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			MapActionTypes.BACK_TO_WORLD,
+			MapActionTypes.ACTIVE_MAP_CHANGED,
+			CasesActionTypes.SELECT_CASE_BY_ID)
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'), (action: Action, casesState: ICasesState, mapState: IMapState) => {
+			return [casesState, mapState];
+		})
+		.map(([casesState, mapState]: [ICasesState, IMapState]) => {
+			const activeMapState = CasesService.activeMap(casesState.selected_case);
+			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
+			return [isGeoRegistered, activeMapState.id, mapState];
+		})
+		.filter(([isGeoRegistered, mapId, mapState]: [boolean, string, IMapState]): any => {
+			const isEnabled = mapState.mapIdToGeoOptions.get(mapId);
+			return isEnabled !== isGeoRegistered;
+		})
+		.map(([isGeoRegistered, mapId, mapState]: [boolean, string, IMapState]): any =>{
+			console.log("effect");
+			return new EnableMapGeoOptionsActionStore({mapId: mapId, isEnabled: isGeoRegistered});
+		});
+
+	@Effect()
+	changeMapGeoOptionsMode$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ENABLE_MAP_GEO_OPTIONS)
+		.mergeMap((action: EnableMapGeoOptionsActionStore) => {
+			const isGeoRegistered = action.payload.isEnabled;
+			return [
+				new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered),
+				new SetMapGeoEnabledModeStatusBarActionStore(isGeoRegistered)
+			];
+		});
+
 	constructor(
 		private actions$: Actions,
-		private casesService: CasesService,
 		private store$: Store<IAppState>,
 		private communicator: ImageryCommunicatorService,
 		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]

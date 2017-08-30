@@ -26,10 +26,18 @@ export const MapActionTypes = {
 		HOVER_FEATURE: 'HOVER_FEATURE',
 		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
 	},
-	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP'
+	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
+	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS'
 };
 
 export type MapActions = any;
+
+export class EnableMapGeoOptionsActionStore implements Action {
+	type = MapActionTypes.ENABLE_MAP_GEO_OPTIONS;
+	constructor(public payload: {mapId: string, isEnabled: boolean}) {
+		// code...
+	}
+}
 
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;

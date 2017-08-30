@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./overlay-geo-registration-error.component.less']
 })
 export class OverlayGeoRegistrationErrorComponent {
-	@Input() overlay;
+	@Input() showError: boolean;
 }

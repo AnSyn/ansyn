@@ -8,10 +8,11 @@
 			(click)="clickMapContainer(maps.data[index].id)"
 			(dblclick)="dbclick()">
 			<ansyn-imagery-container class="map"
+									 [disable-geo-options]="isGeoOptionsDisabled(maps.data[index].id)"
 									 [map-state]="maps.data[index]"
 									 [active]="maps.active_map_id == maps.data[index].id"
 									 [show-status]="count > 1"
-									 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)" >
+									 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)">
 			</ansyn-imagery-container>
 
 			<div class="active-border"

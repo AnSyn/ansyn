@@ -15,8 +15,8 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	SET_ORIENTATION: 'SET_ORIENTATION',
 	SET_GEO_FILTER: 'SET_GEO_FILTER',
-	SET_TIME: 'SET_TIME'
-
+	SET_TIME: 'SET_TIME',
+	MAP_GEO_ENABLED_MODE_CHANGED: 'MAP_GEO_ENABLED_MODE_CHANGED'
 };
 
 export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
@@ -86,4 +86,10 @@ export class SetGeoFilterAction implements Action{
 export class SetTimeAction implements Action{
 	type: string = StatusBarActionsTypes.SET_TIME;
 	constructor(public payload: {from: Date, to: Date}) {}
+}
+
+export class SetMapGeoEnabledModeStatusBarActionStore implements Action {
+	type = StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
+	constructor(public payload: boolean) {
+	}
 }

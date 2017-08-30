@@ -57,10 +57,18 @@ div.status{
 			opacity: 0.8;
 			align-self: center;
 			margin-left: 2px;
+			background: transparent;
+			border: none;
+			outline: none;
+			padding: 0;
 
-			&:hover {
+			&:hover:not(:disabled) {
 				opacity: 1;
 				cursor: pointer;
+			}
+
+			&:disabled {
+				opacity: .6;
 			}
 
 			img {

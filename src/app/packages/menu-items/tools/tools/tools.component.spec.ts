@@ -10,8 +10,8 @@ describe('ToolsComponent', () => {
     let fixture: ComponentFixture <ToolsComponent> ;
     let store: Store <any> ;
 
-	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand'], outputs: ['onGoTo', 'expandChange']});
-	const mock_overlays_display_mode = MockComponent({selector: 'ansyn-overlays-display-mode', inputs: ['expand', 'modeOn'], outputs: ['expandChange', 'modeOnChange']});
+	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand', 'disabled'], outputs: ['onGoTo', 'expandChange']});
+	const mock_overlays_display_mode = MockComponent({selector: 'ansyn-overlays-display-mode', inputs: ['expand', 'disabled', 'modeOn'], outputs: ['expandChange', 'modeOnChange']});
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

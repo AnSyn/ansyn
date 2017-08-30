@@ -8,7 +8,7 @@
 				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 			</div>
 
-			<ansyn-overlay-geo-registration-error [overlay]="overlay"></ansyn-overlay-geo-registration-error>
+			<ansyn-overlay-geo-registration-error [showError]="this.flags.has('geo_registered_options_enabled') && !this.flags.get('geo_registered_options_enabled')"></ansyn-overlay-geo-registration-error>
 
 		</div>
 

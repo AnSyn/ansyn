@@ -16,7 +16,8 @@ export const ToolsActionsTypes = {
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
-	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING')
+	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING'),
+	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 };
 
 export class StartMouseShadow implements Action {
@@ -71,6 +72,12 @@ export class SetActiveOverlaysFootprintModeAction implements  Action {
 	constructor(public payload: OverlayDisplayMode) {};
 }
 
+export class SetMapGeoEnabledModeToolsActionStore implements Action {
+	type = ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
+	constructor(public payload: boolean) {
+	}
+}
+
 export class SetAutoImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?: any) {
@@ -97,4 +104,4 @@ export class EnableImageProcessing implements  Action {
 
 export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter |
 	SetActiveCenter | SetPinLocationModeAction | GoToAction | ShowOverlaysFootprintAction | SetActiveOverlaysFootprintModeAction |
-	SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess;
+	SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess | SetMapGeoEnabledModeToolsActionStore;

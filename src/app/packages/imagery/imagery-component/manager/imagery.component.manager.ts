@@ -5,8 +5,6 @@ import { IMapPlugin } from '../../model/imap-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService } from '../../provider-service/provider.service';
-import { ImageryComponentSettings } from '../../model/imagery-component-settings';
-import { CommunicatorEntity } from '../../communicator-service/communicator.entity';
 import { MapPosition } from '../../model/map-position';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 

@@ -8,7 +8,7 @@ import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.acti
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent  {
-
+	@Input('disable-geo-options') disableGeoOptions: boolean;
 	@Input() map_id;
 	@Input() overlay;
 	@Input() active;
@@ -22,6 +22,8 @@ export class ImageryStatusComponent  {
 	}
 
 	toggleMapSyncroniztion() {
-		this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
+		if (!this.disableGeoOptions) {
+			this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
+		}
 	}
 }

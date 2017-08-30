@@ -6,11 +6,18 @@ import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
 	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction
 } from '../actions/map.actions';
-import { Position } from '@ansyn/core';
+import { Position, Overlay } from '@ansyn/core';
 
 @Injectable()
 export class MapFacadeService {
 	private _subscribers = [];
+
+	static isOverlayGeoRegistered(overlay: Overlay): boolean {
+		if (!overlay) {
+			return true;
+		}
+		return overlay.isGeoRegistered;
+	}
 
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {
 		this.initEmitters();

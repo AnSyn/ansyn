@@ -51,6 +51,8 @@ export class OverlaysDisplayModeComponent {
 		return this._expand;
 	}
 
+	@Input() disabled: boolean;
+
 	@Output() modeOnChange = new EventEmitter();
 	@Input()
 	set modeOn(value) {

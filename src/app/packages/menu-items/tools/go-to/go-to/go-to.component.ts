@@ -14,6 +14,7 @@ import "rxjs/add/operator/pluck";
 	styleUrls: ['./go-to.component.less']
 })
 export class GoToComponent implements OnInit {
+	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
 	activeCenter$: Observable<number[]> = this.store$.select('tools').pluck('activeCenter');
@@ -61,8 +62,6 @@ export class GoToComponent implements OnInit {
 		this.pin_location_mode$.subscribe((_pin_location_mode) => {
 			this.pin_location_mode = _pin_location_mode;
 		});
-
-		this.store$.dispatch(new PullActiveCenter());
 	}
 
 	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) { }

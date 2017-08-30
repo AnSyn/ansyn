@@ -31,12 +31,10 @@ export class ImageriesManagerComponent implements OnInit{
 	clickTimeout: number;
 	preventDbClick: boolean;
 
-	public loadingOverlaysIds$: Observable<string[]> = this.store.select('map')
-		.map((state: IMapState) => {
-			return state.loadingOverlays;
-		});
+	public mapState$: Observable<IMapState> = this.store.select('map').map((state: IMapState)=> state);
 
 	public loadingOverlaysIds = [];
+	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 	@Output() public setActiveImagery = new EventEmitter();
@@ -77,10 +75,15 @@ export class ImageriesManagerComponent implements OnInit{
 		this.initListeners();
 		this.setClassImageriesContainer(this.selected_layout.id);
 
-		this.loadingOverlaysIds$.subscribe((_loadingOverlaysIds) => {
-			this.loadingOverlaysIds = _loadingOverlaysIds;
+		this.mapState$.subscribe((_mapState) => {
+			this.loadingOverlaysIds = _mapState.loadingOverlays;
+			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
+	}
 
+	isGeoOptionsDisabled(mapId: string): boolean {
+		const result = this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId)
+		return result;
 	}
 
 	isOverlayLoading(overlayId) {

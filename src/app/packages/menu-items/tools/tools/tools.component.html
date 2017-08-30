@@ -1,16 +1,16 @@
 <div class='tools-menu-item-container'>
 	<div>
-		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled')">
+		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
 			<img src='/assets/icons/tools/shadow_mouse.svg'/>
 		</button>
 	</div>
 
 	<div>
-		<button (click)="toggleExpandGoTo()">
+		<button (click)="toggleExpandGoTo()" [disabled]="isGeoOptionsDisabled" >
 			<img src='/assets/icons/tools/go-to.svg'/>
 		</button>
 		<span class="tooltiptext">Go To</span>
-		<ansyn-go-to [(expand)]="expandGoTo"></ansyn-go-to>
+		<ansyn-go-to [disabled]="isGeoOptionsDisabled" [(expand)]="expandGoTo"></ansyn-go-to>
 	</div>
 
 	<div class='image-processing'>
@@ -23,9 +23,9 @@
 	</div>
 
 	<div #displayOverlayDiv class="display-overlay-visualizer" [class.active]="displayModeOn">
-		<button (click)="toggleExpandVisualizers()">
+		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled" >
 		</button>
 		<span class="tooltiptext">Display Overlays</span>
-		<ansyn-overlays-display-mode [(expand)]="expandOverlaysDisplayMode" [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
+		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode" [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
 	</div>
 </div>

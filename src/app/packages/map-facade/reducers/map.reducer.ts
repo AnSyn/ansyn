@@ -8,6 +8,7 @@ export interface IMapState {
 	loadingOverlays: string[];
 	filteredOverlays: string[];
 	displayedOverlay: any[];
+	mapIdToGeoOptions: Map<string, boolean>;
 }
 
 export const initialMapState: IMapState = {
@@ -15,20 +16,28 @@ export const initialMapState: IMapState = {
 	communicators: {},
 	loadingOverlays: [],
 	filteredOverlays: [],
-	displayedOverlay: []
+	displayedOverlay: [],
+	mapIdToGeoOptions: new Map<string, boolean>()
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
 
 	switch (action.type) {
+		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
+
+			console.log("reducer")
+			const mapIdToGeoOptionsClone = new Map(state.mapIdToGeoOptions);
+			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);
+			return { ...state, mapIdToGeoOptions: mapIdToGeoOptionsClone };
+
 		case MapActionTypes.POSITION_CHANGED:
 			const positions = cloneDeep(state.positions);
 			positions[action.payload.id] = action.payload.position;
-			return Object.assign(state, {positions});
+			return { ...state, positions: positions };
 
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
-			return Object.assign({},state, {communicators: action.payload.communicatorsIds});
+			return { ...state, communicators: action.payload.communicatorsIds };
 
 		case MapActionTypes.SET_LOADING_OVERLAYS:
 			return  {...state, loadingOverlays: action.payload};

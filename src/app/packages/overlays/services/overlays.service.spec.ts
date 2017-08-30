@@ -16,8 +16,8 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.create((observer: Observer<Overlay[]>) => {
 			const overlays: Overlay[] = [
-				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true},
-				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second", isFullOverlay: true}
+				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true, isGeoRegistered: true},
+				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second", isFullOverlay: true, isGeoRegistered: true}
 			]
 			observer.next(overlays);
 			observer.complete();
@@ -26,7 +26,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	getOverlayById(id: string): Observable<Overlay> {
 		return Observable.create((observer: Observer<Overlay>) => {
-			const overlay =	{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true};
+			const overlay =	{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true, isGeoRegistered: true};
 			observer.next(overlay);
 			observer.complete();
 		});

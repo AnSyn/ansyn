@@ -43,9 +43,14 @@ export const StatusBarInitialState: IStatusBarState = {
 	time: {from: new Date(0), to: new Date()}
 };
 
-
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState  {
 	switch(action.type){
+
+		case StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
+
+			const tmpMap = new Map(state.flags);
+			tmpMap.set('geo_registered_options_enabled', action.payload);
+			return { ...state, flags: tmpMap };
 
 		case StatusBarActionsTypes.CHANGE_LAYOUT:
 			return Object.assign({},state,{selected_layout_index: action.payload});

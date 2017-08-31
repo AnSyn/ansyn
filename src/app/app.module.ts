@@ -13,7 +13,6 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRouter } from './app-routing.module';
-import { AnsynComponent } from './ansyn/ansyn.component';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { ContextModule } from '@ansyn/context/context.module';
@@ -25,11 +24,12 @@ import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
 import { LoginModule } from './packages/login/login.module';
-
-export const contextSources = {
-	 'Proxy': ContextProxySource,
-	 "Elastic": ContextElasticSource
- };
+import { AnsynModule } from './ansyn/ansyn.module';
+//
+// export const contextSources = {
+// 	 'Proxy': ContextProxySource,
+// 	 "Elastic": ContextElasticSource
+//  };
 
 @NgModule({
 	providers: [
@@ -37,41 +37,15 @@ export const contextSources = {
 	],
 	declarations: [
 		AppComponent,
-		AnsynComponent
 	],
 	imports: [
-		AppProvidersModule,
-		OpenLayerCenterMarkerPluginModule,
-		OpenLayerMapModule,
-		BrowserModule,
-		FormsModule,
-		HttpModule,
-		ContextModule,
-		BrowserAnimationsModule,
-		CoreModule,
-		MenuModule,
 		LoginModule,
-		CasesModule,
-		FiltersModule,
-		LayersManagerModule,
-		ToolsModule,
-		AlgorithmsModule,
-		SettingsModule,
-		OverlaysModule,
-		AppRouter,
-		AppReducersModule,
-		ImagerySandBoxModule,
-		MapFacadeModule,
-		ImageryModule,
-		StatusBarModule,
-		ContextModule,
-		OpenLayerVisualizersModule
+		AnsynModule,
+		AppRouter
 	],
 	bootstrap: [AppComponent]
 })
 
 export class AppModule {
-	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, ContextEntityVisualizer);
-	}
+
 }

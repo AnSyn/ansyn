@@ -1,22 +1,21 @@
-import { IAppState } from '../app-reducers';
+import { IAppState } from '../../app-reducers';
 import { Store } from '@ngrx/store';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Observable } from 'rxjs/Observable';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual as _isEqual, isNil as _isNil} from 'lodash';
 import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
-import * as packageJson from '../../../package.json';
+import * as packageJson from '../../../../package.json';
 import { MapsLayout} from '@ansyn/core/models';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { CaseMapState } from '../packages/core/models/case.model';
+import { CaseMapState } from '../../packages/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-ansyn',
@@ -88,7 +87,6 @@ export class AnsynComponent implements OnInit{
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
 		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);
 		this.selected_layout$.subscribe( selected_layout => { this.selected_layout = selected_layout});
-
 	}
 
 	setActiveImagery(active_map_id: string) {

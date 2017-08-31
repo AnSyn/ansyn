@@ -10,6 +10,7 @@ import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { IdahoOverlaysSourceConfig } from './app/app-providers/overlay-source-providers/idaho-source-provider';
 import { ContextProxySource } from '@ansyn/context/providers/context-proxy-source';
 import { ContextElasticSource } from '@ansyn/context/providers/context-elastic-source';
+import { LoginConfig } from '@ansyn/login';
 
 const getProviders = (conf): any[] => {
 	return [
@@ -46,13 +47,19 @@ const getProviders = (conf): any[] => {
 		{
 			provide: ContextConfig,
 			useValue: conf.contextConfig
-		},{
+		},
+		{
 			provide:ContextSources,
 			useValue: {
 				"Proxy": ContextProxySource,
 				"Elastic": ContextElasticSource
 			}
-		}
+		},
+		{
+			provide: LoginConfig,
+			useValue: conf.loginConfig
+		},
+
 	];
 };
 

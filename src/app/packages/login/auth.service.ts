@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { hmacSHA256 } from 'crypto-js/hmac-sha256';
+import hmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
 import Utf8 from 'crypto-js/enc-utf8';
 import { AnsynJwt } from './ansyn-jwt.class';
@@ -21,22 +21,23 @@ export class AuthService{
 	}
 
 	logout(){
-		localStorage.setItem('user',undefined);
+		localStorage.setItem('userToken',undefined);
 	}
 
-	login(userName: string,password: string){
-		const token = this.ansynJwt.createJWT({  alg: 'HS256',
+	login(userName: string, password: string, rememberMe: boolean){
+		const token = this.ansynJwt.createJWT({
+			alg: 'HS256',
 			typ: 'JWT'},{
 			user: "guest-user",
 			role: roles.GUEST,
 			id: UUID.UUID(),
-		},true);
+		},rememberMe);
 
-		localStorage.set('user',token);
+		localStorage.setItem('userToken',token);
 		return Observable.of(this.ansynJwt.getPayload(token));
 	}
 
-	check(token){
+	check(token=this.token){
 		if(!token){
 			return false;
 		}
@@ -48,6 +49,10 @@ export class AuthService{
 			return false;
 		}
 		return false;
+	}
+
+	get token() {
+		return localStorage.getItem('userToken')
 	}
 
 }

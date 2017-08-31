@@ -1,12 +1,11 @@
 import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
 import { BrowserModule } from '@angular/platform-browser';
-import {  NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
-import { MenuItemsModule } from '@ansyn/menu-items';
 import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 import { OpenLayerMapModule } from '@ansyn/open-layers-map';
 import { OverlaysModule } from '@ansyn/overlays';
@@ -25,7 +24,7 @@ import { ContextElasticSource } from '@ansyn/context/';
 import { ContextProxySource } from '@ansyn/context';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
-import { LoginModule } from '@ansyn/login';
+import { LoginModule } from './packages/login/login.module';
 
 export const contextSources = {
 	 'Proxy': ContextProxySource,
@@ -42,7 +41,6 @@ export const contextSources = {
 	],
 	imports: [
 		AppProvidersModule,
-		LoginModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		BrowserModule,
@@ -52,6 +50,7 @@ export const contextSources = {
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule,
+		LoginModule,
 		CasesModule,
 		FiltersModule,
 		LayersManagerModule,

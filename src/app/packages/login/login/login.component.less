@@ -3,6 +3,8 @@ div.login-wrapper{
 	width: 100vw;
 	height: 100vh;
 	background-image: url(/assets/login/background.png);
+	background-repeat: no-repeat;
+	background-size: cover;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -57,9 +59,25 @@ div.login-wrapper{
 				}
 			}
 
+			div.try-again{
+				font-family: 'Open Sans', sans-serif;
+				visibility: hidden;
+				opacity: 0;
+				transition: 0.2s;
+				font-size: 12px;
+				color: #CC1212;
+				text-align: center;
+				font-weight: 600;
+				margin-top: 5px;
+				&.show {
+					visibility: visible;
+					opacity: 1;
+				}
+			}
+
 			div.remember-me{
 				align-self: center;
-				margin-top: 27px;
+				margin-top: 5px;
 				input{
 					display: none;
 					&:checked{
@@ -105,6 +123,7 @@ div.login-wrapper{
 					}
 				}
 			}
+
 			button {
 				border: none;
 				padding: 0;

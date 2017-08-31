@@ -60,7 +60,7 @@ export class RouterAppEffects {
 					(!cases.default_case || action.payload !== cases.default_case.id)
 			})
 		.map(([action, cases, router]: [SelectCaseByIdAction, ICasesState, RouterState])=>{
-			return go(['', action.payload]);
+			return go(['case', action.payload]);
 		});
 
 	@Effect()

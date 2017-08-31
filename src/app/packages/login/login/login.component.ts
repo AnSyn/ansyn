@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-
-import {  AuthService } from '../auth.service';
+import { AuthService } from '../auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-login',
@@ -10,33 +10,28 @@ import {  AuthService } from '../auth.service';
 })
 
 export class LoginComponent implements OnInit {
-	model: any = {};
-	loading = false;
-	returnUrl: string;
+	username: string;
+	password: string;
+	rememberMe: boolean;
+	returnUrl = '';
+	returnUrl$: Observable<string> = this.activatedRoute
+		.queryParams
+		.pluck('returnUrl');
 
-	constructor(
-		private route: ActivatedRoute,
-		private router: Router,
-		private authService: AuthService) { }
+	constructor(private authService: AuthService,
+				private activatedRoute: ActivatedRoute,
+				private router: Router) { }
 
-	ngOnInit() {
-		// reset login status
-		this.authService.logout();
-
-		// get return url from route parameters or default to '/'
-		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+	ngOnInit(): void {
+		this.returnUrl$.subscribe(_returnUrl => {
+			this.returnUrl = _returnUrl;
+		});
 	}
 
-	login() {
-		this.loading = true;
-		this.authService.login(this.model.username, this.model.password)
-			.subscribe(
-				data => {
-					this.router.navigate([this.returnUrl]);
-				},
-				error => {
-					//todo show error
-					this.loading = false;
-				});
+	login(): void {
+		this.authService.login(this.username, this.password, this.rememberMe)
+			.switchMap(() => Observable.fromPromise(this.router.navigate([this.returnUrl])))
+			.subscribe();
 	}
+
 }

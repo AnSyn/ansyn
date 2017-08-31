@@ -155,14 +155,4 @@ export class ImagerySandBoxComponent implements OnInit {
 		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
 		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
 	}
-
-	public setCaseOverlaysAsNotGeoRegistered() {
-		this.selectedCase.state.maps.data.forEach((mapData: CaseMapState)=>{
-			if (mapData.data.overlay) {
-				mapData.data.overlay.isGeoRegistered = false;
-			}
-		});
-		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
-		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
-	}
 }

@@ -34,6 +34,7 @@ import Collection from 'ol/collection';
 
 
 export class OpenLayersMap implements IMap {
+	static mapType = 'openLayersMap';
 
 	public mapType: string;
 	private _mapObject: Map;
@@ -55,7 +56,7 @@ export class OpenLayersMap implements IMap {
 	private _imageProcessing: OpenLayersImageProcessing;
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
-		this.mapType = 'openLayersMap';
+		this.mapType = OpenLayersMap.mapType;
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();
 		this.pointerMove = new EventEmitter<any>();

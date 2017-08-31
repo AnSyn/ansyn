@@ -24,10 +24,10 @@ describe('ImageryProviderService', () => {
 
 		const mapComponent = { id: "test"};
 
-		imageryProviderService.registerMapProvider("map1", mapComponent);
-		imageryProviderService.registerMapProvider("map2", { id: "test2"});
+		imageryProviderService.registerMapProvider("map1", "map1", mapComponent);
+		imageryProviderService.registerMapProvider("map2", "map2", { id: "test2"});
 
-		expect(imageryProviderService.provideMap("map1")).toEqual(mapComponent);
+		expect(imageryProviderService.provideMap("map1")).toEqual({mapType: "map1", mapComponent: mapComponent});
 	});
 
 	class Plugin1 {

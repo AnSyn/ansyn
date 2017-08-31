@@ -1,7 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { OpenLayersMap } from './open-layers-map';
-import { IMap, IMapComponent } from '@ansyn/imagery';
-import { MapPosition } from '../../imagery/model/map-position';
+import { OpenLayersDisabledMap } from './open-layers-disabled-map';
+import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -11,7 +10,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 		<div #olMap></div>
 	`,
 	styles: [
-			`div{
+		`div{
 			position: absolute;
 			width: 100%;
 			height: 100%;
@@ -23,13 +22,13 @@ import { MapPosition } from '../../imagery/model/map-position';
 		}`]
 })
 
-export class MapComponent implements OnInit, OnDestroy, IMapComponent {
+export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapName = 'openLayersMap';
+	static mapName = 'disabledOpenLayersMap';
 
 	@ViewChild('olMap') mapElement: ElementRef;
 
-	private _map: OpenLayersMap;
+	private _map: OpenLayersDisabledMap;
 	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
@@ -40,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 	}
 
 	createMap(layers: any, position?: MapPosition): void {
-		this._map = new OpenLayersMap(this.mapElement.nativeElement, layers, position);
+		this._map = new OpenLayersDisabledMap(this.mapElement.nativeElement, layers, position);
 		this.mapCreated.emit(this._map);
 	}
 
@@ -48,4 +47,27 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 		this._map.dispose();
 	}
 
+	startMouseShadowVectorLayer() {
+
+	}
+
+	stopMouseShadowVectorLayer() {
+
+	}
+
+	drawShadowMouse(latLon: any) {
+
+	}
+
+	addSingleClickEvent() {
+
+	}
+
+	addPinPointIndicator(latLon: any) {
+
+	}
+
+	removePinPointIndicator() {
+
+	}
 }

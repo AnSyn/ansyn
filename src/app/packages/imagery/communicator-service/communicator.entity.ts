@@ -69,8 +69,15 @@ export class CommunicatorEntity {
 
 	//CommunicatorEntity methods begin
 
-	public setActiveMap(mapType: string) {
-		this._manager.setActiveMap(mapType);
+	public setActiveMap(mapName: string, position?: MapPosition, layer?: any) {
+		this._manager.setActiveMap(mapName, position, layer);
+	}
+
+	public get activeMapName(): string {
+		if (this._manager) {
+			return this._manager.activeMapName;
+		}
+		return '';
 	}
 
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {

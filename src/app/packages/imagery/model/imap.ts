@@ -31,7 +31,17 @@ export interface IMap {
 	getPosition(): MapPosition;
 	updateSize(): void;
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
+	setAutoImageProcessing(shouldPerform: boolean): void;
+	dispose(): void;
+
+	// TODO: move them to pluggins
 	togglePointerMove();
 	removeSingleClickEvent();
-	setAutoImageProcessing(shouldPerform: boolean): void;
+	startMouseShadowVectorLayer();
+	stopMouseShadowVectorLayer();
+	drawShadowMouse(latLon);
+	addSingleClickEvent();
+	removeSingleClickEvent();
+	addPinPointIndicator(latLon);
+	removePinPointIndicator();
 }

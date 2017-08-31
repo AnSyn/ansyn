@@ -102,8 +102,8 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
 			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
-			const active_map = casesState.selected_case.state.maps.data.find((map)=> map.id === map_id);
-			return [overlay, map_id, active_map.data.position];
+			const map = CasesService.mapById(casesState.selected_case, map_id);
+			return [overlay, map_id, map.data.position];
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.flatMap(([overlay, map_id, position]:[Overlay, string, Position]) => {
@@ -125,7 +125,15 @@ export class MapAppEffects {
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
-				communicator.resetView(layer, extent);
+				if (overlay.isGeoRegistered) {
+					communicator.resetView(layer, extent);
+				} else {
+					if (communicator.activeMapName !== 'disabledOpenLayersMap') {
+						communicator.setActiveMap('disabledOpenLayersMap', position, layer);
+					} else {
+						communicator.resetView(layer);
+					}
+				}
 				return new DisplayOverlaySuccessAction({id: overlay.id});
 			});
 		});
@@ -357,20 +365,23 @@ export class MapAppEffects {
 			MapActionTypes.ACTIVE_MAP_CHANGED,
 			CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'), (action: Action, casesState: ICasesState, mapState: IMapState) => {
-			return [casesState, mapState];
+			return [action, casesState, mapState];
 		})
-		.map(([casesState, mapState]: [ICasesState, IMapState]) => {
+		.map(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => {
 			const activeMapState = CasesService.activeMap(casesState.selected_case);
 			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-			return [isGeoRegistered, activeMapState.id, mapState];
+			return [action, isGeoRegistered, activeMapState, mapState];
 		})
-		.filter(([isGeoRegistered, mapId, mapState]: [boolean, string, IMapState]): any => {
-			const isEnabled = mapState.mapIdToGeoOptions.get(mapId);
+		.filter(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
+			const isEnabled = mapState.mapIdToGeoOptions.get(activeMapState.id);
 			return isEnabled !== isGeoRegistered;
 		})
-		.map(([isGeoRegistered, mapId, mapState]: [boolean, string, IMapState]): any =>{
-			console.log("effect");
-			return new EnableMapGeoOptionsActionStore({mapId: mapId, isEnabled: isGeoRegistered});
+		.map(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
+			if (action.type === MapActionTypes.BACK_TO_WORLD) {
+				const mapComm = this.communicator.provide(activeMapState.id);
+				mapComm.setActiveMap('openLayersMap', activeMapState.data.position);
+			}
+			return new EnableMapGeoOptionsActionStore({mapId: activeMapState.id, isEnabled: isGeoRegistered});
 		});
 
 	@Effect()

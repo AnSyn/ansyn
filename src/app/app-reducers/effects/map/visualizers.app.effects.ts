@@ -48,7 +48,10 @@ export class VisualizersAppEffects {
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.map((action): void => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				communicator.getVisualizer(FootprintPolylineVisualizerType).setHoverFeature(action.payload.id);
+				const visualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
+				if (visualizer) {
+					visualizer.setHoverFeature(action.payload.id);
+				}
 			});
 		});
 
@@ -64,8 +67,10 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const footprintPolyline = <FootprintPolylineVisualizer> communicator.getVisualizer(FootprintPolylineVisualizerType);
-				footprintPolyline.setMarkupFeatures(action.payload);
+				const footprintPolyline = <FootprintPolylineVisualizer>communicator.getVisualizer(FootprintPolylineVisualizerType);
+				if (footprintPolyline) {
+					footprintPolyline.setMarkupFeatures(action.payload);
+				}
 			});
 		});
 
@@ -114,6 +119,9 @@ export class VisualizersAppEffects {
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
+			if (!polylineVisualizer || !hitMapvisualizer) {
+				return;
+			}
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
 				case 'Hitmap': {

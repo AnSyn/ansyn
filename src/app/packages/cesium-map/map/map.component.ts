@@ -21,7 +21,7 @@ import { CesiumMap } from './cesium-map';
 
 export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapType = 'cesiumMap';
+	static mapName = 'cesiumMap';
 	@ViewChild('cesiumMap') mapElement: ElementRef;
 
 	private _map: CesiumMap;

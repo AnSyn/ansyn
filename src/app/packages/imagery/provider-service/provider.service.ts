@@ -5,10 +5,15 @@ import { IMapVisualizer } from '../model/imap-visualizer';
  * Created by AsafMasa on 24/04/2017.
  */
 
+export interface IProvidedMap {
+	mapType: string;
+	mapComponent: any;
+}
+
 @Injectable()
 export class ImageryProviderService {
 
-	private _mapProviders: { [id: string]: any };
+	private _mapProviders: { [id: string]: IProvidedMap };
 	private _mapPluginProviders: { [mapType: string]: [{"pluginClass": any}] };
 	private _mapVisualizersProviders: Map<string, [{"visualizerClass": any, args: any}]>;
 
@@ -18,12 +23,12 @@ export class ImageryProviderService {
 		this._mapVisualizersProviders = new Map<string, [{visualizerClass: any, args: any}]>();
 	}
 
-	public registerMapProvider(mapType: string, component: any) {
-		if (this._mapProviders[mapType]) {
-			throw new Error(`'Map Provider ${mapType} is already registered.'`);
+	public registerMapProvider(mapName: string, mapType: string, component: any) {
+		if (this._mapProviders[mapName]) {
+			throw new Error(`'Map Provider ${mapName} is already registered.'`);
 		}
 
-		this._mapProviders[mapType] = component;
+		this._mapProviders[mapName] = {mapType: mapType, mapComponent: component};
 	}
 
 	public registerPlugin(mapType: string, pluginClass: any) {
@@ -35,12 +40,12 @@ export class ImageryProviderService {
 		}
 	}
 
-	public provideMap(mapType: string): any {
-		if (!this._mapProviders[mapType]) {
-			throw new Error(`'mapType ${mapType} doesn't exist, can't provide it`);
+	public provideMap(mapName: string): IProvidedMap {
+		if (!this._mapProviders[mapName]) {
+			throw new Error(`'mapName ${mapName} doesn't exist, can't provide it`);
 		}
 
-		const providedMap = this._mapProviders[mapType];
+		const providedMap = this._mapProviders[mapName];
 		return providedMap;
 	}
 

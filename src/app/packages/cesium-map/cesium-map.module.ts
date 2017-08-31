@@ -5,6 +5,7 @@ import {NgModule} from '@angular/core';
 import { MapComponent } from './map/map.component';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImageryProviderService } from '@ansyn/imagery';
+import { CesiumMap } from './map/cesium-map';
 
 @NgModule({
 	imports: [ImageryModule],
@@ -15,6 +16,6 @@ import { ImageryProviderService } from '@ansyn/imagery';
 })
 export class CesiumMapModule {
 	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerMapProvider(MapComponent.mapType, MapComponent);
+		imageryProviderService.registerMapProvider(MapComponent.mapName, CesiumMap.mapType, MapComponent);
 	}
 }

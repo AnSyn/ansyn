@@ -4,7 +4,7 @@ import { IMapComponent } from '../../model/imap-component';
 import { IMapPlugin } from '../../model/imap-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService } from '../../provider-service/provider.service';
+import { ImageryProviderService, IProvidedMap } from '../../provider-service/provider.service';
 import { MapPosition } from '../../model/map-position';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 
@@ -22,6 +22,7 @@ export class ImageryComponentManager {
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
+	public activeMapName: string;
 	private _plugins: IMapPlugin[] = [];
 	private _visualizers: IMapVisualizer[] = [];
 
@@ -73,23 +74,27 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(releventMapConfig.mapSourceMetadata);
 	}
 
-	private buildCurrentComponent(activeMapType: string, position?: MapPosition): void {
-		const component = this.imageryProviderService.provideMap(activeMapType);
-		const factory = this.componentFactoryResolver.resolveComponentFactory(component);
+	private buildCurrentComponent(activeMapName: string, position?: MapPosition, layer?: any): void {
+		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
+		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
 		this._mapComponentRef = this.map_component_elem.createComponent(factory);
 
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 			this.internalSetActiveMap(map);
-			this.buildActiveMapPlugins(activeMapType);
-			this.buildActiveMapVisualizers(activeMapType, map);
+			this.buildActiveMapPlugins(activeMapName);
+			this.buildActiveMapVisualizers(activeMapName, map);
 			this.mapComponentInitilaized.emit(this.id);
 			mapCreatedSubscribe.unsubscribe();
 		});
-		this.createMapSourceForMapType(activeMapType).then((layers)=> {
-			mapComponent.createMap(layers, position);
-		});
+		if (layer) {
+			mapComponent.createMap([layer], position);
+		} else {
+			this.createMapSourceForMapType(providedMap.mapType).then((layers)=> {
+				mapComponent.createMap(layers, position);
+			});
+		}
 	}
 
 	private destroyCurrentComponent(): void {
@@ -101,12 +106,15 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public setActiveMap(activeMapType: string, position?: MapPosition) {
-		// console.log(`'${this.id} setActiveMap ${mapType} map'`);
-		if (this._mapComponentRef) {
-			this.destroyCurrentComponent();
+	public setActiveMap(activeMapName: string, position?: MapPosition, layer?: any) {
+		if (this.activeMapName !== activeMapName) {
+			//console.log(`Set active map to : ${activeMapName}`);
+			this.activeMapName = activeMapName;
+			if (this._mapComponentRef) {
+				this.destroyCurrentComponent();
+			}
+			this.buildCurrentComponent(activeMapName, position, layer);
 		}
-		this.buildCurrentComponent(activeMapType, position);
 		return this.mapComponentInitilaized;
 	}
 

@@ -25,7 +25,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	switch (action.type) {
 		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
 
-			console.log("reducer")
 			const mapIdToGeoOptionsClone = new Map(state.mapIdToGeoOptions);
 			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);
 			return { ...state, mapIdToGeoOptions: mapIdToGeoOptionsClone };

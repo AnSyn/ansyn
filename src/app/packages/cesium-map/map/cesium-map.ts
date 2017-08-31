@@ -6,6 +6,8 @@ import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 
 export class CesiumMap implements IMap {
+	static mapType = 'cesium';
+
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
@@ -75,13 +77,35 @@ export class CesiumMap implements IMap {
 	}
 
 	constructor(element: HTMLElement) {
-		this.mapType = 'cesium';
+		this.mapType = CesiumMap.mapType;
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<MapPosition>();
 		this.mapObject = {};
 	}
 
+	dispose() {}
 
+	startMouseShadowVectorLayer() {
+		throw new Error('Method not implemented.');
+	}
 
+	stopMouseShadowVectorLayer() {
+		throw new Error('Method not implemented.');
+	}
 
+	drawShadowMouse(latLon: any) {
+		throw new Error('Method not implemented.');
+	}
+
+	addSingleClickEvent() {
+		throw new Error('Method not implemented.');
+	}
+
+	addPinPointIndicator(latLon: any) {
+		throw new Error('Method not implemented.');
+	}
+
+	removePinPointIndicator() {
+		throw new Error('Method not implemented.');
+	}
 }

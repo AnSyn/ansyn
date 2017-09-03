@@ -1,28 +1,17 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import hmacSHA256 from 'crypto-js/hmac-sha256';
-import Base64 from 'crypto-js/enc-base64';
-import Utf8 from 'crypto-js/enc-utf8';
-import { AnsynJwt } from '../ansyn-jwt.class';
+
+import { AnsynJwt } from '../helpers/ansyn-jwt.class';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ILoginConfig } from '../models/login.config';
 import { RequestOptions, Headers } from '@angular/http';
-
-const roles = {
-	ADMIN: Symbol('admin'),
-	GUEST: Symbol('guest'),
-	USER: Symbol('user')
-};
 
 export const LoginConfig: InjectionToken<ILoginConfig> = new InjectionToken('LoginConfig');
 
 @Injectable()
 export class AuthService{
-	public ansynJwt: AnsynJwt;
 
-	constructor(private httpClient: HttpClient, @Inject(LoginConfig) private config: ILoginConfig){
-		this.ansynJwt = new AnsynJwt(Base64,Utf8,hmacSHA256);
-	}
+	constructor(private httpClient: HttpClient, @Inject(LoginConfig) private config: ILoginConfig){}
 
 	logout(){
 		this.clear();
@@ -77,16 +66,3 @@ export class AuthService{
 		sessionStorage.removeItem('autoToken');
 	}
 }
-
-
-// if(!token){
-// 	return false;
-// }
-// if(this.ansynJwt.check(token)){
-// 	const payload = this.ansynJwt.getPayload(token);
-// 	if(payload.exp > Date.now()){
-// 		return payload;
-// 	}
-// 	return false;
-// }
-// return false;

@@ -53,9 +53,8 @@ export class CasesRouterEffects {
 	selectDefulatCaseById$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.map(toPayload)
-
-		.withLatestFrom(this.store$.select('cases').pluck('default_case'), (payload: string, default_case: Case): any => [payload, _get(default_case, 'id')])
-		.filter(([payload, defaultCaseId]) => _isEqual(payload, defaultCaseId) )
+		.withLatestFrom(this.store$.select('cases').pluck('default_case'),this.store$.select('router').pluck('caseId'), (payload: string, default_case: Case, caseId: string): any => [payload, _get(default_case, 'id')])
+		.filter(([payload, defaultCaseId, routerCaseId]) => _isEqual(payload, defaultCaseId) && !_isEmpty(routerCaseId))
 		.do(() => {
 			this.router.navigate(['']);
 		});

@@ -1,10 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-
-import { AnsynJwt } from '../helpers/ansyn-jwt.class';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ILoginConfig } from '../models/login.config';
-import { RequestOptions, Headers } from '@angular/http';
 
 export const LoginConfig: InjectionToken<ILoginConfig> = new InjectionToken('LoginConfig');
 
@@ -46,6 +43,9 @@ export class AuthService{
 	}
 
 	isLoggedIn() {
+		if (!this.config.active) {
+			return Observable.of(true);
+		}
 		const token = this.sessionToken ? this.sessionToken : this.localToken;
 		if (!token) {
 			return Observable.throw(401);

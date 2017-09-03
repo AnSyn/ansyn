@@ -31,17 +31,19 @@ export class LoginComponent implements OnInit {
 
 	get login$() {
 		return this.authService.login(this.username, this.password, this.rememberMe)
-			.catch(() => {
-				this.tryAgainMsg = true;
+			.switchMap(() =>Observable.fromPromise(this.router.navigate([this.returnUrl])))
+			.catch((e) => {
+				this.showTryAgainMsg();
 				return Observable.throw('Unauthorized');
-			})
-			.switchMap(() => {
-				return Observable.fromPromise(this.router.navigate([this.returnUrl]))
 			})
 	}
 
 	hideTryAgainMsg() {
 		this.tryAgainMsg = false;
+	}
+
+	showTryAgainMsg() {
+		this.tryAgainMsg = true;
 	}
 
 	login(): void {

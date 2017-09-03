@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ansyn-case',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CaseComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
   }

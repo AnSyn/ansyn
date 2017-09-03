@@ -8,11 +8,17 @@ const routes: Routes = [
 	{
 		path: '',
 		component: AnsynComponent,
+		data: {
+			name: 'case'
+		},
 		canActivate: [AuthGuard],
 		children: [
 			{
-				path: 'case/:case_id',
-				component: CaseComponent
+				path: 'case/:caseId',
+				component: CaseComponent,
+				data: {
+					name: 'caseChild'
+				}
 			}
 		]
 	}

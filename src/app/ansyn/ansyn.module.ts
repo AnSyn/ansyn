@@ -25,6 +25,7 @@ import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, Algorithm
 import { OverlaysModule } from '../packages/overlays/overlays.module';
 import { ImageryProviderService } from '../packages/imagery/provider-service/provider.service';
 import { OpenLayersVisualizerMapType } from '../packages/open-layer-visualizers/open-layer-visualizers.module';
+import { AnsynRouterModule } from '@ansyn/router';
 
 @NgModule({
 	imports: [
@@ -53,8 +54,8 @@ import { OpenLayersVisualizerMapType } from '../packages/open-layer-visualizers/
 		ImageryModule,
 		StatusBarModule,
 		ContextModule,
-		OpenLayerVisualizersModule
-
+		OpenLayerVisualizersModule,
+		AnsynRouterModule
 	],
 	declarations: [AnsynComponent, CaseComponent]
 })

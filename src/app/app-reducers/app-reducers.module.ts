@@ -23,14 +23,14 @@ import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState,ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { RouterAppEffects } from './effects/router.app.effects';
-import { routerReducer, RouterState, RouterStoreModule } from '@ngrx/router-store';
-import { RouterStoreHelperService } from './services/router-store-helper.service';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
 import { ContextEntityAppEffects } from './effects/context/context-entity.app.effect';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
+import { RouterReducer } from '@ansyn/router/reducers/router.reducer';
+import { CasesRouterModule } from '../connection-packages/cases-router/cases-router.module';
+import { IRouterState } from '../packages/router/reducers/router.reducer';
 
 
 export interface IAppState {
@@ -41,8 +41,8 @@ export interface IAppState {
     status_bar: IStatusBarState;
     map: IMapState;
     tools: IToolsState;
-    router: RouterState;
     filters: IFiltersState;
+    router: IRouterState
 }
 
 
@@ -54,8 +54,8 @@ const reducers = {
     layers: LayersReducer,
     status_bar: StatusBarReducer,
     tools: ToolsReducer,
-	router: routerReducer,
-    filters: FiltersReducer
+    filters: FiltersReducer,
+	router: RouterReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);
@@ -80,15 +80,13 @@ export function reducer(state: any, action: any) {
         EffectsModule.run(MenuAppEffects),
         EffectsModule.run(LayersAppEffects),
         EffectsModule.run(StatusBarAppEffects),
-		EffectsModule.run(RouterAppEffects),
         EffectsModule.run(FiltersAppEffects),
 		EffectsModule.run(ToolsAppEffects),
 		EffectsModule.run(ContextMenuAppEffects),
 		EffectsModule.run(ContextEntityAppEffects),
 		EffectsModule.run(VisualizersAppEffects),
-		RouterStoreModule.connectRouter()
+		CasesRouterModule
     ],
-	providers:[RouterStoreHelperService]
 })
 
 export class AppReducersModule {

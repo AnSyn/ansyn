@@ -28,10 +28,10 @@ export class AnsynJwt {
 			case AnsynJwt.roles.ADMIN:
 				exp += this.year();
 				break;
-			case AnsynJwt.USER:
+			case AnsynJwt.roles.USER:
 				exp += this.month();
 				break;
-			case AnsynJwt.GUEST:
+			case AnsynJwt.roles.GUEST:
 				exp += this.week();
 				break;
 		}

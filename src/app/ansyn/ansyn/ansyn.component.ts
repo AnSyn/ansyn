@@ -72,7 +72,6 @@ export class AnsynComponent implements OnInit{
 	maps: CaseMapsState = <any>{};
 	version;
 	pinLocation: boolean;
-	counter = 0;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;

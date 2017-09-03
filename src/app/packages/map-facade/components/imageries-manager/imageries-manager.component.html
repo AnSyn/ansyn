@@ -3,7 +3,7 @@
 	<ng-template ngFor [ngForOf]="maps_count_range" let-index let-count="count">
 
 		<div
-			*ngIf="maps.data[index]"
+			*ngIf="maps.data && maps.data[index]"
 			class='map-container-wrapper'
 			(click)="clickMapContainer(maps.data[index].id)"
 			(dblclick)="dbclick()">

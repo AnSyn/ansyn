@@ -27,6 +27,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public selectedCase:Case;
 	public overlaysCriteria: OverlaysCriteria;
 	public isSpecialDisplayed = false;
+	private _isMouseShadowEnabled = false;
 
 	constructor(public imageryCommunicatorService: ImageryCommunicatorService,public store:Store<ICasesState>) {
 
@@ -77,9 +78,10 @@ export class ImagerySandBoxComponent implements OnInit {
 
 	public togglePointerMoveEvent() {
 		//todo take from active
+		this._isMouseShadowEnabled = !this._isMouseShadowEnabled;
 		const communicators = this.imageryCommunicatorService.communicators;
 		const key = Object.keys(communicators)[0];
-		communicators[key].toggleMouseShadowListener();
+		communicators[key].setMouseShadowListener(this._isMouseShadowEnabled);
 		communicators[key]['pointerMove'].subscribe( latLon => {
 			this.drawShadowMouse(latLon);
 		});

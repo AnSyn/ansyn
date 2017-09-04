@@ -4,7 +4,7 @@ import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
 	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction
+	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction, MapInstanceChangedAction
 } from '../actions/map.actions';
 import { Position, Overlay } from '@ansyn/core';
 
@@ -43,8 +43,16 @@ export class MapFacadeService {
 				this._subscribers.push(visualizer.onHoverFeature.subscribe(this.hoverFeature.bind(this)));
 				this._subscribers.push(visualizer.doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
 			});
+
+			this._subscribers.push(communicator.activeMapChanged.subscribe(this.onActiveMapChanged.bind(this)));
 		});
 
+	}
+
+	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become pluggins
+	onActiveMapChanged($event: {id: string, oldMapInstanceName: string, newMapInstanceName: string}) {
+		const args = {...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators };
+		this.store.dispatch(new MapInstanceChangedAction(args));
 	}
 
 	unsubscribeAll() {

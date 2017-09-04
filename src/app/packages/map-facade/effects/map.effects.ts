@@ -25,7 +25,7 @@ export class MapEffects{
 
 	@Effect({dispatch:false})
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE,MapActionTypes.REMOVE_MAP_INSTACNE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map(() => {
 			this.mapFacadeService.initEmitters();
 		});

@@ -166,7 +166,7 @@ export class OpenLayersDisabledMap implements IMap {
 
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {}
 
-	togglePointerMove() {}
+	setPointerMove(enable: boolean) {}
 
 	removeSingleClickEvent() {}
 

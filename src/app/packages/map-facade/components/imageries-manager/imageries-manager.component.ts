@@ -145,7 +145,7 @@ export class ImageriesManagerComponent implements OnInit{
 			if(mapItem.id === this._maps.active_map_id ){
 				this.publisherMouseShadowMapId = mapItem.id;
 				if (communicators[mapItem.id]) {
-					communicators[mapItem.id].toggleMouseShadowListener();
+					communicators[mapItem.id].setMouseShadowListener(true);
 				}
 				//@todo add take until instead of unsubscribe ?? or not todo
 				this.pointerMoveUnsubscriber = communicators[mapItem.id]['pointerMove'].subscribe( latLon => {
@@ -174,7 +174,7 @@ export class ImageriesManagerComponent implements OnInit{
 		const communicators = this.communicatorProvider.communicators;
 
 		if (communicators[this.publisherMouseShadowMapId]) {
-			communicators[this.publisherMouseShadowMapId].toggleMouseShadowListener();
+			communicators[this.publisherMouseShadowMapId].setMouseShadowListener(false);
 		}
 		if(this.pointerMoveUnsubscriber) {
 			this.pointerMoveUnsubscriber.unsubscribe();

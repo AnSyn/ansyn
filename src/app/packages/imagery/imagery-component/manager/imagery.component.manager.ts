@@ -21,6 +21,7 @@ export class ImageryComponentManager {
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
+	public activeMapChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
 
 	public activeMapName: string;
 	private _plugins: IMapPlugin[] = [];
@@ -32,7 +33,9 @@ export class ImageryComponentManager {
 				private _mapComponentRef: ComponentRef<any>,
 				private _baseSourceProviders: BaseMapSourceProvider[],
 				private config: IImageryConfig,
-				private _id: string) {}
+				private _id: string) {
+		this.activeMapChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
+	}
 
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
 		if (this._activeMap) {
@@ -74,7 +77,7 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(releventMapConfig.mapSourceMetadata);
 	}
 
-	private buildCurrentComponent(activeMapName: string, position?: MapPosition, layer?: any): void {
+	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: MapPosition, layer?: any): void {
 		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
@@ -86,6 +89,7 @@ export class ImageryComponentManager {
 			this.buildActiveMapPlugins(activeMapName);
 			this.buildActiveMapVisualizers(activeMapName, map);
 			this.mapComponentInitilaized.emit(this.id);
+			this.activeMapChanged.emit({id: this.id, newMapInstanceName: activeMapName, oldMapInstanceName: oldMapName});
 			mapCreatedSubscribe.unsubscribe();
 		});
 		if (layer) {
@@ -108,12 +112,13 @@ export class ImageryComponentManager {
 
 	public setActiveMap(activeMapName: string, position?: MapPosition, layer?: any) {
 		if (this.activeMapName !== activeMapName) {
+			const oldMapName = this.activeMapName;
 			//console.log(`Set active map to : ${activeMapName}`);
 			this.activeMapName = activeMapName;
 			if (this._mapComponentRef) {
 				this.destroyCurrentComponent();
 			}
-			this.buildCurrentComponent(activeMapName, position, layer);
+			this.buildCurrentComponent(activeMapName, oldMapName, position, layer);
 		}
 		return this.mapComponentInitilaized;
 	}

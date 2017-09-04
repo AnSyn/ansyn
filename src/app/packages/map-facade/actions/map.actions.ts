@@ -27,7 +27,8 @@ export const MapActionTypes = {
 		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
-	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS'
+	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
+	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION'
 };
 
 export type MapActions = any;
@@ -65,7 +66,18 @@ export class UpdateMapSizeAction implements Action{
 
 export class AddMapInstacneAction implements Action{
 	type = MapActionTypes.ADD_MAP_INSTANCE;
-	constructor(public payload: any) {}
+	constructor(public payload: {currentCommunicatorId: string, communicatorsIds: string[]}) {}
+}
+
+// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become pluggins
+export class MapInstanceChangedAction extends AddMapInstacneAction {
+	public mapInstanceChangedPayload;
+	constructor(payload: {id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string}) {
+		// code...
+		super({currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds});
+		this.mapInstanceChangedPayload = payload;
+		this.type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
+	}
 }
 
 export class RemoveMapInstanceAction implements Action{

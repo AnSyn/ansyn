@@ -127,7 +127,7 @@ describe('ContextEntityAppEffects', () => {
 		const communicators: Array<string> = ['imagery2'];
 		effectsRunner.queue(new AddMapInstacneAction({
 			currentCommunicatorId: 'imagery2',
-			communicatorsIds: [communicators]
+			communicatorsIds: communicators
 		}));
 
 		contextEntityAppEffects.displayEntityFromNewMap$.subscribe();
@@ -139,7 +139,7 @@ describe('ContextEntityAppEffects', () => {
 		const communicators: Array<string> = ['imagery2'];
 		effectsRunner.queue(new AddMapInstacneAction({
 			currentCommunicatorId: 'imagery2',
-			communicatorsIds: [communicators]
+			communicatorsIds: communicators
 		}));
 
 		contextEntityAppEffects.displayEntityFromNewMap$.subscribe();

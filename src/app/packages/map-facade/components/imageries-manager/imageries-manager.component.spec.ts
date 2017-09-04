@@ -61,7 +61,7 @@ describe('ImageriesManagerComponent', () => {
 	});
 
 	beforeEach(() => {
-		const communicator = jasmine.createSpyObj('communicator',['stopMouseShadowVectorLayer','toggleMouseShadowListener','drawShadowMouse','startMouseShadowVectorLayer']);
+		const communicator = jasmine.createSpyObj('communicator',['stopMouseShadowVectorLayer','setMouseShadowListener','drawShadowMouse','startMouseShadowVectorLayer']);
 		communicator.pointerMove =  Observable.create(observer => {});
 
 		//spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
@@ -128,7 +128,7 @@ describe('ImageriesManagerComponent', () => {
 		expect(component.listenersMouseShadowMapsId.length).toBe(1);
 
 		expect(communicatorProvider.communicators['imagery1']
-				.toggleMouseShadowListener).toHaveBeenCalled();
+				.setMouseShadowListener).toHaveBeenCalled();
 
 		expect(communicatorProvider.communicators['imagery2']
 				.startMouseShadowVectorLayer).toHaveBeenCalled();
@@ -152,7 +152,7 @@ describe('ImageriesManagerComponent', () => {
 		spyOn(component.pointerMoveUnsubscriber,'unsubscribe');
 		component.stopPointerMoveProcess();
 
-		expect(communicatorProvider.communicators['imagery1'].toggleMouseShadowListener).toHaveBeenCalled();
+		expect(communicatorProvider.communicators['imagery1'].setMouseShadowListener).toHaveBeenCalled();
 		expect(component.pointerMoveUnsubscriber.unsubscribe).toHaveBeenCalled();
 		expect(communicatorProvider.communicators['imagery2'].stopMouseShadowVectorLayer).toHaveBeenCalled();
 

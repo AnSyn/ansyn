@@ -35,7 +35,7 @@ export interface IMap {
 	dispose(): void;
 
 	// TODO: move them to pluggins
-	togglePointerMove();
+	setPointerMove(enable: boolean);
 	removeSingleClickEvent();
 	startMouseShadowVectorLayer();
 	stopMouseShadowVectorLayer();

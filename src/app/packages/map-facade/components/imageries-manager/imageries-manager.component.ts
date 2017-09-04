@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef, ComponentFactory } from '@angular/core';
-import { CaseMapState } from '@ansyn/menu-items/cases';
+import { CaseMapState } from '@ansyn/core/models';
 import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';

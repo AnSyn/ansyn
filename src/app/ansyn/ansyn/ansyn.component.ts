@@ -15,10 +15,10 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { CaseMapState } from '../../packages/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
-	selector: 'ansyn-ansyn',
+	selector: 'ansyn-app',
 	templateUrl: './ansyn.component.html',
 	styleUrls: ['./ansyn.component.less']
 })

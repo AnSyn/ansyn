@@ -21,9 +21,9 @@ import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextEntityVisualizer } from '../app-visualizers/context-entity.visualizer';
 import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
-import { OverlaysModule } from '../packages/overlays/overlays.module';
-import { ImageryProviderService } from '../packages/imagery/provider-service/provider.service';
-import { OpenLayersVisualizerMapType } from '../packages/open-layer-visualizers/open-layer-visualizers.module';
+import { OverlaysModule } from '@ansyn/overlays/overlays.module';
+import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
+import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { AnsynRouterModule } from '@ansyn/router';
 
 @NgModule({

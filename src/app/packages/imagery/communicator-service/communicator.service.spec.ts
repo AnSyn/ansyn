@@ -17,7 +17,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		activeMapChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
+		mapInstanceChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
 	};
 
 	const componentManager2: ImageryComponentManager = <any>{
@@ -27,7 +27,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		activeMapChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
+		mapInstanceChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
 	};
 
 	beforeEach(async(() => {

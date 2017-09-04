@@ -12,10 +12,10 @@ export class AppComponent implements  AfterViewInit {
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any){}
 
-	ngAfterViewInit(){
-		// const metaTag =  this.renderer.createElement('meta');
-		// metaTag.setAttribute('version',<any>packageJson['version']);
-		// this.renderer.appendChild(this.document.head,metaTag);
+	ngAfterViewInit() {
+		const metaTag =  this.renderer.createElement('meta');
+		metaTag.setAttribute('version',<any>packageJson['version']);
+		this.renderer.appendChild(this.document.head,metaTag);
 	}
 
 

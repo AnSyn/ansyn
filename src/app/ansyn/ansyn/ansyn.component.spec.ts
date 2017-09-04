@@ -9,7 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
-import { AddCaseSuccessAction, SelectCaseByIdAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Subject } from 'rxjs/Subject';
 
 describe('AnsynComponent', () => {

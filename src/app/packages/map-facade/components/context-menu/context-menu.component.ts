@@ -1,11 +1,12 @@
 import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
 import { isEqual as _isEqual, isEmpty as _isEmpty, get as _get, isNil as _isNil} from 'lodash';
-
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/distinctUntilChanged";
 
 @Component({
 	selector: 'ansyn-context-menu',

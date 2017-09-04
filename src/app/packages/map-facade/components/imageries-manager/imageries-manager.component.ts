@@ -3,10 +3,12 @@ import { CaseMapState } from '@ansyn/core/models';
 import { range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/distinctUntilChanged";
 
 @Component({
 	selector: 'ansyn-imageries-manager',

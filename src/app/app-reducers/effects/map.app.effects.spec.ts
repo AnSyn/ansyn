@@ -30,9 +30,8 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { ToolsActionsTypes, SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { EnableMapGeoOptionsActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, initialMapState } from '../../packages/map-facade/reducers/map.reducer';
+import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';

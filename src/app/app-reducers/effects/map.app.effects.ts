@@ -140,7 +140,7 @@ export class MapAppEffects {
 
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => !isNil(state.selected_case))
 		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
@@ -247,7 +247,7 @@ export class MapAppEffects {
 
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE,MapActionTypes.REMOVE_MAP_INSTACNE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[Action,ICasesState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
@@ -257,7 +257,7 @@ export class MapAppEffects {
 
 	@Effect({dispatch:false})
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
 		.filter(([action, caseState, statusBarState]:[any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action, caseState, statusBarState]:[any, any, any]) => {
@@ -276,7 +276,7 @@ export class MapAppEffects {
 
 	@Effect({dispatch:false})
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action: AddMapInstacneAction)=> {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
@@ -368,7 +368,13 @@ export class MapAppEffects {
 			return [action, casesState, mapState];
 		})
 		.map(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => {
-			const activeMapState = CasesService.activeMap(casesState.selected_case);
+			let activeMapState;
+			if (action.type === MapActionTypes.BACK_TO_WORLD) {
+				const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
+				activeMapState = CasesService.mapById(casesState.selected_case, mapId);
+			} else {
+				activeMapState = CasesService.activeMap(casesState.selected_case);
+			}
 			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 			return [action, isGeoRegistered, activeMapState, mapState];
 		})

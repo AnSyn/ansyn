@@ -466,14 +466,12 @@ export class OpenLayersMap implements IMap {
 		this.mapObject.render();
 	}
 
-	public togglePointerMove() {
-		if (!this._flags.pointerMoveListener) {
-
-			this._flags.pointerMoveListener = this.mapObject.on('pointermove', this.onPointerMove, this);
+	public setPointerMove(enable: boolean) {
+		if (enable) {
+			this.mapObject.on('pointermove', this.onPointerMove, this);
 		}
 		else {
 			this.mapObject['un']('pointermove', this.onPointerMove, this);
-			this._flags.pointerMoveListener = false;
 		}
 	}
 

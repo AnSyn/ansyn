@@ -92,7 +92,7 @@ export class VisualizersAppEffects {
 
 	@Effect()
 	shouldDrawOverlaysOnMap$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
 	@Effect({ dispatch: false })

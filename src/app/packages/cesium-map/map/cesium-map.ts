@@ -69,7 +69,7 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	togglePointerMove(){
+	setPointerMove(enable: boolean){
 	}
 
 	removeSingleClickEvent(){

@@ -33,7 +33,7 @@ export class ContextEntityAppEffects {
 
 	@Effect({dispatch:false})
 	displayEntityFromNewMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'))
 		.filter(([action, caseState]:[AddMapInstacneAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
 		.map(([action, caseState]:[AddMapInstacneAction, ICasesState]) => {
@@ -75,13 +75,17 @@ export class ContextEntityAppEffects {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
 			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-			vis.setReferenceDate(overlayDate);
-			vis.setEntities(contextEntities);
+			if (vis) {
+				vis.setReferenceDate(overlayDate);
+				vis.setEntities(contextEntities);
+			}
 		}
 	}
 
 	private setContextOverlayDate(communicatorHandler: CommunicatorEntity, overlayDate: Date) {
 		const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-		vis.setReferenceDate(overlayDate);
+		if (vis) {
+			vis.setReferenceDate(overlayDate);
+		}
 	}
 }

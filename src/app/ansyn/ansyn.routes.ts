@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CaseComponent } from './case/case.component';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { AuthGuard } from '@ansyn/login/guard/auth.guard';
-import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, UnAuthGuard } from '@ansyn/login/guards';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const ansynRoutes: Routes = [
 	{
 		path: '',
 		component: AnsynComponent,
@@ -12,6 +11,7 @@ const routes: Routes = [
 			name: 'case'
 		},
 		canActivate: [AuthGuard],
+		canDeactivate: [UnAuthGuard],
 		children: [
 			{
 				path: 'case/:caseId',
@@ -23,12 +23,3 @@ const routes: Routes = [
 		]
 	}
 ];
-
-@NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
-})
-
-export class AnsynRoutingModule {
-
-}

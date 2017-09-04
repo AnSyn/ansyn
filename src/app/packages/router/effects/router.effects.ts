@@ -7,8 +7,22 @@ import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { RouterActionTypes } from '../actions/router.actions';
 import { AnsynRouterService } from '../services/router.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class RouterEffects {
-	constructor(private actions$: Actions, private ansynRouterService: AnsynRouterService){}
+
+	@Effect({dispatch: false})
+	onNavigateCase$: Observable<any> = this.actions$
+		.ofType(RouterActionTypes.NAVIGATE_CASE)
+		.do(({payload}) => {
+			if (payload) {
+				this.router.navigate(['case', payload])
+			} else {
+				this.router.navigate([''])
+			}
+		});
+
+	constructor(private actions$: Actions, private router: Router){}
+
 }

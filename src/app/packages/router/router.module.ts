@@ -1,9 +1,9 @@
-import { APP_INITIALIZER, Injectable, Injector, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterEffects } from './effects/router.effects';
 import { AnsynRouterService } from './services/router.service';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
 	imports: [
@@ -17,7 +17,7 @@ import { Router, RouterModule } from '@angular/router';
 		{
 			provide: APP_INITIALIZER,
 			useFactory(ansynRouterService: AnsynRouterService) {
-				return () => ansynRouterService.onNavigationEnd();
+				return () => ansynRouterService.onNavigationEnd().subscribe();
 			},
 			deps: [AnsynRouterService],
 			multi: true

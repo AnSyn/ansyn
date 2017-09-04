@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { isNil as _isNil } from 'lodash';
 
@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
 	rememberMe: boolean;
 	returnUrl = this.authService.authrizedPath;
 	returnUrl$: Observable<string> = this.activatedRoute
-		.queryParams
-		.pluck('returnUrl')
+		.queryParamMap
+		.map((map: ParamMap) => map.get('returnUrl'))
 		.filter(_returnUrl => !_isNil(_returnUrl));
 
 	tryAgainMsg: boolean;
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 		this.returnUrl$.subscribe(_returnUrl => {
 			this.returnUrl = _returnUrl;
 		});
-		this.authService.clear()
+		this.authService.clear();
 	}
 
 	get login$() {
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 			.catch(() => {
 				this.showTryAgainMsg();
 				return Observable.throw('Unauthorized');
-			})
+			});
 	}
 
 	hideTryAgainMsg() {

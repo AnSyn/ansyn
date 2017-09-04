@@ -1,5 +1,5 @@
 document.write(`<div class="skeleton-wrapper">
-					<div class="skeleton-menu"></div>
+					<!--<div class="skeleton-menu"></div>-->
 					<div class="skeleton-container">
 						<div class="skeleton-map">
 							<div class="skeleton-loader"></div>
@@ -53,6 +53,6 @@ document.write(`<div class="skeleton-wrapper">
 							</div>
 				
 						</div>
-						<div class="skeleton-timeline"></div>
+						<!--<div class="skeleton-timeline"></div>-->
 					</div>
 				</div>`);

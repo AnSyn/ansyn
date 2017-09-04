@@ -45,7 +45,7 @@ export class AuthService{
 		const body = JSON.stringify({authToken});
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = {headers};
-		return this.httpClient.post(url, body, options)
+		return this.httpClient.post(url, body, options);
 	}
 
 	isLoggedIn() {

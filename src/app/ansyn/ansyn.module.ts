@@ -25,6 +25,7 @@ import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { AnsynRouterModule } from '@ansyn/router';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
 	imports: [
@@ -53,7 +54,8 @@ import { AnsynRouterModule } from '@ansyn/router';
 		StatusBarModule,
 		ContextModule,
 		OpenLayerVisualizersModule,
-		AnsynRouterModule
+		AnsynRouterModule,
+		RouterModule
 	],
 	declarations: [AnsynComponent, CaseComponent]
 })

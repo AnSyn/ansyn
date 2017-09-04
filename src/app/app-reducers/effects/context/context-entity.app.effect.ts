@@ -74,18 +74,18 @@ export class ContextEntityAppEffects {
 	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
-			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-			if (vis) {
-				vis.setReferenceDate(overlayDate);
-				vis.setEntities(contextEntities);
+			const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			if (visualizer) {
+				visualizer.setReferenceDate(overlayDate);
+				visualizer.setEntities(contextEntities);
 			}
 		}
 	}
 
 	private setContextOverlayDate(communicatorHandler: CommunicatorEntity, overlayDate: Date) {
-		const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-		if (vis) {
-			vis.setReferenceDate(overlayDate);
+		const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+		if (visualizer) {
+			visualizer.setReferenceDate(overlayDate);
 		}
 	}
 }

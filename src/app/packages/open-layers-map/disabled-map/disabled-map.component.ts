@@ -46,28 +46,4 @@ export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 	ngOnDestroy(): void {
 		this._map.dispose();
 	}
-
-	startMouseShadowVectorLayer() {
-
-	}
-
-	stopMouseShadowVectorLayer() {
-
-	}
-
-	drawShadowMouse(latLon: any) {
-
-	}
-
-	addSingleClickEvent() {
-
-	}
-
-	addPinPointIndicator(latLon: any) {
-
-	}
-
-	removePinPointIndicator() {
-
-	}
 }

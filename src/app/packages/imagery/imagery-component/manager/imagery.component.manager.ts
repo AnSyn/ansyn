@@ -21,7 +21,7 @@ export class ImageryComponentManager {
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	public activeMapChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
+	public mapInstanceChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
 
 	public activeMapName: string;
 	private _plugins: IMapPlugin[] = [];
@@ -34,7 +34,7 @@ export class ImageryComponentManager {
 				private _baseSourceProviders: BaseMapSourceProvider[],
 				private config: IImageryConfig,
 				private _id: string) {
-		this.activeMapChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
+		this.mapInstanceChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
 	}
 
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
@@ -89,7 +89,7 @@ export class ImageryComponentManager {
 			this.buildActiveMapPlugins(activeMapName);
 			this.buildActiveMapVisualizers(activeMapName, map);
 			this.mapComponentInitilaized.emit(this.id);
-			this.activeMapChanged.emit({id: this.id, newMapInstanceName: activeMapName, oldMapInstanceName: oldMapName});
+			this.mapInstanceChanged.emit({id: this.id, newMapInstanceName: activeMapName, oldMapInstanceName: oldMapName});
 			mapCreatedSubscribe.unsubscribe();
 		});
 		if (layer) {

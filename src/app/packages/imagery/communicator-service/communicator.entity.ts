@@ -20,7 +20,7 @@ export class CommunicatorEntity {
 	public pointerMove: EventEmitter<any>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
-	public activeMapChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
+	public mapInstanceChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
 
 	constructor(private _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
@@ -28,7 +28,7 @@ export class CommunicatorEntity {
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		this.activeMapChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
+		this.mapInstanceChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
 
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
@@ -55,8 +55,8 @@ export class CommunicatorEntity {
 			this.contextMenu.emit(event);
 		}));
 
-		this._managerSubscriptions.push(this._manager.activeMapChanged.subscribe((event: any) => {
-			this.activeMapChanged.emit(event);
+		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {
+			this.mapInstanceChanged.emit(event);
 		}));
 	}
 

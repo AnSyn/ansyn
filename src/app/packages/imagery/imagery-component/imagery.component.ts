@@ -14,6 +14,7 @@ import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
 import { isEqual, isNil, isEmpty} from 'lodash';
 import { Subscriber } from 'rxjs/Subscriber';
+import "rxjs/add/operator/take";
 
 
 @Component({
@@ -87,9 +88,8 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this._mapComponentSettings.id
 		);
 
-		const initSubscriber: Subscriber<any> = this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).subscribe(res => {
+		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).take(1).subscribe(res => {
 			this.imageryCommunicatorService.createCommunicator(this._manager);
-			initSubscriber.unsubscribe();
 		});
 	}
 

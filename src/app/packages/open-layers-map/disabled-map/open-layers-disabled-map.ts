@@ -32,7 +32,7 @@ export class OpenLayersDisabledMap implements IMap {
 		this.initMap(element, layers, position);
 	}
 
-	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: MapPosition) {
 
 		let center = [16, 38];
 		let zoom = 12;
@@ -80,7 +80,7 @@ export class OpenLayersDisabledMap implements IMap {
 		this.setMainLayer(layer, view);
 	}
 
-	private setMainLayer(layer: Layer, currentView: View, position?: MapPosition) {
+	setMainLayer(layer: Layer, currentView: View, position?: MapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
@@ -96,7 +96,7 @@ export class OpenLayersDisabledMap implements IMap {
 		}
 	}
 
-	private generateNewView(layer: Layer, oldview: View, position: MapPosition): any {
+	generateNewView(layer: Layer, oldview: View, position: MapPosition): any {
 		let newCenter = [0, 0];
 		let newZoom;
 		let newRotation;
@@ -127,7 +127,7 @@ export class OpenLayersDisabledMap implements IMap {
 		return view;
 	}
 
-	private fitToMainLayerExtent(extent: Extent) {
+	fitToMainLayerExtent(extent: Extent) {
 		const view = this.mapObject.getView();
 		view.fit(extent, {
 			size: this.mapObject.getSize(),

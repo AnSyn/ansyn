@@ -44,7 +44,7 @@ export class MapFacadeService {
 				this._subscribers.push(visualizer.doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
 			});
 
-			this._subscribers.push(communicator.activeMapChanged.subscribe(this.onActiveMapChanged.bind(this)));
+			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
 		});
 
 	}

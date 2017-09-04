@@ -2,9 +2,10 @@
  * Created by EldadCohen on 22/05/2017.
  */
 
-import { BaseMapSourceProvider, ProjectableRaster } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
+import { ProjectableRaster } from "@ansyn/open-layers-map";
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';

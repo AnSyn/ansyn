@@ -12,6 +12,9 @@
 	"peerDependencies": {
 		"@angular/common": "~2.4.0",
 		"@angular/core": "^2.4.0",
-		"@ansyn/core": "^0.0.1"
+		"@ansyn/core": "^0.0.1",
+		"@ngrx/effects": "^2.0.2",
+		"@ngrx/core": "~1.2.0",
+		"@ngrx/store": "^2.2.1"
 	}
 }

@@ -1,5 +1,7 @@
 export * from './models';
-export * from './guard/auth.guard';
-export * from './login/login.component';
-export * from './services/auth.service';
+export * from './guards';
+export * from './services';
 export * from './login.module';
+export * from './login.routes';
+export * from './login/login.component';
+

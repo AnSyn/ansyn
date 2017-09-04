@@ -29,8 +29,8 @@ import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
 import { ContextEntityAppEffects } from './effects/context/context-entity.app.effect';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { RouterReducer } from '@ansyn/router/reducers/router.reducer';
-import { CasesRouterModule } from '../connection-packages/cases-router/cases-router.module';
-import { IRouterState } from '../packages/router/reducers/router.reducer';
+import { CasesRouterModule } from '@ansyn/cases-router/cases-router.module';
+import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 
 
 export interface IAppState {

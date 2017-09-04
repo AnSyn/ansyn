@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { SetStateAction } from '../actions/router.actions';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { IRouterState } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { isNil as _isNil } from 'lodash';
 
 @Injectable()
 export class AnsynRouterService {
 
-	constructor(private router: Router, private store: Store<IRouterState>) {
-		this.onNavigationEnd();
+	constructor(private store: Store<IRouterState>,  private injector: Injector) {}
+
+	get router(): Router {
+		return this.injector.get(Router);
 	}
 
 	onNavigationEnd(): void {

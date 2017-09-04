@@ -4,16 +4,16 @@ import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class LoginGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
 
-	constructor(public router: Router,public authService:AuthService){}
+	constructor(public router: Router, public authService: AuthService){}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 		return this.authService.isLoggedIn()
-			.map(() => {
-				this.router.navigate(['/']);
-				return false;
-			})
-			.catch(() => Observable.of(true));
+			.map(() => true)
+			.catch(() => {
+				this.router.navigate(['/login'],{queryParams: {returnUrl: state.url}});
+				return Observable.of(false)
+			});
 	}
 }

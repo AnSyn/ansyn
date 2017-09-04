@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { IMap, MapPosition } from '@ansyn/imagery';
+import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 
 import Map from 'ol/map';
 import View from 'ol/view';
@@ -7,6 +8,8 @@ import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
 import Layer from 'ol/layer/layer';
+import Raster from 'ol/source/raster';
+import ImageLayer from 'ol/layer/image';
 
 export class OpenLayersDisabledMap implements IMap {
 	static mapType = 'openLayersMap';
@@ -21,6 +24,8 @@ export class OpenLayersDisabledMap implements IMap {
 
 	mainLayer: Layer;
 
+	private _imageProcessing: OpenLayersImageProcessing;
+
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
 		this.mapType = OpenLayersDisabledMap.mapType;
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
@@ -28,6 +33,7 @@ export class OpenLayersDisabledMap implements IMap {
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
+		this._imageProcessing = new OpenLayersImageProcessing();
 
 		this.initMap(element, layers, position);
 	}
@@ -83,6 +89,9 @@ export class OpenLayersDisabledMap implements IMap {
 	setMainLayer(layer: Layer, currentView: View, position?: MapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
+			if (this.mainLayer.getSource() instanceof Raster) {
+				this._imageProcessing.removeAllRasterOperations(this.mainLayer.getSource());
+			}
 			this.mapObject.render();
 		}
 
@@ -170,8 +179,23 @@ export class OpenLayersDisabledMap implements IMap {
 
 	removeSingleClickEvent() {}
 
-	setAutoImageProcessing(shouldPerform: boolean = false): void {
-		//TODO: ask (why he needs to locate a specific layer and how it is added)
+	public setAutoImageProcessing(shouldPerform: boolean = false): void {
+		let imageLayer: ImageLayer = <ImageLayer>this.mainLayer;
+		if (!imageLayer) {
+			return;
+		}
+
+		let rasterSource: Raster = <Raster>imageLayer.getSource();
+		if (!rasterSource) {
+			return;
+		}
+
+		if (shouldPerform) {
+			this._imageProcessing.addOperation(rasterSource, 'Sharpness');
+			this._imageProcessing.addOperation(rasterSource, 'Histogram');
+		} else {
+			this._imageProcessing.removeAllRasterOperations(rasterSource);
+		}
 	}
 
 	dispose() {

@@ -1,29 +1,82 @@
 @import "~@ansyn/core/less/common";
 
-div.app{
-	display: flex;
-	height:100vh;
-	.layer{
-		width: 100%;
-		height: 100%;
-		color: white;
-		display:flex;
-		flex-direction:column;
-		overflow: hidden;
-		position: relative;
-		.maps-container{
+:host{
+	div.app{
+		display: flex;
+		height:100vh;
+
+		div.layer{
+			width: 100%;
+			height: 100%;
+			color: white;
+			display:flex;
+			flex-direction:column;
+			overflow: hidden;
 			position: relative;
-			flex: 1;
-			&.edit-mode{
-				cursor: pointer;
+			.maps-container{
+				position: relative;
+				flex: 1;
+				&.edit-mode{
+					cursor: pointer;
+				}
+			}
+			.status{
+				position: relative;
+				height: 0;
+			}
+
+			.app-timeline-container {
+				height: 140px;
+				background-color: white;
 			}
 		}
-		.status{
-			position: relative;
-			height: 0;
-		}
-		.app-timeline-container{
-			height: 140px;
+
+		&.animations {
+			@animation-duration: 0.3s;
+
+			@keyframes menu-init {
+				from {
+					transform: translateX(-100%);
+				}
+				to {
+					transform: translateX(0);
+				}
+			}
+
+			@keyframes map-init {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+
+			@keyframes timeline-init {
+				from {
+					transform: translateY(100%);
+				}
+				to {
+					transform: translateY(0);
+				}
+			}
+
+			div.menu{
+				animation: menu-init @animation-duration;
+				transform: transitionX(0);
+			}
+
+			div.layer div.maps-container{
+				animation: map-init 0.7s;
+				animation-delay: @animation-duration;
+				opacity: 0;
+				animation-fill-mode: forwards;
+			}
+
+			div.layer div.status-timeline-container {
+				animation: timeline-init @animation-duration;
+				transform: translateY(0);
+			}
 		}
 	}
 

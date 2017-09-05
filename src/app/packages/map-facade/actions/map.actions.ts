@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Position } from '@ansyn/core';
+import { Position, MapsLayout } from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -28,7 +28,8 @@ export const MapActionTypes = {
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
-	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION'
+	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
+	SET_LAYOUT: 'SET_LAYOUT'
 };
 
 export type MapActions = any;
@@ -153,4 +154,8 @@ export class DbclickFeatureTriggerAction implements Action {
 export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
 	constructor(){}
+}
+export class SetLayoutAction implements Action {
+	type = MapActionTypes.SET_LAYOUT;
+	constructor(public payload: MapsLayout){}
 }

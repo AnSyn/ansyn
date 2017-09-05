@@ -32,6 +32,9 @@ import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction, SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { StatusBarActionsTypes } from '../../packages/status-bar/actions/status-bar.actions';
+import { MapsLayout } from '../../packages/core/models/maps-layout';
+import { SetLayoutAction } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -400,6 +403,15 @@ export class MapAppEffects {
 				new SetMapGeoEnabledModeStatusBarActionStore(isGeoRegistered)
 			];
 		});
+
+	@Effect()
+	onLayoutChange$: Observable<any> = this.actions$
+		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
+		.withLatestFrom(this.store$.select('status_bar'), ({payload}, statusbar: IStatusBarState) => statusbar.layouts[payload])
+		.map((layout: MapsLayout) => {
+			return new SetLayoutAction(layout)
+		});
+
 
 	constructor(
 		private actions$: Actions,

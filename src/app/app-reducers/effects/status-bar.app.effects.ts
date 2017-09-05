@@ -28,6 +28,8 @@ import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysActionTypes } from '../../packages/overlays/actions/overlays.actions';
+import { SetOverlaysCountAction } from '../../packages/status-bar/actions/status-bar.actions';
 
 
 
@@ -236,6 +238,13 @@ export class StatusBarAppEffects {
 			}
 		});
 
+	@Effect()
+	setOverlayCount$ = this.actions$
+		.ofType(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
+		.map(({payload}) => {
+			return new SetOverlaysCountAction(payload)
+		});
+
 	constructor(private actions$: Actions,
 				private store:Store<IAppState>,
 				public imageryCommunicator: ImageryCommunicatorService,
@@ -271,4 +280,6 @@ export class StatusBarAppEffects {
 		}
 		return selected_case;
 	}
+
+
 }

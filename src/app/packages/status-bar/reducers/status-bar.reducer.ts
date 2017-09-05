@@ -1,5 +1,6 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { MapsLayout } from '@ansyn/core';
+import { Case } from '@ansyn/core/models/case.model';
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];
@@ -10,7 +11,8 @@ export interface IStatusBarState {
 	geoFilters: string[],
 	orientation: string;
 	geoFilter: string;
-	time: {from: Date, to: Date}
+	time: {from: Date, to: Date},
+	overlays_count: number
 }
 
 export const statusBarFlagsItems  = {
@@ -40,7 +42,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	geoFilters: ['pin-point', 'other'],
 	orientation: 'original',
 	geoFilter: 'pin-point',
-	time: {from: new Date(0), to: new Date()}
+	time: {from: new Date(0), to: new Date()},
+	overlays_count: 0
 };
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState  {
@@ -86,6 +89,9 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_TIME:
 			return {...state, time: action.payload};
+
+		case StatusBarActionsTypes.SET_OVERLAYS_COUNT:
+			return {...state, overlays_count: action.payload};
 
 		default: return state;
 

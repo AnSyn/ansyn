@@ -1,7 +1,6 @@
 import { IAppState } from '../../app-reducers';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Observable } from 'rxjs/Observable';
 import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual as _isEqual, isNil as _isNil} from 'lodash';
@@ -9,10 +8,8 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import "@ansyn/core/utils/clone-deep";
 import * as packageJson from '../../../../package.json';
-import { MapsLayout} from '@ansyn/core/models';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
@@ -35,10 +32,6 @@ export class AnsynComponent implements OnInit{
 
 	selectedCaseName$: Observable<string> = this.selected_case$.pluck('name');
 
-	overlays_count$ = this.store.select('overlays')
-		.map((state: IOverlayState) => state.count)
-		.distinctUntilChanged(_isEqual);
-
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
 		.map((data: any) => data.overlay);
@@ -59,7 +52,6 @@ export class AnsynComponent implements OnInit{
 		.map((flags: Map<any, any>) => flags.get('pin_location'))
 		.distinctUntilChanged(_isEqual);
 
-	overlays_count = 0;
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
 	editMode = false;
@@ -76,7 +68,6 @@ export class AnsynComponent implements OnInit{
 		this.store.dispatch(new LoadContextsAction());
 		this.selectedCaseName$.subscribe(_selectedCaseName => this.selectedCaseName = _selectedCaseName);
 		this.maps$.subscribe(maps => this.maps = maps);
-		this.overlays_count$.subscribe(_overlays_count => { this.overlays_count = _overlays_count});
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
 		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);

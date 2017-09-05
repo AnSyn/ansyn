@@ -49,17 +49,39 @@
 			}
 
 			&.display-overlay-visualizer{
+				opacity: 0.6;
 				button {
-					opacity: 0.6;
+
 					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat 100%;
 					background-position: center center;
 				}
 				&.active{
+					opacity: 1;
 					button{
+					}
+				}
+			}
+
+			&.user-annotations{
+
+				button{
+					opacity:0.6;
+					display:flex;
+					justify-content: center;
+					align-items: center;
+					span{
+						font-size: 22px;
+						color: white;
+					}
+				}
+
+				&.active{
+					button {
 						opacity: 1;
 					}
 				}
 			}
 		}
 	}
+
 }

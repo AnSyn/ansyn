@@ -14,6 +14,7 @@ export class ToolsComponent implements OnInit {
 	public expandGoTo: boolean;
 	public expandOverlaysDisplayMode: boolean;
 	public displayModeOn: boolean;
+	public userAnnotationsToolOpen: boolean;
 	public flags: Map<string,boolean>;
 	public isGeoOptionsDisabled: boolean;
 	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
@@ -57,6 +58,14 @@ export class ToolsComponent implements OnInit {
 
 	toggleImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing);
+	}
+
+	toggleAnnotationMenu() {
+		// send event to the store that saying the annotation option is enabled
+		// this.store.dispatch(new AnnotationEnabled());
+		// this.store.dispatch(new AnnotationDisabled());
+		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
+
 	}
 
 }

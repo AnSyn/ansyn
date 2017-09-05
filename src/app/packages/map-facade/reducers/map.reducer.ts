@@ -1,6 +1,7 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { Position } from '@ansyn/core'
 import { cloneDeep } from 'lodash';
+import { MapsLayout } from '@ansyn/core/models';
 
 export interface IMapState {
 	positions: Position;
@@ -9,6 +10,7 @@ export interface IMapState {
 	filteredOverlays: string[];
 	displayedOverlay: any[];
 	mapIdToGeoOptions: Map<string, boolean>;
+	layout: MapsLayout
 }
 
 export const initialMapState: IMapState = {
@@ -17,7 +19,8 @@ export const initialMapState: IMapState = {
 	loadingOverlays: [],
 	filteredOverlays: [],
 	displayedOverlay: [],
-	mapIdToGeoOptions: new Map<string, boolean>()
+	mapIdToGeoOptions: new Map<string, boolean>(),
+	layout: <any>{}
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
@@ -63,6 +66,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS:
 			return  {...state, ...action.payload};
+
+		case MapActionTypes.SET_LAYOUT:
+			return  {...state, layout: action.payload};
 
 		default:
 			return state;

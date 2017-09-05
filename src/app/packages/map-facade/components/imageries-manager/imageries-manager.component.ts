@@ -18,6 +18,10 @@ import "rxjs/add/operator/distinctUntilChanged";
 
 export class ImageriesManagerComponent implements OnInit{
 	private _selected_layout;
+	private selected_layout$: Observable<MapsLayout> = this.store.select('map')
+		.pluck('layout')
+		.distinctUntilChanged();
+
 	private _maps: CaseMapsState;
 	public maps_count_range = [];
 	public pointerMoveUnsubscriber: any;
@@ -28,7 +32,7 @@ export class ImageriesManagerComponent implements OnInit{
 	clickTimeout: number;
 	preventDbClick: boolean;
 
-	public mapState$: Observable<IMapState> = this.store.select('map').map((state: IMapState)=> state);
+	public mapState$: Observable<IMapState> = this.store.select('map');
 
 	public loadingOverlaysIds = [];
 	public mapIdToGeoOptions: Map<string, boolean>;
@@ -51,7 +55,6 @@ export class ImageriesManagerComponent implements OnInit{
 		return this._maps;
 	}
 
-	@Input()
 	set selected_layout(value: MapsLayout){
 		this.setClassImageriesContainer(value.id, this._selected_layout && this._selected_layout.id);
 		this._selected_layout = value;
@@ -71,7 +74,10 @@ export class ImageriesManagerComponent implements OnInit{
 
 	ngOnInit(){
 		this.initListeners();
-		this.setClassImageriesContainer(this.selected_layout.id);
+
+		this.selected_layout$.subscribe((_selected_layout: MapsLayout) => {
+			this.selected_layout = _selected_layout;
+		});
 
 		this.mapState$.subscribe((_mapState) => {
 			this.loadingOverlaysIds = _mapState.loadingOverlays;

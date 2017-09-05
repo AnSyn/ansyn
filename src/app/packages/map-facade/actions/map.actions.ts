@@ -155,6 +155,7 @@ export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
 	constructor(){}
 }
+
 export class SetLayoutAction implements Action {
 	type = MapActionTypes.SET_LAYOUT;
 	constructor(public payload: MapsLayout){}

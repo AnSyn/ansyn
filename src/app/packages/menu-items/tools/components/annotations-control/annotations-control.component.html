@@ -1,0 +1,41 @@
+<ul class="annotations-options">
+	<li><span class="icon-annotation--point "></span></li>
+	<li><span class="icon-annotation--line "></span></li>
+	<li><span class="icon-annotation-polygon "></span></li>
+	<li><span class="icon-annotation--circle "></span></li>
+	<li><span class="icon-annotation--square "></span></li>
+	<li><span class="icon-annotation--arrow "></span></li>
+	<li class="spliter"><div></div></li>
+	<li class="expanded-selection" >
+		<div (mouseup)="openLineWidthSelection()" (mousedown)="closeLineWidthSelection()" >
+			<span  class="icon-annotation-weight "></span>
+		</div>
+		<ul (click)="selectLineWidth($event)" #lineWidthSelection tabindex="30" class="line-width-expand">
+			<li tabindex="31" data-index="1">1</li>
+			<li tabindex="32" data-index="2">2</li>
+			<li tabindex="33" data-index="3">3</li>
+			<li tabindex="34" data-index="4">4</li>
+			<li tabindex="35" data-index="5">5</li>
+			<li tabindex="36" data-index="6">6</li>
+			<li tabindex="37" data-index="7">7</li>
+		</ul>
+
+	</li>
+	<li class="expanded-selection color-selection"  >
+		<div (click)="toggleColorSelection($event)"  >
+			<span  class="icon-annotation--color "></span>
+		</div>
+		<ul  #colorSelection tabindex="40" class="color-selection-expand" >
+			<li (click)="openMe($event)" >
+				<span class="text">fill</span>
+				<span class="color" [style.background]="colorOptionsFill"></span>
+				<input type="color"  [(ngModel)]="colorOptionsFill" [ngModelOptions]="{standalone: true}"/>
+			</li>
+			<li (click)="openMe($event)">
+				<span class="text">stroke</span>
+				<span class="color" [style.background]="colorOptionsStroke"></span>
+				<input type="color"  [(ngModel)]="colorOptionsStroke" [ngModelOptions]="{standalone: true}"/>
+			</li>
+		</ul>
+	</li>
+</ul>

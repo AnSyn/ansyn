@@ -3,6 +3,7 @@
 		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
 			<img src='/assets/icons/tools/shadow_mouse.svg'/>
 		</button>
+		<span class="tooltiptext">Mouse shadow</span>
 	</div>
 
 	<div>
@@ -27,5 +28,13 @@
 		</button>
 		<span class="tooltiptext">Display Overlays</span>
 		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode" [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
+	</div>
+
+	<div class="user-annotations" [class.active]="userAnnotationsToolOpen" >
+		<button (click)="toggleAnnotationMenu()">
+			<span class="icon-annotation--edit"></span>
+		</button>
+		<span class="tooltiptext">User Annotations</span>
+		<ansyn-annotations-control [expand]="userAnnotationsToolOpen"></ansyn-annotations-control>
 	</div>
 </div>

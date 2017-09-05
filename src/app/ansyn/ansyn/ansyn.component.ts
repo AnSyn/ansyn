@@ -43,10 +43,6 @@ export class AnsynComponent implements OnInit{
 		.pluck('data')
 		.map((data: any) => data.overlay);
 
-	selected_layout$: Observable<MapsLayout> = this.store.select('status_bar')
-		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index])
-		.distinctUntilChanged(_isEqual);
-
 	isFavoriteOverlay$ = this.selected_case$
 		.filter(selectedCase => _isNil(selectedCase.state.favoritesOverlays))
 		.map((selectedCase: Case) => {
@@ -66,7 +62,6 @@ export class AnsynComponent implements OnInit{
 	overlays_count = 0;
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
-	selected_layout: MapsLayout;
 	editMode = false;
 	isFavoriteOverlay: boolean;
 	maps: CaseMapsState = <any>{};
@@ -85,7 +80,6 @@ export class AnsynComponent implements OnInit{
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
 		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);
-		this.selected_layout$.subscribe( selected_layout => { this.selected_layout = selected_layout});
 	}
 
 	setActiveImagery(active_map_id: string) {

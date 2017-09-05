@@ -32,6 +32,9 @@ export class StatusBarComponent implements OnInit {
 	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
 	flags$ = createSelector(this.store, 'status_bar', 'flags');
 	time$ = createSelector(this.store, 'status_bar', 'time');
+	hideOverlay$: Observable<boolean> = this.store.select('status_bar')
+		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
+		.distinctUntilChanged();
 
 
 	layouts: MapsLayout[] = [];
@@ -43,6 +46,7 @@ export class StatusBarComponent implements OnInit {
 	geoFilter: string;
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: {from: Date, to: Date};
+	hideOverlay: boolean;
 
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
@@ -50,7 +54,6 @@ export class StatusBarComponent implements OnInit {
 	@Input() selected_case_name: string;
 	@Input() overlays_count: number;
 	@Input('overlay') overlay: any;
-	@Input('hide-overlay') hideOverlay: boolean;
 	@Input('maps') maps: any;
 	@Input()
 	set isFavoriteOverlayDisplayed(value){
@@ -158,6 +161,10 @@ export class StatusBarComponent implements OnInit {
 
 		this.time$.subscribe((_time) => {
 			this.time = _time;
+		});
+
+		this.hideOverlay$.subscribe((_hideOverlay: boolean) => {
+			this.hideOverlay = _hideOverlay;
 		})
 	}
 

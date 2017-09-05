@@ -8,9 +8,7 @@
 		<div #mapsContainer class="maps-container" [class.edit-mode]="editMode">
 			<ansyn-imageries-manager
 				[maps]="maps"
-				[pin-location]="pinLocation"
-				(setActiveImagery)="setActiveImagery($event)"
-				(layoutChangeSuccess)="layoutChangeSuccess()">
+				[pinLocation]="pinLocation">
 			</ansyn-imageries-manager>
 		</div>
 

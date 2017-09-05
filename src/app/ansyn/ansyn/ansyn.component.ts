@@ -73,16 +73,6 @@ export class AnsynComponent implements OnInit{
 		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);
 	}
 
-	setActiveImagery(active_map_id: string) {
-		if(this.maps.active_map_id !== active_map_id ){
-			this.store.dispatch(new ActiveMapChangedAction(active_map_id));
-		}
-	}
-
-	layoutChangeSuccess() {
-		this.store.dispatch(new UpdateMapSizeAction());
-	}
-
 	toggleEditMode(){
 		this.editMode = !this.editMode;
 	}

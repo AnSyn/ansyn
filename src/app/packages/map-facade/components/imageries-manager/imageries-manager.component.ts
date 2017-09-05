@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output, OnInit, ViewChild, ElementRef, ComponentFactory } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CaseMapState } from '@ansyn/core/models';
-import { range } from 'lodash';
+import { range as _range} from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
@@ -9,6 +9,7 @@ import { IMapState } from '../../reducers/map.reducer';
 import { CaseMapsState, MapsLayout } from '@ansyn/core';
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/distinctUntilChanged";
+import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -38,10 +39,8 @@ export class ImageriesManagerComponent implements OnInit{
 	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
-	@Output() public setActiveImagery = new EventEmitter();
-	@Output() public layoutChangeSuccess = new EventEmitter();
 
-	@Input('pin-location') pinLocation: boolean;
+	@Input() pinLocation: boolean;
 
 	@Input()
 	set maps(value: any){
@@ -58,7 +57,7 @@ export class ImageriesManagerComponent implements OnInit{
 	set selected_layout(value: MapsLayout){
 		this.setClassImageriesContainer(value.id, this._selected_layout && this._selected_layout.id);
 		this._selected_layout = value;
-		this.maps_count_range = range(this.selected_layout.maps_count);
+		this.maps_count_range = _range(this.selected_layout.maps_count);
 
 	};
 
@@ -100,7 +99,7 @@ export class ImageriesManagerComponent implements OnInit{
 			this.imageriesContainer.nativeElement.classList.remove(old_class);
 		}
 		this.imageriesContainer.nativeElement.classList.add(new_class);
-		this.layoutChangeSuccess.emit();
+		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
 	initListeners() {
@@ -128,7 +127,7 @@ export class ImageriesManagerComponent implements OnInit{
 
 	changeActiveImagery(value) {
 		if(this.maps.active_map_id !== value){
-			this.setActiveImagery.emit(value);
+			this.store.dispatch(new ActiveMapChangedAction(value));
 		}
 	}
 

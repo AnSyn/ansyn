@@ -32,10 +32,14 @@ export class StatusBarComponent implements OnInit {
 	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
 	flags$ = createSelector(this.store, 'status_bar', 'flags');
 	time$ = createSelector(this.store, 'status_bar', 'time');
+
 	hideOverlay$: Observable<boolean> = this.store.select('status_bar')
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
 		.distinctUntilChanged();
 
+	overlays_count$: Observable<number> = this.store.select('status_bar')
+		.pluck('overlays_count')
+		.distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
@@ -52,7 +56,7 @@ export class StatusBarComponent implements OnInit {
 	timeSelectionEditIcon = false;
 
 	@Input() selected_case_name: string;
-	@Input() overlays_count: number;
+	overlays_count: number;
 	@Input('overlay') overlay: any;
 	@Input('maps') maps: any;
 	@Input()
@@ -165,7 +169,11 @@ export class StatusBarComponent implements OnInit {
 
 		this.hideOverlay$.subscribe((_hideOverlay: boolean) => {
 			this.hideOverlay = _hideOverlay;
-		})
+		});
+
+		this.overlays_count$.subscribe(_overlay_count => {
+			this.overlays_count = _overlay_count
+		});
 	}
 
 	toggleTimelineStartEndSearch() {

@@ -13,10 +13,12 @@ export const StatusBarActionsTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	FAVORITE: 'FAVORITE',
 	EXPAND: 'EXPAND',
+
 	SET_ORIENTATION: 'SET_ORIENTATION',
 	SET_GEO_FILTER: 'SET_GEO_FILTER',
 	SET_TIME: 'SET_TIME',
-	MAP_GEO_ENABLED_MODE_CHANGED: 'MAP_GEO_ENABLED_MODE_CHANGED'
+	MAP_GEO_ENABLED_MODE_CHANGED: 'MAP_GEO_ENABLED_MODE_CHANGED',
+	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT'
 };
 
 export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
@@ -90,6 +92,10 @@ export class SetTimeAction implements Action{
 
 export class SetMapGeoEnabledModeStatusBarActionStore implements Action {
 	type = StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
-	constructor(public payload: boolean) {
-	}
+	constructor(public payload: boolean) {}
+}
+
+export class SetOverlaysCountAction implements Action {
+	type = StatusBarActionsTypes.SET_OVERLAYS_COUNT;
+	constructor(public payload: number) {}
 }

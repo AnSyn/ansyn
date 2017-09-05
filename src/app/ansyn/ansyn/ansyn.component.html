@@ -21,7 +21,7 @@
 					[selected_case_name]="selectedCaseName"
 					[overlay]="displayedOverlay"
 					(toggleEditMode)="toggleEditMode()"
-					[overlays_count]="overlays_count"
+					(toggleEditMode)="toggleEditMode($event)"
 					[isFavoriteOverlayDisplayed]="isFavoriteOverlay">
 				</ansyn-status-bar>
 			</div>

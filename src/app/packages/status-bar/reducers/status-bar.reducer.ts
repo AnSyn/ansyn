@@ -12,12 +12,14 @@ export interface IStatusBarState {
 	orientation: string;
 	geoFilter: string;
 	time: {from: Date, to: Date},
-	overlays_count: number
+	overlays_count: number,
+	notFromCaseOverlay: boolean
 }
 
 export const statusBarFlagsItems  = {
 	pinPointIndicator:"PIN_POINT_INDICATOR",
-	pinPointSearch:"PIN_POINT_SEARCH"
+	pinPointSearch:"PIN_POINT_SEARCH",
+	geo_registered_options_enabled: 'geo_registered_options_enabled'
 };
 
 const layouts: MapsLayout[] = [
@@ -43,16 +45,16 @@ export const StatusBarInitialState: IStatusBarState = {
 	orientation: 'original',
 	geoFilter: 'pin-point',
 	time: {from: new Date(0), to: new Date()},
-	overlays_count: 0
+	overlays_count: 0,
+	notFromCaseOverlay: false
 };
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState  {
 	switch(action.type){
 
 		case StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
-
 			const tmpMap = new Map(state.flags);
-			tmpMap.set('geo_registered_options_enabled', action.payload);
+			tmpMap.set(statusBarFlagsItems.geo_registered_options_enabled, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case StatusBarActionsTypes.CHANGE_LAYOUT:
@@ -92,6 +94,9 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_OVERLAYS_COUNT:
 			return {...state, overlays_count: action.payload};
+
+		case StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY:
+			return { ...state, notFromCaseOverlay: action.payload};
 
 		default: return state;
 

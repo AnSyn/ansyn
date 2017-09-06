@@ -433,7 +433,6 @@ export class MapAppEffects {
 			return new SetNotFromCaseOverlaysAction(NotFromCaseOverlays);
 		});
 
-
 	constructor(
 		private actions$: Actions,
 		private store$: Store<IAppState>,

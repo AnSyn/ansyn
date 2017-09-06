@@ -1,7 +1,4 @@
-import {
-	Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
@@ -11,7 +8,6 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
-import { createSelector } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -19,24 +15,22 @@ import { createSelector } from '@ansyn/core';
 	styleUrls: ['./status-bar.component.less']
 })
 export class StatusBarComponent implements OnInit {
+	status_bar$: Observable<IStatusBarState> = this.store.select('status_bar');
 
-	layouts$: Observable<MapsLayout[]> = createSelector(this.store, 'status_bar', 'layouts');
-	selected_layout_index$: Observable<number> = createSelector(this.store, 'status_bar', 'selected_layout_index');
-	showLinkCopyToast$: Observable<boolean> = createSelector(this.store, 'status_bar', 'showLinkCopyToast');
-	orientations$: Observable<string[]> = createSelector(this.store, 'status_bar', 'orientations');
-	orientation$: Observable<string> = createSelector(this.store, 'status_bar', 'orientation');
-	geoFilters$: Observable<string[]> = createSelector(this.store, 'status_bar', 'geoFilters');
-	geoFilter$: Observable<string> = createSelector(this.store, 'status_bar', 'geoFilter');
-	flags$ = createSelector(this.store, 'status_bar', 'flags');
-	time$ = createSelector(this.store, 'status_bar', 'time');
-
-	hideOverlay$: Observable<boolean> = this.store.select('status_bar')
+	layouts$: Observable<MapsLayout[]> = this.status_bar$.pluck('layouts').distinctUntilChanged();
+	selected_layout_index$: Observable<number> = this.status_bar$.pluck('selected_layout_index').distinctUntilChanged();
+	showLinkCopyToast$: Observable<boolean> = this.status_bar$.pluck('showLinkCopyToast').distinctUntilChanged();
+	orientations$: Observable<string[]> = this.status_bar$.pluck('orientations').distinctUntilChanged();
+	orientation$: Observable<string> = this.status_bar$.pluck('orientation').distinctUntilChanged();
+	geoFilters$: Observable<string[]> = this.status_bar$.pluck('geoFilters').distinctUntilChanged();
+	geoFilter$: Observable<string> = this.status_bar$.pluck('geoFilter').distinctUntilChanged();
+	flags$ = this.status_bar$.pluck('flags').distinctUntilChanged();
+	time$: Observable<{from: Date, to: Date}> = this.status_bar$.pluck('time').distinctUntilChanged();
+	hideOverlay$: Observable<boolean> = this.status_bar$
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
 		.distinctUntilChanged();
-
-	overlays_count$: Observable<number> = this.store.select('status_bar')
-		.pluck('overlays_count')
-		.distinctUntilChanged();
+	overlays_count$: Observable<number> = this.status_bar$.pluck('overlays_count').distinctUntilChanged();
+	notFromCaseOverlay$: Observable<boolean> = this.status_bar$.pluck('notFromCaseOverlay').distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
@@ -48,10 +42,10 @@ export class StatusBarComponent implements OnInit {
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: {from: Date, to: Date};
 	hideOverlay: boolean;
-	noOC: boolean;
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
 	overlays_count: number;
+	notFromCaseOverlay: boolean;
 
 	@Input() selected_case_name: string;
 	@Input() overlay: any;
@@ -100,9 +94,7 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	constructor(public store: Store<IStatusBarState>,public renderer: Renderer2) {
-
-	}
+	constructor(public store: Store<IStatusBarState>,public renderer: Renderer2) {}
 
 	ngOnInit(): void {
 
@@ -147,7 +139,7 @@ export class StatusBarComponent implements OnInit {
 			this.geoFilter = _geoFilter;
 		});
 
-		this.flags$.subscribe(flags => {
+		this.flags$.subscribe((flags: Map<string, boolean>) => {
 			//I want to check that the one that was changing is the pin point search
 			if (this.flags.get(statusBarFlagsItems.pinPointSearch) !== flags.get(statusBarFlagsItems.pinPointSearch)) {
 				this.toggleEditMode.emit();
@@ -155,7 +147,7 @@ export class StatusBarComponent implements OnInit {
 			this.flags = new Map(flags) as Map<string, boolean>;
 		});
 
-		this.time$.subscribe((_time) => {
+		this.time$.subscribe(_time => {
 			this.time = _time;
 		});
 
@@ -166,10 +158,15 @@ export class StatusBarComponent implements OnInit {
 		this.overlays_count$.subscribe(_overlay_count => {
 			this.overlays_count = _overlay_count
 		});
+
+		this.notFromCaseOverlay$.subscribe(_notFromCaseOverlay => {
+			this.notFromCaseOverlay = _notFromCaseOverlay;
+		})
 	}
 
 	showGeoRegistrationError(): boolean {
-		return this.flags.has('geo_registered_options_enabled') && !this.flags.get('geo_registered_options_enabled')
+		const key = statusBarFlagsItems.geo_registered_options_enabled;
+		return this.flags.has(key) && !this.flags.get(key)
 	}
 
 	toggleTimelineStartEndSearch() {

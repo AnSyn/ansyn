@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CaseMapState } from '@ansyn/core/models';
-import { range as _range} from 'lodash';
+import { range as _range, isNil as _isNil} from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +10,8 @@ import { CaseMapsState, MapsLayout } from '@ansyn/core';
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/distinctUntilChanged";
 import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.actions';
+import { Overlay } from '@ansyn/core/models';
+import { get as _get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -18,13 +20,17 @@ import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.a
 })
 
 export class ImageriesManagerComponent implements OnInit{
-	private _selected_layout;
 	private selected_layout$: Observable<MapsLayout> = this.store.select('map')
 		.pluck('layout')
+		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
 
+	public notFromCaseOverlays$: Observable<Map<string, boolean>> = this.store.select('map')
+		.pluck('notFromCaseOverlays')
+		.distinctUntilChanged();
+
+	public selected_layout;
 	private _maps: CaseMapsState;
-	public maps_count_range = [];
 	public pointerMoveUnsubscriber: any;
 	public publisherMouseShadowMapId: string;
 	public listenersMouseShadowMapsId: Array<string>;
@@ -32,6 +38,7 @@ export class ImageriesManagerComponent implements OnInit{
 
 	clickTimeout: number;
 	preventDbClick: boolean;
+	notFromCaseOverlays: Map<string, boolean>;
 
 	public mapState$: Observable<IMapState> = this.store.select('map');
 
@@ -44,6 +51,9 @@ export class ImageriesManagerComponent implements OnInit{
 
 	@Input()
 	set maps(value: any){
+		if(!value) {
+			return;
+		}
 		this._maps = value;
 		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.maps.active_map_id){
 			this.changeShadowMouseTarget();
@@ -53,40 +63,43 @@ export class ImageriesManagerComponent implements OnInit{
 	get maps (){
 		return this._maps;
 	}
-
-	set selected_layout(value: MapsLayout){
-		this.setClassImageriesContainer(value.id, this._selected_layout && this._selected_layout.id);
-		this._selected_layout = value;
-		this.maps_count_range = _range(this.selected_layout.maps_count);
-
-	};
-
-	get selected_layout(): MapsLayout {
-		return this._selected_layout;
+	get range(){
+		return _range;
 	}
 
 	constructor(private mapEffects: MapEffects,private communicatorProvider:ImageryCommunicatorService, private store: Store<IMapState>){
-	 	this.shadowMouseProcess = false;
-	 	this.publisherMouseShadowMapId = null;
+		this.shadowMouseProcess = false;
+		this.publisherMouseShadowMapId = null;
 		this.listenersMouseShadowMapsId = new Array<string>();
 	}
 
 	ngOnInit(){
 		this.initListeners();
 
-		this.selected_layout$.subscribe((_selected_layout: MapsLayout) => {
-			this.selected_layout = _selected_layout;
-		});
-
 		this.mapState$.subscribe((_mapState) => {
 			this.loadingOverlaysIds = _mapState.loadingOverlays;
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
+
+		this.selected_layout$.subscribe((_selected_layout: MapsLayout) => {
+			this.setClassImageriesContainer(_selected_layout.id, this.selected_layout && this.selected_layout.id);
+			this.selected_layout = _selected_layout;
+		});
+
+		this.notFromCaseOverlays$.subscribe(_notFromCaseOverlays => {
+			this.notFromCaseOverlays = _notFromCaseOverlays
+		});
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
-		const result = this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId)
+		const result = this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId);
 		return result;
+	}
+
+	notFromCaseOverlay(overlay: Overlay) {
+		const overlayId = <string> _get(overlay, 'id');
+		const displayedAndNotFromCase = this.notFromCaseOverlays.has(overlayId) ? this.notFromCaseOverlays.get(overlayId) : false;
+		return displayedAndNotFromCase;
 	}
 
 	isOverlayLoading(overlayId) {

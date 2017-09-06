@@ -29,7 +29,8 @@ export const MapActionTypes = {
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
-	SET_LAYOUT: 'SET_LAYOUT'
+	SET_LAYOUT: 'SET_LAYOUT',
+	SET_NOT_FROM_CASE_OVERLAYS: 'SET_NOT_FROM_CASE_OVERLAYS'
 };
 
 export type MapActions = any;
@@ -155,8 +156,11 @@ export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
 	constructor(){}
 }
-
 export class SetLayoutAction implements Action {
 	type = MapActionTypes.SET_LAYOUT;
 	constructor(public payload: MapsLayout){}
+}
+export class SetNotFromCaseOverlaysAction implements Action {
+	type = MapActionTypes.SET_NOT_FROM_CASE_OVERLAYS;
+	constructor(public payload: Map<string, boolean>){}
 }

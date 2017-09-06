@@ -14,8 +14,11 @@
 			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 		</div>
 
-		<ansyn-overlay-geo-registration-error [showError]="disableGeoOptions"></ansyn-overlay-geo-registration-error>
+		<!--<ansyn-overlay-geo-registration-error [showError]="disableGeoOptions"></ansyn-overlay-geo-registration-error>-->
 
+		<!--<ansyn-overlay-geo-registration-error [showError]="notFromCase"></ansyn-overlay-geo-registration-error>-->
+
+		<ansyn-overlays-status-notifications [notFromCase]="notFromCase" [geoRegisteration]="disableGeoOptions"></ansyn-overlays-status-notifications>
 		<!--<div class='status-bar-icons'>-->
 		<!-- maybe the will change that later
 			<a *ngIf='!active' (click)=followActiveMap($event)>f</a>

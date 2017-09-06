@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatusBarComponent } from './status-bar/status-bar.component';
+import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
-import { ComboBoxComponent } from './combo-box/combo-box.component';
-import { TimelineTimepickerComponent } from './timeline-timepicker/timeline-timepicker.component';
+import { ComboBoxComponent } from './components/combo-box/combo-box.component';
+import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 
 
 

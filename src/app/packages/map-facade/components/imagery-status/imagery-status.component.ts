@@ -7,14 +7,15 @@ import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.acti
 	templateUrl: './imagery-status.component.html',
 	styleUrls: ['./imagery-status.component.less']
 })
-export class ImageryStatusComponent  {
+
+export class ImageryStatusComponent {
 	@Input('disable-geo-options') disableGeoOptions: boolean;
+	@Input() notFromCase: boolean;
 	@Input() map_id;
 	@Input() overlay;
 	@Input() active;
 
-	constructor(private store: Store<any>) { }
-
+	constructor(private store: Store<any>) {}
 
 	backToWorldView($event) {
 		$event.stopPropagation();

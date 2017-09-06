@@ -19,7 +19,7 @@ import { Case, Context } from '@ansyn/core';
 import { isEmpty, isEqual } from 'lodash';
 
 import 'rxjs/add/operator/share';
-  import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class CasesEffects {
@@ -141,19 +141,12 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select("cases"))
 		.switchMap(([action, state]: [LoadCaseAction, ICasesState]) => {
 			const existing_case = state.cases.find(case_val => case_val.id === action.payload);
-
 			if (existing_case) {
 				return Observable.of(new SelectCaseByIdAction(existing_case.id) as any);
 			} else {
 				return this.casesService.loadCase(action.payload)
-					.map(
-						(data) => {
-							if (data) {
-								return new LoadCaseSuccessAction(data);
-							} else {
-								return new LoadDefaultCaseAction();
-							}
-						});
+					.map((caseValue: Case) => new LoadCaseSuccessAction(caseValue))
+					.catch(() => Observable.of(new LoadDefaultCaseAction()));
 			}
 
 		}).share();

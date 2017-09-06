@@ -30,8 +30,7 @@ export class CasesRouterEffects {
 	@Effect()
 	selectCaseUpdateRouter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('router'), (payload, cases: any, router: any) => {
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('router'), ({payload}, cases: any, router: any) => {
 			return [payload, _get(cases.default_case, 'id'), router.caseId]
 		})
 		.filter(([payload, defaultCaseId, routerCaseId]) => !_isEqual(payload, defaultCaseId) && !_isEqual(payload, routerCaseId))
@@ -40,8 +39,9 @@ export class CasesRouterEffects {
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases').pluck('default_case'),this.store$.select('router').pluck('caseId'), (payload: string, default_case: Case, caseId: string): any => [payload, _get(default_case, 'id')])
+		.withLatestFrom(this.store$.select('cases').pluck('default_case'), this.store$.select('router').pluck('caseId'),
+			({payload}, default_case: Case, routerCaseId: string): any => [payload, _get(default_case, 'id', ), routerCaseId])
+
 		.filter(([payload, defaultCaseId, routerCaseId]) => _isEqual(payload, defaultCaseId) && !_isEmpty(routerCaseId))
 		.map(() => new NavigateCaseTriggerAction());
 

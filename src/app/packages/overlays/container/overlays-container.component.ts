@@ -176,7 +176,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.timelineState = this.timelineState$
 
 			.subscribe(timelineState => {
-				//console.log(timelineState);
 				this.setConfigurationTime(timelineState.from, timelineState.to);
 			});
 

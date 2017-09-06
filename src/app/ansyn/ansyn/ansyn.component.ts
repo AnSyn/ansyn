@@ -56,7 +56,7 @@ export class AnsynComponent implements OnInit{
 	selectedCaseName: string;
 	editMode = false;
 	isFavoriteOverlay: boolean;
-	maps: CaseMapsState = <any>{};
+	maps: CaseMapsState = null;
 	version;
 	pinLocation: boolean;
 

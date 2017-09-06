@@ -4,12 +4,15 @@
 			<div class="back-to-world-view" [hidden]="!overlay">
 				<button (click)="clickBackToWorldView()">Back to world view</button>
 			</div>
+
 			<div class="middle">
 				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 			</div>
 
-			<ansyn-overlay-geo-registration-error [showError]="this.flags.has('geo_registered_options_enabled') && !this.flags.get('geo_registered_options_enabled')"></ansyn-overlay-geo-registration-error>
-
+			<ansyn-overlay-geo-registration-error [showError]="showGeoRegistrationError()"></ansyn-overlay-geo-registration-error>
+			<div class="no-overlay-case" *ngIf="noOC">
+				No Overlay
+			</div>
 		</div>
 
 		<div class="right-side">
@@ -25,9 +28,7 @@
 							<img src="/assets/icons/status-bar/share-link-icon.svg">
 							<span>Share link</span>
 						</button>
-						<!--<button class="share-link" (click)="openLink()">-->
-						<!--<img src="">-->
-						<!--</button>-->
+
 					</div>
 				</div>
 			</div>

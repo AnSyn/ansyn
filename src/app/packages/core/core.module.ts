@@ -5,9 +5,9 @@ import { OverlayTextComponent } from './components/overlay-text/overlay-text.com
 import { OverlayGeoRegistrationErrorComponent } from './components/overlay-geo-registration-error/overlay-geo-registration-error.component';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
+import { OverlaysStatusNotificationsComponent } from './components/overlays-status-notifications/overlays-status-notifications.component';
 
-
-
+const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorComponent,AnsynCheckboxComponent, OverlaysStatusNotificationsComponent]
 
 @NgModule({
 	imports: [
@@ -15,8 +15,8 @@ import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkb
 		ToastModule,
 	],
 	providers: [GenericTypeResolverService],
-	exports: [ToastModule, OverlayTextComponent, OverlayGeoRegistrationErrorComponent,AnsynCheckboxComponent],
-	declarations: [OverlayTextComponent, OverlayGeoRegistrationErrorComponent, AnsynCheckboxComponent]
+	exports: [ToastModule, ...coreComponents],
+	declarations: [...coreComponents]
 })
 
 export class CoreModule { }

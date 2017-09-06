@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../reducers/status-bar.reducer';
-import { StatusBarModule } from '../status-bar.module';
-import { BackToWorldViewAction, ChangeLayoutAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction, UpdateStatusFlagsAction } from '../actions/status-bar.actions';
+import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../../reducers/status-bar.reducer';
+import { StatusBarModule } from '../../status-bar.module';
+import { BackToWorldViewAction, ChangeLayoutAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;

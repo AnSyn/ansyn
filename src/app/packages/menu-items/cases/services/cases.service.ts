@@ -110,16 +110,10 @@ export class CasesService {
 	}
 
 	loadCase(selected_case_id: string): Observable<any> {
-		if (isEmpty(selected_case_id)) {
-			return Observable.of("");
-		}
 		const url = `${this.base_url}/${selected_case_id}`;
 		return this.http.get(url,  this.defaultOptions)
 			.map(res => res.json())
-			.catch((error) => {
-				console.warn(error);
-				return Observable.empty();
-			});
+
 	}
 
 	getDefaultCase(): Case {

@@ -114,10 +114,7 @@ export function OverlayReducer(state = overlayInitialState,action: overlay.Overl
 
 			const res =  OverlaysService.filter(overlaysToFilter,action.payload.parsedFilters);
 
-			return Object.assign({},state,{
-				filters: action.payload.parsedFilters,
-				filteredOverlays: res
-			});
+			return {...state, filters: action.payload.parsedFilters, filteredOverlays: res};
 
 		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
 			const specialObjectsData =  OverlaysService.sort(action.payload) as any ;

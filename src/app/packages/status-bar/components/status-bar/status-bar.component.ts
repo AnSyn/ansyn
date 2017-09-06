@@ -3,18 +3,15 @@ import {
 	ViewChild
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems } from '../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
 	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
 	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
 	SetOrientationAction, SetGeoFilterAction, SetTimeAction
-} from '../actions/status-bar.actions';
+} from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
-import { isEqual } from 'lodash';
 import { MapsLayout } from '@ansyn/core';
 import { createSelector } from '@ansyn/core';
-import { CaseTimeState } from '@ansyn/core/models/case.model';
-import { color } from 'd3-color';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -51,14 +48,14 @@ export class StatusBarComponent implements OnInit {
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: {from: Date, to: Date};
 	hideOverlay: boolean;
-
+	noOC: boolean;
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
+	overlays_count: number;
 
 	@Input() selected_case_name: string;
-	overlays_count: number;
-	@Input('overlay') overlay: any;
-	@Input('maps') maps: any;
+	@Input() overlay: any;
+
 	@Input()
 	set isFavoriteOverlayDisplayed(value){
 		if(value){
@@ -68,17 +65,12 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	// @Input('time') time: CaseTimeState;
-
 	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
 	@ViewChild('starColor') starColor: ElementRef;
 
-
-
 	@HostListener("window:keydown", ['$event'])
-
 	onkeydown($event: KeyboardEvent) {
 		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
 			return;
@@ -174,6 +166,10 @@ export class StatusBarComponent implements OnInit {
 		this.overlays_count$.subscribe(_overlay_count => {
 			this.overlays_count = _overlay_count
 		});
+	}
+
+	showGeoRegistrationError(): boolean {
+		return this.flags.has('geo_registered_options_enabled') && !this.flags.get('geo_registered_options_enabled')
 	}
 
 	toggleTimelineStartEndSearch() {

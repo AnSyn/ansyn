@@ -29,7 +29,11 @@ import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysActionTypes } from '../../packages/overlays/actions/overlays.actions';
-import { SetOverlaysCountAction } from '../../packages/status-bar/actions/status-bar.actions';
+import {
+	SetNotFromCaseOverlayAction,
+	SetOverlaysCountAction
+} from '../../packages/status-bar/actions/status-bar.actions';
+import { MapActionTypes } from '../../packages/map-facade/actions/map.actions';
 
 
 
@@ -244,6 +248,20 @@ export class StatusBarAppEffects {
 		.map(({payload}) => {
 			return new SetOverlaysCountAction(payload)
 		});
+
+	@Effect()
+	setNotFromCaseOverlays$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.SET_NOT_FROM_CASE_OVERLAYS)
+		.withLatestFrom(this.store.select('cases').pluck('selected_case'), ({payload}, selected_case) => [payload, CasesService.activeMap(selected_case)])
+		.map(([notFromCaseOverlays, activeMap]: [Map<string, boolean>, CaseMapState]) => {
+			if(activeMap.data.overlay) {
+				const {id} = activeMap.data.overlay;
+				return notFromCaseOverlays.has(id) ? notFromCaseOverlays.get(id) : false;
+			} else {
+				return false
+			}
+		})
+		.map((notFromCaseResult: boolean) => new SetNotFromCaseOverlayAction(notFromCaseResult));
 
 	constructor(private actions$: Actions,
 				private store:Store<IAppState>,

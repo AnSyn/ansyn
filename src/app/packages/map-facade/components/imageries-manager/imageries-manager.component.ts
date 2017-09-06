@@ -98,8 +98,7 @@ export class ImageriesManagerComponent implements OnInit{
 
 	notFromCaseOverlay(overlay: Overlay) {
 		const overlayId = <string> _get(overlay, 'id');
-		const displayedAndNotFromCase = this.notFromCaseOverlays.has(overlayId) ? this.notFromCaseOverlays.get(overlayId) : false;
-		return displayedAndNotFromCase;
+		return this.notFromCaseOverlays.has(overlayId) ? this.notFromCaseOverlays.get(overlayId) : false;
 	}
 
 	isOverlayLoading(overlayId) {

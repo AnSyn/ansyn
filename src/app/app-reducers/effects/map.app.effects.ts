@@ -32,10 +32,9 @@ import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction, SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { StatusBarActionsTypes } from '../../packages/status-bar/actions/status-bar.actions';
-import { MapsLayout } from '../../packages/core/models/maps-layout';
-import { SetLayoutAction, SetNotFromCaseOverlaysAction } from '../../packages/map-facade/actions/map.actions';
-import { CaseMapsState } from '../../packages/core/models/case.model';
+import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { MapsLayout, CaseMapsState } from '@ansyn/core/models';
+import { SetLayoutAction, SetNotFromCaseOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {

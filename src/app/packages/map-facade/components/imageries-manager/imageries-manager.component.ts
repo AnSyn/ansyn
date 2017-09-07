@@ -20,7 +20,7 @@ import { get as _get } from 'lodash';
 })
 
 export class ImageriesManagerComponent implements OnInit{
-	private selected_layout$: Observable<MapsLayout> = this.store.select('map')
+	public selected_layout$: Observable<MapsLayout> = this.store.select('map')
 		.pluck('layout')
 		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
@@ -81,10 +81,7 @@ export class ImageriesManagerComponent implements OnInit{
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
 
-		this.selected_layout$.subscribe((_selected_layout: MapsLayout) => {
-			this.setClassImageriesContainer(_selected_layout.id, this.selected_layout && this.selected_layout.id);
-			this.selected_layout = _selected_layout;
-		});
+		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this))
 
 		this.notFromCaseOverlays$.subscribe(_notFromCaseOverlays => {
 			this.notFromCaseOverlays = _notFromCaseOverlays
@@ -92,8 +89,7 @@ export class ImageriesManagerComponent implements OnInit{
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
-		const result = this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId);
-		return result;
+		return this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId);
 	}
 
 	notFromCaseOverlay(overlay: Overlay) {
@@ -112,6 +108,11 @@ export class ImageriesManagerComponent implements OnInit{
 		}
 		this.imageriesContainer.nativeElement.classList.add(new_class);
 		this.store.dispatch(new UpdateMapSizeAction());
+	}
+
+	setSelectedLayout(_selected_layout: MapsLayout) {
+		this.setClassImageriesContainer(_selected_layout.id, this.selected_layout && this.selected_layout.id);
+		this.selected_layout = _selected_layout;
 	}
 
 	initListeners() {

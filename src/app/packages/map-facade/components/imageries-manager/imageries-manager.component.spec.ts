@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { MapReducer } from '../../reducers/map.reducer';
 
 const mock_ansyn_context_menu = MockComponent({selector: 'ansyn-context-menu', inputs: ['show', 'top', 'left'], outputs: ['showChange']});
-const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'disable-geo-options']});
+const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'disable-geo-options', 'notFromCase']});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
@@ -103,8 +103,7 @@ describe('ImageriesManagerComponent', () => {
 	});
 
 	it('emit change action event and chagne the active map id ',fakeAsync(()=> {
-		//spyOn(component,'changeShadowMouseTarget');
-		spyOn(component.setActiveImagery,'emit');
+		spyOn(component, 'changeActiveImagery');
 
 		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll(".map-container-wrapper");
 		expect(wrapperDivs.length).toBe(2);
@@ -112,14 +111,14 @@ describe('ImageriesManagerComponent', () => {
 		wrapperDivs[0].click();
 		tick(500);
 		expect(component.maps.active_map_id).toBe('imagery1');
-		expect(component.setActiveImagery.emit['calls'].any()).toBeFalsy();
+		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery1');
 
 		wrapperDivs[1].click();
 		tick(500);
-		expect(component.setActiveImagery.emit).toHaveBeenCalledWith('imagery2');
+		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery2');
 	}));
 
-	it('activeate shadow mouse',() => {
+	it('activate shadow mouse',() => {
 		//spyOn(communicatorProvider,'communicators');
 		component.startPointerMoveProcess();
 
@@ -167,8 +166,7 @@ describe('ImageriesManagerComponent', () => {
 		const element = document.createElement('div');
 		const htmlToAdd = '<div class="ol-rotate">ol-rotate</div>';
 		element.innerHTML = htmlToAdd;
-
-		component.selected_layout = {id: 'layout1', description: 'full screen', maps_count: 1};
+		component.setSelectedLayer({id: 'layout1', description: 'full screen', maps_count: 1})
 		fixture.detectChanges();
 
 		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".map"));
@@ -179,9 +177,7 @@ describe('ImageriesManagerComponent', () => {
 		expect(wrapperDivs.map(olRotate =>
 			getComputedStyle(olRotate).top
 		)).not.toEqual(['40px']);
-
-
-		component.selected_layout = {id: 'layout6', description: 'full', maps_count: 4};
+		component.setSelectedLayer({id: 'layout6', description: 'full', maps_count: 4})
 		fixture.detectChanges();
 		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".ol-rotate"));
 		expect(wrapperDivs.length).toEqual(1);

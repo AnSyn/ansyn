@@ -1,3 +1,5 @@
-export { MapFacadeModule } from './map-facade.module';
-export { MapFacadeService } from './services/map-facade.service';
-export * from './actions/map.actions';
+export * from './map-facade.module';
+export * from './services';
+export * from './actions';
+export * from './reducers';
+export * from './effects';

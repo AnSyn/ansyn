@@ -11,8 +11,8 @@ export class AuthService{
 		return this.loginConfigService.config;
 	}
 
-	get authrizedPath(): string {
-		return this.config.authrizedPath;
+	get authorizedPath(): string {
+		return this.config.authorizedPath;
 	}
 
 	constructor(private httpClient: HttpClient, private loginConfigService: LoginConfigService){}

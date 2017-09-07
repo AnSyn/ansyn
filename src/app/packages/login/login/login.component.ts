@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
 	username: string;
 	password: string;
 	rememberMe: boolean;
-	returnUrl = this.authService.authrizedPath;
+	returnUrl = this.authService.authorizedPath;
 	returnUrl$: Observable<string> = this.activatedRoute
 		.queryParamMap
 		.map((map: ParamMap) => map.get('returnUrl'))

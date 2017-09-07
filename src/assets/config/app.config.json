@@ -65,7 +65,8 @@
 					"filters": []
 				},
 				"geoFilter": "pin-point",
-				"orientation": "original"
+				"orientation": "original",
+				"favoritesOverlays": []
 			}
 		},
 		"casesQueryParamsKeys": ["facets", "time", "maps", "region"],

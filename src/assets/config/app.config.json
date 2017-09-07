@@ -139,6 +139,6 @@
 	"loginConfig": {
 		"baseUrl": "http://localhost:9001/api/v1/login",
 		"active": true,
-		"authrizedPath": "/"
+		"authorizedPath": "/"
 	}
 }

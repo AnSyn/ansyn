@@ -13,7 +13,7 @@ import { AnsynModule } from './ansyn/ansyn.module';
 		AppComponent,
 	],
 	imports: [
-		LoginModule.forRoot({authrizedPath: '/'}),
+		LoginModule,
 		AnsynModule,
 		AppRoutingModule
 	],

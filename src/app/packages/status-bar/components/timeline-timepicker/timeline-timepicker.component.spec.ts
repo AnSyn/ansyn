@@ -1,6 +1,6 @@
 import { TimelineTimepickerComponent } from './timeline-timepicker.component';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { StatusBarModule } from '../status-bar.module';
+import { StatusBarModule } from '../../status-bar.module';
 import { isEqual } from 'lodash';
 
 

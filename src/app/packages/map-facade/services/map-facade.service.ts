@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
-import {
-	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
+import { AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
 	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction, MapInstanceChangedAction
-} from '../actions/map.actions';
+} from '../actions';
 import { Position, Overlay } from '@ansyn/core';
 
 @Injectable()

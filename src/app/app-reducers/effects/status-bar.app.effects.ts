@@ -27,13 +27,9 @@ import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from "@ansyn/menu-items/cases/services/cases.service";
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
-import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysActionTypes } from '../../packages/overlays/actions/overlays.actions';
-import {
-	SetNotFromCaseOverlayAction,
-	SetOverlaysCountAction
-} from '../../packages/status-bar/actions/status-bar.actions';
-import { MapActionTypes } from '../../packages/map-facade/actions/map.actions';
+import { OverlaysActionTypes, SyncFilteredOverlays } from '@ansyn/overlays/actions';
+import { SetNotFromCaseOverlayAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
+import { MapActionTypes } from '@ansyn/map-facade/actions';
 
 
 

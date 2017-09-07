@@ -22,7 +22,7 @@ describe('AnsynComponent', () => {
 	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay','isFavoriteOverlayDisplayed']});
 	const mock_overlays_container = MockComponent({selector: 'ansyn-overlays-container'});
 	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});
-	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps', 'pin-location']});
+	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps', 'pinLocation']});
 	const cases: Case[] = [{
 		id: 'tmp',
 		state: {
@@ -88,10 +88,6 @@ describe('AnsynComponent', () => {
 		store = _store;
 		store.dispatch(new AddCaseSuccessAction(cases[0]));
 		store.dispatch(new SelectCaseByIdAction('tmp'));
-		handler = new Subject();
-		spyOn(store,'select').and.callFake( type => {
-			return handler;
-		});
 	}));
 
 	beforeEach(() => {
@@ -99,6 +95,15 @@ describe('AnsynComponent', () => {
 		fixture = TestBed.createComponent(AnsynComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+
+		Object.defineProperty(component, "selected_case$", {
+			get: () => {}
+		});
+
+		handler = new Subject();
+		spyOnProperty(component, 'selected_case$', 'get').and.callFake( type => {
+			return handler;
+		});
 	});
 
 	it('should be created', () => {

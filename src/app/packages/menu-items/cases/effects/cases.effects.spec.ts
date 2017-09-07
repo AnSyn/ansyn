@@ -125,29 +125,31 @@ describe('CasesEffects', () => {
 		});
 	});
 
-	it('loadCase$ should dispatch LoadCaseSuccessAction if the case is valid but not in the loaded cases', () => {
-		const caseItem: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
-		} as any;
-		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
-		effectsRunner.queue(new LoadCaseAction(caseItem.id));
+	describe('loadCase$ ', () => {
+		it('loadCase$ should dispatch LoadCaseSuccessAction if the case is valid but not in the loaded cases', () => {
+			const caseItem: Case = {
+				id: '31b33526-6447-495f-8b52-83be3f6b55bd'
+			} as any;
+			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
+			effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
-		casesEffects.loadCase$.subscribe((result: SelectCaseByIdAction) => {
-			expect(result instanceof LoadCaseSuccessAction).toBeTruthy();
-			expect(result.payload).toEqual(<any>caseItem);
+			casesEffects.loadCase$.subscribe((result: LoadCaseSuccessAction) => {
+				expect(result instanceof LoadCaseSuccessAction).toBeTruthy();
+				expect(result.payload).toEqual(<any>caseItem);
+			});
 		});
-	});
 
-	it('loadCase$ should dispatch LoadDefaultCaseAction if the case id is not valid', () => {
-		const caseItem: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
-		} as any;
+		it('loadCase$ should dispatch LoadDefaultCaseAction if the case id is not valid ( throw 404 error )', () => {
+			const caseItem: Case = {
+				"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+			} as any;
 
-		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(null));
-		effectsRunner.queue(new LoadCaseAction(caseItem.id));
+			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({error: 'not found'}));
+			effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
-		casesEffects.loadCase$.subscribe((result: LoadDefaultCaseAction) => {
-			expect(result instanceof LoadDefaultCaseAction).toBeTruthy();
+			casesEffects.loadCase$.subscribe((result: LoadDefaultCaseAction) => {
+				expect(result instanceof LoadDefaultCaseAction).toBeTruthy();
+			});
 		});
 	});
 

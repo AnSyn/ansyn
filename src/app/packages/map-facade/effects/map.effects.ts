@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { MapActionTypes, SetMapAutoImageProcessing } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-
+import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 
 
@@ -50,9 +50,11 @@ export class MapEffects{
 	@Effect({dispatch:false})
 	onToggleImageProcessing$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.map((action: SetMapAutoImageProcessing) => {
-			const comm = this.communicatorsService.provide(action.payload.mapId);
-			comm.setAutoImageProcessing(action.payload.toggle_value);
+		.map(toPayload)
+		.map(({mapId, toggle_value}) => [this.communicatorsService.provide(mapId), toggle_value])
+		.filter(([comm]) => !_isNil(comm))
+		.do(([comm, toggle_value]) => {
+			comm.setAutoImageProcessing(toggle_value);
 		});
 
 	@Effect({dispatch:false})

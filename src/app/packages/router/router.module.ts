@@ -23,6 +23,10 @@ import { RouterModule } from '@angular/router';
 	]
 })
 
+export class AnsynRouterModule{
+
+}
+
 export function useFactoryInitializer (ansynRouterService: AnsynRouterService) {
 	return function () {
 		ansynRouterService.onNavigationEnd().subscribe();

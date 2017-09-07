@@ -1,22 +1,21 @@
-import { Injectable, InjectionToken,Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
 
-export const AuthrizedPath: InjectionToken<string> = new InjectionToken('AuthrizedPath');
-
 @Injectable()
 export class AuthService{
+
 	get config(): ILoginConfig {
 		return this.loginConfigService.config;
 	}
 
 	get authrizedPath(): string {
-		return this._authrizedPath;
+		return this.config.authrizedPath;
 	}
 
-	constructor(private httpClient: HttpClient, private loginConfigService: LoginConfigService,@Inject(AuthrizedPath) private _authrizedPath: string){}
+	constructor(private httpClient: HttpClient, private loginConfigService: LoginConfigService){}
 
 	logout(){
 		this.clear();

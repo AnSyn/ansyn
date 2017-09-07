@@ -16,15 +16,15 @@ import { RouterModule } from '@angular/router';
 		AnsynRouterService,
 		{
 			provide: APP_INITIALIZER,
-			useFactory(ansynRouterService: AnsynRouterService) {
-				return () => ansynRouterService.onNavigationEnd().subscribe();
-			},
+			useFactory: useFactoryInitializer,
 			deps: [AnsynRouterService],
 			multi: true
 		},
 	]
 })
 
-export class AnsynRouterModule {
-
+export function useFactoryInitializer (ansynRouterService: AnsynRouterService) {
+	return function () {
+		ansynRouterService.onNavigationEnd().subscribe();
+	};
 }

@@ -166,7 +166,7 @@ describe('ImageriesManagerComponent', () => {
 		const element = document.createElement('div');
 		const htmlToAdd = '<div class="ol-rotate">ol-rotate</div>';
 		element.innerHTML = htmlToAdd;
-		component.setSelectedLayer({id: 'layout1', description: 'full screen', maps_count: 1})
+		component.setSelectedLayout({id: 'layout1', description: 'full screen', maps_count: 1})
 		fixture.detectChanges();
 
 		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".map"));
@@ -177,7 +177,7 @@ describe('ImageriesManagerComponent', () => {
 		expect(wrapperDivs.map(olRotate =>
 			getComputedStyle(olRotate).top
 		)).not.toEqual(['40px']);
-		component.setSelectedLayer({id: 'layout6', description: 'full', maps_count: 4})
+		component.setSelectedLayout({id: 'layout6', description: 'full', maps_count: 4})
 		fixture.detectChanges();
 		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".ol-rotate"));
 		expect(wrapperDivs.length).toEqual(1);

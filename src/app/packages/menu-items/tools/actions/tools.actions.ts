@@ -18,6 +18,7 @@ export const ToolsActionsTypes = {
 	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
 	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
+	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT')
 };
 
 export class StartMouseShadow implements Action {
@@ -100,6 +101,11 @@ export class DisableImageProcessing implements  Action {
 export class EnableImageProcessing implements  Action {
 	type = ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING;
 	constructor(public payload?:any){};
+}
+
+export class AnnotationVisualizerAgentAction implements  Action {
+	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
+	constructor(public payload:any){}
 }
 
 export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter |

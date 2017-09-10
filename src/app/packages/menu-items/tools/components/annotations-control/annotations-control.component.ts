@@ -3,6 +3,8 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
 
 
 @Component({
@@ -10,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnInit, OnDestroy {
+export class AnnotationsControlComponent implements  OnDestroy {
 	private _isExpended: boolean;
 	public lineWidthTrigger: boolean;
 	public colorSelectionTrigger = false;
@@ -30,7 +32,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		return this._isExpended;
 	}
 
-	constructor(public renderer: Renderer2) {
+	constructor(public renderer: Renderer2,public store: Store<any> ) {
 		console.log('x');
 
 	}
@@ -55,36 +57,38 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	toggleColorSelection($event){
 		$event.stopPropagation();
 		this.colorSelectionTrigger = !this.colorSelectionTrigger;
-		//if(document.activeElement !== this.colorSelection.nativeElement){
-			this.colorSelection.nativeElement.classList.toggle('open')
+		this.colorSelection.nativeElement.classList.toggle('open')
+
 		if(this.colorSelectionTrigger){
-				this.addEvent();
-		}else {
+				this.clickOutside();
+		}
+		else {
 			this.subscriber && this.subscriber.unsubscribe();
 		}
 		//}
 	}
 
-	addEvent(){
+	clickOutside(){
 		this.subscriber = Observable.fromEvent(document,'click')
 			.subscribe( (event: any) => {
-				console.log('event document click',event.target);
+
 				if(!event.target.closest(".expanded-selection.color-selection")){
-					this.toggleColorSelection(event);
+					this.colorSelectionTrigger = false;
+					this.colorSelection.nativeElement.classList.remove('open')
 					this.subscriber.unsubscribe();
 				}
 			});
 	}
 
-	closeColorSelection(){
-		if(document.activeElement === this.colorSelection.nativeElement){
-			this.colorSelectionTrigger = true;
-			this.colorSelection.nativeElement.blur();
-		}
+	testVisualizer(type){
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: "createInteraction",
+			type,
+			maps: "active"
+		}));
 	}
 
 	openMe($event) {
-
 		let element = $event.target.closest('li');
 		if(!element){
 			element = $event.target;
@@ -92,15 +96,30 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		element.getElementsByTagName('input')[0].click();
 	}
 
-	clickOutside(){
-
-	}
-
 	selectLineWidth($event){
 		const lineWidth = $event.target.dataset.index;
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: "changeLine",
+			value: lineWidth,
+			maps: "active"
+		}));
+
 	}
 
-	ngOnInit() {
+	changeStrokeColor() {
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: "changeStrokeColor",
+			value: this.colorOptionsStroke,
+			maps: 'active'
+		}));
+	}
+
+	changeFillColor() {
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: "changeFillColor",
+			value: this.colorOptionsFill,
+			maps: 'active'
+		}));
 	}
 
 	ngOnDestroy(){

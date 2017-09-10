@@ -19,7 +19,6 @@ export const EntitiesVisualizerType = 'EntitiesVisualizerType';
 export class EntitiesVisualizer implements IMapVisualizer {
 
 	type: string;
-
 	_imap: IMap;
 	_mapId: string;
 	_source: Vector;

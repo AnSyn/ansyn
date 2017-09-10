@@ -35,6 +35,7 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MapsLayout, CaseMapsState } from '@ansyn/core/models';
 import { SetLayoutAction, SetOverlayNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -256,7 +257,13 @@ export class MapAppEffects {
 			const communicatorsIds = action.payload.communicatorsIds;
 			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selected_case.state.maps.data.length;
 		})
-		.map(() => new CompositeMapShadowAction());
+		.mergeMap(() => [
+			new CompositeMapShadowAction(),
+			new AnnotationVisualizerAgentAction({
+				maps: "all",
+				action: "show",
+			})
+		]);
 
 	@Effect({dispatch:false})
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$

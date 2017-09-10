@@ -1,5 +1,6 @@
 import { Position } from './position.model';
 import { Overlay } from './overlay.model';
+import { FeatureCollection } from 'geojson';
 
 export type Case = {
 	readonly id?: string;
@@ -24,7 +25,8 @@ export type CaseState = {
 	contextEntities?: IContextEntity[],
 	orientation: string,
 	geoFilter: string,
-	favoritesOverlays?: string[]
+	favoritesOverlays?: string[],
+	annotationsLayer?: FeatureCollection<any> | string
 };
 
 export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;

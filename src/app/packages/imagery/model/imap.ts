@@ -44,4 +44,5 @@ export interface IMap {
 	removeSingleClickEvent();
 	addPinPointIndicator(latLon);
 	removePinPointIndicator();
+	addLayerIfNotExist(layer: any);
 }

@@ -52,7 +52,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
 			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filteredOverlays, overlaysState.specialObjects);
-			return drops;
+			return {drops, timelineState: overlaysState.timelineState };
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')
@@ -136,7 +136,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.zoomEnd  = this.emitter.provide('timeline:zoomend')
 			.subscribe(result => {
 				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
-				this.setConfigurationTime(result.dates.from, result.dates.to);
 				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
 			});
 
@@ -164,10 +163,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	setSubscribers(): void {
 
 		this.subscribers.overlays = this.drops$.subscribe((data) => {
-			const count = this.calcOverlayCountViaDrops(data);
+			const count = this.calcOverlayCountViaDrops(data.drops);
 			this.store.dispatch(new UpdateOverlaysCountAction(count));
 
-			this.drops =  data;
+			this.setConfigurationTime(data.timelineState.from, data.timelineState.to);
+			this.drops =  data.drops;
 		});
 
 		this.subscribers.timelineState = this.timelineState$
@@ -181,6 +181,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);*/
 
 		this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
+			this.setConfigurationTime(this.currentTimelineState.from, this.currentTimelineState.to);
 			this.redraw$.next(Math.random());
 		});
 

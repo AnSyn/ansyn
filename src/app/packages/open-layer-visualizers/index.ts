@@ -4,3 +4,4 @@ export { EntitiesVisualizerType, EntitiesVisualizer } from './entities-visualize
 
 export { OpenLayerVisualizersModule, OpenLayersVisualizerMapType } from './open-layer-visualizers.module';
 
+export { AnnotationsVisualizer, AnnotationVisualizerType } from './annotations.visualizer';

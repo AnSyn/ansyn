@@ -1,16 +1,16 @@
 <ul class="annotations-options">
-	<li><span class="icon-annotation--point "></span></li>
-	<li><span class="icon-annotation--line "></span></li>
-	<li><span class="icon-annotation-polygon "></span></li>
-	<li><span class="icon-annotation--circle "></span></li>
-	<li><span class="icon-annotation--square "></span></li>
-	<li><span class="icon-annotation--arrow "></span></li>
+	<li (click)="testVisualizer('Point')"><span class="icon-annotation--point "></span></li>
+	<li (click)="testVisualizer('LineString')"><span class="icon-annotation--line "></span></li>
+	<li (click)="testVisualizer('Polygon')"><span class="icon-annotation-polygon "></span></li>
+	<li (click)="testVisualizer('Circle')"><span class="icon-annotation--circle "></span></li>
+	<li (click)="testVisualizer('Rectangle')"><span class="icon-annotation--square "></span></li>
+	<li (click)="testVisualizer('Arrow')"><span class="icon-annotation--arrow "></span></li>
 	<li class="spliter"><div></div></li>
 	<li class="expanded-selection" >
 		<div (mouseup)="openLineWidthSelection()" (mousedown)="closeLineWidthSelection()" >
 			<span  class="icon-annotation-weight "></span>
 		</div>
-		<ul (click)="selectLineWidth($event)" #lineWidthSelection tabindex="30" class="line-width-expand">
+		<ul (mousedown)="selectLineWidth($event)" #lineWidthSelection tabindex="30" class="line-width-expand">
 			<li tabindex="31" data-index="1">1</li>
 			<li tabindex="32" data-index="2">2</li>
 			<li tabindex="33" data-index="3">3</li>
@@ -29,12 +29,12 @@
 			<li (click)="openMe($event)" >
 				<span class="text">fill</span>
 				<span class="color" [style.background]="colorOptionsFill"></span>
-				<input type="color"  [(ngModel)]="colorOptionsFill" [ngModelOptions]="{standalone: true}"/>
+				<input type="color"  [(ngModel)]="colorOptionsFill" [ngModelOptions]="{standalone: true}" (change)="changeFillColor() "/>
 			</li>
 			<li (click)="openMe($event)">
 				<span class="text">stroke</span>
 				<span class="color" [style.background]="colorOptionsStroke"></span>
-				<input type="color"  [(ngModel)]="colorOptionsStroke" [ngModelOptions]="{standalone: true}"/>
+				<input type="color"  [(ngModel)]="colorOptionsStroke" [ngModelOptions]="{standalone: true}" (change)="changeStrokeColor()" />
 			</li>
 		</ul>
 	</li>

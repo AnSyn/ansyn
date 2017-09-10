@@ -161,6 +161,19 @@ export class OpenLayersMap implements IMap {
 		this.internalAfterSetMainLayer(beforeArgs);
 	}
 
+	addInteraction(interaction){
+		this._mapObject.addInteraction(interaction);
+	}
+
+	removeInteraction(interaction){
+		this._mapObject.removeInteraction(interaction)
+	}
+
+
+
+
+
+
 	private internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
 		const pinPointIndicatorLayer: Layer = <Layer>this.getLayerById(this._pinPointIndicatorLayerId);
 		let lonLatCords;
@@ -217,6 +230,25 @@ export class OpenLayersMap implements IMap {
 		this._mapLayers.push(layer);
 		this._mapObject.addLayer(layer);
 	}
+
+	/**
+	 * add layer to the map if it is not already exists the layer must have an id set
+	 * @param layer
+	 */
+	public addLayerIfNotExist(layer) :Layer{
+		const layerId = layer.get('id');
+		if(!layerId){
+			return;
+		}
+		const existingLayer = this.getLayerById(layerId);
+		if (!existingLayer) {
+			//layer.set('visible',false);
+			this.addLayer(layer);
+			return layer;
+		}
+		return existingLayer;
+	}
+
 
 	public removeAllLayers() {
 		while (this._mapLayers.length > 0) {

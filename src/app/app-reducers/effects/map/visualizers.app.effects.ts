@@ -3,7 +3,7 @@ import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -25,6 +25,8 @@ import { DrawOverlaysOnMapTriggerAction } from '@ansyn/map-facade/actions/map.ac
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 
+import { AnnotationVisualizerType, AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
+
 @Injectable()
 export class VisualizersAppEffects {
 
@@ -41,7 +43,10 @@ export class VisualizersAppEffects {
 	onMouseOverDropAction$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
 		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
-		.map((payload: string | undefined) => new HoverFeatureTriggerAction({id: payload, visualizerType: FootprintPolylineVisualizerType}));
+		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
+			id: payload,
+			visualizerType: FootprintPolylineVisualizerType
+		}));
 
 	@Effect({dispatch: false})
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
@@ -95,24 +100,116 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selected_case];
 		})
-		.map(([overlaysState, selectedCase]: [IOverlayState, Case])=> {
-			selectedCase.state.maps.data.forEach((mapData: CaseMapState)=>{
+		.map(([overlaysState, selectedCase]: [IOverlayState, Case]) => {
+			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
 		});
 
+	@Effect()
+	annotationVisualizerAgent$: Observable<any> = this.actions$
+		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
+		.withLatestFrom(this.store$.select('cases'))
 
-	constructor(
-		private actions$: Actions,
-		private store$: Store<IAppState>,
-		private imageryCommunicatorService: ImageryCommunicatorService
-	){}
+		.map(([action, cases]: [Action, ICasesState]) => {
+			console.log(action.payload.action ,action.payload.maps);
+			const selectedCase: Case = _cloneDeep(cases.selected_case);
+			let update = false;
+			let releventMapsIds = [];
+
+			// we also need to add specific ids for maps that the layers are disabled or
+			// I can check that in the maps == all in the state of the map instance
+			if (action.payload.maps === 'all') {
+				releventMapsIds = selectedCase.state.maps.data.map(m => m.id);
+			}
+			else if (action.payload.maps === 'active') {
+				releventMapsIds.push(selectedCase.state.maps.active_map_id);
+			}
+			else if (action.payload.maps === 'others') {
+				releventMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.active_map_id)
+					.map(m => m.id);
+			}
+			else {
+				return;
+			}
+
+
+			const visualizers = releventMapsIds.map(id => {
+				const communicator = this.imageryCommunicatorService.provide(id);
+				return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
+			});
+
+			visualizers.forEach(visualizer => {
+				switch (action.payload.action) {
+					case "addLayer":
+						visualizer.addLayer();
+						break;
+					case "show":
+						visualizer.addLayer();
+						visualizer.removeInteraction();
+						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
+						break;
+					case "createInteraction":
+						if (action.payload.type === 'Rectangle') {
+							visualizer.rectangleInteraction();
+						}
+						else if (action.payload.type === 'Arrow') {
+							visualizer.arrowInteraction();
+						}
+						else {
+							visualizer.createInteraction(action.payload.type);
+						}
+						break;
+					case "removeInteraction":
+						visualizer.removeInteraction();
+						break;
+					case "changeLine":
+						visualizer.changeLine(action.payload.value);
+						break;
+					case "changeStrokeColor":
+						visualizer.changeStroke(action.payload.value);
+						break;
+					case "changeFillColor":
+						visualizer.changeFill(action.payload.value);
+						break;
+					case "refreshDrawing":
+						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
+						break;
+					case "saveDrawing":
+						selectedCase.state.annotationsLayer = visualizer.getGeoJson();
+						update = true;
+						break;
+					case "endDrawing":
+						selectedCase.state.annotationsLayer = visualizer.getGeoJson();
+						update = true;
+						visualizer.removeInteraction();
+						break;
+					case "removeLayer": {
+						visualizer.removeInteraction();
+						visualizer.removeLayer();
+						break;
+					}
+				}
+			})
+
+			return {selectedCase, update}
+		})
+		.filter(result => result.update)
+		.map(result => {
+			return new UpdateCaseAction(result.selectedCase);
+		})
+
+
+	constructor(private actions$: Actions,
+				private store$: Store<IAppState>,
+				private imageryCommunicatorService: ImageryCommunicatorService) {
+	}
 
 	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
@@ -146,8 +243,8 @@ export class VisualizersAppEffects {
 	}
 
 	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
-		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays,['id', 'footprint']);
-		const  parsedPverlaysToDraw = overlaysToDraw.map(({id, footprint}) => {
+		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
+		const parsedPverlaysToDraw = overlaysToDraw.map(({id, footprint}) => {
 			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
 				geometry: footprint,

@@ -19,6 +19,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -47,7 +48,19 @@ export class ToolsAppEffects {
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
 		.map(([action, selected_case]) => CasesService.activeMap(selected_case))
-		.map(activeMap => new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode))
+		.mergeMap(activeMap =>
+			[
+				new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode),
+				new AnnotationVisualizerAgentAction({
+					action: "removeLayer",
+					maps: "all"
+				}),
+				new AnnotationVisualizerAgentAction({
+					action: "show",
+					maps: "all"
+				})
+			]
+		)
 
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$

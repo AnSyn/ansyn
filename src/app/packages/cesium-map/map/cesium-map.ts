@@ -72,9 +72,15 @@ export class CesiumMap implements IMap {
 	setPointerMove(enable: boolean){
 	}
 
-	removeSingleClickEvent(){
+	removeSingleClickEvent() {
 
 	}
+
+	addLayerIfNotExist() {
+
+	}
+
+
 
 	constructor(element: HTMLElement) {
 		this.mapType = CesiumMap.mapType;

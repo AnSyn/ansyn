@@ -1,5 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { StartMouseShadow, StopMouseShadow, SetAutoImageProcessing } from '../actions/tools.actions';
+import {
+	StartMouseShadow, StopMouseShadow, SetAutoImageProcessing,
+	AnnotationVisualizerAgentAction
+} from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
@@ -62,9 +65,27 @@ export class ToolsComponent implements OnInit {
 
 	toggleAnnotationMenu() {
 		// send event to the store that saying the annotation option is enabled
-		// this.store.dispatch(new AnnotationEnabled());
-		// this.store.dispatch(new AnnotationDisabled());
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
+		if(this.userAnnotationsToolOpen){
+			// this.store.dispatch(new AnnotationEnabled());
+			this.store.dispatch(new AnnotationVisualizerAgentAction({
+				action: "show",
+				maps: "all"
+			}));
+		}else{
+			// this.store.dispatch(new AnnotationDisabled());
+			this.store.dispatch(new AnnotationVisualizerAgentAction({
+				action: "endDrawing",
+				maps: 'active'
+			}));
+
+			/*this.store.dispatch(new AnnotationVisualizerAgentAction({
+				action: "removeLayer",
+				maps: 'all'
+			}));*/
+		}
+
+
 
 	}
 

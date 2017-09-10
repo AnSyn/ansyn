@@ -136,9 +136,9 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.zoomEnd  = this.emitter.provide('timeline:zoomend')
 			.subscribe(result => {
 				this.currentTimelineState = {from: result.dates.from, to: result.dates.to};
+				this.setConfigurationTime(result.dates.from, result.dates.to);
 				this.store.dispatch(new SetTimelineStateAction({from: result.dates.from, to: result.dates.to}));
 			});
-
 
 		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')
 			.subscribe(result => {
@@ -173,9 +173,8 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.timelineState = this.timelineState$
 
 			.subscribe(timelineState => {
-				console.log(timelineState);
-				this.configuration.start = timelineState.from;
-				this.configuration.end = timelineState.to;
+				//console.log(timelineState);
+				this.setConfigurationTime(timelineState.from, timelineState.to);
 			});
 
 		/*this.subscribers.selected = this.selectedOverlays$
@@ -189,6 +188,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe((action: OverlaysMarkupAction) => {
 				this.overlaysMarkup = action.payload;
 			});
+	}
+
+	private setConfigurationTime(from: Date, to: Date) {
+		this.configuration.start = from;
+		this.configuration.end = to;
 	}
 
 	calcOverlayCountViaDrops(drops) {

@@ -19,38 +19,42 @@
 
 	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
-		<ng-template ngFor let-case [ngForOf]="cases_from_state">
+			<div class="cases-table-body-row"
+				 *ngFor="let caseIndex of _range(cases_from_state.length)"
+				 (click)="selectCase(cases_from_state[caseIndex].id)"
+				 [class.active]="active_case_id ===  cases_from_state[caseIndex].id"
+				 [class.selected]="selected_case_id ==  cases_from_state[caseIndex].id"
+				 (mouseenter)="calcTopCaseMenu($event, case_menu)"
+				 [@leaveAnim] #case_row>
 
-			<div class="cases-table-body-row" (click)="selectCase(case.id)" [class.active]="active_case_id ==  case.id" [class.selected]="selected_case_id ==  case.id" (mouseenter)="calcTopCaseMenu($event, case_menu)" [@leaveAnim] #case_row>
 				<hr>
 				<div class="cases-table-body-row-data">
 					<hr>
 
 					<div class="cases-table-body-col">
-						{{case.name}}
+						{{cases_from_state[caseIndex].name}}
 					</div>
 
 					<div class="cases-table-body-col">
-						{{case.owner}}
+						{{cases_from_state[caseIndex].owner}}
 					</div>
 
 					<div class="cases-table-body-col">
-						{{ case.last_modified | date:"MM/dd/yy hh:mm" }}
+						{{ cases_from_state[caseIndex].last_modified | date:"MM/dd/yy hh:mm" }}
 					</div>
 
 					<!--menu-->
 					<div class="case_menu-container">
 						<div class="case-menu" (click)="$event.stopPropagation()" #case_menu >
-							<button (click)="removeCase($event, case.id)"><img src="/assets/icons/Delete.svg"/></button>
-							<button (click)="shareCase($event, case.id)"><img src="/assets/icons/Share.svg"/></button>
-							<button (click)="editCase($event, case.id)"><img src="/assets/icons/Edit.svg"/></button>
+							<button (click)="removeCase($event, cases_from_state[caseIndex].id)"><img src="/assets/icons/Delete.svg"/></button>
+							<button (click)="shareCase($event, cases_from_state[caseIndex].id)"><img src="/assets/icons/Share.svg"/></button>
+							<button (click)="editCase($event, cases_from_state[caseIndex].id)"><img src="/assets/icons/Edit.svg"/></button>
 						</div>
 					</div>
 
 				</div>
-
 			</div>
-		</ng-template>
+
 	</div>
 </div>
 

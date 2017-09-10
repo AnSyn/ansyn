@@ -65,7 +65,6 @@ export function reducer(state: any, action: any) {
     // 	const date = new Date();
     // 	console.log(action.type,date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
 	// }
-	console.log("action ", action.type);
     return appReducer(state, action);
 }
 

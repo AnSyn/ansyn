@@ -26,7 +26,7 @@ export class AnsynComponent implements OnInit{
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.pluck('selected_case')
 		.filter(selected_case => !_isNil(selected_case))
-		.distinctUntilChanged(_isEqual);
+		.distinctUntilChanged();
 
 	activeMap$: Observable<CaseMapState> = this.selected_case$.map(CasesService.activeMap);
 
@@ -66,8 +66,14 @@ export class AnsynComponent implements OnInit{
 
 	ngOnInit(): void {
 		this.store.dispatch(new LoadContextsAction());
+		this.selected_case$.subscribe(() => {
+			console.log("selected_case$! changessssssssssssss!");
+		});
 		this.selectedCaseName$.subscribe(_selectedCaseName => this.selectedCaseName = _selectedCaseName);
-		this.maps$.subscribe(maps => this.maps = maps);
+		this.maps$.subscribe(maps => {
+			console.log("maps$! changessssssssssssss!");
+			this.maps = maps
+		});
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
 		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);

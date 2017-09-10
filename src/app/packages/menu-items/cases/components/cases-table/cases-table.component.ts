@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { isEqual } from 'lodash';
+import { isEqual, range as _range} from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations: any[] = [
@@ -46,6 +46,10 @@ export class CasesTableComponent implements OnInit{
 			.select("cases")
 			.map((state: ICasesState ) => state.selected_case ? state.selected_case.id: null)
 			.distinctUntilChanged(isEqual);
+
+	get _range() {
+		return _range;
+	}
 
 	cases_from_state: Case[];
 	active_case_id: string;

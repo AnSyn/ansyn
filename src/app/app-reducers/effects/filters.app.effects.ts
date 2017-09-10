@@ -133,7 +133,7 @@ export class FiltersAppEffects {
 		const {facets} = cloneSelectedCase.state;
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
 
-    	filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
+        filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
 			const currentFilter: any = facets.filters.find(({fieldName}) => fieldName === filter.modelName);
     		const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
 			if (!currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {

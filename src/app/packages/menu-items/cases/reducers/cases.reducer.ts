@@ -50,28 +50,23 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.CLOSE_MODAL:
 			return Object.assign({}, state, {active_case_id: null, modal: false});
 
-		// reference
-		case CasesActionTypes.UPDATE_CASE:
-			let old_case: Case = state.cases.find((case_value: Case) => case_value.id === action.payload.id);
-			if(!old_case){
-				if(action.payload.id === state.selected_case.id){
-					return {...state, selected_case: action.payload};
-				}
+		case CasesActionTypes.UPDATE_CASE: {
+			const active_case: Case = {...action.payload, last_modified: new Date()};
+			const isSelectedCase = active_case.id === state.selected_case.id;
+			const caseIndex: number = state.cases.findIndex(({id}) => id === active_case.id);
+			if (caseIndex > -1) {
+				const before = state.cases.slice(0, caseIndex);
+				const after = state.cases.slice(caseIndex + 1, state.cases.length);
+				const cases: Case[] = [...before, active_case, ...after];
+				return isSelectedCase ? {...state, cases, selected_case: active_case} : {...state, cases};
 			}
-			const indexOfUpdated = state.cases.indexOf(old_case);
-			const updated_case = action.payload;
+			if (isSelectedCase) {
+				return {...state, selected_case: active_case};
+			}
+			/* No Case to update */
+			return {...state}
+		}
 
-
-			Object.keys(old_case).forEach( (key: string) => {
-				old_case[key] = updated_case[key];
-			});
-
-			const cases_updated: Case[] = [
-				...state.cases.slice(0, indexOfUpdated),
-				old_case,
-				...state.cases.slice(indexOfUpdated + 1, state.cases.length)
-			];
-			return Object.assign({}, state, {cases: cases_updated});
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND:
 			return Object.assign({}, state, {updating_backend: true});
@@ -79,22 +74,19 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS:
 			return Object.assign({}, state, {updating_backend: false});
 
-		case CasesActionTypes.LOAD_CASES:
-			return state;
-
 		case CasesActionTypes.LOAD_CASES_SUCCESS:
 			let cases_loaded: Case[] = [
 				...state.cases,
 				...action.payload
 			];
-			return Object.assign({}, state, {cases: cases_loaded});
+			return {...state, cases: cases_loaded};
 
 		case CasesActionTypes.DELETE_CASE:
 			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.active_case_id);
-			if(case_to_remove_index === -1) {
+			if (case_to_remove_index === -1) {
 				return state;
 			}
-			let cases: Case[] = [
+			const cases: Case[] = [
 				...state.cases.slice(0, case_to_remove_index),
 				...state.cases.slice(case_to_remove_index + 1, state.cases.length),
 			];
@@ -110,7 +102,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			if(state.selected_case && state.selected_case.id === action.payload) {
 				return Object.assign({}, state);
 			}
-			let s_case = state.cases.find((case_value: Case) => case_value.id === action.payload);
+			let s_case = state.cases.find(({id}) => id === action.payload);
 			if(isNil(s_case)){
 				if(state.unlisted_case && state.unlisted_case.id === action.payload) {
 					s_case = state.unlisted_case;
@@ -121,29 +113,14 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 			}
 			return Object.assign({}, state, { selected_case: s_case });
 
-		case CasesActionTypes.LOAD_CONTEXTS:
-			return Object.assign({}, state);
-
 		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
 			return Object.assign({}, state, {contexts: action.payload, contexts_loaded: true});
-
-		case CasesActionTypes.LOAD_CASE:
-			return Object.assign({}, state);
 
 		case CasesActionTypes.LOAD_CASE_SUCCESS:
 			return Object.assign({}, state, {unlisted_case: action.payload});
 
-		case CasesActionTypes.LOAD_DEFAULT_CASE:
-			return Object.assign({}, state);
-
 		case CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS:
 			return Object.assign({}, state, {default_case: action.payload});
-
-		case CasesActionTypes.SAVE_DEFAULT_CASE:
-			return Object.assign({}, state);
-
-		case CasesActionTypes.COPY_CASE_LINK:
-			return Object.assign({}, state);
 
 		case CasesActionTypes.SET_DEFAULT_CASE_QUERY_PARAMS:
 			return Object.assign({}, state, {default_case_query_params: action.payload});
@@ -151,7 +128,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 		case CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS:
 			return Object.assign({}, state, {default_case_query_params: null});
 
-			default:
+		default:
 			return state;
 	}
 }

@@ -143,24 +143,32 @@ export class StatusBarAppEffects {
 			return [action, selected_case, selected_layout];
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
-		.cloneDeep()
 		.mergeMap(([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
-			selected_case.state.maps.layouts_index = action.payload;
+			let updatedCase = cloneDeep(selected_case);
+			updatedCase = this.setMapsDataChanges(updatedCase, selected_layout, action.payload);
+			return [
+				new UpdateCaseAction(updatedCase),
+				new UpdateMapSizeAction()
+			];
+		})
+		.share();
 
-			const updatedCase = this.setMapsDataChanges(selected_case, selected_layout);
-
-			const actionsList: Array<Action> = [];
-			actionsList.push(new UpdateCaseAction(updatedCase));
-			actionsList.push(new UpdateMapSizeAction());
-
-			if(selected_case.state.maps.data.length === 1){
-				actionsList.push(new DisableMouseShadow());
-				actionsList.push(new StopMouseShadow());
-			}else{
-				actionsList.push(new EnableMouseShadow());
+	@Effect()
+	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
+		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
+		.withLatestFrom(this.store.select('status_bar'), (action, status_bar: IStatusBarState) => {
+			const layout = status_bar.layouts[action.payload];
+			return layout.maps_count;
+		})
+		.mergeMap((maps_count) => {
+			if(maps_count === 1){
+				return [
+					new DisableMouseShadow(),
+					new StopMouseShadow()
+				]
 			}
+			return [new EnableMouseShadow()];
 
-			return actionsList;
 		})
 		.share();
 
@@ -272,11 +280,11 @@ export class StatusBarAppEffects {
 		return mapStateCopy;
 	}
 
-	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout): Case {
+	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout, selected_layout_index): Case {
+		selected_case.state.maps.layouts_index = selected_layout_index;
 		const case_maps_count = selected_case.state.maps.data.length;
-
-		if(selected_layout.maps_count !== case_maps_count){
-			if(case_maps_count < selected_layout.maps_count){
+		if (selected_layout.maps_count !== case_maps_count) {
+			if (case_maps_count < selected_layout.maps_count) {
 				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
 					const active_map_position = cloneDeep(selected_case.state.maps.data.find((map) => map.id ===  selected_case.state.maps.active_map_id).data.position);
 					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position));

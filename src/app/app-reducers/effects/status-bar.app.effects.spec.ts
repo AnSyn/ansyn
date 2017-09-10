@@ -169,7 +169,7 @@ describe('StatusBarAppEffects', () => {
 		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( () => {
 			expect(imagery1.removePinPointIndicator['calls'].count()).toBe(3);
 		})
-	})
+	});
 
 	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
 		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));
@@ -194,7 +194,7 @@ describe('StatusBarAppEffects', () => {
 		effectsRunner.queue(action);
 
 		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction)=>{
-			expect((_result instanceof UpdateCaseAction) || (_result instanceof UpdateMapSizeAction) || (_result instanceof DisableMouseShadow) || (_result instanceof StopMouseShadow) || (_result instanceof EnableMouseShadow)  ).toBeTruthy();
+			expect((_result instanceof UpdateCaseAction) ).toBeTruthy();
 
 			if ( _result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);

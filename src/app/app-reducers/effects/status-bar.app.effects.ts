@@ -140,18 +140,11 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store, (action: ChangeLayoutAction, state: IAppState): [ChangeLayoutAction, Case, MapsLayout]  => {
 			const selected_case = state.cases.selected_case;
 			const selected_layout = cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
-			return [action, selected_case, selected_layout];
+			return [action, cloneDeep(selected_case), selected_layout];
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
-		.mergeMap(([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]  ) => {
-			let updatedCase = cloneDeep(selected_case);
-			updatedCase = this.setMapsDataChanges(updatedCase, selected_layout, action.payload);
-			return [
-				new UpdateCaseAction(updatedCase),
-				new UpdateMapSizeAction()
-			];
-		})
-		.share();
+		.map(this.setMapsDataChanges.bind(this))
+		.map((updatedCase: Case) => new UpdateCaseAction(updatedCase));
 
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
@@ -280,8 +273,8 @@ export class StatusBarAppEffects {
 		return mapStateCopy;
 	}
 
-	setMapsDataChanges(selected_case: Case, selected_layout: MapsLayout, selected_layout_index): Case {
-		selected_case.state.maps.layouts_index = selected_layout_index;
+	setMapsDataChanges([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]): Case {
+		selected_case.state.maps.layouts_index = action.payload;
 		const case_maps_count = selected_case.state.maps.data.length;
 		if (selected_layout.maps_count !== case_maps_count) {
 			if (case_maps_count < selected_layout.maps_count) {

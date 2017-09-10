@@ -1,7 +1,7 @@
 import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isNil, isEmpty, cloneDeep,pull } from 'lodash';
+import { isNil, isEmpty, cloneDeep, pull, get as _get } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
@@ -52,7 +52,7 @@ export function CasesReducer(state: ICasesState = initialCasesState , action: Ca
 
 		case CasesActionTypes.UPDATE_CASE: {
 			const active_case: Case = {...action.payload, last_modified: new Date()};
-			const isSelectedCase = active_case.id === state.selected_case.id;
+			const isSelectedCase = active_case.id === _get(state.selected_case, 'id');
 			const caseIndex: number = state.cases.findIndex(({id}) => id === active_case.id);
 			if (caseIndex > -1) {
 				const before = state.cases.slice(0, caseIndex);

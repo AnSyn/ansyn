@@ -103,6 +103,9 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			}
 
 		};
+
+		this.currentTimelineState.from = this.configuration.start;
+		this.currentTimelineState.to = this.configuration.end;
 	}
 
 	ngOnInit(): void {
@@ -191,9 +194,9 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			});
 	}
 
-	private setConfigurationTime(from: Date, to: Date) {
-		this.configuration.start = from;
-		this.configuration.end = to;
+	setConfigurationTime(from: Date, to: Date) {
+        this.configuration.start = from;
+        this.configuration.end = to;
 	}
 
 	calcOverlayCountViaDrops(drops) {

@@ -13,7 +13,6 @@
 	&.expand{
 		form{
 			visibility: visible;
-			display: flex;
 			opacity: 1;
 		}
 		visibility: visible;
@@ -22,6 +21,7 @@
 	}
 
 	.switch-field {
+		display: flex;
 		font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
 		overflow: hidden;
 	}
@@ -42,9 +42,7 @@
 	}
 
 	.switch-field label {
-		float: left;
-		display: inline-block;
-		//width: 60px;
+		flex-grow: 1;
 		background-color: #1c8094;
 		color: rgba(0, 0, 0, 0.6);
 		font-size: 14px;

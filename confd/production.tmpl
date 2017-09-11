@@ -107,23 +107,16 @@
         ]
     },
     "contextConfig": {
-        "contextSources": [
-            {
-                "type": "Elastic",
-                "uri": "{{getv "/ansyn/context/db/elastic/url"}}",
-                "bucket": "context",
-                "available": false,
-                "log": "trace",
-                "auth": "elastic:changeme"
-            },
-            {
-                "uri": "{{getv "/ansyn/context/db/proxy/url"}}",
-                "bucket": "contexts",
-                "type": "Proxy",
-                "available": true,
-                "apiObject" : "Http"
-            }
-        ]
+		"elastic": {
+            "uri": "{{getv "/ansyn/context/db/elastic/url"}}",
+			"bucket": "context",
+			"auth": "elastic:changeme"
+		},
+		"proxy": {
+			"uri": "{{getv "/ansyn/context/db/proxy/url"}}",
+			"bucket": "contexts",
+			"apiObject" : "Http"
+		}
     },
     "toolsConfig": {
         "GoTo": {

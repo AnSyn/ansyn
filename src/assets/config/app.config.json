@@ -129,23 +129,16 @@
 		]
 	},
 	"contextConfig": {
-		"contextSources": [
-			{
-				"type": "Elastic",
-				"uri": "localhost:9200",
-				"bucket": "context",
-				"available": false,
-				"log": "trace",
-				"auth": "elastic:changeme"
-			},
-			{
-				"uri": "http://localhost:9001/api/v1/",
-				"bucket": "contexts",
-				"type": "Proxy",
-				"available": true,
-				"apiObject": "Http"
-			}
-		]
+		"elastic": {
+			"uri": "localhost:9200",
+			"bucket": "context",
+			"auth": "elastic:changeme"
+		},
+		"proxy": {
+			"uri": "http://localhost:9001/api/v1/",
+			"bucket": "contexts",
+			"apiObject": "Http"
+		}
 	},
 	"toolsConfig": {
 		"GoTo": {

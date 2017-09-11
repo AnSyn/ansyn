@@ -9,6 +9,9 @@ import { OverlaysStatusNotificationsComponent } from './components/overlays-stat
 
 const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorComponent,AnsynCheckboxComponent, OverlaysStatusNotificationsComponent]
 
+
+
+
 @NgModule({
 	imports: [
 		CommonModule,

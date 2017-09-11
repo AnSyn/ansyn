@@ -90,7 +90,7 @@ export class AnnotationsControlComponent implements  OnDestroy {
 		}));
 	}
 
-	openMe($event) {
+	openColorInput($event) {
 		let element = $event.target.closest('li');
 		if(!element){
 			element = $event.target;

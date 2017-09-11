@@ -33,7 +33,7 @@ import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/action
 import { EnableMapGeoOptionsActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';

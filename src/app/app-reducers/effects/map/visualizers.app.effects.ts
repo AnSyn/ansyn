@@ -118,7 +118,6 @@ export class VisualizersAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 
 		.map(([action, cases]: [Action, ICasesState]) => {
-			console.log(action.payload.action ,action.payload.maps);
 			const selectedCase: Case = _cloneDeep(cases.selected_case);
 			let update = false;
 			let releventMapsIds = [];
@@ -140,10 +139,15 @@ export class VisualizersAppEffects {
 			}
 
 
-			const visualizers = releventMapsIds.map(id => {
-				const communicator = this.imageryCommunicatorService.provide(id);
-				return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-			});
+			const visualizers = releventMapsIds
+					.map(id => {
+							const communicator = this.imageryCommunicatorService.provide(id);
+							if(!communicator) {
+								return;
+							}
+							return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
+						})
+					.filter(visualizer => !!visualizer);
 
 			visualizers.forEach(visualizer => {
 				switch (action.payload.action) {
@@ -186,8 +190,8 @@ export class VisualizersAppEffects {
 						update = true;
 						break;
 					case "endDrawing":
-						selectedCase.state.annotationsLayer = visualizer.getGeoJson();
-						update = true;
+						/*selectedCase.state.annotationsLayer = visualizer.getGeoJson();
+						update = true;*/
 						visualizer.removeInteraction();
 						break;
 					case "removeLayer": {

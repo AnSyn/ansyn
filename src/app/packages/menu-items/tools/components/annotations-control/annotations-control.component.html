@@ -26,12 +26,12 @@
 			<span  class="icon-annotation--color "></span>
 		</div>
 		<ul  #colorSelection tabindex="40" class="color-selection-expand" >
-			<li (click)="openMe($event)" >
+			<li (click)="openColorInput($event)" >
 				<span class="text">fill</span>
 				<span class="color" [style.background]="colorOptionsFill"></span>
 				<input type="color"  [(ngModel)]="colorOptionsFill" [ngModelOptions]="{standalone: true}" (change)="changeFillColor() "/>
 			</li>
-			<li (click)="openMe($event)">
+			<li (click)="openColorInput($event)">
 				<span class="text">stroke</span>
 				<span class="color" [style.background]="colorOptionsStroke"></span>
 				<input type="color"  [(ngModel)]="colorOptionsStroke" [ngModelOptions]="{standalone: true}" (change)="changeStrokeColor()" />

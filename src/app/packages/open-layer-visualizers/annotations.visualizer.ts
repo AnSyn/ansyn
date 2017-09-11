@@ -4,7 +4,7 @@ import Draw from 'ol/interaction/draw';
 import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import Style from 'ol/style/style';
-import _Stroke from 'ol/style/stroke';
+import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
@@ -17,15 +17,11 @@ import { Subject } from 'rxjs/Subject';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
-export enum OperationsMode {
-	DRAW = 1,
-	VIEW
-}
 
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public _source: VectorSource;
 	public layer: VectorLayer;
-	public operationMode: OperationsMode;
+
 	public interactionHandler: Draw;
 	public currentInteraction;
 	public geoJsonFormat: GeoJSON;
@@ -134,11 +130,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
 		const features = geoJsonFeatures.map((d) =>  this.geoJsonFormat.readFeature(d));
-
+		// reset this.features
 		(<Array<any>>features).forEach( feature => {
 
 			const properties = feature.getProperties();
 			let geometry;
+
+			// convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
+			// and create new geometry
+
+			//save the feature to this.feature;
 
 			geometry = feature.getGeometry();
 			if (properties.geometryName === `${this.namePrefix}Circle`) {
@@ -154,7 +155,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	removeInteraction() {
 		if (this.interactionHandler) {
-			this._imap.removeInteraction(this.interactionHandler);
+			this._imap.mapObject.removeInteraction(this.interactionHandler);
 		}
 	}
 
@@ -185,21 +186,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geoJsonSingleFeature = JSON.stringify(circleGeo);
 		}
 
+		// add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
+
 		this.features.push(geoJsonSingleFeature);
 		this.drawEndPublisher.next(this.features);
 		//this.collection = featureCollection(this.features);
 	}
 
 	addInteraction() {
-		if (this.operationMode === OperationsMode.VIEW){
-			return
-		}
+
 
 		if (this.interactionHandler) {
 
 			this.interactionHandler.on('drawend',this.onDrawEndEvent.bind(this));
 
-			this._imap.addInteraction(this.interactionHandler);
+			this._imap.mapObject.addInteraction(this.interactionHandler);
 		}
 	}
 
@@ -271,7 +272,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const styles = [
 			// linestring
 			new Style({
-				stroke: new _Stroke({
+				stroke: new Stroke({
 					color: this.style.stroke.color,
 					width: this.style.stroke.width
 				})
@@ -293,7 +294,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const lineStr2 = new LineString([end, [end[0] - factor, end[1] - factor]]);
 		lineStr2.rotate(rotation, end);
 
-		const stroke = new _Stroke({
+		const stroke = new Stroke({
 			color: this.style.stroke.color,
 			width: this.style.stroke.width
 		});
@@ -323,7 +324,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					fill: new Fill({
 						color: style.fill.color
 					}),
-					stroke: new _Stroke({
+					stroke: new Stroke({
 						color: style.stroke.color,
 						width: style.point.radius / 2
 					})
@@ -332,7 +333,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			});
 		}
 		return new Style({
-			stroke: new _Stroke({
+			stroke: new Stroke({
 				color: style.stroke.color,
 				width: style.stroke.width
 			}),

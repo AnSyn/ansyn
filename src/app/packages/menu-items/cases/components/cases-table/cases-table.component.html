@@ -22,8 +22,8 @@
 			<div class="cases-table-body-row"
 				 *ngFor="let caseIndex of _range(cases_from_state.length)"
 				 (click)="selectCase(cases_from_state[caseIndex].id)"
-				 [class.active]="active_case_id ===  cases_from_state[caseIndex].id"
-				 [class.selected]="selected_case_id ==  cases_from_state[caseIndex].id"
+				 [class.active]="active_case_id === cases_from_state[caseIndex].id"
+				 [class.selected]="selected_case_id === cases_from_state[caseIndex].id"
 				 (mouseenter)="calcTopCaseMenu($event, case_menu)"
 				 [@leaveAnim] #case_row>
 

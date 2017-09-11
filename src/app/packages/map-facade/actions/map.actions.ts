@@ -30,7 +30,7 @@ export const MapActionTypes = {
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
-	SET_NOT_FROM_CASE_OVERLAYS: 'SET_NOT_FROM_CASE_OVERLAYS'
+	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE'
 };
 
 export type MapActions = any;
@@ -160,7 +160,7 @@ export class SetLayoutAction implements Action {
 	type = MapActionTypes.SET_LAYOUT;
 	constructor(public payload: MapsLayout){}
 }
-export class SetNotFromCaseOverlaysAction implements Action {
-	type = MapActionTypes.SET_NOT_FROM_CASE_OVERLAYS;
+export class SetOverlayNotInCaseAction implements Action {
+	type = MapActionTypes.SET_OVERLAYS_NOT_IN_CASE;
 	constructor(public payload: Map<string, boolean>){}
 }

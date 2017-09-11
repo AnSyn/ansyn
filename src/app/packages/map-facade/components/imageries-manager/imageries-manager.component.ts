@@ -20,13 +20,16 @@ import { get as _get } from 'lodash';
 })
 
 export class ImageriesManagerComponent implements OnInit{
-	public selected_layout$: Observable<MapsLayout> = this.store.select('map')
+
+	public mapState$: Observable<IMapState> = this.store.select('map');
+
+	public selected_layout$: Observable<MapsLayout> = this.mapState$
 		.pluck('layout')
 		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
 
-	public notFromCaseOverlays$: Observable<Map<string, boolean>> = this.store.select('map')
-		.pluck('notFromCaseOverlays')
+	public overlaysNotInCase$: Observable<Map<string, boolean>> = this.mapState$
+		.pluck('overlaysNotInCase')
 		.distinctUntilChanged();
 
 	public selected_layout;
@@ -38,9 +41,8 @@ export class ImageriesManagerComponent implements OnInit{
 
 	clickTimeout: number;
 	preventDbClick: boolean;
-	notFromCaseOverlays: Map<string, boolean>;
+	overlaysNotInCase: Map<string, boolean>;
 
-	public mapState$: Observable<IMapState> = this.store.select('map');
 
 	public loadingOverlaysIds = [];
 	public mapIdToGeoOptions: Map<string, boolean>;
@@ -83,8 +85,8 @@ export class ImageriesManagerComponent implements OnInit{
 
 		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this))
 
-		this.notFromCaseOverlays$.subscribe(_notFromCaseOverlays => {
-			this.notFromCaseOverlays = _notFromCaseOverlays
+		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
+			this.overlaysNotInCase = _overlaysNotInCase
 		});
 	}
 
@@ -92,9 +94,9 @@ export class ImageriesManagerComponent implements OnInit{
 		return this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId);
 	}
 
-	notFromCaseOverlay(overlay: Overlay) {
+	overlayNotInCase(overlay: Overlay) {
 		const overlayId = <string> _get(overlay, 'id');
-		return this.notFromCaseOverlays.has(overlayId) ? this.notFromCaseOverlays.get(overlayId) : false;
+		return this.overlaysNotInCase.has(overlayId) ? this.overlaysNotInCase.get(overlayId) : false;
 	}
 
 	isOverlayLoading(overlayId) {

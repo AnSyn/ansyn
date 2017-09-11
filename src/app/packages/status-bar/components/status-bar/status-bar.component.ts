@@ -30,7 +30,7 @@ export class StatusBarComponent implements OnInit {
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
 		.distinctUntilChanged();
 	overlays_count$: Observable<number> = this.status_bar$.pluck('overlays_count').distinctUntilChanged();
-	notFromCaseOverlay$: Observable<boolean> = this.status_bar$.pluck('notFromCaseOverlay').distinctUntilChanged();
+	overlayNotInCase$: Observable<boolean> = this.status_bar$.pluck('overlayNotInCase').distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
@@ -45,7 +45,7 @@ export class StatusBarComponent implements OnInit {
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
 	overlays_count: number;
-	notFromCaseOverlay: boolean;
+	overlayNotInCase: boolean;
 
 	@Input() selected_case_name: string;
 	@Input() overlay: any;
@@ -159,8 +159,8 @@ export class StatusBarComponent implements OnInit {
 			this.overlays_count = _overlay_count
 		});
 
-		this.notFromCaseOverlay$.subscribe(_notFromCaseOverlay => {
-			this.notFromCaseOverlay = _notFromCaseOverlay;
+		this.overlayNotInCase$.subscribe(_overlayNotInCase => {
+			this.overlayNotInCase = _overlayNotInCase;
 		})
 	}
 

@@ -101,7 +101,7 @@ export class SetOverlaysCountAction implements Action {
 	constructor(public payload: number) {}
 }
 
-export class SetNotFromCaseOverlayAction implements Action {
+export class SetOverlayNotInCaseAction implements Action {
 	type = StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY;
 	constructor(public payload: boolean) {}
 }

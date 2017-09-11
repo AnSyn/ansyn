@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class OverlaysStatusNotificationsComponent implements OnInit {
 	@Input() geoRegisteration;
-	@Input() notFromCase;
+	@Input() notInCase;
 
 	constructor() { }
 

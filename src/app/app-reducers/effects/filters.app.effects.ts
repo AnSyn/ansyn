@@ -41,41 +41,13 @@ export class FiltersAppEffects {
 		});
 
 	@Effect()
-	updateCaseFacets$: Observable<SetFiltersAction> = this.actions$
+	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...this.facetChangesActionType)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
 		.map(([action, filtersState, selectedCase]: [any, any, any]) => {
 			return this.updateCaseFacets(selectedCase, filtersState);
 		})
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
-
-
-	// @Effect()
-	// showOnlyFavorites$: Observable<any> = this.actions$
-	// 	.ofType(FiltersActionTypes.TOGGLE_ONLY_FAVORITES)
-	// 	.withLatestFrom(this.store$.select('filters'),this.store$.select('cases'))
-	// 	.map(([action,filters,cases]: [Action,IFiltersState,ICasesState]) => {
-    //
-	// 		const selectedCase =  cloneDeep(cases.selected_case);
-    //
-	// 		selectedCase.state.facets.showOnlyFavorites = filters.showOnlyFavorites;
-    //
-	// 		return new UpdateCaseAction(selectedCase);
-    //
-	// });
-
-
-	// @Effect()
-	// updateFilters$: Observable<any> = this.actions$
-	//     .ofType(FiltersActionTypes.UPDATE_FILTER_METADATA)
-	//     .map(toPayload)
-	//     .withLatestFrom(this.store$.select('cases'))
-	//     .map(([payload, casesState]: [{ filter: Filter, newMetadata: FilterMetadata }, ICasesState]) => {
-	//         const selected_case: Case = this.updateSelectedCase(payload.filter, payload.newMetadata, casesState);
-	//         return new UpdateCaseAction(selected_case);
-	//     })
-	//     .share();
-
 
 	@Effect()
     initializeFilters$: Observable<any> = this.actions$
@@ -97,38 +69,14 @@ export class FiltersAppEffects {
         });
 
     @Effect()
-    resetFilters$: Observable<any> = this.actions$
+    resetFilters$: Observable<ResetFiltersAction> = this.actions$
         .ofType(OverlaysActionTypes.LOAD_OVERLAYS)
         .map(() => new ResetFiltersAction());
 
     constructor(private actions$: Actions,
         private store$: Store<IAppState>, private casesService: CasesService, private filtersService: FiltersService) { }
 
-    updateSelectedCase(filter: Filter, newMetadata: FilterMetadata, casesState: ICasesState): Case {
-        const selected_case: Case = cloneDeep(casesState.selected_case);
-
-        const currentFilter: any = selected_case.state.facets.filters.find((casesFilter: { fieldName: string, metadata: string[] }) => {
-            return casesFilter.fieldName === filter.modelName;
-        });
-
-        const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-
-        if (!currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
-            selected_case.state.facets.filters.push({
-                fieldName: filter.modelName,
-                metadata: outerStateMetadata
-            });
-        } else if (currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
-            currentFilter.metadata = outerStateMetadata;
-        } else if (currentFilter && this.isMetadataEmpty(outerStateMetadata)) {
-            const index = selected_case.state.facets.filters.indexOf(currentFilter);
-            selected_case.state.facets.filters.splice(index, 1);
-        }
-
-        return selected_case;
-    }
-
-    updateCaseFacets(selected_case: Case, filtersState: IFiltersState): Case {
+      updateCaseFacets(selected_case: Case, filtersState: IFiltersState): Case {
 		const cloneSelectedCase: Case = cloneDeep(selected_case);
 		const {facets} = cloneSelectedCase.state;
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;

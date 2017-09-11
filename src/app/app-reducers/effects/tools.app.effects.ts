@@ -3,10 +3,7 @@ import { Effect, Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../';
-import {
-	ToolsActionsTypes, SetActiveCenter, DisableImageProcessing, EnableImageProcessing,
-	SetAutoImageProcessing, SetAutoImageProcessingSuccess
-} from '@ansyn/menu-items/tools';
+import { ToolsActionsTypes, SetActiveCenter, DisableImageProcessing, EnableImageProcessing,SetAutoImageProcessing, SetAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
 import { ICasesState, CasesActionTypes, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
@@ -19,7 +16,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {

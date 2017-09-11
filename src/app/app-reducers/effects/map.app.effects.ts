@@ -29,13 +29,13 @@ import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@a
 import { isNil } from 'lodash';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetActiveCenter, SetPinLocationModeAction, SetActiveOverlaysFootprintModeAction, SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MapsLayout, CaseMapsState } from '@ansyn/core/models';
 import { SetLayoutAction, SetOverlayNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {

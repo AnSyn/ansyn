@@ -32,6 +32,8 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { EnableMapGeoOptionsActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '../../packages/menu-items/tools/actions/tools.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType= 'mapType1';
@@ -278,7 +280,8 @@ describe('MapAppEffects', () => {
 			const communicators: Array<string> = ['imagery1'];
 
 			communicators.push('imagery2');
-			const expectedResult = new CompositeMapShadowAction();
+			const expectedResult1 = new CompositeMapShadowAction();
+			const expectedResult2 = new AnnotationVisualizerAgentAction({ maps: 'all',action:'show'});
 
 			effectsRunner.queue(new AddMapInstacneAction({
 				currentCommunicatorId: 'imagery2',
@@ -291,12 +294,20 @@ describe('MapAppEffects', () => {
 				communicatorsIds: communicators
 			}));
 
-			let result = null;
+			let result1,result2 = null;
 
+			let count = 0;
 			mapAppEffects.onCommunicatorChange$.subscribe(_result => {
-				result = _result;
+				count++
+				if(count === 1) {
+					result1 = _result;
+				}
+				if(count === 2) {
+					result2 = _result;
+				}
 			});
-			expect(result).toEqual(expectedResult);
+			expect(result1).toEqual(expectedResult1);
+			expect(result2).toEqual(expectedResult2);
 		});
 	});
 

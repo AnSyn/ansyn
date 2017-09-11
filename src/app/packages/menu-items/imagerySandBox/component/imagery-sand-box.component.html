@@ -1,5 +1,7 @@
 <div>
 	<h1>Test Imagery View</h1>
+	<label for="show-annotation">show annotation</label>
+	<input type="checkbox" id="show-annotation" #showAnnotations (change)="showAnnotationsChange($event)" checked>
 	<button (click)="toggleSpecialObject()">toggle Special Object</button>
 	<h3>Set Center</h3>
 	<label>use animation</label>

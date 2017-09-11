@@ -67,22 +67,16 @@ export class ToolsComponent implements OnInit {
 		// send event to the store that saying the annotation option is enabled
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
 		if(this.userAnnotationsToolOpen){
-			// this.store.dispatch(new AnnotationEnabled());
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: "show",
-				maps: "all"
+				maps: 'active'
 			}));
+
 		}else{
-			// this.store.dispatch(new AnnotationDisabled());
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: "endDrawing",
 				maps: 'active'
 			}));
-
-			/*this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: "removeLayer",
-				maps: 'all'
-			}));*/
 		}
 
 

@@ -51,10 +51,12 @@ export class ToolsAppEffects {
 		.mergeMap(activeMap =>
 			[
 				new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode),
+
 				new AnnotationVisualizerAgentAction({
 					action: "removeLayer",
 					maps: "all"
 				}),
+
 				new AnnotationVisualizerAgentAction({
 					action: "show",
 					maps: "all"

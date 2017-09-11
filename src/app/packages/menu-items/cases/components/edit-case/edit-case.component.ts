@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, HostBinding } from '@angular/core';
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
@@ -20,32 +20,22 @@ const animations: any[] = [
 	])
 ];
 
-const host = {
-	"[@modalContent]": "true",
-	"[style.display]": "'block'",
-	"[style.position]": "'absolute'",
-	"[style.width]": "'337px'",
-	"[style.top]": "'15px'",
-	"[style.left]": "'30px'"
-};
 
 @Component({
 	selector: 'ansyn-edit-case',
 	templateUrl: './edit-case.component.html',
 	styleUrls: ['./edit-case.component.less'],
-	animations,
-	host
+	animations
 })
 
 export class EditCaseComponent implements OnInit {
+	@HostBinding('@modalContent') get modalContent(){
+		return true;
+	};
 
 	active_case$: Observable<Case> = this.store.select("cases")
-		.distinctUntilChanged(isEqual)
+		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
-
-	selectedCase$: Observable<Case> = this.store.select("cases")
-		.map((state: ICasesState) => state.selected_case)
-		.distinctUntilChanged(isEqual);
 
 	default_case_id$: Observable<string> = this.store.select("cases").map((state: ICasesState) => state.default_case.id);
 

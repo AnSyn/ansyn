@@ -1,11 +1,14 @@
-import { Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+	Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy,
+	HostBinding
+} from '@angular/core';
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { SaveDefaultCaseAction, CloseModalAction } from '../../actions/cases.actions';
-
+import { cloneDeep as _cloneDeep } from 'lodash';
 const animations_during = '0.2s';
 
 const animations: any[] = [
@@ -15,27 +18,22 @@ const animations: any[] = [
 	])
 ];
 
-const host = {
-	"[@modalContent]": "true",
-	"[style.display]": "'block'",
-	"[style.position]": "'absolute'",
-	"[style.width]": "'337px'",
-	"[style.top]": "'15px'",
-	"[style.left]": "'30px'"
-};
-
 @Component({
 	selector: 'ansyn-save-case',
 	templateUrl: './save-case.component.html',
 	styleUrls: ['./save-case.component.less'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	animations,
-	host
+	animations
 })
 export class SaveCaseComponent implements OnInit {
+	@HostBinding('@modalContent') get modalContent(){
+		return true;
+	};
 
 	selected_case$: Observable<Case> = this.store.select("cases")
-		.map(this.getCloneSelectedCase.bind(this));
+		.pluck('selected_case')
+		.distinctUntilChanged()
+		.map(_cloneDeep);
 
 	case_model: Case;
 
@@ -46,11 +44,6 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	constructor(private store: Store<ICasesState>) { }
-
-	getCloneSelectedCase(case_state: ICasesState): Case {
-		let s_case: Case = case_state.selected_case;
-		return s_case;
-	}
 
 	ngOnInit(): void {
 		this.selected_case$.subscribe((selected_case: Case) => {

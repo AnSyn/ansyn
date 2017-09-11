@@ -5,7 +5,7 @@
 
   <form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase()" >
 
-    <input type="text" name="name" required [(ngModel)]="case_model.name" #name_input>
+    <input name="name" required [(ngModel)]="case_model.name" #name_input>
     <span class="highlight"></span>
     <span class="bar"></span>
     <label>Name</label>
@@ -21,7 +21,7 @@
 
     <div class="bottom-btns">
       <button type="button" (click)="close()">Cancel</button>
-      <button type="submit"  [disabled]="f.invalid" >OK</button>
+      <button [disabled]="f.invalid" >OK</button>
     </div>
   </form>
 </div>

@@ -5,18 +5,20 @@ import { ToolsComponent } from './tools.component';
 import { ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 
+
 describe('ToolsComponent', () => {
     let component: ToolsComponent;
     let fixture: ComponentFixture <ToolsComponent> ;
     let store: Store <any> ;
 
+	const mock_annotations_control = MockComponent({selector: 'ansyn-annotations-control',inputs: ['expand']})
 	const mock_go_to = MockComponent({selector: 'ansyn-go-to', inputs: ['expand', 'disabled'], outputs: ['onGoTo', 'expandChange']});
 	const mock_overlays_display_mode = MockComponent({selector: 'ansyn-overlays-display-mode', inputs: ['expand', 'disabled', 'modeOn'], outputs: ['expandChange', 'modeOnChange']});
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
                 imports: [StoreModule.provideStore({ tools: ToolsReducer})],
-				declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode]
+				declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode,mock_annotations_control]
             })
             .compileComponents();
     }));
@@ -81,4 +83,19 @@ describe('ToolsComponent', () => {
 		fixture.detectChanges();
 		expect(component.displayOverlayDiv.nativeElement.classList.contains('active')).toBeFalsy();
 	});
+
+	it('toogle annotation menu open',() => {
+			component.userAnnotationsToolOpen = false;
+			component.toggleAnnotationMenu();
+			const args = store.dispatch['calls'].mostRecent();
+			expect(args.args[0].payload.action).toBe('show');
+
+	})
+
+	it('toogle annotation menu close',() => {
+		component.userAnnotationsToolOpen = true;
+		component.toggleAnnotationMenu();
+		const args = store.dispatch['calls'].mostRecent();
+		expect(args.args[0].payload.action).toBe('endDrawing');
+	})
 });

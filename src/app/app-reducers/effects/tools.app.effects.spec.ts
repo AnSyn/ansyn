@@ -14,7 +14,8 @@ import {
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
-import { DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
+import { DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess,
+	AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -208,13 +209,43 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onActiveMapChangesSetOverlaysFootprintMode$ should change footprint mode', () => {
+
 		const active_map = CasesService.activeMap(icaseState.selected_case);
+
 		active_map.data.overlayDisplayMode = <any> 'whatever';
 		effectsRunner.queue(new ActiveMapChangedAction());
-		let result;
-		toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$.subscribe(_result => {result = _result;});
-		expect(result.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
-		expect(result.payload).toEqual('whatever');
+
+		let action1,action2,action3;
+		let count = 0;
+		toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$.subscribe(_result => {
+			count++;
+			switch(count){
+				case 1:
+					action1 = _result;
+					break;
+				case 2:
+					action2 = _result;
+					break;
+				case 3:
+					action3 = _result;
+					break;
+			}
+		});
+
+		expect(action1.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
+		expect(action1.payload).toEqual('whatever');
+
+		expect(action2.constructor).toEqual(AnnotationVisualizerAgentAction);
+		expect(action2.payload).toEqual({
+			action: "removeLayer",
+			maps: "all"
+		});
+
+		expect(action3.constructor).toEqual(AnnotationVisualizerAgentAction);
+		expect(action3.payload).toEqual({
+			action: "show",
+			maps: "all"
+		});
 	});
 
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {

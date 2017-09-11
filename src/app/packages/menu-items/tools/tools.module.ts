@@ -8,13 +8,12 @@ import { IToolsConfig, toolsConfig } from './models';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 
-
-
 @NgModule({
 	imports: [CommonModule, CoreModule, GoToModule],
 	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
 	entryComponents: [ToolsComponent],
 })
+
 export class ToolsModule {
 
 

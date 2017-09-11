@@ -110,10 +110,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this._imap.removeLayer(this.layer);
 	}
 
-	setMode(mode: OperationsMode){
-		this.operationMode = mode;
-	}
-
 	redrawFromGeoJson() {
 		//const geoFeatures = this.collection;
 		this._source.clear();

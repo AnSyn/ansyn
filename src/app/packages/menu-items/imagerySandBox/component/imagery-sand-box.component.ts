@@ -1,7 +1,7 @@
 /**
  * Created by AsafMas on 10/05/2017.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -13,6 +13,7 @@ import { isEqual,cloneDeep } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
@@ -28,6 +29,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public overlaysCriteria: OverlaysCriteria;
 	public isSpecialDisplayed = false;
 	private _isMouseShadowEnabled = false;
+	@ViewChild("showAnnotations") showAnnotations;
 
 	constructor(public imageryCommunicatorService: ImageryCommunicatorService,public store:Store<ICasesState>) {
 
@@ -41,6 +43,20 @@ export class ImagerySandBoxComponent implements OnInit {
 				this.overlaysFrom = this.selectedCase.state.time.from.split('T')[0];
 				this.overlaysTo = this.selectedCase.state.time.to.split('T')[0];
 			});
+	}
+
+	public showAnnotationsChange($event){
+		if(this.showAnnotations.nativeElement.checked) {
+			this.store.dispatch(new AnnotationVisualizerAgentAction({
+				action: "show",
+				maps: "all"
+			}));
+		}else {
+			this.store.dispatch(new AnnotationVisualizerAgentAction({
+				action: "removeLayer",
+				maps: "all"
+			}));
+		}
 	}
 
 	public setCenter(coordinate) {

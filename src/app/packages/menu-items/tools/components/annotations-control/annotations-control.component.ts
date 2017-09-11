@@ -1,10 +1,14 @@
-import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+	Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, Renderer2,
+	ViewChild
+} from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
+import { DOCUMENT } from '@angular/common';
 
 
 @Component({
@@ -23,6 +27,7 @@ export class AnnotationsControlComponent implements  OnDestroy {
 	@ViewChild('lineWidthSelection') lineWidthSelection: ElementRef;
 	@ViewChild('colorSelection') colorSelection: ElementRef;
 	@HostBinding('class.expand')
+
 	@Input()
 	set expand(value){
 		this._isExpended = value;
@@ -32,23 +37,20 @@ export class AnnotationsControlComponent implements  OnDestroy {
 		return this._isExpended;
 	}
 
-	constructor(public renderer: Renderer2,public store: Store<any> ) {
-		console.log('x');
-
-	}
+	constructor(public renderer: Renderer2,public store: Store<any>,@Inject(DOCUMENT) public document: any ) {}
 
 	openLineWidthSelection($event){
 		if(this.lineWidthTrigger){
 			this.lineWidthTrigger = false;
 			return;
 		}
-		if(document.activeElement !== this.lineWidthSelection.nativeElement){
+		if(this.document.activeElement !== this.lineWidthSelection.nativeElement){
 			this.lineWidthSelection.nativeElement.focus();
 		}
 	}
 
 	closeLineWidthSelection($event){
-		if(document.activeElement === this.lineWidthSelection.nativeElement){
+		if(this.document.activeElement === this.lineWidthSelection.nativeElement){
 			this.lineWidthTrigger = true;
 			this.lineWidthSelection.nativeElement.blur();
 		}
@@ -80,7 +82,7 @@ export class AnnotationsControlComponent implements  OnDestroy {
 			});
 	}
 
-	testVisualizer(type){
+	createInteraction(type){
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: "createInteraction",
 			type,

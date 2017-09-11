@@ -14,18 +14,6 @@ export interface IContextSource {
 	parseFromSource(any);
 }
 
-
-export interface IContextSourceConfig {
-	type: string;
-	uri: string;
-	bucket: string;
-	available: boolean;
-	log?: string;
-	auth?: string;
-	apiObject: string;
-
-}
-
 export class ContextCriteria {
 	start: number;
 	limit: number;

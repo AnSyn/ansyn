@@ -8,7 +8,7 @@ describe('ImageryContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ImageryContainerComponent, MockComponent({selector: 'ansyn-imagery-status', inputs: ['map_id', 'active', 'overlay', 'disable-geo-options', 'notFromCase']}), MockComponent({selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings']}) ]
+			declarations: [ ImageryContainerComponent, MockComponent({selector: 'ansyn-imagery-status', inputs: ['map_id', 'active', 'overlay', 'disable-geo-options', 'notInCase']}), MockComponent({selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings']}) ]
 		})
 			.compileComponents();
 	}));

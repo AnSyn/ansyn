@@ -9,12 +9,11 @@
 				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 			</div>
 
-			<!--<ansyn-overlay-geo-registration-error [showError]="showGeoRegistrationError()"></ansyn-overlay-geo-registration-error>-->
-
 			<ansyn-overlays-status-notifications
-				[notFromCase]="notFromCaseOverlay"
+				[notInCase]="overlayNotInCase"
 				[geoRegisteration]="showGeoRegistrationError()">
 			</ansyn-overlays-status-notifications>
+
 		</div>
 
 		<div class="right-side">

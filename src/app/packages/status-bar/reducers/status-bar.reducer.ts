@@ -13,7 +13,7 @@ export interface IStatusBarState {
 	geoFilter: string;
 	time: {from: Date, to: Date},
 	overlays_count: number,
-	notFromCaseOverlay: boolean
+	overlayNotInCase: boolean
 }
 
 export const statusBarFlagsItems  = {
@@ -46,7 +46,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	geoFilter: 'pin-point',
 	time: {from: new Date(0), to: new Date()},
 	overlays_count: 0,
-	notFromCaseOverlay: false
+	overlayNotInCase: false
 };
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState  {
@@ -96,7 +96,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			return {...state, overlays_count: action.payload};
 
 		case StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY:
-			return { ...state, notFromCaseOverlay: action.payload};
+			return { ...state, overlayNotInCase: action.payload};
 
 		default: return state;
 

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { MapReducer } from '../../reducers/map.reducer';
 
 const mock_ansyn_context_menu = MockComponent({selector: 'ansyn-context-menu', inputs: ['show', 'top', 'left'], outputs: ['showChange']});
-const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'disable-geo-options', 'notFromCase']});
+const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'disable-geo-options', 'notInCase']});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;

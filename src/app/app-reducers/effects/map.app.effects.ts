@@ -34,7 +34,7 @@ import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/acti
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MapsLayout, CaseMapsState } from '@ansyn/core/models';
-import { SetLayoutAction, SetNotFromCaseOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { SetLayoutAction, SetOverlayNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -413,23 +413,23 @@ export class MapAppEffects {
 		});
 
 	@Effect()
-	setNotFromCaseOverlays$: Observable<any> = this.actions$
+	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases').pluck('selected_case'), (action, {filteredOverlays}, {state}) => {
 			return [filteredOverlays, state.maps.data];
 		})
 		.map(([filteredOverlays, mapsData]: [any[], CaseMapState[]]) => {
-			const NotFromCaseOverlays = new Map<string, boolean>();
+			const overlaysNoInCase = new Map<string, boolean>();
 
 			mapsData.forEach(({data}) => {
 				const {overlay} = data;
 				if(overlay) {
 					const notExistOnFilteredOverlay = !filteredOverlays.some(id => overlay.id === id);
-					NotFromCaseOverlays.set(overlay.id, notExistOnFilteredOverlay)
+					overlaysNoInCase.set(overlay.id, notExistOnFilteredOverlay)
 				}
 			});
 
-			return new SetNotFromCaseOverlaysAction(NotFromCaseOverlays);
+			return new SetOverlayNotInCaseAction(overlaysNoInCase);
 		});
 
 	constructor(

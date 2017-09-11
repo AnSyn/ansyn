@@ -10,7 +10,7 @@ export interface IMapState {
 	filteredOverlays: string[];
 	displayedOverlay: any[];
 	mapIdToGeoOptions: Map<string, boolean>;
-	notFromCaseOverlays: Map<string, boolean>;
+	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout
 }
 
@@ -21,7 +21,7 @@ export const initialMapState: IMapState = {
 	filteredOverlays: [],
 	displayedOverlay: [],
 	mapIdToGeoOptions: new Map<string, boolean>(),
-	notFromCaseOverlays: new Map<string, boolean>(),
+	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null
 };
 
@@ -33,8 +33,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);
 			return { ...state, mapIdToGeoOptions: mapIdToGeoOptionsClone };
 
-		case MapActionTypes.SET_NOT_FROM_CASE_OVERLAYS:
-			return { ...state, notFromCaseOverlays: action.payload };
+		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
+			return { ...state, overlaysNotInCase: action.payload };
 
 		case MapActionTypes.POSITION_CHANGED:
 			const positions = cloneDeep(state.positions);

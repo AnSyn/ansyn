@@ -81,6 +81,10 @@ export class OpenLayersDisabledMap implements IMap {
 	setBoundingBox(bbox: GeoJSON.Point[]) {
 	}
 
+	addLayerIfNotExist(layer: Layer){
+
+	}
+
 	resetView(layer: any, extent?: GeoJSON.Point[]): void {
 		const view = this.mapObject.getView();
 		this.setMainLayer(layer, view);

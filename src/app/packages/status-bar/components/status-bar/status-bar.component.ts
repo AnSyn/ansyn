@@ -17,20 +17,23 @@ import { MapsLayout } from '@ansyn/core';
 export class StatusBarComponent implements OnInit {
 	status_bar$: Observable<IStatusBarState> = this.store.select('status_bar');
 
-	layouts$: Observable<MapsLayout[]> = this.status_bar$.pluck('layouts').distinctUntilChanged();
-	selected_layout_index$: Observable<number> = this.status_bar$.pluck('selected_layout_index').distinctUntilChanged();
-	showLinkCopyToast$: Observable<boolean> = this.status_bar$.pluck('showLinkCopyToast').distinctUntilChanged();
-	orientations$: Observable<string[]> = this.status_bar$.pluck('orientations').distinctUntilChanged();
-	orientation$: Observable<string> = this.status_bar$.pluck('orientation').distinctUntilChanged();
-	geoFilters$: Observable<string[]> = this.status_bar$.pluck('geoFilters').distinctUntilChanged();
-	geoFilter$: Observable<string> = this.status_bar$.pluck('geoFilter').distinctUntilChanged();
+	layouts$: Observable<MapsLayout[]> = this.status_bar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
+
+	selected_layout_index$: Observable<number> = this.status_bar$.pluck<IStatusBarState,number>('selected_layout_index').distinctUntilChanged() ;
+
+	showLinkCopyToast$: Observable<boolean> = this.status_bar$.pluck<IStatusBarState,boolean>('showLinkCopyToast').distinctUntilChanged();
+	orientations$: Observable<string[]> = this.status_bar$.pluck<IStatusBarState,string[]>('orientations').distinctUntilChanged();
+	orientation$: Observable<string> = this.status_bar$.pluck<IStatusBarState,string>('orientation').distinctUntilChanged() ;
+	geoFilters$: Observable<string[]> = this.status_bar$.pluck<IStatusBarState,string[]>('geoFilters').distinctUntilChanged();
+	geoFilter$: Observable<string> = this.status_bar$.pluck<IStatusBarState,string>('geoFilter').distinctUntilChanged() ;
+
 	flags$ = this.status_bar$.pluck('flags').distinctUntilChanged();
-	time$: Observable<{from: Date, to: Date}> = this.status_bar$.pluck('time').distinctUntilChanged();
+	time$: Observable<{from: Date, to: Date}> = this.status_bar$.pluck<IStatusBarState,{from: Date, to: Date}>('time').distinctUntilChanged();
 	hideOverlay$: Observable<boolean> = this.status_bar$
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
 		.distinctUntilChanged();
-	overlays_count$: Observable<number> = this.status_bar$.pluck('overlays_count').distinctUntilChanged();
-	overlayNotInCase$: Observable<boolean> = this.status_bar$.pluck('overlayNotInCase').distinctUntilChanged();
+	overlays_count$: Observable<number> = this.status_bar$.pluck<IStatusBarState,number>('overlays_count').distinctUntilChanged();
+	overlayNotInCase$: Observable<boolean> = this.status_bar$.pluck<IStatusBarState,boolean>('overlayNotInCase').distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;

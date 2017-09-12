@@ -24,12 +24,12 @@ export class ImageriesManagerComponent implements OnInit{
 	public mapState$: Observable<IMapState> = this.store.select('map');
 
 	public selected_layout$: Observable<MapsLayout> = this.mapState$
-		.pluck('layout')
+		.pluck<IMapState,MapsLayout>('layout')
 		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
 
 	public overlaysNotInCase$: Observable<Map<string, boolean>> = this.mapState$
-		.pluck('overlaysNotInCase')
+		.pluck<IMapState,Map<string, boolean>>('overlaysNotInCase')
 		.distinctUntilChanged();
 
 	public selected_layout;

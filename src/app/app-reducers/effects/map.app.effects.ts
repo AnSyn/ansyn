@@ -19,26 +19,23 @@ import {
 import { IAppState } from '../';
 import { Case, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import {
-	ActiveMapChangedAction,
 	CompositeMapShadowAction,
 	MapActionTypes,
 	MapFacadeService,
-	PositionChangedAction,
 	StartMapShadowAction,
 	StopMapShadowAction
 } from '@ansyn/map-facade';
-import { cloneDeep, isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItems, UpdateStatusFlagsAction, StatusBarActionsTypes } from '@ansyn/status-bar';
 import {
 	AddMapInstacneAction,
 	AddOverlayToLoadingOverlaysAction,
-	BackToWorldAction,
 	EnableMapGeoOptionsActionStore,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SetLayoutAction,
@@ -49,7 +46,7 @@ import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/
 import { calcGeoJSONExtent, endTimingLog, isExtentContainedInPolygon, startTimingLog } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
-import { CaseMapState, getPointByPolygon, getPolygonByPoint, Position } from '@ansyn/core';
+import { CaseMapState, getPointByPolygon, getPolygonByPoint, Position, MapsLayout } from '@ansyn/core';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	AnnotationVisualizerAgentAction,
@@ -57,12 +54,8 @@ import {
 	SetMapGeoEnabledModeToolsActionStore,
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import {
-	SetMapGeoEnabledModeStatusBarActionStore,
-	StatusBarActionsTypes
-} from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapsLayout } from '@ansyn/core/models';
 
 @Injectable()
 export class MapAppEffects {
@@ -111,7 +104,7 @@ export class MapAppEffects {
 	@Effect()
 	onMapSingleClickPinLocation$: Observable<SetActiveCenter | SetPinLocationModeAction> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select('tools'), (action, state: IToolsState): any => new Object({
+		.withLatestFrom(this.store$.select('tools'), (action, state: IToolsState): any => ({
 			action,
 			pin_location: state.flags.get('pin_location')
 		}))
@@ -262,25 +255,6 @@ export class MapAppEffects {
 		});
 
 	@Effect()
-	positionChanged$: Observable<UpdateCaseAction> = this.actions$
-		.ofType(MapActionTypes.POSITION_CHANGED)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [PositionChangedAction, ICasesState]) => {
-			const selected_map_index = state.selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
-			return !isEmpty(state.selected_case) && selected_map_index !== -1;
-		})
-		.cloneDeep()
-		.map(([action, state]: [PositionChangedAction, ICasesState]) => {
-			const selected_case: Case = state.selected_case;
-			const selected_map_index = selected_case.state.maps.data.findIndex((map) => map.id === action.payload.id);
-			const selected_map = selected_case.state.maps.data[selected_map_index];
-			selected_map.data.position = action.payload.position;
-			selected_case.state.maps.data[selected_map_index] = selected_map;
-
-			return new UpdateCaseAction(selected_case);
-		});
-
-	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'))
@@ -339,23 +313,6 @@ export class MapAppEffects {
 			});
 		});
 
-	@Effect()
-	onActiveMapChanges$: Observable<Action> = this.actions$
-		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, caseState]: [ActiveMapChangedAction, ICasesState]): any =>
-			caseState.selected_case.state.maps.active_map_id !== action.payload
-		)
-		.mergeMap(([action, caseState]: [ActiveMapChangedAction, ICasesState]) => {
-			const updatedCase = cloneDeep(caseState.selected_case);
-			updatedCase.state.maps.active_map_id = action.payload;
-			return [
-				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(updatedCase))
-			];
-
-		});
-
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
@@ -373,48 +330,21 @@ export class MapAppEffects {
 		});
 
 	@Effect()
-	backToWorldView$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, casesState: ICasesState) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
-			return [action, casesState, mapId];
-		})
-		.mergeMap(([action, caseState, mapId]: [BackToWorldAction, ICasesState, string]) => {
-			const active_map = caseState.selected_case.state.maps.data.find((map) => map.id === mapId);
-			const comm = this.communicator.provide(mapId);
-			comm.loadInitialMapSource(active_map.data.position.boundingBox);
-
-			const updatedCase = cloneDeep(caseState.selected_case);
-			updatedCase.state.maps.data.forEach(
-				(map) => {
-					if (map.id === mapId) {
-						map.data.overlay = null;
-						map.data.isAutoImageProcessingActive = false;
-					}
-				});
-			return [
-				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(updatedCase))
-			];
-		});
-
-	@Effect()
 	activeMapGeoRegistartionChanged$: Observable<any> = this.actions$
 		.ofType(
 			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 			MapActionTypes.BACK_TO_WORLD,
 			MapActionTypes.ACTIVE_MAP_CHANGED,
-			CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'), (action: Action, casesState: ICasesState, mapState: IMapState) => {
-			return [action, casesState, mapState];
-		})
+			MapActionTypes.STORE.SET_MAPS_DATA)
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
+		.filter(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => mapState.mapsData.length > 0)
 		.map(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => {
 			let activeMapState;
 			if (action.type === MapActionTypes.BACK_TO_WORLD) {
 				const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
-				activeMapState = CasesService.mapById(casesState.selected_case, mapId);
+				activeMapState = MapFacadeService.mapById(mapState.mapsData, mapId);
 			} else {
-				activeMapState = CasesService.activeMap(casesState.selected_case);
+				activeMapState = MapFacadeService.activeMap(mapState);
 			}
 			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 			return [action, isGeoRegistered, activeMapState, mapState];

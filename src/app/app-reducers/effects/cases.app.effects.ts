@@ -8,8 +8,7 @@ import {
 	Case,
 	CasesActionTypes,
 	CasesService,
-	ICasesState,
-	UpdateCaseAction
+	ICasesState
 } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -32,6 +31,8 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
 import { ContextCriteria, ContextProviderService } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
+import { IMapState } from '../../packages/map-facade/reducers/map.reducer';
+import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
 
 
 @Injectable()
@@ -47,21 +48,17 @@ export class CasesAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$)
-		.map(([action, state]: [DisplayOverlayAction, IAppState]) => {
-
-			const selectedCase = cloneDeep(state.cases.selected_case);
-			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
-
-			selectedCase.state.maps.data.forEach((map) => {
-				if (mapId === map.id) {
+		.withLatestFrom(this.store$.select('map'))
+		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
+			const updatedMapsData = cloneDeep(mapState.mapsData);
+			const mapId = action.payload.map_id || mapState.activeMapId;
+			updatedMapsData.forEach((map) => {
+				if(mapId === map.id){
 					map.data.overlay = action.payload.overlay;
 				}
 			});
-
-			return new UpdateCaseAction(selectedCase);
-
-		}).share();
+			return new SetMapsDataActionStore(updatedMapsData);
+	}).share();
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$

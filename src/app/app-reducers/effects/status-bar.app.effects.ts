@@ -26,6 +26,7 @@ import { cloneDeep, get, isEmpty, pull } from 'lodash';
 import { Position } from '@ansyn/core/models/position.model';
 import '@ansyn/core/utils/clone-deep';
 import { UUID } from 'angular2-uuid';
+import "@ansyn/core/utils/clone-deep";
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
@@ -146,47 +147,6 @@ export class StatusBarAppEffects {
 			return actions;
 		});
 
-
-	//move this to map-facade package and create all the login in the server
-	//as metter of conceren the status bar app effects does not need to include any logic just pass
-	//the actioin to the correct reference (I don't think it should be an independed package at all it should be part of ״scope" functionality)
-	@Effect()
-	onLayoutsChange$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store, (action: ChangeLayoutAction, state: IAppState): [ChangeLayoutAction, Case, MapsLayout] => {
-			const selected_case = state.cases.selected_case;
-			const selected_layout = cloneDeep(state.status_bar.layouts[state.status_bar.selected_layout_index]);
-			return [action, cloneDeep(selected_case), selected_layout];
-		})
-		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
-		.map(this.setMapsDataChanges.bind(this))
-		.mergeMap((updatedCase: Case) => {
-			const overlaysMarkup = CasesService.getOverlaysMarkup(updatedCase);
-			return [
-				new UpdateCaseAction(updatedCase),
-				new OverlaysMarkupAction(overlaysMarkup)];
-		});
-
-	@Effect()
-	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store.select('status_bar'), (action, status_bar: IStatusBarState) => {
-			const layout = status_bar.layouts[action.payload];
-			return layout.maps_count;
-		})
-		.mergeMap((maps_count) => {
-			if (maps_count === 1) {
-				return [
-					new DisableMouseShadow(),
-					new StopMouseShadow()
-				];
-			}
-			return [new EnableMouseShadow()];
-
-		})
-		.share();
-
-
 	@Effect()
 	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
@@ -286,34 +246,5 @@ export class StatusBarAppEffects {
 				public overlaysService: OverlaysService,
 				public casesService: CasesService) {
 	}
-
-	createCopyMap(index, position: Position): CaseMapState {
-		// TODO: Need to get the real map Type from store instead of default map
-		return { id: UUID.UUID(), data: { position }, mapType: defaultMapType };
-	}
-
-	setMapsDataChanges([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]): Case {
-		selected_case.state.maps.layouts_index = action.payload;
-		const case_maps_count = selected_case.state.maps.data.length;
-		if (selected_layout.maps_count !== case_maps_count) {
-			if (case_maps_count < selected_layout.maps_count) {
-				for (let i = case_maps_count; i < selected_layout.maps_count; i++) {
-					const active_map_position = cloneDeep(selected_case.state.maps.data.find((map) => map.id === selected_case.state.maps.active_map_id).data.position);
-					selected_case.state.maps.data.push(this.createCopyMap(i + 1, active_map_position));
-				}
-			}
-			else if (selected_layout.maps_count < case_maps_count) {
-				for (let i = selected_layout.maps_count; i < case_maps_count; i++) {
-					selected_case.state.maps.data.pop();
-				}
-				const exist = selected_case.state.maps.data.find((map) => map.id === selected_case.state.maps.active_map_id);
-				if (!exist) {
-					selected_case.state.maps.active_map_id = selected_case.state.maps.data[selected_case.state.maps.data.length - 1].id;
-				}
-			}
-		}
-		return selected_case;
-	}
-
 
 }

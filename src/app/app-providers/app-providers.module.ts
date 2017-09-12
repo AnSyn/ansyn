@@ -11,6 +11,8 @@ import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-laye
 import { OpenLayerMapBoxSourceProvider } from "./map-source-providers/open-layers-MapBox-source-provider";
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
+import { ContextElasticSource } from './context-source-providers/context-elastic-source.service';
+import { BaseContextSourceProvider } from '../packages/context/context.interface';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 		{provide: BaseMapSourceProvider , useClass: OpenLayerOSMSourceProvider, multi:true},
 		{provide: BaseMapSourceProvider , useClass: OpenLayerIDAHOSourceProvider, multi:true},
         {provide: BaseMapSourceProvider , useClass: OpenLayerBingSourceProvider, multi: true},
-        {provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider}
+        {provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider},
+		{ provide: BaseContextSourceProvider, useClass: ContextElasticSource}
     ]
 })
 export class AppProvidersModule {

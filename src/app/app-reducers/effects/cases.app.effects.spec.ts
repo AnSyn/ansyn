@@ -17,9 +17,12 @@ import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
+import { ContextElasticSource } from '../../app-providers/context-source-providers/context-elastic-source.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
@@ -42,9 +45,9 @@ describe('CasesAppEffects', () => {
 			providers: [CasesAppEffects,
 				CasesService,
 				{provide: casesConfig, useValue: {baseUrl: null}},
-				ContextProviderService
+				// Provide context provider
+				{ provide: BaseContextSourceProvider, useClass: ContextElasticSource },
 			]
-
 		}).compileComponents();
 	}));
 

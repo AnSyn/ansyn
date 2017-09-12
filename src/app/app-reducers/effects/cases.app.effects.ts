@@ -107,7 +107,7 @@ export class CasesAppEffects {
 				observable = Observable.of(state.contexts);
 			} else {
 				const criteria = new ContextCriteria({start: 0, limit: 200});
-				observable = this.contextProviderService.provide('Proxy').find(criteria);
+				observable = this.contextSourceService.find(criteria);
 				// observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts: Context[]) => {
@@ -124,7 +124,7 @@ export class CasesAppEffects {
 			(action: LoadDefaultCaseAction) => {
 				return this.actions$
 					.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
-					.withLatestFrom(this.store$.select('cases'), (action, cases) => cases)
+					.withLatestFrom(this.store$.select('cases'), (_, cases) => cases)
 					.mergeMap((state: ICasesState) => {
 						const actions = [];
 						const defaultCase = this.casesService.getDefaultCase();
@@ -150,7 +150,7 @@ export class CasesAppEffects {
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private casesService: CasesService,
-				public contextProviderService: ContextProviderService) {
+				public contextSourceService: BaseContextSourceProvider) {
 	}
 
 }

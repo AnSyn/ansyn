@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ContextProviderService } from '../providers/context-provider.service';
-import { ContextCriteria } from '../context.interface';
+import { BaseContextSourceProvider, ContextCriteria } from '../context.interface';
 import 'rxjs/add/observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -20,15 +19,12 @@ import { Context } from '../';
 export class ContainerComponent implements OnInit {
 
 	public providerType: string;
-	public contextProviders: string[];
 	public contextBody: string;
 	public findStream: Subject<any>;
 	public editItem: any;
 	public result: Context[] = [];
 
-	constructor(public contextProviderService: ContextProviderService) {
-		this.contextProviders = this.contextProviderService.keys();
-
+	constructor(public contextProviderService: BaseContextSourceProvider) {
 		this.findStream = new Subject();
 
 		this.findStream
@@ -58,7 +54,6 @@ export class ContainerComponent implements OnInit {
 	create() {
 		const context = JSON.parse(this.contextBody);
 		this.findStream.next(this.contextProviderService
-			.provide(this.providerType)
 			.create(context)
 			.delay(1000)
 			.switchMap(() => this.find$()));
@@ -74,7 +69,7 @@ export class ContainerComponent implements OnInit {
 	find$() {
 		console.log('find');
 		const criteria = new ContextCriteria({start: 0, limit: 20});
-		return this.contextProviderService.provide(this.providerType).find(criteria);
+		return this.contextProviderService.find(criteria);
 	}
 
 	edit(id) {
@@ -92,24 +87,19 @@ export class ContainerComponent implements OnInit {
 	delete(id) {
 		console.log('delete', id);
 		this.findStream.next((this.contextProviderService
-			.provide(this.providerType)
 			.remove(id)
 			.switchMap(() => this.find$())));
 	}
 
 	update() {
 		this.findStream.next(this.contextProviderService
-			.provide(this.providerType)
 			.update(this.editItem.id, JSON.parse(this.contextBody))
 			.switchMap(() => this.find$()));
 		this.clear();
 	}
 
-
 	clear() {
 		this.editItem = {};
 		this.contextBody = '';
 	}
-
-
 }

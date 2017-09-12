@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { CaseComponent } from './case/case.component';
@@ -33,37 +33,43 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { AnsynRouterModule } from '@ansyn/router';
 import { RouterModule } from '@angular/router';
+import { configuration } from '../../configuration/configuration';
+
+const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
+	CommonModule,
+	AppProvidersModule,
+	OpenLayerCenterMarkerPluginModule,
+	OpenLayerMapModule,
+	BrowserModule,
+	FormsModule,
+	HttpModule,
+	ContextModule,
+	BrowserAnimationsModule,
+	CoreModule,
+	MenuModule,
+	OverlaysModule,
+	CasesModule,
+	FiltersModule,
+	LayersManagerModule,
+	ToolsModule,
+	AppReducersModule,
+	MapFacadeModule,
+	ImageryModule,
+	StatusBarModule,
+	ContextModule,
+	OpenLayerVisualizersModule,
+	AnsynRouterModule,
+	RouterModule
+	];
+
+if (configuration.env !== 'production') {
+	imports.push(ImagerySandBoxModule);
+	imports.push(SettingsModule);
+	imports.push(AlgorithmsModule);
+}
 
 @NgModule({
-	imports: [
-		CommonModule,
-		AppProvidersModule,
-		OpenLayerCenterMarkerPluginModule,
-		OpenLayerMapModule,
-		BrowserModule,
-		FormsModule,
-		HttpModule,
-		ContextModule,
-		BrowserAnimationsModule,
-		CoreModule,
-		MenuModule,
-		OverlaysModule,
-		CasesModule,
-		FiltersModule,
-		LayersManagerModule,
-		ToolsModule,
-		AlgorithmsModule,
-		SettingsModule,
-		AppReducersModule,
-		ImagerySandBoxModule,
-		MapFacadeModule,
-		ImageryModule,
-		StatusBarModule,
-		ContextModule,
-		OpenLayerVisualizersModule,
-		AnsynRouterModule,
-		RouterModule
-	],
+	imports: imports,
 	declarations: [AnsynComponent, CaseComponent]
 })
 

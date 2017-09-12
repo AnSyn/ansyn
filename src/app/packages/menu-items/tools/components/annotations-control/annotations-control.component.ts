@@ -41,7 +41,7 @@ export class AnnotationsControlComponent implements OnDestroy {
 	constructor(public renderer: Renderer2, public store: Store<any>, @Inject(DOCUMENT) public document: any) {
 	}
 
-	openLineWidthSelection($event) {
+	openLineWidthSelection() {
 		if (this.lineWidthTrigger) {
 			this.lineWidthTrigger = false;
 			return;
@@ -51,7 +51,7 @@ export class AnnotationsControlComponent implements OnDestroy {
 		}
 	}
 
-	closeLineWidthSelection($event) {
+	closeLineWidthSelection() {
 		if (this.document.activeElement === this.lineWidthSelection.nativeElement) {
 			this.lineWidthTrigger = true;
 			this.lineWidthSelection.nativeElement.blur();

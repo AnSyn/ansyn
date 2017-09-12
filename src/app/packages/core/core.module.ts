@@ -7,9 +7,7 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { OverlaysStatusNotificationsComponent } from './components/overlays-status-notifications/overlays-status-notifications.component';
 
-const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorComponent,AnsynCheckboxComponent, OverlaysStatusNotificationsComponent]
-
-
+const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorComponent, AnsynCheckboxComponent, OverlaysStatusNotificationsComponent];
 
 
 @NgModule({
@@ -22,4 +20,5 @@ const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorCompone
 	declarations: [...coreComponents]
 })
 
-export class CoreModule { }
+export class CoreModule {
+}

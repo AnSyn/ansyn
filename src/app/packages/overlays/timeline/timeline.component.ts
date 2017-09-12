@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { selectAll, mouse, event, select, selection,style } from 'd3';
+import { selectAll, mouse, event, select, selection, style } from 'd3';
 import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Observable';
@@ -8,8 +8,8 @@ import { isEqual } from 'lodash';
 
 export const BASE_DROP_COLOR = '#d393e1';
 
-selection.prototype.moveToFront = function() {
-	return this.each(function(){
+selection.prototype.moveToFront = function () {
+	return this.each(function () {
 		this.parentNode.appendChild(this);
 	});
 };
@@ -27,18 +27,19 @@ export class TimelineComponent implements OnInit {
 	private _markup: any[];
 	private stream: Observable<any>;
 
-	@HostListener('window:resize') onresize() {
+	@HostListener('window:resize')
+	onresize() {
 		this.redraw$.next(0);
 	}
 
 	@ViewChild('context') context: ElementRef;
 
 
-    @Input()
-    set drops(drops: any[]) {
-        this._drops = drops || [];
-        this.eventDropsHandler();
-        if (this._drops.length > 0 && this._markup) {
+	@Input()
+	set drops(drops: any[]) {
+		this._drops = drops || [];
+		this.eventDropsHandler();
+		if (this._drops.length > 0 && this._markup) {
 			this.drawMarkup();
 		}
 		//this.stream.next();
@@ -46,9 +47,9 @@ export class TimelineComponent implements OnInit {
 	}
 
 
-    get drops() {
-        return this._drops;
-    }
+	get drops() {
+		return this._drops;
+	}
 
 
 	@Input() configuration: any;
@@ -56,8 +57,8 @@ export class TimelineComponent implements OnInit {
 	@Input() redraw$: BehaviorSubject<number>;
 
 	@Input()
-	set markup(value){
-		if(!isEqual(this._markup,value)){
+	set markup(value) {
+		if (!isEqual(this._markup, value)) {
 			this._markup = value;
 			this.drawMarkup();
 		}
@@ -67,35 +68,36 @@ export class TimelineComponent implements OnInit {
 
 		selectAll('.drop.displayed').classed('displayed ', false);
 		selectAll('.drop.active').classed('active', false);
-		selectAll('.drop.favorites').classed('favorites',false).style('filter','none');
+		selectAll('.drop.favorites').classed('favorites', false).style('filter', 'none');
 		selectAll('.drop.hover').classed('hover', false);
 
 		const nodes = [];
 		this._markup.forEach(markupItem => {
 			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
-			if(element) {
+			if (element) {
 				element.classList.add(markupItem.class);
 				nodes.push(element);
 			}
 		});
-		if(nodes.length > 0) {
+		if (nodes.length > 0) {
 			const selection = (<any>selectAll(nodes));
 			selection.moveToFront();
 		}
 
-		selectAll('.drop.favorites').style('filter','url(#highlight)');
+		selectAll('.drop.favorites').style('filter', 'url(#highlight)');
 	}
 
-	get markup(){
+	get markup() {
 		return this._markup;
 	}
 
 
-	constructor(private emitter: TimelineEmitterService) {}
+	constructor(private emitter: TimelineEmitterService) {
+	}
 
-	ngOnInit(){
+	ngOnInit() {
 		this.redraw$.subscribe(value => {
-			if(this.drops){
+			if (this.drops) {
 				this.eventDropsHandler();
 				this.drawMarkup();
 			}
@@ -118,7 +120,7 @@ export class TimelineComponent implements OnInit {
 				})(event), 300);
 			} else {
 				if (dist(down, mouse(document.body)) < tolerance) {
-					this.selectAndShowDrop(nodes[index],event,data,index,nodes);
+					this.selectAndShowDrop(nodes[index], event, data, index, nodes);
 
 				}
 				if (wait) {
@@ -131,9 +133,9 @@ export class TimelineComponent implements OnInit {
 		};
 	}
 
-    selectAndShowDrop(element,event,data,index,nodes) {
-        this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
-    }
+	selectAndShowDrop(element, event, data, index, nodes) {
+		this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
+	}
 
 	toggleDrop(element) {
 		//d3.select(element)['moveToFront']();
@@ -147,7 +149,7 @@ export class TimelineComponent implements OnInit {
 			.mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
 			.mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
 			.zoomend((result) => this.emitter.provide('timeline:zoomend').next(result))
-			.zoomStreamCallback( result => this.emitter.provide('timeline:zoomStream').next(result))
+			.zoomStreamCallback(result => this.emitter.provide('timeline:zoomStream').next(result))
 			.eventColor(BASE_DROP_COLOR)
 			.click(this.clickEvent())
 			.dblclick(() => {
@@ -155,16 +157,16 @@ export class TimelineComponent implements OnInit {
 			});
 
 		const dataSet = this.drops.map(entities => ({
-			name: entities.name || "",
+			name: entities.name || '',
 			data: entities.data,
 		}));
 
-        const element = select(this.context.nativeElement)
-            .datum(dataSet);
+		const element = select(this.context.nativeElement)
+			.datum(dataSet);
 
 		chart(element);
 
-		if(this._markup){
+		if (this._markup) {
 			this.drawMarkup();
 		}
 

@@ -10,12 +10,12 @@ import { FormsModule } from '@angular/forms';
 import { ContextModule } from '@ansyn/context/context.module';
 
 @NgModule({
-	imports: [ CommonModule, CoreModule,FormsModule, ContextModule ],
+	imports: [CommonModule, CoreModule, FormsModule, ContextModule],
 	declarations: [ImagerySandBoxComponent],
 	entryComponents: [ImagerySandBoxComponent]
 })
 export class ImagerySandBoxModule {
-	constructor(store: Store <any>) {
+	constructor(store: Store<any>) {
 		const menu_item: MenuItem = {
 			name: 'Imagery SandBox',
 			component: ImagerySandBoxComponent,

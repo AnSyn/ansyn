@@ -3,8 +3,14 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 const animations: any[] = [
 	trigger('toastAnimation', [
-		transition(":enter", [style({ opactiy: 0, transform: 'translate(0, 100%)'}), animate('0.2s', style({ opactiy: 1, transform: 'translate(0, 0)'}))]),
-		transition(":leave", [style({ opactiy: 1, transform: 'translate(0, 0)'}), animate('0.2s', style({ opactiy: 0, transform: 'translate(0, 100%)'}))]),
+		transition(':enter', [style({
+			opactiy: 0,
+			transform: 'translate(0, 100%)'
+		}), animate('0.2s', style({ opactiy: 1, transform: 'translate(0, 0)' }))]),
+		transition(':leave', [style({ opactiy: 1, transform: 'translate(0, 0)' }), animate('0.2s', style({
+			opactiy: 0,
+			transform: 'translate(0, 100%)'
+		}))]),
 	])
 ];
 
@@ -28,7 +34,7 @@ export class ToastComponent {
 
 		this.showToastChange.emit(value);
 
-		if(value) {
+		if (value) {
 			this.timeoutRef = setTimeout(() => {
 				this.showToastChange.emit(false);
 

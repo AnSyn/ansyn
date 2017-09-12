@@ -1,1 +1,1 @@
-export {AlgorithmsModule} from './algorithms.module'
+export { AlgorithmsModule } from './algorithms.module';

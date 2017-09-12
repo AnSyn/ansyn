@@ -1,5 +1,5 @@
 export enum LayerType {
-    static,
-    dynamic,
-    complex
+	static,
+	dynamic,
+	complex
 };

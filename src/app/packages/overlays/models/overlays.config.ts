@@ -5,5 +5,5 @@ export interface IOverlaysConfig {
 	overlaysByTimeAndPolygon: string;
 	searchByCase: boolean;
 	overlaySource: string;
-	polygonGenerationDisatnce:number;
+	polygonGenerationDisatnce: number;
 }

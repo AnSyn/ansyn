@@ -34,7 +34,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 				url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'
 			})
 		});
-		return [osmLayer,openSeaMapLayer];
+		return [osmLayer, openSeaMapLayer];
 	}
 
 	createAsync(metaData: any): Promise<any> {

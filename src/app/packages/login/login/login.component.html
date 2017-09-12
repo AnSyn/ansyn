@@ -11,7 +11,8 @@
 
 			<div class="field">
 				<label for="password">Password</label>
-				<input id="password" name="password" type="password" [(ngModel)]="password" (input)="hideTryAgainMsg()" required/>
+				<input id="password" name="password" type="password" [(ngModel)]="password" (input)="hideTryAgainMsg()"
+					   required/>
 			</div>
 
 			<div class="try-again" [class.show]="tryAgainMsg">

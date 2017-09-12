@@ -7,9 +7,6 @@ import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 
 
-
-
-
 @NgModule({
 	imports: [
 		FormsModule,
@@ -17,7 +14,8 @@ import { TimelineTimepickerComponent } from './components/timeline-timepicker/ti
 		CoreModule
 
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent,TimelineTimepickerComponent ],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent],
 	exports: [StatusBarComponent]
 })
-export class StatusBarModule { }
+export class StatusBarModule {
+}

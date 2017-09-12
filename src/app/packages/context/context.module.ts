@@ -7,11 +7,11 @@ import { Http, HttpModule } from '@angular/http';
 import { IContextSource, IContextSourceConfig } from './context.interface';
 
 //this must be here in order to use it in InjectionToken
-export interface IContextConfig  {
+export interface IContextConfig {
 	contextSources: IContextSourceConfig[];
 }
 
-export interface  IContextSources {
+export interface IContextSources {
 	sources: any;
 }
 
@@ -36,31 +36,31 @@ export class ContextModule {
 			ngModule: ContextModule,
 			providers: [
 				ContextProviderService,
-				{provide: ContextConfig, useValue: config},
-				{provide: ContextSources ,useValue: sources}
+				{ provide: ContextConfig, useValue: config },
+				{ provide: ContextSources, useValue: sources }
 			]
 		};
 	}
 
-	constructor(public contextProviderService: ContextProviderService, @Inject(ContextSources)sourcesHandler, @Inject(ContextConfig)config:IContextConfig,private http: Http){
-		this.register(config,sourcesHandler);
+	constructor(public contextProviderService: ContextProviderService, @Inject(ContextSources)sourcesHandler, @Inject(ContextConfig)config: IContextConfig, private http: Http) {
+		this.register(config, sourcesHandler);
 
 	}
 
-	register(config,sourcesHandler){
-		config.contextSources.forEach(( itemConfig: IContextSourceConfig ) => {
+	register(config, sourcesHandler) {
+		config.contextSources.forEach((itemConfig: IContextSourceConfig) => {
 			if (!itemConfig.available) {
 				return;
 			}
 			const object: IContextSource = sourcesHandler[itemConfig.type];
 			const gateway = this.getGateway(itemConfig.apiObject);
-			const instance: IContextSource = new  (<any>object)(itemConfig,gateway );
+			const instance: IContextSource = new (<any>object)(itemConfig, gateway);
 			this.contextProviderService.register(itemConfig.type, instance);
 		});
 	}
 
-	getGateway(apiObject){
-		if(apiObject === "Http"){
+	getGateway(apiObject) {
+		if (apiObject === 'Http') {
 			return this.http;
 		}
 		return undefined;

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
-import { EditCaseComponent } from "../edit-case/edit-case.component";
-import { DeleteCaseComponent } from "../delete-case/delete-case.component";
+import { EditCaseComponent } from '../edit-case/edit-case.component';
+import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { HttpModule } from '@angular/http';
 import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
@@ -16,7 +16,7 @@ describe('ModalContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }),RouterTestingModule],
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();

@@ -2,7 +2,9 @@
 	<div class='status-container'>
 
 		<div class="left-buttons-container">
-			<button [hidden]="!overlay" (click)="backToWorldView($event)" class="back-to-world-view">Back to world view</button>
+			<button [hidden]="!overlay" (click)="backToWorldView($event)" class="back-to-world-view">Back to world
+				view
+			</button>
 
 			<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
 			<button [disabled]="disableGeoOptions" class='status-bar-link-maps-icon'>
@@ -14,7 +16,8 @@
 			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 		</div>
 
-		<ansyn-overlays-status-notifications [notInCase]="notInCase" [geoRegisteration]="disableGeoOptions"></ansyn-overlays-status-notifications>
+		<ansyn-overlays-status-notifications [notInCase]="notInCase"
+											 [geoRegisteration]="disableGeoOptions"></ansyn-overlays-status-notifications>
 		<!--<div class='status-bar-icons'>-->
 		<!-- maybe the will change that later
 			<a *ngIf='!active' (click)=followActiveMap($event)>f</a>

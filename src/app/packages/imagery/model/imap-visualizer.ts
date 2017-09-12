@@ -11,7 +11,7 @@ export interface IVisualizerEntity {
 	state?: 'static' | 'activeDisplad'
 }
 
-export type IMarkupEvent = {id: string, class: boolean}[];
+export type IMarkupEvent = { id: string, class: boolean }[];
 
 export interface IMapVisualizer {
 	type: string;
@@ -19,6 +19,7 @@ export interface IMapVisualizer {
 	onHoverFeature: EventEmitter<any>;
 	doubleClickFeature: EventEmitter<any>;
 	subscribers: Subscriber<any>[]
+
 	/**
 	 * @description This function is called after constructor and gives those args to the visualizer
 	 * @param {string} mapId

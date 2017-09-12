@@ -21,7 +21,7 @@ export class ImageryComponentManager {
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	public mapInstanceChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
+	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
 
 	public activeMapName: string;
 	private _plugins: IMapPlugin[] = [];
@@ -34,7 +34,7 @@ export class ImageryComponentManager {
 				private _baseSourceProviders: BaseMapSourceProvider[],
 				private config: IImageryConfig,
 				private _id: string) {
-		this.mapInstanceChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
+		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
 	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
@@ -42,7 +42,7 @@ export class ImageryComponentManager {
 			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 				this.resetView(layers[0], extent);
 				if (layers.length > 0) {
-					for(let i = 1; i < layers.length; i++) {
+					for (let i = 1; i < layers.length; i++) {
 						this._activeMap.addLayer(layers[i]);
 					}
 				}
@@ -58,7 +58,7 @@ export class ImageryComponentManager {
 	}
 
 	private resetVisualizers() {
-		this.visualizers.forEach((visualizer)=>{
+		this.visualizers.forEach((visualizer) => {
 			visualizer.onResetView();
 		});
 	}
@@ -73,7 +73,7 @@ export class ImageryComponentManager {
 		if (!releventMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === releventMapConfig.mapType && item.sourceType ===  releventMapConfig.mapSource);
+		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === releventMapConfig.mapType && item.sourceType === releventMapConfig.mapSource);
 		return sourceProvider.createAsync(releventMapConfig.mapSourceMetadata);
 	}
 
@@ -89,13 +89,17 @@ export class ImageryComponentManager {
 			this.buildActiveMapPlugins(activeMapName);
 			this.buildActiveMapVisualizers(activeMapName, map);
 			this.mapComponentInitilaized.emit(this.id);
-			this.mapInstanceChanged.emit({id: this.id, newMapInstanceName: activeMapName, oldMapInstanceName: oldMapName});
+			this.mapInstanceChanged.emit({
+				id: this.id,
+				newMapInstanceName: activeMapName,
+				oldMapInstanceName: oldMapName
+			});
 			mapCreatedSubscribe.unsubscribe();
 		});
 		if (layer) {
 			mapComponent.createMap([layer], position);
 		} else {
-			this.createMapSourceForMapType(providedMap.mapType).then((layers)=> {
+			this.createMapSourceForMapType(providedMap.mapType).then((layers) => {
 				mapComponent.createMap(layers, position);
 			});
 		}
@@ -150,7 +154,7 @@ export class ImageryComponentManager {
 	private buildActiveMapVisualizers(activeMapType: string, map: IMap) {
 		// Create Map visualizer's
 
-		const mapVisualizersConfig: [{visualizerClass: any, args: any}] = this.imageryProviderService.getVisualizersConfig(activeMapType);
+		const mapVisualizersConfig: [{ visualizerClass: any, args: any }] = this.imageryProviderService.getVisualizersConfig(activeMapType);
 		if (!mapVisualizersConfig) {
 			this._visualizers = [];
 			return;
@@ -164,7 +168,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public createVisualizers(existingVisualizersConfig: [{visualizerClass: any, args: any}], map: IMap): IMapVisualizer[] {
+	public createVisualizers(existingVisualizersConfig: [{ visualizerClass: any, args: any }], map: IMap): IMapVisualizer[] {
 		const visualizers: IMapVisualizer[] = [];
 
 		existingVisualizersConfig.forEach(provider => {
@@ -222,7 +226,7 @@ export class ImageryComponentManager {
 		return this._id;
 	}
 
-	public set id(value: string ){
+	public set id(value: string) {
 		this._id = value;
 	}
 

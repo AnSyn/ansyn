@@ -3,20 +3,27 @@ import { TestBed, inject } from '@angular/core/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
-	LoadOverlaysAction, LoadOverlaysSuccessAction,
-	OverlaysMarkupAction, OverlaysActionTypes, RedrawTimelineAction, DisplayOverlayFromStoreAction, SetTimelineStateAction,
-	DisplayOverlayAction, RequestOverlayByIDFromBackendAction
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysMarkupAction,
+	OverlaysActionTypes,
+	RedrawTimelineAction,
+	DisplayOverlayFromStoreAction,
+	SetTimelineStateAction,
+	DisplayOverlayAction,
+	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
-import { OverlaysService,OverlaysConfig } from '../services/overlays.service';
+import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
 import { OverlayReducer } from '../reducers/overlays.reducer';
 import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';
-import {BaseOverlaySourceProvider, IFetchParams} from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
-class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
-	sourceType = "Mock";
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
+	sourceType = 'Mock';
+
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.empty();
 	}
@@ -24,7 +31,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
 }
 
 
-describe("Overlays Effects ", () => {
+describe('Overlays Effects ', () => {
 	const overlays = <Overlay[]>[
 		{
 			id: '12',
@@ -50,14 +57,14 @@ describe("Overlays Effects ", () => {
 		providers: [
 			OverlaysEffects, {
 				provide: OverlaysService,
-				useValue: jasmine.createSpyObj('overlaysService', ['getByCase','search', 'getTimeStateByOverlay', 'getOverlayById'])
+				useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
 			},
 			{ provide: OverlaysConfig, useValue: {} },
-			{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
+			{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 		]
 	}));
 
-	beforeEach(inject([Store],(_store: Store<any>) =>{
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 	}));
 
@@ -70,36 +77,36 @@ describe("Overlays Effects ", () => {
 		};
 	}
 
-	it('effect - onOverlaysMarkupChanged$',() => {
+	it('effect - onOverlaysMarkupChanged$', () => {
 		const { runner, overlaysEffects } = setup();
 		const action = new OverlaysMarkupAction({});
 
 		runner.queue(action);
 		let count = 0;
-		overlaysEffects.onOverlaysMarkupChanged$.subscribe((action:Action) =>{
+		overlaysEffects.onOverlaysMarkupChanged$.subscribe((action: Action) => {
 			count++;
 			expect(action.type).toEqual(OverlaysActionTypes.OVERLAYS_MARKUPS);
 		});
 
-		expect(count).toBe(1)
+		expect(count).toBe(1);
 	});
 
-	it('effect - onRedrawTimeline$',() => {
+	it('effect - onRedrawTimeline$', () => {
 		const { runner, overlaysEffects } = setup();
 		const action = new RedrawTimelineAction();
 		runner.queue(action);
 		let count = 0;
-		overlaysEffects.onRedrawTimeline$.subscribe((result:boolean) =>{
+		overlaysEffects.onRedrawTimeline$.subscribe((result: boolean) => {
 			count++;
 			expect(result).toBe(true);
 		});
-		expect(count).toBe(1)
+		expect(count).toBe(1);
 	});
 
 	it('it should load all the overlays', () => {
 		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 		let tmp = <Overlay[]>[];
-		overlays.forEach(i => tmp.push(Object.assign({}, i,{
+		overlays.forEach(i => tmp.push(Object.assign({}, i, {
 			//date: new Date(i.photoTime),
 			//sourceType: overlaysConfig.overlaySource
 		})));
@@ -122,10 +129,10 @@ describe("Overlays Effects ", () => {
 		const fakeOverlay = new Overlay();
 		fakeOverlay.id = 'test';
 
-		const expectedResult = new DisplayOverlayAction(<any>{overlay: fakeOverlay, map_id: 'testMapId'});
+		const expectedResult = new DisplayOverlayAction(<any>{ overlay: fakeOverlay, map_id: 'testMapId' });
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 
-		runner.queue(new RequestOverlayByIDFromBackendAction({overlayId: 'test', map_id: 'testMapId'}));
+		runner.queue(new RequestOverlayByIDFromBackendAction({ overlayId: 'test', map_id: 'testMapId' }));
 
 		let result = null;
 		overlaysEffects.onRequestOverlayByID$.subscribe(_result => {
@@ -137,11 +144,11 @@ describe("Overlays Effects ", () => {
 	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
 		it('should be moved forwards', () => {
 			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
-			const getTimeStateByOverlayResult = {from: new Date(1500), to: new Date(6500) };
+			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
 
 			const overlays = [
-				{id: '1234', date: new Date(6000)}
+				{ id: '1234', date: new Date(6000) }
 			];
 			const timelineState = {
 				from: new Date(0),
@@ -150,24 +157,24 @@ describe("Overlays Effects ", () => {
 			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
 			store.dispatch(new SetTimelineStateAction(timelineState));
 
-			const action = new DisplayOverlayFromStoreAction({id: '1234'});
+			const action = new DisplayOverlayFromStoreAction({ id: '1234' });
 			runner.queue(action);
 
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
 				expect(result instanceof SetTimelineStateAction).toBeTruthy();
 				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
 				expect(result.payload).toEqual(getTimeStateByOverlayResult);
-			})
+			});
 		});
 
 		it('should be moved backwards', () => {
 
 			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
-			const getTimeStateByOverlayResult = {from: new Date(1500), to: new Date(6500) };
+			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
 
 			const loadedOverlays = [
-				{id: '5678', date: new Date(4000)}
+				{ id: '5678', date: new Date(4000) }
 			];
 			const timelineState = {
 				from: new Date(5000),
@@ -176,7 +183,7 @@ describe("Overlays Effects ", () => {
 			store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
 			store.dispatch(new SetTimelineStateAction(timelineState));
 
-			const action = new DisplayOverlayFromStoreAction({id: '5678'});
+			const action = new DisplayOverlayFromStoreAction({ id: '5678' });
 			runner.queue(action);
 
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
@@ -187,17 +194,19 @@ describe("Overlays Effects ", () => {
 		});
 	});
 
-	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store' ,() => {
+	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
 		const { runner, overlaysEffects } = setup();
 		const loadedOverlays = [
-			{id: 'tmp', image:'tmp_img'},
-			{id: 'tmp2', image:'tmp_img2'}
+			{ id: 'tmp', image: 'tmp_img' },
+			{ id: 'tmp2', image: 'tmp_img2' }
 		];
 		store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
-		const action  = new DisplayOverlayFromStoreAction({ id: "tmp", map_id: '4444'});
+		const action = new DisplayOverlayFromStoreAction({ id: 'tmp', map_id: '4444' });
 		runner.queue(action);
 		let result: DisplayOverlayAction;
-		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => { result = _result;});
+		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => {
+			result = _result;
+		});
 		expect(result.constructor).toEqual(DisplayOverlayAction);
 		expect(result.payload.overlay).toEqual(loadedOverlays[0] as any);
 		expect(result.payload.map_id).toEqual('4444');

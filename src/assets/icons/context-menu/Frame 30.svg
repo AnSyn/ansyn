@@ -1,59 +1,65 @@
-<svg width="32" height="32" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<title>Frame 30</title>
-<desc>Created using Figma</desc>
-<g id="Canvas" transform="translate(-28687 -4901)">
-<clipPath id="clip-0" clip-rule="evenodd">
-<path d="M 28687 4901L 28719 4901L 28719 4933L 28687 4933L 28687 4901Z" fill="#FFFFFF"/>
-</clipPath>
-<g id="Frame 30" clip-path="url(#clip-0)">
-<g id="bg" filter="url(#filter0_dddd)">
-<use xlink:href="#path0_fill" transform="translate(28687 4901)" fill="#187284"/>
-<mask id="mask0_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(28687 4901)"/>
-</mask>
-<g mask="url(#mask0_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(28687 4901)" fill="url(#paint1_linear)"/>
-<use xlink:href="#path1_stroke_2x" transform="translate(28687 4901)" fill="url(#paint2_linear)"/>
-</g>
-</g>
-</g>
-</g>
-<defs>
-<filter id="filter0_dddd" filterUnits="userSpaceOnUse" x="28687" y="4901" width="32" height="32" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
-<feOffset dx="0" dy="12"/>
-<feGaussianBlur stdDeviation="6"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.237602 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
-<feOffset dx="0" dy="0"/>
-<feGaussianBlur stdDeviation="6"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
-<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
-<feOffset dx="0" dy="6"/>
-<feGaussianBlur stdDeviation="3"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0"/>
-<feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
-<feOffset dx="0" dy="0"/>
-<feGaussianBlur stdDeviation="3"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
-<feBlend mode="normal" in2="effect3_dropShadow" result="effect4_dropShadow"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect4_dropShadow" result="shape"/>
-</filter>
-<linearGradient id="paint1_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 31.6869 -31.6869 0 16 0)">
-<stop offset="0" stop-color="#000000" stop-opacity="0.01"/>
-<stop offset="0.8" stop-color="#000000" stop-opacity="0.02"/>
-<stop offset="1" stop-color="#000000" stop-opacity="0.04"/>
-</linearGradient>
-<linearGradient id="paint2_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 32 -32 0 16 0)">
-<stop offset="0" stop-color="#FFFFFF" stop-opacity="0.12"/>
-<stop offset="0.2" stop-color="#FFFFFF" stop-opacity="0.06"/>
-<stop offset="1" stop-color="#FFFFFF" stop-opacity="0.01"/>
-</linearGradient>
-<path id="path0_fill" fill-rule="evenodd" d="M 16 32C 24.8366 32 32 24.8366 32 16C 32 7.16344 24.8366 0 16 0C 7.16344 0 0 7.16344 0 16C 0 24.8366 7.16344 32 16 32Z"/>
-<path id="path1_stroke_2x" d="M 16 32.5C 25.1127 32.5 32.5 25.1127 32.5 16L 31.5 16C 31.5 24.5604 24.5604 31.5 16 31.5L 16 32.5ZM 32.5 16C 32.5 6.8873 25.1127 -0.5 16 -0.5L 16 0.5C 24.5604 0.5 31.5 7.43959 31.5 16L 32.5 16ZM 16 -0.5C 6.8873 -0.5 -0.5 6.8873 -0.5 16L 0.5 16C 0.5 7.43959 7.43959 0.5 16 0.5L 16 -0.5ZM -0.5 16C -0.5 25.1127 6.8873 32.5 16 32.5L 16 31.5C 7.43959 31.5 0.5 24.5604 0.5 16L -0.5 16Z"/>
-</defs>
+<svg width="32" height="32" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Frame 30</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-28687 -4901)">
+		<clipPath id="clip-0" clip-rule="evenodd">
+			<path d="M 28687 4901L 28719 4901L 28719 4933L 28687 4933L 28687 4901Z" fill="#FFFFFF"/>
+		</clipPath>
+		<g id="Frame 30" clip-path="url(#clip-0)">
+			<g id="bg" filter="url(#filter0_dddd)">
+				<use xlink:href="#path0_fill" transform="translate(28687 4901)" fill="#187284"/>
+				<mask id="mask0_outline_ins">
+					<use xlink:href="#path0_fill" fill="white" transform="translate(28687 4901)"/>
+				</mask>
+				<g mask="url(#mask0_outline_ins)">
+					<use xlink:href="#path1_stroke_2x" transform="translate(28687 4901)" fill="url(#paint1_linear)"/>
+					<use xlink:href="#path1_stroke_2x" transform="translate(28687 4901)" fill="url(#paint2_linear)"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<filter id="filter0_dddd" filterUnits="userSpaceOnUse" x="28687" y="4901" width="32" height="32"
+				color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
+			<feOffset dx="0" dy="12"/>
+			<feGaussianBlur stdDeviation="6"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.237602 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
+			<feOffset dx="0" dy="0"/>
+			<feGaussianBlur stdDeviation="6"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
+			<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
+			<feOffset dx="0" dy="6"/>
+			<feGaussianBlur stdDeviation="3"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0"/>
+			<feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
+			<feOffset dx="0" dy="0"/>
+			<feGaussianBlur stdDeviation="3"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
+			<feBlend mode="normal" in2="effect3_dropShadow" result="effect4_dropShadow"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect4_dropShadow" result="shape"/>
+		</filter>
+		<linearGradient id="paint1_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse"
+						gradientTransform="matrix(0 31.6869 -31.6869 0 16 0)">
+			<stop offset="0" stop-color="#000000" stop-opacity="0.01"/>
+			<stop offset="0.8" stop-color="#000000" stop-opacity="0.02"/>
+			<stop offset="1" stop-color="#000000" stop-opacity="0.04"/>
+		</linearGradient>
+		<linearGradient id="paint2_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse"
+						gradientTransform="matrix(0 32 -32 0 16 0)">
+			<stop offset="0" stop-color="#FFFFFF" stop-opacity="0.12"/>
+			<stop offset="0.2" stop-color="#FFFFFF" stop-opacity="0.06"/>
+			<stop offset="1" stop-color="#FFFFFF" stop-opacity="0.01"/>
+		</linearGradient>
+		<path id="path0_fill" fill-rule="evenodd"
+			  d="M 16 32C 24.8366 32 32 24.8366 32 16C 32 7.16344 24.8366 0 16 0C 7.16344 0 0 7.16344 0 16C 0 24.8366 7.16344 32 16 32Z"/>
+		<path id="path1_stroke_2x"
+			  d="M 16 32.5C 25.1127 32.5 32.5 25.1127 32.5 16L 31.5 16C 31.5 24.5604 24.5604 31.5 16 31.5L 16 32.5ZM 32.5 16C 32.5 6.8873 25.1127 -0.5 16 -0.5L 16 0.5C 24.5604 0.5 31.5 7.43959 31.5 16L 32.5 16ZM 16 -0.5C 6.8873 -0.5 -0.5 6.8873 -0.5 16L 0.5 16C 0.5 7.43959 7.43959 0.5 16 0.5L 16 -0.5ZM -0.5 16C -0.5 25.1127 6.8873 32.5 16 32.5L 16 31.5C 7.43959 31.5 0.5 24.5604 0.5 16L -0.5 16Z"/>
+	</defs>
 </svg>

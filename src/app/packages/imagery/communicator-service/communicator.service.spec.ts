@@ -11,27 +11,30 @@ import { MapPosition } from '../model/map-position';
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: ImageryComponentManager = <any>{
-		id: "1",
+		id: '1',
 		centerChanged: new EventEmitter<GeoJSON.Point>(),
-		positionChanged: new EventEmitter<{id: string, position: MapPosition}>(),
+		positionChanged: new EventEmitter<{ id: string, position: MapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		mapInstanceChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
+		mapInstanceChanged: new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>()
 	};
 
 	const componentManager2: ImageryComponentManager = <any>{
-		id: "2",
+		id: '2',
 		centerChanged: new EventEmitter<GeoJSON.Point>(),
-		positionChanged: new EventEmitter<{id: string, position: MapPosition}>(),
+		positionChanged: new EventEmitter<{ id: string, position: MapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		mapInstanceChanged: new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>()
+		mapInstanceChanged: new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>()
 	};
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({declarations: [], providers: [ ImageryCommunicatorService]}).compileComponents();
+		TestBed.configureTestingModule({
+			declarations: [],
+			providers: [ImageryCommunicatorService]
+		}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService], (_imageryCommunicatorService) => {
@@ -47,8 +50,8 @@ describe('ImageryCommunicatorService', () => {
 		spyOn(imageryCommunicatorService.instanceCreated, 'emit');
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({
-				communicatorsIds: ["1"],
-				currentCommunicatorId: "1"
+				communicatorsIds: ['1'],
+				currentCommunicatorId: '1'
 			}
 		);
 	});
@@ -60,7 +63,7 @@ describe('ImageryCommunicatorService', () => {
 
 		expect((<any>(imageryCommunicatorService.provide(componentManager2.id)))._manager).toEqual(componentManager2);
 		expect((<any>(imageryCommunicatorService.provide(componentManager1.id)))._manager).toEqual(componentManager1);
-		expect(imageryCommunicatorService.provide("3")).toEqual(null);
+		expect(imageryCommunicatorService.provide('3')).toEqual(null);
 	});
 
 	it('communicators should return object containing the communicators', () => {
@@ -86,11 +89,11 @@ describe('ImageryCommunicatorService', () => {
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		imageryCommunicatorService.createCommunicator(componentManager2);
 
-		imageryCommunicatorService.replaceCommunicatorId(componentManager2.id, "3");
+		imageryCommunicatorService.replaceCommunicatorId(componentManager2.id, '3');
 
-		expect(imageryCommunicatorService.provide("2")).toEqual(null);
-		expect((<any>(imageryCommunicatorService.provide("3")))._manager).toEqual(componentManager2);
-		expect(componentManager2.id).toEqual("3");
+		expect(imageryCommunicatorService.provide('2')).toEqual(null);
+		expect((<any>(imageryCommunicatorService.provide('3')))._manager).toEqual(componentManager2);
+		expect(componentManager2.id).toEqual('3');
 	});
 
 	it('remove should remove the communicator from service', () => {

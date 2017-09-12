@@ -33,7 +33,7 @@ export class ContextElasticSource implements IContextSource {
 			} else {
 				console.log('All is well');
 			}
-		})
+		});
 	}
 
 	find(criteria: ContextCriteria) {
@@ -72,7 +72,7 @@ export class ContextElasticSource implements IContextSource {
 			body: {
 				doc
 			}
-		}))
+		}));
 	}
 
 	parseToSource(data) {

@@ -11,21 +11,35 @@ export const MenuActionTypes = {
 
 export class AddMenuItemAction implements Action {
 	type = MenuActionTypes.ADD_MENU_ITEM;
-	constructor(public payload: MenuItem){}
+
+	constructor(public payload: MenuItem) {
+	}
 }
+
 export class SelectMenuItemAction implements Action {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
-	constructor(public payload: number){}
+
+	constructor(public payload: number) {
+	}
 }
+
 export class UnSelectMenuItemAction implements Action {
 	type = MenuActionTypes.UNSELECT_MENU_ITEM;
-	constructor(public payload?: any){}
+
+	constructor(public payload?: any) {
+	}
 }
+
 export class AnimationStartAction implements Action {
 	type = MenuActionTypes.ANIMATION_START;
-	constructor(public payload?: any){}
+
+	constructor(public payload?: any) {
+	}
 }
+
 export class AnimationEndAction implements Action {
 	type = MenuActionTypes.ANIMATION_END;
-	constructor(public payload?: any){}
+
+	constructor(public payload?: any) {
+	}
 }

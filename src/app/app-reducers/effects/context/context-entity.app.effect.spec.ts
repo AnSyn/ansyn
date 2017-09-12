@@ -17,31 +17,34 @@ describe('ContextEntityAppEffects', () => {
 	let effectsRunner: EffectsRunner;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let imageryCommunicatorServiceMock = {
-		provide:() => {}
+		provide: () => {
+		}
 	};
 	const imageryComm = {
-		getVisualizer: () => {}
+		getVisualizer: () => {
+		}
 	};
 	const visualizer = {
-		setEntities: () => {},
-		setReferenceDate: () => {}
-	};
-
-	const feature: GeoJSON.Feature<any> = {
-		"type": "Feature",
-		"properties": {
+		setEntities: () => {
 		},
-		"geometry": {
-			"type": "Point",
-			"coordinates": [35.71991824722275, 32.709192409794866]
+		setReferenceDate: () => {
 		}
 	};
 
-	const fakeContextEntities = [{id: '1', date: new Date("2015-04-17T03:55:12.129Z"), featureJson: feature}];
+	const feature: GeoJSON.Feature<any> = {
+		'type': 'Feature',
+		'properties': {},
+		'geometry': {
+			'type': 'Point',
+			'coordinates': [35.71991824722275, 32.709192409794866]
+		}
+	};
+
+	const fakeContextEntities = [{ id: '1', date: new Date('2015-04-17T03:55:12.129Z'), featureJson: feature }];
 	const cases: Case[] = [{
 		state: {
 			contextEntities: fakeContextEntities,
-			time: { type: '',from: new Date(), to: new Date()},
+			time: { type: '', from: new Date(), to: new Date() },
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -55,9 +58,9 @@ describe('ContextEntityAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {overlay: {date: new Date()}}},
-					{id: 'imagery2', data: {overlay: {date: new Date()}}},
-					{id: 'imagery3', data: {overlay: {date: new Date()}}}
+					{ id: 'imagery1', data: { overlay: { date: new Date() } } },
+					{ id: 'imagery2', data: { overlay: { date: new Date() } } },
+					{ id: 'imagery3', data: { overlay: { date: new Date() } } }
 				],
 				active_map_id: 'imagery1'
 			}
@@ -68,7 +71,7 @@ describe('ContextEntityAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({cases: CasesReducer})
+				StoreModule.provideStore({ cases: CasesReducer })
 			],
 			providers: [
 				ContextEntityAppEffects,
@@ -85,8 +88,8 @@ describe('ContextEntityAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const selected_case = cases[0];
-		const icaseState = {cases, selected_case} as any;
-		const fakeStore = {cases: icaseState};
+		const icaseState = { cases, selected_case } as any;
+		const fakeStore = { cases: icaseState };
 
 		spyOn(store, 'select').and.callFake(type => {
 			return Observable.of(fakeStore[type]);
@@ -114,7 +117,7 @@ describe('ContextEntityAppEffects', () => {
 		expect(visualizer.setEntities['calls'].count()).toBe(3);
 	});
 
-	it("displayEntityFromCase$ DOESN'T display context entity from selected case if context entity isn't provided", () => {
+	it('displayEntityFromCase$ DOESN\'T display context entity from selected case if context entity isn\'t provided', () => {
 		cases[0].state.contextEntities = null;
 		effectsRunner.queue(new SelectCaseByIdAction('fakeCaseId'));
 
@@ -134,7 +137,7 @@ describe('ContextEntityAppEffects', () => {
 		expect(visualizer.setEntities).toHaveBeenCalled();
 	});
 
-	it("displayEntityFromNewMap$ should NOT display on new map if doesn't exist in case", () => {
+	it('displayEntityFromNewMap$ should NOT display on new map if doesn\'t exist in case', () => {
 		cases[0].state.contextEntities = null;
 		const communicators: Array<string> = ['imagery2'];
 		effectsRunner.queue(new AddMapInstacneAction({
@@ -150,8 +153,8 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 
 		spyOn(visualizer, 'setReferenceDate');
-		let fake_overlay = <any>{id: 'overlayId', isFullOverlay: true};
-		effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery2'}));
+		let fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true };
+		effectsRunner.queue(new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery2' }));
 
 		contextEntityAppEffects.displayEntityTimeFromOverlay$.subscribe();
 		expect(visualizer.setReferenceDate).toHaveBeenCalled();
@@ -161,8 +164,8 @@ describe('ContextEntityAppEffects', () => {
 	it('displayEntityTimeFromOverlay$ should NOT display set overlay date to context visualizer', () => {
 		cases[0].state.contextEntities = null;
 		spyOn(visualizer, 'setReferenceDate');
-		let fake_overlay = <any>{id: 'overlayId', isFullOverlay: true};
-		effectsRunner.queue(new DisplayOverlayAction({overlay: fake_overlay, map_id: 'imagery2'}));
+		let fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true };
+		effectsRunner.queue(new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery2' }));
 
 		contextEntityAppEffects.displayEntityTimeFromOverlay$.subscribe();
 		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();
@@ -173,7 +176,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 
 		spyOn(visualizer, 'setReferenceDate');
-		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery2'}));
+		effectsRunner.queue(new BackToWorldAction({ mapId: 'imagery2' }));
 
 		contextEntityAppEffects.displayEntityTimeFromBackToWorld$.subscribe();
 		expect(visualizer.setReferenceDate).toHaveBeenCalled();
@@ -184,7 +187,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = null;
 
 		spyOn(visualizer, 'setReferenceDate');
-		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery2'}));
+		effectsRunner.queue(new BackToWorldAction({ mapId: 'imagery2' }));
 
 		contextEntityAppEffects.displayEntityTimeFromBackToWorld$.subscribe();
 		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();

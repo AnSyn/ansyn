@@ -4,7 +4,11 @@ import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ContextMenuDisplayAction, ContextMenuShowAction, SetContextMenuFiltersAction } from '@ansyn/map-facade/actions/map.actions';
+import {
+	ContextMenuDisplayAction,
+	ContextMenuShowAction,
+	SetContextMenuFiltersAction
+} from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
@@ -19,7 +23,7 @@ describe('ContextMenuAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({cases: CasesReducer, overlays: OverlayReducer})
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer })
 			],
 			providers: [
 				ContextMenuAppEffects
@@ -47,11 +51,11 @@ describe('ContextMenuAppEffects', () => {
 			point: 'point'
 		});
 		spyOn(OverlaysService, 'pluck').and.returnValue([
-			{id: 1, footprint: 'in'},
-			{id: 2, footprint: 'in'},
-			{id: 3, footprint: 'out'},
-			{id: 4, footprint: 'out'},
-			{id: 5, footprint: 'in'}
+			{ id: 1, footprint: 'in' },
+			{ id: 2, footprint: 'in' },
+			{ id: 3, footprint: 'out' },
+			{ id: 4, footprint: 'out' },
+			{ id: 5, footprint: 'in' }
 		]);
 		spyOn(CasesService, 'activeMap').and.returnValue({});
 		spyOnProperty(turf, 'inside', 'get').and.returnValue((point, footprint) => footprint === 'in');

@@ -43,7 +43,7 @@ describe('CasesToolsComponent', () => {
 
 	it('add-case button should call showCaseModal()', () => {
 		spyOn(component, 'showEditCaseModal');
-		let button = fixture.nativeElement.querySelector("button.add-case");
+		let button = fixture.nativeElement.querySelector('button.add-case');
 		button.click();
 		fixture.detectChanges();
 		expect(component.showEditCaseModal).toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe('CasesToolsComponent', () => {
 
 	it('save-case button should call showCaseModal()', () => {
 		spyOn(component, 'showSaveCaseModal');
-		const button = fixture.nativeElement.querySelector("button.save-case");
+		const button = fixture.nativeElement.querySelector('button.save-case');
 		button.click();
 		fixture.detectChanges();
 		expect(component.showSaveCaseModal).toHaveBeenCalled();

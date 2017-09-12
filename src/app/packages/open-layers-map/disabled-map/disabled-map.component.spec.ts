@@ -9,7 +9,7 @@ describe('openLayersMap DisabledMapComponent spec', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ DisabledMapComponent ]
+			declarations: [DisabledMapComponent]
 		}).compileComponents();
 	}));
 
@@ -19,7 +19,9 @@ describe('openLayersMap DisabledMapComponent spec', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {expect(component).toBeTruthy(); });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
 	it('createMap should raise mapCreated event', () => {
 

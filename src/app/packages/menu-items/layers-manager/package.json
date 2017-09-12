@@ -1,18 +1,18 @@
 {
-  "name": "@ansyn/menu-items/layaers-manager",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "peerDependencies": {
-    "@angular/common": "~2.4.0",
-    "@angular/core": "^2.4.0",
-    "@ansyn/core": "^0.0.1",
-    "angular-tree-component": "^3.3.0"
-  }
+	"name": "@ansyn/menu-items/layaers-manager",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"peerDependencies": {
+		"@angular/common": "~2.4.0",
+		"@angular/core": "^2.4.0",
+		"@ansyn/core": "^0.0.1",
+		"angular-tree-component": "^3.3.0"
+	}
 }

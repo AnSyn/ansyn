@@ -21,16 +21,16 @@ export class Overlay {
 	azimuth: number; //radians
 	approximateTransform?: any;
 	csmState?: string;
-	sourceType?:string;
+	sourceType?: string;
 	isFullOverlay: boolean;
 	isGeoRegistered: boolean;
 }
 
-export interface OverlaysCriteria  {
+export interface OverlaysCriteria {
 	to: string;
 	from: string;
-	polygon:GeometryObject;
-	caseId?:string;
+	polygon: GeometryObject;
+	caseId?: string;
 };
 
 export interface OverlaySpecialObject {

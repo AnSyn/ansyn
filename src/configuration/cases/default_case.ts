@@ -6,29 +6,29 @@ export const defaultCase = {
 	state: {
 		maps: {
 			layouts_index: 0,
-			active_map_id: "default_imagery1",
+			active_map_id: 'default_imagery1',
 			data: [{
-					"id": "default_imagery1",
-					"mapType": "openLayersMap",
-					"data": {
-						"position": {
-							"center": {
-								"type": 'Point',
-								"coordinates": [
-									-74.07608662469286,
-									40.71400637493053
-								]
-							},
-							"zoom": 4,
-							"rotation": 6.287545840111019
-						}
+				'id': 'default_imagery1',
+				'mapType': 'openLayersMap',
+				'data': {
+					'position': {
+						'center': {
+							'type': 'Point',
+							'coordinates': [
+								-74.07608662469286,
+								40.71400637493053
+							]
+						},
+						'zoom': 4,
+						'rotation': 6.287545840111019
 					}
 				}
+			}
 			]
 		},
-		"region": {
-			"type": "Polygon",
-			"coordinates": [
+		'region': {
+			'type': 'Polygon',
+			'coordinates': [
 				[
 					[
 						-74.09214019775389,
@@ -53,10 +53,10 @@ export const defaultCase = {
 				]
 			]
 		},
-		"time": {
-			"type": "absolute",
-			"from": new Date(new Date().getTime() - 3600000 * 24 * 365).toISOString(),
-			"to": new Date().toISOString()
+		'time': {
+			'type': 'absolute',
+			'from': new Date(new Date().getTime() - 3600000 * 24 * 365).toISOString(),
+			'to': new Date().toISOString()
 		},
 		facets: {
 			filters: []

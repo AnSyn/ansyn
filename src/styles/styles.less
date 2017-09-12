@@ -1,143 +1,145 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'icons';
 
-body{
+body {
 	margin: 0;
-	font-family:'Open Sans',sans-serif;
-	font-size:14px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
 	background-image: url(/assets/background.webp);
 	background-repeat: no-repeat;
 	background-size: cover;
 }
 
-circle.drop.selected{
+circle.drop.selected {
 	fill: black;
 }
 
-.main-timeline{
+.main-timeline {
 	padding: 0 50px;
-	width:100%;
-	margin:0px auto;
+	width: 100%;
+	margin: 0px auto;
 	box-sizing: border-box;
 }
 
-button{
-	cursor:pointer;
+button {
+	cursor: pointer;
 }
-button[disabled]{
-	cursor:initial;
-}
-/* latin */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans Light'), local('OpenSans-Light'), url(/assets/fonts/Open_Sans/OpenSans-Light.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+
+button[disabled] {
+	cursor: initial;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url(/assets/fonts/Open_Sans/OpenSans-Regular.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 300;
+	src: local('Open Sans Light'), local('OpenSans-Light'), url(/assets/fonts/Open_Sans/OpenSans-Light.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(/assets/fonts/Open_Sans/OpenSans-Semibold.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'), url(/assets/fonts/Open_Sans/OpenSans-Regular.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(/assets/fonts/Open_Sans/OpenSans-Bold.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 600;
+	src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(/assets/fonts/Open_Sans/OpenSans-Semibold.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 800;
-  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url(/assets/fonts/Open_Sans/OpenSans-ExtraBold.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-
-/* latin */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 300;
-  src: local('Open Sans Light Italic'), local('OpenSansLight-Italic'), url(/assets/fonts/Open_Sans/OpenSans-LightItalic.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Open Sans Bold'), local('OpenSans-Bold'), url(/assets/fonts/Open_Sans/OpenSans-Bold.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(/assets/fonts/Open_Sans/OpenSans-Italic.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 800;
+	src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url(/assets/fonts/Open_Sans/OpenSans-ExtraBold.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 600;
-  src: local('Open Sans Semibold Italic'), local('OpenSans-SemiboldItalic'), url(/assets/fonts/Open_Sans/OpenSans-SemiboldItalic.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 300;
+	src: local('Open Sans Light Italic'), local('OpenSansLight-Italic'), url(/assets/fonts/Open_Sans/OpenSans-LightItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 700;
-  src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'), url(/assets/fonts/Open_Sans/OpenSans-BoldItalic.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 400;
+	src: local('Open Sans Italic'), local('OpenSans-Italic'), url(/assets/fonts/Open_Sans/OpenSans-Italic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 800;
-  src: local('Open Sans Extrabold Italic'), local('OpenSans-ExtraboldItalic'), url(/assets/fonts/Open_Sans/OpenSans-ExtraBoldItalic.ttf) format('truetype');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 600;
+	src: local('Open Sans Semibold Italic'), local('OpenSans-SemiboldItalic'), url(/assets/fonts/Open_Sans/OpenSans-SemiboldItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
-.spinner-wrapper{
-	position:absolute;
-	top:0;
-	left:0;
-	height:0px;
-	width:0px;
+/* latin */
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 700;
+	src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'), url(/assets/fonts/Open_Sans/OpenSans-BoldItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 800;
+	src: local('Open Sans Extrabold Italic'), local('OpenSans-ExtraboldItalic'), url(/assets/fonts/Open_Sans/OpenSans-ExtraBoldItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+.spinner-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 0px;
+	width: 0px;
 	pointer-events: none;
 }
 
-.spinner-before{
-	background:black;
-	opacity:0.7;
-	position : absolute;
+.spinner-before {
+	background: black;
+	opacity: 0.7;
+	position: absolute;
 	justify-content: center;
-	display:flex;
-	align-items:center;
-	z-index:9999999;
+	display: flex;
+	align-items: center;
+	z-index: 9999999;
 }
-.spinner-before:before{
-	z-index:1000;
+
+.spinner-before:before {
+	z-index: 1000;
 	content: ' ';
 	margin: 0 auto 1rem;
 	width: 50px;
@@ -146,26 +148,30 @@ button[disabled]{
 	border-left: 0;
 	border-top: 0;
 	border-radius: 50%;
-	animation-name:spin;
-	animation-duration:1s;
+	animation-name: spin;
+	animation-duration: 1s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
-//	transform:rotate(360deg);
+	//	transform:rotate(360deg);
 }
+
 .spinner-text {
-	z-index:9999999;
-	color:white;
-	top:50px;
+	z-index: 9999999;
+	color: white;
+	top: 50px;
 	justify-content: center;
-	align-items:center;
-	text-align:center;
-	display:flex;
+	align-items: center;
+	text-align: center;
+	display: flex;
 }
 
-
-@keyframes spin  {
-	0% { transform: rotate(0deg)}
-	100%{ transform: rotate(360deg)}
+@keyframes spin {
+	0% {
+		transform: rotate(0deg)
+	}
+	100% {
+		transform: rotate(360deg)
+	}
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -176,8 +182,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 @font-face {
 	font-family: 'icomoon';
-	src:  url('/assets/fonts/icomoon/icomoon.eot?mxpept');
-	src:  url('/assets/fonts/icomoon/icomoon.eot?mxpept#iefix') format('embedded-opentype'),
+	src: url('/assets/fonts/icomoon/icomoon.eot?mxpept');
+	src: url('/assets/fonts/icomoon/icomoon.eot?mxpept#iefix') format('embedded-opentype'),
 	url('/assets/fonts/icomoon/icomoon.ttf?mxpept') format('truetype'),
 	url('/assets/fonts/icomoon/icomoon.woff?mxpept') format('woff'),
 	url('/assets/fonts/icomoon/icomoon.svg?mxpept#icomoon') format('svg');

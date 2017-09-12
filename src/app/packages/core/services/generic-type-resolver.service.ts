@@ -3,9 +3,10 @@ import { GenericTypeResolver, InjectionResolverFilter, Type } from './generic-ty
 
 @Injectable()
 export class GenericTypeResolverService {
-    constructor(private injector: Injector) { }
+	constructor(private injector: Injector) {
+	}
 
-    resolveMultiInjection(token: Type, filterFunction: InjectionResolverFilter = null, isSingelton: boolean = false): any {
-        return GenericTypeResolver.resolveMultiInjection(this.injector, token, filterFunction, isSingelton);
-    }
+	resolveMultiInjection(token: Type, filterFunction: InjectionResolverFilter = null, isSingelton: boolean = false): any {
+		return GenericTypeResolver.resolveMultiInjection(this.injector, token, filterFunction, isSingelton);
+	}
 }

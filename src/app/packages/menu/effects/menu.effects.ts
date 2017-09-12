@@ -10,8 +10,10 @@ import { MenuActionTypes } from '@ansyn/core';
 @Injectable()
 export class MenuEffects {
 
-	constructor(private actions$: Actions){}
-	@Effect({dispatch: false})
+	constructor(private actions$: Actions) {
+	}
+
+	@Effect({ dispatch: false })
 	onSelectMenuItem$: Observable<any> = this.actions$
 		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
 		.map((action) => {

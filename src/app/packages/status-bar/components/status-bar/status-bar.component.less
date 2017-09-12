@@ -1,15 +1,16 @@
 @import "~@ansyn/core/less/common";
+
 @share-link-padding-bottom: 20px;
 
-div.status-bar-container{
+div.status-bar-container {
 	position: relative;
 	display: flex;
 	width: 100%;
-	height:35px;
+	height: 35px;
 	transform: translate(0, -100%);
 	justify-content: flex-end;
 
-	div.navigation-area{
+	div.navigation-area {
 		background: white;
 		width: 144px;
 		height: 100%;
@@ -19,41 +20,40 @@ div.status-bar-container{
 		padding: 0 10px;
 		box-sizing: border-box;
 		z-index: 1;
-		button{
+		button {
 			outline: none;
 			width: 24px;
 			height: 24px;
 			background: #D8D8D8;
 			border: none;
 			padding: 0;
-			&.expand{
+			&.expand {
 				background: transparent;
 			}
-			&:active{
+			&:active {
 				box-shadow: 0 0 2px 2px #666;
 			}
-			&.active{
+			&.active {
 				box-shadow: 0 0 2px 2px #666;
 			}
 		}
 	}
 
-
 	div.status-bar {
 		background: @status-color;
-		height:100%;
+		height: 100%;
 		width: 100%;
 		display: flex;
 		box-sizing: border-box;
 		padding: 0 5px;
 		justify-content: flex-end;
 		align-items: center;
-		font-size:14px;
+		font-size: 14px;
 
 		div.left-side {
 			display: flex;
 			width: 50%;
-			position:relative;
+			position: relative;
 			justify-content: space-between;
 
 			.back-to-world-view {
@@ -71,7 +71,7 @@ div.status-bar-container{
 			}
 
 			button.active {
-				box-shadow:	inset 0 0 2px #FFFFFF;
+				box-shadow: inset 0 0 2px #FFFFFF;
 			}
 		}
 
@@ -82,7 +82,7 @@ div.status-bar-container{
 			justify-content: center;
 			flex-direction: column;
 		}
-		.overlays-count{
+		.overlays-count {
 			min-width: 54px;
 		}
 		.layout-item {
@@ -101,7 +101,7 @@ div.status-bar-container{
 					transition: .4s;
 					display: flex;
 				}
-				&.visible{
+				&.visible {
 					visibility: visible;
 					opacity: 1;
 					div.pop-hover-content {
@@ -110,7 +110,7 @@ div.status-bar-container{
 				}
 
 			}
-			&.pop-on-hover:hover{
+			&.pop-on-hover:hover {
 				div.pop-hover {
 					visibility: visible;
 					opacity: 1;
@@ -120,8 +120,6 @@ div.status-bar-container{
 				}
 			}
 		}
-
-
 
 		div.right-side {
 			display: flex;
@@ -136,22 +134,22 @@ div.status-bar-container{
 				margin: 0;
 				transition: .4s;
 
-				span{
+				span {
 					max-width: 100px;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
 
-				img{
-					height:14px;
-					margin:-1px 4px 0 0;
+				img {
+					height: 14px;
+					margin: -1px 4px 0 0;
 				}
 				div.pop-hover {
 
-					.pop-hover-content{
+					.pop-hover-content {
 
-						button.share-link{
+						button.share-link {
 							border: solid white 1px;
 							cursor: pointer;
 							padding: 5px 10px;
@@ -161,8 +159,8 @@ div.status-bar-container{
 							transition: .3s;
 							display: flex;
 							align-items: center;
-							img{
-								height:20px;
+							img {
+								height: 20px;
 							}
 							&:hover {
 								border-top-color: #727272;
@@ -183,18 +181,17 @@ div.status-bar-container{
 		div.layout-item {
 			margin: 0 5px;
 			display: flex;
-			align-items:center;
+			align-items: center;
 			&.selection-combobox {
 				img {
 					margin: 0;
 				}
 				.status-bar-world-icon {
 					margin-right: 3px;
-					padding-top:5px;
+					padding-top: 5px;
 				}
 				.status-bar-edit-icon {
 					opacity: 0.5;
-
 
 					&.active {
 						opacity: 1;
@@ -205,7 +202,7 @@ div.status-bar-container{
 				}
 				.status-bar-eye-icon {
 					opacity: 0.5;
-					padding-top:4px;
+					padding-top: 4px;
 					&.active {
 						opacity: 1;
 					}
@@ -215,45 +212,45 @@ div.status-bar-container{
 				}
 				.status-bar-orientation-icon {
 					img {
-						margin-top:5px;
-						margin-right:4px;
+						margin-top: 5px;
+						margin-right: 4px;
 					}
 				}
 				.status-bar-calender-icon {
-					margin-right:3px;
-					padding-top:6px;
+					margin-right: 3px;
+					padding-top: 6px;
 					img {
 
 					}
 				}
 				.layout-combobox {
-					img{
-						hegiht:14px;
-						margin-right:4px;
+					img {
+						hegiht: 14px;
+						margin-right: 4px;
 					}
 
 				}
-				&.type-selection{
+				&.type-selection {
 
 				}
 				&.geo-selection {
-					.status-bar-edit-icon{
-						padding-top:3px;
+					.status-bar-edit-icon {
+						padding-top: 3px;
 						margin: 0px 2px 0px 3px;
 					}
 				}
-				&.time-selection{
-					.status-bar-edit-icon{
-						padding-top:4px;
-						margin:  0px 0px 0px 8px;
+				&.time-selection {
+					.status-bar-edit-icon {
+						padding-top: 4px;
+						margin: 0px 0px 0px 8px;
 					}
-					.pop-hover-content{
+					.pop-hover-content {
 						background: white;
-						width:230px;
-						height:97px;
-						padding:8px 12px 13px;
+						width: 230px;
+						height: 97px;
+						padding: 8px 12px 13px;
 						flex-direction: column;
-						border:1px solid dimgray;
+						border: 1px solid dimgray;
 
 					}
 				}
@@ -268,16 +265,16 @@ div.status-bar-container{
 		select {
 			background: black;
 			color: white;
-			font-size:12px;
-			option{
-				&:before{
+			font-size: 12px;
+			option {
+				&:before {
 					content: "";
 					position: fixed;
 					width: 200px;
 					height: 200px;
 					background: red;
 				}
-				div{
+				div {
 
 				}
 			}

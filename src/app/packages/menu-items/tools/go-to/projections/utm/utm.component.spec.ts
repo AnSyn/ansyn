@@ -9,7 +9,7 @@ describe('UtmComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ UtmComponent ],
+			declarations: [UtmComponent],
 			imports: [FormsModule]
 		})
 			.compileComponents();
@@ -26,10 +26,10 @@ describe('UtmComponent', () => {
 	});
 
 	it('validate should return error if some of coordinates values is empty', () => {
-		const fakeController: any = {value: [1,2,null]};
+		const fakeController: any = { value: [1, 2, null] };
 		let result = component.validate(fakeController);
-		expect(result).toEqual({empty: true});
-		fakeController.value = [1,2,3];
+		expect(result).toEqual({ empty: true });
+		fakeController.value = [1, 2, 3];
 		result = component.validate(fakeController);
 		expect(result).toBeNull();
 	});

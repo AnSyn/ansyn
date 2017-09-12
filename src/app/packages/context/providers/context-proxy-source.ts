@@ -10,7 +10,7 @@ export class ContextProxySource implements IContextSource {
 	public headers = new Headers({ 'Content-Type': 'application/json' });
 	public options = new RequestOptions();
 
-	constructor(public config: IContextSourceConfig, public http: Http ) {
+	constructor(public config: IContextSourceConfig, public http: Http) {
 		this.uri = `${this.config.uri}${this.config.bucket}`;
 		this.providerType = config.type;
 		this.options.headers = this.headers;
@@ -18,10 +18,9 @@ export class ContextProxySource implements IContextSource {
 	}
 
 
-
 	find(criteria: ContextCriteria) {
-		return this.http.get(this.uri.concat('/', criteria.start , '/' , criteria.limit ))
-			.map(res =>  this.parseFromSource(res.json() || {}))
+		return this.http.get(this.uri.concat('/', criteria.start, '/', criteria.limit))
+			.map(res => this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
@@ -31,21 +30,21 @@ export class ContextProxySource implements IContextSource {
 
 	create(payload: Context) {
 		return this.http.post(this.uri, this.parseToSource(payload), this.options)
-			// .map(res =>  this.parseFromSource(res.json() || {}))
+		// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
-	update (id, payload: Context) {
+	update(id, payload: Context) {
 		return this.http.put(this.uri + '/' + id, this.parseToSource(payload), this.options)
-			// .map(res =>  this.parseFromSource(res.json() || {}))
+		// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
-	parseToSource(data): any{
+	parseToSource(data): any {
 		return data;
 	}
 
-	parseFromSource(data): Context[]  {
+	parseFromSource(data): Context[] {
 		return data.hits.hits.map((contextElastic: any): Context => {
 			let context: any = {};
 			context.id = contextElastic._id;
@@ -56,7 +55,7 @@ export class ContextProxySource implements IContextSource {
 		});
 	}
 
-	private handleError (error: Response | any) {
+	private handleError(error: Response | any) {
 		// In a real world app, you might use a remote logging infrastructure
 		let errMsg: string;
 		if (error instanceof Response) {

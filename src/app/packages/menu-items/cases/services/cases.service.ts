@@ -1,10 +1,10 @@
 import { ICasesConfig } from './../models/cases-config';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { Http, Headers, RequestOptions } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/debounce";
-  import 'rxjs/add/observable/of';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/observable/of';
 import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
 import { cloneDeep, isEmpty } from 'lodash';
 import * as rison from 'rison';
@@ -14,7 +14,7 @@ import { Context } from '@ansyn/core/models';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { Point } from 'geojson';
 
-import { get as _get} from 'lodash';
+import { get as _get } from 'lodash';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -25,7 +25,7 @@ export class CasesService {
 	base_url;
 	paginationLimit = 15;
 	queryParamsKeys;
-	defaultOptions = new RequestOptions({ headers: new Headers({'Content-Type': 'application/json'})});
+	defaultOptions = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
 	public contextValues = {
 		imageryCount: -1,
@@ -46,27 +46,27 @@ export class CasesService {
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 
-	static getOverlaysMarkup(caseValue: Case, hoverId?:string){
+	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {
 		const result = [];
 
 		const activeMapId = caseValue.state.maps.active_map_id;
 
-		caseValue.state.maps.data.forEach( (map:CaseMapState) => {
-			if(!isEmpty(map.data.overlay)){
-				if(map.id === activeMapId){
-					result.push({id : map.data.overlay.id,class: 'active'});
-				}else{
-					result.push({id: map.data.overlay.id,class: 'displayed'});
+		caseValue.state.maps.data.forEach((map: CaseMapState) => {
+			if (!isEmpty(map.data.overlay)) {
+				if (map.id === activeMapId) {
+					result.push({ id: map.data.overlay.id, class: 'active' });
+				} else {
+					result.push({ id: map.data.overlay.id, class: 'displayed' });
 				}
 			}
 		});
 
 		if (caseValue.state.favoritesOverlays) {
-		 	caseValue.state.favoritesOverlays.forEach(item => result.push({id: item,class: 'favorites'}));
+			caseValue.state.favoritesOverlays.forEach(item => result.push({ id: item, class: 'favorites' }));
 		}
 
 		if (hoverId) {
-			result.push({id: hoverId, class: 'hover'});
+			result.push({ id: hoverId, class: 'hover' });
 		}
 
 		return result;
@@ -74,7 +74,7 @@ export class CasesService {
 
 	loadCases(last_id: string = '-1'): Observable<any> {
 		const url = `${this.base_url}/pagination/${last_id}?limit=${this.paginationLimit}`;
-		return this.http.get(url, this.defaultOptions).map(res => res.json())
+		return this.http.get(url, this.defaultOptions).map(res => res.json());
 	}
 
 	createCase(selected_case: Case): Observable<Case> {
@@ -83,8 +83,8 @@ export class CasesService {
 		return this.http.post(url, body, this.defaultOptions).map(res => res.json());
 	}
 
-	wrapUpdateCase(selected_case: Case): Observable<Case>{
-		return Observable.create( observer => {
+	wrapUpdateCase(selected_case: Case): Observable<Case> {
+		return Observable.create(observer => {
 			observer.next(Date.now());
 		})
 			.debounceTime(this.config.updateCaseDebounceTime)
@@ -94,36 +94,36 @@ export class CasesService {
 	}
 
 	updateCase(selected_case: Case): Observable<Case> {
-		const url:string = `${this.base_url}`;
-		const body:string = JSON.stringify(selected_case);
-		return this.http.put (url, body, this.defaultOptions).map(res => res.json());
+		const url: string = `${this.base_url}`;
+		const body: string = JSON.stringify(selected_case);
+		return this.http.put(url, body, this.defaultOptions).map(res => res.json());
 	}
 
 	removeCase(selected_case_id: string): Observable<any> {
 		const url: string = `${this.base_url}/${selected_case_id}`;
-		return this.http.delete(url,  this.defaultOptions).map(res => res.json());
+		return this.http.delete(url, this.defaultOptions).map(res => res.json());
 	}
 
 	loadContexts(): Observable<any> {
 		const url: string = `${this.base_url}/contexts`;
-		return this.http.get(url,  this.defaultOptions).map((res) => res.json());
+		return this.http.get(url, this.defaultOptions).map((res) => res.json());
 	}
 
 	loadCase(selected_case_id: string): Observable<any> {
 		const url = `${this.base_url}/${selected_case_id}`;
-		return this.http.get(url,  this.defaultOptions)
-			.map(res => res.json())
+		return this.http.get(url, this.defaultOptions)
+			.map(res => res.json());
 
 	}
 
 	getDefaultCase(): Case {
 		//this is because of a bug in the aot that does not compile javascript in configuration
-		const startDate: string = <string>_get(this,'config.defatulCase.state.time.from') || (new Date(new Date().getTime() - 3600000 * 24 * 365)).toISOString();
-		const endDate: string = <string>_get(this,'config.defatulCase.state.time.to') || new Date().toISOString() ;
-		const defaultCase =  cloneDeep(this.config.defaultCase);
+		const startDate: string = <string>_get(this, 'config.defatulCase.state.time.from') || (new Date(new Date().getTime() - 3600000 * 24 * 365)).toISOString();
+		const endDate: string = <string>_get(this, 'config.defatulCase.state.time.to') || new Date().toISOString();
+		const defaultCase = cloneDeep(this.config.defaultCase);
 
 		defaultCase.state.time.to = endDate;
-		defaultCase.state.time.from = startDate ;
+		defaultCase.state.time.from = startDate;
 
 		return defaultCase;
 
@@ -132,6 +132,7 @@ export class CasesService {
 	enhanceDefaultCase(default_case: Case): void {
 		default_case.last_modified = new Date();
 	}
+
 	get decodeCaseObjects() {
 		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
 	}

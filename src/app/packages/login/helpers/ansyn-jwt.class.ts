@@ -7,7 +7,7 @@ export class AnsynJwt {
 	public utf8;
 	public hmacSha256;
 
-	constructor(){
+	constructor() {
 		this.base64 = Base64;
 		this.utf8 = Utf8;
 		this.hmacSha256 = HmacSHA256;
@@ -18,13 +18,13 @@ export class AnsynJwt {
 			ADMIN: 'ADMIN',
 			USER: 'USER',
 			GUEST: 'GUEST'
-		}
+		};
 	};
 
 	createJWT(header, payload) {
 		const now = Date.now();
 		let exp = now;
-		switch (payload.role){
+		switch (payload.role) {
 			case AnsynJwt.roles.ADMIN:
 				exp += this.year();
 				break;
@@ -37,7 +37,7 @@ export class AnsynJwt {
 		}
 		payload.exp = exp;
 		const token = this.encode(header) + '.' + this.encode(payload);
-		return token + "." + this.encodeSigneture(token,now.toString());
+		return token + '.' + this.encodeSigneture(token, now.toString());
 	}
 
 	day() {
@@ -60,24 +60,24 @@ export class AnsynJwt {
 		return this.base64.stringify(this.utf8.parse(JSON.stringify(source)));
 	}
 
-	decode(token){
+	decode(token) {
 		// CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(source)));
 		return JSON.parse(this.utf8.stringify(this.base64.parse(token)));
 	}
 
-	encodeSigneture(token,salt){
-		return this.base64.stringify( this.hmacSha256(token,salt));
+	encodeSigneture(token, salt) {
+		return this.base64.stringify(this.hmacSha256(token, salt));
 	}
 
-	check(jwt){
+	check(jwt) {
 		let jwtValues = jwt.split('.');
-		if(jwtValues.length !== 3){
+		if (jwtValues.length !== 3) {
 			return false;
 		}
 		const [header, data, signeture] = [...jwtValues];
 		const payload = this.decode(data);
 		let key = payload.exp;
-		switch (payload.role){
+		switch (payload.role) {
 			case AnsynJwt.roles.ADMIN:
 				key -= this.year();
 				break;
@@ -88,10 +88,10 @@ export class AnsynJwt {
 				key -= this.week();
 				break;
 		}
-		return signeture === this.encodeSigneture(header + '.' + data,key.toString());
+		return signeture === this.encodeSigneture(header + '.' + data, key.toString());
 	}
 
-	getPayload(jwt){
+	getPayload(jwt) {
 		const [header, data, signeture] = [...jwt.split('.')];
 		const payload = this.decode(data);
 		return payload;

@@ -7,25 +7,25 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnumFilterContainerComponent } from './enum-filter-container.component';
 
 describe('EnumFilterContainerComponent', () => {
-  let component: EnumFilterContainerComponent;
-  let fixture: ComponentFixture<EnumFilterContainerComponent>;
+	let component: EnumFilterContainerComponent;
+	let fixture: ComponentFixture<EnumFilterContainerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })]
-    })
-      .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })]
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(EnumFilterContainerComponent);
-    component = fixture.componentInstance;
-    component.metadata = new EnumFilterMetadata();
-    
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(EnumFilterContainerComponent);
+		component = fixture.componentInstance;
+		component.metadata = new EnumFilterMetadata();
 
-  // it('should be created', () => {
-  //   expect(component).toBeTruthy();
-  // });
+		fixture.detectChanges();
+	});
+
+	// it('should be created', () => {
+	//   expect(component).toBeTruthy();
+	// });
 });

@@ -50,9 +50,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	};
 
-	constructor(style?: any){
-		super(AnnotationVisualizerType,[]);
-		if(style){
+	constructor(style?: any) {
+		super(AnnotationVisualizerType, []);
+		if (style) {
 			this.style = style;
 		}
 		this.geoJsonFormat = new GeoJSON();
@@ -60,12 +60,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.fill = true;
 	}
 
-	onInit(mapId: string, map: IMap){
+	onInit(mapId: string, map: IMap) {
 		this._imap = map;
 		this._mapId = mapId;
 	}
 
-	onResetView(){
+	onResetView() {
 		this.addLayer();
 		this.redrawFromGeoJson();
 	}
@@ -74,7 +74,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return JSON.stringify(this.getFeatures());
 	}
 
-	getFeatures(){
+	getFeatures() {
 		return featureCollection(this.features);
 	}
 
@@ -90,19 +90,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.style.stroke.width = width;
 	}
 
-	addLayer(id = this.type){
+	addLayer(id = this.type) {
 		const layer = new VectorLayer();
 		//if id is empty then set the current type name as id
-		layer.set('id',id );
+		layer.set('id', id);
 		this.layer = this._imap.addLayerIfNotExist(layer);
 
-		this._source = new VectorSource({wrapX: false});
+		this._source = new VectorSource({ wrapX: false });
 		this.layer.setSource(this._source);
-		this.layer.setStyle(this.styleFunction.bind(this))
-		this.layer.setZIndex(200000)
+		this.layer.setStyle(this.styleFunction.bind(this));
+		this.layer.setZIndex(200000);
 	}
 
-	removeLayer(){
+	removeLayer() {
 		this._imap.removeLayer(this.layer);
 	}
 
@@ -115,11 +115,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	drawFeatures(data) {
-		if(data === undefined){
-			return ;
+		if (data === undefined) {
+			return;
 		}
 
-		if(typeof data === 'string') {
+		if (typeof data === 'string') {
 			data = JSON.parse(data);
 		}
 		// readFeatures throw exceptions so I am using this method
@@ -129,9 +129,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
-		const features = geoJsonFeatures.map((d) =>  this.geoJsonFormat.readFeature(d));
+		const features = geoJsonFeatures.map((d) => this.geoJsonFormat.readFeature(d));
 		//@TODO reset this.features
-		(<Array<any>>features).forEach( feature => {
+		(<Array<any>>features).forEach(feature => {
 
 			const properties = feature.getProperties();
 			let geometry;
@@ -175,14 +175,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		if (geometryName === `${this.namePrefix}Circle`) {
 
-			const circleGeo  = JSON.parse(geoJsonSingleFeature);
+			const circleGeo = JSON.parse(geoJsonSingleFeature);
 
 			circleGeo.geometry = {
 				type: 'Point',
 				coordinates: data.feature.getGeometry().getCenter()
 			};
 
-			circleGeo.properties = {...circleGeo.properties, ...circleGeo.properties.data, radius: data.feature.getGeometry().getRadius() };
+			circleGeo.properties = {
+				...circleGeo.properties, ...circleGeo.properties.data,
+				radius: data.feature.getGeometry().getRadius()
+			};
 			geoJsonSingleFeature = JSON.stringify(circleGeo);
 		}
 
@@ -198,7 +201,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		if (this.interactionHandler) {
 
-			this.interactionHandler.on('drawend',this.onDrawEndEvent.bind(this));
+			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 
 			this._imap.mapObject.addInteraction(this.interactionHandler);
 		}
@@ -260,10 +263,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	createLayer() {
-			this._source = new VectorLayer({
-				source: this._source,
-				style: this.styleFunction.bind(this)
-			})
+		this._source = new VectorLayer({
+			source: this._source,
+			style: this.styleFunction.bind(this)
+		});
 	}
 
 	arrowStyle(feature, resolution) {
@@ -281,7 +284,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const cordinates = geometry.getCoordinates();
 		// draw the arrows on the last segment
 		const start = cordinates[cordinates.length - 2];
-		const end  = cordinates[cordinates.length - 1];
+		const end = cordinates[cordinates.length - 1];
 
 		const dx = end[0] - start[0];
 		const dy = end[1] - start[1];
@@ -320,7 +323,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (feature.getGeometryName() === `${this.namePrefix}Point`) {
 			return new Style({
 				image: new Circle({
-					radius:   style.point.radius,
+					radius: style.point.radius,
 					fill: new Fill({
 						color: style.fill.color
 					}),
@@ -337,13 +340,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				color: style.stroke.color,
 				width: style.stroke.width
 			}),
-			fill: new Fill ({
+			fill: new Fill({
 				color: style.fill.color,
 			})
 		});
 	}
 
-	dispose(){
+	dispose() {
 		super.dispose();
 		this.removeLayer();
 	}

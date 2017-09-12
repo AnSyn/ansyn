@@ -2,8 +2,11 @@
 
 <div class="inputs">
 	<ng-template [ngIf]="coordinates">
-		<input type="number" [(ngModel)]="coordinates[0]" name="x" (ngModelChange)="onInputs(coordinates)" autocomplete="false"/>
-		<input type="number" [(ngModel)]="coordinates[1]" name="y" (ngModelChange)="onInputs(coordinates)" autocomplete="false"/>
-		<input type="number" [(ngModel)]="coordinates[2]" name="z" (ngModelChange)="onInputs(coordinates)" autocomplete="false"/>
+		<input type="number" [(ngModel)]="coordinates[0]" name="x" (ngModelChange)="onInputs(coordinates)"
+			   autocomplete="false"/>
+		<input type="number" [(ngModel)]="coordinates[1]" name="y" (ngModelChange)="onInputs(coordinates)"
+			   autocomplete="false"/>
+		<input type="number" [(ngModel)]="coordinates[2]" name="z" (ngModelChange)="onInputs(coordinates)"
+			   autocomplete="false"/>
 	</ng-template>
 </div>

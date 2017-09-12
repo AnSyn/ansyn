@@ -1,20 +1,21 @@
 <p>
-  container works!
+	container works!
 </p>
 <h4>context</h4>
-<div  class="sources-list">
+<div class="sources-list">
 	<button *ngFor="let key of contextProviders" (click)="changeSourceProvider(key)">{{key}}</button>
 </div>
 <textarea rows="10" cols="45" [(ngModel)]="contextBody">
 
 </textarea>
 <br>
-<input type="text" />
+<input type="text"/>
 <button (click)="find()">Find</button>
 <button (click)="update()">Update</button>
 <button (click)="create()">Create</button>
 <ul>
 	<ng-template ngFor let-hit [ngForOf]="result">
-		<li>{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;<a (click)="delete(hit.id)">delete</a></li>
+		<li>{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;<a
+			(click)="delete(hit.id)">delete</a></li>
 	</ng-template>
 </ul>

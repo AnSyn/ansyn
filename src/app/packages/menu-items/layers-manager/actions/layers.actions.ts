@@ -3,41 +3,51 @@ import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
 import { Action } from '@ngrx/store';
 
 export const LayersActionTypes = {
-    BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
-    LAYER_TREE_LOADED: 'LAYER_TREE_LOADED',
+	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
+	LAYER_TREE_LOADED: 'LAYER_TREE_LOADED',
 
-    SELECT_LAYER: 'SELECT_LAYER',
-    UNSELECT_LAYER: 'UNSELECT_LAYER',
+	SELECT_LAYER: 'SELECT_LAYER',
+	UNSELECT_LAYER: 'UNSELECT_LAYER',
 
-    ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS'
+	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS'
 };
 
 export type LayersActions = any;
 
 export class BeginLayerTreeLoadAction implements Action {
-    type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;
-    constructor(public payload: { caseId: string }) { }
+	type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;
+
+	constructor(public payload: { caseId: string }) {
+	}
 }
 
 export class LayerTreeLoadedAction implements Action {
-    type = LayersActionTypes.LAYER_TREE_LOADED;
-    constructor(public payload: {
-        layers: ILayerTreeNodeRoot[],
-        selectedLayers: ILayerTreeNodeLeaf[]
-    }) { }
+	type = LayersActionTypes.LAYER_TREE_LOADED;
+
+	constructor(public payload: {
+		layers: ILayerTreeNodeRoot[],
+		selectedLayers: ILayerTreeNodeLeaf[]
+	}) {
+	}
 }
 
 export class SelectLayerAction implements Action {
-    type = LayersActionTypes.SELECT_LAYER;
-    constructor(public payload: ILayerTreeNodeLeaf) { }
+	type = LayersActionTypes.SELECT_LAYER;
+
+	constructor(public payload: ILayerTreeNodeLeaf) {
+	}
 }
 
 export class UnselectLayerAction implements Action {
-    type = LayersActionTypes.UNSELECT_LAYER;
-    constructor(public payload: ILayerTreeNodeLeaf) { }
+	type = LayersActionTypes.UNSELECT_LAYER;
+
+	constructor(public payload: ILayerTreeNodeLeaf) {
+	}
 }
 
 export class ErrorLoadingLayersAction implements Action {
-    type = LayersActionTypes.ERROR_LOADING_LAYERS;
-    constructor(public payload: string) { }
+	type = LayersActionTypes.ERROR_LOADING_LAYERS;
+
+	constructor(public payload: string) {
+	}
 }

@@ -1,5 +1,20 @@
-import { Component, ComponentFactoryResolver, ComponentRef, ViewChild, ViewContainerRef, ElementRef, Input, AfterViewInit } from '@angular/core';
-import { MenuItem, SelectMenuItemAction, UnSelectMenuItemAction, AnimationStartAction, AnimationEndAction } from "@ansyn/core";
+import {
+	Component,
+	ComponentFactoryResolver,
+	ComponentRef,
+	ViewChild,
+	ViewContainerRef,
+	ElementRef,
+	Input,
+	AfterViewInit
+} from '@angular/core';
+import {
+	MenuItem,
+	SelectMenuItemAction,
+	UnSelectMenuItemAction,
+	AnimationStartAction,
+	AnimationEndAction
+} from '@ansyn/core';
 import * as packageJson from '../../../../../package.json';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
@@ -7,7 +22,7 @@ import { Store } from '@ngrx/store';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { isNil,isEqual } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 
 const DEFAULT_WIDTH = 90;
 
@@ -32,20 +47,20 @@ const animations: any[] = [
 	animations
 })
 
-export class MenuComponent implements AfterViewInit{
+export class MenuComponent implements AfterViewInit {
 
-	@Input("width") width: number = DEFAULT_WIDTH;
-	@ViewChild("container") container: ElementRef;
-	@ViewChild("selected_component_elem", { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
+	@Input('width') width: number = DEFAULT_WIDTH;
+	@ViewChild('container') container: ElementRef;
+	@ViewChild('selected_component_elem', { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
-	menu_items$: Observable<MenuItem[]> = this.store.select("menu")
+	menu_items$: Observable<MenuItem[]> = this.store.select('menu')
 		.map((state: IMenuState) => state.menu_items)
 		.distinctUntilChanged(isEqual);
 
 	menu_items: MenuItem[];
 
 	selected_menu_item_index$: Observable<number> =
-		this.store.select("menu")
+		this.store.select('menu')
 			.map((state: IMenuState) => state.selected_menu_item_index)
 			.distinctUntilChanged(isEqual);
 
@@ -53,13 +68,13 @@ export class MenuComponent implements AfterViewInit{
 
 	selected_component_ref: ComponentRef<any>;
 
-	public animation$: Observable<boolean> = this.store.select("menu").map((store: IMenuState) => store.animation).distinctUntilChanged(isEqual);
+	public animation$: Observable<boolean> = this.store.select('menu').map((store: IMenuState) => store.animation).distinctUntilChanged(isEqual);
 	public animation: boolean;
 	public version = packageJson['version'];
 	public expand = false;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-		private store: Store<IMenuState>) {
+				private store: Store<IMenuState>) {
 
 		this.menu_items$.subscribe((menu_items: MenuItem[]) => {
 			this.menu_items = menu_items;

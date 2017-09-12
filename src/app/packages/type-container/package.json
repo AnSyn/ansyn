@@ -1,14 +1,14 @@
 {
-  "name": "@ansyn/type-container",
-  "version": "0.0.2",
-  "description": "This package use as a type container to resolve types",
-  "main": "index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "eldadcohen1",
-  "license": "MIT",
-  "peerDependencies": {
-    "@angular/core": "^4.0.0"
-  }
+	"name": "@ansyn/type-container",
+	"version": "0.0.2",
+	"description": "This package use as a type container to resolve types",
+	"main": "index.ts",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "eldadcohen1",
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/core": "^4.0.0"
+	}
 }

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
-import { AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
+import {
+	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
 	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction, MapInstanceChangedAction
 } from '../actions';
 import { Position, Overlay } from '@ansyn/core';
@@ -36,7 +37,7 @@ export class MapFacadeService {
 	initEmitters() {
 		this.unsubscribeAll();
 
-		this.imageryCommunicatorService.communicatorsAsArray().forEach( (communicator): void => {
+		this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator): void => {
 
 			this._subscribers.push(communicator.positionChanged.subscribe(this.positionChanged.bind(this)));
 			this._subscribers.push(communicator.singleClick.subscribe(this.singleClick.bind(this)));
@@ -49,7 +50,7 @@ export class MapFacadeService {
 
 			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
 
-			const annotationVisualizer =  communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
+			const annotationVisualizer = communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
 			this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
 
 		});
@@ -57,48 +58,48 @@ export class MapFacadeService {
 	}
 
 	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become pluggins
-	onActiveMapChanged($event: {id: string, oldMapInstanceName: string, newMapInstanceName: string}) {
-		const args = {...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators };
+	onActiveMapChanged($event: { id: string, oldMapInstanceName: string, newMapInstanceName: string }) {
+		const args = { ...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators };
 		this.store.dispatch(new MapInstanceChangedAction(args));
 	}
 
 	unsubscribeAll() {
-		this._subscribers.forEach((subscriber)=>{
+		this._subscribers.forEach((subscriber) => {
 			subscriber.unsubscribe();
 		});
 		this._subscribers = [];
 	}
 
-	positionChanged($event: {id: string, position: Position}) {
+	positionChanged($event: { id: string, position: Position }) {
 		this.store.dispatch(new PositionChangedAction($event));
 	}
 
-	singleClick(event){
+	singleClick(event) {
 		this.store.dispatch(new MapSingleClickAction(event));
 	}
 
-	contextMenu(event){
+	contextMenu(event) {
 		this.store.dispatch(new ContextMenuShowAction(event));
 	}
 
 	hoverFeature(event) {
-		this.store.dispatch(new HoverFeatureTriggerAction(event))
+		this.store.dispatch(new HoverFeatureTriggerAction(event));
 	}
 
 	dbclickFeature(event) {
-		this.store.dispatch(new DbclickFeatureTriggerAction(event))
+		this.store.dispatch(new DbclickFeatureTriggerAction(event));
 	}
 
 	drawEndSubscriber(event) {
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "saveDrawing",
-			maps: "active"
+			action: 'saveDrawing',
+			maps: 'active'
 		}));
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "refreshDrawing",
-			maps: "others"
+			action: 'refreshDrawing',
+			maps: 'others'
 		}));
 	}
 

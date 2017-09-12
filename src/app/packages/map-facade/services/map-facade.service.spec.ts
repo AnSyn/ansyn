@@ -6,16 +6,16 @@ import { ImageryModule } from '@ansyn/imagery';
 import { MapReducer } from '../reducers/map.reducer';
 
 describe('MapFacadeService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-      	MapFacadeService
-	  ],
-		imports: [ImageryModule, StoreModule.provideStore({map: MapReducer})]
-    });
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [
+				MapFacadeService
+			],
+			imports: [ImageryModule, StoreModule.provideStore({ map: MapReducer })]
+		});
+	});
 
-  it('should ...', inject([MapFacadeService], (service: MapFacadeService) => {
-    expect(service).toBeTruthy();
-  }));
+	it('should ...', inject([MapFacadeService], (service: MapFacadeService) => {
+		expect(service).toBeTruthy();
+	}));
 });

@@ -16,7 +16,7 @@ import { DOCUMENT } from '@angular/common';
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements  OnDestroy {
+export class AnnotationsControlComponent implements OnDestroy {
 	private _isExpended: boolean;
 	public lineWidthTrigger: boolean;
 	public colorSelectionTrigger = false;
@@ -26,43 +26,45 @@ export class AnnotationsControlComponent implements  OnDestroy {
 
 	@ViewChild('lineWidthSelection') lineWidthSelection: ElementRef;
 	@ViewChild('colorSelection') colorSelection: ElementRef;
+
 	@HostBinding('class.expand')
 
 	@Input()
-	set expand(value){
+	set expand(value) {
 		this._isExpended = value;
 	}
 
-	get expand(){
+	get expand() {
 		return this._isExpended;
 	}
 
-	constructor(public renderer: Renderer2,public store: Store<any>,@Inject(DOCUMENT) public document: any ) {}
+	constructor(public renderer: Renderer2, public store: Store<any>, @Inject(DOCUMENT) public document: any) {
+	}
 
-	openLineWidthSelection($event){
-		if(this.lineWidthTrigger){
+	openLineWidthSelection($event) {
+		if (this.lineWidthTrigger) {
 			this.lineWidthTrigger = false;
 			return;
 		}
-		if(this.document.activeElement !== this.lineWidthSelection.nativeElement){
+		if (this.document.activeElement !== this.lineWidthSelection.nativeElement) {
 			this.lineWidthSelection.nativeElement.focus();
 		}
 	}
 
-	closeLineWidthSelection($event){
-		if(this.document.activeElement === this.lineWidthSelection.nativeElement){
+	closeLineWidthSelection($event) {
+		if (this.document.activeElement === this.lineWidthSelection.nativeElement) {
 			this.lineWidthTrigger = true;
 			this.lineWidthSelection.nativeElement.blur();
 		}
 	}
 
-	toggleColorSelection($event){
+	toggleColorSelection($event) {
 		$event.stopPropagation();
 		this.colorSelectionTrigger = !this.colorSelectionTrigger;
-		this.colorSelection.nativeElement.classList.toggle('open')
+		this.colorSelection.nativeElement.classList.toggle('open');
 
-		if(this.colorSelectionTrigger){
-				this.clickOutside();
+		if (this.colorSelectionTrigger) {
+			this.clickOutside();
 		}
 		else {
 			this.subscriber && this.subscriber.unsubscribe();
@@ -70,47 +72,47 @@ export class AnnotationsControlComponent implements  OnDestroy {
 		//}
 	}
 
-	clickOutside(){
-		this.subscriber = Observable.fromEvent(document,'click')
-			.subscribe( (event: any) => {
+	clickOutside() {
+		this.subscriber = Observable.fromEvent(document, 'click')
+			.subscribe((event: any) => {
 
-				if(!event.target.closest(".expanded-selection.color-selection")){
+				if (!event.target.closest('.expanded-selection.color-selection')) {
 					this.colorSelectionTrigger = false;
-					this.colorSelection.nativeElement.classList.remove('open')
+					this.colorSelection.nativeElement.classList.remove('open');
 					this.subscriber.unsubscribe();
 				}
 			});
 	}
 
-	createInteraction(type){
+	createInteraction(type) {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "createInteraction",
+			action: 'createInteraction',
 			type,
-			maps: "active"
+			maps: 'active'
 		}));
 	}
 
 	openColorInput($event) {
 		let element = $event.target.closest('li');
-		if(!element){
+		if (!element) {
 			element = $event.target;
 		}
 		element.getElementsByTagName('input')[0].click();
 	}
 
-	selectLineWidth($event){
+	selectLineWidth($event) {
 		const lineWidth = $event.target.dataset.index;
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "changeLine",
+			action: 'changeLine',
 			value: lineWidth,
-			maps: "active"
+			maps: 'active'
 		}));
 
 	}
 
 	changeStrokeColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "changeStrokeColor",
+			action: 'changeStrokeColor',
 			value: this.colorOptionsStroke,
 			maps: 'active'
 		}));
@@ -118,13 +120,13 @@ export class AnnotationsControlComponent implements  OnDestroy {
 
 	changeFillColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: "changeFillColor",
+			action: 'changeFillColor',
 			value: this.colorOptionsFill,
 			maps: 'active'
 		}));
 	}
 
-	ngOnDestroy(){
+	ngOnDestroy() {
 		this.subscriber && this.subscriber.unsubscribe();
 	}
 

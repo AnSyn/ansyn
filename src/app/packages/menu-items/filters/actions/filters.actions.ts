@@ -18,31 +18,43 @@ export type FiltersActions = any;
 
 export class InitializeFiltersAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS;
-	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] }, showAll?: boolean }) { }
+
+	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] }, showAll?: boolean }) {
+	}
 }
 
 export class InitializeFiltersSuccessAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
-	constructor(public payload?: Map<Filter, FilterMetadata>) { }
+
+	constructor(public payload?: Map<Filter, FilterMetadata>) {
+	}
 }
 
 export class UpdateFilterAction implements Action {
 	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
-	constructor(public payload?: { filter: Filter, newMetadata: FilterMetadata }) { }
+
+	constructor(public payload?: { filter: Filter, newMetadata: FilterMetadata }) {
+	}
 }
 
 export class ResetFiltersAction implements Action {
 	type = FiltersActionTypes.RESET_FILTERS;
-	constructor(public payload?: any) { }
+
+	constructor(public payload?: any) {
+	}
 }
 
 export class ToggleOnlyFavoriteAction implements Action {
 	type = FiltersActionTypes.TOGGLE_ONLY_FAVORITES;
-	constructor(public payload?: any){}
+
+	constructor(public payload?: any) {
+	}
 }
 
-export class EnableOnlyFavortiesSelectionAction implements Action{
+export class EnableOnlyFavortiesSelectionAction implements Action {
 	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
-	constructor(public payload?: any){}
+
+	constructor(public payload?: any) {
+	}
 }
 

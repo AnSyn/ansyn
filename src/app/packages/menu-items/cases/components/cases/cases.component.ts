@@ -1,9 +1,10 @@
-import {  Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ansyn-cases',
-  templateUrl: './cases.component.html',
-  styleUrls: ['./cases.component.less']
+	selector: 'ansyn-cases',
+	templateUrl: './cases.component.html',
+	styleUrls: ['./cases.component.less']
 })
 
-export class CasesComponent {}
+export class CasesComponent {
+}

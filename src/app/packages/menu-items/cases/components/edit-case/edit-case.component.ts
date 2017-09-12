@@ -15,8 +15,14 @@ const animations_during = '0.2s';
 
 const animations: any[] = [
 	trigger('modalContent', [
-		transition(":enter", [style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)'}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}))]),
-		transition(":leave", [style({ 'backgroundColor': 'white', transform: 'translate(0, 0)'}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)'}))]),
+		transition(':enter', [style({
+			'backgroundColor': '#27b2cf',
+			transform: 'translate(0, -100%)'
+		}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
+		transition(':leave', [style({
+			'backgroundColor': 'white',
+			transform: 'translate(0, 0)'
+		}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
 	])
 ];
 
@@ -29,36 +35,39 @@ const animations: any[] = [
 })
 
 export class EditCaseComponent implements OnInit {
-	@HostBinding('@modalContent') get modalContent(){
+	@HostBinding('@modalContent')
+	get modalContent() {
 		return true;
 	};
 
-	active_case$: Observable<Case> = this.store.select("cases")
+	active_case$: Observable<Case> = this.store.select('cases')
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
-	default_case_id$: Observable<string> = this.store.select("cases").map((state: ICasesState) => state.default_case.id);
+	default_case_id$: Observable<string> = this.store.select('cases').map((state: ICasesState) => state.default_case.id);
 
-	contexts_list$: Observable <Context[]> = this.store.select("cases").map( (state: ICasesState) => state.contexts).distinctUntilChanged(isEqual);
+	contexts_list$: Observable<Context[]> = this.store.select('cases').map((state: ICasesState) => state.contexts).distinctUntilChanged(isEqual);
 	contexts_list: Context[];
 
-	case_model:Case;
+	case_model: Case;
 	on_edit_case = false;
 	default_case_id: string;
 
-	@ViewChild("name_input") name_input: ElementRef;
+	@ViewChild('name_input') name_input: ElementRef;
 
-	@HostListener("@modalContent.done") selectText() {
+	@HostListener('@modalContent.done')
+	selectText() {
 		this.name_input.nativeElement.select();
 	}
 
-	constructor(private store: Store<ICasesState>, private casesService: CasesService) { }
+	constructor(private store: Store<ICasesState>, private casesService: CasesService) {
+	}
 
 
 	getCloneActiveCase(case_state: ICasesState): Case {
 		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.active_case_id);
-		if(s_case && s_case.id !== case_state.default_case.id) {
-			s_case =  cloneDeep(s_case);
+		if (s_case && s_case.id !== case_state.default_case.id) {
+			s_case = cloneDeep(s_case);
 			this.on_edit_case = true;
 		} else {
 			const selectedCase = cloneDeep(case_state.selected_case);
@@ -71,8 +80,8 @@ export class EditCaseComponent implements OnInit {
 		const activeMap = selectedCase.state.maps.data.find(map => map.id === selectedCase.state.maps.active_map_id);
 
 		return {
-			name:'',
-			owner:'',
+			name: '',
+			owner: '',
 			last_modified: new Date(),
 			state: {
 				maps: {
@@ -95,13 +104,13 @@ export class EditCaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.active_case$.subscribe((active_case: Case)=>{
+		this.active_case$.subscribe((active_case: Case) => {
 			this.case_model = active_case;
 		});
 
 		this.contexts_list$.subscribe((_context_list: Context[]) => {
 			this.contexts_list = _context_list;
-			if(!this.case_model.id && this.contexts_list.length > 0 ){
+			if (!this.case_model.id && this.contexts_list.length > 0) {
 				this.case_model.state.selected_context_id = this.contexts_list[0].id;
 				this.updateCaseViaContext();
 			}
@@ -117,7 +126,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
-		if(this.case_model.id && this.case_model.id !== this.default_case_id) {
+		if (this.case_model.id && this.case_model.id !== this.default_case_id) {
 			this.store.dispatch(new UpdateCaseAction(this.case_model));
 		} else {
 			this.store.dispatch(new AddCaseAction(this.case_model));

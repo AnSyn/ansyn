@@ -15,19 +15,25 @@ import { Subject } from 'rxjs/Subject';
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
 	let fixture: ComponentFixture<AnsynComponent>;
-	let store: Store<any> ;
+	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({selector: 'ansyn-menu'});
-	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay','isFavoriteOverlayDisplayed']});
-	const mock_overlays_container = MockComponent({selector: 'ansyn-overlays-container'});
-	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});
-	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager', inputs: ['selected_layout', 'maps', 'pinLocation']});
+	const mock_menu = MockComponent({ selector: 'ansyn-menu' });
+	const mock_status = MockComponent({
+		selector: 'ansyn-status-bar',
+		inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay', 'isFavoriteOverlayDisplayed']
+	});
+	const mock_overlays_container = MockComponent({ selector: 'ansyn-overlays-container' });
+	const mock_empty_component = MockComponent({ selector: 'ansyn-empty' });
+	const mock_imagery_view = MockComponent({
+		selector: 'ansyn-imageries-manager',
+		inputs: ['selected_layout', 'maps', 'pinLocation']
+	});
 	const cases: Case[] = [{
 		id: 'tmp',
 		state: {
 			favoritesOverlays: [],
-			time: { type: '',from: new Date(), to: new Date()},
+			time: { type: '', from: new Date(), to: new Date() },
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -45,14 +51,14 @@ describe('AnsynComponent', () => {
 						id: 'imagery1',
 						data: {
 							position: {
-								zoom: 1, center: 2, boundingBox: {test: 1}
+								zoom: 1, center: 2, boundingBox: { test: 1 }
 							},
 							isHistogramActive: false,
-							overlay: {id :'overlayId1'}
+							overlay: { id: 'overlayId1' }
 						}
 					},
-					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
-					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 } } },
+					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
 				active_map_id: 'imagery1'
 			}
@@ -77,7 +83,7 @@ describe('AnsynComponent', () => {
 				StoreModule.provideStore({
 					status_bar: StatusBarReducer,
 					cases: CasesReducer,
-					overlays : OverlayReducer,
+					overlays: OverlayReducer,
 					tools: ToolsReducer
 				})]
 		})
@@ -96,12 +102,13 @@ describe('AnsynComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 
-		Object.defineProperty(component, "selected_case$", {
-			get: () => {}
+		Object.defineProperty(component, 'selected_case$', {
+			get: () => {
+			}
 		});
 
 		handler = new Subject();
-		spyOnProperty(component, 'selected_case$', 'get').and.callFake( type => {
+		spyOnProperty(component, 'selected_case$', 'get').and.callFake(type => {
 			return handler;
 		});
 	});
@@ -112,30 +119,30 @@ describe('AnsynComponent', () => {
 
 	describe('isFavoriteOverlay', () => {
 
-		it("check isFavoriteOverlay overlay is not favorite",() => {
-			component.isFavoriteOverlay$.subscribe( isFavorite => {
+		it('check isFavoriteOverlay overlay is not favorite', () => {
+			component.isFavoriteOverlay$.subscribe(isFavorite => {
 				expect(isFavorite).toBe(false);
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId2');
-			handler.next({ selected_case: selectedCase});
+			handler.next({ selected_case: selectedCase });
 
 		});
 
-		it("check isFavoriteOverlay truthy value",() => {
-			component.isFavoriteOverlay$.subscribe( isFavorite => {
+		it('check isFavoriteOverlay truthy value', () => {
+			component.isFavoriteOverlay$.subscribe(isFavorite => {
 				expect(isFavorite).toBe(true);
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId1');
-			handler.next({ selected_case: selectedCase});
+			handler.next({ selected_case: selectedCase });
 		});
 
-		it("check isFavoriteOverlay falsy value",() => {
-			component.isFavoriteOverlay$.subscribe( isFavorite => {
+		it('check isFavoriteOverlay falsy value', () => {
+			component.isFavoriteOverlay$.subscribe(isFavorite => {
 				expect(isFavorite).toBe(false);
 			});
-			handler.next({selected_case: _cloneDeep(cases[0])});
+			handler.next({ selected_case: _cloneDeep(cases[0]) });
 		});
 	});
 });

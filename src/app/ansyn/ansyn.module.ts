@@ -15,12 +15,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { ContextModule } from '@ansyn/context/context.module';
-import { AppProvidersModule } from "../app-providers/app-providers.module";
+import { AppProvidersModule } from '../app-providers/app-providers.module';
 import { AppReducersModule } from '../app-reducers/app-reducers.module';
 import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextEntityVisualizer } from '../app-visualizers/context-entity.visualizer';
-import { CasesModule, FiltersModule, LayersManagerModule, ToolsModule, AlgorithmsModule, SettingsModule } from "@ansyn/menu-items";
+import {
+	CasesModule,
+	FiltersModule,
+	LayersManagerModule,
+	ToolsModule,
+	AlgorithmsModule,
+	SettingsModule
+} from '@ansyn/menu-items';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';

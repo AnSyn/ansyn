@@ -1,5 +1,5 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { Position } from '@ansyn/core'
+import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 
@@ -25,7 +25,7 @@ export const initialMapState: IMapState = {
 	layout: null
 };
 
-export function MapReducer(state: IMapState = initialMapState, action: MapActions ) {
+export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
 
 	switch (action.type) {
 		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
@@ -46,33 +46,33 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, communicators: action.payload.communicatorsIds };
 
 		case MapActionTypes.SET_LOADING_OVERLAYS:
-			return  {...state, loadingOverlays: action.payload};
+			return { ...state, loadingOverlays: action.payload };
 
 		case MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS:
 			const overlayIdToAdd = action.payload.overlayId;
-			const isOverlayIdToAddExists = state.loadingOverlays.find((overlay) => overlayIdToAdd ===  overlay);
+			const isOverlayIdToAddExists = state.loadingOverlays.find((overlay) => overlayIdToAdd === overlay);
 			if (!isOverlayIdToAddExists) {
 				const loadingOverlays = cloneDeep(state.loadingOverlays);
 				loadingOverlays.push(overlayIdToAdd);
-				return  {...state, loadingOverlays: loadingOverlays};
+				return { ...state, loadingOverlays: loadingOverlays };
 			}
 			break;
 
 		case MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS:
 			const overlayIdToRemove = action.payload.overlayId;
-			const overlayIndex = state.loadingOverlays.findIndex((overlay) => overlayIdToRemove ===  overlay);
+			const overlayIndex = state.loadingOverlays.findIndex((overlay) => overlayIdToRemove === overlay);
 			if (overlayIndex !== -1) {
 				const loadingOverlays = cloneDeep(state.loadingOverlays);
 				loadingOverlays.splice(overlayIndex, 1);
-				return  {...state, loadingOverlays: loadingOverlays};
+				return { ...state, loadingOverlays: loadingOverlays };
 			}
 			break;
 
 		case MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS:
-			return  {...state, ...action.payload};
+			return { ...state, ...action.payload };
 
 		case MapActionTypes.SET_LAYOUT:
-			return  {...state, layout: action.payload};
+			return { ...state, layout: action.payload };
 
 		default:
 			return state;

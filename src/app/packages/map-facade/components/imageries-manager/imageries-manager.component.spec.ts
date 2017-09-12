@@ -9,8 +9,15 @@ import { Dispatcher, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { MapReducer } from '../../reducers/map.reducer';
 
-const mock_ansyn_context_menu = MockComponent({selector: 'ansyn-context-menu', inputs: ['show', 'top', 'left'], outputs: ['showChange']});
-const mock_ansyn_imagery_container = MockComponent({selector: 'ansyn-imagery-container', inputs: ['map-state', 'active','show-status', 'showSpinner', 'disable-geo-options', 'notInCase']});
+const mock_ansyn_context_menu = MockComponent({
+	selector: 'ansyn-context-menu',
+	inputs: ['show', 'top', 'left'],
+	outputs: ['showChange']
+});
+const mock_ansyn_imagery_container = MockComponent({
+	selector: 'ansyn-imagery-container',
+	inputs: ['map-state', 'active', 'show-status', 'showSpinner', 'disable-geo-options', 'notInCase']
+});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
@@ -27,14 +34,14 @@ describe('ImageriesManagerComponent', () => {
 				Dispatcher,
 				MapFacadeService
 			],
-			imports:[StoreModule.provideStore({key:'value', map: MapReducer})],
-			declarations: [ ImageriesManagerComponent, mock_ansyn_context_menu, mock_ansyn_imagery_container],
+			imports: [StoreModule.provideStore({ key: 'value', map: MapReducer })],
+			declarations: [ImageriesManagerComponent, mock_ansyn_context_menu, mock_ansyn_imagery_container],
 
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
-	beforeEach(inject([MapEffects,ImageryCommunicatorService],(_mapEffects: MapEffects,_imageryCommunicatorService:ImageryCommunicatorService) => {
+	beforeEach(inject([MapEffects, ImageryCommunicatorService], (_mapEffects: MapEffects, _imageryCommunicatorService: ImageryCommunicatorService) => {
 		mapEffects = _mapEffects;
 		communicatorProvider = _imageryCommunicatorService;
 	}));
@@ -50,10 +57,10 @@ describe('ImageriesManagerComponent', () => {
 			maps_count: 2
 		};
 		component.maps = {
-			active_map_id:'imagery1',
+			active_map_id: 'imagery1',
 			data: [
-				{id: 'imagery1', data: {overlay: {}}},
-				{id: 'imagery2', data: {overlay: {}}}
+				{ id: 'imagery1', data: { overlay: {} } },
+				{ id: 'imagery2', data: { overlay: {} } }
 			]
 		};
 
@@ -61,37 +68,38 @@ describe('ImageriesManagerComponent', () => {
 	});
 
 	beforeEach(() => {
-		const communicator = jasmine.createSpyObj('communicator',['stopMouseShadowVectorLayer','setMouseShadowListener','drawShadowMouse','startMouseShadowVectorLayer']);
-		communicator.pointerMove =  Observable.create(observer => {});
+		const communicator = jasmine.createSpyObj('communicator', ['stopMouseShadowVectorLayer', 'setMouseShadowListener', 'drawShadowMouse', 'startMouseShadowVectorLayer']);
+		communicator.pointerMove = Observable.create(observer => {
+		});
 
 		//spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
 		const list = {
-			"imagery1": communicator,
-			"imagery2": communicator
+			'imagery1': communicator,
+			'imagery2': communicator
 		};
-		spyOnProperty(communicatorProvider,'communicators','get').and.returnValue(list);
+		spyOnProperty(communicatorProvider, 'communicators', 'get').and.returnValue(list);
 	});
 
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('check that all events are called ',()=> {
-		spyOn(component,'changeShadowMouseTarget');
-		spyOn(component,'stopPointerMoveProcess');
-		spyOn(component,'startPointerMoveProcess');
+	it('check that all events are called ', () => {
+		spyOn(component, 'changeShadowMouseTarget');
+		spyOn(component, 'stopPointerMoveProcess');
+		spyOn(component, 'startPointerMoveProcess');
 		//component.maps.data
 		//I want to fake and observable and then call him and check if the function has been called
 		//I can dispathc the actions
-		mapEffects.onComposeMapShadowMouse$ = Observable.create( observer => {
+		mapEffects.onComposeMapShadowMouse$ = Observable.create(observer => {
 			observer.next();
 		});
 
-		mapEffects.onStopMapShadowMouse$ = Observable.create( observer => {
+		mapEffects.onStopMapShadowMouse$ = Observable.create(observer => {
 			observer.next();
 		});
 
-		mapEffects.onStartMapShadowMouse$ = Observable.create( observer => {
+		mapEffects.onStartMapShadowMouse$ = Observable.create(observer => {
 			observer.next();
 		});
 
@@ -102,10 +110,10 @@ describe('ImageriesManagerComponent', () => {
 
 	});
 
-	it('emit change action event and chagne the active map id ',fakeAsync(()=> {
+	it('emit change action event and chagne the active map id ', fakeAsync(() => {
 		spyOn(component, 'changeActiveImagery');
 
-		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll(".map-container-wrapper");
+		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll('.map-container-wrapper');
 		expect(wrapperDivs.length).toBe(2);
 
 		wrapperDivs[0].click();
@@ -118,7 +126,7 @@ describe('ImageriesManagerComponent', () => {
 		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery2');
 	}));
 
-	it('activate shadow mouse',() => {
+	it('activate shadow mouse', () => {
 		//spyOn(communicatorProvider,'communicators');
 		component.startPointerMoveProcess();
 
@@ -127,28 +135,28 @@ describe('ImageriesManagerComponent', () => {
 		expect(component.listenersMouseShadowMapsId.length).toBe(1);
 
 		expect(communicatorProvider.communicators['imagery1']
-				.setMouseShadowListener).toHaveBeenCalled();
+			.setMouseShadowListener).toHaveBeenCalled();
 
 		expect(communicatorProvider.communicators['imagery2']
-				.startMouseShadowVectorLayer).toHaveBeenCalled();
+			.startMouseShadowVectorLayer).toHaveBeenCalled();
 
 		expect(component.shadowMouseProcess).toBe(true);
 
 
 	});
 
-	it('draw shadow mouse',() => {
-		const latLon = [10,10];
+	it('draw shadow mouse', () => {
+		const latLon = [10, 10];
 		component.listenersMouseShadowMapsId = ['imagery2'];
 		component.drawShadowMouse((latLon));
 		expect(communicatorProvider.communicators['imagery2'].drawShadowMouse).toHaveBeenCalledWith(latLon);
 	});
 
-	it('stop shadow mouse listeners',() => {
+	it('stop shadow mouse listeners', () => {
 		component.startPointerMoveProcess();
 
 		expect(component.pointerMoveUnsubscriber).toBeTruthy();
-		spyOn(component.pointerMoveUnsubscriber,'unsubscribe');
+		spyOn(component.pointerMoveUnsubscriber, 'unsubscribe');
 		component.stopPointerMoveProcess();
 
 		expect(communicatorProvider.communicators['imagery1'].setMouseShadowListener).toHaveBeenCalled();
@@ -162,24 +170,24 @@ describe('ImageriesManagerComponent', () => {
 
 	});
 
-	it("change selected layout to 'layout1' and make sure 'ol-rotate' style updates",() => {
+	it('change selected layout to \'layout1\' and make sure \'ol-rotate\' style updates', () => {
 		const element = document.createElement('div');
 		const htmlToAdd = '<div class="ol-rotate">ol-rotate</div>';
 		element.innerHTML = htmlToAdd;
-		component.setSelectedLayout({id: 'layout1', description: 'full screen', maps_count: 1})
+		component.setSelectedLayout({ id: 'layout1', description: 'full screen', maps_count: 1 });
 		fixture.detectChanges();
 
-		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".map"));
+		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.map'));
 		mapDivs[0].appendChild(element);
 
-		let wrapperDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".ol-rotate"));
+		let wrapperDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.ol-rotate'));
 		expect(wrapperDivs.length).toEqual(1);
 		expect(wrapperDivs.map(olRotate =>
 			getComputedStyle(olRotate).top
 		)).not.toEqual(['40px']);
-		component.setSelectedLayout({id: 'layout6', description: 'full', maps_count: 4})
+		component.setSelectedLayout({ id: 'layout6', description: 'full', maps_count: 4 });
 		fixture.detectChanges();
-		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll(".ol-rotate"));
+		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.ol-rotate'));
 		expect(wrapperDivs.length).toEqual(1);
 		expect(wrapperDivs.map(olRotate =>
 			getComputedStyle(olRotate).top

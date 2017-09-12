@@ -5,16 +5,19 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 	templateUrl: './combo-box.component.html',
 	styleUrls: ['./combo-box.component.less']
 })
-export class ComboBoxComponent{
+export class ComboBoxComponent {
 	private _selectedIndex: number;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
 
 	@Input() options: any[];
-	@Input('selectedIndex') set selectedIndex(value){
+
+	@Input('selectedIndex')
+	set selectedIndex(value) {
 		this._selectedIndex = value;
 		this.selectedIndexChange.emit(value);
 	};
+
 	@Output('selectedIndexChange') selectedIndexChange = new EventEmitter();
 
 	get selectedIndex() {
@@ -22,7 +25,7 @@ export class ComboBoxComponent{
 	}
 
 	toggleShow() {
-		if(this.optionsContainer.nativeElement.style.visibility !== 'visible' ) {
+		if (this.optionsContainer.nativeElement.style.visibility !== 'visible') {
 			this.optionsContainer.nativeElement.style.visibility = 'visible';
 			this.optionsContainer.nativeElement.focus();
 		} else {
@@ -30,11 +33,12 @@ export class ComboBoxComponent{
 		}
 	}
 
-	onBlurOptionsContainer($event: FocusEvent){
-		if($event.relatedTarget !== this.optionsTrigger.nativeElement){
+	onBlurOptionsContainer($event: FocusEvent) {
+		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
 			this.optionsContainer.nativeElement.style.visibility = 'hidden';
 		}
 	}
+
 	selectOption(index) {
 		this.selectedIndex = index;
 		this.optionsContainer.nativeElement.style.visibility = 'hidden';

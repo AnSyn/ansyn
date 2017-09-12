@@ -1,26 +1,26 @@
 @import "~@ansyn/core/less/common";
 
-:host{
-	div.app{
+:host {
+	div.app {
 		display: flex;
-		height:100vh;
+		height: 100vh;
 
-		div.layer{
+		div.layer {
 			width: 100%;
 			height: 100%;
 			color: white;
-			display:flex;
-			flex-direction:column;
+			display: flex;
+			flex-direction: column;
 			overflow: hidden;
 			position: relative;
-			.maps-container{
+			.maps-container {
 				position: relative;
 				flex: 1;
-				&.edit-mode{
+				&.edit-mode {
 					cursor: pointer;
 				}
 			}
-			.status{
+			.status {
 				position: relative;
 				height: 0;
 			}
@@ -61,12 +61,12 @@
 				}
 			}
 
-			div.menu{
+			div.menu {
 				animation: menu-init @animation-duration;
 				transform: transitionX(0);
 			}
 
-			div.layer div.maps-container{
+			div.layer div.maps-container {
 				animation: map-init 0.7s;
 				animation-delay: @animation-duration;
 				opacity: 0;

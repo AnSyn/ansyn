@@ -1,14 +1,14 @@
 {
-  "name": "@ansyn/overlays",
-  "version": "1.0.0",
-  "description": "overlays component to show data with graphic touch",
-  "main": "index.ts",
-  "scripts": {
-    "test": "npm test"
-  },
-  "author": "",
-  "license": "ISC",
-  "peerDependencies": {
-    "event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64"
-  }
+	"name": "@ansyn/overlays",
+	"version": "1.0.0",
+	"description": "overlays component to show data with graphic touch",
+	"main": "index.ts",
+	"scripts": {
+		"test": "npm test"
+	},
+	"author": "",
+	"license": "ISC",
+	"peerDependencies": {
+		"event-drops": "github:marmelab/EventDrops#ce9076d327b452054ce989430539c724a7a32b64"
+	}
 }

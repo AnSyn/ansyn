@@ -15,9 +15,10 @@ import { FormsModule } from '@angular/forms';
 	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule, FormsModule],
 	providers: [MapFacadeService],
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent, ContextMenuComponent],
-	exports:[ImageriesManagerComponent]
+	exports: [ImageriesManagerComponent]
 })
 
 export class MapFacadeModule {
-	constructor(){}
+	constructor() {
+	}
 }

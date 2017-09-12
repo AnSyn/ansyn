@@ -5,4 +5,5 @@ import { EffectsModule } from '@ngrx/effects';
 @NgModule({
 	imports: [EffectsModule.run(CasesRouterEffects)]
 })
-export class CasesRouterModule { }
+export class CasesRouterModule {
+}

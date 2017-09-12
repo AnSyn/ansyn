@@ -1,6 +1,6 @@
-:host{
+:host {
 
-	div.tools-menu-item-container{
+	div.tools-menu-item-container {
 		display: flex;
 		flex-direction: column;
 		padding: 36px 0;
@@ -18,14 +18,14 @@
 				height: 24px;
 				background: rgba(255, 255, 255, 0.25);
 				box-sizing: content-box;
-				outline:none;
+				outline: none;
 				&:disabled {
 					opacity: .6;
 				}
-				&.active{
+				&.active {
 					background-color: rgb(41, 127, 155);
 				}
-				&:hover ~ span.tooltiptext{
+				&:hover ~ span.tooltiptext {
 					visibility: visible;
 					opacity: 1;
 				}
@@ -48,34 +48,34 @@
 				z-index: 2;
 			}
 
-			&.display-overlay-visualizer{
+			&.display-overlay-visualizer {
 				opacity: 0.6;
 				button {
 
 					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat 100%;
 					background-position: center center;
 				}
-				&.active{
+				&.active {
 					opacity: 1;
-					button{
+					button {
 					}
 				}
 			}
 
-			&.user-annotations{
+			&.user-annotations {
 
-				button{
+				button {
 
-					display:flex;
+					display: flex;
 					justify-content: center;
 					align-items: center;
-					span{
+					span {
 						font-size: 22px;
 						color: white;
 					}
 				}
 
-				&.active{
+				&.active {
 					button {
 
 					}

@@ -2,9 +2,9 @@ import { IAppState } from '../../app-reducers';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Case,CaseMapsState } from '@ansyn/menu-items/cases';
-import { isEqual as _isEqual, isNil as _isNil} from 'lodash';
-import "@ansyn/core/utils/clone-deep";
+import { Case, CaseMapsState } from '@ansyn/menu-items/cases';
+import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
+import '@ansyn/core/utils/clone-deep';
 import * as packageJson from '../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -18,7 +18,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent implements OnInit{
+export class AnsynComponent implements OnInit {
 	@ViewChild('mapsContainer') mapsContainer;
 
 	selected_case$: Observable<Case> = this.store.select('cases')
@@ -65,13 +65,19 @@ export class AnsynComponent implements OnInit{
 	ngOnInit(): void {
 		this.store.dispatch(new LoadContextsAction());
 		this.selectedCaseName$.subscribe(_selectedCaseName => this.selectedCaseName = _selectedCaseName);
-		this.maps$.subscribe(maps => {this.maps = maps});
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});
-		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
-		this.pinLocation$.subscribe( _pinLocation => this.pinLocation = _pinLocation);
+		this.maps$.subscribe(maps => {
+			this.maps = maps;
+		});
+		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
+			this.displayedOverlay = _displayedOverlay;
+		});
+		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
+			this.isFavoriteOverlay = isFavoriteOverlay;
+		});
+		this.pinLocation$.subscribe(_pinLocation => this.pinLocation = _pinLocation);
 	}
 
-	toggleEditMode(){
+	toggleEditMode() {
 		this.editMode = !this.editMode;
 	}
 

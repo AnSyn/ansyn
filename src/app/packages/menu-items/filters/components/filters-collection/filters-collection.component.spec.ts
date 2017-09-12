@@ -15,13 +15,13 @@ describe('FiltersCollectionComponent', () => {
 	let handler: Subject<any>;
 
 	const mock_ansyn_checkbox = MockComponent({
-		selector: "ansyn-checkbox",
+		selector: 'ansyn-checkbox',
 		inputs: ['id', 'checked', 'disabled', 'text'],
 		outputs: ['click']
 	});
 
 	const mock_anysn_filter_container = MockComponent({
-		selector: "ansyn-filter-container",
+		selector: 'ansyn-filter-container',
 		inputs: ['filter']
 	});
 
@@ -31,16 +31,16 @@ describe('FiltersCollectionComponent', () => {
 				mock_ansyn_checkbox,
 				mock_anysn_filter_container
 			],
-			imports: [FiltersModule, StoreModule.provideStore({filters: FiltersReducer})],
-			providers: [{provide: filtersConfig, useValue: {filters: null}}]
+			imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })],
+			providers: [{ provide: filtersConfig, useValue: { filters: null } }]
 		})
 			.compileComponents();
 	}));
-	beforeEach(inject([Store],(_store: Store<any>) => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		handler = new Subject();
-		spyOn(store,'select').and.returnValue(handler);
-	} ))
+		spyOn(store, 'select').and.returnValue(handler);
+	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FiltersCollectionComponent);
@@ -52,14 +52,14 @@ describe('FiltersCollectionComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('showOnlyFavorites call to Action ToggleOnlyFavoriteAction',() => {
-		spyOn(store,'dispatch');
+	it('showOnlyFavorites call to Action ToggleOnlyFavoriteAction', () => {
+		spyOn(store, 'dispatch');
 		component.showOnlyFavorites({});
 		const result = new ToggleOnlyFavoriteAction();
 		expect(store.dispatch).toHaveBeenCalledWith(result);
 	});
 
-	it('check that disableShowOnlyFavoritesSelection is been set in subscribe',() => {
+	it('check that disableShowOnlyFavoritesSelection is been set in subscribe', () => {
 		expect(component.disableShowOnlyFavoritesSelection).toBeFalsy();
 
 		handler.next({
@@ -97,7 +97,6 @@ describe('FiltersCollectionComponent', () => {
 
 
 	});
-
 
 
 });

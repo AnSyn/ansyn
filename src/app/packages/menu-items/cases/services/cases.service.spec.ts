@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { CasesService } from './cases.service';
-import { HttpModule } from "@angular/http";
-import { Http, Headers, RequestOptions } from "@angular/http";
+import { HttpModule } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Case } from '../models/case.model';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
@@ -13,18 +13,16 @@ export const MockCasesConfig = {
 	provide: casesConfig,
 	useValue: {
 		defaultCase: {
-			name:'default name',
+			name: 'default name',
 			id: 'default id',
 			state: {
-				time: {
-
-				}
+				time: {}
 			}
 		},
-		baseUrl:  "fake-cases-url",
+		baseUrl: 'fake-cases-url',
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region']
 
-		}
+	}
 } as any;
 
 describe('CasesService', () => {
@@ -32,17 +30,15 @@ describe('CasesService', () => {
 	let http: Http;
 
 	const defaultCase: Case = {
-		name:'default name',
+		name: 'default name',
 		id: 'default id',
 		state: {
-			time: {
-
-			}
+			time: {}
 		}
 
 	} as any;
 
-	const baseUrl: string = "fake-cases-url";
+	const baseUrl: string = 'fake-cases-url';
 	const casesQueryParamsKeys: string[] = ['facets', 'time', 'maps', 'region'];
 
 	beforeEach(() => {
@@ -61,33 +57,32 @@ describe('CasesService', () => {
 		expect(casesService).toBeDefined();
 	});
 
-	it('function getOveralysMarkup ', ()=> {
+	it('function getOveralysMarkup ', () => {
 		const testCase = {
-			state : {
+			state: {
 				maps: {
-					active_map_id: "333",
+					active_map_id: '333',
 					data: [
 						{
-							id:"333",
-							data:{
+							id: '333',
+							data: {
 								overlay: {
-									id: "333-a"
+									id: '333-a'
 								}
 							}
 						},
 						{
-							id:"444",
-							data:{
+							id: '444',
+							data: {
 								overlay: {
-									id: "444-a"
+									id: '444-a'
 								}
 							}
 						},
 						,
 						{
-							id:"5555",
-							data:{
-							}
+							id: '5555',
+							data: {}
 						}
 					]
 				}

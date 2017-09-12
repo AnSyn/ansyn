@@ -8,4 +8,5 @@ import { ToastComponent } from './toast/toast.component';
 	exports: [ToastComponent]
 
 })
-export class ToastModule { }
+export class ToastModule {
+}

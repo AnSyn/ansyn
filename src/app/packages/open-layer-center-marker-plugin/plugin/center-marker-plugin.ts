@@ -62,7 +62,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	}
 
 	private register() {
-		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: MapPosition)=>{
+		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: MapPosition) => {
 			if (this.isEnabled) {
 				this.tryDrawCenter();
 			} else {

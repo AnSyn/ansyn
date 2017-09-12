@@ -3,6 +3,7 @@
 	justify-content: center;
 	width: 100%;
 }
+
 .digit {
 	display: inline-block;
 	font-size: 14px;
@@ -11,6 +12,7 @@
 	line-height: 1;
 	margin: 0;
 }
+
 .time-part {
 	text-align: center;
 	height: 12px;
@@ -19,9 +21,11 @@
 	box-sizing: border-box;
 	color: black;
 }
+
 .time-part.static {
 	overflow: visible;
 }
+
 .time-part .digit-wrapper {
 	animation-timing-function: cubic-bezier(1, 0, 1, 0);
 	display: flex;
@@ -35,19 +39,22 @@
 	animation-duration: 2s;
 	animation-iteration-count: 1;
 }
+
 .time-part.hundredths.ones .digit-wrapper {
 	animation-name: hundredths-ones;
 	animation-duration: 0.2s;
 	animation-iteration-count: 10
 }
+
 .time-part.hundredths.hun .digit-wrapper {
 	animation-name: hundredths-ones2;
-	animation-fill-mode:forwards;
+	animation-fill-mode: forwards;
 	animation-duration: 2s;
 	animation-iteration-count: 1;
-	animation-timing-function:steps(1);
+	animation-timing-function: steps(1);
 	opacity: 0;
 }
+
 @keyframes hundredths-ones2 {
 	0% {
 		opacity: 0;
@@ -57,6 +64,7 @@
 		opacity: 1;
 	}
 }
+
 @keyframes hundredths-ones {
 	10% {
 		transform: translateY(-12px);
@@ -90,35 +98,38 @@
 	}
 }
 
-
-
-.skeleton-wrapper{
+.skeleton-wrapper {
 	display: flex;
-	height:100vh;
-	width:100vw;
+	height: 100vh;
+	width: 100vw;
 }
-.skeleton-menu{
-	width:90px;
+
+.skeleton-menu {
+	width: 90px;
 	background: #2e2d46;
-	height:100%;
+	height: 100%;
 }
-.skeleton-container{
-	flex:1;
-	display:flex;
+
+.skeleton-container {
+	flex: 1;
+	display: flex;
 	flex-direction: column;
-	height:100%;
+	height: 100%;
 }
-.skeleton-map{
+
+.skeleton-map {
 	position: relative;
-	flex:1px;
+	flex: 1px;
 	/*background: black;*/
-	display:flex;
-	align-items:center;
+	display: flex;
+	align-items: center;
 }
-.skeleton-timeline{
-	height:140px;
-	background:white;
+
+.skeleton-timeline {
+	height: 140px;
+	background: white;
 }
+
 .skeleton-loader {
 	font-size: 10px;
 	margin: 50px auto;
@@ -132,6 +143,7 @@
 	animation: load3 1.4s infinite linear;
 	transform: translateZ(0);
 }
+
 .skeleton-loader:before {
 	width: 50%;
 	height: 50%;
@@ -142,7 +154,8 @@
 	left: 0;
 	content: '';
 }
-.skeleton-text{
+
+.skeleton-text {
 	width: 82.5px;
 	height: 82.5px;
 	background: #2e2d46;;
@@ -159,6 +172,7 @@
 	font-family: 'sans-serif';
 
 }
+
 @-webkit-keyframes load3 {
 	0% {
 		-webkit-transform: rotate(0deg);
@@ -169,6 +183,7 @@
 		transform: rotate(360deg);
 	}
 }
+
 @keyframes load3 {
 	0% {
 		-webkit-transform: rotate(0deg);

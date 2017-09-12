@@ -2,8 +2,10 @@ import { inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
-import { LoadOverlaysSuccessAction, OverlaysActionTypes, LoadOverlaysAction,
-	DisplayOverlayFromStoreAction, SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	LoadOverlaysSuccessAction, OverlaysActionTypes, LoadOverlaysAction,
+	DisplayOverlayFromStoreAction, SetFiltersAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { HttpModule } from '@angular/http';
@@ -18,7 +20,7 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
-describe('OverlaysAppEffects',()=> {
+describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
@@ -30,23 +32,24 @@ describe('OverlaysAppEffects',()=> {
 	let toolsState: IToolsState;
 	let overlaysState: IOverlayState;
 	let imageryCommunicatorServiceMock = {
-		provide:() => {}
+		provide: () => {
+		}
 	};
 
-	const caseItem: Case =  {
-		"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
-		"state": {
-			"region": {
-				"type": "FeatureCollection",
-				"features": [{
-					"type": "Feature",
-					"properties": {
-						"MUN_HEB": "Hasharon",
-						"MUN_ENG": "Hasharon"
+	const caseItem: Case = {
+		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
+		'state': {
+			'region': {
+				'type': 'FeatureCollection',
+				'features': [{
+					'type': 'Feature',
+					'properties': {
+						'MUN_HEB': 'Hasharon',
+						'MUN_ENG': 'Hasharon'
 					},
-					"geometry": {
-						"type": "Polygon",
-						"coordinates": [
+					'geometry': {
+						'type': 'Polygon',
+						'coordinates': [
 							[
 								[35.71991824722275, 32.709192409794866],
 								[35.54566531753454, 32.393992011030576]
@@ -57,16 +60,16 @@ describe('OverlaysAppEffects',()=> {
 					}
 				}]
 			},
-			"time": {
-				"type": "absolute",
-				"from": new Date("2013-06-27T08:43:03.624Z"),
-				"to": new Date("2015-04-17T03:55:12.129Z")
+			'time': {
+				'type': 'absolute',
+				'from': new Date('2013-06-27T08:43:03.624Z'),
+				'to': new Date('2015-04-17T03:55:12.129Z')
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {overlayDisplayMode: 'Hitmap'}},
-					{id: 'imagery2', data: {overlayDisplayMode: 'None'}},
-					{id: 'imagery3', data: {}},
+					{ id: 'imagery1', data: { overlayDisplayMode: 'Hitmap' } },
+					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
+					{ id: 'imagery3', data: {} },
 				],
 				active_map_id: 'imagery1'
 			}
@@ -79,18 +82,18 @@ describe('OverlaysAppEffects',()=> {
 				EffectsTestingModule,
 				HttpModule,
 
-				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer}),
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
 			],
-			providers:[
+			providers: [
 				OverlaysAppEffects,
 				OverlaysService,
-				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock},
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{ provide: OverlaysConfig, useValue: {} },
 				{
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null,
-						contextValues: {imageryCount: -1}
+						contextValues: { imageryCount: -1 }
 					}
 				},
 				{
@@ -102,22 +105,22 @@ describe('OverlaysAppEffects',()=> {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store],(_store) => {
+	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		spyOn(store, 'select').and.callFake((type) => {
-			console.log(type,'x');
-			if(type === 'overlays') {
+			console.log(type, 'x');
+			if (type === 'overlays') {
 				return Observable.of({
 					filteredOverlays: ['first', 'last']
 				});
 			}
-			if(type === 'cases'){
+			if (type === 'cases') {
 				return Observable.of({
 					selected_case: caseItem,
-					cases: [ caseItem ]
+					cases: [caseItem]
 				});
 			}
-			if(type === 'tools'){
+			if (type === 'tools') {
 				toolsState = cloneDeep(toolsInitialState);
 				return Observable.of(toolsState);
 			}
@@ -125,7 +128,7 @@ describe('OverlaysAppEffects',()=> {
 		});
 	}));
 
-	beforeEach(inject([ CasesService, EffectsRunner, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService],(_casesService:CasesService,_effectsRunner:EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService,_overalysAppEffects:OverlaysAppEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([CasesService, EffectsRunner, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _overalysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {
 		casesService = _casesService;
 		overlaysAppEffects = _overalysAppEffects;
 		effectsRunner = _effectsRunner;
@@ -137,12 +140,12 @@ describe('OverlaysAppEffects',()=> {
 		expect(overlaysAppEffects).toBeTruthy();
 	});
 
-	it("onOverlaysMarkupsChanged$",() => {
-		spyOn(CasesService,'getOverlaysMarkup').and.returnValue({});
+	it('onOverlaysMarkupsChanged$', () => {
+		spyOn(CasesService, 'getOverlaysMarkup').and.returnValue({});
 		const action = new LoadOverlaysSuccessAction({} as any);
 		effectsRunner.queue(action);
 		let count = 0;
-		overlaysAppEffects.onOverlaysMarkupsChanged$.subscribe((_result:Action) => {
+		overlaysAppEffects.onOverlaysMarkupsChanged$.subscribe((_result: Action) => {
 			count++;
 			expect(_result.type).toEqual(OverlaysActionTypes.OVERLAYS_MARKUPS);
 			expect(CasesService.getOverlaysMarkup).toHaveBeenCalledTimes(1);
@@ -165,8 +168,7 @@ describe('OverlaysAppEffects',()=> {
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		let result;
-		const drops = [{name:'name', data: [{id: 'first'}, {id: 'last'}]}];
-
+		const drops = [{ name: 'name', data: [{ id: 'first' }, { id: 'last' }] }];
 
 
 		casesService.contextValues.defaultOverlay = 'latest';

@@ -1,24 +1,24 @@
 <div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort">
 
- <div class="left-side">
-    <div class="checkbox">
-		<input type="checkbox"
-            id="checkbox{{ enumMetadata.key }}"
-            class="regular-checkbox"
-            [checked]="enumMetadata.value.isChecked ? 'checked' : ''"
-            (click)='onInputClicked(enumMetadata.key)'/>
-      	<label for="checkbox{{ enumMetadata.key }}"></label>
-    </div>
-    <div class="filter-row">
-      <div class="field-name-container">
-        <span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
-      </div>
-      <span class="only-filter" (click)="selectOnly(enumMetadata.key)">only</span>
-    </div>
-  </div>
+	<div class="left-side">
+		<div class="checkbox">
+			<input type="checkbox"
+				   id="checkbox{{ enumMetadata.key }}"
+				   class="regular-checkbox"
+				   [checked]="enumMetadata.value.isChecked ? 'checked' : ''"
+				   (click)='onInputClicked(enumMetadata.key)'/>
+			<label for="checkbox{{ enumMetadata.key }}"></label>
+		</div>
+		<div class="filter-row">
+			<div class="field-name-container">
+				<span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
+			</div>
+			<span class="only-filter" (click)="selectOnly(enumMetadata.key)">only</span>
+		</div>
+	</div>
 
-  <div class="right-side">
-    <span>{{enumMetadata.value.count}}</span>
-  </div>
+	<div class="right-side">
+		<span>{{enumMetadata.value.count}}</span>
+	</div>
 
 </div>

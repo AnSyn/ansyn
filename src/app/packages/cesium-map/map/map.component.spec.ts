@@ -10,7 +10,7 @@ describe('cesiumMap Component spec', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ MapComponent ]
+			declarations: [MapComponent]
 		}).compileComponents();
 	}));
 
@@ -20,7 +20,9 @@ describe('cesiumMap Component spec', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {expect(component).toBeTruthy(); });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
 	it('createMap should raise mapCreated event', () => {
 

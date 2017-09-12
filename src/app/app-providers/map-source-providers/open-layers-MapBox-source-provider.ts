@@ -32,23 +32,23 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 			projection: 'EPSG:3857'
 		});
 
-		source.once('tileloadstart',() => {
+		source.once('tileloadstart', () => {
 			/*
 			this will work every request for tile source and will have slightly effect on performance (one function call) nothing wo worry about
 			 */
-			super.startTimingLog("tile_load-" + metaData.id);
+			super.startTimingLog('tile_load-' + metaData.id);
 		});
 
-		source.once('tileloadend',() => {
-			super.endTimingLog("tile_load-"+ metaData.id);
+		source.once('tileloadend', () => {
+			super.endTimingLog('tile_load-' + metaData.id);
 		});
 
 
 		const mapBoxLayer = new TileLayer({
-            source: source,
-            visible: true,
-            preload: Infinity
-			});
+			source: source,
+			visible: true,
+			preload: Infinity
+		});
 		return [mapBoxLayer];
 	}
 

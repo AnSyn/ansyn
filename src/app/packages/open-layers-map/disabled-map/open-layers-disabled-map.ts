@@ -81,7 +81,7 @@ export class OpenLayersDisabledMap implements IMap {
 	setBoundingBox(bbox: GeoJSON.Point[]) {
 	}
 
-	addLayerIfNotExist(layer: Layer){
+	addLayerIfNotExist(layer: Layer) {
 
 	}
 
@@ -100,7 +100,7 @@ export class OpenLayersDisabledMap implements IMap {
 		}
 
 		this.mainLayer = layer;
-		const newView =	this.generateNewView(layer, currentView, position);
+		const newView = this.generateNewView(layer, currentView, position);
 		this.mapObject.setView(newView);
 		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
@@ -118,10 +118,10 @@ export class OpenLayersDisabledMap implements IMap {
 		if (!oldview) {
 			newCenter = position ? position.center.coordinates : newCenter;
 			newZoom = position ? position.zoom : 12;
-			newRotation  = position ? position.rotation : 0;
+			newRotation = position ? position.rotation : 0;
 		} else {
 			newZoom = position ? position.zoom : oldview.getZoom();
-			newRotation  = position ? position.rotation : oldview.getRotation();
+			newRotation = position ? position.rotation : oldview.getRotation();
 
 			const oldCenter = oldview.getCenter();
 			const oldProjection = oldview.getProjection();
@@ -177,11 +177,14 @@ export class OpenLayersDisabledMap implements IMap {
 		this.mapObject.updateSize();
 	}
 
-	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {}
+	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
+	}
 
-	setPointerMove(enable: boolean) {}
+	setPointerMove(enable: boolean) {
+	}
 
-	removeSingleClickEvent() {}
+	removeSingleClickEvent() {
+	}
 
 	public setAutoImageProcessing(shouldPerform: boolean = false): void {
 		let imageLayer: ImageLayer = <ImageLayer>this.mainLayer;

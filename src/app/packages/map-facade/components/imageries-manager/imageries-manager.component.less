@@ -1,25 +1,26 @@
 @import "~@ansyn/core/less/common";
+
 @height-minus-status: calc(~"100% - @{status-bar-height}");
 
-div.imageries-container{
+div.imageries-container {
 	position: relative;
 	display: flex;
 	height: 100%;
 	flex-wrap: wrap;
 	background: black;
 
-	&.pin-location{
+	&.pin-location {
 		cursor: url('/assets/cursors/pin-location.cur'), default;
 	}
 
 	&:not(.layout1) {
 		//ansyn-imagery-container
-		/deep/ .ol-rotate{
+		/deep/ .ol-rotate {
 			top: 40px;
 		}
 	}
 
-	div.active-border{
+	div.active-border {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -31,28 +32,28 @@ div.imageries-container{
 		border: none;
 		pointer-events: none;
 
-		&.active{
+		&.active {
 			border: solid 3px #27B2CF;
 		}
 	}
 
 	&.layout1 {
-		div.map-container-wrapper{
+		div.map-container-wrapper {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			div.active-border{
+			div.active-border {
 				display: none;
 			}
 		}
 	}
 
 	&.layout2 {
-		div.map-container-wrapper{
+		div.map-container-wrapper {
 			position: relative;
 			width: 50%;
 			height: 100%;
-			div.active-border{
+			div.active-border {
 				height: @height-minus-status;
 			}
 		}
@@ -60,12 +61,12 @@ div.imageries-container{
 	}
 	&.layout3 {
 		flex-direction: column;
-		div.map-container-wrapper{
+		div.map-container-wrapper {
 			position: relative;
 			width: 100%;
 			height: 50%;
-			&:last-child{
-				div.active-border{
+			&:last-child {
+				div.active-border {
 					height: @height-minus-status;
 				}
 			}
@@ -76,12 +77,12 @@ div.imageries-container{
 			position: relative;
 			width: 50%;
 			height: 50%;
-			&:first-child{
+			&:first-child {
 				width: 100%;
 				height: 50%;
 			}
 			&:not(:first-child) {
-				div.active-border{
+				div.active-border {
 					height: @height-minus-status;
 				}
 			}
@@ -89,7 +90,7 @@ div.imageries-container{
 	}
 
 	&.layout5 {
-		div.map-container-wrapper{
+		div.map-container-wrapper {
 			position: relative;
 			width: 50%;
 			height: 50%;
@@ -98,7 +99,7 @@ div.imageries-container{
 				height: 100%;
 			}
 			&:first-child, &:last-child {
-				div.active-border{
+				div.active-border {
 					height: @height-minus-status;
 				}
 			}
@@ -106,12 +107,12 @@ div.imageries-container{
 		flex-direction: column;
 	}
 	&.layout6 {
-		div.map-container-wrapper{
+		div.map-container-wrapper {
 			position: relative;
 			width: 50%;
 			height: 50%;
-			&:nth-child(3), &:nth-child(4)  {
-				div.active-border{
+			&:nth-child(3), &:nth-child(4) {
+				div.active-border {
 					height: @height-minus-status;
 				}
 			}

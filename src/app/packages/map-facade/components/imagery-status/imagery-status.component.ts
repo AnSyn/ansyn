@@ -15,16 +15,17 @@ export class ImageryStatusComponent {
 	@Input() overlay;
 	@Input() active;
 
-	constructor(private store: Store<any>) {}
+	constructor(private store: Store<any>) {
+	}
 
 	backToWorldView($event) {
 		$event.stopPropagation();
-		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id}));
+		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id }));
 	}
 
 	toggleMapSyncroniztion() {
 		if (!this.disableGeoOptions) {
-			this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
+			this.store.dispatch(new SynchronizeMapsAction({ mapId: this.map_id }));
 		}
 	}
 }

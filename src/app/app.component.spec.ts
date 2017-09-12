@@ -15,7 +15,7 @@ describe('AppComponent', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(()=>{
+	beforeEach(() => {
 		fixture = TestBed.createComponent(AppComponent);
 		appComponent = fixture.debugElement.componentInstance;
 		element = fixture.debugElement.nativeElement;

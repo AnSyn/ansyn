@@ -3,32 +3,32 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComboBoxComponent } from './combo-box.component';
 
 describe('ComboBoxComponent', () => {
-  let component: ComboBoxComponent;
-  let fixture: ComponentFixture<ComboBoxComponent>;
+	let component: ComboBoxComponent;
+	let fixture: ComponentFixture<ComboBoxComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ComboBoxComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ComboBoxComponent]
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ComboBoxComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(ComboBoxComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should be created', () => {
+		expect(component).toBeTruthy();
+	});
 
 	it('should set selectIndex change value of _selectedIndex and call selectedIndexChange.emit with the new value', () => {
 		spyOn(component.selectedIndexChange, 'emit');
 		(<any>component)._selectedIndex = 0;
 		component.selectedIndex = 6;
 		expect(component.selectedIndexChange.emit).toHaveBeenCalledWith(6);
-		expect((<any>component)._selectedIndex).toEqual(6)
+		expect((<any>component)._selectedIndex).toEqual(6);
 	});
 
 	it('toggleShow should toggle "visibility" of optionsContainer("visible" and "hidden"). on "visible" focus() should have been call too', () => {

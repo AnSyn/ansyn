@@ -37,130 +37,183 @@ export type MapActions = any;
 
 export class EnableMapGeoOptionsActionStore implements Action {
 	type = MapActionTypes.ENABLE_MAP_GEO_OPTIONS;
-	constructor(public payload: {mapId: string, isEnabled: boolean}) {
+
+	constructor(public payload: { mapId: string, isEnabled: boolean }) {
 		// code...
 	}
 }
 
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;
-	constructor(public payload: {mapId: string} = {mapId: undefined}) {
+
+	constructor(public payload: { mapId: string } = { mapId: undefined }) {
 		// code...
 	}
 }
 
 export class ActiveMapChangedAction implements Action {
 	type = MapActionTypes.ACTIVE_MAP_CHANGED;
+
 	constructor(public payload?: any) {
 		// code...
 	}
 }
 
-export class PositionChangedAction implements Action{
+export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
-	constructor	(public payload: {id: string, position: Position}) {}
+
+	constructor(public payload: { id: string, position: Position }) {
+	}
 }
 
-export class UpdateMapSizeAction implements Action{
+export class UpdateMapSizeAction implements Action {
 	type = MapActionTypes.UPDATE_MAP_SIZE;
-	constructor	(public payload?: any) {}
+
+	constructor(public payload?: any) {
+	}
 }
 
-export class AddMapInstacneAction implements Action{
+export class AddMapInstacneAction implements Action {
 	type = MapActionTypes.ADD_MAP_INSTANCE;
-	constructor(public payload: {currentCommunicatorId: string, communicatorsIds: string[]}) {}
+
+	constructor(public payload: { currentCommunicatorId: string, communicatorsIds: string[] }) {
+	}
 }
 
 // TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become pluggins
 export class MapInstanceChangedAction extends AddMapInstacneAction {
 	public mapInstanceChangedPayload;
-	constructor(payload: {id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string}) {
+
+	constructor(payload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {
 		// code...
-		super({currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds});
+		super({ currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds });
 		this.mapInstanceChangedPayload = payload;
 		this.type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 	}
 }
 
-export class RemoveMapInstanceAction implements Action{
+export class RemoveMapInstanceAction implements Action {
 	type = MapActionTypes.REMOVE_MAP_INSTACNE;
-	constructor(public payload: any) {}
+
+	constructor(public payload: any) {
+	}
 }
 
-export class StopMapShadowAction implements Action{
+export class StopMapShadowAction implements Action {
 	type = MapActionTypes.STOP_MAP_SHADOW_ACTIONS;
-	constructor	(public payload?: any) {}
+
+	constructor(public payload?: any) {
+	}
 }
 
-export class StartMapShadowAction implements Action{
+export class StartMapShadowAction implements Action {
 	type = MapActionTypes.START_MAP_SHADOW_ACTIONS;
-	constructor(public payload?: any) {}
+
+	constructor(public payload?: any) {
+	}
 }
 
-export class SynchronizeMapsAction implements Action{
+export class SynchronizeMapsAction implements Action {
 	type = MapActionTypes.SYNCHRONIZE_MAPS;
-	constructor(public payload: {mapId: string}) {}
+
+	constructor(public payload: { mapId: string }) {
+	}
 }
 
 export class CompositeMapShadowAction implements Action {
 	type = MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION;
-	constructor(public payload?: any) {}
+
+	constructor(public payload?: any) {
+	}
 }
 
 export class MapSingleClickAction implements Action {
 	type = MapActionTypes.MAP_SINGLE_CLICK;
-	constructor(public payload: any){}
+
+	constructor(public payload: any) {
+	}
 }
 
 export class SetLoadingOverlaysAction implements Action {
 	type = MapActionTypes.SET_LOADING_OVERLAYS;
-	constructor(public payload: string[]){}
+
+	constructor(public payload: string[]) {
+	}
 }
 
 export class AddOverlayToLoadingOverlaysAction implements Action {
 	type = MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS;
-	constructor(public payload: string){}
+
+	constructor(public payload: string) {
+	}
 }
 
 export class RemoveOverlayFromLoadingOverlaysAction implements Action {
 	type = MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS;
-	constructor(public payload: string){}
+
+	constructor(public payload: string) {
+	}
 }
 
 export class SetMapAutoImageProcessing implements Action {
 	type = MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING;
-	constructor(public payload: { mapId: string, toggle_value: boolean }) { }
+
+	constructor(public payload: { mapId: string, toggle_value: boolean }) {
+	}
 }
 
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
-	constructor(public payload: any){}
+
+	constructor(public payload: any) {
+	}
 }
+
 export class SetContextMenuFiltersAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS;
-	constructor(public payload: {filteredOverlays: any[], displayedOverlay: any}){}
+
+	constructor(public payload: { filteredOverlays: any[], displayedOverlay: any }) {
+	}
 }
+
 export class ContextMenuDisplayAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
-	constructor(public payload: string){}
+
+	constructor(public payload: string) {
+	}
 }
+
 export class HoverFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
-	constructor(public payload: {visualizerType: string, id?: string}){}
+
+	constructor(public payload: { visualizerType: string, id?: string }) {
+	}
 }
+
 export class DbclickFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.DBCLICK_FEATURE;
-	constructor(public payload: {visualizerType: string, id: string}){}
+
+	constructor(public payload: { visualizerType: string, id: string }) {
+	}
 }
+
 export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
-	constructor(){}
+
+	constructor() {
+	}
 }
+
 export class SetLayoutAction implements Action {
 	type = MapActionTypes.SET_LAYOUT;
-	constructor(public payload: MapsLayout){}
+
+	constructor(public payload: MapsLayout) {
+	}
 }
+
 export class SetOverlayNotInCaseAction implements Action {
 	type = MapActionTypes.SET_OVERLAYS_NOT_IN_CASE;
-	constructor(public payload: Map<string, boolean>){}
+
+	constructor(public payload: Map<string, boolean>) {
+	}
 }

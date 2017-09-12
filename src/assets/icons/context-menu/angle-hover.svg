@@ -1,19 +1,21 @@
-<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<title>Frame 5</title>
-<desc>Created using Figma</desc>
-<g id="Canvas" transform="translate(-2617 -3479)">
-<clipPath id="clip-0" clip-rule="evenodd">
-<path d="M 2617 3479L 2641 3479L 2641 3503L 2617 3503L 2617 3479Z" fill="#27B2CF"/>
-</clipPath>
-<g id="Frame 5" clip-path="url(#clip-0)">
-<g id="angle">
-<g id="Shape">
-<use xlink:href="#path0_fill" transform="translate(2618 3482)" fill="#27B2CF"/>
-</g>
-</g>
-</g>
-</g>
-<defs>
-<path id="path0_fill" d="M 21.8779 16.4501L 11.2717 16.4501C 11.1134 14.1562 10.2212 12.0078 8.70468 10.2707L 17.7288 1.25734C 18.0168 0.969871 18.0168 0.503283 17.7288 0.215768C 17.4408 -0.0719228 16.9741 -0.0719228 16.686 0.215768L 7.16573 9.72458L 0.216053 16.666C 0.00527066 16.8765 -0.0580701 17.1934 0.0561553 17.4687C 0.170381 17.744 0.439292 17.9233 0.7374 17.9233L 10.5702 17.9233L 21.8779 17.9233C 22.285 17.9233 22.6154 17.5936 22.6154 17.1867C 22.6154 16.7798 22.285 16.4501 21.8779 16.4501Z"/>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Frame 5</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-2617 -3479)">
+		<clipPath id="clip-0" clip-rule="evenodd">
+			<path d="M 2617 3479L 2641 3479L 2641 3503L 2617 3503L 2617 3479Z" fill="#27B2CF"/>
+		</clipPath>
+		<g id="Frame 5" clip-path="url(#clip-0)">
+			<g id="angle">
+				<g id="Shape">
+					<use xlink:href="#path0_fill" transform="translate(2618 3482)" fill="#27B2CF"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<path id="path0_fill"
+			  d="M 21.8779 16.4501L 11.2717 16.4501C 11.1134 14.1562 10.2212 12.0078 8.70468 10.2707L 17.7288 1.25734C 18.0168 0.969871 18.0168 0.503283 17.7288 0.215768C 17.4408 -0.0719228 16.9741 -0.0719228 16.686 0.215768L 7.16573 9.72458L 0.216053 16.666C 0.00527066 16.8765 -0.0580701 17.1934 0.0561553 17.4687C 0.170381 17.744 0.439292 17.9233 0.7374 17.9233L 10.5702 17.9233L 21.8779 17.9233C 22.285 17.9233 22.6154 17.5936 22.6154 17.1867C 22.6154 16.7798 22.285 16.4501 21.8779 16.4501Z"/>
+	</defs>
 </svg>

@@ -27,7 +27,7 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-		.withLatestFrom(this.store.select("cases"))
+		.withLatestFrom(this.store.select('cases'))
 		.switchMap(([action, state]: [LoadCasesAction, ICasesState]) => {
 			let last_case: Case = state.cases[state.cases.length - 1];
 			let last_id = last_case ? last_case.id : '-1';
@@ -51,11 +51,11 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [state.active_case_id, state.selected_case.id])
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.active_case_id, state.selected_case.id])
 		.mergeMap(([active_case_id, selected_case_id]) => {
 			const actions: Action[] = [];
-			if(isEqual(active_case_id, selected_case_id)){
-				actions.push(new LoadDefaultCaseAction())
+			if (isEqual(active_case_id, selected_case_id)) {
+				actions.push(new LoadDefaultCaseAction());
 			}
 			actions.push(new DeleteCaseBackendAction(active_case_id));
 			return actions;
@@ -80,7 +80,7 @@ export class CasesEffects {
 			const limit = this.casesService.paginationLimit;
 			return cases_length <= limit;
 		})
-		.map(()=>{
+		.map(() => {
 			return new LoadCasesAction();
 		})
 		.share();
@@ -89,7 +89,7 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.withLatestFrom(this.store.select("cases"), (action, state: ICasesState) => [action, state.default_case.id])
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [action, state.default_case.id])
 		.filter(([action, default_case_id]: [UpdateCaseAction, string]) => action.payload.id !== default_case_id)
 		.map(([action]: [UpdateCaseAction]) => {
 			return new UpdateCaseBackendAction(action.payload);
@@ -113,7 +113,6 @@ export class CasesEffects {
 		}).share();
 
 
-
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL)
@@ -128,8 +127,7 @@ export class CasesEffects {
 
 
 	@Effect()
-	addCaseSuccess$: Observable<any> = this.actions$.
-	ofType(CasesActionTypes.ADD_CASE_SUCCESS)
+	addCaseSuccess$: Observable<any> = this.actions$.ofType(CasesActionTypes.ADD_CASE_SUCCESS)
 		.map((action: AddCaseSuccessAction) => {
 			return new SelectCaseByIdAction(action.payload.id);
 		}).share();
@@ -138,7 +136,7 @@ export class CasesEffects {
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASE)
-		.withLatestFrom(this.store.select("cases"))
+		.withLatestFrom(this.store.select('cases'))
 		.switchMap(([action, state]: [LoadCaseAction, ICasesState]) => {
 			const existing_case = state.cases.find(case_val => case_val.id === action.payload);
 			if (existing_case) {
@@ -162,7 +160,7 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
-		.withLatestFrom(this.store.select("cases"))
+		.withLatestFrom(this.store.select('cases'))
 		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => !action.payload['context'])
 		.mergeMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
 			const actions = [];
@@ -176,7 +174,7 @@ export class CasesEffects {
 				defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas(action.payload, defaultCase);
 			}
 			actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
-			if(isEmpty(state.default_case)){
+			if (isEmpty(state.default_case)) {
 				actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 			} else {
 				actions.push(new SelectCaseByIdAction(state.default_case.id));
@@ -195,6 +193,7 @@ export class CasesEffects {
 
 	constructor(private actions$: Actions,
 				private casesService: CasesService,
-				private store: Store<ICasesState>) { }
+				private store: Store<ICasesState>) {
+	}
 }
 

@@ -34,9 +34,9 @@ export class LayersManagerModule {
 
 	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
-			name: "Layers Manager",
+			name: 'Layers Manager',
 			component: LayersManagerComponent,
-			icon_url: "/assets/icons/data-layers.svg"
+			icon_url: '/assets/icons/data-layers.svg'
 		};
 		store.dispatch(new AddMenuItemAction(menu_item));
 	}

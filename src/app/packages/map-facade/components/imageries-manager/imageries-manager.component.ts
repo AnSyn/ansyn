@@ -6,10 +6,12 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState } from '../../reducers/map.reducer';
-import { CaseMapsState, MapsLayout } from '@ansyn/core';
+import { MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.actions';
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/distinctUntilChanged";
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -19,7 +21,7 @@ import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.a
 
 export class ImageriesManagerComponent implements OnInit {
 
-	public mapState$: Observable<IMapState> = this.store.select('map');
+	mapState$: Observable<IMapState> = this.store.select('map');
 
 	public selected_layout$: Observable<MapsLayout> = this.mapState$
 		.pluck<IMapState, MapsLayout>('layout')
@@ -27,11 +29,21 @@ export class ImageriesManagerComponent implements OnInit {
 		.distinctUntilChanged();
 
 	public overlaysNotInCase$: Observable<Map<string, boolean>> = this.mapState$
-		.pluck<IMapState, Map<string, boolean>>('overlaysNotInCase')
+		.pluck<IMapState, Map<string, boolean>>('overlaysNotInCase');
+
+	public activeMapId$: Observable<string> = this.mapState$
+		.pluck('activeMapId')
+		.distinctUntilChanged();
+
+	public mapsData$: Observable<CaseMapState[]> = this.mapState$
+		.pluck('mapsData')
+		.distinctUntilChanged();
+
+	public pinLocation$: Observable<boolean> = this.mapState$
+		.pluck<IMapState, boolean>('pinLocation')
 		.distinctUntilChanged();
 
 	public selected_layout;
-	private _maps: CaseMapsState;
 	public pointerMoveUnsubscriber: any;
 	public publisherMouseShadowMapId: string;
 	public listenersMouseShadowMapsId: Array<string>;
@@ -41,28 +53,14 @@ export class ImageriesManagerComponent implements OnInit {
 	preventDbClick: boolean;
 	overlaysNotInCase: Map<string, boolean>;
 
-
 	public loadingOverlaysIds: Array<string> = [];
 	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
-	@Input() pinLocation: boolean;
-
-	@Input()
-	set maps(value: any) {
-		if (!value) {
-			return;
-		}
-		this._maps = value;
-		if (this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.maps.active_map_id) {
-			this.changeShadowMouseTarget();
-		}
-	};
-
-	get maps() {
-		return this._maps;
-	}
+	pinLocation: boolean;
+	mapsData: CaseMapState[];
+	activeMapId;
 
 	get range() {
 		return _range;
@@ -76,17 +74,19 @@ export class ImageriesManagerComponent implements OnInit {
 
 	ngOnInit() {
 		this.initListeners();
+		this.initSubscribers();
+	}
 
+	initSubscribers() {
 		this.mapState$.subscribe((_mapState) => {
 			this.loadingOverlaysIds = _mapState.loadingOverlays;
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
-
 		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this));
-
-		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
-			this.overlaysNotInCase = _overlaysNotInCase;
-		});
+		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {this.overlaysNotInCase = _overlaysNotInCase});
+		this.activeMapId$.subscribe(this.setActiveMapId.bind(this));
+		this.mapsData$.subscribe((_mapsData: CaseMapState[]) => {this.mapsData = _mapsData});
+		this.pinLocation$.subscribe((_pinLocation) => {this.pinLocation = _pinLocation})
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
@@ -116,6 +116,13 @@ export class ImageriesManagerComponent implements OnInit {
 		this.selected_layout = _selected_layout;
 	}
 
+	setActiveMapId(_activeMapId) {
+		this.activeMapId = _activeMapId;
+		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.activeMapId){
+			this.changeShadowMouseTarget();
+		}
+	}
+
 	initListeners() {
 		this.mapEffects.onComposeMapShadowMouse$.subscribe(res => {
 			this.changeShadowMouseTarget();
@@ -140,7 +147,7 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	changeActiveImagery(value) {
-		if (this.maps.active_map_id !== value) {
+		if(this.activeMapId !== value){
 			this.store.dispatch(new ActiveMapChangedAction(value));
 		}
 	}
@@ -152,14 +159,15 @@ export class ImageriesManagerComponent implements OnInit {
 		}
 	}
 
-	startPointerMoveProcess() {
-		if (this.maps.data.length < 2) {
+
+	startPointerMoveProcess(){
+		if(this.selected_layout.maps_count < 2){
 			return;
 		}
 		const communicators = this.communicatorProvider.communicators;
 
-		this._maps.data.forEach((mapItem: CaseMapState) => {
-			if (mapItem.id === this._maps.active_map_id) {
+		this.mapsData.forEach((mapItem: CaseMapState) => {
+			if(mapItem.id === this.activeMapId){
 				this.publisherMouseShadowMapId = mapItem.id;
 				if (communicators[mapItem.id]) {
 					communicators[mapItem.id].setMouseShadowListener(true);

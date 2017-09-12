@@ -1,6 +1,6 @@
 import { IAppState } from '../../app-reducers';
 import { Store } from '@ngrx/store';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case, CaseMapsState } from '@ansyn/menu-items/cases';
 import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
@@ -11,6 +11,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
+import { IMapState } from '../../packages/map-facade/reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -19,14 +21,18 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 })
 
 export class AnsynComponent implements OnInit {
-	@ViewChild('mapsContainer') mapsContainer;
 
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.pluck('selected_case')
 		.filter(selected_case => !_isNil(selected_case))
 		.distinctUntilChanged();
 
-	activeMap$: Observable<CaseMapState> = this.selected_case$.map(CasesService.activeMap);
+
+	mapState$: Observable<IMapState> = this.store.select('map');
+
+	activeMap$: Observable<CaseMapState> = this.mapState$
+		.map(MapFacadeService.activeMap)
+		.filter(activeMap => !_isNil(activeMap));
 
 	selectedCaseName$: Observable<string> = this.selected_case$.pluck('name');
 
@@ -41,22 +47,11 @@ export class AnsynComponent implements OnInit {
 			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);
 		});
 
-	maps$: Observable<CaseMapsState> = this.selected_case$
-		.map((selectedCase: Case) => selectedCase.state.maps)
-		.distinctUntilChanged(_isEqual);
-
-	pinLocation$: Observable<boolean> = this.store.select('tools')
-		.pluck('flags')
-		.map((flags: Map<any, any>) => flags.get('pin_location'))
-		.distinctUntilChanged(_isEqual);
-
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
-	editMode = false;
+	editMode: boolean;
 	isFavoriteOverlay: boolean;
-	maps: CaseMapsState = null;
 	version;
-	pinLocation: boolean;
 
 	constructor(private store: Store<IAppState>) {
 		this.version = (<any>packageJson).version;
@@ -65,16 +60,8 @@ export class AnsynComponent implements OnInit {
 	ngOnInit(): void {
 		this.store.dispatch(new LoadContextsAction());
 		this.selectedCaseName$.subscribe(_selectedCaseName => this.selectedCaseName = _selectedCaseName);
-		this.maps$.subscribe(maps => {
-			this.maps = maps;
-		});
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
-			this.displayedOverlay = _displayedOverlay;
-		});
-		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
-			this.isFavoriteOverlay = isFavoriteOverlay;
-		});
-		this.pinLocation$.subscribe(_pinLocation => this.pinLocation = _pinLocation);
+		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => { this.displayedOverlay = _displayedOverlay});
+		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => { this.isFavoriteOverlay = isFavoriteOverlay});
 	}
 
 	toggleEditMode() {

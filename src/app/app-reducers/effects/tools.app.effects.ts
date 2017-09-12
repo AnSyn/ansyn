@@ -11,7 +11,7 @@ import {
 	SetAutoImageProcessingSuccess,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools';
-import { CasesActionTypes, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep, get as _get, isNil as _isNil } from 'lodash';
@@ -23,7 +23,9 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { IMapState } from '../../packages/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
+import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -32,17 +34,16 @@ export class ToolsAppEffects {
 	@Effect()
 	onActiveMapChanges$: Observable<ActiveMapChangedAction> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('cases'))
-		.mergeMap(([action, casesState]: [ActiveMapChangedAction, ICasesState]) => {
-			const mapId = casesState.selected_case.state.maps.active_map_id;
-			const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
-
-			if (active_map.data.overlay == null) {
+		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
+		.map(MapFacadeService.activeMap)
+		.filter(activeMap => !_isNil(activeMap))
+		.mergeMap((activeMap) => {
+			if (activeMap.data.overlay == null) {
 				return [new DisableImageProcessing()];
 			} else {
 				return [
 					new EnableImageProcessing(),
-					new SetAutoImageProcessingSuccess(active_map.data.isAutoImageProcessingActive)
+					new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 				];
 			}
 		});
@@ -50,8 +51,8 @@ export class ToolsAppEffects {
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<SetActiveOverlaysFootprintModeAction> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
-		.map(([action, selected_case]) => CasesService.activeMap(selected_case))
+		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
+		.map(MapFacadeService.activeMap)
 		.mergeMap(activeMap =>
 			[
 				new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode),
@@ -103,24 +104,24 @@ export class ToolsAppEffects {
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select('cases'), (action: SetAutoImageProcessing, casesState: ICasesState) => {
-			const mapId = casesState.selected_case.state.maps.active_map_id;
-			return [action, casesState, mapId];
+		.withLatestFrom(this.store$.select('maps'), (action: SetAutoImageProcessing, mapsState: IMapState) => {
+			return [action, mapsState];
 		})
-		.mergeMap(([action, caseState, mapId]: [SetAutoImageProcessing, ICasesState, string]) => {
+		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
+			const activeMapId = mapsState.activeMapId;
 			let shouldAutoImageProcessing;
-			const updatedCase = cloneDeep(caseState.selected_case);
-			updatedCase.state.maps.data.forEach(
+			const updatedMapsData = cloneDeep(mapsState.mapsData);
+			updatedMapsData.forEach(
 				(map) => {
-					if (map.id === mapId) {
+					if (map.id === activeMapId) {
 						map.data.isAutoImageProcessingActive = !map.data.isAutoImageProcessingActive;
 						shouldAutoImageProcessing = map.data.isAutoImageProcessingActive;
 					}
 				});
 
 			return [
-				new SetMapAutoImageProcessing({ mapId: mapId, toggle_value: shouldAutoImageProcessing }),
-				new UpdateCaseAction(updatedCase),
+				new SetMapAutoImageProcessing({ mapId: activeMapId, toggle_value: shouldAutoImageProcessing }),
+				new SetMapsDataActionStore(updatedMapsData),
 				new SetAutoImageProcessingSuccess(shouldAutoImageProcessing)
 			];
 		});

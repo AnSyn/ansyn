@@ -1,25 +1,25 @@
 <div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
-	<ng-template [ngIf]="maps && maps.data">
-		<ng-template ngFor [ngForOf]="range(maps.data.length)" let-index let-count="count">
-			<div
-				*ngIf="maps.data[index]"
-				class='map-container-wrapper'
-				(click)="clickMapContainer(maps.data[index].id)"
-				(dblclick)="dbclick()">
-				<ansyn-imagery-container class="map"
-										 [disableGeoOptions]="isGeoOptionsDisabled(maps.data[index].id)"
-										 [mapState]="maps.data[index]"
-										 [active]="maps.active_map_id == maps.data[index].id"
-										 [showStatus]="count > 1"
-										 [notInCase]="overlayNotInCase(maps.data[index].data.overlay)"
-										 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)">
-				</ansyn-imagery-container>
+	<ng-template [ngIf]="mapsData">
+		<div
+			*ngFor="let index of range(mapsData.length); count as count"
+			class='map-container-wrapper'
+			(click)="clickMapContainer(mapsData[index].id)"
+			(dblclick)="dbclick()">
+			<ansyn-imagery-container class="map"
+									 [disableGeoOptions]="isGeoOptionsDisabled(mapsData[index].id)"
+									 [mapState]="mapsData[index]"
+									 [active]="activeMapId === mapsData[index].id"
+									 [showStatus]="count > 1"
+									 [notInCase]="overlayNotInCase(mapsData[index].data.overlay)"
+									 [showSpinner]="isOverlayLoading((mapsData[index].data.overlay)?.id)">
+			</ansyn-imagery-container>
 
-				<div class="active-border"
-					 [class.active]="maps.active_map_id === maps.data[index].id">
-				</div>
+			<div class="active-border"
+				 [class.active]="activeMapId === mapsData[index].id">
 			</div>
-		</ng-template>
+
+		</div>
+
 	</ng-template>
 </div>
 

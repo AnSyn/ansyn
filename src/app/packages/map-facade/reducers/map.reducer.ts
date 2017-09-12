@@ -2,6 +2,7 @@ import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
+import { CaseMapsState, CaseMapState } from '../../core/models/case.model';
 
 export interface IMapState {
 	positions: Position;
@@ -11,7 +12,10 @@ export interface IMapState {
 	displayedOverlay: any[];
 	mapIdToGeoOptions: Map<string, boolean>;
 	overlaysNotInCase: Map<string, boolean>;
-	layout: MapsLayout
+	layout: MapsLayout;
+	activeMapId: string;
+	mapsData: CaseMapState[];
+	pinLocation: boolean;
 }
 
 export const initialMapState: IMapState = {
@@ -22,7 +26,10 @@ export const initialMapState: IMapState = {
 	displayedOverlay: [],
 	mapIdToGeoOptions: new Map<string, boolean>(),
 	overlaysNotInCase: new Map<string, boolean>(),
-	layout: null
+	layout: null,
+	activeMapId: null,
+	mapsData: [],
+	pinLocation: false
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
@@ -73,6 +80,16 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };
+
+		case MapActionTypes.ACTIVE_MAP_CHANGED:
+			return  {...state, activeMapId: action.payload};
+
+		case MapActionTypes.STORE.SET_MAPS_DATA:
+			return  {...state, mapsData: action.payload};
+
+		case MapActionTypes.STORE.PIN_LOCATION_MODE:
+			return  {...state, pinLocation: action.payload};
+
 
 		default:
 			return state;

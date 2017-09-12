@@ -12,9 +12,11 @@ import {
 	PositionChangedAction,
 	RemoveMapInstanceAction
 } from '../actions';
-import { Overlay, Position } from '@ansyn/core';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { Position, Overlay, CaseMapState, defaultMapType } from '@ansyn/core';
+import { range, cloneDeep, last } from 'lodash';
+import { UUID } from 'angular2-uuid';
 
 @Injectable()
 export class MapFacadeService {
@@ -25,6 +27,34 @@ export class MapFacadeService {
 			return true;
 		}
 		return overlay.isGeoRegistered;
+	}
+
+	static activeMap(mapState: IMapState): CaseMapState {
+		return MapFacadeService.mapById(mapState.mapsData, mapState.activeMapId);
+	}
+
+	static mapById(mapsData: CaseMapState[], mapId: string): CaseMapState {
+		return mapsData.find(({id}) => id === mapId);
+	}
+
+
+	static setMapsDataChanges(mapsData, activeMapId, layout): {newMapsData: CaseMapState[], newActiveMapId?: string} {
+		const newMapsData: CaseMapState[]  = [];
+		const activeMap = mapsData.find(({id}) => id === activeMapId);
+		range(layout.maps_count).forEach((index) => {
+			if (mapsData[index]) {
+				newMapsData.push(mapsData[index])
+			} else {
+				const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position: cloneDeep(activeMap.data.position)}, mapType: defaultMapType};
+				newMapsData.push(mapStateCopy);
+			}
+		});
+		const notExist = !newMapsData.some(({id}) => id === activeMapId);
+		if (notExist) {
+			const newActiveMapId = last(newMapsData).id;
+			return { newMapsData, newActiveMapId };
+		}
+		return { newMapsData };
 	}
 
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {

@@ -6,6 +6,36 @@ import { ContainerComponent } from './container.component';
 import { Observable } from 'rxjs/Observable';
 import { IContextSource } from '../context.interface';
 
+class ProxyContext {
+	find() {
+		return Observable.of([{ 'title': 'tmp' }]);
+	}
+
+	remove() {
+		return Observable.of({});
+	}
+
+	create() {
+		return Observable.of({});
+	}
+
+	update() {
+		return Observable.of({});
+	}
+
+	providerType() {
+		return 'demo';
+	}
+
+	parseToSource(data) {
+		return data;
+	}
+
+	parseFromSource(data) {
+		return data;
+	}
+}
+
 describe('ContainerComponent', () => {
 	let component: ContainerComponent;
 	let fixture: ComponentFixture<ContainerComponent>;
@@ -24,15 +54,7 @@ describe('ContainerComponent', () => {
 	beforeEach(inject([ContextProviderService], (_contextProviderService: ContextProviderService) => {
 		console.log('t');
 		contextProviderService = _contextProviderService;
-		const proxyObject: IContextSource = {
-			find: () => Observable.of([{'title': 'tmp'}]),
-			remove: () => Observable.of({}),
-			create: () => Observable.of({}),
-			update: () => Observable.of({}),
-			providerType: 'demo',
-			parseToSource: data => data,
-			parseFromSource: data => data
-		};
+		const proxyObject= new ProxyContext();
 
 		contextProviderService.register('demo', proxyObject);
 		// spyOn(proxyObject,'find').and.returnValue(Observable.empty());

@@ -130,13 +130,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
 		const features = geoJsonFeatures.map((d) =>  this.geoJsonFormat.readFeature(d));
-		// reset this.features
+		//@TODO reset this.features
 		(<Array<any>>features).forEach( feature => {
 
 			const properties = feature.getProperties();
 			let geometry;
 
-			// convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
+			//@TODO convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
 			// and create new geometry
 
 			//save the feature to this.feature;
@@ -186,7 +186,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geoJsonSingleFeature = JSON.stringify(circleGeo);
 		}
 
-		// add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
+		//@TODO add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
 		this.drawEndPublisher.next(this.features);

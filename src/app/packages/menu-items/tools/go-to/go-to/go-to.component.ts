@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
 import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
-import "rxjs/add/operator/pluck";
+import 'rxjs/add/operator/pluck';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -19,10 +19,10 @@ export class GoToComponent implements OnInit {
 	public activeCenter: number[];
 	activeCenter$: Observable<number[]> = this.store$.select('tools').pluck('activeCenter');
 
-	activeCenterProjDatum: CoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
+	activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
 	inputs = {
-		from: [0,0],
+		from: [0, 0],
 		to: []
 	};
 
@@ -34,13 +34,15 @@ export class GoToComponent implements OnInit {
 
 	@Output() expandChange = new EventEmitter();
 
-	@HostBinding('class.expand') @Input() set expand(value) {
+	@HostBinding('class.expand') @Input()
+	set expand(value) {
 		this._expand = value;
 		if (value) {
 			this.store$.dispatch(new PullActiveCenter());
 		}
 		this.expandChange.emit(value);
 	};
+
 	get expand() {
 		return this._expand;
 	}
@@ -65,7 +67,8 @@ export class GoToComponent implements OnInit {
 		});
 	}
 
-	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) { }
+	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) {
+	}
 
 	submitGoTo(): void {
 		const goToInput = convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);

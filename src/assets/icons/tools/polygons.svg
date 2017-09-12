@@ -1,50 +1,64 @@
-<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<title>Frame 32</title>
-<desc>Created using Figma</desc>
-<g id="Canvas" transform="translate(-28681 -4963)">
-<clipPath id="clip-0" clip-rule="evenodd">
-<path d="M 28681 4963L 28705 4963L 28705 4987L 28681 4987L 28681 4963Z" fill="#FFFFFF"/>
-</clipPath>
-<g id="Frame 32" clip-path="url(#clip-0)">
-<g id="Component">
-<g id="Group 8">
-<g id="Rectangle 4">
-<use xlink:href="#path0_fill" transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)" fill="#5DC5DB"/>
-<mask id="mask0_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)"/>
-</mask>
-<g mask="url(#mask0_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)" fill="#FFFFFF"/>
-</g>
-</g>
-<g id="Rectangle 4">
-<use xlink:href="#path2_fill" transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)" fill="#5DC5DB"/>
-<mask id="mask1_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)"/>
-</mask>
-<g mask="url(#mask1_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)" fill="#FFFFFF"/>
-</g>
-</g>
-<g id="Rectangle 4">
-<use xlink:href="#path4_fill" transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)" fill="#5DC5DB"/>
-<mask id="mask2_outline_ins">
-<use xlink:href="#path4_fill" fill="white" transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)"/>
-</mask>
-<g mask="url(#mask2_outline_ins)">
-<use xlink:href="#path5_stroke_2x" transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)" fill="#FFFFFF"/>
-</g>
-</g>
-</g>
-</g>
-</g>
-</g>
-<defs>
-<path id="path0_fill" fill-rule="evenodd" d="M 0 0L 6.78978 0L 6.78978 14.2014L 0 14.2014L 0 0Z"/>
-<path id="path1_stroke_2x" d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.78978 0L 7.78978 0L 7.78978 -1L 6.78978 -1L 6.78978 0ZM 6.78978 14.2014L 6.78978 15.2014L 7.78978 15.2014L 7.78978 14.2014L 6.78978 14.2014ZM 0 14.2014L -1 14.2014L -1 15.2014L 0 15.2014L 0 14.2014ZM 0 1L 6.78978 1L 6.78978 -1L 0 -1L 0 1ZM 5.78978 0L 5.78978 14.2014L 7.78978 14.2014L 7.78978 0L 5.78978 0ZM 6.78978 13.2014L 0 13.2014L 0 15.2014L 6.78978 15.2014L 6.78978 13.2014ZM 1 14.2014L 1 0L -1 0L -1 14.2014L 1 14.2014Z"/>
-<path id="path2_fill" fill-rule="evenodd" d="M 0 0L 6.78639 0L 6.78639 9.04224L 0 9.04224L 0 0Z"/>
-<path id="path3_stroke_2x" d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.78639 0L 7.78639 0L 7.78639 -1L 6.78639 -1L 6.78639 0ZM 6.78639 9.04224L 6.78639 10.0422L 7.78639 10.0422L 7.78639 9.04224L 6.78639 9.04224ZM 0 9.04224L -1 9.04224L -1 10.0422L 0 10.0422L 0 9.04224ZM 0 1L 6.78639 1L 6.78639 -1L 0 -1L 0 1ZM 5.78639 0L 5.78639 9.04224L 7.78639 9.04224L 7.78639 0L 5.78639 0ZM 6.78639 8.04224L 0 8.04224L 0 10.0422L 6.78639 10.0422L 6.78639 8.04224ZM 1 9.04224L 1 0L -1 0L -1 9.04224L 1 9.04224Z"/>
-<path id="path4_fill" fill-rule="evenodd" d="M 0 0L 6.42966 0L 6.42966 9.53953L 0 9.53953L 0 0Z"/>
-<path id="path5_stroke_2x" d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.42966 0L 7.42966 0L 7.42966 -1L 6.42966 -1L 6.42966 0ZM 6.42966 9.53953L 6.42966 10.5395L 7.42966 10.5395L 7.42966 9.53953L 6.42966 9.53953ZM 0 9.53953L -1 9.53953L -1 10.5395L 0 10.5395L 0 9.53953ZM 0 1L 6.42966 1L 6.42966 -1L 0 -1L 0 1ZM 5.42966 0L 5.42966 9.53953L 7.42966 9.53953L 7.42966 0L 5.42966 0ZM 6.42966 8.53953L 0 8.53953L 0 10.5395L 6.42966 10.5395L 6.42966 8.53953ZM 1 9.53953L 1 0L -1 0L -1 9.53953L 1 9.53953Z"/>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Frame 32</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-28681 -4963)">
+		<clipPath id="clip-0" clip-rule="evenodd">
+			<path d="M 28681 4963L 28705 4963L 28705 4987L 28681 4987L 28681 4963Z" fill="#FFFFFF"/>
+		</clipPath>
+		<g id="Frame 32" clip-path="url(#clip-0)">
+			<g id="Component">
+				<g id="Group 8">
+					<g id="Rectangle 4">
+						<use xlink:href="#path0_fill"
+							 transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)" fill="#5DC5DB"/>
+						<mask id="mask0_outline_ins">
+							<use xlink:href="#path0_fill" fill="white"
+								 transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)"/>
+						</mask>
+						<g mask="url(#mask0_outline_ins)">
+							<use xlink:href="#path1_stroke_2x"
+								 transform="matrix(0.96951 -0.24505 0.273245 0.961944 28684 4968.66)" fill="#FFFFFF"/>
+						</g>
+					</g>
+					<g id="Rectangle 4">
+						<use xlink:href="#path2_fill"
+							 transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)" fill="#5DC5DB"/>
+						<mask id="mask1_outline_ins">
+							<use xlink:href="#path2_fill" fill="white"
+								 transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)"/>
+						</mask>
+						<g mask="url(#mask1_outline_ins)">
+							<use xlink:href="#path3_stroke_2x"
+								 transform="matrix(0.965311 0.261104 -0.29084 0.956772 28695.4 4968.16)"
+								 fill="#FFFFFF"/>
+						</g>
+					</g>
+					<g id="Rectangle 4">
+						<use xlink:href="#path4_fill"
+							 transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)" fill="#5DC5DB"/>
+						<mask id="mask2_outline_ins">
+							<use xlink:href="#path4_fill" fill="white"
+								 transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)"/>
+						</mask>
+						<g mask="url(#mask2_outline_ins)">
+							<use xlink:href="#path5_stroke_2x"
+								 transform="matrix(0.0554723 0.99846 -0.99878 0.049376 28697.9 4972.5)" fill="#FFFFFF"/>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<path id="path0_fill" fill-rule="evenodd" d="M 0 0L 6.78978 0L 6.78978 14.2014L 0 14.2014L 0 0Z"/>
+		<path id="path1_stroke_2x"
+			  d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.78978 0L 7.78978 0L 7.78978 -1L 6.78978 -1L 6.78978 0ZM 6.78978 14.2014L 6.78978 15.2014L 7.78978 15.2014L 7.78978 14.2014L 6.78978 14.2014ZM 0 14.2014L -1 14.2014L -1 15.2014L 0 15.2014L 0 14.2014ZM 0 1L 6.78978 1L 6.78978 -1L 0 -1L 0 1ZM 5.78978 0L 5.78978 14.2014L 7.78978 14.2014L 7.78978 0L 5.78978 0ZM 6.78978 13.2014L 0 13.2014L 0 15.2014L 6.78978 15.2014L 6.78978 13.2014ZM 1 14.2014L 1 0L -1 0L -1 14.2014L 1 14.2014Z"/>
+		<path id="path2_fill" fill-rule="evenodd" d="M 0 0L 6.78639 0L 6.78639 9.04224L 0 9.04224L 0 0Z"/>
+		<path id="path3_stroke_2x"
+			  d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.78639 0L 7.78639 0L 7.78639 -1L 6.78639 -1L 6.78639 0ZM 6.78639 9.04224L 6.78639 10.0422L 7.78639 10.0422L 7.78639 9.04224L 6.78639 9.04224ZM 0 9.04224L -1 9.04224L -1 10.0422L 0 10.0422L 0 9.04224ZM 0 1L 6.78639 1L 6.78639 -1L 0 -1L 0 1ZM 5.78639 0L 5.78639 9.04224L 7.78639 9.04224L 7.78639 0L 5.78639 0ZM 6.78639 8.04224L 0 8.04224L 0 10.0422L 6.78639 10.0422L 6.78639 8.04224ZM 1 9.04224L 1 0L -1 0L -1 9.04224L 1 9.04224Z"/>
+		<path id="path4_fill" fill-rule="evenodd" d="M 0 0L 6.42966 0L 6.42966 9.53953L 0 9.53953L 0 0Z"/>
+		<path id="path5_stroke_2x"
+			  d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 6.42966 0L 7.42966 0L 7.42966 -1L 6.42966 -1L 6.42966 0ZM 6.42966 9.53953L 6.42966 10.5395L 7.42966 10.5395L 7.42966 9.53953L 6.42966 9.53953ZM 0 9.53953L -1 9.53953L -1 10.5395L 0 10.5395L 0 9.53953ZM 0 1L 6.42966 1L 6.42966 -1L 0 -1L 0 1ZM 5.42966 0L 5.42966 9.53953L 7.42966 9.53953L 7.42966 0L 5.42966 0ZM 6.42966 8.53953L 0 8.53953L 0 10.5395L 6.42966 10.5395L 6.42966 8.53953ZM 1 9.53953L 1 0L -1 0L -1 9.53953L 1 9.53953Z"/>
+	</defs>
 </svg>

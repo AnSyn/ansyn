@@ -111,9 +111,9 @@ export class OpenLayersMap implements IMap {
 			let coordinates = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY]);
 			const projection = this._mapObject.getView().getProjection();
 			coordinates = proj.transform(coordinates, projection, 'EPSG:4326');
-			const point: GeoJSON.Point = {type: 'Point', coordinates};
+			const point: GeoJSON.Point = { type: 'Point', coordinates };
 			containerElem.click();
-			this.contextMenu.emit({point, view, e});
+			this.contextMenu.emit({ point, view, e });
 		});
 
 	}
@@ -161,17 +161,13 @@ export class OpenLayersMap implements IMap {
 		this.internalAfterSetMainLayer(beforeArgs);
 	}
 
-	addInteraction(interaction){
+	addInteraction(interaction) {
 		this._mapObject.addInteraction(interaction);
 	}
 
-	removeInteraction(interaction){
-		this._mapObject.removeInteraction(interaction)
+	removeInteraction(interaction) {
+		this._mapObject.removeInteraction(interaction);
 	}
-
-
-
-
 
 
 	private internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
@@ -235,9 +231,9 @@ export class OpenLayersMap implements IMap {
 	 * add layer to the map if it is not already exists the layer must have an id set
 	 * @param layer
 	 */
-	public addLayerIfNotExist(layer) :Layer{
+	public addLayerIfNotExist(layer): Layer {
 		const layerId = layer.get('id');
-		if(!layerId){
+		if (!layerId) {
 			return;
 		}
 		const existingLayer = this.getLayerById(layerId);
@@ -474,6 +470,7 @@ export class OpenLayersMap implements IMap {
 	public removePinPointIndicator() {
 		this.removeLayerById(this._pinPointIndicatorLayerId);
 	}
+
 	//*****-- pin point paint on the map end --********
 
 	//*****-- shadow mouse functionality--********
@@ -543,7 +540,6 @@ export class OpenLayersMap implements IMap {
 	//*****-- shadow mouse functionality end --********
 
 	//*****-- tools ----*****
-
 
 
 	//*****-- end tools ---****

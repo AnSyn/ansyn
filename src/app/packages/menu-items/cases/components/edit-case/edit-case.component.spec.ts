@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { EditCaseComponent } from './edit-case.component';
-import { HttpModule } from "@angular/http";
+import { HttpModule } from '@angular/http';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
@@ -16,15 +16,15 @@ describe('EditCaseComponent', () => {
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null},},
-			{ id: 'fake_id2', name: 'fake_name2', state: {selected_context_id: null}, }
+			{ id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null }, },
+			{ id: 'fake_id2', name: 'fake_name2', state: { selected_context_id: null }, }
 		],
 		active_case_id: 'fake_id1',
 		modal: true,
 		contexts: [],
 		contexts_loaded: true,
-		selected_case: { id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null}},
-		default_case: { id: 'fake_id3', name: 'fake_name3', state: {selected_context_id: null}}
+		selected_case: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
+		default_case: { id: 'fake_id3', name: 'fake_name3', state: { selected_context_id: null } }
 	} as any;
 
 	beforeEach(async(() => {
@@ -60,15 +60,15 @@ describe('EditCaseComponent', () => {
 		expect(component.close).toHaveBeenCalled();
 	});
 
-	describe("template", () => {
+	describe('template', () => {
 		let template: any;
 
 		beforeEach(() => {
 			template = fixture.nativeElement;
 		});
 
-	xit('input name text should current case_model name', async(() => {
-			let input = template.querySelector("input[name='name']");
+		xit('input name text should current case_model name', async(() => {
+			let input = template.querySelector('input[name=\'name\']');
 			fixture.detectChanges();
 			fixture.whenStable().then(() => {
 				expect(input.value).toEqual(fake_iCasesState.cases[0].name);

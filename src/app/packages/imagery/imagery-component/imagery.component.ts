@@ -1,7 +1,7 @@
 /**
  * Created by AsafMasa on 25/04/2017.
  */
-import {BaseMapSourceProvider} from '../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import {
 	Component, Input, OnInit, OnChanges, OnDestroy, ViewChild,
 	ViewContainerRef, ComponentRef, ComponentFactoryResolver, Inject, SimpleChanges
@@ -12,9 +12,9 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
-import { isEqual, isNil, isEmpty} from 'lodash';
+import { isEqual, isNil, isEmpty } from 'lodash';
 import { Subscriber } from 'rxjs/Subscriber';
-import "rxjs/add/operator/take";
+import 'rxjs/add/operator/take';
 
 
 @Component({
@@ -30,22 +30,22 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	@ViewChild('map_component_elem', { read: ViewContainerRef }) map_component_elem: ViewContainerRef;
 
 	@Input()
-	set mapComponentSettings(value){
+	set mapComponentSettings(value) {
 		//ngOnInit first
-		if(isNil(this._mapComponentSettings)) {
+		if (isNil(this._mapComponentSettings)) {
 			this._mapComponentSettings = value;
 			return;
 		}
 
 		//id has been change
-		if(!isEqual(this._mapComponentSettings.id, value.id)){
+		if (!isEqual(this._mapComponentSettings.id, value.id)) {
 			if (this._manager) {
 				this.imageryCommunicatorService.replaceCommunicatorId(this._mapComponentSettings.id, value.id);
 			}
 		}
 
 		//position has been change
-		if(!isEqual(this._mapComponentSettings.data.position, value.data.position)){
+		if (!isEqual(this._mapComponentSettings.data.position, value.data.position)) {
 			if (this._manager) {
 				this._manager.ActiveMap.setPosition(value.data.position);
 			}
@@ -60,7 +60,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		this._mapComponentSettings = value;
 	}
 
-	get mapComponentSettings(){
+	get mapComponentSettings() {
 		return this._mapComponentSettings;
 	}
 
@@ -94,10 +94,10 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
-		private componentFactoryResolver: ComponentFactoryResolver,
-		private imageryProviderService: ImageryProviderService,
-		@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],
-		@Inject(ConfigurationToken) private config: IImageryConfig) {
+				private componentFactoryResolver: ComponentFactoryResolver,
+				private imageryProviderService: ImageryProviderService,
+				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],
+				@Inject(ConfigurationToken) private config: IImageryConfig) {
 	}
 
 	ngOnDestroy() {

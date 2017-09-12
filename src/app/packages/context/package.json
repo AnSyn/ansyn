@@ -1,8 +1,7 @@
 {
-  "name": "@ansyn/context",
-  "version": "0.0.1",
+	"name": "@ansyn/context",
+	"version": "0.0.1",
 	"main": "index.ts",
-  "dependencies": {
-
-  }
+	"dependencies": {
+	}
 }

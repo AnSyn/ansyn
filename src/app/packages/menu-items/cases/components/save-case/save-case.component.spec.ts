@@ -5,7 +5,7 @@ import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { HttpModule } from "@angular/http";
+import { HttpModule } from '@angular/http';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,15 +16,15 @@ describe('SaveCaseComponent', () => {
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null},},
-			{ id: 'fake_id2', name: 'fake_name2', state: {selected_context_id: null}, }
+			{ id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null }, },
+			{ id: 'fake_id2', name: 'fake_name2', state: { selected_context_id: null }, }
 		],
 		active_case_id: 'fake_id1',
 		modal: true,
 		contexts: [],
 		contexts_loaded: true,
-		selected_case: { id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null}},
-		default_case: { id: 'fake_id3', name: 'fake_name3', state: {selected_context_id: null}}
+		selected_case: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
+		default_case: { id: 'fake_id3', name: 'fake_name3', state: { selected_context_id: null } }
 	} as any;
 
 	beforeEach(async(() => {

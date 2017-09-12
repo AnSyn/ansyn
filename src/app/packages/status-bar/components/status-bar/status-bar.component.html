@@ -54,7 +54,8 @@
 				</div>
 
 
-				<select name="timeline" name="geoFilter" [(ngModel)]="geoFilter" (ngModelChange)="geoFilterChange(geoFilter)">
+				<select name="timeline" name="geoFilter" [(ngModel)]="geoFilter"
+						(ngModelChange)="geoFilterChange(geoFilter)">
 					<option *ngFor="let geo of geoFilters" [value]="geo">{{geo | titlecase}}</option>
 				</select>
 
@@ -62,7 +63,8 @@
 					<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
 				</div>
 				<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt="" class="status-bar-image-right">
+					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt=""
+						 class="status-bar-image-right">
 				</div>
 			</div>
 
@@ -75,7 +77,8 @@
 					<option>Start - End</option>
 				</select>
 				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
-					<img (click)="toggleTimelineStartEndSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
+					<img (click)="toggleTimelineStartEndSearch()" src="/assets/edit.svg" alt=""
+						 class="status-bar-image-right">
 				</div>
 				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">
@@ -115,7 +118,8 @@
 		</button>
 
 		<button (click)="clickFavorite()">
-			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24" version="1.1" >
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
+				 viewBox="0 0 24 24" version="1.1">
 				<title>Frame 17</title>
 				<desc>Created using Figma</desc>
 				<g id="Canvas" transform="translate(-27557 -5008)">
@@ -125,12 +129,14 @@
 					<g id="Frame 17" clip-path="url(#clip-0)">
 						<g id="Star" opacity="0.75">
 							<g id="Rectangle 7">
-								<use xlink:href="#path0_fill" transform="matrix(-1 0 0 1 27581 5008)" fill="#D8D8D8" id="tmp"/>
+								<use xlink:href="#path0_fill" transform="matrix(-1 0 0 1 27581 5008)" fill="#D8D8D8"
+									 id="tmp"/>
 							</g>
 							<g id="star" opacity="0.75">
 								<g id="Capa_1">
 									<g id="Shape">
-										<use xlink:href="#path1_fill" transform="matrix(-1 0 0 1 27577 5012.1)" style="&#10;&#10;" #starColor />
+										<use xlink:href="#path1_fill" transform="matrix(-1 0 0 1 27577 5012.1)"
+											 style="&#10;&#10;" #starColor/>
 									</g>
 								</g>
 							</g>
@@ -139,7 +145,8 @@
 				</g>
 				<defs>
 					<path id="path0_fill" fill-rule="evenodd" d="M 0 0L 24 0L 24 24L 0 24L 0 0Z"/>
-					<path id="path1_fill" d="M 7.98044 0L 10.4462 5.18892L 15.9606 6.02123L 11.9704 10.06L 12.9123 15.7634L 7.98044 13.0708L 3.0483 15.7634L 3.99022 10.06L 0 6.02123L 5.51437 5.18892L 7.98044 0Z"/>
+					<path id="path1_fill"
+						  d="M 7.98044 0L 10.4462 5.18892L 15.9606 6.02123L 11.9704 10.06L 12.9123 15.7634L 7.98044 13.0708L 3.0483 15.7634L 3.99022 10.06L 0 6.02123L 5.51437 5.18892L 7.98044 0Z"/>
 				</defs>
 			</svg>
 		</button>
@@ -155,4 +162,5 @@
 
 </div>
 
-<ansyn-toast [showToast]="showLinkCopyToast" duration="4" (showToastChange)="onShowToastChange($event)"  text="Link copied to clipboard"></ansyn-toast>
+<ansyn-toast [showToast]="showLinkCopyToast" duration="4" (showToastChange)="onShowToastChange($event)"
+			 text="Link copied to clipboard"></ansyn-toast>

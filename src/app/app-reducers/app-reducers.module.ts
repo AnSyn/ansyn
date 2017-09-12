@@ -21,7 +21,7 @@ import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { IToolsState,ToolsReducer } from '@ansyn/menu-items/tools';
+import { IToolsState, ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
@@ -34,59 +34,59 @@ import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 
 
 export interface IAppState {
-    overlays: IOverlayState;
-    cases: ICasesState;
-    menu: IMenuState;
-    layers: ILayerState;
-    status_bar: IStatusBarState;
-    map: IMapState;
-    tools: IToolsState;
-    filters: IFiltersState;
-    router: IRouterState
+	overlays: IOverlayState;
+	cases: ICasesState;
+	menu: IMenuState;
+	layers: ILayerState;
+	status_bar: IStatusBarState;
+	map: IMapState;
+	tools: IToolsState;
+	filters: IFiltersState;
+	router: IRouterState
 }
 
 
 const reducers = {
-    overlays: OverlayReducer,
-    cases: CasesReducer,
-    menu: MenuReducer,
-    map: MapReducer,
-    layers: LayersReducer,
-    status_bar: StatusBarReducer,
-    tools: ToolsReducer,
-    filters: FiltersReducer,
+	overlays: OverlayReducer,
+	cases: CasesReducer,
+	menu: MenuReducer,
+	map: MapReducer,
+	layers: LayersReducer,
+	status_bar: StatusBarReducer,
+	tools: ToolsReducer,
+	filters: FiltersReducer,
 	router: RouterReducer
 };
 
 const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
-    // if(configuration.General.logActions ){
-     	//const date = new Date();
-    	//console.log(action.type,date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
+	// if(configuration.General.logActions ){
+	//const date = new Date();
+	//console.log(action.type,date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds());
 	// }
-    return appReducer(state, action);
+	return appReducer(state, action);
 }
 
 @NgModule({
-    imports: [
-        StoreModule.provideStore(reducer),
+	imports: [
+		StoreModule.provideStore(reducer),
 		StoreDevtoolsModule.instrumentOnlyWithExtension({
 			maxAge: 5
 		}),
 		EffectsModule.run(OverlaysAppEffects),
-        EffectsModule.run(MapAppEffects),
-        EffectsModule.run(CasesAppEffects),
-        EffectsModule.run(MenuAppEffects),
-        EffectsModule.run(LayersAppEffects),
-        EffectsModule.run(StatusBarAppEffects),
-        EffectsModule.run(FiltersAppEffects),
+		EffectsModule.run(MapAppEffects),
+		EffectsModule.run(CasesAppEffects),
+		EffectsModule.run(MenuAppEffects),
+		EffectsModule.run(LayersAppEffects),
+		EffectsModule.run(StatusBarAppEffects),
+		EffectsModule.run(FiltersAppEffects),
 		EffectsModule.run(ToolsAppEffects),
 		EffectsModule.run(ContextMenuAppEffects),
 		EffectsModule.run(ContextEntityAppEffects),
 		EffectsModule.run(VisualizersAppEffects),
 		CasesRouterModule
-    ],
+	],
 })
 
 export class AppReducersModule {

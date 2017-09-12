@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
-import { isEqual as _isEqual} from 'lodash';
+import { isEqual as _isEqual } from 'lodash';
 
 const providers = [
 	{
@@ -21,14 +21,16 @@ const providers = [
 	styleUrls: ['./utm.component.less'],
 	providers
 })
-export class UtmComponent implements ControlValueAccessor, Validator{
-	coordinates: number[] = [0,0,0];
-	onChanges = (value)  => {}
-	onBlur = () => {}
+export class UtmComponent implements ControlValueAccessor, Validator {
+	coordinates: number[] = [0, 0, 0];
+	onChanges = (value) => {
+	};
+	onBlur = () => {
+	};
 
 	writeValue(newValue: number[]): void {
-		if(newValue && !_isEqual(newValue, this.coordinates)){
-			this.coordinates =newValue.map((num) => Math.floor(num));
+		if (newValue && !_isEqual(newValue, this.coordinates)) {
+			this.coordinates = newValue.map((num) => Math.floor(num));
 		}
 	}
 
@@ -45,13 +47,13 @@ export class UtmComponent implements ControlValueAccessor, Validator{
 	}
 
 
-	validate(c: AbstractControl): {[key: string]: any;} {
-		if(!c.value) {
-			return {empty: true}
+	validate(c: AbstractControl): { [key: string]: any; } {
+		if (!c.value) {
+			return { empty: true };
 		}
 		const someEmpty = c.value.some(empty => !empty);
 		if (someEmpty) {
-			return {empty: true}
+			return { empty: true };
 		}
 		return null;
 	}

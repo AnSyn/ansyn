@@ -3,14 +3,26 @@ import { Effect, Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../';
-import { ToolsActionsTypes, SetActiveCenter, DisableImageProcessing, EnableImageProcessing,SetAutoImageProcessing, SetAutoImageProcessingSuccess } from '@ansyn/menu-items/tools';
+import {
+	ToolsActionsTypes,
+	SetActiveCenter,
+	DisableImageProcessing,
+	EnableImageProcessing,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess
+} from '@ansyn/menu-items/tools';
 import { ICasesState, CasesActionTypes, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { get as _get, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { MapActionTypes, SetMapAutoImageProcessing, BackToWorldAction, ActiveMapChangedAction } from '@ansyn/map-facade';
+import {
+	MapActionTypes,
+	SetMapAutoImageProcessing,
+	BackToWorldAction,
+	ActiveMapChangedAction
+} from '@ansyn/map-facade';
 import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -50,16 +62,16 @@ export class ToolsAppEffects {
 				new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode),
 
 				new AnnotationVisualizerAgentAction({
-					action: "removeLayer",
-					maps: "all"
+					action: 'removeLayer',
+					maps: 'all'
 				}),
 
 				new AnnotationVisualizerAgentAction({
-					action: "show",
-					maps: "all"
+					action: 'show',
+					maps: 'all'
 				})
 			]
-		)
+		);
 
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$
@@ -122,7 +134,7 @@ export class ToolsAppEffects {
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => {
-			const activeMapId: string = <string>_get(cases.selected_case, "state.maps.active_map_id");
+			const activeMapId: string = <string>_get(cases.selected_case, 'state.maps.active_map_id');
 			return this.imageryCommunicatorService.provide(activeMapId);
 		})
 		.filter(communicator => !_isNil(communicator))
@@ -149,7 +161,7 @@ export class ToolsAppEffects {
 	onGoTo$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState): any => {
-			const activeMapId: string = <any>_get(cases.selected_case, "state.maps.active_map_id");
+			const activeMapId: string = <any>_get(cases.selected_case, 'state.maps.active_map_id');
 			return { action, communicator: this.imageryCommunicatorService.provide(activeMapId) };
 		})
 		.filter(({ action, communicator }) => !_isNil(communicator))
@@ -163,5 +175,6 @@ export class ToolsAppEffects {
 		});
 
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private imageryCommunicatorService: ImageryCommunicatorService) { }
+	constructor(private actions$: Actions, private store$: Store<IAppState>, private imageryCommunicatorService: ImageryCommunicatorService) {
+	}
 }

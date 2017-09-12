@@ -1,13 +1,13 @@
-:host /deep/ circle.active{
-	r:8;
-	fill:#27b2cf;
+:host /deep/ circle.active {
+	r: 8;
+	fill: #27b2cf;
 	stroke: white;
 }
 
-:host /deep/ circle.displayed{
-	r:8;
+:host /deep/ circle.displayed {
+	r: 8;
 }
 
-:host /deep/ circle.hover:not(.active){
-	fill:#bd0fe2;
+:host /deep/ circle.hover:not(.active) {
+	fill: #bd0fe2;
 }

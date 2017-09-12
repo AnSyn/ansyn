@@ -6,7 +6,11 @@ import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions
 import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { AddCaseSuccessAction, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import {
+	AddCaseSuccessAction,
+	SelectCaseByIdAction,
+	UpdateCaseAction
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
@@ -20,12 +24,13 @@ import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPr
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
-import {BaseOverlaySourceProvider, IFetchParams,Overlay} from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { cloneDeep } from 'lodash';
 
-class OverlaySourceProviderMock extends BaseOverlaySourceProvider{
-	sourceType = "Mock";
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
+	sourceType = 'Mock';
+
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.empty();
 	}
@@ -46,32 +51,38 @@ describe('StatusBarAppEffects', () => {
 			imports: [
 				HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({status_bar: StatusBarReducer, cases: CasesReducer, overlays: OverlayReducer})
+				StoreModule.provideStore({
+					status_bar: StatusBarReducer,
+					cases: CasesReducer,
+					overlays: OverlayReducer
+				})
 			],
 			providers: [
 				OverlaysService,
 				StatusBarAppEffects,
-				{provide: CasesService, useValue: {updateCase: () => null, getOverlaysMarkup: () => null }},
+				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				OverlaysService,
 				Http,
 				ConnectionBackend,
-				{ provide: OverlaysConfig, useValue: {
-					"baseUrl": "http://localhost:9001/api/v1/",
-					"overlaysByCaseId": "case/:id/overlays",
-					"overlaysByTimeAndPolygon": "overlays/find",
-					"defaultApi": "overlays",
-					"searchByCase": false,
-					"overlaySource": "IDAHO",
-					"polygonGenerationDisatnce": 0.1
-				} },
-				{ provide: BaseOverlaySourceProvider, useClass :OverlaySourceProviderMock}
+				{
+					provide: OverlaysConfig, useValue: {
+					'baseUrl': 'http://localhost:9001/api/v1/',
+					'overlaysByCaseId': 'case/:id/overlays',
+					'overlaysByTimeAndPolygon': 'overlays/find',
+					'defaultApi': 'overlays',
+					'searchByCase': false,
+					'overlaySource': 'IDAHO',
+					'polygonGenerationDisatnce': 0.1
+				}
+				},
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			]
 		}).compileComponents();
 	}));
 
 
-	beforeEach(inject([ImageryCommunicatorService,StatusBarAppEffects, EffectsRunner, Store, CasesService, OverlaysService], (_imageryCommunicatorService,_statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService, _overlaysService: OverlaysService) => {
+	beforeEach(inject([ImageryCommunicatorService, StatusBarAppEffects, EffectsRunner, Store, CasesService, OverlaysService], (_imageryCommunicatorService, _statusBarAppEffects: StatusBarAppEffects, _effectsRunner: EffectsRunner, _store: Store<any>, _casesService: CasesService, _overlaysService: OverlaysService) => {
 		statusBarAppEffects = _statusBarAppEffects;
 		effectsRunner = _effectsRunner;
 		store = _store;
@@ -79,10 +90,10 @@ describe('StatusBarAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		overlaysService = _overlaysService;
 
-			fakeCase = {
+		fakeCase = {
 			id: 'case1',
 			state: {
-				facets:{},
+				facets: {},
 				region: {
 					type: 'Polygon',
 					coordinates: [
@@ -95,11 +106,11 @@ describe('StatusBarAppEffects', () => {
 					]
 				},
 				maps: {
-					active_map_id: "active_map_id",
+					active_map_id: 'active_map_id',
 					data: [
 						{
 							id: 'active_map_id',
-							data: {overlay: {id :'overlayId1'}}
+							data: { overlay: { id: 'overlayId1' } }
 						}
 					]
 				},
@@ -112,63 +123,67 @@ describe('StatusBarAppEffects', () => {
 	}));
 
 
-
-	it('updatePinPointSearchAction$',() => {
-		const action  = new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch,value: true });
+	it('updatePinPointSearchAction$', () => {
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true });
 
 		//mock communicatorsAsArray
 		const imagery1 = {
-			createMapSingleClickEvent: () => {}
+			createMapSingleClickEvent: () => {
+			}
 		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1]);
-		spyOn (imagery1,'createMapSingleClickEvent');
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1]);
+		spyOn(imagery1, 'createMapSingleClickEvent');
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointSearchAction$.subscribe( () => {
+		statusBarAppEffects.updatePinPointSearchAction$.subscribe(() => {
 			expect(imagery1.createMapSingleClickEvent['calls'].count()).toBe(2);
-		})
+		});
 
 	});
 
-	it("updatePinPointIndicatorAction$ - add",() => {
+	it('updatePinPointIndicatorAction$ - add', () => {
 
-		const action  = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator,value: true });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true });
 		store.dispatch(action);
 		//mock communicatorsAsArray
 		const imagery1 = {
-			addPinPointIndicator: () => {},
-			removePinPointIndicator: () => {}
+			addPinPointIndicator: () => {
+			},
+			removePinPointIndicator: () => {
+			}
 		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1,imagery1]);
-		spyOn (imagery1,'addPinPointIndicator');
-		spyOn (imagery1,'removePinPointIndicator');
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
+		spyOn(imagery1, 'addPinPointIndicator');
+		spyOn(imagery1, 'removePinPointIndicator');
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( () => {
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe(() => {
 			expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
-		})
-	})
+		});
+	});
 
-	it("updatePinPointIndicatorAction$ - remove",() => {
+	it('updatePinPointIndicatorAction$ - remove', () => {
 
-		const action  = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator,value: false });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false });
 		store.dispatch(action);
 		//mock communicatorsAsArray
 		const imagery1 = {
-			addPinPointIndicator: () => {},
-			removePinPointIndicator: () => {}
+			addPinPointIndicator: () => {
+			},
+			removePinPointIndicator: () => {
+			}
 		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1,imagery1,imagery1]);
-		spyOn (imagery1,'addPinPointIndicator');
-		spyOn (imagery1,'removePinPointIndicator');
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
+		spyOn(imagery1, 'addPinPointIndicator');
+		spyOn(imagery1, 'removePinPointIndicator');
 
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe( () => {
+		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe(() => {
 			expect(imagery1.removePinPointIndicator['calls'].count()).toBe(3);
-		})
+		});
 	});
 
 	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
@@ -179,11 +194,11 @@ describe('StatusBarAppEffects', () => {
 		const layouts_index = 2;
 
 		const caseItem: Case = <any> {
-			id: "31b33526-6447-495f-8b52-83be3f6b55bd",
-			state:{
-				maps:{
+			id: '31b33526-6447-495f-8b52-83be3f6b55bd',
+			state: {
+				maps: {
 					layouts_index,
-					data : [{},{}]
+					data: [{}, {}]
 				}
 			}
 		};
@@ -193,10 +208,10 @@ describe('StatusBarAppEffects', () => {
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
 
-		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction)=>{
-			expect((_result instanceof UpdateCaseAction) ).toBeTruthy();
+		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction) => {
+			expect((_result instanceof UpdateCaseAction)).toBeTruthy();
 
-			if ( _result instanceof UpdateCaseAction) {
+			if (_result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);
 			}
 		});
@@ -205,14 +220,14 @@ describe('StatusBarAppEffects', () => {
 	it('selectCase$ should get layers_index, orientation, geoFilter and time from selected_case and return all update status-bar actions', () => {
 		const layouts_index = 2;
 		const caseItem: Case = <any> {
-			id: "31b33526-6447-495f-8b52-83be3f6b55bd",
-			state:{
-				maps:{
+			id: '31b33526-6447-495f-8b52-83be3f6b55bd',
+			state: {
+				maps: {
 					layouts_index
 				},
 				orientation: 'orientation',
 				geoFilter: 'geoFilter',
-				time: {from: 0, to: 100}
+				time: { from: 0, to: 100 }
 			}
 		};
 
@@ -220,7 +235,7 @@ describe('StatusBarAppEffects', () => {
 		store.dispatch(new SelectCaseByIdAction(caseItem.id));
 
 		effectsRunner.queue(new SelectCaseByIdAction(caseItem.id));
-		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction | SetOrientationAction | SetGeoFilterAction | SetTimeAction)=>{
+		statusBarAppEffects.selectCase$.subscribe((result: ChangeLayoutAction | SetOrientationAction | SetGeoFilterAction | SetTimeAction) => {
 			switch (result.constructor) {
 				case ChangeLayoutAction:
 					expect(result.payload).toEqual(layouts_index);
@@ -232,7 +247,7 @@ describe('StatusBarAppEffects', () => {
 					expect(result.payload).toEqual('geoFilter');
 					break;
 				case SetTimeAction:
-					expect(result.payload).toEqual({from: new Date(0), to: new Date(100)});
+					expect(result.payload).toEqual({ from: new Date(0), to: new Date(100) });
 					break;
 			}
 		});
@@ -240,7 +255,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('onBackToWorldView$$ should return BackToWorldAction with no args', () => {
 		effectsRunner.queue(new BackToWorldViewAction());
-		statusBarAppEffects.onBackToWorldView$.subscribe((result: BackToWorldAction)=>{
+		statusBarAppEffects.onBackToWorldView$.subscribe((result: BackToWorldAction) => {
 			expect(result instanceof BackToWorldAction).toBeTruthy();
 		});
 	});
@@ -288,7 +303,7 @@ describe('StatusBarAppEffects', () => {
 	it('onExpand$', () => {
 		effectsRunner.queue(new ExpandAction());
 		statusBarAppEffects.onExpand$.subscribe(() => {
-			console.log("onExpand$");
+			console.log('onExpand$');
 		});
 	});
 
@@ -297,24 +312,24 @@ describe('StatusBarAppEffects', () => {
 		let counter = 0;
 		statusBarAppEffects.onFavorite$.subscribe((result) => {
 			counter++;
-			if (result instanceof  UpdateCaseAction){
-				expect(result.payload.state.favoritesOverlays[0]).toBe("overlayId1");
+			if (result instanceof UpdateCaseAction) {
+				expect(result.payload.state.favoritesOverlays[0]).toBe('overlayId1');
 			}
 
 		});
 		expect(counter).toBe(3);
 	});
 
-	it('onFavorite$ with favorites and showOnlyFavorites on (unfavorite)',() => {
+	it('onFavorite$ with favorites and showOnlyFavorites on (unfavorite)', () => {
 		const testCase = cloneDeep(fakeCase);
 		testCase.state.facets.showOnlyFavorites = true;
-		testCase.state.favoritesOverlays.push("overlayId1");
-		store.dispatch(new UpdateCaseAction( testCase));
+		testCase.state.favoritesOverlays.push('overlayId1');
+		store.dispatch(new UpdateCaseAction(testCase));
 		effectsRunner.queue(new FavoriteAction());
-		let count =0;
+		let count = 0;
 		statusBarAppEffects.onFavorite$.subscribe((result) => {
 			count++;
-			if (result instanceof UpdateCaseAction){
+			if (result instanceof UpdateCaseAction) {
 				expect(count).toBe(1);
 				expect(result.payload.state.favoritesOverlays.length).toBe(0);
 			}

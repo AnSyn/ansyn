@@ -1,21 +1,23 @@
-<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<title>2 screens a</title>
-<desc>Created using Figma</desc>
-<g id="Canvas" transform="translate(-27722 -4836)">
-<clipPath id="clip-0" clip-rule="evenodd">
-<path d="M 27722 4836L 27746 4836L 27746 4860L 27722 4860L 27722 4836Z" fill="#FFFFFF"/>
-</clipPath>
-<g id="2 screens a" clip-path="url(#clip-0)">
-<g id="Group">
-<g id="ic_view_quilt_black_24px">
-<g id="Vector">
-<use xlink:href="#path0_fill" transform="translate(27726 4841)" fill="#FFFFFF"/>
-</g>
-</g>
-</g>
-</g>
-</g>
-<defs>
-<path id="path0_fill" d="M 0 13L 16 13L 16 7L 0 7L 0 13ZM 0 13L 0 0.5L 0 0L 0 13ZM 16 10L 16 13L 16 7L 16 8.5L 16 10ZM 0 0L 0 6L 16 6L 16 0L 0 0Z"/>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>2 screens a</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-27722 -4836)">
+		<clipPath id="clip-0" clip-rule="evenodd">
+			<path d="M 27722 4836L 27746 4836L 27746 4860L 27722 4860L 27722 4836Z" fill="#FFFFFF"/>
+		</clipPath>
+		<g id="2 screens a" clip-path="url(#clip-0)">
+			<g id="Group">
+				<g id="ic_view_quilt_black_24px">
+					<g id="Vector">
+						<use xlink:href="#path0_fill" transform="translate(27726 4841)" fill="#FFFFFF"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<path id="path0_fill"
+			  d="M 0 13L 16 13L 16 7L 0 7L 0 13ZM 0 13L 0 0.5L 0 0L 0 13ZM 16 10L 16 13L 16 7L 16 8.5L 16 10ZM 0 0L 0 6L 16 6L 16 0L 0 0Z"/>
+	</defs>
 </svg>

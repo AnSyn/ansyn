@@ -2,7 +2,7 @@ import { CasesActionTypes, SelectCaseByIdAction, ICasesState } from '@ansyn/menu
 import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
-import { Store,Action } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { MenuActionTypes, SelectMenuItemAction, MenuItem } from '@ansyn/core';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
@@ -17,7 +17,7 @@ export class MenuAppEffects {
 	@Effect()
 	onAnimationEnd$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(MenuActionTypes.ANIMATION_END)
-		.map( () => {
+		.map(() => {
 			return new UpdateMapSizeAction();
 		});
 
@@ -27,9 +27,9 @@ export class MenuAppEffects {
 		.map(() => {
 			return new RedrawTimelineAction(true);
 		});
-  
+
 	/*
-	
+
 	@Effect()
 	onCaseLoaded$: Observable<SelectMenuItemAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
@@ -47,5 +47,6 @@ export class MenuAppEffects {
 		});
 	*/
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>) { }
+	constructor(private actions$: Actions, private store$: Store<IAppState>) {
+	}
 }

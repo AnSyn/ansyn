@@ -6,12 +6,12 @@ import { ImageryComponentManager } from '../imagery-component/manager/imagery.co
 @Injectable()
 export class ImageryCommunicatorService {
 
-	private  _communicators: { [id: string]: CommunicatorEntity };
+	private _communicators: { [id: string]: CommunicatorEntity };
 	public instanceCreated = new EventEmitter();
 	public instanceRemoved = new EventEmitter();
 
 
-	public initiliziedCommunicators:Array<string> = [];
+	public initiliziedCommunicators: Array<string> = [];
 
 	constructor() {
 		this._communicators = {};
@@ -29,7 +29,7 @@ export class ImageryCommunicatorService {
 		return this._communicators;
 	}
 
-	communicatorsAsArray(): CommunicatorEntity[]{
+	communicatorsAsArray(): CommunicatorEntity[] {
 		return values(this._communicators) as CommunicatorEntity[];
 	}
 
@@ -55,7 +55,7 @@ export class ImageryCommunicatorService {
 			currentCommunicatorId: old_id
 		});
 
-		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id),1);
+		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id), 1);
 		this.initiliziedCommunicators.push(new_id);
 		this.instanceCreated.emit({
 			communicatorsIds: this.initiliziedCommunicators,
@@ -64,14 +64,14 @@ export class ImageryCommunicatorService {
 	}
 
 	public remove(id: string) {
-		if(!this._communicators[id]) {
+		if (!this._communicators[id]) {
 			return;
 		}
 
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);
-		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(id),1);
+		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(id), 1);
 		this.instanceRemoved.emit({
 			communicatorsIds: this.initiliziedCommunicators,
 			currentCommunicatorId: id

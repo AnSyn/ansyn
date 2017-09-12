@@ -14,20 +14,22 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, StoreModule.provideStore({tools: ToolsReducer})],
+			imports: [GoToModule, StoreModule.provideStore({ tools: ToolsReducer })],
 			providers: [
-				{provide: toolsConfig, useValue: {
+				{
+					provide: toolsConfig, useValue: {
 					GoTo: {
 						from: '',
 						to: ''
 					}
-				}},
+				}
+				},
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store <IToolsState>) => {
+	beforeEach(inject([Store], (_store: Store<IToolsState>) => {
 		store = _store;
 		fixture = TestBed.createComponent(GoToComponent);
 		component = fixture.componentInstance;
@@ -51,9 +53,9 @@ describe('GoToComponent', () => {
 	describe('submitGoTo', () => {
 		it('should dispatch  GoToAction with convertByProjectionDatum result', () => {
 			spyOn(store, 'dispatch');
-			spyOn(utilcovertProjectionss, 'convertByProjectionDatum').and.returnValue([0,0]);
+			spyOn(utilcovertProjectionss, 'convertByProjectionDatum').and.returnValue([0, 0]);
 			component.submitGoTo();
-			expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0,0]));
+			expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0, 0]));
 		});
 		it('"submit" button should call submitGoTo', () => {
 			spyOn(component, 'submitGoTo');
@@ -67,7 +69,7 @@ describe('GoToComponent', () => {
 	it('togglePinLocation should dispatch SetPinLocationModeAction and toggle pin_location_mode)', () => {
 		spyOn(store, 'dispatch');
 		component.togglePinLocation();
-		expect(store.dispatch).toHaveBeenCalledWith(new SetPinLocationModeAction (!component.pin_location_mode));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetPinLocationModeAction(!component.pin_location_mode));
 	});
 
 	it('close() should change expand to false', () => {

@@ -8,14 +8,15 @@ import '@ansyn/core/utils/clone-deep';
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.less']
 })
-export class AppComponent implements  AfterViewInit {
+export class AppComponent implements AfterViewInit {
 
-	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any){}
+	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: any) {
+	}
 
 	ngAfterViewInit() {
-		const metaTag =  this.renderer.createElement('meta');
-		metaTag.setAttribute('version',<any>packageJson['version']);
-		this.renderer.appendChild(this.document.head,metaTag);
+		const metaTag = this.renderer.createElement('meta');
+		metaTag.setAttribute('version', <any>packageJson['version']);
+		this.renderer.appendChild(this.document.head, metaTag);
 	}
 
 

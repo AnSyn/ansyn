@@ -11,14 +11,32 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = "Mock";
+	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.create((observer: Observer<Overlay[]>) => {
 			const overlays: Overlay[] = [
-				{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true, isGeoRegistered: true},
-				{id: "abc", sourceType: "mock2", azimuth: 0, date: new Date(1987), photoTime: "beww", name: "second", isFullOverlay: true, isGeoRegistered: true}
-			]
+				{
+					id: 'abc',
+					sourceType: 'mock1',
+					azimuth: 0,
+					date: new Date(1999),
+					photoTime: 'dsds',
+					name: 'first',
+					isFullOverlay: true,
+					isGeoRegistered: true
+				},
+				{
+					id: 'abc',
+					sourceType: 'mock2',
+					azimuth: 0,
+					date: new Date(1987),
+					photoTime: 'beww',
+					name: 'second',
+					isFullOverlay: true,
+					isGeoRegistered: true
+				}
+			];
 			observer.next(overlays);
 			observer.complete();
 		});
@@ -26,7 +44,16 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	getOverlayById(id: string): Observable<Overlay> {
 		return Observable.create((observer: Observer<Overlay>) => {
-			const overlay =	{id: "abc", sourceType: "mock1", azimuth: 0, date: new Date(1999), photoTime: "dsds", name: "first", isFullOverlay: true, isGeoRegistered: true};
+			const overlay = {
+				id: 'abc',
+				sourceType: 'mock1',
+				azimuth: 0,
+				date: new Date(1999),
+				photoTime: 'dsds',
+				name: 'first',
+				isFullOverlay: true,
+				isGeoRegistered: true
+			};
 			observer.next(overlay);
 			observer.complete();
 		});
@@ -39,14 +66,14 @@ describe('OverlaysService', () => {
 	let overlaysTmpData: any[];
 	let response = {
 		data: [
-			{key: "a", value: 1},
-			{key: "b", value: 2}
+			{ key: 'a', value: 1 },
+			{ key: 'b', value: 2 }
 		]
 	};
 	let searchParams = {
 		polygon: {
-			"type": "Polygon",
-			"coordinates": [
+			'type': 'Polygon',
+			'coordinates': [
 				[
 					[
 						-14.4140625,
@@ -79,9 +106,9 @@ describe('OverlaysService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
-				{provide: XHRBackend, useClass: MockBackend},
-				{provide: OverlaysConfig, useValue: {}},
-				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock}
+				{ provide: XHRBackend, useClass: MockBackend },
+				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			imports: [HttpModule]
 		});
@@ -94,13 +121,13 @@ describe('OverlaysService', () => {
 		baseSourceProvider = _baseSourceProvider;
 
 		mockBackend.connections.subscribe((connection: any) => {
-			if (connection.request.url == "//localhost:8037/api/mock/eventDrops/data") {
+			if (connection.request.url == '//localhost:8037/api/mock/eventDrops/data') {
 				connection.mockRespond(new Response(new ResponseOptions({
 					body: JSON.stringify(response)
 				})));
 			}
 
-			if (connection.request.url === "error") {
+			if (connection.request.url === 'error') {
 				connection.mockError(new Error('Username or password is incorrect'));
 			}
 		});
@@ -123,31 +150,31 @@ describe('OverlaysService', () => {
 
 	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
 		let overlayArray: Overlay = <any>[
-			{id: 'id1', date: new Date(1000)},
-			{id: 'id2', date: new Date(3000)},
-			{id: 'id3', date: new Date(7000)},
-			{id: 'id4', date: new Date(2000)}
+			{ id: 'id1', date: new Date(1000) },
+			{ id: 'id2', date: new Date(3000) },
+			{ id: 'id3', date: new Date(7000) },
+			{ id: 'id4', date: new Date(2000) }
 		];
 		overlayArray = <any> OverlaysService.sort(<any>overlayArray);
-		expect(overlayArray[0]).toEqual({id: 'id1', date: new Date(1000)});
-		expect(overlayArray[1]).toEqual({id: 'id4', date: new Date(2000)});
-		expect(overlayArray[2]).toEqual({id: 'id2', date: new Date(3000)});
-		expect(overlayArray[3]).toEqual({id: 'id3', date: new Date(7000)});
+		expect(overlayArray[0]).toEqual({ id: 'id1', date: new Date(1000) });
+		expect(overlayArray[1]).toEqual({ id: 'id4', date: new Date(2000) });
+		expect(overlayArray[2]).toEqual({ id: 'id2', date: new Date(3000) });
+		expect(overlayArray[3]).toEqual({ id: 'id3', date: new Date(7000) });
 	});
 
-	it("pluck check that pluck function returns smaller object from overlays",() => {
+	it('pluck check that pluck function returns smaller object from overlays', () => {
 		const objectMap = new Map([
-			['1',{id: '1',name: 'tmp1',value: '2'}],
-			['2',{id: '2',name: 'tmp1',value: '2'}],
-			['3',{id: '3',name: 'tmp1',value: '2'}],
-			['4',{id: '4',name: 'tmp1',value: '2'}],
-			['5',{id: '5',name: 'tmp1',value: '2'}],
-			['6',{id: '6',name: 'tmp1',value: '2'}]
+			['1', { id: '1', name: 'tmp1', value: '2' }],
+			['2', { id: '2', name: 'tmp1', value: '2' }],
+			['3', { id: '3', name: 'tmp1', value: '2' }],
+			['4', { id: '4', name: 'tmp1', value: '2' }],
+			['5', { id: '5', name: 'tmp1', value: '2' }],
+			['6', { id: '6', name: 'tmp1', value: '2' }]
 		]);
-		const result = OverlaysService.pluck(objectMap,['1','2','6'],['id','name']);
+		const result = OverlaysService.pluck(objectMap, ['1', '2', '6'], ['id', 'name']);
 		expect(result.length).toBe(3);
 		expect(Object.keys(result[0]).length).toBe(2);
-	})
+	});
 
 	it('check all dependencies are defined properly', () => {
 		expect(overlaysService).toBeTruthy();
@@ -188,13 +215,13 @@ describe('OverlaysService', () => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays,['13']);
+		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays, ['13']);
 		expect(result[0].data.length).toBe(1);
 
-		const specialObjects = new Map<string,OverlaySpecialObject>();
-		specialObjects.set('15',{id: '15',shape:'star',date: new Date()});
+		const specialObjects = new Map<string, OverlaySpecialObject>();
+		specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
-		const result2 = overlaysService.parseOverlayDataForDispaly(mockData.overlays,['13'],specialObjects);
+		const result2 = overlaysService.parseOverlayDataForDispaly(mockData.overlays, ['13'], specialObjects);
 		expect(result2[0].data.length).toBe(2);
 	});
 
@@ -216,11 +243,11 @@ describe('OverlaysService', () => {
 		overlayState1.filteredOverlays = mockData.filteredOverlays;
 		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeFalsy();
 
-	})
+	});
 
 	it('check the method fetchData with spyOn', () => {
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({key: 'value'})
+			body: JSON.stringify({ key: 'value' })
 		}));
 
 		spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
@@ -234,18 +261,18 @@ describe('OverlaysService', () => {
 		});
 
 		response = new Response(new ResponseOptions({
-			body: JSON.stringify({key: 'value2'})
+			body: JSON.stringify({ key: 'value2' })
 		}));
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
 			expect(result.key).toBe('value2');
 		});
-	})
+	});
 
 	it('check the method searchOverlay with spyOn', () => {
 
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({key: 'value'})
+			body: JSON.stringify({ key: 'value' })
 		}));
 
 		var calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
@@ -258,8 +285,8 @@ describe('OverlaysService', () => {
 
 		let params = {
 			polygon: {
-				"type": "Polygon",
-				"coordinates": [
+				'type': 'Polygon',
+				'coordinates': [
 					[
 						[
 							-14.4140625,
@@ -291,7 +318,7 @@ describe('OverlaysService', () => {
 			params
 		).subscribe((result: any) => {
 			let requestBody = calls.allArgs()[0][1];
-			let bbox = turf.bbox({type: 'Feature', geometry: params.polygon, properties: {}});
+			let bbox = turf.bbox({ type: 'Feature', geometry: params.polygon, properties: {} });
 			let bboxFeature = turf.bboxPolygon(bbox);
 			expect(result.key).toBe('value');
 		});
@@ -299,10 +326,10 @@ describe('OverlaysService', () => {
 
 		//var requestBody = spyOn(http,'post').calls.first();
 
-	})
+	});
 
 	it('check the method getOverlayById with mock data', () => {
-		overlaysService.getOverlayById("test").subscribe((result: any) => {
+		overlaysService.getOverlayById('test').subscribe((result: any) => {
 			expect(result).toBeTruthy();
 		});
 	});
@@ -332,7 +359,7 @@ describe('OverlaysService', () => {
 				from: new Date(0),
 				to: new Date(5000)			//delta tenth is 500 ms
 			};
-			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(1500));
 			expect(to).toEqual(new Date(6500));
 		});
@@ -345,10 +372,10 @@ describe('OverlaysService', () => {
 				from: new Date(2000),
 				to: new Date(7000)  //delta tenth is 500 ms
 			};
-			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(500));
 			expect(to).toEqual(new Date(5500));
-		})
+		});
 
-	})
+	});
 });

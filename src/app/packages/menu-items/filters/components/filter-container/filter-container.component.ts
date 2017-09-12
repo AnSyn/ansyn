@@ -39,29 +39,30 @@ import 'rxjs/add/operator/distinctUntilChanged';
 		])
 	]
 })
-export class FilterContainerComponent implements OnInit{
+export class FilterContainerComponent implements OnInit {
 
 	public show = true;
-	public metadataFromState: FilterMetadata ;
+	public metadataFromState: FilterMetadata;
 
 	@Input() filter;
 	@ViewChild('fields') fields: ElementRef;
 
 
 	metadataFromState$: Observable<any> = this.store
-		.select("filters")
+		.select('filters')
 		.distinctUntilChanged(isEqual)
 		.map((state: IFiltersState) => {
 			return state.filters;
 		});
 
-	constructor(private store: Store<IFiltersState>) {}
+	constructor(private store: Store<IFiltersState>) {
+	}
 
 	get disabledButton() {
 		return !this.metadataFromState;
 	}
 
-	ngOnInit(){
+	ngOnInit() {
 		this.metadataFromState$.subscribe((filters) => {
 			const metadata = cloneDeep(filters.get(this.filter));
 			this.metadataFromState = metadata;
@@ -69,7 +70,7 @@ export class FilterContainerComponent implements OnInit{
 	}
 
 	onMetadataChange(metadeata: any): void {
-		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata: metadeata}));
+		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: metadeata }));
 	}
 
 	showAll(): void {

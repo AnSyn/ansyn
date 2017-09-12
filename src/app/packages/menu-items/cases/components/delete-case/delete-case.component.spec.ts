@@ -59,7 +59,7 @@ describe('DeleteCaseComponent', () => {
 	});
 
 	it('text on "p" tag should include case name', () => {
-		let p_tag = fixture.nativeElement.querySelector("p");
+		let p_tag = fixture.nativeElement.querySelector('p');
 		expect(p_tag.innerText).toEqual(`Are you sure you want to delete ${fake_iCasesState.cases[0].name}?`);
 	});
 

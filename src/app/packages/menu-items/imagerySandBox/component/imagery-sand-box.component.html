@@ -10,11 +10,13 @@
 	<input #latInput type="number" (keyup)="0">
 	<label>long</label>
 	<input #longInput type="number" (keyup)="0">
-	<button (click)="setCenter({lat :latInput.value, long: longInput.value, animation: animationInput.checked})">set center to lat: {{latInput.value}}, long: {{longInput.value}})</button>
+	<button (click)="setCenter({lat :latInput.value, long: longInput.value, animation: animationInput.checked})">set
+		center to lat: {{latInput.value}}, long: {{longInput.value}})
+	</button>
 
 	<h3>load image source</h3>
 	<!--<button (click)="setImageLayer()">Set Image Layer (remove other layers)</button>-->
-	<button (click)="setWorldLayer()">Set  World Layer (remove other layers)</button>
+	<button (click)="setWorldLayer()">Set World Layer (remove other layers)</button>
 	<!--<button (click)="addImageLayer()">add Image Layer (on top of other layers)</button>-->
 
 	<h3>Toggle maps</h3>
@@ -25,7 +27,7 @@
 	<br>
 	<div>
 		from:<input type="date" id="overlaysFrom" [(ngModel)]="overlaysFrom"/>
-		<br />
+		<br/>
 		to:<input type="date" id="overlaysTo" [(ngModel)]="overlaysTo"/>
 		<br/>
 		<button (click)="reloadOverlays($event)">reload overalys with new time</button>

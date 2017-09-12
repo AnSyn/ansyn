@@ -26,7 +26,8 @@ export class LoginComponent implements OnInit {
 
 	constructor(private authService: AuthService,
 				private activatedRoute: ActivatedRoute,
-				private router: Router) { }
+				private router: Router) {
+	}
 
 	ngOnInit(): void {
 		this.returnUrl$.subscribe(_returnUrl => {
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit {
 
 	get login$() {
 		return this.authService.login(this.username, this.password, this.rememberMe)
-			.switchMap(() =>Observable.fromPromise(this.router.navigate([this.returnUrl])))
+			.switchMap(() => Observable.fromPromise(this.router.navigate([this.returnUrl])))
 			.catch(() => {
 				this.showTryAgainMsg();
 				return Observable.throw('Unauthorized');

@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
-import { CoreModule, AddMenuItemAction, MenuItem } from "@ansyn/core";
+import { CoreModule, AddMenuItemAction, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
 import { IToolsConfig, toolsConfig } from './models';
@@ -27,12 +27,11 @@ export class ToolsModule {
 	}
 
 
-
-	constructor(store: Store <any>) {
+	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
-			name:"Tools",
+			name: 'Tools',
 			component: ToolsComponent,
-			icon_url: "/assets/icons/tools.svg"
+			icon_url: '/assets/icons/tools.svg'
 		};
 		store.dispatch(new AddMenuItemAction(menu_item));
 	}

@@ -10,10 +10,10 @@ import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './configuration.token';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [ImageryComponent],
-  providers: [ImageryCommunicatorService, ImageryProviderService],
-  exports: [ImageryComponent]
+	imports: [CommonModule],
+	declarations: [ImageryComponent],
+	providers: [ImageryCommunicatorService, ImageryProviderService],
+	exports: [ImageryComponent]
 })
 export class ImageryModule {
 

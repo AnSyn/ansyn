@@ -4,9 +4,9 @@ import { CasesAppEffects } from './cases.app.effects';
 import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
 import { SelectCaseByIdAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
-import { CasesReducer,AddCaseSuccessAction } from '@ansyn/menu-items/cases';
+import { CasesReducer, AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
-import { OverlayReducer} from '@ansyn/overlays';
+import { OverlayReducer } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -21,7 +21,7 @@ describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
 	let effectsRunner: EffectsRunner;
 	let casesService: CasesService;
-	let store: Store < any > ;
+	let store: Store<any>;
 	let icase_state: ICasesState;
 
 	beforeEach(async(() => {
@@ -34,23 +34,23 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { baseUrl: null }},
+				{ provide: casesConfig, useValue: { baseUrl: null } },
 				ContextProviderService
 			]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, casesConfig], (_store: Store<any>, casesConfig:any) => {
+	beforeEach(inject([Store, casesConfig], (_store: Store<any>, casesConfig: any) => {
 		store = _store;
 
 		icase_state = {
 			cases: [{
 				id: 'case1',
-				state:{
+				state: {
 					maps: {
 						active_map_id: '5555',
-						data:[
+						data: [
 							{
 								id: '5555',
 								data: {}
@@ -65,7 +65,7 @@ describe('CasesAppEffects', () => {
 					favoritesOverlays: ['2']
 				}
 			}],
-			selected_case:{
+			selected_case: {
 				id: 'case1',
 				index: 0
 
@@ -80,7 +80,12 @@ describe('CasesAppEffects', () => {
 
 		store.dispatch(new AddCaseSuccessAction(icase_state.cases[0]));
 		store.dispatch(new SelectCaseByIdAction(icase_state.selected_case.id));
-		store.dispatch( new LoadOverlaysSuccessAction([{id: 'tmp',name:'tmp',imageUrl:'tmp',sourceType:"tmp"}] as any));
+		store.dispatch(new LoadOverlaysSuccessAction([{
+			id: 'tmp',
+			name: 'tmp',
+			imageUrl: 'tmp',
+			sourceType: 'tmp'
+		}] as any));
 	}));
 
 	beforeEach(inject([CasesAppEffects, EffectsRunner, CasesService], (_casesAppEffects: CasesAppEffects, _effectsRunner: EffectsRunner, _casesService: CasesService) => {
@@ -89,23 +94,25 @@ describe('CasesAppEffects', () => {
 		casesService = _casesService;
 	}));
 
-	it("setShowFavoritesFlagOnFilters$",() => {
+	it('setShowFavoritesFlagOnFilters$', () => {
 		effectsRunner.queue(new SelectCaseByIdAction(icase_state.selected_case.id));
 		let count = 0;
-		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe( (result: Action) => {
+		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe((result: Action) => {
 			expect(result.type).toBe(FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION);
-			expect(result.payload).toBe(true );
+			expect(result.payload).toBe(true);
 			count++;
 		});
 		expect(count).toBe(1);
 	});
 
 
-	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
+	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
+		const action = new DisplayOverlayAction({ overlay: <Overlay> { id: 'tmp' } });
 		effectsRunner.queue(action);
 		let result: UpdateCaseAction;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {result = _result;});
+		casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {
+			result = _result;
+		});
 		expect(result.constructor).toEqual(UpdateCaseAction);
 		expect(CasesService.activeMap(result.payload).data.overlay.id).toEqual('tmp');
 	});

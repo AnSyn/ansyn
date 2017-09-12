@@ -1,7 +1,7 @@
-.combo-container{
+.combo-container {
 	position: relative;
 
-	button.trigger{
+	button.trigger {
 		outline: none;
 		background: black;
 		color: white;
@@ -12,30 +12,30 @@
 		align-items: center;
 		padding: 0 6px;
 		cursor: default;
-		img{
+		img {
 			height: 16px;
 		}
-		span.arrow{
+		span.arrow {
 			margin-left: 5px;
 			font-size: 7px;
 		}
 	}
-	.options-container{
+	.options-container {
 		width: 100%;
 		background: black;
 
-		&.show{
+		&.show {
 			visibility: visible;
 		}
-		&:focus{
+		&:focus {
 			visibility: visible;
 			outline: none;
 		}
 		visibility: hidden;
 		position: absolute;
 		top: 0;
-		transform: translate(0,-100%);
-		.option{
+		transform: translate(0, -100%);
+		.option {
 			display: flex;
 			justify-content: center;
 			padding: 1px 6px;
@@ -43,12 +43,12 @@
 			cursor: pointer;
 			border-bottom: 1px solid black;
 			box-sizing: border-box;
-			img{
+			img {
 				opacity: .8;
 			}
-			&:hover{
+			&:hover {
 				border-color: white;
-				img{
+				img {
 					opacity: 1;
 				}
 			}

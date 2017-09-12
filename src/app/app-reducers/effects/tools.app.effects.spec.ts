@@ -14,8 +14,10 @@ import {
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
-import { DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess,
-	AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools';
+import {
+	DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess,
+	AnnotationVisualizerAgentAction
+} from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -44,7 +46,14 @@ describe('ToolsAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{ id: 'imagery1', data: { position: { zoom: 1, center: 2 }, isAutoImageProcessingActive: true, overlay: 'overlay' } }
+					{
+						id: 'imagery1',
+						data: {
+							position: { zoom: 1, center: 2 },
+							isAutoImageProcessingActive: true,
+							overlay: 'overlay'
+						}
+					}
 				],
 				active_map_id: 'imagery1'
 			}
@@ -99,8 +108,10 @@ describe('ToolsAppEffects', () => {
 
 	describe('updatePinLocationAction$ should createMapSingleClickEvent or removeSingleClickEvent on ', () => {
 		const activeCommunicator = {
-			createMapSingleClickEvent: () => { },
-			removeSingleClickEvent: () => { }
+			createMapSingleClickEvent: () => {
+			},
+			removeSingleClickEvent: () => {
+			}
 		};
 
 		beforeEach(() => {
@@ -125,7 +136,8 @@ describe('ToolsAppEffects', () => {
 
 	it('onGoTo$ should call SetCenter on active communicator with action.payload', () => {
 		const activeCommunicator = jasmine.createSpyObj({
-			setCenter: () => { }
+			setCenter: () => {
+			}
 		});
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 		effectsRunner.queue(new GoToAction([0, 0]));
@@ -215,11 +227,11 @@ describe('ToolsAppEffects', () => {
 		active_map.data.overlayDisplayMode = <any> 'whatever';
 		effectsRunner.queue(new ActiveMapChangedAction());
 
-		let action1,action2,action3;
+		let action1, action2, action3;
 		let count = 0;
 		toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$.subscribe(_result => {
 			count++;
-			switch(count){
+			switch (count) {
 				case 1:
 					action1 = _result;
 					break;
@@ -237,14 +249,14 @@ describe('ToolsAppEffects', () => {
 
 		expect(action2.constructor).toEqual(AnnotationVisualizerAgentAction);
 		expect(action2.payload).toEqual({
-			action: "removeLayer",
-			maps: "all"
+			action: 'removeLayer',
+			maps: 'all'
 		});
 
 		expect(action3.constructor).toEqual(AnnotationVisualizerAgentAction);
 		expect(action3.payload).toEqual({
-			action: "show",
-			maps: "all"
+			action: 'show',
+			maps: 'all'
 		});
 	});
 

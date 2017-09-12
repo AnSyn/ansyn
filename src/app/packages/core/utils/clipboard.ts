@@ -1,4 +1,3 @@
-
 const clearSelection = (inputElement: HTMLInputElement | HTMLTextAreaElement, window: Window) => {
 	inputElement && inputElement.blur();
 	window.getSelection().removeAllRanges();
@@ -21,7 +20,7 @@ const copyFromInputElement = (targetElm: HTMLInputElement | HTMLTextAreaElement)
 	}
 };
 
-const createTempTextArea = (doc: Document, window: Window): HTMLTextAreaElement  => {
+const createTempTextArea = (doc: Document, window: Window): HTMLTextAreaElement => {
 	const isRTL = doc.documentElement.getAttribute('dir') === 'rtl';
 	let ta: HTMLTextAreaElement;
 	ta = doc.createElement('textarea');
@@ -42,7 +41,7 @@ const createTempTextArea = (doc: Document, window: Window): HTMLTextAreaElement 
 	return ta;
 };
 
-export function  copyFromContent (content: string): boolean {
+export function copyFromContent(content: string): boolean {
 	const tempTextArea: HTMLTextAreaElement = createTempTextArea(document, window);
 	tempTextArea.value = content;
 	document.body.appendChild(tempTextArea);

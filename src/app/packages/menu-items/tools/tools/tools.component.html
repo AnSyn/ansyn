@@ -1,13 +1,15 @@
 <div class='tools-menu-item-container'>
 	<div>
-		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item' [class.active]="flags.get('shadow_mouse')" [disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
+		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item'
+				[class.active]="flags.get('shadow_mouse')"
+				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
 			<img src='/assets/icons/tools/shadow_mouse.svg'/>
 		</button>
 		<span class="tooltiptext">Mouse shadow</span>
 	</div>
 
 	<div>
-		<button (click)="toggleExpandGoTo()" [disabled]="isGeoOptionsDisabled" >
+		<button (click)="toggleExpandGoTo()" [disabled]="isGeoOptionsDisabled">
 			<img src='/assets/icons/tools/go-to.svg'/>
 		</button>
 		<span class="tooltiptext">Go To</span>
@@ -16,21 +18,22 @@
 
 	<div class='image-processing'>
 		<button (click)='toggleImageProcessing()'
-		[class.active]="flags.get('auto_image_processing')"
-		[disabled]="flags.get('auto_image_processing_disabled')">
+				[class.active]="flags.get('auto_image_processing')"
+				[disabled]="flags.get('auto_image_processing_disabled')">
 			<img src='/assets/icons/tools/automatic-processing.svg'/>
 		</button>
 		<span class="tooltiptext">Automatic Image Enhancement</span>
 	</div>
 
 	<div #displayOverlayDiv class="display-overlay-visualizer" [class.active]="displayModeOn">
-		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled" >
+		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled">
 		</button>
 		<span class="tooltiptext">Display Overlays</span>
-		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode" [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
+		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode"
+									 [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
 	</div>
 
-	<div class="user-annotations" [class.active]="userAnnotationsToolOpen" >
+	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
 		<button (click)="toggleAnnotationMenu()">
 			<span class="icon-annotation--edit"></span>
 		</button>

@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core';
 
 export const toolsConfig: InjectionToken<IToolsConfig> = new InjectionToken('toolsConfig');
 
-export interface IToolsConfig  {
+export interface IToolsConfig {
 	GoTo: {
 		from: CoordinatesSystem;
 		to: CoordinatesSystem;

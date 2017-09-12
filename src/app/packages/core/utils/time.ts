@@ -1,4 +1,3 @@
-
 export class TimeDiff {
 	isNegative: boolean;
 	seconds: number;
@@ -40,7 +39,7 @@ export function getTimeDiff(date1: Date, date2: Date): TimeDiff {
 	millisecondsDiff -= minutes * 1000 * 60;
 	const seconds = Math.floor(millisecondsDiff / 1000);
 	millisecondsDiff -= seconds * 1000;
-    const result = new TimeDiff(years, months, days, hours, minutes, seconds, isNegative);
+	const result = new TimeDiff(years, months, days, hours, minutes, seconds, isNegative);
 	return result;
 }
 

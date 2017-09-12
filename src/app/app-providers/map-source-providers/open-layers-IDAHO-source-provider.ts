@@ -5,7 +5,7 @@
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { ProjectableRaster } from "@ansyn/open-layers-map";
+import { ProjectableRaster } from '@ansyn/open-layers-map';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
@@ -33,15 +33,15 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			projection: 'EPSG:3857'
 		});
 
-		source.once('tileloadstart',() => {
+		source.once('tileloadstart', () => {
 			/*
 			this will work every request for tile source and will have slightly effect on performance (one function call) nothing wo worry about
 			 */
-			super.startTimingLog("tile_load-" + metaData.id);
+			super.startTimingLog('tile_load-' + metaData.id);
 		});
 
-		source.once('tileloadend',() => {
-			super.endTimingLog("tile_load-"+ metaData.id);
+		source.once('tileloadend', () => {
+			super.endTimingLog('tile_load-' + metaData.id);
 		});
 
 

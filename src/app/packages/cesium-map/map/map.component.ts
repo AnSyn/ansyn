@@ -4,6 +4,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { CesiumMap } from './cesium-map';
+
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -13,7 +14,7 @@ import { CesiumMap } from './cesium-map';
 		<div #cesiumMap>Working!</div>
 	`,
 	styles: [
-			`div{
+		`div{
 			width: 100%;
 			height: 100%;
 		}`]

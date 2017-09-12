@@ -1,27 +1,28 @@
 <div class="edit-case">
-  <button (click)="close()" class="close" type="button">
-    <span>×</span>
-  </button>
+	<button (click)="close()" class="close" type="button">
+		<span>×</span>
+	</button>
 
-  <form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase()" >
+	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase()">
 
-    <input name="name" required [(ngModel)]="case_model.name" #name_input>
-    <span class="highlight"></span>
-    <span class="bar"></span>
-    <label>Name</label>
+		<input name="name" required [(ngModel)]="case_model.name" #name_input>
+		<span class="highlight"></span>
+		<span class="bar"></span>
+		<label>Name</label>
 
-    <div class="select-context">
-      <h4>Context</h4>
-      <select [(ngModel)]="case_model.state.selected_context_id" (ngModelChange)="updateCaseViaContext()" name="context" required [disabled]="on_edit_case">
-        <ng-template ngFor [ngForOf]="contexts_list" let-context>
-          <option [value]="context.id">{{context.name}}</option>
-        </ng-template>
-      </select>
-    </div>
+		<div class="select-context">
+			<h4>Context</h4>
+			<select [(ngModel)]="case_model.state.selected_context_id" (ngModelChange)="updateCaseViaContext()"
+					name="context" required [disabled]="on_edit_case">
+				<ng-template ngFor [ngForOf]="contexts_list" let-context>
+					<option [value]="context.id">{{context.name}}</option>
+				</ng-template>
+			</select>
+		</div>
 
-    <div class="bottom-btns">
-      <button type="button" (click)="close()">Cancel</button>
-      <button [disabled]="f.invalid" >OK</button>
-    </div>
-  </form>
+		<div class="bottom-btns">
+			<button type="button" (click)="close()">Cancel</button>
+			<button [disabled]="f.invalid">OK</button>
+		</div>
+	</form>
 </div>

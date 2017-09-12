@@ -11,45 +11,48 @@ import * as flatpickr from 'flatpickr';
 export class TimelineTimepickerComponent implements OnInit {
 
 	private _startDatePickerValue = new Date(new Date().getTime() - 3600000 * 24 * 365);
-	private _endDatePickerValue =  new Date();
+	private _endDatePickerValue = new Date();
 
 	endDatePickerInstance: flatpickr;
 	startDatePickerInstance: flatpickr;
 	error: string;
 
-	@ViewChild("startDatePicker") startDatePicker: ElementRef;
-	@ViewChild("endDatePicker") endDatePicker: ElementRef;
+	@ViewChild('startDatePicker') startDatePicker: ElementRef;
+	@ViewChild('endDatePicker') endDatePicker: ElementRef;
 
 	@Output('applyDate') applyDate = new EventEmitter();
-	@Output('closeComponent') closeComponent= new EventEmitter();
+	@Output('closeComponent') closeComponent = new EventEmitter();
 
-	@Input() set startDatePickerValue(value: Date){
+	@Input()
+	set startDatePickerValue(value: Date) {
 		this._startDatePickerValue = value;
 		if (this.startDatePickerInstance) {
-			this.startDatePickerInstance.setDate(this.startDatePickerValue,false);
+			this.startDatePickerInstance.setDate(this.startDatePickerValue, false);
 		}
 	}
 
-	@Input() set endDatePickerValue(value: Date){
+	@Input()
+	set endDatePickerValue(value: Date) {
 		this._endDatePickerValue = value;
-		if(this.endDatePickerInstance){
-			this.endDatePickerInstance.setDate(this.endDatePickerValue,false);
+		if (this.endDatePickerInstance) {
+			this.endDatePickerInstance.setDate(this.endDatePickerValue, false);
 		}
 	}
 
-	get startDatePickerValue(){
+	get startDatePickerValue() {
 		return this._startDatePickerValue;
 	}
 
-	get endDatePickerValue(){
+	get endDatePickerValue() {
 		return this._endDatePickerValue;
 	}
 
 
-	constructor(){}
+	constructor() {
+	}
 
 	ngOnInit(): void {
-		this.endDatePickerInstance = new flatpickr(this.endDatePicker.nativeElement,{
+		this.endDatePickerInstance = new flatpickr(this.endDatePicker.nativeElement, {
 			id: 'end',
 			time_24hr: true,
 			enableTime: true,
@@ -57,9 +60,9 @@ export class TimelineTimepickerComponent implements OnInit {
 			plugins: [this.confirmDatePlugin({})]
 		});
 
-		this.endDatePickerInstance.setDate(this.endDatePickerValue,false);
+		this.endDatePickerInstance.setDate(this.endDatePickerValue, false);
 
-		this.startDatePickerInstance = new flatpickr(this.startDatePicker.nativeElement,{
+		this.startDatePickerInstance = new flatpickr(this.startDatePicker.nativeElement, {
 			id: 'start',
 			time_24hr: true,
 			enableTime: true,
@@ -67,24 +70,24 @@ export class TimelineTimepickerComponent implements OnInit {
 			plugins: [this.confirmDatePlugin({})]
 		});
 
-		this.startDatePickerInstance.setDate(this.startDatePickerValue,false);
+		this.startDatePickerInstance.setDate(this.startDatePickerValue, false);
 	}
 
-	selectedDateChanged(date: Date,dateString: string,instance: flatpickr){
+	selectedDateChanged(date: Date, dateString: string, instance: flatpickr) {
 		this.error = '';
-		if(instance.config.id === 'start'){
+		if (instance.config.id === 'start') {
 			this.startDatePickerValue = new Date(date[0]);
-		} else{
+		} else {
 			this.endDatePickerValue = new Date(date[0]);
 		}
 	}
 
-	confirmDatePlugin(pluginConfig: any){
+	confirmDatePlugin(pluginConfig: any) {
 		const defaultConfig = {
-			confirmIcon: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='17' height='17' viewBox='0 0 17 17'> <g> </g> <path d='M15.418 1.774l-8.833 13.485-4.918-4.386 0.666-0.746 4.051 3.614 8.198-12.515 0.836 0.548z' fill='#000000' /> </svg>",
-			confirmText: "OK ",
+			confirmIcon: '<svg version=\'1.1\' xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' width=\'17\' height=\'17\' viewBox=\'0 0 17 17\'> <g> </g> <path d=\'M15.418 1.774l-8.833 13.485-4.918-4.386 0.666-0.746 4.051 3.614 8.198-12.515 0.836 0.548z\' fill=\'#000000\' /> </svg>',
+			confirmText: 'OK ',
 			showAlways: false,
-			theme: "light"
+			theme: 'light'
 		};
 
 		const config = {} as any;
@@ -95,35 +98,35 @@ export class TimelineTimepickerComponent implements OnInit {
 		return function (fp) {
 			const hooks = {
 				onKeyDown: function onKeyDown(_, __, ___, e) {
-					if (fp.config.enableTime && e.key === "Tab" && e.target === fp.amPM) {
+					if (fp.config.enableTime && e.key === 'Tab' && e.target === fp.amPM) {
 						e.preventDefault();
 						fp.confirmContainer.focus();
-					} else if (e.key === "Enter" && e.target === fp.confirmContainer) {
+					} else if (e.key === 'Enter' && e.target === fp.confirmContainer) {
 						fp.close();
 					}
 				},
 				onReady: function onReady() {
-					if (fp.calendarContainer === undefined){
+					if (fp.calendarContainer === undefined) {
 						return;
 					}
 
-					fp.confirmContainer = fp._createElement("div", "flatpickr-confirm " + (config.showAlways ? "visible" : "") + " " + config.theme + "Theme", config.confirmText);
+					fp.confirmContainer = fp._createElement('div', 'flatpickr-confirm ' + (config.showAlways ? 'visible' : '') + ' ' + config.theme + 'Theme', config.confirmText);
 
 					fp.confirmContainer.tabIndex = -1;
 					fp.confirmContainer.innerHTML += config.confirmIcon;
 
-					fp.confirmContainer.addEventListener("click", fp.close);
+					fp.confirmContainer.addEventListener('click', fp.close);
 					fp.calendarContainer.appendChild(fp.confirmContainer);
 				}
 			} as any;
 
 			if (!config.showAlways) {
 				hooks.onChange = function (dateObj, dateStr) {
-					const showCondition = fp.config.enableTime || fp.config.mode === "multiple";
+					const showCondition = fp.config.enableTime || fp.config.mode === 'multiple';
 					if (dateStr && !fp.config.inline && showCondition) {
-						return fp.confirmContainer.classList.add("visible");
+						return fp.confirmContainer.classList.add('visible');
 					}
-					fp.confirmContainer.classList.remove("visible");
+					fp.confirmContainer.classList.remove('visible');
 				};
 			}
 
@@ -132,9 +135,8 @@ export class TimelineTimepickerComponent implements OnInit {
 	}
 
 
-
-	applyTimepickerEvent(){
-		if(this.startDatePickerValue.getTime() >= this.endDatePickerValue.getTime()){
+	applyTimepickerEvent() {
+		if (this.startDatePickerValue.getTime() >= this.endDatePickerValue.getTime()) {
 			this.error = '* error';
 			return;
 		}

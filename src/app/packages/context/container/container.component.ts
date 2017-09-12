@@ -33,8 +33,8 @@ export class ContainerComponent implements OnInit {
 		this.findStream = new Subject();
 
 		this.findStream
-			.switchMap(result =>{
-				console.log('flat map ',result);
+			.switchMap(result => {
+				console.log('flat map ', result);
 				return result;
 			})
 			.subscribe((res: any) => {
@@ -74,7 +74,7 @@ export class ContainerComponent implements OnInit {
 
 	find$() {
 		console.log('find');
-		const criteria = new ContextCriteria({start: 0, limit: 20});
+		const criteria = new ContextCriteria({ start: 0, limit: 20 });
 		return this.contextProviderService.provide(this.providerType).find(criteria);
 	}
 
@@ -83,7 +83,7 @@ export class ContainerComponent implements OnInit {
 		this.editItem = this.result.find((context: any) => context.id === id);
 		const contextBody = {};
 		Object.keys(this.editItem).forEach((key) => {
-			if(key !== 'id'){
+			if (key !== 'id') {
 				contextBody[key] = this.editItem[key];
 			}
 		});

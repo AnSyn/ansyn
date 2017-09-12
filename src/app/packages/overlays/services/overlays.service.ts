@@ -14,16 +14,14 @@ import * as bboxPolygon from '@turf/bbox-polygon';
 import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 
-
-
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string,Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): string[]{
-		if(isNil(overlays)){
-			return [] ;
+	static filter(overlays: Map<string, Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): string[] {
+		if (isNil(overlays)) {
+			return [];
 		}
 
 		const overlaysData = [];
@@ -42,7 +40,7 @@ export class OverlaysService {
 	}
 
 	static sort(overlays: any[]): Overlay[] {
-		if(isNil(overlays)){
+		if (isNil(overlays)) {
 			return [] as Overlay[];
 		}
 		return overlays
@@ -63,10 +61,10 @@ export class OverlaysService {
 	 * @param ids
 	 * @param properties
 	 */
-	static pluck<T>(items: Map<string,T >, ids: string[], properties: string[]){
-		return ids.map( id => {
+	static pluck<T>(items: Map<string, T>, ids: string[], properties: string[]) {
+		return ids.map(id => {
 			const item = items.get(id);
-			if(!properties.length ) {
+			if (!properties.length) {
 				return item;
 			}
 			return properties.reduce((obj, property) => {
@@ -76,7 +74,8 @@ export class OverlaysService {
 		});
 	}
 
-	constructor(@Inject(OverlaysConfig) private config: IOverlaysConfig , private _overlaySourceProvider: BaseOverlaySourceProvider) {}
+	constructor(@Inject(OverlaysConfig) private config: IOverlaysConfig, private _overlaySourceProvider: BaseOverlaySourceProvider) {
+	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {
 		let tBbox = bbox(params.polygon);
@@ -94,16 +93,15 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getById(id);
 	}
 
-	getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+	getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
 
 
+	parseOverlayDataForDispaly(overlays: Map<string, Overlay>, ids, specialObject?: Map<string, OverlaySpecialObject>): Array<any> {
+		const overlaysData = OverlaysService.pluck(overlays, ids, ['id', 'date']);
 
-	parseOverlayDataForDispaly(overlays: Map<string,Overlay>,ids,specialObject?: Map<string,OverlaySpecialObject>): Array<any> {
-		const overlaysData =  OverlaysService.pluck(overlays,ids,["id","date"]);
-
-		if(specialObject) {
+		if (specialObject) {
 			specialObject.forEach((value) => {
 				overlaysData.push(value);
 			});
@@ -118,23 +116,23 @@ export class OverlaysService {
 	}*/
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = isEqual(data.filteredOverlays,data1.filteredOverlays)
-					&& isEqual(data.filters, data1.filters)
-					&& isEqual(data.specialObjects,data1.specialObjects) ;
+		const result = isEqual(data.filteredOverlays, data1.filteredOverlays)
+			&& isEqual(data.filters, data1.filters)
+			&& isEqual(data.specialObjects, data1.specialObjects);
 		return result;
 	}
 
-	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: {from: Date, to: Date}): {from: Date, to: Date} {
+	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: { from: Date, to: Date }): { from: Date, to: Date } {
 		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
 		const deltaTenth: number = (delta) * 0.1;
 		let from: Date, to: Date;
-		if(displayedOverlay.date < timelineState.from){
+		if (displayedOverlay.date < timelineState.from) {
 			from = new Date(displayedOverlay.date.getTime() - deltaTenth);
 			to = new Date(from.getTime() + delta);
-		} else if(timelineState.to < displayedOverlay.date) {
+		} else if (timelineState.to < displayedOverlay.date) {
 			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
 			from = new Date(to.getTime() - delta);
 		}
-		return {from, to};
+		return { from, to };
 	}
 }

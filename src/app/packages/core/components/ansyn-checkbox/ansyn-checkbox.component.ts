@@ -11,27 +11,29 @@ export class AnsynCheckboxComponent implements OnInit {
 	public _disabled;
 
 	@Output() inputClicked = new EventEmitter<any>();
-	@Input("id")id;
+	@Input('id') id;
 
 
 	@Input()
-	set checked(value){
+	set checked(value) {
 		this._checked = value;
 	}
-	get checked (){
+
+	get checked() {
 		return this._checked;
 	}
 
 	@HostBinding('class.disabled')
 	@Input()
-	set disabled(value){
+	set disabled(value) {
 		this._disabled = value;
 	}
-	get disabled(){
+
+	get disabled() {
 		return this._disabled;
 	}
 
-	@Input () text;
+	@Input() text;
 
 	constructor() {
 	}
@@ -40,9 +42,9 @@ export class AnsynCheckboxComponent implements OnInit {
 	}
 
 	onInputClicked(event) {
-		if(this._disabled){
+		if (this._disabled) {
 			return false;
 		}
-		this.inputClicked.emit({event:event, data : {id: this.id,isChecked:!this._checked}});
+		this.inputClicked.emit({ event: event, data: { id: this.id, isChecked: !this._checked } });
 	}
 }

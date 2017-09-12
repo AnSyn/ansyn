@@ -41,6 +41,7 @@ export class OverlaysDisplayModeComponent {
 	}
 
 	@Output() expandChange = new EventEmitter();
+
 	@HostBinding('class.expand') @Input()
 	set expand(value) {
 		this._expand = value;
@@ -54,6 +55,7 @@ export class OverlaysDisplayModeComponent {
 	@Input() disabled: boolean;
 
 	@Output() modeOnChange = new EventEmitter();
+
 	@Input()
 	set modeOn(value) {
 		this._modeOn = value;
@@ -69,7 +71,7 @@ export class OverlaysDisplayModeComponent {
 		this.visualizerType = 'None';
 		this.needToDispatchAction = true;
 
-		this.selectedMapOverlaysMode$.subscribe((visualizerType)=>{
+		this.selectedMapOverlaysMode$.subscribe((visualizerType) => {
 			this.needToDispatchAction = false;
 			if (!visualizerType) {
 				this.visualizerType = 'None';

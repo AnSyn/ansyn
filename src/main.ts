@@ -15,10 +15,10 @@ import { LoginConfig } from '@ansyn/login';
 const getProviders = (conf): any[] => {
 	return [
 		{
-			provide : IdahoOverlaysSourceConfig,
+			provide: IdahoOverlaysSourceConfig,
 			useValue: {
-				baseUrl : conf.overlaysConfig.baseUrl,
-				overlaysByTimeAndPolygon : conf.overlaysConfig.overlaysByTimeAndPolygon,
+				baseUrl: conf.overlaysConfig.baseUrl,
+				overlaysByTimeAndPolygon: conf.overlaysConfig.overlaysByTimeAndPolygon,
 				defaultApi: conf.overlaysConfig.defaultApi
 			}
 		},
@@ -36,8 +36,8 @@ const getProviders = (conf): any[] => {
 		{
 			provide: toolsConfig,
 			useValue: conf.toolsConfig
-		},{
-			provide : OverlaysConfig,
+		}, {
+			provide: OverlaysConfig,
 			useValue: conf.overlaysConfig
 		},
 		{
@@ -49,10 +49,10 @@ const getProviders = (conf): any[] => {
 			useValue: conf.contextConfig
 		},
 		{
-			provide:ContextSources,
+			provide: ContextSources,
 			useValue: {
-				"Proxy": ContextProxySource,
-				"Elastic": ContextElasticSource
+				'Proxy': ContextProxySource,
+				'Elastic': ContextElasticSource
 			}
 		},
 		{
@@ -64,7 +64,7 @@ const getProviders = (conf): any[] => {
 };
 
 const bootsrapApplicationModule = (): void => {
-	fetch("/assets/config/app.config.json")
+	fetch('/assets/config/app.config.json')
 		.then(response => response.json())
 		.then(getProviders)
 		.then(providers => {

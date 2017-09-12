@@ -4,18 +4,18 @@ import Projection from 'ol/proj/projection';
 
 export class ProjectableRaster extends Raster {
 
-    sources: Source[];
+	sources: Source[];
 
-    constructor(options: any) {
-        super(options);
-        this.sources = options.sources;
-    }
+	constructor(options: any) {
+		super(options);
+		this.sources = options.sources;
+	}
 
-    getProjection(): Projection {
-        if (this.sources.length === 1) {
-            return this.sources[0].getProjection();
-        } else {
-            throw new Error('Can not obtain raster projection with multiple sources');
-        }
-    }
+	getProjection(): Projection {
+		if (this.sources.length === 1) {
+			return this.sources[0].getProjection();
+		} else {
+			throw new Error('Can not obtain raster projection with multiple sources');
+		}
+	}
 }

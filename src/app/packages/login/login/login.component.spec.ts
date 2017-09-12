@@ -6,15 +6,16 @@ import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import "rxjs/add/operator/catch";
+import 'rxjs/add/operator/catch';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
 	let fixture: ComponentFixture<LoginComponent>;
 	let router: Router;
 	let mockAuthService = {
-		login: () => Observable.of("nothing"),
-		clear: () => {}
+		login: () => Observable.of('nothing'),
+		clear: () => {
+		}
 	};
 	let authService: AuthService;
 
@@ -22,7 +23,7 @@ describe('LoginComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [LoginComponent],
 			imports: [RouterTestingModule, FormsModule],
-			providers: [{provide: AuthService, useValue: mockAuthService}]
+			providers: [{ provide: AuthService, useValue: mockAuthService }]
 		})
 			.compileComponents();
 	}));
@@ -45,7 +46,7 @@ describe('LoginComponent', () => {
 	});
 
 	it('login functino should call login$.subscribe', () => {
-		const fakeLogin$ = Observable.of("login");
+		const fakeLogin$ = Observable.of('login');
 		spyOn(fakeLogin$, 'subscribe');
 		spyOnProperty(component, 'login$', 'get').and.callFake(() => fakeLogin$);
 		component.login();
@@ -54,24 +55,26 @@ describe('LoginComponent', () => {
 
 
 	describe('login$ should be an Observable with catch or switchMap results', () => {
-		let loginObservable: any = Observable.of("ok");
+		let loginObservable: any = Observable.of('ok');
 
 		beforeEach(() => {
-			spyOn(authService, 'login').and.callFake(() => loginObservable );
-			spyOn(router, 'navigate').and.callFake(() => "navigation");
-			spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of(""));
+			spyOn(authService, 'login').and.callFake(() => loginObservable);
+			spyOn(router, 'navigate').and.callFake(() => 'navigation');
+			spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of(''));
 			spyOn(Observable, 'throw').and.callFake(() => Observable.throw);
 		});
 
 		it('on switchMap', () => {
 			component.login$.subscribe(() => {
-				expect(Observable.fromPromise).toHaveBeenCalledWith("navigation");
+				expect(Observable.fromPromise).toHaveBeenCalledWith('navigation');
 				expect(router.navigate).toHaveBeenCalled();
 			});
 		});
 
 		it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', () => {
-			loginObservable = loginObservable.do(() => {throw new Error("error")});
+			loginObservable = loginObservable.do(() => {
+				throw new Error('error');
+			});
 			spyOn(component, 'showTryAgainMsg');
 			component.login$.subscribe(() => {
 				expect(component.showTryAgainMsg).toHaveBeenCalled();

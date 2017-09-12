@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
-import { trigger, transition, style, animate } from "@angular/animations";
-import { ComponentFactoryResolver } from "@angular/core";
+import { trigger, transition, style, animate } from '@angular/animations';
+import { ComponentFactoryResolver } from '@angular/core';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
@@ -14,8 +14,8 @@ const animations_during = '0.2s';
 
 const animations: any[] = [
 	trigger('blackScreen', [
-		transition(":enter", [style({ opacity: 0}), animate(animations_during, style({ opacity: 1}))]),
-		transition(":leave", [style({ opacity: 1}), animate(animations_during, style({ opacity: 0}))]),
+		transition(':enter', [style({ opacity: 0 }), animate(animations_during, style({ opacity: 1 }))]),
+		transition(':leave', [style({ opacity: 1 }), animate(animations_during, style({ opacity: 0 }))]),
 	])
 ];
 
@@ -26,15 +26,16 @@ const animations: any[] = [
 	animations
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
-	@ViewChild("modal_content", {read: ViewContainerRef}) modal_content: ViewContainerRef;
-	modal$: Observable <boolean> = this.store.select("cases")
-											 .map((state: ICasesState) => state.modal)
-											 .distinctUntilChanged(isEqual);
+	@ViewChild('modal_content', { read: ViewContainerRef }) modal_content: ViewContainerRef;
+	modal$: Observable<boolean> = this.store.select('cases')
+		.map((state: ICasesState) => state.modal)
+		.distinctUntilChanged(isEqual);
 	modal: boolean;
 
 	selected_component_ref;
 
-	constructor(public casesEffects: CasesEffects, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<ICasesState>) {}
+	constructor(public casesEffects: CasesEffects, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<ICasesState>) {
+	}
 
 	close() {
 		this.store.dispatch(new CloseModalAction());
@@ -42,8 +43,8 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		this.modal$.subscribe( (_modal: boolean) => {
-			this.modal = _modal
+		this.modal$.subscribe((_modal: boolean) => {
+			this.modal = _modal;
 		});
 
 		this.casesEffects.openModal$.subscribe(this.buildTemplate.bind(this));
@@ -56,7 +57,7 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	destroyTemplate() {
-		if(this.selected_component_ref) {
+		if (this.selected_component_ref) {
 			this.selected_component_ref.destroy();
 		}
 	}

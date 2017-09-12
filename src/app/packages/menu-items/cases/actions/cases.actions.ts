@@ -44,104 +44,164 @@ export const CasesActionTypes = {
 
 export type CasesActions = any;
 
-export class LoadCasesAction implements Action{
+export class LoadCasesAction implements Action {
 	type = CasesActionTypes.LOAD_CASES;
-	constructor(public payload?: Case[]){}
-}
-export class LoadCasesSuccessAction implements Action{
-	type = CasesActionTypes.LOAD_CASES_SUCCESS;
-	constructor(public payload: Case[]){}
-}
 
-export class AddCaseAction implements Action{
-	type = CasesActionTypes.ADD_CASE;
-	constructor(public payload: Case){}
-}
-
-export class AddCaseSuccessAction implements Action{
-	type = CasesActionTypes.ADD_CASE_SUCCESS;
-	constructor(public payload: Case){}
-}
-
-export class UpdateCaseAction implements Action{
-	type = CasesActionTypes.UPDATE_CASE;
-	constructor(public payload: Case){}
-}
-export class UpdateCaseBackendSuccessAction implements Action{
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
-	constructor(public payload: Case){}
-}
-export class UpdateCaseBackendAction implements Action{
-	type = CasesActionTypes.UPDATE_CASE_BACKEND;
-	constructor(public payload: Case){}
-}
-
-export class DeleteCaseAction implements Action{
-	type = CasesActionTypes.DELETE_CASE;
-	constructor(public payload?: string){}
-}
-
-export class DeleteCaseBackendAction implements Action{
-	type = CasesActionTypes.DELETE_CASE_BACKEND;
-	constructor(public payload: string){}
-}
-
-export class DeleteCaseBackendSuccessAction implements Action{
-	type = CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS;
-	constructor(public payload?: any){}
-}
-
-export class OpenModalAction implements Action{
-	type = CasesActionTypes.OPEN_MODAL;
-	constructor(public payload: {component: any, case_id?: string}){}
-}
-export class CloseModalAction implements Action{
-	type = CasesActionTypes.CLOSE_MODAL;
-	constructor(public payload?: any){}
-}
-export class SelectCaseByIdAction implements Action{
-	type = CasesActionTypes.SELECT_CASE_BY_ID;
-	constructor(public payload: string){
+	constructor(public payload?: Case[]) {
 	}
 }
-export class LoadContextsAction implements Action{
+
+export class LoadCasesSuccessAction implements Action {
+	type = CasesActionTypes.LOAD_CASES_SUCCESS;
+
+	constructor(public payload: Case[]) {
+	}
+}
+
+export class AddCaseAction implements Action {
+	type = CasesActionTypes.ADD_CASE;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class AddCaseSuccessAction implements Action {
+	type = CasesActionTypes.ADD_CASE_SUCCESS;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class UpdateCaseAction implements Action {
+	type = CasesActionTypes.UPDATE_CASE;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class UpdateCaseBackendSuccessAction implements Action {
+	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class UpdateCaseBackendAction implements Action {
+	type = CasesActionTypes.UPDATE_CASE_BACKEND;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class DeleteCaseAction implements Action {
+	type = CasesActionTypes.DELETE_CASE;
+
+	constructor(public payload?: string) {
+	}
+}
+
+export class DeleteCaseBackendAction implements Action {
+	type = CasesActionTypes.DELETE_CASE_BACKEND;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class DeleteCaseBackendSuccessAction implements Action {
+	type = CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS;
+
+	constructor(public payload?: any) {
+	}
+}
+
+export class OpenModalAction implements Action {
+	type = CasesActionTypes.OPEN_MODAL;
+
+	constructor(public payload: { component: any, case_id?: string }) {
+	}
+}
+
+export class CloseModalAction implements Action {
+	type = CasesActionTypes.CLOSE_MODAL;
+
+	constructor(public payload?: any) {
+	}
+}
+
+export class SelectCaseByIdAction implements Action {
+	type = CasesActionTypes.SELECT_CASE_BY_ID;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class LoadContextsAction implements Action {
 	type = CasesActionTypes.LOAD_CONTEXTS;
-	constructor(public payload?: string){}
+
+	constructor(public payload?: string) {
+	}
 }
-export class LoadContextsSuccessAction implements Action{
+
+export class LoadContextsSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_CONTEXTS_SUCCESS;
-	constructor(public payload: Context[]){}
+
+	constructor(public payload: Context[]) {
+	}
 }
-export class LoadCaseAction implements Action{
+
+export class LoadCaseAction implements Action {
 	type = CasesActionTypes.LOAD_CASE;
-	constructor(public payload: string){}
+
+	constructor(public payload: string) {
+	}
 }
-export class LoadCaseSuccessAction implements Action{
+
+export class LoadCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_CASE_SUCCESS;
-	constructor(public payload: Case){}
+
+	constructor(public payload: Case) {
+	}
 }
+
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-	constructor(public payload: Params = {}) {}
+
+	constructor(public payload: Params = {}) {
+	}
 }
+
 export class LoadDefaultCaseSuccessAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
-	constructor(public payload: Case) {}
+
+	constructor(public payload: Case) {
+	}
 }
+
 export class SaveDefaultCaseAction implements Action {
 	type = CasesActionTypes.SAVE_DEFAULT_CASE;
-	constructor(public payload: Case) {}
+
+	constructor(public payload: Case) {
+	}
 }
+
 export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
-	constructor(public payload: string) {}
+
+	constructor(public payload: string) {
+	}
 }
+
 export class SetDefaultCaseQueryParams implements Action {
 	type = CasesActionTypes.SET_DEFAULT_CASE_QUERY_PARAMS;
-	constructor(public payload: Case) {}
+
+	constructor(public payload: Case) {
+	}
 }
+
 export class RemoveDefaultCaseQueryParamsAction implements Action {
 	type = CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS;
-	constructor() {}
+
+	constructor() {
+	}
 }
 

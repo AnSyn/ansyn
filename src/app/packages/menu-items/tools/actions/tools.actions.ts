@@ -23,6 +23,7 @@ export const ToolsActionsTypes = {
 
 export class StartMouseShadow implements Action {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
+
 	constructor(public payload?: any) {
 		// code...
 	}
@@ -30,57 +31,78 @@ export class StartMouseShadow implements Action {
 
 export class StopMouseShadow implements Action {
 	type = ToolsActionsTypes.STOP_MOUSE_SHADOW;
+
 	constructor(public payload?: any) {
 		// code...
 	}
 }
 
-export class DisableMouseShadow implements  Action {
+export class DisableMouseShadow implements Action {
 	type = ToolsActionsTypes.DISABLE_MOUSE_SHADOW;
-	constructor(public payload?:any){};
+
+	constructor(public payload?: any) {
+	};
 }
 
-export class EnableMouseShadow implements  Action {
+export class EnableMouseShadow implements Action {
 	type = ToolsActionsTypes.ENABLE_MOUSE_SHADOW;
-	constructor(public payload?:any){};
+
+	constructor(public payload?: any) {
+	};
 }
 
-export class PullActiveCenter implements  Action {
+export class PullActiveCenter implements Action {
 	type = ToolsActionsTypes.PULL_ACTIVE_CENTER;
-	constructor(public payload?:any){};
+
+	constructor(public payload?: any) {
+	};
 }
-export class SetActiveCenter implements  Action {
+
+export class SetActiveCenter implements Action {
 	type = ToolsActionsTypes.SET_ACTIVE_CENTER;
-	constructor(public payload: number[]){};
+
+	constructor(public payload: number[]) {
+	};
 }
-export class SetPinLocationModeAction implements  Action {
+
+export class SetPinLocationModeAction implements Action {
 	type = ToolsActionsTypes.SET_PIN_LOCATION_MODE;
-	constructor(public payload: boolean) {};
+
+	constructor(public payload: boolean) {
+	};
 }
 
-export class GoToAction implements  Action {
+export class GoToAction implements Action {
 	type = ToolsActionsTypes.GO_TO;
-	constructor(public payload: number[]) {};
+
+	constructor(public payload: number[]) {
+	};
 }
 
-export class ShowOverlaysFootprintAction implements  Action {
+export class ShowOverlaysFootprintAction implements Action {
 	type = ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT;
-	constructor(public payload: OverlayDisplayMode) {};
+
+	constructor(public payload: OverlayDisplayMode) {
+	};
 }
 
-export class SetActiveOverlaysFootprintModeAction implements  Action {
+export class SetActiveOverlaysFootprintModeAction implements Action {
 	type = ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE;
-	constructor(public payload: OverlayDisplayMode) {};
+
+	constructor(public payload: OverlayDisplayMode) {
+	};
 }
 
 export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	type = ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
+
 	constructor(public payload: boolean) {
 	}
 }
 
 export class SetAutoImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
+
 	constructor(public payload?: any) {
 		// code...
 	}
@@ -88,26 +110,48 @@ export class SetAutoImageProcessing implements Action {
 
 export class SetAutoImageProcessingSuccess implements Action {
 	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
+
 	constructor(public payload: boolean) {
 		// code...
 	}
 }
 
-export class DisableImageProcessing implements  Action {
+export class DisableImageProcessing implements Action {
 	type = ToolsActionsTypes.DISABLE_AUTO_IMAGE_PROCESSING;
-	constructor(public payload?:any){};
+
+	constructor(public payload?: any) {
+	};
 }
 
-export class EnableImageProcessing implements  Action {
+export class EnableImageProcessing implements Action {
 	type = ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING;
-	constructor(public payload?:any){};
+
+	constructor(public payload?: any) {
+	};
 }
 
-export class AnnotationVisualizerAgentAction implements  Action {
+export class AnnotationVisualizerAgentAction implements Action {
 	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
-	constructor(public payload:any){}
+
+	constructor(public payload: any) {
+	}
 }
 
-export type ToolsActions = StartMouseShadow | StopMouseShadow | DisableMouseShadow | EnableMouseShadow | PullActiveCenter |
-	SetActiveCenter | SetPinLocationModeAction | GoToAction | ShowOverlaysFootprintAction | SetActiveOverlaysFootprintModeAction |
-	SetAutoImageProcessing | DisableImageProcessing | EnableImageProcessing | SetAutoImageProcessingSuccess | SetMapGeoEnabledModeToolsActionStore;
+export type ToolsActions =
+	StartMouseShadow
+	| StopMouseShadow
+	| DisableMouseShadow
+	| EnableMouseShadow
+	| PullActiveCenter
+	|
+	SetActiveCenter
+	| SetPinLocationModeAction
+	| GoToAction
+	| ShowOverlaysFootprintAction
+	| SetActiveOverlaysFootprintModeAction
+	|
+	SetAutoImageProcessing
+	| DisableImageProcessing
+	| EnableImageProcessing
+	| SetAutoImageProcessingSuccess
+	| SetMapGeoEnabledModeToolsActionStore;

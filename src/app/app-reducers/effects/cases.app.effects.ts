@@ -12,13 +12,19 @@ import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import { isNil, isEmpty, cloneDeep } from 'lodash';
-import "@ansyn/core/utils/clone-deep";
+import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { LoadContextsSuccessAction, LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, SelectCaseByIdAction, SetDefaultCaseQueryParams } from '@ansyn/menu-items/cases/actions/cases.actions';
+import {
+	LoadContextsSuccessAction,
+	LoadDefaultCaseAction,
+	LoadDefaultCaseSuccessAction,
+	SelectCaseByIdAction,
+	SetDefaultCaseQueryParams
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Context } from '@ansyn/core';
 import { ContextProviderService, ContextCriteria } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
@@ -30,7 +36,7 @@ export class CasesAppEffects {
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
-		.map(([action,cases]: [Action,ICasesState]) => {
+		.map(([action, cases]: [Action, ICasesState]) => {
 			return new EnableOnlyFavortiesSelectionAction(cases.selected_case.state.favoritesOverlays && !!cases.selected_case.state.favoritesOverlays.length);
 		});
 
@@ -38,46 +44,46 @@ export class CasesAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$)
-		.map(([action, state]:[DisplayOverlayAction, IAppState]) => {
+		.map(([action, state]: [DisplayOverlayAction, IAppState]) => {
 
 			const selectedCase = cloneDeep(state.cases.selected_case);
 			const mapId = action.payload.map_id || state.cases.selected_case.state.maps.active_map_id;
 
 			selectedCase.state.maps.data.forEach((map) => {
-				if(mapId === map.id){
+				if (mapId === map.id) {
 					map.data.overlay = action.payload.overlay;
 				}
 			});
 
 			return new UpdateCaseAction(selectedCase);
 
-	}).share();
+		}).share();
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
 		.ofType(CasesActionTypes.COPY_CASE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let s_case = state.cases.find((case_value: Case) => case_value.id === action.payload);
-			if(isNil(s_case)){
-				if(state.selected_case.id === action.payload){
+			if (isNil(s_case)) {
+				if (state.selected_case.id === action.payload) {
 					s_case = state.selected_case;
 				}
 			}
 			return s_case;
 		})
-		.map( (s_case: Case) => {
+		.map((s_case: Case) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(s_case);
 			const result = copyFromContent(shareLink);
 			return new SetLinkCopyToastValueAction(result);
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
 			return state.selected_case;
 		})
-		.map( (s_case: Case) => {
+		.map((s_case: Case) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(s_case);
 			window.open(shareLink);
 		});
@@ -89,7 +95,7 @@ export class CasesAppEffects {
 		.map((default_case: Case) => {
 
 			this.casesService.enhanceDefaultCase(default_case);
-			default_case.owner = "Default Owner"; //TODO: replace with id from authentication service
+			default_case.owner = 'Default Owner'; //TODO: replace with id from authentication service
 
 			return new AddCaseAction(default_case);
 		});
@@ -97,13 +103,13 @@ export class CasesAppEffects {
 	@Effect()
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)
-		.withLatestFrom(this.store$.select("cases"))
+		.withLatestFrom(this.store$.select('cases'))
 		.switchMap(([action, state]: any[]) => {
 			let observable: Observable<Context[]>;
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				const criteria = new ContextCriteria({start: 0, limit: 200});
+				const criteria = new ContextCriteria({ start: 0, limit: 200 });
 				observable = this.contextProviderService.provide('Proxy').find(criteria);
 				//observable = this.casesService.loadContexts();
 			}
@@ -121,7 +127,7 @@ export class CasesAppEffects {
 			(action: LoadDefaultCaseAction) => {
 				return this.actions$
 					.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
-					.withLatestFrom(this.store$.select("cases"), (action, cases) => cases)
+					.withLatestFrom(this.store$.select('cases'), (action, cases) => cases)
 					.mergeMap((state: ICasesState) => {
 						const actions = [];
 						const defaultCase = this.casesService.getDefaultCase();
@@ -134,22 +140,20 @@ export class CasesAppEffects {
 							defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, defaultCase);
 						}
 						actions.push(new SetDefaultCaseQueryParams(defaultCaseQueryParams));
-						if(isEmpty(state.default_case)){
+						if (isEmpty(state.default_case)) {
 							actions.push(new LoadDefaultCaseSuccessAction(defaultCase));
 						} else {
-							actions.push(new SelectCaseByIdAction(state.default_case.id))
+							actions.push(new SelectCaseByIdAction(state.default_case.id));
 						}
 						return actions;
 					});
 			});
 
 
-
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private casesService: CasesService,
-				public contextProviderService: ContextProviderService
-	){
+				public contextProviderService: ContextProviderService) {
 	}
 
 }

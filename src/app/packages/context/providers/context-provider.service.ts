@@ -20,8 +20,8 @@ export class ContextProviderService {
 	}
 
 	provide(key: string): IContextSource {
-		const funcHandler =  this.container.get(key);
-		return funcHandler ;
+		const funcHandler = this.container.get(key);
+		return funcHandler;
 	}
 
 	keys() {

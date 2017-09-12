@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersDisabledMap } from './open-layers-disabled-map';
 import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
+
 /**
  * Created by AsafMas on 07/05/2017.
  */

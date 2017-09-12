@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { CasesTableComponent } from './cases-table.component';
-import { DeleteCaseComponent } from "../delete-case/delete-case.component";
-import { EditCaseComponent } from "../edit-case/edit-case.component";
+import { DeleteCaseComponent } from '../delete-case/delete-case.component';
+import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { CasesService } from '../../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
@@ -43,13 +43,13 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('selectCase should call casesService.selectCase', () => {
-		component.selectCase("id");
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseByIdAction("id"));
+		component.selectCase('id');
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseByIdAction('id'));
 	});
 
 	it('onCasesAdded should change tbody_element scrollTop to 0( only if tbody_element is not undefined )', () => {
 		component.tbody_element = <any> {
-			nativeElement: {scrollTop: 100}
+			nativeElement: { scrollTop: 100 }
 		};
 		component.onCasesAdded();
 		expect(component.tbody_element.nativeElement.scrollTop).toEqual(0);
@@ -68,7 +68,10 @@ describe('CasesTableComponent', () => {
 		let selected_case_id: string = 'fake_selected_case_id';
 		component.removeCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: DeleteCaseComponent, case_id: selected_case_id }));
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
+			component: DeleteCaseComponent,
+			case_id: selected_case_id
+		}));
 	});
 
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
@@ -77,7 +80,10 @@ describe('CasesTableComponent', () => {
 		let selected_case_id: string = 'fake_selected_case_id';
 		component.editCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ component: EditCaseComponent, case_id: selected_case_id }));
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
+			component: EditCaseComponent,
+			case_id: selected_case_id
+		}));
 	});
 
 });

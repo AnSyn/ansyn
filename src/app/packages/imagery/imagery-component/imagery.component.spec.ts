@@ -10,7 +10,7 @@ import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
-	mapType= 'mapType1';
+	mapType = 'mapType1';
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {
@@ -24,7 +24,8 @@ class SourceProviderMock1 implements BaseMapSourceProvider {
 	startTimingLog(key) {
 
 	}
-	endTimingLog(key){
+
+	endTimingLog(key) {
 
 	}
 }
@@ -40,26 +41,36 @@ describe('ImageryComponent', () => {
 		coordinates: [15.7, 37.9]
 	};
 
-	const imageryData: ImageryComponentSettings = {id: 'imagery1', mapType: 'openLayersMap', data:{position: {center: geoPoint, zoom: 0}}};
+	const imageryData: ImageryComponentSettings = {
+		id: 'imagery1',
+		mapType: 'openLayersMap',
+		data: { position: { center: geoPoint, zoom: 0 } }
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[],
-			declarations: [ ImageryComponent ],
+			imports: [],
+			declarations: [ImageryComponent],
 			providers: [
-				{ provide: BaseMapSourceProvider , useClass: SourceProviderMock1 , multi: true },
-				{ provide: ConfigurationToken, useValue: {
-					"geoMapsInitialMapSource": [{
-							"mapType": "openLayersMap",
-							"mapSource": "BING",
-							"mapSourceMetadata": { "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des", "styles": [ "Aerial"] }
-						}, {
-							"mapType": "cesiumMap",
-							"mapSource": "OSM",
-							"mapSourceMetadata": null
-						}]
-				} },
-				ImageryCommunicatorService, ImageryProviderService ]}).compileComponents();
+				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
+				{
+					provide: ConfigurationToken, useValue: {
+					'geoMapsInitialMapSource': [{
+						'mapType': 'openLayersMap',
+						'mapSource': 'BING',
+						'mapSourceMetadata': {
+							'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
+							'styles': ['Aerial']
+						}
+					}, {
+						'mapType': 'cesiumMap',
+						'mapSource': 'OSM',
+						'mapSourceMetadata': null
+					}]
+				}
+				},
+				ImageryCommunicatorService, ImageryProviderService]
+		}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ImageryProviderService], (_imageryCommunicatorService, _imageryProviderService) => {
@@ -70,5 +81,7 @@ describe('ImageryComponent', () => {
 		fixture.detectChanges();
 	}));
 
-	it('should create', () => {expect(component).toBeTruthy(); });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

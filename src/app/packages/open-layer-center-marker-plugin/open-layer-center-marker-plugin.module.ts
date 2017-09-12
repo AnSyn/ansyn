@@ -7,7 +7,7 @@ import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 import { CenterMarkerPlugin } from './plugin/center-marker-plugin';
 
 @NgModule({
-	imports: [CommonModule , ImageryModule],
+	imports: [CommonModule, ImageryModule],
 	providers: [],
 })
 

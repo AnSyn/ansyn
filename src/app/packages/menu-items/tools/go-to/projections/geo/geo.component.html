@@ -1,7 +1,9 @@
 <label>Geo WGS84</label>
 <div class="inputs">
-	<ng-template [ngIf]="coordinates" >
-		<input type="number" [(ngModel)]="coordinates[0]" name="lng" (input)="onInputs(coordinates)" (blur)="onBlur()" autocomplete="false" required/>
-		<input type="number" [(ngModel)]="coordinates[1]" name="lat" (input)="onInputs(coordinates)" (blur)="onBlur()" autocomplete="false" required/>
+	<ng-template [ngIf]="coordinates">
+		<input type="number" [(ngModel)]="coordinates[0]" name="lng" (input)="onInputs(coordinates)" (blur)="onBlur()"
+			   autocomplete="false" required/>
+		<input type="number" [(ngModel)]="coordinates[1]" name="lat" (input)="onInputs(coordinates)" (blur)="onBlur()"
+			   autocomplete="false" required/>
 	</ng-template>
 </div>

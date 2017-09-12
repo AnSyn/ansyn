@@ -8,7 +8,7 @@ describe('ToastComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ToastComponent ]
+			declarations: [ToastComponent]
 		})
 			.compileComponents();
 	}));
@@ -22,8 +22,8 @@ describe('ToastComponent', () => {
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
-	describe('set showToast', ()=> {
-		beforeEach(()=> {
+	describe('set showToast', () => {
+		beforeEach(() => {
 			spyOn(window, 'setTimeout');
 			spyOn(window, 'clearTimeout');
 			spyOn(component.showToastChange, 'emit');
@@ -54,6 +54,6 @@ describe('ToastComponent', () => {
 			component.showToast = false;
 			expect((<any>component)._showToast).toBeFalsy();
 		});
-	})
+	});
 
 });

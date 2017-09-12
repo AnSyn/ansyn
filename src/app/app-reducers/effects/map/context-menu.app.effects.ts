@@ -22,20 +22,22 @@ export class ContextMenuAppEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'))
 		.map(([action, overlays, cases]: [ContextMenuShowAction, IOverlayState, ICasesState]) => {
 			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date', 'bestResolution']);
-			filteredOverlays = filteredOverlays.filter(({footprint}) => inside(action.payload.point, footprint));
+			filteredOverlays = filteredOverlays.filter(({ footprint }) => inside(action.payload.point, footprint));
 			const activeMap = CasesService.activeMap(cases.selected_case);
-			return new SetContextMenuFiltersAction({filteredOverlays, displayedOverlay: <any>_get(activeMap.data, 'overlay')});
+			return new SetContextMenuFiltersAction({
+				filteredOverlays,
+				displayedOverlay: <any>_get(activeMap.data, 'overlay')
+			});
 		});
 
 	@Effect()
 	onContextMenuDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.DISPLAY)
 		.map(toPayload)
-		.map(id => new DisplayOverlayFromStoreAction({id}));
+		.map(id => new DisplayOverlayFromStoreAction({ id }));
 
-	constructor(
-		private actions$: Actions,
-		private store$: Store<IAppState>
-	){}
+	constructor(private actions$: Actions,
+				private store$: Store<IAppState>) {
+	}
 
 }

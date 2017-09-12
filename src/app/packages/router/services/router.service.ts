@@ -8,7 +8,8 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class AnsynRouterService {
 
-	constructor(private store: Store<IRouterState>,  private injector: Injector) {}
+	constructor(private store: Store<IRouterState>, private injector: Injector) {
+	}
 
 	get router(): Router {
 		return this.injector.get(Router);
@@ -19,7 +20,7 @@ export class AnsynRouterService {
 			.filter(e => e instanceof NavigationEnd)
 			.map(() => {
 				let activated = this.router.routerState.root;
-				while(activated.firstChild) {
+				while (activated.firstChild) {
 					activated = activated.firstChild;
 				}
 				return activated;
@@ -28,11 +29,13 @@ export class AnsynRouterService {
 			.map(activated => {
 				const queryParamMap = activated.snapshot.queryParamMap;
 				const queryParams = {};
-				queryParamMap.keys.forEach(key => {queryParams[key] = queryParamMap.get(key)});
+				queryParamMap.keys.forEach(key => {
+					queryParams[key] = queryParamMap.get(key);
+				});
 				const caseId = activated.snapshot.paramMap.get('caseId');
-				return {caseId, queryParams}
+				return { caseId, queryParams };
 			})
-			.do(state => this.store.dispatch(new SetStateAction(state)))
+			.do(state => this.store.dispatch(new SetStateAction(state)));
 	}
 
 }

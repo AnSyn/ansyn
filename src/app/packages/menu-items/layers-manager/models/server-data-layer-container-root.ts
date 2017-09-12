@@ -3,9 +3,9 @@ import { IServerDataLayer } from './server-data-layer';
 import { LayerType } from './layer-type';
 
 export interface IServerDataLayerContainerRoot {
-    id: string;
-    name: string;
-    type: LayerType;
-    dataLayerContainers: IServerDataLayerContainer[];
-    dataLayers: IServerDataLayer[];
+	id: string;
+	name: string;
+	type: LayerType;
+	dataLayerContainers: IServerDataLayerContainer[];
+	dataLayers: IServerDataLayer[];
 };

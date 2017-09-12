@@ -13,7 +13,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CoreModule, StoreModule.provideStore({})],
-			declarations: [ ImageryStatusComponent ]
+			declarations: [ImageryStatusComponent]
 		})
 			.compileComponents();
 	}));
@@ -21,7 +21,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.map_id = "test";
+		component.map_id = 'test';
 		fixture.detectChanges();
 		store = _store;
 	}));
@@ -30,23 +30,26 @@ describe('ImageryStatusComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it("check click on backToWorldView",() => {
-		spyOn(store,'dispatch');
+	it('check click on backToWorldView', () => {
+		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction ({ mapId : "test"}));
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: 'test' }));
 	});
 
-	it("check click on toggleMapSyncroniztion",() => {
-		spyOn(store,'dispatch');
+	it('check click on toggleMapSyncroniztion', () => {
+		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.status-bar-link-maps-icon img').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction ({mapId: "test"}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction({ mapId: 'test' }));
 	});
 
 	it('expect backToWorldView get event, call stopPropagation and call dispatch with backToWorldViewAction', () => {
 		spyOn(store, 'dispatch');
-		const $event: any = jasmine.createSpyObj({stopPropagation: () => {}});
+		const $event: any = jasmine.createSpyObj({
+			stopPropagation: () => {
+			}
+		});
 		component.backToWorldView($event);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({mapId: component.map_id}));
-	})
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: component.map_id }));
+	});
 });

@@ -1,4 +1,3 @@
-
 import { EntitiesVisualizer } from '../entities-visualizer';
 
 export const FootprintHitmapVisualizerType = 'FootprintHitmapVisualizer';

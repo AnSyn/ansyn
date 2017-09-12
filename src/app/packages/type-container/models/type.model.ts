@@ -1,3 +1,3 @@
 export interface Type extends Function {
-    new (...args: any[]): any;
+	new (...args: any[]): any;
 }

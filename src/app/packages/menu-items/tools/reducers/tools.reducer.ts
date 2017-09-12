@@ -11,15 +11,15 @@ export interface IToolsState {
 };
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<string,boolean>(),
+	flags: new Map<string, boolean>(),
 	activeCenter: [0, 0]
 };
 
 toolsInitialState.flags.set('geo_registered_options_enabled', true);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
-	let tmpMap: Map<string,boolean>;
-	switch(action.type){
+	let tmpMap: Map<string, boolean>;
+	switch (action.type) {
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 
 			tmpMap = new Map(state.flags);
@@ -29,29 +29,29 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.START_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse',true);
+			tmpMap.set('shadow_mouse', true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse',false);
+			tmpMap.set('shadow_mouse', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse_disabled',true);
+			tmpMap.set('shadow_mouse_disabled', true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse_disabled',false);
+			tmpMap.set('shadow_mouse_disabled', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
-			return { ...state, activeCenter: action.payload};
+			return { ...state, activeCenter: action.payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
@@ -59,11 +59,11 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.GO_TO:
-			return { ...state};
+			return { ...state };
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('auto_image_processing',action.payload);
+			tmpMap.set('auto_image_processing', action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING:

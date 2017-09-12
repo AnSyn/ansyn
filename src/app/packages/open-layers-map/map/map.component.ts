@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } fro
 import { OpenLayersMap } from './open-layers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { MapPosition } from '../../imagery/model/map-position';
+
 /**
  * Created by AsafMas on 07/05/2017.
  */
@@ -11,7 +12,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 		<div #olMap></div>
 	`,
 	styles: [
-			`div{
+		`div{
 			position: absolute;
 			width: 100%;
 			height: 100%;

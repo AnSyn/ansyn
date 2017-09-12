@@ -2,11 +2,11 @@ import { ICasesConfig } from './models/cases-config';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { CoreModule, MenuItem, AddMenuItemAction } from "@ansyn/core";
-import { InfiniteScrollModule } from "@ansyn/utils";
+import { CoreModule, MenuItem, AddMenuItemAction } from '@ansyn/core';
+import { InfiniteScrollModule } from '@ansyn/utils';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
-import { EditCaseComponent } from "./components/edit-case/edit-case.component";
-import { FormsModule } from "@angular/forms";
+import { EditCaseComponent } from './components/edit-case/edit-case.component';
+import { FormsModule } from '@angular/forms';
 import { CasesModalContainerComponent } from './components/cases-modal-container/cases-modal-container.component';
 import { DeleteCaseComponent } from './components/delete-case/delete-case.component';
 import { CasesToolsComponent } from './components/cases-tools/cases-tools.component';
@@ -43,9 +43,9 @@ export class CasesModule {
 
 	constructor(store: Store<any>, casesService: CasesService) {
 		let menu_item: MenuItem = {
-			name: "Cases",
+			name: 'Cases',
 			component: CasesComponent,
-			icon_url: "/assets/icons/cases.svg"
+			icon_url: '/assets/icons/cases.svg'
 		};
 		store.dispatch(new AddMenuItemAction(menu_item));
 	}

@@ -12,7 +12,7 @@ describe('LayersAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule,StoreModule.provideStore({layers : LayersReducer})],
+			imports: [EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
 			providers: [LayersAppEffects]
 
 		}).compileComponents();
@@ -28,13 +28,13 @@ describe('LayersAppEffects', () => {
 		let selectedCaseId = 'asdfasdf';
 
 		effectsRunner.queue(new SelectCaseByIdAction(selectedCaseId));
-		let result: BeginLayerTreeLoadAction ;
-		layersAppEffects.selectCase$.subscribe( (_result: BeginLayerTreeLoadAction) => {
+		let result: BeginLayerTreeLoadAction;
+		layersAppEffects.selectCase$.subscribe((_result: BeginLayerTreeLoadAction) => {
 			result = _result;
 		});
 
 		expect(result instanceof BeginLayerTreeLoadAction).toBeTruthy();
-		expect(result.payload).toEqual({caseId: selectedCaseId});
+		expect(result.payload).toEqual({ caseId: selectedCaseId });
 	});
 
 });

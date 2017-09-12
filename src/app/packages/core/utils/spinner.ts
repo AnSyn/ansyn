@@ -8,35 +8,37 @@ export class Spinner {
 	private wrapper: any;
 	private text: string;
 
-	constructor (el) {
+	constructor(el) {
 		this._setElement(el);
 	}
 
-	_setElement (el){
+	_setElement(el) {
 		this.element = el;
-		if(typeof this.element === 'string'){
+		if (typeof this.element === 'string') {
 			this.element = document.querySelector(el);
 		}
-		if(this.element === undefined){
-			return ;
+		if (this.element === undefined) {
+			return;
 		}
 		this.wrapper = this.element.offsetHeight;
 	}
-	_setText (text){
+
+	_setText(text) {
 		this.text = text;
 	}
-	setElement (el) {
+
+	setElement(el) {
 		this._setElement(el);
 	}
 
-	start(text, color){
+	start(text, color) {
 		//console.log('start',this.element);
-		if(!this.element){
-			console.warn('this.element is not defined',this.element);
+		if (!this.element) {
+			console.warn('this.element is not defined', this.element);
 			return;
 		}
 
-		if(text){
+		if (text) {
 			this.text = text;
 		}
 
@@ -48,53 +50,53 @@ export class Spinner {
 		this.element.style.position = 'relative';
 		let textDiv = undefined;
 
-		if(this.text){
+		if (this.text) {
 			textDiv = document.createElement('div');
 			textDiv.innerHTML = this.text;
 			textDiv.classList.add('spinner-text');
 		}
 
-		if(screen.height >= this.element.offsetHeight && screen.width >= this.element.offsetWidth ){
+		if (screen.height >= this.element.offsetHeight && screen.width >= this.element.offsetWidth) {
 			innerDiv.style.height = this.element.offsetHeight + 'px';
 			innerDiv.style.width = this.element.offsetWidth + 'px';
-			if(this.text){
+			if (this.text) {
 				textDiv.style.height = this.element.offsetHeight + 'px';
 				textDiv.style.width = this.element.offsetWidth + 'px';
 				textDiv.style.top = '50px';
 				textDiv.style.position = 'relative';
 
 			}
-			if(color) {
+			if (color) {
 				innerDiv.style.backgroundColor = color;
 				textDiv.style.color = 'black';
 			}
 
-		}else{
-			innerDiv.style.height = "100%";
-			innerDiv.style.width = "100%";
+		} else {
+			innerDiv.style.height = '100%';
+			innerDiv.style.width = '100%';
 			innerDiv.style.position = 'fixed';
 			this.element = document.querySelector('body');
-			if(this.text){
-				textDiv.style.height = "100%";
-				textDiv.style.width = "100%";
+			if (this.text) {
+				textDiv.style.height = '100%';
+				textDiv.style.width = '100%';
 				textDiv.style.position = 'fixed';
 			}
 		}
 
 		this.outerDiv.appendChild(innerDiv);
-		if(this.text){
+		if (this.text) {
 			this.outerDiv.appendChild(textDiv);
 		}
 		this.element.appendChild(this.outerDiv);
 
 	}
 
-	stop(){
-		if(!this.element){
-			console.warn('this.element is not defined',this.element);
+	stop() {
+		if (!this.element) {
+			console.warn('this.element is not defined', this.element);
 			return;
 		}
-		if(!this.outerDiv){
+		if (!this.outerDiv) {
 			return;
 		}
 		this.element.removeChild(this.outerDiv);

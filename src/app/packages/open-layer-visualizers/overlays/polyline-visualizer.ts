@@ -3,13 +3,13 @@ import Select from 'ol/interaction/select';
 import condition from 'ol/events/condition';
 import Style from 'ol/style/style';
 import Vector from 'ol/layer/vector';
-import SourceVector from 'ol/source/vector'
+import SourceVector from 'ol/source/vector';
 import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
 import MultiPolygon from 'ol/geom/multipolygon';
 import Feature from 'ol/feature';
 import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
-import {cloneDeep as _cloneDeep, isNil as _isNil} from 'lodash';
+import { cloneDeep as _cloneDeep, isNil as _isNil } from 'lodash';
 import { IMap } from '@ansyn/imagery/model/imap';
 
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
@@ -33,7 +33,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				},
 				width: 5
 			},
-			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
+			fill: new Fill({ color: 'rgba(255,255,255,0.4)' })
 		},
 		staticFeature: {
 			stroke: {
@@ -49,7 +49,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 	};
 
-	interactionsStyle =  new Style({
+	interactionsStyle = new Style({
 		stroke: new Stroke({
 			color: 'transparent',
 			width: 5
@@ -71,20 +71,20 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return isFavorites ? [this.baseFavoritesStyle(featureStyle), baseHoverStyle] : [baseHoverStyle];
 	}
 
-	private baseFavoritesStyle({stroke, fill}) {
+	private baseFavoritesStyle({ stroke, fill }) {
 		return this.getStyleWithStroke(stroke.width, stroke.colors['favorites'], fill);
 	}
 
-	private baseFeatureStyle(isActive, isFavorites, isDisplayed, {stroke, fill}) {
+	private baseFeatureStyle(isActive, isFavorites, isDisplayed, { stroke, fill }) {
 		const [colors, width] = isFavorites ? [stroke.colors, stroke.width * 0.6] : [stroke.colors, stroke.width];
 		const color = isActive ? colors['active'] : isDisplayed ? colors['displayed'] : colors[''];
 		return this.getStyleWithStroke(width, color, fill);
 	}
 
 	private getStyleWithStroke(width, color, fill?) {
-		const stroke = new Stroke({width, color});
-		const styleObj = fill ? {stroke, fill} : {stroke};
-		return new Style(styleObj)
+		const stroke = new Stroke({ width, color });
+		const styleObj = fill ? { stroke, fill } : { stroke };
+		return new Style(styleObj);
 	}
 
 	onInit(mapId: string, map: IMap) {
@@ -113,14 +113,14 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				return this.getFeatureStyles(markClass, this.styleProperties.hoverFeature);
 			}
 		});
-		this.hoverLayer.setZIndex(100000)
+		this.hoverLayer.setZIndex(100000);
 		this._imap.mapObject.addLayer(this.hoverLayer);
 	}
 
 	getMarkClass(featureId): any {
 		return this.markups
-			.filter( ({id}) => id === featureId)
-			.map(mark => mark.class)
+			.filter(({ id }) => id === featureId)
+			.map(mark => mark.class);
 	}
 
 	addPointerMoveInteraction() {
@@ -145,22 +145,22 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature($event) {
 		const event = { visualizerType: this.type };
-		if ($event.selected.length > 0){
+		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
 			const hoverFeature = this.hoverLayerSource.getFeatureById(id);
-			if (!hoverFeature || hoverFeature.getId() !== id ) {
-				this.onHoverFeature.emit({...event, id});
+			if (!hoverFeature || hoverFeature.getId() !== id) {
+				this.onHoverFeature.emit({ ...event, id });
 			}
 		} else {
-			this.onHoverFeature.emit({...event});
+			this.onHoverFeature.emit({ ...event });
 		}
 	}
 
 	onDoubleClickFeature($event) {
-		if($event.selected.length > 0) {
+		if ($event.selected.length > 0) {
 			const visualizerType = this.type;
 			const id = $event.selected[0].getId();
-			this.doubleClickFeature.emit({visualizerType, id});
+			this.doubleClickFeature.emit({ visualizerType, id });
 		}
 	}
 
@@ -191,7 +191,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	setHoverFeature(id) {
 		super.setHoverFeature(id);
-		if(_isNil(id)) {
+		if (_isNil(id)) {
 			this.hoverLayerSource.clear();
 		} else {
 			const polyline = this._source.getFeatureById(id);

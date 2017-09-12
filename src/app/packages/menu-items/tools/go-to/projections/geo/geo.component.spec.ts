@@ -9,7 +9,7 @@ describe('GeoComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ GeoComponent ],
+			declarations: [GeoComponent],
 			imports: [FormsModule]
 		})
 			.compileComponents();
@@ -30,20 +30,20 @@ describe('GeoComponent', () => {
 		component.onInputs(component.coordinates);
 		expect(component.onChanges).toHaveBeenCalledWith(component.coordinates);
 	});
-	describe('validate',() => {
+	describe('validate', () => {
 		it('should return error if some of coordinates values is empty', () => {
-			const fakeController: any = {value: [1,null]};
+			const fakeController: any = { value: [1, null] };
 			let result = component.validate(fakeController);
-			expect(result).toEqual({empty: true});
+			expect(result).toEqual({ empty: true });
 		});
 
 		it('should return check that lng between -180 to 180 and lat between -90 to 90', () => {
-			const fakeController: any = {value: [-181, 0]};
+			const fakeController: any = { value: [-181, 0] };
 			let result = component.validate(fakeController);
-			expect(result).toEqual({invalid: true});
+			expect(result).toEqual({ invalid: true });
 			fakeController.value = [0, 91];
 			result = component.validate(fakeController);
-			expect(result).toEqual({invalid: true});
+			expect(result).toEqual({ invalid: true });
 		});
-	})
+	});
 });

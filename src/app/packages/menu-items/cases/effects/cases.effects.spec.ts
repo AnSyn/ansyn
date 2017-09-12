@@ -35,8 +35,8 @@ describe('CasesEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
 			providers: [CasesEffects,
-			CasesService,
-			{ provide: casesConfig, useValue: { baseUrl: null } }]
+				CasesService,
+				{ provide: casesConfig, useValue: { baseUrl: null } }]
 		}).compileComponents();
 	}));
 
@@ -82,11 +82,11 @@ describe('CasesEffects', () => {
 		store.dispatch(new AddCaseSuccessAction(deleted_case));
 		store.dispatch(new SelectCaseByIdAction(deleted_case.id));
 		// set active_case_id
-		store.dispatch(new OpenModalAction({component: '', case_id: deleted_case.id}));
+		store.dispatch(new OpenModalAction({ component: '', case_id: deleted_case.id }));
 		effectsRunner.queue(new DeleteCaseAction());
 		casesEffects.onDeleteCase$.subscribe((result: AddCaseSuccessAction) => {
 			expect((result instanceof DeleteCaseBackendAction) || (result instanceof LoadDefaultCaseAction)).toBeTruthy();
-			if(result instanceof DeleteCaseBackendAction){
+			if (result instanceof DeleteCaseBackendAction) {
 				expect(result.payload).toEqual(deleted_case.id);
 			}
 		});
@@ -113,7 +113,7 @@ describe('CasesEffects', () => {
 
 	it('loadCase$ should select the case loaded case if it exists', () => {
 		const caseItem: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 		} as any;
 
 		store.dispatch(new AddCaseSuccessAction(caseItem));
@@ -141,10 +141,10 @@ describe('CasesEffects', () => {
 
 		it('loadCase$ should dispatch LoadDefaultCaseAction if the case id is not valid ( throw 404 error )', () => {
 			const caseItem: Case = {
-				"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+				'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 			} as any;
 
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({error: 'not found'}));
+			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({ error: 'not found' }));
 			effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
 			casesEffects.loadCase$.subscribe((result: LoadDefaultCaseAction) => {
@@ -155,7 +155,7 @@ describe('CasesEffects', () => {
 
 	it('loadCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
 		const caseItem: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 		} as any;
 
 		effectsRunner.queue(new LoadCaseSuccessAction(caseItem));
@@ -168,12 +168,12 @@ describe('CasesEffects', () => {
 
 	it('loadDefaultCase$ should dispatch LoadDefaultCaseSuccessAction if default_case is empty, and call setDefaultCaseQueryParams too(mergeMap)', () => {
 		const defaultCase: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 		} as any;
 
 		const defaultCaseWithQueryParmas: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd",
-			"name":"queryParamsDefaultCase"
+			'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
+			'name': 'queryParamsDefaultCase'
 		} as any;
 
 		spyOn(casesService, 'getDefaultCase').and.callFake(() => defaultCase);
@@ -185,13 +185,13 @@ describe('CasesEffects', () => {
 		let count = 0;
 		casesEffects.loadDefaultCase$.subscribe((result: any) => {
 			count = count + 1;
-			if(result instanceof SetDefaultCaseQueryParams) {
+			if (result instanceof SetDefaultCaseQueryParams) {
 				expect(isEqual(result.payload, defaultCaseWithQueryParmas)).toBeTruthy();
 			}
-			if(result instanceof LoadDefaultCaseSuccessAction) {
+			if (result instanceof LoadDefaultCaseSuccessAction) {
 				expect(isEqual(result.payload, defaultCase)).toBeTruthy();
 			}
-			if(result instanceof SelectCaseByIdAction) {
+			if (result instanceof SelectCaseByIdAction) {
 				expect(result.payload).toEqual(defaultCase.id);
 			}
 
@@ -201,7 +201,7 @@ describe('CasesEffects', () => {
 
 	it('loadDefaultCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
 		const caseItem: Case = {
-			"id": "31b33526-6447-495f-8b52-83be3f6b55bd"
+			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 		} as any;
 
 		effectsRunner.queue(new LoadCaseSuccessAction(caseItem));

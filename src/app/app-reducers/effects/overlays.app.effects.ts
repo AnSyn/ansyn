@@ -1,8 +1,10 @@
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysActionTypes, OverlaysMarkupAction,
-	DisplayOverlayFromStoreAction, SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	OverlaysActionTypes, OverlaysMarkupAction,
+	DisplayOverlayFromStoreAction, SetTimelineStateAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
@@ -24,8 +26,8 @@ export class OverlaysAppEffects {
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action,cases]:[Action,ICasesState]) => !isEmpty(cases.selected_case) )
-		.map(([action,cases]:[Action,ICasesState])=> {
+		.filter(([action, cases]: [Action, ICasesState]) => !isEmpty(cases.selected_case))
+		.map(([action, cases]: [Action, ICasesState]) => {
 			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selected_case);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
@@ -61,7 +63,7 @@ export class OverlaysAppEffects {
 				limit: this.casesService.contextValues.imageryCount,
 				facets: selected_case.state.facets
 			})
-				.mergeMap((data: {startDate, endDate}) => {
+				.mergeMap((data: { startDate, endDate }) => {
 					const from = new Date(data.startDate);
 					const to = new Date(data.endDate);
 					selected_case.state.time.from = from.toISOString();
@@ -74,14 +76,13 @@ export class OverlaysAppEffects {
 						caseId: selected_case.id
 					};
 
-					return[
+					return [
 						new UpdateCaseAction(selected_case),
-						new SetTimeAction({from, to}),
+						new SetTimeAction({ from, to }),
 						new LoadOverlaysAction(overlayFilter)
 					];
 				});
 		});
-
 
 
 	@Effect()
@@ -93,7 +94,7 @@ export class OverlaysAppEffects {
 			const tenth = (timelineState.to.getTime() - timelineState.from.getTime()) / 10;
 			const fromTenth = new Date(timelineState.from.getTime() - tenth);
 			const toTenth = new Date(timelineState.to.getTime() + tenth);
-			return new SetTimelineStateAction({from: fromTenth, to: toTenth});
+			return new SetTimelineStateAction({ from: fromTenth, to: toTenth });
 		});
 
 	@Effect()
@@ -107,15 +108,15 @@ export class OverlaysAppEffects {
 		.map((displayedOverlays: any[]) => {
 			const lastOverlayId = last(displayedOverlays);
 			this.casesService.contextValues.defaultOverlay = '';
-			return new DisplayOverlayFromStoreAction({id: lastOverlayId});
+			return new DisplayOverlayFromStoreAction({ id: lastOverlayId });
 		})
 		.share();
 
 
-	constructor(
-		public actions$: Actions,
-		public store$: Store<IAppState>,
-		public casesService: CasesService,
-		public overlaysService: OverlaysService) {}
+	constructor(public actions$: Actions,
+				public store$: Store<IAppState>,
+				public casesService: CasesService,
+				public overlaysService: OverlaysService) {
+	}
 
 }

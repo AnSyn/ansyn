@@ -4,49 +4,49 @@ import { FilterMetadata } from './../models/metadata/filter-metadata.interface';
 import { FiltersActions } from '../actions/filters.actions';
 
 export interface IFiltersState {
-    filters: Map<Filter, FilterMetadata>;
-    isLoading: boolean;
-    showOnlyFavorites: boolean;
+	filters: Map<Filter, FilterMetadata>;
+	isLoading: boolean;
+	showOnlyFavorites: boolean;
 	enableOnlyFavoritesSelection: boolean;
 }
 
 export const initialFiltersState: IFiltersState = {
-    filters: new Map<Filter, FilterMetadata>(),
-    isLoading: true,
+	filters: new Map<Filter, FilterMetadata>(),
+	isLoading: true,
 	showOnlyFavorites: false,
 	enableOnlyFavoritesSelection: false
 };
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
-    switch (action.type) {
+	switch (action.type) {
 
-        case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
-            return Object.assign({}, state, { filters: action.payload, isLoading: false });
+		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
+			return Object.assign({}, state, { filters: action.payload, isLoading: false });
 
-        case FiltersActionTypes.INITIALIZE_FILTERS:
-            return Object.assign({}, state, { isLoading: true });
+		case FiltersActionTypes.INITIALIZE_FILTERS:
+			return Object.assign({}, state, { isLoading: true });
 
-        case FiltersActionTypes.UPDATE_FILTER_METADATA:
-            const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
-            const clonedFilters = new Map(state.filters);
+		case FiltersActionTypes.UPDATE_FILTER_METADATA:
+			const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
+			const clonedFilters = new Map(state.filters);
 
-            clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
+			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
 
-            return Object.assign({}, state, { filters: clonedFilters });
+			return Object.assign({}, state, { filters: clonedFilters });
 
-        case FiltersActionTypes.RESET_FILTERS:
-            return Object.assign({}, state, {
-                filters: new Map<Filter, FilterMetadata>(),
-                isLoading: true
-            });
+		case FiltersActionTypes.RESET_FILTERS:
+			return Object.assign({}, state, {
+				filters: new Map<Filter, FilterMetadata>(),
+				isLoading: true
+			});
 
 		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
-			return Object.assign({},state,{showOnlyFavorites : !state.showOnlyFavorites });
+			return Object.assign({}, state, { showOnlyFavorites: !state.showOnlyFavorites });
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
-			return Object.assign({},state,{enableOnlyFavoritesSelection: action.payload});
+			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 
-        default:
-            return  state; //Object.assign({},state);
-    }
+		default:
+			return state; //Object.assign({},state);
+	}
 }

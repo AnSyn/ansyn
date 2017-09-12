@@ -9,12 +9,19 @@ import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { SaveDefaultCaseAction, CloseModalAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
+
 const animations_during = '0.2s';
 
 const animations: any[] = [
 	trigger('modalContent', [
-		transition(":enter", [style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
-		transition(":leave", [style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
+		transition(':enter', [style({
+			'backgroundColor': '#27b2cf',
+			transform: 'translate(0, -100%)'
+		}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
+		transition(':leave', [style({
+			'backgroundColor': 'white',
+			transform: 'translate(0, 0)'
+		}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
 	])
 ];
 
@@ -26,24 +33,27 @@ const animations: any[] = [
 	animations
 })
 export class SaveCaseComponent implements OnInit {
-	@HostBinding('@modalContent') get modalContent(){
+	@HostBinding('@modalContent')
+	get modalContent() {
 		return true;
 	};
 
-	selected_case$: Observable<Case> = this.store.select("cases")
+	selected_case$: Observable<Case> = this.store.select('cases')
 		.pluck('selected_case')
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 
 	case_model: Case;
 
-	@ViewChild("name_input") name_input: ElementRef;
+	@ViewChild('name_input') name_input: ElementRef;
 
-	@HostListener("@modalContent.done") selectText() {
+	@HostListener('@modalContent.done')
+	selectText() {
 		this.name_input.nativeElement.select();
 	}
 
-	constructor(private store: Store<ICasesState>) { }
+	constructor(private store: Store<ICasesState>) {
+	}
 
 	ngOnInit(): void {
 		this.selected_case$.subscribe((selected_case: Case) => {

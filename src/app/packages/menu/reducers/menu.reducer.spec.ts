@@ -1,7 +1,8 @@
 import { MenuItem } from '@ansyn/core';
 import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core';
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
-describe('MenuReducer', () =>{
+
+describe('MenuReducer', () => {
 
 	it('ADD_MENU_ITEM action should add new menu_item to state', () => {
 		let menu_item: MenuItem = {
@@ -11,7 +12,7 @@ describe('MenuReducer', () =>{
 		};
 		let action: AddMenuItemAction = new AddMenuItemAction(menu_item);
 		let result: IMenuState = MenuReducer(initialMenuState, action);
-		expect(result.menu_items).toEqual([menu_item])
+		expect(result.menu_items).toEqual([menu_item]);
 	});
 
 

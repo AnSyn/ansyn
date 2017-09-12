@@ -12,17 +12,18 @@ import { Router } from '@angular/router';
 @Injectable()
 export class RouterEffects {
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onNavigateCase$: Observable<any> = this.actions$
 		.ofType(RouterActionTypes.NAVIGATE_CASE)
-		.do(({payload}) => {
+		.do(({ payload }) => {
 			if (payload) {
-				this.router.navigate(['case', payload])
+				this.router.navigate(['case', payload]);
 			} else {
-				this.router.navigate([''])
+				this.router.navigate(['']);
 			}
 		});
 
-	constructor(private actions$: Actions, private router: Router){}
+	constructor(private actions$: Actions, private router: Router) {
+	}
 
 }

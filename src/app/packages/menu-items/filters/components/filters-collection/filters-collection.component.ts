@@ -1,6 +1,6 @@
 import { FiltersService } from '../../services/filters.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
 import { IFiltersState } from '../../reducer/filters.reducer';
@@ -29,27 +29,27 @@ export class FiltersCollectionComponent implements OnDestroy {
 	initialFilters$: Observable<Filter[]> = this.filtersService.loadFilters();
 
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
-		this.subscribers.filters =  this.store.select('filters')
+		this.subscribers.filters = this.store.select('filters')
 			.distinctUntilChanged(isEqual)
-			.map( (state: IFiltersState) => {
+			.map((state: IFiltersState) => {
 				return {
 					showOnlyFavorites: state.showOnlyFavorites,
 					enableOnlyFavoritesSelection: state.enableOnlyFavoritesSelection
 				};
 			})
-			.subscribe( result => {
-			// don't let the checkbox to be disabled if it is checked;
-			// onlyFavorite is true after ToggleOnlyFavoriteAction;
-			// enableOnlyFavoritesSelection is true when there are favorites in the system
-			// there is a situation where enableOnlyFavoritesSelection is false but the input is checked
-			// and therefore can never be unchecked
-			this.onlyFavorite = result.showOnlyFavorites;
-			if(this.onlyFavorite && !result.enableOnlyFavoritesSelection){
-				return;
-			}
+			.subscribe(result => {
+				// don't let the checkbox to be disabled if it is checked;
+				// onlyFavorite is true after ToggleOnlyFavoriteAction;
+				// enableOnlyFavoritesSelection is true when there are favorites in the system
+				// there is a situation where enableOnlyFavoritesSelection is false but the input is checked
+				// and therefore can never be unchecked
+				this.onlyFavorite = result.showOnlyFavorites;
+				if (this.onlyFavorite && !result.enableOnlyFavoritesSelection) {
+					return;
+				}
 
-			this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
-		});
+				this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
+			});
 
 		this.subscribers.intialFilters = this.initialFilters$.subscribe(filters => {
 			this.filters = filters;
@@ -60,7 +60,7 @@ export class FiltersCollectionComponent implements OnDestroy {
 		this.store.dispatch(new ToggleOnlyFavoriteAction());
 	}
 
-	ngOnDestroy(){
+	ngOnDestroy() {
 
 	}
 

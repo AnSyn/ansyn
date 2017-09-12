@@ -1,4 +1,4 @@
-:host{
+:host {
 	width: 0;
 	height: 0;
 	position: absolute;
@@ -10,8 +10,8 @@
 	transition: .2s;
 	z-index: 2;
 	overflow: hidden;
-	&.expand{
-		form{
+	&.expand {
+		form {
 			visibility: visible;
 			display: flex;
 			opacity: 1;
@@ -43,18 +43,16 @@
 		height: 100%;
 		box-sizing: border-box;
 
-
-		div.buttons-area{
+		div.buttons-area {
 			display: flex;
 			width: 100%;
 			justify-content: space-around;
 
-
-			button{
+			button {
 				outline: none;
 			}
 
-			button.pin-location{
+			button.pin-location {
 				background: transparent;
 				border: none;
 				color: white;
@@ -62,12 +60,12 @@
 				font-size: 14px;
 				align-items: center;
 				opacity: .7;
-				&.active{
+				&.active {
 					opacity: 1;
 				}
 			}
 
-			button[type='submit']{
+			button[type='submit'] {
 				border-radius: 2px;
 				width: 83px;
 				border: none;
@@ -75,12 +73,11 @@
 				font-size: 14px;
 				color: #156879;
 				box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
-				&:disabled{
+				&:disabled {
 					opacity: .5;
 				}
 			}
 		}
-
 
 	}
 }

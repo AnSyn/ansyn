@@ -9,7 +9,8 @@ export class OverlaysStatusNotificationsComponent implements OnInit {
 	@Input() geoRegisteration;
 	@Input() notInCase;
 
-	constructor() { }
+	constructor() {
+	}
 
 	ngOnInit() {
 	}

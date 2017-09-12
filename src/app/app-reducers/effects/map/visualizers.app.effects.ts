@@ -48,7 +48,7 @@ export class VisualizersAppEffects {
 			visualizerType: FootprintPolylineVisualizerType
 		}));
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.map((action): void => {
@@ -64,10 +64,10 @@ export class VisualizersAppEffects {
 	onDbclickFeaturePolylineDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
 		.map(toPayload)
-		.filter(({visualizerType}) => visualizerType === FootprintPolylineVisualizerType)
-		.map(({id}) => new DisplayOverlayFromStoreAction({id}));
+		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizerType)
+		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	markupVisualizer$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
@@ -100,7 +100,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
@@ -140,26 +140,26 @@ export class VisualizersAppEffects {
 
 
 			const visualizers = releventMapsIds
-					.map(id => {
-							const communicator = this.imageryCommunicatorService.provide(id);
-							if(!communicator) {
-								return;
-							}
-							return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-						})
-					.filter(visualizer => !!visualizer);
+				.map(id => {
+					const communicator = this.imageryCommunicatorService.provide(id);
+					if (!communicator) {
+						return;
+					}
+					return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
+				})
+				.filter(visualizer => !!visualizer);
 
 			visualizers.forEach(visualizer => {
 				switch (action.payload.action) {
-					case "addLayer":
+					case 'addLayer':
 						visualizer.addLayer();
 						break;
-					case "show":
+					case 'show':
 						visualizer.addLayer();
 						visualizer.removeInteraction();
 						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
 						break;
-					case "createInteraction":
+					case 'createInteraction':
 						if (action.payload.type === 'Rectangle') {
 							visualizer.rectangleInteraction();
 						}
@@ -170,44 +170,44 @@ export class VisualizersAppEffects {
 							visualizer.createInteraction(action.payload.type);
 						}
 						break;
-					case "removeInteraction":
+					case 'removeInteraction':
 						visualizer.removeInteraction();
 						break;
-					case "changeLine":
+					case 'changeLine':
 						visualizer.changeLine(action.payload.value);
 						break;
-					case "changeStrokeColor":
+					case 'changeStrokeColor':
 						visualizer.changeStroke(action.payload.value);
 						break;
-					case "changeFillColor":
+					case 'changeFillColor':
 						visualizer.changeFill(action.payload.value);
 						break;
-					case "refreshDrawing":
+					case 'refreshDrawing':
 						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
 						break;
-					case "saveDrawing":
+					case 'saveDrawing':
 						selectedCase.state.annotationsLayer = visualizer.getGeoJson();
 						update = true;
 						break;
-					case "endDrawing":
+					case 'endDrawing':
 						/*selectedCase.state.annotationsLayer = visualizer.getGeoJson();
 						update = true;*/
 						visualizer.removeInteraction();
 						break;
-					case "removeLayer": {
+					case 'removeLayer': {
 						visualizer.removeInteraction();
 						visualizer.removeLayer();
 						break;
 					}
 				}
-			})
+			});
 
-			return {selectedCase, update}
+			return { selectedCase, update };
 		})
 		.filter(result => result.update)
 		.map(result => {
 			return new UpdateCaseAction(result.selectedCase);
-		})
+		});
 
 
 	constructor(private actions$: Actions,
@@ -248,13 +248,13 @@ export class VisualizersAppEffects {
 
 	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		const parsedPverlaysToDraw = overlaysToDraw.map(({id, footprint}) => {
+		const parsedPverlaysToDraw = overlaysToDraw.map(({ id, footprint }) => {
 			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
 				geometry: footprint,
 				properties: {}
 			};
-			return {id, featureJson};
+			return { id, featureJson };
 		});
 		return parsedPverlaysToDraw;
 	}

@@ -5,7 +5,7 @@ import { MapPosition } from './model/map-position';
 
 export { MapPosition } from './model/map-position';
 export { IMap } from './model/imap';
-export { BaseMapSourceProvider } from './model/base-source-provider.model'
+export { BaseMapSourceProvider } from './model/base-source-provider.model';
 export { IMapPlugin } from './model/imap-plugin';
 export { IMapComponent } from './model/imap-component';
 export { IMapVisualizer, IVisualizerEntity } from './model/imap-visualizer';
@@ -15,5 +15,5 @@ export { ImageryModule } from './imagery.module';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
 export { ImageryComponentSettings } from './model/imagery-component-settings';
 export { ConfigurationToken } from './configuration.token';
-export { IImageryConfig , IMapConfig} from './model/iimagery-config';
+export { IImageryConfig, IMapConfig } from './model/iimagery-config';
 

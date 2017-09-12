@@ -15,20 +15,20 @@ export class CommunicatorEntity {
 	private _managerSubscriptions;
 
 
-	public positionChanged: EventEmitter<{id: string, position: MapPosition}>;
+	public positionChanged: EventEmitter<{ id: string, position: MapPosition }>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public pointerMove: EventEmitter<any>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
-	public mapInstanceChanged: EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>;
+	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
 
 	constructor(private _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<{id: string, position: MapPosition}>();
+		this.positionChanged = new EventEmitter<{ id: string, position: MapPosition }>();
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		this.mapInstanceChanged = new EventEmitter<{id: string, oldMapInstanceName: string, newMapInstanceName: string}>();
+		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
@@ -39,11 +39,11 @@ export class CommunicatorEntity {
 			this.centerChanged.emit(center);
 		}));
 
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition ) => {
-			this.positionChanged.emit({id: this._manager.id, position});
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition) => {
+			this.positionChanged.emit({ id: this._manager.id, position });
 		}));
 
-		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any> ) => {
+		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any>) => {
 			this.pointerMove.emit(latLon);
 		}));
 
@@ -89,8 +89,8 @@ export class CommunicatorEntity {
 	}
 
 	public get ActiveMap() {
-		if (this._manager){
-				return this._manager.ActiveMap;
+		if (this._manager) {
+			return this._manager.ActiveMap;
 		}
 		return null;
 	}
@@ -142,7 +142,7 @@ export class CommunicatorEntity {
 	}
 
 	public resetView(layer: any, extent?: GeoJSON.Point[]) {
-		if (this._manager){
+		if (this._manager) {
 			this._manager.resetView(layer, extent);
 		}
 	}
@@ -159,7 +159,7 @@ export class CommunicatorEntity {
 		}
 	}
 
-    public addVectorLayer(layer: any): void {
+	public addVectorLayer(layer: any): void {
 		if (this.ActiveMap) {
 			this.ActiveMap.addVectorLayer(layer);
 		}
@@ -176,41 +176,44 @@ export class CommunicatorEntity {
 			this.ActiveMap.setAutoImageProcessing(shouldPerform);
 		}
 	}
+
 	//CommunicatorEntity methods end
 
 	//======shadow mouse start
-	public setMouseShadowListener(enable: boolean){
+	public setMouseShadowListener(enable: boolean) {
 		this.ActiveMap.setPointerMove(enable);
 	}
 
-	public startMouseShadowVectorLayer(){
+	public startMouseShadowVectorLayer() {
 		(<any>this.ActiveMap).startMouseShadowVectorLayer();
 	}
 
-	public stopMouseShadowVectorLayer(){
+	public stopMouseShadowVectorLayer() {
 		(<any>this.ActiveMap).stopMouseShadowVectorLayer();
 	}
 
-	public drawShadowMouse(latLon){
+	public drawShadowMouse(latLon) {
 		(<any>this.ActiveMap).drawShadowMouse(latLon);
 	}
+
 	//======shadow mouse end
 
 	//======pinPointIndicator
-	public createMapSingleClickEvent(){
+	public createMapSingleClickEvent() {
 		(<any>this.ActiveMap).addSingleClickEvent();
 	}
 
-	public removeSingleClickEvent(){
+	public removeSingleClickEvent() {
 		(<any>this.ActiveMap).removeSingleClickEvent();
 	}
 
-	public addPinPointIndicator(latLon:Array<number>){
+	public addPinPointIndicator(latLon: Array<number>) {
 		(<any>this.ActiveMap).addPinPointIndicator(latLon);
 	}
 
-	public removePinPointIndicator(){
+	public removePinPointIndicator() {
 		(<any>this.ActiveMap).removePinPointIndicator();
 	}
+
 	//======end pinPointIndicator
 }

@@ -4,10 +4,10 @@ import { IContextSource } from '../context.interface';
 import { Observable } from 'rxjs/Observable';
 import { isEqual } from 'lodash';
 
-describe("Context Provider Service" ,() => {
+describe('Context Provider Service', () => {
 	let contextProviderService: ContextProviderService;
 	const mockContextSourceObject: IContextSource = {
-		find: () => Observable.of([{"title": "tmp"}]),
+		find: () => Observable.of([{ 'title': 'tmp' }]),
 		remove: () => Observable.of({}),
 		create: () => Observable.of({}),
 		update: () => Observable.of({}),
@@ -17,34 +17,34 @@ describe("Context Provider Service" ,() => {
 	};
 
 	beforeEach(() => {
-			TestBed.configureTestingModule({
-				providers: [ ContextProviderService ]
-			});
+		TestBed.configureTestingModule({
+			providers: [ContextProviderService]
+		});
 	});
 
 
-	beforeEach(inject([ContextProviderService],(_contextProviderService: ContextProviderService) => {
+	beforeEach(inject([ContextProviderService], (_contextProviderService: ContextProviderService) => {
 		contextProviderService = _contextProviderService;
 	}));
 
-	it("check that the module is initialized ", () => {
+	it('check that the module is initialized ', () => {
 		expect(contextProviderService).toBeTruthy();
 	});
 
-	it("Func Name: register", () => {
-		contextProviderService.register('demo',mockContextSourceObject);
+	it('Func Name: register', () => {
+		contextProviderService.register('demo', mockContextSourceObject);
 		expect(contextProviderService.keys().length).toBe(1);
 	});
 
-	it("Func Name: provide", () => {
-		contextProviderService.register('demo',mockContextSourceObject);
+	it('Func Name: provide', () => {
+		contextProviderService.register('demo', mockContextSourceObject);
 		const result = contextProviderService.provide('demo');
 		expect(result).toBeTruthy();
 	});
 
-	it("Func Name keys",() => {
-		contextProviderService.register('demo',mockContextSourceObject);
-		contextProviderService.register('demo2',mockContextSourceObject);
-		expect(isEqual(contextProviderService.keys(),['demo','demo2'])).toBe(true);
+	it('Func Name keys', () => {
+		contextProviderService.register('demo', mockContextSourceObject);
+		contextProviderService.register('demo2', mockContextSourceObject);
+		expect(isEqual(contextProviderService.keys(), ['demo', 'demo2'])).toBe(true);
 	});
 });

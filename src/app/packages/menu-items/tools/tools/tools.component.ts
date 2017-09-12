@@ -9,20 +9,20 @@ import { IToolsState } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
 
 @Component({
-  selector: 'ansyn-tools',
-  templateUrl: './tools.component.html',
-  styleUrls: ['./tools.component.less']
+	selector: 'ansyn-tools',
+	templateUrl: './tools.component.html',
+	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit {
 	public expandGoTo: boolean;
 	public expandOverlaysDisplayMode: boolean;
 	public displayModeOn: boolean;
 	public userAnnotationsToolOpen: boolean;
-	public flags: Map<string,boolean>;
+	public flags: Map<string, boolean>;
 	public isGeoOptionsDisabled: boolean;
-	public flags$: Observable<Map<string,boolean>> = this.store.select('tools')
-														.map((tools: IToolsState) => tools.flags)
-														.distinctUntilChanged(isEqual);
+	public flags$: Observable<Map<string, boolean>> = this.store.select('tools')
+		.map((tools: IToolsState) => tools.flags)
+		.distinctUntilChanged(isEqual);
 
 	// for tests
 	@ViewChild('displayOverlayDiv') displayOverlayDiv: ElementRef;
@@ -39,12 +39,12 @@ export class ToolsComponent implements OnInit {
 		});
 	}
 
-	toggleShadowMouse(){
+	toggleShadowMouse() {
 		const value = this.flags.get('shadow_mouse');
 
-		if(value){
+		if (value) {
 			this.store.dispatch(new StopMouseShadow());
-		}else{
+		} else {
 			this.store.dispatch(new StartMouseShadow());
 		}
 	}
@@ -66,19 +66,18 @@ export class ToolsComponent implements OnInit {
 	toggleAnnotationMenu() {
 		// send event to the store that saying the annotation option is enabled
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
-		if(this.userAnnotationsToolOpen){
+		if (this.userAnnotationsToolOpen) {
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: "show",
+				action: 'show',
 				maps: 'active'
 			}));
 
-		}else{
+		} else {
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: "endDrawing",
+				action: 'endDrawing',
 				maps: 'active'
 			}));
 		}
-
 
 
 	}

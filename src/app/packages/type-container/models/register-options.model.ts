@@ -1,9 +1,9 @@
-import {Type} from './type.model';
+import { Type } from './type.model';
 
 export class RegisterOptions {
-    baseType : Function;
-    type: Type;
-    name?: string ;
+	baseType: Function;
+	type: Type;
+	name?: string;
 }
 
 

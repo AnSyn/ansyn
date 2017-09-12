@@ -1,7 +1,6 @@
-
 <div class="combo-container">
 
-	<button class="trigger"  #optionsTrigger (click)="toggleShow()">
+	<button class="trigger" #optionsTrigger (click)="toggleShow()">
 		<img [src]="'/assets/icons/status-bar/screen/' + (selectedIndex + 1) + '.svg'"/>
 		<span class="arrow" *ngIf="optionsContainer.style.visibility !== 'visible'; else close">
 				▼

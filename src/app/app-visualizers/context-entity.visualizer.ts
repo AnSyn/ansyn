@@ -60,7 +60,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				})
 			];
 			if (!this.referenceDate) {
-				textStyle.setText("");
+				textStyle.setText('');
 			} else {
 				const originalEntity = this._idToEntity.get(feature.getId()).originalEntity;
 				const entityDate = (<IContextEntity>originalEntity).date;
@@ -90,8 +90,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
-		logicalEntities.forEach((entity)=>{
-			if (this.idToCachedCenter.has(entity.id)){
+		logicalEntities.forEach((entity) => {
+			if (this.idToCachedCenter.has(entity.id)) {
 				this.idToCachedCenter.delete(entity.id);
 			}
 		});

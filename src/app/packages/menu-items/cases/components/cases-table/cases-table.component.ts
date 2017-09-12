@@ -11,16 +11,15 @@ import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { isEqual, range as _range} from 'lodash';
+import { isEqual, range as _range } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations: any[] = [
-	trigger("leaveAnim", [
-		transition(":leave", [style({height: '57px'}), animate("0.2s", style({height: '0'}))])
+	trigger('leaveAnim', [
+		transition(':leave', [style({ height: '57px' }), animate('0.2s', style({ height: '0' }))])
 
 	])
 ];
-
 
 
 @Component({
@@ -29,23 +28,23 @@ const animations: any[] = [
 	styleUrls: ['./cases-table.component.less'],
 	animations
 })
-export class CasesTableComponent implements OnInit{
-	@ViewChild("tbody_element") tbody_element: ElementRef;
+export class CasesTableComponent implements OnInit {
+	@ViewChild('tbody_element') tbody_element: ElementRef;
 
-	cases_from_state$: Observable <Case[]> = this.store
-			.select("cases")
-			.map((state: ICasesState ) => state.cases)
-			.distinctUntilChanged(isEqual);
+	cases_from_state$: Observable<Case[]> = this.store
+		.select('cases')
+		.map((state: ICasesState) => state.cases)
+		.distinctUntilChanged(isEqual);
 
-	active_case_id$: Observable <string> = this.store
-			.select("cases")
-			.map((state: ICasesState ) => state.active_case_id)
-			.distinctUntilChanged(isEqual);
+	active_case_id$: Observable<string> = this.store
+		.select('cases')
+		.map((state: ICasesState) => state.active_case_id)
+		.distinctUntilChanged(isEqual);
 
-	selected_case_id$: Observable <string> = this.store
-			.select("cases")
-			.map((state: ICasesState ) => state.selected_case ? state.selected_case.id: null)
-			.distinctUntilChanged(isEqual);
+	selected_case_id$: Observable<string> = this.store
+		.select('cases')
+		.map((state: ICasesState) => state.selected_case ? state.selected_case.id : null)
+		.distinctUntilChanged(isEqual);
 
 	get _range() {
 		return _range;
@@ -81,13 +80,13 @@ export class CasesTableComponent implements OnInit{
 	}
 
 	onCasesAdded() {
-		if(this.tbody_element){
+		if (this.tbody_element) {
 			this.tbody_element.nativeElement.scrollTop = 0;
 		}
 	}
 
-	calcTopCaseMenu($event:MouseEvent, case_menu: HTMLDivElement) {
-		let target:HTMLElement = <any> $event.target;
+	calcTopCaseMenu($event: MouseEvent, case_menu: HTMLDivElement) {
+		let target: HTMLElement = <any> $event.target;
 		let offsetTop = target.offsetTop;
 		let scrollTop = target.parentElement.scrollTop;
 		case_menu.style.top = `${offsetTop - scrollTop}px`;
@@ -96,16 +95,16 @@ export class CasesTableComponent implements OnInit{
 	removeCase($event: MouseEvent, case_id: string): void {
 		$event.stopPropagation();
 		let component = DeleteCaseComponent;
-		this.store.dispatch(new OpenModalAction({component, case_id}));
+		this.store.dispatch(new OpenModalAction({ component, case_id }));
 	}
 
-	editCase($event: MouseEvent, case_id: string){
+	editCase($event: MouseEvent, case_id: string) {
 		$event.stopPropagation();
 		let component = EditCaseComponent;
-		this.store.dispatch(new OpenModalAction({component, case_id}));
+		this.store.dispatch(new OpenModalAction({ component, case_id }));
 	}
 
-	shareCase($event: MouseEvent, case_id: string){
+	shareCase($event: MouseEvent, case_id: string) {
 		$event.stopPropagation();
 		this.store.dispatch(new CopyCaseLinkAction(case_id));
 	}

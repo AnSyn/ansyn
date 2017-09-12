@@ -36,7 +36,7 @@ describe('AnsynCheckboxComponent', () => {
 
 	it('check that disabled actully disabes the input and the function', () => {
 		const input = fixture.debugElement.query(By.css('input')).nativeElement;
-		spyOn(component,'onInputClicked');
+		spyOn(component, 'onInputClicked');
 		component.disabled = true;
 		fixture.detectChanges();
 

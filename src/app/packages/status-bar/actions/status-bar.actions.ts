@@ -5,7 +5,7 @@ export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
 	SET_LINK_COPY_TOAST_VALUE: 'SET_LINK_COPY_TOAST_VALUE',
-	UPDATE_STATUS_FLAGS: "UPDATE_STATUS_FLAGS",
+	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
 	OPEN_SHARE_LINK: 'OPEN_SHARE_LINK',
 
 	GO_PREV: 'GO_PREV',
@@ -22,86 +22,118 @@ export const StatusBarActionsTypes = {
 	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY'
 };
 
-export type StatusActions = ChangeLayoutAction |  UpdateStatusFlagsAction;
+export type StatusActions = ChangeLayoutAction | UpdateStatusFlagsAction;
 
 export class ChangeLayoutAction implements Action {
 	type: string = StatusBarActionsTypes.CHANGE_LAYOUT;
-	constructor(public payload: number) {}
+
+	constructor(public payload: number) {
+	}
 }
 
-export class CopySelectedCaseLinkAction implements Action{
+export class CopySelectedCaseLinkAction implements Action {
 	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class SetLinkCopyToastValueAction implements Action{
+export class SetLinkCopyToastValueAction implements Action {
 	type: string = StatusBarActionsTypes.SET_LINK_COPY_TOAST_VALUE;
-	constructor(public payload: boolean) {}
+
+	constructor(public payload: boolean) {
+	}
 }
 
 
 export class UpdateStatusFlagsAction implements Action {
 	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
+
 	constructor(public payload: any) {
 		// code...
 	}
 }
-export class OpenShareLink implements Action{
+
+export class OpenShareLink implements Action {
 	type: string = StatusBarActionsTypes.OPEN_SHARE_LINK;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class GoPrevAction implements Action{
+export class GoPrevAction implements Action {
 	type: string = StatusBarActionsTypes.GO_PREV;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class GoNextAction implements Action{
+export class GoNextAction implements Action {
 	type: string = StatusBarActionsTypes.GO_NEXT;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class ExpandAction implements Action{
+export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class FavoriteAction implements Action{
+export class FavoriteAction implements Action {
 	type: string = StatusBarActionsTypes.FAVORITE;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class BackToWorldViewAction implements Action{
+export class BackToWorldViewAction implements Action {
 	type: string = StatusBarActionsTypes.BACK_TO_WORLD_VIEW;
-	constructor() {}
+
+	constructor() {
+	}
 }
 
-export class SetOrientationAction implements Action{
+export class SetOrientationAction implements Action {
 	type: string = StatusBarActionsTypes.SET_ORIENTATION;
-	constructor(public payload: string) {}
+
+	constructor(public payload: string) {
+	}
 }
 
-export class SetGeoFilterAction implements Action{
+export class SetGeoFilterAction implements Action {
 	type: string = StatusBarActionsTypes.SET_GEO_FILTER;
-	constructor(public payload: string) {}
+
+	constructor(public payload: string) {
+	}
 }
 
-export class SetTimeAction implements Action{
+export class SetTimeAction implements Action {
 	type: string = StatusBarActionsTypes.SET_TIME;
-	constructor(public payload: {from: Date, to: Date}) {}
+
+	constructor(public payload: { from: Date, to: Date }) {
+	}
 }
 
 export class SetMapGeoEnabledModeStatusBarActionStore implements Action {
 	type = StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
-	constructor(public payload: boolean) {}
+
+	constructor(public payload: boolean) {
+	}
 }
 
 export class SetOverlaysCountAction implements Action {
 	type = StatusBarActionsTypes.SET_OVERLAYS_COUNT;
-	constructor(public payload: number) {}
+
+	constructor(public payload: number) {
+	}
 }
 
 export class SetOverlayNotInCaseAction implements Action {
 	type = StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY;
-	constructor(public payload: boolean) {}
+
+	constructor(public payload: boolean) {
+	}
 }

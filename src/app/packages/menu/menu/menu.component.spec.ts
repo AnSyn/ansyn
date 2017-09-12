@@ -1,7 +1,7 @@
 import { ComponentRef } from '@angular/core';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MenuComponent } from './menu.component';
-import { MenuItem } from "@ansyn/core";
+import { MenuItem } from '@ansyn/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core/actions/menu.actions';
@@ -15,7 +15,7 @@ describe('MenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[BrowserAnimationsModule, StoreModule.provideStore({menu: MenuReducer})],
+			imports: [BrowserAnimationsModule, StoreModule.provideStore({ menu: MenuReducer })],
 			declarations: [MenuComponent],
 		}).compileComponents();
 	}));
@@ -41,28 +41,34 @@ describe('MenuComponent', () => {
 	});
 
 	it('destroyCurrentComponent should call factory destroy function and set factory to undefined', () => {
-		let fake_factory = {destroy():void {}};
+		let fake_factory = {
+			destroy(): void {
+			}
+		};
 		menuComponent.selected_component_ref = <any> fake_factory;
 		spyOn(fake_factory, 'destroy');
-		menuComponent.destroyCurrentComponent ();
+		menuComponent.destroyCurrentComponent();
 		expect(fake_factory.destroy).toHaveBeenCalled();
 		expect(menuComponent.selected_component_ref).toBeUndefined();
 	});
 
 	it('buildCurrentComponent should create factory from selected_item component only when menu is open', () => {
-		let fake_factory:ComponentRef<any> = <any>{destroy():void {}};
+		let fake_factory: ComponentRef<any> = <any>{
+			destroy(): void {
+			}
+		};
 
 		spyOn(menuComponent, 'componentChanges');
 		let mock_menu_item: MenuItem = {
-			name:"one",
-			component:"fake_comp",
-			icon_url:"fake/url/to/icon"
+			name: 'one',
+			component: 'fake_comp',
+			icon_url: 'fake/url/to/icon'
 		};
 		menuComponent.menu_items = [mock_menu_item];
 		menuComponent.selected_item_index = 0;
 		spyOn(menuComponent, 'itemSelected').and.returnValue(true);
-		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(()=> fake_factory );
-		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(()=> fake_factory);
+		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fake_factory);
+		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(() => fake_factory);
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith(fake_factory);
 		expect(menuComponent.selected_component_ref).toEqual(fake_factory);
@@ -131,7 +137,7 @@ describe('MenuComponent', () => {
 
 
 	it('onSelectedIndexChange should change expand via 3 parameters. if expand is true componentChanges() should have been call', () => {
-		let _selected_item_index:any = true;
+		let _selected_item_index: any = true;
 		let itemSelectedRes;
 
 		spyOn(menuComponent, 'componentChanges');
@@ -151,7 +157,6 @@ describe('MenuComponent', () => {
 		expect(menuComponent['expand']).toBeTruthy();
 
 	});
-
 
 
 });

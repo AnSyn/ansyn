@@ -1,21 +1,23 @@
-<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<title>Frame 29</title>
-<desc>Created using Figma</desc>
-<g id="Canvas" transform="translate(-28012 -4951)">
-<clipPath id="clip-0" clip-rule="evenodd">
-<path d="M 28012 4951L 28036 4951L 28036 4975L 28012 4975L 28012 4951Z" fill="#FFFFFF"/>
-</clipPath>
-<g id="Frame 29" clip-path="url(#clip-0)">
-<g id="Group">
-<g id="magic-wand">
-<g id="Vector">
-<use xlink:href="#path0_fill" transform="translate(28015 4954)" fill="#FFFFFF"/>
-</g>
-</g>
-</g>
-</g>
-</g>
-<defs>
-<path id="path0_fill" d="M 11.4545 6.05445e-10L 10.2645 6.05445e-10L 10.2645 2.39004L 11.4545 2.39004L 11.4545 6.05445e-10ZM 16.9563 2.60216L 16.1149 1.75728L 14.4321 3.44704L 15.2735 4.29192L 16.9563 2.60216ZM 8.62572 3.44704L 6.94294 1.75728L 6.10155 2.60216L 7.78433 4.29192L 8.62572 3.44704ZM 11.4545 3.65975L 0 15.1618L 2.82645 18L 14.3185 6.46028L 11.4545 3.65975ZM 9.03749 7.84232L 11.4551 5.41464L 12.6452 6.53497L 10.1907 8.9997L 9.03749 7.84232ZM 13.5021 10.5939L 15.1849 12.2836L 16.0262 11.4387L 14.3435 9.74898L 13.5021 10.5939ZM 15.6198 7.17012L 15.6198 8.36515L 18 8.36515L 18 7.17012L 15.6198 7.17012Z"/>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Frame 29</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-28012 -4951)">
+		<clipPath id="clip-0" clip-rule="evenodd">
+			<path d="M 28012 4951L 28036 4951L 28036 4975L 28012 4975L 28012 4951Z" fill="#FFFFFF"/>
+		</clipPath>
+		<g id="Frame 29" clip-path="url(#clip-0)">
+			<g id="Group">
+				<g id="magic-wand">
+					<g id="Vector">
+						<use xlink:href="#path0_fill" transform="translate(28015 4954)" fill="#FFFFFF"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<path id="path0_fill"
+			  d="M 11.4545 6.05445e-10L 10.2645 6.05445e-10L 10.2645 2.39004L 11.4545 2.39004L 11.4545 6.05445e-10ZM 16.9563 2.60216L 16.1149 1.75728L 14.4321 3.44704L 15.2735 4.29192L 16.9563 2.60216ZM 8.62572 3.44704L 6.94294 1.75728L 6.10155 2.60216L 7.78433 4.29192L 8.62572 3.44704ZM 11.4545 3.65975L 0 15.1618L 2.82645 18L 14.3185 6.46028L 11.4545 3.65975ZM 9.03749 7.84232L 11.4551 5.41464L 12.6452 6.53497L 10.1907 8.9997L 9.03749 7.84232ZM 13.5021 10.5939L 15.1849 12.2836L 16.0262 11.4387L 14.3435 9.74898L 13.5021 10.5939ZM 15.6198 7.17012L 15.6198 8.36515L 18 8.36515L 18 7.17012L 15.6198 7.17012Z"/>
+	</defs>
 </svg>

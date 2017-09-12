@@ -10,23 +10,24 @@
 				"maps": {
 					"layouts_index": 0,
 					"active_map_id": "default_imagery1",
-					"data": [{
-						"id": "default_imagery1",
-						"mapType": "openLayersMap",
-						"data": {
-							"position": {
-								"center": {
-									"type": "Point",
-									"coordinates": [
-										-74.07608662469286,
-										40.71400637493053
-									]
-								},
-								"zoom": 4,
-								"rotation": 6.287545840111019
+					"data": [
+						{
+							"id": "default_imagery1",
+							"mapType": "openLayersMap",
+							"data": {
+								"position": {
+									"center": {
+										"type": "Point",
+										"coordinates": [
+											-74.07608662469286,
+											40.71400637493053
+										]
+									},
+									"zoom": 4,
+									"rotation": 6.287545840111019
+								}
 							}
 						}
-					}
 					]
 				},
 				"region": {
@@ -69,7 +70,12 @@
 				"favoritesOverlays": []
 			}
 		},
-		"casesQueryParamsKeys": ["facets", "time", "maps", "region"],
+		"casesQueryParamsKeys": [
+			"facets",
+			"time",
+			"maps",
+			"region"
+		],
 		"updateCaseDebounceTime": 700,
 		"useHash": true
 	},
@@ -86,24 +92,40 @@
 		"polygonGenerationDisatnce": 0.1
 	},
 	"imageryConfig": {
-		"geoMapsInitialMapSource": [{
-			"mapType": "openLayersMap",
-			"mapSource": "MapBox",
-			"mapSourceMetadata": { "imageUrl": "https://api.mapbox.com/styles/v1/ansyn/cj6x6ya4k116n2sn1r8scuyzc/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zeW4iLCJhIjoiY2o2eDZ4b3QyMjI2eTMzbzNzMnk3N2RuZSJ9.SyvUIW3Bi5dA1-RwdzPWcQ" }
-		}, {
-			"mapType": "cesiumMap",
-			"mapSource": "OSM",
-			"mapSourceMetadata": null
-		}, {
-			"mapType": "disabledOpenLayersMap",
-			"mapSource": "MapBox",
-			"mapSourceMetadata": { "imageUrl": "https://api.mapbox.com/styles/v1/ansyn/cj6x6ya4k116n2sn1r8scuyzc/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zeW4iLCJhIjoiY2o2eDZ4b3QyMjI2eTMzbzNzMnk3N2RuZSJ9.SyvUIW3Bi5dA1-RwdzPWcQ" }
-		}]
+		"geoMapsInitialMapSource": [
+			{
+				"mapType": "openLayersMap",
+				"mapSource": "MapBox",
+				"mapSourceMetadata": {
+					"imageUrl": "https://api.mapbox.com/styles/v1/ansyn/cj6x6ya4k116n2sn1r8scuyzc/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zeW4iLCJhIjoiY2o2eDZ4b3QyMjI2eTMzbzNzMnk3N2RuZSJ9.SyvUIW3Bi5dA1-RwdzPWcQ"
+				}
+			},
+			{
+				"mapType": "cesiumMap",
+				"mapSource": "OSM",
+				"mapSourceMetadata": null
+			},
+			{
+				"mapType": "disabledOpenLayersMap",
+				"mapSource": "MapBox",
+				"mapSourceMetadata": {
+					"imageUrl": "https://api.mapbox.com/styles/v1/ansyn/cj6x6ya4k116n2sn1r8scuyzc/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5zeW4iLCJhIjoiY2o2eDZ4b3QyMjI2eTMzbzNzMnk3N2RuZSJ9.SyvUIW3Bi5dA1-RwdzPWcQ"
+				}
+			}
+		]
 	},
 	"filtersConfig": {
 		"filters": [
-			{ "modelName": "sensorType", "displayName": "Sensor Type", "type": "Enum" },
-			{ "modelName": "sensorName", "displayName": "Sensor Name", "type": "Enum" }
+			{
+				"modelName": "sensorType",
+				"displayName": "Sensor Type",
+				"type": "Enum"
+			},
+			{
+				"modelName": "sensorName",
+				"displayName": "Sensor Name",
+				"type": "Enum"
+			}
 		]
 	},
 	"contextConfig": {
@@ -121,7 +143,7 @@
 				"bucket": "contexts",
 				"type": "Proxy",
 				"available": true,
-				"apiObject" : "Http"
+				"apiObject": "Http"
 			}
 		]
 	},

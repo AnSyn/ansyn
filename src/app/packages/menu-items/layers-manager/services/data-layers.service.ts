@@ -36,7 +36,7 @@ export class DataLayersService {
 
 	public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayerRootsBundle {
 		let clientTree: LayerRootsBundle = this.serverTreeToClientTree(dataLayerArray);
-		return clientTree || {layers: [], selectedLayers: []};
+		return clientTree || { layers: [], selectedLayers: [] };
 	}
 
 	private serverTreeToClientTree(serverTree: IServerDataLayerContainerRoot[]): LayerRootsBundle {
@@ -50,7 +50,7 @@ export class DataLayersService {
 		}
 
 
-		return {layers: allRoots, selectedLayers: selectedLayers};
+		return { layers: allRoots, selectedLayers: selectedLayers };
 	}
 
 	private serverRootContainerToClientRootContainer(container: IServerDataLayerContainerRoot): LayerRootsBundle {
@@ -100,7 +100,7 @@ export class DataLayersService {
 		let flattenedChildren: ILayerTreeNode[] = [];
 		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = [];
 
-		if(container.dataLayerContainers){
+		if (container.dataLayerContainers) {
 			container.dataLayerContainers.forEach(childContainer => {
 				let childContainerBundle: LayerNodesBundle = this.serverLayerContainerToLayerTreeNodes(childContainer);
 
@@ -116,7 +116,7 @@ export class DataLayersService {
 			selectedChildrenNodes = selectedChildrenNodes.concat(dataLayersBundle.selectedLayers);
 		}
 
-		return {layers: flattenedChildren, selectedLayers: selectedChildrenNodes};
+		return { layers: flattenedChildren, selectedLayers: selectedChildrenNodes };
 	}
 
 	private serverDataLayersToClientLayerTreeNodes(serverDataLayers: IServerDataLayer[]): LayerNodesBundle {
@@ -138,7 +138,7 @@ export class DataLayersService {
 				selectedLayers.push(layerTreeNode);
 			}
 		}
-		return {layers: allLayers, selectedLayers: selectedLayers};
+		return { layers: allLayers, selectedLayers: selectedLayers };
 	}
 
 	private handleError(error: Response | any) {

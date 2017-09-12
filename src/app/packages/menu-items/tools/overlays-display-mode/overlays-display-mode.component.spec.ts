@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed, inject  } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
-import { Store,StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
 import { ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
@@ -9,21 +9,21 @@ import { Observable } from 'rxjs/Observable';
 
 describe('overlaysDisplayModeComponent', () => {
 	let component: OverlaysDisplayModeComponent;
-	let fixture: ComponentFixture <OverlaysDisplayModeComponent> ;
-	let store: Store <any> ;
+	let fixture: ComponentFixture<OverlaysDisplayModeComponent>;
+	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.provideStore({ tools: ToolsReducer})],
+			imports: [FormsModule, StoreModule.provideStore({ tools: ToolsReducer })],
 			declarations: [OverlaysDisplayModeComponent]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store <any>)=> {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		spyOn(store,'dispatch');
+		spyOn(store, 'dispatch');
 
-		const fakeStore = {tools: {activeOverlaysFootprintMode: 'None'}};
+		const fakeStore = { tools: { activeOverlaysFootprintMode: 'None' } };
 
 		spyOn(store, 'select').and.callFake(type => {
 			return Observable.of(fakeStore[type]);
@@ -40,7 +40,7 @@ describe('overlaysDisplayModeComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('check that ShowOverlaysFootprintAction is dispatched when visualizerType change',() =>{
+	it('check that ShowOverlaysFootprintAction is dispatched when visualizerType change', () => {
 		component.visualizerType = 'Hitmap';
 		expect(store.dispatch).toHaveBeenCalledWith(new ShowOverlaysFootprintAction('Hitmap'));
 	});

@@ -9,5 +9,6 @@ export interface IMapPlugin {
 	isEnabled: boolean;
 
 	init(imageryCommunicator: CommunicatorEntity): void;
+
 	dispose();
 }

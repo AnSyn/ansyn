@@ -4,8 +4,8 @@ import { IFiltersConfig } from '@ansyn/menu-items/filters';
 import { IToolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 
 export interface MenuItemsConfig {
-    CasesConfig: ICasesConfig;
-    LayersManagerConfig: ILayersManagerConfig;
-    FiltersConfig: IFiltersConfig;
-    ToolsConfig: IToolsConfig;
+	CasesConfig: ICasesConfig;
+	LayersManagerConfig: ILayersManagerConfig;
+	FiltersConfig: IFiltersConfig;
+	ToolsConfig: IToolsConfig;
 }

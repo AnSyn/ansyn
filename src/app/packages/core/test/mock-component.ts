@@ -7,26 +7,27 @@ import { Component, EventEmitter } from '@angular/core';
  */
 class Name {
 	public selector: string;
-	constructor(){
+
+	constructor() {
 
 	}
 }
 
-export function MockComponent (options: Component): Component{
+export function MockComponent(options: Component): Component {
 	const metadata: Component = {
-    	selector: options.selector,
-    	template: options.template || '',
-    	inputs: options.inputs,
-    	outputs: options.outputs
-    };
-    return Component(metadata)(
-    	class Name2 {
-			constructor(){
-				if(options.outputs) {
+		selector: options.selector,
+		template: options.template || '',
+		inputs: options.inputs,
+		outputs: options.outputs
+	};
+	return Component(metadata)(
+		class Name2 {
+			constructor() {
+				if (options.outputs) {
 					options.outputs.forEach((output: string) => {
 						this[output] = new EventEmitter();
-					})
+					});
 				}
 			}
-	} as any);
+		} as any);
 }

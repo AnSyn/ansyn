@@ -12,20 +12,20 @@ module.exports = function (config) {
 			require('karma-coverage-istanbul-reporter'),
 			require('@angular/cli/plugins/karma')
 		],
-		client:{
+		client: {
 			clearContext: false // leave Jasmine Spec Runner output visible in browser
 		},
 		files: [
-			{ pattern: './src/test.ts', watched: false }
+			{pattern: './src/test.ts', watched: false}
 		],
 		preprocessors: {
 			'./src/test.ts': ['@angular/cli']
 		},
 		mime: {
-			'text/x-typescript': ['ts','tsx']
+			'text/x-typescript': ['ts', 'tsx']
 		},
 		coverageIstanbulReporter: {
-			reports: [ 'html', 'lcovonly' ],
+			reports: ['html', 'lcovonly'],
 			fixWebpackSourcePaths: true
 		},
 		angularCli: {
@@ -40,9 +40,9 @@ module.exports = function (config) {
 		autoWatch: true,
 		browsers: ['Chrome'],
 		singleRun: false,
-		browserNoActivityTimeout : 60000,
-		browserDisconnectTimeout : 10000,
-		browserDisconnectTolerance : 1,
+		browserNoActivityTimeout: 60000,
+		browserDisconnectTimeout: 10000,
+		browserDisconnectTolerance: 1,
 		captureTimeout: 60000
 	});
 };

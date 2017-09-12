@@ -10,4 +10,5 @@ import { UtmComponent } from './projections/utm/utm.component';
 	declarations: [GoToComponent, GeoComponent, UtmComponent],
 	exports: [GoToComponent, FormsModule]
 })
-export class GoToModule { }
+export class GoToModule {
+}

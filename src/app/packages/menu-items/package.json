@@ -1,9 +1,9 @@
 {
-  "name": "@ansyn/menu-items",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "~2.4.0",
-    "@angular/core": "^2.4.0",
-    "@ansyn/core": "^0.0.1"
-  }
+	"name": "@ansyn/menu-items",
+	"version": "0.0.1",
+	"peerDependencies": {
+		"@angular/common": "~2.4.0",
+		"@angular/core": "^2.4.0",
+		"@ansyn/core": "^0.0.1"
+	}
 }

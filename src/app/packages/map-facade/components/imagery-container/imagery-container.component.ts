@@ -17,7 +17,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	private _showSpinner: boolean;
 
-	@Input("showSpinner")
+	@Input('showSpinner')
 	public set showSpinner(value: boolean) {
 		if (this._showSpinner === value) {
 			return;
@@ -35,6 +35,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	}
 
 	private _spinner: Spinner;
+
 	constructor() {
 		this.showSpinner = true;
 	}
@@ -42,7 +43,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	toggleSpinner() {
 		if (this._spinner) {
 			if (this._showSpinner) {
-				this._spinner.start("Loading...", 'transparent');//#EDEDED
+				this._spinner.start('Loading...', 'transparent');//#EDEDED
 			} else {
 				this._spinner.stop();
 			}

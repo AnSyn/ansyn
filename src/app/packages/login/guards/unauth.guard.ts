@@ -6,7 +6,8 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class UnAuthGuard implements CanDeactivate<any> {
 
-	constructor(public router: Router,public authService:AuthService){}
+	constructor(public router: Router, public authService: AuthService) {
+	}
 
 	canDeactivate(component: any, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 		return this.authService.isLoggedIn()

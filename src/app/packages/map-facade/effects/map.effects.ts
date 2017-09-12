@@ -81,23 +81,18 @@ export class MapEffects {
 		);
 
 
-	// @Effect()
-	// positionChanged$: Observable<any> = this.actions$
-	// 	.ofType(MapActionTypes.POSITION_CHANGED)
-	// 	.withLatestFrom(this.store$.select('map'), (action: PositionChangedAction, state: IMapState): any => {
-	// 		return [MapFacadeService.mapById(state.mapsData, action.payload.id), state.mapsData, action.payload.position];
-	// 	})
-	// 	.filter(([selectedMap]) => !_isEmpty(selectedMap))
-	// 	.map( ([selectedMap, mapsData, position]) => {
-	// 		const indexSelectedMap = mapsData.indexOf(selectedMap);
-	// 		const cloneMap = _cloneDeep(selectedMap);
-	// 		cloneMap.data.position = position;
-	// 		const before = mapsData.slice(0, indexSelectedMap);
-	// 		const after = mapsData.slice(indexSelectedMap + 1, mapsData.length);
-	// 		const newMapsData = [...before, cloneMap, ...after];
-	// 		return new SetMapsDataActionStore(newMapsData);
-	// 	});
-  //
+	@Effect()
+	positionChanged$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.POSITION_CHANGED)
+		.withLatestFrom(this.store$.select('map'), (action: PositionChangedAction, state: IMapState): any => {
+			return [MapFacadeService.mapById(state.mapsData, action.payload.id), state.mapsData, action.payload.position];
+		})
+		.filter(([selectedMap]) => !_isEmpty(selectedMap))
+		.map( ([selectedMap, mapsData, position]) => {
+			selectedMap.data.position = position;
+			return new SetMapsDataActionStore([...mapsData]);
+		});
+
 
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$

@@ -44,7 +44,6 @@ export class CasesMapEffects {
 						...selected_case.state.maps,
 						data: payload
 					}}};
-			console.log("too many times!")
 			return new UpdateCaseAction(updatedCase)
 		});
 

@@ -46,10 +46,10 @@ describe('AnnotationsControlComponent', () => {
 		spyOn(component.lineWidthSelection.nativeElement, 'focus');
 
 		component.lineWidthTrigger = true;
-		component.openLineWidthSelection({});
+		component.openLineWidthSelection();
 		expect(component.lineWidthTrigger).toBe(false);
 
-		component.openLineWidthSelection({});
+		component.openLineWidthSelection();
 
 		expect(component.lineWidthSelection.nativeElement.focus).toHaveBeenCalled();
 
@@ -59,7 +59,7 @@ describe('AnnotationsControlComponent', () => {
 	it('close line width selection', () => {
 		spyOn(component.lineWidthSelection.nativeElement, 'blur');
 
-		component.closeLineWidthSelection({});
+		component.closeLineWidthSelection();
 
 		expect(component.lineWidthTrigger).toBeFalsy();
 		expect(component.lineWidthSelection.nativeElement.blur).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('AnnotationsControlComponent', () => {
 		expect(component.document.activeElement).toEqual(component.lineWidthSelection.nativeElement);
 
 
-		component.closeLineWidthSelection({});
+		component.closeLineWidthSelection();
 		expect(component.lineWidthTrigger).toBe(true);
 		expect(component.lineWidthSelection.nativeElement.blur).toHaveBeenCalled();
 

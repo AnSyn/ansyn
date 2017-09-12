@@ -23,7 +23,7 @@ import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/m
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { GoNextDisplayAction, GoPrevDisplayAction, OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { cloneDeep } from 'lodash';
@@ -198,7 +198,14 @@ describe('StatusBarAppEffects', () => {
 			state: {
 				maps: {
 					layouts_index,
-					data: [{}, {}]
+					data: [
+						{
+							id: 'imagery1',
+							data: { position: { zoom: 1, center: 2 } }
+						},
+						{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Hitmap' } },
+						{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
+					]
 				}
 			}
 		};
@@ -208,13 +215,16 @@ describe('StatusBarAppEffects', () => {
 		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
 		effectsRunner.queue(action);
 
+		const results = [];
 		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction) => {
-			expect((_result instanceof UpdateCaseAction)).toBeTruthy();
-
+			results.push(_result);
 			if (_result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);
+			} else {
+				expect((_result instanceof OverlaysMarkupAction)).toBeTruthy();
 			}
 		});
+		expect(results.length).toEqual(2);
 	});
 
 	it('selectCase$ should get layers_index, orientation, geoFilter and time from selected_case and return all update status-bar actions', () => {

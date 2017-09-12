@@ -5,7 +5,7 @@ import { CoreModule } from '@ansyn/core';
 import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
 
 
-describe('ImageryStatusComponent', () => {
+describe('', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
 	let store: Store<any>;

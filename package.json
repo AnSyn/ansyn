@@ -77,7 +77,7 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "~2.3.3",
+    "typescript": "~2.5.2",
     "@types/d3": "^4.9.0",
     "jasmine": "latest"
   }

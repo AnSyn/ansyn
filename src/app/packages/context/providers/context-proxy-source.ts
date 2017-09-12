@@ -1,20 +1,20 @@
-import { Context, ContextCriteria, IContextSource, IContextSourceConfig } from '../context.interface';
+import { ContextCriteria, Context, ContextProviderService } from '../context.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/catch';
 
-export class ContextProxySource implements IContextSource {
+export class ContextProxySource extends ContextProviderService {
 	public providerType: string;
 	public uri;
 	public headers = new Headers({'Content-Type': 'application/json'});
 	public options = new RequestOptions();
 
-	constructor(public config: IContextSourceConfig, public http: Http) {
+	constructor(private http: Http) {
+		super();
 		this.uri = `${this.config.uri}${this.config.bucket}`;
 		this.providerType = config.type;
 		this.options.headers = this.headers;
-
 	}
 
 

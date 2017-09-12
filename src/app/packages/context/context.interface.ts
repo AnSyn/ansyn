@@ -1,17 +1,23 @@
-export interface IContextSource {
-	providerType: string;
+import { ContextConfig } from './context.module';
 
-	find(ContextCriteria): any;
+export abstract class BaseContextSourceProvider {
+	config: any;
 
-	remove(id);
+	constructor(config: any, sourceName: string) {
+		this.config = config[sourceName];
+	}
 
-	create(Context);
+	abstract find(ContextCriteria);
 
-	update(id, Context);
+	abstract remove(id);
 
-	parseToSource(any);
+	abstract create(Context);
 
-	parseFromSource(any);
+	abstract update(id, Context);
+
+	abstract parseToSource(any);
+
+	abstract parseFromSource(any);
 }
 
 export class ContextCriteria {

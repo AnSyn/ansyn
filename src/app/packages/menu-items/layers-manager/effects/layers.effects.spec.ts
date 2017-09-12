@@ -49,11 +49,12 @@ describe('LayersEffects', () => {
 
         effectsRunner.queue(new BeginLayerTreeLoadAction({ caseId: 'blabla' }));
 
-        layersEffects.beginLayerTreeLoad$.subscribe((result: LayerTreeLoadedAction) => {
+        layersEffects.beginLayerTreeLoad$.subscribe((result: LayerTreeLoadedAction | SelectLayerAction) => {
             expect(dataLayersService.getAllLayersInATree).toHaveBeenCalledWith('blabla');
+
             expect(result instanceof LayerTreeLoadedAction ||
                 result instanceof SelectLayerAction).toBeTruthy();
-            
+
             if (result instanceof LayerTreeLoadedAction) {
                 expect(result.payload).toEqual(<any>loadedTreeBundle);
             }
@@ -62,5 +63,6 @@ describe('LayersEffects', () => {
                 expect(result.payload).toEqual(<any>staticLeaf);
             }
         });
+
     });
 });

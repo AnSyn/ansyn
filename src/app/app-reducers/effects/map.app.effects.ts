@@ -204,6 +204,9 @@ export class MapAppEffects {
 					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
 					previusResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, map_id: data.id }));
 				}
+				if (isEmpty(data.data.overlay)) {
+					previusResult.push(new BackToWorldAction({ mapId: data.id }));
+				}
 				return previusResult;
 			}, []);
 		});
@@ -375,12 +378,13 @@ export class MapAppEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, casesState: ICasesState) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
+		.withLatestFrom(this.store$.select('cases'), (action: BackToWorldAction, casesState: ICasesState): any => {
+			const mapId: string = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
 			return [action, casesState, mapId];
 		})
+		.filter(([a, b, mapId]: [any, any, string]) => !isNil(this.communicator.provide(mapId)))
 		.mergeMap(([action, caseState, mapId]: [BackToWorldAction, ICasesState, string]) => {
-			const active_map = caseState.selected_case.state.maps.data.find((map) => map.id === mapId);
+			const active_map = CasesService.mapById(caseState.selected_case, mapId);
 			const comm = this.communicator.provide(mapId);
 			comm.loadInitialMapSource(active_map.data.position.boundingBox);
 
@@ -423,6 +427,7 @@ export class MapAppEffects {
 			const isEnabled = mapState.mapIdToGeoOptions.get(activeMapState.id);
 			return isEnabled !== isGeoRegistered;
 		})
+		.filter(([a, b, activeMapState]: [any, any, CaseMapState]) => !isNil(this.communicator.provide(activeMapState.id)))
 		.map(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
 			if (action.type === MapActionTypes.BACK_TO_WORLD) {
 				const mapComm = this.communicator.provide(activeMapState.id);

@@ -7,7 +7,7 @@ import { ImagerySandBoxComponent } from './component/imagery-sand-box.component'
 import { AddMenuItemAction, CoreModule, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { FormsModule } from '@angular/forms';
-import { ContextModule } from '@ansyn/context/context.module';
+import { ContextModule } from '@ansyn/context';
 
 @NgModule({
 	imports: [CommonModule, CoreModule, FormsModule, ContextModule],

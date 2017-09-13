@@ -14,11 +14,10 @@ import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
-import { ContextModule } from '@ansyn/context/context.module';
+import { ContextModule } from '@ansyn/context';
 import { AppProvidersModule } from '../app-providers/app-providers.module';
 import { AppReducersModule } from '../app-reducers/app-reducers.module';
 import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
-import { ContextElasticSource } from '@ansyn/context/';
 import { ContextEntityVisualizer } from '../app-visualizers/context-entity.visualizer';
 import {
 	AlgorithmsModule,

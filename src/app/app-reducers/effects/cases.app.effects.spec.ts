@@ -22,7 +22,9 @@ import { ContextProviderService } from '@ansyn/context/providers/context-provide
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
-import { ContextElasticSource } from '../../app-providers/context-source-providers/context-elastic-source.service';
+import { ContextModule } from '../../packages/context/context.module';
+import { ContextTestSourceService } from '../../packages/context/providers/context-test-source.service';
+import { MOCK_TEST_CONFIG } from '../../packages/context/providers/context-test-source.service.spec';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
@@ -40,13 +42,14 @@ describe('CasesAppEffects', () => {
 				EffectsTestingModule,
 				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
 				CoreModule,
-				RouterTestingModule
+				RouterTestingModule,
+				ContextModule.forRoot(MOCK_TEST_CONFIG)
 			],
 			providers: [CasesAppEffects,
 				CasesService,
 				{provide: casesConfig, useValue: {baseUrl: null}},
 				// Provide context provider
-				{ provide: BaseContextSourceProvider, useClass: ContextElasticSource },
+				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService },
 			]
 		}).compileComponents();
 	}));

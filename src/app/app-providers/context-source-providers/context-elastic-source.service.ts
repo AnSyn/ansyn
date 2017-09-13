@@ -1,20 +1,22 @@
 import { Client, SearchResponse } from 'elasticsearch';
 import { Observable } from 'rxjs/Observable';
 import { Context, ContextCriteria, BaseContextSourceProvider } from '@ansyn/context/context.interface';
-import { IContextConfig } from '@ansyn/context/context.module';
+import { IContextConfig } from '@ansyn/context';
 import 'rxjs/add/observable/fromPromise';
+import { Inject } from '@angular/core';
+import { ContextConfig } from '@ansyn/context';
 
-export interface IElasticSource {
+export interface IElasticContextSource {
 	uri: string;
 	log: string;
 	auth: string;
 }
 
-export class ContextElasticSource extends BaseContextSourceProvider {
+export class ContextElasticSourceService extends BaseContextSourceProvider {
 	client: Client;
-	config: IElasticSource;
+	config: IElasticContextSource;
 
-	constructor(config: IContextConfig) {
+	constructor(@Inject(ContextConfig)config: IContextConfig) {
 		super(config, 'elastic');
 
 		this.client = new Client({
@@ -66,9 +68,7 @@ export class ContextElasticSource extends BaseContextSourceProvider {
 			index: 'context',
 			type: 'context',
 			id: id,
-			body: {
-				doc
-			}
+			body: { doc }
 		}));
 	}
 
@@ -79,5 +79,4 @@ export class ContextElasticSource extends BaseContextSourceProvider {
 	parseFromSource(data) {
 		return data;
 	}
-
 }

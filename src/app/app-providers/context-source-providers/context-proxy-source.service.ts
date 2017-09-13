@@ -1,10 +1,12 @@
 import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
 import { Observable } from 'rxjs/Observable';
 import { Http, RequestOptions, Headers } from '@angular/http';
-import { IContextConfig } from '@ansyn/context/context.module';
+import { IContextConfig } from '@ansyn/context';
+import { ContextConfig } from '@ansyn/context';
 
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/catch';
+import { Inject } from '@angular/core';
 
 export interface IProxySource {
 	uri: string;
@@ -12,13 +14,13 @@ export interface IProxySource {
 	bucket: string;
 }
 
-export class ContextProxySource extends BaseContextSourceProvider {
+export class ContextProxySourceService extends BaseContextSourceProvider {
 	config: IProxySource;
 
 	uri: string;
 	options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
-	constructor(config: IContextConfig, private http: Http) {
+	constructor(@Inject(ContextConfig)config: IContextConfig, private http: Http) {
 		super(config, 'proxy');
 
 		this.uri = `${this.config.uri}${this.config.bucket}`;

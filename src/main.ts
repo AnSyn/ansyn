@@ -1,6 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
-import { ContextConfig } from '@ansyn/context/context.module';
+import { ContextConfig } from '@ansyn/context';
 import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';

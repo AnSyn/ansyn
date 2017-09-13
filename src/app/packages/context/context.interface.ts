@@ -1,4 +1,7 @@
-import { ContextConfig } from './context.module';
+// TODO: What is this doing here -Amit
+export interface IContextConfig {
+	[str: string]: Object;
+}
 
 export abstract class BaseContextSourceProvider {
 	config: any;
@@ -14,10 +17,6 @@ export abstract class BaseContextSourceProvider {
 	abstract create(Context);
 
 	abstract update(id, Context);
-
-	abstract parseToSource(any);
-
-	abstract parseFromSource(any);
 }
 
 export class ContextCriteria {

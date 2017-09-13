@@ -59,7 +59,7 @@ describe('LoginComponent', () => {
 
 		beforeEach(() => {
 			spyOn(authService, 'login').and.callFake(() => loginObservable);
-			spyOn(router, 'navigate').and.callFake(() => 'navigation');
+			spyOn(router, 'navigateByUrl').and.callFake(() => 'navigation');
 			spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of(''));
 			spyOn(Observable, 'throw').and.callFake(() => Observable.throw);
 		});
@@ -67,7 +67,7 @@ describe('LoginComponent', () => {
 		it('on switchMap', () => {
 			component.login$.subscribe(() => {
 				expect(Observable.fromPromise).toHaveBeenCalledWith('navigation');
-				expect(router.navigate).toHaveBeenCalled();
+				expect(router.navigateByUrl).toHaveBeenCalled();
 			});
 		});
 

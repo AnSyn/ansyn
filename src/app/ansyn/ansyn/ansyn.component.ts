@@ -39,7 +39,7 @@ export class AnsynComponent implements OnInit {
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
 		.map((data: any) => data.overlay);
-
+app
 	isFavoriteOverlay$ = this.selected_case$
 		.filter(selectedCase => _isNil(selectedCase.state.favoritesOverlays))
 		.map((selectedCase: Case) => {

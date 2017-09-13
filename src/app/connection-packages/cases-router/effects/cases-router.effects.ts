@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
-import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction, Case } from '@ansyn/menu-items/cases';
-import { isEqual as _isEqual, isNil as _isNil, get as _get, isEmpty as _isEmpty } from 'lodash';
+import { Case, CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
+import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
 
 @Injectable()

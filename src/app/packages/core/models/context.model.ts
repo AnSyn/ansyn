@@ -1,4 +1,4 @@
-import { CaseTimeState, CaseFacetsState, CaseRegionState } from './case.model';
+import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
 
 export interface Context {
 	id: string;

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';

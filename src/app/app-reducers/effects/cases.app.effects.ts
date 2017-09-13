@@ -3,30 +3,34 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes } from '@ansyn/overlays';
-import { CasesService } from '@ansyn/menu-items/cases';
-import { ICasesState } from '@ansyn/menu-items/cases';
-import { Case } from '@ansyn/menu-items/cases';
-import { CasesActionTypes, AddCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import {
+	AddCaseAction,
+	Case,
+	CasesActionTypes,
+	CasesService,
+	ICasesState,
+	UpdateCaseAction
+} from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { isNil, isEmpty, cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
-import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
-import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import {
+	CopyCaseLinkAction,
 	LoadContextsSuccessAction,
 	LoadDefaultCaseAction,
 	LoadDefaultCaseSuccessAction,
 	SelectCaseByIdAction,
 	SetDefaultCaseQueryParams
 } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
-import { ContextProviderService, ContextCriteria } from '@ansyn/context';
+import { ContextCriteria, ContextProviderService } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 
 

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings/settings.component';
-import { CoreModule, AddMenuItemAction, MenuItem } from '@ansyn/core';
+import { AddMenuItemAction, CoreModule, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 
 @NgModule({

@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { LoginConfig, LoginConfigService } from './login-config.service';
 
 describe('LoginConfigService', () => {

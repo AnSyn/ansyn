@@ -1,17 +1,17 @@
 import {
 	AddCaseSuccessAction,
 	CloseModalAction,
+	DeleteCaseAction,
 	LoadCasesSuccessAction,
-	OpenModalAction,
-	SelectCaseByIdAction,
 	LoadCaseSuccessAction,
 	LoadDefaultCaseSuccessAction,
+	OpenModalAction,
+	RemoveDefaultCaseQueryParamsAction,
+	SelectCaseByIdAction,
+	SetDefaultCaseQueryParams,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction,
-	DeleteCaseAction,
-	SetDefaultCaseQueryParams,
-	RemoveDefaultCaseQueryParamsAction
+	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';

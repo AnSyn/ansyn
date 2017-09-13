@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
-import { Injectable, InjectionToken, Inject } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlayState } from '../reducers/overlays.reducer';

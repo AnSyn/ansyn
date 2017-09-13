@@ -1,7 +1,4 @@
-import {
-	Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, Renderer2,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 

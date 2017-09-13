@@ -3,54 +3,52 @@ import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/laye
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
-import { ICasesState, CasesReducer, UpdateCaseAction, CasesService } from '@ansyn/menu-items/cases';
+import { CasesReducer, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { ImageryCommunicatorService, ConfigurationToken } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import {
-	StopMapShadowAction,
-	StartMapShadowAction,
+	ActiveMapChangedAction,
 	CompositeMapShadowAction,
-	ActiveMapChangedAction
+	StartMapShadowAction,
+	StopMapShadowAction
 } from '@ansyn/map-facade';
-import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstacneAction,
-	MapSingleClickAction,
-	SynchronizeMapsAction,
 	AddOverlayToLoadingOverlaysAction,
-	BackToWorldAction
+	BackToWorldAction,
+	EnableMapGeoOptionsActionStore,
+	MapSingleClickAction,
+	RemoveOverlayFromLoadingOverlaysAction,
+	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import {
-	statusBarFlagsItems, StatusBarInitialState,
+	IStatusBarState,
+	statusBarFlagsItems,
+	StatusBarInitialState,
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	LoadOverlaysAction,
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
+	LoadOverlaysAction,
+	OverlaysActionTypes,
 	OverlaysMarkupAction,
-	RequestOverlayByIDFromBackendAction,
-	OverlaysActionTypes
+	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IOverlayState, overlayInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { RemoveOverlayFromLoadingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { EnableMapGeoOptionsActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {

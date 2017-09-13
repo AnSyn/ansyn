@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
 import { MockComponent } from '@ansyn/core/test';
 import { ImageryCommunicatorService } from '@ansyn/imagery';

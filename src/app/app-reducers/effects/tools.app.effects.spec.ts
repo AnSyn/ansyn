@@ -4,23 +4,27 @@ import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { async, TestBed, inject } from '@angular/core/testing';
+import { async, inject, TestBed } from '@angular/core/testing';
 import { ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	GoToAction,
-	PullActiveCenter, SetActiveCenter,
+	PullActiveCenter,
+	SetActiveCenter,
+	SetActiveOverlaysFootprintModeAction,
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import {
-	DisableImageProcessing, EnableImageProcessing, SetAutoImageProcessing, SetAutoImageProcessingSuccess,
-	AnnotationVisualizerAgentAction
+	AnnotationVisualizerAgentAction,
+	DisableImageProcessing,
+	EnableImageProcessing,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess
 } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

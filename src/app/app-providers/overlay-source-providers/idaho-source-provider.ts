@@ -1,9 +1,9 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
-import { RequestOptions, Headers, Http, Response } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import * as wellknown from 'wellknown';
-import { InjectionToken, Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 

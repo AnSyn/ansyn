@@ -1,28 +1,28 @@
 import {
+	AfterViewInit,
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
-	ViewChild,
-	ViewContainerRef,
 	ElementRef,
 	Input,
-	AfterViewInit
+	ViewChild,
+	ViewContainerRef
 } from '@angular/core';
 import {
+	AnimationEndAction,
+	AnimationStartAction,
 	MenuItem,
 	SelectMenuItemAction,
-	UnSelectMenuItemAction,
-	AnimationStartAction,
-	AnimationEndAction
+	UnSelectMenuItemAction
 } from '@ansyn/core';
 import * as packageJson from '../../../../../package.json';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { isNil, isEqual } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 
 const DEFAULT_WIDTH = 90;
 

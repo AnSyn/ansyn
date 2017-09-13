@@ -1,4 +1,4 @@
-import { Injector, Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { GenericTypeResolver, InjectionResolverFilter, Type } from './generic-type-resolver';
 
 @Injectable()

@@ -1,16 +1,18 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
 import {
-	LoadCasesAction, OpenModalAction, SelectCaseByIdAction,
-	CopyCaseLinkAction
+	CopyCaseLinkAction,
+	LoadCasesAction,
+	OpenModalAction,
+	SelectCaseByIdAction
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { isEqual, range as _range } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 

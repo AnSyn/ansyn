@@ -1,7 +1,7 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { OverlaysService, OverlaysConfig } from './overlays.service';
+import { inject, TestBed } from '@angular/core/testing';
+import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
-import { HttpModule, XHRBackend, Response, ResponseOptions, Http } from '@angular/http';
+import { Http, HttpModule, Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';

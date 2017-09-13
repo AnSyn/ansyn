@@ -1,30 +1,44 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { ChangeLayoutAction, UpdateStatusFlagsAction, StatusBarActionsTypes } from '@ansyn/status-bar';
+import {
+	ChangeLayoutAction,
+	CopySelectedCaseLinkAction,
+	IStatusBarState,
+	StatusBarActionsTypes,
+	statusBarFlagsItems,
+	UpdateStatusFlagsAction
+} from '@ansyn/status-bar';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
-import { ICasesState, Case, defaultMapType, CaseMapState, CasesActionTypes } from '@ansyn/menu-items/cases';
+import {
+	Case,
+	CaseMapState,
+	CasesActionTypes,
+	CopyCaseLinkAction,
+	defaultMapType,
+	ICasesState,
+	UpdateCaseAction
+} from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { cloneDeep, isEmpty, get, pull } from 'lodash';
-import { IStatusBarState } from '@ansyn/status-bar';
-import { UpdateMapSizeAction } from '@ansyn/map-facade';
+import { cloneDeep, get, isEmpty, pull } from 'lodash';
 import { Position } from '@ansyn/core/models/position.model';
 import '@ansyn/core/utils/clone-deep';
 import { UUID } from 'angular2-uuid';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { UpdateCaseAction, CopyCaseLinkAction } from '@ansyn/menu-items/cases';
-import { CopySelectedCaseLinkAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
-import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
+	LoadOverlaysAction,
+	OverlaysMarkupAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { MapsLayout } from '@ansyn/core';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { OverlaysActionTypes, SyncFilteredOverlays } from '@ansyn/overlays/actions';

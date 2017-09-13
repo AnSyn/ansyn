@@ -1,13 +1,18 @@
 import {
-	Component, HostListener, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy,
-	HostBinding
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	HostBinding,
+	HostListener,
+	OnInit,
+	ViewChild
 } from '@angular/core';
-import { transition, trigger, style, animate } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { SaveDefaultCaseAction, CloseModalAction } from '../../actions/cases.actions';
+import { CloseModalAction, SaveDefaultCaseAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 const animations_during = '0.2s';

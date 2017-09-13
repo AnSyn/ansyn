@@ -5,10 +5,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ToolsReducer } from '../../reducers/tools.reducer';
 
 
-import { Observable } from 'rxjs/Observable';
-import { dispatch } from 'd3-dispatch';
-
-
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
 	let fixture: ComponentFixture<AnnotationsControlComponent>;

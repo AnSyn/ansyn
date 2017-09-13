@@ -1,5 +1,5 @@
-import { Store, State, ActionReducer } from '@ngrx/store';
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { ActionReducer, State, Store } from '@ngrx/store';
+import { getTestBed, TestBed } from '@angular/core/testing';
 
 export interface StoreFixture<T> {
 	store: Store<T>;

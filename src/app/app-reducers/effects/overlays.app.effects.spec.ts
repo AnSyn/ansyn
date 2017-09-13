@@ -3,22 +3,23 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import {
-	LoadOverlaysSuccessAction, OverlaysActionTypes, LoadOverlaysAction,
-	DisplayOverlayFromStoreAction, SetFiltersAction
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
+	SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesReducer, Case, CasesService, AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
+import { Case, CasesReducer, CasesService, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer, IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlayState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
-import { IToolsState, ToolsReducer, toolsInitialState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsInitialState, ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
-import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

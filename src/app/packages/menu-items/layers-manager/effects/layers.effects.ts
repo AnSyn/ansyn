@@ -1,14 +1,13 @@
 import { ILayerState } from './../reducers/layers.reducer';
 import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
-import { ILayerTreeNode } from './../models/layer-tree-node';
 import {
-	LayersActions,
 	BeginLayerTreeLoadAction,
-	LayerTreeLoadedAction,
+	ErrorLoadingLayersAction,
+	LayersActions,
 	LayersActionTypes,
+	LayerTreeLoadedAction,
 	SelectLayerAction,
-	UnselectLayerAction,
-	ErrorLoadingLayersAction
+	UnselectLayerAction
 } from './../actions/layers.actions';
 import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
@@ -19,7 +18,7 @@ import 'rxjs/add/observable/from';
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
-	StartMouseShadow, StopMouseShadow, SetAutoImageProcessing,
-	AnnotationVisualizerAgentAction
+	AnnotationVisualizerAgentAction,
+	SetAutoImageProcessing,
+	StartMouseShadow,
+	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';

@@ -1,5 +1,5 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { MapActionTypes, AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstacneAction, BackToWorldAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
@@ -10,10 +10,9 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 import { isNil as _isNil } from 'lodash';
-import { ImageryCommunicatorService, IVisualizerEntity, CommunicatorEntity } from '@ansyn/imagery';
-import { ContextEntityVisualizerType, ContextEntityVisualizer } from 'app/app-visualizers/context-entity.visualizer';
+import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
+import { ContextEntityVisualizer, ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class ContextEntityAppEffects {

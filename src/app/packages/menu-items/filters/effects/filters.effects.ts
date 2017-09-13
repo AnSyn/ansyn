@@ -11,10 +11,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

@@ -1,9 +1,7 @@
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
-import { ILayerTreeNode } from '../models/layer-tree-node';
-import { IServerDataLayerContainerRoot } from '../models/server-data-layer-container-root';
-import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
-import { HttpModule, Http, Headers, RequestOptions } from '@angular/http';
-import { DataLayersService, LayerRootsBundle } from './data-layers.service';
+import { inject, TestBed } from '@angular/core/testing';
+import { Http, HttpModule } from '@angular/http';
+import { DataLayersService } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';

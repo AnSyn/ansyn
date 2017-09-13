@@ -3,8 +3,6 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-import { defaultCase } from './cases/default_case';
-
 export const configuration = {
 	env: 'dev',
 	production: false,

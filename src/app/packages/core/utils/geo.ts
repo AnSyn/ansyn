@@ -1,5 +1,5 @@
-import { FeatureCollection, GeometryObject, Point, Polygon } from 'geojson';
-import { point, feature } from '@turf/helpers';
+import { FeatureCollection, GeometryObject, Point } from 'geojson';
+import { feature, point } from '@turf/helpers';
 import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
 

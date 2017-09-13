@@ -1,70 +1,68 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	DisplayOverlaySuccessAction,
+	LoadOverlaysAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction,
+	RequestOverlayByIDFromBackendAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	LayersActionTypes,
 	SelectLayerAction,
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { BaseMapSourceProvider } from '@ansyn/imagery';
-import { Case, ICasesState, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Case, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import {
+	ActiveMapChangedAction,
+	CompositeMapShadowAction,
 	MapActionTypes,
+	MapFacadeService,
 	PositionChangedAction,
 	StartMapShadowAction,
-	StopMapShadowAction,
-	CompositeMapShadowAction,
-	ActiveMapChangedAction,
-	MapFacadeService
+	StopMapShadowAction
 } from '@ansyn/map-facade';
-import { isEmpty, cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty, isNil } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction, statusBarFlagsItems } from '@ansyn/status-bar';
+import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	LoadOverlaysAction,
-	OverlaysMarkupAction,
-	DisplayOverlaySuccessAction,
-	RequestOverlayByIDFromBackendAction
-} from '@ansyn/overlays/actions/overlays.actions';
-import {
-	BackToWorldAction,
 	AddMapInstacneAction,
-	SynchronizeMapsAction,
 	AddOverlayToLoadingOverlaysAction,
+	BackToWorldAction,
+	EnableMapGeoOptionsActionStore,
 	RemoveOverlayFromLoadingOverlaysAction,
-	EnableMapGeoOptionsActionStore
+	SetLayoutAction,
+	SetOverlayNotInCaseAction,
+	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { calcGeoJSONExtent, isExtentContainedInPolygon } from '@ansyn/core/utils';
+import { calcGeoJSONExtent, endTimingLog, isExtentContainedInPolygon, startTimingLog } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
-import { Position, CaseMapState, getPointByPolygon, getPolygonByPoint } from '@ansyn/core';
-import { isNil } from 'lodash';
-import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
+import { CaseMapState, getPointByPolygon, getPolygonByPoint, Position } from '@ansyn/core';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
+	AnnotationVisualizerAgentAction,
 	SetActiveCenter,
-	SetPinLocationModeAction,
-	SetActiveOverlaysFootprintModeAction,
-	SetMapGeoEnabledModeToolsActionStore
+	SetMapGeoEnabledModeToolsActionStore,
+	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
+import {
+	SetMapGeoEnabledModeStatusBarActionStore,
+	StatusBarActionsTypes
+} from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
-import { MapsLayout, CaseMapsState } from '@ansyn/core/models';
-import { SetLayoutAction, SetOverlayNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
+import { MapsLayout } from '@ansyn/core/models';
 
 @Injectable()
 export class MapAppEffects {

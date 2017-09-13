@@ -1,28 +1,26 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { MockComponent } from '@ansyn/core/test';
-import { StoreFixture, createStore } from '@ansyn/core/test';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { createStore, MockComponent, StoreFixture } from '@ansyn/core/test';
 import { OverlaysContainerComponent } from './overlays-container.component';
-import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { Observable, Observer } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import * as d3 from 'd3';
 
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from '../effects/overlays.effects';
 
-import { StoreModule, Store, State, ActionReducer } from '@ngrx/store';
+import { State, Store, StoreModule } from '@ngrx/store';
 
-import { IOverlayState, OverlayReducer, overlayInitialState } from '../reducers/overlays.reducer';
+import { IOverlayState, OverlayReducer } from '../reducers/overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	SelectOverlayAction,
 	UnSelectOverlayAction
 } from '../actions/overlays.actions';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

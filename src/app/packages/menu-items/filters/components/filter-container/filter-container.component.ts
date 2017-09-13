@@ -1,15 +1,11 @@
 import { UpdateFilterAction } from './../../actions/filters.actions';
 import { Store } from '@ngrx/store';
-import { isEqual, cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from './../../models/metadata/filter-metadata.interface';
-import { Filter } from './../../models/filter';
-import {
-	Component, Input, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy,
-	ChangeDetectorRef, OnInit
-} from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({

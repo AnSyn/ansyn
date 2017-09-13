@@ -1,5 +1,5 @@
 import { TypeContainerService } from './services/type-container.service';
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { TypeContainerModule } from './type-container.module';
 
 

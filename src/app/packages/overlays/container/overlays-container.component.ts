@@ -1,14 +1,17 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import * as overlaysAction from '../actions/overlays.actions';
 import {
-	DisplayOverlayFromStoreAction,
-	GoNextDisplayAction,
-	GoPrevDisplayAction, MouseOutDropAction, MouseOverDropAction,
-	OverlaysMarkupAction, SelectOverlayAction, SetTimelineStateAction, UnSelectOverlayAction,
+	MouseOutDropAction,
+	MouseOverDropAction,
+	OverlaysMarkupAction,
+	SelectOverlayAction,
+	SetTimelineStateAction,
+	UnSelectOverlayAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
-import { isEmpty, isEqual, get, isNil } from 'lodash';
+import { isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
@@ -16,14 +19,12 @@ import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';
-import * as overlaysAction from '../actions/overlays.actions';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { schemeCategory10 } from 'd3';
 import { OverlaysService } from '../services/overlays.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Spinner } from '@ansyn/core/utils';
-import { Observable } from 'rxjs/Observable';
 import { startTimingLog } from '@ansyn/core/utils';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-overlays-container',

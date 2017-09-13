@@ -1,13 +1,10 @@
-import { CasesActionTypes, SelectCaseByIdAction, ICasesState } from '@ansyn/menu-items/cases';
-import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
-import { Store, Action } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes, SelectMenuItemAction, MenuItem } from '@ansyn/core';
+import { MenuActionTypes } from '@ansyn/core';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { IAppState } from '../';
-import { isEmpty } from 'lodash';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
 

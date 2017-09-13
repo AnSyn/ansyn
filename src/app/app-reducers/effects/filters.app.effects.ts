@@ -1,19 +1,19 @@
-import { cloneDeep, isNil, isEmpty } from 'lodash';
+import { cloneDeep, isEmpty, isNil } from 'lodash';
 
-import { Case, UpdateCaseAction, ICasesState } from '@ansyn/menu-items/cases';
-import { OverlaysActionTypes, Overlay } from '@ansyn/overlays';
+import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
 import {
-	InitializeFiltersAction,
-	ResetFiltersAction,
-	FilterMetadata,
-	FiltersService,
 	Filter,
-	FiltersActionTypes
+	FilterMetadata,
+	FiltersActionTypes,
+	FiltersService,
+	InitializeFiltersAction,
+	ResetFiltersAction
 } from '@ansyn/menu-items/filters';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';

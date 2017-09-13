@@ -12,9 +12,19 @@ import {
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
-	ChangeLayoutAction, SetLinkCopyToastValueAction, OpenShareLink, UpdateStatusFlagsAction,
-	CopySelectedCaseLinkAction, FavoriteAction, ExpandAction, GoNextAction, GoPrevAction, BackToWorldViewAction,
-	SetOrientationAction, SetGeoFilterAction, SetTimeAction
+	BackToWorldViewAction,
+	ChangeLayoutAction,
+	CopySelectedCaseLinkAction,
+	ExpandAction,
+	FavoriteAction,
+	GoNextAction,
+	GoPrevAction,
+	OpenShareLink,
+	SetGeoFilterAction,
+	SetLinkCopyToastValueAction,
+	SetOrientationAction,
+	SetTimeAction,
+	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';

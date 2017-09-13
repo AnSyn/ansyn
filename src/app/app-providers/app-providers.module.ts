@@ -1,15 +1,15 @@
 import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import {
-	IIdahoOverlaySourceConfig,
+	IdahoOverlaysSourceConfig,
 	IdahoSourceProvider,
-	IdahoOverlaysSourceConfig
+	IIdahoOverlaySourceConfig
 } from './overlay-source-providers/idaho-source-provider';
 import { OpenLayerBingSourceProvider } from './map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerIDAHOSourceProvider } from './map-source-providers/open-layers-IDAHO-source-provider';
 import { OpenLayerOSMSourceProvider } from './map-source-providers/open-layers-OSM-source-provider';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 
 

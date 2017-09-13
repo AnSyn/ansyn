@@ -1,5 +1,5 @@
 import { FiltersService } from '../../services/filters.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';

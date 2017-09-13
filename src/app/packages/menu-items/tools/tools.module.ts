@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
-import { CoreModule, AddMenuItemAction, MenuItem } from '@ansyn/core';
+import { AddMenuItemAction, CoreModule, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { GoToModule } from './go-to/go-to.module';
 import { IToolsConfig, toolsConfig } from './models';

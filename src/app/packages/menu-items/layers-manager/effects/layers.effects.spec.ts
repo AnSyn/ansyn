@@ -6,7 +6,7 @@ import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { HttpModule } from '@angular/http';
-import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
+import { DataLayersService } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from './../actions/layers.actions';

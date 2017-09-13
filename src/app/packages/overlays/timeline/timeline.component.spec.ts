@@ -1,11 +1,9 @@
-import { async, ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import * as d3 from 'd3';
-import * as eventDrops from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { Subject, Subscription } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 

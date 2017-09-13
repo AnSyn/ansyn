@@ -1,4 +1,4 @@
-import { startTimingLog, endTimingLog } from '@ansyn/core/utils';
+import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 
 export abstract class BaseMapSourceProvider {
 

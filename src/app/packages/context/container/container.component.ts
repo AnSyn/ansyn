@@ -9,7 +9,6 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/delay';
-import { logger } from 'codelyzer/util/logger';
 import { Context } from '../';
 
 @Component({

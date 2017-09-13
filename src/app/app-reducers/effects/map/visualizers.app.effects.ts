@@ -1,31 +1,38 @@
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import {
+	DrawOverlaysOnMapTriggerAction,
+	HoverFeatureTriggerAction,
+	MapActionTypes
+} from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Action, Store } from '@ngrx/store';
-import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { Case } from '@ansyn/core/models/case.model';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import {
+	DisplayOverlayFromStoreAction,
+	MouseOutDropAction,
+	MouseOverDropAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
+import {
+	FootprintPolylineVisualizer,
+	FootprintPolylineVisualizerType
+} from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/hitmap-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { DrawOverlaysOnMapTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 
-import { AnnotationVisualizerType, AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
+import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {

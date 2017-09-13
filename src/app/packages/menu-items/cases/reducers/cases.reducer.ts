@@ -1,7 +1,7 @@
-import { CasesActionTypes, CasesActions } from '../actions/cases.actions';
+import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
-import { isNil, isEmpty, cloneDeep, pull, get as _get } from 'lodash';
+import { get as _get, isEmpty, isNil } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];

@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
 
 	get login$() {
 		return this.authService.login(this.username, this.password, this.rememberMe)
-			.switchMap(() => Observable.fromPromise(this.router.navigate([this.returnUrl])))
+			.switchMap(() => Observable.fromPromise(this.router.navigateByUrl(this.returnUrl)))
 			.catch(() => {
 				this.showTryAgainMsg();
 				return Observable.throw('Unauthorized');

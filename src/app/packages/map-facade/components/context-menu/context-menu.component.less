@@ -1,10 +1,12 @@
+@import '../../../../../styles/z-index-globals';
+
 :host {
 	outline: none;
 	position: fixed;
 	transform: translate(-32px, -32px);
 	width: 0;
 	height: 0;
-	z-index: 4000;
+	z-index: @context-menu-depth;
 
 	&:focus {
 		nav.menu {
@@ -123,7 +125,6 @@
 		position: relative;
 		transition: visibility 200ms;
 		visibility: hidden;
-
 
 		button.menu-open-button {
 			border-radius: 100%;

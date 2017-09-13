@@ -49,6 +49,5 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 	};
 
 	const centerPoint = center(extentPoly);
-	const isInside = inside(centerPoint, footprintFeature);
-	return isInside;
+	return inside(centerPoint, footprintFeature);
 }

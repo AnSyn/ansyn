@@ -255,7 +255,7 @@ export class VisualizersAppEffects {
 
 	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		const parsedPverlaysToDraw = overlaysToDraw.map(({ id, footprint }) => {
+		return overlaysToDraw.map(({ id, footprint }) => {
 			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
 				geometry: footprint,
@@ -263,7 +263,6 @@ export class VisualizersAppEffects {
 			};
 			return { id, featureJson };
 		});
-		return parsedPverlaysToDraw;
 	}
 
 }

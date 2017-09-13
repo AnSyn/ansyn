@@ -1,5 +1,5 @@
-import { SelectLayerAction, UnselectLayerAction } from './../../actions/layers.actions';
-import { NodeActivationChangedEventArgs } from './../../event-args/node-activation-changed-event-args';
+import { SelectLayerAction, UnselectLayerAction } from '../../actions/layers.actions';
+import { NodeActivationChangedEventArgs } from '../../event-args/node-activation-changed-event-args';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Component } from '@angular/core';
 import { ILayerTreeNode } from '../../models/layer-tree-node';

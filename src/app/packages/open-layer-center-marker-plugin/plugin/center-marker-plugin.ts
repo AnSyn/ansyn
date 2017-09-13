@@ -113,10 +113,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 			features: [iconFeature]
 		});
 
-		const vectorLayer = new VectorLayer({
-			source: vectorSource,
-		});
-		this._existingLayer = vectorLayer;
+		this._existingLayer = new VectorLayer({ source: vectorSource });
 
 		this._imageryCommunicator.addLayer(this._existingLayer);
 	}

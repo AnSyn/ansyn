@@ -45,8 +45,7 @@ export class ImageryProviderService {
 			throw new Error(`'mapName ${mapName} doesn't exist, can't provide it`);
 		}
 
-		const providedMap = this._mapProviders[mapName];
-		return providedMap;
+		return this._mapProviders[mapName];
 	}
 
 	public createPlugins(mapType: string): IMapPlugin[] {
@@ -79,7 +78,6 @@ export class ImageryProviderService {
 		if (!hasMapVisualizersProviders) {
 			return null;
 		}
-		const existingVisualizersConfig = this._mapVisualizersProviders.get(mapType);
-		return existingVisualizersConfig;
+		return this._mapVisualizersProviders.get(mapType);
 	}
 }

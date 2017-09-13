@@ -1,8 +1,8 @@
 import { LayerTreeLoadedAction, SelectLayerAction, UnselectLayerAction } from '../actions/layers.actions';
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
-import { ILayerTreeNode } from './../models/layer-tree-node';
-import { LayerType } from './../models/layer-type';
+import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
+import { ILayerTreeNode } from '../models/layer-tree-node';
+import { LayerType } from '../models/layer-type';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
 
 describe('LayersReducer', () => {

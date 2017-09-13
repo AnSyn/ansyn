@@ -153,7 +153,7 @@ function histogramEqualization(imageData, data) {
 	return this['performHistogram'](imageData, histLut);
 }
 
-function rgb2YCbCr(rgb) {
+function rgb2YCbCr(rgb): { y: number, cb, cr } {
 	const y = 16 + 0.257 * rgb.r + 0.504 * rgb.g + 0.098 * rgb.b;
 	const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
 	const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
@@ -166,9 +166,9 @@ function yCbCr2RGB(yCbCr) {
 	const cbNorm = yCbCr.cb - 128;
 	const crNorm = yCbCr.cr - 128;
 
-	const r = 1.164 * yNorm + 0 * cbNorm + 1.596 * crNorm;
+	const r = 1.164 * yNorm + 1.596 * crNorm;
 	const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
-	const b = 1.164 * yNorm + 2.017 * cbNorm + 0 * crNorm;
+	const b = 1.164 * yNorm + 2.017 * cbNorm;
 
 	return { r, g, b };
 }
@@ -185,7 +185,7 @@ function buildHistogramLut(imageData) {
 		const g = imageData.data[index + 1];
 		const b = imageData.data[index + 2];
 
-		const yCbCr = this['rgb2YCbCr']({ r, g, b });
+		const yCbCr = rgb2YCbCr({ r, g, b });
 
 		const val = Math.floor(yCbCr.y);
 		if (totalHistLut[val] === undefined) {

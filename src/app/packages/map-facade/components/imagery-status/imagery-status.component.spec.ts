@@ -36,7 +36,7 @@ describe('ImageryStatusComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: 'test' }));
 	});
 
-	it('check click on toggleMapSyncroniztion', () => {
+	it('check click on toggleMapSynchronization', () => {
 		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.status-bar-link-maps-icon img').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction({ mapId: 'test' }));

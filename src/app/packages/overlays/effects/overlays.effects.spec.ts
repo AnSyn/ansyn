@@ -202,9 +202,7 @@ describe('Overlays Effects ', () => {
 		const action = new DisplayOverlayFromStoreAction({ id: 'tmp', map_id: '4444' });
 		runner.queue(action);
 		let result: DisplayOverlayAction;
-		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => {
-			result = _result;
-		});
+		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => result = _result);
 		expect(result.constructor).toEqual(DisplayOverlayAction);
 		expect(result.payload.overlay).toEqual(loadedOverlays[0] as any);
 		expect(result.payload.map_id).toEqual('4444');

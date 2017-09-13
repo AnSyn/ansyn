@@ -18,8 +18,7 @@ export class QueryParamsHelper {
 		const s_case = cloneDeep(defaultCase);
 		const q_params_keys = Object.keys(q_params);
 		q_params_keys.forEach((key) => {
-			const encodedValue = this.decodeCaseObjects(key, q_params[key]);
-			s_case.state[key] = encodedValue;
+			s_case.state[key] = this.decodeCaseObjects(key, q_params[key]);
 		});
 		return s_case;
 	}
@@ -61,8 +60,7 @@ export class QueryParamsHelper {
 		const urlTree = this.casesService.urlSerializer.parse(url);
 		const keys = this.casesService.queryParamsKeys.filter(key => s_case.state[key]);
 		keys.forEach(key => {
-			const decodedValue = this.encodeCaseObjects(key, s_case.state[key]);
-			urlTree.queryParams[key] = decodedValue;
+			urlTree.queryParams[key] = this.encodeCaseObjects(key, s_case.state[key]);
 		});
 		const baseLocation = this.casesService.config.useHash ? `${location.origin}/#` : location.origin;
 		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);

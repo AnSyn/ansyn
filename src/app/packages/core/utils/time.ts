@@ -38,9 +38,7 @@ export function getTimeDiff(date1: Date, date2: Date): TimeDiff {
 	const minutes = Math.floor(millisecondsDiff / 1000 / 60);
 	millisecondsDiff -= minutes * 1000 * 60;
 	const seconds = Math.floor(millisecondsDiff / 1000);
-	millisecondsDiff -= seconds * 1000;
-	const result = new TimeDiff(years, months, days, hours, minutes, seconds, isNegative);
-	return result;
+	return new TimeDiff(years, months, days, hours, minutes, seconds, isNegative);
 }
 
 export function getTimeDiffFormat(timeDiff: TimeDiff): string {

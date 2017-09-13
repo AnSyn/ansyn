@@ -93,8 +93,7 @@ export class AnsynJwt {
 
 	getPayload(jwt) {
 		const [header, data, signeture] = [...jwt.split('.')];
-		const payload = this.decode(data);
-		return payload;
+		return this.decode(data);
 	}
 
 }

@@ -29,12 +29,8 @@ export class OverlaysDisplayModeComponent {
 			}
 		}
 		// Refresh the parent, need to be outside of if, because load bug
-		if (this._visualizerType === 'None') {
-			this.modeOn = false;
-		} else {
-			this.modeOn = true;
-		}
-	};
+		this.modeOn = this._visualizerType !== 'None';
+	}
 
 	public get visualizerType() {
 		return this._visualizerType;

@@ -80,7 +80,7 @@ export class AddMapInstacneAction implements Action {
 	}
 }
 
-// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become pluggins
+// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
 export class MapInstanceChangedAction extends AddMapInstacneAction {
 	public mapInstanceChangedPayload;
 

@@ -44,17 +44,13 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			super.endTimingLog('tile_load-' + metaData.id);
 		});
 
-
-		const idahoLayer = new ImageLayer({
+		return new ImageLayer({
 			source: new ProjectableRaster({
 				sources: [source],
-				operation: function (pixels, data) {
-					return pixels[0];
-				},
+				operation: (pixels) => pixels[0],
 				operationType: 'image'
 			})
 		});
-		return idahoLayer;
 	}
 
 	createAsync(metaData: any): Promise<any> {

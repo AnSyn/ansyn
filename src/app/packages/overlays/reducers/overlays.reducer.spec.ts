@@ -62,7 +62,7 @@ describe('Overlay Reducer', () => {
 	});
 
 
-	it('should add overaly id to seleced overlays array\'s', () => {
+	it('should add overlay id to selected overlays array\'s', () => {
 		const fakeId = 'iu34-2322';
 		const action = new SelectOverlayAction(fakeId);
 
@@ -71,7 +71,7 @@ describe('Overlay Reducer', () => {
 
 	});
 
-	it('should remove overaly id from the seleced overlays array\'s', () => {
+	it('should remove overlay id from the selected overlays array\'s', () => {
 		const fakeId = 'iu34-2322';
 		const action = new SelectOverlayAction(fakeId);
 

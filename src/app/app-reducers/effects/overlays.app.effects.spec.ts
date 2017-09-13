@@ -129,9 +129,9 @@ describe('OverlaysAppEffects', () => {
 		});
 	}));
 
-	beforeEach(inject([CasesService, EffectsRunner, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _overalysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([CasesService, EffectsRunner, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _effectsRunner: EffectsRunner, _imageryCommunicatorService: ImageryCommunicatorService, _overlaysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {
 		casesService = _casesService;
-		overlaysAppEffects = _overalysAppEffects;
+		overlaysAppEffects = _overlaysAppEffects;
 		effectsRunner = _effectsRunner;
 		overlaysService = _overlaysService;
 		imageryCommunicatorService = _imageryCommunicatorService;
@@ -169,16 +169,12 @@ describe('OverlaysAppEffects', () => {
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		let result;
-		const drops = [{ name: 'name', data: [{ id: 'first' }, { id: 'last' }] }];
-
 
 		casesService.contextValues.defaultOverlay = 'latest';
 
 		effectsRunner.queue(new SetFiltersAction([]));
 
-		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => {
-			result = _result;
-		});
+		overlaysAppEffects.displayLatestOverlay$.subscribe((_result) => result = _result);
 		expect(result).toBeTruthy();
 		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
 		expect(result.payload.id).toEqual('last');

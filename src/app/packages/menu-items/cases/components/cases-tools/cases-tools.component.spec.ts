@@ -1,4 +1,4 @@
-import { SaveCaseComponent } from './../save-case/save-case.component';
+import { SaveCaseComponent } from '../save-case/save-case.component';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CasesToolsComponent } from './cases-tools.component';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';

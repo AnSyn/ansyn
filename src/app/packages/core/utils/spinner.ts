@@ -23,16 +23,7 @@ export class Spinner {
 		this.wrapper = this.element.offsetHeight;
 	}
 
-	_setText(text) {
-		this.text = text;
-	}
-
-	setElement(el) {
-		this._setElement(el);
-	}
-
 	start(text, color) {
-		//console.log('start',this.element);
 		if (!this.element) {
 			console.warn('this.element is not defined', this.element);
 			return;
@@ -88,7 +79,6 @@ export class Spinner {
 			this.outerDiv.appendChild(textDiv);
 		}
 		this.element.appendChild(this.outerDiv);
-
 	}
 
 	stop() {

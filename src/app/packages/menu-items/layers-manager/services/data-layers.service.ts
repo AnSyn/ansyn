@@ -1,7 +1,7 @@
-import { ILayersManagerConfig } from './../models/layers-manager-config';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { IServerDataLayerContainerRoot } from './../models/server-data-layer-container-root';
+import { ILayersManagerConfig } from '../models/layers-manager-config';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
+import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
+import { IServerDataLayerContainerRoot } from '../models/server-data-layer-container-root';
 import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';

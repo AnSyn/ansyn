@@ -14,8 +14,8 @@
 <button (click)="update()">Update</button>
 <button (click)="create()">Create</button>
 <ul>
-	<ng-template ngFor let-hit [ngForOf]="result">
-		<li>{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;<a
-			(click)="delete(hit.id)">delete</a></li>
-	</ng-template>
+	<li *ngFor="let hit of result">
+		{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;
+		<a (click)="delete(hit.id)">delete</a>
+	</li>
 </ul>

@@ -110,7 +110,7 @@ describe('ImageriesManagerComponent', () => {
 
 	});
 
-	it('emit change action event and chagne the active map id ', fakeAsync(() => {
+	it('emit change action event and change the active map id ', fakeAsync(() => {
 		spyOn(component, 'changeActiveImagery');
 
 		const wrapperDivs = fixture.debugElement.nativeElement.querySelectorAll('.map-container-wrapper');
@@ -172,8 +172,7 @@ describe('ImageriesManagerComponent', () => {
 
 	it('change selected layout to \'layout1\' and make sure \'ol-rotate\' style updates', () => {
 		const element = document.createElement('div');
-		const htmlToAdd = '<div class="ol-rotate">ol-rotate</div>';
-		element.innerHTML = htmlToAdd;
+		element.innerHTML = '<div class="ol-rotate">ol-rotate</div>';
 		component.setSelectedLayout({ id: 'layout1', description: 'full screen', maps_count: 1 });
 		fixture.detectChanges();
 

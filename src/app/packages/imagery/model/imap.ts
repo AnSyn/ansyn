@@ -22,8 +22,8 @@ export interface IMap {
 
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
-	 * @param The new layer to set the view with. this layer projection will be the views projection
-	 * @param {Point[]} the extent (bounding box points) of the map at ESPG:4326
+	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
+	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
 	resetView(layer: any, extent?: GeoJSON.Point[]): void;
 
@@ -47,7 +47,7 @@ export interface IMap {
 
 	dispose(): void;
 
-	// TODO: move them to pluggins
+	// TODO: move them to plugins
 	setPointerMove(enable: boolean);
 
 	removeSingleClickEvent();

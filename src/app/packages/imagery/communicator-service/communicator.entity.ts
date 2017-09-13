@@ -127,13 +127,11 @@ export class CommunicatorEntity {
 	}
 
 	public getPlugin(pluginName: string): IMapPlugin {
-		let pluginResult: IMapPlugin = this._manager.plugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
-		return pluginResult;
+		return this._manager.plugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
 	}
 
 	public getVisualizer(visualizerType: string): IMapVisualizer {
-		let visualizerResult: IMapVisualizer = this._manager.visualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
-		return visualizerResult;
+		return this._manager.visualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
 	}
 
 	public getAllVisualizers() {

@@ -12,9 +12,7 @@ export class MapPosition {
 				  center: GeoJSON.Point,
 				  rotation?: number,
 				  boundingBox?: GeoJSON.Point[]): MapPosition {
-
-		const mapPosition = new MapPosition(zoom, center, rotation, boundingBox);
-		return mapPosition;
+		return new MapPosition(zoom, center, rotation, boundingBox);
 	}
 
 	constructor(zoom: number,

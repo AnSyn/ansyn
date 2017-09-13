@@ -6,13 +6,8 @@ import Coordinate from 'ol/coordinate';
 
 export class Utils {
 	static BoundingBoxToOLExtent(bbox: GeoJSON.Point[]): Extent | any {
-		const coordinates: Coordinate[] = [];
-
-		bbox.forEach((p) => {
-			coordinates.push([p.coordinates[0], p.coordinates[1]]);
-		});
-		const geoViewExtent: Extent = Extent.boundingExtent(coordinates);
-		return geoViewExtent;
+		const coordinates: Coordinate[] = bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
+		return Extent.boundingExtent(coordinates);
 	}
 
 	static OLExtentToBoundingBox(extent: Extent): GeoJSON.Point[] {

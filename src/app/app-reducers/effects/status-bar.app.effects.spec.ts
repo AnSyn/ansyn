@@ -73,7 +73,7 @@ describe('StatusBarAppEffects', () => {
 					'defaultApi': 'overlays',
 					'searchByCase': false,
 					'overlaySource': 'IDAHO',
-					'polygonGenerationDisatnce': 0.1
+					'polygonGenerationDistance': 0.1
 				}
 				},
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }

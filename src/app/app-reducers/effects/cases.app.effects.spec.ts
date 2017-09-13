@@ -21,6 +21,9 @@ import { ContextProviderService } from '@ansyn/context/providers/context-provide
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
+import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
+import { MapReducer } from '../../packages/map-facade/reducers/map.reducer';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -33,7 +36,7 @@ describe('CasesAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer }),
+				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
 				CoreModule,
 				RouterTestingModule
 			],
@@ -111,15 +114,16 @@ describe('CasesAppEffects', () => {
 	});
 
 
-	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
-		const action = new DisplayOverlayAction({ overlay: <Overlay> { id: 'tmp' } });
+	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
+		const mapsList: any[] = [{id:'map1', data: {}}, {id:'map2', data: {}}];
+		const activeMapId = 'map1';
+		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
+		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
 		effectsRunner.queue(action);
 		let result: UpdateCaseAction;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result: UpdateCaseAction) => {
-			result = _result;
-		});
-		expect(result.constructor).toEqual(UpdateCaseAction);
-		expect(CasesService.activeMap(result.payload).data.overlay.id).toEqual('tmp');
+		casesAppEffects.onDisplayOverlay$.subscribe((_result: SetMapsDataActionStore) => {result = _result;});
+		expect(result.constructor).toEqual(SetMapsDataActionStore);
+		expect(MapFacadeService.activeMap(<any>{...result.payload, activeMapId}).data.overlay.id).toEqual('tmp');
 	});
 
 

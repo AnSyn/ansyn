@@ -11,6 +11,7 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
 import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Subject } from 'rxjs/Subject';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -18,17 +19,12 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({ selector: 'ansyn-menu' });
-	const mock_status = MockComponent({
-		selector: 'ansyn-status-bar',
-		inputs: ['selected_case_name', 'overlays_count', 'overlay', 'hide-overlay', 'isFavoriteOverlayDisplayed']
-	});
-	const mock_overlays_container = MockComponent({ selector: 'ansyn-overlays-container' });
-	const mock_empty_component = MockComponent({ selector: 'ansyn-empty' });
-	const mock_imagery_view = MockComponent({
-		selector: 'ansyn-imageries-manager',
-		inputs: ['selected_layout', 'maps', 'pinLocation']
-	});
+	const mock_menu = MockComponent({selector: 'ansyn-menu'});
+	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']});
+	const mock_overlays_container = MockComponent({selector: 'ansyn-overlays-container'});
+	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});
+	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager'});
+
 	const cases: Case[] = [{
 		id: 'tmp',
 		state: {
@@ -83,8 +79,9 @@ describe('AnsynComponent', () => {
 				StoreModule.provideStore({
 					status_bar: StatusBarReducer,
 					cases: CasesReducer,
-					overlays: OverlayReducer,
-					tools: ToolsReducer
+					overlays : OverlayReducer,
+					tools: ToolsReducer,
+					map: MapReducer
 				})]
 		})
 			.compileComponents();

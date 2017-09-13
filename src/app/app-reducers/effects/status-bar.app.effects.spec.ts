@@ -33,6 +33,7 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
+import { SetLayoutAction } from '../../packages/map-facade/actions/map.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -132,7 +133,7 @@ describe('StatusBarAppEffects', () => {
 	it('updatePinPointSearchAction$', () => {
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true });
 
-		//mock communicatorsAsArray
+		// mock communicatorsAsArray
 		const imagery1 = {
 			createMapSingleClickEvent: () => {
 			}
@@ -152,7 +153,7 @@ describe('StatusBarAppEffects', () => {
 
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true });
 		store.dispatch(action);
-		//mock communicatorsAsArray
+		// mock communicatorsAsArray
 		const imagery1 = {
 			addPinPointIndicator: () => {
 			},
@@ -174,7 +175,7 @@ describe('StatusBarAppEffects', () => {
 
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false });
 		store.dispatch(action);
-		//mock communicatorsAsArray
+		// mock communicatorsAsArray
 		const imagery1 = {
 			addPinPointIndicator: () => {
 			},
@@ -190,47 +191,6 @@ describe('StatusBarAppEffects', () => {
 		statusBarAppEffects.updatePinPointIndicatorAction$.subscribe(() => {
 			expect(imagery1.removePinPointIndicator['calls'].count()).toBe(3);
 		});
-	});
-
-	it('onLayoutsChange$ should; set new layout_index on selected_case, change the maps of selected_case if layouts map_count are not equal', () => {
-		spyOn(casesService, 'updateCase').and.callFake((s_case) => Observable.of(s_case));
-		spyOn(statusBarAppEffects, 'setMapsDataChanges').and.callFake((s_case) => s_case);
-
-		const new_layout_index = 1;
-		const layouts_index = 2;
-
-		const caseItem: Case = <any> {
-			id: '31b33526-6447-495f-8b52-83be3f6b55bd',
-			state: {
-				maps: {
-					layouts_index,
-					data: [
-						{
-							id: 'imagery1',
-							data: { position: { zoom: 1, center: 2 } }
-						},
-						{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Hitmap' } },
-						{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
-					]
-				}
-			}
-		};
-		store.dispatch(new AddCaseSuccessAction(caseItem));
-		store.dispatch(new SelectCaseByIdAction(caseItem.id));
-
-		let action: ChangeLayoutAction = new ChangeLayoutAction(new_layout_index);
-		effectsRunner.queue(action);
-
-		const results = [];
-		statusBarAppEffects.onLayoutsChange$.subscribe((_result: UpdateCaseAction | UpdateMapSizeAction) => {
-			results.push(_result);
-			if (_result instanceof UpdateCaseAction) {
-				expect(_result.payload.state.maps.layouts_index).toEqual(new_layout_index);
-			} else {
-				expect((_result instanceof OverlaysMarkupAction)).toBeTruthy();
-			}
-		});
-		expect(results.length).toEqual(2);
 	});
 
 	it('selectCase$ should get layers_index, orientation, geoFilter and time from selected_case and return all update status-bar actions', () => {

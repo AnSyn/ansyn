@@ -14,7 +14,7 @@ import {
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { CasesReducer, ICasesState, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { CasesReducer, ICasesState, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import {
 	AnnotationVisualizerAgentAction,
@@ -24,7 +24,8 @@ import {
 	SetAutoImageProcessingSuccess
 } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
+import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -63,7 +64,12 @@ describe('ToolsAppEffects', () => {
 			}
 		} as any
 	}];
-
+	const imapState: any = {
+		mapsList: [
+			{ id: 'imagery1', data: { position: { zoom: 1, center: 2 }, isAutoImageProcessingActive: true, overlay: 'overlay' } }
+		],
+		activeMapId: 'imagery1'
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -82,7 +88,7 @@ describe('ToolsAppEffects', () => {
 		store = _store;
 		const selected_case = cases[0];
 		icaseState = cloneDeep({ cases, selected_case }) as any;
-		const fakeStore = { cases: icaseState };
+		const fakeStore = { cases: icaseState, map: imapState };
 
 		spyOn(store, 'select').and.callFake(type => {
 			return Observable.of(fakeStore[type]);
@@ -159,11 +165,9 @@ describe('ToolsAppEffects', () => {
 
 	describe('onActiveMapChanges', () => {
 		it('onActiveMapChanges with overlay null should raise DisableImageProcessing', () => {
-			const mapId = icaseState.selected_case.state.maps.active_map_id;
-			const active_map = icaseState.selected_case.state.maps.data.find((map) => map.id === mapId);
-			active_map.data.overlay = null;
-
-			effectsRunner.queue(new ActiveMapChangedAction());
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.overlay = null;
+			effectsRunner.queue(new ActiveMapChangedAction('fakeId'));
 			let result = null;
 			toolsAppEffects.onActiveMapChanges$.subscribe(_result => result = _result);
 			expect(result instanceof DisableImageProcessing).toBeTruthy();
@@ -171,8 +175,10 @@ describe('ToolsAppEffects', () => {
 		});
 
 		it('onActiveMapChanges with overlay and image processing as true on should raise EnableImageProcessing and ToggleImageProcessingSuccess with true', () => {
-			effectsRunner.queue(new ActiveMapChangedAction());
-
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.overlay = 'overlay' as any;
+			activeMap.data.isAutoImageProcessingActive = true;
+			effectsRunner.queue(new ActiveMapChangedAction('fakeId'));
 			let result = null;
 			toolsAppEffects.onActiveMapChanges$.subscribe(_result => result = _result);
 			expect(result instanceof EnableImageProcessing || result instanceof SetAutoImageProcessingSuccess).toBe(true);
@@ -183,11 +189,10 @@ describe('ToolsAppEffects', () => {
 		});
 
 		it('onActiveMapChanges with overlay and image processing as false on should raise EnableImageProcessing and ToggleImageProcessingSuccess with false', () => {
-			const mapId = icaseState.selected_case.state.maps.active_map_id;
-			const active_map = icaseState.selected_case.state.maps.data.find((map) => map.id === mapId);
-			active_map.data.isAutoImageProcessingActive = false;
-
-			effectsRunner.queue(new ActiveMapChangedAction());
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.overlay = 'overlay' as any;
+			activeMap.data.isAutoImageProcessingActive = false;
+			effectsRunner.queue(new ActiveMapChangedAction('fakeId'));
 
 			let result = null;
 			toolsAppEffects.onActiveMapChanges$.subscribe(_result => result = _result);
@@ -225,11 +230,10 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onActiveMapChangesSetOverlaysFootprintMode$ should change footprint mode', () => {
-
-		const active_map = CasesService.activeMap(icaseState.selected_case);
-
+		const active_map = MapFacadeService.activeMap(imapState);
 		active_map.data.overlayDisplayMode = <any> 'whatever';
-		effectsRunner.queue(new ActiveMapChangedAction());
+
+		effectsRunner.queue(new ActiveMapChangedAction(''));
 
 		let action1, action2, action3;
 		let count = 0;
@@ -247,7 +251,6 @@ describe('ToolsAppEffects', () => {
 					break;
 			}
 		});
-
 		expect(action1.constructor).toEqual(SetActiveOverlaysFootprintModeAction);
 		expect(action1.payload).toEqual('whatever');
 
@@ -312,13 +315,16 @@ describe('ToolsAppEffects', () => {
 	});
 
 	describe('toggleAutoImageProcessing', () => {
-		it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, UpdateCaseAction and ToggleAutoImageProcessingSuccess accordingly', () => {
+		it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, SetMapsDataActionStore and ToggleAutoImageProcessingSuccess accordingly', () => {
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.isAutoImageProcessingActive = true;
+
 			effectsRunner.queue(new SetAutoImageProcessing());
 
 			let result = null;
 			toolsAppEffects.toggleAutoImageProcessing$.subscribe(_result => result = _result);
 
-			expect(result instanceof SetMapAutoImageProcessing || result instanceof UpdateCaseAction
+			expect(result instanceof SetMapAutoImageProcessing || result instanceof SetMapsDataActionStore
 				|| result instanceof SetAutoImageProcessingSuccess).toBe(true);
 
 			if (result instanceof SetMapAutoImageProcessing) {
@@ -327,12 +333,8 @@ describe('ToolsAppEffects', () => {
 				expect(setMapImageProcessingResult.payload.toggle_value).toBeFalsy();
 			}
 
-			if (result instanceof UpdateCaseAction) {
-				const updatedCase: Case = result.payload;
-				const mapId = updatedCase.state.maps.active_map_id;
-				const active_map = updatedCase.state.maps.data.find((map) => map.id === mapId);
-
-				expect(active_map.data.isAutoImageProcessingActive).toBeFalsy();
+			if (result instanceof SetMapsDataActionStore) {
+				expect(activeMap.data.isAutoImageProcessingActive).toBeFalsy();
 			}
 
 			if (result instanceof SetAutoImageProcessingSuccess) {

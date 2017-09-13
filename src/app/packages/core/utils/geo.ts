@@ -5,8 +5,7 @@ import * as circle from '@turf/circle';
 
 export function getPolygonByPoint(lonLat: number[], radius = 0.1): GeoJSON.Feature<GeoJSON.Polygon> {
 	const tPoint = point(lonLat);
-	const region = circle(tPoint, radius);
-	return region;
+	return circle(tPoint, radius);
 }
 
 export function getPointByPolygon(geometry: GeometryObject | FeatureCollection<any>): Point {

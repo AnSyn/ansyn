@@ -108,11 +108,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 			return false;
 		}
 
-		if (node.children.every(child => child.data.isChecked) || node.children.every(child => !child.data.isChecked)) {
-			return false;
-		} else {
-			return true;
-		}
+		return !(node.children.every(child => child.data.isChecked) || node.children.every(child => !child.data.isChecked));
 	}
 }
 

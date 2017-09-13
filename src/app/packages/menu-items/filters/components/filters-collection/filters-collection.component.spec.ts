@@ -1,5 +1,5 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { FiltersModule } from './../../filters.module';
+import { FiltersModule } from '../../filters.module';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';

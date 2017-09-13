@@ -48,10 +48,10 @@ describe('ImageryProviderService', () => {
 		imageryProviderService.registerPlugin('map1', Plugin2);
 		imageryProviderService.registerPlugin('map2', Plugin3);
 
-		const pluggins = imageryProviderService.createPlugins('map1');
-		expect(pluggins.length).toEqual(2);
-		expect((<any>pluggins[0]).id).toEqual(new Plugin1().id);
-		expect((<any>pluggins[1]).id).toEqual(new Plugin2().id);
+		const plugins = imageryProviderService.createPlugins('map1');
+		expect(plugins.length).toEqual(2);
+		expect((<any>plugins[0]).id).toEqual(new Plugin1().id);
+		expect((<any>plugins[1]).id).toEqual(new Plugin2().id);
 	});
 
 	it('ImageryProviderService should registerVisualizer and getVisualizersConfig by map type', () => {
@@ -60,11 +60,11 @@ describe('ImageryProviderService', () => {
 		imageryProviderService.registerVisualizer('map1', Plugin2, 'arg1');
 		imageryProviderService.registerVisualizer('map2', Plugin3);
 
-		const pluggins = imageryProviderService.getVisualizersConfig('map1');
-		expect(pluggins.length).toEqual(2);
+		const plugins = imageryProviderService.getVisualizersConfig('map1');
+		expect(plugins.length).toEqual(2);
 		//{visualizerClass: visualizerClass, args: constructorArgs}
-		expect((<any>pluggins[0]).visualizerClass).toEqual(Plugin1);
-		expect((<any>pluggins[1]).visualizerClass).toEqual(Plugin2);
-		expect((<any>pluggins[1]).args).toEqual('arg1');
+		expect((<any>plugins[0]).visualizerClass).toEqual(Plugin1);
+		expect((<any>plugins[1]).visualizerClass).toEqual(Plugin2);
+		expect((<any>plugins[1]).args).toEqual('arg1');
 	});
 });

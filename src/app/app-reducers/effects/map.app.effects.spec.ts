@@ -457,12 +457,7 @@ describe('MapAppEffects', () => {
 	describe('backToWorldView$', () => {
 		it('listen to BackToWorldAction with overlay', () => {
 
-			// data: [
-			// 	{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
-			// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
-			// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
-			// ],
-			const testOverlay: Overlay = {
+			icaseState.selected_case.state.maps.data[0].data.overlay = {
 				id: 'testOverlay1',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -471,7 +466,7 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+
 			const communicator = {
 				loadInitialMapSource: () => {
 				},
@@ -489,8 +484,7 @@ describe('MapAppEffects', () => {
 					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 				if (_result instanceof UpdateCaseAction) {
-					const resultCase: Case = _result.payload;
-					expect(resultCase.state.maps.data[0].data.overlay).toEqual(null);
+					expect(_result.payload.state.maps.data[0].data.overlay).toEqual(null);
 				}
 			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
@@ -644,7 +638,7 @@ describe('MapAppEffects', () => {
 
 	describe('overlayLoadingSuccess$', () => {
 		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction', () => {
-			const testOverlay: Overlay = {
+			icaseState.selected_case.state.maps.data[0].data.overlay = {
 				id: 'test_overlay_id',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -653,7 +647,7 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+
 			effectsRunner.queue(new DisplayOverlaySuccessAction({ id: 'test_overlay_id' }));
 
 			const resultActions = [];
@@ -677,8 +671,7 @@ describe('MapAppEffects', () => {
 
 	describe('displayOverlayOnNewMapInstance$', () => {
 		it('should dispatch DisplayOverlayAction when communicator added that contains overlay', () => {
-
-			const testOverlay: Overlay = {
+			icaseState.selected_case.state.maps.data[0].data.overlay = {
 				id: 'test_overlay_id',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -687,7 +680,6 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
 
 			const communicators: Array<string> = ['imagery1'];
 

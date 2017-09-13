@@ -1,5 +1,5 @@
 import { InfiniteScrollDirective } from './infinite-scroll.directive';
-import { ElementRef } from '../../../../../node_modules/@angular/core/src/linker/element_ref';
+import { ElementRef } from '@angular/core/src/linker/element_ref';
 
 describe('InfiniteScrollDirective', () => {
 	let directive: InfiniteScrollDirective;

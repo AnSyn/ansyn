@@ -41,8 +41,7 @@ describe('CasesReducer', () => {
 	});
 
 	it('SELECT_CASE action should set selected_case_id from payload if case exists', () => {
-		let state: ICasesState = initialCasesState;
-		state.cases = [
+		initialCasesState.cases = [
 			{ id: 'fake_case_id', name: 'fake_case_name1' },
 		];
 		let action: SelectCaseByIdAction = new SelectCaseByIdAction('fake_case_id');

@@ -321,11 +321,10 @@ export class OpenLayersMap implements IMap {
 		const projection = view.getProjection();
 		const center = view.getCenter();
 		const transformedCenter = proj.transform(center, projection, 'EPSG:4326');
-		const geoPoint: GeoJSON.Point = {
+		return {
 			type: 'Point',
 			coordinates: transformedCenter
 		};
-		return geoPoint;
 	}
 
 	public setPosition(position: MapPosition): void {
@@ -347,11 +346,7 @@ export class OpenLayersMap implements IMap {
 		let rotation: number = view.getRotation();
 		let boundingBox = this.getMapExtentInGeo();
 
-		const result: MapPosition = { center, zoom, rotation, boundingBox };
-		//if(configuration.General.logActions ){
-		//	console.log(`'Get Map Extent : ${JSON.stringify(boundingBox)}'`);
-		//}
-		return result;
+		return { center, zoom, rotation, boundingBox };
 	}
 
 	private getMapExtentInGeo() {
@@ -359,8 +354,7 @@ export class OpenLayersMap implements IMap {
 		const viewProjection = view.getProjection();
 		const viewExtent = view.calculateExtent(this._mapObject.getSize());
 		const viewExtentGeo = proj.transformExtent(viewExtent, viewProjection, 'EPSG:4326');
-		const bbox = Utils.OLExtentToBoundingBox(viewExtentGeo);
-		return bbox;
+		return Utils.OLExtentToBoundingBox(viewExtentGeo);
 	}
 
 	private flyTo(location) {

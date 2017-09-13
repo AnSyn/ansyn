@@ -1,7 +1,7 @@
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
-import { ILayerTreeNode } from './../models/layer-tree-node';
-import { LayerType } from './../models/layer-type';
+import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
+import { ILayerTreeNode } from '../models/layer-tree-node';
+import { LayerType } from '../models/layer-type';
 import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 import { DataLayersService } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
-import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from './../actions/layers.actions';
+import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs/Observable';
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
 

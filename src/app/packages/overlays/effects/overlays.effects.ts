@@ -80,26 +80,20 @@ export class OverlaysEffects {
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
 		.withLatestFrom((this.store$.select('overlays').pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
-			const prevOverlayId = filteredOverlays[index - 1];
-			return prevOverlayId;
+			return filteredOverlays[index - 1];
 		})
 		.filter(prevOverlayId => !_isNil(prevOverlayId))
-		.map(prevOverlayId => {
-			return new DisplayOverlayFromStoreAction({ id: prevOverlayId });
-		});
+		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
 
 	@Effect()
 	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
 		.withLatestFrom((this.store$.select('overlays').pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
-			const nextOverlayId = filteredOverlays[index + 1];
-			return nextOverlayId;
+			return filteredOverlays[index + 1];
 		})
 		.filter(nextOverlayId => !_isNil(nextOverlayId))
-		.map(nextOverlayId => {
-			return new DisplayOverlayFromStoreAction({ id: nextOverlayId });
-		});
+		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
 
 
 	// this method moves the timeline to active displayed overlay if exists in timeline

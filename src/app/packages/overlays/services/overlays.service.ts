@@ -57,9 +57,9 @@ export class OverlaysService {
 
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
-	 * @param {Map<any, any>} overlays
-	 * @param ids
-	 * @param properties
+	 * @param {Map<string, T>} items
+	 * @param {string[]} ids
+	 * @param {string[]} properties
 	 */
 	static pluck<T>(items: Map<string, T>, ids: string[], properties: string[]) {
 		return ids.map(id => {
@@ -97,7 +97,6 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
 
-
 	parseOverlayDataForDispaly(overlays: Map<string, Overlay>, ids, specialObject?: Map<string, OverlaySpecialObject>): Array<any> {
 		const overlaysData = OverlaysService.pluck(overlays, ids, ['id', 'date']);
 
@@ -110,16 +109,10 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}
 
-	/*parseOverlayDataForDispalyWithFilters(overlays , filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]){
-		const overlaysData = OverlaysService.pluck(OverlaysService.sort(OverlaysService.filter(overlays,filters)),["id","date"]);
-		return [{ name: undefined, data: overlaysData }];
-	}*/
-
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
-		const result = isEqual(data.filteredOverlays, data1.filteredOverlays)
+		return isEqual(data.filteredOverlays, data1.filteredOverlays)
 			&& isEqual(data.filters, data1.filters)
 			&& isEqual(data.specialObjects, data1.specialObjects);
-		return result;
 	}
 
 	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: { from: Date, to: Date }): { from: Date, to: Date } {

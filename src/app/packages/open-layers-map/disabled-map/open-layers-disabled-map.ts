@@ -39,15 +39,6 @@ export class OpenLayersDisabledMap implements IMap {
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: MapPosition) {
-
-		let center = [16, 38];
-		let zoom = 12;
-		let rotation = 0;
-		if (position) {
-			center = position.center.coordinates;
-			zoom = position.zoom;
-			rotation = position.rotation;
-		}
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -67,11 +58,10 @@ export class OpenLayersDisabledMap implements IMap {
 		const projection = view.getProjection();
 		const center = view.getCenter();
 		const transformedCenter = proj.transform(center, projection, 'EPSG:4326');
-		const geoPoint: GeoJSON.Point = {
+		return {
 			type: 'Point',
 			coordinates: transformedCenter
 		};
-		return geoPoint;
 	}
 
 	setCenter(center: GeoJSON.Point, animation: boolean) {
@@ -131,13 +121,12 @@ export class OpenLayersDisabledMap implements IMap {
 			}
 		}
 		newCenter = proj.transform([newCenter[0], newCenter[1]], 'EPSG:4326', newProjection);
-		const view: any = new View({
+		return new View({
 			center: newCenter,
 			zoom: newZoom,
 			rotation: newRotation,
 			projection: newProjection
 		});
-		return view;
 	}
 
 	fitToMainLayerExtent(extent: Extent) {
@@ -169,8 +158,7 @@ export class OpenLayersDisabledMap implements IMap {
 		let zoom: number = view.getZoom();
 		let rotation: number = view.getRotation();
 
-		const result: MapPosition = { center, zoom, rotation };
-		return result;
+		return { center, zoom, rotation };
 	}
 
 	updateSize(): void {

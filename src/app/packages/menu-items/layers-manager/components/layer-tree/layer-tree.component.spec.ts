@@ -110,7 +110,6 @@ describe('LayerTreeComponent', () => {
 		});
 
 		const rootDiv = fixture.debugElement.query(By.css('#node' + allFalseNodes[0].id)).nativeElement;
-		const allNodes: ILayerTreeNode[] = flattenNodeTree(allFalseNodes[0]);
 
 		rootDiv.click();
 		fixture.detectChanges();

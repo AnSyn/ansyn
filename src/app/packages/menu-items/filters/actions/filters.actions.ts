@@ -1,5 +1,5 @@
-import { FilterMetadata } from './../models/metadata/filter-metadata.interface';
-import { Filter } from './../models/filter';
+import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { Filter } from '../models/filter';
 import { Action } from '@ngrx/store';
 
 export const FiltersActionTypes = {

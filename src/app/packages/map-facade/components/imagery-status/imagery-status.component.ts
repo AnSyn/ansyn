@@ -23,7 +23,7 @@ export class ImageryStatusComponent {
 		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id }));
 	}
 
-	toggleMapSyncroniztion() {
+	toggleMapSynchronization() {
 		if (!this.disableGeoOptions) {
 			this.store.dispatch(new SynchronizeMapsAction({ mapId: this.map_id }));
 		}

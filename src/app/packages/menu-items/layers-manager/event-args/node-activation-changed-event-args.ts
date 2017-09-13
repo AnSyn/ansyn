@@ -1,4 +1,4 @@
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 
 export class NodeActivationChangedEventArgs {
 	public node: ILayerTreeNodeLeaf;

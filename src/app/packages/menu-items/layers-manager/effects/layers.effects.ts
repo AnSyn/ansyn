@@ -1,5 +1,5 @@
-import { ILayerState } from './../reducers/layers.reducer';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerState } from '../reducers/layers.reducer';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import {
 	BeginLayerTreeLoadAction,
 	ErrorLoadingLayersAction,
@@ -8,7 +8,7 @@ import {
 	LayerTreeLoadedAction,
 	SelectLayerAction,
 	UnselectLayerAction
-} from './../actions/layers.actions';
+} from '../actions/layers.actions';
 import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';

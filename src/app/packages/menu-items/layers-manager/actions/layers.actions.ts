@@ -1,5 +1,5 @@
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { Action } from '@ngrx/store';
 
 export const LayersActionTypes = {

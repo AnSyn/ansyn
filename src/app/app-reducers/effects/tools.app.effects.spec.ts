@@ -328,8 +328,7 @@ describe('ToolsAppEffects', () => {
 			}
 
 			if (result instanceof UpdateCaseAction) {
-				const updateCaseAction: UpdateCaseAction = result;
-				const updatedCase: Case = updateCaseAction.payload;
+				const updatedCase: Case = result.payload;
 				const mapId = updatedCase.state.maps.active_map_id;
 				const active_map = updatedCase.state.maps.data.find((map) => map.id === mapId);
 

@@ -1,4 +1,4 @@
-import { SaveDefaultCaseAction } from './../../actions/cases.actions';
+import { SaveDefaultCaseAction } from '../../actions/cases.actions';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';

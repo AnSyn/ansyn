@@ -182,14 +182,10 @@ export class MapAppEffects {
 		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => !isNil(state.selected_case))
 		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
 			const currentCase = state.selected_case;
-			const mapDataOfOverlayToDisplay = currentCase.state.maps.data.find((mapData) => {
-				return mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId;
-			});
-			return mapDataOfOverlayToDisplay;
+			return currentCase.state.maps.data
+				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
 		})
-		.filter((caseMapState: CaseMapState) => {
-			return !isNil(caseMapState);
-		})
+		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
 		.map((caseMapState: CaseMapState) => {
 			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 			return new DisplayOverlayAction({ overlay: caseMapState.data.overlay, map_id: caseMapState.id });
@@ -201,7 +197,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.mergeMap(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
 			const currentCase = state.selected_case;
-			const displayedOverlays = currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
+			return currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
 				const communicatorHandler = this.communicator.provide(data.id);
 				//if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
@@ -210,7 +206,6 @@ export class MapAppEffects {
 				}
 				return previusResult;
 			}, []);
-			return displayedOverlays;
 		});
 
 	@Effect()

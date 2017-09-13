@@ -1,6 +1,6 @@
 import { ILayerState } from './layers.reducer';
-import { ILayerTreeNodeRoot } from './../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from './../models/layer-tree-node-leaf';
+import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
+import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 
 export interface ILayerState {

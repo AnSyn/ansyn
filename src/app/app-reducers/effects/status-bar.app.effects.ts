@@ -289,8 +289,7 @@ export class StatusBarAppEffects {
 
 	createCopyMap(index, position: Position): CaseMapState {
 		// TODO: Need to get the real map Type from store instead of default map
-		const mapStateCopy: CaseMapState = { id: UUID.UUID(), data: { position }, mapType: defaultMapType };
-		return mapStateCopy;
+		return { id: UUID.UUID(), data: { position }, mapType: defaultMapType };
 	}
 
 	setMapsDataChanges([action, selected_case, selected_layout]: [ChangeLayoutAction, Case, MapsLayout]): Case {

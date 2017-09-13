@@ -72,9 +72,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	private handleError(error: Response | any): any {
 		let errorMessage: string;
-		const _error = error;
 		if (error instanceof Response) {
-			const body = _error.json() || '';
+			const body = error.json() || '';
 			const bodyError = body.error || JSON.stringify(body);
 			errorMessage = `${bodyError.status} - ${bodyError.statusText || ''} ${bodyError}`;
 		} else {

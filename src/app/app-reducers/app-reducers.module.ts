@@ -25,8 +25,8 @@ import { ContextEntityAppEffects } from './effects/context/context-entity.app.ef
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { IRouterState, RouterReducer } from '@ansyn/router/reducers/router.reducer';
 import { CasesRouterModule } from '@ansyn/cases-router/cases-router.module';
-import { ToolsMapsModule } from '../connection-packages/tools-maps/tools-maps.module';
-import { CasesMapModule } from '../connection-packages/cases-map/cases-map.module';
+import { ToolsMapsModule } from '@ansyn/tools-map/tools-maps.module';
+import { CasesMapModule } from '@ansyn/cases-map/cases-map.module';
 
 
 export interface IAppState {

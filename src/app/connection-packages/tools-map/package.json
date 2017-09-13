@@ -1,0 +1,8 @@
+{
+	"name": "@ansyn/tools-map",
+	"version": "1.0.0",
+	"peerDependencies": {
+		"@angular/core": "^4.2.4",
+		"@ngrx/effects": "^2.0.2"
+	}
+}

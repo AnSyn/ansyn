@@ -14,7 +14,7 @@ export interface IMapState {
 	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
 	activeMapId: string;
-	mapsData: CaseMapState[];
+	mapsList: CaseMapState[];
 	pinLocation: boolean;
 }
 
@@ -28,7 +28,7 @@ export const initialMapState: IMapState = {
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
 	activeMapId: null,
-	mapsData: [],
+	mapsList: [],
 	pinLocation: false
 };
 
@@ -81,11 +81,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };
 
-		case MapActionTypes.ACTIVE_MAP_CHANGED:
-			return  {...state, activeMapId: action.payload};
-
 		case MapActionTypes.STORE.SET_MAPS_DATA:
-			return  {...state, mapsData: action.payload};
+			return  {...state, ...action.payload};
 
 		case MapActionTypes.STORE.PIN_LOCATION_MODE:
 			return  {...state, pinLocation: action.payload};

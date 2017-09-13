@@ -3,11 +3,14 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { ActiveMapChangedAction, BackToWorldAction, MapActionTypes, SetMapsDataActionStore } from '../actions/map.actions';
+import {
+	ActiveMapChangedAction, BackToWorldAction, MapActionTypes, PositionChangedAction,
+	SetMapsDataActionStore
+} from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { isNil as _isNil, cloneDeep as _cloneDeep } from 'lodash';
+import { isNil as _isNil, isEmpty as _isEmpty } from 'lodash';
 import 'rxjs/add/operator/share';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
@@ -67,57 +70,61 @@ export class MapEffects {
 	@Effect()
 	onLayoutsChange$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(MapActionTypes.SET_LAYOUT)
-		.withLatestFrom(this.store$.select('map').pluck<any, any>('mapsData'), this.store$.select('map').pluck('activeMapId'))
-		.filter(([{payload}, mapsData]) => payload.maps_count !== mapsData.length && mapsData.length > 0)
-		.map(([{payload}, mapsData, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsData, activeMapId, payload))
-		.mergeMap(
-			({ newMapsData, newActiveMapId }) => {
-				if (newActiveMapId) {
-					return [new SetMapsDataActionStore(newMapsData), new ActiveMapChangedAction(newActiveMapId)];
-				} else {
-					return [new SetMapsDataActionStore(newMapsData)];
-				}
-			}
-		);
-
+		.withLatestFrom(this.store$.select('map').pluck<any, any>('mapsList'), this.store$.select('map').pluck('activeMapId'))
+		.filter(([{payload}, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
+		.map(([{payload}, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
+		.map((newData) => new SetMapsDataActionStore(newData));
 
 	@Effect()
 	positionChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select('map'), (action: PositionChangedAction, state: IMapState): any => {
-			return [MapFacadeService.mapById(state.mapsData, action.payload.id), state.mapsData, action.payload.position];
+			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
 		.filter(([selectedMap]) => !_isEmpty(selectedMap))
-		.map( ([selectedMap, mapsData, position]) => {
+		.map( ([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
-			return new SetMapsDataActionStore([...mapsData]);
+			return new SetMapsDataActionStore({mapsList: [...mapsList]});
 		});
-
 
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('map'), (action: BackToWorldAction, mapState: IMapState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
-			return [action, mapId, mapState.mapsData];
+			return [action, mapId, mapState.mapsList];
 		})
-		.mergeMap(([action, mapId, mapsData]: [BackToWorldAction, string, CaseMapState[]]) => {
-			const selectedMap = MapFacadeService.mapById(mapsData, mapId);
+		.map(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
+			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
 			comm.loadInitialMapSource(selectedMap.data.position.boundingBox);
 
-			const updatedMapsData = _cloneDeep(mapsData);
-			updatedMapsData.forEach(
+			const updatedMapsList = [...mapsList];
+			updatedMapsList.forEach(
 				(map) => {
 					if(map.id === mapId){
 						map.data.overlay = null;
 						map.data.isAutoImageProcessingActive = false;
 					}
 				});
-			return [
-				new SetMapsDataActionStore(updatedMapsData),
-			];
+			return new SetMapsDataActionStore({mapsList: updatedMapsList});
 		});
+
+	@Effect()
+	onMapsDataActiveMapIdChanged$: Observable<Action> = this.actions$
+		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
+		.map(toPayload)
+		.filter(({activeMapId}) => !_isNil(activeMapId))
+		.map(({activeMapId}) => new ActiveMapChangedAction(activeMapId));
+
+	@Effect()
+	onMapsData1MapsListChanged$: Observable<Action> = this.actions$
+		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
+		.map(toPayload)
+		.filter(({mapsList}) => !_isNil(mapsList))
+		.map(({mapsList}) => new MapsListChangedAction(mapsList));
+
+
 
 	constructor(private actions$: Actions,
 				private mapFacadeService: MapFacadeService,

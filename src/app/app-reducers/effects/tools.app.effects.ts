@@ -14,7 +14,7 @@ import {
 import { CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep, get as _get, isNil as _isNil } from 'lodash';
+import { get as _get, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	AnnotationVisualizerAgentAction,
@@ -23,9 +23,9 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { IMapState } from '../../packages/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
-import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -110,8 +110,8 @@ export class ToolsAppEffects {
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMapId = mapsState.activeMapId;
 			let shouldAutoImageProcessing;
-			const updatedMapsData = cloneDeep(mapsState.mapsData);
-			updatedMapsData.forEach(
+			const updatedMapsList = [...mapsState.mapsList];
+			updatedMapsList.forEach(
 				(map) => {
 					if (map.id === activeMapId) {
 						map.data.isAutoImageProcessingActive = !map.data.isAutoImageProcessingActive;
@@ -121,7 +121,7 @@ export class ToolsAppEffects {
 
 			return [
 				new SetMapAutoImageProcessing({ mapId: activeMapId, toggle_value: shouldAutoImageProcessing }),
-				new SetMapsDataActionStore(updatedMapsData),
+				new SetMapsDataActionStore({mapsList: updatedMapsList}),
 				new SetAutoImageProcessingSuccess(shouldAutoImageProcessing)
 			];
 		});

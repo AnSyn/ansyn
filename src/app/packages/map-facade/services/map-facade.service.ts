@@ -30,31 +30,38 @@ export class MapFacadeService {
 	}
 
 	static activeMap(mapState: IMapState): CaseMapState {
-		return MapFacadeService.mapById(mapState.mapsData, mapState.activeMapId);
+		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
 	}
 
-	static mapById(mapsData: CaseMapState[], mapId: string): CaseMapState {
-		return mapsData.find(({id}) => id === mapId);
+	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
+		return mapsList.find(({id}) => id === mapId);
 	}
 
+	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): {mapsList?: CaseMapState[], activeMapId?: string} {
+		let mapsListChange = {};
+		let activeMapChange = {};
+		const mapsList: CaseMapState[]  = [];
 
-	static setMapsDataChanges(mapsData, activeMapId, layout): {newMapsData: CaseMapState[], newActiveMapId?: string} {
-		const newMapsData: CaseMapState[]  = [];
-		const activeMap = mapsData.find(({id}) => id === activeMapId);
+		/* mapsList*/
+		const activeMap = oldMapsList.find(({id}) => id === oldActiveMapId);
 		range(layout.maps_count).forEach((index) => {
-			if (mapsData[index]) {
-				newMapsData.push(mapsData[index])
+			if (oldMapsList[index]) {
+				mapsList.push(oldMapsList[index])
 			} else {
 				const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position: cloneDeep(activeMap.data.position)}, mapType: defaultMapType};
-				newMapsData.push(mapStateCopy);
+				mapsList.push(mapStateCopy);
 			}
 		});
-		const notExist = !newMapsData.some(({id}) => id === activeMapId);
+		mapsListChange = {mapsList};
+
+		/* activeMapId */
+		const notExist = !mapsList.some(({id}) => id === oldActiveMapId);
 		if (notExist) {
-			const newActiveMapId = last(newMapsData).id;
-			return { newMapsData, newActiveMapId };
+			const activeMapId = last(mapsList).id;
+			activeMapChange = {activeMapId}
 		}
-		return { newMapsData };
+
+		return { ...mapsListChange, ...activeMapChange };
 	}
 
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {

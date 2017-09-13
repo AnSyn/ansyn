@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CaseMapState, Overlay } from '@ansyn/core/models';
 import { get as _get, isNil as _isNil, range as _range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
@@ -9,9 +9,7 @@ import { IMapState } from '../../reducers/map.reducer';
 import { MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.actions';
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/distinctUntilChanged";
+import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -35,8 +33,8 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck('activeMapId')
 		.distinctUntilChanged();
 
-	public mapsData$: Observable<CaseMapState[]> = this.mapState$
-		.pluck('mapsData')
+	public mapsList$: Observable<CaseMapState[]> = this.mapState$
+		.pluck('mapsList')
 		.distinctUntilChanged();
 
 	public pinLocation$: Observable<boolean> = this.mapState$
@@ -59,7 +57,7 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocation: boolean;
-	mapsData: CaseMapState[];
+	mapsList: CaseMapState[];
 	activeMapId;
 
 	get range() {
@@ -85,7 +83,7 @@ export class ImageriesManagerComponent implements OnInit {
 		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this));
 		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {this.overlaysNotInCase = _overlaysNotInCase});
 		this.activeMapId$.subscribe(this.setActiveMapId.bind(this));
-		this.mapsData$.subscribe((_mapsData: CaseMapState[]) => {this.mapsData = _mapsData});
+		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => {this.mapsList = _mapsList});
 		this.pinLocation$.subscribe((_pinLocation) => {this.pinLocation = _pinLocation})
 	}
 
@@ -148,7 +146,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	changeActiveImagery(value) {
 		if(this.activeMapId !== value){
-			this.store.dispatch(new ActiveMapChangedAction(value));
+			this.store.dispatch(new SetMapsDataActionStore({activeMapId: value}));
 		}
 	}
 
@@ -166,7 +164,7 @@ export class ImageriesManagerComponent implements OnInit {
 		}
 		const communicators = this.communicatorProvider.communicators;
 
-		this.mapsData.forEach((mapItem: CaseMapState) => {
+		this.mapsList.forEach((mapItem: CaseMapState) => {
 			if(mapItem.id === this.activeMapId){
 				this.publisherMouseShadowMapId = mapItem.id;
 				if (communicators[mapItem.id]) {

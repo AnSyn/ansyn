@@ -1,5 +1,7 @@
 const clearSelection = (inputElement: HTMLInputElement | HTMLTextAreaElement, window: Window) => {
-	inputElement && inputElement.blur();
+	if (inputElement) {
+		inputElement.blur();
+	}
 	window.getSelection().removeAllRanges();
 };
 

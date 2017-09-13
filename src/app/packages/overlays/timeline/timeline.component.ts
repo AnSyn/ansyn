@@ -23,17 +23,27 @@ selection.prototype.moveToFront = function () {
 
 
 export class TimelineComponent implements OnInit {
+	@ViewChild('context') context: ElementRef;
+
 	private _drops: any[];
 	private _markup: any[];
-	private stream: Observable<any>;
+
+	@Input() configuration: any;
+
+	@Input() redraw$: BehaviorSubject<number>;
+
+	@Input()
+	set markup(value) {
+		if (!isEqual(this._markup, value)) {
+			this._markup = value;
+			this.drawMarkup();
+		}
+	}
 
 	@HostListener('window:resize')
 	onresize() {
 		this.redraw$.next(0);
 	}
-
-	@ViewChild('context') context: ElementRef;
-
 
 	@Input()
 	set drops(drops: any[]) {
@@ -46,22 +56,8 @@ export class TimelineComponent implements OnInit {
 
 	}
 
-
 	get drops() {
 		return this._drops;
-	}
-
-
-	@Input() configuration: any;
-
-	@Input() redraw$: BehaviorSubject<number>;
-
-	@Input()
-	set markup(value) {
-		if (!isEqual(this._markup, value)) {
-			this._markup = value;
-			this.drawMarkup();
-		}
 	}
 
 	drawMarkup() {

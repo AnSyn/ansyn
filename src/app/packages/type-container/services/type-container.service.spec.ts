@@ -5,41 +5,40 @@ import { RegisterOptions } from '../models/register-options.model';
 
 
 abstract class MockBaseClass {
+	sourceType;
+
 	get(query: any): any {
 	};
-
-	sourceType;
 }
 
 class Class1 extends MockBaseClass {
+	sourceType = 'sourceType1';
+
 	get(query: any): any {
 		return {
 			id: '123456'
 		};
 	}
-
-	sourceType = 'sourceType1';
 }
 
 class Class2 extends MockBaseClass {
+	sourceType = 'sourceType2';
+
 	get(query: any): any {
 		return {
 			id: '654321'
 		};
 	}
-
-	sourceType = 'sourceType2';
-
 }
 
 class Class3 extends MockBaseClass {
+	sourceType = 'sourceType3';
+
 	get(query: any): any {
 		return {
 			id: '162534'
 		};
 	}
-
-	sourceType = 'sourceType3';
 }
 
 describe('TypeContainerService', () => {

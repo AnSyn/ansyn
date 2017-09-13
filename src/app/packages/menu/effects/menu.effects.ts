@@ -9,10 +9,6 @@ import { MenuActionTypes } from '@ansyn/core';
 
 @Injectable()
 export class MenuEffects {
-
-	constructor(private actions$: Actions) {
-	}
-
 	@Effect({ dispatch: false })
 	onSelectMenuItem$: Observable<any> = this.actions$
 		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
@@ -20,5 +16,6 @@ export class MenuEffects {
 			return action;
 		}).share();
 
-
+	constructor(private actions$: Actions) {
+	}
 }

@@ -65,7 +65,7 @@ describe('CasesTableComponent', () => {
 	it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
 		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
-		let selected_case_id: string = 'fake_selected_case_id';
+		let selected_case_id = 'fake_selected_case_id';
 		component.removeCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
@@ -77,7 +77,7 @@ describe('CasesTableComponent', () => {
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
 		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
-		let selected_case_id: string = 'fake_selected_case_id';
+		let selected_case_id = 'fake_selected_case_id';
 		component.editCase($event, selected_case_id);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({

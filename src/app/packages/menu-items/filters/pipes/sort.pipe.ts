@@ -1,6 +1,12 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 
-export type KeyVal = { key: string, value: { count: number, isChecked: boolean } };
+export interface KeyVal {
+	key: string;
+	value: {
+		count: number;
+		isChecked: boolean;
+	};
+}
 
 
 @Pipe({ name: 'sort' })

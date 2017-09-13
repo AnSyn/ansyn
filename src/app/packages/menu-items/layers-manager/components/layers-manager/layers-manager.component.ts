@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 @Component({
-	selector: 'app-layer-managers',
+	selector: 'ansyn-layer-managers',
 	templateUrl: './layers-manager.component.html',
 	styleUrls: ['./layers-manager.component.less']
 })

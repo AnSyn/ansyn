@@ -2,13 +2,13 @@ import { Position } from './position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 
-export type Case = {
+export interface Case {
 	readonly id?: string;
 	name?: string;
 	owner?: string;
 	last_modified?: Date;
 	state?: CaseState;
-};
+}
 
 export interface IContextEntity {
 	id: string;
@@ -16,7 +16,7 @@ export interface IContextEntity {
 	date: Date;
 }
 
-export type CaseState = {
+export interface CaseState {
 	selected_context_id?: string;
 	maps?: CaseMapsState,
 	time: CaseTimeState,
@@ -27,26 +27,26 @@ export type CaseState = {
 	geoFilter: string,
 	favoritesOverlays?: string[],
 	annotationsLayer?: FeatureCollection<any> | string
-};
+}
 
 export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
 
-export type CaseTimeState = {
+export interface CaseTimeState {
 	type: string,
 	from: string,
 	to: string
-};
+}
 
-export type CaseFacetsState = {
+export interface CaseFacetsState {
 	filters: { fieldName: string, metadata: any }[];
 	showOnlyFavorites?: boolean;
 }
 
-export type CaseMapsState = {
+export interface CaseMapsState {
 	layouts_index: number,
 	active_map_id: string,
 	data: CaseMapState[]
-};
+}
 
 export type OverlayDisplayMode = 'Hitmap' | 'Polygon' | 'None';
 
@@ -59,6 +59,6 @@ export interface CaseMapState {
 		overlayDisplayMode?: OverlayDisplayMode
 	};
 	mapType: string;
-};
+}
 
 export const defaultMapType = 'openLayersMap';

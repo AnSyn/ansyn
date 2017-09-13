@@ -4,41 +4,33 @@ import { TypeContainerModule } from './type-container.module';
 
 
 abstract class MockBaseClass {
-	get(query: any): any {
-	};
+	abstract sourceType: string;
 
-	sourceType;
+	abstract get(query: any);
 }
 
 class Class1 extends MockBaseClass {
-	get(query: any): any {
-		return {
-			id: '123456'
-		};
-	}
-
 	sourceType = 'sourceType1';
+
+	get(query: any): any {
+		return { id: '123456' };
+	}
 }
 
 class Class2 extends MockBaseClass {
-	get(query: any): any {
-		return {
-			id: '654321'
-		};
-	}
-
 	sourceType = 'sourceType2';
 
+	get(query: any): any {
+		return { id: '654321' };
+	}
 }
 
 class Class3 extends MockBaseClass {
-	get(query: any): any {
-		return {
-			id: '162534'
-		};
-	}
-
 	sourceType = 'sourceType3';
+
+	get(query: any): any {
+		return { id: '162534' };
+	}
 }
 
 describe('TypeContainerModule', () => {
@@ -93,5 +85,4 @@ describe('TypeContainerModule', () => {
 	it('should resolve all MockBaseClass', () => {
 		expect(typeContainerService.resolve(MockBaseClass).length).toEqual(2);
 	});
-
 });

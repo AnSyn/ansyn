@@ -29,7 +29,7 @@ export class ContextElasticSource implements IContextSource {
 			requestTimeout: 1000,
 		}, error => {
 			if (error) {
-				console.trace('elasticsearch cluster id donw!');
+				console.error('elasticsearch cluster id donw!');
 			} else {
 				console.log('All is well');
 			}

@@ -146,7 +146,7 @@ export class StatusBarAppEffects {
 		})
 		.filter(([action, selected_case, selected_layout]) => !isEmpty(selected_case))
 		.map(this.setMapsDataChanges.bind(this))
-		.mergeMap((updatedCase: Case)=> {
+		.mergeMap((updatedCase: Case) => {
 			const overlaysMarkup = CasesService.getOverlaysMarkup(updatedCase);
 			return [
 				new UpdateCaseAction(updatedCase),

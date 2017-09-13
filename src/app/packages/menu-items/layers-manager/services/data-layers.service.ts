@@ -13,13 +13,20 @@ import 'rxjs/add/operator/map';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
-export type LayerRootsBundle = { layers: ILayerTreeNodeRoot[], selectedLayers: ILayerTreeNodeLeaf[] };
-type LayerNodesBundle = { layers: ILayerTreeNode[], selectedLayers: ILayerTreeNodeLeaf[] };
+export interface LayerRootsBundle {
+	layers: ILayerTreeNodeRoot[],
+	selectedLayers: ILayerTreeNodeLeaf[]
+}
+
+interface LayerNodesBundle {
+	layers: ILayerTreeNode[],
+	selectedLayers: ILayerTreeNodeLeaf[]
+}
 
 @Injectable()
 export class DataLayersService {
 	// should be in a global config
-	baseUrl;
+	baseUrl: string;
 
 	tree: ILayerTreeNode[] = [];
 

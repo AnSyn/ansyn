@@ -42,7 +42,7 @@ export class ImageriesManagerComponent implements OnInit {
 	overlaysNotInCase: Map<string, boolean>;
 
 
-	public loadingOverlaysIds = [];
+	public loadingOverlaysIds: Array<string> = [];
 	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
@@ -71,7 +71,7 @@ export class ImageriesManagerComponent implements OnInit {
 	constructor(private mapEffects: MapEffects, private communicatorProvider: ImageryCommunicatorService, private store: Store<IMapState>) {
 		this.shadowMouseProcess = false;
 		this.publisherMouseShadowMapId = null;
-		this.listenersMouseShadowMapsId = new Array<string>();
+		this.listenersMouseShadowMapsId = [];
 	}
 
 	ngOnInit() {
@@ -203,7 +203,7 @@ export class ImageriesManagerComponent implements OnInit {
 					communicators[id].stopMouseShadowVectorLayer();
 				}
 			});
-			this.listenersMouseShadowMapsId = new Array<string>();
+			this.listenersMouseShadowMapsId = [];
 		}
 
 		this.publisherMouseShadowMapId = null;

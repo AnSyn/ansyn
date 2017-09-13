@@ -5,4 +5,4 @@ export interface IServerDataLayerContainer {
 	name: string;
 	dataLayerContainers: IServerDataLayerContainer[];
 	dataLayers: IServerDataLayer[];
-};
+}

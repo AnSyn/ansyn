@@ -139,7 +139,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('Set Special Objects', () => {
-		let data: OverlaySpecialObject[] = new Array<OverlaySpecialObject>();
+		let data: OverlaySpecialObject[] = [];
 		data.push({ id: 'fkdsjl', date: new Date(), shape: 'star' });
 		const action = new SetSpecialObjectsActionStore(data);
 

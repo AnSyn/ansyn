@@ -3,4 +3,4 @@ export interface IServerDataLayer {
 	name: string;
 	isChecked: boolean;
 	url: string;
-};
+}

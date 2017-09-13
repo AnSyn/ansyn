@@ -25,4 +25,4 @@ declare module 'rxjs/Observable' {
 		debug: (...any) => Observable<T>;
 	}
 }
-;
+

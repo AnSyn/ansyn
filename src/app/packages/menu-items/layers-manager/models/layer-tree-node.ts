@@ -4,4 +4,4 @@ export interface ILayerTreeNode {
 	id: string;
 	isChecked: boolean;
 	isIndeterminate: boolean;
-};
+}

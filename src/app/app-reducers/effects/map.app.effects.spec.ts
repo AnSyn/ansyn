@@ -19,7 +19,6 @@ import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstacneAction,
 	AddOverlayToLoadingOverlaysAction,
-	BackToWorldAction,
 	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
 	RemoveOverlayFromLoadingOverlaysAction,
@@ -34,22 +33,21 @@ import {
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	OverlaysActionTypes,
-	OverlaysMarkupAction,
 	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -221,7 +219,7 @@ describe('MapAppEffects', () => {
 	it('onMapSingleClick$ effect', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		//mock communicatorsAsArray
+		// mock communicatorsAsArray
 		const imagery1 = {
 			addPinPointIndicator: () => {
 			},
@@ -371,25 +369,25 @@ describe('MapAppEffects', () => {
 			expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
 		});
 	});
-
-	describe('onActiveMapChanges$', () => {
-
-		it('on active map changes fire update case action', () => {
-			spyOn(CasesService, 'getOverlaysMarkup');
-			effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
-			let count = 0;
-			mapAppEffects.onActiveMapChanges$.subscribe((_result: Action) => {
-				count++;
-				if (_result.type === CasesActionTypes.UPDATE_CASE) {
-					expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
-				}
-				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
-					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
-				}
-			});
-			expect(count).toBe(2);
-		});
-	});
+  //
+	// describe('onActiveMapChanges$', () => {
+  //
+	// 	it('on active map changes fire update case action', () => {
+	// 		spyOn(CasesService, 'getOverlaysMarkup');
+	// 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
+	// 		let count = 0;
+	// 		mapAppEffects.onActiveMapChanges$.subscribe((_result: Action) => {
+	// 			count++;
+	// 			if (_result.type === CasesActionTypes.UPDATE_CASE) {
+	// 				expect(_result.payload.state.maps.active_map_id).toBe('imagery2');
+	// 			}
+	// 			if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
+	// 				expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
+	// 			}
+	// 		});
+	// 		expect(count).toBe(2);
+	// 	});
+	// });
 
 	describe('onStartMapShadow$', () => {
 		it('listen to start map shadow action', () => {
@@ -454,42 +452,39 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('backToWorldView$', () => {
-		it('listen to BackToWorldAction with overlay', () => {
-
-			icaseState.selected_case.state.maps.data[0].data.overlay = {
-				id: 'testOverlay1',
-				name: 'testOverlay1',
-				photoTime: new Date().toDateString(),
-				date: null,
-				azimuth: 0,
-				isFullOverlay: true,
-				isGeoRegistered: true
-			};
-
-			const communicator = {
-				loadInitialMapSource: () => {
-				},
-			};
-
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'loadInitialMapSource');
-			spyOn(CasesService, 'getOverlaysMarkup');
-			effectsRunner.queue(new BackToWorldAction({ mapId: 'imagery1' }));
-			mapAppEffects.backToWorldView$.subscribe(_result => {
-				let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
-				expect(result).toBe(true);
-
-				if (_result instanceof OverlaysMarkupAction) {
-					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
-				}
-				if (_result instanceof UpdateCaseAction) {
-					expect(_result.payload.state.maps.data[0].data.overlay).toEqual(null);
-				}
-			});
-			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
-		});
-	});
+	// describe('backToWorldView$', () => {
+	// 	it('listen to BackToWorldAction with overlay',() => {
+  //
+	// 		// data: [
+	// 		// 	{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
+	// 		// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+	// 		// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+	// 		// ],
+	// 		const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true, isGeoRegistered: true};
+	// 		icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+	// 		const communicator = {
+	// 			loadInitialMapSource: () => {},
+	// 		};
+  //
+	// 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+	// 		spyOn(communicator, 'loadInitialMapSource');
+	// 		spyOn(CasesService, 'getOverlaysMarkup');
+	// 		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery1'}));
+	// 		mapAppEffects.backToWorldView$.subscribe(_result => {
+	// 			let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
+	// 			expect(result).toBe(true);
+  //
+	// 			if(_result instanceof OverlaysMarkupAction){
+	// 				expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
+	// 			}
+	// 			if(_result instanceof UpdateCaseAction ){
+	// 				const resultCase: Case = _result.payload;
+	// 				expect(resultCase.state.maps.data[0].data.overlay).toEqual(null);
+	// 			}
+	// 		});
+	// 		expect(communicator.loadInitialMapSource).toHaveBeenCalled();
+	// 	});
+	// });
 
 	describe('onDisplayOverlay$ communicator should set Layer on map, by isExtentContainedInPolygon', () => {
 		const fake_layer = {};
@@ -606,7 +601,7 @@ describe('MapAppEffects', () => {
 				expect(result).toBe(true);
 
 				if (_result.type === OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND) {
-					//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
+					// const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
 					expect(_result.payload).toEqual({ overlayId: testOverlay.id, map_id: 'imagery1' });
 				}
 				resultActions.push(_result);
@@ -653,19 +648,16 @@ describe('MapAppEffects', () => {
 			const resultActions = [];
 			spyOn(CasesService, 'getOverlaysMarkup');
 			mapAppEffects.overlayLoadingSuccess$.subscribe(_result => {
-				let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction || _result instanceof OverlaysMarkupAction;
+				let result = _result instanceof RemoveOverlayFromLoadingOverlaysAction;
 				expect(result).toBe(true);
 
 				if (_result instanceof RemoveOverlayFromLoadingOverlaysAction) {
-					//const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
+					// const action = <RemoveOverlayFromLoadingOverlaysAction>_result;
 					expect(_result.payload).toEqual('test_overlay_id');
-				}
-				if (_result.type === OverlaysActionTypes.OVERLAYS_MARKUPS) {
-					expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 				}
 				resultActions.push(_result);
 			});
-			expect(resultActions.length).toEqual(2);
+			expect(resultActions.length).toEqual(1);
 		});
 	});
 
@@ -747,23 +739,17 @@ describe('MapAppEffects', () => {
 	});
 
 	describe('activeMapGeoRegistartionChanged$', () => {
-		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = {
-				id: 'test_overlay_id1',
-				name: 'testOverlay1',
-				photoTime: new Date().toDateString(),
-				date: null,
-				azimuth: 0,
-				isFullOverlay: true,
-				isGeoRegistered: false
-			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
-			icaseState.selected_case.state.maps.data[1].data.overlay = testOverlay;
-
-			const fakeCommuincator = { id: 'test' };
+		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state',() => {
+			const testOverlay: Overlay = {id: 'test_overlay_id1', isGeoRegistered: false} as Overlay;
+			mapState.mapsList = <any> [
+				{...icaseState.selected_case.state.maps.data[0], data: {...icaseState.selected_case.state.maps.data[0].data, overlay: testOverlay}},
+				{...icaseState.selected_case.state.maps.data[1], data: {...icaseState.selected_case.state.maps.data[1].data, overlay: testOverlay}},
+			];
+			mapState.activeMapId = icaseState.selected_case.state.maps.active_map_id;
+			const fakeCommuincator = {id: 'test'};
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 
-			effectsRunner.queue(new SelectCaseByIdAction(icaseState.selected_case.id));
+			effectsRunner.queue(new ActiveMapChangedAction(''));
 			let resultAction = null;
 			mapAppEffects.activeMapGeoRegistartionChanged$.subscribe(_result => {
 				const validActionType = _result instanceof EnableMapGeoOptionsActionStore;

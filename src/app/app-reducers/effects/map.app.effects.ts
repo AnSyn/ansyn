@@ -55,8 +55,8 @@ import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/too
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { Position, CaseMapState, MapsLayout } from '@ansyn/core/models';
-import { SetMapGeoEnabledModeToolsActionStore } from '../../packages/menu-items/tools/actions/tools.actions';
-import { SetMapGeoEnabledModeStatusBarActionStore } from '../../packages/status-bar/actions/status-bar.actions';
+import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -327,19 +327,12 @@ export class MapAppEffects {
 	activeMapGeoRegistartionChanged$: Observable<any> = this.actions$
 		.ofType(
 			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			MapActionTypes.BACK_TO_WORLD,
-			MapActionTypes.ACTIVE_MAP_CHANGED,
-			MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
-		.filter(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => mapState.mapsList.length > 0)
-		.map(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => {
+			MapActionTypes.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select('map'))
+		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
+		.map(([action, mapState]: [Action, IMapState]) => {
 			let activeMapState;
-			if (action.type === MapActionTypes.BACK_TO_WORLD) {
-				const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
-				activeMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-			} else {
-				activeMapState = MapFacadeService.activeMap(mapState);
-			}
+			activeMapState = MapFacadeService.activeMap(mapState);
 			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 			return [action, isGeoRegistered, activeMapState, mapState];
 		})
@@ -347,12 +340,22 @@ export class MapAppEffects {
 			const isEnabled = mapState.mapIdToGeoOptions.get(activeMapState.id);
 			return isEnabled !== isGeoRegistered;
 		})
-		.map(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
-			if (action.type === MapActionTypes.BACK_TO_WORLD) {
-				const mapComm = this.communicator.provide(activeMapState.id);
-				mapComm.setActiveMap('openLayersMap', activeMapState.data.position);
-			}
-			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
+		.map(([action, isGeoRegistered, activeMapState]: [Action, boolean, CaseMapState, IMapState]): any => {
+			return new EnableMapGeoOptionsActionStore({mapId: activeMapState.id, isEnabled: isGeoRegistered});
+		});
+
+	@Effect({dispatch: false})
+	backToWorldGeoRegistartion$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select('map'))
+		.map(([action, mapState]: [any, any]): any[] => {
+			const map = MapFacadeService.mapById(mapState.mapsList, action.payload.mapId);
+			const mapComm = this.communicator.provide(action.payload.mapId);
+			return [mapComm, map.data.position]
+		})
+		.filter(([mapComm]) => !isNil(mapComm))
+		.do(([mapComm, position]: any[]) => {
+			mapComm.setActiveMap('openLayersMap', position);
 		});
 
 	@Effect()

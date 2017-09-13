@@ -5,9 +5,10 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
-import { Dispatcher, StoreModule } from '@ngrx/store';
+import { Dispatcher, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { MapReducer } from '../../reducers/map.reducer';
+import { IMapState, MapReducer } from '../../reducers/map.reducer';
+import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
 
 const mock_ansyn_context_menu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -24,6 +25,7 @@ describe('ImageriesManagerComponent', () => {
 	let fixture: ComponentFixture<ImageriesManagerComponent>;
 	let mapEffects: MapEffects;
 	let communicatorProvider: ImageryCommunicatorService;
+	let store: Store<IMapState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -41,29 +43,28 @@ describe('ImageriesManagerComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([MapEffects, ImageryCommunicatorService], (_mapEffects: MapEffects, _imageryCommunicatorService: ImageryCommunicatorService) => {
+	beforeEach(inject([MapEffects,ImageryCommunicatorService, Store],(_mapEffects: MapEffects,_imageryCommunicatorService:ImageryCommunicatorService, _store: Store<IMapState>) => {
 		mapEffects = _mapEffects;
 		communicatorProvider = _imageryCommunicatorService;
+		store = _store;
 	}));
 
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
-
-		component.selected_layout = {
+		const mapsList = <any> [
+			{id: 'imagery1', data: {overlay: {}}},
+			{id: 'imagery2', data: {overlay: {}}}
+		];
+		const activeMapId = 'imagery1';
+		const selected_layout: any = {
 			id: '1',
 			description: '',
 			maps_count: 2
 		};
-		component.maps = {
-			active_map_id: 'imagery1',
-			data: [
-				{ id: 'imagery1', data: { overlay: {} } },
-				{ id: 'imagery2', data: { overlay: {} } }
-			]
-		};
-
+		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
+		store.dispatch(new SetLayoutAction(selected_layout));
 		fixture.detectChanges();
 	});
 
@@ -72,7 +73,7 @@ describe('ImageriesManagerComponent', () => {
 		communicator.pointerMove = Observable.create(observer => {
 		});
 
-		//spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
+		// spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
 		const list = {
 			'imagery1': communicator,
 			'imagery2': communicator
@@ -88,9 +89,9 @@ describe('ImageriesManagerComponent', () => {
 		spyOn(component, 'changeShadowMouseTarget');
 		spyOn(component, 'stopPointerMoveProcess');
 		spyOn(component, 'startPointerMoveProcess');
-		//component.maps.data
-		//I want to fake and observable and then call him and check if the function has been called
-		//I can dispathc the actions
+		// component.maps.data
+		// I want to fake and observable and then call him and check if the function has been called
+		// I can dispathc the actions
 		mapEffects.onComposeMapShadowMouse$ = Observable.create(observer => {
 			observer.next();
 		});
@@ -118,7 +119,7 @@ describe('ImageriesManagerComponent', () => {
 
 		wrapperDivs[0].click();
 		tick(500);
-		expect(component.maps.active_map_id).toBe('imagery1');
+		expect(component.activeMapId).toBe('imagery1');
 		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery1');
 
 		wrapperDivs[1].click();
@@ -127,7 +128,7 @@ describe('ImageriesManagerComponent', () => {
 	}));
 
 	it('activate shadow mouse', () => {
-		//spyOn(communicatorProvider,'communicators');
+		// spyOn(communicatorProvider,'communicators');
 		component.startPointerMoveProcess();
 
 		expect(communicatorProvider.communicators['imagery1']).toBeTruthy();

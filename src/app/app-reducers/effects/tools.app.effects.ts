@@ -38,7 +38,7 @@ export class ToolsAppEffects {
 		.map(MapFacadeService.activeMap)
 		.filter(activeMap => !_isNil(activeMap))
 		.mergeMap((activeMap) => {
-			if (activeMap.data.overlay == null) {
+			if (_isNil(activeMap.data.overlay)) {
 				return [new DisableImageProcessing()];
 			} else {
 				return [
@@ -104,7 +104,7 @@ export class ToolsAppEffects {
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select('maps'), (action: SetAutoImageProcessing, mapsState: IMapState) => {
+		.withLatestFrom(this.store$.select('map'), (action: SetAutoImageProcessing, mapsState: IMapState) => {
 			return [action, mapsState];
 		})
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {

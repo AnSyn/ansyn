@@ -1,21 +1,21 @@
 <div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
-	<ng-template [ngIf]="mapsData">
+	<ng-template [ngIf]="mapsList">
 		<div
-			*ngFor="let index of range(mapsData.length); count as count"
+			*ngFor="let mapData of mapsList; count as count"
 			class='map-container-wrapper'
-			(click)="clickMapContainer(mapsData[index].id)"
+			(click)="clickMapContainer(mapData.id)"
 			(dblclick)="dbclick()">
 			<ansyn-imagery-container class="map"
-									 [disableGeoOptions]="isGeoOptionsDisabled(mapsData[index].id)"
-									 [mapState]="mapsData[index]"
-									 [active]="activeMapId === mapsData[index].id"
+									 [disableGeoOptions]="isGeoOptionsDisabled(mapData.id)"
+									 [mapState]="mapData"
+									 [active]="activeMapId === mapData.id"
 									 [showStatus]="count > 1"
-									 [notInCase]="overlayNotInCase(mapsData[index].data.overlay)"
-									 [showSpinner]="isOverlayLoading((mapsData[index].data.overlay)?.id)">
+									 [notInCase]="overlayNotInCase(mapData .data.overlay)"
+									 [showSpinner]="isOverlayLoading((mapData.data.overlay)?.id)">
 			</ansyn-imagery-container>
 
 			<div class="active-border"
-				 [class.active]="activeMapId === mapsData[index].id">
+				 [class.active]="activeMapId === mapData.id">
 			</div>
 
 		</div>

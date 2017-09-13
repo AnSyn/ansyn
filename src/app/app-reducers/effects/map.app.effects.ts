@@ -43,19 +43,20 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { calcGeoJSONExtent, endTimingLog, isExtentContainedInPolygon, startTimingLog } from '@ansyn/core/utils';
+import { calcGeoJSONExtent, isExtentContainedInPolygon, getPointByPolygon } from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
-import { CaseMapState, getPointByPolygon, getPolygonByPoint, Position, MapsLayout } from '@ansyn/core';
-import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
-	AnnotationVisualizerAgentAction,
-	SetActiveCenter,
-	SetMapGeoEnabledModeToolsActionStore,
-	SetPinLocationModeAction
+	AnnotationVisualizerAgentAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
+import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { getPolygonByPoint } from '@ansyn/core/utils/geo';
+import { Position, CaseMapState, MapsLayout } from '@ansyn/core/models';
+import { SetMapGeoEnabledModeToolsActionStore } from '../../packages/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeStatusBarActionStore } from '../../packages/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -67,30 +68,30 @@ export class MapAppEffects {
 		.filter(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.mergeMap(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
 
-			//create the region
+			// create the region
 			const region = getPolygonByPoint(action.payload.lonLat).geometry;
 
-			//draw on all maps
+			// draw on all maps
 			this.communicator.communicatorsAsArray().forEach(communicator => {
 				if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
 					communicator.addPinPointIndicator(action.payload.lonLat);
 				}
-				//this is for the others communicators
+				// this is for the others communicators
 				communicator.removeSingleClickEvent();
 			});
 
-			//draw the point on the map // all maps
+			// draw the point on the map // all maps
 			const selectedCase = {
 				...caseState.selected_case,
 				state: { ...caseState.selected_case.state, region: region }
 			};
 
 			return [
-				//disable the pinpoint search
+				// disable the pinpoint search
 				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
-				//update case
+				// update case
 				new UpdateCaseAction(selectedCase),
-				//load overlays
+				// load overlays
 				new LoadOverlaysAction({
 					to: selectedCase.state.time.to,
 					from: selectedCase.state.time.from,
@@ -129,7 +130,7 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState): any[] => {
 			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
 			const map = CasesService.mapById(casesState.selected_case, map_id);
@@ -192,7 +193,7 @@ export class MapAppEffects {
 			const currentCase = state.selected_case;
 			return currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
 				const communicatorHandler = this.communicator.provide(data.id);
-				//if overlay exists and map is loaded
+				// if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
 					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
 					previusResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, map_id: data.id }));
@@ -221,15 +222,8 @@ export class MapAppEffects {
 	overlayLoadingSuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
-		.withLatestFrom(this.store$.select('cases'))
-		.map(([action, state]: [DisplayOverlaySuccessAction, ICasesState]) => {
-			return [action, state.selected_case];
-		})
-		.mergeMap(([action, selectedCase]: [DisplayOverlaySuccessAction, Case]) => {
-			return [
-				new RemoveOverlayFromLoadingOverlaysAction(action.payload.id),
-				new OverlaysMarkupAction(CasesService.getOverlaysMarkup(selectedCase))
-			];
+		.map((action)=> {
+			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		});
 
 	@Effect({ dispatch: false })
@@ -337,12 +331,12 @@ export class MapAppEffects {
 			MapActionTypes.ACTIVE_MAP_CHANGED,
 			MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
-		.filter(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => mapState.mapsData.length > 0)
+		.filter(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => mapState.mapsList.length > 0)
 		.map(([action, casesState, mapState]: [Action, ICasesState, IMapState]) => {
 			let activeMapState;
 			if (action.type === MapActionTypes.BACK_TO_WORLD) {
 				const mapId = action.payload.mapId ? action.payload.mapId : casesState.selected_case.state.maps.active_map_id;
-				activeMapState = MapFacadeService.mapById(mapState.mapsData, mapId);
+				activeMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
 			} else {
 				activeMapState = MapFacadeService.activeMap(mapState);
 			}
@@ -400,9 +394,17 @@ export class MapAppEffects {
 			return new SetOverlayNotInCaseAction(overlaysNoInCase);
 		});
 
+	@Effect()
+	markupOnMapsDataChanges$ = this.actions$
+		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED, MapActionTypes.MAPS_LIST_CHANGED)
+		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), (action, selected_case) => selected_case)
+		.map((selectedCase:Case) => CasesService.getOverlaysMarkup(selectedCase))
+		.map(markups => new OverlaysMarkupAction(markups));
+
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private communicator: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]) {
 	}
+
 }

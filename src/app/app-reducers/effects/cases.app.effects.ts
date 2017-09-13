@@ -50,14 +50,16 @@ export class CasesAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select('map'))
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
-			const updatedMapsData = cloneDeep(mapState.mapsData);
+
+			const updatedMapsList = [...mapState.mapsList];
 			const mapId = action.payload.map_id || mapState.activeMapId;
-			updatedMapsData.forEach((map) => {
+
+			updatedMapsList.forEach((map) => {
 				if(mapId === map.id){
 					map.data.overlay = action.payload.overlay;
 				}
 			});
-			return new SetMapsDataActionStore(updatedMapsData);
+			return new SetMapsDataActionStore({mapsList: updatedMapsList});
 	}).share();
 
 	@Effect()
@@ -96,7 +98,7 @@ export class CasesAppEffects {
 		.map((default_case: Case) => {
 
 			this.casesService.enhanceDefaultCase(default_case);
-			default_case.owner = 'Default Owner'; //TODO: replace with id from authentication service
+			default_case.owner = 'Default Owner'; // TODO: replace with id from authentication service
 
 			return new AddCaseAction(default_case);
 		});
@@ -112,7 +114,7 @@ export class CasesAppEffects {
 			} else {
 				const criteria = new ContextCriteria({ start: 0, limit: 200 });
 				observable = this.contextProviderService.provide('Proxy').find(criteria);
-				//observable = this.casesService.loadContexts();
+				// observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts: Context[]) => {
 				return new LoadContextsSuccessAction(contexts);

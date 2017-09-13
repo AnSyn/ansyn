@@ -75,6 +75,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	private _manager: ImageryComponentManager;
 
 	ngOnInit() {
+		console.log("ngOnInit")
 		if (isNil(this.mapComponentSettings)) {
 			console.error('mapComponentSettings is Needed!');
 			return;
@@ -107,6 +108,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		console.log("ngOnDestroy")
 		if (this._manager) {
 			this.imageryCommunicatorService.remove(this._manager.id);
 			this._manager.dispose();

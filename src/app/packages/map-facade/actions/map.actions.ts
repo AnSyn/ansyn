@@ -10,6 +10,7 @@ export const MapActionTypes = {
 	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
 	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
+	MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
@@ -221,10 +222,14 @@ export class SetOverlayNotInCaseAction implements Action {
 }
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.STORE.SET_MAPS_DATA;
-	constructor(public payload: CaseMapState[]){}
+	constructor(public payload: {mapsList?: CaseMapState[], activeMapId?: string}){}
 }
 export class SetPinLocationModeActionStore implements Action {
 	type = MapActionTypes.STORE.PIN_LOCATION_MODE;
 	constructor(public payload: boolean){}
+}
+export class MapsListChangedAction implements Action {
+	type = MapActionTypes.MAPS_LIST_CHANGED;
+	constructor(public payload: CaseMapState[]){}
 }
 

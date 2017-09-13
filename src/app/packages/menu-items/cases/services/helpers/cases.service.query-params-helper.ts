@@ -7,7 +7,7 @@ import * as rison from 'rison';
 import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
 import { Point } from 'geojson';
-import { getPointByPolygon, getPolygonByPoint } from '@ansyn/core/utils/geo';
+import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 
 export class QueryParamsHelper {
 

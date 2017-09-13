@@ -1,4 +1,4 @@
-import { FiltersService, filtersConfig } from './filters.service';
+import { filtersConfig, FiltersService } from './filters.service';
 import { HttpModule } from '@angular/http';
 import { inject, TestBed } from '@angular/core/testing';
 

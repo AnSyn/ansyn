@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { ContextProviderService } from './context-provider.service';
 import { IContextSource } from '../context.interface';
 import { Observable } from 'rxjs/Observable';

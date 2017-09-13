@@ -6,10 +6,9 @@ import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
-import { AddMapInstacneAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstacneAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;

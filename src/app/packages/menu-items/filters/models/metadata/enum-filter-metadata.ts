@@ -1,5 +1,3 @@
-import { isNil } from 'lodash';
-import { Filter } from './../filter';
 import { FilterMetadata } from './filter-metadata.interface';
 
 export class EnumFilterMetadata implements FilterMetadata {

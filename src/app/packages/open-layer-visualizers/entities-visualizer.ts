@@ -1,7 +1,7 @@
 /**
  * Created by AsafMas on 02/08/2017.
  */
-import { IMapVisualizer, IMap, IVisualizerEntity } from '@ansyn/imagery';
+import { IMap, IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 
 import Vector from 'ol/source/vector';
@@ -11,7 +11,6 @@ import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
 import VectorLayer from 'ol/layer/vector';
-import { IMarkupEvent } from '../imagery/model/imap-visualizer';
 import { Subscriber } from 'rxjs/Subscriber';
 
 export const EntitiesVisualizerType = 'EntitiesVisualizerType';

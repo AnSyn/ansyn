@@ -10,7 +10,7 @@ import proj from 'ol/proj';
 import Point from 'ol/geom/point';
 
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
-import { getTimeDiff, TimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
+import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 

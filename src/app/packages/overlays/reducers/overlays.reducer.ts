@@ -3,7 +3,6 @@
  */
 import * as overlay from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
-import { isNil } from 'lodash';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 

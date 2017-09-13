@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { selectAll, mouse, event, select, selection, style } from 'd3';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { event, mouse, select, selectAll, selection } from 'd3';
 import { eventDrops } from 'event-drops';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { isEqual } from 'lodash';
 

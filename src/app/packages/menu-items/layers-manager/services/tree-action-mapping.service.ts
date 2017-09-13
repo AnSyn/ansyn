@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TREE_ACTIONS, KEYS, IActionMapping } from 'angular-tree-component';
+import { IActionMapping, KEYS, TREE_ACTIONS } from 'angular-tree-component';
 
 @Injectable()
 export class TreeActionMappingService {

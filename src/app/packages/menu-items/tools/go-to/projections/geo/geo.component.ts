@@ -1,10 +1,10 @@
 import { Component, forwardRef } from '@angular/core';
 import {
-	ControlValueAccessor,
-	NG_VALUE_ACCESSOR,
-	NG_VALIDATORS,
-	ValidationErrors,
 	AbstractControl,
+	ControlValueAccessor,
+	NG_VALIDATORS,
+	NG_VALUE_ACCESSOR,
+	ValidationErrors,
 	Validator
 } from '@angular/forms';
 import { isEqual as _isEqual, isNil as _isNil } from 'lodash';

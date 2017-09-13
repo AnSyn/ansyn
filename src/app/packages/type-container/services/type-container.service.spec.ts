@@ -1,5 +1,5 @@
 import { TypeContainerService } from './type-container.service';
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { RegisterOptions } from '../models/register-options.model';
 

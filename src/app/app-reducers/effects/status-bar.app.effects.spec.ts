@@ -2,8 +2,14 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import {
+	ChangeLayoutAction,
+	SetGeoFilterAction,
+	SetOrientationAction,
+	SetTimeAction,
+	UpdateStatusFlagsAction
+} from '@ansyn/status-bar/actions/status-bar.actions';
+import { statusBarFlagsItems, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import {
@@ -17,9 +23,6 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend, Http, HttpModule } from '@angular/http';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { statusBarFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -29,7 +32,6 @@ import {
 	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
-import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { cloneDeep } from 'lodash';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

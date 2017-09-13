@@ -1,4 +1,4 @@
-import { IStatusBarState, statusBarFlagsItems, StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
+import { statusBarFlagsItems, StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
 
 describe('Status Bar Reducer', () => {

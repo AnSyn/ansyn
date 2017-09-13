@@ -1,19 +1,24 @@
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import { CasesService, casesConfig } from '@ansyn/menu-items/cases';
-import { SelectCaseByIdAction, SaveDefaultCaseAction, AddCaseAction } from '@ansyn/menu-items/cases';
+import {
+	AddCaseAction,
+	AddCaseSuccessAction,
+	casesConfig,
+	CasesReducer,
+	CasesService,
+	SaveDefaultCaseAction,
+	SelectCaseByIdAction
+} from '@ansyn/menu-items/cases';
 import { HttpModule } from '@angular/http';
-import { CasesReducer, AddCaseSuccessAction } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
 import { ICasesState } from '@ansyn//menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 

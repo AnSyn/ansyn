@@ -1,5 +1,4 @@
-import { BaseOverlaySourceProvider } from './models/base-overlay-source-provider.model';
-import { NgModule, ModuleWithProviders, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HttpModule } from '@angular/http';
@@ -9,7 +8,7 @@ import { TimelineEmitterService } from './services/timeline-emitter.service';
 import { OverlaysContainerComponent } from './container/overlays-container.component';
 import { IOverlaysConfig } from './models/overlays.config';
 
-import { OverlaysService, OverlaysConfig } from './services/overlays.service';
+import { OverlaysConfig, OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from './effects/overlays.effects';
 import { EffectsModule } from '@ngrx/effects';
 

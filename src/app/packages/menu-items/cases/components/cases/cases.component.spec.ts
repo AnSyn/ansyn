@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CasesComponent } from './cases.component';
 import { CasesService } from '../../services/cases.service';
 import { MockComponent } from '@ansyn/core/test';

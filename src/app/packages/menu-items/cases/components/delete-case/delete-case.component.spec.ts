@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
 import { HttpModule } from '@angular/http';
 import { Store, StoreModule } from '@ngrx/store';
@@ -7,7 +7,6 @@ import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 

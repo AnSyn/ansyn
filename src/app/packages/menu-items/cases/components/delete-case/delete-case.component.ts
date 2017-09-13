@@ -1,10 +1,10 @@
-import { Component, EventEmitter, HostBinding, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Case } from '../../models/case.model';
-import { transition, trigger, style, animate } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 const animations_during = '0.2s';
 

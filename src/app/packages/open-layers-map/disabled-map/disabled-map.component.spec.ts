@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DisabledMapComponent } from './disabled-map.component';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';

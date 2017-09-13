@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CaseMapState } from '@ansyn/core/models';
-import { range as _range, isNil as _isNil } from 'lodash';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { CaseMapState, Overlay } from '@ansyn/core/models';
+import { get as _get, isNil as _isNil, range as _range } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
@@ -10,8 +10,6 @@ import { CaseMapsState, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ActiveMapChangedAction, UpdateMapSizeAction } from '../../actions/map.actions';
-import { Overlay } from '@ansyn/core/models';
-import { get as _get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-imageries-manager',

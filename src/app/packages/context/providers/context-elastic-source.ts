@@ -2,9 +2,6 @@ import { Client, SearchResponse } from 'elasticsearch';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Context, ContextCriteria, IContextSource, IContextSourceConfig } from '../context.interface';
-import { logger } from 'codelyzer/util/logger';
-import { Inject, Injectable } from '@angular/core';
-import { ContextConfig } from '../context.module';
 
 export class ContextElasticSource implements IContextSource {
 	public uri;

@@ -3,10 +3,16 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
-	AddMapInstacneAction, RemoveMapInstanceAction, PositionChangedAction, MapSingleClickAction,
-	ContextMenuShowAction, HoverFeatureTriggerAction, DbclickFeatureTriggerAction, MapInstanceChangedAction
+	AddMapInstacneAction,
+	ContextMenuShowAction,
+	DbclickFeatureTriggerAction,
+	HoverFeatureTriggerAction,
+	MapInstanceChangedAction,
+	MapSingleClickAction,
+	PositionChangedAction,
+	RemoveMapInstanceAction
 } from '../actions';
-import { Position, Overlay } from '@ansyn/core';
+import { Overlay, Position } from '@ansyn/core';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 

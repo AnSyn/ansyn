@@ -3,13 +3,24 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { HttpModule } from '@angular/http';
 import { CasesService } from '../services/cases.service';
-import { Store, combineReducers, StoreModule } from '@ngrx/store';
+import { combineReducers, Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../reducers/cases.reducer';
 import {
-	AddCaseAction, AddCaseSuccessAction, DeleteCaseAction, DeleteCaseBackendAction, LoadCasesAction,
-	LoadCasesSuccessAction, UpdateCaseAction, SelectCaseByIdAction, LoadCaseAction, LoadCaseSuccessAction,
-	LoadDefaultCaseAction, LoadDefaultCaseSuccessAction, UpdateCaseBackendAction, OpenModalAction,
-	SetDefaultCaseQueryParams
+	AddCaseAction,
+	AddCaseSuccessAction,
+	DeleteCaseAction,
+	DeleteCaseBackendAction,
+	LoadCaseAction,
+	LoadCasesAction,
+	LoadCasesSuccessAction,
+	LoadCaseSuccessAction,
+	LoadDefaultCaseAction,
+	LoadDefaultCaseSuccessAction,
+	OpenModalAction,
+	SelectCaseByIdAction,
+	SetDefaultCaseQueryParams,
+	UpdateCaseAction,
+	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';

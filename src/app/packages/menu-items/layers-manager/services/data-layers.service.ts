@@ -5,7 +5,7 @@ import { IServerDataLayerContainerRoot } from './../models/server-data-layer-con
 import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';
-import { Injectable, InjectionToken, Inject } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';

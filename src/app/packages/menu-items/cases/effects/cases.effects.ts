@@ -3,19 +3,29 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	AddCaseAction, AddCaseSuccessAction, CasesActionTypes, DeleteCaseBackendSuccessAction, DeleteCaseBackendAction,
+	AddCaseAction,
+	AddCaseSuccessAction,
+	CasesActionTypes,
+	DeleteCaseBackendAction,
+	DeleteCaseBackendSuccessAction,
 	LoadCaseAction,
 	LoadCasesAction,
-	LoadCasesSuccessAction, LoadCaseSuccessAction, LoadContextsSuccessAction, LoadDefaultCaseSuccessAction,
-	SelectCaseByIdAction, UpdateCaseAction, UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction, SetDefaultCaseQueryParams, LoadDefaultCaseAction, LoadContextsAction
+	LoadCasesSuccessAction,
+	LoadCaseSuccessAction,
+	LoadDefaultCaseAction,
+	LoadDefaultCaseSuccessAction,
+	SelectCaseByIdAction,
+	SetDefaultCaseQueryParams,
+	UpdateCaseAction,
+	UpdateCaseBackendAction,
+	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
-import { Case, Context } from '@ansyn/core';
+import { Case } from '@ansyn/core';
 import { isEmpty, isEqual } from 'lodash';
 
 import 'rxjs/add/operator/share';

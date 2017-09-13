@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { Injectable, InjectionToken, Inject } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
 

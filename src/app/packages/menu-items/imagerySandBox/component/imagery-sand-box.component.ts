@@ -4,17 +4,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
-import { UpdateCaseAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn//overlays/actions/overlays.actions';
 import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { isEqual, cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-map-sand-box',

@@ -1,5 +1,5 @@
 import { GenericTypeResolver, InjectionResolverFilter } from './generic-type-resolver';
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { Injector } from '@angular/core';
 
 abstract class MockBaseClass {

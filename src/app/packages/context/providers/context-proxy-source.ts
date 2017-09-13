@@ -1,7 +1,7 @@
-import { ContextCriteria, IContextSourceConfig, IContextSource, Context } from '../context.interface';
+import { Context, ContextCriteria, IContextSource, IContextSourceConfig } from '../context.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
-import { Http, RequestOptions, Headers } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/catch';
 
 export class ContextProxySource implements IContextSource {

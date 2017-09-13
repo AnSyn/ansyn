@@ -2,9 +2,7 @@ import { SelectLayerAction, UnselectLayerAction } from './../../actions/layers.a
 import { NodeActivationChangedEventArgs } from './../../event-args/node-activation-changed-event-args';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Component } from '@angular/core';
-import { TreeNode } from 'angular-tree-component';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
-import { DataLayersService } from './../../services/data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 

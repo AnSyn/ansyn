@@ -1,20 +1,14 @@
 import { ICasesConfig } from './../models/cases-config';
-import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/observable/of';
-import { Case, CaseMapsState, CaseMapState } from '../models/case.model';
-import { cloneDeep, isEmpty } from 'lodash';
-import * as rison from 'rison';
+import { Case, CaseMapState } from '../models/case.model';
+import { cloneDeep, get as _get, isEmpty } from 'lodash';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
-import { Context } from '@ansyn/core/models';
-import { getPointByPolygon } from '@ansyn/core/utils/geo';
-import { Point } from 'geojson';
-
-import { get as _get } from 'lodash';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 

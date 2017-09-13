@@ -3,7 +3,7 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { MapActionTypes, SetMapAutoImageProcessing } from '../actions/map.actions';
+import { MapActionTypes } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';

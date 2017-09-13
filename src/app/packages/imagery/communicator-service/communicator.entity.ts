@@ -3,7 +3,6 @@ import { ImageryComponentManager } from '../imagery-component/manager/imagery.co
 
 import * as _ from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
-import { IMap } from '../model/imap';
 import { MapPosition } from '../model/map-position';
 import { IMapVisualizer } from '../model/imap-visualizer';
 

@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 import { FootprintPolygonVisualizer } from './overlays/polygon-visualizer';
 import { FootprintHitmapVisualizer } from './overlays/hitmap-visualizer';
-import { FootprintPolylineVisualizer, FootprintPolylineVisualizerType } from './overlays/polyline-visualizer';
+import { FootprintPolylineVisualizer } from './overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from './annotations.visualizer';
 
 export const OpenLayersVisualizerMapType = 'openLayersMap';

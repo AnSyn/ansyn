@@ -1,20 +1,22 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
-import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
-import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	DisplayOverlayFromStoreAction, MouseOutDropAction,
-	MouseOverDropAction, SetFiltersAction
-} from '@ansyn/overlays/actions/overlays.actions';
-import {
-	DbclickFeatureTriggerAction, DrawOverlaysOnMapTriggerAction,
+	DbclickFeatureTriggerAction,
+	DrawOverlaysOnMapTriggerAction,
+	HoverFeatureTriggerAction,
 	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
+import {
+	DisplayOverlayFromStoreAction,
+	MouseOutDropAction,
+	MouseOverDropAction,
+	OverlaysMarkupAction,
+	SetFiltersAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
 	AddCaseSuccessAction,

@@ -1,9 +1,8 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
 import { ToolsReducer } from '../reducers/tools.reducer';
-import { MockComponent } from '@ansyn/core/test/mock-component';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 

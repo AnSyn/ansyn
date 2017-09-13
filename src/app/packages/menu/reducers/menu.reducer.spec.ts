@@ -1,5 +1,4 @@
-import { MenuItem } from '@ansyn/core';
-import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core';
+import { AddMenuItemAction, MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core';
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
 
 describe('MenuReducer', () => {

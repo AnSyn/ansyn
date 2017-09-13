@@ -1,7 +1,7 @@
 import {
+	AddMenuItemAction,
 	MenuActionTypes,
 	MenuItem,
-	AddMenuItemAction,
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
 } from '@ansyn/core';

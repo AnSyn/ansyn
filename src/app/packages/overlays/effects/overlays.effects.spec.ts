@@ -1,21 +1,21 @@
-import { EffectsTestingModule, EffectsRunner } from '@ngrx/effects/testing';
-import { TestBed, inject } from '@angular/core/testing';
+import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysMarkupAction,
 	OverlaysActionTypes,
+	OverlaysMarkupAction,
 	RedrawTimelineAction,
-	DisplayOverlayFromStoreAction,
-	SetTimelineStateAction,
-	DisplayOverlayAction,
-	RequestOverlayByIDFromBackendAction
+	RequestOverlayByIDFromBackendAction,
+	SetTimelineStateAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
-import { OverlaysService, OverlaysConfig } from '../services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
 import { OverlayReducer } from '../reducers/overlays.reducer';
 import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';

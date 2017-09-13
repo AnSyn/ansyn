@@ -1,13 +1,8 @@
-import { SelectMenuItemAction, AddMenuItemAction } from '@ansyn/core';
-import {
-	AddCaseSuccessAction,
-	SelectCaseByIdAction,
-	LoadDefaultCaseSuccessAction,
-	CasesReducer
-} from '@ansyn/menu-items/cases';
+import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/core';
+import { AddCaseSuccessAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { Store, StoreModule, Action } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { AnimationEndAction } from '@ansyn/core/actions/menu.actions';

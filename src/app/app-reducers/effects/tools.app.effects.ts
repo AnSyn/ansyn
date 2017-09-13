@@ -1,34 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../';
 import {
-	ToolsActionsTypes,
-	SetActiveCenter,
 	DisableImageProcessing,
 	EnableImageProcessing,
+	SetActiveCenter,
 	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess
+	SetAutoImageProcessingSuccess,
+	ToolsActionsTypes
 } from '@ansyn/menu-items/tools';
-import { ICasesState, CasesActionTypes, SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { CasesActionTypes, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
-import { get as _get, isNil as _isNil } from 'lodash';
+import { cloneDeep, get as _get, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
-	MapActionTypes,
-	SetMapAutoImageProcessing,
-	BackToWorldAction,
-	ActiveMapChangedAction
-} from '@ansyn/map-facade';
-import { OverlaysActionTypes, DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { cloneDeep } from 'lodash';
+	AnnotationVisualizerAgentAction,
+	SetActiveOverlaysFootprintModeAction,
+	SetPinLocationModeAction
+} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { Case } from '@ansyn/core/models/case.model';
-import { SetActiveOverlaysFootprintModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {

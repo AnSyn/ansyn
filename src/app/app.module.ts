@@ -1,4 +1,4 @@
-import { FilterMetadata, EnumFilterMetadata } from '@ansyn/menu-items/filters';
+import { EnumFilterMetadata, FilterMetadata } from '@ansyn/menu-items/filters';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';

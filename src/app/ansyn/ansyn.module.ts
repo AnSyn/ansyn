@@ -21,12 +21,12 @@ import { OpenLayerVisualizersModule } from '@ansyn/open-layer-visualizers';
 import { ContextElasticSource } from '@ansyn/context/';
 import { ContextEntityVisualizer } from '../app-visualizers/context-entity.visualizer';
 import {
+	AlgorithmsModule,
 	CasesModule,
 	FiltersModule,
 	LayersManagerModule,
-	ToolsModule,
-	AlgorithmsModule,
-	SettingsModule
+	SettingsModule,
+	ToolsModule
 } from '@ansyn/menu-items';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';

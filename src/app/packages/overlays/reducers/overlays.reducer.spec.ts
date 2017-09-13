@@ -1,13 +1,13 @@
-import { OverlayReducer, overlayInitialState, IOverlayState } from './overlays.reducer';
+import { IOverlayState, overlayInitialState, OverlayReducer } from './overlays.reducer';
 import {
-	UnSelectOverlayAction,
-	SelectOverlayAction,
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
+	LoadOverlaysSuccessAction,
+	SelectOverlayAction,
+	SetFiltersAction,
+	SetSpecialObjectsActionStore,
+	UnSelectOverlayAction
 } from '../actions/overlays.actions';
-import { Overlay } from '../models/overlay.model';
 import { cloneDeep } from 'lodash';
-import { before } from 'selenium-webdriver/testing';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 describe('Overlay Reducer', () => {

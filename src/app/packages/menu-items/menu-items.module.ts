@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItemsConfig } from './models/menu-items-config';
 import { CasesModule } from './cases/cases.module';

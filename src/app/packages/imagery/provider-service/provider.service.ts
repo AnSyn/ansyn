@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
-import { IMapVisualizer } from '../model/imap-visualizer';
 
 /**
  * Created by AsafMasa on 24/04/2017.

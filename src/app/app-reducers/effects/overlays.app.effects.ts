@@ -1,22 +1,21 @@
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
-	OverlaysActionTypes, OverlaysMarkupAction,
-	DisplayOverlayFromStoreAction, SetTimelineStateAction
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction,
+	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
-import { ICasesState, Case, CasesService } from '@ansyn/menu-items/cases';
+import { Case, CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays';
-import { isEmpty } from 'lodash';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { last } from 'lodash';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Injectable()
 export class OverlaysAppEffects {

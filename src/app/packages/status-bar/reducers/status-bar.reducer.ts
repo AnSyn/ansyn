@@ -1,6 +1,5 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { MapsLayout } from '@ansyn/core';
-import { Case } from '@ansyn/core/models/case.model';
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];

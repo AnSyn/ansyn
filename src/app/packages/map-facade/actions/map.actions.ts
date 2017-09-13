@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Position, MapsLayout } from '@ansyn/core';
+import { MapsLayout, Position } from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',

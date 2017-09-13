@@ -2,19 +2,24 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
-	OverlaysMarkupAction, RequestOverlayByIDFromBackendAction, SetTimelineStateAction
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction,
+	RequestOverlayByIDFromBackendAction,
+	SetTimelineStateAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
 import { IOverlayState } from '../reducers/overlays.reducer';
 import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';
-import { isNil as _isNil, isEqual } from 'lodash';
+import { isEqual, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 
 @Injectable()

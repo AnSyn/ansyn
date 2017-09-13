@@ -1,6 +1,6 @@
 import { RegisterOptions } from '../models/register-options.model';
 import { Type } from '../models/type.model';
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 
 export interface ITypeContainer {

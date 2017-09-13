@@ -3,8 +3,15 @@
  */
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import {
-	Component, Input, OnInit, OnChanges, OnDestroy, ViewChild,
-	ViewContainerRef, ComponentRef, ComponentFactoryResolver, Inject, SimpleChanges
+	Component,
+	ComponentFactoryResolver,
+	ComponentRef,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+	ViewContainerRef
 } from '@angular/core';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { ImageryComponentManager } from './manager/imagery.component.manager';
@@ -12,8 +19,7 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
-import { isEqual, isNil, isEmpty } from 'lodash';
-import { Subscriber } from 'rxjs/Subscriber';
+import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/take';
 
 

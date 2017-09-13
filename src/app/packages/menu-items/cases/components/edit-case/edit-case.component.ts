@@ -1,13 +1,12 @@
-import { Component, HostListener, OnInit, ViewChild, ElementRef, HostBinding } from '@angular/core';
-import { transition, trigger, style, animate } from '@angular/animations';
+import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
-import { AddCaseAction, CloseModalAction, LoadContextsAction, UpdateCaseAction } from '../../actions/cases.actions';
-import { isEqual, cloneDeep } from 'lodash';
+import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { cloneDeep, isEqual } from 'lodash';
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
-import { defaultMapType } from '../../';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 

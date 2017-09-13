@@ -1,5 +1,3 @@
-import { Filter } from './../filter';
-
 export abstract class FilterMetadata {
 	type: string;
 

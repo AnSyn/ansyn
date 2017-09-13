@@ -3,10 +3,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { RouterActionTypes } from '../actions/router.actions';
-import { AnsynRouterService } from '../services/router.service';
 import { Router } from '@angular/router';
 
 @Injectable()

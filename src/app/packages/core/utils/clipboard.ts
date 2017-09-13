@@ -50,5 +50,5 @@ export function copyFromContent(content: string): boolean {
 	const result: boolean = copyFromInputElement(tempTextArea);
 	document.body.removeChild(tempTextArea);
 	return result;
-};
+}
 

@@ -8,4 +8,4 @@ export interface IServerDataLayerContainerRoot {
 	type: LayerType;
 	dataLayerContainers: IServerDataLayerContainer[];
 	dataLayers: IServerDataLayer[];
-};
+}

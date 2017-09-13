@@ -8,7 +8,7 @@ export interface IToolsState {
 	flags: Map<string, boolean>;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
-};
+}
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<string, boolean>(),

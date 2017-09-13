@@ -31,7 +31,7 @@ export interface OverlaysCriteria {
 	from: string;
 	polygon: GeometryObject;
 	caseId?: string;
-};
+}
 
 export interface OverlaySpecialObject {
 	id: string;

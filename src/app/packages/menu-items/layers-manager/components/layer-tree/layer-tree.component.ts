@@ -114,7 +114,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 			return true;
 		}
 	}
-};
+}
 
 
 

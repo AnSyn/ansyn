@@ -14,4 +14,4 @@ export abstract class FilterMetadata {
 	abstract isFiltered(): boolean;
 
 	abstract showAll(): void;
-};
+}

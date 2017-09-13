@@ -53,7 +53,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	createLayer() {
-		this._featuresCollection = new Array();
+		this._featuresCollection = [];
 		this._source = new Vector({
 			features: this._featuresCollection
 		});
@@ -92,7 +92,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		const view = this._imap.mapObject.getView();
 		const projection = view.getProjection();
 
-		const featuresArray = new Array();
+		const featuresArray = [];
 		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
 			type: 'FeatureCollection',
 			features: featuresArray

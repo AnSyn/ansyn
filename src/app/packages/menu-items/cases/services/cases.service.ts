@@ -40,12 +40,6 @@ export class CasesService {
 		return selectedCase.state.maps.data.find(map => map.id === id);
 	}
 
-	constructor(private http: Http, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
-		this.base_url = this.config.baseUrl;
-		this.paginationLimit = this.config.paginationLimit;
-		this.queryParamsKeys = this.config.casesQueryParamsKeys;
-	}
-
 	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {
 		const result = [];
 
@@ -72,6 +66,12 @@ export class CasesService {
 		return result;
 	}
 
+	constructor(private http: Http, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
+		this.base_url = this.config.baseUrl;
+		this.paginationLimit = this.config.paginationLimit;
+		this.queryParamsKeys = this.config.casesQueryParamsKeys;
+	}
+
 	loadCases(last_id: string = '-1'): Observable<any> {
 		const url = `${this.base_url}/pagination/${last_id}?limit=${this.paginationLimit}`;
 		return this.http.get(url, this.defaultOptions).map(res => res.json());
@@ -94,18 +94,18 @@ export class CasesService {
 	}
 
 	updateCase(selected_case: Case): Observable<Case> {
-		const url: string = `${this.base_url}`;
+		const url = `${this.base_url}`;
 		const body: string = JSON.stringify(selected_case);
 		return this.http.put(url, body, this.defaultOptions).map(res => res.json());
 	}
 
 	removeCase(selected_case_id: string): Observable<any> {
-		const url: string = `${this.base_url}/${selected_case_id}`;
+		const url = `${this.base_url}/${selected_case_id}`;
 		return this.http.delete(url, this.defaultOptions).map(res => res.json());
 	}
 
 	loadContexts(): Observable<any> {
-		const url: string = `${this.base_url}/contexts`;
+		const url = `${this.base_url}/contexts`;
 		return this.http.get(url, this.defaultOptions).map((res) => res.json());
 	}
 

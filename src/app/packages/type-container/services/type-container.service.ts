@@ -60,7 +60,7 @@ export class TypeContainerService implements ITypeContainer {
 		}
 
 		if (abstractTypeNameClasses.has(name)) {
-			throw 'Name with the same type al ready registered';
+			throw new Error('Name with the same type al ready registered');
 		}
 		abstractTypeNameClasses.set(name, classTypeToResolve);
 		this.registerNameless(abstractType, classTypeToResolve);
@@ -115,18 +115,18 @@ export class TypeContainerService implements ITypeContainer {
 			this._namelessResolvedTypes.set(abstractType, resolvedClasses);
 		}
 		if (!classesToResolve || classesToResolve == null) {
-			return new Array<any>();
+			return [];
 		}
-		var res = [];
-		classesToResolve.forEach(type => {
+
+		return Array.from(classesToResolve).map(type => {
 			let entity = resolvedClasses.get(type);
 			if (!entity || entity == null) {
 				entity = new type();
 				resolvedClasses.set(type, entity);
 			}
-			res.push(entity);
+
+			return entity;
 		});
-		return res;
 	}
 
 	private resolveByName(abstractType: Function, name: string): any {

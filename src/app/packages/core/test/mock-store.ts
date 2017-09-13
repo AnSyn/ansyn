@@ -1,7 +1,7 @@
 import { Store, State, ActionReducer } from '@ngrx/store';
 import { TestBed, getTestBed } from '@angular/core/testing';
 
-export type StoreFixture<T> = {
+export interface StoreFixture<T> {
 	store: Store<T>;
 	state: State<T>;
 	cleanup: () => void;

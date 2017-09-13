@@ -9,7 +9,7 @@ import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.acti
 })
 
 export class ImageryStatusComponent {
-	@Input('disable-geo-options') disableGeoOptions: boolean;
+	@Input() disableGeoOptions: boolean;
 	@Input() notInCase: boolean;
 	@Input() map_id;
 	@Input() overlay;

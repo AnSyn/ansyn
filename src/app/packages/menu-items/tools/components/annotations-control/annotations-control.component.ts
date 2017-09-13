@@ -65,17 +65,14 @@ export class AnnotationsControlComponent implements OnDestroy {
 
 		if (this.colorSelectionTrigger) {
 			this.clickOutside();
+		} else if (this.subscriber) {
+			this.subscriber.unsubscribe();
 		}
-		else {
-			this.subscriber && this.subscriber.unsubscribe();
-		}
-		//}
 	}
 
 	clickOutside() {
 		this.subscriber = Observable.fromEvent(document, 'click')
 			.subscribe((event: any) => {
-
 				if (!event.target.closest('.expanded-selection.color-selection')) {
 					this.colorSelectionTrigger = false;
 					this.colorSelection.nativeElement.classList.remove('open');
@@ -127,7 +124,9 @@ export class AnnotationsControlComponent implements OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.subscriber && this.subscriber.unsubscribe();
+		if (this.subscriber) {
+			this.subscriber.unsubscribe();
+		}
 	}
 
 }

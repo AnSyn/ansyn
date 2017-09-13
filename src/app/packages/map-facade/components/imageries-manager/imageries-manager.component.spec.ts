@@ -16,7 +16,7 @@ const mock_ansyn_context_menu = MockComponent({
 });
 const mock_ansyn_imagery_container = MockComponent({
 	selector: 'ansyn-imagery-container',
-	inputs: ['map-state', 'active', 'show-status', 'showSpinner', 'disable-geo-options', 'notInCase']
+	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase']
 });
 
 describe('ImageriesManagerComponent', () => {

@@ -87,13 +87,10 @@ export class TimelineTimepickerComponent implements OnInit {
 			confirmIcon: '<svg version=\'1.1\' xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' width=\'17\' height=\'17\' viewBox=\'0 0 17 17\'> <g> </g> <path d=\'M15.418 1.774l-8.833 13.485-4.918-4.386 0.666-0.746 4.051 3.614 8.198-12.515 0.836 0.548z\' fill=\'#000000\' /> </svg>',
 			confirmText: 'OK ',
 			showAlways: false,
-			theme: 'light'
+			theme: 'light',
 		};
 
-		const config = {} as any;
-		for (let key in defaultConfig) {
-			config[key] = pluginConfig && pluginConfig[key] !== undefined ? pluginConfig[key] : defaultConfig[key];
-		}
+		const config = Object.assign(defaultConfig, pluginConfig);
 
 		return function (fp) {
 			const hooks = {
@@ -144,9 +141,5 @@ export class TimelineTimepickerComponent implements OnInit {
 			start: this.startDatePickerValue,
 			end: this.endDatePickerValue
 		});
-
 	}
-
-
 }
-

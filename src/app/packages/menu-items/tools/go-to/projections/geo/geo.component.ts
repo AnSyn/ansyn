@@ -20,7 +20,6 @@ const providers = [
 		useExisting: forwardRef(() => GeoComponent),
 		multi: true
 	}
-
 ];
 
 @Component({
@@ -29,7 +28,6 @@ const providers = [
 	styleUrls: ['./geo.component.less'],
 	providers
 })
-
 export class GeoComponent implements ControlValueAccessor, Validator {
 	coordinates: number[] = [0, 0];
 	onChanges = (value) => {

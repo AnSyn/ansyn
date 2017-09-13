@@ -7,26 +7,21 @@
 				(click)="clickMapContainer(maps.data[index].id)"
 				(dblclick)="dbclick()">
 				<ansyn-imagery-container class="map"
-										 [disable-geo-options]="isGeoOptionsDisabled(maps.data[index].id)"
-										 [map-state]="maps.data[index]"
+										 [disableGeoOptions]="isGeoOptionsDisabled(maps.data[index].id)"
+										 [mapState]="maps.data[index]"
 										 [active]="maps.active_map_id == maps.data[index].id"
-										 [show-status]="count > 1"
+										 [showStatus]="count > 1"
 										 [notInCase]="overlayNotInCase(maps.data[index].data.overlay)"
 										 [showSpinner]="isOverlayLoading((maps.data[index].data.overlay)?.id)">
 				</ansyn-imagery-container>
 
 				<div class="active-border"
 					 [class.active]="maps.active_map_id === maps.data[index].id">
-
 				</div>
-
 			</div>
-
 		</ng-template>
 	</ng-template>
-
 </div>
-
 
 <ansyn-context-menu></ansyn-context-menu>
 

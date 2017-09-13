@@ -38,9 +38,6 @@ describe('CasesService', () => {
 
 	} as any;
 
-	const baseUrl: string = 'fake-cases-url';
-	const casesQueryParamsKeys: string[] = ['facets', 'time', 'maps', 'region'];
-
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule],
@@ -79,7 +76,6 @@ describe('CasesService', () => {
 								}
 							}
 						},
-						,
 						{
 							id: '5555',
 							data: {}

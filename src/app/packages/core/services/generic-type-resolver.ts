@@ -1,7 +1,8 @@
 export type InjectionResolverFilter = (resolvedClasses: any[]) => any;
-export type Resolver = {
+
+export interface Resolver {
 	get: (any) => any;
-};
+}
 
 export type Type = Function;
 

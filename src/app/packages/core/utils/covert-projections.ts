@@ -1,7 +1,7 @@
 import { isEqual as _isEqual } from 'lodash';
 import * as proj4 from 'proj4';
 
-export type CoordinatesSystem = {
+export interface CoordinatesSystem {
 	datum: 'wgs84' | 'ed50';
 	projection: 'geo' | 'utm';
 }

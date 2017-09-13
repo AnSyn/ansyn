@@ -8,11 +8,11 @@ import { CaseMapState, Overlay } from '@ansyn/core';
 	styleUrls: ['./imagery-container.component.less']
 })
 export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
-	@Input('disable-geo-options') disableGeoOptions: boolean;
+	@Input() disableGeoOptions: boolean;
 	@Input() notInCase;
-	@Input('map-state') mapState: CaseMapState;
+	@Input() mapState: CaseMapState;
 	@Input() active: boolean;
-	@Input('show-status') showStatus: boolean;
+	@Input() showStatus: boolean;
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 
 	private _showSpinner: boolean;

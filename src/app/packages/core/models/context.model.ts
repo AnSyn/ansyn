@@ -1,6 +1,6 @@
 import { CaseTimeState, CaseFacetsState, CaseRegionState } from './case.model';
 
-export type Context = {
+export interface Context {
 	id: string;
 	name: string;
 

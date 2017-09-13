@@ -1,7 +1,12 @@
 import Raster from 'ol/source/raster';
 
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
-export type rasterOperation = { name: string, operation: pixelOperation, lib: {} };
+
+export interface IRasterOperation {
+	name: string,
+	operation: pixelOperation,
+	lib: {}
+}
 
 export type supportedOperations = 'Histogram' | 'Sharpness';
 
@@ -9,12 +14,12 @@ export const operations = [];
 
 export class OpenLayersImageProcessing {
 
-	_rasterToOperations: Map<Raster, rasterOperation[]>;
-	_operations: Map<string, rasterOperation>;
+	_rasterToOperations: Map<Raster, IRasterOperation[]>;
+	_operations: Map<string, IRasterOperation>;
 
 	constructor() {
-		this._rasterToOperations = new Map<Raster, rasterOperation[]>();
-		this._operations = new Map<string, rasterOperation>();
+		this._rasterToOperations = new Map<Raster, IRasterOperation[]>();
+		this._operations = new Map<string, IRasterOperation>();
 
 		this.initializeOperations();
 	}
@@ -98,7 +103,7 @@ export class OpenLayersImageProcessing {
 			let globalLib = {};
 			const operationsArray = [];
 
-			currentOperations.forEach((operation: rasterOperation) => {
+			currentOperations.forEach((operation: IRasterOperation) => {
 				operationsArray.push(operation.operation);
 				for (let property in operation.lib) {
 					if (operation.lib.hasOwnProperty(property)) {

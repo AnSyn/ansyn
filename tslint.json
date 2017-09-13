@@ -40,8 +40,6 @@
 			true,
 			"debug",
 			"info",
-			"time",
-			"timeEnd",
 			"trace"
 		],
 		"no-construct": true,
@@ -54,7 +52,7 @@
 			true,
 			"ignore-params"
 		],
-		"no-shadowed-variable": true,
+		"no-shadowed-variable": false,
 		"no-string-literal": false,
 		"no-string-throw": true,
 		"no-switch-case-fall-through": true,

@@ -23,7 +23,11 @@ import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/m
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { GoNextDisplayAction, GoPrevDisplayAction, OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
+	OverlaysMarkupAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { cloneDeep } from 'lodash';

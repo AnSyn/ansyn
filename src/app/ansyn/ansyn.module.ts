@@ -60,7 +60,7 @@ const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	OpenLayerVisualizersModule,
 	AnsynRouterModule,
 	RouterModule
-	];
+];
 
 if (configuration.env !== 'production') {
 	imports.push(ImagerySandBoxModule);

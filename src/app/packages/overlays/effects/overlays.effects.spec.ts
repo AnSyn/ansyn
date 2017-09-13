@@ -147,9 +147,7 @@ describe('Overlays Effects ', () => {
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
 
-			const overlays = [
-				{ id: '1234', date: new Date(6000) }
-			];
+			const overlays = [{ id: '1234', date: new Date(6000) }];
 			const timelineState = {
 				from: new Date(0),
 				to: new Date(5000)

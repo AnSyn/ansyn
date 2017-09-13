@@ -121,7 +121,7 @@ describe('OverlaysService', () => {
 		baseSourceProvider = _baseSourceProvider;
 
 		mockBackend.connections.subscribe((connection: any) => {
-			if (connection.request.url == '//localhost:8037/api/mock/eventDrops/data') {
+			if (connection.request.url === '//localhost:8037/api/mock/eventDrops/data') {
 				connection.mockRespond(new Response(new ResponseOptions({
 					body: JSON.stringify(response)
 				})));
@@ -270,16 +270,12 @@ describe('OverlaysService', () => {
 	});
 
 	it('check the method searchOverlay with spyOn', () => {
-
 		let response = new Response(new ResponseOptions({
 			body: JSON.stringify({ key: 'value' })
 		}));
 
-		var calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
-			return Observable.create((observer: Observer<any>) => {
-
-				observer.next(response.json());
-			});
+		let calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
+			return Observable.create((observer: Observer<any>) => observer.next(response.json()));
 		}).calls;
 
 

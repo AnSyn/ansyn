@@ -7,7 +7,7 @@ import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-	selector: 'app-layer-tree',
+	selector: 'ansyn-layer-tree',
 	templateUrl: './layer-tree.component.html',
 	styleUrls: ['./layer-tree.component.less'],
 	providers: [TreeActionMappingService]

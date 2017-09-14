@@ -45,10 +45,9 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MapReducer } from '../../packages/map-facade/reducers/map.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';

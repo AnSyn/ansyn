@@ -18,7 +18,6 @@ import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';

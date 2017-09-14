@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
 describe('Context Provider Service', () => {
 	let contextProviderService: ContextProviderService;
 	const mockContextSourceObject: IContextSource = {
-		find: () => Observable.of([{ 'title': 'tmp' }]),
+		find: () => Observable.of([{'title': 'tmp'}]),
 		remove: () => Observable.of({}),
 		create: () => Observable.of({}),
 		update: () => Observable.of({}),

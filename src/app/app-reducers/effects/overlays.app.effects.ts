@@ -77,7 +77,7 @@ export class OverlaysAppEffects {
 
 					return [
 						new UpdateCaseAction(selected_case),
-						new SetTimeAction({ from, to }),
+						new SetTimeAction({from, to}),
 						new LoadOverlaysAction(overlayFilter)
 					];
 				});
@@ -93,7 +93,7 @@ export class OverlaysAppEffects {
 			const tenth = (timelineState.to.getTime() - timelineState.from.getTime()) / 10;
 			const fromTenth = new Date(timelineState.from.getTime() - tenth);
 			const toTenth = new Date(timelineState.to.getTime() + tenth);
-			return new SetTimelineStateAction({ from: fromTenth, to: toTenth });
+			return new SetTimelineStateAction({from: fromTenth, to: toTenth});
 		});
 
 	@Effect()
@@ -107,7 +107,7 @@ export class OverlaysAppEffects {
 		.map((displayedOverlays: any[]) => {
 			const lastOverlayId = last(displayedOverlays);
 			this.casesService.contextValues.defaultOverlay = '';
-			return new DisplayOverlayFromStoreAction({ id: lastOverlayId });
+			return new DisplayOverlayFromStoreAction({id: lastOverlayId});
 		})
 		.share();
 

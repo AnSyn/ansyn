@@ -158,7 +158,7 @@ export class OpenLayersDisabledMap implements IMap {
 		let zoom: number = view.getZoom();
 		let rotation: number = view.getRotation();
 
-		return { center, zoom, rotation };
+		return {center, zoom, rotation};
 	}
 
 	updateSize(): void {

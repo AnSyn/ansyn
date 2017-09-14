@@ -58,7 +58,7 @@ export class VisualizersAppEffects {
 			visualizerType: FootprintPolylineVisualizerType
 		}));
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.map((action): void => {
@@ -74,10 +74,10 @@ export class VisualizersAppEffects {
 	onDbclickFeaturePolylineDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
 		.map(toPayload)
-		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizerType)
-		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
+		.filter(({visualizerType}) => visualizerType === FootprintPolylineVisualizerType)
+		.map(({id}) => new DisplayOverlayFromStoreAction({id}));
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	markupVisualizer$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
@@ -110,7 +110,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
@@ -212,7 +212,7 @@ export class VisualizersAppEffects {
 				}
 			});
 
-			return { selectedCase, update };
+			return {selectedCase, update};
 		})
 		.filter(result => result.update)
 		.map(result => {
@@ -258,13 +258,13 @@ export class VisualizersAppEffects {
 
 	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		return overlaysToDraw.map(({ id, footprint }) => {
+		return overlaysToDraw.map(({id, footprint}) => {
 			const featureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',
 				geometry: footprint,
 				properties: {}
 			};
-			return { id, featureJson };
+			return {id, featureJson};
 		});
 	}
 

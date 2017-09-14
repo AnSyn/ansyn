@@ -19,7 +19,7 @@ export class GoToComponent implements OnInit {
 	public activeCenter: number[];
 	activeCenter$: Observable<number[]> = this.store$.select('tools').pluck('activeCenter');
 
-	activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+	activeCenterProjDatum: CoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
 
 	inputs = {
 		from: [0, 0],

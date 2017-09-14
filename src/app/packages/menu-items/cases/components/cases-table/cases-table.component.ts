@@ -18,7 +18,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
-		transition(':leave', [style({ height: '57px' }), animate('0.2s', style({ height: '0' }))])
+		transition(':leave', [style({height: '57px'}), animate('0.2s', style({height: '0'}))])
 
 	])
 ];
@@ -97,13 +97,13 @@ export class CasesTableComponent implements OnInit {
 	removeCase($event: MouseEvent, case_id: string): void {
 		$event.stopPropagation();
 		let component = DeleteCaseComponent;
-		this.store.dispatch(new OpenModalAction({ component, case_id }));
+		this.store.dispatch(new OpenModalAction({component, case_id}));
 	}
 
 	editCase($event: MouseEvent, case_id: string) {
 		$event.stopPropagation();
 		let component = EditCaseComponent;
-		this.store.dispatch(new OpenModalAction({ component, case_id }));
+		this.store.dispatch(new OpenModalAction({component, case_id}));
 	}
 
 	shareCase($event: MouseEvent, case_id: string) {

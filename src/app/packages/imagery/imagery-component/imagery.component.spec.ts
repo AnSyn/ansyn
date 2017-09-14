@@ -44,7 +44,7 @@ describe('ImageryComponent', () => {
 	const imageryData: ImageryComponentSettings = {
 		id: 'imagery1',
 		mapType: 'openLayersMap',
-		data: { position: { center: geoPoint, zoom: 0 } }
+		data: {position: {center: geoPoint, zoom: 0}}
 	};
 
 	beforeEach(async(() => {
@@ -52,7 +52,7 @@ describe('ImageryComponent', () => {
 			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
-				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
+				{provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true},
 				{
 					provide: ConfigurationToken, useValue: {
 					'geoMapsInitialMapSource': [{

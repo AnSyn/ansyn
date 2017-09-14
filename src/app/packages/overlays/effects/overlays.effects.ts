@@ -29,18 +29,18 @@ export class OverlaysEffects {
 	onDisplayOverlayFromStore$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlayState): any => {
-			return { overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id };
+			return {overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id};
 		})
-		.map(({ overlay, map_id }: any) => {
-			return new DisplayOverlayAction({ overlay, map_id });
+		.map(({overlay, map_id}: any) => {
+			return new DisplayOverlayAction({overlay, map_id});
 		}).share();
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onOverlaysMarkupChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.share();
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onRedrawTimeline$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
 		.map(() => true)
@@ -62,7 +62,7 @@ export class OverlaysEffects {
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId) // this.overlaysService.fetchData("",action.payload)
 				.map((overlay: Overlay) => {
-					return new DisplayOverlayAction({ overlay, map_id: action.payload.map_id });
+					return new DisplayOverlayAction({overlay, map_id: action.payload.map_id});
 				});
 		});
 
@@ -72,7 +72,7 @@ export class OverlaysEffects {
 		.map((action: LoadOverlaysAction) => {
 			const from = new Date(action.payload.from);
 			const to = new Date(action.payload.to);
-			return new SetTimelineStateAction({ from, to });
+			return new SetTimelineStateAction({from, to});
 		});
 
 	@Effect()
@@ -83,7 +83,7 @@ export class OverlaysEffects {
 			return filteredOverlays[index - 1];
 		})
 		.filter(prevOverlayId => !_isNil(prevOverlayId))
-		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
+		.map(prevOverlayId => new DisplayOverlayFromStoreAction({id: prevOverlayId}));
 
 	@Effect()
 	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
@@ -93,7 +93,7 @@ export class OverlaysEffects {
 			return filteredOverlays[index + 1];
 		})
 		.filter(nextOverlayId => !_isNil(nextOverlayId))
-		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
+		.map(nextOverlayId => new DisplayOverlayFromStoreAction({id: nextOverlayId}));
 
 
 	// this method moves the timeline to active displayed overlay if exists in timeline

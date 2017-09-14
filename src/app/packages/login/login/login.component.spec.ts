@@ -23,7 +23,7 @@ describe('LoginComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [LoginComponent],
 			imports: [RouterTestingModule, FormsModule],
-			providers: [{ provide: AuthService, useValue: mockAuthService }]
+			providers: [{provide: AuthService, useValue: mockAuthService}]
 		})
 			.compileComponents();
 	}));

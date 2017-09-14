@@ -33,7 +33,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	private _mapComponentSettings: ImageryComponentSettings;
 
-	@ViewChild('map_component_elem', { read: ViewContainerRef }) map_component_elem: ViewContainerRef;
+	@ViewChild('map_component_elem', {read: ViewContainerRef}) map_component_elem: ViewContainerRef;
 
 	@Input()
 	set mapComponentSettings(value) {

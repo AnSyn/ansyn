@@ -12,13 +12,13 @@ describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
-	const mockMapEffects = { onContextMenuShow$: new EventEmitter<void>() };
+	const mockMapEffects = {onContextMenuShow$: new EventEmitter<void>()};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, EffectsTestingModule, StoreModule.provideStore({ map: MapReducer })],
+			imports: [FormsModule, EffectsTestingModule, StoreModule.provideStore({map: MapReducer})],
 			declarations: [ContextMenuComponent],
-			providers: [{ provide: MapEffects, useValue: mockMapEffects }]
+			providers: [{provide: MapEffects, useValue: mockMapEffects}]
 		}).compileComponents();
 	}));
 
@@ -64,7 +64,7 @@ describe('ContextMenuComponent', () => {
 		spyOn(component, 'initializeSensors');
 		expect(elem.style.top).not.toEqual('2px');
 		expect(elem.style.left).not.toEqual('1px');
-		const action = <ContextMenuShowAction> { payload: { e: { x: 1, y: 2 } } };
+		const action = <ContextMenuShowAction> {payload: {e: {x: 1, y: 2}}};
 		component.show(action);
 		expect(component.initializeSensors).toHaveBeenCalled();
 		expect(elem.focus).toHaveBeenCalled();
@@ -74,9 +74,9 @@ describe('ContextMenuComponent', () => {
 
 	it('clickNext should calculate next overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'a' },
-			{ id: '2', sensorName: 'b' },
-			{ id: '3', sensorName: 'a' }
+			{id: '1', sensorName: 'a'},
+			{id: '2', sensorName: 'b'},
+			{id: '3', sensorName: 'a'}
 		];
 		component.displayedOverlayIndex = 0;
 		const $event = <MouseEvent> null;
@@ -91,10 +91,10 @@ describe('ContextMenuComponent', () => {
 
 	it('clickPrev should calculate prev overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'b' },
-			{ id: '2', sensorName: 'a' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'b' },
+			{id: '1', sensorName: 'b'},
+			{id: '2', sensorName: 'a'},
+			{id: '3', sensorName: 'c'},
+			{id: '4', sensorName: 'b'},
 		];
 		component.displayedOverlayIndex = 3; // b
 		const $event = <MouseEvent> null;
@@ -109,10 +109,10 @@ describe('ContextMenuComponent', () => {
 
 	it('clickLast should calculate last overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'c' },
-			{ id: '2', sensorName: 'c' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'b' },
+			{id: '1', sensorName: 'c'},
+			{id: '2', sensorName: 'c'},
+			{id: '3', sensorName: 'c'},
+			{id: '4', sensorName: 'b'},
 		];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -125,10 +125,10 @@ describe('ContextMenuComponent', () => {
 
 	it('clickFirst should calculate first overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'a' },
-			{ id: '2', sensorName: 'c' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'c' },
+			{id: '1', sensorName: 'a'},
+			{id: '2', sensorName: 'c'},
+			{id: '3', sensorName: 'c'},
+			{id: '4', sensorName: 'c'},
 		];
 		component.displayedOverlayIndex = 3;
 		const $event = <MouseEvent> null;
@@ -143,10 +143,10 @@ describe('ContextMenuComponent', () => {
 
 	it('clickBest should calculate best(resolution) overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'c', bestResolution: 3.5 },
-			{ id: '2', sensorName: 'c', bestResolution: 1.25 }, // best of "c" (index 1)
-			{ id: '3', sensorName: 'b', bestResolution: 0.5 }, // best (index 2)
-			{ id: '4', sensorName: 'c', bestResolution: 1.5 },
+			{id: '1', sensorName: 'c', bestResolution: 3.5},
+			{id: '2', sensorName: 'c', bestResolution: 1.25}, // best of "c" (index 1)
+			{id: '3', sensorName: 'b', bestResolution: 0.5}, // best (index 2)
+			{id: '4', sensorName: 'c', bestResolution: 1.5},
 		];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -162,7 +162,7 @@ describe('ContextMenuComponent', () => {
 			stopPropagation: () => {
 			}
 		});
-		component.displayOverlayEvent($event, { id: '6' });
+		component.displayOverlayEvent($event, {id: '6'});
 		expect(store.dispatch).toHaveBeenCalledWith(new ContextMenuDisplayAction('6'));
 
 	});

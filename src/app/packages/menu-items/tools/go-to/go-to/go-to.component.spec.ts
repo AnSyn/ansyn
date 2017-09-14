@@ -14,7 +14,7 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, StoreModule.provideStore({ tools: ToolsReducer })],
+			imports: [GoToModule, StoreModule.provideStore({tools: ToolsReducer})],
 			providers: [
 				{
 					provide: toolsConfig, useValue: {

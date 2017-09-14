@@ -92,7 +92,7 @@ describe('CasesService', () => {
 		spyOn(http, 'post').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		let selected_case: Case = { id: 'faker_id', name: 'faker_name' };
 		casesService.createCase(selected_case);
-		expect(http.post).toHaveBeenCalledWith(`${casesService.base_url}`, JSON.stringify(selected_case), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }));
+		expect(http.post).toHaveBeenCalledWith(`${casesService.base_url}`, JSON.stringify(selected_case), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}));
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
@@ -100,16 +100,16 @@ describe('CasesService', () => {
 		let fake_response = { json: () => selected_case };
 		spyOn(http, 'put').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		casesService.updateCase(selected_case);
-		expect(http.put).toHaveBeenCalledWith(`${casesService.base_url}`, JSON.stringify(selected_case), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }));
+		expect(http.put).toHaveBeenCalledWith(`${casesService.base_url}`, JSON.stringify(selected_case), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}));
 	});
 
 	it('updateCase should send the case id as param in ajax("delete")', () => {
-		let selected_case: Case = { id: 'faker_id', name: 'faker_other_name' };
+		let selected_case: Case = {id: 'faker_id', name: 'faker_other_name'};
 		let case_id_to_remove = selected_case.id;
 		let fake_response = { json: () => selected_case };
 		spyOn(http, 'delete').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		casesService.removeCase('faker_id');
-		expect(http.delete).toHaveBeenCalledWith(`${casesService.base_url}/${case_id_to_remove}`, new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }));
+		expect(http.delete).toHaveBeenCalledWith(`${casesService.base_url}/${case_id_to_remove}`, new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}));
 	});
 
 	it('loadContexts should send the all contexts from ajax("get")', () => {

@@ -12,7 +12,7 @@ export class TypeContainerModule {
 		return {
 			ngModule: TypeContainerModule,
 			providers: [
-				{ provide: RegisterOptions, useValue: registerOptions, multi: true }
+				{provide: RegisterOptions, useValue: registerOptions, multi: true}
 			]
 		};
 	}

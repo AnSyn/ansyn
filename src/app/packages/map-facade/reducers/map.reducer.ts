@@ -38,22 +38,22 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
 			const mapIdToGeoOptionsClone = new Map(state.mapIdToGeoOptions);
 			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);
-			return { ...state, mapIdToGeoOptions: mapIdToGeoOptionsClone };
+			return {...state, mapIdToGeoOptions: mapIdToGeoOptionsClone};
 
 		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
-			return { ...state, overlaysNotInCase: action.payload };
+			return {...state, overlaysNotInCase: action.payload};
 
 		case MapActionTypes.POSITION_CHANGED:
 			const positions = cloneDeep(state.positions);
 			positions[action.payload.id] = action.payload.position;
-			return { ...state, positions: positions };
+			return {...state, positions: positions};
 
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
-			return { ...state, communicators: action.payload.communicatorsIds };
+			return {...state, communicators: action.payload.communicatorsIds};
 
 		case MapActionTypes.SET_LOADING_OVERLAYS:
-			return { ...state, loadingOverlays: action.payload };
+			return {...state, loadingOverlays: action.payload};
 
 		case MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS:
 			const overlayIdToAdd = action.payload.overlayId;
@@ -61,7 +61,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (!isOverlayIdToAddExists) {
 				const loadingOverlays = cloneDeep(state.loadingOverlays);
 				loadingOverlays.push(overlayIdToAdd);
-				return { ...state, loadingOverlays: loadingOverlays };
+				return {...state, loadingOverlays: loadingOverlays};
 			}
 			break;
 
@@ -71,15 +71,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (overlayIndex !== -1) {
 				const loadingOverlays = cloneDeep(state.loadingOverlays);
 				loadingOverlays.splice(overlayIndex, 1);
-				return { ...state, loadingOverlays: loadingOverlays };
+				return {...state, loadingOverlays: loadingOverlays};
 			}
 			break;
 
 		case MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS:
-			return { ...state, ...action.payload };
+			return {...state, ...action.payload};
 
 		case MapActionTypes.SET_LAYOUT:
-			return { ...state, layout: action.payload };
+			return {...state, layout: action.payload};
 
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };

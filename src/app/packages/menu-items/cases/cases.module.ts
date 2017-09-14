@@ -36,7 +36,7 @@ export class CasesModule {
 			ngModule: CasesModule,
 			providers: [
 				CasesService,
-				{ provide: casesConfig, useValue: config }
+				{provide: casesConfig, useValue: config}
 			]
 		};
 	}

@@ -11,7 +11,7 @@ describe('MapFacadeService', () => {
 			providers: [
 				MapFacadeService
 			],
-			imports: [ImageryModule, StoreModule.provideStore({ map: MapReducer })]
+			imports: [ImageryModule, StoreModule.provideStore({map: MapReducer})]
 		});
 	});
 

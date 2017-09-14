@@ -65,7 +65,7 @@ export class FilterContainerComponent implements OnInit {
 	}
 
 	onMetadataChange(metadeata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: metadeata }));
+		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata: metadeata}));
 	}
 
 	showAll(): void {

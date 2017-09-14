@@ -16,8 +16,8 @@ describe('DeleteCaseComponent', () => {
 
 	const fake_iCasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1' },
-			{ id: 'fake_id2', name: 'fake_name2' }
+			{id: 'fake_id1', name: 'fake_name1'},
+			{id: 'fake_id2', name: 'fake_name2'}
 		],
 		active_case_id: 'fake_id1',
 		selected_case_id: null,
@@ -28,8 +28,8 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer}), RouterTestingModule],
+			providers: [{provide: casesConfig, useValue: {baseUrl: null}}]
 		}).compileComponents();
 	}));
 

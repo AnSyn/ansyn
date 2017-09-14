@@ -11,6 +11,7 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
 import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('AnsynComponent', () => {
@@ -94,23 +95,25 @@ describe('AnsynComponent', () => {
 		store = _store;
 		store.dispatch(new AddCaseSuccessAction(cases[0]));
 		store.dispatch(new SelectCaseByIdAction('tmp'));
-	}));
 
-	beforeEach(() => {
-
-		fixture = TestBed.createComponent(AnsynComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-
-		Object.defineProperty(component, 'selected_case$', {
-			get: () => {
+		handler = new Subject();
+		spyOn(store,'select').and.callFake( type => {
+			if(type === 'cases') {
+				return handler;
+			}
+			else if (type === 'tools') {
+				return Observable.of({
+					flags : new Map<string,any>()
+				})
 			}
 		});
 
-		handler = new Subject();
-		spyOnProperty(component, 'selected_case$', 'get').and.callFake(type => {
-			return handler;
-		});
+	}));
+
+	beforeEach(() => {
+		fixture = TestBed.createComponent(AnsynComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
 	});
 
 	it('should be created', () => {
@@ -135,7 +138,8 @@ describe('AnsynComponent', () => {
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId1');
-			handler.next({ selected_case: selectedCase });
+			handler.next( { selected_case: selectedCase });
+
 		});
 
 		it('check isFavoriteOverlay falsy value', () => {

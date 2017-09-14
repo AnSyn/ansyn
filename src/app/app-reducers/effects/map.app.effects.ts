@@ -377,7 +377,7 @@ export class MapAppEffects {
 	onLayoutChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
 		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), this.store$.select('status_bar'), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
-			return [selectedCase, statusbar.layouts[payload], payload]
+			return [selectedCase, statusbar.layouts[payload], payload];
 		})
 		.mergeMap(([selectedCase, layout, layoutIndex]: any[]) => {
 			const actions = [];
@@ -392,7 +392,7 @@ export class MapAppEffects {
 						}
 					}
 				} as any;
-				actions.push(new UpdateCaseAction(updatedCase))
+				actions.push(new UpdateCaseAction(updatedCase));
 			}
 			actions.push(new SetLayoutAction(layout));
 			return actions;

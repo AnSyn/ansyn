@@ -30,7 +30,7 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck<IMapState, Map<string, boolean>>('overlaysNotInCase');
 
 	public activeMapId$: Observable<string> = this.mapState$
-		.pluck('activeMapId')
+		.pluck<IMapState, string>('activeMapId')
 		.distinctUntilChanged();
 
 	public mapsList$: Observable<CaseMapState[]> = this.mapState$

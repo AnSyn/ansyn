@@ -89,7 +89,10 @@ describe('ContextEntityAppEffects', () => {
 		store = _store;
 		const selected_case = cases[0];
 		const icaseState = { cases, selected_case } as any;
-		const iMapState = { mapsList: selected_case.state.maps.data, activeMapId: selected_case.state.maps.active_map_id };
+		const iMapState = {
+			mapsList: selected_case.state.maps.data,
+			activeMapId: selected_case.state.maps.active_map_id
+		};
 		const fakeStore = { cases: icaseState, map: iMapState };
 
 		spyOn(store, 'select').and.callFake(type => {

@@ -164,7 +164,7 @@ export class StatusBarComponent implements OnInit {
 		});
 
 		this.flags$.subscribe((flags: Map<string, boolean>) => {
-			// I want to check that the one that was changing is the pin point search
+			//  I want to check that the one that was changing is the pin point search
 			if (this.flags.get(statusBarFlagsItems.pinPointSearch) !== flags.get(statusBarFlagsItems.pinPointSearch)) {
 				this.toggleEditMode.emit();
 			}

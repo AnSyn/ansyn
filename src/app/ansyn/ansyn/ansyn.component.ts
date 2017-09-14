@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
-import { isNil as _isNil } from 'lodash';
+import { isNil as _isNil, isEqual as _isEqual } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import * as packageJson from '../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -41,8 +41,9 @@ export class AnsynComponent implements OnInit {
 
 	isFavoriteOverlay$ = this.selected_case$
 		.withLatestFrom(this.activeMap$)
-		.filter(([selectedCase]) => _isNil(selectedCase.state.favoritesOverlays))
-		.map(([selectedCase, activeMap]: [Case, CaseMapState]) => {
+		.filter(( [selectedCase]) => _isNil(selectedCase.state.favoritesOverlays))
+		.distinctUntilChanged(( [oldCase], [newCase]): boolean => 	 _isEqual(oldCase.state.favoritesOverlays , newCase.state.favoritesOverlays))
+		.map(( [ selectedCase , activeMap ]: [Case, CaseMapState] ) => {
 			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);
 		});
 

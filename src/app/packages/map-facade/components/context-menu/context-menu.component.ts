@@ -2,12 +2,11 @@ import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } f
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
 import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SetActiveCenter, SetPinLocationModeAction } from '../../../menu-items/tools/actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-context-menu',
@@ -138,6 +137,6 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	setPinPoint() {
-		// this.point.coordinates
+		this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));
 	}
 }

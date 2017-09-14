@@ -97,7 +97,7 @@ export class OpenLayersMap implements IMap {
 			this.setBoundingBox(position.boundingBox);
 		}
 
-		this._mapObject.on('moveend', (e) => {
+		this._mapObject.on('moveend', () => {
 			const mapCenter = this.getCenter();
 			this.centerChanged.emit(mapCenter);
 			this.positionChanged.emit(this.getPosition());
@@ -107,15 +107,14 @@ export class OpenLayersMap implements IMap {
 
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
-			const view = this._mapObject.getViewport();
-			let coordinates = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY]);
+
+			let coordinates = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
 			const projection = this._mapObject.getView().getProjection();
-			coordinates = proj.transform(coordinates, projection, 'EPSG:4326');
+			coordinates = proj.toLonLat(coordinates, projection);
 			const point: GeoJSON.Point = {type: 'Point', coordinates};
 			containerElem.click();
-			this.contextMenu.emit({point, view, e});
+			this.contextMenu.emit({point, e});
 		});
-
 	}
 
 

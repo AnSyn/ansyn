@@ -9,7 +9,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstacneAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { MapReducer } from '../../../packages/map-facade/reducers/map.reducer';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;

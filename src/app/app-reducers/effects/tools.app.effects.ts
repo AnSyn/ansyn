@@ -33,7 +33,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onActiveMapChanges$: Observable<ActiveMapChangedAction | DisableImageProcessing | SetAutoImageProcessingSuccess> = this.actions$
-		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)
 		.filter(activeMap => !_isNil(activeMap))
@@ -50,7 +50,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<SetActiveOverlaysFootprintModeAction> = this.actions$
-		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)
 		.mergeMap(activeMap =>

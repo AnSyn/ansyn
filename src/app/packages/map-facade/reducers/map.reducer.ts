@@ -2,7 +2,7 @@ import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
-import { CaseMapState } from '../../core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export interface IMapState {
 	positions: Position;

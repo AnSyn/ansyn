@@ -330,7 +330,7 @@ export class MapAppEffects {
 	activeMapGeoRegistartionChanged$: Observable<any> = this.actions$
 		.ofType(
 			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			MapActionTypes.ACTIVE_MAP_CHANGED)
+			MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'))
 		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
 		.map(([action, mapState]: [Action, IMapState]) => {
@@ -420,7 +420,7 @@ export class MapAppEffects {
 
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
-		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED, MapActionTypes.MAPS_LIST_CHANGED)
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
 		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), (action, selected_case) => selected_case)
 		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));

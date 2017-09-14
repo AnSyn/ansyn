@@ -9,8 +9,6 @@ export const MapActionTypes = {
 	STOP_MAP_SHADOW_ACTIONS: 'STOP_MAP_SHADOW_ACTIONS',
 	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
-	ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-	MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
@@ -35,6 +33,10 @@ export const MapActionTypes = {
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE'
+	},
+	TRIGGER: {
+		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
+		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED'
 	}
 };
 
@@ -57,7 +59,7 @@ export class BackToWorldAction implements Action {
 }
 
 export class ActiveMapChangedAction implements Action {
-	type = MapActionTypes.ACTIVE_MAP_CHANGED;
+	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;
 
 	constructor(public payload: string) {
 	}
@@ -237,7 +239,7 @@ export class SetPinLocationModeActionStore implements Action {
 }
 
 export class MapsListChangedAction implements Action {
-	type = MapActionTypes.MAPS_LIST_CHANGED;
+	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
 
 	constructor(public payload: CaseMapState[]) {
 	}

@@ -38,7 +38,7 @@ export class AnsynComponent implements OnInit {
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
 		.map((data: any) => data.overlay);
-	app;
+
 	isFavoriteOverlay$ = this.selected_case$
 		.withLatestFrom(this.activeMap$)
 		.filter(([selectedCase]) => _isNil(selectedCase.state.favoritesOverlays))
@@ -58,10 +58,15 @@ export class AnsynComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.store.dispatch(new LoadContextsAction());
-		this.selectedCaseName$.subscribe(_selectedCaseName => this.selectedCaseName = _selectedCaseName);
+
+		this.selectedCaseName$.subscribe(_selectedCaseName => {
+			this.selectedCaseName = _selectedCaseName;
+		});
+
 		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
 			this.displayedOverlay = _displayedOverlay;
 		});
+
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
 			this.isFavoriteOverlay = isFavoriteOverlay;
 		});

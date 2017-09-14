@@ -62,6 +62,8 @@ import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
+import { MapsLayout } from '@ansyn/core/models';
+import { SetPinPointAction } from '../../packages/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -71,10 +73,29 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
 		.filter(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.mergeMap(([action]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
+			// draw on all maps
+			this.communicator.communicatorsAsArray().forEach(communicator => {
+				// this is for the others communicators
+				communicator.removeSingleClickEvent();
+			});
+
+			return [
+				// disable the pinpoint search
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
+				// update pin point
+				new SetPinPointAction(action.payload.lonLat)
+			];
+		});
+
+	@Effect()
+	onSetPinPoint$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.SET_PIN_POINT)
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
 		.mergeMap(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
-			const region = getPolygonByPoint(action.payload.lonLat).geometry;
+			const region = getPolygonByPoint(action.payload).geometry;
 
 			// draw on all maps
 			this.communicator.communicatorsAsArray().forEach(communicator => {
@@ -85,16 +106,14 @@ export class MapAppEffects {
 				communicator.removeSingleClickEvent();
 			});
 
-			// draw the point on the map // all maps
+			// draw the point on the map
 			const selectedCase = {
 				...caseState.selected_case,
 				state: { ...caseState.selected_case.state, region: region }
 			};
 
 			return [
-				// disable the pinpoint search
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
-				// update case
+				//update case
 				new UpdateCaseAction(selectedCase),
 				// load overlays
 				new LoadOverlaysAction({

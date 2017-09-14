@@ -34,7 +34,7 @@ export class ImageriesManagerComponent implements OnInit {
 		.distinctUntilChanged();
 
 	public mapsList$: Observable<CaseMapState[]> = this.mapState$
-		.pluck('mapsList')
+		.pluck<IMapState, CaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
 	public pinLocation$: Observable<boolean> = this.mapState$

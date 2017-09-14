@@ -400,7 +400,7 @@ export class MapAppEffects {
 
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.BACK_TO_WORLD, OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'), (action, { filteredOverlays }, mapState: IMapState) => {
 			return [filteredOverlays, mapState.mapsList];
 		})

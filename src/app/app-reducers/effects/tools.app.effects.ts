@@ -32,7 +32,7 @@ export class ToolsAppEffects {
 
 
 	@Effect()
-	onActiveMapChanges$: Observable<ActiveMapChangedAction> = this.actions$
+	onActiveMapChanges$: Observable<ActiveMapChangedAction | DisableImageProcessing | SetAutoImageProcessingSuccess> = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)

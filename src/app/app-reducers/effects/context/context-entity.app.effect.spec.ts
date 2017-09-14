@@ -9,6 +9,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstacneAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { MapReducer } from '../../../packages/map-facade/reducers/map.reducer';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -70,7 +71,7 @@ describe('ContextEntityAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer })
+				StoreModule.provideStore({ cases: CasesReducer, map: MapReducer })
 			],
 			providers: [
 				ContextEntityAppEffects,
@@ -88,7 +89,8 @@ describe('ContextEntityAppEffects', () => {
 		store = _store;
 		const selected_case = cases[0];
 		const icaseState = { cases, selected_case } as any;
-		const fakeStore = { cases: icaseState };
+		const iMapState = { mapsList: selected_case.state.maps.data, activeMapId: selected_case.state.maps.active_map_id };
+		const fakeStore = { cases: icaseState, map: iMapState };
 
 		spyOn(store, 'select').and.callFake(type => {
 			return Observable.of(fakeStore[type]);

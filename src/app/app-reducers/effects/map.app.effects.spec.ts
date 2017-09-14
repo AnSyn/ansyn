@@ -48,6 +48,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { IMapState, initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { MapReducer } from '../../packages/map-facade/reducers/map.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -135,7 +136,8 @@ describe('MapAppEffects', () => {
 				StoreModule.provideStore({
 					cases: CasesReducer,
 					status_bar: StatusBarReducer,
-					overlays: OverlayReducer
+					overlays: OverlayReducer,
+					map: MapReducer
 				})],
 			providers: [
 				MapAppEffects,
@@ -196,6 +198,8 @@ describe('MapAppEffects', () => {
 		overlaysState = cloneDeep(overlayInitialState);
 		fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
 		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
+		mapState.mapsList = [...icaseState.selected_case.state.maps.data];
+		mapState.activeMapId = icaseState.selected_case.state.maps.active_map_id;
 
 		const fakeStore = { cases: icaseState, status_bar: statusBarState, overlays: overlaysState, map: mapState };
 
@@ -531,7 +535,6 @@ describe('MapAppEffects', () => {
 			});
 			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(false);
 			effectsRunner.queue(new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery1' }));
-
 			let subscribeResult = undefined;
 			mapAppEffects.onDisplayOverlay$.subscribe(result => {
 				subscribeResult = result;

@@ -24,8 +24,8 @@ import {
 	SetAutoImageProcessingSuccess
 } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
-import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

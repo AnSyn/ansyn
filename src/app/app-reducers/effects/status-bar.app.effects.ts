@@ -39,6 +39,8 @@ import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { OverlaysActionTypes, SyncFilteredOverlays } from '@ansyn/overlays/actions';
 import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 
 @Injectable()
@@ -223,7 +225,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	setOverlaysNotFromCase$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_OVERLAYS_NOT_IN_CASE)
-		.withLatestFrom(this.store.select('cases').pluck('selected_case'), ({ payload }, selected_case) => [payload, CasesService.activeMap(selected_case)])
+		.withLatestFrom(this.store.select('map'), ({ payload }, mapState: IMapState) => [payload, MapFacadeService.activeMap(mapState)])
 		.map(([overlaysNotInCase, activeMap]: [Map<string, boolean>, CaseMapState]) => {
 			if (activeMap.data.overlay) {
 				const { id } = activeMap.data.overlay;

@@ -255,6 +255,9 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public removeLayer(layer: any): void {
+		if (!layer) {
+			return;
+		}
 		const index = this._mapLayers.indexOf(layer);
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);

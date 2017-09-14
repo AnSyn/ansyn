@@ -120,7 +120,7 @@ describe('CasesAppEffects', () => {
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
 		const action = new DisplayOverlayAction({ overlay: <Overlay> { id: 'tmp' } });
 		effectsRunner.queue(action);
-		let result: UpdateCaseAction;
+		let result: SetMapsDataActionStore;
 		casesAppEffects.onDisplayOverlay$.subscribe((_result: SetMapsDataActionStore) => {
 			result = _result;
 		});

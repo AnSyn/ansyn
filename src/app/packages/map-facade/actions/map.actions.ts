@@ -10,7 +10,6 @@ export const MapActionTypes = {
 	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
 	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
-	SET_PIN_POINT: 'SET_PIN_POINT',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
 	ADD_OVERLAY_TO_LOADING_OVERLAYS: 'ADD_OVERLAY_TO_LOADING_OVERLAYS',
@@ -37,7 +36,8 @@ export const MapActionTypes = {
 	},
 	TRIGGER: {
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED'
+		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
+		PIN_POINT: 'PIN_POINT'
 	}
 };
 
@@ -137,14 +137,14 @@ export class CompositeMapShadowAction implements Action {
 export class MapSingleClickAction implements Action {
 	type = MapActionTypes.MAP_SINGLE_CLICK;
 
-	constructor(public payload: any) {
+	constructor(public payload: { lonLat: GeoJSON.Position }) {
 	}
 }
 
-export class SetPinPointAction implements Action {
-	type = MapActionTypes.SET_PIN_POINT;
+export class PinPointTriggerAction implements Action {
+	type = MapActionTypes.TRIGGER.PIN_POINT;
 
-	constructor(public payload: number[]) {
+	constructor(public payload: GeoJSON.Position) {
 	}
 }
 
@@ -179,7 +179,7 @@ export class SetMapAutoImageProcessing implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: { point: GeoJSON.Point, view, e: Event }) {
+	constructor(public payload: { point: GeoJSON.Point, view, e: MouseEvent }) {
 	}
 }
 

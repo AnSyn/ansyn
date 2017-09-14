@@ -12,7 +12,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 		<div #olMap></div>
 	`,
 	styles: [
-		`div{
+			`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;
@@ -20,7 +20,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 			top: 0;
 			display: block;
 			box-sizing: border-box;
-			
+
 		}`]
 })
 

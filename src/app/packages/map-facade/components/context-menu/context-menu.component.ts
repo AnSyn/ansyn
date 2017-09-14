@@ -7,6 +7,7 @@ import { MapEffects } from '../../effects/map.effects';
 import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { SetActiveCenter, SetPinLocationModeAction } from '../../../menu-items/tools/actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-context-menu',
@@ -24,6 +25,8 @@ export class ContextMenuComponent implements OnInit {
 	prevSensors = [];
 	allSensors = [];
 	contextMenuShowAction: ContextMenuShowAction;
+
+	private point: GeoJSON.Point;
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -62,6 +65,7 @@ export class ContextMenuComponent implements OnInit {
 
 	show(action: ContextMenuShowAction) {
 		this.contextMenuShowAction = action;
+		this.point = action.payload.point;
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.e.y}px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.e.x}px`);
 		this.elem.nativeElement.focus();
@@ -133,4 +137,7 @@ export class ContextMenuComponent implements OnInit {
 		}
 	}
 
+	setPinPoint() {
+		// this.point.coordinates
+	}
 }

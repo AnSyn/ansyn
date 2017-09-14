@@ -2,10 +2,11 @@ import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import { feature, point } from '@turf/helpers';
 import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
+import * as bbox from '@turf/bbox';
 
 export function getPolygonByPoint(lonLat: number[], radius = 0.1): GeoJSON.Feature<GeoJSON.Polygon> {
 	const tPoint = point(lonLat);
-	return circle(tPoint, radius);
+	return bbox(circle(tPoint, radius));
 }
 
 export function getPointByPolygon(geometry: GeometryObject | FeatureCollection<any>): Point {

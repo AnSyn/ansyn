@@ -58,8 +58,9 @@ const appReducer = compose(combineReducers)(reducers);
 
 export function reducer(state: any, action: any) {
 	// if(configuration.General.logActions ){
-	// const date = new Date();
-	// console.log(action.type,`${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`);
+	const date = new Date();
+	console.log(action.type, `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`);
+	console.log(state, action);
 	// }
 	// console.log("action", action.type)
 	return appReducer(state, action);

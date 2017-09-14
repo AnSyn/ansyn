@@ -111,9 +111,7 @@ export class MapFacadeService {
 	}
 
 	unsubscribeAll() {
-		this._subscribers.forEach((subscriber) => {
-			subscriber.unsubscribe();
-		});
+		this._subscribers.forEach((subscriber) => subscriber.unsubscribe());
 		this._subscribers = [];
 	}
 

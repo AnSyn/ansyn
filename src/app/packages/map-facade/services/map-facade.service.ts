@@ -14,8 +14,8 @@ import {
 } from '../actions';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { Position, Overlay, CaseMapState, defaultMapType } from '@ansyn/core';
-import { range, cloneDeep, last } from 'lodash';
+import { CaseMapState, defaultMapType, Overlay, Position } from '@ansyn/core';
+import { cloneDeep, last, range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 
 @Injectable()
@@ -34,31 +34,35 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
-		return mapsList.find(({id}) => id === mapId);
+		return mapsList.find(({ id }) => id === mapId);
 	}
 
-	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): {mapsList?: CaseMapState[], activeMapId?: string} {
+	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
 		let mapsListChange = {};
 		let activeMapChange = {};
-		const mapsList: CaseMapState[]  = [];
+		const mapsList: CaseMapState[] = [];
 
 		/* mapsList*/
-		const activeMap = oldMapsList.find(({id}) => id === oldActiveMapId);
+		const activeMap = oldMapsList.find(({ id }) => id === oldActiveMapId);
 		range(layout.maps_count).forEach((index) => {
 			if (oldMapsList[index]) {
-				mapsList.push(oldMapsList[index])
+				mapsList.push(oldMapsList[index]);
 			} else {
-				const mapStateCopy: CaseMapState = {id: UUID.UUID(), data:{position: cloneDeep(activeMap.data.position)}, mapType: defaultMapType};
+				const mapStateCopy: CaseMapState = {
+					id: UUID.UUID(),
+					data: { position: cloneDeep(activeMap.data.position) },
+					mapType: defaultMapType
+				};
 				mapsList.push(mapStateCopy);
 			}
 		});
-		mapsListChange = {mapsList};
+		mapsListChange = { mapsList };
 
 		/* activeMapId */
-		const notExist = !mapsList.some(({id}) => id === oldActiveMapId);
+		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
 		if (notExist) {
 			const activeMapId = last(mapsList).id;
-			activeMapChange = {activeMapId}
+			activeMapChange = { activeMapId };
 		}
 
 		return { ...mapsListChange, ...activeMapChange };

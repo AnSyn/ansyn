@@ -5,4 +5,5 @@ import { CasesMapEffects } from './effects/cases-map.effects';
 @NgModule({
 	imports: [EffectsModule.run(CasesMapEffects)]
 })
-export class CasesMapModule { }
+export class CasesMapModule {
+}

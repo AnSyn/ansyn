@@ -43,7 +43,7 @@ describe('ImageriesManagerComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([MapEffects,ImageryCommunicatorService, Store],(_mapEffects: MapEffects,_imageryCommunicatorService:ImageryCommunicatorService, _store: Store<IMapState>) => {
+	beforeEach(inject([MapEffects, ImageryCommunicatorService, Store], (_mapEffects: MapEffects, _imageryCommunicatorService: ImageryCommunicatorService, _store: Store<IMapState>) => {
 		mapEffects = _mapEffects;
 		communicatorProvider = _imageryCommunicatorService;
 		store = _store;
@@ -54,8 +54,8 @@ describe('ImageriesManagerComponent', () => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
 		const mapsList = <any> [
-			{id: 'imagery1', data: {overlay: {}}},
-			{id: 'imagery2', data: {overlay: {}}}
+			{ id: 'imagery1', data: { overlay: {} } },
+			{ id: 'imagery2', data: { overlay: {} } }
 		];
 		const activeMapId = 'imagery1';
 		const selected_layout: any = {
@@ -63,7 +63,7 @@ describe('ImageriesManagerComponent', () => {
 			description: '',
 			maps_count: 2
 		};
-		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
+		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
 		store.dispatch(new SetLayoutAction(selected_layout));
 		fixture.detectChanges();
 	});

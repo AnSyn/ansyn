@@ -81,10 +81,16 @@ export class ImageriesManagerComponent implements OnInit {
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
 		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this));
-		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {this.overlaysNotInCase = _overlaysNotInCase});
+		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
+			this.overlaysNotInCase = _overlaysNotInCase;
+		});
 		this.activeMapId$.subscribe(this.setActiveMapId.bind(this));
-		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => {this.mapsList = _mapsList});
-		this.pinLocation$.subscribe((_pinLocation) => {this.pinLocation = _pinLocation})
+		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => {
+			this.mapsList = _mapsList;
+		});
+		this.pinLocation$.subscribe((_pinLocation) => {
+			this.pinLocation = _pinLocation;
+		});
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
@@ -116,7 +122,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	setActiveMapId(_activeMapId) {
 		this.activeMapId = _activeMapId;
-		if(this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.activeMapId){
+		if (this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.activeMapId) {
 			this.changeShadowMouseTarget();
 		}
 	}
@@ -145,8 +151,8 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	changeActiveImagery(value) {
-		if(this.activeMapId !== value){
-			this.store.dispatch(new SetMapsDataActionStore({activeMapId: value}));
+		if (this.activeMapId !== value) {
+			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
 		}
 	}
 
@@ -158,14 +164,14 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 
-	startPointerMoveProcess(){
-		if(this.selected_layout.maps_count < 2){
+	startPointerMoveProcess() {
+		if (this.selected_layout.maps_count < 2) {
 			return;
 		}
 		const communicators = this.communicatorProvider.communicators;
 
 		this.mapsList.forEach((mapItem: CaseMapState) => {
-			if(mapItem.id === this.activeMapId){
+			if (mapItem.id === this.activeMapId) {
 				this.publisherMouseShadowMapId = mapItem.id;
 				if (communicators[mapItem.id]) {
 					communicators[mapItem.id].setMouseShadowListener(true);

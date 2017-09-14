@@ -369,9 +369,9 @@ describe('MapAppEffects', () => {
 			expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
 		});
 	});
-  //
+	//
 	// describe('onActiveMapChanges$', () => {
-  //
+	//
 	// 	it('on active map changes fire update case action', () => {
 	// 		spyOn(CasesService, 'getOverlaysMarkup');
 	// 		effectsRunner.queue(new ActiveMapChangedAction('imagery2'));
@@ -454,7 +454,7 @@ describe('MapAppEffects', () => {
 
 	// describe('backToWorldView$', () => {
 	// 	it('listen to BackToWorldAction with overlay',() => {
-  //
+	//
 	// 		// data: [
 	// 		// 	{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
 	// 		// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
@@ -465,7 +465,7 @@ describe('MapAppEffects', () => {
 	// 		const communicator = {
 	// 			loadInitialMapSource: () => {},
 	// 		};
-  //
+	//
 	// 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 	// 		spyOn(communicator, 'loadInitialMapSource');
 	// 		spyOn(CasesService, 'getOverlaysMarkup');
@@ -473,7 +473,7 @@ describe('MapAppEffects', () => {
 	// 		mapAppEffects.backToWorldView$.subscribe(_result => {
 	// 			let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
 	// 			expect(result).toBe(true);
-  //
+	//
 	// 			if(_result instanceof OverlaysMarkupAction){
 	// 				expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
 	// 			}
@@ -739,14 +739,20 @@ describe('MapAppEffects', () => {
 	});
 
 	describe('activeMapGeoRegistartionChanged$', () => {
-		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state',() => {
-			const testOverlay: Overlay = {id: 'test_overlay_id1', isGeoRegistered: false} as Overlay;
+		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
+			const testOverlay: Overlay = { id: 'test_overlay_id1', isGeoRegistered: false } as Overlay;
 			mapState.mapsList = <any> [
-				{...icaseState.selected_case.state.maps.data[0], data: {...icaseState.selected_case.state.maps.data[0].data, overlay: testOverlay}},
-				{...icaseState.selected_case.state.maps.data[1], data: {...icaseState.selected_case.state.maps.data[1].data, overlay: testOverlay}},
+				{
+					...icaseState.selected_case.state.maps.data[0],
+					data: { ...icaseState.selected_case.state.maps.data[0].data, overlay: testOverlay }
+				},
+				{
+					...icaseState.selected_case.state.maps.data[1],
+					data: { ...icaseState.selected_case.state.maps.data[1].data, overlay: testOverlay }
+				},
 			];
 			mapState.activeMapId = icaseState.selected_case.state.maps.active_map_id;
-			const fakeCommuincator = {id: 'test'};
+			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 
 			effectsRunner.queue(new ActiveMapChangedAction(''));

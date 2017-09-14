@@ -3,18 +3,12 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysActionTypes } from '@ansyn/overlays';
-import {
-	AddCaseAction,
-	Case,
-	CasesActionTypes,
-	CasesService,
-	ICasesState
-} from '@ansyn/menu-items/cases';
+import { AddCaseAction, Case, CasesActionTypes, CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { cloneDeep, isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLinkCopyToastValueAction } from '@ansyn/status-bar';
@@ -55,12 +49,12 @@ export class CasesAppEffects {
 			const mapId = action.payload.map_id || mapState.activeMapId;
 
 			updatedMapsList.forEach((map) => {
-				if(mapId === map.id){
+				if (mapId === map.id) {
 					map.data.overlay = action.payload.overlay;
 				}
 			});
-			return new SetMapsDataActionStore({mapsList: updatedMapsList});
-	}).share();
+			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
+		}).share();
 
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$

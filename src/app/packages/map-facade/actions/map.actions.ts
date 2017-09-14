@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { MapsLayout, Position, CaseMapState } from '@ansyn/core';
+import { CaseMapState, MapsLayout, Position } from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -58,6 +58,7 @@ export class BackToWorldAction implements Action {
 
 export class ActiveMapChangedAction implements Action {
 	type = MapActionTypes.ACTIVE_MAP_CHANGED;
+
 	constructor(public payload: string) {
 	}
 }
@@ -220,16 +221,25 @@ export class SetOverlayNotInCaseAction implements Action {
 	constructor(public payload: Map<string, boolean>) {
 	}
 }
+
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.STORE.SET_MAPS_DATA;
-	constructor(public payload: {mapsList?: CaseMapState[], activeMapId?: string}){}
+
+	constructor(public payload: { mapsList?: CaseMapState[], activeMapId?: string }) {
+	}
 }
+
 export class SetPinLocationModeActionStore implements Action {
 	type = MapActionTypes.STORE.PIN_LOCATION_MODE;
-	constructor(public payload: boolean){}
+
+	constructor(public payload: boolean) {
+	}
 }
+
 export class MapsListChangedAction implements Action {
 	type = MapActionTypes.MAPS_LIST_CHANGED;
-	constructor(public payload: CaseMapState[]){}
+
+	constructor(public payload: CaseMapState[]) {
+	}
 }
 

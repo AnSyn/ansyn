@@ -32,7 +32,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItems, UpdateStatusFlagsAction, StatusBarActionsTypes } from '@ansyn/status-bar';
+import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	AddMapInstacneAction,
 	AddOverlayToLoadingOverlaysAction,
@@ -43,19 +43,25 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { calcGeoJSONExtent, isExtentContainedInPolygon, getPointByPolygon } from '@ansyn/core/utils';
+import {
+	calcGeoJSONExtent,
+	endTimingLog,
+	getPointByPolygon,
+	isExtentContainedInPolygon,
+	startTimingLog
+} from '@ansyn/core/utils';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import {
-	AnnotationVisualizerAgentAction
+	AnnotationVisualizerAgentAction,
+	SetActiveCenter,
+	SetMapGeoEnabledModeToolsActionStore,
+	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
-import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
-import { Position, CaseMapState, MapsLayout } from '@ansyn/core/models';
-import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { CaseMapState, MapsLayout, Position } from '@ansyn/core/models';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
@@ -222,8 +228,8 @@ export class MapAppEffects {
 	overlayLoadingSuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
-		.map((action)=> {
-			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
+		.map((action) => {
+			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id);
 		});
 
 	@Effect({ dispatch: false })
@@ -341,17 +347,17 @@ export class MapAppEffects {
 			return isEnabled !== isGeoRegistered;
 		})
 		.map(([action, isGeoRegistered, activeMapState]: [Action, boolean, CaseMapState, IMapState]): any => {
-			return new EnableMapGeoOptionsActionStore({mapId: activeMapState.id, isEnabled: isGeoRegistered});
+			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	backToWorldGeoRegistartion$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('map'))
 		.map(([action, mapState]: [any, any]): any[] => {
 			const map = MapFacadeService.mapById(mapState.mapsList, action.payload.mapId);
 			const mapComm = this.communicator.provide(action.payload.mapId);
-			return [mapComm, map.data.position]
+			return [mapComm, map.data.position];
 		})
 		.filter(([mapComm]) => !isNil(mapComm))
 		.do(([mapComm, position]: any[]) => {
@@ -401,7 +407,7 @@ export class MapAppEffects {
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType(MapActionTypes.ACTIVE_MAP_CHANGED, MapActionTypes.MAPS_LIST_CHANGED)
 		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), (action, selected_case) => selected_case)
-		.map((selectedCase:Case) => CasesService.getOverlaysMarkup(selectedCase))
+		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));
 
 	constructor(private actions$: Actions,

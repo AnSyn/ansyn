@@ -4,11 +4,15 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction, BackToWorldAction, MapActionTypes, PositionChangedAction,
+	ActiveMapChangedAction,
+	BackToWorldAction,
+	MapActionTypes,
+	MapsListChangedAction,
+	PositionChangedAction,
 	SetMapsDataActionStore
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { isNil as _isNil, isEmpty as _isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 import { Action, Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
@@ -22,7 +26,7 @@ export class MapEffects {
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
 		.map(() => {
-			//@todo move this to service we will need it pass function name and send it to all the maps
+			// @todo move this to service we will need it pass function name and send it to all the maps
 			Object.keys(this.communicatorsService.communicators).forEach((imagery_id: string) => {
 				this.communicatorsService.provide(imagery_id).updateSize();
 			});
@@ -71,8 +75,8 @@ export class MapEffects {
 	onLayoutsChange$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(MapActionTypes.SET_LAYOUT)
 		.withLatestFrom(this.store$.select('map').pluck<any, any>('mapsList'), this.store$.select('map').pluck('activeMapId'))
-		.filter(([{payload}, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
-		.map(([{payload}, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
+		.filter(([{ payload }, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
+		.map(([{ payload }, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
 		.map((newData) => new SetMapsDataActionStore(newData));
 
 	@Effect()
@@ -82,9 +86,9 @@ export class MapEffects {
 			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
 		.filter(([selectedMap]) => !_isEmpty(selectedMap))
-		.map( ([selectedMap, mapsList, position]) => {
+		.map(([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
-			return new SetMapsDataActionStore({mapsList: [...mapsList]});
+			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
 
 	@Effect()
@@ -102,32 +106,32 @@ export class MapEffects {
 			const updatedMapsList = [...mapsList];
 			updatedMapsList.forEach(
 				(map) => {
-					if(map.id === mapId){
+					if (map.id === mapId) {
 						map.data.overlay = null;
 						map.data.isAutoImageProcessingActive = false;
 					}
 				});
-			return new SetMapsDataActionStore({mapsList: updatedMapsList});
+			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		});
 
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(toPayload)
-		.filter(({activeMapId}) => !_isNil(activeMapId))
-		.map(({activeMapId}) => new ActiveMapChangedAction(activeMapId));
+		.filter(({ activeMapId }) => !_isNil(activeMapId))
+		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
 
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(toPayload)
-		.filter(({mapsList}) => !_isNil(mapsList))
-		.map(({mapsList}) => new MapsListChangedAction(mapsList));
-
+		.filter(({ mapsList }) => !_isNil(mapsList))
+		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
 
 	constructor(private actions$: Actions,
 				private mapFacadeService: MapFacadeService,
 				private communicatorsService: ImageryCommunicatorService,
-				private store$: Store<any>) {}
+				private store$: Store<any>) {
+	}
 }

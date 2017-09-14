@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/common";
+
 :host {
 	display: block;
 	position: absolute;
@@ -41,12 +43,12 @@ div.save-case {
 			width: 100%;
 			border: none;
 			border-bottom: 1px solid #999;
-			color: #27b2cf;
+			color: @application-color;
 			-webkit-text-fill-color: #999;
 		}
 		input:focus {
 			outline: none;
-			border-color: #27b2cf;
+			border-color: @application-color;
 		}
 
 		label {
@@ -66,7 +68,7 @@ div.save-case {
 		input:focus ~ label, input:valid ~ label {
 			top: -10px;
 			font-size: 11px;
-			color: #27b2cf;
+			color: @application-color;
 		}
 
 		.bar {
@@ -79,7 +81,7 @@ div.save-case {
 				width: 0;
 				bottom: 1px;
 				position: absolute;
-				background: #27b2cf;
+				background: @application-color;
 				transition: 0.2s ease all;
 				-moz-transition: 0.2s ease all;
 				-webkit-transition: 0.2s ease all;
@@ -181,7 +183,7 @@ div.save-case {
 				cursor: pointer;
 				background: transparent;
 				border: none;
-				color: #27b2cf;
+				color: @application-color;
 				&:hover {
 					font-weight: bold;
 				}

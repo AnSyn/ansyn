@@ -5,4 +5,5 @@ import { ToolsMapEffects } from './effects/tools-map.effects';
 @NgModule({
 	imports: [EffectsModule.run(ToolsMapEffects)]
 })
-export class ToolsMapsModule { }
+export class ToolsMapsModule {
+}

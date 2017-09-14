@@ -114,16 +114,18 @@ describe('CasesAppEffects', () => {
 	});
 
 
-	it('Effect : onDisplayOverlay$ - with the active map id ' ,() => {
-		const mapsList: any[] = [{id:'map1', data: {}}, {id:'map2', data: {}}];
+	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
+		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
-		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
-		const action  = new DisplayOverlayAction({overlay: <Overlay> {id: 'tmp'}});
+		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		const action = new DisplayOverlayAction({ overlay: <Overlay> { id: 'tmp' } });
 		effectsRunner.queue(action);
 		let result: UpdateCaseAction;
-		casesAppEffects.onDisplayOverlay$.subscribe((_result: SetMapsDataActionStore) => {result = _result;});
+		casesAppEffects.onDisplayOverlay$.subscribe((_result: SetMapsDataActionStore) => {
+			result = _result;
+		});
 		expect(result.constructor).toEqual(SetMapsDataActionStore);
-		expect(MapFacadeService.activeMap(<any>{...result.payload, activeMapId}).data.overlay.id).toEqual('tmp');
+		expect(MapFacadeService.activeMap(<any>{ ...result.payload, activeMapId }).data.overlay.id).toEqual('tmp');
 	});
 
 

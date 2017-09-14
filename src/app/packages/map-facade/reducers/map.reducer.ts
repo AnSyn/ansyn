@@ -2,7 +2,7 @@ import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
-import { CaseMapsState, CaseMapState } from '../../core/models/case.model';
+import { CaseMapState } from '../../core/models/case.model';
 
 export interface IMapState {
 	positions: Position;
@@ -82,10 +82,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, layout: action.payload };
 
 		case MapActionTypes.STORE.SET_MAPS_DATA:
-			return  {...state, ...action.payload};
+			return { ...state, ...action.payload };
 
 		case MapActionTypes.STORE.PIN_LOCATION_MODE:
-			return  {...state, pinLocation: action.payload};
+			return { ...state, pinLocation: action.payload };
 
 
 		default:

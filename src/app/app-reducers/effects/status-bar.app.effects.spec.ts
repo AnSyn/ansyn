@@ -19,21 +19,15 @@ import {
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
-import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	OverlaysMarkupAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
-import { SetLayoutAction } from '../../packages/map-facade/actions/map.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

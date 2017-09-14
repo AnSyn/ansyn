@@ -1,7 +1,6 @@
 import { Filter } from '../models/filter';
-import { FiltersActionTypes } from '../actions/filters.actions';
+import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { FiltersActions } from '../actions/filters.actions';
 
 export interface IFiltersState {
 	filters: Map<Filter, FilterMetadata>;

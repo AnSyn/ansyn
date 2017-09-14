@@ -16,20 +16,15 @@ import {
 	CaseMapState,
 	CasesActionTypes,
 	CopyCaseLinkAction,
-	defaultMapType,
 	ICasesState,
 	UpdateCaseAction
 } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { cloneDeep, get, isEmpty, pull } from 'lodash';
-import { Position } from '@ansyn/core/models/position.model';
 import '@ansyn/core/utils/clone-deep';
-import { UUID } from 'angular2-uuid';
-import "@ansyn/core/utils/clone-deep";
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { DisableMouseShadow, EnableMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	GoNextDisplayAction,
@@ -37,7 +32,6 @@ import {
 	LoadOverlaysAction,
 	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { MapsLayout } from '@ansyn/core';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';

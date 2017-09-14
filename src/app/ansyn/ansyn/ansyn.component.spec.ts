@@ -19,11 +19,14 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({selector: 'ansyn-menu'});
-	const mock_status = MockComponent({selector: 'ansyn-status-bar', inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']});
-	const mock_overlays_container = MockComponent({selector: 'ansyn-overlays-container'});
-	const mock_empty_component = MockComponent({selector: 'ansyn-empty'});
-	const mock_imagery_view = MockComponent({selector: 'ansyn-imageries-manager'});
+	const mock_menu = MockComponent({ selector: 'ansyn-menu' });
+	const mock_status = MockComponent({
+		selector: 'ansyn-status-bar',
+		inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']
+	});
+	const mock_overlays_container = MockComponent({ selector: 'ansyn-overlays-container' });
+	const mock_empty_component = MockComponent({ selector: 'ansyn-empty' });
+	const mock_imagery_view = MockComponent({ selector: 'ansyn-imageries-manager' });
 
 	const cases: Case[] = [{
 		id: 'tmp',
@@ -79,7 +82,7 @@ describe('AnsynComponent', () => {
 				StoreModule.provideStore({
 					status_bar: StatusBarReducer,
 					cases: CasesReducer,
-					overlays : OverlayReducer,
+					overlays: OverlayReducer,
 					tools: ToolsReducer,
 					map: MapReducer
 				})]

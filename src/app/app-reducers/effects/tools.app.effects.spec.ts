@@ -66,7 +66,10 @@ describe('ToolsAppEffects', () => {
 	}];
 	const imapState: any = {
 		mapsList: [
-			{ id: 'imagery1', data: { position: { zoom: 1, center: 2 }, isAutoImageProcessingActive: true, overlay: 'overlay' } }
+			{
+				id: 'imagery1',
+				data: { position: { zoom: 1, center: 2 }, isAutoImageProcessingActive: true, overlay: 'overlay' }
+			}
 		],
 		activeMapId: 'imagery1'
 	};

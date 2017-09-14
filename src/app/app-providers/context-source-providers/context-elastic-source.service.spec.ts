@@ -1,6 +1,7 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { ContextElasticSourceService, IElasticContextSource } from './context-elastic-source.service';
 import { ContextModule } from '../../packages/context/context.module';
+import { ContextCriteria } from '../../packages/context/context.interface';
 
 const MOCK_ELASTIC_CONFIG: { elastic: IElasticContextSource } = {
 	elastic: {
@@ -38,20 +39,16 @@ describe('ContextElasticSourceService', () => {
 	describe('ping', () => {
 		it('should call client ping', () => {
 			spyOn(contextSource.client, 'ping');
+			contextSource.ping();
 			expect(contextSource.client.ping).toHaveBeenCalled();
 		});
 	});
 
 	describe('find', () => {
 		it('should call client find', () => {
-			spyOn(contextSource.client, 'find');
-			expect(contextSource.client.ping).toHaveBeenCalled();
-		});
-
-		it('should call parseFromSource', () => {
-			spyOn(contextSource, 'parseFromSource');
-			expect(contextSource.parseFromSource).toHaveBeenCalled();
+			spyOn(contextSource.client, 'search');
+			contextSource.find(new ContextCriteria({ start: 0, limit: 10 }));
+			expect(contextSource.client.search).toHaveBeenCalled();
 		});
 	});
-
 });

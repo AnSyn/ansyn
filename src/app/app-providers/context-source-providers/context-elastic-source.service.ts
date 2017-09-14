@@ -1,10 +1,9 @@
 import { Client, SearchResponse } from 'elasticsearch';
 import { Observable } from 'rxjs/Observable';
-import { Context, ContextCriteria, BaseContextSourceProvider } from '@ansyn/context/context.interface';
-import { IContextConfig } from '@ansyn/context';
+import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
+import { ContextConfig, IContextConfig } from '@ansyn/context';
 import 'rxjs/add/observable/fromPromise';
 import { Inject } from '@angular/core';
-import { ContextConfig } from '@ansyn/context';
 
 export interface IElasticContextSource {
 	uri: string;

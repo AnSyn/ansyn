@@ -1,7 +1,7 @@
 import { Client, SearchResponse } from 'elasticsearch';
 import { Observable } from 'rxjs/Observable';
-import { Context, ContextCriteria, BaseContextSourceProvider } from '@ansyn/context/context.interface';
-import { IContextConfig, ContextConfig } from '@ansyn/context';
+import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
+import { ContextConfig, IContextConfig } from '@ansyn/context';
 import { Inject } from '@angular/core';
 import 'rxjs/add/observable/fromPromise';
 

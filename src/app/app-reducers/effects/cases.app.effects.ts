@@ -23,7 +23,7 @@ import {
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
-import { ContextCriteria, ContextProviderService } from '@ansyn/context';
+import { BaseContextSourceProvider, ContextCriteria } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -152,5 +152,4 @@ export class CasesAppEffects {
 				private casesService: CasesService,
 				public contextSourceService: BaseContextSourceProvider) {
 	}
-
 }

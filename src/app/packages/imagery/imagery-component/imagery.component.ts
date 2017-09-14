@@ -37,20 +37,20 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	@Input()
 	set mapComponentSettings(value) {
-		//ngOnInit first
+		// ngOnInit first
 		if (isNil(this._mapComponentSettings)) {
 			this._mapComponentSettings = value;
 			return;
 		}
 
-		//id has been change
+		// id has been change
 		if (!isEqual(this._mapComponentSettings.id, value.id)) {
 			if (this._manager) {
 				this.imageryCommunicatorService.replaceCommunicatorId(this._mapComponentSettings.id, value.id);
 			}
 		}
 
-		//position has been change
+		// position has been change
 		if (!isEqual(this._mapComponentSettings.data.position, value.data.position)) {
 			if (this._manager) {
 				this._manager.ActiveMap.setPosition(value.data.position);

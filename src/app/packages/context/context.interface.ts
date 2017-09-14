@@ -1,5 +1,3 @@
-//	 docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "http.cors.enabled=true" -e "http.cors.allow-origin=/.*/" -e "http.cors.allow-credentials=true" -e "http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization" docker.elastic.co/elasticsearch/elasticsearch:5.4.3
-
 export interface IContextSource {
 	providerType: string;
 

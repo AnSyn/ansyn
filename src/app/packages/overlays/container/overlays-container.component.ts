@@ -152,7 +152,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	}
 
-	//maybe to move this to the service
+	// maybe to move this to the service
 	toggleOverlay(id): void {
 		if (this.selectedOverlays.indexOf(id) > -1) {
 			this.store.dispatch(new UnSelectOverlayAction(id));

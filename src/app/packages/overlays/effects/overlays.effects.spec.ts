@@ -107,8 +107,8 @@ describe('Overlays Effects ', () => {
 		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 		let tmp = <Overlay[]>[];
 		overlays.forEach(i => tmp.push(Object.assign({}, i, {
-			//date: new Date(i.photoTime),
-			//sourceType: overlaysConfig.overlaySource
+			// date: new Date(i.photoTime),
+			// sourceType: overlaysConfig.overlaySource
 		})));
 		const expectedResult = new LoadOverlaysSuccessAction(tmp);
 

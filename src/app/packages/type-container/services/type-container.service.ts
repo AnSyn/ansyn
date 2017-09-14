@@ -132,12 +132,12 @@ export class TypeContainerService implements ITypeContainer {
 	private resolveByName(abstractType: Function, name: string): any {
 		const namedTypes = this._namedRegisteredTypes.get(abstractType);
 		if (!namedTypes || namedTypes == null) {
-			//throw "type:" + abstractType + "was not registered";
+			// throw "type:" + abstractType + "was not registered";
 			return null;
 		}
 		let typeToResolve = namedTypes.get(name);
 		if (!typeToResolve || typeToResolve == null) {
-			//throw "type:" + abstractType + "was not registered with name" + name;
+			// throw "type:" + abstractType + "was not registered with name" + name;
 			return null;
 		}
 		let resolvedNamedClass = this._namedResolvedTypes.get(abstractType);

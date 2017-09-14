@@ -4,10 +4,10 @@ import { StatusBarModule } from '../../status-bar.module';
 
 
 describe('TimelineTimepickerComponent', () => {
-	//const FlatpickrService = new  InjectionToken<Flatpickr>("flickr");
+	// const FlatpickrService = new  InjectionToken<Flatpickr>("flickr");
 	let component: TimelineTimepickerComponent;
 	let fixture: ComponentFixture<TimelineTimepickerComponent>;
-	//let flatpickr: Flatpickr;
+	// let flatpickr: Flatpickr;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -37,7 +37,7 @@ describe('TimelineTimepickerComponent', () => {
 	});
 
 	it('ngOnInit - check that both instances are avilable and one with start id and the second with end id', () => {
-		//expect(true).toBe(false);
+		// expect(true).toBe(false);
 		expect(component.endDatePickerInstance).toBeTruthy();
 		expect(component.startDatePickerInstance).toBeTruthy();
 

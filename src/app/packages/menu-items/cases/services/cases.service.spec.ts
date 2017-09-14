@@ -5,7 +5,6 @@ import { Case } from '../models/case.model';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-//import { CasesConfig } from '../models/cases-config';
 
 export const MockCasesConfig = {
 	provide: casesConfig,

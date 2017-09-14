@@ -114,19 +114,19 @@ describe('MenuComponent', () => {
 		spyOn(menuComponent, 'componentChanges');
 		spyOn(menuComponent, 'itemSelected').and.callFake(() => itemSelectedRes);
 
-		//expand = true
+		// expand = true
 		this.on_animation = true;
 		menuComponent.onFinishAnimation(true);
 		expect(menuComponent['on_animation']).toBeFalsy();
 
-		//expand = false ; itemSelected() = false
+		// expand = false ; itemSelected() = false
 		this.on_animation = true;
 		menuComponent.onFinishAnimation(false);
 		expect(menuComponent['on_animation']).toBeFalsy();
 		expect(menuComponent.componentChanges).toHaveBeenCalled();
 		expect(menuComponent['expand']).toBeFalsy();
 
-		//expand = false ; itemSelected() = true
+		// expand = false ; itemSelected() = true
 		itemSelectedRes = true;
 		this.on_animation = true;
 		menuComponent.onFinishAnimation(false);

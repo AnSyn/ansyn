@@ -94,12 +94,14 @@
 		"unified-signatures": true,
 		"variable-name": false,
 		"whitespace": [
-			false,
+			true,
 			"check-branch",
 			"check-decl",
 			"check-operator",
+			"check-module",
 			"check-separator",
-			"check-type"
+			"check-type",
+			"check-preblock"
 		],
 		"directive-selector": [
 			true,

@@ -35,7 +35,7 @@ describe('ContainerComponent', () => {
 		};
 
 		contextProviderService.register('demo', proxyObject);
-		//spyOn(proxyObject,'find').and.returnValue(Observable.empty());
+		// spyOn(proxyObject,'find').and.returnValue(Observable.empty());
 		spyOn(contextProviderService, 'provide').and.returnValue(proxyObject);
 	}));
 

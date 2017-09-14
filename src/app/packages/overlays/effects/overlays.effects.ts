@@ -60,7 +60,7 @@ export class OverlaysEffects {
 	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
-			return this.overlaysService.getOverlayById(action.payload.overlayId) //this.overlaysService.fetchData("",action.payload)
+			return this.overlaysService.getOverlayById(action.payload.overlayId) // this.overlaysService.fetchData("",action.payload)
 				.map((overlay: Overlay) => {
 					return new DisplayOverlayAction({ overlay, map_id: action.payload.map_id });
 				});

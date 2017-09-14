@@ -78,8 +78,8 @@ describe('OverlayContainerComponent', () => {
 		storeFixture = createStore(OverlayReducer);
 		store = storeFixture.store;
 		getState = storeFixture.getState;
-		state = storeFixture.state; //(overlayInitialState);
-		//state = overlayInitialState;
+		state = storeFixture.state; // (overlayInitialState);
+		// state = overlayInitialState;
 	}));
 
 	beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {

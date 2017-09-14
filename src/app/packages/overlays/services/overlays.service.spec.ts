@@ -320,7 +320,7 @@ describe('OverlaysService', () => {
 		});
 
 
-		//var requestBody = spyOn(http,'post').calls.first();
+		// var requestBody = spyOn(http,'post').calls.first();
 
 	});
 
@@ -353,7 +353,7 @@ describe('OverlaysService', () => {
 			} as any;
 			const timelineState = {
 				from: new Date(0),
-				to: new Date(5000)			//delta tenth is 500 ms
+				to: new Date(5000) // delta tenth is 500 ms
 			};
 			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(1500));
@@ -366,7 +366,7 @@ describe('OverlaysService', () => {
 			} as any;
 			const timelineState = {
 				from: new Date(2000),
-				to: new Date(7000)  //delta tenth is 500 ms
+				to: new Date(7000) // delta tenth is 500 ms
 			};
 			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(500));

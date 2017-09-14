@@ -40,7 +40,7 @@ export class CasesRouterEffects {
 	selectDefaultCaseUpdateRouter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases').pluck('default_case'), this.store$.select('router').pluck('caseId'),
-			({ payload }, default_case: Case, routerCaseId: string): any => [payload, _get(default_case, 'id',), routerCaseId])
+			({ payload }, default_case: Case, routerCaseId: string): any => [payload, _get(default_case, 'id'), routerCaseId])
 
 		.filter(([payload, defaultCaseId, routerCaseId]) => _isEqual(payload, defaultCaseId) && !_isEmpty(routerCaseId))
 		.map(() => new NavigateCaseTriggerAction());

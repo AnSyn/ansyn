@@ -8,10 +8,7 @@ export class MapPosition {
 	public center: GeoJSON.Point;
 	public boundingBox?: GeoJSON.Point[];
 
-	static create(zoom: number,
-				  center: GeoJSON.Point,
-				  rotation?: number,
-				  boundingBox?: GeoJSON.Point[]): MapPosition {
+	static create(zoom: number, center: GeoJSON.Point, rotation?: number, boundingBox?: GeoJSON.Point[]): MapPosition {
 		return new MapPosition(zoom, center, rotation, boundingBox);
 	}
 

@@ -80,7 +80,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 				fill: new Fill({
 					color: this.fillColor
 				})
-				//,add text here
+				// add text here
 			});
 			this._styleCache[featureId] = style;
 		}

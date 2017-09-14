@@ -103,7 +103,7 @@ export class CasesService {
 	}
 
 	getDefaultCase(): Case {
-		//this is because of a bug in the aot that does not compile javascript in configuration
+		// this is because of a bug in the aot that does not compile javascript in configuration
 		const startDate: string = <string>_get(this, 'config.defatulCase.state.time.from') || (new Date(new Date().getTime() - 3600000 * 24 * 365)).toISOString();
 		const endDate: string = <string>_get(this, 'config.defatulCase.state.time.to') || new Date().toISOString();
 		const defaultCase = cloneDeep(this.config.defaultCase);

@@ -74,7 +74,7 @@ describe('FiltersCollectionComponent', () => {
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
 
-		//we don't want disableShowOnlyFavoritesSelection to change
+		// we don't want disableShowOnlyFavoritesSelection to change
 		component.disableShowOnlyFavoritesSelection = false;
 		handler.next({
 			showOnlyFavorites: true,

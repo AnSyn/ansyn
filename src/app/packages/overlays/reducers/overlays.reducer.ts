@@ -10,7 +10,7 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 export interface IOverlayState {
 	loaded: boolean;
 	loading: boolean;
-	overlays: any; //Map
+	overlays: any; // Map
 	selectedOverlays: string[];
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;
@@ -28,7 +28,7 @@ export const overlayInitialState: IOverlayState = {
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),
 	demo: 1,
-	//@todo change to Map
+	// @TODO change to Map
 	filters: [],
 	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
@@ -87,7 +87,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				}
 			});
 
-			//we already initiliazing the state
+			// we already initiliazing the state
 			return Object.assign({}, state, {
 				loading: false,
 				loaded: true,

@@ -92,7 +92,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	}
 
 	public togglePointerMoveEvent() {
-		//todo take from active
+		// TODO take from active
 		this._isMouseShadowEnabled = !this._isMouseShadowEnabled;
 		const communicators = this.imageryCommunicatorService.communicators;
 		const key = Object.keys(communicators)[0];

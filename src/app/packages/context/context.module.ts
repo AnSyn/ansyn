@@ -10,8 +10,7 @@ export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken(
 @NgModule({
 	imports: [
 		CommonModule,
-		FormsModule,
-		HttpModule
+		FormsModule
 	],
 	exports: [ContainerComponent],
 	declarations: [ContainerComponent]

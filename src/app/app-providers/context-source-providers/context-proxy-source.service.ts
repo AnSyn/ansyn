@@ -1,12 +1,9 @@
-import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
+import { BaseContextSourceProvider, Context, ContextConfig, ContextCriteria, IContextConfig } from '@ansyn/context';
 import { Observable } from 'rxjs/Observable';
-import { Http, RequestOptions, Headers } from '@angular/http';
-import { IContextConfig } from '@ansyn/context';
-import { ContextConfig } from '@ansyn/context';
-
+import { Inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/catch';
-import { Inject } from '@angular/core';
 
 export interface IProxySource {
 	uri: string;
@@ -18,9 +15,9 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	config: IProxySource;
 
 	uri: string;
-	options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+	headers = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
-	constructor(@Inject(ContextConfig)config: IContextConfig, private http: Http) {
+	constructor(@Inject(ContextConfig)config: IContextConfig, private http: HttpClient) {
 		super(config, 'proxy');
 
 		this.uri = `${this.config.uri}${this.config.bucket}`;
@@ -28,7 +25,7 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 
 	find(criteria: ContextCriteria) {
 		return this.http.get(this.uri.concat('/', String(criteria.start), '/', String(criteria.limit)))
-			.map(res => this.parseFromSource(res.json() || {}))
+			.map(res => this.parseFromSource(res))
 			.catch(this.handleError);
 	}
 
@@ -37,13 +34,13 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	}
 
 	create(payload: Context) {
-		return this.http.post(this.uri, this.parseToSource(payload), this.options)
+		return this.http.post(this.uri, this.parseToSource(payload), this.headers)
 		// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
 	update(id, payload: Context) {
-		return this.http.put(this.uri + '/' + id, this.parseToSource(payload), this.options)
+		return this.http.put(this.uri + '/' + id, this.parseToSource(payload), this.headers)
 			.catch(this.handleError);
 	}
 

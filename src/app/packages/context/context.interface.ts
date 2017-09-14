@@ -1,7 +1,5 @@
 // TODO: What is this doing here -Amit
-export interface IContextConfig {
-	[str: string]: Object;
-}
+export * from './context.config.interface';
 
 export abstract class BaseContextSourceProvider {
 	config: any;

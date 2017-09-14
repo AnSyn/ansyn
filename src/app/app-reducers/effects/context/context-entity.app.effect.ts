@@ -6,13 +6,13 @@ import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-
 import { isNil as _isNil } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { ContextEntityVisualizer, ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class ContextEntityAppEffects {
@@ -33,10 +33,10 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, caseState]: [AddMapInstacneAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
-		.map(([action, caseState]: [AddMapInstacneAction, ICasesState]) => {
-			const mapState: CaseMapState = CasesService.mapById(caseState.selected_case, action.payload.currentCommunicatorId);
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
+		.filter(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.map(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => {
+			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 			this.setContextEntity(mapState.id, overlayDate, caseState.selected_case.state.contextEntities);
 		});
@@ -44,11 +44,11 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
-		.map(([action, caseState]: [DisplayOverlayAction, ICasesState]) => {
-			const mapId = action.payload.map_id ? action.payload.map_id : caseState.selected_case.state.maps.active_map_id;
-			const mapState: CaseMapState = CasesService.mapById(caseState.selected_case, mapId);
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
+		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.map(([action, caseState, mapStore]: [DisplayOverlayAction, ICasesState, IMapState]) => {
+			const mapId = action.payload.map_id ? action.payload.map_id : mapStore.activeMapId;
+			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, mapId);
 			const communicatorHandler = this.communicatorService.provide(mapId);
 			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
 		});

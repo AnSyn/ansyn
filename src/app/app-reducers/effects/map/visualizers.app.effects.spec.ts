@@ -8,7 +8,8 @@ import {
 	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
-	MapActionTypes
+	MapActionTypes,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	DisplayOverlayFromStoreAction,
@@ -18,14 +19,11 @@ import {
 	SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import {
-	AddCaseSuccessAction,
-	CasesActionTypes,
-	SelectCaseByIdAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -65,7 +63,7 @@ describe('VisualizersAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer })
+				StoreModule.provideStore({ cases: CasesReducer, map: MapReducer })
 			],
 			providers: [
 				VisualizersAppEffects,
@@ -82,6 +80,10 @@ describe('VisualizersAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		store.dispatch(new AddCaseSuccessAction(selectedCase));
 		store.dispatch(new SelectCaseByIdAction(selectedCase.id));
+		store.dispatch(new SetMapsDataActionStore({
+			mapsList: selectedCase.state.maps.data,
+			activeMapId: selectedCase.state.maps.active_map_id
+		}));
 	}));
 
 	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
@@ -172,9 +174,9 @@ describe('VisualizersAppEffects', () => {
 		effectsRunner.queue(new ShowOverlaysFootprintAction('Hitmap'));
 		let count = 0;
 		visualizersAppEffects.updateCaseFromTools$.subscribe((_result: any) => {
-			expect(_result.type === CasesActionTypes.UPDATE_CASE || _result.type === MapActionTypes.DRAW_OVERLAY_ON_MAP).toBeTruthy();
-			if (_result.type === CasesActionTypes.UPDATE_CASE) {
-				expect(_result.payload.state.maps.data[0].data.overlayDisplayMode).toBe('Hitmap');
+			expect(_result.type === MapActionTypes.STORE.SET_MAPS_DATA || _result.type === MapActionTypes.DRAW_OVERLAY_ON_MAP).toBeTruthy();
+			if (_result.type === MapActionTypes.STORE.SET_MAPS_DATA) {
+				expect(_result.payload.mapsList[0].data.overlayDisplayMode).toBe('Hitmap');
 			}
 			count++;
 		});

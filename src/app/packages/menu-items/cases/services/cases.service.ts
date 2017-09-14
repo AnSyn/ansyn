@@ -26,14 +26,6 @@ export class CasesService {
 		defaultOverlay: ''
 	};
 
-	static activeMap(selectedCase: Case): CaseMapState {
-		return selectedCase.state.maps.data.find(map => map.id === selectedCase.state.maps.active_map_id);
-	}
-
-	static mapById(selectedCase: Case, id: string): CaseMapState {
-		return selectedCase.state.maps.data.find(map => map.id === id);
-	}
-
 	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {
 		const result = [];
 

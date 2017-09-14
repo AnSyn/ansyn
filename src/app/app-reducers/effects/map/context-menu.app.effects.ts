@@ -12,9 +12,9 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { get as _get } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { inside } from '@turf/turf';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class ContextMenuAppEffects {
@@ -22,11 +22,11 @@ export class ContextMenuAppEffects {
 	@Effect()
 	setContextFilter$: Observable<SetContextMenuFiltersAction> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'))
-		.map(([action, overlays, cases]: [ContextMenuShowAction, IOverlayState, ICasesState]) => {
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'))
+		.map(([action, overlays, mapState]: [ContextMenuShowAction, IOverlayState, IMapState]) => {
 			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date', 'bestResolution']);
 			filteredOverlays = filteredOverlays.filter(({ footprint }) => inside(action.payload.point, footprint));
-			const activeMap = CasesService.activeMap(cases.selected_case);
+			const activeMap = MapFacadeService.activeMap(mapState);
 			return new SetContextMenuFiltersAction({
 				filteredOverlays,
 				displayedOverlay: <any>_get(activeMap.data, 'overlay')

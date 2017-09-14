@@ -9,10 +9,9 @@ import * as packageJson from '../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
-import { IMapState } from '../../packages/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -41,9 +40,9 @@ export class AnsynComponent implements OnInit {
 		.map((data: any) => data.overlay);
 	app;
 	isFavoriteOverlay$ = this.selected_case$
-		.filter(selectedCase => _isNil(selectedCase.state.favoritesOverlays))
-		.map((selectedCase: Case) => {
-			const activeMap = CasesService.activeMap(selectedCase);
+		.withLatestFrom(this.activeMap$)
+		.filter(([selectedCase]) => _isNil(selectedCase.state.favoritesOverlays))
+		.map(([selectedCase, activeMap]: [Case, CaseMapState]) => {
 			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);
 		});
 

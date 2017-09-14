@@ -50,7 +50,6 @@ import {
 	isExtentContainedInPolygon,
 	startTimingLog
 } from '@ansyn/core/utils';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import {
 	AnnotationVisualizerAgentAction,
@@ -61,7 +60,7 @@ import {
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
-import { CaseMapState, MapsLayout, Position } from '@ansyn/core/models';
+import { CaseMapState, Position } from '@ansyn/core/models';
 import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
@@ -136,10 +135,10 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlaysState: IOverlayState, casesState: ICasesState): any[] => {
+		.withLatestFrom(this.store$.select('map'), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
 			const overlay = action.payload.overlay;
-			const map_id = action.payload.map_id ? action.payload.map_id : casesState.selected_case.state.maps.active_map_id;
-			const map = CasesService.mapById(casesState.selected_case, map_id);
+			const map_id = action.payload.map_id ? action.payload.map_id : mapState.activeMapId;
+			const map = MapFacadeService.mapById(mapState.mapsList, map_id);
 			return [overlay, map_id, map.data.position];
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
@@ -178,11 +177,10 @@ export class MapAppEffects {
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, state]: [AddMapInstacneAction, ICasesState]) => !isNil(state.selected_case))
-		.map(([action, state]: [AddMapInstacneAction, ICasesState]) => {
-			const currentCase = state.selected_case;
-			return currentCase.state.maps.data
+		.withLatestFrom(this.store$.select('map'))
+		.filter(([action, mapsState]: [AddMapInstacneAction, IMapState]) => !isEmpty(mapsState.mapsList))
+		.map(([action, mapsState]: [AddMapInstacneAction, IMapState]) => {
+			return mapsState.mapsList
 				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
 		})
 		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
@@ -194,10 +192,9 @@ export class MapAppEffects {
 	@Effect()
 	displayOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases'))
-		.mergeMap(([action, state]: [SelectCaseByIdAction, ICasesState]) => {
-			const currentCase = state.selected_case;
-			return currentCase.state.maps.data.reduce((previusResult, data: CaseMapState) => {
+		.withLatestFrom(this.store$.select('map'))
+		.mergeMap(([action, mapState]: [SelectCaseByIdAction, IMapState]) => {
+			return mapState.mapsList.reduce((previusResult, data: CaseMapState) => {
 				const communicatorHandler = this.communicator.provide(data.id);
 				// if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
@@ -355,7 +352,8 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('map'))
 		.map(([action, mapState]: [any, any]): any[] => {
-			const map = MapFacadeService.mapById(mapState.mapsList, action.payload.mapId);
+			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
+			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
 			const mapComm = this.communicator.provide(action.payload.mapId);
 			return [mapComm, map.data.position];
 		})
@@ -378,21 +376,38 @@ export class MapAppEffects {
 	@Effect()
 	onLayoutChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store$.select('status_bar'), ({ payload }, statusbar: IStatusBarState) => statusbar.layouts[payload])
-		.map((layout: MapsLayout) => {
-			return new SetLayoutAction(layout);
+		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), this.store$.select('status_bar'), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
+			return [selectedCase, statusbar.layouts[payload], payload]
+		})
+		.mergeMap(([selectedCase, layout, layoutIndex]: any[]) => {
+			const actions = [];
+			if (selectedCase) {
+				const updatedCase: Case = {
+					...selectedCase,
+					state: {
+						...selectedCase.state,
+						maps: {
+							...selectedCase.state.maps,
+							layouts_index: layoutIndex
+						}
+					}
+				} as any;
+				actions.push(new UpdateCaseAction(updatedCase))
+			}
+			actions.push(new SetLayoutAction(layout));
+			return actions;
 		});
 
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases').pluck('selected_case'), (action, { filteredOverlays }, { state }) => {
-			return [filteredOverlays, state.maps.data];
+		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.BACK_TO_WORLD, OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'), (action, { filteredOverlays }, mapState: IMapState) => {
+			return [filteredOverlays, mapState.mapsList];
 		})
-		.map(([filteredOverlays, mapsData]: [any[], CaseMapState[]]) => {
+		.map(([filteredOverlays, mapsList]: [any[], CaseMapState[]]) => {
 			const overlaysNoInCase = new Map<string, boolean>();
 
-			mapsData.forEach(({ data }) => {
+			mapsList.forEach(({ data }) => {
 				const { overlay } = data;
 				if (overlay) {
 					const notExistOnFilteredOverlay = !filteredOverlays.some(id => overlay.id === id);

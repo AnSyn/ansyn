@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
@@ -21,19 +21,16 @@ const animations: any[] = [
 	])
 ];
 
-const host = {
-	'[@modalContent]': 'true',
-};
-
 @Component({
 	selector: 'ansyn-delete-case',
 	templateUrl: './delete-case.component.html',
 	styleUrls: ['./delete-case.component.less'],
-	animations,
-	host
+	animations
 })
 
 export class DeleteCaseComponent {
+	@HostBinding('@modalContent') readonly modalContent = true;
+
 	selected_case_name$: Observable<string> = this.store.select('cases').map(this.getActiveCaseName);
 
 	@Output() submitCase = new EventEmitter();

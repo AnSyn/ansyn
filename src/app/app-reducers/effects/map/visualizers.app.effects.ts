@@ -2,7 +2,8 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import {
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
-	MapActionTypes
+	MapActionTypes,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -33,6 +34,8 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -90,13 +93,13 @@ export class VisualizersAppEffects {
 	updateCaseFromTools$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases'))
-		.mergeMap(([payload, casesState]: [OverlayDisplayMode, ICasesState]) => {
-			const updatedCase = _cloneDeep(casesState.selected_case);
-			const activeMap = CasesService.activeMap(updatedCase);
+		.withLatestFrom(this.store$.select('map'))
+		.mergeMap(([payload, mapState]: [OverlayDisplayMode, IMapState]) => {
+			const mapsList = [...mapState.mapsList];
+			const activeMap = MapFacadeService.activeMap(mapState);
 			activeMap.data.overlayDisplayMode = payload;
 			return [
-				new UpdateCaseAction(updatedCase),
+				new SetMapsDataActionStore({ mapsList }),
 				new DrawOverlaysOnMapTriggerAction()
 			];
 		});

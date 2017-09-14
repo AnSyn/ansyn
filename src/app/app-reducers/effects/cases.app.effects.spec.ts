@@ -21,9 +21,9 @@ import { ContextProviderService } from '@ansyn/context/providers/context-provide
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SetMapsDataActionStore } from '../../packages/map-facade/actions/map.actions';
-import { MapFacadeService } from '../../packages/map-facade/services/map-facade.service';
-import { MapReducer } from '../../packages/map-facade/reducers/map.reducer';
+import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

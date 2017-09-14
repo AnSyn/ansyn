@@ -12,7 +12,8 @@ import {
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
@@ -23,7 +24,7 @@ describe('ContextMenuAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer })
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, map: MapReducer })
 			],
 			providers: [
 				ContextMenuAppEffects
@@ -57,7 +58,7 @@ describe('ContextMenuAppEffects', () => {
 			{ id: 4, footprint: 'out' },
 			{ id: 5, footprint: 'in' }
 		]);
-		spyOn(CasesService, 'activeMap').and.returnValue({});
+		spyOn(MapFacadeService, 'activeMap').and.returnValue({});
 		spyOnProperty(turf, 'inside', 'get').and.returnValue((point, footprint) => footprint === 'in');
 		effectsRunner.queue(showAction);
 		let result: SetContextMenuFiltersAction;

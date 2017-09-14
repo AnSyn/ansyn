@@ -111,9 +111,9 @@ export class OpenLayersMap implements IMap {
 			let coordinates = this._mapObject.getCoordinateFromPixel([e.layerX, e.layerY]);
 			const projection = this._mapObject.getView().getProjection();
 			coordinates = proj.transform(coordinates, projection, 'EPSG:4326');
-			const point: GeoJSON.Point = { type: 'Point', coordinates };
+			const point: GeoJSON.Point = {type: 'Point', coordinates};
 			containerElem.click();
-			this.contextMenu.emit({ point, view, e });
+			this.contextMenu.emit({point, view, e});
 		});
 
 	}
@@ -180,7 +180,7 @@ export class OpenLayersMap implements IMap {
 			const layerCords = pinPointGeometry.getCoordinates();
 			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
 		}
-		return { pinPointLonLatGeo: lonLatCords };
+		return {pinPointLonLatGeo: lonLatCords};
 	}
 
 	private internalAfterSetMainLayer(args: { pinPointLonLatGeo }) {
@@ -349,7 +349,7 @@ export class OpenLayersMap implements IMap {
 		let rotation: number = view.getRotation();
 		let boundingBox = this.getMapExtentInGeo();
 
-		return { center, zoom, rotation, boundingBox };
+		return {center, zoom, rotation, boundingBox};
 	}
 
 	private getMapExtentInGeo() {
@@ -420,7 +420,7 @@ export class OpenLayersMap implements IMap {
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLat = proj.toLonLat(e.coordinate, projection);
-		this.singleClick.emit({ lonLat: lonLat });
+		this.singleClick.emit({lonLat: lonLat});
 	}
 
 

@@ -37,7 +37,7 @@ export class OverlaysModule {
 			providers: [
 				OverlaysService,
 				TimelineEmitterService,
-				{ provide: OverlaysConfig, useValue: config }
+				{provide: OverlaysConfig, useValue: config}
 			]
 		};
 	}

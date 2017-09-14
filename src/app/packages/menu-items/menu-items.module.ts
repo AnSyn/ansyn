@@ -31,10 +31,10 @@ export class MenuItemsModule {
 		return {
 			ngModule: MenuItemsModule,
 			providers: [
-				{ provide: casesConfig, useValue: config.CasesConfig },
-				{ provide: layersConfig, useValue: config.LayersManagerConfig },
-				{ provide: filtersConfig, useValue: config.FiltersConfig },
-				{ provide: toolsConfig, useValue: config.ToolsConfig }
+				{provide: casesConfig, useValue: config.CasesConfig},
+				{provide: layersConfig, useValue: config.LayersManagerConfig},
+				{provide: filtersConfig, useValue: config.FiltersConfig},
+				{provide: toolsConfig, useValue: config.ToolsConfig}
 			]
 		};
 	}

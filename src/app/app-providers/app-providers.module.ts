@@ -15,12 +15,12 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 
 @NgModule({
 	providers: [
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
-		{ provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider }
+		{provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true},
+		{provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true},
+		{provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true},
+		{provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true},
+		{provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true},
+		{provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider}
 	]
 })
 export class AppProvidersModule {
@@ -28,7 +28,7 @@ export class AppProvidersModule {
 		return {
 			ngModule: AppProvidersModule,
 			providers: [
-				{ provide: IdahoOverlaysSourceConfig, useValue: idahoOverlaySourceConfig }
+				{provide: IdahoOverlaysSourceConfig, useValue: idahoOverlaySourceConfig}
 			]
 		};
 	}

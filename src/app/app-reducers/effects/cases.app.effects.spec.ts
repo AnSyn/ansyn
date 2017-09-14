@@ -41,7 +41,7 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { baseUrl: null } },
+				{provide: casesConfig, useValue: {baseUrl: null}},
 				ContextProviderService
 			]
 

@@ -9,7 +9,7 @@ describe('ImageryProviderService', () => {
 	let imageryProviderService: ImageryProviderService;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({ declarations: [], providers: [ImageryProviderService] }).compileComponents();
+		TestBed.configureTestingModule({declarations: [], providers: [ImageryProviderService]}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryProviderService], (_ImageryProviderService) => {
@@ -22,12 +22,12 @@ describe('ImageryProviderService', () => {
 
 	it('ImageryProviderService should registerMapProvider and provideMap by map type', () => {
 
-		const mapComponent = { id: 'test' };
+		const mapComponent = {id: 'test'};
 
 		imageryProviderService.registerMapProvider('map1', 'map1', mapComponent);
-		imageryProviderService.registerMapProvider('map2', 'map2', { id: 'test2' });
+		imageryProviderService.registerMapProvider('map2', 'map2', {id: 'test2'});
 
-		expect(imageryProviderService.provideMap('map1')).toEqual({ mapType: 'map1', mapComponent: mapComponent });
+		expect(imageryProviderService.provideMap('map1')).toEqual({mapType: 'map1', mapComponent: mapComponent});
 	});
 
 	class Plugin1 {

@@ -12,7 +12,7 @@ describe('EnumFilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })]
+			imports: [FiltersModule, StoreModule.provideStore({filters: FiltersReducer})]
 		})
 			.compileComponents();
 	}));

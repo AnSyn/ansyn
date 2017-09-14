@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 export class ContextProxySource implements IContextSource {
 	public providerType: string;
 	public uri;
-	public headers = new Headers({ 'Content-Type': 'application/json' });
+	public headers = new Headers({'Content-Type': 'application/json'});
 	public options = new RequestOptions();
 
 	constructor(public config: IContextSourceConfig, public http: Http) {

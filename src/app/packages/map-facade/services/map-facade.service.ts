@@ -106,7 +106,7 @@ export class MapFacadeService {
 
 	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
 	onActiveMapChanged($event: { id: string, oldMapInstanceName: string, newMapInstanceName: string }) {
-		const args = { ...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators };
+		const args = {...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators};
 		this.store.dispatch(new MapInstanceChangedAction(args));
 	}
 

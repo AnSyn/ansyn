@@ -7,7 +7,7 @@ import { AnsynModule } from './ansyn/ansyn.module';
 
 @NgModule({
 	providers: [
-		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true }
+		{provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true}
 	],
 	declarations: [
 		AppComponent,

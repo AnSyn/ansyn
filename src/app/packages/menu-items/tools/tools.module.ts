@@ -21,7 +21,7 @@ export class ToolsModule {
 		return {
 			ngModule: ToolsModule,
 			providers: [
-				{ provide: toolsConfig, useValue: config }
+				{provide: toolsConfig, useValue: config}
 			]
 		};
 	}

@@ -31,7 +31,7 @@ export const overlayInitialState: IOverlayState = {
 	// @TODO change to Map
 	filters: [],
 	queryParams: {},
-	timelineState: { from: new Date(), to: new Date() },
+	timelineState: {from: new Date(), to: new Date()},
 	filteredOverlays: [],
 	count: 0
 };
@@ -40,7 +40,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 	switch (action.type) {
 
 		case overlay.OverlaysActionTypes.UPDATE_OVERLAYS_COUNT:
-			return { ...state, count: action.payload };
+			return {...state, count: action.payload};
 
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -113,7 +113,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 
 			const res = OverlaysService.filter(overlaysToFilter, action.payload.parsedFilters);
 
-			return { ...state, filters: action.payload.parsedFilters, filteredOverlays: res };
+			return {...state, filters: action.payload.parsedFilters, filteredOverlays: res};
 
 		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;
@@ -123,7 +123,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				specialObjects.set(i.id, i);
 			});
 
-			return { ...state, specialObjects };
+			return {...state, specialObjects};
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
 			return Object.assign({}, state, {

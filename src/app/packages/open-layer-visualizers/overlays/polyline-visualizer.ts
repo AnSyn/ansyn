@@ -33,7 +33,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				},
 				width: 5
 			},
-			fill: new Fill({ color: 'rgba(255,255,255,0.4)' })
+			fill: new Fill({color: 'rgba(255,255,255,0.4)'})
 		},
 		staticFeature: {
 			stroke: {
@@ -71,19 +71,19 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return isFavorites ? [this.baseFavoritesStyle(featureStyle), baseHoverStyle] : [baseHoverStyle];
 	}
 
-	private baseFavoritesStyle({ stroke, fill }) {
+	private baseFavoritesStyle({stroke, fill}) {
 		return this.getStyleWithStroke(stroke.width, stroke.colors['favorites'], fill);
 	}
 
-	private baseFeatureStyle(isActive, isFavorites, isDisplayed, { stroke, fill }) {
+	private baseFeatureStyle(isActive, isFavorites, isDisplayed, {stroke, fill}) {
 		const [colors, width] = isFavorites ? [stroke.colors, stroke.width * 0.6] : [stroke.colors, stroke.width];
 		const color = isActive ? colors['active'] : isDisplayed ? colors['displayed'] : colors[''];
 		return this.getStyleWithStroke(width, color, fill);
 	}
 
 	private getStyleWithStroke(width, color, fill?) {
-		const stroke = new Stroke({ width, color });
-		const styleObj = fill ? { stroke, fill } : { stroke };
+		const stroke = new Stroke({width, color});
+		const styleObj = fill ? {stroke, fill} : {stroke};
 		return new Style(styleObj);
 	}
 
@@ -119,7 +119,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	getMarkClass(featureId): any {
 		return this.markups
-			.filter(({ id }) => id === featureId)
+			.filter(({id}) => id === featureId)
 			.map(mark => mark.class);
 	}
 
@@ -144,15 +144,15 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	onSelectFeature($event) {
-		const event = { visualizerType: this.type };
+		const event = {visualizerType: this.type};
 		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
 			const hoverFeature = this.hoverLayerSource.getFeatureById(id);
 			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.onHoverFeature.emit({ ...event, id });
+				this.onHoverFeature.emit({...event, id});
 			}
 		} else {
-			this.onHoverFeature.emit({ ...event });
+			this.onHoverFeature.emit({...event});
 		}
 	}
 
@@ -160,7 +160,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		if ($event.selected.length > 0) {
 			const visualizerType = this.type;
 			const id = $event.selected[0].getId();
-			this.doubleClickFeature.emit({ visualizerType, id });
+			this.doubleClickFeature.emit({visualizerType, id});
 		}
 	}
 

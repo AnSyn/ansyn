@@ -45,6 +45,6 @@ export class AnsynCheckboxComponent implements OnInit {
 		if (this._disabled) {
 			return false;
 		}
-		this.inputClicked.emit({ event: event, data: { id: this.id, isChecked: !this._checked } });
+		this.inputClicked.emit({event: event, data: {id: this.id, isChecked: !this._checked}});
 	}
 }

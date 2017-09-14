@@ -43,7 +43,7 @@ export class QueryParamsHelper {
 						const geopointStr = q_params['geopoint'];
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(strToNum => +strToNum);
-							const geoPoint: Point = { type: 'Point', coordinates };
+							const geoPoint: Point = {type: 'Point', coordinates};
 							case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 							case_model.state.region = getPolygonByPoint(coordinates).geometry;
 						}
@@ -76,7 +76,7 @@ export class QueryParamsHelper {
 				const clonedvalue: CaseMapsState = cloneDeep(value);
 				clonedvalue.data.forEach((caseMapState: CaseMapState) => {
 					if (caseMapState.data.overlay) {
-						caseMapState.data.overlay = <any>{ id: caseMapState.data.overlay.id };
+						caseMapState.data.overlay = <any>{id: caseMapState.data.overlay.id};
 					}
 				});
 				return rison.encode(clonedvalue);

@@ -21,5 +21,5 @@ export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): St
 	const replaceReducer = reducer => {
 		store.replaceReducer(reducer);
 	};
-	return { store, state, cleanup, getState, replaceReducer };
+	return {store, state, cleanup, getState, replaceReducer};
 }

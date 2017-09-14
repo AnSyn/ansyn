@@ -50,7 +50,7 @@ describe('CasesService', () => {
 
 		it('generateQueryParamsViaCase should parse url to q_params object (after parsing) ', () => {
 			spyOn(queryParamsHelper, 'encodeCaseObjects').and.callFake((key, val) => val);
-			spyOn((<any>queryParamsHelper).casesService.urlSerializer, 'parse').and.returnValue({ queryParams: {} });
+			spyOn((<any>queryParamsHelper).casesService.urlSerializer, 'parse').and.returnValue({queryParams: {}});
 
 			let fake_case: Case = {
 				id: '12345678',
@@ -71,11 +71,11 @@ describe('CasesService', () => {
 			queryParamsHelper.encodeCaseObjects('facets', 'facets_value');
 			expect(rison.encode).toHaveBeenCalledWith('facets_value');
 
-			queryParamsHelper.encodeCaseObjects('time', { from: 'from', to: 'to' });
-			expect(rison.encode).toHaveBeenCalledWith({ from: 'from', to: 'to' });
+			queryParamsHelper.encodeCaseObjects('time', {from: 'from', to: 'to'});
+			expect(rison.encode).toHaveBeenCalledWith({from: 'from', to: 'to'});
 
-			queryParamsHelper.encodeCaseObjects('maps', { data: [] });
-			expect(rison.encode).toHaveBeenCalledWith({ data: [] });
+			queryParamsHelper.encodeCaseObjects('maps', {data: []});
+			expect(rison.encode).toHaveBeenCalledWith({data: []});
 
 			queryParamsHelper.encodeCaseObjects('region', 'region_value');
 			expect(wellknown.stringify).toHaveBeenCalledWith('region_value');
@@ -88,8 +88,8 @@ describe('CasesService', () => {
 			queryParamsHelper.decodeCaseObjects('facets', 'facets_value');
 			expect(rison.decode).toHaveBeenCalledWith('facets_value');
 
-			queryParamsHelper.decodeCaseObjects('time', { from: 'from', to: 'to' });
-			expect(rison.decode).toHaveBeenCalledWith({ from: 'from', to: 'to' });
+			queryParamsHelper.decodeCaseObjects('time', {from: 'from', to: 'to'});
+			expect(rison.decode).toHaveBeenCalledWith({from: 'from', to: 'to'});
 
 			queryParamsHelper.decodeCaseObjects('maps', 'maps_value');
 			expect(rison.decode).toHaveBeenCalledWith('maps_value');

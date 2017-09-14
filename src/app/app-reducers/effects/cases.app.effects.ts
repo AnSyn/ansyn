@@ -74,7 +74,7 @@ export class CasesAppEffects {
 			return new SetLinkCopyToastValueAction(result);
 		});
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
 		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
@@ -106,7 +106,7 @@ export class CasesAppEffects {
 			if (state.contexts_loaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				const criteria = new ContextCriteria({ start: 0, limit: 200 });
+				const criteria = new ContextCriteria({start: 0, limit: 200});
 				observable = this.contextProviderService.provide('Proxy').find(criteria);
 				// observable = this.casesService.loadContexts();
 			}

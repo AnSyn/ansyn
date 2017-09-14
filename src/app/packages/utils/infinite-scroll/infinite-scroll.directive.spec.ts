@@ -22,8 +22,8 @@ describe('InfiniteScrollDirective', () => {
 	});
 
 	it('should check if scroll top on bottom', () => {
-		let target = <any> { scrollTop: 0, clientHeight: 100, scrollHeight: 101 };
-		let $event: MouseEvent = <any> { target };
+		let target = <any> {scrollTop: 0, clientHeight: 100, scrollHeight: 101};
+		let $event: MouseEvent = <any> {target};
 		spyOn(directive.ansynInfiniteScroll, 'emit');
 		directive.onScroll($event);
 		// not 0 + 100 >= 101

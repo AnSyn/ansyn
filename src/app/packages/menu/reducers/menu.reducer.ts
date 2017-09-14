@@ -28,19 +28,19 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 				...state.menu_items,
 				action.payload,
 			];
-			return Object.assign({}, state, { menu_items });
+			return Object.assign({}, state, {menu_items});
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
-			return Object.assign({}, state, { selected_menu_item_index: action.payload, animation: true });
+			return Object.assign({}, state, {selected_menu_item_index: action.payload, animation: true});
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM:
-			return Object.assign({}, state, { selected_menu_item_index: -1, animation: true });
+			return Object.assign({}, state, {selected_menu_item_index: -1, animation: true});
 
 		case MenuActionTypes.ANIMATION_START:
-			return Object.assign({}, state, { animation: true });
+			return Object.assign({}, state, {animation: true});
 
 		case MenuActionTypes.ANIMATION_END:
-			return Object.assign({}, state, { animation: false });
+			return Object.assign({}, state, {animation: false});
 
 
 		default:

@@ -66,8 +66,8 @@ describe('OverlaysService', () => {
 	let overlaysTmpData: any[];
 	let response = {
 		data: [
-			{ key: 'a', value: 1 },
-			{ key: 'b', value: 2 }
+			{key: 'a', value: 1},
+			{key: 'b', value: 2}
 		]
 	};
 	let searchParams = {
@@ -106,9 +106,9 @@ describe('OverlaysService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
-				{ provide: XHRBackend, useClass: MockBackend },
-				{ provide: OverlaysConfig, useValue: {} },
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
+				{provide: XHRBackend, useClass: MockBackend},
+				{provide: OverlaysConfig, useValue: {}},
+				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock}
 			],
 			imports: [HttpModule]
 		});
@@ -150,26 +150,26 @@ describe('OverlaysService', () => {
 
 	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
 		let overlayArray: Overlay = <any>[
-			{ id: 'id1', date: new Date(1000) },
-			{ id: 'id2', date: new Date(3000) },
-			{ id: 'id3', date: new Date(7000) },
-			{ id: 'id4', date: new Date(2000) }
+			{id: 'id1', date: new Date(1000)},
+			{id: 'id2', date: new Date(3000)},
+			{id: 'id3', date: new Date(7000)},
+			{id: 'id4', date: new Date(2000)}
 		];
 		overlayArray = <any> OverlaysService.sort(<any>overlayArray);
-		expect(overlayArray[0]).toEqual({ id: 'id1', date: new Date(1000) });
-		expect(overlayArray[1]).toEqual({ id: 'id4', date: new Date(2000) });
-		expect(overlayArray[2]).toEqual({ id: 'id2', date: new Date(3000) });
-		expect(overlayArray[3]).toEqual({ id: 'id3', date: new Date(7000) });
+		expect(overlayArray[0]).toEqual({id: 'id1', date: new Date(1000)});
+		expect(overlayArray[1]).toEqual({id: 'id4', date: new Date(2000)});
+		expect(overlayArray[2]).toEqual({id: 'id2', date: new Date(3000)});
+		expect(overlayArray[3]).toEqual({id: 'id3', date: new Date(7000)});
 	});
 
 	it('pluck check that pluck function returns smaller object from overlays', () => {
 		const objectMap = new Map([
-			['1', { id: '1', name: 'tmp1', value: '2' }],
-			['2', { id: '2', name: 'tmp1', value: '2' }],
-			['3', { id: '3', name: 'tmp1', value: '2' }],
-			['4', { id: '4', name: 'tmp1', value: '2' }],
-			['5', { id: '5', name: 'tmp1', value: '2' }],
-			['6', { id: '6', name: 'tmp1', value: '2' }]
+			['1', {id: '1', name: 'tmp1', value: '2'}],
+			['2', {id: '2', name: 'tmp1', value: '2'}],
+			['3', {id: '3', name: 'tmp1', value: '2'}],
+			['4', {id: '4', name: 'tmp1', value: '2'}],
+			['5', {id: '5', name: 'tmp1', value: '2'}],
+			['6', {id: '6', name: 'tmp1', value: '2'}]
 		]);
 		const result = OverlaysService.pluck(objectMap, ['1', '2', '6'], ['id', 'name']);
 		expect(result.length).toBe(3);
@@ -219,7 +219,7 @@ describe('OverlaysService', () => {
 		expect(result[0].data.length).toBe(1);
 
 		const specialObjects = new Map<string, OverlaySpecialObject>();
-		specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
+		specialObjects.set('15', {id: '15', shape: 'star', date: new Date()});
 
 		const result2 = overlaysService.parseOverlayDataForDispaly(mockData.overlays, ['13'], specialObjects);
 		expect(result2[0].data.length).toBe(2);
@@ -247,7 +247,7 @@ describe('OverlaysService', () => {
 
 	it('check the method fetchData with spyOn', () => {
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
+			body: JSON.stringify({key: 'value'})
 		}));
 
 		spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
@@ -261,7 +261,7 @@ describe('OverlaysService', () => {
 		});
 
 		response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value2' })
+			body: JSON.stringify({key: 'value2'})
 		}));
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
@@ -271,7 +271,7 @@ describe('OverlaysService', () => {
 
 	it('check the method searchOverlay with spyOn', () => {
 		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
+			body: JSON.stringify({key: 'value'})
 		}));
 
 		let calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
@@ -314,7 +314,7 @@ describe('OverlaysService', () => {
 			params
 		).subscribe((result: any) => {
 			let requestBody = calls.allArgs()[0][1];
-			let bbox = turf.bbox({ type: 'Feature', geometry: params.polygon, properties: {} });
+			let bbox = turf.bbox({type: 'Feature', geometry: params.polygon, properties: {}});
 			let bboxFeature = turf.bboxPolygon(bbox);
 			expect(result.key).toBe('value');
 		});
@@ -355,7 +355,7 @@ describe('OverlaysService', () => {
 				from: new Date(0),
 				to: new Date(5000) // delta tenth is 500 ms
 			};
-			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(1500));
 			expect(to).toEqual(new Date(6500));
 		});
@@ -368,7 +368,7 @@ describe('OverlaysService', () => {
 				from: new Date(2000),
 				to: new Date(7000) // delta tenth is 500 ms
 			};
-			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const {from, to} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(from).toEqual(new Date(500));
 			expect(to).toEqual(new Date(5500));
 		});

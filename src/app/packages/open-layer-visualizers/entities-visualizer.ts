@@ -108,10 +108,10 @@ export class EntitiesVisualizer implements IMapVisualizer {
 				existingEntity.feature.setGeometry(newGeometry);
 				existingEntity.originalEntity = entity;
 			} else {
-				const clonedFeatureJson = { ...entity.featureJson };
+				const clonedFeatureJson = {...entity.featureJson};
 				clonedFeatureJson.id = entity.id;
 				featuresCollectionToAdd.features.push(clonedFeatureJson);
-				this._idToEntity.set(entity.id, { originalEntity: entity, feature: null });
+				this._idToEntity.set(entity.id, {originalEntity: entity, feature: null});
 			}
 		});
 
@@ -124,7 +124,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		features.forEach((feature: Feature) => {
 			const id: string = <string>feature.getId();
 			const existingEntity = this._idToEntity.get(id);
-			this._idToEntity.set(id, { ...existingEntity, feature: feature });
+			this._idToEntity.set(id, {...existingEntity, feature: feature});
 		});
 		this._source.addFeatures(features);
 	}

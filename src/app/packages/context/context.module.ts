@@ -36,8 +36,8 @@ export class ContextModule {
 			ngModule: ContextModule,
 			providers: [
 				ContextProviderService,
-				{ provide: ContextConfig, useValue: config },
-				{ provide: ContextSources, useValue: sources }
+				{provide: ContextConfig, useValue: config},
+				{provide: ContextSources, useValue: sources}
 			]
 		};
 	}

@@ -25,7 +25,7 @@ describe('ContainerComponent', () => {
 		console.log('t');
 		contextProviderService = _contextProviderService;
 		const proxyObject: IContextSource = {
-			find: () => Observable.of([{ 'title': 'tmp' }]),
+			find: () => Observable.of([{'title': 'tmp'}]),
 			remove: () => Observable.of({}),
 			create: () => Observable.of({}),
 			update: () => Observable.of({}),

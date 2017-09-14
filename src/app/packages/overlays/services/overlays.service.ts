@@ -106,7 +106,7 @@ export class OverlaysService {
 			});
 		}
 
-		return [{ name: undefined, data: overlaysData }];
+		return [{name: undefined, data: overlaysData}];
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {
@@ -126,6 +126,6 @@ export class OverlaysService {
 			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
 			from = new Date(to.getTime() - delta);
 		}
-		return { from, to };
+		return {from, to};
 	}
 }

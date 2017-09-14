@@ -38,7 +38,7 @@ export class CasesMapEffects {
 		.withLatestFrom(this.store$.select('cases').pluck<any, Case>('selected_case'))
 		.map(([action, selected_case]) => _cloneDeep(selected_case.state.maps))
 		.map(({ active_map_id, data }) => {
-			return new SetMapsDataActionStore({ mapsList: data, activeMapId: active_map_id })
+			return new SetMapsDataActionStore({ mapsList: data, activeMapId: active_map_id });
 		});
 
 	constructor(private actions$: Actions, private store$: Store<any>) {

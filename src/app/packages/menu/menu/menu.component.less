@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/common";
+
 div.menu-wrapper {
 	height: 100vh;
 	display: flex;
@@ -19,16 +21,16 @@ div.menu-wrapper {
 				display: block;
 			}
 			&:hover {
-				background-color: #27B2CF;
+				background-color: @application-color;
 			}
 			&.active {
-				background-color: #27B2CF;
+				background-color: @application-color;
 			}
 		}
 	}
 	div.container {
 		position: relative;
-		background: #27B2CF;
+		background: @application-color;
 		width: auto;
 
 		button.close {

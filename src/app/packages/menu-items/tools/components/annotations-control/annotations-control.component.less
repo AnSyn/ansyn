@@ -1,3 +1,4 @@
+@import "~@ansyn/core/less/common";
 @tools-box-width: 290px;
 @tools-box-height: 46px;
 
@@ -8,7 +9,7 @@
 	top: -7px;
 	right: 0;
 	transform: translateX(100%);
-	background: #27b2cf;
+	background: @application-color;
 	//v
 	transition-property: width;
 	transition-duration: 0.1s;
@@ -79,7 +80,7 @@
 
 				text-align: center;
 				transition: height 0.3s;
-				background: #27b2cf;
+				background: @application-color;
 				& > li {
 					list-style-type: none;
 					border: 1px solid white;

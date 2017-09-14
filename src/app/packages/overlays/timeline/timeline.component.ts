@@ -16,7 +16,7 @@ selection.prototype.moveToFront = function () {
 @Component({
 	selector: 'ansyn-timeline',
 	templateUrl: './timeline.component.html',
-	styleUrls: ['./timeline.component.css'],
+	styleUrls: ['./timeline.component.less'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 

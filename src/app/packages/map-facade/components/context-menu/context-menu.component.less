@@ -1,4 +1,5 @@
-@import '../../../../../styles/z-index-globals';
+@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/z-index-globals';
 
 :host {
 	outline: none;
@@ -16,7 +17,7 @@
 				.menu-item {
 					&:hover:not(:disabled) {
 						span {
-							color: #27B2CF;
+							color: @application-color;
 						}
 						div.sub-buttons-list {
 							visibility: visible;

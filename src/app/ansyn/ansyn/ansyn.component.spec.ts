@@ -20,7 +20,7 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({ selector: 'ansyn-menu' });
+	const mock_menu = MockComponent({selector: 'ansyn-menu'});
 	const mock_status = MockComponent({
 		selector: 'ansyn-status-bar',
 		inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']
@@ -33,7 +33,7 @@ describe('AnsynComponent', () => {
 		id: 'tmp',
 		state: {
 			favoritesOverlays: [],
-			time: { type: '', from: new Date(), to: new Date() },
+			time: {type: '', from: new Date(), to: new Date()},
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -51,14 +51,14 @@ describe('AnsynComponent', () => {
 						id: 'imagery1',
 						data: {
 							position: {
-								zoom: 1, center: 2, boundingBox: { test: 1 }
+								zoom: 1, center: 2, boundingBox: {test: 1}
 							},
 							isHistogramActive: false,
-							overlay: { id: 'overlayId1' }
+							overlay: {id: 'overlayId1'}
 						}
 					},
-					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 } } },
-					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
+					{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
 				active_map_id: 'imagery1'
 			}
@@ -97,13 +97,13 @@ describe('AnsynComponent', () => {
 		store.dispatch(new SelectCaseByIdAction('tmp'));
 
 		handler = new Subject();
-		spyOn(store,'select').and.callFake( type => {
-			if(type === 'cases') {
+		spyOn(store, 'select').and.callFake(type => {
+			if (type === 'cases') {
 				return handler;
 			}
 			else if (type === 'tools') {
 				return Observable.of({
-					flags : new Map<string,any>()
+					flags: new Map<string, any>()
 				})
 			}
 		});
@@ -128,7 +128,7 @@ describe('AnsynComponent', () => {
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId2');
-			handler.next({ selected_case: selectedCase });
+			handler.next({selected_case: selectedCase});
 
 		});
 
@@ -138,7 +138,7 @@ describe('AnsynComponent', () => {
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId1');
-			handler.next( { selected_case: selectedCase });
+			handler.next({selected_case: selectedCase});
 
 		});
 
@@ -146,7 +146,7 @@ describe('AnsynComponent', () => {
 			component.isFavoriteOverlay$.subscribe(isFavorite => {
 				expect(isFavorite).toBe(false);
 			});
-			handler.next({ selected_case: _cloneDeep(cases[0]) });
+			handler.next({selected_case: _cloneDeep(cases[0])});
 		});
 	});
 });

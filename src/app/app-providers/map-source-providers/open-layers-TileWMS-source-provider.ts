@@ -25,6 +25,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		const tiled = new TileLayer({
 			visible: true,
 			source: new TileWMS({
+				preload: Infinity,
 				url: metaData.url,
 				params: {
 					'VERSION': '1.1.1',

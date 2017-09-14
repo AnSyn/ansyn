@@ -53,7 +53,8 @@ export class OverlaysEffects {
 			return this.overlaysService.search(action.payload)
 				.map(data => {
 					return new LoadOverlaysSuccessAction(data);
-				});
+				})
+				.catch(() => Observable.of(new LoadOverlaysSuccessAction([])));
 		});
 
 	@Effect()

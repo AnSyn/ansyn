@@ -63,9 +63,9 @@ const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 ];
 
 if (configuration.env !== 'production') {
-	imports.push(ImagerySandBoxModule);
-	imports.push(SettingsModule);
 	imports.push(AlgorithmsModule);
+	imports.push(SettingsModule);
+	imports.push(ImagerySandBoxModule);
 }
 
 @NgModule({

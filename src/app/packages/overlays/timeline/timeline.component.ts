@@ -51,7 +51,7 @@ export class TimelineComponent implements OnInit {
 		if (this._drops.length > 0 && this._markup) {
 			this.drawMarkup();
 		}
-		//this.stream.next();
+		// this.stream.next();
 
 	}
 
@@ -110,7 +110,7 @@ export class TimelineComponent implements OnInit {
 				wait = window.setTimeout(((e) => () => {
 					wait = null;
 					down = null;
-					//this.toggleDrop(nodes[index]);
+					// this.toggleDrop(nodes[index]);
 					this.emitter.provide('timeline:click').next({ event: e, element: data, index, nodes });
 				})(event), 300);
 			} else {
@@ -133,9 +133,8 @@ export class TimelineComponent implements OnInit {
 	}
 
 	toggleDrop(element) {
-		//d3.select(element)['moveToFront']();
-		//element.classList.toggle('selected');
-
+		// d3.select(element)['moveToFront']();
+		// element.classList.toggle('selected');
 	}
 
 	eventDropsHandler(): void {

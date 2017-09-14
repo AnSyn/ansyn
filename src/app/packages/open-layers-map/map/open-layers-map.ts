@@ -238,7 +238,7 @@ export class OpenLayersMap implements IMap {
 		}
 		const existingLayer = this.getLayerById(layerId);
 		if (!existingLayer) {
-			//layer.set('visible',false);
+			// layer.set('visible',false);
 			this.addLayer(layer);
 			return layer;
 		}
@@ -274,7 +274,7 @@ export class OpenLayersMap implements IMap {
 	public removeLayerById(layerId) {
 		const layer = this.getLayerById(layerId);
 		if (layer) {
-			//layer.set('visible',false);
+			// layer.set('visible',false);
 			this.removeLayer(layer);
 		}
 	}
@@ -369,9 +369,9 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public setBoundingBox(bbox: GeoJSON.Point[]) {
-		//if(configuration.General.logActions ){
-		//	console.log(`'Set Map extent to: ${JSON.stringify(bbox)}'`);
-		//}
+		// if(configuration.General.logActions ){
+		// 	console.log(`'Set Map extent to: ${JSON.stringify(bbox)}'`);
+		// }
 		const geoViewExtent: Extent = Utils.BoundingBoxToOLExtent(bbox);
 		const view = this._mapObject.getView();
 		const viewProjection = view.getProjection();
@@ -407,7 +407,7 @@ export class OpenLayersMap implements IMap {
 		}
 	}
 
-	//*****--pin point paint on the map--********
+	// *****--pin point paint on the map--********
 	public addSingleClickEvent() {
 		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);
 	}
@@ -445,7 +445,7 @@ export class OpenLayersMap implements IMap {
 
 			const iconStyle = new Icon({
 				scale: 1,
-				src: '/assets/pinpoint_indicator.svg' //for further usage either bring from configuration or create svg
+				src: '/assets/pinpoint_indicator.svg' // for further usage either bring from configuration or create svg
 			});
 
 			const vectorLayer: VectorLayer = new VectorLayer({
@@ -468,9 +468,9 @@ export class OpenLayersMap implements IMap {
 		this.removeLayerById(this._pinPointIndicatorLayerId);
 	}
 
-	//*****-- pin point paint on the map end --********
+	// *****-- pin point paint on the map end --********
 
-	//*****-- shadow mouse functionality--********
+	// *****-- shadow mouse functionality--********
 
 	public onPointerMove(e) {
 		const view = this._mapObject.getView();
@@ -519,7 +519,7 @@ export class OpenLayersMap implements IMap {
 				style: new Style({
 					image: new Icon({
 						scale: 0.05,
-						src: '/assets/2877.png' //for further usage either bring from configuration or create svg
+						src: '/assets/2877.png' // for further usage either bring from configuration or create svg
 					})
 				})
 			});
@@ -534,12 +534,12 @@ export class OpenLayersMap implements IMap {
 		this.removeLayerById(this._shadowMouselayerId);
 	}
 
-	//*****-- shadow mouse functionality end --********
+	// *****-- shadow mouse functionality end --********
 
-	//*****-- tools ----*****
+	// *****-- tools ----*****
 
 
-	//*****-- end tools ---****
+	// *****-- end tools ---****
 	// IMap End
 	public dispose() {
 

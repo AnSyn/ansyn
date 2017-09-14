@@ -11,9 +11,12 @@
     "startAOT": "ng s --aot true",
     "buildAOT": "ng build --aot true",
     "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
-  },
+    "test:once": "ng tests --watch=false",
+		"lint": "ng lint",
+    "e2e": "ng e2e",
+  "docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3"
+	},
+	"precommit": "lint",
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.2.4",
@@ -63,12 +66,12 @@
     "@angular/compiler-cli": "^4.2.4",
     "@angular/language-service": "^4.2.4",
     "@types/d3": "^4.9.0",
-    "@types/jasmine": "~2.5.53",
+		"@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "~3.1.1",
     "jasmine": "latest",
-    "jasmine-core": "~2.6.2",
+		"jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
     "karma-chrome-launcher": "~2.1.1",
@@ -76,9 +79,11 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "protractor": "~5.1.2",
+    "pre-commit": "^1.2.2",
+		"protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "^2.5.2"
+
   }
 }

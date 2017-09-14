@@ -176,7 +176,7 @@ export class ImageriesManagerComponent implements OnInit {
 				if (communicators[mapItem.id]) {
 					communicators[mapItem.id].setMouseShadowListener(true);
 				}
-				//@todo add take until instead of unsubscribe ?? or not todo
+				// @TODO add take until instead of unsubscribe ?? or not todo
 				this.pointerMoveUnsubscriber = communicators[mapItem.id]['pointerMove'].subscribe(latLon => {
 					this.drawShadowMouse(latLon);
 				});

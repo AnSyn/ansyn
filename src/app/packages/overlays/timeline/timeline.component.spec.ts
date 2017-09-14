@@ -99,7 +99,7 @@ describe('TimelineComponent', () => {
 
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]');
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="2040299a8fe6c586a702382b50a63d7abb8fcff3"]');
-		//expect(moveToFront.moveToFront).toHaveBeenCalledTimes(1);
+		// expect(moveToFront.moveToFront).toHaveBeenCalledTimes(1);
 
 	});
 
@@ -164,7 +164,7 @@ describe('TimelineComponent', () => {
 		const svg2 = fixture.nativeElement.querySelector('svg');
 		expect(svg2).not.toBe(null);
 
-		//de.nativeElement
+		// de.nativeElement
 	});
 
 	it('check that the drops are installed properly', () => {

@@ -62,7 +62,7 @@ describe('ImageryProviderService', () => {
 
 		const plugins = imageryProviderService.getVisualizersConfig('map1');
 		expect(plugins.length).toEqual(2);
-		//{visualizerClass: visualizerClass, args: constructorArgs}
+		// {visualizerClass: visualizerClass, args: constructorArgs}
 		expect((<any>plugins[0]).visualizerClass).toEqual(Plugin1);
 		expect((<any>plugins[1]).visualizerClass).toEqual(Plugin2);
 		expect((<any>plugins[1]).args).toEqual('arg1');

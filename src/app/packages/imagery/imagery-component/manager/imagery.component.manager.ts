@@ -117,7 +117,7 @@ export class ImageryComponentManager {
 	public setActiveMap(activeMapName: string, position?: MapPosition, layer?: any) {
 		if (this.activeMapName !== activeMapName) {
 			const oldMapName = this.activeMapName;
-			//console.log(`Set active map to : ${activeMapName}`);
+			// console.log(`Set active map to : ${activeMapName}`);
 			this.activeMapName = activeMapName;
 			if (this._mapComponentRef) {
 				this.destroyCurrentComponent();

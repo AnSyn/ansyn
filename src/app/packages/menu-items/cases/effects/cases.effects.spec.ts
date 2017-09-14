@@ -192,7 +192,7 @@ describe('CasesEffects', () => {
 		spyOn((<any>casesService).queryParamsHelper, 'updateCaseViaQueryParmas').and.callFake(() => defaultCaseWithQueryParmas);
 
 		effectsRunner.queue(new LoadDefaultCaseAction());
-		//mergeMap
+		// mergeMap
 		let count = 0;
 		casesEffects.loadDefaultCase$.subscribe((result: any) => {
 			count = count + 1;

@@ -92,7 +92,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	addLayer(id = this.type) {
 		const layer = new VectorLayer();
-		//if id is empty then set the current type name as id
+		// if id is empty then set the current type name as id
 		layer.set('id', id);
 		this.layer = this._imap.addLayerIfNotExist(layer);
 
@@ -107,7 +107,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	redrawFromGeoJson() {
-		//const geoFeatures = this.collection;
+		// const geoFeatures = this.collection;
 		this._source.clear();
 		this.collection = undefined;
 		const features = this.createFeturesFromGeoJson(this.features);
@@ -130,16 +130,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
 		const features = geoJsonFeatures.map((d) => this.geoJsonFormat.readFeature(d));
-		//@TODO reset this.features
+		// @TODO reset this.features
 		(<Array<any>>features).forEach(feature => {
 
 			const properties = feature.getProperties();
 			let geometry;
 
-			//@TODO convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
+			// @TODO convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
 			// and create new geometry
 
-			//save the feature to this.feature;
+			// save the feature to this.feature;
 
 			geometry = feature.getGeometry();
 			if (properties.geometryName === `${this.namePrefix}Circle`) {
@@ -189,11 +189,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geoJsonSingleFeature = JSON.stringify(circleGeo);
 		}
 
-		//@TODO add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
+		// @TODO add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
 		this.drawEndPublisher.next(this.features);
-		//this.collection = featureCollection(this.features);
+		// this.collection = featureCollection(this.features);
 	}
 
 	addInteraction() {

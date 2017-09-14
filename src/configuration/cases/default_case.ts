@@ -1,5 +1,3 @@
-//import { Case } from '@ansyn/menu-items/cases/models/case.model';
-
 export const defaultCase = {
 	id: '1234-5678',
 	name: 'Default case',

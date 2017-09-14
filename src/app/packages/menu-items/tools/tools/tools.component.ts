@@ -29,7 +29,7 @@ export class ToolsComponent implements OnInit {
 	// for tests
 	@ViewChild('displayOverlayDiv') displayOverlayDiv: ElementRef;
 
-	//@todo display the shadow mouse only if there more then one map .
+	// @TODO display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) {
 
 	}

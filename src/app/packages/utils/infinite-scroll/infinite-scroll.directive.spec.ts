@@ -26,11 +26,11 @@ describe('InfiniteScrollDirective', () => {
 		let $event: MouseEvent = <any> { target };
 		spyOn(directive.ansynInfiniteScroll, 'emit');
 		directive.onScroll($event);
-		//not 0 + 100 >= 101
+		// not 0 + 100 >= 101
 		expect(directive.ansynInfiniteScroll.emit).not.toHaveBeenCalled();
 		target.scrollHeight = 99;
 		directive.onScroll($event);
-		//0 + 100 >= 99
+		// 0 + 100 >= 99
 		expect(directive.ansynInfiniteScroll.emit).toHaveBeenCalled();
 	});
 

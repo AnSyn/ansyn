@@ -6,7 +6,7 @@ import { ContextProviderService } from './providers/context-provider.service';
 import { Http, HttpModule } from '@angular/http';
 import { IContextSource, IContextSourceConfig } from './context.interface';
 
-//this must be here in order to use it in InjectionToken
+// this must be here in order to use it in InjectionToken
 export interface IContextConfig {
 	contextSources: IContextSourceConfig[];
 }

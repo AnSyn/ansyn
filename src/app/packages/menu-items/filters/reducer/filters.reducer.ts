@@ -46,6 +46,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 
 		default:
-			return state; //Object.assign({},state);
+			return state; // Object.assign({},state);
 	}
 }

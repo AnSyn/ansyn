@@ -26,7 +26,7 @@ export class MapEffects {
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
 		.map(() => {
-			// @todo move this to service we will need it pass function name and send it to all the maps
+			// @TODO move this to service we will need it pass function name and send it to all the maps
 			Object.keys(this.communicatorsService.communicators).forEach((imagery_id: string) => {
 				this.communicatorsService.provide(imagery_id).updateSize();
 			});

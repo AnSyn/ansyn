@@ -163,7 +163,7 @@ export class StatusBarAppEffects {
 			const actions = [];
 			const activeMap = selectedCase.state.maps.data.find(item => item.id === selectedCase.state.maps.active_map_id);
 
-			//lagecy support
+			// lagecy support
 			if (!selectedCase.state.favoritesOverlays) {
 				selectedCase.state.favoritesOverlays = [];
 			}
@@ -179,7 +179,7 @@ export class StatusBarAppEffects {
 
 			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
 
-			//order does metter update case must be the first actions since all other relays on him
+			// order does metter update case must be the first actions since all other relays on him
 			actions.unshift(new UpdateCaseAction(selectedCase));
 			actions.push(new OverlaysMarkupAction(overlaysMarkup));
 			actions.push(new EnableOnlyFavortiesSelectionAction(!!selectedCase.state.favoritesOverlays.length));

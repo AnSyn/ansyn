@@ -7,7 +7,7 @@ import { GeometryObject } from 'geojson';
 
 export class Overlay {
 	id: string;
-	footprint?: any;//@todo add type geojson_multipoligon,
+	footprint?: any; // @TODO add type geojson_multipoligon,
 	sensorType?: string;
 	sensorName?: string;
 	channel?: string;
@@ -18,7 +18,7 @@ export class Overlay {
 	thumbnailUrl?: string;
 	photoTime: string;
 	date: Date;
-	azimuth: number; //radians
+	azimuth: number; // radians
 	approximateTransform?: any;
 	csmState?: string;
 	sourceType?: string;
@@ -36,5 +36,5 @@ export interface OverlaysCriteria {
 export interface OverlaySpecialObject {
 	id: string;
 	date: Date;
-	shape: string; //this will be type soon or I will add another property for shapeType
+	shape: string; // this will be type soon or I will add another property for shapeType
 }

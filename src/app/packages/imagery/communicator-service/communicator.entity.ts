@@ -70,7 +70,7 @@ export class CommunicatorEntity {
 		this.unregisterToManagerEvents();
 	}
 
-	//CommunicatorEntity methods begin
+	// CommunicatorEntity methods begin
 
 	public setActiveMap(mapName: string, position?: MapPosition, layer?: any) {
 		this._manager.setActiveMap(mapName, position, layer);
@@ -174,9 +174,9 @@ export class CommunicatorEntity {
 		}
 	}
 
-	//CommunicatorEntity methods end
+	// CommunicatorEntity methods end
 
-	//======shadow mouse start
+	// ======shadow mouse start
 	public setMouseShadowListener(enable: boolean) {
 		this.ActiveMap.setPointerMove(enable);
 	}
@@ -193,9 +193,9 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).drawShadowMouse(latLon);
 	}
 
-	//======shadow mouse end
+	// ======shadow mouse end
 
-	//======pinPointIndicator
+	// ======pinPointIndicator
 	public createMapSingleClickEvent() {
 		(<any>this.ActiveMap).addSingleClickEvent();
 	}
@@ -212,5 +212,5 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).removePinPointIndicator();
 	}
 
-	//======end pinPointIndicator
+	// ======end pinPointIndicator
 }

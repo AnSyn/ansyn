@@ -51,15 +51,15 @@ describe('ToolsComponent', () => {
 		component.flags = new Map();
 		component.flags.set('shadow_mouse', false);
 
-		//expect(component.flags.get('shadow_mouse')).toBe(false);
+		// expect(component.flags.get('shadow_mouse')).toBe(false);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
 
 		component.flags.set('shadow_mouse', true);
-		//expect(component.flags.get('shadow_mouse')).toBe(true);
+		// expect(component.flags.get('shadow_mouse')).toBe(true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
-		//expect(component.flags.get('shadow_mouse')).toBe(false);
+		// expect(component.flags.get('shadow_mouse')).toBe(false);
 
 	});
 

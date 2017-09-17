@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ContextElasticSourceService, IElasticContextSource } from './context-elastic-source.service';
-import { ContextModule } from '../../packages/context/context.module';
-import { ContextCriteria } from '../../packages/context/context.interface';
+import { ContextModule } from '@ansyn/context/context.module';
+import { ContextCriteria } from '@ansyn/context/context.interface';
 
 const MOCK_ELASTIC_CONFIG: { elastic: IElasticContextSource } = {
 	elastic: {

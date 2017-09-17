@@ -16,8 +16,8 @@ describe('EditCaseComponent', () => {
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
-			{id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null},},
-			{id: 'fake_id2', name: 'fake_name2', state: {selected_context_id: null},}
+			{id: 'fake_id1', name: 'fake_name1', state: {selected_context_id: null}},
+			{id: 'fake_id2', name: 'fake_name2', state: {selected_context_id: null}}
 		],
 		active_case_id: 'fake_id1',
 		modal: true,

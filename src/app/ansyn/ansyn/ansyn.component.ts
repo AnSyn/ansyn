@@ -41,7 +41,7 @@ export class AnsynComponent implements OnInit {
 
 	isFavoriteOverlay$ = this.selected_case$
 		.withLatestFrom(this.activeMap$)
-		.filter(( [selectedCase]) => _isNil(selectedCase.state.favoritesOverlays))
+		.filter(( [selectedCase]) => !_isNil(selectedCase.state.favoritesOverlays))
 		.distinctUntilChanged(( [oldCase], [newCase]): boolean => 	 _isEqual(oldCase.state.favoritesOverlays , newCase.state.favoritesOverlays))
 		.map(( [ selectedCase , activeMap ]: [Case, CaseMapState] ) => {
 			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1);

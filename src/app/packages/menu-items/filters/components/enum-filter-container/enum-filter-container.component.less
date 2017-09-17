@@ -6,6 +6,12 @@ div.enum-fields-enumerator {
 	padding: 2.5px 0;
 	justify-content: space-between;
 
+	&:hover {
+		div.left-side div.filter-row span.only-filter {
+			visibility: visible;
+		}
+	}
+
 	div.left-side {
 		display: flex;
 
@@ -79,6 +85,7 @@ div.enum-fields-enumerator {
 			}
 
 			span.only-filter {
+				visibility: hidden;
 				font-size: 12px;
 				font-style: normal;
 				color: rgba(255, 255, 255, 0.75);

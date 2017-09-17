@@ -66,7 +66,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			return Object.assign({}, state, { showLinkCopyToast: action.payload });
 
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
-			if (Object['values'](statusBarFlagsItems).indexOf(action.payload.key) < 0) {
+			if (!Object.values(statusBarFlagsItems).includes(action.payload.key)) {
 				return state;
 			}
 

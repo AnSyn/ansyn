@@ -45,7 +45,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
-			if (selected.indexOf(action.payload) === -1) {
+			if (!selected.includes(action.payload)) {
 				selected.push(action.payload);
 			}
 			return Object.assign({}, state, {

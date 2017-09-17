@@ -10,7 +10,7 @@
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"target": "es6",
+		"target": "es5",
 		"skipLibCheck": true,
 		"allowJs": true,
 		"typeRoots": [
@@ -22,8 +22,10 @@
 			"d3"
 		],
 		"lib": [
-			"es7",
-			"es6",
+			"ESNext",
+			"ES2017",
+			"ES2016",
+			"ES2015",
 			"dom"
 		]
 	}

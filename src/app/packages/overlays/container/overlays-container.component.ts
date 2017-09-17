@@ -120,7 +120,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 				const id = data.element.id;
 				startTimingLog(`LOAD_OVERLAY_${id}`);
 				this.store.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: id }));
-				if (this.selectedOverlays.indexOf(id) === -1) {
+				if (!this.selectedOverlays.includes(id)) {
 					this.store.dispatch(new SelectOverlayAction(id));
 				}
 			});
@@ -154,7 +154,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	// maybe to move this to the service
 	toggleOverlay(id): void {
-		if (this.selectedOverlays.indexOf(id) > -1) {
+		if (this.selectedOverlays.includes(id)) {
 			this.store.dispatch(new UnSelectOverlayAction(id));
 		} else {
 			this.store.dispatch(new SelectOverlayAction(id));

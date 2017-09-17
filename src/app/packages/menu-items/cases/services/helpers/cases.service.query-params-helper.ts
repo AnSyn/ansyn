@@ -36,7 +36,11 @@ export class QueryParamsHelper {
 			}
 		});
 
-		if (selected_context.requirements && isEmpty(q_params)) {
+		if (selected_context.zoom) {
+			case_model.state.maps.data.forEach(map => map.data.position.zoom = selected_context.zoom);
+		}
+
+		if (selected_context.requirements && !isEmpty(q_params)) {
 			selected_context.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
 					case 'geopoint':

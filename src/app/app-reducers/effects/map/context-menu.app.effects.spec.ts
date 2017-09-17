@@ -49,7 +49,11 @@ describe('ContextMenuAppEffects', () => {
 
 	it('setContextFilter$ should get point and filter filteredOverlays by footprint', () => {
 		const showAction = new ContextMenuShowAction({
-			point: 'point'
+			point: {
+				type: 'Point',
+				coordinates: [0, 0],
+			},
+			e: new MouseEvent(null, null)
 		});
 		spyOn(OverlaysService, 'pluck').and.returnValue([
 			{ id: 1, footprint: 'in' },

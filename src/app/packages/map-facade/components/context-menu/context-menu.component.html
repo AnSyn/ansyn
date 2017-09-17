@@ -13,10 +13,11 @@
 			<span>Next</span>
 			<div class="sub-buttons-list">
 				<button
+					class="tooltip-value"
 					*ngFor="let filter of nextSensors"
 					(mousedown)="clickNext($event, filter)"
-					[title]="filter">
-					{{filter}}
+					[value]="filter">
+					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>
@@ -28,10 +29,11 @@
 			<span>Prev</span>
 			<div class="sub-buttons-list">
 				<button
+					class="tooltip-value"
 					*ngFor="let filter of prevSensors"
 					(mousedown)="clickPrev($event, filter)"
-					[title]="filter">
-					{{filter}}
+					[value]="filter">
+					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>
@@ -43,10 +45,11 @@
 			<span>First</span>
 			<div class="sub-buttons-list">
 				<button
+					class="tooltip-value"
 					*ngFor="let filter of prevSensors"
 					(mousedown)="clickFirst($event, filter)"
-					[title]="filter">
-					{{filter}}
+					[value]="filter">
+					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>
@@ -59,10 +62,11 @@
 			<span>Last</span>
 			<div class="sub-buttons-list">
 				<button
+					class="tooltip-value"
 					*ngFor="let filter of nextSensors"
 					(mousedown)="clickLast($event, filter)"
-					[title]="filter">
-					{{filter}}
+					[value]="filter">
+					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>
@@ -75,10 +79,11 @@
 			<span>Best</span>
 			<div class="sub-buttons-list">
 				<button
+					class="tooltip-value"
 					*ngFor="let filter of allSensors"
 					(mousedown)="clickBest($event, filter)"
-					[title]="filter">
-					{{filter}}
+					[value]="filter">
+					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>

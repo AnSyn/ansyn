@@ -3,7 +3,8 @@
 :host {
 	outline: none;
 	position: fixed;
-	transform: translate(-32px, -32px);
+	transform: translate(-28px, -27px);
+
 	width: 0;
 	height: 0;
 	z-index: @context-menu-depth;
@@ -28,29 +29,27 @@
 			}
 
 			button.menu-open-button {
-				&:hover {
-					background: #0dc5c1;
-					transform: scale(0.6715);
+				background-color: #FFFFFF;
 
-					.hamburger {
-						background: #FFFFFF;
-					}
-				}
 				transition-timing-function: linear;
 				transition-duration: 200ms;
-				transform: scale(0.5715) translate(0, 0);
+				transform: scale(0.5715);
 
-				span.hamburger {
-					&.hamburger-1 {
-						transform: translate3d(0, 0, 0) rotate(45deg);
-					}
-					&.hamburger-2 {
-						transform: translate3d(0, 0, 0) scale(0.1, 1);
-					}
-					&.hamburger-3 {
-						transform: translate3d(0, 0, 0) rotate(-45deg);
-					}
+				display: flex;
+				align-items: center;
+				justify-content: center;
 
+				&:hover {
+					background-color: #0dc5c1;
+					transform: scale(0.6715);
+					.pointer {
+						color: white;
+					}
+				}
+
+				.pointer {
+					font-size: 30px;
+					font-weight: bold;
 				}
 			}
 			.buttons-area {
@@ -135,38 +134,10 @@
 			position: relative;
 			top: 0;
 			left: 0;
-			transition: transform ease-out 200ms;
 			z-index: 4000;
-			transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-			transition-duration: 400ms;
-			transform: scale(1.1, 1.1) translate(0, 0);
 			cursor: pointer;
 			background: #FFFFFF;
 			color: #30A2C6;
-			box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
-
-			span.hamburger {
-				width: 25px;
-				height: 3px;
-				background: #30A2C6;
-				display: block;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				margin-left: -12.5px;
-				margin-top: -1.5px;
-				transition: transform 200ms;
-				&.hamburger-1 {
-					transform: translate3d(0, -8px, 0);
-				}
-				&.hamburger-2 {
-					transform: translate3d(0, 0, 0);
-				}
-				&.hamburger-3 {
-					transform: translate3d(0, 8px, 0);
-				}
-			}
-
 		}
 
 		div.buttons-area {

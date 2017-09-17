@@ -179,7 +179,7 @@ export class SetMapAutoImageProcessing implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: { point: GeoJSON.Point, view, e: MouseEvent }) {
+	constructor(public payload: { point: GeoJSON.Point, e: MouseEvent }) {
 	}
 }
 

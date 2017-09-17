@@ -106,6 +106,25 @@ describe('AnsynComponent', () => {
 					flags: new Map<string, any>()
 				})
 			}
+			else if ( type === 'map') {
+				return Observable.of({
+					mapsList: [
+						{
+							id: 'imagery1',
+							data: {
+								position: {
+									zoom: 1, center: 2, boundingBox: {test: 1}
+								},
+								isHistogramActive: false,
+								overlay: {id: 'overlayId1'}
+							}
+						},
+						{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
+						{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+					],
+					active_map_id: 'imagery1'
+				})
+			}
 		});
 
 	}));

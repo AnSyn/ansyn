@@ -48,6 +48,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { PinPointTriggerAction } from 'app/packages/map-facade/actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -224,27 +225,53 @@ describe('MapAppEffects', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
 		// mock communicatorsAsArray
 		const imagery1 = {
-			addPinPointIndicator: () => {
-			},
 			removeSingleClickEvent: () => {
 			}
 		};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addPinPointIndicator');
 		spyOn(imagery1, 'removeSingleClickEvent');
 
-		const action = new MapSingleClickAction({
-			lonLat: [-70.33666666666667, 25.5]
-		});
+		const lonLat = [-70.33666666666667, 25.5];
+
+		const action = new MapSingleClickAction({ lonLat });
 
 		effectsRunner.queue(action);
+
 		mapAppEffects.onMapSingleClick$.concat().subscribe((_result: Action) => {
-			let result = _result instanceof UpdateStatusFlagsAction || _result instanceof UpdateCaseAction || _result instanceof LoadOverlaysAction;
+			let result = _result instanceof UpdateStatusFlagsAction || _result instanceof PinPointTriggerAction;
 			expect(result).toBe(true);
+
 			if (_result instanceof UpdateStatusFlagsAction) {
 				expect(_result.payload.key).toEqual(statusBarFlagsItems.pinPointSearch);
 				expect(_result.payload.value).toEqual(false);
 			}
+			if (_result instanceof PinPointTriggerAction) {
+				expect(_result.payload).toEqual(lonLat);
+			}
+		});
+
+		expect(imagery1.removeSingleClickEvent['calls'].count()).toBe(3);
+	});
+
+	it('onPinPointTrigger$ effect', () => {
+		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+		// mock communicatorsAsArray
+		const imagery1 = {
+			addPinPointIndicator: () => {
+			}
+		};
+		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
+		spyOn(imagery1, 'addPinPointIndicator');
+
+		const action = new PinPointTriggerAction([-70.33666666666667, 25.5]);
+
+		effectsRunner.queue(action);
+
+		mapAppEffects.onPinPointTrigger$.concat().subscribe((_result: Action) => {
+			let result = _result instanceof UpdateCaseAction || _result instanceof LoadOverlaysAction;
+			expect(result).toBe(true);
+
 			if (_result instanceof UpdateCaseAction) {
 				expect(_result.payload.state.region).not.toEqual(icaseState.selected_case.state.region);
 				icaseState.selected_case = _result.payload;
@@ -260,7 +287,6 @@ describe('MapAppEffects', () => {
 		});
 
 		expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
-		expect(imagery1.removeSingleClickEvent['calls'].count()).toBe(3);
 	});
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {

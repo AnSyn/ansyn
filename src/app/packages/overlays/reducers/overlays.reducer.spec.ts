@@ -67,7 +67,7 @@ describe('Overlay Reducer', () => {
 		const action = new SelectOverlayAction(fakeId);
 
 		const result: IOverlayState = OverlayReducer(overlayInitialState, action);
-		expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+		expect(result.selectedOverlays.includes(fakeId)).toBeTruthy();
 
 	});
 
@@ -77,7 +77,8 @@ describe('Overlay Reducer', () => {
 
 		let result: IOverlayState = OverlayReducer(overlayInitialState, action);
 
-		expect(result.selectedOverlays.indexOf(fakeId)).toBeGreaterThan(-1);
+		expect(result.selectedOverlays.includes(fakeId)).toBeTruthy();
+
 
 		const unSelectAction = new UnSelectOverlayAction(fakeId);
 

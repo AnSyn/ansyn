@@ -168,7 +168,7 @@ export class StatusBarAppEffects {
 				selectedCase.state.favoritesOverlays = [];
 			}
 
-			if (selectedCase.state.favoritesOverlays.indexOf(activeMap.data.overlay.id) > -1) {
+			if (selectedCase.state.favoritesOverlays.includes(activeMap.data.overlay.id)) {
 				pull(selectedCase.state.favoritesOverlays, activeMap.data.overlay.id);
 				if (selectedCase.state.facets.showOnlyFavorites) {
 					actions.push(new SyncFilteredOverlays());

@@ -67,6 +67,13 @@ export class OpenLayersMap implements IMap {
 		this.initMap(element, layers, position);
 	}
 
+	public positionToPoint(x, y): GeoJSON.Point {
+		let coordinates = this._mapObject.getCoordinateFromPixel([x, y]);
+		const projection = this._mapObject.getView().getProjection();
+		coordinates = proj.toLonLat(coordinates, projection);
+		return { type: 'Point', coordinates };
+	}
+
 	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
 
 		let center = [16, 38];
@@ -108,12 +115,10 @@ export class OpenLayersMap implements IMap {
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
 
-			let coordinates = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
-			const projection = this._mapObject.getView().getProjection();
-			coordinates = proj.toLonLat(coordinates, projection);
-			const point: GeoJSON.Point = {type: 'Point', coordinates};
 			containerElem.click();
-			this.contextMenu.emit({point, e});
+
+			const point = this.positionToPoint(e.offsetX, e.offsetY);
+			this.contextMenu.emit({ point, e });
 		});
 	}
 
@@ -179,7 +184,7 @@ export class OpenLayersMap implements IMap {
 			const layerCords = pinPointGeometry.getCoordinates();
 			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
 		}
-		return {pinPointLonLatGeo: lonLatCords};
+		return { pinPointLonLatGeo: lonLatCords };
 	}
 
 	private internalAfterSetMainLayer(args: { pinPointLonLatGeo }) {
@@ -348,7 +353,7 @@ export class OpenLayersMap implements IMap {
 		let rotation: number = view.getRotation();
 		let boundingBox = this.getMapExtentInGeo();
 
-		return {center, zoom, rotation, boundingBox};
+		return { center, zoom, rotation, boundingBox };
 	}
 
 	private getMapExtentInGeo() {
@@ -419,7 +424,7 @@ export class OpenLayersMap implements IMap {
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLat = proj.toLonLat(e.coordinate, projection);
-		this.singleClick.emit({lonLat: lonLat});
+		this.singleClick.emit({ lonLat: lonLat });
 	}
 
 

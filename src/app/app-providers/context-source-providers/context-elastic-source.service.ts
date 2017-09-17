@@ -17,7 +17,8 @@ export class ContextElasticSourceService extends BaseContextSourceProvider {
 	config: IElasticContextSource;
 
 	constructor(@Inject(ContextConfig)config: IContextConfig) {
-		super(config, 'elastic');
+		super();
+		this.config = <IElasticContextSource>config.elastic;
 
 		this.client = new Client({
 			host: this.config.uri,

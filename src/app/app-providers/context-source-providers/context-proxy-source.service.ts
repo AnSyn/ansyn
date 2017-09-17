@@ -18,7 +18,8 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	uri: string;
 
 	constructor(@Inject(ContextConfig)config: IContextConfig, private http: HttpClient) {
-		super(config, 'proxy');
+		super();
+		this.config = <IProxySource>config.proxy;
 
 		this.uri = `${this.config.uri}${this.config.bucket}`;
 	}

@@ -12,9 +12,10 @@ import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layer
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { BaseContextSourceProvider } from '../packages/context/context.interface';
-import { ContextProxySourceService } from './context-source-providers/context-proxy-source.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { ContextElasticSourceService } from './context-source-providers/context-elastic-source.service';
+import { ContextProxySourceService } from './context-source-providers/context-proxy-source.service';
 
 
 @NgModule({

@@ -1,29 +1,30 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
-    "sourceMap": true,
-    "declaration": true,
-    "stripInternal": true,
-    "module": "es2015",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es6",
-    "skipLibCheck": true,
-    "allowJs": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types":[
-      "jasmine",
-      "node",
-      "d3"
-    ],
-    "lib": [
-      "es6",
-      "dom"
-    ]
-  }
+	"compileOnSave": false,
+	"compilerOptions": {
+		"outDir": "./dist/out-tsc",
+		"baseUrl": "src",
+		"sourceMap": true,
+		"declaration": true,
+		"stripInternal": true,
+		"module": "es2015",
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"target": "es6",
+		"skipLibCheck": true,
+		"allowJs": true,
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"types": [
+			"jasmine",
+			"node",
+			"d3"
+		],
+		"lib": [
+			"es7",
+			"es6",
+			"dom"
+		]
+	}
 }

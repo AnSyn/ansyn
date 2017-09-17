@@ -13,7 +13,8 @@ export class ContextTestSourceService extends BaseContextSourceProvider {
 	config: ITestContextConfig;
 
 	constructor(@Inject(ContextConfig)config: IContextConfig) {
-		super(config, 'test');
+		super();
+		this.config = <ITestContextConfig>config.test;
 	}
 
 	find(criteria: ContextCriteria) {

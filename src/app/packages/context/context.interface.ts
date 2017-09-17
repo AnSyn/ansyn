@@ -4,10 +4,6 @@ export * from './context.config.interface';
 export abstract class BaseContextSourceProvider {
 	config: any;
 
-	constructor(config: any, sourceName: string) {
-		this.config = config[sourceName];
-	}
-
 	abstract find(ContextCriteria);
 
 	abstract remove(id);

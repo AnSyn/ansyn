@@ -1,6 +1,6 @@
 {
 	"name": "ansyn",
-	"version": "0.1.1",
+	"version": "0.1.6",
 	"license": "MIT",
 	"scripts": {
 		"postinstall": "npm link ./src/app/connection-packages/tools-map ./src/app/connection-packages/cases-map ./src/app/connection-packages/cases-router ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin ./src/app/packages/type-container",
@@ -11,7 +11,6 @@
 		"startAOT": "ng s --aot true",
 		"buildAOT": "ng build --aot true",
 		"test": "ng test",
-		"test:once": "ng tests --watch=false",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
 		"fix-packages": "node scripts/fix-packages",
@@ -80,7 +79,6 @@
 		"karma-coverage-istanbul-reporter": "^1.2.1",
 		"karma-jasmine": "~1.1.0",
 		"karma-jasmine-html-reporter": "^0.2.2",
-		"pre-commit": "^1.2.2",
 		"protractor": "~5.1.2",
 		"replace": "^0.3.0",
 		"ts-node": "~3.2.0",

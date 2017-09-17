@@ -36,7 +36,7 @@ export class FiltersAppEffects {
 			const favorites = casesState.selected_case.state.favoritesOverlays;
 			filtersState.filters.forEach((value: any, key: any) => {
 				parsedFilters.push({
-					filteringParams: {key: key.modelName, metadata: value},
+					filteringParams: { key: key.modelName, metadata: value },
 					filterFunc: value.filterFunc
 				});
 			});
@@ -72,7 +72,7 @@ export class FiltersAppEffects {
 		})
 		.map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
 
-			return new InitializeFiltersAction({overlays, facets, showAll});
+			return new InitializeFiltersAction({ overlays, facets, showAll });
 		});
 
 	@Effect()
@@ -86,15 +86,15 @@ export class FiltersAppEffects {
 
 	updateCaseFacets(selected_case: Case, filtersState: IFiltersState): Case {
 		const cloneSelectedCase: Case = cloneDeep(selected_case);
-		const {facets} = cloneSelectedCase.state;
+		const { facets } = cloneSelectedCase.state;
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
 
 		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
-			const currentFilter: any = facets.filters.find(({fieldName}) => fieldName === filter.modelName);
+			const currentFilter: any = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
 			if (!currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
 				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
-				facets.filters.push({fieldName, metadata});
+				facets.filters.push({ fieldName, metadata });
 			} else if (currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
 				currentFilter.metadata = outerStateMetadata;
 			} else if (currentFilter && this.isMetadataEmpty(outerStateMetadata)) {

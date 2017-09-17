@@ -11,7 +11,7 @@ describe('ImageryContainerComponent', () => {
 			declarations: [ImageryContainerComponent, MockComponent({
 				selector: 'ansyn-imagery-status',
 				inputs: ['map_id', 'active', 'overlay', 'disableGeoOptions', 'notInCase']
-			}), MockComponent({selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings']})]
+			}), MockComponent({ selector: 'ansyn-imagery-view', inputs: ['mapComponentSettings'] })]
 		})
 			.compileComponents();
 	}));

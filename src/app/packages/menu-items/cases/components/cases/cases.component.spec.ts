@@ -4,9 +4,9 @@ import { CasesService } from '../../services/cases.service';
 import { MockComponent } from '@ansyn/core/test';
 
 
-let a = MockComponent({selector: 'ansyn-cases-tools'});
-let b = MockComponent({selector: 'ansyn-cases-table'});
-let c = MockComponent({selector: 'ansyn-cases-modal-container'});
+let a = MockComponent({ selector: 'ansyn-cases-tools' });
+let b = MockComponent({ selector: 'ansyn-cases-table' });
+let c = MockComponent({ selector: 'ansyn-cases-modal-container' });
 
 
 describe('CasesComponent', () => {

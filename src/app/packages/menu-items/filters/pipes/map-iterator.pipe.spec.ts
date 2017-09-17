@@ -13,7 +13,7 @@ describe('MapIteratorPipe', () => {
 		map.set('1', 'one');
 		map.set('2', 'two');
 
-		expect(mapIteratorPipe.transform(map)).toEqual([{key: '1', value: 'one'}, {key: '2', value: 'two'}]);
+		expect(mapIteratorPipe.transform(map)).toEqual([{ key: '1', value: 'one' }, { key: '2', value: 'two' }]);
 	});
 
 });

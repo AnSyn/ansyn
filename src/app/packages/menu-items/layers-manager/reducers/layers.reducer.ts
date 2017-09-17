@@ -31,7 +31,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 				return state;
 			}
 
-			return Object.assign({}, state, {selectedLayers: state.selectedLayers.concat([action.payload])});
+			return Object.assign({}, state, { selectedLayers: state.selectedLayers.concat([action.payload]) });
 
 		case LayersActionTypes.UNSELECT_LAYER:
 			let unselectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
@@ -42,7 +42,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let newSelectedArray: ILayerTreeNodeLeaf[] = [
 				...state.selectedLayers.slice(0, unselectedLayerIndex),
 				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
-			return Object.assign({}, state, {selectedLayers: newSelectedArray});
+			return Object.assign({}, state, { selectedLayers: newSelectedArray });
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;

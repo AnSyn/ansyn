@@ -14,7 +14,7 @@ describe('AnnotationsControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent],
-			imports: [FormsModule, StoreModule.provideStore({tools: ToolsReducer})],
+			imports: [FormsModule, StoreModule.provideStore({ tools: ToolsReducer })],
 			/*	providers: [{
 						provide: 'DOCUMENT',  useClass: MockDocument
 					}]*/
@@ -120,7 +120,7 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('select line width', () => {
-		component.selectLineWidth({target: {dataset: {index: 5}}});
+		component.selectLineWidth({ target: { dataset: { index: 5 } } });
 		const args = store.dispatch['calls'].mostRecent().args;
 		expect(args[0].payload.value).toBe(5);
 

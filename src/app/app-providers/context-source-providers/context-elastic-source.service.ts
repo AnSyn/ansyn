@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
 import { ContextConfig, IContextConfig } from '@ansyn/context';
 import 'rxjs/add/observable/fromPromise';
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 export interface IElasticContextSource {
 	uri: string;
@@ -11,6 +11,7 @@ export interface IElasticContextSource {
 	auth: string;
 }
 
+@Injectable()
 export class ContextElasticSourceService extends BaseContextSourceProvider {
 	client: Client;
 	config: IElasticContextSource;

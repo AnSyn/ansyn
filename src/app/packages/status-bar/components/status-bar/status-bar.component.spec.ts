@@ -20,7 +20,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.provideStore({status_bar: StatusBarReducer})],
+			imports: [StatusBarModule, StoreModule.provideStore({ status_bar: StatusBarReducer })],
 		})
 			.compileComponents();
 	}));
@@ -55,10 +55,10 @@ describe('StatusBarComponent', () => {
 	it('check click on pinPoint flags', () => {
 		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.status-bar-edit-icon img').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch}));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 
 		fixture.nativeElement.querySelector('.status-bar-eye-icon img').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointIndicator}));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	});
 	describe('clicks', () => {
 		it('clickBackToWorldView should dispatch action BackToWorldView', () => {
@@ -96,7 +96,7 @@ describe('StatusBarComponent', () => {
 		spyOn(component, 'clickGoNext');
 		const $event = {
 			code: 'ArrowRight',
-			currentTarget: {document: {activeElement: {}}}
+			currentTarget: { document: { activeElement: {} } }
 		};
 		component.onkeyup(<any>$event);
 		expect(component.goNext.nativeElement.classList.remove).toHaveBeenCalledWith('active');
@@ -112,7 +112,7 @@ describe('StatusBarComponent', () => {
 		spyOn(component.goNext.nativeElement.classList, 'add');
 		const $event = {
 			code: 'ArrowRight',
-			currentTarget: {document: {activeElement: {}}}
+			currentTarget: { document: { activeElement: {} } }
 		};
 		component.onkeydown(<any>$event);
 		expect(component.goNext.nativeElement.classList.add).toHaveBeenCalledWith('active');

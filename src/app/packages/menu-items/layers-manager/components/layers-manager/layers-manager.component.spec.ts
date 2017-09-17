@@ -13,8 +13,8 @@ describe('LayersManagerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({layers: LayersReducer})],
-			providers: [{provide: layersConfig, useValue: {layersByCaseIdUrl: null}}]
+			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})
 			.compileComponents();
 	}));

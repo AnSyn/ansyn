@@ -22,11 +22,11 @@ const animations: any[] = [
 		transition(':enter', [style({
 			'backgroundColor': '#27b2cf',
 			transform: 'translate(0, -100%)'
-		}), animate(animations_during, style({'backgroundColor': 'white', transform: 'translate(0, 0)'}))]),
+		}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
 		transition(':leave', [style({
 			'backgroundColor': 'white',
 			transform: 'translate(0, 0)'
-		}), animate(animations_during, style({'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)'}))]),
+		}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
 	])
 ];
 

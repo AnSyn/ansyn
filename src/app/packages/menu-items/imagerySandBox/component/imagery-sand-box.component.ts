@@ -5,7 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { SelectCaseByIdAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn//overlays/actions/overlays.actions';
+import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';

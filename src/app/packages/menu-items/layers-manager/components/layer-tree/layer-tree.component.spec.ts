@@ -24,8 +24,8 @@ describe('LayerTreeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({layers: LayersReducer})],
-			providers: [{provide: layersConfig, useValue: {layersByCaseIdUrl: null}}]
+			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})
 			.compileComponents();
 	}));
@@ -49,11 +49,11 @@ describe('LayerTreeComponent', () => {
 			children: [
 				{
 					name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
-					{name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: []},
-					{name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: []}]
+					{ name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+					{ name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
 				},
-				{name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: []},
-				{name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: []}
+				{ name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+				{ name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
 			]
 		}];
 
@@ -83,11 +83,11 @@ describe('LayerTreeComponent', () => {
 			children: [
 				{
 					name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
-					{name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: []},
-					{name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: []}]
+					{ name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+					{ name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
 				},
-				{name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: []},
-				{name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: []}
+				{ name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+				{ name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
 			]
 		}];
 
@@ -139,11 +139,11 @@ describe('LayerTreeComponent', () => {
 			children: [
 				{
 					name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
-					{name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: []},
-					{name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: []}]
+					{ name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+					{ name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
 				},
-				{name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: []},
-				{name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: []}
+				{ name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+				{ name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
 			]
 		}];
 
@@ -202,11 +202,11 @@ describe('LayerTreeComponent', () => {
 			children: [
 				{
 					name: 'Rice Fields', id: '2', isChecked: false, isIndeterminate: false, children: [
-					{name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: []},
-					{name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: []}]
+					{ name: 'Brown Rice', id: '5', isChecked: false, isIndeterminate: false, children: [] },
+					{ name: 'Persian Rice', id: '6', isChecked: false, isIndeterminate: false, children: [] }]
 				},
-				{name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: []},
-				{name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: []}
+				{ name: 'Wheat Fields', id: '3', isChecked: false, isIndeterminate: false, children: [] },
+				{ name: 'Oat Fields', id: '4', isChecked: false, isIndeterminate: false, children: [] }
 			]
 		}];
 
@@ -268,11 +268,11 @@ describe('LayerTreeComponent', () => {
 			children: [
 				{
 					name: 'Rice Fields', id: '2', isChecked: true, isIndeterminate: false, children: [
-					{name: 'Brown Rice', id: '5', isChecked: true, isIndeterminate: false, children: []},
-					{name: 'Persian Rice', id: '6', isChecked: true, isIndeterminate: false, children: []}]
+					{ name: 'Brown Rice', id: '5', isChecked: true, isIndeterminate: false, children: [] },
+					{ name: 'Persian Rice', id: '6', isChecked: true, isIndeterminate: false, children: [] }]
 				},
-				{name: 'Wheat Fields', id: '3', isChecked: true, isIndeterminate: false, children: []},
-				{name: 'Oat Fields', id: '4', isChecked: true, isIndeterminate: false, children: []}
+				{ name: 'Wheat Fields', id: '3', isChecked: true, isIndeterminate: false, children: [] },
+				{ name: 'Oat Fields', id: '4', isChecked: true, isIndeterminate: false, children: [] }
 			]
 		}];
 

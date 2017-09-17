@@ -51,7 +51,7 @@ export class MenuComponent implements AfterViewInit {
 
 	@Input('width') width: number = DEFAULT_WIDTH;
 	@ViewChild('container') container: ElementRef;
-	@ViewChild('selected_component_elem', {read: ViewContainerRef}) selected_component_elem: ViewContainerRef;
+	@ViewChild('selected_component_elem', { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
 	menu_items$: Observable<MenuItem[]> = this.store.select('menu')
 		.map((state: IMenuState) => state.menu_items)

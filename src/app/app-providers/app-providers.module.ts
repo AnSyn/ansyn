@@ -13,21 +13,22 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { BaseContextSourceProvider } from '../packages/context/context.interface';
 import { ContextProxySourceService } from './context-source-providers/context-proxy-source.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
 	imports: [
+		BrowserModule,
 		HttpClientModule
 	],
 	providers: [
-		HttpClient,
-		{provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
-		{provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
-		{provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
-		{provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
-		{provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
-		{provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
+		{ provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider },
 		{ provide: BaseContextSourceProvider, useClass: ContextProxySourceService }
 	]
 })

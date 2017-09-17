@@ -17,7 +17,7 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 @Injectable()
 export class ContextEntityAppEffects {
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	displayEntityFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store$.select('cases'))
@@ -30,7 +30,7 @@ export class ContextEntityAppEffects {
 			});
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
@@ -41,7 +41,7 @@ export class ContextEntityAppEffects {
 			this.setContextEntity(mapState.id, overlayDate, caseState.selected_case.state.contextEntities);
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
@@ -53,7 +53,7 @@ export class ContextEntityAppEffects {
 			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('cases'))

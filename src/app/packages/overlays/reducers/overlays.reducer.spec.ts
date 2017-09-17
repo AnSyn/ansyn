@@ -48,7 +48,7 @@ describe('Overlay Reducer', () => {
 
 	it('should activate load_overlay reducer', () => {
 
-		const queryParams = {search: '9399ejf'};
+		const queryParams = { search: '9399ejf' };
 		const action = new LoadOverlaysAction(queryParams);
 		const mockOverlayInitialState = cloneDeep(overlayInitialState);
 
@@ -140,7 +140,7 @@ describe('Overlay Reducer', () => {
 
 	it('Set Special Objects', () => {
 		let data: OverlaySpecialObject[] = [];
-		data.push({id: 'fkdsjl', date: new Date(), shape: 'star'});
+		data.push({ id: 'fkdsjl', date: new Date(), shape: 'star' });
 		const action = new SetSpecialObjectsActionStore(data);
 
 		const result = OverlayReducer(overlayInitialState, action);

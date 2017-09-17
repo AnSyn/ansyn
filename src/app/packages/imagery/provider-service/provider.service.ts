@@ -28,15 +28,15 @@ export class ImageryProviderService {
 			throw new Error(`'Map Provider ${mapName} is already registered.'`);
 		}
 
-		this._mapProviders[mapName] = {mapType: mapType, mapComponent: component};
+		this._mapProviders[mapName] = { mapType: mapType, mapComponent: component };
 	}
 
 	public registerPlugin(mapType: string, pluginClass: any) {
 
 		if (!this._mapPluginProviders[mapType]) {
-			this._mapPluginProviders[mapType] = [{'pluginClass': pluginClass}];
+			this._mapPluginProviders[mapType] = [{ 'pluginClass': pluginClass }];
 		} else {
-			this._mapPluginProviders[mapType].push({'pluginClass': pluginClass});
+			this._mapPluginProviders[mapType].push({ 'pluginClass': pluginClass });
 		}
 	}
 
@@ -65,10 +65,10 @@ export class ImageryProviderService {
 
 	public registerVisualizer(mapType: string, visualizerClass: any, constructorArgs?: any) {
 		if (!this._mapVisualizersProviders.has(mapType)) {
-			this._mapVisualizersProviders.set(mapType, [{visualizerClass: visualizerClass, args: constructorArgs}]);
+			this._mapVisualizersProviders.set(mapType, [{ visualizerClass: visualizerClass, args: constructorArgs }]);
 		} else {
 			const existingVisualizers = this._mapVisualizersProviders.get(mapType);
-			existingVisualizers.push({visualizerClass: visualizerClass, args: constructorArgs});
+			existingVisualizers.push({ visualizerClass: visualizerClass, args: constructorArgs });
 			this._mapVisualizersProviders.set(mapType, existingVisualizers);
 		}
 	}

@@ -29,7 +29,7 @@ describe('CasesReducer', () => {
 	});
 
 	it('OPEN_MODAL action should set active_case_id from payload and change modal to true', () => {
-		let action: OpenModalAction = new OpenModalAction({component: 'fake', case_id: 'fake_case_id'});
+		let action: OpenModalAction = new OpenModalAction({ component: 'fake', case_id: 'fake_case_id' });
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.modal).toBeTruthy();
 	});
@@ -42,7 +42,7 @@ describe('CasesReducer', () => {
 
 	it('SELECT_CASE action should set selected_case_id from payload if case exists', () => {
 		initialCasesState.cases = [
-			{id: 'fake_case_id', name: 'fake_case_name1'},
+			{ id: 'fake_case_id', name: 'fake_case_name1' },
 		];
 		let action: SelectCaseByIdAction = new SelectCaseByIdAction('fake_case_id');
 		let result: ICasesState = CasesReducer(initialCasesState, action);
@@ -52,9 +52,9 @@ describe('CasesReducer', () => {
 	it('SELECT_CASE action should set selected_case_id from unlisted_case if it was selected', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
-			{id: 'fake_case_id', name: 'fake_case_name1'},
+			{ id: 'fake_case_id', name: 'fake_case_name1' },
 		];
-		state.unlisted_case = {id: 'unlisted_case_id', name: 'unlisted_case_name1'};
+		state.unlisted_case = { id: 'unlisted_case_id', name: 'unlisted_case_name1' };
 		let action: SelectCaseByIdAction = new SelectCaseByIdAction('unlisted_case_id');
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selected_case.id).toEqual('unlisted_case_id');
@@ -63,9 +63,9 @@ describe('CasesReducer', () => {
 	it('SELECT_CASE action should set selected_case_id from default_case if it was selected', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
-			{id: 'fake_case_id', name: 'fake_case_name1'},
+			{ id: 'fake_case_id', name: 'fake_case_name1' },
 		];
-		state.default_case = {id: 'default_case_id', name: 'default_case_name1'};
+		state.default_case = { id: 'default_case_id', name: 'default_case_name1' };
 		let action: SelectCaseByIdAction = new SelectCaseByIdAction('default_case_id');
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selected_case.id).toEqual('default_case_id');
@@ -74,9 +74,9 @@ describe('CasesReducer', () => {
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
-			{id: 'id1', name: 'name1'},
-			{id: 'id2', name: 'name2'},
-			{id: 'id3', name: 'name3'}
+			{ id: 'id1', name: 'name1' },
+			{ id: 'id2', name: 'name2' },
+			{ id: 'id3', name: 'name3' }
 		];
 
 		state.active_case_id = 'id2';
@@ -92,7 +92,7 @@ describe('CasesReducer', () => {
 
 	it('UPDATE_CASE_BACKEND action should change updating_backend to "true" ', () => {
 		const state: ICasesState = initialCasesState;
-		const case_payload: Case = {id: '6'};
+		const case_payload: Case = { id: '6' };
 		let action: UpdateCaseBackendAction = new UpdateCaseBackendAction(case_payload);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.updating_backend).toBeTruthy();
@@ -100,7 +100,7 @@ describe('CasesReducer', () => {
 
 	it('UPDATE_CASE_BACKEND_SUCCESS action should change updating_backend to "false" ', () => {
 		const state: ICasesState = initialCasesState;
-		const case_payload: Case = {id: '6'};
+		const case_payload: Case = { id: '6' };
 		let action: UpdateCaseBackendSuccessAction = new UpdateCaseBackendSuccessAction(case_payload);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.updating_backend).toBeFalsy();
@@ -109,14 +109,14 @@ describe('CasesReducer', () => {
 	it('LOAD_CASES_SUCCESS action should add cases from payload to state.cases', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
-			{id: 'id1', name: 'name1'},
-			{id: 'id2', name: 'name2'},
-			{id: 'id3', name: 'name3'}
+			{ id: 'id1', name: 'name1' },
+			{ id: 'id2', name: 'name2' },
+			{ id: 'id3', name: 'name3' }
 		];
 		let cases_loaded: Case[] = [
-			{id: 'id4', name: 'name4'},
-			{id: 'id5', name: 'name5'},
-			{id: 'id6', name: 'name6'}
+			{ id: 'id4', name: 'name4' },
+			{ id: 'id5', name: 'name5' },
+			{ id: 'id6', name: 'name6' }
 		];
 		let action: LoadCasesSuccessAction = new LoadCasesSuccessAction(cases_loaded);
 		let result: ICasesState = CasesReducer(state, action);
@@ -126,9 +126,9 @@ describe('CasesReducer', () => {
 	it('DELETE_CASE action should delete case from state.cases by active_case_id', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
-			{id: 'id1', name: 'name1'},
-			{id: 'id2', name: 'name2'},
-			{id: 'id3', name: 'name3'}
+			{ id: 'id1', name: 'name1' },
+			{ id: 'id2', name: 'name2' },
+			{ id: 'id3', name: 'name3' }
 		];
 		state.active_case_id = 'id1';
 		let action: DeleteCaseAction = new DeleteCaseAction();
@@ -138,7 +138,7 @@ describe('CasesReducer', () => {
 
 	it('LOAD_CASE_SUCCESS action should set the loaded case as unlisted', () => {
 		let state: ICasesState = initialCasesState;
-		let loaded_case = {id: 'default_case_id', name: 'name1'};
+		let loaded_case = { id: 'default_case_id', name: 'name1' };
 		let action: LoadCaseSuccessAction = new LoadCaseSuccessAction(loaded_case);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.unlisted_case.id).toEqual('default_case_id');
@@ -146,7 +146,7 @@ describe('CasesReducer', () => {
 
 	it('SET_DEFAULT_CASE_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
 		let state: ICasesState = initialCasesState;
-		const case_value: Case = {id: '12354', region: 'any region', facets: []} as any;
+		const case_value: Case = { id: '12354', region: 'any region', facets: [] } as any;
 		let action: SetDefaultCaseQueryParams = new SetDefaultCaseQueryParams(case_value);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.default_case_query_params).toEqual(case_value);
@@ -161,7 +161,7 @@ describe('CasesReducer', () => {
 
 	it('LOAD_DEFAULT_CASE_SUCCESS action should set the loaded case as default_case', () => {
 		let state: ICasesState = initialCasesState;
-		let loaded_case = {id: 'default_case_id', name: 'name1'};
+		let loaded_case = { id: 'default_case_id', name: 'name1' };
 		let action: LoadDefaultCaseSuccessAction = new LoadDefaultCaseSuccessAction(loaded_case);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.default_case.id).toEqual('default_case_id');

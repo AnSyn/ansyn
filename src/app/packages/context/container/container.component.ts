@@ -68,7 +68,7 @@ export class ContainerComponent implements OnInit {
 
 	find$() {
 		console.log('find');
-		const criteria = new ContextCriteria({start: 0, limit: 20});
+		const criteria = new ContextCriteria({ start: 0, limit: 20 });
 		return this.contextProviderService.find(criteria);
 	}
 

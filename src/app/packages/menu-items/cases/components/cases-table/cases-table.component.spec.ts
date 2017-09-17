@@ -19,8 +19,8 @@ describe('CasesTableComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({cases: CasesReducer}), RouterTestingModule],
-			providers: [{provide: casesConfig, useValue: {baseUrl: null}}]
+			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
+			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();
 	}));
@@ -49,21 +49,21 @@ describe('CasesTableComponent', () => {
 
 	it('onCasesAdded should change tbody_element scrollTop to 0( only if tbody_element is not undefined )', () => {
 		component.tbody_element = <any> {
-			nativeElement: {scrollTop: 100}
+			nativeElement: { scrollTop: 100 }
 		};
 		component.onCasesAdded();
 		expect(component.tbody_element.nativeElement.scrollTop).toEqual(0);
 	});
 
 	it('calcTopCaseMenu should get MouseEvent calc the top and put on case_menu.style', () => {
-		let case_menu = <any>{style: {top: '-1px'}};
-		let $event = <any>{target: {offsetTop: 100, parentElement: {scrollTop: 50}}};
+		let case_menu = <any>{ style: { top: '-1px' } };
+		let $event = <any>{ target: { offsetTop: 100, parentElement: { scrollTop: 50 } } };
 		component.calcTopCaseMenu($event, case_menu);
 		expect(case_menu.style.top).toEqual('50px');
 	});
 
 	it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
-		let $event = <any>{stopPropagation: () => null};
+		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
 		let selected_case_id = 'fake_selected_case_id';
 		component.removeCase($event, selected_case_id);
@@ -75,7 +75,7 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
-		let $event = <any>{stopPropagation: () => null};
+		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
 		let selected_case_id = 'fake_selected_case_id';
 		component.editCase($event, selected_case_id);

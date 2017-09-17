@@ -19,7 +19,7 @@ export class CasesService {
 	base_url;
 	paginationLimit = 15;
 	queryParamsKeys;
-	defaultOptions = new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})});
+	defaultOptions = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
 	public contextValues = {
 		imageryCount: -1,
@@ -34,19 +34,19 @@ export class CasesService {
 		caseValue.state.maps.data.forEach((map: CaseMapState) => {
 			if (!isEmpty(map.data.overlay)) {
 				if (map.id === activeMapId) {
-					result.push({id: map.data.overlay.id, class: 'active'});
+					result.push({ id: map.data.overlay.id, class: 'active' });
 				} else {
-					result.push({id: map.data.overlay.id, class: 'displayed'});
+					result.push({ id: map.data.overlay.id, class: 'displayed' });
 				}
 			}
 		});
 
 		if (caseValue.state.favoritesOverlays) {
-			caseValue.state.favoritesOverlays.forEach(item => result.push({id: item, class: 'favorites'}));
+			caseValue.state.favoritesOverlays.forEach(item => result.push({ id: item, class: 'favorites' }));
 		}
 
 		if (hoverId) {
-			result.push({id: hoverId, class: 'hover'});
+			result.push({ id: hoverId, class: 'hover' });
 		}
 
 		return result;

@@ -54,7 +54,7 @@ export class EnableMapGeoOptionsActionStore implements Action {
 export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;
 
-	constructor(public payload: { mapId: string } = {mapId: undefined}) {
+	constructor(public payload: { mapId: string } = { mapId: undefined }) {
 		// code...
 	}
 }
@@ -93,7 +93,7 @@ export class MapInstanceChangedAction extends AddMapInstacneAction {
 
 	constructor(payload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {
 		// code...
-		super({currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds});
+		super({ currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds });
 		this.mapInstanceChangedPayload = payload;
 		this.type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 	}

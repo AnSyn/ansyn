@@ -123,14 +123,14 @@ export class CasesEffects {
 		}).share();
 
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL)
 		.map((action) => {
 			return action;
 		}).share();
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	closeModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.CLOSE_MODAL)
 		.share();

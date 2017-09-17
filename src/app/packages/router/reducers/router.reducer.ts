@@ -16,7 +16,7 @@ export const RouterInitialState: IRouterState = {
 export function RouterReducer(state = RouterInitialState, action: RouterActions): IRouterState {
 	switch (action.type) {
 		case RouterActionTypes.SET_STATE:
-			return {...state, ...action.payload};
+			return { ...state, ...action.payload };
 
 		default:
 			return state;

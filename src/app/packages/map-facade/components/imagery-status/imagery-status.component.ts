@@ -20,12 +20,12 @@ export class ImageryStatusComponent {
 
 	backToWorldView($event) {
 		$event.stopPropagation();
-		this.store.dispatch(new BackToWorldAction({mapId: this.map_id}));
+		this.store.dispatch(new BackToWorldAction({ mapId: this.map_id }));
 	}
 
 	toggleMapSynchronization() {
 		if (!this.disableGeoOptions) {
-			this.store.dispatch(new SynchronizeMapsAction({mapId: this.map_id}));
+			this.store.dispatch(new SynchronizeMapsAction({ mapId: this.map_id }));
 		}
 	}
 }

@@ -32,14 +32,14 @@ describe('TimelineEmitterService', () => {
 			.subscribe((data) => {
 				expect(data.key).toBe('value');
 			});
-		timeLineEmitterService.provide('timeline:mouseout').next({key: 'value'});
+		timeLineEmitterService.provide('timeline:mouseout').next({ key: 'value' });
 	});
 
 	it('check the subscribe function', () => {
 		timeLineEmitterService.subscribe('timeline:mouseout', (data) => {
 			expect(data.key).toBe('value');
 		});
-		timeLineEmitterService.provide('timeline:mouseout').next({key: 'value'});
+		timeLineEmitterService.provide('timeline:mouseout').next({ key: 'value' });
 	});
 
 	it('check the ask for wrong event will throw an error', () => {

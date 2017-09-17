@@ -33,7 +33,7 @@ export class AnsynRouterService {
 					queryParams[key] = queryParamMap.get(key);
 				});
 				const caseId = activated.snapshot.paramMap.get('caseId');
-				return {caseId, queryParams};
+				return { caseId, queryParams };
 			})
 			.do(state => this.store.dispatch(new SetStateAction(state)));
 	}

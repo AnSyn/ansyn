@@ -13,7 +13,7 @@ describe('overlaysDisplayModeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.provideStore({tools: ToolsReducer})],
+			imports: [FormsModule, StoreModule.provideStore({ tools: ToolsReducer })],
 			declarations: [OverlaysDisplayModeComponent]
 		}).compileComponents();
 	}));
@@ -22,7 +22,7 @@ describe('overlaysDisplayModeComponent', () => {
 		store = _store;
 		spyOn(store, 'dispatch');
 
-		const fakeStore = {tools: {activeOverlaysFootprintMode: 'None'}};
+		const fakeStore = { tools: { activeOverlaysFootprintMode: 'None' } };
 
 		spyOn(store, 'select').and.callFake(type => {
 			return Observable.of(fakeStore[type]);

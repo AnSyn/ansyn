@@ -33,8 +33,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public getById(id: string): Observable<Overlay> {
-		let headers = new Headers({'Content-Type': 'application/json'});
-		let options = new RequestOptions({headers});
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers });
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
 		return <Observable<Overlay>>this.http.get(url, options)
 			.map(this.extractData.bind(this))
@@ -42,8 +42,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		let headers = new Headers({'Content-Type': 'application/json'});
-		let options = new RequestOptions({headers});
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers });
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
 		return <Observable<Overlay[]>>this.http.post(url, fetchParams, options)
 			.map(this.extractArrayData.bind(this))

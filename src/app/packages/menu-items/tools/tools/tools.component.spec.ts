@@ -11,7 +11,7 @@ describe('ToolsComponent', () => {
 	let fixture: ComponentFixture<ToolsComponent>;
 	let store: Store<any>;
 
-	const mock_annotations_control = MockComponent({selector: 'ansyn-annotations-control', inputs: ['expand']});
+	const mock_annotations_control = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand'] });
 	const mock_go_to = MockComponent({
 		selector: 'ansyn-go-to',
 		inputs: ['expand', 'disabled'],
@@ -25,7 +25,7 @@ describe('ToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.provideStore({tools: ToolsReducer})],
+			imports: [StoreModule.provideStore({ tools: ToolsReducer })],
 			declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode, mock_annotations_control]
 		})
 			.compileComponents();

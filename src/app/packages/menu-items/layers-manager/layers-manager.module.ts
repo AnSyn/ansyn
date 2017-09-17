@@ -27,7 +27,7 @@ export class LayersManagerModule {
 			ngModule: LayersManagerModule,
 			providers: [
 				DataLayersService,
-				{provide: layersConfig, useValue: config}
+				{ provide: layersConfig, useValue: config }
 			]
 		};
 	}

@@ -22,7 +22,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 @Injectable()
 export class MapEffects {
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
 		.map(() => {
@@ -33,7 +33,7 @@ export class MapEffects {
 		});
 
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map(() => {
@@ -41,32 +41,32 @@ export class MapEffects {
 		});
 
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onStopMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.STOP_MAP_SHADOW_ACTIONS)
 		.share();
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onStartMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.START_MAP_SHADOW_ACTIONS)
 		.share();
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onComposeMapShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION)
 		.share();
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onToggleImageProcessing$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
 		.map(toPayload)
-		.map(({mapId, toggle_value}) => [this.communicatorsService.provide(mapId), toggle_value])
+		.map(({ mapId, toggle_value }) => [this.communicatorsService.provide(mapId), toggle_value])
 		.filter(([comm]) => !_isNil(comm))
 		.do(([comm, toggle_value]) => {
 			comm.setAutoImageProcessing(toggle_value);
 		});
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onContextMenuShow$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.share();

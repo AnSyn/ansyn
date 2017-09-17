@@ -90,7 +90,7 @@ describe('LayersReducer', () => {
 
 		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({layers: layers, selectedLayers: [staticLeaf]}, action);
+		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([staticLeaf]);
@@ -134,7 +134,7 @@ describe('LayersReducer', () => {
 
 		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({layers: layers, selectedLayers: [staticLeaf]}, action);
+		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([staticLeaf]);
@@ -178,7 +178,7 @@ describe('LayersReducer', () => {
 
 		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({layers: layers, selectedLayers: [staticLeaf]}, action);
+		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([]);
@@ -222,7 +222,7 @@ describe('LayersReducer', () => {
 
 		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({layers: layers, selectedLayers: []}, action);
+		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([]);

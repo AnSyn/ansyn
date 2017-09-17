@@ -73,8 +73,8 @@ export class ContextMenuComponent implements OnInit {
 
 	initializeSensors() {
 		const sensorsOnly = this.filteredOverlays
-			.filter(({id}) => _get(this.displayedOverlay, 'id') !== id)
-			.map(({sensorName}) => sensorName);
+			.filter(({ id }) => _get(this.displayedOverlay, 'id') !== id)
+			.map(({ sensorName }) => sensorName);
 		this.allSensors = [...new Set(sensorsOnly)];
 		this.displayedOverlayIndex = this.filteredOverlays.findIndex((overlay) => overlay.id === _get(this.displayedOverlay, 'id'));
 
@@ -96,7 +96,7 @@ export class ContextMenuComponent implements OnInit {
 	clickNext($event: MouseEvent, subFilter?: string) {
 		const nextOverlay = this.filteredOverlays
 			.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
-			.find(({id, sensorName}) => !subFilter || subFilter === sensorName);
+			.find(({ id, sensorName }) => !subFilter || subFilter === sensorName);
 		this.displayOverlayEvent($event, nextOverlay);
 	}
 
@@ -104,12 +104,12 @@ export class ContextMenuComponent implements OnInit {
 		const prevOverlay = this.filteredOverlays
 			.slice(0, this.displayedOverlayIndex)
 			.reverse()
-			.find(({sensorName}) => !subFilter || subFilter === sensorName);
+			.find(({ sensorName }) => !subFilter || subFilter === sensorName);
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
 	clickBest($event: MouseEvent, subFilter?: string) {
-		const sensorOnly = this.filteredOverlays.filter(({sensorName}) => !subFilter || subFilter === sensorName);
+		const sensorOnly = this.filteredOverlays.filter(({ sensorName }) => !subFilter || subFilter === sensorName);
 		const bestOverlay = sensorOnly.reduce((minValue, value) => {
 			return value.bestResolution < minValue.bestResolution ? value : minValue;
 		});
@@ -118,14 +118,14 @@ export class ContextMenuComponent implements OnInit {
 
 	clickFirst($event: MouseEvent, subFilter?: string) {
 		const firstOverlay = this.filteredOverlays
-			.find(({sensorName}) => !subFilter || subFilter === sensorName);
+			.find(({ sensorName }) => !subFilter || subFilter === sensorName);
 		this.displayOverlayEvent($event, firstOverlay);
 	}
 
 	clickLast($event: MouseEvent, subFilter?: string) {
 		const lastOverlay = [...this.filteredOverlays]
 			.reverse()
-			.find(({sensorName}) => !subFilter || subFilter === sensorName);
+			.find(({ sensorName }) => !subFilter || subFilter === sensorName);
 		this.displayOverlayEvent($event, lastOverlay);
 	}
 

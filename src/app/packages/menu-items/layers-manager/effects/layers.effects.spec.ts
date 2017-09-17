@@ -20,10 +20,10 @@ describe('LayersEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({layers: LayersReducer})],
+			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
 			providers: [LayersEffects, DataLayersService, {
 				provide: layersConfig,
-				useValue: {layersByCaseIdUrl: null}
+				useValue: { layersByCaseIdUrl: null }
 			}]
 		}).compileComponents();
 	}));
@@ -75,10 +75,10 @@ describe('LayersEffects', () => {
 		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
 		let selectedLayers: ILayerTreeNode[] = [staticLeaf];
 
-		let loadedTreeBundle = {layers: layers, selectedLayers: selectedLayers};
+		let loadedTreeBundle = { layers: layers, selectedLayers: selectedLayers };
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
 
-		effectsRunner.queue(new BeginLayerTreeLoadAction({caseId: 'blabla'}));
+		effectsRunner.queue(new BeginLayerTreeLoadAction({ caseId: 'blabla' }));
 
 		layersEffects.beginLayerTreeLoad$.subscribe((result: LayerTreeLoadedAction | SelectLayerAction) => {
 			expect(dataLayersService.getAllLayersInATree).toHaveBeenCalledWith('blabla');

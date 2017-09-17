@@ -13,8 +13,8 @@ const animations_during = '0.2s';
 
 const animations: any[] = [
 	trigger('blackScreen', [
-		transition(':enter', [style({opacity: 0}), animate(animations_during, style({opacity: 1}))]),
-		transition(':leave', [style({opacity: 1}), animate(animations_during, style({opacity: 0}))]),
+		transition(':enter', [style({ opacity: 0 }), animate(animations_during, style({ opacity: 1 }))]),
+		transition(':leave', [style({ opacity: 1 }), animate(animations_during, style({ opacity: 0 }))]),
 	])
 ];
 
@@ -25,7 +25,7 @@ const animations: any[] = [
 	animations
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
-	@ViewChild('modal_content', {read: ViewContainerRef}) modal_content: ViewContainerRef;
+	@ViewChild('modal_content', { read: ViewContainerRef }) modal_content: ViewContainerRef;
 	modal$: Observable<boolean> = this.store.select('cases')
 		.map((state: ICasesState) => state.modal)
 		.distinctUntilChanged(isEqual);

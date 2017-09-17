@@ -65,13 +65,13 @@ describe('OverlayContainerComponent', () => {
 					'polygonGenerationDistance': 0.1
 				}
 				},
-				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock}
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			declarations: [
 				OverlaysContainerComponent,
-				MockComponent({selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup']})
+				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] })
 			],
-			imports: [HttpModule, StoreModule.provideStore({overlays: OverlayReducer})]
+			imports: [HttpModule, StoreModule.provideStore({ overlays: OverlayReducer })]
 		})
 			.compileComponents();
 

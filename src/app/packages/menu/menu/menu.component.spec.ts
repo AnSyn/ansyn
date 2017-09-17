@@ -15,7 +15,7 @@ describe('MenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule, StoreModule.provideStore({menu: MenuReducer})],
+			imports: [BrowserAnimationsModule, StoreModule.provideStore({ menu: MenuReducer })],
 			declarations: [MenuComponent],
 		}).compileComponents();
 	}));

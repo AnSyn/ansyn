@@ -2,9 +2,7 @@
 	container works!
 </p>
 <h4>context</h4>
-<div class="sources-list">
-	<button *ngFor="let key of contextProviders" (click)="changeSourceProvider(key)">{{key}}</button>
-</div>
+
 <textarea rows="10" cols="45" [(ngModel)]="contextBody">
 
 </textarea>
@@ -15,7 +13,7 @@
 <button (click)="create()">Create</button>
 <ul>
 	<li *ngFor="let hit of result">
-		{{hit.title || hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;
+		{{hit.name}} <a (click)="edit(hit.id)">edit</a>&nbsp;&nbsp;
 		<a (click)="delete(hit.id)">delete</a>
 	</li>
 </ul>

@@ -13,24 +13,24 @@ export class CasesRouterEffects {
 	onUpdateLocationDefaultCase: Observable<Action> = this.actions$
 		.ofType(RouterActionTypes.SET_STATE)
 		.map(toPayload)
-		.filter(({caseId}) => _isNil(caseId))
+		.filter(({ caseId }) => _isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
 		.filter(([payload, cases]) => (_isEmpty(cases.selected_case) || _isEmpty(cases.default_case) || !_isEqual(cases.selected_case.id, cases.default_case.id)))
-		.map(([{queryParams}]) => new LoadDefaultCaseAction(queryParams));
+		.map(([{ queryParams }]) => new LoadDefaultCaseAction(queryParams));
 
 	@Effect()
 	onUpdateLocationCase$: Observable<Action> = this.actions$
 		.ofType(RouterActionTypes.SET_STATE)
 		.map(toPayload)
-		.filter(({caseId}) => !_isNil(caseId))
+		.filter(({ caseId }) => !_isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
 		.filter(([payload, cases]) => payload !== _get(cases.selected_case, 'id'))
-		.map(([{caseId}]) => new LoadCaseAction(caseId));
+		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 
 	@Effect()
 	selectCaseUpdateRouter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('router'), ({payload}, cases: any, router: any) => {
+		.withLatestFrom(this.store$.select('cases'), this.store$.select('router'), ({ payload }, cases: any, router: any) => {
 			return [payload, _get(cases.default_case, 'id'), router.caseId];
 		})
 		.filter(([payload, defaultCaseId, routerCaseId]) => !_isEqual(payload, defaultCaseId) && !_isEqual(payload, routerCaseId))

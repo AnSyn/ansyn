@@ -199,7 +199,7 @@ export class StatusBarComponent implements OnInit {
 
 	applyTimelinePickerResult(result) {
 		// apply here your dispathces
-		this.store.dispatch(new SetTimeAction({from: result.start, to: result.end}));
+		this.store.dispatch(new SetTimeAction({ from: result.start, to: result.end }));
 		this.toggleTimelineStartEndSearch();
 	}
 
@@ -228,11 +228,11 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapPointSearch() {
-		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch}));
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 	}
 
 	togglePinPointIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointIndicator}));
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	}
 
 	clickGoPrev(): void {

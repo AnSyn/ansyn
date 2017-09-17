@@ -9,7 +9,7 @@ describe('FiltersService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpModule],
-			providers: [FiltersService, {provide: filtersConfig, useValue: {filters: null}}]
+			providers: [FiltersService, { provide: filtersConfig, useValue: { filters: null } }]
 		});
 	});
 

@@ -68,9 +68,9 @@ describe('OverlaysAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{id: 'imagery1', data: {overlayDisplayMode: 'Hitmap'}},
-					{id: 'imagery2', data: {overlayDisplayMode: 'None'}},
-					{id: 'imagery3', data: {}},
+					{ id: 'imagery1', data: { overlayDisplayMode: 'Hitmap' } },
+					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
+					{ id: 'imagery3', data: {} },
 				],
 				active_map_id: 'imagery1'
 			}
@@ -83,18 +83,18 @@ describe('OverlaysAppEffects', () => {
 				EffectsTestingModule,
 				HttpModule,
 
-				StoreModule.provideStore({cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer}),
+				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
 			],
 			providers: [
 				OverlaysAppEffects,
 				OverlaysService,
-				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock},
-				{provide: OverlaysConfig, useValue: {}},
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
+				{ provide: OverlaysConfig, useValue: {} },
 				{
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null,
-						contextValues: {imageryCount: -1}
+						contextValues: { imageryCount: -1 }
 					}
 				},
 				{

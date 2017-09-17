@@ -1,7 +1,7 @@
 import { BaseContextSourceProvider, Context, ContextConfig, ContextCriteria, IContextConfig } from '@ansyn/context';
 import { Observable } from 'rxjs/Observable';
-import { Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/catch';
 
@@ -11,11 +11,11 @@ export interface IProxySource {
 	bucket: string;
 }
 
+@Injectable()
 export class ContextProxySourceService extends BaseContextSourceProvider {
 	config: IProxySource;
 
 	uri: string;
-	headers = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
 	constructor(@Inject(ContextConfig)config: IContextConfig, private http: HttpClient) {
 		super(config, 'proxy');
@@ -34,13 +34,13 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	}
 
 	create(payload: Context) {
-		return this.http.post(this.uri, this.parseToSource(payload), this.headers)
+		return this.http.post(this.uri, this.parseToSource(payload))
 		// .map(res =>  this.parseFromSource(res.json() || {}))
 			.catch(this.handleError);
 	}
 
 	update(id, payload: Context) {
-		return this.http.put(this.uri + '/' + id, this.parseToSource(payload), this.headers)
+		return this.http.put(this.uri + '/' + id, this.parseToSource(payload))
 			.catch(this.handleError);
 	}
 

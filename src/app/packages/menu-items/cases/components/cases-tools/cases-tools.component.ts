@@ -16,10 +16,10 @@ export class CasesToolsComponent {
 	}
 
 	showEditCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({component: EditCaseComponent}));
+		this.store.dispatch(new OpenModalAction({ component: EditCaseComponent }));
 	}
 
 	showSaveCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({component: SaveCaseComponent}));
+		this.store.dispatch(new OpenModalAction({ component: SaveCaseComponent }));
 	}
 }

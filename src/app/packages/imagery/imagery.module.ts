@@ -23,7 +23,7 @@ export class ImageryModule {
 			providers: [
 				ImageryCommunicatorService,
 				ImageryProviderService,
-				{provide: ConfigurationToken, useValue: config}
+				{ provide: ConfigurationToken, useValue: config }
 			]
 		};
 	}

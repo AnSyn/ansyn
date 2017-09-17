@@ -36,7 +36,7 @@ export class FiltersModule {
 			ngModule: FiltersModule,
 			providers: [
 				FiltersService,
-				{provide: filtersConfig, useValue: config}
+				{ provide: filtersConfig, useValue: config }
 			]
 		};
 	}

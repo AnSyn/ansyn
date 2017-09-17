@@ -19,12 +19,12 @@ describe('TimelineComponent', () => {
 		'data': [{
 			'sha': 'ad4a690c2708e11156e24534e01238df16b07f23',
 			'message': 'Merge-pull-request-19-from-marmelab-jpetitcolas-patch-1',
-			'author': {'name': 'Francois Zaninotto', 'email': 'fzaninotto@gmail.com'},
+			'author': { 'name': 'Francois Zaninotto', 'email': 'fzaninotto@gmail.com' },
 			'date': 'Wed, 7 Sep 2016 12:04:14 +0200'
 		}, {
 			'sha': '8110e85434d4cc87212dc5d8534e3e1069e174c2',
 			'message': 'Doc-how-to-use-dev-version-in-real-world-project',
-			'author': {'name': 'Jonathan Petitcolas', 'email': 'petitcolas.jonathan@gmail.com'},
+			'author': { 'name': 'Jonathan Petitcolas', 'email': 'petitcolas.jonathan@gmail.com' },
 			'date': 'Wed, 7 Sep 2016 11:16:40 +0200'
 		}]
 	}, {
@@ -32,22 +32,22 @@ describe('TimelineComponent', () => {
 		'data': [{
 			'sha': '412a71481f94e845cb1e920616136a9221b91c17',
 			'message': 'Update-watch-target',
-			'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'},
+			'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' },
 			'date': 'Thu, 22 Jan 2015 13:13:56 +0100'
 		}, {
 			'sha': 'ae145441f60e9475e19de37d44b4842260af7d08',
 			'message': 'Use-browserify',
-			'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'},
+			'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' },
 			'date': 'Thu, 22 Jan 2015 12:28:22 +0100'
 		}, {
 			'sha': '2040299a8fe6c586a702382b50a63d7abb8fcff3',
 			'message': 'Rename-to-restful.js',
-			'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'},
+			'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' },
 			'date': 'Thu, 22 Jan 2015 09:03:39 +0100'
 		}, {
 			'sha': 'eea59ff38abb348fd71ec4716250f21fc94edd0f',
 			'message': 'first-commit',
-			'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'},
+			'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' },
 			'date': 'Wed, 21 Jan 2015 14:07:20 +0100'
 		}]
 	}];
@@ -95,7 +95,7 @@ describe('TimelineComponent', () => {
 		component.markup = [{
 			id: 'eea59ff38abb348fd71ec4716250f21fc94edd0f',
 			class: 'active'
-		}, {id: '2040299a8fe6c586a702382b50a63d7abb8fcff3', class: 'displayed'}];
+		}, { id: '2040299a8fe6c586a702382b50a63d7abb8fcff3', class: 'displayed' }];
 
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]');
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="2040299a8fe6c586a702382b50a63d7abb8fcff3"]');
@@ -127,23 +127,23 @@ describe('TimelineComponent', () => {
 		const mouseSpy = spyOn(d3, 'mouse').and.returnValue([10, 15]);
 		spyOn(d3, 'event').and.returnValue({});
 
-		event({key: 'value'}, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes);
 		tick(400);
 		expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:click');
 
-		event({key: 'value'}, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes);
 		tick(150);
-		event({key: 'value'}, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes);
 		expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:dblclick');
 
 		tick(500);
 		timeLineEmitterService.provide['calls'].reset();
 
 		mouseSpy.and.returnValue([20, 20]);
-		event({key: 'value'}, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes);
 		tick(150);
 		mouseSpy.and.returnValue([200, 200]);
-		event({key: 'value'}, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes);
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:click');
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:dblclick');
 

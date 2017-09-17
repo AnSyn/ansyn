@@ -37,7 +37,7 @@ export class OpenLayersImageProcessing {
 			yCbCr2RGB: yCbCr2RGB
 		};
 
-		this._operations.set('Histogram', {name: 'Histogram', operation: histogramEqualization, lib: lib});
+		this._operations.set('Histogram', { name: 'Histogram', operation: histogramEqualization, lib: lib });
 	}
 
 	initializeSharpness() {
@@ -48,7 +48,7 @@ export class OpenLayersImageProcessing {
 			normalizeColor: normalizeColor
 		};
 
-		this._operations.set('Sharpness', {name: 'Sharpness', operation: performSharpness, lib: lib});
+		this._operations.set('Sharpness', { name: 'Sharpness', operation: performSharpness, lib: lib });
 
 	}
 
@@ -158,7 +158,7 @@ function rgb2YCbCr(rgb): { y: number, cb, cr } {
 	const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
 	const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
 
-	return {y, cb, cr};
+	return { y, cb, cr };
 }
 
 function yCbCr2RGB(yCbCr) {
@@ -170,7 +170,7 @@ function yCbCr2RGB(yCbCr) {
 	const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
 	const b = 1.164 * yNorm + 2.017 * cbNorm;
 
-	return {r, g, b};
+	return { r, g, b };
 }
 
 function buildHistogramLut(imageData) {
@@ -185,7 +185,7 @@ function buildHistogramLut(imageData) {
 		const g = imageData.data[index + 1];
 		const b = imageData.data[index + 2];
 
-		const yCbCr = rgb2YCbCr({r, g, b});
+		const yCbCr = rgb2YCbCr({ r, g, b });
 
 		const val = Math.floor(yCbCr.y);
 		if (totalHistLut[val] === undefined) {
@@ -226,7 +226,7 @@ function performHistogram(imageData, histogramLut) {
 		const b = imageData.data[index + 2];
 		const a = imageData.data[index + 3];
 
-		const yCbCr = this['rgb2YCbCr']({r, g, b});
+		const yCbCr = this['rgb2YCbCr']({ r, g, b });
 
 		yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
 

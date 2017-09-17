@@ -13,12 +13,10 @@ import {
 import { HttpModule } from '@angular/http';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
-import { ICasesState } from '@ansyn//menu-items/cases';
+import { ICasesState } from '@ansyn/menu-items/cases';
 import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ContextProviderService } from '@ansyn/context/providers/context-provider.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
@@ -47,7 +45,7 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [CasesAppEffects,
 				CasesService,
-				{provide: casesConfig, useValue: {baseUrl: null}},
+				{ provide: casesConfig, useValue: { baseUrl: null } },
 				// Provide context provider
 				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService },
 			]

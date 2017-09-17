@@ -36,7 +36,7 @@ describe('CasesEffects', () => {
 	let effectsRunner: EffectsRunner;
 	let store: Store<any>;
 
-	const appReducer = compose(combineReducers)({cases: CasesReducer, overlays: OverlayReducer});
+	const appReducer = compose(combineReducers)({ cases: CasesReducer, overlays: OverlayReducer });
 
 	function reducer(state: any, action: any) {
 		return appReducer(state, action);
@@ -47,7 +47,7 @@ describe('CasesEffects', () => {
 			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
 			providers: [CasesEffects,
 				CasesService,
-				{provide: casesConfig, useValue: {baseUrl: null}}]
+				{ provide: casesConfig, useValue: { baseUrl: null } }]
 		}).compileComponents();
 	}));
 
@@ -66,7 +66,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('loadCases$ should call casesService.loadCases with case last_id from state, and return LoadCasesSuccessAction', () => {
-		let loaded_cases: Case[] = [{id: 'loaded_case1'}, {id: 'loaded_case2'}, {id: 'loaded_case1'}];
+		let loaded_cases: Case[] = [{ id: 'loaded_case1' }, { id: 'loaded_case2' }, { id: 'loaded_case1' }];
 		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loaded_cases));
 		effectsRunner.queue(new LoadCasesAction());
 		casesEffects.loadCases$.subscribe((result: LoadCasesSuccessAction) => {
@@ -77,7 +77,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
-		let new_case_payload: Case = {id: 'new_case_id', name: 'new_case_name'};
+		let new_case_payload: Case = { id: 'new_case_id', name: 'new_case_name' };
 		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(new_case_payload));
 		effectsRunner.queue(new AddCaseAction(new_case_payload));
 		casesEffects.onAddCase$.subscribe((result: AddCaseSuccessAction) => {
@@ -89,11 +89,11 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 
-		let deleted_case: Case = {id: 'new_case_id', name: 'new_case_name'};
+		let deleted_case: Case = { id: 'new_case_id', name: 'new_case_name' };
 		store.dispatch(new AddCaseSuccessAction(deleted_case));
 		store.dispatch(new SelectCaseByIdAction(deleted_case.id));
 		// set active_case_id
-		store.dispatch(new OpenModalAction({component: '', case_id: deleted_case.id}));
+		store.dispatch(new OpenModalAction({ component: '', case_id: deleted_case.id }));
 		effectsRunner.queue(new DeleteCaseAction());
 		casesEffects.onDeleteCase$.subscribe((result: AddCaseSuccessAction) => {
 			expect((result instanceof DeleteCaseBackendAction) || (result instanceof LoadDefaultCaseAction)).toBeTruthy();
@@ -115,7 +115,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('addCaseSuccess$ should select the case being added', () => {
-		let added_case: Case = {id: 'new_case_id', name: 'new_case_name'};
+		let added_case: Case = { id: 'new_case_id', name: 'new_case_name' };
 		effectsRunner.queue(new AddCaseSuccessAction(added_case));
 		casesEffects.addCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
 			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
@@ -155,7 +155,7 @@ describe('CasesEffects', () => {
 				'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 			} as any;
 
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({error: 'not found'}));
+			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({ error: 'not found' }));
 			effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
 			casesEffects.loadCase$.subscribe((result: LoadDefaultCaseAction) => {

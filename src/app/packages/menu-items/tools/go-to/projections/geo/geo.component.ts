@@ -55,14 +55,14 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 
 	validate(c: AbstractControl): ValidationErrors {
 		if (!c.value) {
-			return {empty: true};
+			return { empty: true };
 		}
 		const lng = c.value[0];
 		const lat = c.value[1];
 		if (_isNil(lng) || _isNil(lat)) {
-			return {empty: true};
+			return { empty: true };
 		} else if (!( -180 < lng && lng < 180 ) || !( -90 < lat && lat < 90)) {
-			return {invalid: true};
+			return { invalid: true };
 		}
 		return null;
 	}

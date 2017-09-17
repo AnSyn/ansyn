@@ -16,9 +16,10 @@ describe('ContainerComponent', () => {
 			declarations: [ContainerComponent],
 			imports: [FormsModule],
 			providers: [
-		{ provide: ContextConfig, useValue: MOCK_TEST_CONFIG },
+				{ provide: ContextConfig, useValue: MOCK_TEST_CONFIG },
 				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService }
-			]}).compileComponents();
+			]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {

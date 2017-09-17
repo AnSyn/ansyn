@@ -20,10 +20,10 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
-			return Object.assign({}, state, {filters: action.payload, isLoading: false});
+			return Object.assign({}, state, { filters: action.payload, isLoading: false });
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
-			return Object.assign({}, state, {isLoading: true});
+			return Object.assign({}, state, { isLoading: true });
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA:
 			const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
@@ -31,7 +31,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
 
-			return Object.assign({}, state, {filters: clonedFilters});
+			return Object.assign({}, state, { filters: clonedFilters });
 
 		case FiltersActionTypes.RESET_FILTERS:
 			return Object.assign({}, state, {
@@ -40,10 +40,10 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			});
 
 		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
-			return Object.assign({}, state, {showOnlyFavorites: !state.showOnlyFavorites});
+			return Object.assign({}, state, { showOnlyFavorites: !state.showOnlyFavorites });
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
-			return Object.assign({}, state, {enableOnlyFavoritesSelection: action.payload});
+			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 
 		default:
 			return state; // Object.assign({},state);

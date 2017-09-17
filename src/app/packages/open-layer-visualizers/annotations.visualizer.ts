@@ -96,7 +96,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		layer.set('id', id);
 		this.layer = this._imap.addLayerIfNotExist(layer);
 
-		this._source = new VectorSource({wrapX: false});
+		this._source = new VectorSource({ wrapX: false });
 		this.layer.setSource(this._source);
 		this.layer.setStyle(this.styleFunction.bind(this));
 		this.layer.setZIndex(200000);

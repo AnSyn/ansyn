@@ -9,7 +9,7 @@ export interface KeyVal {
 }
 
 
-@Pipe({name: 'sort'})
+@Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
 
 	transform(array: Array<KeyVal>, args?: any[]): Array<KeyVal> {

@@ -3,7 +3,7 @@ import { cloneDeep, isEmpty, isNil } from 'lodash';
 import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
@@ -35,7 +35,9 @@ export class FiltersAppEffects {
 
 			const favorites = casesState.selected_case.state.favoritesOverlays;
 
-			const parsedFilters = Array.from(filtersState.filters).map((value: any, key: any) => ({
+			const parsedFilters = [];
+
+			filtersState.filters.forEach((value: any, key: any) =>  parsedFilters.push({
 					filteringParams: { key: key.modelName, metadata: value },
 					filterFunc: value.filterFunc
 				}));
@@ -51,7 +53,7 @@ export class FiltersAppEffects {
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...this.facetChangesActionType)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
-		.map(([action, filtersState, selectedCase]: [any, any, any]) =>  this.updateCaseFacets(selectedCase, filtersState))
+		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) =>  this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
 	@Effect()
@@ -59,11 +61,11 @@ export class FiltersAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
 
-			const overlaysArray: Overlay[] = overlaysState.overlays.map( value => value);
+			const overlaysArray: Overlay[] = overlaysState.overlays.map(value => value);
 
 			let showAll = false;
 
-			if (casesState.selected_case.state.facets.filters.length === 0 ) {
+			if (casesState.selected_case.state.facets.filters.length === 0) {
 				showAll = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValues.imageryCount === -1;
 			}
 

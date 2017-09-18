@@ -44,7 +44,7 @@ export class QueryParamsHelper {
 			selected_context.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
 					case 'geopoint':
-						const geopointStr = q_params['geopoint'];
+						const geopointStr = q_params.geopoint;
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(strToNum => +strToNum);
 							const geoPoint: Point = { type: 'Point', coordinates };

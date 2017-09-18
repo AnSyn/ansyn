@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
 import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
-import * as packageJson from '../../../../package.json';
+import packageJson from '../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -54,7 +54,7 @@ export class AnsynComponent implements OnInit {
 	version;
 
 	constructor(private store: Store<IAppState>) {
-		this.version = (<any>packageJson).version;
+		this.version = packageJson.version;
 	}
 
 	ngOnInit(): void {

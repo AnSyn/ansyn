@@ -131,14 +131,14 @@ describe('ImageriesManagerComponent', () => {
 		// spyOn(communicatorProvider,'communicators');
 		component.startPointerMoveProcess();
 
-		expect(communicatorProvider.communicators['imagery1']).toBeTruthy();
+		expect(communicatorProvider.communicators.imagery1).toBeTruthy();
 
 		expect(component.listenersMouseShadowMapsId.length).toBe(1);
 
-		expect(communicatorProvider.communicators['imagery1']
+		expect(communicatorProvider.communicators.imagery1
 			.setMouseShadowListener).toHaveBeenCalled();
 
-		expect(communicatorProvider.communicators['imagery2']
+		expect(communicatorProvider.communicators.imagery2
 			.startMouseShadowVectorLayer).toHaveBeenCalled();
 
 		expect(component.shadowMouseProcess).toBe(true);
@@ -150,7 +150,7 @@ describe('ImageriesManagerComponent', () => {
 		const latLon = [10, 10];
 		component.listenersMouseShadowMapsId = ['imagery2'];
 		component.drawShadowMouse((latLon));
-		expect(communicatorProvider.communicators['imagery2'].drawShadowMouse).toHaveBeenCalledWith(latLon);
+		expect(communicatorProvider.communicators.imagery2.drawShadowMouse).toHaveBeenCalledWith(latLon);
 	});
 
 	it('stop shadow mouse listeners', () => {
@@ -160,9 +160,9 @@ describe('ImageriesManagerComponent', () => {
 		spyOn(component.pointerMoveUnsubscriber, 'unsubscribe');
 		component.stopPointerMoveProcess();
 
-		expect(communicatorProvider.communicators['imagery1'].setMouseShadowListener).toHaveBeenCalled();
+		expect(communicatorProvider.communicators.imagery1.setMouseShadowListener).toHaveBeenCalled();
 		expect(component.pointerMoveUnsubscriber.unsubscribe).toHaveBeenCalled();
-		expect(communicatorProvider.communicators['imagery2'].stopMouseShadowVectorLayer).toHaveBeenCalled();
+		expect(communicatorProvider.communicators.imagery2.stopMouseShadowVectorLayer).toHaveBeenCalled();
 
 		expect(component.listenersMouseShadowMapsId.length).toBe(0);
 		expect(component.publisherMouseShadowMapId).toBe(null);

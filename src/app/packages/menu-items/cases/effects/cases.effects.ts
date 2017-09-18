@@ -171,11 +171,11 @@ export class CasesEffects {
 	loadDefaultCase$: Observable<LoadDefaultCaseSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.withLatestFrom(this.store.select('cases'))
-		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => !action.payload['context'])
+		.filter(([action, state]: [LoadDefaultCaseAction, ICasesState]) => !action.payload.context)
 		.mergeMap(([action, state]: [LoadDefaultCaseAction, ICasesState]) => {
 			const actions = [];
 			const defaultCase = this.casesService.getDefaultCase();
-			const contextName = action.payload['context'];
+			const contextName = action.payload.context;
 			let defaultCaseQueryParams: Case;
 			if (contextName) {
 				const context = state.contexts.find(c => c.name === contextName);

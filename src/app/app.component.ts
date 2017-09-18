@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject, Renderer2 } from '@angular/core';
-import * as packageJson from '../../package.json';
+import packageJson from '../../package.json';
 import { DOCUMENT } from '@angular/common';
 import '@ansyn/core/utils/clone-deep';
 
@@ -15,9 +15,8 @@ export class AppComponent implements AfterViewInit {
 
 	ngAfterViewInit() {
 		const metaTag = this.renderer.createElement('meta');
-		metaTag.setAttribute('version', <any>packageJson['version']);
+		metaTag.setAttribute('version', packageJson.version);
 		this.renderer.appendChild(this.document.head, metaTag);
 	}
-
 
 }

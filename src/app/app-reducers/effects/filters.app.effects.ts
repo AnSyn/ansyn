@@ -32,14 +32,14 @@ export class FiltersAppEffects {
 		.ofType(...this.facetChangesActionType)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases'))
 		.map(([action, filtersState, casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState, ICasesState]) => {
-			const parsedFilters = [];
+
 			const favorites = casesState.selected_case.state.favoritesOverlays;
-			filtersState.filters.forEach((value: any, key: any) => {
-				parsedFilters.push({
+
+			const parsedFilters = Array.from(filtersState.filters).map((value: any, key: any) => ({
 					filteringParams: { key: key.modelName, metadata: value },
 					filterFunc: value.filterFunc
-				});
-			});
+				}));
+
 			return new SetFiltersAction({
 				parsedFilters,
 				showOnlyFavorites: filtersState.showOnlyFavorites,
@@ -51,27 +51,30 @@ export class FiltersAppEffects {
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...this.facetChangesActionType)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
-		.map(([action, filtersState, selectedCase]: [any, any, any]) => {
-			return this.updateCaseFacets(selectedCase, filtersState);
-		})
+		.map(([action, filtersState, selectedCase]: [any, any, any]) =>  this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
-			const overlaysArray: Overlay[] = [];
-			overlaysState.overlays.forEach((value, key) => {
-				overlaysArray.push(value);
-			});
-			const showAll: boolean = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValues.imageryCount === -1;
+
+			const overlaysArray: Overlay[] = overlaysState.overlays.map( value => value);
+
+			let showAll = false;
+
+			if (casesState.selected_case.state.facets.filters.length === 0 ) {
+				showAll = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValues.imageryCount === -1;
+			}
+
+			// what is going here  ?? who updates the contextValues imageryCount  and why it is not in the store please add the correct remarks
 			if (this.casesService.contextValues.imageryCount !== -1) {
 				this.casesService.contextValues.imageryCount = -1;
 			}
+
 			return [overlaysArray, casesState.selected_case.state.facets, showAll];
 		})
 		.map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
-
 			return new InitializeFiltersAction({ overlays, facets, showAll });
 		});
 
@@ -90,14 +93,18 @@ export class FiltersAppEffects {
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
 
 		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
+
 			const currentFilter: any = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
+
 			if (!currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
 				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
 				facets.filters.push({ fieldName, metadata });
-			} else if (currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
+			}
+			else if (currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
 				currentFilter.metadata = outerStateMetadata;
-			} else if (currentFilter && this.isMetadataEmpty(outerStateMetadata)) {
+			}
+			else if (currentFilter && this.isMetadataEmpty(outerStateMetadata)) {
 				const index = facets.filters.indexOf(currentFilter);
 				facets.filters.splice(index, 1);
 			}

@@ -92,8 +92,6 @@ describe('CasesService', () => {
 		let fake_response = { selected_case };
 		spyOn(http, 'post').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		casesService.createCase(selected_case);
-		let fake_response = { json: () => selected_case };
-		spyOn(http, 'post').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		expect(http.post).toHaveBeenCalledWith(`${casesService.base_url}`, selected_case);
 	});
 

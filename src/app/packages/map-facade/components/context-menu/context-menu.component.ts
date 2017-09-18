@@ -137,6 +137,6 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	setPinPoint() {
-		this.store.dispatch(new PinPointTriggerAction({lonLat: this.point.coordinates, anchor: [0.5, 0.5]}));
+		this.store.dispatch(new PinPointTriggerAction({ lonLat: this.point.coordinates, anchor: [0.5, 0.5] }));
 	}
 }

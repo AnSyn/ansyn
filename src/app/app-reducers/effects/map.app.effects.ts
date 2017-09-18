@@ -84,7 +84,7 @@ export class MapAppEffects {
 				// disable the pinpoint search
 				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
 				// update pin point
-				new PinPointTriggerAction({lonLat})
+				new PinPointTriggerAction({ lonLat })
 			];
 		});
 

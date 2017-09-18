@@ -1,4 +1,7 @@
-<div class="imageries-container" #imageriesContainer [class.pin-location]="pinLocation">
+<div class="imageries-container"
+	 #imageriesContainer
+	 [ngClass]="{'pin-location': pinLocationMode, 'pin-point': pinPointMode}">
+
 	<ng-template [ngIf]="mapsList">
 		<div
 			*ngFor="let mapData of mapsList; count as count"

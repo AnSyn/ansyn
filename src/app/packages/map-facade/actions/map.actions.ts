@@ -31,13 +31,14 @@ export const MapActionTypes = {
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	STORE: {
-		SET_MAPS_DATA: 'SET_MAPS_DATA',
-		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE'
+		SET_MAPS_DATA: 'SET_MAPS_DATA'
 	},
 	TRIGGER: {
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
-		PIN_POINT: 'PIN_POINT'
+		PIN_POINT: 'PIN_POINT',
+		PIN_POINT_MODE: 'PIN_POINT_MODE',
+		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE'
 	}
 };
 
@@ -239,8 +240,8 @@ export class SetMapsDataActionStore implements Action {
 	}
 }
 
-export class SetPinLocationModeActionStore implements Action {
-	type = MapActionTypes.STORE.PIN_LOCATION_MODE;
+export class PinLocationModeTriggerAction implements Action {
+	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
 	constructor(public payload: boolean) {
 	}
@@ -250,6 +251,13 @@ export class MapsListChangedAction implements Action {
 	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
 
 	constructor(public payload: CaseMapState[]) {
+	}
+}
+
+export class PinPointModeTriggerAction implements Action {
+	type = MapActionTypes.TRIGGER.PIN_POINT_MODE;
+
+	constructor(public payload: boolean) {
 	}
 }
 

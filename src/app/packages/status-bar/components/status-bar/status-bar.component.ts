@@ -1,14 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	HostListener,
-	Input,
-	OnInit,
-	Output,
-	Renderer2,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
@@ -82,7 +72,6 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	@Output('toggleEditMode') toggleEditMode = new EventEmitter();
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
 	@ViewChild('starColor') starColor: ElementRef;
@@ -164,10 +153,6 @@ export class StatusBarComponent implements OnInit {
 		});
 
 		this.flags$.subscribe((flags: Map<string, boolean>) => {
-			//  I want to check that the one that was changing is the pin point search
-			if (this.flags.get(statusBarFlagsItems.pinPointSearch) !== flags.get(statusBarFlagsItems.pinPointSearch)) {
-				this.toggleEditMode.emit();
-			}
 			this.flags = new Map(flags) as Map<string, boolean>;
 		});
 

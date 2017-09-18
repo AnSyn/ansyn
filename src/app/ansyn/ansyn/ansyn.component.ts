@@ -49,7 +49,6 @@ export class AnsynComponent implements OnInit {
 
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
-	editMode: boolean;
 	isFavoriteOverlay: boolean;
 	version;
 
@@ -71,10 +70,6 @@ export class AnsynComponent implements OnInit {
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
 			this.isFavoriteOverlay = isFavoriteOverlay;
 		});
-	}
-
-	toggleEditMode() {
-		this.editMode = !this.editMode;
 	}
 
 }

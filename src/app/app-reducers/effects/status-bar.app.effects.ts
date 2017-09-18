@@ -25,7 +25,7 @@ import { cloneDeep, get, isEmpty, pull } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { BackToWorldAction, PinPointModeTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	GoNextDisplayAction,
 	GoPrevDisplayAction,
@@ -235,6 +235,15 @@ export class StatusBarAppEffects {
 			}
 		})
 		.map((notInCaseResult: boolean) => new SetOverlayNotInCaseAction(notInCaseResult));
+
+
+	@Effect()
+	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
+		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
+		.withLatestFrom(this.store.select('status_bar').pluck('flags'))
+		.map(([action, flags]: [any, Map<any, any>]) => flags.get(statusBarFlagsItems.pinPointSearch))
+		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
 	constructor(private actions$: Actions,
 				private store: Store<IAppState>,

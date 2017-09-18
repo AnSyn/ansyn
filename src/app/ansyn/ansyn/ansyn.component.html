@@ -5,7 +5,7 @@
 	</div>
 
 	<div class="layer">
-		<div #mapsContainer class="maps-container" [class.edit-mode]="editMode">
+		<div class="maps-container">
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 		</div>
 
@@ -15,7 +15,6 @@
 				<ansyn-status-bar
 					[selected_case_name]="selectedCaseName"
 					[overlay]="displayedOverlay"
-					(toggleEditMode)="toggleEditMode()"
 					[isFavoriteOverlayDisplayed]="isFavoriteOverlay">
 				</ansyn-status-bar>
 			</div>

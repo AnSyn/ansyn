@@ -449,6 +449,7 @@ export class OpenLayersMap implements IMap {
 
 			const iconStyle = new Icon({
 				scale: 1,
+				anchor: [0, 0],
 				src: '/assets/pinpoint_indicator.svg' // for further usage either bring from configuration or create svg
 			});
 

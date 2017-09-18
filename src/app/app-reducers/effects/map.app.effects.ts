@@ -74,16 +74,17 @@ export class MapAppEffects {
 		.filter(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.mergeMap(([action]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
 			// draw on all maps
-			this.communicator.communicatorsAsArray().forEach(communicator => {
+			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				// this is for the others communicators
 				communicator.removeSingleClickEvent();
 			});
+			const lonLat = action.payload.lonLat;
 
 			return [
 				// disable the pinpoint search
 				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
 				// update pin point
-				new PinPointTriggerAction(action.payload.lonLat)
+				new PinPointTriggerAction({lonLat})
 			];
 		});
 
@@ -91,15 +92,15 @@ export class MapAppEffects {
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
-		.mergeMap(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
+		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
-			const region = getPolygonByPoint(action.payload).geometry;
+			const region = getPolygonByPoint(action.payload.lonLat).geometry;
 
 			// draw on all maps
-			this.communicator.communicatorsAsArray().forEach(communicator => {
+			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-					communicator.addPinPointIndicator(action.payload);
+					communicator.addPinPointIndicator(action.payload.lonLat, action.payload.anchor);
 				}
 			});
 
@@ -169,7 +170,7 @@ export class MapAppEffects {
 				extent = calcGeoJSONExtent(overlay.footprint);
 			}
 
-			const communicator = this.communicator.provide(map_id);
+			const communicator = this.imageryCommunicatorService.provide(map_id);
 
 			const mapType = communicator.ActiveMap.mapType;
 
@@ -211,7 +212,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('map'))
 		.mergeMap(([action, mapState]: [SelectCaseByIdAction, IMapState]) => {
 			return mapState.mapsList.reduce((previusResult, data: CaseMapState) => {
-				const communicatorHandler = this.communicator.provide(data.id);
+				const communicatorHandler = this.imageryCommunicatorService.provide(data.id);
 				// if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
 					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
@@ -253,7 +254,7 @@ export class MapAppEffects {
 			return [action, state.selected_case.state.maps.active_map_id];
 		})
 		.map(([action, active_map_id]: [SelectLayerAction, string]) => {
-			const imagery = this.communicator.provide(active_map_id);
+			const imagery = this.imageryCommunicatorService.provide(active_map_id);
 			imagery.addVectorLayer(action.payload);
 		});
 
@@ -263,7 +264,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 		.map(([action, state]: [UnselectLayerAction, ICasesState]) => [action, state.selected_case.state.maps.active_map_id])
 		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
-			let imagery = this.communicator.provide(active_map_id);
+			let imagery = this.imageryCommunicatorService.provide(active_map_id);
 			imagery.removeVectorLayer(action.payload);
 		});
 
@@ -289,7 +290,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
 		.filter(([action, caseState, statusBarState]: [any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action, caseState, statusBarState]: [any, any, any]) => {
-			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
+			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 
 			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
 				const point = getPointByPolygon(caseState.selected_case.state.region);
@@ -307,7 +308,7 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action: AddMapInstacneAction) => {
 			// Init CenterMarkerPlugin
-			const communicatorHandler = this.communicator.provide(action.payload.currentCommunicatorId);
+			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.s_pluginType);
 			if (centerMarkerPluggin) {
 				centerMarkerPluggin.init(communicatorHandler);
@@ -321,8 +322,8 @@ export class MapAppEffects {
 		.filter(([action, caseState, statusBarState]: [any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action, caseState, statusBarState]: [any, any, any]) => {
 			const point = getPointByPolygon(caseState.selected_case.state.region);
-			this.communicator.communicatorsAsArray().forEach(c => {
-				c.addPinPointIndicator(point.coordinates);
+			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
+				communicator.addPinPointIndicator(point.coordinates);
 			});
 		});
 
@@ -336,7 +337,7 @@ export class MapAppEffects {
 			const mapToSyncTo = casesState.selected_case.state.maps.data.find((map) => map.id === action.payload.mapId);
 			casesState.selected_case.state.maps.data.forEach((mapItem: CaseMapState) => {
 				if (mapToSyncTo.id !== mapItem.id) {
-					const comm = this.communicator.provide(mapItem.id);
+					const comm = this.imageryCommunicatorService.provide(mapItem.id);
 					comm.setPosition(mapToSyncTo.data.position);
 				}
 			});
@@ -370,7 +371,7 @@ export class MapAppEffects {
 		.map(([action, mapState]: [any, any]): any[] => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-			const mapComm = this.communicator.provide(action.payload.mapId);
+			const mapComm = this.imageryCommunicatorService.provide(action.payload.mapId);
 			return [mapComm, map.data.position];
 		})
 		.filter(([mapComm]) => !isNil(mapComm))
@@ -443,7 +444,7 @@ export class MapAppEffects {
 
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
-				private communicator: ImageryCommunicatorService,
+				private imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]) {
 	}
 

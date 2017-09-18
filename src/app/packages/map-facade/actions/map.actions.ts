@@ -145,7 +145,7 @@ export class MapSingleClickAction implements Action {
 export class PinPointTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_POINT;
 
-	constructor(public payload: GeoJSON.Position) {
+	constructor(public payload: { lonLat: GeoJSON.Position, anchor?: [number, number]}) {
 	}
 }
 

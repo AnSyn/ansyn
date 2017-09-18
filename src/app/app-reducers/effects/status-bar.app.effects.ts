@@ -53,8 +53,8 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store.select('status_bar'))
 		.filter(([action, statusBarState]: [any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(() => {
-			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
-				c.createMapSingleClickEvent();
+			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
+				communicator.createMapSingleClickEvent();
 			});
 		});
 
@@ -66,13 +66,13 @@ export class StatusBarAppEffects {
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
 
 			const value: boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
-			this.imageryCommunicator.communicatorsAsArray().forEach(c => {
+			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				if (value) {
 					const point = getPointByPolygon(casesState.selected_case.state.region);
 					const latLon = point.coordinates;
-					c.addPinPointIndicator(latLon);
+					communicator.addPinPointIndicator(latLon);
 				} else {
-					c.removePinPointIndicator();
+					communicator.removePinPointIndicator();
 				}
 
 			});

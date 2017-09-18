@@ -45,6 +45,9 @@
 			"project": "src/tsconfig.app.json"
 		},
 		{
+			"project": "src/tsconfig.backwards.json"
+		},
+		{
 			"project": "src/tsconfig.spec.json"
 		},
 		{

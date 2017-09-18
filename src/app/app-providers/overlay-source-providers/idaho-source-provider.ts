@@ -1,9 +1,10 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 
@@ -27,25 +28,21 @@ export interface IIdahoOverlaySourceConfig {
 
 @Injectable()
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
-	constructor(private http: Http, @Inject(IdahoOverlaysSourceConfig) private _overlaySourceConfig: IIdahoOverlaySourceConfig) {
+	constructor(private http: HttpClient, @Inject(IdahoOverlaysSourceConfig) private _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super();
 		this.sourceType = IdahoOverlaySourceType;
 	}
 
 	public getById(id: string): Observable<Overlay> {
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
-		return <Observable<Overlay>>this.http.get(url, options)
+		return <Observable<Overlay>>this.http.get(url)
 			.map(this.extractData.bind(this))
 			.catch(this.handleError);
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
-		return <Observable<Overlay[]>>this.http.post(url, fetchParams, options)
+		return <Observable<Overlay[]>>this.http.post(url, fetchParams)
 			.map(this.extractArrayData.bind(this))
 			.catch(this.handleError);
 
@@ -53,20 +50,17 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<Array<Overlay>> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
-		return this.http.post(url, params)
-			.map(res => res.json())
+		return <Observable<Overlay[]>>this.http.post<Array<Overlay>>(url, params)
 			.catch(this.handleError);
 	}
 
-	private extractArrayData(response: Response): Array<Overlay> {
-		const data: IdahoResponse = response.json();
+	private extractArrayData(data: IdahoResponse): Array<Overlay> {
 		return data ? data.idahoResult.map((element) => {
 			return this.parseData(element, data.token);
 		}) : [];
 	}
 
-	private extractData(response: Response): Overlay {
-		const data: IdahoResponseForGetById = response.json();
+	private extractData(data: IdahoResponseForGetById): Overlay {
 		return this.parseData(data.idahoResult, data.token);
 	}
 

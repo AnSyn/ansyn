@@ -1,6 +1,5 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
@@ -9,6 +8,7 @@ import { Case, CaseMapState } from '../models/case.model';
 import { cloneDeep, get as _get, isEmpty } from 'lodash';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -19,7 +19,6 @@ export class CasesService {
 	base_url;
 	paginationLimit = 15;
 	queryParamsKeys;
-	defaultOptions = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
 	public contextValues = {
 		imageryCount: -1,
@@ -52,7 +51,7 @@ export class CasesService {
 		return result;
 	}
 
-	constructor(private http: Http, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
+	constructor(private http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
 		this.base_url = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
@@ -60,45 +59,38 @@ export class CasesService {
 
 	loadCases(last_id: string = '-1'): Observable<any> {
 		const url = `${this.base_url}/pagination/${last_id}?limit=${this.paginationLimit}`;
-		return this.http.get(url, this.defaultOptions).map(res => res.json());
+		return this.http.get(url);
 	}
 
 	createCase(selected_case: Case): Observable<Case> {
 		const url = `${this.base_url}`;
-		const body = JSON.stringify(selected_case);
-		return this.http.post(url, body, this.defaultOptions).map(res => res.json());
+		return this.http.post<Case>(url, selected_case);
 	}
 
 	wrapUpdateCase(selected_case: Case): Observable<Case> {
-		return Observable.create(observer => {
-			observer.next(Date.now());
-		})
+		return Observable.create(observer => observer.next(Date.now()))
 			.debounceTime(this.config.updateCaseDebounceTime)
-			.switchMap(() => {
-				return this.updateCase(selected_case);
-			});
+			.switchMap(() => this.updateCase(selected_case));
 	}
 
 	updateCase(selected_case: Case): Observable<Case> {
 		const url = `${this.base_url}`;
-		const body: string = JSON.stringify(selected_case);
-		return this.http.put(url, body, this.defaultOptions).map(res => res.json());
+		return this.http.put<Case>(url, selected_case);
 	}
 
 	removeCase(selected_case_id: string): Observable<any> {
 		const url = `${this.base_url}/${selected_case_id}`;
-		return this.http.delete(url, this.defaultOptions).map(res => res.json());
+		return this.http.delete(url);
 	}
 
 	loadContexts(): Observable<any> {
 		const url = `${this.base_url}/contexts`;
-		return this.http.get(url, this.defaultOptions).map((res) => res.json());
+		return this.http.get(url);
 	}
 
 	loadCase(selected_case_id: string): Observable<any> {
 		const url = `${this.base_url}/${selected_case_id}`;
-		return this.http.get(url, this.defaultOptions)
-			.map(res => res.json());
+		return this.http.get(url);
 
 	}
 

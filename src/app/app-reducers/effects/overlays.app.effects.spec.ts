@@ -11,7 +11,6 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Case, CasesReducer, CasesService, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { HttpModule } from '@angular/http';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import { IOverlayState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -20,6 +19,7 @@ import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import { IToolsState, toolsInitialState, ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -81,7 +81,7 @@ describe('OverlaysAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				HttpModule,
+				HttpClientModule,
 
 				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
 			],

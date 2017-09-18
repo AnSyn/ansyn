@@ -6,10 +6,11 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -30,14 +31,14 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(private http: Http, @Inject(layersConfig) private config: ILayersManagerConfig) {
+	constructor(private http: HttpClient, @Inject(layersConfig) private config: ILayersManagerConfig) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 
 	public getAllLayersInATree(caseId?: string): Observable<LayerRootsBundle> {
 		const url_string: string = this.baseUrl + (caseId ? `?case_id=${caseId}` : '');
 		return this.http.get(url_string)
-			.map((res) => this.extractData(res.json()))
+			.map(this.extractData.bind(this))
 			.catch(this.handleError);
 	}
 

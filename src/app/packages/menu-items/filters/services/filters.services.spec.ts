@@ -1,6 +1,6 @@
 import { filtersConfig, FiltersService } from './filters.service';
-import { HttpModule } from '@angular/http';
 import { inject, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('FiltersService', () => {
 
@@ -8,7 +8,7 @@ describe('FiltersService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule],
+			imports: [HttpClientModule],
 			providers: [FiltersService, { provide: filtersConfig, useValue: { filters: null } }]
 		});
 	});

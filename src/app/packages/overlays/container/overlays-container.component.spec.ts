@@ -4,7 +4,6 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Rx';
-import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -22,6 +21,7 @@ import {
 } from '../actions/overlays.actions';
 import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { HttpClientModule } from '@angular/common/http';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -71,7 +71,10 @@ describe('OverlayContainerComponent', () => {
 				OverlaysContainerComponent,
 				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] })
 			],
-			imports: [HttpModule, StoreModule.provideStore({ overlays: OverlayReducer })]
+			imports: [
+				HttpClientModule,
+				StoreModule.provideStore({ overlays: OverlayReducer })
+			]
 		})
 			.compileComponents();
 

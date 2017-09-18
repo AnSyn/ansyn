@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
-import { Http, HttpModule, Response, ResponseOptions, XHRBackend } from '@angular/http';
+import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
@@ -9,6 +9,7 @@ import * as turf from '@turf/turf';
 import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaySpecialObject } from '../../core/models/overlay.model';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -110,11 +111,11 @@ describe('OverlaysService', () => {
 				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			],
-			imports: [HttpModule]
+			imports: [HttpClientModule]
 		});
 	});
 
-	beforeEach(inject([OverlaysService, XHRBackend, Http, BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _baseSourceProvider: BaseOverlaySourceProvider) => {
+	beforeEach(inject([OverlaysService, XHRBackend, HttpClient, BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _baseSourceProvider: BaseOverlaySourceProvider) => {
 		overlaysService = _overlaysService;
 		mockBackend = _mockBackend;
 		http = _http;
@@ -246,23 +247,18 @@ describe('OverlaysService', () => {
 	});
 
 	it('check the method fetchData with spyOn', () => {
-		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
-		}));
+		let response = { key: 'value' };
 
-		spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
-			return Observable.create((observer: Observer<any>) => {
-				observer.next(response.json());
-			});
+		spyOn(baseSourceProvider, 'fetch').and.callFake(() => {
+			return Observable.create((observer: Observer<any>) => observer.next(response));
 		});
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
+			console.log(result);
 			expect(result.key).toBe('value');
 		});
 
-		response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value2' })
-		}));
+		response = { key: 'value2' };
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
 			expect(result.key).toBe('value2');
@@ -270,12 +266,10 @@ describe('OverlaysService', () => {
 	});
 
 	it('check the method searchOverlay with spyOn', () => {
-		let response = new Response(new ResponseOptions({
-			body: JSON.stringify({ key: 'value' })
-		}));
+		let response = { key: 'value' };
 
 		let calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
-			return Observable.create((observer: Observer<any>) => observer.next(response.json()));
+			return Observable.create((observer: Observer<any>) => observer.next(response));
 		}).calls;
 
 
@@ -310,17 +304,9 @@ describe('OverlaysService', () => {
 			from: new Date(2020),
 			to: Date.now()
 		};
-		overlaysService.search(
-			params
-		).subscribe((result: any) => {
-			let requestBody = calls.allArgs()[0][1];
-			let bbox = turf.bbox({ type: 'Feature', geometry: params.polygon, properties: {} });
-			let bboxFeature = turf.bboxPolygon(bbox);
+		overlaysService.search(params).subscribe((result: any) => {
 			expect(result.key).toBe('value');
 		});
-
-
-		// var requestBody = spyOn(http,'post').calls.first();
 
 	});
 

@@ -4,7 +4,6 @@ import { AnsynComponent } from './ansyn/ansyn.component';
 import { CaseComponent } from './case/case.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { ImageryModule } from '@ansyn/imagery';
@@ -33,6 +32,7 @@ import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-
 import { AnsynRouterModule } from '@ansyn/router';
 import { RouterModule } from '@angular/router';
 import { configuration } from '../../configuration/configuration';
+import { HttpClientModule } from '@angular/common/http';
 
 const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	CommonModule,
@@ -41,7 +41,7 @@ const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	OpenLayerMapModule,
 	BrowserModule,
 	FormsModule,
-	HttpModule,
+	HttpClientModule,
 	ContextModule,
 	BrowserAnimationsModule,
 	CoreModule,

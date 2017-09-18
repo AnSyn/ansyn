@@ -1,7 +1,6 @@
 import { CasesEffects } from './cases.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
-import { HttpModule } from '@angular/http';
 import { CasesService } from '../services/cases.service';
 import { combineReducers, Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../reducers/cases.reducer';
@@ -29,6 +28,7 @@ import { OverlayReducer } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { isEqual } from 'lodash';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -44,7 +44,12 @@ describe('CasesEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore(reducer), RouterTestingModule],
+			imports: [
+				HttpClientModule,
+				EffectsTestingModule,
+				StoreModule.provideStore(reducer),
+				RouterTestingModule
+			],
 			providers: [CasesEffects,
 				CasesService,
 				{ provide: casesConfig, useValue: { baseUrl: null } }]

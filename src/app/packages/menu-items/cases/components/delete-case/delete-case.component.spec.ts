@@ -1,6 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
-import { HttpModule } from '@angular/http';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
@@ -9,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -28,7 +28,12 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
+			imports: [
+				HttpClientModule,
+				CasesModule,
+				StoreModule.provideStore({ cases: CasesReducer }),
+				RouterTestingModule
+			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		}).compileComponents();
 	}));

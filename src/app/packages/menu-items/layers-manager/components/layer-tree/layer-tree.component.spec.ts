@@ -1,6 +1,5 @@
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../../layers-manager.module';
@@ -9,6 +8,7 @@ import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../../reducers/layers.reducer';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;
@@ -24,7 +24,11 @@ describe('LayerTreeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+			imports: [
+				LayersManagerModule,
+				HttpClientModule,
+				StoreModule.provideStore({ layers: LayersReducer })
+			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})
 			.compileComponents();

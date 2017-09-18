@@ -428,16 +428,24 @@ export class OpenLayersMap implements IMap {
 	}
 
 
-	public addPinPointIndicator(lonLat) {
+	public addPinPointIndicator(lonLat, anchor = [0, 0]) {
 		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const lonLatCords = proj.fromLonLat(lonLat, projection);
+
+		const iconStyle = new Icon({
+			scale: 1,
+			anchor,
+			src: '/assets/pinpoint_indicator.svg' // for further usage either bring from configuration or create svg
+		});
+
 		if (layer) {
 			layer.set('visible', true);
 			const feature = (<any>layer).getSource().getFeatures()[0];
 			feature.setGeometry(new Point(lonLatCords));
+			layer.getStyle().setImage(iconStyle);
 		}
 		else {
 			const feature = new Feature({
@@ -446,12 +454,6 @@ export class OpenLayersMap implements IMap {
 			});
 
 			const featuresCollection = new Collection([feature]);
-
-			const iconStyle = new Icon({
-				scale: 1,
-				anchor: [0, 0],
-				src: '/assets/pinpoint_indicator.svg' // for further usage either bring from configuration or create svg
-			});
 
 			const vectorLayer: VectorLayer = new VectorLayer({
 				source: new Vector({

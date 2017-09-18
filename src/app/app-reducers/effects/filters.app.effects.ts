@@ -37,10 +37,14 @@ export class FiltersAppEffects {
 
 			const parsedFilters = [];
 
-			filtersState.filters.forEach((value: any, key: any) =>  parsedFilters.push({
+			filtersState.filters.forEach((value: any, key: any) =>  {
+
+				parsedFilters.push({
 					filteringParams: { key: key.modelName, metadata: value },
 					filterFunc: value.filterFunc
-				}));
+				})
+
+			});
 
 			return new SetFiltersAction({
 				parsedFilters,
@@ -61,7 +65,7 @@ export class FiltersAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
 
-			const overlaysArray: Overlay[] = overlaysState.overlays.map(value => value);
+			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays).map(([key, overlay]: [string, Overlay]) => overlay);
 
 			let showAll = false;
 

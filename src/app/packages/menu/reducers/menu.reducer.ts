@@ -4,7 +4,8 @@ import {
 	MenuItem,
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
-} from '@ansyn/core';
+} from '../';
+import { SetBadgeAction } from '../actions/menu.actions';
 
 export interface IMenuState {
 	menu_items: MenuItem[];
@@ -18,7 +19,7 @@ export const initialMenuState: IMenuState = {
 	animation: false
 };
 
-export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | any;
+export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 
 export function MenuReducer(state: IMenuState = initialMenuState, action: MenuActions) {
 
@@ -42,6 +43,18 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.ANIMATION_END:
 			return Object.assign({}, state, { animation: false });
 
+		case MenuActionTypes.SET_BADGE: {
+			const { index, badge } = action.payload ;
+			const menuItem = state.menu_items[index];
+			menuItem.badge = badge;
+			const size = state.menu_items.length;
+			const menu_items = [
+				state.menu_items.slice(0, index),
+				menuItem,
+				state.menu_items.slice(index + 1, size),
+			];
+			return {...state, menu_items};
+		}
 
 		default:
 			return state;

@@ -2,7 +2,8 @@ import { ICasesConfig } from './models/cases-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { AddMenuItemAction, CoreModule, MenuItem } from '@ansyn/core';
+import { AddMenuItemAction, MenuItem } from '@ansyn/menu';
+import { CoreModule } from '@ansyn/core';
 import { InfiniteScrollModule } from '@ansyn/utils';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
 import { EditCaseComponent } from './components/edit-case/edit-case.component';
@@ -41,7 +42,7 @@ export class CasesModule {
 		};
 	}
 
-	constructor(store: Store<any>, casesService: CasesService) {
+	constructor(store: Store<any>) {
 		let menu_item: MenuItem = {
 			name: 'Cases',
 			component: CasesComponent,

@@ -111,7 +111,6 @@ export class OverlaysAppEffects {
 		})
 		.share();
 
-
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,

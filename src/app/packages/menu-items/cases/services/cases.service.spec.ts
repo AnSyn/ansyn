@@ -1,6 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { CasesService } from './cases.service';
-import { Headers, RequestOptions } from '@angular/http';
 import { Case } from '../models/case.model';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';

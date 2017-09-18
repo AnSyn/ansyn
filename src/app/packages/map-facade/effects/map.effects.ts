@@ -128,6 +128,16 @@ export class MapEffects {
 		.filter(({ mapsList }) => !_isNil(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
+	@Effect({ dispatch: false })
+	pinPointModeTriggerAction$: Observable<boolean> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.PIN_POINT_MODE)
+		.map(({ payload }) => payload);
+
+	@Effect({ dispatch: false })
+	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
+		.map(({ payload }) => payload);
+
 
 	constructor(private actions$: Actions,
 				private mapFacadeService: MapFacadeService,

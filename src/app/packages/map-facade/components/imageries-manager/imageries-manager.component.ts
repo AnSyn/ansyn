@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CaseMapState, Overlay } from '@ansyn/core/models';
-import { get as _get, isNil as _isNil, range as _range } from 'lodash';
+import { get as _get, isNil as _isNil } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
@@ -37,10 +37,6 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck<IMapState, CaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
-	public pinLocation$: Observable<boolean> = this.mapState$
-		.pluck<IMapState, boolean>('pinLocation')
-		.distinctUntilChanged();
-
 	public selected_layout;
 	public pointerMoveUnsubscriber: any;
 	public publisherMouseShadowMapId: string;
@@ -56,13 +52,10 @@ export class ImageriesManagerComponent implements OnInit {
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
-	pinLocation: boolean;
+	pinLocationMode: boolean;
+	pinPointMode: boolean;
 	mapsList: CaseMapState[];
-	activeMapId;
-
-	get range() {
-		return _range;
-	}
+	activeMapId: string;
 
 	constructor(private mapEffects: MapEffects, private communicatorProvider: ImageryCommunicatorService, private store: Store<IMapState>) {
 		this.shadowMouseProcess = false;
@@ -80,17 +73,19 @@ export class ImageriesManagerComponent implements OnInit {
 			this.loadingOverlaysIds = _mapState.loadingOverlays;
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
+
 		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this));
+
 		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
 			this.overlaysNotInCase = _overlaysNotInCase;
 		});
+
 		this.activeMapId$.subscribe(this.setActiveMapId.bind(this));
+
 		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => {
 			this.mapsList = _mapsList;
 		});
-		this.pinLocation$.subscribe((_pinLocation) => {
-			this.pinLocation = _pinLocation;
-		});
+
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
@@ -138,6 +133,14 @@ export class ImageriesManagerComponent implements OnInit {
 
 		this.mapEffects.onStartMapShadowMouse$.subscribe(res => {
 			this.startPointerMoveProcess();
+		});
+
+		this.mapEffects.pinPointModeTriggerAction$.subscribe((_pinPointMode: boolean) => {
+			this.pinPointMode = _pinPointMode;
+		});
+
+		this.mapEffects.pinLocationModeTriggerAction$.subscribe((_pinLocationMode: boolean) => {
+			this.pinLocationMode = _pinLocationMode;
 		});
 	}
 

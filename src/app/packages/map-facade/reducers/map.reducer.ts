@@ -15,7 +15,6 @@ export interface IMapState {
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
-	pinLocation: boolean;
 }
 
 export const initialMapState: IMapState = {
@@ -29,7 +28,6 @@ export const initialMapState: IMapState = {
 	layout: null,
 	activeMapId: null,
 	mapsList: [],
-	pinLocation: false
 };
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
@@ -83,10 +81,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
-
-		case MapActionTypes.STORE.PIN_LOCATION_MODE:
-			return { ...state, pinLocation: action.payload };
-
 
 		default:
 			return state;

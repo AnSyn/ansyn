@@ -15,7 +15,7 @@ export class ToolsMapEffects {
 	@Effect()
 	updatePinLocationState$: any = this.actions$
 		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.map(({ payload }) => new MapActions.SetPinLocationModeActionStore(payload));
+		.map(({ payload }) => new MapActions.PinLocationModeTriggerAction(payload));
 
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$

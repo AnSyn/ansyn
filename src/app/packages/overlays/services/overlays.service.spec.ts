@@ -5,7 +5,6 @@ import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import * as turf from '@turf/turf';
 import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaySpecialObject } from '../../core/models/overlay.model';

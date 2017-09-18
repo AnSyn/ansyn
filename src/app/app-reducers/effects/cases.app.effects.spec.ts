@@ -11,7 +11,6 @@ import {
 	SaveDefaultCaseAction,
 	SelectCaseByIdAction
 } from '@ansyn/menu-items/cases';
-import { HttpModule } from '@angular/http';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
 import { CoreModule } from '@ansyn/core';
@@ -26,6 +25,7 @@ import { MOCK_TEST_CONFIG } from '@ansyn/context/providers/context-test-source.s
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -36,7 +36,8 @@ describe('CasesAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule,
+			imports: [
+				HttpClientModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
 				CoreModule,

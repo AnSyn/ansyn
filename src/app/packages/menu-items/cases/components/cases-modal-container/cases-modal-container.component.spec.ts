@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
-import { HttpModule } from '@angular/http';
 import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { StoreModule } from '@ngrx/store';
 import { CasesReducer } from '../../reducers/cases.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -16,7 +16,12 @@ describe('ModalContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
+			imports: [
+				HttpClientModule,
+				CasesModule,
+				StoreModule.provideStore({ cases: CasesReducer }),
+				RouterTestingModule
+			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();

@@ -4,11 +4,11 @@ import { CasesToolsComponent } from './cases-tools.component';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
-import { HttpModule } from '@angular/http';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -17,7 +17,12 @@ describe('CasesToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
+			imports: [
+				HttpClientModule,
+				CasesModule,
+				StoreModule.provideStore({ cases: CasesReducer }),
+				RouterTestingModule
+			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();

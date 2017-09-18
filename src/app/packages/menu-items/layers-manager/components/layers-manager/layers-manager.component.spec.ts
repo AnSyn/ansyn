@@ -2,10 +2,10 @@ import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { LayersManagerModule } from '../../layers-manager.module';
 import { LayersManagerComponent } from './layers-manager.component';
-import { HttpModule } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { LayersReducer } from '../../reducers/layers.reducer';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -13,7 +13,11 @@ describe('LayersManagerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [LayersManagerModule, HttpModule, StoreModule.provideStore({ layers: LayersReducer })],
+			imports: [
+				LayersManagerModule,
+				HttpClientModule,
+				StoreModule.provideStore({ layers: LayersReducer })
+			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})
 			.compileComponents();

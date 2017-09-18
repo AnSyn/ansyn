@@ -1,5 +1,4 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { Http, HttpModule } from '@angular/http';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
 import { Case } from '../../models/case.model';
@@ -7,21 +6,20 @@ import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
-	let http: Http;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule],
+			imports: [HttpClientModule],
 			providers: [CasesService, UrlSerializer, MockCasesConfig]
 		});
 	});
 
-	beforeEach(inject([CasesService, Http], (_casesService: CasesService, _http: Http) => {
+	beforeEach(inject([CasesService], (_casesService: CasesService) => {
 		casesService = _casesService;
-		http = _http;
 	}));
 	let queryParamsHelper: QueryParamsHelper;
 

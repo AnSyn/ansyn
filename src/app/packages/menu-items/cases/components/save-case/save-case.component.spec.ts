@@ -5,9 +5,9 @@ import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { HttpModule } from '@angular/http';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -29,7 +29,12 @@ describe('SaveCaseComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, CasesModule, StoreModule.provideStore({ cases: CasesReducer }), RouterTestingModule],
+			imports: [
+				HttpClientModule,
+				CasesModule,
+				StoreModule.provideStore({ cases: CasesReducer }),
+				RouterTestingModule
+			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
 		})
 			.compileComponents();

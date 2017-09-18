@@ -1,18 +1,18 @@
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { inject, TestBed } from '@angular/core/testing';
-import { Http, HttpModule } from '@angular/http';
 import { DataLayersService } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;
-	let http: Http;
+	let http: HttpClient;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule],
+			imports: [HttpClientModule],
 			providers: [DataLayersService, {
 				provide: layersConfig,
 				useValue: {
@@ -22,7 +22,7 @@ describe('DataLayersService', () => {
 		});
 	});
 
-	beforeEach(inject([DataLayersService, Http], (_dataLayersService: DataLayersService, _http: Http) => {
+	beforeEach(inject([DataLayersService, HttpClient], (_dataLayersService: DataLayersService, _http: HttpClient) => {
 		dataLayersService = _dataLayersService;
 		http = _http;
 	}));

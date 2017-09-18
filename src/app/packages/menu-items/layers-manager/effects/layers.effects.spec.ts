@@ -5,13 +5,13 @@ import { LayerType } from '../models/layer-type';
 import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
-import { HttpModule } from '@angular/http';
 import { DataLayersService } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs/Observable';
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -20,7 +20,11 @@ describe('LayersEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpModule, EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
+			imports: [
+				HttpClientModule,
+				EffectsTestingModule,
+				StoreModule.provideStore({ layers: LayersReducer })
+			],
 			providers: [LayersEffects, DataLayersService, {
 				provide: layersConfig,
 				useValue: { layersByCaseIdUrl: null }

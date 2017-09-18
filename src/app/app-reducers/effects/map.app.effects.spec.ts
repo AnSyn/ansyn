@@ -2,7 +2,6 @@ import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers
 import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { CasesReducer, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
@@ -49,6 +48,7 @@ import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reduce
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { PinPointTriggerAction } from 'app/packages/map-facade/actions';
+import { HttpClientModule } from '@angular/common/http';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -131,7 +131,7 @@ describe('MapAppEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				HttpModule,
+				HttpClientModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({
 					cases: CasesReducer,

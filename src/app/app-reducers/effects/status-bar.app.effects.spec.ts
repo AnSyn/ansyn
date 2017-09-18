@@ -21,13 +21,14 @@ import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ConnectionBackend, Http, HttpModule } from '@angular/http';
+import { ConnectionBackend } from '@angular/http';
 import { BackToWorldViewAction, ExpandAction, FavoriteAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { cloneDeep } from 'lodash';
+import { HttpClientModule } from '@angular/common/http';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -50,7 +51,7 @@ describe('StatusBarAppEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				HttpModule,
+				HttpClientModule,
 				EffectsTestingModule,
 				StoreModule.provideStore({
 					status_bar: StatusBarReducer,
@@ -64,7 +65,6 @@ describe('StatusBarAppEffects', () => {
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				OverlaysService,
-				Http,
 				ConnectionBackend,
 				{
 					provide: OverlaysConfig, useValue: {

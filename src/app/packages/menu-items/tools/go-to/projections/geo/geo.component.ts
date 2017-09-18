@@ -9,25 +9,25 @@ import {
 } from '@angular/forms';
 import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
 
-const providers = [
-	{
-		provide: NG_VALUE_ACCESSOR,
-		useExisting: forwardRef(() => GeoComponent),
-		multi: true
-	},
-	{
-		provide: NG_VALIDATORS,
-		useExisting: forwardRef(() => GeoComponent),
-		multi: true
-	}
-];
 
 @Component({
 	selector: 'ansyn-geo',
 	templateUrl: './geo.component.html',
 	styleUrls: ['./geo.component.less'],
-	providers
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => GeoComponent),
+			multi: true
+		},
+		{
+			provide: NG_VALIDATORS,
+			useExisting: forwardRef(() => GeoComponent),
+			multi: true
+		}
+	]
 })
+
 export class GeoComponent implements ControlValueAccessor, Validator {
 	coordinates: number[] = [0, 0];
 	onChanges = (value) => {

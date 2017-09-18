@@ -2,25 +2,24 @@ import { Component, forwardRef } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
 
-const providers = [
-	{
-		provide: NG_VALUE_ACCESSOR,
-		useExisting: forwardRef(() => UtmComponent),
-		multi: true
-	},
-	{
-		provide: NG_VALIDATORS,
-		useExisting: forwardRef(() => UtmComponent),
-		multi: true
-	}
-];
-
 @Component({
 	selector: 'ansyn-utm',
 	templateUrl: './utm.component.html',
 	styleUrls: ['./utm.component.less'],
-	providers
+	providers :  [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => UtmComponent),
+			multi: true
+		},
+		{
+			provide: NG_VALIDATORS,
+			useExisting: forwardRef(() => UtmComponent),
+			multi: true
+		}
+	]
 })
+
 export class UtmComponent implements ControlValueAccessor, Validator {
 	coordinates: number[] = [0, 0, 0];
 	onChanges = (value) => {

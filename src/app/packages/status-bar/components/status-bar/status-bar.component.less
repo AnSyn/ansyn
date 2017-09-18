@@ -134,7 +134,7 @@ div.status-bar-container {
 				margin: 0;
 				transition: .4s;
 
-				span {
+				span.name {
 					max-width: 100px;
 					white-space: nowrap;
 					overflow: hidden;
@@ -150,21 +150,25 @@ div.status-bar-container {
 					.pop-hover-content {
 
 						button.share-link {
-							border: solid white 1px;
+							padding: 5px;
+							background: black;
+							color: #fff;
+							text-align: center;
+							border-radius: 6px;
+							border: solid black 1px;
 							cursor: pointer;
-							padding: 5px 10px;
-							background: #fafafa;
-							color: #727272;
-							border-radius: 2px;
 							transition: .3s;
 							display: flex;
 							align-items: center;
-							img {
-								height: 20px;
+
+							span.icon-status-bar--share-link {
+								margin-right: 3px;
+								font-size: 18px;
 							}
+
 							&:hover {
-								border-top-color: #727272;
-								border-bottom-color: #727272;
+								border-top-color: white;
+								border-bottom-color: white;
 							}
 						}
 					}

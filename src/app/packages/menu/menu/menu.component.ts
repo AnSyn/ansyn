@@ -15,7 +15,7 @@ import {
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
 } from '@ansyn/core';
-import * as packageJson from '../../../../../package.json';
+import packageJson from '../../../../../package.json';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
@@ -70,7 +70,7 @@ export class MenuComponent implements AfterViewInit {
 
 	public animation$: Observable<boolean> = this.store.select('menu').map((store: IMenuState) => store.animation).distinctUntilChanged(isEqual);
 	public animation: boolean;
-	public version = packageJson['version'];
+	public version = packageJson.version;
 	public expand = false;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,

@@ -24,7 +24,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		if (!this.enumsFields.get(value)) {
 			this.enumsFields.set(value, { count: 1, isChecked: false });
 		} else {
-			this.enumsFields.get(value)['count'] = this.enumsFields.get(value)['count'] + 1;
+			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
 	}
 

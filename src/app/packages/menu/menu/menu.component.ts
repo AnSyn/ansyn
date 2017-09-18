@@ -11,17 +11,16 @@ import {
 import {
 	AnimationEndAction,
 	AnimationStartAction,
-	MenuItem,
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
-} from '@ansyn/core';
+} from '../actions';
+import { MenuItem } from '../models';
 import packageJson from '../../../../../package.json';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-
 import { isEqual, isNil } from 'lodash';
 
 const DEFAULT_WIDTH = 90;
@@ -53,22 +52,23 @@ export class MenuComponent implements AfterViewInit {
 	@ViewChild('container') container: ElementRef;
 	@ViewChild('selected_component_elem', { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
-	menu_items$: Observable<MenuItem[]> = this.store.select('menu')
-		.map((state: IMenuState) => state.menu_items)
+	menuState$: Observable<IMenuState> = this.store.select('menu');
+
+	menu_items$: Observable<MenuItem[]> = this.menuState$
+		.pluck <IMenuState, MenuItem[]> ('menu_items')
 		.distinctUntilChanged(isEqual);
 
 	menu_items: MenuItem[];
 
-	selected_menu_item_index$: Observable<number> =
-		this.store.select('menu')
-			.map((state: IMenuState) => state.selected_menu_item_index)
-			.distinctUntilChanged(isEqual);
+	selected_menu_item_index$: Observable<number> = this.menuState$
+			.pluck <IMenuState, number> ('selected_menu_item_index')
+			.distinctUntilChanged();
+
+	animation$: Observable<boolean> = this.menuState$.pluck <IMenuState, boolean> ('animation').distinctUntilChanged();
 
 	selected_item_index: number;
 
 	selected_component_ref: ComponentRef<any>;
-
-	public animation$: Observable<boolean> = this.store.select('menu').map((store: IMenuState) => store.animation).distinctUntilChanged(isEqual);
 	public animation: boolean;
 	public version = packageJson.version;
 	public expand = false;

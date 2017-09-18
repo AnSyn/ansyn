@@ -6,7 +6,8 @@ export const MenuActionTypes = {
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	ANIMATION_START: 'ANIMATION_START',
-	ANIMATION_END: 'ANIMATION_END'
+	ANIMATION_END: 'ANIMATION_END',
+	SET_BADGE: 'SET_BADGE'
 };
 
 export class AddMenuItemAction implements Action {
@@ -43,3 +44,11 @@ export class AnimationEndAction implements Action {
 	constructor(public payload?: any) {
 	}
 }
+
+export class SetBadgeAction implements Action {
+	type = MenuActionTypes.SET_BADGE;
+
+	constructor(public payload: {index: number, badge: number}) {
+	}
+}
+

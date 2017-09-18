@@ -1,14 +1,18 @@
 <div class="menu-wrapper">
 
 	<div class="menu" [style.width.px]="width">
+
 		<div
 			class="menu-btn"
 			*ngFor="let menu_item of menu_items; let index = index"
 			[class.active]="isActive(index)"
 			(click)="toggleItem(index)">
+
 			<img [src]="menu_item.icon_url"/>
+			<span class="badge" [hidden]="!menu_item.badge">{{menu_item.badge}}</span>
 			{{menu_item.name}}
 		</div>
+
 		<div class="logo">
 			<img src="/assets/logo.svg" alt="{{version}}" title="{{version}}">
 		</div>

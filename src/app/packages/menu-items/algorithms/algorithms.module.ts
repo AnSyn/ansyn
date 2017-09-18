@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
-import { AddMenuItemAction, CoreModule, MenuItem } from '@ansyn/core';
+import { AddMenuItemAction } from '@ansyn/menu';
+import { CoreModule, MenuItem } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 
 @NgModule({

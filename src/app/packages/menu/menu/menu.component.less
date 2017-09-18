@@ -10,12 +10,25 @@ div.menu-wrapper {
 		display: flex;
 		z-index: 2;
 		div.menu-btn {
+			position: relative;
 			text-align: center;
 			color: white;
 			text-decoration: none;
 			padding: 10px 0;
 			cursor: pointer;
 			font-size: 0.9rem;
+
+			span.badge {
+				position: absolute;
+				background: #D0021B;
+				right: 10px;
+				top: 0;
+				width: 20px;
+				height: 20px;
+				border-radius: 100%;
+				border: 1px solid white;
+			}
+
 			img {
 				margin: 0 auto 5px auto;
 				display: block;

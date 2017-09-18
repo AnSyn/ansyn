@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes } from '@ansyn/core';
+import { MenuActionTypes } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { IAppState } from '../';
 import { RedrawTimelineAction } from '@ansyn/overlays';

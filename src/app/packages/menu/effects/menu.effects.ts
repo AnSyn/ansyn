@@ -5,7 +5,7 @@ import 'rxjs/add/operator/share';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes } from '@ansyn/core';
+import { MenuActionTypes } from '../actions';
 
 @Injectable()
 export class MenuEffects {

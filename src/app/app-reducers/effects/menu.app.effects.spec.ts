@@ -1,4 +1,4 @@
-import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/core';
+import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
 import { AddCaseSuccessAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';

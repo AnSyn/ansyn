@@ -6,7 +6,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'angular-tree-component';
 import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
-import { AddMenuItemAction, MenuItem } from '@ansyn/core';
+import { AddMenuItemAction, MenuItem } from '@ansyn/menu';
 import { LayerTreeComponent } from './components/layer-tree/layer-tree.component';
 import { Store } from '@ngrx/store';
 

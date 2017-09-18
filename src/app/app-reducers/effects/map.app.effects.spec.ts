@@ -47,7 +47,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { PinPointTriggerAction } from 'app/packages/map-facade/actions';
+import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {

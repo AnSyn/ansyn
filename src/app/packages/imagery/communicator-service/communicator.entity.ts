@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
 import { MapPosition } from '../model/map-position';
 import { IMapVisualizer } from '../model/imap-visualizer';
+import { IMap } from '../model/imap';
 
 /**
  * Created by AsafMasa on 27/04/2017.
@@ -87,7 +88,7 @@ export class CommunicatorEntity {
 		this._manager.loadInitialMapSource(extent);
 	}
 
-	public get ActiveMap() {
+	public get ActiveMap(): IMap {
 		if (this._manager) {
 			return this._manager.ActiveMap;
 		}

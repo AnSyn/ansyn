@@ -1,10 +1,10 @@
 import { ComponentRef } from '@angular/core';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MenuComponent } from './menu.component';
-import { MenuItem } from '@ansyn/core';
+import { MenuItem } from '../models';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/core/actions/menu.actions';
+import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MenuComponent', () => {
@@ -64,37 +64,36 @@ describe('MenuComponent', () => {
 			component: 'fake_comp',
 			icon_url: 'fake/url/to/icon'
 		};
-		menuComponent.menu_items = [mock_menu_item];
-		menuComponent.selected_item_index = 0;
+		menuComponent.menuItems = new Map();
+		menuComponent.menuItems.set(mock_menu_item.name, mock_menu_item);
+		menuComponent.selectedMenuItem  = 'one';
 		spyOn(menuComponent, 'itemSelected').and.returnValue(true);
 		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fake_factory);
 		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(() => fake_factory);
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.selected_component_elem.createComponent).toHaveBeenCalledWith(fake_factory);
 		expect(menuComponent.selected_component_ref).toEqual(fake_factory);
-
-		menuComponent.selected_item_index = -1;
-		menuComponent.menu_items = [];
-
+		menuComponent.selectedMenuItem = '';
+		menuComponent.menuItems = new Map();
 	});
 
 
-	it('toggleItem should call: closeMenu if selected_item_index and index are equals or openMenu if not', () => {
+	it('toggleItem should call: closeMenu if selectedMenuItem and key are equals or openMenu if not', () => {
 		spyOn(menuComponent, 'closeMenu');
 		spyOn(menuComponent, 'openMenu');
-		menuComponent.selected_item_index = 0;
-		menuComponent.toggleItem(0);
+		menuComponent.selectedMenuItem = 'fakeMenuItem';
+		menuComponent.toggleItem('fakeMenuItem');
 		expect(menuComponent.closeMenu).toHaveBeenCalled();
-		menuComponent.toggleItem(1);
-		expect(menuComponent.openMenu).toHaveBeenCalledWith(1);
-		menuComponent.selected_item_index = -1;
+		menuComponent.toggleItem('fakeMenuItem2');
+		expect(menuComponent.openMenu).toHaveBeenCalledWith('fakeMenuItem2');
+		menuComponent.selectedMenuItem = '';
 	});
 
-	it('isActive should get index and check if selected_item_index equal to index', () => {
-		menuComponent.selected_item_index = 6;
-		expect(menuComponent.isActive(5)).toBeFalsy();
-		expect(menuComponent.isActive(6)).toBeTruthy();
-		menuComponent.selected_item_index = -1;
+	it('isActive should get key and check if selectedMenuItem equal to the key', () => {
+		menuComponent.selectedMenuItem = 'one';
+		expect(menuComponent.isActive('two')).toBeFalsy();
+		expect(menuComponent.isActive('one')).toBeTruthy();
+		menuComponent.selectedMenuItem = '';
 	});
 
 	it('closeMenu should call store.dispatch with UnSelectMenuItemAction', () => {
@@ -105,8 +104,8 @@ describe('MenuComponent', () => {
 
 	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
-		menuComponent.openMenu(1);
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction(1));
+		menuComponent.openMenu('one');
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction('one'));
 	});
 
 	it('onFinishAnimation should get expand value and change on_animation to false. if expand is false: call componentChanges and if menu open change expand to true', () => {

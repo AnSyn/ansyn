@@ -22,14 +22,14 @@ import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { facetChangesActionType } from '../../packages/menu-items/filters/effects/filters.effects';
 
 @Injectable()
 export class FiltersAppEffects {
-	facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS, FiltersActionTypes.TOGGLE_ONLY_FAVORITES, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS];
 
 	@Effect()
 	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
-		.ofType(...this.facetChangesActionType)
+		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases'))
 		.map(([action, filtersState, casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState, ICasesState]) => {
 
@@ -55,7 +55,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
-		.ofType(...this.facetChangesActionType)
+		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
 		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) =>  this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));

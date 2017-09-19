@@ -11,20 +11,20 @@ describe('MenuReducer', () => {
 		};
 		let action: AddMenuItemAction = new AddMenuItemAction(menu_item);
 		let result: IMenuState = MenuReducer(initialMenuState, action);
-		expect(result.menu_items).toEqual([menu_item]);
+		expect(result.menuItems.get('fake_menu_item')).toEqual(menu_item);
 	});
 
 
 	it('SELECT_MENU_ITEM action should set selected_menu_item_index with action.payload', () => {
-		let select_action: SelectMenuItemAction = new SelectMenuItemAction(1);
+		let select_action: SelectMenuItemAction = new SelectMenuItemAction('fake_menu_item');
 		let result: IMenuState = MenuReducer(initialMenuState, select_action);
-		expect(result.selected_menu_item_index).toEqual(1);
+		expect(result.selectedMenuItem).toEqual('fake_menu_item');
 	});
 
 	it('UNSELECT_MENU_ITEM action should set selected_menu_item_index with "-1"', () => {
 		let unselect_action: UnSelectMenuItemAction = new UnSelectMenuItemAction();
 		let result: IMenuState = MenuReducer(initialMenuState, unselect_action);
-		expect(result.selected_menu_item_index).toEqual(-1);
+		expect(result.selectedMenuItem).toEqual('');
 	});
 
 });

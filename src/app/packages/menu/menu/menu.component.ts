@@ -78,6 +78,7 @@ export class MenuComponent implements AfterViewInit {
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>) {
+
 		this.menuItems$.subscribe((_menuItems) => {
 			this.menuItems = _menuItems;
 		});

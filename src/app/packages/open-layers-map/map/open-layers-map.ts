@@ -94,7 +94,8 @@ export class OpenLayersMap implements IMap {
 			view: new View({
 				center: proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,
-				rotation: rotation
+				rotation: rotation,
+				minZoom: 3
 			})
 		});
 

@@ -6,7 +6,7 @@ import { isEqual as _isEqual } from 'lodash';
 	selector: 'ansyn-utm',
 	templateUrl: './utm.component.html',
 	styleUrls: ['./utm.component.less'],
-	providers :  [
+	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => UtmComponent),

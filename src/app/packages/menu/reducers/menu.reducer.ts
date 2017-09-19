@@ -1,10 +1,4 @@
-import {
-	AddMenuItemAction,
-	MenuActionTypes,
-	MenuItem,
-	SelectMenuItemAction,
-	UnSelectMenuItemAction
-} from '../';
+import { AddMenuItemAction, MenuActionTypes, MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from '../';
 import { SetBadgeAction } from '../actions/menu.actions';
 
 export interface IMenuState {
@@ -42,7 +36,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return { ...state, animation: false };
 
 		case MenuActionTypes.SET_BADGE: {
-			const { key, badge } = action.payload ;
+			const { key, badge } = action.payload;
 			const menuItems = new Map(state.menuItems);
 			const menuItem = menuItems.get(key);
 			menuItem.badge = badge;

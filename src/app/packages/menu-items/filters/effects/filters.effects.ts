@@ -56,12 +56,12 @@ export class FiltersEffects {
 		.map(([action, filters]) => filters)
 		.map((filters: Map<Filter, FilterMetadata>) => {
 			const enumFilterValues = [...filters.values()]
-				.filter (value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
-			const badge = enumFilterValues.reduce((badgeNum: number, {enumsFields}) =>  {
-				const someUnchecked = [...enumsFields.values()].some(({isChecked}) => !isChecked)
+				.filter(value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
+			const badge = enumFilterValues.reduce((badgeNum: number, { enumsFields }) => {
+				const someUnchecked = [...enumsFields.values()].some(({ isChecked }) => !isChecked);
 				return someUnchecked ? badgeNum + 1 : badgeNum;
 			}, 0);
-			return new SetBadgeAction({key: 'Filters', badge})
+			return new SetBadgeAction({ key: 'Filters', badge });
 		})
 		.share();
 

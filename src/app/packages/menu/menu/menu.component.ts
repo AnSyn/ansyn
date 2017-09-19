@@ -8,12 +8,7 @@ import {
 	ViewChild,
 	ViewContainerRef
 } from '@angular/core';
-import {
-	AnimationEndAction,
-	AnimationStartAction,
-	SelectMenuItemAction,
-	UnSelectMenuItemAction
-} from '../actions';
+import { AnimationEndAction, AnimationStartAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { MenuItem } from '../models';
 import packageJson from '../../../../../package.json';
 import { Observable } from 'rxjs/Observable';
@@ -55,18 +50,18 @@ export class MenuComponent implements AfterViewInit {
 	menuState$: Observable<IMenuState> = this.store.select('menu');
 
 	menuItems$: Observable<Map<string, MenuItem>> = this.menuState$
-		.pluck <IMenuState, Map<string, MenuItem>> ('menuItems')
+		.pluck <IMenuState, Map<string, MenuItem>>('menuItems')
 		.distinctUntilChanged();
 
 	menuItemsAsArray$: Observable<MenuItem[]> = this.menuItems$
 		.map((menuItems: Map<string, MenuItem>) => [...menuItems.values()]);
 
 	selectedMenuItem$: Observable<string> = this.menuState$
-			.pluck <IMenuState, string> ('selectedMenuItem')
-			.distinctUntilChanged();
+		.pluck <IMenuState, string>('selectedMenuItem')
+		.distinctUntilChanged();
 
 	animation$: Observable<boolean> = this.menuState$
-		.pluck <IMenuState, boolean> ('animation')
+		.pluck <IMenuState, boolean>('animation')
 		.distinctUntilChanged();
 
 	selectedMenuItem: string;

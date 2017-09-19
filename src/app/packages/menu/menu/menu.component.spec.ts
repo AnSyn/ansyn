@@ -66,7 +66,7 @@ describe('MenuComponent', () => {
 		};
 		menuComponent.menuItems = new Map();
 		menuComponent.menuItems.set(mock_menu_item.name, mock_menu_item);
-		menuComponent.selectedMenuItem  = 'one';
+		menuComponent.selectedMenuItem = 'one';
 		spyOn(menuComponent, 'itemSelected').and.returnValue(true);
 		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fake_factory);
 		spyOn(menuComponent.selected_component_elem, 'createComponent').and.callFake(() => fake_factory);

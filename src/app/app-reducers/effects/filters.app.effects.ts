@@ -10,7 +10,6 @@ import { IAppState } from '../app-reducers.module';
 import {
 	Filter,
 	FilterMetadata,
-	FiltersActionTypes,
 	FiltersService,
 	InitializeFiltersAction,
 	ResetFiltersAction
@@ -22,7 +21,7 @@ import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { facetChangesActionType } from '../../packages/menu-items/filters/effects/filters.effects';
+import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -37,12 +36,12 @@ export class FiltersAppEffects {
 
 			const parsedFilters = [];
 
-			filtersState.filters.forEach((value: any, key: any) =>  {
+			filtersState.filters.forEach((value: any, key: any) => {
 
 				parsedFilters.push({
 					filteringParams: { key: key.modelName, metadata: value },
 					filterFunc: value.filterFunc
-				})
+				});
 
 			});
 
@@ -57,7 +56,7 @@ export class FiltersAppEffects {
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
-		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) =>  this.updateCaseFacets(selectedCase, filtersState))
+		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
 	@Effect()

@@ -1,7 +1,6 @@
 // @TODO add  tests
 
 
-
 describe('Filters app effects', () => {
 
 	it('updateOverlayFilters$ effect', () => {
@@ -15,17 +14,17 @@ describe('Filters app effects', () => {
 	it('initializeFilters$ effect', () => {
 
 	});
-	
+
 	it('resetFilters$ effect', () => {
 
-	})
+	});
 
 	it('updateCaseFacets function', () => {
 
-	})
+	});
 
 	it('isMetadataEmpty', () => {
 
-	})
+	});
 
 });

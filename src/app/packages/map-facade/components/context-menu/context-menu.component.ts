@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
-import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
+import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil, uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -75,17 +75,18 @@ export class ContextMenuComponent implements OnInit {
 		const sensorsOnly = this.filteredOverlays
 			.filter(({ id }) => _get(this.displayedOverlay, 'id') !== id)
 			.map(({ sensorName }) => sensorName);
-		this.allSensors = [...new Set(sensorsOnly)];
-		this.displayedOverlayIndex = this.filteredOverlays.findIndex((overlay) => overlay.id === _get(this.displayedOverlay, 'id'));
+		this.allSensors = _uniq(sensorsOnly);
+		this.displayedOverlayIndex = this.filteredOverlays
+			.findIndex(({ id }) => _get(this.displayedOverlay, 'id') === id);
 
 		if (this.displayedOverlayIndex === -1) {
 			if (_isNil(this.displayedOverlay)) {
 				this.prevSensors = [];
-				this.nextSensors = [...this.allSensors];
+				this.nextSensors = Array.from(this.allSensors);
 			}
 		} else {
-			this.prevSensors = [...new Set(sensorsOnly.slice(0, this.displayedOverlayIndex))];
-			this.nextSensors = [...new Set(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length))];
+			this.prevSensors = _uniq(sensorsOnly.slice(0, this.displayedOverlayIndex));
+			this.nextSensors = _uniq(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length));
 		}
 	}
 

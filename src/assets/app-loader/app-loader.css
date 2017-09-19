@@ -122,7 +122,6 @@
 .skeleton-loader {
 	font-size: 10px;
 	margin: 50px auto;
-	text-indent: -9999em;
 	width: 11em;
 	height: 11em;
 	border-radius: 50%;
@@ -148,9 +147,12 @@
 	width: 82.5px;
 	height: 82.5px;
 	background: #2e2d46;;
-	align-self: center;
-	position: absolute;
-	left: calc(50% - 41.5px);
+	position: relative;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
 	border-radius: 50%;
 	font-size: 16px;
 	display: flex;
@@ -159,7 +161,6 @@
 	color: #2e2d46;
 	font-weight: bold;
 	font-family: 'sans-serif';
-
 }
 
 @-webkit-keyframes load3 {

@@ -49,3 +49,4 @@ Thumbs.db
 /out/chrome/*
 
 package-lock.json
+yarn.lock

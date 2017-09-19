@@ -1,5 +1,6 @@
-import { AddMenuItemAction, MenuActionTypes, MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from '../';
+import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { SetBadgeAction } from '../actions/menu.actions';
+import { MenuItem } from '@ansyn/core';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
@@ -35,14 +36,14 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.ANIMATION_END:
 			return { ...state, animation: false };
 
-		case MenuActionTypes.SET_BADGE: {
+		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
-			const menuItems = new Map(state.menuItems);
-			const menuItem = menuItems.get(key);
+			const menuItemsHandler = new Map<string, MenuItem>(state.menuItems);
+			const menuItem = menuItemsHandler.get(key);
 			menuItem.badge = badge;
-			menuItems.set(key, menuItem);
-			return { ...state, menuItems };
-		}
+			menuItemsHandler.set(key, menuItem);
+			return { ...state, menuItems: menuItemsHandler };
+
 
 		default:
 			return state;

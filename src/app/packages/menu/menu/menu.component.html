@@ -4,13 +4,13 @@
 
 		<div
 			class="menu-btn"
-			*ngFor="let menu_item of menuItemsAsArray$ | async; let index = index"
-			[class.active]="isActive(menu_item.name)"
-			(click)="toggleItem(menu_item.name)">
+			*ngFor="let menuItem of menuItemsAsArray$ | async; let index = index"
+			[class.active]="isActive(menuItem.name)"
+			(click)="toggleItem(menuItem.name)">
 
-			<img [src]="menu_item.icon_url"/>
-			<span class="badge" [hidden]="!menu_item.badge">{{menu_item.badge}}</span>
-			{{menu_item.name}}
+			<img [src]="menuItem.icon_url"/>
+			<span class="badge" [hidden]="!menuItem.badge">{{menuItem.badge}}</span>
+			{{menuItem.name}}
 		</div>
 
 		<div class="logo">

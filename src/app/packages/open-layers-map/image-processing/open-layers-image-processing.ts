@@ -185,7 +185,7 @@ function buildHistogramLut(imageData) {
 		const g = imageData.data[index + 1];
 		const b = imageData.data[index + 2];
 
-		const yCbCr = rgb2YCbCr({ r, g, b });
+		const yCbCr = this['rgb2YCbCr']({ r, g, b });
 
 		const val = Math.floor(yCbCr.y);
 		if (totalHistLut[val] === undefined) {

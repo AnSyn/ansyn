@@ -50,7 +50,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 	}
 
 	copyToClipBoard() {
-		this.copyToClipBoardHandler.emit(this.coordinates.join(' '))
+		this.copyToClipBoardHandler.emit(this.coordinates.join(' '));
 	}
 
 	validate(c: AbstractControl): { [key: string]: any; } {

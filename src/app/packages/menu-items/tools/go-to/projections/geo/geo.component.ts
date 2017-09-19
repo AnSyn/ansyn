@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import {
 	AbstractControl,
 	ControlValueAccessor,
@@ -29,9 +29,13 @@ import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
 })
 
 export class GeoComponent implements ControlValueAccessor, Validator {
+	@Output() copyToClipBoardHandler = new EventEmitter();
+
 	coordinates: number[] = [0, 0];
+
 	onChanges = (value) => {
 	};
+
 	onBlur = () => {
 	};
 
@@ -51,6 +55,10 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 
 	onInputs(value) {
 		this.onChanges([...value]);
+	}
+
+	copyToClipBoard() {
+		this.copyToClipBoardHandler.emit(`${this.coordinates[1]} ${this.coordinates[0]}`);
 	}
 
 	validate(c: AbstractControl): ValidationErrors {

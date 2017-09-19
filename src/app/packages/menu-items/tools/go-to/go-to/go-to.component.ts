@@ -7,6 +7,7 @@ import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
 import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
 import 'rxjs/add/operator/pluck';
+import { copyFromContent } from '@ansyn/core/utils/clipboard';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -73,6 +74,10 @@ export class GoToComponent implements OnInit {
 	submitGoTo(): void {
 		const goToInput = convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
 		this.store$.dispatch(new GoToAction(goToInput));
+	}
+
+	copyToClipBoard(value: string) {
+		copyFromContent(value);
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {

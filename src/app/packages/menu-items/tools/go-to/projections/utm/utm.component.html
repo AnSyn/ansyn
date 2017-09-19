@@ -1,12 +1,27 @@
-<label>UTM ED50</label>
+<label class="goto-projection-title">UTM ED50</label>
 
 <div class="inputs">
 	<ng-template [ngIf]="coordinates">
-		<input type="number" [(ngModel)]="coordinates[0]" name="x" (ngModelChange)="onInputs(coordinates)"
-			   autocomplete="false"/>
-		<input type="number" [(ngModel)]="coordinates[1]" name="y" (ngModelChange)="onInputs(coordinates)"
-			   autocomplete="false"/>
-		<input type="number" [(ngModel)]="coordinates[2]" name="z" (ngModelChange)="onInputs(coordinates)"
-			   autocomplete="false"/>
+		<div class="input-box">
+			<label for="utm-x-input">x</label>
+			<input id="utm-x-input" type="number" [(ngModel)]="coordinates[0]" name="x"
+				   (ngModelChange)="onInputs(coordinates)"
+				   autocomplete="false"/>
+		</div>
+		<div class="input-box">
+			<label for="utm-y-input">y</label>
+			<input id="utm-y-input" type="number" [(ngModel)]="coordinates[1]" name="y"
+				   (ngModelChange)="onInputs(coordinates)"
+				   autocomplete="false"/>
+		</div>
+		<div class="input-box">
+			<label for="utm-z-input">z</label>
+			<input id="utm-z-input" type="number" [(ngModel)]="coordinates[2]" name="z"
+				   (ngModelChange)="onInputs(coordinates)"
+				   autocomplete="false"/>
+		</div>
+		<div class="utm-copy-to-clipboard" (click)="copyToClipBoard()">
+			<span class="icon-status-bar--share-link"></span>
+		</div>
 	</ng-template>
 </div>

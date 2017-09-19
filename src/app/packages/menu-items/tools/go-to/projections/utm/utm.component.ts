@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
 
@@ -6,7 +6,7 @@ import { isEqual as _isEqual } from 'lodash';
 	selector: 'ansyn-utm',
 	templateUrl: './utm.component.html',
 	styleUrls: ['./utm.component.less'],
-	providers :  [
+	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => UtmComponent),
@@ -21,9 +21,13 @@ import { isEqual as _isEqual } from 'lodash';
 })
 
 export class UtmComponent implements ControlValueAccessor, Validator {
+	@Output() copyToClipBoardHandler = new EventEmitter();
+
 	coordinates: number[] = [0, 0, 0];
+
 	onChanges = (value) => {
 	};
+
 	onBlur = () => {
 	};
 
@@ -45,6 +49,9 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		this.onChanges([...value]);
 	}
 
+	copyToClipBoard() {
+		this.copyToClipBoardHandler.emit(this.coordinates.join(' '))
+	}
 
 	validate(c: AbstractControl): { [key: string]: any; } {
 		if (!c.value) {

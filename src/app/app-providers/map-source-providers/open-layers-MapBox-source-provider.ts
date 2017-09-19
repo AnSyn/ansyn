@@ -49,6 +49,7 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 			visible: true,
 			preload: Infinity
 		});
+
 		return [mapBoxLayer];
 	}
 

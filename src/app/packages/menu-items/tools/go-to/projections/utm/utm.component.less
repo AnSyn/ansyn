@@ -3,29 +3,45 @@
 	display: flex;
 	flex-direction: column;
 	color: white;
-
-	label {
-		margin: 5px 0;
-	}
-
+	margin-left:12px;
 	.inputs {
 		display: flex;
-		width: 100%;
-		input {
-			margin: 0 5px;
-			width: 100%;
-			display: block;
-			flex: 2;
-			background: transparent;
-			border: none;
-			border-bottom: 1px solid #229db6;
-			outline: none;
-			color: white;
-			font-size: 14px;
-			padding: 0 5px;
+
+		.input-box {
+			margin-right: 5px;
+			padding: 0 10px;
+			width: 43%;
+
 			&:last-child {
-				flex: 1;
+				width:10%;
+				text-align:center;
+				margin-right:0px;
 			}
+			label {
+				opacity:0.7;
+				font-size:12px;
+			}
+			input {
+				display: block;
+				width:100%;
+				background: transparent;
+				border: none;
+				border-bottom: 1px solid #229db6;
+				outline: none;
+				color: white;
+				font-size: 14px;
+				padding: 1px 0 1px 1px;
+
+			}
+		}
+		.utm-copy-to-clipboard {
+			width: 5%;
+			font-size: 18px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			padding-right: 17px;
+			cursor: pointer;
 		}
 
 	}

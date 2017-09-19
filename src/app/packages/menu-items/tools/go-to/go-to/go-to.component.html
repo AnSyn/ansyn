@@ -8,6 +8,7 @@
 			name="from"
 			[(ngModel)]="inputs.from"
 			(ngModelChange)="convert($event, from, to, 'to')"
+			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-geo>
 
@@ -16,6 +17,7 @@
 			name="to"
 			[(ngModel)]="inputs.from"
 			(ngModelChange)="convert($event, from, to, 'to')"
+			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-utm>
 
@@ -28,6 +30,7 @@
 			name="to"
 			[(ngModel)]="inputs.to"
 			(ngModelChange)="convert($event, to, from, 'from')"
+			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-utm>
 
@@ -36,6 +39,7 @@
 			name="from"
 			[(ngModel)]="inputs.to"
 			(ngModelChange)="convert($event, to, from, 'from')"
+			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-geo>
 

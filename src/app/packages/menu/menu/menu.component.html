@@ -4,9 +4,9 @@
 
 		<div
 			class="menu-btn"
-			*ngFor="let menu_item of menu_items; let index = index"
-			[class.active]="isActive(index)"
-			(click)="toggleItem(index)">
+			*ngFor="let menu_item of menuItemsAsArray$ | async; let index = index"
+			[class.active]="isActive(menu_item.name)"
+			(click)="toggleItem(menu_item.name)">
 
 			<img [src]="menu_item.icon_url"/>
 			<span class="badge" [hidden]="!menu_item.badge">{{menu_item.badge}}</span>

@@ -21,7 +21,7 @@ import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { isEqual, isNil } from 'lodash';
+import { isNil } from 'lodash';
 
 const DEFAULT_WIDTH = 90;
 
@@ -48,26 +48,29 @@ const animations: any[] = [
 
 export class MenuComponent implements AfterViewInit {
 
-	@Input('width') width: number = DEFAULT_WIDTH;
+	@Input() width: number = DEFAULT_WIDTH;
 	@ViewChild('container') container: ElementRef;
 	@ViewChild('selected_component_elem', { read: ViewContainerRef }) selected_component_elem: ViewContainerRef;
 
 	menuState$: Observable<IMenuState> = this.store.select('menu');
 
-	menu_items$: Observable<MenuItem[]> = this.menuState$
-		.pluck <IMenuState, MenuItem[]> ('menu_items')
-		.distinctUntilChanged(isEqual);
+	menuItems$: Observable<Map<string, MenuItem>> = this.menuState$
+		.pluck <IMenuState, Map<string, MenuItem>> ('menuItems')
+		.distinctUntilChanged();
 
-	menu_items: MenuItem[];
+	menuItemsAsArray$: Observable<MenuItem[]> = this.menuItems$
+		.map((menuItems: Map<string, MenuItem>) => [...menuItems.values()]);
 
-	selected_menu_item_index$: Observable<number> = this.menuState$
-			.pluck <IMenuState, number> ('selected_menu_item_index')
+	selectedMenuItem$: Observable<string> = this.menuState$
+			.pluck <IMenuState, string> ('selectedMenuItem')
 			.distinctUntilChanged();
 
-	animation$: Observable<boolean> = this.menuState$.pluck <IMenuState, boolean> ('animation').distinctUntilChanged();
+	animation$: Observable<boolean> = this.menuState$
+		.pluck <IMenuState, boolean> ('animation')
+		.distinctUntilChanged();
 
-	selected_item_index: number;
-
+	selectedMenuItem: string;
+	menuItems: Map<string, MenuItem>;
 	selected_component_ref: ComponentRef<any>;
 	public animation: boolean;
 	public version = packageJson.version;
@@ -75,12 +78,11 @@ export class MenuComponent implements AfterViewInit {
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>) {
-
-		this.menu_items$.subscribe((menu_items: MenuItem[]) => {
-			this.menu_items = menu_items;
+		this.menuItems$.subscribe((_menuItems) => {
+			this.menuItems = _menuItems;
 		});
 
-		this.selected_menu_item_index$
+		this.selectedMenuItem$
 			.subscribe(this.onSelectedIndexChange.bind(this));
 
 		this.animation$.subscribe((_animation: boolean) => {
@@ -89,11 +91,11 @@ export class MenuComponent implements AfterViewInit {
 	}
 
 	get selected_item(): MenuItem {
-		return this.menu_items[this.selected_item_index];
+		return this.menuItems.get(this.selectedMenuItem);
 	}
 
-	onSelectedIndexChange(selected_item_index: number): void {
-		this.selected_item_index = selected_item_index;
+	onSelectedIndexChange(_selectedMenuItem: string): void {
+		this.selectedMenuItem = _selectedMenuItem;
 		let expand_result = this.itemSelected() && (!this.selected_component_ref || this.animation);
 		if (expand_result) {
 			this.componentChanges();
@@ -113,8 +115,8 @@ export class MenuComponent implements AfterViewInit {
 		}
 	}
 
-	isActive(index: number): boolean {
-		return this.selected_item_index === index;
+	isActive(key: string): boolean {
+		return this.selectedMenuItem === key;
 	}
 
 	buildCurrentComponent(): void {
@@ -124,11 +126,11 @@ export class MenuComponent implements AfterViewInit {
 		}
 	}
 
-	toggleItem(index: number): void {
-		if (this.selected_item_index === index) {
+	toggleItem(key: string): void {
+		if (this.selectedMenuItem === key) {
 			this.closeMenu();
 		} else {
-			this.openMenu(index);
+			this.openMenu(key);
 		}
 	}
 
@@ -140,8 +142,8 @@ export class MenuComponent implements AfterViewInit {
 		return !this.itemNotSelected();
 	}
 
-	openMenu(index: number) {
-		this.store.dispatch(new SelectMenuItemAction(index));
+	openMenu(key: string) {
+		this.store.dispatch(new SelectMenuItemAction(key));
 	}
 
 	closeMenu(): void {

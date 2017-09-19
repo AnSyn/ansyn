@@ -20,7 +20,7 @@ export class AddMenuItemAction implements Action {
 export class SelectMenuItemAction implements Action {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
 
-	constructor(public payload: number) {
+	constructor(public payload: string) {
 	}
 }
 
@@ -48,7 +48,7 @@ export class AnimationEndAction implements Action {
 export class SetBadgeAction implements Action {
 	type = MenuActionTypes.SET_BADGE;
 
-	constructor(public payload: {index: number, badge: number}) {
+	constructor(public payload: {key: string, badge: number}) {
 	}
 }
 

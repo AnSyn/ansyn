@@ -99,6 +99,7 @@ export class MapEffects {
 			return [action, mapId, mapState.mapsList];
 		})
 		.map(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
+
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
 			comm.loadInitialMapSource(selectedMap.data.position.boundingBox);

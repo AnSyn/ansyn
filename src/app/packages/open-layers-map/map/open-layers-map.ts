@@ -79,11 +79,13 @@ export class OpenLayersMap implements IMap {
 		let center = [16, 38];
 		let zoom = 12;
 		let rotation = 0;
+
 		if (position) {
 			center = position.center.coordinates;
 			zoom = position.zoom;
 			rotation = position.rotation;
 		}
+
 		this._mapObject = new Map({
 			target: element,
 			layers: layers,
@@ -157,7 +159,8 @@ export class OpenLayersMap implements IMap {
 			center: newCenter,
 			zoom: currentZoom,
 			rotation: currentRotation,
-			projection: layer.getSource().getProjection()
+			projection: layer.getSource().getProjection(),
+			minZoom: 2.5
 		});
 
 		this._mapObject.setView(view);

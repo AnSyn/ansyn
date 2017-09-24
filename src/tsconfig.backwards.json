@@ -9,10 +9,12 @@
 		"lib": [
 			"dom",
 			"es2015",
-			"es2016"
+			"es2016",
+			"es2017",
+			"esnext"
 		],
 		"outDir": "../out-tsc/app",
-		"module": "es2015",
+		"module": "esnext",
 		"baseUrl": "",
 		"allowJs": true,
 		"types": [

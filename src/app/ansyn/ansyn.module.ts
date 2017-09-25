@@ -45,7 +45,7 @@ const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	ContextModule,
 	BrowserAnimationsModule,
 	CoreModule,
-	MenuModule,
+	MenuModule.provideMenuItem({menuItems: []}),
 	OverlaysModule,
 	CasesModule,
 	FiltersModule,

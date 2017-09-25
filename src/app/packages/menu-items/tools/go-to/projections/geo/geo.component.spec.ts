@@ -32,13 +32,13 @@ describe('GeoComponent', () => {
 		expect(component.onChanges).toHaveBeenCalledWith(component.coordinates);
 	});
 
-	it("click on copy to clipboard", () => {
+	it('click on copy to clipboard', () => {
 		spyOn(component, 'copyToClipBoard');
-		const element = fixture.debugElement.query(By.css(".geo-copy-to-clipboard"));
+		const element = fixture.debugElement.query(By.css('.geo-copy-to-clipboard'));
 		element.triggerEventHandler('click', {});
 		expect(component.copyToClipBoard).toHaveBeenCalled();
 
-	})
+	});
 
 	describe('validate', () => {
 		it('should return error if some of coordinates values is empty', () => {

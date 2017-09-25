@@ -23,7 +23,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			const menuItems = new Map();
 			action.payload.forEach((menuItem: MenuItem) => {
 				menuItems.set(menuItem.name, menuItem);
-			})
+			});
 			return { ...state, menuItems };
 		}
 		case MenuActionTypes.ADD_MENU_ITEM:

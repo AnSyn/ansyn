@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
 import { CoreModule } from '@ansyn/core';
@@ -9,6 +9,8 @@ import { MenuItem } from './models/menu-item.model';
 import { Store } from '@ngrx/store';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 
+export const MENU_ITEMS = new InjectionToken<MenuItem[]>('MENU_ITEMS');
+
 @NgModule({
 	imports: [CommonModule, CoreModule, EffectsModule.run(MenuEffects), BrowserAnimationsModule],
 	declarations: [MenuComponent],
@@ -16,32 +18,19 @@ import { InitializeMenuItemsAction } from './actions/menu.actions';
 })
 export class MenuModule {
 
-	static provideMenuItem({menuItems}: {menuItems: MenuItem[]}): ModuleWithProviders {
+	static provideMenuItems(menuItems: any[]): ModuleWithProviders {
 		return {
 			ngModule: MenuModule,
 			providers: [
 				{
-					provide: APP_INITIALIZER,
-					useFactory(store: Store<any>) {
-						return function () {
-							console.log("store ", store);
-							console.log("menuItems ", menuItems);
-
-							// store.dispatch(new InitializeMenuItemsAction(menuItems));
-							// ansynRouterService.onNavigationEnd().subscribe();
-						};
-					},
-					deps: [Store],
-					multi: true
-				},
+					provide: MENU_ITEMS,
+					useValue: menuItems
+				}
 			]
 		};
 	}
-}
 
-// export function useFactoryInitializer(store: Store<any>) {
-// 	return function () {
-// 		store.dispatch(new InitializeMenuItemsAction())
-// 		ansynRouterService.onNavigationEnd().subscribe();
-// 	};
-// }
+	constructor(private store: Store<any>, @Inject(MENU_ITEMS) menuItems: MenuItem[]) {
+		store.dispatch(new InitializeMenuItemsAction(menuItems));
+	}
+}

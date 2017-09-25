@@ -120,7 +120,6 @@ export class TimelineComponent implements OnInit {
 			} else {
 				if (dist(down, [event.clientX, event.clientY]) < tolerance) {
 					this.selectAndShowDrop(nodes[index], event, data, index, nodes);
-
 				}
 				if (wait) {
 					window.clearTimeout(wait);

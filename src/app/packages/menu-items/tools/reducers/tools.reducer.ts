@@ -66,9 +66,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.GO_TO_EXPAND:
 			return { ...state, gotoExpand: action.payload };
 
-		case ToolsActionsTypes.GO_TO_INPUT_CHANGED:
-			return {...state};
-
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);

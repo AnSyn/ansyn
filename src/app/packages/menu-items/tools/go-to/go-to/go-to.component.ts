@@ -68,8 +68,8 @@ export class GoToComponent implements OnInit {
 		});
 
 		this.gotoExpand$.subscribe((_gotoExpand) => {
-			this._expand = _gotoExpand;
-			if (this._expand) {
+			this.expand = _gotoExpand;
+			if (this.expand) {
 				this.store$.dispatch(new PullActiveCenter());
 			}
 		})

@@ -1,5 +1,4 @@
 @import "~@ansyn/core/less/common";
-
 @height-minus-status: calc(~"100% - @{status-bar-height}");
 
 :host {
@@ -14,14 +13,14 @@
 		flex-wrap: wrap;
 		background: black;
 
-		&.pin-location {
-			cursor: url('/assets/cursors/pin-location.cur') 12 12, pointer;
-		}
+	&.pin-location {
+		cursor: url('/assets/cursors/pin-location.cur') 12 12, pointer;
+	}
 
-		&.pin-point {
-			// Center cursor image to mouse pointer center
-			cursor: url('/assets/cursors/pin-point2.cur') 17 17, pointer;
-		}
+	&.pin-point {
+		// Center cursor image to mouse pointer center
+		cursor: url('/assets/cursors/pin-point2.cur') 17 17, pointer;
+	}
 
 		&:not(.layout1) {
 			//ansyn-imagery-container

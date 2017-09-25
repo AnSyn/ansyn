@@ -46,7 +46,7 @@
 		"debounce": "^1.0.0",
 		"elasticsearch": "^13.2.0",
 		"enhanced-resolve": "^3.3.0",
-		"event-drops": "github:osadan/EventDrops#f442043a4d035885012e76d29f7ebc99967bf183",
+		"ansyn-event-drops": "0.4.1",
 		"flatpickr": "^3.0.6",
 		"jsdoc": "3.4.3",
 		"lodash": "^4.17.4",

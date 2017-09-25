@@ -38,8 +38,6 @@ export class GoToComponent implements OnInit {
 
 	pin_location_mode: boolean;
 
-	@Output() expandChange = new EventEmitter();
-
 	@HostBinding('class.expand') 
 	set expand(value) {
 		this._expand = value;

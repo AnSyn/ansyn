@@ -40,16 +40,6 @@ describe('GoToComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('set expand should change _expand value and call expandChange.emit', () => {
-		spyOn(component.expandChange, 'emit');
-		component.expand = true;
-		expect(component.expandChange.emit).toHaveBeenCalledWith(true);
-		expect((<any>component)._expand).toBeTruthy();
-		component.expand = false;
-		expect(component.expandChange.emit).toHaveBeenCalledWith(false);
-		expect((<any>component)._expand).toBeFalsy();
-	});
-
 	describe('submitGoTo', () => {
 		it('should dispatch  GoToAction with convertByProjectionDatum result', () => {
 			spyOn(store, 'dispatch');

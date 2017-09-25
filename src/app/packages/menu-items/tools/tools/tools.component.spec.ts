@@ -1,5 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
+import { GoToExpandAction, StartMouseShadow,  StopMouseShadow} from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { ToolsReducer } from '../reducers/tools.reducer';
@@ -66,21 +66,16 @@ describe('ToolsComponent', () => {
 	it('toggleExpandGoTo should toggle expandGoTo and close expandOverlaysDisplayMode', () => {
 		component.expandGoTo = true;
 		component.toggleExpandGoTo();
-		expect(component.expandGoTo).toBeFalsy();
-		component.expandOverlaysDisplayMode = true;
-		component.toggleExpandGoTo();
-		expect(component.expandGoTo).toBeTruthy();
+		expect(store.dispatch).toHaveBeenCalledWith(new GoToExpandAction(!component.expandGoTo));
 		expect(component.expandOverlaysDisplayMode).toBeFalsy();
 	});
 
 	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {
 		component.expandOverlaysDisplayMode = true;
 		component.toggleExpandVisualizers();
-		expect(component.expandOverlaysDisplayMode).toBeFalsy();
-		component.expandGoTo = true;
+		expect(store.dispatch).toHaveBeenCalledWith(new GoToExpandAction(false))
 		component.toggleExpandVisualizers();
 		expect(component.expandOverlaysDisplayMode).toBeTruthy();
-		expect(component.expandGoTo).toBeFalsy();
 	});
 
 	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {

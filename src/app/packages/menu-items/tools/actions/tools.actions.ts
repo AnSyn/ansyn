@@ -93,7 +93,6 @@ export class GoToInputChangeAction implements Action {
 	type = ToolsActionsTypes.GO_TO_INPUT_CHANGED;
 
 	constructor(public payload: any[]) {
-		debugger;
 	}
 }
 

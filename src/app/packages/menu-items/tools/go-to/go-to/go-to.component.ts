@@ -18,7 +18,7 @@ export class GoToComponent implements OnInit {
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
-	public gotoExpand$ : Observable<boolean> = this.store$.select<IToolsState>('tools')
+	public gotoExpand$: Observable<boolean> = this.store$.select<IToolsState>('tools')
 	.pluck<IToolsState, boolean>('gotoExpand')
 	.distinctUntilChanged();
 	activeCenter$: Observable<number[]> = this.store$.select('tools')

@@ -21,7 +21,7 @@
 			"prefix": "ansyn",
 			"styles": [
 				"./styles/styles.less",
-				"../node_modules/event-drops/src/style.css",
+				"../node_modules/ansyn-event-drops/src/style.css",
 				"../node_modules/ol/ol.css",
 				"../node_modules/flatpickr/dist/flatpickr.css"
 			],

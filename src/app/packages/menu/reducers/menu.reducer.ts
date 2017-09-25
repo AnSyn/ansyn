@@ -19,6 +19,13 @@ export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMen
 export function MenuReducer(state: IMenuState = initialMenuState, action: MenuActions) {
 
 	switch (action.type) {
+		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
+			const menuItems = new Map();
+			action.payload.forEach((menuItem: MenuItem) => {
+				menuItems.set(menuItem.name, menuItem);
+			})
+			return { ...state, menuItems };
+		}
 		case MenuActionTypes.ADD_MENU_ITEM:
 			const menuItems = new Map(state.menuItems);
 			menuItems.set(action.payload.name, action.payload);

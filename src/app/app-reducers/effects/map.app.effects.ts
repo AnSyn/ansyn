@@ -441,6 +441,7 @@ export class MapAppEffects {
 		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));
 
+
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private imageryCommunicatorService: ImageryCommunicatorService,

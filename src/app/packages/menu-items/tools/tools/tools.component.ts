@@ -3,7 +3,8 @@ import {
 	AnnotationVisualizerAgentAction,
 	SetAutoImageProcessing,
 	StartMouseShadow,
-	StopMouseShadow
+	StopMouseShadow,
+	GoToExpandAction
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -17,6 +18,9 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit {
+	public gotoExpand$: Observable<boolean> = this.store.select<IToolsState>('tools')
+		.pluck<IToolsState, boolean>('gotoExpand')
+		.distinctUntilChanged();
 	public expandGoTo: boolean;
 	public expandOverlaysDisplayMode: boolean;
 	public displayModeOn: boolean;
@@ -40,6 +44,9 @@ export class ToolsComponent implements OnInit {
 			this.flags = _flags;
 			this.isGeoOptionsDisabled = !this.flags.get('geo_registered_options_enabled');
 		});
+		this.gotoExpand$.subscribe(_gotoExpand => {
+			this.expandGoTo = _gotoExpand;
+		})
 	}
 
 	toggleShadowMouse() {
@@ -54,11 +61,12 @@ export class ToolsComponent implements OnInit {
 
 	toggleExpandGoTo() {
 		this.expandOverlaysDisplayMode = false;
-		this.expandGoTo = !this.expandGoTo;
+		this.store.dispatch(new GoToExpandAction(!this.expandGoTo));
+	
 	}
 
 	toggleExpandVisualizers() {
-		this.expandGoTo = false;
+		this.store.dispatch(new GoToExpandAction(false));
 		this.expandOverlaysDisplayMode = !this.expandOverlaysDisplayMode;
 	}
 

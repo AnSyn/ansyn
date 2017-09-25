@@ -8,11 +8,13 @@ export interface IToolsState {
 	flags: Map<string, boolean>;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
+	gotoExpand: boolean;
 }
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<string, boolean>(),
-	activeCenter: [0, 0]
+	activeCenter: [0, 0],
+	gotoExpand: false
 };
 
 toolsInitialState.flags.set('geo_registered_options_enabled', true);
@@ -60,6 +62,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.GO_TO:
 			return { ...state };
+
+		case ToolsActionsTypes.GO_TO_EXPAND:
+			return { ...state, gotoExpand: action.payload };
+
+		case ToolsActionsTypes.GO_TO_INPUT_CHANGED:
+			return {...state};
+
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);

@@ -78,13 +78,12 @@ export class MapAppEffects {
 				// this is for the others communicators
 				communicator.removeSingleClickEvent();
 			});
-			const lonLat = action.payload.lonLat;
 
 			return [
 				// disable the pinpoint search
 				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
 				// update pin point
-				new PinPointTriggerAction({ lonLat })
+				new PinPointTriggerAction(action.payload.lonLat)
 			];
 		});
 
@@ -95,12 +94,12 @@ export class MapAppEffects {
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
-			const region = getPolygonByPoint(action.payload.lonLat).geometry;
+			const region = getPolygonByPoint(action.payload).geometry;
 
 			// draw on all maps
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-					communicator.addPinPointIndicator(action.payload.lonLat, action.payload.anchor);
+					communicator.addPinPointIndicator(action.payload);
 				}
 			});
 

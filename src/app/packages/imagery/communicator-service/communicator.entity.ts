@@ -205,8 +205,8 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).removeSingleClickEvent();
 	}
 
-	public addPinPointIndicator(latLon: Array<number>, anchor?) {
-		(<any>this.ActiveMap).addPinPointIndicator(latLon, anchor);
+	public addPinPointIndicator(latLon: Array<number>) {
+		(<any>this.ActiveMap).addPinPointIndicator(latLon);
 	}
 
 	public removePinPointIndicator() {

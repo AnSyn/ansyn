@@ -246,7 +246,7 @@ describe('MapAppEffects', () => {
 				expect(_result.payload.value).toEqual(false);
 			}
 			if (_result instanceof PinPointTriggerAction) {
-				expect(_result.payload.lonLat).toEqual(lonLat);
+				expect(_result.payload).toEqual(lonLat);
 			}
 		});
 
@@ -264,7 +264,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		spyOn(imagery1, 'addPinPointIndicator');
 
-		const action = new PinPointTriggerAction({ lonLat: [-70.33666666666667, 25.5] });
+		const action = new PinPointTriggerAction([-70.33666666666667, 25.5] );
 
 		effectsRunner.queue(action);
 

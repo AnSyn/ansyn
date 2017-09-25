@@ -264,7 +264,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		spyOn(imagery1, 'addPinPointIndicator');
 
-		const action = new PinPointTriggerAction([-70.33666666666667, 25.5] );
+		const action = new PinPointTriggerAction([-70.33666666666667, 25.5]);
 
 		effectsRunner.queue(action);
 

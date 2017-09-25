@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
-import { copyFromContent } from '@ansyn/core/utils/clipboard';
 
 @Component({
 	selector: 'ansyn-tools',

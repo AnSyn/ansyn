@@ -27,13 +27,13 @@ describe('UtmComponent', () => {
 	});
 
 
-	it("click on copy to clipboard", () => {
+	it('click on copy to clipboard', () => {
 		spyOn(component, 'copyToClipBoard');
-		const element = fixture.debugElement.query(By.css(".utm-copy-to-clipboard"));
+		const element = fixture.debugElement.query(By.css('.utm-copy-to-clipboard'));
 		element.triggerEventHandler('click', {});
 		expect(component.copyToClipBoard).toHaveBeenCalled();
 
-	})
+	});
 
 	it('validate should return error if some of coordinates values is empty', () => {
 		const fakeController: any = { value: [1, 2, null] };

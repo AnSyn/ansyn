@@ -33,6 +33,7 @@ import { AnsynRouterModule } from '@ansyn/router';
 import { RouterModule } from '@angular/router';
 import { configuration } from '../../configuration/configuration';
 import { HttpClientModule } from '@angular/common/http';
+import { ansynMenuItems } from './ansyn.menu-items';
 
 const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	CommonModule,
@@ -45,7 +46,7 @@ const imports: Array<Type<any> | ModuleWithProviders | any[]> = [
 	ContextModule,
 	BrowserAnimationsModule,
 	CoreModule,
-	MenuModule.provideMenuItem({menuItems: []}),
+	MenuModule.provideMenuItems(ansynMenuItems),
 	OverlaysModule,
 	CasesModule,
 	FiltersModule,

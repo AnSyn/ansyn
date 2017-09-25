@@ -2,7 +2,6 @@ import { ICasesConfig } from './models/cases-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { AddMenuItemAction, MenuItem } from '@ansyn/menu';
 import { CoreModule } from '@ansyn/core';
 import { InfiniteScrollModule } from '@ansyn/utils';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
@@ -14,7 +13,6 @@ import { CasesToolsComponent } from './components/cases-tools/cases-tools.compon
 import { EffectsModule } from '@ngrx/effects';
 import { CasesEffects } from './effects/cases.effects';
 import { casesConfig, CasesService } from './services/cases.service';
-import { Store } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
 
@@ -42,12 +40,4 @@ export class CasesModule {
 		};
 	}
 
-	constructor(store: Store<any>) {
-		let menu_item: MenuItem = {
-			name: 'Cases',
-			component: CasesComponent,
-			icon_url: '/assets/icons/cases.svg'
-		};
-		store.dispatch(new AddMenuItemAction(menu_item));
-	}
 }

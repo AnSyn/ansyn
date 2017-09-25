@@ -62,7 +62,7 @@ export interface IMap {
 
 	removeSingleClickEvent();
 
-	addPinPointIndicator(latLon, anchor?);
+	addPinPointIndicator(latLon);
 
 	removePinPointIndicator();
 

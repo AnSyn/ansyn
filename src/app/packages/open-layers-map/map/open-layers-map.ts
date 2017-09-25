@@ -429,7 +429,7 @@ export class OpenLayersMap implements IMap {
 	}
 
 
-	public addPinPointIndicator(lonLat, anchor = [0, 0]) {
+	public addPinPointIndicator(lonLat) {
 		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
 
 		const view = this._mapObject.getView();
@@ -438,7 +438,6 @@ export class OpenLayersMap implements IMap {
 
 		const iconStyle = new Icon({
 			scale: 1,
-			anchor,
 			src: '/assets/pinpoint_indicator.svg' // for further usage either bring from configuration or create svg
 		});
 

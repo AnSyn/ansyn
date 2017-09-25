@@ -1,3 +1,5 @@
+import {GoToVisualizerType} from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
+import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import {
 	DrawOverlaysOnMapTriggerAction,
@@ -122,6 +124,34 @@ export class VisualizersAppEffects {
 			});
 		});
 
+	@Effect({ dispatch: false })
+	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
+			.ofType(ToolsActionsTypes.GO_TO_EXPAND)
+			.withLatestFrom(
+				this.store$.select<IToolsState>('tools').pluck<IToolsState, boolean>('gotoExpand'), 
+				this.store$.select('map'),
+				this.store$.select('tools').pluck('activeCenter'),
+				(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]
+			)
+			.map(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
+				const activeMap = MapFacadeService.activeMap(map);
+				this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
+			});
+	@Effect({dispatch: false})
+	OnGoToInputChanged$ = this.actions$
+			.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
+			.withLatestFrom(
+				this.store$.select('map'),
+				(action, mapState) => {
+					return [mapState, action.payload]
+					
+				}
+				)
+			.map(([mapState, coords]: [IMapState, any[]]) => {
+				const activeMap = MapFacadeService.activeMap(mapState);
+				this.drawGotoIconOnMap(activeMap, coords);
+			
+			});
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
@@ -253,6 +283,32 @@ export class VisualizersAppEffects {
 					hitMapvisualizer.clearEntities();
 				}
 			}
+		}
+	}
+
+	private drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true, ) {
+		const communicator = this.imageryCommunicatorService.provide(mapData.id);
+		if (communicator) {
+			const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+			if (!gotoVisualizer) {
+				return;
+			}
+			if (gotoExpand) {
+				const gotoPoint: GeoJSON.Point = {
+					type: 'Point',
+					coordinates: point
+				};
+				const gotoFeatureJson: GeoJSON.Feature<any> = {
+					type: 'Feature',
+					geometry: gotoPoint,
+					properties: {}
+				}
+				gotoVisualizer.clearEntities();
+				gotoVisualizer.setEntities([{ id: "goto" , featureJson: gotoFeatureJson}])
+			} else {
+				gotoVisualizer.clearEntities();
+			}
+
 		}
 	}
 

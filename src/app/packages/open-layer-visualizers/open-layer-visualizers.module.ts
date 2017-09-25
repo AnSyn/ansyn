@@ -7,6 +7,7 @@ import { FootprintPolygonVisualizer } from './overlays/polygon-visualizer';
 import { FootprintHitmapVisualizer } from './overlays/hitmap-visualizer';
 import { FootprintPolylineVisualizer } from './overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from './annotations.visualizer';
+import { GoToVisualizer } from './tools/goto.visualizer';
 
 export const OpenLayersVisualizerMapType = 'openLayersMap';
 
@@ -23,5 +24,6 @@ export class OpenLayerVisualizersModule {
 		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, FootprintHitmapVisualizer);
 		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, FootprintPolylineVisualizer);
 		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, AnnotationsVisualizer);
+		imageryProviderService.registerVisualizer(OpenLayersVisualizerMapType, GoToVisualizer);
 	}
 }

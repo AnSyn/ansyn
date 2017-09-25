@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnInit, Output } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
-import { GoToAction, PullActiveCenter, SetPinLocationModeAction } from '../../actions/tools.actions';
+import { GoToExpandAction, GoToAction, PullActiveCenter, SetPinLocationModeAction, GoToInputChangeAction } from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
@@ -18,7 +18,12 @@ export class GoToComponent implements OnInit {
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
-	activeCenter$: Observable<number[]> = this.store$.select('tools').pluck('activeCenter');
+	public gotoExpand$ : Observable<boolean> = this.store$.select<IToolsState>('tools')
+	.pluck<IToolsState, boolean>('gotoExpand')
+	.distinctUntilChanged();
+	activeCenter$: Observable<number[]> = this.store$.select('tools')
+	.pluck<any, any>('activeCenter')
+	.distinctUntilChanged();
 
 	activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
@@ -35,14 +40,10 @@ export class GoToComponent implements OnInit {
 
 	@Output() expandChange = new EventEmitter();
 
-	@HostBinding('class.expand') @Input()
+	@HostBinding('class.expand') 
 	set expand(value) {
 		this._expand = value;
-		if (value) {
-			this.store$.dispatch(new PullActiveCenter());
-		}
-		this.expandChange.emit(value);
-	};
+	}
 
 	get expand() {
 		return this._expand;
@@ -61,11 +62,19 @@ export class GoToComponent implements OnInit {
 			this.activeCenter = _activeCenter;
 			this.inputs.from = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
 			this.inputs.to = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+			this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 		});
 
 		this.pin_location_mode$.subscribe((_pin_location_mode) => {
 			this.pin_location_mode = _pin_location_mode;
 		});
+
+		this.gotoExpand$.subscribe((_gotoExpand) => {
+			this._expand = _gotoExpand;
+			if (this._expand) {
+				this.store$.dispatch(new PullActiveCenter());
+			}
+		})
 	}
 
 	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) {
@@ -82,6 +91,7 @@ export class GoToComponent implements OnInit {
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
 		this.inputs[inputKey] = convertByProjectionDatum(coords, convertFrom, convertTo);
+		this.dispatchInputUpdated(coords, convertFrom);
 	}
 
 	togglePinLocation() {
@@ -89,6 +99,11 @@ export class GoToComponent implements OnInit {
 	}
 
 	close() {
-		this.expand = false;
+		this.store$.dispatch(new GoToExpandAction(false));
+	}
+
+	private dispatchInputUpdated(coords: number[], convertFrom: CoordinatesSystem) {
+		const toWgs84 = convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
+		this.store$.dispatch(new GoToInputChangeAction(toWgs84));
 	}
 }

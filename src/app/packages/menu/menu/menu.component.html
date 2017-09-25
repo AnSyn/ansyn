@@ -8,7 +8,7 @@
 			[class.active]="isActive(menuItem.name)"
 			(click)="toggleItem(menuItem.name)">
 
-			<img [src]="menuItem.icon_url"/>
+			<img [src]="menuItem.iconUrl"/>
 			<span class="badge" [hidden]="!menuItem.badge">{{menuItem.badge}}</span>
 			{{menuItem.name}}
 		</div>

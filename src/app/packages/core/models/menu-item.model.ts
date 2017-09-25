@@ -1,6 +1,6 @@
 export interface MenuItem {
 	name: string;
 	component: any;
-	icon_url: string;
+	iconUrl: string;
 	badge?: number
 }

@@ -109,8 +109,11 @@ div.status-bar-container {
 						transform: translate(0, 0);
 					}
 				}
-
+				&.default-case {
+					left: 0;
+				}
 			}
+
 			&.pop-on-hover:hover {
 				div.pop-hover {
 					visibility: visible;
@@ -136,6 +139,7 @@ div.status-bar-container {
 				padding: 5px;
 				margin: 0;
 				transition: .4s;
+				position: relative;
 
 				span.name {
 					max-width: 100px;

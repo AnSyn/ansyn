@@ -48,6 +48,9 @@ div.menu-wrapper {
 	}
 	div.container {
 		position: absolute;
+		white-space: nowrap;
+		overflow: hidden;
+
 		left: 90px;
 		z-index: @menu-container;
 		height: 100vh;
@@ -62,6 +65,7 @@ div.menu-wrapper {
 				transform: rotate(0);
 			}
 		}
+
 		button.close {
 			position: absolute;
 			right: 0;

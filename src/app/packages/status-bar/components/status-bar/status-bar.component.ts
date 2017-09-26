@@ -65,19 +65,10 @@ export class StatusBarComponent implements OnInit {
 
 	@Input() selected_case_name: string;
 	@Input() overlay: any;
-
-	@Input()
-	set isFavoriteOverlayDisplayed(value) {
-		if (value) {
-			this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'gold');
-		} else {
-			this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'initial');
-		}
-	}
+	@Input() isFavoriteOverlayDisplayed = false;
 
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
-	@ViewChild('starColor') starColor: ElementRef;
 
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {

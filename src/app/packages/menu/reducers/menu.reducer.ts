@@ -1,6 +1,6 @@
 import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { SetBadgeAction } from '../actions/menu.actions';
-import { MenuItem } from '@ansyn/core';
+import { MenuItem } from '../models';
 import { isDevMode } from '@angular/core';
 
 export interface IMenuState {

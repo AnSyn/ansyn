@@ -62,7 +62,7 @@ describe('MenuComponent', () => {
 		let mock_menu_item: MenuItem = {
 			name: 'one',
 			component: 'fake_comp',
-			icon_url: 'fake/url/to/icon'
+			iconUrl: 'fake/url/to/icon'
 		};
 		menuComponent.menuItems = new Map();
 		menuComponent.menuItems.set(mock_menu_item.name, mock_menu_item);

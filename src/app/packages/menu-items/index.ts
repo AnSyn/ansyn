@@ -5,5 +5,3 @@ export * from './algorithms';
 export * from './settings';
 export * from './tools';
 export * from './imagerySandBox';
-export * from './menu-items.module';
-export * from './models';

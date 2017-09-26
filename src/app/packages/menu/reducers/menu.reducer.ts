@@ -1,6 +1,7 @@
 import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { SetBadgeAction } from '../actions/menu.actions';
 import { MenuItem } from '@ansyn/core';
+import { isDevMode } from '@angular/core';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
@@ -22,13 +23,17 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
 			const menuItems = new Map();
 			action.payload.forEach((menuItem: MenuItem) => {
-				menuItems.set(menuItem.name, menuItem);
+				if (isDevMode() || menuItem.production) {
+					menuItems.set(menuItem.name, menuItem);
+				}
 			});
 			return { ...state, menuItems };
 		}
 		case MenuActionTypes.ADD_MENU_ITEM:
 			const menuItems = new Map(state.menuItems);
-			menuItems.set(action.payload.name, action.payload);
+			if (isDevMode() || action.payload.production) {
+				menuItems.set(action.payload.name, action.payload);
+			}
 			return { ...state, menuItems };
 
 		case MenuActionTypes.SELECT_MENU_ITEM:

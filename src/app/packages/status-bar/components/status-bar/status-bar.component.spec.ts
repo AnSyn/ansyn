@@ -123,8 +123,8 @@ describe('StatusBarComponent', () => {
 
 	it('check isFavoriteOverlayDisplayed changes', () => {
 		component.isFavoriteOverlayDisplayed = true;
-		expect(component.starColor.nativeElement.style.fill).toBe('gold');
+		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.includes('active')).toBeTruthy();
 		component.isFavoriteOverlayDisplayed = false;
-		expect(component.starColor.nativeElement.style.fill).not.toBe('gold');
+		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.includes('active')).toBeFalsy();
 	});
 });

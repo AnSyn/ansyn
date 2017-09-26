@@ -85,7 +85,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 		.distinctUntilChanged();
 
 	menuItemsAsArray$: Observable<MenuItem[]> = this.menuItems$
-		.map((menuItems: Map<string, MenuItem>) => [...menuItems.values()]);
+		.map((menuItems: Map<string, MenuItem>) => Array.from(menuItems.values()));
 
 	selectedMenuItem$: Observable<string> = this.menuState$
 		.pluck <IMenuState, string>('selectedMenuItem')

@@ -10,6 +10,17 @@ div.status-bar-container {
 	transform: translate(0, -100%);
 	justify-content: flex-end;
 
+	.favorite-icon {
+		font-size: 25px;
+		margin-left: -2px;
+		.path2:before {
+			color: #000000;
+		}
+		&.active .path2:before {
+			color: gold;
+		}
+	}
+
 	div.navigation-area {
 		position: absolute;
 		background: white;

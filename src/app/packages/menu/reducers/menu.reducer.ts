@@ -17,13 +17,15 @@ export const initialMenuState: IMenuState = {
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 
+const isMenuItemShown = (menuItem: MenuItem) => isDevMode() || menuItem.production;
+
 export function MenuReducer(state: IMenuState = initialMenuState, action: MenuActions) {
 
 	switch (action.type) {
 		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
 			const menuItems = new Map();
 			action.payload.forEach((menuItem: MenuItem) => {
-				if (isDevMode() || menuItem.production) {
+				if (isMenuItemShown(menuItem)) {
 					menuItems.set(menuItem.name, menuItem);
 				}
 			});
@@ -31,7 +33,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		}
 		case MenuActionTypes.ADD_MENU_ITEM:
 			const menuItems = new Map(state.menuItems);
-			if (isDevMode() || action.payload.production) {
+			if (isMenuItemShown(action.payload)) {
 				menuItems.set(action.payload.name, action.payload);
 			}
 			return { ...state, menuItems };

@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
 	AnnotationVisualizerAgentAction,
+	GoToExpandAction,
 	SetAutoImageProcessing,
 	StartMouseShadow,
-	StopMouseShadow,
-	GoToExpandAction
+	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -45,7 +45,7 @@ export class ToolsComponent implements OnInit {
 		});
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			this.expandGoTo = _gotoExpand;
-		})
+		});
 	}
 
 	toggleShadowMouse() {
@@ -61,7 +61,7 @@ export class ToolsComponent implements OnInit {
 	toggleExpandGoTo() {
 		this.expandOverlaysDisplayMode = false;
 		this.store.dispatch(new GoToExpandAction(!this.expandGoTo));
-	
+
 	}
 
 	toggleExpandVisualizers() {

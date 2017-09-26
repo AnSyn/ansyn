@@ -1,6 +1,6 @@
 export const configuration = {
 	env: 'default',
-	production: true,
+	production: false,
 	MetaConfig: {},
 	General: {
 		logActions: false

@@ -6,7 +6,7 @@ describe('MenuReducer', () => {
 	it('ADD_MENU_ITEM action should add new menu_item to state', () => {
 		let menu_item: MenuItem = {
 			name: 'fake_menu_item',
-			icon_url: 'fake/icon/url',
+			iconUrl: 'fake/icon/url',
 			component: 'component'
 		};
 		let action: AddMenuItemAction = new AddMenuItemAction(menu_item);

@@ -2,5 +2,6 @@ export interface MenuItem {
 	name: string;
 	component: any;
 	iconUrl: string;
-	badge?: number
+	badge?: number;
+	production: boolean;
 }

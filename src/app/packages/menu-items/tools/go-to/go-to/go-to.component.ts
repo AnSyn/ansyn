@@ -1,7 +1,13 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
-import { GoToExpandAction, GoToAction, PullActiveCenter, SetPinLocationModeAction, GoToInputChangeAction } from '../../actions/tools.actions';
+import {
+	GoToAction,
+	GoToExpandAction,
+	GoToInputChangeAction,
+	PullActiveCenter,
+	SetPinLocationModeAction
+} from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
@@ -19,11 +25,11 @@ export class GoToComponent implements OnInit {
 	private _expand: boolean;
 	public activeCenter: number[];
 	public gotoExpand$: Observable<boolean> = this.store$.select<IToolsState>('tools')
-	.pluck<IToolsState, boolean>('gotoExpand')
-	.distinctUntilChanged();
+		.pluck<IToolsState, boolean>('gotoExpand')
+		.distinctUntilChanged();
 	activeCenter$: Observable<number[]> = this.store$.select('tools')
-	.pluck<any, any>('activeCenter')
-	.distinctUntilChanged();
+		.pluck<any, any>('activeCenter')
+		.distinctUntilChanged();
 
 	activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
@@ -38,7 +44,7 @@ export class GoToComponent implements OnInit {
 
 	pin_location_mode: boolean;
 
-	@HostBinding('class.expand') 
+	@HostBinding('class.expand')
 	set expand(value) {
 		this._expand = value;
 	}
@@ -72,7 +78,7 @@ export class GoToComponent implements OnInit {
 			if (this.expand) {
 				this.store$.dispatch(new PullActiveCenter());
 			}
-		})
+		});
 	}
 
 	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) {

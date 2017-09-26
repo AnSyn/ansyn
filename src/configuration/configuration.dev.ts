@@ -5,7 +5,7 @@
 
 export const configuration = {
 	env: 'dev',
-	production: false,
+	production: true,
 	MetaConfig: {},
 	General: {
 		logActions: false

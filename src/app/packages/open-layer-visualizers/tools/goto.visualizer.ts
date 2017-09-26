@@ -13,7 +13,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	constructor(args: any) {
 		super(GoToVisualizerType, args);
 
-		this.iconStyle = new Style({ image: new Icon({ scale: 1, src: '/assets/icons/tools/goto-map-marker.svg' })});
+		this.iconStyle = new Style({ image: new Icon({ scale: 1, src: '/assets/icons/tools/goto-map-marker.svg' }) });
 	}
 
 	featureStyle(feature: Feature, resolution) {

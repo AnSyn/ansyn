@@ -1,18 +1,13 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { AnsynComponent } from './ansyn.component';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
-import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { initialMenuState } from '../../packages/menu/reducers/menu.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -20,7 +15,7 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({ selector: 'ansyn-menu' });
+	const mock_menu = MockComponent({ selector: 'ansyn-menu', inputs: ['version'] });
 	const mock_status = MockComponent({
 		selector: 'ansyn-status-bar',
 		inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']
@@ -80,51 +75,41 @@ describe('AnsynComponent', () => {
 			],
 			imports: [
 				RouterTestingModule,
-				StoreModule.provideStore({
-					status_bar: StatusBarReducer,
-					cases: CasesReducer,
-					overlays: OverlayReducer,
-					tools: ToolsReducer,
-					map: MapReducer
-				})]
-		})
-			.compileComponents();
+				StoreModule.provideStore({})]
+		}).compileComponents();
 	});
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddCaseSuccessAction(cases[0]));
-		store.dispatch(new SelectCaseByIdAction('tmp'));
-
 		handler = new Subject();
+
+		const mockStore = {
+			cases: handler,
+			tools: Observable.of({
+				flags: new Map<string, any>()
+			}),
+			map: Observable.of({
+				mapsList: [
+					{
+						id: 'imagery1',
+						data: {
+							position: {
+								zoom: 1, center: 2, boundingBox: { test: 1 }
+							},
+							isHistogramActive: false,
+							overlay: { id: 'overlayId1' }
+						}
+					},
+					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 } } },
+					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
+				],
+				activeMapId: 'imagery1'
+			}),
+			menu: Observable.of(initialMenuState)
+		};
+
 		spyOn(store, 'select').and.callFake(type => {
-			if (type === 'cases') {
-				return handler;
-			}
-			else if (type === 'tools') {
-				return Observable.of({
-					flags: new Map<string, any>()
-				});
-			}
-			else if (type === 'map') {
-				return Observable.of({
-					mapsList: [
-						{
-							id: 'imagery1',
-							data: {
-								position: {
-									zoom: 1, center: 2, boundingBox: { test: 1 }
-								},
-								isHistogramActive: false,
-								overlay: { id: 'overlayId1' }
-							}
-						},
-						{ id: 'imagery2', data: { position: { zoom: 3, center: 4 } } },
-						{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
-					],
-					active_map_id: 'imagery1'
-				});
-			}
+			return mockStore[type];
 		});
 
 	}));

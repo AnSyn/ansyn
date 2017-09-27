@@ -2,6 +2,9 @@ div.cases-table {
 	width: 100%;
 	color: white;
 	font-size: 13px;
+	padding: 0 5px;
+	box-sizing: border-box;
+
 	div.cases-table-head {
 		display: flex;
 		div.cases-table-head-row {
@@ -23,14 +26,12 @@ div.cases-table {
 		}
 	}
 	div.cases-table-body {
-		direction: rtl;
 		display: block;
 		overflow-y: auto;
 		height: 80vh;
 
 		&::-webkit-scrollbar {
-			width: 14px;
-			height: 18px;
+			width: 7px;
 		}
 
 		&::-webkit-scrollbar-corner {
@@ -47,7 +48,7 @@ div.cases-table {
 			-webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.05);
 			border: 4px solid transparent;
 			background-clip: padding-box;
-			border-radius: 8px;
+			border-radius: 2px;
 			background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
 		}
 

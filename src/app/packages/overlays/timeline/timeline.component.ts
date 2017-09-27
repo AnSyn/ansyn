@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { event, mouse, select, selectAll, selection } from 'd3';
+import { select, selectAll, selection } from 'd3';
 import { eventDrops } from 'ansyn-event-drops';
+
+
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { isEqual } from 'lodash';
@@ -19,6 +21,7 @@ selection.prototype.moveToFront = function () {
 	styleUrls: ['./timeline.component.less'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 
 
 export class TimelineComponent implements OnInit {
@@ -104,17 +107,18 @@ export class TimelineComponent implements OnInit {
 		let down, wait;
 		const dist = (a, b) => Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 
-		return (data, index, nodes) => {
+
+		return (data, index, nodes, event: MouseEvent) => {
 			if (!down) {
-				down = mouse(document.body);
-				wait = window.setTimeout(((e) => () => {
+				down = [event.clientX, event.clientY];
+				wait = window.setTimeout(( () => {
 					wait = null;
 					down = null;
 					// this.toggleDrop(nodes[index]);
-					this.emitter.provide('timeline:click').next({ event: e, element: data, index, nodes });
-				})(event), 300);
+					this.emitter.provide('timeline:click').next({ event, element: data, index, nodes });
+				}), 300);
 			} else {
-				if (dist(down, mouse(document.body)) < tolerance) {
+				if (dist(down, [event.clientX, event.clientY]) < tolerance) {
 					this.selectAndShowDrop(nodes[index], event, data, index, nodes);
 
 				}
@@ -138,7 +142,8 @@ export class TimelineComponent implements OnInit {
 	}
 
 	eventDropsHandler(): void {
-
+		// console.log(eventDrops);
+		// return;
 		const chart = eventDrops(this.configuration)
 			.mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
 			.mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
@@ -149,6 +154,7 @@ export class TimelineComponent implements OnInit {
 			.dblclick(() => {
 				event.stopPropagation();
 			});
+
 
 		const dataSet = this.drops.map(entities => ({
 			name: entities.name || '',

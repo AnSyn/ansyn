@@ -123,27 +123,27 @@ describe('TimelineComponent', () => {
 
 		const handler = spyOn(timeLineEmitterService, 'provide').and.returnValue(new Subject());
 
-
-		const mouseSpy = spyOn(d3, 'mouse').and.returnValue([10, 15]);
 		spyOn(d3, 'event').and.returnValue({});
-
-		event({ key: 'value' }, 1, list.childNodes);
+		let mouseEventResult = {clientX: 10, clientY: 15} as MouseEvent;
+		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(400);
 		expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:click');
 
-		event({ key: 'value' }, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(150);
-		event({ key: 'value' }, 1, list.childNodes);
+		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:dblclick');
 
 		tick(500);
 		timeLineEmitterService.provide['calls'].reset();
 
-		mouseSpy.and.returnValue([20, 20]);
-		event({ key: 'value' }, 1, list.childNodes);
+
+		mouseEventResult = {clientX: 20, clientY: 20} as MouseEvent;
+		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(150);
-		mouseSpy.and.returnValue([200, 200]);
-		event({ key: 'value' }, 1, list.childNodes);
+
+		mouseEventResult = {clientX: 200, clientY: 200} as MouseEvent;
+		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:click');
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:dblclick');
 

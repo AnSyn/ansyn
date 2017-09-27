@@ -1,10 +1,11 @@
-<div class="app animations">
+<div class="app animations" [ngClass]="isPinnedClass">
 
 	<div class="menu">
-		<ansyn-menu></ansyn-menu>
+		<ansyn-menu [version]="version"></ansyn-menu>
 	</div>
 
 	<div class="layer">
+
 		<div class="maps-container">
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 		</div>

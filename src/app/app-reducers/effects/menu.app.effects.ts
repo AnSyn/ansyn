@@ -10,18 +10,12 @@ import 'rxjs/add/operator/withLatestFrom';
 export class MenuAppEffects {
 
 	@Effect()
-	onAnimationEnd$: Observable<UpdateMapSizeAction> = this.actions$
-		.ofType(MenuActionTypes.ANIMATION_END)
-		.map(() => {
-			return new UpdateMapSizeAction();
-		});
-
-	@Effect()
-	redrawTimeline$: Observable<RedrawTimelineAction> = this.actions$
-		.ofType(MenuActionTypes.ANIMATION_END)
-		.map(() => {
-			return new RedrawTimelineAction(true);
-		});
+	onContainerChanged$: Observable<UpdateMapSizeAction> = this.actions$
+		.ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED)
+		.mergeMap(() => [
+			new UpdateMapSizeAction(),
+			new RedrawTimelineAction(true)
+		]);
 
 	constructor(private actions$: Actions) {
 	}

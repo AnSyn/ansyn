@@ -12,6 +12,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -20,12 +21,15 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 })
 
 export class AnsynComponent implements OnInit {
-
 	selected_case$: Observable<Case> = this.store.select('cases')
 		.pluck('selected_case')
 		.filter(selected_case => !_isNil(selected_case))
 		.distinctUntilChanged();
 
+	isPinned$ = this.store.select<IMenuState>('menu')
+		.pluck<IMenuState, boolean>('isPinned')
+		.distinctUntilChanged()
+		.skip(1);
 
 	mapState$: Observable<IMapState> = this.store.select('map');
 
@@ -50,10 +54,10 @@ export class AnsynComponent implements OnInit {
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
 	isFavoriteOverlay: boolean;
-	version;
+	version = packageJson.version;
+	isPinnedClass: string;
 
 	constructor(private store: Store<IAppState>) {
-		this.version = packageJson.version;
 	}
 
 	ngOnInit(): void {
@@ -69,6 +73,10 @@ export class AnsynComponent implements OnInit {
 
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
 			this.isFavoriteOverlay = isFavoriteOverlay;
+		});
+
+		this.isPinned$.subscribe((_isPinned: boolean) => {
+			this.isPinnedClass = _isPinned ? 'isPinned' : 'isNotPinned';
 		});
 	}
 

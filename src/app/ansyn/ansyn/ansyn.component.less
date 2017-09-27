@@ -1,9 +1,43 @@
 @import "~@ansyn/core/less/common";
 
+@keyframes pinned {
+	from {
+		transform: scale(1.1) translateX(-100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes unPinned {
+	from {
+		transform: scale(1) translateX(200px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
 :host {
 	div.app {
 		display: flex;
 		height: 100vh;
+		overflow: hidden;
+
+		&.isPinned, &.isNotPinned {
+			background: black;
+			div.layer {
+				animation-duration: .4s;
+			}
+		}
+
+		&.isPinned div.layer {
+			animation-name: pinned;
+		}
+
+		&.isNotPinned div.layer {
+			animation-name: unPinned;
+		}
 
 		div.layer {
 			width: 100%;
@@ -13,6 +47,7 @@
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
 			.maps-container {
 				position: relative;
 				flex: 1;

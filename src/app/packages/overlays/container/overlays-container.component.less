@@ -1,0 +1,19 @@
+@import "~@ansyn/core/less/common";
+@background: #d393e1;
+
+.overlays-status {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(red(@background),green(@background),blue(@background),0.3);
+	color: @application-main-color;
+	font-size:18px;
+	& > div{
+		margin-top:18px;
+	}
+}

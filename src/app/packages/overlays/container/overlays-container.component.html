@@ -1,5 +1,8 @@
 <!-- <button (click)="demo()" >click</button> -->
 <div class='overlays-container'>
+	<div class="overlays-status">
+		<div>No overlays available, please try another search</div>
+	</div>
 	<ansyn-timeline [drops]='drops' [configuration]='configuration' [redraw$]='redraw$'
 					[markup]="overlaysMarkup"></ansyn-timeline>
 </div>

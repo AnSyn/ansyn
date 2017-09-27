@@ -126,6 +126,13 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 			return { ...state, specialObjects };
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
+			const { from, to } = action.payload as { to: Date, from: Date };
+
+			const result: number = from.getTime() - to.getTime();
+			if (result > 0) {
+				return state;
+			}
+
 			return Object.assign({}, state, {
 				timelineState: action.payload
 			});

@@ -5,7 +5,8 @@ import {
 	SelectOverlayAction,
 	SetFiltersAction,
 	SetSpecialObjectsActionStore,
-	UnSelectOverlayAction
+	UnSelectOverlayAction,
+	SetTimelineStateAction,
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
@@ -147,6 +148,24 @@ describe('Overlay Reducer', () => {
 		const result = OverlayReducer(overlayInitialState, action);
 		expect(result.specialObjects.size).toBe(1);
 		expect(result.specialObjects.get('fkdsjl'));
+	});
+
+	it('set timeline state action should update the store', () => {
+		const data1 = { to: new Date(), from: new Date( (new Date()).getTime()  - (1000 * 60 * 60 * 24 * 30) )};
+
+		const action = new SetTimelineStateAction(data1);
+		const result = OverlayReducer(overlayInitialState, action);
+		expect(result.timelineState.from.getTime()).toBe(data1.from.getTime());
+		expect(result.timelineState.to.getTime()).toBe(data1.to.getTime());
+	});
+
+	it('set timeline state action should fail and not update the store', () => {
+		const data1 = { from: new Date(), to: new Date( (new Date()).getTime()  - (1000 * 60 * 60 * 24 * 30) )};
+
+		const action = new SetTimelineStateAction(data1);
+		const result = OverlayReducer(overlayInitialState, action);
+		expect(result.timelineState.from.getTime()).not.toBe(data1.from.getTime());
+		expect(result.timelineState.to.getTime()).not.toBe(data1.to.getTime());
 	});
 
 });

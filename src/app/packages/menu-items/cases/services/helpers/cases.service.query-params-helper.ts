@@ -46,7 +46,7 @@ export class QueryParamsHelper {
 					case 'geopoint':
 						const geopointStr = q_params.geopoint;
 						if (geopointStr) {
-							const coordinates = geopointStr.split(',').map(strToNum => +strToNum);
+							const coordinates = geopointStr.split(',').map(strToNum => +strToNum).reverse();
 							const geoPoint: Point = { type: 'Point', coordinates };
 							case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 							case_model.state.region = getPolygonByPoint(coordinates).geometry;

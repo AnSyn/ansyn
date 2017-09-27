@@ -46,7 +46,7 @@
 		"debounce": "^1.0.0",
 		"elasticsearch": "^13.2.0",
 		"enhanced-resolve": "^3.3.0",
-		"ansyn-event-drops": "0.4.10",
+		"ansyn-event-drops": "0.4.11",
 		"flatpickr": "^3.0.6",
 		"jsdoc": "3.4.3",
 		"lodash": "^4.17.4",

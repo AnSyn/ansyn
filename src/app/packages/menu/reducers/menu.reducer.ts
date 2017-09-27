@@ -6,13 +6,15 @@ import { isDevMode } from '@angular/core';
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
 	selectedMenuItem: string;
-	animation: boolean;
+	isPinned: boolean;
+	containerWidth: number;
 }
 
 export const initialMenuState: IMenuState = {
 	menuItems: new Map(),
 	selectedMenuItem: '',
-	animation: false
+	isPinned: false,
+	containerWidth: 0
 };
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
@@ -39,16 +41,10 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return { ...state, menuItems };
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
-			return { ...state, selectedMenuItem: action.payload, animation: true };
+			return { ...state, selectedMenuItem: action.payload };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM:
-			return { ...state, selectedMenuItem: '', animation: true };
-
-		case MenuActionTypes.ANIMATION_START:
-			return { ...state, animation: true };
-
-		case MenuActionTypes.ANIMATION_END:
-			return { ...state, animation: false };
+			return { ...state, selectedMenuItem: '' };
 
 		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
@@ -58,6 +54,8 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			menuItemsHandler.set(key, menuItem);
 			return { ...state, menuItems: menuItemsHandler };
 
+		case MenuActionTypes.TOGGLE_IS_PINNED:
+			return { ...state, isPinned: action.payload };
 
 		default:
 			return state;

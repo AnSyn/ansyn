@@ -1,10 +1,10 @@
 <div class="menu-wrapper">
 
-	<div class="menu" [style.width.px]="width">
+	<div class="menu">
 
 		<div
 			class="menu-btn"
-			*ngFor="let menuItem of menuItemsAsArray$ | async; let index = index"
+			*ngFor="let menuItem of menuItemsAsArray$ | async"
 			[class.active]="isActive(menuItem.name)"
 			(click)="toggleItem(menuItem.name)">
 
@@ -19,10 +19,13 @@
 	</div>
 
 
-	<div class="container" #container [@expand]="expand.toString()" (@expand.done)="onFinishAnimation(expand)"
-		 (@expand.start)="onStartAnimation()">
-		<button class="close" (click)="closeMenu()">×</button>
-		<ng-template #selected_component_elem></ng-template>
+	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()">
+		<!--<button class="close" (click)="closeMenu()">×</button>-->
+		<button class="pin" (click)="toggleIsPinned()">
+			<span class="icon-tools--go-to-pin"></span>
+		</button>
+
+		<ng-template #componentElem></ng-template>
 	</div>
 
 

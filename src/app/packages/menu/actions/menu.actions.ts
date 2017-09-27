@@ -6,9 +6,11 @@ export const MenuActionTypes = {
 	ADD_MENU_ITEM: 'ADD_MENU_ITEM',
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
-	ANIMATION_START: 'ANIMATION_START',
-	ANIMATION_END: 'ANIMATION_END',
-	SET_BADGE: 'SET_BADGE'
+	SET_BADGE: 'SET_BADGE',
+	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
+	TRIGGER: {
+		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
+	}
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -39,24 +41,27 @@ export class UnSelectMenuItemAction implements Action {
 	}
 }
 
-export class AnimationStartAction implements Action {
-	type = MenuActionTypes.ANIMATION_START;
-
-	constructor(public payload?: any) {
-	}
-}
-
-export class AnimationEndAction implements Action {
-	type = MenuActionTypes.ANIMATION_END;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class SetBadgeAction implements Action {
 	type = MenuActionTypes.SET_BADGE;
 
 	constructor(public payload: { key: string, badge: number }) {
 	}
 }
+
+export class ToggleIsPinnedAction implements Action {
+	type = MenuActionTypes.TOGGLE_IS_PINNED;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+
+export class ContainerChangedTriggerAction implements Action {
+	type = MenuActionTypes.TRIGGER.CONTAINER_CHANGED;
+
+	constructor(public payload?: any) {
+	}
+}
+
+
 

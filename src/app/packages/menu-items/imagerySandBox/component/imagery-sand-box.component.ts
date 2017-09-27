@@ -17,7 +17,8 @@ import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions
 
 @Component({
 	selector: 'ansyn-map-sand-box',
-	templateUrl: './imagery-sand-box.component.html'
+	templateUrl: './imagery-sand-box.component.html',
+	styleUrls: [`./imagery-sand-box.component.less`]
 
 
 })

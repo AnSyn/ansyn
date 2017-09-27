@@ -5,9 +5,10 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
-import { AnimationEndAction } from '@ansyn/menu/actions/menu.actions';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { IAppState } from '../';
+import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
+import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -83,13 +84,14 @@ describe('MenuAppEffects', () => {
 	}));
 
 	it('onAnimationEnd$ effect should dispatch UpdateMapSizeAction', () => {
-		let action: AnimationEndAction = new AnimationEndAction();
+		let count = 0;
+		let action: ContainerChangedTriggerAction = new ContainerChangedTriggerAction();
 		effectsRunner.queue(action);
-		let result: UpdateMapSizeAction;
-		menuAppEffects.onAnimationEnd$.subscribe((_result: UpdateMapSizeAction) => {
-			result = _result;
+		menuAppEffects.onContainerChanged$.subscribe((_result: UpdateMapSizeAction | RedrawTimelineAction | any) => {
+			expect(_result instanceof UpdateMapSizeAction || _result instanceof RedrawTimelineAction).toBeTruthy();
+			count = count + 1;
 		});
-		expect(result instanceof UpdateMapSizeAction).toBeTruthy();
+		expect(count).toEqual(2);
 	});
 
 });

@@ -9,6 +9,8 @@ div.menu-wrapper {
 		flex-direction: column;
 		display: flex;
 		z-index: 2;
+		width: 90px;
+
 		div.menu-btn {
 			position: relative;
 			text-align: center;
@@ -44,10 +46,22 @@ div.menu-wrapper {
 		}
 	}
 	div.container {
-		position: relative;
-		background: @application-main-color;
+		position: absolute;
+		left: 90px;
+		z-index: 1;
+		height: 100vh;
+		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .8);
 		width: auto;
-
+		box-shadow: 0 0 10px black;
+		//transform: translateX(-100%);
+		&.pinned {
+			position: relative;
+			left: auto;
+			background: @application-main-color;
+			button.pin span {
+				transform: rotate(0);
+			}
+		}
 		button.close {
 			position: absolute;
 			right: 0;
@@ -59,6 +73,25 @@ div.menu-wrapper {
 			z-index: 1;
 			&:hover {
 				color: #2e2d46;
+			}
+		}
+
+		button.pin {
+			position: absolute;
+			right: 0;
+			color: white;
+			border: none;
+			background: transparent;
+			cursor: pointer;
+			outline: none;
+			z-index: 1;
+			font-size: 24px;
+			padding: 18px 15px;
+			box-sizing: border-box;
+			span {
+				display: block;
+				transition: transform .5s;
+				transform: rotate(90deg);
 			}
 		}
 	}

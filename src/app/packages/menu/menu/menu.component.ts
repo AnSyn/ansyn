@@ -29,7 +29,7 @@ const animations: any[] = [
 			state('0', style({
 				transform: 'translateX(-100%)'
 			})),
-			transition('1 <=> 0', animate('0.4s ease-in-out')),
+			transition('1 <=> 0', animate('0.3s ease-in-out')),
 		]
 	),
 ];
@@ -183,7 +183,7 @@ export class MenuComponent implements OnInit {
 
 		Observable
 			.fromEvent(this.document, 'click')
-			.filter(() => !this.isPinned && this.anyMenuItemSelected())
+			.filter(() => !this.isPinned && this.anyMenuItemSelected() && !this.onAnimation)
 			.filter((event: any) => !event.target.closest('.menu-wrapper'))
 			.subscribe(this.closeMenu.bind(this));
 	}

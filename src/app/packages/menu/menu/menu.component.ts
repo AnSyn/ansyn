@@ -2,6 +2,7 @@ import {
 	Component,
 	ComponentFactoryResolver,
 	ElementRef,
+	Inject,
 	Input,
 	OnInit,
 	Renderer2,
@@ -17,6 +18,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import 'rxjs/add/operator/distinctUntilChanged';
 import { isEmpty, isNil } from 'lodash';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
+import { DOCUMENT } from '@angular/common';
+import { Subscription } from 'rxjs/Subscription';
 
 const animations: any[] = [
 	trigger(
@@ -43,6 +46,7 @@ export class MenuComponent implements OnInit {
 
 	@ViewChild('componentElem', { read: ViewContainerRef }) componentElem: ViewContainerRef;
 	@ViewChild('container') container: ElementRef;
+	@ViewChild('menuWrapper') menuWrapper: ElementRef;
 	@Input() version;
 
 	menuState$: Observable<IMenuState> = this.store.select('menu');
@@ -66,10 +70,12 @@ export class MenuComponent implements OnInit {
 	selectedMenuItemName: string;
 	menuItems: Map<string, MenuItem>;
 	isPinned: boolean;
+	outsideClickSubscriber: Subscription;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>,
-				private renderer: Renderer2) {
+				private renderer: Renderer2,
+				@Inject(DOCUMENT) private document: Document) {
 
 		this.menuItems$.subscribe((_menuItems) => {
 			this.menuItems = _menuItems;
@@ -160,5 +166,11 @@ export class MenuComponent implements OnInit {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
+
+		Observable
+			.fromEvent(this.document, 'click')
+			.filter(() => !this.isPinned && this.anyMenuItemSelected())
+			.filter((event: any) => !event.target.closest('.menu-wrapper'))
+			.subscribe(this.closeMenu.bind(this));
 	}
 }

@@ -124,7 +124,7 @@ describe('TimelineComponent', () => {
 		const handler = spyOn(timeLineEmitterService, 'provide').and.returnValue(new Subject());
 
 		spyOn(d3, 'event').and.returnValue({});
-		let mouseEventResult = {clientX: 10, clientY: 15} as MouseEvent;
+		let mouseEventResult = { clientX: 10, clientY: 15 } as MouseEvent;
 		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(400);
 		expect(timeLineEmitterService.provide).toHaveBeenCalledWith('timeline:click');
@@ -138,11 +138,11 @@ describe('TimelineComponent', () => {
 		timeLineEmitterService.provide['calls'].reset();
 
 
-		mouseEventResult = {clientX: 20, clientY: 20} as MouseEvent;
+		mouseEventResult = { clientX: 20, clientY: 20 } as MouseEvent;
 		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(150);
 
-		mouseEventResult = {clientX: 200, clientY: 200} as MouseEvent;
+		mouseEventResult = { clientX: 200, clientY: 200 } as MouseEvent;
 		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:click');
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:dblclick');

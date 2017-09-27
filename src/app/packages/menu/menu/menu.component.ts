@@ -19,7 +19,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { isEmpty, isNil } from 'lodash';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
-import { Subscription } from 'rxjs/Subscription';
 
 const animations: any[] = [
 	trigger(
@@ -70,7 +69,6 @@ export class MenuComponent implements OnInit {
 	selectedMenuItemName: string;
 	menuItems: Map<string, MenuItem>;
 	isPinned: boolean;
-	outsideClickSubscriber: Subscription;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>,
@@ -81,14 +79,7 @@ export class MenuComponent implements OnInit {
 			this.menuItems = _menuItems;
 		});
 
-		this.selectedMenuItem$.subscribe((_selectedMenuItemName) => {
-			this.selectedMenuItemName = _selectedMenuItemName;
-			if (this.anyMenuItemSelected()) {
-				this.componentChanges();
-			} else {
-				this.store.dispatch(new ToggleIsPinnedAction(false));
-			}
-		});
+		this.selectedMenuItem$.subscribe(this.setSelectedMenuItem.bind(this));
 
 		this.isPinned$.subscribe((_isPinned: boolean) => {
 			this.isPinned = _isPinned;
@@ -108,6 +99,15 @@ export class MenuComponent implements OnInit {
 
 	get selectedMenuItem(): MenuItem {
 		return this.menuItems.get(this.selectedMenuItemName);
+	}
+
+	setSelectedMenuItem(_selectedMenuItemName) {
+		this.selectedMenuItemName = _selectedMenuItemName;
+		if (this.anyMenuItemSelected()) {
+			this.componentChanges();
+		} else {
+			this.store.dispatch(new ToggleIsPinnedAction(false));
+		}
 	}
 
 	componentChanges(): void {

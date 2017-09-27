@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/z-index-globals';
 
 div.menu-wrapper {
 	height: 100vh;
@@ -8,7 +9,7 @@ div.menu-wrapper {
 		background: #2E2D46;
 		flex-direction: column;
 		display: flex;
-		z-index: 2;
+		z-index: @menu;
 		width: 90px;
 
 		div.menu-btn {
@@ -48,15 +49,14 @@ div.menu-wrapper {
 	div.container {
 		position: absolute;
 		left: 90px;
-		z-index: 1;
+		z-index: @menu-container;
 		height: 100vh;
 		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
-		width: auto;
 		box-shadow: 0 0 10px black;
-		//transform: translateX(-100%);
+
 		&.pinned {
 			position: relative;
-			left: auto;
+			left: 0;
 			background: @application-main-color;
 			button.pin span {
 				transform: rotate(0);

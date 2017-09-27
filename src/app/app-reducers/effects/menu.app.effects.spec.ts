@@ -83,7 +83,7 @@ describe('MenuAppEffects', () => {
 
 	}));
 
-	it('onAnimationEnd$ effect should dispatch UpdateMapSizeAction', () => {
+	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
 		let count = 0;
 		let action: ContainerChangedTriggerAction = new ContainerChangedTriggerAction();
 		effectsRunner.queue(action);

@@ -7,7 +7,7 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { initialMenuState } from '../../packages/menu/reducers/menu.reducer';
+import { initialMenuState } from '@ansyn/menu/reducers/menu.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;

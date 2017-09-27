@@ -7,14 +7,12 @@ export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
 	selectedMenuItem: string;
 	isPinned: boolean;
-	containerWidth: number;
 }
 
 export const initialMenuState: IMenuState = {
 	menuItems: new Map(),
 	selectedMenuItem: '',
-	isPinned: false,
-	containerWidth: 0
+	isPinned: false
 };
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;

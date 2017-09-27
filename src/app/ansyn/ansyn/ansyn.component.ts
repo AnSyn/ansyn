@@ -58,7 +58,6 @@ export class AnsynComponent implements OnInit {
 	isPinnedClass: string;
 
 	constructor(private store: Store<IAppState>) {
-		this.version = packageJson.version;
 	}
 
 	ngOnInit(): void {

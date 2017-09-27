@@ -41,6 +41,13 @@ const animations: any[] = [
 	animations
 })
 
+/*
+	Scenarios
+	menu is close -> toggle menu item -> dispatch store -> subscribe store -> change expand and build component
+	menu is open -> toggle other menu item -> dispatch store -> subscribe store -> build component // without animations (expand not changed)
+	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
+*/
+
 export class MenuComponent implements OnInit {
 
 	@ViewChild('componentElem', { read: ViewContainerRef }) componentElem: ViewContainerRef;
@@ -69,6 +76,8 @@ export class MenuComponent implements OnInit {
 	selectedMenuItemName: string;
 	menuItems: Map<string, MenuItem>;
 	isPinned: boolean;
+	expand: boolean;
+	onAnimation: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>,
@@ -90,11 +99,6 @@ export class MenuComponent implements OnInit {
 			}
 			this.store.dispatch(new ContainerChangedTriggerAction());
 		});
-
-	}
-
-	get expand(): boolean {
-		return !isEmpty(this.selectedMenuItemName);
 	}
 
 	get selectedMenuItem(): MenuItem {
@@ -103,6 +107,8 @@ export class MenuComponent implements OnInit {
 
 	setSelectedMenuItem(_selectedMenuItemName) {
 		this.selectedMenuItemName = _selectedMenuItemName;
+		this.expand = !isEmpty(this.selectedMenuItemName);
+
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
 		} else {
@@ -111,7 +117,7 @@ export class MenuComponent implements OnInit {
 	}
 
 	componentChanges(): void {
-		if (!this.componentElem) {
+		if (!this.componentElem || this.onAnimation) {
 			return;
 		}
 		this.componentElem.clear();
@@ -130,6 +136,9 @@ export class MenuComponent implements OnInit {
 	}
 
 	toggleItem(key: string): void {
+		if (this.onAnimation) {
+			return;
+		}
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {
@@ -149,7 +158,12 @@ export class MenuComponent implements OnInit {
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 
+	onExpandStart() {
+		this.onAnimation = true;
+	}
+
 	onExpandDone(): void {
+		this.onAnimation = false;
 		if (!this.anyMenuItemSelected()) {
 			this.componentChanges();
 		}

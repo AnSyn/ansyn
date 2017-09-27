@@ -5,8 +5,8 @@ import {
 	SelectOverlayAction,
 	SetFiltersAction,
 	SetSpecialObjectsActionStore,
-	UnSelectOverlayAction,
 	SetTimelineStateAction,
+	UnSelectOverlayAction,
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
@@ -151,7 +151,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set timeline state action should update the store', () => {
-		const data1 = { to: new Date(), from: new Date( (new Date()).getTime()  - (1000 * 60 * 60 * 24 * 30) )};
+		const data1 = { to: new Date(), from: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
 
 		const action = new SetTimelineStateAction(data1);
 		const result = OverlayReducer(overlayInitialState, action);
@@ -160,7 +160,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set timeline state action should fail and not update the store', () => {
-		const data1 = { from: new Date(), to: new Date( (new Date()).getTime()  - (1000 * 60 * 60 * 24 * 30) )};
+		const data1 = { from: new Date(), to: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
 
 		const action = new SetTimelineStateAction(data1);
 		const result = OverlayReducer(overlayInitialState, action);

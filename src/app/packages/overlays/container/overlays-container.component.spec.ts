@@ -140,7 +140,7 @@ describe('OverlayContainerComponent', () => {
 	it('check that we subscribing for both overlays and selected overlays', () => {
 		component.ngOnInit();
 		component.ngAfterViewInit();
-		expect(Object.keys(component.subscribers).length).toEqual(10);
+		expect(Object.keys(component.subscribers).length).toEqual(11);
 	});
 
 	it('check the function toggle overlay', () => {

@@ -5,8 +5,8 @@ import { MenuActionTypes } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
-import { GoToExpandAction, ToolsActionsTypes } from '../../packages/menu-items/tools/actions/tools.actions';
-import { SetClickOutside } from '../../packages/menu/actions/menu.actions';
+import { GoToExpandAction, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 
 @Injectable()
 export class MenuAppEffects {

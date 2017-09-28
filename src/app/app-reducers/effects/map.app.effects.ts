@@ -63,8 +63,8 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
-import { SetMapGeoEnabledModeStatusBarActionStore, UpdateToastFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { statusBarToastFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { SetMapGeoEnabledModeStatusBarActionStore, SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -254,7 +254,7 @@ export class MapAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
 		.mergeMap((action) => [
-			new UpdateToastFlagsAction(({ key: statusBarToastFlagsItems.showOverlayErrorToast, value: true})),
+			new SetToastMessageStoreAction({ toastText: statusBarToastMessages.showOverlayErrorToast, showWarningIcon: true }),
 			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		]);
 

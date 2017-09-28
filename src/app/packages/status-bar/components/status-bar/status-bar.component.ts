@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems, statusBarToastFlagsItems } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFlagsItems, IToastMessage } from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction,
 	ChangeLayoutAction,
@@ -11,7 +11,7 @@ import {
 	GoPrevAction,
 	OpenShareLink,
 	SetGeoFilterAction,
-	UpdateToastFlagsAction,
+	SetToastMessageStoreAction,
 	SetOrientationAction,
 	SetTimeAction,
 	UpdateStatusFlagsAction
@@ -25,8 +25,6 @@ import { MapsLayout } from '@ansyn/core';
 	styleUrls: ['./status-bar.component.less']
 })
 export class StatusBarComponent implements OnInit {
-	static s_linkMessage = 'Link copied to clipboard';
-	static s_imageErrorMessage = 'Failed to load overlay';
 
 	status_bar$: Observable<IStatusBarState> = this.store.select('status_bar');
 
@@ -40,7 +38,7 @@ export class StatusBarComponent implements OnInit {
 	geoFilter$: Observable<string> = this.status_bar$.pluck<IStatusBarState, string>('geoFilter').distinctUntilChanged();
 
 	flags$ = this.status_bar$.pluck('flags').distinctUntilChanged();
-	toastFlags$ = this.status_bar$.pluck('toastFlags').distinctUntilChanged();
+	toastMessage$ = this.status_bar$.pluck('toastMessage').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.status_bar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
 	hideOverlay$: Observable<boolean> = this.status_bar$
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
@@ -136,21 +134,15 @@ export class StatusBarComponent implements OnInit {
 			this.layouts = _layouts;
 		});
 
-		this.toastFlags$.subscribe((_toastFlags: Map<string, boolean>) => {
-			if (_toastFlags.has(statusBarToastFlagsItems.showOverlayErrorToast) &&
-				_toastFlags.get(statusBarToastFlagsItems.showOverlayErrorToast)) {
-				this.toastText = StatusBarComponent.s_imageErrorMessage;
-				this.showAlertIcon = true;
-				this.showToast = true;
-			} else if (_toastFlags.has(statusBarToastFlagsItems.showLinkCopyToast) &&
-				_toastFlags.get(statusBarToastFlagsItems.showLinkCopyToast)) {
-				this.toastText = StatusBarComponent.s_linkMessage;
-				this.showAlertIcon = false;
-				this.showToast = true;
-			} else {
+		this.toastMessage$.subscribe((_toastFlags: IToastMessage) => {
+			if (!_toastFlags) {
 				this.showToast = false;
 				this.showAlertIcon = false;
 				this.toastText = '';
+			} else {
+				this.toastText = _toastFlags.toastText;
+				this.showAlertIcon = _toastFlags.showWarningIcon;
+				this.showToast = true;
 			}
 		});
 
@@ -223,14 +215,8 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	onShowToastChange(value: boolean) {
-		if (value) {
-			if (this.toastText === StatusBarComponent.s_imageErrorMessage) {
-				this.store.dispatch(new UpdateToastFlagsAction({ key: statusBarToastFlagsItems.showOverlayErrorToast, value: value }));
-			} else if (this.toastText === StatusBarComponent.s_linkMessage) {
-				this.store.dispatch(new UpdateToastFlagsAction({ key: statusBarToastFlagsItems.showLinkCopyToast, value: value }));
-			}
-		} else {
-			this.store.dispatch(new UpdateToastFlagsAction());
+		if (!value) {
+			this.store.dispatch(new SetToastMessageStoreAction());
 		}
 	}
 

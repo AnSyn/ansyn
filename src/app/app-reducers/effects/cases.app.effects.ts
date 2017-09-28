@@ -11,7 +11,7 @@ import { IAppState } from '../';
 import { isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { UpdateToastFlagsAction } from '@ansyn/status-bar';
+import { SetToastMessageStoreAction } from '@ansyn/status-bar';
 import {
 	CopyCaseLinkAction,
 	LoadContextsSuccessAction,
@@ -27,7 +27,7 @@ import { BaseContextSourceProvider, ContextCriteria } from '@ansyn/context';
 import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { statusBarToastFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
 @Injectable()
 export class CasesAppEffects {
@@ -71,7 +71,7 @@ export class CasesAppEffects {
 		.map((s_case: Case) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(s_case);
 			const result = copyFromContent(shareLink);
-			return new UpdateToastFlagsAction(({ key: statusBarToastFlagsItems.showLinkCopyToast, value: result}));
+			return new SetToastMessageStoreAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
 	@Effect({ dispatch: false })

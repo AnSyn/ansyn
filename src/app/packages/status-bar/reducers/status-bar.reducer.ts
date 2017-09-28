@@ -1,11 +1,16 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { MapsLayout } from '@ansyn/core';
 
+export interface IToastMessage {
+	toastText: string;
+	showWarningIcon?: boolean;
+}
+
 export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selected_layout_index: number;
 	flags: Map<string, boolean>;
-	toastFlags: Map<string, boolean>;
+	toastMessage: IToastMessage,
 	orientations: string[],
 	geoFilters: string[],
 	orientation: string;
@@ -21,9 +26,9 @@ export const statusBarFlagsItems = {
 	geo_registered_options_enabled: 'geo_registered_options_enabled'
 };
 
-export const statusBarToastFlagsItems = {
-	showLinkCopyToast: 'showLinkCopyToast',
-	showOverlayErrorToast: 'showOverlayErrorToast'
+export const statusBarToastMessages = {
+	showLinkCopyToast: 'Link copied to clipboard',
+	showOverlayErrorToast: 'Failed to load overlay'
 };
 
 const layouts: MapsLayout[] = [
@@ -41,7 +46,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selected_layout_index,
 	flags: new Map<string, boolean>(),
-	toastFlags: new Map<string, boolean>(),
+	toastMessage: null,
 	orientations: ['original'],
 	geoFilters: ['pin-point'],
 	orientation: 'original',
@@ -83,34 +88,11 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 			return { ...state, flags: newMap };
 
-		case StatusBarActionsTypes.UPDATE_TOAST_FLAGS:
-
-			const newToastMap = new Map(state.toastFlags);
-			// reset toast items state
-			newToastMap.forEach((value, key) => {
-				newToastMap.set(key, false);
-			});
-
-			// reset for empty payload
+		case StatusBarActionsTypes.SET_TOAST_MESSAGE:
 			if (!action.payload) {
-				return { ...state, toastFlags: newToastMap };
+				return { ...state, toastMessage: null };
 			}
-
-			// return original state for invalid payload
-			const toastItems = Object.keys(statusBarToastFlagsItems).map(k => statusBarToastFlagsItems[k]);
-			if (!toastItems.includes(action.payload.key)) {
-				return state;
-			}
-
-			if (!newToastMap.get(action.payload.key)) {
-				newToastMap.set(action.payload.key, false);
-			}
-
-			const toastItemValue = action.payload.value !== undefined ? action.payload.value : !newToastMap.get(action.payload.key);
-
-			newToastMap.set(action.payload.key, toastItemValue);
-
-			return { ...state, toastFlags: newToastMap };
+			return { ...state, toastMessage: action.payload };
 
 		case StatusBarActionsTypes.SET_ORIENTATION:
 			return { ...state, orientation: action.payload };

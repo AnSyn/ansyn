@@ -12,15 +12,9 @@ export interface IFetchParams {
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		return Observable.empty();
-	};
+	abstract fetch(fetchParams: IFetchParams): Observable<Overlay[]>;
 
-	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
-	};
+	abstract getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any>;
 
-	public getById(id: string): Observable<Overlay> {
-		return Observable.empty();
-	};
+	abstract getById(id: string): Observable<Overlay>;
 }

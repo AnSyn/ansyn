@@ -1,6 +1,6 @@
 {
 	"name": "ansyn",
-	"version": "0.1.8",
+	"version": "0.1.11",
 	"license": "MIT",
 	"scripts": {
 		"postinstall": "npm link ./src/app/connection-packages/tools-map ./src/app/connection-packages/cases-map ./src/app/connection-packages/cases-router ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin ./src/app/packages/type-container",

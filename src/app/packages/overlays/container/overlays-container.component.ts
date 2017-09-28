@@ -27,7 +27,6 @@ import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
 import { animate, style, trigger, transition } from '@angular/animations';
 
-// noinspection TypeScriptUnresolvedFunction
 const animations: any[] = [
 	trigger('timeline-status', [
 		transition(':enter', [

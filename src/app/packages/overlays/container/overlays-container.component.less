@@ -1,13 +1,13 @@
 @import "~@ansyn/core/less/common";
 
-@background: #d393e1;
+
 
 .loading-container div {
 	width: 12px;
 	height: 12px;
 	position: absolute;
 	left: -20px;
-	background-color: @background;
+	background-color: @overlays-dots-color;
 	border-radius: 50%;
 	animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
 }
@@ -37,7 +37,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: rgba(red(@background),green(@background),blue(@background),0.1);
+	background: rgba(red(@overlays-dots-color),green(@overlays-dots-color),blue(@overlays-dots-color),0.1);
 	color: @application-main-color;
 	font-size:15px;
 	.text-container{

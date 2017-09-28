@@ -1,4 +1,5 @@
 <div class="toast" *ngIf="showToast" [@toastAnimation]>
+	<img *ngIf="showAlertIcon" src="/assets/icons/status-bar/alert.svg"/>
 	{{text}}
 	<span (click)="showToast = false">×</span>
 </div>

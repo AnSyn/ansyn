@@ -3,6 +3,7 @@ import {
 	Component,
 	ComponentFactoryResolver,
 	ElementRef,
+	HostListener,
 	Inject,
 	Input,
 	OnInit,
@@ -50,8 +51,21 @@ const animations: any[] = [
 */
 
 export class MenuComponent implements OnInit, AfterViewInit {
+	_componentElem;
 
-	@ViewChild('componentElem', { read: ViewContainerRef }) componentElem: ViewContainerRef;
+	@ViewChild('componentElem', { read: ViewContainerRef })
+	set componentElem(value) {
+		this._componentElem = value;
+		if (this.isBuildNeeded) {
+			this.componentChanges();
+			this.isBuildNeeded = false;
+		}
+	}
+
+	get componentElem() {
+		return this._componentElem;
+	}
+
 	@ViewChild('container') container: ElementRef;
 	@ViewChild('menuWrapper') menuWrapper: ElementRef;
 	@Input() version;
@@ -60,6 +74,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
 	isPinned$ = this.menuState$
 		.pluck<IMenuState, boolean>('isPinned')
+		.distinctUntilChanged();
+
+	clickOutside$ = this.menuState$
+		.pluck<IMenuState, boolean>('clickOutside')
 		.distinctUntilChanged();
 
 	menuItems$: Observable<Map<string, MenuItem>> = this.menuState$
@@ -76,8 +94,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	selectedMenuItemName: string;
 	menuItems: Map<string, MenuItem>;
 	isPinned: boolean;
+	clickOutside: boolean;
 	expand: boolean;
 	onAnimation: boolean;
+	isBuildNeeded: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				private store: Store<IMenuState>,
@@ -94,10 +114,19 @@ export class MenuComponent implements OnInit, AfterViewInit {
 			this.isPinned = _isPinned;
 			this.onIsPinnedChange();
 		});
+
+		this.clickOutside$.subscribe((clickOutside: boolean) => {
+			this.clickOutside = clickOutside;
+		});
 	}
 
 	get selectedMenuItem(): MenuItem {
 		return this.menuItems.get(this.selectedMenuItemName);
+	}
+
+	@HostListener('click', ['$event'])
+	clickCompnent($event: MouseEvent) {
+		$event.stopPropagation();
 	}
 
 	onIsPinnedChange() {
@@ -125,6 +154,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
 	componentChanges(): void {
 		if (!this.componentElem || this.onAnimation) {
+			this.isBuildNeeded = !this.componentElem;
 			return;
 		}
 		this.componentElem.clear();
@@ -190,13 +220,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
 		Observable
 			.fromEvent(this.document, 'click')
-			.filter(() => !this.isPinned && this.anyMenuItemSelected() && !this.onAnimation)
-			.filter((event: any) => !event.target.closest('.menu-wrapper'))
+			.filter(() => !this.isPinned && this.clickOutside && this.anyMenuItemSelected() && !this.onAnimation)
 			.subscribe(this.closeMenu.bind(this));
 	}
 
 	ngAfterViewInit(): void {
-		this.componentChanges();
 		this.onIsPinnedChange();
 	}
+
 }

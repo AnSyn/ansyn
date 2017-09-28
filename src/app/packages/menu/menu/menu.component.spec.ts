@@ -5,6 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ContainerChangedTriggerAction } from '../actions/menu.actions';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -15,7 +16,7 @@ describe('MenuComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.provideStore({ menu: MenuReducer })],
-			declarations: [MenuComponent],
+			declarations: [MenuComponent]
 		}).compileComponents();
 	}));
 
@@ -98,5 +99,18 @@ describe('MenuComponent', () => {
 		expect(menuComponent.componentChanges).toHaveBeenCalled();
 	});
 
+	it('onIsPinnedChange should toggle "pinned" class on container element and should send ContainerChangedTriggerAction', () => {
+		spyOn(store, 'dispatch');
+
+		menuComponent.isPinned = true;
+		menuComponent.onIsPinnedChange();
+		expect(menuComponent.container.nativeElement.classList.contains('pinned')).toBeTruthy();
+		expect(store.dispatch).toHaveBeenCalledWith(new ContainerChangedTriggerAction());
+
+		menuComponent.isPinned = false;
+		menuComponent.onIsPinnedChange();
+		expect(menuComponent.container.nativeElement.classList.contains('pinned')).toBeFalsy();
+		expect(store.dispatch).toHaveBeenCalledWith(new ContainerChangedTriggerAction());
+	});
 
 });

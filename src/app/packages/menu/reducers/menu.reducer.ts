@@ -2,6 +2,7 @@ import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuI
 import { SetBadgeAction } from '../actions/menu.actions';
 import { MenuItem } from '../models';
 import { isDevMode } from '@angular/core';
+import { sessionData, updateSession } from '../helpers/menu-session.helper';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
@@ -11,8 +12,8 @@ export interface IMenuState {
 
 export const initialMenuState: IMenuState = {
 	menuItems: new Map(),
-	selectedMenuItem: '',
-	isPinned: false
+	selectedMenuItem: sessionData().selectedMenuItem,
+	isPinned: sessionData().isPinned
 };
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
@@ -39,10 +40,15 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return { ...state, menuItems };
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
-			return { ...state, selectedMenuItem: action.payload };
+			const selectedMenuItem = action.payload;
+			updateSession({ selectedMenuItem });
+			return { ...state, selectedMenuItem };
 
-		case MenuActionTypes.UNSELECT_MENU_ITEM:
-			return { ...state, selectedMenuItem: '' };
+		case MenuActionTypes.UNSELECT_MENU_ITEM: {
+			const selectedMenuItem = '';
+			updateSession({ selectedMenuItem });
+			return { ...state, selectedMenuItem };
+		}
 
 		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
@@ -53,6 +59,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return { ...state, menuItems: menuItemsHandler };
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
+			updateSession({ isPinned: action.payload });
 			return { ...state, isPinned: action.payload };
 
 		default:

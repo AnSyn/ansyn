@@ -162,5 +162,5 @@
 
 </div>
 
-<ansyn-toast [showToast]="showLinkCopyToast" duration="4" (showToastChange)="onShowToastChange($event)"
-			 text="Link copied to clipboard"></ansyn-toast>
+<ansyn-toast [showToast]="showToast" duration="4" (showToastChange)="onShowToastChange($event)"
+			 [text]=toastText></ansyn-toast>

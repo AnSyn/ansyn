@@ -18,6 +18,7 @@ export const OverlaysActionTypes = {
 	DISPLAY_OVERLAY_FROM_STORE: type('[Overlay] Display Overlay From Store'),
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
+	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
 	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
@@ -109,6 +110,13 @@ export class DisplayOverlaySuccessAction implements Action {
 	}
 }
 
+export class DisplayOverlayFailedAction implements Action {
+	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
+
+	constructor(public payload: { id: string }) {
+	}
+}
+
 export class DemoAction implements Action {
 	type = OverlaysActionTypes.DEMO;
 
@@ -191,6 +199,7 @@ export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayOverlayAction
 	| DisplayOverlaySuccessAction
+	| DisplayOverlayFailedAction
 	| SelectOverlayAction
 	| UnSelectOverlayAction
 	| RequestOverlayByIDFromBackendAction

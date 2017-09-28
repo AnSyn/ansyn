@@ -9,6 +9,7 @@ import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.servic
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { IdahoOverlaysSourceConfig } from './app/app-providers/overlay-source-providers/idaho-source-provider';
 import { LoginConfig } from '@ansyn/login';
+import { enableProdMode } from '@angular/core';
 
 const getProviders = (conf): any[] => {
 	return [
@@ -57,6 +58,12 @@ const getProviders = (conf): any[] => {
 const bootsrapApplicationModule = (): void => {
 	fetch('/assets/config/app.config.json')
 		.then(response => response.json())
+		.then( conf => {
+			if (conf.production) {
+				enableProdMode();
+			}
+			return conf;
+		})
 		.then(getProviders)
 		.then(providers => {
 			return platformBrowserDynamic(providers).bootstrapModule(AppModule);

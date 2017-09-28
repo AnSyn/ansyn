@@ -1,5 +1,5 @@
 {
-	"production": false,
+	"production": true,
 	"casesConfig": {
 		"baseUrl": "http://localhost:9001/api/v1/cases",
 		"paginationLimit": 16,

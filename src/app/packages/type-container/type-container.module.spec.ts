@@ -6,13 +6,13 @@ import { TypeContainerModule } from './type-container.module';
 abstract class MockBaseClass {
 	abstract sourceType: string;
 
-	abstract get(query: any);
+	abstract get (query: any);
 }
 
 class Class1 extends MockBaseClass {
 	sourceType = 'sourceType1';
 
-	get(query: any): any {
+	get (query: any): any {
 		return { id: '123456' };
 	}
 }
@@ -20,7 +20,7 @@ class Class1 extends MockBaseClass {
 class Class2 extends MockBaseClass {
 	sourceType = 'sourceType2';
 
-	get(query: any): any {
+	get (query: any): any {
 		return { id: '654321' };
 	}
 }
@@ -28,7 +28,7 @@ class Class2 extends MockBaseClass {
 class Class3 extends MockBaseClass {
 	sourceType = 'sourceType3';
 
-	get(query: any): any {
+	get (query: any): any {
 		return { id: '162534' };
 	}
 }

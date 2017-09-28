@@ -286,7 +286,7 @@ export class VisualizersAppEffects {
 		}
 	}
 
-	private drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true,) {
+	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
 			const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);

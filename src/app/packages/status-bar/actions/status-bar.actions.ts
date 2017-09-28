@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
+import { IToastMessage } from '../reducers/status-bar.reducer';
 
 export const StatusBarActionsTypes = {
 	CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
-	UPDATE_TOAST_FLAGS: 'UPDATE_TOAST_FLAGS',
+	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
 	OPEN_SHARE_LINK: 'OPEN_SHARE_LINK',
 
@@ -22,7 +23,7 @@ export const StatusBarActionsTypes = {
 	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY'
 };
 
-export type StatusActions = ChangeLayoutAction | UpdateStatusFlagsAction;
+export type StatusActions = ChangeLayoutAction | UpdateStatusFlagsAction | SetToastMessageStoreAction;
 
 export class ChangeLayoutAction implements Action {
 	type: string = StatusBarActionsTypes.CHANGE_LAYOUT;
@@ -38,10 +39,10 @@ export class CopySelectedCaseLinkAction implements Action {
 	}
 }
 
-export class UpdateToastFlagsAction implements Action {
-	type = StatusBarActionsTypes.UPDATE_TOAST_FLAGS;
+export class SetToastMessageStoreAction implements Action {
+	type = StatusBarActionsTypes.SET_TOAST_MESSAGE;
 
-	constructor(public payload?: any) {
+	constructor(public payload?: IToastMessage) {
 	}
 }
 

@@ -8,12 +8,14 @@ export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
 	selectedMenuItem: string;
 	isPinned: boolean;
+	clickOutside: boolean;
 }
 
 export const initialMenuState: IMenuState = {
 	menuItems: new Map(),
 	selectedMenuItem: sessionData().selectedMenuItem,
-	isPinned: sessionData().isPinned
+	isPinned: sessionData().isPinned,
+	clickOutside: true
 };
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
@@ -62,6 +64,8 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			updateSession({ isPinned: action.payload });
 			return { ...state, isPinned: action.payload };
 
+		case MenuActionTypes.SET_CLICK_OUTSIDE:
+			return { ...state, clickOutside: action.payload };
 		default:
 			return state;
 	}

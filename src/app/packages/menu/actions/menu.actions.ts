@@ -10,7 +10,8 @@ export const MenuActionTypes = {
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
-	}
+	},
+	SET_CLICK_OUTSIDE: 'SET_CLICK_OUTSIDE'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -55,7 +56,6 @@ export class ToggleIsPinnedAction implements Action {
 	}
 }
 
-
 export class ContainerChangedTriggerAction implements Action {
 	type = MenuActionTypes.TRIGGER.CONTAINER_CHANGED;
 
@@ -63,5 +63,10 @@ export class ContainerChangedTriggerAction implements Action {
 	}
 }
 
+export class SetClickOutside implements Action {
+	type = MenuActionTypes.SET_CLICK_OUTSIDE;
 
+	constructor(public payload: boolean) {
+	}
+}
 

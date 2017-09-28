@@ -4,6 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlaySuccessAction,
+	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
@@ -62,7 +63,8 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
-import { SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetMapGeoEnabledModeStatusBarActionStore, UpdateToastFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { statusBarToastFlagsItems } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -176,18 +178,20 @@ export class MapAppEffects {
 			// assuming that there is one provider
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
-			return Observable.fromPromise(sourceLoader.createAsync(overlay)).map(layer => {
-				if (overlay.isGeoRegistered) {
-					communicator.resetView(layer, extent);
-				} else {
-					if (communicator.activeMapName !== 'disabledOpenLayersMap') {
-						communicator.setActiveMap('disabledOpenLayersMap', position, layer);
+			return Observable.fromPromise(sourceLoader.createAsync(overlay))
+				.map(layer => {
+					if (overlay.isGeoRegistered) {
+						communicator.resetView(layer, extent);
 					} else {
-						communicator.resetView(layer);
+						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
+							communicator.setActiveMap('disabledOpenLayersMap', position, layer);
+						} else {
+							communicator.resetView(layer);
+						}
 					}
-				}
-				return new DisplayOverlaySuccessAction({ id: overlay.id });
-			});
+					return new DisplayOverlaySuccessAction({ id: overlay.id });
+				})
+				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id })));
 		});
 
 	@Effect()
@@ -244,6 +248,15 @@ export class MapAppEffects {
 		.map((action) => {
 			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id);
 		});
+
+	@Effect()
+	overlayLoadingFailed$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
+		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
+		.mergeMap((action) => [
+			new UpdateToastFlagsAction(({ key: statusBarToastFlagsItems.showOverlayErrorToast, value: true})),
+			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
+		]);
 
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$

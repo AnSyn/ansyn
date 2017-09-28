@@ -5,7 +5,7 @@ export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selected_layout_index: number;
 	flags: Map<string, boolean>;
-	showLinkCopyToast: boolean;
+	toastFlags: Map<string, boolean>;
 	orientations: string[],
 	geoFilters: string[],
 	orientation: string;
@@ -21,6 +21,11 @@ export const statusBarFlagsItems = {
 	geo_registered_options_enabled: 'geo_registered_options_enabled'
 };
 
+export const statusBarToastFlagsItems = {
+	showLinkCopyToast: 'showLinkCopyToast',
+	showOverlayErrorToast: 'showOverlayErrorToast'
+};
+
 const layouts: MapsLayout[] = [
 	{ id: 'layout1', description: 'full screen', maps_count: 1 },
 	{ id: 'layout2', description: '2 maps full', maps_count: 2 },
@@ -32,13 +37,11 @@ const layouts: MapsLayout[] = [
 
 const selected_layout_index = 0;
 
-const showLinkCopyToast = false;
-
 export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selected_layout_index,
-	showLinkCopyToast,
 	flags: new Map<string, boolean>(),
+	toastFlags: new Map<string, boolean>(),
 	orientations: ['original'],
 	geoFilters: ['pin-point'],
 	orientation: 'original',
@@ -62,9 +65,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.COPY_SELECTED_CASE_LINK:
 			return Object.assign({}, state);
 
-		case StatusBarActionsTypes.SET_LINK_COPY_TOAST_VALUE:
-			return Object.assign({}, state, { showLinkCopyToast: action.payload });
-
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
 			const items = Object.keys(statusBarFlagsItems).map(k => statusBarFlagsItems[k]);
 			if (!items.includes(action.payload.key)) {
@@ -82,6 +82,35 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			newMap.set(action.payload.key, value);
 
 			return { ...state, flags: newMap };
+
+		case StatusBarActionsTypes.UPDATE_TOAST_FLAGS:
+
+			const newToastMap = new Map(state.toastFlags);
+			// reset toast items state
+			newToastMap.forEach((value, key) => {
+				newToastMap.set(key, false);
+			});
+
+			// reset for empty payload
+			if (!action.payload) {
+				return { ...state, toastFlags: newToastMap };
+			}
+
+			// return original state for invalid payload
+			const toastItems = Object.keys(statusBarToastFlagsItems).map(k => statusBarToastFlagsItems[k]);
+			if (!toastItems.includes(action.payload.key)) {
+				return state;
+			}
+
+			if (!newToastMap.get(action.payload.key)) {
+				newToastMap.set(action.payload.key, false);
+			}
+
+			const toastItemValue = action.payload.value !== undefined ? action.payload.value : !newToastMap.get(action.payload.key);
+
+			newToastMap.set(action.payload.key, toastItemValue);
+
+			return { ...state, toastFlags: newToastMap };
 
 		case StatusBarActionsTypes.SET_ORIENTATION:
 			return { ...state, orientation: action.payload };

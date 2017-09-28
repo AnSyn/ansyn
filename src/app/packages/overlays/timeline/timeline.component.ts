@@ -26,6 +26,7 @@ selection.prototype.moveToFront = function () {
 export class TimelineComponent implements OnInit {
 	@ViewChild('context') context: ElementRef;
 
+
 	private _drops: any[];
 	private _markup: any[];
 

@@ -51,6 +51,7 @@ export class StatusBarComponent implements OnInit {
 	layouts: MapsLayout[] = [];
 	selected_layout_index: number;
 	showToast: boolean;
+	showAlertIcon: boolean;
 	toastText: string;
 	orientations: string[] = [];
 	orientation: string;
@@ -113,6 +114,7 @@ export class StatusBarComponent implements OnInit {
 	constructor(public store: Store<IStatusBarState>, public renderer: Renderer2) {
 		this.showToast = false;
 		this.toastText = '';
+		this.showAlertIcon = false;
 	}
 
 	ngOnInit(): void {
@@ -138,13 +140,16 @@ export class StatusBarComponent implements OnInit {
 			if (_toastFlags.has(statusBarToastFlagsItems.showOverlayErrorToast) &&
 				_toastFlags.get(statusBarToastFlagsItems.showOverlayErrorToast)) {
 				this.toastText = StatusBarComponent.s_imageErrorMessage;
+				this.showAlertIcon = true;
 				this.showToast = true;
 			} else if (_toastFlags.has(statusBarToastFlagsItems.showLinkCopyToast) &&
 				_toastFlags.get(statusBarToastFlagsItems.showLinkCopyToast)) {
 				this.toastText = StatusBarComponent.s_linkMessage;
+				this.showAlertIcon = false;
 				this.showToast = true;
 			} else {
 				this.showToast = false;
+				this.showAlertIcon = false;
 				this.toastText = '';
 			}
 		});

@@ -28,6 +28,8 @@ export class ToastComponent {
 	@Input() duration: number;
 	@Output() showToastChange = new EventEmitter();
 
+	@Input()
+	showAlertIcon: boolean;
 
 	@Input()
 	set showToast(value) {

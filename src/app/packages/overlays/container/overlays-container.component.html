@@ -1,8 +1,21 @@
 <!-- <button (click)="demo()" >click</button> -->
 <div class='overlays-container'>
-	<div class="overlays-status">
-		<div>No overlays available, please try another search</div>
+	<div class="overlays-status" *ngIf="!(loading || !noDrops) " [@timeline-status]>
+		<div class="text-container">
+			No overlays available, please try another search
+		</div>
 	</div>
+	<div class="overlays-status" *ngIf="loading" [@timeline-status]>
+		<div class="loading-container">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</div>
+
+
+
 	<ansyn-timeline [drops]='drops' [configuration]='configuration' [redraw$]='redraw$'
 					[markup]="overlaysMarkup"></ansyn-timeline>
 </div>

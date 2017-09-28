@@ -11,7 +11,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
-import { isEqual } from 'lodash';
+import { isEqual, first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
@@ -25,11 +25,27 @@ import { OverlaysService } from '../services/overlays.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
+import { animate, style, trigger, transition } from '@angular/animations';
+
+// noinspection TypeScriptUnresolvedFunction
+const animations: any[] = [
+	trigger('timeline-status', [
+		transition(':enter', [
+			style({opacity: 0}),
+			animate('0.2s', style({ opacity: 1 }))
+		]),
+		transition(':leave', [
+			style({ opacity: 1 }),
+			animate('0.2s', style({opacity: 0}	))
+		]),
+	])
+];
 
 @Component({
 	selector: 'ansyn-overlays-container',
 	templateUrl: './overlays-container.component.html',
-	styleUrls: ['./overlays-container.component.less']
+	styleUrls: ['./overlays-container.component.less'],
+	animations
 })
 
 @DestroySubscribers({
@@ -47,13 +63,16 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	public selectedOverlays: Array<string> = [];
 	public subscribers: any = {};
 	public overlaysMarkup: any = [];
+	public loading: boolean;
+	public noDrops: boolean;
 
 	public drops$: Observable<any> = this.store.select('overlays')
 		.skip(1)
 		.distinctUntilChanged(this.overlaysService.compareOverlays)
 		.map((overlaysState: IOverlayState) => {
 			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filteredOverlays, overlaysState.specialObjects);
-			return { drops, timelineState: overlaysState.timelineState };
+			const { timelineState, loaded } = overlaysState;
+			return { drops, timelineState, loaded };
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')
@@ -65,6 +84,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		.filter(timelineState => {
 			return (timelineState.from.getTime() !== this.currentTimelineState.from.getTime() || timelineState.to.getTime() !== this.currentTimelineState.to.getTime());
 		});
+
+	public overlaysLoader$: Observable<any> = this.store.select('overlays')
+		.map((overlayState: IOverlayState) => overlayState.loading )
+		.distinctUntilChanged(isEqual)
+
 
 	/*
 		// this is not needed for now maybe will be needed for later use
@@ -169,6 +193,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 			this.setConfigurationTime(data.timelineState.from, data.timelineState.to);
 			this.drops = data.drops;
+			this.noDrops = Boolean(first(this.drops).data.length === 0);
 		});
 
 		this.subscribers.timelineState = this.timelineState$
@@ -176,6 +201,10 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe(timelineState => {
 				this.setConfigurationTime(timelineState.from, timelineState.to);
 			});
+
+		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
+			this.loading = loading;
+		});
 
 		/*this.subscribers.selected = this.selectedOverlays$
 			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);*/

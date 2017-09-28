@@ -13,6 +13,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
+	public getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+		return Observable.empty();
+	};
+
+	public getById(id: string): Observable<Overlay> {
+		return Observable.empty();
+	};
+
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
 		return Observable.create((observer: Observer<Overlay[]>) => {
 			const overlays: Overlay[] = [

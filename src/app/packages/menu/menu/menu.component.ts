@@ -1,4 +1,5 @@
 import {
+	AfterViewInit,
 	Component,
 	ComponentFactoryResolver,
 	ElementRef,
@@ -48,7 +49,7 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, AfterViewInit {
 
 	@ViewChild('componentElem', { read: ViewContainerRef }) componentElem: ViewContainerRef;
 	@ViewChild('container') container: ElementRef;
@@ -59,8 +60,7 @@ export class MenuComponent implements OnInit {
 
 	isPinned$ = this.menuState$
 		.pluck<IMenuState, boolean>('isPinned')
-		.distinctUntilChanged()
-		.skip(1);
+		.distinctUntilChanged();
 
 	menuItems$: Observable<Map<string, MenuItem>> = this.menuState$
 		.pluck <IMenuState, Map<string, MenuItem>>('menuItems')
@@ -92,17 +92,24 @@ export class MenuComponent implements OnInit {
 
 		this.isPinned$.subscribe((_isPinned: boolean) => {
 			this.isPinned = _isPinned;
-			if (_isPinned) {
-				this.renderer.addClass(this.container.nativeElement, 'pinned');
-			} else {
-				this.renderer.removeClass(this.container.nativeElement, 'pinned');
-			}
-			this.store.dispatch(new ContainerChangedTriggerAction());
+			this.onIsPinnedChange();
 		});
 	}
 
 	get selectedMenuItem(): MenuItem {
 		return this.menuItems.get(this.selectedMenuItemName);
+	}
+
+	onIsPinnedChange() {
+		if (!this.container) {
+			return;
+		}
+		if (this.isPinned) {
+			this.renderer.addClass(this.container.nativeElement, 'pinned');
+		} else {
+			this.renderer.removeClass(this.container.nativeElement, 'pinned');
+		}
+		this.store.dispatch(new ContainerChangedTriggerAction());
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
@@ -186,5 +193,10 @@ export class MenuComponent implements OnInit {
 			.filter(() => !this.isPinned && this.anyMenuItemSelected() && !this.onAnimation)
 			.filter((event: any) => !event.target.closest('.menu-wrapper'))
 			.subscribe(this.closeMenu.bind(this));
+	}
+
+	ngAfterViewInit(): void {
+		this.componentChanges();
+		this.onIsPinnedChange();
 	}
 }

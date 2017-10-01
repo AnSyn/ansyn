@@ -35,13 +35,17 @@ export class AnsynComponent implements OnInit {
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
 		.map(MapFacadeService.activeMap)
+		.do(() => console.log('tmp'))
 		.filter(activeMap => !_isNil(activeMap));
 
 	selectedCaseName$: Observable<string> = this.selected_case$.pluck('name');
 
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
-		.map((data: any) => data.overlay);
+		.do(() => console.log('before'))
+		.map((data: any) => data.overlay)
+		.do((data) => console.log('after', data))
+		.distinctUntilChanged();
 
 	isFavoriteOverlay$ = this.selected_case$
 		.withLatestFrom(this.activeMap$)
@@ -67,9 +71,23 @@ export class AnsynComponent implements OnInit {
 			this.selectedCaseName = _selectedCaseName;
 		});
 
-		this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
+		/*this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
 			this.displayedOverlay = _displayedOverlay;
-		});
+		});*/
+
+		this.displayedOverlay$
+			.withLatestFrom(this.selected_case$)
+			.filter(([overlay, selectedCase]: [Overlay, Case]) => {
+				return Boolean(selectedCase)
+			})
+			.subscribe(([overlay, selectedCase]: [Overlay, Case]) => {
+				this.displayedOverlay = overlay;
+				if (Boolean(overlay)) {
+					this.isFavoriteOverlay = selectedCase.state.favoritesOverlays.includes(overlay.id);
+				} else {
+					this.isFavoriteOverlay = false;
+				}
+			});
 
 		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
 			this.isFavoriteOverlay = isFavoriteOverlay;

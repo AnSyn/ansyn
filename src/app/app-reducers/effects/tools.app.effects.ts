@@ -98,7 +98,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onSelectCaseById$: Observable<DisableImageProcessing> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(() => new DisableImageProcessing());
 
 	@Effect()

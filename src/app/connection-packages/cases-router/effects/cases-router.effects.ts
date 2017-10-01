@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
-import { Case, CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
+import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
 import { get as _get, isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { Case } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class CasesRouterEffects {
@@ -16,7 +20,7 @@ export class CasesRouterEffects {
 		.map(toPayload)
 		.filter(({ caseId }) => _isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
-		.filter(([payload, cases]) => (_isEmpty(cases.selected_case) || _isEmpty(cases.default_case) || !_isEqual(cases.selected_case.id, cases.default_case.id)))
+		.filter(([payload, cases]: [string, ICasesState]) => (_isEmpty(cases.selected_case) || !_isEqual(cases.selected_case.id, CasesService.defaultCase.id)))
 		.map(([{ queryParams }]) => new LoadDefaultCaseAction(queryParams));
 
 	@Effect()
@@ -30,23 +34,21 @@ export class CasesRouterEffects {
 
 	@Effect()
 	selectCaseUpdateRouter$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('router'), ({ payload }, cases: any, router: any) => {
-			return [payload, _get(cases.default_case, 'id'), router.caseId];
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.withLatestFrom(this.store$.select('router'), ({ payload }: SelectCaseAction, router: IRouterState): any[] => {
+			return [payload, router.caseId];
 		})
-		.filter(([payload, defaultCaseId, routerCaseId]) => !_isEqual(payload, defaultCaseId) && !_isEqual(payload, routerCaseId))
-		.map(([payload]) => new NavigateCaseTriggerAction(payload));
+		.filter(([selectedCase, routerCaseId]) => !_isEqual(selectedCase.id, CasesService.defaultCase.id) && !_isEqual(selectedCase.id, routerCaseId))
+		.map(([selectedCase]: [Case]) => new NavigateCaseTriggerAction(selectedCase.id));
 
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store$.select('cases').pluck('default_case'), this.store$.select('router'),
-			({ payload }, default_case: Case, routerState: IRouterState): any => [payload, _get(default_case, 'id'), routerState])
-		.filter(([payload, defaultCaseId, { caseId, queryParams }]) => {
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.withLatestFrom(this.store$.select('router'), ({ payload }, routerState: IRouterState): any => [payload, routerState])
+		.filter(([selectedCase, { caseId, queryParams }]: [Case, IRouterState]) => {
 			const caseIdRouterNotEmpty = !_isEmpty(caseId);
 			const queryParamsNotEmpty = !_isEmpty(queryParams);
-			return _isEqual(payload, defaultCaseId) && (caseIdRouterNotEmpty || queryParamsNotEmpty);
-
+			return _isEqual(selectedCase.id, CasesService.defaultCase.id) && (caseIdRouterNotEmpty || queryParamsNotEmpty);
 		})
 		.map(() => new NavigateCaseTriggerAction());
 

@@ -44,7 +44,7 @@ import {
 	SetOverlayNotInCaseAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	calcGeoJSONExtent,
 	endTimingLog,
@@ -67,6 +67,8 @@ import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
+
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -213,9 +215,9 @@ export class MapAppEffects {
 
 	@Effect()
 	displayOverlayFromCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('map'))
-		.mergeMap(([action, mapState]: [SelectCaseByIdAction, IMapState]) => {
+		.mergeMap(([action, mapState]: [SelectCaseAction, IMapState]) => {
 			return mapState.mapsList.reduce((previusResult, data: CaseMapState) => {
 				const communicatorHandler = this.imageryCommunicatorService.provide(data.id);
 				// if overlay exists and map is loaded
@@ -334,10 +336,10 @@ export class MapAppEffects {
 
 	@Effect({ dispatch: false })
 	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
-		.filter(([action, caseState, statusBarState]: [any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
-		.map(([action, caseState, statusBarState]: [any, any, any]) => {
+		.filter(([action, caseState, statusBarState]: [SelectCaseAction, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+		.map(([action, caseState, statusBarState]: [SelectCaseAction, any, any]) => {
 			const point = getPointByPolygon(caseState.selected_case.state.region);
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				communicator.addPinPointIndicator(point.coordinates);

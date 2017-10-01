@@ -1,4 +1,4 @@
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
@@ -10,12 +10,13 @@ import {
 import { CasesActionTypes, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
-import { Case, CasesService, ICasesState } from '@ansyn/menu-items/cases';
+import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -32,51 +33,46 @@ export class OverlaysAppEffects {
 		});
 
 	@Effect()
-	selectCase$: Observable<LoadOverlaysAction | void> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.filter(() => this.casesService.contextValues.imageryCount === -1)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases'))
-		.filter(([case_id, state]: [string, ICasesState]) => !isEmpty(state.selected_case))
-		.map(([caseId, state]: [string, ICasesState]) => {
-			const caseSelected: Case = state.selected_case;
-
+	selectCase$: Observable<LoadOverlaysAction> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.filter((action: SelectCaseAction) => this.casesService.contextValues.imageryCount === -1)
+		.filter((action: SelectCaseAction) => !isEmpty(action.payload))
+		.map(({ payload }: SelectCaseAction) => {
 			const overlayFilter: any = {
-				to: caseSelected.state.time.to,
-				from: caseSelected.state.time.from,
-				polygon: caseSelected.state.region,
-				caseId: caseId
+				to: payload.state.time.to,
+				from: payload.state.time.from,
+				polygon: payload.state.region,
+				caseId: payload.id
 			};
 			return new LoadOverlaysAction(overlayFilter);
 		});
 
 	@Effect()
 	selectCaseWithImageryCount$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(() => this.casesService.contextValues.imageryCount !== -1)
-		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => cases.selected_case)
-		.filter(selected_case => !isEmpty(selected_case))
-		.switchMap((selected_case: Case) => {
+		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
+		.switchMap(({ payload }: SelectCaseAction) => {
 			return this.overlaysService.getStartDateViaLimitFasets({
-				region: selected_case.state.region,
+				region: payload.state.region,
 				limit: this.casesService.contextValues.imageryCount,
-				facets: selected_case.state.facets
+				facets: payload.state.facets
 			})
 				.mergeMap((data: { startDate, endDate }) => {
 					const from = new Date(data.startDate);
 					const to = new Date(data.endDate);
-					selected_case.state.time.from = from.toISOString();
-					selected_case.state.time.to = to.toISOString();
+					payload.state.time.from = from.toISOString();
+					payload.state.time.to = to.toISOString();
 
 					const overlayFilter: any = {
-						to: selected_case.state.time.to,
-						from: selected_case.state.time.from,
-						polygon: selected_case.state.region,
-						caseId: selected_case.id
+						to: payload.state.time.to,
+						from: payload.state.time.from,
+						polygon: payload.state.region,
+						caseId: payload.id
 					};
 
 					return [
-						new UpdateCaseAction(selected_case),
+						new UpdateCaseAction(payload),
 						new SetTimeAction({ from, to }),
 						new LoadOverlaysAction(overlayFilter)
 					];

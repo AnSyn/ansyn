@@ -13,16 +13,17 @@ import { ContextEntityVisualizer, ContextEntityVisualizerType } from 'app/app-vi
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class ContextEntityAppEffects {
 
 	@Effect({ dispatch: false })
 	displayEntityFromCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, caseState]: [SelectCaseByIdAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
-		.map(([action, caseState]: [SelectCaseByIdAction, ICasesState]) => {
+		.filter(([action, caseState]: [SelectCaseAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.map(([action, caseState]: [SelectCaseAction, ICasesState]) => {
 			const currentCase = caseState.selected_case;
 			currentCase.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;

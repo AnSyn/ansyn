@@ -3,20 +3,22 @@
 		<span>×</span>
 	</button>
 
-	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase()">
+	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase(selectContextElement.selectedIndex)">
 
-		<input name="name" required [(ngModel)]="case_model.name" #name_input>
-		<span class="highlight"></span>
+		<input id="caseName" name="name" required [(ngModel)]="caseModel.name" #nameInput>
 		<span class="bar"></span>
-		<label>Name</label>
+		<label class="case-name" for="caseName">Name</label>
 
 		<div class="select-context">
-			<h4>Context</h4>
-			<select [(ngModel)]="case_model.state.selected_context_id" (ngModelChange)="updateCaseViaContext()"
-					name="context" required [disabled]="on_edit_case">
-				<ng-template ngFor [ngForOf]="contexts_list" let-context>
-					<option [value]="context.id">{{context.name}}</option>
-				</ng-template>
+			<label for="context">Context</label>
+			<select id="context"
+					#selectContextElement
+					name="context" required [disabled]="editMode">
+				<option
+					*ngFor="let context of contextsList"
+					[selected]="context.id === caseModel.state.selected_context_id">
+					{{context.name}}
+				</option>
 			</select>
 		</div>
 

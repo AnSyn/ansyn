@@ -228,10 +228,12 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickGoPrev(): void {
+		this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'initial');
 		this.store.dispatch(new GoPrevAction());
 	}
 
 	clickGoNext(): void {
+		this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'initial');
 		this.store.dispatch(new GoNextAction());
 	}
 

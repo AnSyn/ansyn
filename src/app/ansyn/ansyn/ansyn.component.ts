@@ -68,10 +68,6 @@ export class AnsynComponent implements OnInit {
 			this.selectedCaseName = _selectedCaseName;
 		});
 
-		/*this.displayedOverlay$.subscribe((_displayedOverlay: Overlay) => {
-			this.displayedOverlay = _displayedOverlay;
-		});*/
-
 		this.displayedOverlay$
 			.withLatestFrom(this.selected_case$)
 			.filter(([overlay, selectedCase]: [Overlay, Case]) => {

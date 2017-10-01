@@ -14,7 +14,11 @@ export class QueryParamsHelper {
 	constructor(private casesService: CasesService) {
 	}
 
-	updateCaseViaQueryParmas(q_params: Params = {}, defaultCase: Case = this.casesService.config.defaultCase) {
+	get defaultCase() {
+		return this.casesService.config.defaultCase;
+	}
+
+	updateCaseViaQueryParmas(q_params: Params = {}, defaultCase: Case = this.defaultCase) {
 		const s_case = cloneDeep(defaultCase);
 		const q_params_keys = Object.keys(q_params);
 		q_params_keys.forEach((key) => {
@@ -23,42 +27,45 @@ export class QueryParamsHelper {
 		return s_case;
 	}
 
-	updateCaseViaContext(selected_context: Context, case_model: Case, q_params: Params = {}) {
-		case_model.state.selected_context_id = selected_context.id;
-
+	updateCaseViaContext(selectedContext: Context, caseModel: Case, qParams: Params = {}) {
+		if (selectedContext.id === 'default') {
+			return { ...this.defaultCase, name: caseModel.name };
+		}
+		let updatedCaseModel = cloneDeep(caseModel);
+		updatedCaseModel.state.selected_context_id = selectedContext.id;
 		['region', 'facets', 'time', 'layout_index', 'geoFilter', 'orientation'].forEach(key => {
-			if (selected_context[key]) {
-				case_model.state[key] = selected_context[key];
+			if (selectedContext[key]) {
+				updatedCaseModel.state[key] = selectedContext[key];
 			}
 		});
 
 		['defaultOverlay', 'imageryCount'].forEach(key => {
-			if (selected_context[key]) {
-				this.casesService.contextValues[key] = selected_context[key];
+			if (selectedContext[key]) {
+				this.casesService.contextValues[key] = selectedContext[key];
 			}
 		});
 
-		if (selected_context.zoom) {
-			case_model.state.maps.data.forEach(map => map.data.position.zoom = selected_context.zoom);
+		if (selectedContext.zoom) {
+			updatedCaseModel.state.maps.data.forEach(map => map.data.position.zoom = selectedContext.zoom);
 		}
 
-		if (selected_context.requirements && !isEmpty(q_params)) {
-			selected_context.requirements.forEach((requireKey: string) => {
+		if (selectedContext.requirements && !isEmpty(qParams)) {
+			selectedContext.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
 					case 'geopoint':
-						const geopointStr = q_params.geopoint;
+						const geopointStr = qParams.geopoint;
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(strToNum => +strToNum).reverse();
 							const geoPoint: Point = { type: 'Point', coordinates };
-							case_model.state.maps.data.forEach(map => map.data.position.center = geoPoint);
-							case_model.state.region = getPolygonByPoint(coordinates).geometry;
+							updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+							updatedCaseModel.state.region = getPolygonByPoint(coordinates).geometry;
 						}
 						break;
 				}
 			});
 		}
 
-
+		return updatedCaseModel;
 	}
 
 	generateQueryParamsViaCase(s_case: Case): string {

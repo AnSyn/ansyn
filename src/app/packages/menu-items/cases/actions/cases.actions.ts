@@ -21,16 +21,15 @@ export const CasesActionTypes = {
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
+	SELECT_CASE: 'SELECT_CASE',
 	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
 
 	LOAD_CONTEXTS: 'LOAD_CONTEXTS',
 	LOAD_CONTEXTS_SUCCESS: 'LOAD_CONTEXTS_SUCCESS',
 
 	LOAD_CASE: 'LOAD_CASE',
-	LOAD_CASE_SUCCESS: 'LOAD_CASE_SUCCESS',
 
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
-	LOAD_DEFAULT_CASE_SUCCESS: 'LOAD_DEFAULT_CASE_SUCCESS',
 
 	SAVE_DEFAULT_CASE: 'SAVE_DEFAULT_CASE',
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
@@ -128,6 +127,13 @@ export class CloseModalAction implements Action {
 	}
 }
 
+export class SelectCaseAction implements Action {
+	type = CasesActionTypes.SELECT_CASE;
+
+	constructor(public payload: Case) {
+	}
+}
+
 export class SelectCaseByIdAction implements Action {
 	type = CasesActionTypes.SELECT_CASE_BY_ID;
 
@@ -156,24 +162,10 @@ export class LoadCaseAction implements Action {
 	}
 }
 
-export class LoadCaseSuccessAction implements Action {
-	type = CasesActionTypes.LOAD_CASE_SUCCESS;
-
-	constructor(public payload: Case) {
-	}
-}
-
 export class LoadDefaultCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
 
 	constructor(public payload: Params = {}) {
-	}
-}
-
-export class LoadDefaultCaseSuccessAction implements Action {
-	type = CasesActionTypes.LOAD_DEFAULT_CASE_SUCCESS;
-
-	constructor(public payload: Case) {
 	}
 }
 
@@ -190,18 +182,3 @@ export class CopyCaseLinkAction implements Action {
 	constructor(public payload: string) {
 	}
 }
-
-export class SetDefaultCaseQueryParams implements Action {
-	type = CasesActionTypes.SET_DEFAULT_CASE_QUERY_PARAMS;
-
-	constructor(public payload: Case) {
-	}
-}
-
-export class RemoveDefaultCaseQueryParamsAction implements Action {
-	type = CasesActionTypes.REMOVE_DEFAULT_CASE_QUERY_PARAMS;
-
-	constructor() {
-	}
-}
-

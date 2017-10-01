@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/observable/of';
 import { Case, CaseMapState } from '../models/case.model';
-import { cloneDeep, get as _get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,8 @@ export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cas
 
 @Injectable()
 export class CasesService {
+
+	static defaultCase: Case;
 
 	private queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	base_url;
@@ -55,6 +57,7 @@ export class CasesService {
 		this.base_url = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
+		CasesService.defaultCase = config.defaultCase;
 	}
 
 	loadCases(last_id: string = '-1'): Observable<any> {
@@ -91,19 +94,6 @@ export class CasesService {
 	loadCase(selected_case_id: string): Observable<any> {
 		const url = `${this.base_url}/${selected_case_id}`;
 		return this.http.get(url);
-
-	}
-
-	getDefaultCase(): Case {
-		// this is because of a bug in the aot that does not compile javascript in configuration
-		const startDate: string = <string>_get(this, 'config.defatulCase.state.time.from') || (new Date(new Date().getTime() - 3600000 * 24 * 365)).toISOString();
-		const endDate: string = <string>_get(this, 'config.defatulCase.state.time.to') || new Date().toISOString();
-		const defaultCase = cloneDeep(this.config.defaultCase);
-
-		defaultCase.state.time.to = endDate;
-		defaultCase.state.time.from = startDate;
-
-		return defaultCase;
 
 	}
 

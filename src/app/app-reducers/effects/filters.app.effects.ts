@@ -1,5 +1,4 @@
 import { cloneDeep, isEmpty, isNil } from 'lodash';
-
 import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -7,13 +6,7 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
-import {
-	Filter,
-	FilterMetadata,
-	FiltersService,
-	InitializeFiltersAction,
-	ResetFiltersAction
-} from '@ansyn/menu-items/filters';
+import { Filter, FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -65,7 +58,7 @@ export class FiltersAppEffects {
 			let showAll = false;
 
 			if (casesState.selected_case.state.facets.filters.length === 0) {
-				showAll = casesState.selected_case.id === casesState.default_case.id && this.casesService.contextValues.imageryCount === -1;
+				showAll = casesState.selected_case.id === CasesService.defaultCase.id && this.casesService.contextValues.imageryCount === -1;
 			}
 
 			// what is going here  ?? who updates the contextValues imageryCount  and why it is not in the store please add the correct remarks
@@ -85,7 +78,7 @@ export class FiltersAppEffects {
 		.map(() => new ResetFiltersAction());
 
 	constructor(private actions$: Actions,
-				private store$: Store<IAppState>, private casesService: CasesService, private filtersService: FiltersService) {
+				private store$: Store<IAppState>, private casesService: CasesService) {
 	}
 
 	updateCaseFacets(selected_case: Case, filtersState: IFiltersState): Case {

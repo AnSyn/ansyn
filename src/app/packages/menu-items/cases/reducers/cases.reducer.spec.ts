@@ -3,7 +3,6 @@ import {
 	CloseModalAction,
 	DeleteCaseAction,
 	LoadCasesSuccessAction,
-	LoadCaseSuccessAction,
 	LoadDefaultCaseSuccessAction,
 	OpenModalAction,
 	RemoveDefaultCaseQueryParamsAction,
@@ -47,17 +46,6 @@ describe('CasesReducer', () => {
 		let action: SelectCaseByIdAction = new SelectCaseByIdAction('fake_case_id');
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selected_case.id).toEqual('fake_case_id');
-	});
-
-	it('SELECT_CASE action should set selected_case_id from unlisted_case if it was selected', () => {
-		let state: ICasesState = initialCasesState;
-		state.cases = [
-			{ id: 'fake_case_id', name: 'fake_case_name1' },
-		];
-		state.unlisted_case = { id: 'unlisted_case_id', name: 'unlisted_case_name1' };
-		let action: SelectCaseByIdAction = new SelectCaseByIdAction('unlisted_case_id');
-		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selected_case.id).toEqual('unlisted_case_id');
 	});
 
 	it('SELECT_CASE action should set selected_case_id from default_case if it was selected', () => {
@@ -134,14 +122,6 @@ describe('CasesReducer', () => {
 		let action: DeleteCaseAction = new DeleteCaseAction();
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases.length).toEqual(2);
-	});
-
-	it('LOAD_CASE_SUCCESS action should set the loaded case as unlisted', () => {
-		let state: ICasesState = initialCasesState;
-		let loaded_case = { id: 'default_case_id', name: 'name1' };
-		let action: LoadCaseSuccessAction = new LoadCaseSuccessAction(loaded_case);
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.unlisted_case.id).toEqual('default_case_id');
 	});
 
 	it('SET_DEFAULT_CASE_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {

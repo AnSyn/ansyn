@@ -91,7 +91,7 @@ export class StatusBarAppEffects {
 
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
+		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): Case => state.selected_case)
 		.filter((selected_case) => !isEmpty(selected_case))
 		.cloneDeep()

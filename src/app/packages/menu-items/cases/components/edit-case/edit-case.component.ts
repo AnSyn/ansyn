@@ -45,16 +45,11 @@ export class EditCaseComponent implements OnInit {
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
-	defaultCase$: Observable<Case> = this.casesState$
-		.pluck('default_case')
-		.distinctUntilChanged();
-
 	contextsList$: Observable<Context[]> = this.casesState$
 		.pluck <ICasesState, Context[]>('contexts')
 		.distinctUntilChanged()
 		.map(this.addDefaultContext);
 
-	defaultCase: Case;
 	contextsList: Context[];
 	caseModel: Case;
 	editMode = false;
@@ -71,14 +66,14 @@ export class EditCaseComponent implements OnInit {
 
 	addDefaultContext(context: Context[]): Context[] {
 		return [
-			{id: 'default', name: 'Default Case'},
+			{ id: 'default', name: 'Default Case' },
 			...context
-		]
+		];
 	}
 
 	getCloneActiveCase(case_state: ICasesState): Case {
 		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.active_case_id);
-		if (s_case && s_case.id !== case_state.default_case.id) {
+		if (s_case && s_case.id !== CasesService.defaultCase.id) {
 			s_case = cloneDeep(s_case);
 			this.editMode = true;
 		} else {
@@ -122,15 +117,8 @@ export class EditCaseComponent implements OnInit {
 
 		this.contextsList$.subscribe((_contextsList: Context[]) => {
 			this.contextsList = _contextsList;
-			// if (!this.case_model.id && this.contexts_list.length > 0) {
-			// 	// this.case_model.state.selected_context_id = this.contexts_list[0].id;
-			// 	// this.updateCaseViaContext();
-			// }
 		});
 
-		this.defaultCase$.subscribe((_defaultCase: Case) => {
-			this.defaultCase = _defaultCase;
-		});
 	}
 
 	close(): void {
@@ -142,11 +130,7 @@ export class EditCaseComponent implements OnInit {
 			this.store.dispatch(new UpdateCaseAction(this.caseModel));
 		} else {
 			const selectContext = this.contextsList[contextIndex];
-			if (selectContext.id === 'default') {
-				this.caseModel = cloneDeep(this.defaultCase);
-			} else {
-				this.casesService.updateCaseViaContext(selectContext, this.caseModel);
-			}
+			this.caseModel = this.casesService.updateCaseViaContext(selectContext, this.caseModel);
 			this.store.dispatch(new AddCaseAction(this.caseModel));
 		}
 		this.close();

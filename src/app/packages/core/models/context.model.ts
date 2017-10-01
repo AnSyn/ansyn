@@ -12,7 +12,7 @@ export interface Context {
 	geoFilter?: string;
 	orientation?: string;
 	time?: CaseTimeState;
-	facets: CaseFacetsState;
+	facets?: CaseFacetsState;
 	region?: CaseRegionState;
 	requires?: string[]
 	defaultOverlay?: string;

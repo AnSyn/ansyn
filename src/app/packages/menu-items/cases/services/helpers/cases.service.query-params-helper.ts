@@ -24,6 +24,8 @@ export class QueryParamsHelper {
 	}
 
 	updateCaseViaContext(selected_context: Context, case_model: Case, q_params: Params = {}) {
+		case_model.state.selected_context_id = selected_context.id;
+
 		['region', 'facets', 'time', 'layout_index', 'geoFilter', 'orientation'].forEach(key => {
 			if (selected_context[key]) {
 				case_model.state[key] = selected_context[key];

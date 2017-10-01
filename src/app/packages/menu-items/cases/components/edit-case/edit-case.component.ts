@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -39,35 +39,48 @@ export class EditCaseComponent implements OnInit {
 		return true;
 	};
 
-	active_case$: Observable<Case> = this.store.select('cases')
+	casesState$: Observable<ICasesState> = this.store.select<ICasesState>('cases');
+
+	activeCase$: Observable<Case> = this.casesState$
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
-	default_case_id$: Observable<string> = this.store.select('cases').map((state: ICasesState) => state.default_case.id);
+	defaultCase$: Observable<Case> = this.casesState$
+		.pluck('default_case')
+		.distinctUntilChanged();
 
-	contexts_list$: Observable<Context[]> = this.store.select('cases').map((state: ICasesState) => state.contexts).distinctUntilChanged(isEqual);
-	contexts_list: Context[];
+	contextsList$: Observable<Context[]> = this.casesState$
+		.pluck <ICasesState, Context[]>('contexts')
+		.distinctUntilChanged()
+		.map(this.addDefaultContext);
 
-	case_model: Case;
-	on_edit_case = false;
-	default_case_id: string;
+	defaultCase: Case;
+	contextsList: Context[];
+	caseModel: Case;
+	editMode = false;
 
-	@ViewChild('name_input') name_input: ElementRef;
+	@ViewChild('nameInput') nameInput: ElementRef;
 
 	@HostListener('@modalContent.done')
 	selectText() {
-		this.name_input.nativeElement.select();
+		this.nameInput.nativeElement.select();
 	}
 
 	constructor(private store: Store<ICasesState>, private casesService: CasesService) {
 	}
 
+	addDefaultContext(context: Context[]): Context[] {
+		return [
+			{id: 'default', name: 'Default Case'},
+			...context
+		]
+	}
 
 	getCloneActiveCase(case_state: ICasesState): Case {
 		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.active_case_id);
 		if (s_case && s_case.id !== case_state.default_case.id) {
 			s_case = cloneDeep(s_case);
-			this.on_edit_case = true;
+			this.editMode = true;
 		} else {
 			const selectedCase = cloneDeep(case_state.selected_case);
 			s_case = this.getEmptyCase(selectedCase);
@@ -103,20 +116,20 @@ export class EditCaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.active_case$.subscribe((active_case: Case) => {
-			this.case_model = active_case;
+		this.activeCase$.subscribe((activeCase: Case) => {
+			this.caseModel = activeCase;
 		});
 
-		this.contexts_list$.subscribe((_context_list: Context[]) => {
-			this.contexts_list = _context_list;
-			if (!this.case_model.id && this.contexts_list.length > 0) {
-				this.case_model.state.selected_context_id = this.contexts_list[0].id;
-				this.updateCaseViaContext();
-			}
+		this.contextsList$.subscribe((_contextsList: Context[]) => {
+			this.contextsList = _contextsList;
+			// if (!this.case_model.id && this.contexts_list.length > 0) {
+			// 	// this.case_model.state.selected_context_id = this.contexts_list[0].id;
+			// 	// this.updateCaseViaContext();
+			// }
 		});
 
-		this.default_case_id$.subscribe((default_id: string) => {
-			this.default_case_id = default_id;
+		this.defaultCase$.subscribe((_defaultCase: Case) => {
+			this.defaultCase = _defaultCase;
 		});
 	}
 
@@ -124,21 +137,19 @@ export class EditCaseComponent implements OnInit {
 		this.store.dispatch(new CloseModalAction());
 	}
 
-	onSubmitCase() {
-		if (this.case_model.id && this.case_model.id !== this.default_case_id) {
-			this.store.dispatch(new UpdateCaseAction(this.case_model));
+	onSubmitCase(contextIndex: number) {
+		if (this.editMode) {
+			this.store.dispatch(new UpdateCaseAction(this.caseModel));
 		} else {
-			this.store.dispatch(new AddCaseAction(this.case_model));
+			const selectContext = this.contextsList[contextIndex];
+			if (selectContext.id === 'default') {
+				this.caseModel = cloneDeep(this.defaultCase);
+			} else {
+				this.casesService.updateCaseViaContext(selectContext, this.caseModel);
+			}
+			this.store.dispatch(new AddCaseAction(this.caseModel));
 		}
 		this.close();
-	}
-
-	updateCaseViaContext() {
-		return this.casesService.updateCaseViaContext(this.selected_context, this.case_model);
-	}
-
-	get selected_context() {
-		return cloneDeep(this.contexts_list.find((context: Context) => context.id === this.case_model.state.selected_context_id));
 	}
 
 }

@@ -18,9 +18,5 @@
 		"types": [
 			"d3"
 		]
-	},
-	"exclude": [
-		"test.ts",
-		"**/*.spec.ts"
-	]
+	}
 }

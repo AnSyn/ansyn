@@ -16,9 +16,7 @@
 		"baseUrl": "",
 		"allowJs": true,
 		"types": [
-			"d3",
-			"dom",
-			"event-drops"
+			"d3"
 		]
 	},
 	"exclude": [

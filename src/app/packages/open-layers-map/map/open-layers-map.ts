@@ -97,7 +97,8 @@ export class OpenLayersMap implements IMap {
 				center: proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,
 				rotation: rotation,
-				minZoom: 2.5
+				minZoom: 2.5,
+				maxZoom: 19
 			})
 		});
 
@@ -160,7 +161,8 @@ export class OpenLayersMap implements IMap {
 			zoom: currentZoom,
 			rotation: currentRotation,
 			projection: layer.getSource().getProjection(),
-			minZoom: 2.5
+			minZoom: 2.5,
+			maxZoom: 19
 		});
 
 		this._mapObject.setView(view);

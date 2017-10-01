@@ -2,12 +2,11 @@ import { endTimingLog, startTimingLog } from '@ansyn/core/utils';
 
 export abstract class BaseMapSourceProvider {
 
-	mapType: string;
+	abstract mapType: string;
 
-	sourceType: string;
+	abstract sourceType: string;
 
-	create(metaData: any): any {
-	};
+	abstract create(metaData: any): any;
 
 	createAsync(metaData: any): Promise<any> {
 		return Promise.resolve();
@@ -20,5 +19,4 @@ export abstract class BaseMapSourceProvider {
 	endTimingLog(id) {
 		endTimingLog(id);
 	}
-
 }

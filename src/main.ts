@@ -58,7 +58,7 @@ const getProviders = (conf): any[] => {
 const bootsrapApplicationModule = (): void => {
 	fetch('/assets/config/app.config.json')
 		.then(response => response.json())
-		.then( conf => {
+		.then(conf => {
 			if (conf.production) {
 				enableProdMode();
 			}

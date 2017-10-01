@@ -11,15 +11,8 @@ export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 
 export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 
-	public mapType;
-	public sourceType;
-
-	constructor() {
-		super();
-
-		this.mapType = OpenLayerMapBoxSourceProviderMapType;
-		this.sourceType = OpenLayerMapBoxSourceProviderSourceType;
-	}
+	public mapType = OpenLayerMapBoxSourceProviderMapType;
+	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
 
 	create(metaData: any): any {
 		/*

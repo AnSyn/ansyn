@@ -1,7 +1,3 @@
-/**
- * Created by EldadCohen on 22/05/2017.
- */
-
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
@@ -12,15 +8,8 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
-	public mapType;
-	public sourceType;
-
-	constructor() {
-		super();
-
-		this.mapType = OpenLayerIDAHOSourceProviderMapType;
-		this.sourceType = OpenLayerIDAHOSourceProviderSourceType;
-	}
+	public mapType = OpenLayerIDAHOSourceProviderMapType;
+	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
 	create(metaData: any): any {
 		/*

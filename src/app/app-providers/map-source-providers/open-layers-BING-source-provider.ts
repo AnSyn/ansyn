@@ -9,32 +9,18 @@ export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
-	public mapType;
-	public sourceType;
-
-	constructor() {
-		super();
-		this.sourceType = OpenLayerBingSourceProviderSourceType;
-		this.mapType = OpenLayerBingSourceProviderMapType;
-	}
+	public mapType = OpenLayerBingSourceProviderMapType;
+	public sourceType = OpenLayerBingSourceProviderSourceType;
 
 	create(metaData: any): any {
-		const bingLayers = [];
-		let i, ii;
-		for (i = 0, ii = metaData.styles.length; i < ii; ++i) {
-			bingLayers.push(new TileLayer({
-				visible: true,
-				preload: Infinity,
-				source: new BingMaps({
-					key: metaData.key,
-					imagerySet: metaData.styles[i]
-					// use maxZoom 19 to see stretched tiles instead of the BingMaps
-					// "no photos at this zoom level" tiles
-					// maxZoom: 19
-				})
-			}));
-		}
-		return bingLayers;
+		return metaData.styles.map(style => new TileLayer({
+			visible: true,
+			preload: Infinity,
+			source: new BingMaps({
+				key: metaData.key,
+				imagerySet: style
+			})
+		}));
 	}
 
 	createAsync(metaData: any): Promise<any> {

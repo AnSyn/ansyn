@@ -10,15 +10,8 @@ export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
 export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
-	public mapType;
-	public sourceType;
-
-	constructor() {
-		super();
-
-		this.mapType = OpenLayerTileWMSSourceProviderMapType;
-		this.sourceType = OpenLayerTileWMSSourceProviderSourceType;
-	}
+	public mapType = OpenLayerTileWMSSourceProviderMapType;
+	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
 	create(metaData: any): any {
 		const layers = metaData.layers.join(',');

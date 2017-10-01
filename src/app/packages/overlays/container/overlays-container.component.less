@@ -1,7 +1,5 @@
 @import "~@ansyn/core/less/common";
 
-
-
 .loading-container div {
 	width: 12px;
 	height: 12px;
@@ -9,24 +7,32 @@
 	left: -20px;
 	background-color: @overlays-dots-color;
 	border-radius: 50%;
-	animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
+	animation: move 4s infinite cubic-bezier(.2, .64, .81, .23);
 }
+
 .loading-container div:nth-child(2) {
 	animation-delay: 150ms;
 }
+
 .loading-container div:nth-child(3) {
 	animation-delay: 300ms;
 }
+
 .loading-container div:nth-child(4) {
 	animation-delay: 450ms;
 }
 
 @keyframes move {
-	0% {left: 0%;}
-	75% {left:100%;}
-	100% {left:100%;}
+	0% {
+		left: 0%;
+	}
+	75% {
+		left: 100%;
+	}
+	100% {
+		left: 100%;
+	}
 }
-
 
 .overlays-status {
 	position: absolute;
@@ -37,13 +43,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: rgba(red(@overlays-dots-color),green(@overlays-dots-color),blue(@overlays-dots-color),0.1);
+	background: rgba(red(@overlays-dots-color), green(@overlays-dots-color), blue(@overlays-dots-color), 0.1);
 	color: @application-main-color;
-	font-size:15px;
-	.text-container{
-		margin-top:18px;
+	font-size: 15px;
+	.text-container {
+		margin-top: 18px;
 	}
-	.loading-container{
+	.loading-container {
 		margin-top: 10px;
 	}
 }

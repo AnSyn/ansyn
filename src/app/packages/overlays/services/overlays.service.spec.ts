@@ -13,7 +13,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
 		return Observable.empty();
 	};
 

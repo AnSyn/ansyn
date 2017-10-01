@@ -3,8 +3,8 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlaySuccessAction,
 	DisplayOverlayFailedAction,
+	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
@@ -32,7 +32,7 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { DisplayOverlayAction } from '@ansyn/overlays';
-import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { IStatusBarState, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	AddMapInstacneAction,
@@ -63,8 +63,10 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
-import { SetMapGeoEnabledModeStatusBarActionStore, SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import {
+	SetMapGeoEnabledModeStatusBarActionStore,
+	SetToastMessageStoreAction
+} from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -254,7 +256,10 @@ export class MapAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
 		.mergeMap((action) => [
-			new SetToastMessageStoreAction({ toastText: statusBarToastMessages.showOverlayErrorToast, showWarningIcon: true }),
+			new SetToastMessageStoreAction({
+				toastText: statusBarToastMessages.showOverlayErrorToast,
+				showWarningIcon: true
+			}),
 			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		]);
 

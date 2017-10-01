@@ -11,7 +11,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
-import { isEqual, first } from 'lodash';
+import { first, isEqual } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
@@ -25,17 +25,17 @@ import { OverlaysService } from '../services/overlays.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
-import { animate, style, trigger, transition } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 const animations: any[] = [
 	trigger('timeline-status', [
 		transition(':enter', [
-			style({opacity: 0}),
+			style({ opacity: 0 }),
 			animate('0.2s', style({ opacity: 1 }))
 		]),
 		transition(':leave', [
 			style({ opacity: 1 }),
-			animate('0.2s', style({opacity: 0}	))
+			animate('0.2s', style({ opacity: 0 }))
 		]),
 	])
 ];
@@ -85,8 +85,8 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		});
 
 	public overlaysLoader$: Observable<any> = this.store.select('overlays')
-		.map((overlayState: IOverlayState) => overlayState.loading )
-		.distinctUntilChanged(isEqual)
+		.map((overlayState: IOverlayState) => overlayState.loading)
+		.distinctUntilChanged(isEqual);
 
 
 	/*

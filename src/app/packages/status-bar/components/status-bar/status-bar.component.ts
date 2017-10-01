@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems, IToastMessage } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, IToastMessage, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction,
 	ChangeLayoutAction,
@@ -11,9 +11,9 @@ import {
 	GoPrevAction,
 	OpenShareLink,
 	SetGeoFilterAction,
-	SetToastMessageStoreAction,
 	SetOrientationAction,
 	SetTimeAction,
+	SetToastMessageStoreAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';

@@ -37,7 +37,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	public getStartDateViaLimitFasets(params: {facets, limit, region}): Observable<any> {
+	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
 		return Observable.empty();
 	};
 

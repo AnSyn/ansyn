@@ -24,6 +24,7 @@ import { MapsLayout } from '@ansyn/core';
 	templateUrl: './status-bar.component.html',
 	styleUrls: ['./status-bar.component.less']
 })
+
 export class StatusBarComponent implements OnInit {
 
 	status_bar$: Observable<IStatusBarState> = this.store.select('status_bar');
@@ -228,12 +229,12 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickGoPrev(): void {
-		this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'initial');
+		this.isFavoriteOverlayDisplayed = false;
 		this.store.dispatch(new GoPrevAction());
 	}
 
 	clickGoNext(): void {
-		this.renderer.setStyle(this.starColor.nativeElement, 'fill', 'initial');
+		this.isFavoriteOverlayDisplayed = false;
 		this.store.dispatch(new GoNextAction());
 	}
 

@@ -35,16 +35,13 @@ export class AnsynComponent implements OnInit {
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
 		.map(MapFacadeService.activeMap)
-		.do(() => console.log('tmp'))
 		.filter(activeMap => !_isNil(activeMap));
 
 	selectedCaseName$: Observable<string> = this.selected_case$.pluck('name');
 
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
-		.do(() => console.log('before'))
 		.map((data: any) => data.overlay)
-		.do((data) => console.log('after', data))
 		.distinctUntilChanged();
 
 	isFavoriteOverlay$ = this.selected_case$

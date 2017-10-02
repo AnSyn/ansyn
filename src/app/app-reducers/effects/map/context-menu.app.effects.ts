@@ -8,13 +8,13 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { get as _get } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class ContextMenuAppEffects {
@@ -24,7 +24,7 @@ export class ContextMenuAppEffects {
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'))
 		.map(([action, overlays, mapState]: [ContextMenuShowAction, IOverlayState, IMapState]) => {
-			let filteredOverlays: any[] = OverlaysService.pluck(overlays.overlays, overlays.filteredOverlays, ['id', 'footprint', 'sensorName', 'date', 'bestResolution']);
+			let filteredOverlays: any[] = overlays.filteredOverlays.map((id: string): Overlay => overlays.overlays.get(id));
 			filteredOverlays = filteredOverlays.filter(({ footprint }) => inside(action.payload.point, footprint));
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return new SetContextMenuFiltersAction({

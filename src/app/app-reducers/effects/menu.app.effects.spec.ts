@@ -52,13 +52,13 @@ describe('MenuAppEffects', () => {
 				menu_items: [{
 					name: 'Cases',
 					component: null,
-					iconUrl: null
+					iconClass: null
 
 				},
 					{
 						name: 'Shmases',
 						component: null,
-						iconUrl: null
+						iconClass: null
 
 					}],
 				selected_menu_item_index: 1
@@ -70,13 +70,13 @@ describe('MenuAppEffects', () => {
 		store.dispatch(new AddMenuItemAction({
 			name: 'Cases',
 			component: null,
-			iconUrl: null
+			iconClass: null
 
 		}));
 		store.dispatch(new AddMenuItemAction({
 			name: 'Shmases',
 			component: null,
-			iconUrl: null
+			iconClass: null
 
 		}));
 		store.dispatch(new SelectMenuItemAction('Cases'));

@@ -5,11 +5,10 @@
 	</button>
 
 	<div class="buttons-area">
-
-		<button
-			class="menu-item next"
-			[disabled]="_isEmpty(nextSensors)"
-			(mousedown)="clickNext($event)">
+		<button class="menu-item next"
+				[disabled]="_isEmpty(nextSensors)"
+				(mousedown)="clickNext($event)">
+			<i class="icon-context--next"></i>
 			<span>Next</span>
 			<div class="sub-buttons-list">
 				<button
@@ -22,10 +21,10 @@
 			</div>
 		</button>
 
-		<button
-			class="menu-item prev"
-			[disabled]="_isEmpty(prevSensors)"
-			(mousedown)="clickPrev($event)">
+		<button class="menu-item prev"
+				[disabled]="_isEmpty(prevSensors)"
+				(mousedown)="clickPrev($event)">
+			<i class="icon-context--prev"></i>
 			<span>Prev</span>
 			<div class="sub-buttons-list">
 				<button
@@ -38,10 +37,10 @@
 			</div>
 		</button>
 
-		<button
-			class="menu-item first"
-			[disabled]="_isEmpty(prevSensors)"
-			(mousedown)="clickFirst($event)">
+		<button class="menu-item first"
+				[disabled]="_isEmpty(prevSensors)"
+				(mousedown)="clickFirst($event)">
+			<i class="icon-context--first"></i>
 			<span>First</span>
 			<div class="sub-buttons-list">
 				<button
@@ -54,11 +53,10 @@
 			</div>
 		</button>
 
-
-		<button
-			class="menu-item last"
-			[disabled]="_isEmpty(nextSensors)"
-			(mousedown)="clickLast($event)">
+		<button class="menu-item last"
+				[disabled]="_isEmpty(nextSensors)"
+				(mousedown)="clickLast($event)">
+			<i class="icon-context-last"></i>
 			<span>Last</span>
 			<div class="sub-buttons-list">
 				<button
@@ -72,10 +70,10 @@
 		</button>
 
 
-		<button
-			class="menu-item best"
-			[disabled]="_isEmpty(allSensors)"
-			(mousedown)="clickBest($event)">
+		<button class="menu-item best"
+				[disabled]="_isEmpty(allSensors)"
+				(mousedown)="clickBest($event)">
+			<i class="icon-context-best"></i>
 			<span>Best</span>
 			<div class="sub-buttons-list">
 				<button
@@ -88,9 +86,8 @@
 			</div>
 		</button>
 
-		<button
-			class="menu-item angle"
-			disabled>
+		<button class="menu-item angle" disabled>
+			<i class="icon-context--angle"></i>
 			<span>Angle</span>
 			<div class="sub-buttons-list">
 				<button>Draw</button>
@@ -98,7 +95,5 @@
 				<button>Show</button>
 			</div>
 		</button>
-
-
 	</div>
 </nav>

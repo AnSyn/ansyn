@@ -11,43 +11,43 @@ export const ansynMenuItems: MenuItem[] = [
 	{
 		name: 'Cases',
 		component: CasesComponent,
-		iconUrl: '/assets/icons/cases.svg',
+		iconClass: 'icon-main--cases',
 		production: true
 	},
 	{
 		name: 'Filters',
 		component: FiltersCollectionComponent,
-		iconUrl: '/assets/icons/filters.svg',
+		iconClass: 'icon-main--filters',
 		production: true
 	},
 	{
 		name: 'Layers Manager',
 		component: LayersManagerComponent,
-		iconUrl: '/assets/icons/data-layers.svg',
+		iconClass: 'icon-hide-layers',
 		production: true
 	},
 	{
 		name: 'Tools',
 		component: ToolsComponent,
-		iconUrl: '/assets/icons/tools.svg',
+		iconClass: 'icon-main--tools',
 		production: true
 	},
 	{
 		name: 'Algorithms',
 		component: AlgorithmsComponent,
-		iconUrl: '/assets/icons/algorithms.svg',
+		iconClass: 'icon-main--algorithms',
 		production: false
 	},
 	{
 		name: 'Settings',
 		component: SettingsComponent,
-		iconUrl: '/assets/icons/settings.svg',
+		iconClass: 'icon-main--settings',
 		production: false
 	},
 	{
 		name: 'Imagery SandBox',
 		component: ImagerySandBoxComponent,
-		iconUrl: '/assets/icons/tools.svg',
+		iconClass: 'icon-main--tools',
 		production: false
 	}
 ];

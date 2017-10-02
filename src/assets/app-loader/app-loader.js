@@ -44,7 +44,7 @@ document.write(`<div class="skeleton-wrapper">
 										</div>
 				
 										<div class="time-part static">
-											<span class="digit">%🌍</span>
+											<span class="digit">%</span>
 										</div>
 									</div>
 								</div>

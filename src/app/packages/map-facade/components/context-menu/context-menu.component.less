@@ -1,6 +1,9 @@
 @import "~@ansyn/core/less/common";
 @import '~@ansyn/core/less/z-index-globals';
 
+@context-menu-color: #0dc5c1;
+@context-menu-contrast: white;
+
 :host {
 	outline: none;
 	position: fixed;
@@ -41,10 +44,10 @@
 				justify-content: center;
 
 				&:hover {
-					background-color: #0dc5c1;
+					background-color: @context-menu-color;
 					transform: scale(0.6715);
 					.pointer {
-						color: white;
+						color: @context-menu-contrast;
 					}
 				}
 
@@ -56,64 +59,52 @@
 			.buttons-area {
 				.menu-item {
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+					background-color: @context-menu-color;
+					color: @context-menu-contrast;
+
+					i {
+						font-size: 24px;
+					}
+
+					&:hover:not(:disabled) {
+						background-color: @context-menu-contrast;
+						color: @context-menu-color;
+					}
+
 					&.best {
 						transition-duration: 180ms;
 						left: 66px;
 						top: 0;
-						background: #0dc5c1 url(/assets/icons/context-menu/best.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/best-hover.svg) no-repeat center 8px;
-						}
 					}
 
 					&.first {
 						transition-duration: 280ms;
 						left: -33px;
 						top: 59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/first.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/first-hover.svg) no-repeat center 8px;
-						}
 					}
 
 					&.angle {
 						transition-duration: 380ms;
 						left: -66px;
 						top: 0;
-						background: #0dc5c1 url(/assets/icons/context-menu/angle.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/angle-hover.svg) no-repeat center 8px;
-						}
 					}
 
 					&.last {
 						transition-duration: 480ms;
 						left: 33px;
 						top: 59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/last.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/last-hover.svg) no-repeat center 8px;
-						}
 					}
 
 					&.next {
 						transition-duration: 580ms;
 						left: 33px;
 						top: -59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/next.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/next-hover.svg) no-repeat center 8px;
-						}
 					}
 
 					&.prev {
 						transition-duration: 680ms;
 						left: -33px;
 						top: -59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/prev.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/prev-hover.svg) no-repeat center 8px;
-						}
 					}
 
 				}
@@ -146,7 +137,7 @@
 				position: absolute;
 				border: none;
 				outline: none;
-				color: white;
+				color: @context-menu-contrast;
 				border-radius: 100%;
 				width: 56px;
 				height: 56px;
@@ -229,12 +220,12 @@
 						height: 42px;
 						background: #187284;
 						box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
-						color: white;
+						color: @context-menu-contrast;
 						margin-right: 5.5px;
 						transition: left, z-index;
 
 						span {
-							color: white !important;
+							color: @context-menu-contrast !important;
 							display: block;
 							align-items: center;
 							overflow: hidden;

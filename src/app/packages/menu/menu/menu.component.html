@@ -7,7 +7,7 @@
 			[class.active]="isActive(menuItem.name)"
 			(click)="toggleItem(menuItem.name)">
 
-			<img [src]="menuItem.iconUrl"/>
+			<i [ngClass]="menuItem.iconClass"></i>
 			<span class="badge" [hidden]="!menuItem.badge">{{menuItem.badge}}</span>
 			{{menuItem.name}}
 		</div>

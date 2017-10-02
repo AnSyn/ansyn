@@ -20,7 +20,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 			state('false', style({
 				transform: 'rotateZ(135deg) translateY(-75%)',
 			})),
-			transition('true <=> false', animate('0.1s')),
+			transition('1 <=> 0', animate('0.1s')),
 		]),
 		trigger('fieldsTrigger', [
 			state('true', style({
@@ -31,7 +31,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 				maxHeight: '0',
 				opacity: 0
 			})),
-			transition('* <=> *', animate('0.2s'))
+			transition('1 <=> 0', animate('0.2s'))
 		])
 	]
 })

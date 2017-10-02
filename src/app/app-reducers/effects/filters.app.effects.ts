@@ -55,11 +55,7 @@ export class FiltersAppEffects {
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays).map(([key, overlay]: [string, Overlay]) => overlay);
 
-			let showAll = false;
-
-			if (casesState.selectedCase.state.facets.filters.length === 0) {
-				showAll = casesState.selectedCase.id === CasesService.defaultCase.id && this.casesService.contextValues.imageryCount === -1;
-			}
+			const showAll = isNil(casesState.selectedCase.state.facets.filters);
 
 			// what is going here  ?? who updates the contextValues imageryCount  and why it is not in the store please add the correct remarks
 			if (this.casesService.contextValues.imageryCount !== -1) {

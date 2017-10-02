@@ -15,7 +15,7 @@ import {
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CaseMapState, defaultMapType, Overlay, Position } from '@ansyn/core';
-import { cloneDeep, last, range } from 'lodash';
+import { cloneDeep, range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 
 @Injectable()
@@ -39,7 +39,6 @@ export class MapFacadeService {
 
 	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
 		let mapsListChange = {};
-		let activeMapChange = {};
 		const mapsList: CaseMapState[] = [];
 
 		/* mapsList*/
@@ -61,11 +60,10 @@ export class MapFacadeService {
 		/* activeMapId */
 		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
 		if (notExist) {
-			const activeMapId = last(mapsList).id;
-			activeMapChange = { activeMapId };
+			mapsList[mapsList.length - 1] = activeMap;
 		}
 
-		return { ...mapsListChange, ...activeMapChange };
+		return { ...mapsListChange };
 	}
 
 	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {

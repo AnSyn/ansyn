@@ -1,6 +1,3 @@
-/**
- * Created by ohad1 on 02/04/2017.
- */
 import * as overlay from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
@@ -10,7 +7,7 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 export interface IOverlayState {
 	loaded: boolean;
 	loading: boolean;
-	overlays: any; // Map
+	overlays: Map<string, Overlay>;
 	selectedOverlays: string[];
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;

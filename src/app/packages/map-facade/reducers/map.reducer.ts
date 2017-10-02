@@ -3,13 +3,14 @@ import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { Overlay } from '../../core/models/overlay.model';
 
 export interface IMapState {
 	positions: Position;
 	communicators: {};
 	loadingOverlays: string[];
-	filteredOverlays: string[];
-	displayedOverlay: any[];
+	filteredOverlays: Overlay[];
+	displayedOverlay: Overlay;
 	mapIdToGeoOptions: Map<string, boolean>;
 	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
@@ -22,7 +23,7 @@ export const initialMapState: IMapState = {
 	communicators: {},
 	loadingOverlays: [],
 	filteredOverlays: [],
-	displayedOverlay: [],
+	displayedOverlay: null,
 	mapIdToGeoOptions: new Map<string, boolean>(),
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,

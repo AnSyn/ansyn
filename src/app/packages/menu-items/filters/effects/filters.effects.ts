@@ -18,6 +18,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
+import { IOverlayState } from '../../../overlays/reducers/overlays.reducer';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
@@ -27,7 +28,8 @@ export class FiltersEffects {
 	@Effect()
 	initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS)
-		.switchMap((action: InitializeFiltersAction) => {
+		.withLatestFrom(this.store$.select('overlays'))
+		.switchMap(([action, overlaysState]: [InitializeFiltersAction, IOverlayState]) => {
 			return this.filtersService.loadFilters().map((filters: Filter[]) => {
 				const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
 				filters.forEach((filter: Filter) => {
@@ -37,12 +39,32 @@ export class FiltersEffects {
 						metadata.accumulateData(overlay[filter.modelName]);
 					});
 
+					// Check if filters were previously deselected, and if so deselect them now
+					let oldFilter = overlaysState.oldFilters.find(oldFilter => oldFilter.filteringParams.key === filter.modelName);
+					if (oldFilter) {
+						const oldFilterFields = oldFilter.filteringParams.metadata.enumsFields;
+						const filterFields = metadata.enumsFields;
+
+						filterFields.forEach((value, key) => {
+							let isChecked = true;
+							if (oldFilterFields.has(key)) {
+								const oldFilter = oldFilterFields.get(key);
+								if (!oldFilter.isChecked) {
+									isChecked = false;
+								}
+							}
+							value.isChecked = isChecked;
+						});
+					}
+
+					// If show all is set, select all
 					if (action.payload.showAll) {
 						metadata.showAll();
 					}
 
 					filterMetadatas.set(filter, metadata);
 				});
+
 				return new InitializeFiltersSuccessAction(filterMetadatas);
 			});
 		}).share();

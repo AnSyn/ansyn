@@ -15,6 +15,7 @@ export interface IOverlayState {
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;
 	filters: any[];
+	oldFilters: any[];
 	filteredOverlays: string[];
 	queryParams: any;
 	timelineState: { from: Date, to: Date };
@@ -30,6 +31,7 @@ export const overlayInitialState: IOverlayState = {
 	demo: 1,
 	// @TODO change to Map
 	filters: [],
+	oldFilters: [],
 	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
 	filteredOverlays: [],
@@ -72,6 +74,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				queryParams,
 				overlays: new Map(),
 				filters: [],
+				oldFilters: state.filters,
 				filteredOverlays: []
 			});
 
@@ -113,7 +116,11 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 
 			const res = OverlaysService.filter(overlaysToFilter, action.payload.parsedFilters);
 
-			return { ...state, filters: action.payload.parsedFilters, filteredOverlays: res };
+			return {
+				...state,
+				filters: action.payload.parsedFilters,
+				filteredOverlays: res
+			};
 
 		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;

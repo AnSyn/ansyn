@@ -5,24 +5,21 @@
 		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"
 			  class="filtered">(filtered)</span>
 
-		<button [@rotateArrow]="show.toString()" #downArrow class="down-arrow" [disabled]="disabledButton"
+		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledButton"
 				(click)="show = !show">
 		</button>
-
 
 		<div class="show-all">
 			<span (click)="showAll()">Show all</span>
 		</div>
 	</div>
 
-	<div class="fields" #fields [@fieldsTrigger]="show.toString()">
-
+	<div class="fields" #fields [@fieldsTrigger]="show">
 		<ansyn-enum-filter-container
 			*ngIf="metadataFromState && metadataFromState?.type === 'Enum'"
 			[metadata]="metadataFromState"
 			(onMetadataChange)="onMetadataChange($event)">
 		</ansyn-enum-filter-container>
-
 	</div>
 
 	<div *ngIf="!metadataFromState">

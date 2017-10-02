@@ -31,19 +31,16 @@ export class FiltersAppEffects {
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases'))
 		.map(([action, filtersState, casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState, ICasesState]) => {
+			const parsedFilters = Array.from(filtersState.filters)
+				.map(([key, value]) => ({
+					filteringParams: {
+						key: key.modelName,
+						metadata: value
+					},
+					filterFunc: value.filterFunc
+				}));
 
 			const favorites = casesState.selected_case.state.favoritesOverlays;
-
-			const parsedFilters = [];
-
-			filtersState.filters.forEach((value: any, key: any) => {
-
-				parsedFilters.push({
-					filteringParams: { key: key.modelName, metadata: value },
-					filterFunc: value.filterFunc
-				});
-
-			});
 
 			return new SetFiltersAction({
 				parsedFilters,
@@ -63,7 +60,6 @@ export class FiltersAppEffects {
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
-
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays).map(([key, overlay]: [string, Overlay]) => overlay);
 
 			let showAll = false;

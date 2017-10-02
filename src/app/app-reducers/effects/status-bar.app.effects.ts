@@ -41,7 +41,7 @@ import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status
 import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 
 @Injectable()

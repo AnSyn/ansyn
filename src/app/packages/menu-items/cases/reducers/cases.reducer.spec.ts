@@ -3,11 +3,8 @@ import {
 	CloseModalAction,
 	DeleteCaseAction,
 	LoadCasesSuccessAction,
-	LoadDefaultCaseSuccessAction,
 	OpenModalAction,
-	RemoveDefaultCaseQueryParamsAction,
-	SelectCaseByIdAction,
-	SetDefaultCaseQueryParams,
+	SelectCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
@@ -39,24 +36,11 @@ describe('CasesReducer', () => {
 		expect(result.modal).toBeFalsy();
 	});
 
-	it('SELECT_CASE action should set selected_case_id from payload if case exists', () => {
-		initialCasesState.cases = [
-			{ id: 'fake_case_id', name: 'fake_case_name1' },
-		];
-		let action: SelectCaseByIdAction = new SelectCaseByIdAction('fake_case_id');
+	it('SELECT_CASE action should set selected_case from payload', () => {
+		const fakeCase = { id: 'fakeCaseId' } as Case;
+		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selected_case.id).toEqual('fake_case_id');
-	});
-
-	it('SELECT_CASE action should set selected_case_id from default_case if it was selected', () => {
-		let state: ICasesState = initialCasesState;
-		state.cases = [
-			{ id: 'fake_case_id', name: 'fake_case_name1' },
-		];
-		state.default_case = { id: 'default_case_id', name: 'default_case_name1' };
-		let action: SelectCaseByIdAction = new SelectCaseByIdAction('default_case_id');
-		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selected_case.id).toEqual('default_case_id');
+		expect(result.selected_case).toEqual(fakeCase);
 	});
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
@@ -124,26 +108,4 @@ describe('CasesReducer', () => {
 		expect(result.cases.length).toEqual(2);
 	});
 
-	it('SET_DEFAULT_CASE_QEURY_PARAMS action should get queryParams payload and set on default_case_query_parmas', () => {
-		let state: ICasesState = initialCasesState;
-		const case_value: Case = { id: '12354', region: 'any region', facets: [] } as any;
-		let action: SetDefaultCaseQueryParams = new SetDefaultCaseQueryParams(case_value);
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.default_case_query_params).toEqual(case_value);
-	});
-
-	it('REMOVE_DEFAULT_CASE_QEURY_PARAMS action should change default_case_query_parmas to "null"', () => {
-		let state: ICasesState = initialCasesState;
-		let action: RemoveDefaultCaseQueryParamsAction = new RemoveDefaultCaseQueryParamsAction();
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.default_case_query_params).toBeNull();
-	});
-
-	it('LOAD_DEFAULT_CASE_SUCCESS action should set the loaded case as default_case', () => {
-		let state: ICasesState = initialCasesState;
-		let loaded_case = { id: 'default_case_id', name: 'name1' };
-		let action: LoadDefaultCaseSuccessAction = new LoadDefaultCaseSuccessAction(loaded_case);
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.default_case.id).toEqual('default_case_id');
-	});
 });

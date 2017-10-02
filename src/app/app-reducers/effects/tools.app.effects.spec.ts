@@ -14,7 +14,7 @@ import {
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { CasesReducer, ICasesState, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
+import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import {
 	AnnotationVisualizerAgentAction,
@@ -308,10 +308,10 @@ describe('ToolsAppEffects', () => {
 
 	describe('onSelectCaseById', () => {
 		it('onSelectCaseById should raise DisableImageProcessing', () => {
-			effectsRunner.queue(new SelectCaseByIdAction('asdfasd'));
+			effectsRunner.queue(new SelectCaseAction({} as Case));
 
 			let result = null;
-			toolsAppEffects.onSelectCaseById$.subscribe(_result => result = _result);
+			toolsAppEffects.onSelectCase$.subscribe(_result => result = _result);
 			expect(result instanceof DisableImageProcessing).toBeTruthy();
 
 		});

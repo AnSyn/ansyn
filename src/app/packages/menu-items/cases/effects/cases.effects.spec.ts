@@ -12,12 +12,11 @@ import {
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction,
-	LoadCaseSuccessAction,
 	LoadDefaultCaseAction,
-	LoadDefaultCaseSuccessAction,
 	OpenModalAction,
+	SaveCaseAsAction,
+	SelectCaseAction,
 	SelectCaseByIdAction,
-	SetDefaultCaseQueryParams,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
@@ -27,8 +26,8 @@ import { compose } from '@ngrx/core';
 import { OverlayReducer } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
-import { isEqual } from 'lodash';
 import { HttpClientModule } from '@angular/common/http';
+import { Params } from '@angular/router';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -52,7 +51,7 @@ describe('CasesEffects', () => {
 			],
 			providers: [CasesEffects,
 				CasesService,
-				{ provide: casesConfig, useValue: { baseUrl: null } }]
+				{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]
 		}).compileComponents();
 	}));
 
@@ -96,7 +95,7 @@ describe('CasesEffects', () => {
 
 		let deleted_case: Case = { id: 'new_case_id', name: 'new_case_name' };
 		store.dispatch(new AddCaseSuccessAction(deleted_case));
-		store.dispatch(new SelectCaseByIdAction(deleted_case.id));
+		store.dispatch(new SelectCaseAction(deleted_case));
 		// set active_case_id
 		store.dispatch(new OpenModalAction({ component: '', case_id: deleted_case.id }));
 		effectsRunner.queue(new DeleteCaseAction());
@@ -109,14 +108,16 @@ describe('CasesEffects', () => {
 	});
 
 	it('onUpdateCase$ should call casesService.updateCase with action.payload("updated_case"), and return UpdateCaseAction', () => {
-		let updated_case: Case = {
+		const updatedCase: Case = {
 			id: 'new_case_id',
 			name: 'new_case_name'
 		};
-		effectsRunner.queue(new UpdateCaseAction(updated_case));
-		casesEffects.onUpdateCase$.subscribe((result: UpdateCaseAction) => {
-			expect(result instanceof UpdateCaseBackendAction).toBeTruthy();
+		let result: UpdateCaseAction;
+		effectsRunner.queue(new UpdateCaseAction(updatedCase));
+		casesEffects.onUpdateCase$.subscribe((_result: UpdateCaseAction) => {
+			result = _result;
 		});
+		expect(result instanceof UpdateCaseBackendAction).toBeTruthy();
 	});
 
 	it('addCaseSuccess$ should select the case being added', () => {
@@ -142,15 +143,15 @@ describe('CasesEffects', () => {
 	});
 
 	describe('loadCase$ ', () => {
-		it('loadCase$ should dispatch LoadCaseSuccessAction if the case is valid but not in the loaded cases', () => {
+		it('loadCase$ should dispatch SelectCaseAction', () => {
 			const caseItem: Case = {
 				id: '31b33526-6447-495f-8b52-83be3f6b55bd'
 			} as any;
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 			effectsRunner.queue(new LoadCaseAction(caseItem.id));
 
-			casesEffects.loadCase$.subscribe((result: LoadCaseSuccessAction) => {
-				expect(result instanceof LoadCaseSuccessAction).toBeTruthy();
+			casesEffects.loadCase$.subscribe((result: SelectCaseAction) => {
+				expect(result instanceof SelectCaseAction).toBeTruthy();
 				expect(result.payload).toEqual(<any>caseItem);
 			});
 		});
@@ -169,62 +170,37 @@ describe('CasesEffects', () => {
 		});
 	});
 
-	it('loadCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
-		const caseItem: Case = {
+	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectCaseAction ', () => {
+
+		CasesService.defaultCase = {
 			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
 		} as any;
 
-		effectsRunner.queue(new LoadCaseSuccessAction(caseItem));
+		spyOn(casesService.queryParamsHelper, 'updateCaseViaQueryParmas')
+			.and
+			.returnValue('updateCaseViaQueryParmasResult');
 
-		casesEffects.loadCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
-			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem.id);
+		const queryParmas: Params = { foo: 'bar' };
+
+		effectsRunner.queue(new LoadDefaultCaseAction(queryParmas));
+		let result: SelectCaseAction;
+		casesEffects.loadDefaultCase$.subscribe((_result: SelectCaseAction) => {
+			result = _result;
 		});
+		expect(casesService.queryParamsHelper.updateCaseViaQueryParmas).toHaveBeenCalledWith(queryParmas, CasesService.defaultCase);
+		expect(result instanceof SelectCaseAction).toBeTruthy();
+		expect(result.payload).toEqual('updateCaseViaQueryParmasResult' as Case);
 	});
 
-	it('loadDefaultCase$ should dispatch LoadDefaultCaseSuccessAction if default_case is empty, and call setDefaultCaseQueryParams too(mergeMap)', () => {
-		const defaultCase: Case = {
-			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
-		} as any;
-
-		const defaultCaseWithQueryParmas: Case = {
-			'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
-			'name': 'queryParamsDefaultCase'
-		} as any;
-
-		spyOn(casesService, 'getDefaultCase').and.callFake(() => defaultCase);
-
-		spyOn((<any>casesService).queryParamsHelper, 'updateCaseViaQueryParmas').and.callFake(() => defaultCaseWithQueryParmas);
-
-		effectsRunner.queue(new LoadDefaultCaseAction());
-		// mergeMap
-		let count = 0;
-		casesEffects.loadDefaultCase$.subscribe((result: any) => {
-			count = count + 1;
-			if (result instanceof SetDefaultCaseQueryParams) {
-				expect(isEqual(result.payload, defaultCaseWithQueryParmas)).toBeTruthy();
-			}
-			if (result instanceof LoadDefaultCaseSuccessAction) {
-				expect(isEqual(result.payload, defaultCase)).toBeTruthy();
-			}
-			if (result instanceof SelectCaseByIdAction) {
-				expect(result.payload).toEqual(defaultCase.id);
-			}
-
+	it('onSaveCaseAs$ should add a default case', () => {
+		const selectedCase = { id: 'selectedCaseId' } as Case;
+		effectsRunner.queue(new SaveCaseAsAction(selectedCase));
+		let result: AddCaseAction;
+		casesEffects.onSaveCaseAs$.subscribe((_result: AddCaseAction) => {
+			result = _result;
 		});
-		expect(count).toEqual(2);
+		expect(result instanceof AddCaseAction).toBeTruthy();
+		expect(result.payload).toEqual(selectedCase);
 	});
 
-	it('loadDefaultCaseSuccess$ should dispatch SelectCaseByIdAction with the same case id', () => {
-		const caseItem: Case = {
-			'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
-		} as any;
-
-		effectsRunner.queue(new LoadCaseSuccessAction(caseItem));
-
-		casesEffects.loadDefaultCaseSuccess$.subscribe((result: SelectCaseByIdAction) => {
-			expect(result instanceof SelectCaseByIdAction).toBeTruthy();
-			expect(result.payload).toEqual(caseItem.id);
-		});
-	});
 });

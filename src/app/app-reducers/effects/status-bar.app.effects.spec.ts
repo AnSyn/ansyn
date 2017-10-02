@@ -14,6 +14,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import {
 	AddCaseSuccessAction,
+	SelectCaseAction,
 	SelectCaseByIdAction,
 	UpdateCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -127,7 +128,7 @@ describe('StatusBarAppEffects', () => {
 		} as any;
 
 		store.dispatch(new AddCaseSuccessAction(fakeCase));
-		store.dispatch(new SelectCaseByIdAction(fakeCase.id));
+		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 
 

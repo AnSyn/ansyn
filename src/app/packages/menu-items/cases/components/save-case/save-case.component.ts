@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { ICasesState } from '../../reducers/cases.reducer';
-import { CloseModalAction, SaveDefaultCaseAction } from '../../actions/cases.actions';
+import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 const animations_during = '0.2s';
@@ -71,7 +71,7 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
-		this.store.dispatch(new SaveDefaultCaseAction(this.case_model));
+		this.store.dispatch(new SaveCaseAsAction(this.case_model));
 		this.close();
 	}
 }

@@ -198,6 +198,17 @@ export class CasesEffects {
 			return new SelectCaseAction(sCase);
 		});
 
+	@Effect()
+	onSaveCaseAs$: Observable<AddCaseAction> = this.actions$
+		.ofType(CasesActionTypes.SAVE_CASE_AS)
+		.map(toPayload)
+		.map((default_case: Case) => {
+
+			this.casesService.enhanceDefaultCase(default_case);
+			default_case.owner = 'Default Owner'; // TODO: replace with id from authentication service
+
+			return new AddCaseAction(default_case);
+		});
 
 
 	constructor(private actions$: Actions,

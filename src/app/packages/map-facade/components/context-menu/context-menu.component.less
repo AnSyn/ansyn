@@ -1,4 +1,4 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 @import '~@ansyn/core/less/z-index-globals';
 
 :host {
@@ -6,23 +6,26 @@
 	position: fixed;
 	transform: translate(-28px, -27px);
 
-	width: 0;
-	height: 0;
+	width: 0px;
+	height: 0px;
 	z-index: @context-menu-depth;
 
 	&:focus {
 		nav.menu {
 			visibility: visible;
-			div.buttons-area {
+
+div.buttons-area {
 				.menu-item {
 					&:hover:not(:disabled) {
 						span {
 							color: @application-main-color;
 						}
-						div.sub-buttons-list {
+
+div.sub-buttons-list {
 							visibility: visible;
-							button {
-								left: 0 !important;
+
+button {
+								left: 0px !important;
 							}
 						}
 					}
@@ -30,7 +33,7 @@
 			}
 
 			button.menu-open-button {
-				background-color: #FFFFFF;
+				background-color: #ffffff;
 
 				transition-timing-function: linear;
 				transition-duration: 200ms;
@@ -43,7 +46,8 @@
 				&:hover {
 					background-color: #0dc5c1;
 					transform: scale(0.6715);
-					.pointer {
+
+.pointer {
 						color: white;
 					}
 				}
@@ -53,16 +57,19 @@
 					font-weight: bold;
 				}
 			}
-			.buttons-area {
+
+.buttons-area {
 				.menu-item {
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
-					&.best {
+
+&.best {
 						transition-duration: 180ms;
 						left: 66px;
-						top: 0;
-						background: #0dc5c1 url(/assets/icons/context-menu/best.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/best-hover.svg) no-repeat center 8px;
+						top: 0px;
+						background: #0dc5c1 url('/assets/icons/context-menu/best.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/best-hover.svg') no-repeat center 8px;
 						}
 					}
 
@@ -70,19 +77,21 @@
 						transition-duration: 280ms;
 						left: -33px;
 						top: 59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/first.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/first-hover.svg) no-repeat center 8px;
+						background: #0dc5c1 url('/assets/icons/context-menu/first.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/first-hover.svg') no-repeat center 8px;
 						}
 					}
 
 					&.angle {
 						transition-duration: 380ms;
 						left: -66px;
-						top: 0;
-						background: #0dc5c1 url(/assets/icons/context-menu/angle.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/angle-hover.svg) no-repeat center 8px;
+						top: 0px;
+						background: #0dc5c1 url('/assets/icons/context-menu/angle.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/angle-hover.svg') no-repeat center 8px;
 						}
 					}
 
@@ -90,9 +99,10 @@
 						transition-duration: 480ms;
 						left: 33px;
 						top: 59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/last.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/last-hover.svg) no-repeat center 8px;
+						background: #0dc5c1 url('/assets/icons/context-menu/last.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/last-hover.svg') no-repeat center 8px;
 						}
 					}
 
@@ -100,9 +110,10 @@
 						transition-duration: 580ms;
 						left: 33px;
 						top: -59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/next.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/next-hover.svg) no-repeat center 8px;
+						background: #0dc5c1 url('/assets/icons/context-menu/next.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/next-hover.svg') no-repeat center 8px;
 						}
 					}
 
@@ -110,9 +121,10 @@
 						transition-duration: 680ms;
 						left: -33px;
 						top: -59px;
-						background: #0dc5c1 url(/assets/icons/context-menu/prev.svg) no-repeat center 8px;
-						&:hover:not(:disabled) {
-							background: white url(/assets/icons/context-menu/prev-hover.svg) no-repeat center 8px;
+						background: #0dc5c1 url('/assets/icons/context-menu/prev.svg') no-repeat center 8px;
+
+&:hover:not(:disabled) {
+							background: white url('/assets/icons/context-menu/prev-hover.svg') no-repeat center 8px;
 						}
 					}
 
@@ -128,23 +140,23 @@
 
 		button.menu-open-button {
 			border-radius: 100%;
-			border: none;
+			border: noneone;
 			outline: none;
 			width: 56px;
 			height: 56px;
 			position: relative;
-			top: 0;
-			left: 0;
+			top: 0px;
+			left: 0px;
 			z-index: 4000;
 			cursor: pointer;
-			background: #FFFFFF;
-			color: #30A2C6;
+			background: #ffffff;
+			color: #30a2c6;
 		}
 
 		div.buttons-area {
 			.menu-item {
 				position: absolute;
-				border: none;
+				border: noneone;
 				outline: none;
 				color: white;
 				border-radius: 100%;
@@ -158,36 +170,45 @@
 				box-sizing: border-box;
 				align-items: center;
 				padding: 8px;
-				top: 0;
-				left: 0;
-				box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
+				top: 0px;
+				left: 0px;
+				box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.237602), 0px 0px 12px rgba(0, 0, 0, 0.12), 0px 6px 6px rgba(0, 0, 0, 0.24), 0px 0px 6px rgba(0, 0, 0, 0.12);
 				transition: top ease-out 200ms, left ease-out 200ms;
 
 				&:disabled {
-					&.first, &.prev, &.angle, &.next, &.last, &.best {
+					&.first,
+&.prev,
+&.angle,
+&.next,
+&.last,
+&.best {
 						background-color: #83b5c3;
 					}
 				}
 
-				&.first, &.prev, &.angle {
+				&.first,
+&.prev,
+&.angle {
 					div.sub-buttons-list {
 						left: initial;
-						right: 0;
+						right: 0px;
 						flex-direction: row-reverse;
 
 						button {
-							margin-right: 0;
+							margin-right: 0px;
 							margin-left: 5.5px;
 
 							&:first-child {
 								margin-left: 5.5px;
 								margin-right: 66px;
 							}
-							&:last-child:not(:first-child) {
-								margin-right: 0;
-								margin-left: 0;
+
+&:last-child:not(:first-child) {
+								margin-right: 0px;
+								margin-left: 0px;
 							}
-							.loop(@i) when (@i < 10) {
+
+.loop(@i) when (@i < 10) {
 								&:nth-child(@{i}) {
 									left: 20px + (@i * 32px) + (@i * 5.5px);
 								}
@@ -210,10 +231,11 @@
 						z-index: -1;
 					}
 				}
-				.sub-buttons-list {
+
+.sub-buttons-list {
 					position: absolute;
-					top: 0;
-					left: 0;
+					top: 0px;
+					left: 0px;
 					visibility: hidden;
 					display: flex;
 					height: 100%;
@@ -223,12 +245,12 @@
 					button {
 						position: relative;
 						border-radius: 100%;
-						border: none;
+						border: noneone;
 						outline: none;
 						width: 42px;
 						height: 42px;
 						background: #187284;
-						box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
+						box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.237602), 0px 0px 12px rgba(0, 0, 0, 0.12), 0px 6px 6px rgba(0, 0, 0, 0.24), 0px 0px 6px rgba(0, 0, 0, 0.12);
 						color: white;
 						margin-right: 5.5px;
 						transition: left, z-index;
@@ -270,7 +292,7 @@
 						}
 
 						&:last-child {
-							margin-right: 0;
+							margin-right: 0px;
 						}
 
 						&:first-child {

@@ -3,29 +3,32 @@
 	div.tools-menu-item-container {
 		display: flex;
 		flex-direction: column;
-		padding: 36px 0;
+		padding: 36px 0px;
 
 		div {
 			position: relative;
-			padding: 0 12px;
-			margin: 5px 0;
+			padding: 0px 12px;
+			margin: 5px 0px;
 
 			button {
-				margin: 0;
+				margin: 0px;
 				padding: 3px;
-				border: none;
+				border: noneone;
 				width: 24px;
 				height: 24px;
 				background: rgba(255, 255, 255, 0.25);
 				box-sizing: content-box;
 				outline: none;
-				&:disabled {
+
+&:disabled {
 					opacity: .6;
 				}
-				&.active {
+
+&.active {
 					background-color: rgb(41, 127, 155);
 				}
-				&:hover ~ span.tooltiptext {
+
+&:hover ~ span.tooltiptext {
 					visibility: visible;
 					opacity: 1;
 				}
@@ -35,9 +38,9 @@
 				visibility: hidden;
 				width: 120px;
 				background-color: black;
-				color: #fff;
+				color: #ffffff;
 				text-align: center;
-				padding: 5px 0;
+				padding: 5px 0px;
 				border-radius: 6px;
 				opacity: 0;
 
@@ -51,12 +54,13 @@
 			&.display-overlay-visualizer {
 				button {
 					opacity: 0.6;
-					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat center center;
+					background: rgba(255, 255, 255, 0.25) url('/assets/icons/tools/polygons.svg') no-repeat center center;
 				}
-				&.active {
+
+&.active {
 					opacity: 1;
-					button {
-					}
+
+
 				}
 			}
 
@@ -67,17 +71,14 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
-					span {
+
+span {
 						font-size: 22px;
 						color: white;
 					}
 				}
 
-				&.active {
-					button {
 
-					}
-				}
 			}
 		}
 	}

@@ -1,28 +1,30 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 div.menu-wrapper {
 	height: 100vh;
 	display: flex;
-	div.menu {
+
+div.menu {
 		position: relative;
-		background: #2E2D46;
+		background: #2e2d46;
 		flex-direction: column;
 		display: flex;
 		z-index: 2;
-		div.menu-btn {
+
+div.menu-btn {
 			position: relative;
 			text-align: center;
 			color: white;
 			text-decoration: none;
-			padding: 10px 0;
+			padding: 10px 0px;
 			cursor: pointer;
 			font-size: 0.9rem;
 
 			span.badge {
 				position: absolute;
-				background: #D0021B;
+				background: #d0021b;
 				right: 10px;
-				top: 0;
+				top: 0px;
 				width: 20px;
 				height: 20px;
 				border-radius: 100%;
@@ -30,37 +32,42 @@ div.menu-wrapper {
 			}
 
 			img {
-				margin: 0 auto 5px auto;
+				margin: 0px auto 5px auto;
 				display: block;
 			}
-			&:hover {
+
+&:hover {
 				background-color: @application-main-color;
 			}
-			&.active {
+
+&.active {
 				background-color: @application-main-color;
 			}
 		}
 	}
-	div.container {
+
+div.container {
 		position: relative;
 		background: @application-main-color;
 		width: auto;
 
 		button.close {
 			position: absolute;
-			right: 0;
+			right: 0px;
 			color: white;
-			border: none;
+			border: noneone;
 			background: transparent;
 			cursor: pointer;
 			outline: none;
 			z-index: 1;
-			&:hover {
+
+&:hover {
 				color: #2e2d46;
 			}
 		}
 	}
-	div.logo {
+
+div.logo {
 		position: absolute;
 		bottom: 10px;
 		width: 100%;

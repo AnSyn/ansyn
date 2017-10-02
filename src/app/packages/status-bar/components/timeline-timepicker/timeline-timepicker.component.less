@@ -1,22 +1,25 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 .time-row {
 	display: flex;
 	align-items: center;
-	margin: 6px 0;
-	span {
+	margin: 6px 0px;
+
+span {
 		color: black;
 		width: 75px;
 		display: inline-block;
 		white-space: pre;
 	}
-	button {
+
+button {
 		display: none;
 	}
-	button.time-row-button {
+
+button.time-row-button {
 		width: 155px;
 		height: 22px;
-		padding: 0;
+		padding: 0px;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
@@ -24,8 +27,9 @@
 		border: 1px solid dimgrey;
 		font-size: 12px;
 	}
-	input {
-		width: 0;
+
+input {
+		width: 0px;
 		opacity: 0;
 	}
 }
@@ -35,20 +39,25 @@
 	display: flex;
 	justify-content: space-between;
 	color: @application-main-color;
-	a {
+
+a {
 		cursor: pointer;
-		&:hover {
+
+&:hover {
 			font-weight: bold;
 		}
-		&:first-child {
+
+&:first-child {
 			margin-right: 9px;
 			width: 42px;
 		}
-		&:last-child {
+
+&:last-child {
 			width: 17px;
 		}
 	}
-	.error {
+
+.error {
 		color: crimson;
 	}
 

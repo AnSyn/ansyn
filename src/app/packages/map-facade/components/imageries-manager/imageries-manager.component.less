@@ -1,6 +1,6 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
-@height-minus-status: calc(~"100% - @{status-bar-height}");
+@height-minus-status: calc(~'100% - @{status-bar-height}');
 
 div.imageries-container {
 	position: relative;
@@ -29,11 +29,11 @@ div.imageries-container {
 		width: 100%;
 		height: 100%;
 		background: transparent;
-		top: 0;
-		left: 0;
+		top: 0px;
+		left: 0px;
 		box-sizing: border-box;
 		z-index: 4;
-		border: none;
+		border: noneone;
 		pointer-events: none;
 
 		&.active {
@@ -46,7 +46,8 @@ div.imageries-container {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			div.active-border {
+
+div.active-border {
 				display: none;
 			}
 		}
@@ -57,35 +58,42 @@ div.imageries-container {
 			position: relative;
 			width: 50%;
 			height: 100%;
-			div.active-border {
+
+div.active-border {
 				height: @height-minus-status;
 			}
 		}
 
 	}
-	&.layout3 {
+
+&.layout3 {
 		flex-direction: column;
-		div.map-container-wrapper {
+
+div.map-container-wrapper {
 			position: relative;
 			width: 100%;
 			height: 50%;
-			&:last-child {
+
+&:last-child {
 				div.active-border {
 					height: @height-minus-status;
 				}
 			}
 		}
 	}
-	&.layout4 {
+
+&.layout4 {
 		div.map-container-wrapper {
 			position: relative;
 			width: 50%;
 			height: 50%;
-			&:first-child {
+
+&:first-child {
 				width: 100%;
 				height: 50%;
 			}
-			&:not(:first-child) {
+
+&:not(:first-child) {
 				div.active-border {
 					height: @height-minus-status;
 				}
@@ -98,11 +106,14 @@ div.imageries-container {
 			position: relative;
 			width: 50%;
 			height: 50%;
-			&:first-child {
+
+&:first-child {
 				width: 50%;
 				height: 100%;
 			}
-			&:first-child, &:last-child {
+
+&:first-child,
+&:last-child {
 				div.active-border {
 					height: @height-minus-status;
 				}
@@ -110,12 +121,15 @@ div.imageries-container {
 		}
 		flex-direction: column;
 	}
-	&.layout6 {
+
+&.layout6 {
 		div.map-container-wrapper {
 			position: relative;
 			width: 50%;
 			height: 50%;
-			&:nth-child(3), &:nth-child(4) {
+
+&:nth-child(3),
+&:nth-child(4) {
 				div.active-border {
 					height: @height-minus-status;
 				}

@@ -59,13 +59,13 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.active_case_id, state.selected_case.id])
-		.mergeMap(([active_case_id, selected_case_id]) => {
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.modalCaseId, state.selected_case.id])
+		.mergeMap(([modalCaseId, selected_case_id]) => {
 			const actions: Action[] = [];
-			if (isEqual(active_case_id, selected_case_id)) {
+			if (isEqual(modalCaseId, selected_case_id)) {
 				actions.push(new LoadDefaultCaseAction());
 			}
-			actions.push(new DeleteCaseBackendAction(active_case_id));
+			actions.push(new DeleteCaseBackendAction(modalCaseId));
 			return actions;
 		}).share();
 

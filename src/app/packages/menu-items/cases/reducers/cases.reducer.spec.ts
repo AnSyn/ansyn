@@ -24,13 +24,13 @@ describe('CasesReducer', () => {
 		expect(result.cases).toEqual([new_case]);
 	});
 
-	it('OPEN_MODAL action should set active_case_id from payload and change modal to true', () => {
+	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
 		let action: OpenModalAction = new OpenModalAction({ component: 'fake', case_id: 'fake_case_id' });
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.modal).toBeTruthy();
 	});
 
-	it('CLOSE_MODAL action should change active_case_id to null and change modal to true', () => {
+	it('CLOSE_MODAL action should change modalCaseId to null and change modal to true', () => {
 		let action: CloseModalAction = new CloseModalAction();
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.modal).toBeFalsy();
@@ -51,7 +51,7 @@ describe('CasesReducer', () => {
 			{ id: 'id3', name: 'name3' }
 		];
 
-		state.active_case_id = 'id2';
+		state.modalCaseId = 'id2';
 
 		let new_case: Case = {
 			id: 'id2', name: 'name2 lastname2'
@@ -95,14 +95,14 @@ describe('CasesReducer', () => {
 		expect(result.cases.length).toEqual(6);
 	});
 
-	it('DELETE_CASE action should delete case from state.cases by active_case_id', () => {
+	it('DELETE_CASE action should delete case from state.cases by modalCaseId', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
 			{ id: 'id1', name: 'name1' },
 			{ id: 'id2', name: 'name2' },
 			{ id: 'id3', name: 'name3' }
 		];
-		state.active_case_id = 'id1';
+		state.modalCaseId = 'id1';
 		let action: DeleteCaseAction = new DeleteCaseAction();
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases.length).toEqual(2);

@@ -26,7 +26,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { CaseMapState } from '../../packages/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class ToolsAppEffects {

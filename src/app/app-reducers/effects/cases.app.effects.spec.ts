@@ -17,8 +17,8 @@ import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
-import { SelectCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
-import { Case } from '../../packages/core/models/case.model';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Case } from '@ansyn/core/models/case.model';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

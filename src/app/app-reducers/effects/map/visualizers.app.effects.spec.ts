@@ -24,7 +24,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

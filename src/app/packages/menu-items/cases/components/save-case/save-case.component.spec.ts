@@ -1,4 +1,4 @@
-import { SaveDefaultCaseAction } from '../../actions/cases.actions';
+import { SaveCaseAsAction } from '../../actions/cases.actions';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
@@ -54,10 +54,10 @@ describe('SaveCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('onSubmitCase should call dispatch with UpdateCaseAction and call close()', () => {
+	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
 		spyOn(component, 'close');
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveDefaultCaseAction(component.case_model));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(component.case_model));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

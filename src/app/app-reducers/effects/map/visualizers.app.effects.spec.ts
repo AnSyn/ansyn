@@ -19,11 +19,12 @@ import {
 	SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { AddCaseSuccessAction, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { SelectCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -79,7 +80,7 @@ describe('VisualizersAppEffects', () => {
 		effectsRunner = _effectsRunner;
 		imageryCommunicatorService = _imageryCommunicatorService;
 		store.dispatch(new AddCaseSuccessAction(selectedCase));
-		store.dispatch(new SelectCaseByIdAction(selectedCase.id));
+		store.dispatch(new SelectCaseAction(selectedCase));
 		store.dispatch(new SetMapsDataActionStore({
 			mapsList: selectedCase.state.maps.data,
 			activeMapId: selectedCase.state.maps.active_map_id

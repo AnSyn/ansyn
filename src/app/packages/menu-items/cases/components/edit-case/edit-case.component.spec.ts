@@ -4,15 +4,17 @@ import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs/Observable';
-import { CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { CasesService } from '../../services/cases.service';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
 	let fixture: ComponentFixture<EditCaseComponent>;
 	let store: Store<ICasesState>;
+	let casesService: CasesService;
 
 	let fake_iCasesState: ICasesState = {
 		cases: [
@@ -24,7 +26,6 @@ describe('EditCaseComponent', () => {
 		contexts: [],
 		contexts_loaded: true,
 		selected_case: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
-		default_case: { id: 'fake_id3', name: 'fake_name3', state: { selected_context_id: null } }
 	} as any;
 
 	beforeEach(async(() => {
@@ -35,11 +36,11 @@ describe('EditCaseComponent', () => {
 				StoreModule.provideStore({ cases: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
+			providers: [{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
+	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
 		spyOn(_store, 'select').and.callFake(() => Observable.of(fake_iCasesState));
 
@@ -47,6 +48,7 @@ describe('EditCaseComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		store = _store;
+		casesService = _casesService;
 	}));
 
 	it('should create', () => {
@@ -58,11 +60,25 @@ describe('EditCaseComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});
 
-	it('onSubmitCase should call dispatch with UpdateCaseAction and close()', () => {
-		spyOn(component, 'close');
-		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.case_model));
-		expect(component.close).toHaveBeenCalled();
+	describe('onSubmitCase', () => {
+		it('on editMode should call dispatch with UpdateCaseAction and close()', () => {
+			component.editMode = true;
+			spyOn(component, 'close');
+			component.onSubmitCase(0);
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.caseModel));
+			expect(component.close).toHaveBeenCalled();
+		});
+
+		it('on createMode should get case via selected context, dispatch AddCaseAction and close', () => {
+			component.editMode = false;
+			spyOn(component, 'close');
+			spyOn(casesService.queryParamsHelper, 'updateCaseViaContext').and.returnValue(component.caseModel);
+			component.contextsList = ['fakeContext' as any];
+			component.onSubmitCase(0);
+			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
+			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));
+			expect(component.close).toHaveBeenCalled();
+		});
 	});
 
 	describe('template', () => {

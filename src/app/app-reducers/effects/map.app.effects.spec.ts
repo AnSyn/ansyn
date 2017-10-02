@@ -32,7 +32,7 @@ import {
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
@@ -762,7 +762,7 @@ describe('MapAppEffects', () => {
 			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 
-			effectsRunner.queue(new SelectCaseByIdAction(icaseState.selected_case.id));
+			effectsRunner.queue(new SelectCaseAction(icaseState.selected_case));
 			const displayActions = [];
 			mapAppEffects.displayOverlayFromCase$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;

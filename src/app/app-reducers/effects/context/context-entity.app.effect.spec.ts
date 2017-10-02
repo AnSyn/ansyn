@@ -3,13 +3,13 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { ContextEntityAppEffects } from './context-entity.app.effect';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstacneAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { SelectCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -115,7 +115,7 @@ describe('ContextEntityAppEffects', () => {
 	});
 
 	it('displayEntityFromCase$ display context entity from selected case', () => {
-		effectsRunner.queue(new SelectCaseByIdAction('fakeCaseId'));
+		effectsRunner.queue(new SelectCaseAction(cases[0]));
 
 		contextEntityAppEffects.displayEntityFromCase$.subscribe();
 		expect(visualizer.setEntities['calls'].count()).toBe(3);
@@ -123,7 +123,7 @@ describe('ContextEntityAppEffects', () => {
 
 	it('displayEntityFromCase$ DOESN\'T display context entity from selected case if context entity isn\'t provided', () => {
 		cases[0].state.contextEntities = null;
-		effectsRunner.queue(new SelectCaseByIdAction('fakeCaseId'));
+		effectsRunner.queue(new SelectCaseAction(cases[0]));
 
 		contextEntityAppEffects.displayEntityFromCase$.subscribe();
 		expect(visualizer.setEntities).not.toHaveBeenCalled();

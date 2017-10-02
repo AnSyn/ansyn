@@ -17,7 +17,7 @@ export class CasesService {
 
 	static defaultCase: Case;
 
-	private queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
+	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	base_url;
 	paginationLimit = 15;
 	queryParamsKeys;

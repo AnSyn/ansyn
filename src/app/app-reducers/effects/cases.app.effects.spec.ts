@@ -2,13 +2,11 @@ import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import {
-	AddCaseAction,
 	AddCaseSuccessAction,
 	casesConfig,
 	CasesReducer,
 	CasesService,
 	ICasesState,
-	SaveDefaultCaseAction,
 	SelectCaseByIdAction
 } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
@@ -26,13 +24,34 @@ import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
+import { SelectCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
+import { Case } from '../../packages/core/models/case.model';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
 	let effectsRunner: EffectsRunner;
 	let casesService: CasesService;
 	let store: Store<any>;
-	let icase_state: ICasesState;
+	const selectedCase: Case = {
+		id: 'case1',
+		state: {
+			maps: {
+				active_map_id: '5555',
+				data: [
+					{
+						id: '5555',
+						data: {}
+
+					},
+					{
+						id: '4444',
+						data: {}
+					}
+				]
+			},
+			favoritesOverlays: ['2']
+		}
+	} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -55,43 +74,8 @@ describe('CasesAppEffects', () => {
 
 	beforeEach(inject([Store, casesConfig], (_store: Store<any>, casesConfig: any) => {
 		store = _store;
-
-		icase_state = {
-			cases: [{
-				id: 'case1',
-				state: {
-					maps: {
-						active_map_id: '5555',
-						data: [
-							{
-								id: '5555',
-								data: {}
-
-							},
-							{
-								id: '4444',
-								data: {}
-							}
-						]
-					},
-					favoritesOverlays: ['2']
-				}
-			}],
-			selected_case: {
-				id: 'case1',
-				index: 0
-
-			},
-			default_case: {
-				id: 'case1',
-				state: {
-					selected_overlays_ids: []
-				}
-			}
-		} as any;
-
-		store.dispatch(new AddCaseSuccessAction(icase_state.cases[0]));
-		store.dispatch(new SelectCaseByIdAction(icase_state.selected_case.id));
+		store.dispatch(new AddCaseSuccessAction(selectedCase));
+		store.dispatch(new SelectCaseAction(selectedCase));
 		store.dispatch(new LoadOverlaysSuccessAction([{
 			id: 'tmp',
 			name: 'tmp',
@@ -107,7 +91,7 @@ describe('CasesAppEffects', () => {
 	}));
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		effectsRunner.queue(new SelectCaseByIdAction(icase_state.selected_case.id));
+		effectsRunner.queue(new SelectCaseAction(selectedCase));
 		let count = 0;
 		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe((result: Action) => {
 			expect(result.type).toBe(FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION);
@@ -132,14 +116,5 @@ describe('CasesAppEffects', () => {
 		expect(MapFacadeService.activeMap(<any>{ ...result.payload, activeMapId }).data.overlay.id).toEqual('tmp');
 	});
 
-
-	it('saveDefaultCase$ should add a default case', () => {
-		effectsRunner.queue(new SaveDefaultCaseAction(icase_state.default_case));
-
-		casesAppEffects.saveDefaultCase$.subscribe((result: AddCaseAction) => {
-			expect(result instanceof AddCaseAction).toBeTruthy();
-			expect(result.payload).toEqual(icase_state.default_case);
-		});
-	});
 
 });

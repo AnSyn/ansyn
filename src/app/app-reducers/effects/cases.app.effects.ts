@@ -84,18 +84,6 @@ export class CasesAppEffects {
 		});
 
 	@Effect()
-	saveDefaultCase$: Observable<AddCaseAction> = this.actions$
-		.ofType(CasesActionTypes.SAVE_DEFAULT_CASE)
-		.map(toPayload)
-		.map((default_case: Case) => {
-
-			this.casesService.enhanceDefaultCase(default_case);
-			default_case.owner = 'Default Owner'; // TODO: replace with id from authentication service
-
-			return new AddCaseAction(default_case);
-		});
-
-	@Effect()
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)
 		.withLatestFrom(this.store$.select('cases'))

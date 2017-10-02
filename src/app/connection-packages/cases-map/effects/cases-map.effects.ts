@@ -16,14 +16,14 @@ export class CasesMapEffects {
 	onMapsDataChange$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases').pluck('selected_case'), this.store$.select('map'))
-		.map(([action, selected_case, mapState]: [any, Case, IMapState]) => {
+		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('map'))
+		.map(([action, selectedCase, mapState]: [any, Case, IMapState]) => {
 			const updatedCase = {
-				...selected_case,
+				...selectedCase,
 				state: {
-					...selected_case.state,
+					...selectedCase.state,
 					maps: {
-						...selected_case.state.maps,
+						...selectedCase.state.maps,
 						data: [...mapState.mapsList],
 						active_map_id: mapState.activeMapId
 					}

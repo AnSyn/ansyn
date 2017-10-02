@@ -195,7 +195,7 @@ describe('StatusBarAppEffects', () => {
 		});
 	});
 
-	it('selectCase$ should get layers_index, orientation, geoFilter and time from selected_case and return all update status-bar actions', () => {
+	it('selectCase$ should get layers_index, orientation, geoFilter and time from selectedCase and return all update status-bar actions', () => {
 		const layouts_index = 2;
 		const caseItem: Case = <any> {
 			id: '31b33526-6447-495f-8b52-83be3f6b55bd',

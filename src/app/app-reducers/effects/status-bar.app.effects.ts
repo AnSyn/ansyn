@@ -68,7 +68,7 @@ export class StatusBarAppEffects {
 			const value: boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				if (value) {
-					const point = getPointByPolygon(casesState.selected_case.state.region);
+					const point = getPointByPolygon(casesState.selectedCase.state.region);
 					const latLon = point.coordinates;
 					communicator.addPinPointIndicator(latLon);
 				} else {
@@ -82,7 +82,7 @@ export class StatusBarAppEffects {
 	onCopySelectedCaseLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
 		.withLatestFrom(this.store.select('cases'), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
-			return state.selected_case.id;
+			return state.selectedCase.id;
 		})
 		.map((case_id: string) => {
 			return new CopyCaseLinkAction(case_id);
@@ -92,18 +92,18 @@ export class StatusBarAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): Case => state.selected_case)
-		.filter((selected_case) => !isEmpty(selected_case))
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): Case => state.selectedCase)
+		.filter((selectedCase) => !isEmpty(selectedCase))
 		.cloneDeep()
-		.mergeMap((selected_case: Case) => {
-			const layouts_index = selected_case.state.maps.layouts_index;
+		.mergeMap((selectedCase: Case) => {
+			const layouts_index = selectedCase.state.maps.layouts_index;
 			return [
 				new ChangeLayoutAction(+layouts_index),
-				new SetOrientationAction(selected_case.state.orientation),
-				new SetGeoFilterAction(selected_case.state.geoFilter),
+				new SetOrientationAction(selectedCase.state.orientation),
+				new SetGeoFilterAction(selectedCase.state.geoFilter),
 				new SetTimeAction({
-					from: new Date(selected_case.state.time.from),
-					to: new Date(selected_case.state.time.to)
+					from: new Date(selectedCase.state.time.from),
+					to: new Date(selectedCase.state.time.to)
 				})
 			];
 		});
@@ -111,10 +111,10 @@ export class StatusBarAppEffects {
 	@Effect()
 	statusBarChanges$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER, StatusBarActionsTypes.SET_TIME)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): any[] => [action, state.selected_case])
-		.filter(([action, selected_case]) => !isEmpty(selected_case))
-		.mergeMap(([action, selected_case]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) => {
-			const updatedCase = cloneDeep(selected_case);
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): any[] => [action, state.selectedCase])
+		.filter(([action, selectedCase]) => !isEmpty(selectedCase))
+		.mergeMap(([action, selectedCase]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) => {
+			const updatedCase = cloneDeep(selectedCase);
 			const actions: Action[] = [new UpdateCaseAction(updatedCase)];
 
 			switch (action.constructor) {
@@ -153,7 +153,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
 		.ofType(StatusBarActionsTypes.FAVORITE)
-		.withLatestFrom(this.store.select('cases'), (action: Action, cases: ICasesState): Case => cloneDeep(cases.selected_case))
+		.withLatestFrom(this.store.select('cases'), (action: Action, cases: ICasesState): Case => cloneDeep(cases.selectedCase))
 		.filter((selectedCase: Case) => {
 			const activeMap = selectedCase.state.maps.data.find(item => item.id === selectedCase.state.maps.active_map_id);
 			return !isEmpty(activeMap.data.overlay);
@@ -199,7 +199,7 @@ export class StatusBarAppEffects {
 	onGoPrevNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
 		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
-			const activeMap = casesState.selected_case.state.maps.data.find(map => casesState.selected_case.state.maps.active_map_id === map.id);
+			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.active_map_id === map.id);
 			const overlayId = get(activeMap.data.overlay, 'id');
 			return [action.type, overlayId];
 		})

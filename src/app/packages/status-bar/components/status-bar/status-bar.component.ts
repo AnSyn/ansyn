@@ -64,7 +64,7 @@ export class StatusBarComponent implements OnInit {
 	overlays_count: number;
 	overlayNotInCase: boolean;
 
-	@Input() selected_case_name: string;
+	@Input() selectedCaseName: string;
 	@Input() overlay: any;
 	@Input() isFavoriteOverlayDisplayed = false;
 

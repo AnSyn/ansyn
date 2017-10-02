@@ -5,22 +5,22 @@ import { get as _get } from 'lodash';
 
 export interface ICasesState {
 	cases: Case[];
-	selected_case: Case;
+	selectedCase: Case;
 	modalCaseId: string;
 	modal: boolean;
 	contexts: Context[];
-	contexts_loaded: boolean;
-	updating_backend: boolean;
+	contextsLoaded: boolean;
+	updatingBackend: boolean;
 }
 
 export const initialCasesState: ICasesState = {
 	cases: [],
-	selected_case: null,
+	selectedCase: null,
 	modalCaseId: null,
 	modal: false,
 	contexts: [],
-	contexts_loaded: false,
-	updating_backend: false
+	contextsLoaded: false,
+	updatingBackend: false
 };
 
 
@@ -46,16 +46,16 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 
 		case CasesActionTypes.UPDATE_CASE: {
 			const active_case: Case = { ...action.payload, last_modified: new Date() };
-			const isSelectedCase = active_case.id === _get(state.selected_case, 'id');
+			const isSelectedCase = active_case.id === _get(state.selectedCase, 'id');
 			const caseIndex: number = state.cases.findIndex(({ id }) => id === active_case.id);
 			if (caseIndex > -1) {
 				const before = state.cases.slice(0, caseIndex);
 				const after = state.cases.slice(caseIndex + 1, state.cases.length);
 				const cases: Case[] = [...before, active_case, ...after];
-				return isSelectedCase ? { ...state, cases, selected_case: active_case } : { ...state, cases };
+				return isSelectedCase ? { ...state, cases, selectedCase: active_case } : { ...state, cases };
 			}
 			if (isSelectedCase) {
-				return { ...state, selected_case: active_case };
+				return { ...state, selectedCase: active_case };
 			}
 			/* No Case to update */
 			return { ...state };
@@ -63,10 +63,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND:
-			return Object.assign({}, state, { updating_backend: true });
+			return Object.assign({}, state, { updatingBackend: true });
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS:
-			return Object.assign({}, state, { updating_backend: false });
+			return Object.assign({}, state, { updatingBackend: false });
 
 		case CasesActionTypes.LOAD_CASES_SUCCESS:
 			let cases_loaded: Case[] = [
@@ -87,16 +87,16 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state, { cases });
 
 		case CasesActionTypes.DELETE_CASE_BACKEND:
-			return Object.assign({}, state, { updating_backend: true });
+			return Object.assign({}, state, { updatingBackend: true });
 
 		case CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS:
-			return Object.assign({}, state, { updating_backend: false });
+			return Object.assign({}, state, { updatingBackend: false });
 
 		case CasesActionTypes.SELECT_CASE:
-			return { ...state, selected_case: action.payload };
+			return { ...state, selectedCase: action.payload };
 
 		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
-			return Object.assign({}, state, { contexts: action.payload, contexts_loaded: true });
+			return Object.assign({}, state, { contexts: action.payload, contextsLoaded: true });
 
 		default:
 			return state;

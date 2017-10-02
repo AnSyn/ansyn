@@ -26,8 +26,8 @@ const animations: any[] = [
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('modal_content', { read: ViewContainerRef }) modal_content: ViewContainerRef;
-	modal$: Observable<boolean> = this.store.select <ICasesState> ('cases')
-		.pluck <ICasesState, boolean> ('modal')
+	modal$: Observable<boolean> = this.store.select <ICasesState>('cases')
+		.pluck <ICasesState, boolean>('modal')
 		.distinctUntilChanged();
 
 	modal: boolean;
@@ -64,3 +64,5 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		this.close();
 	}
+
+}

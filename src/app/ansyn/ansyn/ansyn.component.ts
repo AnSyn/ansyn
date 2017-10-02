@@ -21,9 +21,9 @@ import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 })
 
 export class AnsynComponent implements OnInit {
-	selected_case$: Observable<Case> = this.store.select('cases')
-		.pluck('selected_case')
-		.filter(selected_case => !_isNil(selected_case))
+	selectedCase$: Observable<Case> = this.store.select('cases')
+		.pluck('selectedCase')
+		.filter(selectedCase => !_isNil(selectedCase))
 		.distinctUntilChanged();
 
 	isPinned$ = this.store.select<IMenuState>('menu')
@@ -37,14 +37,14 @@ export class AnsynComponent implements OnInit {
 		.map(MapFacadeService.activeMap)
 		.filter(activeMap => !_isNil(activeMap));
 
-	selectedCaseName$: Observable<string> = this.selected_case$.pluck('name');
+	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
 
 	displayedOverlay$: any = this.activeMap$
 		.pluck('data')
 		.map((data: any) => data.overlay)
 		.distinctUntilChanged();
 
-	isFavoriteOverlay$ = this.selected_case$
+	isFavoriteOverlay$ = this.selectedCase$
 		.withLatestFrom(this.activeMap$)
 		.filter(([selectedCase]) => !_isNil(selectedCase.state.favoritesOverlays))
 		.distinctUntilChanged(([oldCase], [newCase]): boolean => _isEqual(oldCase.state.favoritesOverlays, newCase.state.favoritesOverlays))

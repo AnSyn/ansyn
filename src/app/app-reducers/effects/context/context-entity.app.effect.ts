@@ -33,18 +33,18 @@ export class ContextEntityAppEffects {
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
-		.filter(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.filter(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
-			this.setContextEntity(mapState.id, overlayDate, caseState.selected_case.state.contextEntities);
+			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);
 		});
 
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
-		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [DisplayOverlayAction, ICasesState, IMapState]) => {
 			const mapId = action.payload.map_id ? action.payload.map_id : mapStore.activeMapId;
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, mapId);
@@ -56,9 +56,9 @@ export class ContextEntityAppEffects {
 	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selected_case.state.contextEntities))
+		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState]: [BackToWorldAction, ICasesState]) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selected_case.state.maps.active_map_id;
+			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.active_map_id;
 			const communicatorHandler = this.communicatorService.provide(mapId);
 			this.setContextOverlayDate(communicatorHandler, null);
 		});

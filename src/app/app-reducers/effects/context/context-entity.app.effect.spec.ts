@@ -87,11 +87,11 @@ describe('ContextEntityAppEffects', () => {
 	/* store data mock */
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const selected_case = cases[0];
-		const icaseState = { cases, selected_case } as any;
+		const selectedCase = cases[0];
+		const icaseState = { cases, selectedCase } as any;
 		const iMapState = {
-			mapsList: selected_case.state.maps.data,
-			activeMapId: selected_case.state.maps.active_map_id
+			mapsList: selectedCase.state.maps.data,
+			activeMapId: selectedCase.state.maps.active_map_id
 		};
 		const fakeStore = { cases: icaseState, map: iMapState };
 

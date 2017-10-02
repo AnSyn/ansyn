@@ -33,7 +33,7 @@ export class FiltersAppEffects {
 					filterFunc: value.filterFunc
 				}));
 
-			const favorites = casesState.selected_case.state.favoritesOverlays;
+			const favorites = casesState.selectedCase.state.favoritesOverlays;
 
 			return new SetFiltersAction({
 				parsedFilters,
@@ -45,7 +45,7 @@ export class FiltersAppEffects {
 	@Effect()
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selected_case'))
+		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selectedCase'))
 		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
@@ -57,8 +57,8 @@ export class FiltersAppEffects {
 
 			let showAll = false;
 
-			if (casesState.selected_case.state.facets.filters.length === 0) {
-				showAll = casesState.selected_case.id === CasesService.defaultCase.id && this.casesService.contextValues.imageryCount === -1;
+			if (casesState.selectedCase.state.facets.filters.length === 0) {
+				showAll = casesState.selectedCase.id === CasesService.defaultCase.id && this.casesService.contextValues.imageryCount === -1;
 			}
 
 			// what is going here  ?? who updates the contextValues imageryCount  and why it is not in the store please add the correct remarks
@@ -66,7 +66,7 @@ export class FiltersAppEffects {
 				this.casesService.contextValues.imageryCount = -1;
 			}
 
-			return [overlaysArray, casesState.selected_case.state.facets, showAll];
+			return [overlaysArray, casesState.selectedCase.state.facets, showAll];
 		})
 		.map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
 			return new InitializeFiltersAction({ overlays, facets, showAll });
@@ -81,8 +81,8 @@ export class FiltersAppEffects {
 				private store$: Store<IAppState>, private casesService: CasesService) {
 	}
 
-	updateCaseFacets(selected_case: Case, filtersState: IFiltersState): Case {
-		const cloneSelectedCase: Case = cloneDeep(selected_case);
+	updateCaseFacets(selectedCase: Case, filtersState: IFiltersState): Case {
+		const cloneSelectedCase: Case = cloneDeep(selectedCase);
 		const { facets } = cloneSelectedCase.state;
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
 

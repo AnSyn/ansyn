@@ -20,7 +20,7 @@ export class CasesRouterEffects {
 		.map(toPayload)
 		.filter(({ caseId }) => _isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
-		.filter(([payload, cases]: [string, ICasesState]) => (_isEmpty(cases.selected_case) || !_isEqual(cases.selected_case.id, CasesService.defaultCase.id)))
+		.filter(([payload, cases]: [string, ICasesState]) => (_isEmpty(cases.selectedCase) || !_isEqual(cases.selectedCase.id, CasesService.defaultCase.id)))
 		.map(([{ queryParams }]) => new LoadDefaultCaseAction(queryParams));
 
 	@Effect()
@@ -29,7 +29,7 @@ export class CasesRouterEffects {
 		.map(toPayload)
 		.filter(({ caseId }) => !_isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
-		.filter(([payload, cases]) => payload !== _get(cases.selected_case, 'id'))
+		.filter(([payload, cases]) => payload !== _get(cases.selectedCase, 'id'))
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 
 	@Effect()

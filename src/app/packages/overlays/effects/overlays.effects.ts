@@ -104,7 +104,7 @@ export class OverlaysEffects {
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlayState, cases: ICasesState) => {
 			const displayedOverlay = overlays.overlays.get(action.payload.overlay.id);
 			const timelineState = overlays.timelineState;
-			const isActiveMap: boolean = _isNil(action.payload.map_id) || isEqual(cases.selected_case.state.maps.active_map_id, action.payload.map_id);
+			const isActiveMap: boolean = _isNil(action.payload.map_id) || isEqual(cases.selectedCase.state.maps.active_map_id, action.payload.map_id);
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {

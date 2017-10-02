@@ -26,9 +26,9 @@ export class OverlaysAppEffects {
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'))
-		.filter(([action, cases]: [Action, ICasesState]) => !isEmpty(cases.selected_case))
+		.filter(([action, cases]: [Action, ICasesState]) => !isEmpty(cases.selectedCase))
 		.map(([action, cases]: [Action, ICasesState]) => {
-			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selected_case);
+			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selectedCase);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 

@@ -1,18 +1,19 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 :host {
-	width: 0;
-	height: 0;
+	width: 0px;
+	height: 0px;
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 0px;
+	right: 0px;
 	transform: translate(100%);
 	background: @application-main-color;
 	visibility: hidden;
 	transition: .2s;
 	z-index: 2;
 	overflow: hidden;
-	&.expand {
+
+&.expand {
 		form {
 			visibility: visible;
 			display: flex;
@@ -22,20 +23,23 @@
 		width: 280px;
 		height: 190px;
 	}
-	button.close {
+
+button.close {
 		position: absolute;
-		right: 0;
+		right: 0px;
 		color: white;
-		border: none;
+		border: noneone;
 		background: transparent;
 		cursor: pointer;
 		outline: none;
 		z-index: 1;
-		&:hover {
+
+&:hover {
 			color: #2e2d46;
 		}
 	}
-	form {
+
+form {
 		opacity: 0;
 		transition: visibility 0s linear .2s;
 		visibility: hidden;
@@ -56,13 +60,14 @@
 
 			button.pin-location {
 				background: transparent;
-				border: none;
+				border: noneone;
 				color: white;
 				display: flex;
 				font-size: 14px;
 				align-items: center;
 				opacity: .7;
-				&.active {
+
+&.active {
 					opacity: 1;
 				}
 			}
@@ -70,12 +75,13 @@
 			button[type='submit'] {
 				border-radius: 2px;
 				width: 83px;
-				border: none;
-				background: #FFFFFF;
+				border: noneone;
+				background: #ffffff;
 				font-size: 14px;
 				color: #156879;
-				box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
-				&:disabled {
+				box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
+
+&:disabled {
 					opacity: .5;
 				}
 			}

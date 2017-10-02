@@ -1,4 +1,4 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 :host {
 	display: block;
@@ -10,7 +10,7 @@
 
 div.save-case {
 	background: white;
-	box-shadow: 0 0 13px 0 #2e2d46;
+	box-shadow: 0px 0px 13px 0px #2e2d46;
 	padding: 7%;
 	box-sizing: border-box;
 	width: 100%;
@@ -18,14 +18,15 @@ div.save-case {
 
 	button.close {
 		position: absolute;
-		right: 0;
-		top: 0;
-		border: none;
+		right: 0px;
+		top: 0px;
+		border: noneone;
 		background: transparent;
 		cursor: pointer;
 		outline: none;
 		color: #2e2d46;
-		&:hover {
+
+&:hover {
 			font-weight: bold;
 			text-decoration: underline;
 		}
@@ -38,25 +39,26 @@ div.save-case {
 
 		input {
 			font-size: 11px;
-			padding: 10px 0;
+			padding: 10px 0px;
 			display: block;
 			width: 100%;
-			border: none;
-			border-bottom: 1px solid #999;
+			border: noneone;
+			border-bottom: 1px solid #999999;
 			color: @application-main-color;
-			-webkit-text-fill-color: #999;
+			-webkit-text-fill-color: #999999;
 		}
-		input:focus {
+
+input:focus {
 			outline: none;
 			border-color: @application-main-color;
 		}
 
 		label {
-			color: #999;
+			color: #999999;
 			font-weight: normal;
 			position: absolute;
 			pointer-events: none;
-			left: 0;
+			left: 0px;
 			top: 11px;
 			transition: 0.2s ease all;
 			-moz-transition: 0.2s ease all;
@@ -65,7 +67,8 @@ div.save-case {
 
 		}
 
-		input:focus ~ label, input:valid ~ label {
+		input:focus ~ label,
+input:valid ~ label {
 			top: -10px;
 			font-size: 11px;
 			color: @application-main-color;
@@ -75,10 +78,12 @@ div.save-case {
 			position: relative;
 			display: block;
 			width: 100%;
-			&:before, &:after {
+
+&:before,
+&:after {
 				content: '';
 				height: 1px;
-				width: 0;
+				width: 0px;
 				bottom: 1px;
 				position: absolute;
 				background: @application-main-color;
@@ -86,15 +91,18 @@ div.save-case {
 				-moz-transition: 0.2s ease all;
 				-webkit-transition: 0.2s ease all;
 			}
-			&:before {
+
+&:before {
 				left: 50%;
 			}
-			&:after {
+
+&:after {
 				right: 50%;
 			}
 		}
 
-		input:focus ~ .bar:before, input:focus ~ .bar:after {
+		input:focus ~ .bar:before,
+input:focus ~ .bar:after {
 			width: 50%;
 			height: 2px;
 		}
@@ -105,7 +113,7 @@ div.save-case {
 			height: 60%;
 			width: 100px;
 			top: 25%;
-			left: 0;
+			left: 0px;
 			pointer-events: none;
 			opacity: 0.5;
 		}
@@ -118,73 +126,84 @@ div.save-case {
 
 		@-webkit-keyframes inputHighlighter {
 			from {
-				background: #5264AE;
+				background: #5264ae;
 			}
-			to {
-				width: 0;
+
+to {
+				width: 0px;
 				background: transparent;
 			}
 		}
-		@-moz-keyframes inputHighlighter {
+
+@-moz-keyframes inputHighlighter {
 			from {
-				background: #5264AE;
+				background: #5264ae;
 			}
-			to {
-				width: 0;
+
+to {
+				width: 0px;
 				background: transparent;
 			}
 		}
-		@keyframes inputHighlighter {
+
+@keyframes inputHighlighter {
 			from {
-				background: #5264AE;
+				background: #5264ae;
 			}
-			to {
-				width: 0;
+
+to {
+				width: 0px;
 				background: transparent;
 			}
 		}
 
 		div.select-context {
 			display: flex;
-			margin: 15px 0;
+			margin: 15px 0px;
 
 			h4 {
-				margin: 0 15px 0 0;
+				margin: 0px 15px 0px 0px;
 
 			}
-			select {
+
+select {
 				outline: none;
 				cursor: pointer;
-				margin: 0 0 0 15px;
+				margin: 0px 0px 0px 15px;
 				width: 100%;
-				background: #F7F7F7;
+				background: #f7f7f7;
 				border: 0.5px solid rgba(0, 0, 0, 0.1);
 				box-sizing: border-box;
-				box-shadow: 0 1px 1px rgba(0, 0, 0, 0.314764);
-				font-family: "Open Sans";
+				box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.314764);
+				font-family: 'Open Sans';
 				font-style: normal;
 				font-weight: normal;
 				font-size: 11px;
 				color: rgba(0, 0, 0, 0.75);
 				text-align: center;
-				option {
+
+option {
 					text-align: center;
 				}
-				&:disabled {
+
+&:disabled {
 					opacity: .5;
 					cursor: default;
 				}
 			}
 		}
-		.bottom-btns {
+
+.bottom-btns {
 			display: flex;
 			justify-content: flex-end;
-			button {
+
+button {
 				cursor: pointer;
 				background: transparent;
-				border: none;
+				border: noneone;
 				color: @application-main-color;
-				&:hover {
+
+&:hover {
 					font-weight: bold;
 				}
 			}

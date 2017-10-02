@@ -1,14 +1,14 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 @tools-box-width: 290px;
 @tools-box-height: 46px;
 
 :host {
-	width: 0;
+	width: 0px;
 	height: @tools-box-height;
 	position: absolute;
 	top: -7px;
-	right: 0;
+	right: 0px;
 	transform: translateX(100%);
 	background: @application-main-color;
 	//v
@@ -22,50 +22,58 @@
 		width: @tools-box-width;
 		height: @tools-box-height;
 		transition-delay: 0.1s;
-		.annotations-options {
+
+.annotations-options {
 			visibility: visible;
 			transition-delay: 0.1s;
 		}
 
 	}
-	ul.annotations-options {
+
+ul.annotations-options {
 		transition-delay: 0.05s;
 		visibility: hidden;
 		display: flex;
 		align-items: center;
-		padding: 0;
-		margin: 0;
+		padding: 0px;
+		margin: 0px;
 		height: @tools-box-height;
-		& > li {
+
+& > li {
 			list-style-type: none;
 
 			span {
 				color: white;
 				font-size: 35px;
 			}
-			&.spliter {
+
+&.spliter {
 				display: flex;
 				align-items: center;
 				height: 100%;
-				margin: 0 4px;
-				div {
+				margin: 0px 4px;
+
+div {
 					height: 70%;
 					border: 1px solid black;
 					opacity: 0.4;
 				}
 
 			}
-			&:last-child {
+
+&:last-child {
 				padding-right: 2px;
 			}
-			button {
+
+button {
 				background: transparent;
-				padding: 0;
-				border: none;
-				outline: 0 none;
+				padding: 0px;
+				border: noneone;
+				outline: 0px none;
 			}
 		}
-		li.expanded-selection {
+
+li.expanded-selection {
 			position: relative;
 
 			ul {
@@ -74,15 +82,16 @@
 				position: absolute;
 				top: 41px;
 				left: -4px;
-				height: 0;
+				height: 0px;
 				overflow: hidden;
-				padding: 0;
-				margin: 0;
+				padding: 0px;
+				margin: 0px;
 
 				text-align: center;
 				transition: height 0.3s;
 				background: @application-main-color;
-				& > li {
+
+& > li {
 					list-style-type: none;
 					border: 1px solid white;
 					cursor: pointer;
@@ -91,31 +100,38 @@
 					padding: 4px;
 
 				}
-				&.line-width-expand {
+
+&.line-width-expand {
 					width: 41px;
 				}
-				&.line-width-expand:focus {
+
+&.line-width-expand:focus {
 					height: 203px;
 				}
-				&.color-selection-expand {
+
+&.color-selection-expand {
 					width: 80px;
 					left: -45px;
-					input {
+
+input {
 						display: none;
 					}
-					li {
+
+li {
 						span.color {
 							display: inline-block;
 							width: 10px;
 							height: 10px;
 						}
-						span.text {
+
+span.text {
 							font-size: 14px;
 						}
 
 					}
 				}
-				&.color-selection-expand.open {
+
+&.color-selection-expand.open {
 					height: 59px;
 				}
 			}

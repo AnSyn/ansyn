@@ -1,28 +1,30 @@
 @status-color: rgba(0, 0, 0, 0.70);
 @timeline-color: #557f86;
 @status-bar-height: 35px;
-@application-main-color: #27B2CF;
+@application-main-color: #27b2cf;
 
 .tooltip-value {
 	&.bottom {
 		&:after {
 			top: auto;
-			bottom: 0;
+			bottom: 0px;
 			transform: translate(0, 100%);
 		}
-		&:hover:after {
-			transform: translate(0, calc(~"100% + 15px"));
+
+&:hover:after {
+			transform: translate(0, calc(~'100% + 15px'));
 		}
 	}
 
 	&.right {
 		&:after {
 			left: auto;
-			right: 0;
+			right: 0px;
 			transform: translate(100%, 0);
 		}
-		&:hover:after {
-			transform: translate(calc(~"100% + 15px"), 0);
+
+&:hover:after {
+			transform: translate(calc(~'100% + 15px'), 0);
 		}
 	}
 
@@ -30,8 +32,9 @@
 		&:after {
 			transform: translate(-100%, 0);
 		}
-		&:hover:after {
-			transform: translate(calc(~"-100% - 15px"), 0);
+
+&:hover:after {
+			transform: translate(calc(~'-100% - 15px'), 0);
 		}
 	}
 
@@ -40,12 +43,12 @@
 		position: absolute;
 		content: attr(value);
 		padding: 5px;
-		left: 0;
-		top: 0;
+		left: 0px;
+		top: 0px;
 		background: black;
 		transition: visibility .3s, transform .3s, opacity .3s;
 		visibility: hidden;
-		color: #fff;
+		color: #ffffff;
 		text-align: center;
 		border-radius: 6px;
 		z-index: 2;
@@ -56,7 +59,7 @@
 		&:after {
 			opacity: 1;
 			visibility: visible;
-			transform: translate(0, calc(~"-100% - 15px"));
+			transform: translate(0, calc(~'-100% - 15px'));
 		}
 	}
 

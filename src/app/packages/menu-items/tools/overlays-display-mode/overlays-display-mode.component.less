@@ -1,16 +1,17 @@
 :host {
-	width: 0;
-	height: 0;
+	width: 0px;
+	height: 0px;
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 0px;
+	right: 0px;
 	transform: translate(100%);
 	background: #1c8094;
 	visibility: hidden;
 	transition: .2s;
 	z-index: 2;
 	overflow: hidden;
-	&.expand {
+
+&.expand {
 		form {
 			visibility: visible;
 			opacity: 1;
@@ -22,7 +23,7 @@
 
 	.switch-field {
 		display: flex;
-		font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+		font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
 		overflow: hidden;
 	}
 
@@ -51,14 +52,15 @@
 		text-shadow: none;
 		padding: 2px 6px;
 		border: 1px solid rgba(0, 0, 0, 0.2);
-		-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-		box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+		-webkit-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 1px rgba(255, 255, 255, 0.1);
+		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 1px rgba(255, 255, 255, 0.1);
 		-webkit-transition: all 0.1s ease-in-out;
 		-moz-transition: all 0.1s ease-in-out;
 		-ms-transition: all 0.1s ease-in-out;
 		-o-transition: all 0.1s ease-in-out;
 		transition: all 0.1s ease-in-out;
-		&:hover {
+
+&:hover {
 			cursor: pointer;
 		}
 	}
@@ -71,16 +73,13 @@
 
 	.switch-field input:disabled + label {
 		opacity: 0.6;
-		&:hover {
+
+&:hover {
 			cursor: default;
 		}
 	}
 
-	.switch-field label:first-of-type {
-		//border-radius: 4px 0 0 4px;
-	}
 
-	.switch-field label:last-of-type {
-		//border-radius: 0 4px 4px 0;
-	}
+
+
 }

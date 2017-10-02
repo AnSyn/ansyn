@@ -5,13 +5,14 @@
 div.status {
 	position: absolute;
 	width: 100%;
-	top: 0;
+	top: 0px;
 	text-align: center;
 	background: rgba(3, 1, 6, 0.36);
 	z-index: 1;
 	padding: 7px 5px;
 	box-sizing: border-box;
-	&.active {
+
+&.active {
 		background: rgba(3, 1, 6, 0.66);
 	}
 
@@ -20,14 +21,17 @@ div.status {
 .status-container {
 	display: flex;
 	justify-content: space-between;
-	.status-bar-title {
+
+.status-bar-title {
 		display: flex;
 		width: 100%;
 		justify-content: center;
-		div.sensor-and-date {
+
+div.sensor-and-date {
 			display: flex;
 			justify-content: center;
-			span.sensor-name {
+
+span.sensor-name {
 				display: block;
 				max-width: 100px;
 				white-space: nowrap;
@@ -39,8 +43,8 @@ div.status {
 
 	.left-buttons-container {
 		position: absolute;
-		left: 0;
-		top: 0;
+		left: 0px;
+		top: 0px;
 		display: flex;
 		height: 100%;
 		align-items: center;
@@ -49,7 +53,7 @@ div.status {
 			width: 160px;
 			background: black;
 			color: white;
-			border: none;
+			border: noneone;
 			cursor: pointer;
 			align-self: center;
 		}
@@ -59,9 +63,9 @@ div.status {
 			align-self: center;
 			margin-left: 2px;
 			background: transparent;
-			border: none;
+			border: noneone;
 			outline: none;
-			padding: 0;
+			padding: 0px;
 
 			&:hover:not(:disabled) {
 				opacity: 1;
@@ -78,7 +82,7 @@ div.status {
 		}
 
 		button.active {
-			box-shadow: inset 0 0 2px #FFFFFF;
+			box-shadow: inset 0px 0px 2px #ffffff;
 		}
 	}
 }

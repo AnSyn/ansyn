@@ -1,12 +1,14 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 :host {
 	margin-right: 5px;
 	display: flex;
-	&.disabled {
+
+&.disabled {
 		opacity: 0.5;
 	}
-	input {
+
+input {
 		label {
 			display: inline;
 		}
@@ -17,8 +19,8 @@
 	}
 
 	input.regular-checkbox + label {
-		border: 1px solid #C9C9C9;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
+		border: 1px solid #c9c9c9;
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
 		padding: 9px;
 		border-radius: 3px;
 		display: inline-block;
@@ -26,24 +28,24 @@
 	}
 
 	input.regular-checkbox:hover + label:hover {
-		border: 1px solid #FFFFFF;
+		border: 1px solid #ffffff;
 	}
 
 	input.regular-checkbox + label:active {
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 	}
 
 	input.regular-checkbox:checked + label {
-		background-color: #FFFFFF;
-		border: 1px solid #FFFFFF;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-		color: #FFFFFF;
+		background-color: #ffffff;
+		border: 1px solid #ffffff;
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+		color: #ffffff;
 
 		&:after {
 			content: '\2714';
 			font-size: 14px;
 			position: absolute;
-			top: 0;
+			top: 0px;
 			left: 3px;
 			color: @application-main-color;
 		}

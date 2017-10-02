@@ -1,4 +1,4 @@
-@import "~@ansyn/core/less/common";
+@import '~@ansyn/core/less/common';
 
 @share-link-padding-bottom: 20px;
 
@@ -17,24 +17,28 @@ div.status-bar-container {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0 10px;
+		padding: 0px 10px;
 		box-sizing: border-box;
 		z-index: 1;
-		button {
+
+button {
 			outline: none;
 			width: 24px;
 			height: 24px;
-			background: #D8D8D8;
-			border: none;
-			padding: 0;
-			&.expand {
+			background: #d8d8d8;
+			border: noneone;
+			padding: 0px;
+
+&.expand {
 				background: transparent;
 			}
-			&:active {
-				box-shadow: 0 0 2px 2px #666;
+
+&:active {
+				box-shadow: 0px 0px 2px 2px #666666;
 			}
-			&.active {
-				box-shadow: 0 0 2px 2px #666;
+
+&.active {
+				box-shadow: 0px 0px 2px 2px #666666;
 			}
 		}
 	}
@@ -45,7 +49,7 @@ div.status-bar-container {
 		width: 100%;
 		display: flex;
 		box-sizing: border-box;
-		padding: 0 5px;
+		padding: 0px 5px;
 		justify-content: flex-end;
 		align-items: center;
 		font-size: 14px;
@@ -60,18 +64,19 @@ div.status-bar-container {
 				margin-left: 7px;
 				align-self: center;
 				position: absolute;
-				left: 0;
-				button {
+				left: 0px;
+
+button {
 					width: 160px;
 					background: black;
 					color: white;
-					border: none;
+					border: noneone;
 					line-height: 20px;
 				}
 			}
 
 			button.active {
-				box-shadow: inset 0 0 2px #FFFFFF;
+				box-shadow: inset 0px 0px 2px #ffffff;
 			}
 		}
 
@@ -82,10 +87,12 @@ div.status-bar-container {
 			justify-content: center;
 			flex-direction: column;
 		}
-		.overlays-count {
+
+.overlays-count {
 			min-width: 54px;
 		}
-		.layout-item {
+
+.layout-item {
 			div.pop-hover {
 				visibility: hidden;
 				opacity: 0;
@@ -95,26 +102,31 @@ div.status-bar-container {
 				transform: translate(0, -100%);
 				top: 3px;
 				padding-bottom: @share-link-padding-bottom;
-				margin: 0 -5px;
-				.pop-hover-content {
+				margin: 0px -5px;
+
+.pop-hover-content {
 					transform: translate(0, @share-link-padding-bottom);
 					transition: .4s;
 					display: flex;
 				}
-				&.visible {
+
+&.visible {
 					visibility: visible;
 					opacity: 1;
-					div.pop-hover-content {
+
+div.pop-hover-content {
 						transform: translate(0, 0);
 					}
 				}
 
 			}
-			&.pop-on-hover:hover {
+
+&.pop-on-hover:hover {
 				div.pop-hover {
 					visibility: visible;
 					opacity: 1;
-					div.pop-hover-content {
+
+div.pop-hover-content {
 						transform: translate(0, 0);
 					}
 				}
@@ -131,7 +143,7 @@ div.status-bar-container {
 
 			div.selected-case {
 				padding: 5px;
-				margin: 0;
+				margin: 0px;
 				transition: .4s;
 
 				span.name {
@@ -143,16 +155,17 @@ div.status-bar-container {
 
 				img {
 					height: 14px;
-					margin: -1px 4px 0 0;
+					margin: -1px 4px 0px 0px;
 				}
-				div.pop-hover {
+
+div.pop-hover {
 
 					.pop-hover-content {
 
 						button.share-link {
 							padding: 5px;
 							background: black;
-							color: #fff;
+							color: #ffffff;
 							text-align: center;
 							border-radius: 6px;
 							border: solid black 1px;
@@ -183,72 +196,83 @@ div.status-bar-container {
 		}
 
 		div.layout-item {
-			margin: 0 5px;
+			margin: 0px 5px;
 			display: flex;
 			align-items: center;
-			&.selection-combobox {
+
+&.selection-combobox {
 				img {
-					margin: 0;
+					margin: 0px;
 				}
-				.status-bar-world-icon {
+
+.status-bar-world-icon {
 					margin-right: 3px;
 					padding-top: 5px;
 				}
-				.status-bar-edit-icon {
+
+.status-bar-edit-icon {
 					opacity: 0.5;
 
 					&.active {
 						opacity: 1;
 					}
-					img {
+
+img {
 						height: 16px;
 					}
 				}
-				.status-bar-eye-icon {
+
+.status-bar-eye-icon {
 					opacity: 0.5;
 					padding-top: 4px;
-					&.active {
+
+&.active {
 						opacity: 1;
 					}
-					img {
+
+img {
 						height: 14px;
 					}
 				}
-				.status-bar-orientation-icon {
+
+.status-bar-orientation-icon {
 					img {
 						margin-top: 5px;
 						margin-right: 4px;
 					}
 				}
-				.status-bar-calender-icon {
+
+.status-bar-calender-icon {
 					margin-right: 3px;
 					padding-top: 6px;
-					img {
 
-					}
+
 				}
-				.layout-combobox {
+
+.layout-combobox {
 					img {
 						hegiht: 14px;
 						margin-right: 4px;
 					}
 
 				}
-				&.type-selection {
 
-				}
-				&.geo-selection {
+
+
+&.geo-selection {
 					.status-bar-edit-icon {
 						padding-top: 3px;
-						margin: 0 2px 0 3px;
+						margin: 0px 2px 0px 3px;
 					}
 				}
-				&.time-selection {
+
+&.time-selection {
 					.status-bar-edit-icon {
 						padding-top: 4px;
-						margin: 0 0 0 8px;
+						margin: 0px 0px 0px 8px;
 					}
-					.pop-hover-content {
+
+.pop-hover-content {
 						background: white;
 						width: 230px;
 						height: 97px;
@@ -270,17 +294,17 @@ div.status-bar-container {
 			background: black;
 			color: white;
 			font-size: 12px;
-			option {
+
+option {
 				&:before {
-					content: "";
+					content: '';
 					position: fixed;
 					width: 200px;
 					height: 200px;
 					background: red;
 				}
-				div {
 
-				}
+
 			}
 		}
 	}

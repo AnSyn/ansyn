@@ -69,10 +69,8 @@ export class AnsynComponent implements OnInit {
 		});
 
 		this.displayedOverlay$
-			.withLatestFrom(this.selected_case$)
-			.filter(([overlay, selectedCase]: [Overlay, Case]) => {
-				return Boolean(selectedCase);
-			})
+			.withLatestFrom(this.selectedCase$)
+			.filter(([overlay, selectedCase]: [Overlay, Case]) => Boolean(selectedCase))
 			.subscribe(([overlay, selectedCase]: [Overlay, Case]) => {
 				this.displayedOverlay = overlay;
 				if (Boolean(overlay)) {

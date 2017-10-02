@@ -91,6 +91,8 @@ describe('ToolsAppEffects', () => {
 		store = _store;
 		const selectedCase = cases[0];
 		icaseState = cloneDeep({ cases, selectedCase }) as any;
+		imapState.mapsList = selectedCase.state.maps.data;
+		imapState.activeMapId = selectedCase.state.maps.active_map_id;
 		const fakeStore = { cases: icaseState, map: imapState };
 
 		spyOn(store, 'select').and.callFake(type => {
@@ -210,6 +212,9 @@ describe('ToolsAppEffects', () => {
 
 	describe('onDisplayOverlaySuccess', () => {
 		it('onDisplayOverlaySuccess with image processing as true should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.isAutoImageProcessingActive = true;
+
 			effectsRunner.queue(new DisplayOverlaySuccessAction({ id: 'id' }));
 
 			let result = null;
@@ -271,9 +276,8 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const mapId = icaseState.selectedCase.state.maps.active_map_id;
-		const active_map = icaseState.selectedCase.state.maps.data.find((map) => map.id === mapId);
-		active_map.data.isAutoImageProcessingActive = false;
+		const activeMap = MapFacadeService.activeMap(imapState);
+		activeMap.data.isAutoImageProcessingActive = false;
 
 		effectsRunner.queue(new DisplayOverlaySuccessAction({ id: 'id' }));
 

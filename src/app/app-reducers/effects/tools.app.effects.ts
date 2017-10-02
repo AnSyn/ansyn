@@ -37,9 +37,9 @@ export class ToolsAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)
-		.filter(activeMap => !_isNil(activeMap))
+		.filter(activeMap => Boolean(activeMap))
 		.mergeMap((activeMap) => {
-			if (_isNil(activeMap.data.overlay)) {
+			if (!activeMap.data.overlay) {
 				return [new DisableImageProcessing()];
 			} else {
 				return [
@@ -81,13 +81,14 @@ export class ToolsAppEffects {
 		.withLatestFrom(this.store$.select('map'), (action: DisplayOverlaySuccessAction, mapState: IMapState): IMapState => mapState)
 		.map <IMapState, CaseMapState>(MapFacadeService.activeMap)
 		.mergeMap((activeMap: CaseMapState) => {
+			const { isAutoImageProcessingActive } = activeMap.data;
 			return [
 				new EnableImageProcessing(),
 				new SetMapAutoImageProcessing({
 					mapId: activeMap.id,
-					toggle_value: activeMap.data.isAutoImageProcessingActive
+					toggle_value: isAutoImageProcessingActive
 				}),
-				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
+				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 			];
 		});
 

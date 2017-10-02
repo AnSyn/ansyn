@@ -108,13 +108,17 @@ export class FiltersEffects {
 				return FilterMetadatas.find((item) => item.type === filterType);
 			};
 		})();
+
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = facets
-			&& facets.filters.find(field => {
-				return field.fieldName === filter.modelName;
-			});
+		if (facets && !facets.filters) {
+			facets.filters = [];
+		}
+
+		const currentFilterInit = facets.filters.find(field => {
+			return field.fieldName === filter.modelName;
+		});
 
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata);
 

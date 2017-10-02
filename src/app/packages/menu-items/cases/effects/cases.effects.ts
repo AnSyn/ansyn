@@ -59,10 +59,10 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.modalCaseId, state.selected_case.id])
-		.mergeMap(([modalCaseId, selected_case_id]) => {
+		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
+		.mergeMap(([modalCaseId, selectedCaseId]) => {
 			const actions: Action[] = [];
-			if (isEqual(modalCaseId, selected_case_id)) {
+			if (isEqual(modalCaseId, selectedCaseId)) {
 				actions.push(new LoadDefaultCaseAction());
 			}
 			actions.push(new DeleteCaseBackendAction(modalCaseId));
@@ -192,7 +192,7 @@ export class CasesEffects {
 	onSelectCaseById$: Observable<SelectCaseAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store.select('cases'))
-		.filter(([action, casesState]: [SelectCaseByIdAction, ICasesState]) => !casesState.selected_case || (casesState.selected_case.id !== action.payload))
+		.filter(([action, casesState]: [SelectCaseByIdAction, ICasesState]) => !casesState.selectedCase || (casesState.selectedCase.id !== action.payload))
 		.map(([action, casesState]: [SelectCaseByIdAction, ICasesState]) => {
 			let sCase = casesState.cases.find(({ id }) => id === action.payload);
 			return new SelectCaseAction(sCase);

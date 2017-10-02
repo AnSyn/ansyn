@@ -36,11 +36,11 @@ describe('CasesReducer', () => {
 		expect(result.modal).toBeFalsy();
 	});
 
-	it('SELECT_CASE action should set selected_case from payload', () => {
+	it('SELECT_CASE action should set selectedCase from payload', () => {
 		const fakeCase = { id: 'fakeCaseId' } as Case;
 		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selected_case).toEqual(fakeCase);
+		expect(result.selectedCase).toEqual(fakeCase);
 	});
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
@@ -62,20 +62,20 @@ describe('CasesReducer', () => {
 		expect(result.cases[1].name).toEqual('name2 lastname2');
 	});
 
-	it('UPDATE_CASE_BACKEND action should change updating_backend to "true" ', () => {
+	it('UPDATE_CASE_BACKEND action should change updatingBackend to "true" ', () => {
 		const state: ICasesState = initialCasesState;
 		const case_payload: Case = { id: '6' };
 		let action: UpdateCaseBackendAction = new UpdateCaseBackendAction(case_payload);
 		let result: ICasesState = CasesReducer(state, action);
-		expect(result.updating_backend).toBeTruthy();
+		expect(result.updatingBackend).toBeTruthy();
 	});
 
-	it('UPDATE_CASE_BACKEND_SUCCESS action should change updating_backend to "false" ', () => {
+	it('UPDATE_CASE_BACKEND_SUCCESS action should change updatingBackend to "false" ', () => {
 		const state: ICasesState = initialCasesState;
 		const case_payload: Case = { id: '6' };
 		let action: UpdateCaseBackendSuccessAction = new UpdateCaseBackendSuccessAction(case_payload);
 		let result: ICasesState = CasesReducer(state, action);
-		expect(result.updating_backend).toBeFalsy();
+		expect(result.updatingBackend).toBeFalsy();
 	});
 
 	it('LOAD_CASES_SUCCESS action should add cases from payload to state.cases', () => {

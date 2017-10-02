@@ -45,7 +45,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.withLatestFrom(this.store$.select('cases').pluck('selected_case'))
+		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'))
 		.map(([action, selectedCase]: [HoverFeatureTriggerAction, Case]) => {
 			const markups = CasesService.getOverlaysMarkup(selectedCase, action.payload.id);
 			return new OverlaysMarkupAction(markups);
@@ -116,7 +116,7 @@ export class VisualizersAppEffects {
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
-			return [overlaysState, casesState.selected_case];
+			return [overlaysState, casesState.selectedCase];
 		})
 		.map(([overlaysState, selectedCase]: [IOverlayState, Case]) => {
 			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
@@ -158,7 +158,7 @@ export class VisualizersAppEffects {
 		.withLatestFrom(this.store$.select('cases'))
 
 		.map(([action, cases]: [Action, ICasesState]) => {
-			const selectedCase: Case = _cloneDeep(cases.selected_case);
+			const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
 			let releventMapsIds = [];
 

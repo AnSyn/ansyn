@@ -65,24 +65,24 @@ export class CasesService {
 		return this.http.get(url);
 	}
 
-	createCase(selected_case: Case): Observable<Case> {
+	createCase(selectedCase: Case): Observable<Case> {
 		const url = `${this.base_url}`;
-		return this.http.post<Case>(url, selected_case);
+		return this.http.post<Case>(url, selectedCase);
 	}
 
-	wrapUpdateCase(selected_case: Case): Observable<Case> {
+	wrapUpdateCase(selectedCase: Case): Observable<Case> {
 		return Observable.create(observer => observer.next(Date.now()))
 			.debounceTime(this.config.updateCaseDebounceTime)
-			.switchMap(() => this.updateCase(selected_case));
+			.switchMap(() => this.updateCase(selectedCase));
 	}
 
-	updateCase(selected_case: Case): Observable<Case> {
+	updateCase(selectedCase: Case): Observable<Case> {
 		const url = `${this.base_url}`;
-		return this.http.put<Case>(url, selected_case);
+		return this.http.put<Case>(url, selectedCase);
 	}
 
-	removeCase(selected_case_id: string): Observable<any> {
-		const url = `${this.base_url}/${selected_case_id}`;
+	removeCase(selectedCaseId: string): Observable<any> {
+		const url = `${this.base_url}/${selectedCaseId}`;
 		return this.http.delete(url);
 	}
 
@@ -91,8 +91,8 @@ export class CasesService {
 		return this.http.get(url);
 	}
 
-	loadCase(selected_case_id: string): Observable<any> {
-		const url = `${this.base_url}/${selected_case_id}`;
+	loadCase(selectedCaseId: string): Observable<any> {
+		const url = `${this.base_url}/${selectedCaseId}`;
 		return this.http.get(url);
 
 	}

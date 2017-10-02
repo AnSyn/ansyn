@@ -117,7 +117,7 @@ describe('OverlaysAppEffects', () => {
 			}
 			if (type === 'cases') {
 				return Observable.of({
-					selected_case: caseItem,
+					selectedCase: caseItem,
 					cases: [caseItem]
 				});
 			}

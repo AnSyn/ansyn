@@ -88,25 +88,25 @@ describe('CasesService', () => {
 	});
 
 	it('createCase should send the case as body in ajax("post")', () => {
-		let selected_case: Case = { id: 'faker_id', name: 'faker_name' };
-		let fake_response = { selected_case };
+		let selectedCase: Case = { id: 'faker_id', name: 'faker_name' };
+		let fake_response = { selectedCase };
 		spyOn(http, 'post').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
-		casesService.createCase(selected_case);
-		expect(http.post).toHaveBeenCalledWith(`${casesService.base_url}`, selected_case);
+		casesService.createCase(selectedCase);
+		expect(http.post).toHaveBeenCalledWith(`${casesService.base_url}`, selectedCase);
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
-		let selected_case: Case = { id: 'faker_id', name: 'faker_other_name' };
-		let fake_response = { selected_case };
+		let selectedCase: Case = { id: 'faker_id', name: 'faker_other_name' };
+		let fake_response = { selectedCase };
 		spyOn(http, 'put').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
-		casesService.updateCase(selected_case);
-		expect(http.put).toHaveBeenCalledWith(`${casesService.base_url}`, selected_case);
+		casesService.updateCase(selectedCase);
+		expect(http.put).toHaveBeenCalledWith(`${casesService.base_url}`, selectedCase);
 	});
 
 	it('updateCase should send the case id as param in ajax("delete")', () => {
-		let selected_case: Case = { id: 'faker_id', name: 'faker_other_name' };
-		let case_id_to_remove = selected_case.id;
-		let fake_response = { selected_case };
+		let selectedCase: Case = { id: 'faker_id', name: 'faker_other_name' };
+		let case_id_to_remove = selectedCase.id;
+		let fake_response = { selectedCase };
 		spyOn(http, 'delete').and.callFake(() => ({ map: (callBack) => callBack(fake_response) }));
 		casesService.removeCase('faker_id');
 		expect(http.delete).toHaveBeenCalledWith(`${casesService.base_url}/${case_id_to_remove}`);

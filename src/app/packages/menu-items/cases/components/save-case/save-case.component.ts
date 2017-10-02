@@ -43,8 +43,8 @@ export class SaveCaseComponent implements OnInit {
 		return true;
 	};
 
-	selected_case$: Observable<Case> = this.store.select('cases')
-		.pluck('selected_case')
+	selectedCase$: Observable<Case> = this.store.select('cases')
+		.pluck('selectedCase')
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 
@@ -61,8 +61,8 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.selected_case$.subscribe((selected_case: Case) => {
-			this.case_model = selected_case;
+		this.selectedCase$.subscribe((selectedCase: Case) => {
+			this.case_model = selectedCase;
 		});
 	}
 

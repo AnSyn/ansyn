@@ -77,7 +77,7 @@ export class EditCaseComponent implements OnInit {
 			s_case = cloneDeep(s_case);
 			this.editMode = true;
 		} else {
-			const selectedCase = cloneDeep(case_state.selected_case);
+			const selectedCase = cloneDeep(case_state.selectedCase);
 			s_case = this.getEmptyCase(selectedCase);
 		}
 		return s_case;

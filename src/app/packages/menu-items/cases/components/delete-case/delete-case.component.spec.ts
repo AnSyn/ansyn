@@ -20,7 +20,7 @@ describe('DeleteCaseComponent', () => {
 			{ id: 'fake_id2', name: 'fake_name2' }
 		],
 		modalCaseId: 'fake_id1',
-		selected_case_id: null,
+		selectedCaseId: null,
 		modal: true
 	} as any;
 

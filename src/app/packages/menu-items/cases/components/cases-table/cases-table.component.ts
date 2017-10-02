@@ -43,9 +43,9 @@ export class CasesTableComponent implements OnInit {
 		.map((state: ICasesState) => state.modalCaseId)
 		.distinctUntilChanged(isEqual);
 
-	selected_case_id$: Observable<string> = this.store
+	selectedCaseId$: Observable<string> = this.store
 		.select('cases')
-		.map((state: ICasesState) => state.selected_case ? state.selected_case.id : null)
+		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
 		.distinctUntilChanged(isEqual);
 
 	get _range() {
@@ -54,7 +54,7 @@ export class CasesTableComponent implements OnInit {
 
 	cases_from_state: Case[];
 	modalCaseId: string;
-	selected_case_id: string;
+	selectedCaseId: string;
 
 	constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
 		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));
@@ -70,8 +70,8 @@ export class CasesTableComponent implements OnInit {
 			this.modalCaseId = _modalCaseId;
 		});
 
-		this.selected_case_id$.subscribe((_selected_case_id) => {
-			this.selected_case_id = _selected_case_id;
+		this.selectedCaseId$.subscribe((_selectedCaseId) => {
+			this.selectedCaseId = _selectedCaseId;
 		});
 
 		this.loadCases();

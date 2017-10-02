@@ -22,8 +22,8 @@ describe('SaveCaseComponent', () => {
 		modalCaseId: 'fake_id1',
 		modal: true,
 		contexts: [],
-		contexts_loaded: true,
-		selected_case: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
+		contextsLoaded: true,
+		selectedCase: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
 		default_case: { id: 'fake_id3', name: 'fake_name3', state: { selected_context_id: null } }
 	} as any;
 

@@ -18,7 +18,7 @@ describe('AnsynComponent', () => {
 	const mock_menu = MockComponent({ selector: 'ansyn-menu', inputs: ['version'] });
 	const mock_status = MockComponent({
 		selector: 'ansyn-status-bar',
-		inputs: ['selected_case_name', 'overlay', 'isFavoriteOverlayDisplayed']
+		inputs: ['selectedCaseName', 'overlay', 'isFavoriteOverlayDisplayed']
 	});
 	const mock_overlays_container = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mock_empty_component = MockComponent({ selector: 'ansyn-empty' });
@@ -132,7 +132,7 @@ describe('AnsynComponent', () => {
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId2');
-			handler.next({ selected_case: selectedCase });
+			handler.next({ selectedCase: selectedCase });
 
 		});
 
@@ -142,7 +142,7 @@ describe('AnsynComponent', () => {
 			});
 			const selectedCase = _cloneDeep(cases[0]);
 			selectedCase.state.favoritesOverlays.push('overlayId1');
-			handler.next({ selected_case: selectedCase });
+			handler.next({ selectedCase: selectedCase });
 
 		});
 
@@ -150,7 +150,7 @@ describe('AnsynComponent', () => {
 			component.isFavoriteOverlay$.subscribe(isFavorite => {
 				expect(isFavorite).toBe(false);
 			});
-			handler.next({ selected_case: _cloneDeep(cases[0]) });
+			handler.next({ selectedCase: _cloneDeep(cases[0]) });
 		});
 	});
 });

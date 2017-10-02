@@ -78,8 +78,8 @@ export class ToolsAppEffects {
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), (action: DisplayOverlaySuccessAction, casesState: ICasesState) => {
-			const mapId = casesState.selected_case.state.maps.active_map_id;
-			const active_map = casesState.selected_case.state.maps.data.find((map) => map.id === mapId);
+			const mapId = casesState.selectedCase.state.maps.active_map_id;
+			const active_map = casesState.selectedCase.state.maps.data.find((map) => map.id === mapId);
 			return [mapId, active_map.data.isAutoImageProcessingActive];
 		})
 		.mergeMap(([mapId, isAutoImageProcessingActive]: [string, boolean]) => {
@@ -130,7 +130,7 @@ export class ToolsAppEffects {
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => {
-			const activeMapId: string = <string>_get(cases.selected_case, 'state.maps.active_map_id');
+			const activeMapId: string = <string>_get(cases.selectedCase, 'state.maps.active_map_id');
 			return this.imageryCommunicatorService.provide(activeMapId);
 		})
 		.filter(communicator => !_isNil(communicator))
@@ -157,7 +157,7 @@ export class ToolsAppEffects {
 	onGoTo$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO)
 		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState): any => {
-			const activeMapId: string = <any>_get(cases.selected_case, 'state.maps.active_map_id');
+			const activeMapId: string = <any>_get(cases.selectedCase, 'state.maps.active_map_id');
 			return { action, communicator: this.imageryCommunicatorService.provide(activeMapId) };
 		})
 		.filter(({ action, communicator }) => !_isNil(communicator))

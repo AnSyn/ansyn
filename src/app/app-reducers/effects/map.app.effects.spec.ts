@@ -198,15 +198,15 @@ describe('MapAppEffects', () => {
 	/* store data mock */
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const selected_case = cases[0];
-		icaseState = { cases, selected_case } as any;
+		const selectedCase = cases[0];
+		icaseState = { cases, selectedCase } as any;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
 		overlaysState = cloneDeep(overlayInitialState);
 		fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
 		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
-		mapState.mapsList = [...icaseState.selected_case.state.maps.data];
-		mapState.activeMapId = icaseState.selected_case.state.maps.active_map_id;
+		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
+		mapState.activeMapId = icaseState.selectedCase.state.maps.active_map_id;
 
 		const fakeStore = { cases: icaseState, status_bar: statusBarState, overlays: overlaysState, map: mapState };
 
@@ -280,15 +280,15 @@ describe('MapAppEffects', () => {
 			expect(result).toBe(true);
 
 			if (_result instanceof UpdateCaseAction) {
-				expect(_result.payload.state.region).not.toEqual(icaseState.selected_case.state.region);
-				icaseState.selected_case = _result.payload;
+				expect(_result.payload.state.region).not.toEqual(icaseState.selectedCase.state.region);
+				icaseState.selectedCase = _result.payload;
 			}
 			if (_result instanceof LoadOverlaysAction) {
 				expect(_result.payload).toEqual({
-					to: icaseState.selected_case.state.time.to,
-					from: icaseState.selected_case.state.time.from,
-					polygon: icaseState.selected_case.state.region,
-					caseId: icaseState.selected_case.id
+					to: icaseState.selectedCase.state.time.to,
+					from: icaseState.selectedCase.state.time.from,
+					polygon: icaseState.selectedCase.state.region,
+					caseId: icaseState.selectedCase.id
 				});
 			}
 		});
@@ -497,7 +497,7 @@ describe('MapAppEffects', () => {
 	// 		// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 	// 		// ],
 	// 		const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true, isGeoRegistered: true};
-	// 		icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+	// 		icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
 	// 		const communicator = {
 	// 			loadInitialMapSource: () => {},
 	// 		};
@@ -654,7 +654,7 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
+			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
 			effectsRunner.queue(new DisplayOverlayAction({ overlay: testOverlay, map_id: 'imagery1' }));
 
 			const resultActions = [];
@@ -668,7 +668,7 @@ describe('MapAppEffects', () => {
 
 	describe('overlayLoadingSuccess$', () => {
 		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction', () => {
-			icaseState.selected_case.state.maps.data[0].data.overlay = {
+			icaseState.selectedCase.state.maps.data[0].data.overlay = {
 				id: 'test_overlay_id',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -698,7 +698,7 @@ describe('MapAppEffects', () => {
 
 	describe('displayOverlayOnNewMapInstance$', () => {
 		it('should dispatch DisplayOverlayAction when communicator added that contains overlay', () => {
-			icaseState.selected_case.state.maps.data[0].data.overlay = {
+			icaseState.selectedCase.state.maps.data[0].data.overlay = {
 				id: 'test_overlay_id',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -728,7 +728,7 @@ describe('MapAppEffects', () => {
 
 		it('should not dispatch DisplayOverlayAction when communicator added that doesnt contain overlay', () => {
 
-			icaseState.selected_case.state.maps.data[1].data.overlay = null;
+			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
 
 			const communicators: Array<string> = ['imagery2'];
 
@@ -756,13 +756,13 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			icaseState.selected_case.state.maps.data[0].data.overlay = testOverlay;
-			icaseState.selected_case.state.maps.data[1].data.overlay = testOverlay;
+			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
+			icaseState.selectedCase.state.maps.data[1].data.overlay = testOverlay;
 
 			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 
-			effectsRunner.queue(new SelectCaseAction(icaseState.selected_case));
+			effectsRunner.queue(new SelectCaseAction(icaseState.selectedCase));
 			const displayActions = [];
 			mapAppEffects.displayOverlayFromCase$.subscribe(_result => {
 				let result = _result instanceof DisplayOverlayAction;
@@ -778,15 +778,15 @@ describe('MapAppEffects', () => {
 			const testOverlay: Overlay = { id: 'test_overlay_id1', isGeoRegistered: false } as Overlay;
 			mapState.mapsList = <any> [
 				{
-					...icaseState.selected_case.state.maps.data[0],
-					data: { ...icaseState.selected_case.state.maps.data[0].data, overlay: testOverlay }
+					...icaseState.selectedCase.state.maps.data[0],
+					data: { ...icaseState.selectedCase.state.maps.data[0].data, overlay: testOverlay }
 				},
 				{
-					...icaseState.selected_case.state.maps.data[1],
-					data: { ...icaseState.selected_case.state.maps.data[1].data, overlay: testOverlay }
+					...icaseState.selectedCase.state.maps.data[1],
+					data: { ...icaseState.selectedCase.state.maps.data[1].data, overlay: testOverlay }
 				},
 			];
-			mapState.activeMapId = icaseState.selected_case.state.maps.active_map_id;
+			mapState.activeMapId = icaseState.selectedCase.state.maps.active_map_id;
 			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 

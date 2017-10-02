@@ -39,7 +39,7 @@ export class ImagerySandBoxComponent implements OnInit {
 		this.store.select('cases')
 			.distinctUntilChanged(isEqual)
 			.subscribe((cases: ICasesState) => {
-				this.selectedCase = cloneDeep(cases.selected_case);
+				this.selectedCase = cloneDeep(cases.selectedCase);
 				this.overlaysFrom = this.selectedCase.state.time.from.split('T')[0];
 				this.overlaysTo = this.selectedCase.state.time.to.split('T')[0];
 			});

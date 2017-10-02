@@ -89,8 +89,8 @@ describe('ToolsAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const selected_case = cases[0];
-		icaseState = cloneDeep({ cases, selected_case }) as any;
+		const selectedCase = cases[0];
+		icaseState = cloneDeep({ cases, selectedCase }) as any;
 		const fakeStore = { cases: icaseState, map: imapState };
 
 		spyOn(store, 'select').and.callFake(type => {
@@ -271,8 +271,8 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const mapId = icaseState.selected_case.state.maps.active_map_id;
-		const active_map = icaseState.selected_case.state.maps.data.find((map) => map.id === mapId);
+		const mapId = icaseState.selectedCase.state.maps.active_map_id;
+		const active_map = icaseState.selectedCase.state.maps.data.find((map) => map.id === mapId);
 		active_map.data.isAutoImageProcessingActive = false;
 
 		effectsRunner.queue(new DisplayOverlaySuccessAction({ id: 'id' }));

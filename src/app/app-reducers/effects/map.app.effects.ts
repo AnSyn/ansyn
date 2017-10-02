@@ -44,7 +44,7 @@ import {
 	SetOverlayNotInCaseAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	calcGeoJSONExtent,
 	endTimingLog,
@@ -67,8 +67,6 @@ import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -338,8 +336,8 @@ export class MapAppEffects {
 	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
-		.filter(([action, caseState, statusBarState]: [SelectCaseAction, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
-		.map(([action, caseState, statusBarState]: [SelectCaseAction, any, any]) => {
+		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+		.do(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
 			const point = getPointByPolygon(caseState.selectedCase.state.region);
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				communicator.addPinPointIndicator(point.coordinates);

@@ -2,7 +2,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { CasesTableComponent } from './cases-table.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { CasesService } from '../../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
@@ -14,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
 	let fixture: ComponentFixture<CasesTableComponent>;
-	let casesService: CasesService;
 	let store: Store<ICasesState>;
 
 	beforeEach(async(() => {
@@ -70,7 +68,7 @@ describe('CasesTableComponent', () => {
 	it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
 		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
-		let selectedCaseId = 'fake_selectedCaseId';
+		let selectedCaseId = 'fakeSelectedCaseId';
 		component.removeCase($event, selectedCaseId);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
@@ -82,7 +80,7 @@ describe('CasesTableComponent', () => {
 	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
 		let $event = <any>{ stopPropagation: () => null };
 		spyOn($event, 'stopPropagation');
-		let selectedCaseId = 'fake_selectedCaseId';
+		let selectedCaseId = 'fakeSelectedCaseId';
 		component.editCase($event, selectedCaseId);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({

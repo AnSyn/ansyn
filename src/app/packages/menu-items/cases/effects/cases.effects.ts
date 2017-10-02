@@ -24,7 +24,7 @@ import {
 import { CasesService } from '../services/cases.service';
 import { ICasesState } from '../reducers/cases.reducer';
 import { Case } from '@ansyn/core';
-import { isEmpty, isEqual, isNil } from 'lodash';
+import { isEqual } from 'lodash';
 
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
@@ -192,11 +192,12 @@ export class CasesEffects {
 	onSelectCaseById$: Observable<SelectCaseAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store.select('cases'))
-		.filter(([action, casesState]: [SelectCaseByIdAction, ICasesState]) => !casesState.selectedCase || (casesState.selectedCase.id !== action.payload))
-		.map(([action, casesState]: [SelectCaseByIdAction, ICasesState]) => {
-			let sCase = casesState.cases.find(({ id }) => id === action.payload);
-			return new SelectCaseAction(sCase);
-		});
+		.map(([{ payload }, casesState]: [SelectCaseByIdAction, ICasesState]): [Case, string] => [
+			casesState.cases.find(({ id }) => id === payload),
+			casesState.selectedCase.id
+		])
+		.filter(([selectedCase, oldSelectedCaseId]) => Boolean(selectedCase) && selectedCase.id !== oldSelectedCaseId)
+		.map(([selectedCase, oldSelectedCaseId]: [Case, string]) => new SelectCaseAction(selectedCase));
 
 	@Effect()
 	onSaveCaseAs$: Observable<AddCaseAction> = this.actions$

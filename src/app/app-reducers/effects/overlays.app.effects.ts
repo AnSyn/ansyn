@@ -7,7 +7,7 @@ import {
 	OverlaysMarkupAction,
 	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesActionTypes, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app-reducers.module';
 import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
@@ -16,7 +16,6 @@ import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class OverlaysAppEffects {

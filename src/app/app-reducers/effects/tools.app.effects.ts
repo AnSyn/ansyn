@@ -11,10 +11,10 @@ import {
 	SetAutoImageProcessingSuccess,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools';
-import { CasesActionTypes, ICasesState } from '@ansyn/menu-items/cases';
+import { CasesActionTypes } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
-import { get as _get, isNil as _isNil } from 'lodash';
+import { isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	AnnotationVisualizerAgentAction,
@@ -26,6 +26,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import { CaseMapState } from '../../packages/core/models/case.model';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -77,16 +78,16 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select('cases'), (action: DisplayOverlaySuccessAction, casesState: ICasesState) => {
-			const mapId = casesState.selectedCase.state.maps.active_map_id;
-			const active_map = casesState.selectedCase.state.maps.data.find((map) => map.id === mapId);
-			return [mapId, active_map.data.isAutoImageProcessingActive];
-		})
-		.mergeMap(([mapId, isAutoImageProcessingActive]: [string, boolean]) => {
+		.withLatestFrom(this.store$.select('map'), (action: DisplayOverlaySuccessAction, mapState: IMapState): IMapState => mapState)
+		.map <IMapState, CaseMapState>(MapFacadeService.activeMap)
+		.mergeMap((activeMap: CaseMapState) => {
 			return [
 				new EnableImageProcessing(),
-				new SetMapAutoImageProcessing({ mapId: mapId, toggle_value: isAutoImageProcessingActive }),
-				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
+				new SetMapAutoImageProcessing({
+					mapId: activeMap.id,
+					toggle_value: activeMap.data.isAutoImageProcessingActive
+				}),
+				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 			];
 		});
 
@@ -109,7 +110,7 @@ export class ToolsAppEffects {
 		})
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMapId = mapsState.activeMapId;
-			let shouldAutoImageProcessing;
+			let shouldAutoImageProcessing = false;
 			const updatedMapsList = [...mapsState.mapsList];
 			updatedMapsList.forEach(
 				(map) => {
@@ -129,10 +130,7 @@ export class ToolsAppEffects {
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
-		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState) => {
-			const activeMapId: string = <string>_get(cases.selectedCase, 'state.maps.active_map_id');
-			return this.imageryCommunicatorService.provide(activeMapId);
-		})
+		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
 		.filter(communicator => !_isNil(communicator))
 		.map((communicator: CommunicatorEntity) => {
 			const activeMapCenter = communicator.getCenter();
@@ -156,10 +154,10 @@ export class ToolsAppEffects {
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO)
-		.withLatestFrom(this.store$.select('cases'), (action, cases: ICasesState): any => {
-			const activeMapId: string = <any>_get(cases.selectedCase, 'state.maps.active_map_id');
-			return { action, communicator: this.imageryCommunicatorService.provide(activeMapId) };
-		})
+		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState): any => ({
+			action,
+			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
+		}))
 		.filter(({ action, communicator }) => !_isNil(communicator))
 		.map(({ action, communicator }) => {
 			const center: GeoJSON.Point = {

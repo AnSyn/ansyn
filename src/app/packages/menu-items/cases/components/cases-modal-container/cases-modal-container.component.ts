@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
-import { isEqual } from 'lodash';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 

@@ -42,7 +42,7 @@ export class DeleteCaseComponent {
 	}
 
 	getActiveCaseName(case_state: ICasesState): string {
-		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.active_case_id);
+		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.modalCaseId);
 		return s_case ? s_case.name : '';
 	}
 

@@ -6,7 +6,7 @@ import { get as _get } from 'lodash';
 export interface ICasesState {
 	cases: Case[];
 	selected_case: Case;
-	active_case_id: string;
+	modalCaseId: string;
 	modal: boolean;
 	contexts: Context[];
 	contexts_loaded: boolean;
@@ -16,7 +16,7 @@ export interface ICasesState {
 export const initialCasesState: ICasesState = {
 	cases: [],
 	selected_case: null,
-	active_case_id: '',
+	modalCaseId: null,
 	modal: false,
 	contexts: [],
 	contexts_loaded: false,
@@ -39,10 +39,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state, { cases: cases_added });
 
 		case CasesActionTypes.OPEN_MODAL:
-			return Object.assign({}, state, { active_case_id: action.payload.case_id, modal: true });
+			return { ...state, modalCaseId: action.payload.case_id, modal: true };
 
 		case CasesActionTypes.CLOSE_MODAL:
-			return Object.assign({}, state, { active_case_id: null, modal: false });
+			return { ...state, modalCaseId: null, modal: false };
 
 		case CasesActionTypes.UPDATE_CASE: {
 			const active_case: Case = { ...action.payload, last_modified: new Date() };
@@ -76,7 +76,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return { ...state, cases: cases_loaded };
 
 		case CasesActionTypes.DELETE_CASE:
-			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.active_case_id);
+			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.modalCaseId);
 			if (case_to_remove_index === -1) {
 				return state;
 			}

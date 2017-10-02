@@ -19,7 +19,7 @@ describe('DeleteCaseComponent', () => {
 			{ id: 'fake_id1', name: 'fake_name1' },
 			{ id: 'fake_id2', name: 'fake_name2' }
 		],
-		active_case_id: 'fake_id1',
+		modalCaseId: 'fake_id1',
 		selected_case_id: null,
 		modal: true
 	} as any;
@@ -52,12 +52,12 @@ describe('DeleteCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('getActiveCaseName should return case_name by active_case_id', () => {
+	it('getActiveCaseName should return case_name by modalCaseId', () => {
 		let clone_state = _.cloneDeep(fake_iCasesState);
-		clone_state.active_case_id = clone_state.cases[0].id;
+		clone_state.modalCaseId = clone_state.cases[0].id;
 		let result: string = component.getActiveCaseName(clone_state);
 		expect(result).toEqual(clone_state.cases[0].name);
-		clone_state.active_case_id = clone_state.cases[1].id;
+		clone_state.modalCaseId = clone_state.cases[1].id;
 		result = component.getActiveCaseName(clone_state);
 		expect(result).toEqual(clone_state.cases[1].name);
 	});

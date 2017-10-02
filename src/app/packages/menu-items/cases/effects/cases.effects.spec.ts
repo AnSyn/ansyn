@@ -96,7 +96,7 @@ describe('CasesEffects', () => {
 		let deleted_case: Case = { id: 'new_case_id', name: 'new_case_name' };
 		store.dispatch(new AddCaseSuccessAction(deleted_case));
 		store.dispatch(new SelectCaseAction(deleted_case));
-		// set active_case_id
+		// set modalCaseId
 		store.dispatch(new OpenModalAction({ component: '', case_id: deleted_case.id }));
 		effectsRunner.queue(new DeleteCaseAction());
 		casesEffects.onDeleteCase$.subscribe((result: AddCaseSuccessAction) => {

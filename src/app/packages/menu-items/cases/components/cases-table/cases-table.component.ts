@@ -38,9 +38,9 @@ export class CasesTableComponent implements OnInit {
 		.map((state: ICasesState) => state.cases)
 		.distinctUntilChanged(isEqual);
 
-	active_case_id$: Observable<string> = this.store
+	modalCaseId$: Observable<string> = this.store
 		.select('cases')
-		.map((state: ICasesState) => state.active_case_id)
+		.map((state: ICasesState) => state.modalCaseId)
 		.distinctUntilChanged(isEqual);
 
 	selected_case_id$: Observable<string> = this.store
@@ -53,7 +53,7 @@ export class CasesTableComponent implements OnInit {
 	}
 
 	cases_from_state: Case[];
-	active_case_id: string;
+	modalCaseId: string;
 	selected_case_id: string;
 
 	constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
@@ -66,8 +66,8 @@ export class CasesTableComponent implements OnInit {
 			this.cases_from_state = _cases_from_state;
 		});
 
-		this.active_case_id$.subscribe((_active_case_id) => {
-			this.active_case_id = _active_case_id;
+		this.modalCaseId$.subscribe((_modalCaseId) => {
+			this.modalCaseId = _modalCaseId;
 		});
 
 		this.selected_case_id$.subscribe((_selected_case_id) => {

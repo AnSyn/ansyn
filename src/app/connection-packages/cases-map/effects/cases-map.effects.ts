@@ -4,10 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { MapActionTypes, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { Action, Store } from '@ngrx/store';
 import { Case } from '@ansyn/core/models/case.model';
-import { CasesActionTypes, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class CasesMapEffects {

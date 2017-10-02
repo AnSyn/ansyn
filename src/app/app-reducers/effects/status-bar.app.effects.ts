@@ -41,6 +41,7 @@ import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status
 import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { SelectCaseAction } from '../../packages/menu-items/cases/actions/cases.actions';
 
 
 @Injectable()
@@ -92,18 +93,16 @@ export class StatusBarAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): Case => state.selectedCase)
-		.filter((selectedCase) => !isEmpty(selectedCase))
-		.cloneDeep()
-		.mergeMap((selectedCase: Case) => {
-			const layouts_index = selectedCase.state.maps.layouts_index;
+		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
+		.mergeMap(({ payload }: SelectCaseAction) => {
+			const layoutsIndex = payload.state.maps.layouts_index;
 			return [
-				new ChangeLayoutAction(+layouts_index),
-				new SetOrientationAction(selectedCase.state.orientation),
-				new SetGeoFilterAction(selectedCase.state.geoFilter),
+				new ChangeLayoutAction(+layoutsIndex),
+				new SetOrientationAction(payload.state.orientation),
+				new SetGeoFilterAction(payload.state.geoFilter),
 				new SetTimeAction({
-					from: new Date(selectedCase.state.time.from),
-					to: new Date(selectedCase.state.time.to)
+					from: new Date(payload.state.time.from),
+					to: new Date(payload.state.time.to)
 				})
 			];
 		});

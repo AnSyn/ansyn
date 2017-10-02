@@ -71,20 +71,20 @@ export class EditCaseComponent implements OnInit {
 		];
 	}
 
-	getCloneActiveCase(case_state: ICasesState): Case {
-		let s_case: Case = case_state.cases.find((case_value: Case) => case_value.id === case_state.modalCaseId);
-		if (s_case && s_case.id !== CasesService.defaultCase.id) {
-			s_case = cloneDeep(s_case);
+	getCloneActiveCase(caseState: ICasesState): Case {
+		let sCase: Case = caseState.cases.find(({ id }: Case) => id === caseState.modalCaseId);
+		if (sCase) {
 			this.editMode = true;
+			sCase = cloneDeep(sCase);
 		} else {
-			const selectedCase = cloneDeep(case_state.selectedCase);
-			s_case = this.getEmptyCase(selectedCase);
+			const selectedCase = cloneDeep(caseState.selectedCase);
+			sCase = this.getEmptyCase(selectedCase);
 		}
-		return s_case;
+		return sCase;
 	}
 
 	getEmptyCase(selectedCase: Case): Case {
-		const activeMap = selectedCase.state.maps.data.find(map => map.id === selectedCase.state.maps.active_map_id);
+		const activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.active_map_id);
 
 		return {
 			name: '',

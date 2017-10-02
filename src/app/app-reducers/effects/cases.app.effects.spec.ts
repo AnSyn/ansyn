@@ -1,14 +1,7 @@
 import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import {
-	AddCaseSuccessAction,
-	casesConfig,
-	CasesReducer,
-	CasesService,
-	ICasesState,
-	SelectCaseByIdAction
-} from '@ansyn/menu-items/cases';
+import { AddCaseSuccessAction, casesConfig, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { Action, Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
 import { CoreModule } from '@ansyn/core';

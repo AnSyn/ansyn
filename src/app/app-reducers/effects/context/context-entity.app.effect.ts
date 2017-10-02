@@ -6,14 +6,13 @@ import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesActionTypes, SelectCaseByIdAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { isNil as _isNil } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { ContextEntityVisualizer, ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class ContextEntityAppEffects {
@@ -21,8 +20,8 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({payload}: SelectCaseAction) => !_isNil(payload.state.contextEntities))
-		.map(({payload}: SelectCaseAction) => {
+		.filter(({ payload }: SelectCaseAction) => !_isNil(payload.state.contextEntities))
+		.map(({ payload }: SelectCaseAction) => {
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);

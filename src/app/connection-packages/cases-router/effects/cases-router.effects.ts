@@ -38,7 +38,7 @@ export class CasesRouterEffects {
 		.withLatestFrom(this.store$.select('router'), ({ payload }: SelectCaseAction, router: IRouterState): any[] => {
 			return [payload, router.caseId];
 		})
-		.filter(([selectedCase, routerCaseId]) => !_isEqual(selectedCase.id, CasesService.defaultCase.id) && !_isEqual(selectedCase.id, routerCaseId))
+		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== CasesService.defaultCase.id && selectedCase.id !== routerCaseId)
 		.map(([selectedCase]: [Case]) => new NavigateCaseTriggerAction(selectedCase.id));
 
 	@Effect()
@@ -46,9 +46,9 @@ export class CasesRouterEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('router'), ({ payload }, routerState: IRouterState): any => [payload, routerState])
 		.filter(([selectedCase, { caseId, queryParams }]: [Case, IRouterState]) => {
-			const caseIdRouterNotEmpty = !_isEmpty(caseId);
-			const queryParamsNotEmpty = !_isEmpty(queryParams);
-			return _isEqual(selectedCase.id, CasesService.defaultCase.id) && (caseIdRouterNotEmpty || queryParamsNotEmpty);
+			const caseIdRouterNotEmpty = Boolean(caseId);
+			const queryParamsNotEmpty = Boolean(queryParams);
+			return selectedCase.id === CasesService.defaultCase.id && (caseIdRouterNotEmpty || queryParamsNotEmpty);
 		})
 		.map(() => new NavigateCaseTriggerAction());
 

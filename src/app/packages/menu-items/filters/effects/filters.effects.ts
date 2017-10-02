@@ -18,7 +18,6 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
-import { IOverlayState } from '../../../overlays/reducers/overlays.reducer';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
@@ -28,10 +27,12 @@ export class FiltersEffects {
 	@Effect()
 	initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS)
-		.withLatestFrom(this.store$.select('overlays'))
-		.switchMap(([action, overlaysState]: [InitializeFiltersAction, IOverlayState]) => {
+		.withLatestFrom(this.store$.select('filters'))
+		.switchMap(([action, filtersState]: [InitializeFiltersAction, IFiltersState]) => {
 			return this.filtersService.loadFilters().map((filters: Filter[]) => {
 				const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
+				const oldFiltersArray = filtersState.oldFilters ? Array.from(filtersState.oldFilters) : [];
+
 				filters.forEach((filter: Filter) => {
 					const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
 
@@ -40,21 +41,27 @@ export class FiltersEffects {
 					});
 
 					// Check if filters were previously deselected, and if so deselect them now
-					let oldFilter = overlaysState.oldFilters.find(oldFilter => oldFilter.filteringParams.key === filter.modelName);
-					if (oldFilter) {
-						const oldFilterFields = oldFilter.filteringParams.metadata.enumsFields;
-						const filterFields = metadata.enumsFields;
+					if (oldFiltersArray) {
+						const oldFilterArray = oldFiltersArray
+							.find(([oldFilterKey, oldFilter]: [Filter, FilterMetadata]) => oldFilterKey.modelName === filter.modelName);
 
-						filterFields.forEach((value, key) => {
-							let isChecked = true;
-							if (oldFilterFields.has(key)) {
-								const oldFilter = oldFilterFields.get(key);
-								if (!oldFilter.isChecked) {
-									isChecked = false;
+
+						if (oldFilterArray) {
+							const [oldFilterKey, oldFilter] = oldFilterArray;
+							const oldFilterFields = oldFilter.enumsFields;
+							const filterFields = metadata.enumsFields;
+
+							filterFields.forEach((value, key) => {
+								let isChecked = true;
+								if (oldFilterFields.has(key)) {
+									const oldFilter = oldFilterFields.get(key);
+									if (!oldFilter.isChecked) {
+										isChecked = false;
+									}
 								}
-							}
-							value.isChecked = isChecked;
-						});
+								value.isChecked = isChecked;
+							});
+						}
 					}
 
 					// If show all is set, select all

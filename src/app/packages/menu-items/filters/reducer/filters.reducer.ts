@@ -4,6 +4,7 @@ import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 
 export interface IFiltersState {
 	filters: Map<Filter, FilterMetadata>;
+	oldFilters: Map<Filter, FilterMetadata>;
 	isLoading: boolean;
 	showOnlyFavorites: boolean;
 	enableOnlyFavoritesSelection: boolean;
@@ -11,6 +12,7 @@ export interface IFiltersState {
 
 export const initialFiltersState: IFiltersState = {
 	filters: new Map<Filter, FilterMetadata>(),
+	oldFilters: null,
 	isLoading: true,
 	showOnlyFavorites: false,
 	enableOnlyFavoritesSelection: false
@@ -34,10 +36,12 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return Object.assign({}, state, { filters: clonedFilters });
 
 		case FiltersActionTypes.RESET_FILTERS:
-			return Object.assign({}, state, {
+			return {
+				...state,
+				oldFilters: state.filters,
 				filters: new Map<Filter, FilterMetadata>(),
 				isLoading: true
-			});
+			};
 
 		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
 			return Object.assign({}, state, { showOnlyFavorites: !state.showOnlyFavorites });

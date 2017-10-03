@@ -113,4 +113,12 @@ describe('MenuComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new ContainerChangedTriggerAction());
 	});
 
+	it('hideBadge should check if badge need to be hidden', () => {
+		expect(menuComponent.hideBadge('')).toBeTruthy();
+		expect(menuComponent.hideBadge('0')).toBeTruthy();
+		expect(menuComponent.hideBadge('str')).toBeTruthy();
+		expect(menuComponent.hideBadge('1')).toBeFalsy();
+		expect(menuComponent.hideBadge('★')).toBeFalsy();
+	});
+
 });

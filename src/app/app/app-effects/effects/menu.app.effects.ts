@@ -12,6 +12,8 @@ import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/r
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
+import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
+import { Action } from '@ngrx/store';
 
 @Injectable()
 export class MenuAppEffects {
@@ -37,9 +39,13 @@ export class MenuAppEffects {
 	 * @action SetClickOutside
 	 */
 	@Effect()
-	onGoToExpand$: Observable<UpdateMapSizeAction> = this.actions$
+	onGoToExpand$: Observable<Action> = this.actions$
 		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
+
+	autoCloseMenu$: Observable<Action> = this.actions$
+		.ofType(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
+		.map(({ payload }) => new SetClickOutside(payload));
 
 	/**
 	 * @type Effect

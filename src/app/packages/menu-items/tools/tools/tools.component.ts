@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AnnotationVisualizerAgentAction,
-	GoToExpandAction,
+	GoToExpandAction, SetAutoCloseMenu,
 	SetAutoImageProcessing,
 	StartMouseShadow,
 	StopMouseShadow
@@ -74,12 +74,14 @@ export class ToolsComponent implements OnInit {
 		// send event to the store that saying the annotation option is enabled
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
 		if (this.userAnnotationsToolOpen) {
+			this.store.dispatch(new SetAutoCloseMenu(false))
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: 'show',
 				maps: 'active'
 			}));
 
 		} else {
+			this.store.dispatch(new SetAutoCloseMenu(true))
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: 'endDrawing',
 				maps: 'active'

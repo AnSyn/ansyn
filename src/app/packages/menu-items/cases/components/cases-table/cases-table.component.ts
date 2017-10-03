@@ -34,8 +34,8 @@ export class CasesTableComponent implements OnInit {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
 	cases$: Observable<Case[]> = this.store$
-		.select <ICasesState> ('cases')
-		.pluck <ICasesState, Case[]> ('cases')
+		.select <ICasesState>('cases')
+		.pluck <ICasesState, Case[]>('cases')
 		.distinctUntilChanged();
 
 	modalCaseId$: Observable<string> = this.store$
@@ -87,32 +87,36 @@ export class CasesTableComponent implements OnInit {
 		}
 	}
 
-	calcTopCaseMenu($event: MouseEvent, caseMenu: HTMLDivElement) {
-		let target: HTMLElement = <any> $event.target;
-		let offsetTop = target.offsetTop;
-		let scrollTop = target.parentElement.scrollTop;
-		caseMenu.style.top = `${offsetTop - scrollTop}px`;
+	onMouseEnterCaseRow(caseMenu: HTMLDivElement, caseRow: HTMLDivElement, tbodyElement: HTMLDivElement) {
+		let offsetTop = caseRow.offsetTop;
+		let scrollTop = tbodyElement.scrollTop;
+		caseMenu.style.top = `${offsetTop - scrollTop + 1}px`;
+		caseRow.classList.add('mouse-enter');
 	}
 
-	removeCase($event: MouseEvent, caseId: string): void {
-		$event.stopPropagation();
-		let component = DeleteCaseComponent;
-		this.store$.dispatch(new OpenModalAction({ component, caseId }));
+	onMouseLeaveCaseRow(caseRow: HTMLDivElement) {
+		caseRow.classList.remove('mouse-enter');
 	}
 
-	editCase($event: MouseEvent, caseId: string) {
+	genralCaseMenuClick($event: MouseEvent, caseRow: HTMLDivElement) {
+		caseRow.classList.remove('mouse-enter');
 		$event.stopPropagation();
-		let component = EditCaseComponent;
-		this.store$.dispatch(new OpenModalAction({ component, caseId }));
 	}
 
-	shareCase($event: MouseEvent, caseId: string) {
-		$event.stopPropagation();
+	removeCase(caseId: string): void {
+		this.store$.dispatch(new OpenModalAction({ component: DeleteCaseComponent, caseId }));
+	}
+
+	editCase(caseId: string) {
+		this.store$.dispatch(new OpenModalAction({ component: EditCaseComponent, caseId }));
+	}
+
+	shareCase(caseId: string) {
 		this.store$.dispatch(new CopyCaseLinkAction(caseId));
 	}
 
-	selectCase(id: string): void {
-		this.store$.dispatch(new SelectCaseByIdAction(id));
+	selectCase(caseId: string): void {
+		this.store$.dispatch(new SelectCaseByIdAction(caseId));
 	}
 
 }

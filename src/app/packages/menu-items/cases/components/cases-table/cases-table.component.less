@@ -74,15 +74,19 @@ div.cases-table {
 			height: 57px;
 			position: relative;
 
-			&:hover {
+			&.mouse-enter {
 				color: #156879;
 				background: #EBF8FA;
+
 				div.cases-table-body-row-data div.case_menu-container div.case-menu {
 					transform: translate(-10%, 50%);
 					opacity: 1;
 					visibility: visible;
+					pointer-events: auto;
 				}
+
 			}
+
 			&.active {
 				background: #9deeff;
 				color: #156879;
@@ -129,7 +133,7 @@ div.cases-table {
 					flex: 0;
 					div.case-menu {
 						display: flex;
-						transition: .3s;
+						transition: visibility .3s, transform .3s, opacity .3s;
 						opacity: 0;
 						visibility: hidden;
 						z-index: 2;
@@ -140,6 +144,8 @@ div.cases-table {
 						border-radius: 4px;
 						background: #FFFFFF;
 						transform: translate(-50%, 50%);
+						pointer-events: none;
+
 						button {
 							background: transparent;
 							border: 1px solid transparent;

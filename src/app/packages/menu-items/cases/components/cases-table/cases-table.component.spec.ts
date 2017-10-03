@@ -9,6 +9,7 @@ import { LoadCasesAction, OpenModalAction, SelectCaseByIdAction } from '../../ac
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { expand } from 'rxjs/operator/expand';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -58,31 +59,49 @@ describe('CasesTableComponent', () => {
 		expect(component.tbodyElement.nativeElement.scrollTop).toEqual(0);
 	});
 
-	it('calcTopCaseMenu should get MouseEvent calc the top and put on case_menu.style', () => {
-		let case_menu = <any>{ style: { top: '-1px' } };
-		let $event = <any>{ target: { offsetTop: 100, parentElement: { scrollTop: 50 } } };
-		component.calcTopCaseMenu($event, case_menu);
-		expect(case_menu.style.top).toEqual('50px');
+	it('onMouseEnterCaseRow should calc the top of caseMenu and add "mouse-enter" class', () => {
+		let caseMenu = <HTMLDivElement> { style: { top: '-1px' } };
+		const caseRow = <HTMLDivElement> { offsetTop: 100, classList: jasmine.createSpyObj({
+			add: () => null
+		})};
+		const tbodyElement = <HTMLDivElement> { scrollTop: 50 };
+		component.onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement);
+		expect(caseMenu.style.top).toEqual('51px');
+		expect(caseRow.classList.add).toHaveBeenCalledWith('mouse-enter');
 	});
 
-	it('removeCase should call stopPropagation() and open modal with DeleteCaseComponent', () => {
-		let $event = <any>{ stopPropagation: () => null };
-		spyOn($event, 'stopPropagation');
-		let selectedCaseId = 'fakeSelectedCaseId';
-		component.removeCase($event, selectedCaseId);
+	it('onMouseLeaveCaseRow should remove "mouse-enter" class', () => {
+		const caseRow = <HTMLDivElement> { classList: jasmine.createSpyObj({
+			remove: () => null
+		})};
+		component.onMouseLeaveCaseRow(caseRow);
+		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
+	});
+
+	it('caseMenuClick should call stopPropagation() and remove mouse-enter class from caseRow', () => {
+		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
+		const caseRow = <HTMLDivElement> {
+			classList: jasmine.createSpyObj({
+				remove: () => null
+			})
+		};
+		component.caseMenuClick($event, caseRow);
 		expect($event.stopPropagation).toHaveBeenCalled();
+		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
+	});
+
+	it('removeCase should open modal with DeleteCaseComponent', () => {
+		let selectedCaseId = 'fakeSelectedCaseId';
+		component.removeCase(selectedCaseId);
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
 			component: DeleteCaseComponent,
 			caseId: selectedCaseId
 		}));
 	});
 
-	it('editCase should call stopPropagation() and open modal with EditCaseComponent', () => {
-		let $event = <any>{ stopPropagation: () => null };
-		spyOn($event, 'stopPropagation');
+	it('editCase should open modal with EditCaseComponent', () => {
 		let selectedCaseId = 'fakeSelectedCaseId';
-		component.editCase($event, selectedCaseId);
-		expect($event.stopPropagation).toHaveBeenCalled();
+		component.editCase(selectedCaseId);
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
 			component: EditCaseComponent,
 			caseId: selectedCaseId

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ansynMenuItems } from './ansyn.menu-items';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { CaseComponent } from './case/case.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
@@ -60,7 +59,7 @@ import { HttpClientModule } from '@angular/common/http';
 		AnsynRouterModule,
 		RouterModule
 	],
-	declarations: [AnsynComponent, CaseComponent]
+	declarations: [AnsynComponent]
 })
 
 export class AnsynModule {

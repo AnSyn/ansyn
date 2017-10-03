@@ -25,7 +25,7 @@ describe('CasesReducer', () => {
 	});
 
 	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
-		let action: OpenModalAction = new OpenModalAction({ component: 'fake', case_id: 'fake_case_id' });
+		let action: OpenModalAction = new OpenModalAction({ component: 'fake', caseId: 'fake_case_id' });
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.modal).toBeTruthy();
 	});

@@ -50,12 +50,12 @@ describe('CasesTableComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseByIdAction('id'));
 	});
 
-	it('onCasesAdded should change tbody_element scrollTop to 0( only if tbody_element is not undefined )', () => {
-		component.tbody_element = <any> {
+	it('onCasesAdded should change tbodyElement scrollTop to 0( only if tbody_element is not undefined )', () => {
+		component.tbodyElement = <any> {
 			nativeElement: { scrollTop: 100 }
 		};
 		component.onCasesAdded();
-		expect(component.tbody_element.nativeElement.scrollTop).toEqual(0);
+		expect(component.tbodyElement.nativeElement.scrollTop).toEqual(0);
 	});
 
 	it('calcTopCaseMenu should get MouseEvent calc the top and put on case_menu.style', () => {
@@ -73,7 +73,7 @@ describe('CasesTableComponent', () => {
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
 			component: DeleteCaseComponent,
-			case_id: selectedCaseId
+			caseId: selectedCaseId
 		}));
 	});
 
@@ -85,7 +85,7 @@ describe('CasesTableComponent', () => {
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
 			component: EditCaseComponent,
-			case_id: selectedCaseId
+			caseId: selectedCaseId
 		}));
 	});
 

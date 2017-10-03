@@ -39,7 +39,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state, { cases: cases_added });
 
 		case CasesActionTypes.OPEN_MODAL:
-			return { ...state, modalCaseId: action.payload.case_id, modal: true };
+			return { ...state, modalCaseId: action.payload.caseId, modal: true };
 
 		case CasesActionTypes.CLOSE_MODAL:
 			return { ...state, modalCaseId: null, modal: false };

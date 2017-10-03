@@ -188,7 +188,7 @@ export class ContextMenuShowAction implements Action {
 export class ContextMenuGetFilteredOverlaysAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS;
 
-	constructor(public payload: Overlay[] ) {
+	constructor(public payload: Overlay[]) {
 	}
 }
 

@@ -139,6 +139,10 @@ export class MapEffects {
 		.ofType(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
 		.map(({ payload }) => payload);
 
+	@Effect({ dispatch: false })
+	getFilteredOverlays$: Observable<Action> = this.actions$
+		.ofType(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
+		.share();
 
 	constructor(private actions$: Actions,
 				private mapFacadeService: MapFacadeService,

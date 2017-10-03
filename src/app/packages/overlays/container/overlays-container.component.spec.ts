@@ -88,7 +88,7 @@ describe('OverlayContainerComponent', () => {
 		storeFixture = createStore(OverlayReducer);
 		store = storeFixture.store;
 		getState = storeFixture.getState;
-		state = storeFixture.state; // (overlayInitialState);
+		state = <State<any>> storeFixture.state; // (overlayInitialState);
 		// state = overlayInitialState;
 	}));
 

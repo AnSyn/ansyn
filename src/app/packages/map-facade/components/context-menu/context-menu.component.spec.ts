@@ -12,7 +12,7 @@ describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
-	const mockMapEffects = { onContextMenuShow$: new EventEmitter<void>() };
+	const mockMapEffects = { onContextMenuShow$: new EventEmitter<void>(), getFilteredOverlays$: new EventEmitter<void>() };
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -37,18 +37,18 @@ describe('ContextMenuComponent', () => {
 		expect(component.tabindex).toEqual(0);
 	});
 
-	it('onmousewheel should get hide function', () => {
+	it('onMousewheel should get hide function', () => {
 		spyOn(component, 'hide');
-		component.onmousewheel();
+		component.onMousewheel();
 		expect(component.hide).toHaveBeenCalled();
 	});
 
-	it('contextmenu should call preventDefault on event arg', () => {
+	it('onContextMenu should call preventDefault on event arg', () => {
 		const $event = jasmine.createSpyObj({
 			preventDefault: () => {
 			}
 		});
-		component.contextmenu($event);
+		component.onContextMenu($event);
 		expect($event.preventDefault).toHaveBeenCalled();
 	});
 
@@ -74,10 +74,10 @@ describe('ContextMenuComponent', () => {
 
 	it('clickNext should calculate next overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'a' },
-			{ id: '2', sensorName: 'b' },
-			{ id: '3', sensorName: 'a' }
-		];
+			{ id: '1', [component.filterField]: 'a' },
+			{ id: '2', [component.filterField]: 'b' },
+			{ id: '3', [component.filterField]: 'a' }
+		] as any[];
 		component.displayedOverlayIndex = 0;
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -91,11 +91,11 @@ describe('ContextMenuComponent', () => {
 
 	it('clickPrev should calculate prev overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'b' },
-			{ id: '2', sensorName: 'a' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'b' },
-		];
+			{ id: '1', [component.filterField]: 'b' },
+			{ id: '2', [component.filterField]: 'a' },
+			{ id: '3', [component.filterField]: 'c' },
+			{ id: '4', [component.filterField]: 'b' },
+		] as any[];
 		component.displayedOverlayIndex = 3; // b
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -109,11 +109,11 @@ describe('ContextMenuComponent', () => {
 
 	it('clickLast should calculate last overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'c' },
-			{ id: '2', sensorName: 'c' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'b' },
-		];
+			{ id: '1', [component.filterField]: 'c' },
+			{ id: '2', [component.filterField]: 'c' },
+			{ id: '3', [component.filterField]: 'c' },
+			{ id: '4', [component.filterField]: 'b' },
+		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickLast($event);
@@ -125,11 +125,11 @@ describe('ContextMenuComponent', () => {
 
 	it('clickFirst should calculate first overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'a' },
-			{ id: '2', sensorName: 'c' },
-			{ id: '3', sensorName: 'c' },
-			{ id: '4', sensorName: 'c' },
-		];
+			{ id: '1', [component.filterField]: 'a' },
+			{ id: '2', [component.filterField]: 'c' },
+			{ id: '3', [component.filterField]: 'c' },
+			{ id: '4', [component.filterField]: 'c' },
+		] as any[];
 		component.displayedOverlayIndex = 3;
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -143,11 +143,11 @@ describe('ContextMenuComponent', () => {
 
 	it('clickBest should calculate best(resolution) overlay(via subFilter) and call displayOverlayEvent', () => {
 		component.filteredOverlays = [
-			{ id: '1', sensorName: 'c', bestResolution: 3.5 },
-			{ id: '2', sensorName: 'c', bestResolution: 1.25 }, // best of "c" (index 1)
-			{ id: '3', sensorName: 'b', bestResolution: 0.5 }, // best (index 2)
-			{ id: '4', sensorName: 'c', bestResolution: 1.5 },
-		];
+			{ id: '1', [component.filterField]: 'c', bestResolution: 3.5 },
+			{ id: '2', [component.filterField]: 'c', bestResolution: 1.25 }, // best of "c" (index 1)
+			{ id: '3', [component.filterField]: 'b', bestResolution: 0.5 }, // best (index 2)
+			{ id: '4', [component.filterField]: 'c', bestResolution: 1.5 },
+		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickBest($event);

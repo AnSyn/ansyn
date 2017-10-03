@@ -4,16 +4,13 @@ import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	ContextMenuDisplayAction,
-	ContextMenuShowAction,
-	SetContextMenuFiltersAction
-} from '@ansyn/map-facade/actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction, } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { ContextMenuGetFilteredOverlaysAction } from '../../../packages/map-facade/actions/map.actions';
+import { OverlaysService } from '../../../packages/overlays/services/overlays.service';
+import { LoadOverlaysSuccessAction, SetFiltersAction } from '../../../packages/overlays/actions/overlays.actions';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
@@ -37,6 +34,18 @@ describe('ContextMenuAppEffects', () => {
 		store = _store;
 		contextMenuAppEffects = _contextMenuAppEffects;
 		effectsRunner = _effectsRunner;
+
+		store.dispatch(new LoadOverlaysSuccessAction([
+			{ id: '1', footprint: 'in' },
+			{ id: '2', footprint: 'in' },
+			{ id: '3', footprint: 'out' },
+			{ id: '4', footprint: 'out' },
+			{ id: '5', footprint: 'in' }
+		] as any[]));
+
+		spyOn(OverlaysService, 'filter').and.returnValue(['1', '2', '3', '4', '5']);
+
+		store.dispatch(new SetFiltersAction({}))
 	}));
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
@@ -55,20 +64,12 @@ describe('ContextMenuAppEffects', () => {
 			},
 			e: new MouseEvent(null, null)
 		});
-		spyOn(OverlaysService, 'pluck').and.returnValue([
-			{ id: 1, footprint: 'in' },
-			{ id: 2, footprint: 'in' },
-			{ id: 3, footprint: 'out' },
-			{ id: 4, footprint: 'out' },
-			{ id: 5, footprint: 'in' }
-		]);
-		spyOn(MapFacadeService, 'activeMap').and.returnValue({});
 		spyOnProperty(turf, 'inside', 'get').and.returnValue((point, footprint) => footprint === 'in');
 		effectsRunner.queue(showAction);
-		let result: SetContextMenuFiltersAction;
+		let result: ContextMenuGetFilteredOverlaysAction;
 		contextMenuAppEffects.setContextFilter$.subscribe(_result => result = _result);
-		expect(result.constructor).toEqual(SetContextMenuFiltersAction);
-		expect(result.payload.filteredOverlays.length).toEqual(3);
+		expect(result.constructor).toEqual(ContextMenuGetFilteredOverlaysAction);
+		expect(result.payload.length).toEqual(3);
 	});
 
 });

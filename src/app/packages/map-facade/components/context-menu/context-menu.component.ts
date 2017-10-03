@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { IMapState } from '../../reducers/map.reducer';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
@@ -8,8 +8,10 @@ import { get as _get, isEmpty as _isEmpty, isNil as _isNil, uniq as _uniq } from
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn\/core/models/overlay.model';
+import { MapFacadeService } from '../../services/map-facade.service';
+import { CaseMapState } from '../../../core/models/case.model';
+import { toPayload } from '@ngrx/effects';
 
-export const filterField = 'sensorType';
 
 @Component({
 	selector: 'ansyn-context-menu',
@@ -17,15 +19,24 @@ export const filterField = 'sensorType';
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
-	mapState$ = this.store.select<IMapState>('map');
+	static filterField = 'sensorType';
 
-	filteredOverlays$: Observable<Overlay[]> = this.mapState$
-		.pluck <IMapState, Overlay[]>('filteredOverlays')
-		.distinctUntilChanged();
+	get filterField() {
+		return ContextMenuComponent.filterField;
+	}
+
+	mapState$ = this.store.select <IMapState>('map');
+
+	filteredOverlays$: Observable<Overlay[]> = this.mapEffects$
+		.getFilteredOverlays$
+		.map <Action, Overlay[]>(toPayload);
 
 	displayedOverlay$: Observable<Overlay> = this.mapState$
-		.pluck<IMapState, Overlay>('displayedOverlay')
+		.map(MapFacadeService.activeMap)
+		.filter((activeMap: CaseMapState) => Boolean(activeMap))
+		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
+
 
 	displayedOverlay: Overlay;
 	filteredOverlays: Overlay[];
@@ -43,7 +54,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	@HostListener('window:mousewheel')
-	get onmousewheel() {
+	get onMousewheel() {
 		return this.hide;
 	}
 
@@ -57,7 +68,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	constructor(private store: Store<IMapState>,
-				private mapEffects: MapEffects,
+				private mapEffects$: MapEffects,
 				private elem: ElementRef,
 				private renderer: Renderer2) {
 	}
@@ -71,7 +82,7 @@ export class ContextMenuComponent implements OnInit {
 			this.displayedOverlay = displayedOverlay;
 		});
 
-		this.mapEffects.onContextMenuShow$.subscribe(this.show.bind(this));
+		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
 	}
 
 	show(action: ContextMenuShowAction) {
@@ -86,7 +97,7 @@ export class ContextMenuComponent implements OnInit {
 	initializeSensors() {
 		const sensorsOnly = this.filteredOverlays
 			.filter(({ id }) => _get(this.displayedOverlay, 'id') !== id)
-			.map((overlay: Overlay) => overlay[filterField]);
+			.map((overlay: Overlay) => overlay[this.filterField]);
 		this.allSensors = _uniq(sensorsOnly);
 		this.displayedOverlayIndex = this.filteredOverlays
 			.findIndex(({ id }) => _get(this.displayedOverlay, 'id') === id);
@@ -109,7 +120,7 @@ export class ContextMenuComponent implements OnInit {
 	clickNext($event: MouseEvent, subFilter?: string) {
 		const nextOverlay = this.filteredOverlays
 			.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
-			.find((overlay: Overlay) => !subFilter || subFilter === overlay[filterField]);
+			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, nextOverlay);
 	}
 
@@ -117,12 +128,12 @@ export class ContextMenuComponent implements OnInit {
 		const prevOverlay = this.filteredOverlays
 			.slice(0, this.displayedOverlayIndex)
 			.reverse()
-			.find((overlay: Overlay) => !subFilter || subFilter === overlay[filterField]);
+			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
 	clickBest($event: MouseEvent, subFilter?: string) {
-		const sensorOnly = this.filteredOverlays.filter((overlay: Overlay) => !subFilter || subFilter === overlay[filterField]);
+		const sensorOnly = this.filteredOverlays.filter((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		const bestOverlay = sensorOnly.reduce((minValue, value) => {
 			return value.bestResolution < minValue.bestResolution ? value : minValue;
 		});
@@ -131,14 +142,14 @@ export class ContextMenuComponent implements OnInit {
 
 	clickFirst($event: MouseEvent, subFilter?: string) {
 		const firstOverlay = this.filteredOverlays
-			.find((overlay: Overlay) => !subFilter || subFilter === overlay[filterField]);
+			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, firstOverlay);
 	}
 
 	clickLast($event: MouseEvent, subFilter?: string) {
 		const lastOverlay = [...this.filteredOverlays]
 			.reverse()
-			.find((overlay: Overlay) => !subFilter || subFilter === overlay[filterField]);
+			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, lastOverlay);
 	}
 

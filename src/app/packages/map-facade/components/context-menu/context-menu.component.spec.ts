@@ -12,7 +12,10 @@ describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
-	const mockMapEffects = { onContextMenuShow$: new EventEmitter<void>(), getFilteredOverlays$: new EventEmitter<void>() };
+	const mockMapEffects = {
+		onContextMenuShow$: new EventEmitter<void>(),
+		getFilteredOverlays$: new EventEmitter<void>()
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

@@ -4,13 +4,19 @@ import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ContextMenuDisplayAction, ContextMenuShowAction, } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	ContextMenuDisplayAction,
+	ContextMenuGetFilteredOverlaysAction,
+	ContextMenuShowAction,
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysSuccessAction,
+	SetFiltersAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { ContextMenuGetFilteredOverlaysAction } from '../../../packages/map-facade/actions/map.actions';
-import { OverlaysService } from '../../../packages/overlays/services/overlays.service';
-import { LoadOverlaysSuccessAction, SetFiltersAction } from '../../../packages/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
@@ -45,7 +51,7 @@ describe('ContextMenuAppEffects', () => {
 
 		spyOn(OverlaysService, 'filter').and.returnValue(['1', '2', '3', '4', '5']);
 
-		store.dispatch(new SetFiltersAction({}))
+		store.dispatch(new SetFiltersAction({}));
 	}));
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {

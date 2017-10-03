@@ -9,7 +9,6 @@ import { LoadCasesAction, OpenModalAction, SelectCaseByIdAction } from '../../ac
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { expand } from 'rxjs/operator/expand';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -61,9 +60,11 @@ describe('CasesTableComponent', () => {
 
 	it('onMouseEnterCaseRow should calc the top of caseMenu and add "mouse-enter" class', () => {
 		let caseMenu = <HTMLDivElement> { style: { top: '-1px' } };
-		const caseRow = <HTMLDivElement> { offsetTop: 100, classList: jasmine.createSpyObj({
-			add: () => null
-		})};
+		const caseRow = <HTMLDivElement> {
+			offsetTop: 100, classList: jasmine.createSpyObj({
+				add: () => null
+			})
+		};
 		const tbodyElement = <HTMLDivElement> { scrollTop: 50 };
 		component.onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement);
 		expect(caseMenu.style.top).toEqual('51px');
@@ -71,9 +72,11 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('onMouseLeaveCaseRow should remove "mouse-enter" class', () => {
-		const caseRow = <HTMLDivElement> { classList: jasmine.createSpyObj({
-			remove: () => null
-		})};
+		const caseRow = <HTMLDivElement> {
+			classList: jasmine.createSpyObj({
+				remove: () => null
+			})
+		};
 		component.onMouseLeaveCaseRow(caseRow);
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});

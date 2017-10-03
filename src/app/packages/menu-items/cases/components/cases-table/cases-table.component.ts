@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { isEqual, range as _range } from 'lodash';
+import { range as _range } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 const animations: any[] = [
@@ -33,20 +33,19 @@ const animations: any[] = [
 export class CasesTableComponent implements OnInit {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
-	cases$: Observable<Case[]> = this.store$
-		.select <ICasesState>('cases')
+	caseState$: Observable<ICasesState> = this.store$.select <ICasesState>('cases');
+
+	cases$: Observable<Case[]> = this.caseState$
 		.pluck <ICasesState, Case[]>('cases')
 		.distinctUntilChanged();
 
-	modalCaseId$: Observable<string> = this.store$
-		.select('cases')
+	modalCaseId$: Observable<string> = this.caseState$
 		.map((state: ICasesState) => state.modalCaseId)
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged();
 
-	selectedCaseId$: Observable<string> = this.store$
-		.select('cases')
+	selectedCaseId$: Observable<string> = this.caseState$
 		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged();
 
 	get _range() {
 		return _range;

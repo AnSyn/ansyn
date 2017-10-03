@@ -16,8 +16,6 @@ import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
@@ -75,24 +73,6 @@ export class FiltersEffects {
 				return new InitializeFiltersSuccessAction(filterMetadatas);
 			});
 		}).share();
-
-	@Effect()
-	updateFiltersBadge$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType)
-		.withLatestFrom(this.store$
-			.select<IFiltersState>('filters')
-			.pluck <IFiltersState, Map<Filter, FilterMetadata>>('filters'))
-		.map(([action, filters]) => filters)
-		.map((filters: Map<Filter, FilterMetadata>) => {
-			const enumFilterValues = Array.from(filters.values())
-				.filter(value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
-			const badge = enumFilterValues.reduce((badgeNum: number, { enumsFields }) => {
-				const someUnchecked = Array.from(enumsFields.values()).some(({ isChecked }) => !isChecked);
-				return someUnchecked ? badgeNum + 1 : badgeNum;
-			}, 0);
-			return new SetBadgeAction({ key: 'Filters', badge });
-		})
-		.share();
 
 	constructor(private actions$: Actions,
 				private filtersService: FiltersService,

@@ -8,7 +8,7 @@
 			(click)="toggleItem(menuItem.name)">
 
 			<i [ngClass]="menuItem.iconClass"></i>
-			<span class="badge" [hidden]="!menuItem.badge">{{menuItem.badge}}</span>
+			<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 			{{menuItem.name}}
 		</div>
 

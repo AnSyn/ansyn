@@ -48,4 +48,11 @@
 		</ansyn-overlays-display-mode>
 	</div>
 
+	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
+	<button (click)="toggleAnnotationMenu()">
+	<span class="icon-annotation--edit"></span>
+	</button>
+	<span class="tooltiptext">User Annotations</span>
+	<ansyn-annotations-control [expand]="userAnnotationsToolOpen"></ansyn-annotations-control>
+	</div>
 </div>

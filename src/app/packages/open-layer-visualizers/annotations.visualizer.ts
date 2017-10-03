@@ -5,6 +5,7 @@ import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
+import Select from 'ol/interaction/select';
 import Fill from 'ol/style/fill';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
@@ -23,6 +24,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public layer: VectorLayer;
 
 	public interactionHandler: Draw;
+	public selectInteraction: Select;
 	public currentInteraction;
 	public geoJsonFormat: GeoJSON;
 	public features: Array<any>;
@@ -100,6 +102,32 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.layer.setSource(this._source);
 		this.layer.setStyle(this.styleFunction.bind(this));
 		this.layer.setZIndex(200000);
+
+		this.selectInteraction = new Select({
+			condition: event => event.originalEvent.which === 3 && event.type === 'pointerdown',
+			layers: [this.layer]
+		})
+
+		this.selectInteraction.on('select', openLayesrBrowserEvent => {
+			const target = openLayesrBrowserEvent.originalEvent.target;
+			const callback = event => {
+				event.stopPropagation();
+				this.selectInteraction.getFeatures().clear();
+				target.removeEventListener('contextmenu', callback)
+				document.createElement('div');
+
+			}
+			target.addEventListener('contextmenu', callback);
+		})
+
+	}
+
+	addSelectInteraction() {
+		this._imap.mapObject.addInteraction(this.selectInteraction)
+	}
+
+	removeSelectInteraction() {
+		this._imap.mapObject.removeInteraction(this.selectInteraction);
 	}
 
 	removeLayer() {
@@ -202,7 +230,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.interactionHandler) {
 
 			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
-
+			this.removeSelectInteraction();
 			this._imap.mapObject.addInteraction(this.interactionHandler);
 		}
 	}
@@ -212,6 +240,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		if (this.currentInteraction === type) {
 			this.currentInteraction = undefined;
+			this.addSelectInteraction();
 			return;
 		}
 
@@ -232,6 +261,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeInteraction();
 		if (this.currentInteraction === 'Arrow') {
 			this.currentInteraction = undefined;
+			this.addSelectInteraction();
 			return;
 		}
 		this.currentInteraction = 'Arrow';
@@ -247,6 +277,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeInteraction();
 		if (this.currentInteraction === 'Rectangle') {
 			this.currentInteraction = undefined;
+			this.addSelectInteraction();
 			return;
 		}
 		this.currentInteraction = 'Rectangle';

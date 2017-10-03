@@ -292,6 +292,7 @@ export class VisualizersAppEffects {
 					case 'show':
 						visualizer.addLayer();
 						visualizer.removeInteraction();
+						visualizer.addSelectInteraction();
 						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
 						break;
 					case 'createInteraction':
@@ -307,6 +308,7 @@ export class VisualizersAppEffects {
 						break;
 					case 'removeInteraction':
 						visualizer.removeInteraction();
+						visualizer.addSelectInteraction();
 						break;
 					case 'changeLine':
 						visualizer.changeLine(action.payload.value);
@@ -328,6 +330,7 @@ export class VisualizersAppEffects {
 						/*selectedCase.state.annotationsLayer = visualizer.getGeoJson();
 						update = true;*/
 						visualizer.removeInteraction();
+						visualizer.addSelectInteraction();
 						break;
 					case 'removeLayer': {
 						visualizer.removeInteraction();

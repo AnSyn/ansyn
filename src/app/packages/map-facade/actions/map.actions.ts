@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { CaseMapState, MapsLayout, Position } from '@ansyn/core';
-import { Overlay } from '../../core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',

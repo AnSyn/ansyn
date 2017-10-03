@@ -17,13 +17,13 @@ export const ansynMenuItems: MenuItem[] = [
 	{
 		name: 'Filters',
 		component: FiltersCollectionComponent,
-		iconClass: 'icon-main--filters',
+		iconClass: 'icon-main--filters2',
 		production: true
 	},
 	{
 		name: 'Layers Manager',
 		component: LayersManagerComponent,
-		iconClass: 'icon-hide-layers',
+		iconClass: 'icon-main--filters',
 		production: true
 	},
 	{
@@ -51,4 +51,3 @@ export const ansynMenuItems: MenuItem[] = [
 		production: false
 	}
 ];
-

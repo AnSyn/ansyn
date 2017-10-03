@@ -1,4 +1,4 @@
-<div class="cases-table" *ngIf="cases_from_state && cases_from_state.length > 0; else noCases">
+<div class="cases-table" *ngIf="cases && cases.length > 0; else noCases">
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">
 			<div class="cases-table-head-row-data">
@@ -19,11 +19,11 @@
 	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbody_element>
 
 		<div class="cases-table-body-row"
-			 *ngFor="let caseIndex of _range(cases_from_state.length)"
-			 (click)="selectCase(cases_from_state[caseIndex].id)"
-			 [class.active]="modalCaseId === cases_from_state[caseIndex].id"
-			 [class.selected]="selectedCaseId === cases_from_state[caseIndex].id"
-			 (mouseenter)="calcTopCaseMenu($event, case_menu)"
+			 *ngFor="let caseIndex of _range(cases.length)"
+			 (click)="selectCase(cases[caseIndex].id)"
+			 [class.active]="modalCaseId === cases[caseIndex].id"
+			 [class.selected]="selectedCaseId === cases[caseIndex].id"
+			 (mouseenter)="calcTopCaseMenu($event, caseMenu)"
 			 [@leaveAnim] #case_row>
 
 			<hr>
@@ -31,27 +31,27 @@
 				<hr>
 
 				<div class="cases-table-body-col">
-					{{cases_from_state[caseIndex].name}}
+					{{cases[caseIndex].name}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{cases_from_state[caseIndex].owner}}
+					{{cases[caseIndex].owner}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{ cases_from_state[caseIndex].last_modified | date:"MM/dd/yy hh:mm" }}
+					{{ cases[caseIndex].last_modified | date:"MM/dd/yy hh:mm" }}
 				</div>
 
 				<!--menu-->
 				<div class="case_menu-container">
-					<div class="case-menu" (click)="$event.stopPropagation()" #case_menu>
-						<button (click)="removeCase($event, cases_from_state[caseIndex].id)">
+					<div class="case-menu" (click)="$event.stopPropagation()" #caseMenu>
+						<button (click)="removeCase($event, cases[caseIndex].id)">
 							<i class="icon-case--delete"></i>
 						</button>
-						<button (click)="shareCase($event, cases_from_state[caseIndex].id)">
+						<button (click)="shareCase($event, cases[caseIndex].id)">
 							<i class="icon-case--share"></i>
 						</button>
-						<button (click)="editCase($event, cases_from_state[caseIndex].id)">
+						<button (click)="editCase($event, cases[caseIndex].id)">
 							<i class="icon-case--edit"></i>
 						</button>
 					</div>

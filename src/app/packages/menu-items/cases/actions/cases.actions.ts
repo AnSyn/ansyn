@@ -116,7 +116,7 @@ export class DeleteCaseBackendSuccessAction implements Action {
 export class OpenModalAction implements Action {
 	type = CasesActionTypes.OPEN_MODAL;
 
-	constructor(public payload: { component: any, case_id?: string }) {
+	constructor(public payload: { component: any, caseId?: string }) {
 	}
 }
 

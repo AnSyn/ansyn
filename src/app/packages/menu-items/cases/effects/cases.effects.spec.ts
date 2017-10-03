@@ -97,7 +97,7 @@ describe('CasesEffects', () => {
 		store.dispatch(new AddCaseSuccessAction(deleted_case));
 		store.dispatch(new SelectCaseAction(deleted_case));
 		// set modalCaseId
-		store.dispatch(new OpenModalAction({ component: '', case_id: deleted_case.id }));
+		store.dispatch(new OpenModalAction({ component: '', caseId: deleted_case.id }));
 		effectsRunner.queue(new DeleteCaseAction());
 		casesEffects.onDeleteCase$.subscribe((result: AddCaseSuccessAction) => {
 			expect((result instanceof DeleteCaseBackendAction) || (result instanceof LoadDefaultCaseAction)).toBeTruthy();

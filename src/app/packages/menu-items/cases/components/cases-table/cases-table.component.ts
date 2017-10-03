@@ -31,19 +31,19 @@ const animations: any[] = [
 	animations
 })
 export class CasesTableComponent implements OnInit {
-	@ViewChild('tbody_element') tbody_element: ElementRef;
+	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
-	cases_from_state$: Observable<Case[]> = this.store
-		.select('cases')
-		.map((state: ICasesState) => state.cases)
-		.distinctUntilChanged(isEqual);
+	cases$: Observable<Case[]> = this.store$
+		.select <ICasesState> ('cases')
+		.pluck <ICasesState, Case[]> ('cases')
+		.distinctUntilChanged();
 
-	modalCaseId$: Observable<string> = this.store
+	modalCaseId$: Observable<string> = this.store$
 		.select('cases')
 		.map((state: ICasesState) => state.modalCaseId)
 		.distinctUntilChanged(isEqual);
 
-	selectedCaseId$: Observable<string> = this.store
+	selectedCaseId$: Observable<string> = this.store$
 		.select('cases')
 		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
 		.distinctUntilChanged(isEqual);
@@ -52,67 +52,67 @@ export class CasesTableComponent implements OnInit {
 		return _range;
 	}
 
-	cases_from_state: Case[];
+	cases: Case[];
 	modalCaseId: string;
 	selectedCaseId: string;
 
-	constructor(private store: Store<ICasesState>, private casesEffects: CasesEffects) {
+	constructor(private store$: Store<ICasesState>, private casesEffects: CasesEffects) {
 		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));
 	}
 
 	ngOnInit(): void {
 
-		this.cases_from_state$.subscribe((_cases_from_state) => {
-			this.cases_from_state = _cases_from_state;
+		this.cases$.subscribe((cases) => {
+			this.cases = cases;
 		});
 
-		this.modalCaseId$.subscribe((_modalCaseId) => {
-			this.modalCaseId = _modalCaseId;
+		this.modalCaseId$.subscribe((modalCaseId) => {
+			this.modalCaseId = modalCaseId;
 		});
 
-		this.selectedCaseId$.subscribe((_selectedCaseId) => {
-			this.selectedCaseId = _selectedCaseId;
+		this.selectedCaseId$.subscribe((selectedCaseId) => {
+			this.selectedCaseId = selectedCaseId;
 		});
 
 		this.loadCases();
 	}
 
 	loadCases() {
-		this.store.dispatch(new LoadCasesAction());
+		this.store$.dispatch(new LoadCasesAction());
 	}
 
 	onCasesAdded() {
-		if (this.tbody_element) {
-			this.tbody_element.nativeElement.scrollTop = 0;
+		if (this.tbodyElement) {
+			this.tbodyElement.nativeElement.scrollTop = 0;
 		}
 	}
 
-	calcTopCaseMenu($event: MouseEvent, case_menu: HTMLDivElement) {
+	calcTopCaseMenu($event: MouseEvent, caseMenu: HTMLDivElement) {
 		let target: HTMLElement = <any> $event.target;
 		let offsetTop = target.offsetTop;
 		let scrollTop = target.parentElement.scrollTop;
-		case_menu.style.top = `${offsetTop - scrollTop}px`;
+		caseMenu.style.top = `${offsetTop - scrollTop}px`;
 	}
 
-	removeCase($event: MouseEvent, case_id: string): void {
+	removeCase($event: MouseEvent, caseId: string): void {
 		$event.stopPropagation();
 		let component = DeleteCaseComponent;
-		this.store.dispatch(new OpenModalAction({ component, case_id }));
+		this.store$.dispatch(new OpenModalAction({ component, caseId }));
 	}
 
-	editCase($event: MouseEvent, case_id: string) {
+	editCase($event: MouseEvent, caseId: string) {
 		$event.stopPropagation();
 		let component = EditCaseComponent;
-		this.store.dispatch(new OpenModalAction({ component, case_id }));
+		this.store$.dispatch(new OpenModalAction({ component, caseId }));
 	}
 
-	shareCase($event: MouseEvent, case_id: string) {
+	shareCase($event: MouseEvent, caseId: string) {
 		$event.stopPropagation();
-		this.store.dispatch(new CopyCaseLinkAction(case_id));
+		this.store$.dispatch(new CopyCaseLinkAction(caseId));
 	}
 
 	selectCase(id: string): void {
-		this.store.dispatch(new SelectCaseByIdAction(id));
+		this.store$.dispatch(new SelectCaseByIdAction(id));
 	}
 
 }

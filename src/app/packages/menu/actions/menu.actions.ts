@@ -45,7 +45,7 @@ export class UnSelectMenuItemAction implements Action {
 export class SetBadgeAction implements Action {
 	type = MenuActionTypes.SET_BADGE;
 
-	constructor(public payload: { key: string, badge: number }) {
+	constructor(public payload: { key: string, badge: string }) {
 	}
 }
 

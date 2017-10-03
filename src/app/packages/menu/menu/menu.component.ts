@@ -161,6 +161,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
 		this.buildCurrentComponent();
 	}
 
+	hideBadge(badge: string): boolean {
+		return badge === '★' ? false : !Number(badge);
+	}
+
 	isActive(key: string): boolean {
 		return this.selectedMenuItemName === key;
 	}

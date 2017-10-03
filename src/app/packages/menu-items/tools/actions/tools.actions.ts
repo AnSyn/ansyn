@@ -21,6 +21,7 @@ export const ToolsActionsTypes = {
 	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
+	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU')
 
 };
 
@@ -151,6 +152,13 @@ export class AnnotationVisualizerAgentAction implements Action {
 	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
 
 	constructor(public payload: any) {
+	}
+}
+
+export class SetAutoCloseMenu implements Action {
+	type = ToolsActionsTypes.SET_AUTOCLOSE_MENU;
+
+	constructor(public payload: boolean) {
 	}
 }
 

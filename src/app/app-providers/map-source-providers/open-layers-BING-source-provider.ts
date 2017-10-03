@@ -18,7 +18,8 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 			preload: Infinity,
 			source: new BingMaps({
 				key: metaData.key,
-				imagerySet: style
+				imagerySet: style,
+				maxZoom: 19
 			})
 		}));
 	}

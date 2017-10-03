@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { CaseMapState, MapsLayout, Position } from '@ansyn/core';
+import { Overlay } from '../../core/models/overlay.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -18,7 +19,7 @@ export const MapActionTypes = {
 	SET_MAP_AUTO_IMAGE_PROCESSING: 'SET_MAP_AUTO_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
-		SET_FILTERED_OVERLAYS: 'SET_FILTERED_OVERLAYS',
+		GET_FILTERED_OVERLAYS: 'GET_FILTERED_OVERLAYS',
 		DISPLAY: 'DISPLAY'
 	},
 	VISUALIZERS: {
@@ -184,10 +185,10 @@ export class ContextMenuShowAction implements Action {
 	}
 }
 
-export class SetContextMenuFiltersAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS;
+export class ContextMenuGetFilteredOverlaysAction implements Action {
+	type = MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS;
 
-	constructor(public payload: { filteredOverlays: any[], displayedOverlay: any }) {
+	constructor(public payload: Overlay[] ) {
 	}
 }
 

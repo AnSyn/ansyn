@@ -1,37 +1,31 @@
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import {
+	ContextMenuGetFilteredOverlaysAction,
 	ContextMenuShowAction,
-	MapActionTypes,
-	SetContextMenuFiltersAction
+	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { get as _get } from 'lodash';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class ContextMenuAppEffects {
 
 	@Effect()
-	setContextFilter$: Observable<SetContextMenuFiltersAction> = this.actions$
+	setContextFilter$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'))
-		.map(([action, overlays, mapState]: [ContextMenuShowAction, IOverlayState, IMapState]) => {
-			let filteredOverlays: any[] = overlays.filteredOverlays.map((id: string): Overlay => overlays.overlays.get(id));
-			filteredOverlays = filteredOverlays.filter(({ footprint }) => inside(action.payload.point, footprint));
-			const activeMap = MapFacadeService.activeMap(mapState);
-			return new SetContextMenuFiltersAction({
-				filteredOverlays,
-				displayedOverlay: <any>_get(activeMap.data, 'overlay')
-			});
-		});
+		.withLatestFrom(this.store$.select('overlays'))
+		.map(([action, overlaysState]: [ContextMenuShowAction, IOverlayState]) => {
+			return overlaysState.filteredOverlays
+				.map((id: string): Overlay => overlaysState.overlays.get(id))
+				.filter(({ footprint }) => inside(action.payload.point, footprint));
+		})
+		.map((filteredOverlays: Overlay[]) => new ContextMenuGetFilteredOverlaysAction(filteredOverlays));
 
 	@Effect()
 	onContextMenuDisplayAction$: Observable<any> = this.actions$

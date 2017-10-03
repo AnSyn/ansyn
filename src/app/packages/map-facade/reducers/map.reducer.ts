@@ -1,16 +1,11 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { Position } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { Overlay } from '../../core/models/overlay.model';
 
 export interface IMapState {
-	positions: Position;
 	communicators: {};
 	loadingOverlays: string[];
-	filteredOverlays: Overlay[];
-	displayedOverlay: Overlay;
 	mapIdToGeoOptions: Map<string, boolean>;
 	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
@@ -19,11 +14,8 @@ export interface IMapState {
 }
 
 export const initialMapState: IMapState = {
-	positions: {} as any,
 	communicators: {},
 	loadingOverlays: [],
-	filteredOverlays: [],
-	displayedOverlay: null,
 	mapIdToGeoOptions: new Map<string, boolean>(),
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
@@ -42,11 +34,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
 			return { ...state, overlaysNotInCase: action.payload };
 
-		case MapActionTypes.POSITION_CHANGED:
-			const positions = cloneDeep(state.positions);
-			positions[action.payload.id] = action.payload.position;
-			return { ...state, positions: positions };
-
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
 			return { ...state, communicators: action.payload.communicatorsIds };
@@ -62,7 +49,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				loadingOverlays.push(overlayIdToAdd);
 				return { ...state, loadingOverlays: loadingOverlays };
 			}
-			break;
+			return state;
 
 		case MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS:
 			const overlayIdToRemove = action.payload.overlayId;
@@ -72,10 +59,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				loadingOverlays.splice(overlayIndex, 1);
 				return { ...state, loadingOverlays: loadingOverlays };
 			}
-			break;
-
-		case MapActionTypes.CONTEXT_MENU.SET_FILTERED_OVERLAYS:
-			return { ...state, ...action.payload };
+			return state;
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

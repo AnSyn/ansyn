@@ -10,6 +10,7 @@ import {
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { Overlay } from '../../core/models/overlay.model';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -53,7 +54,7 @@ describe('Overlay Reducer', () => {
 		const action = new LoadOverlaysAction(queryParams);
 		const mockOverlayInitialState = cloneDeep(overlayInitialState);
 
-		mockOverlayInitialState.overlays.set('tmp', 'value');
+		mockOverlayInitialState.overlays.set('tmp', <any> 'value');
 		expect(mockOverlayInitialState.overlays.size).toBe(1);
 		const result = OverlayReducer(mockOverlayInitialState, action);
 

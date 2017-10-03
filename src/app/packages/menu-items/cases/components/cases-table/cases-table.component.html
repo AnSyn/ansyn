@@ -16,17 +16,20 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbody_element>
+	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbodyElement>
 
 		<div class="cases-table-body-row"
 			 *ngFor="let caseIndex of _range(cases.length)"
 			 (click)="selectCase(cases[caseIndex].id)"
 			 [class.active]="modalCaseId === cases[caseIndex].id"
 			 [class.selected]="selectedCaseId === cases[caseIndex].id"
-			 (mouseenter)="calcTopCaseMenu($event, caseMenu)"
-			 [@leaveAnim] #case_row>
+			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
+			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
+			 [@leaveAnim]
+			 #caseRow>
 
 			<hr>
+
 			<div class="cases-table-body-row-data">
 				<hr>
 
@@ -44,14 +47,14 @@
 
 				<!--menu-->
 				<div class="case_menu-container">
-					<div class="case-menu" (click)="$event.stopPropagation()" #caseMenu>
-						<button (click)="removeCase($event, cases[caseIndex].id)">
+					<div class="case-menu" (click)="genralCaseMenuClick($event, caseRow)" #caseMenu>
+						<button (click)="removeCase(cases[caseIndex].id)">
 							<i class="icon-case--delete"></i>
 						</button>
-						<button (click)="shareCase($event, cases[caseIndex].id)">
+						<button (click)="shareCase(cases[caseIndex].id)">
 							<i class="icon-case--share"></i>
 						</button>
-						<button (click)="editCase($event, cases[caseIndex].id)">
+						<button (click)="editCase(cases[caseIndex].id)">
 							<i class="icon-case--edit"></i>
 						</button>
 					</div>

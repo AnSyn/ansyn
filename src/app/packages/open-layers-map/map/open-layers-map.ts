@@ -531,7 +531,7 @@ export class OpenLayersMap implements IMap {
 				style: new Style({
 					image: new Icon({
 						scale: 0.05,
-						src: '/assets/2877.png' // for further usage either bring from configuration or create svg
+						src: '/assets/mouse-shadow.png' // for further usage either bring from configuration or create svg
 					})
 				})
 			});

@@ -45,12 +45,15 @@
 				<!--menu-->
 				<div class="case_menu-container">
 					<div class="case-menu" (click)="$event.stopPropagation()" #case_menu>
-						<button (click)="removeCase($event, cases_from_state[caseIndex].id)"><img
-							src="/assets/icons/Delete.svg"/></button>
-						<button (click)="shareCase($event, cases_from_state[caseIndex].id)"><img
-							src="/assets/icons/Share.svg"/></button>
-						<button (click)="editCase($event, cases_from_state[caseIndex].id)"><img
-							src="/assets/icons/Edit.svg"/></button>
+						<button (click)="removeCase($event, cases_from_state[caseIndex].id)">
+							<i class="icon-case--delete"></i>
+						</button>
+						<button (click)="shareCase($event, cases_from_state[caseIndex].id)">
+							<i class="icon-case--share"></i>
+						</button>
+						<button (click)="editCase($event, cases_from_state[caseIndex].id)">
+							<i class="icon-case--edit"></i>
+						</button>
 					</div>
 				</div>
 

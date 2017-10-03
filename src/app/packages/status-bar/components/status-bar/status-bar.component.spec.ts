@@ -54,7 +54,7 @@ describe('StatusBarComponent', () => {
 
 	it('check click on pinPoint flags', () => {
 		spyOn(store, 'dispatch');
-		fixture.nativeElement.querySelector('.status-bar-edit-icon img').click();
+		fixture.nativeElement.querySelector('.status-bar-edit-icon i').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 
 		fixture.nativeElement.querySelector('.status-bar-eye-icon img').click();

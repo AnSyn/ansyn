@@ -48,19 +48,25 @@
 			overflow: hidden;
 			position: relative;
 
+			div.status-timeline-container {
+				position: relative;
+
+				.status {
+					position: relative;
+					height: 0;
+				}
+
+				.app-timeline-container {
+					height: 140px;
+					background-color: white;
+				}
+			}
+
 			.maps-container {
 				position: relative;
 				flex: 1;
 			}
-			.status {
-				position: relative;
-				height: 0;
-			}
 
-			.app-timeline-container {
-				height: 140px;
-				background-color: white;
-			}
 		}
 
 		&.animations {
@@ -86,10 +92,10 @@
 
 			@keyframes timeline-init {
 				from {
-					transform: translateY(100%);
+					top: 100%;
 				}
 				to {
-					transform: translateY(0);
+					top: 0;
 				}
 			}
 
@@ -107,7 +113,6 @@
 
 			div.layer div.status-timeline-container {
 				animation: timeline-init @animation-duration;
-				transform: translateY(0);
 			}
 		}
 	}

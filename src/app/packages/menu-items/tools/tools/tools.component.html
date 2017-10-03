@@ -3,14 +3,14 @@
 		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item'
 				[class.active]="flags.get('shadow_mouse')"
 				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
-			<img src='/assets/icons/tools/shadow_mouse.svg'/>
+			<i class="icon-tools--shadow-mouse"></i>
 		</button>
 		<span class="tooltiptext">Shadow mouse cursor</span>
 	</div>
 
 	<div>
 		<button (click)="toggleExpandGoTo()" [disabled]="isGeoOptionsDisabled">
-			<img src='/assets/icons/tools/go-to.svg'/>
+			<i class="icon-tools--go-to-location"></i>
 		</button>
 		<span class="tooltiptext">Go To</span>
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
@@ -20,13 +20,14 @@
 		<button (click)='toggleImageProcessing()'
 				[class.active]="flags.get('auto_image_processing')"
 				[disabled]="flags.get('auto_image_processing_disabled')">
-			<img src='/assets/icons/tools/automatic-processing.svg'/>
+			<i class="icon-automatic-image-processing"></i>
 		</button>
 		<span class="tooltiptext">Automatic Image Enhancement</span>
 	</div>
 
 	<div #displayOverlayDiv class="display-overlay-visualizer" [class.active]="displayModeOn">
-		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled">
+		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled"
+				style="width: 24px;height: 24px;">
 		</button>
 		<span class="tooltiptext">Display Overlays</span>
 		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode"

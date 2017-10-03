@@ -49,7 +49,7 @@
 
 			<div class="selection-combobox layout-item geo-selection">
 				<div class='status-bar-world-icon'>
-					<img src="/assets/icons/status-bar/geo-filter-icon.svg" class="status-bar-image-left">
+					<i class="icon-status-bar--geo"></i>
 				</div>
 
 
@@ -59,7 +59,7 @@
 				</select>
 
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-					<img (click)="toggleMapPointSearch()" src="/assets/edit.svg" alt="" class="status-bar-image-right">
+					<i (click)="toggleMapPointSearch()" class="icon-status-bar--edit-pin-point"></i>
 				</div>
 				<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt=""
@@ -76,8 +76,7 @@
 					<option>Start - End</option>
 				</select>
 				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
-					<img (click)="toggleTimelineStartEndSearch()" src="/assets/edit.svg" alt=""
-						 class="status-bar-image-right">
+					<i (click)="toggleTimelineStartEndSearch()" class="icon-case--edit"></i>
 				</div>
 				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">

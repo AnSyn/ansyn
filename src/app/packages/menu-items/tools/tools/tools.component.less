@@ -12,15 +12,17 @@
 
 			button {
 				margin: 0;
-				padding: 3px;
+				padding: 5px;
 				border: none;
-				width: 24px;
-				height: 24px;
+				font-size: 24px;
+				color: white;
 				background: rgba(255, 255, 255, 0.25);
 				box-sizing: content-box;
 				outline: none;
+
 				&:disabled {
 					opacity: .6;
+					cursor: not-allowed;
 				}
 				&.active {
 					background-color: rgb(41, 127, 155);
@@ -50,11 +52,9 @@
 
 			&.display-overlay-visualizer {
 				button {
-					opacity: 0.6;
 					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat center center;
 				}
 				&.active {
-					opacity: 1;
 					button {
 					}
 				}

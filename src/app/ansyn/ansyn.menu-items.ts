@@ -11,25 +11,25 @@ export const ansynMenuItems: MenuItem[] = [
 	{
 		name: 'Cases',
 		component: CasesComponent,
-		iconClass: 'icon-main--cases',
+		iconClass: 'icon-cases2',
 		production: true
 	},
 	{
 		name: 'Filters',
 		component: FiltersCollectionComponent,
-		iconClass: 'icon-main--filters2',
+		iconClass: 'icon-filters2',
 		production: true
 	},
 	{
 		name: 'Layers Manager',
 		component: LayersManagerComponent,
-		iconClass: 'icon-main--filters',
+		iconClass: 'icon-data_layers2',
 		production: true
 	},
 	{
 		name: 'Tools',
 		component: ToolsComponent,
-		iconClass: 'icon-main--tools',
+		iconClass: 'icon-tools2',
 		production: true
 	},
 	{

@@ -98,7 +98,7 @@ export class CasesTableComponent implements OnInit {
 		caseRow.classList.remove('mouse-enter');
 	}
 
-	genralCaseMenuClick($event: MouseEvent, caseRow: HTMLDivElement) {
+	caseMenuClick($event: MouseEvent, caseRow: HTMLDivElement) {
 		caseRow.classList.remove('mouse-enter');
 		$event.stopPropagation();
 	}

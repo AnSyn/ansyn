@@ -47,7 +47,7 @@ describe('ToolsComponent', () => {
 	});
 
 	it('check the mouse shadow toggle button', () => {
-		const button = fixture.debugElement.nativeElement.querySelector('.shadow-mouse-button');
+		const button = fixture.debugElement.nativeElement.querySelector('button:first-child');
 		component.flags = new Map();
 		component.flags.set('shadow_mouse', false);
 
@@ -78,13 +78,20 @@ describe('ToolsComponent', () => {
 		expect(component.expandOverlaysDisplayMode).toBeTruthy();
 	});
 
-	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {
+	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {
+		const displayOverlayButton: HTMLButtonElement = fixture.nativeElement.querySelector('.display-overlay-visualizer button');
 		component.displayModeOn = true;
 		fixture.detectChanges();
-		expect(component.displayOverlayDiv.nativeElement.classList.contains('active')).toBeTruthy();
+		expect(displayOverlayButton.classList.contains('mode-on')).toBeTruthy();
 		component.displayModeOn = false;
 		fixture.detectChanges();
-		expect(component.displayOverlayDiv.nativeElement.classList.contains('active')).toBeFalsy();
+		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
+		component.expandOverlaysDisplayMode = true;
+		fixture.detectChanges();
+		expect(displayOverlayButton.classList.contains('active')).toBeTruthy();
+		component.expandOverlaysDisplayMode = false;
+		fixture.detectChanges();
+		expect(displayOverlayButton.classList.contains('active')).toBeFalsy();
 	});
 
 	it('toogle annotation menu open', () => {

@@ -12,7 +12,7 @@
 	overflow: hidden;
 }
 
-.tooltip-value {
+.tooltip-value:not(.active):not(:disabled) {
 	&.bottom {
 		&:after {
 			top: auto;
@@ -45,10 +45,11 @@
 	}
 
 	&:after {
+		font-size: small;
 		opacity: 0;
 		position: absolute;
 		content: attr(value);
-		padding: 5px;
+		padding: 0 10px;
 		left: 0;
 		top: 0;
 		background: black;
@@ -59,16 +60,20 @@
 		border-radius: 6px;
 		z-index: 2;
 		transform: translate(0, -100%);
+		white-space: nowrap;
+		pointer-events: none;
+		height: 34px;
+		display: flex;
+		align-items: center;
 	}
 
-	&:hover {
-		&:after {
-			opacity: 1;
-			visibility: visible;
-			transform: translate(0, calc(~"-100% - 15px"));
-		}
+	&:hover:after {
+		opacity: 1;
+		visibility: visible;
+		transform: translate(0, calc(~"-100% - 15px"));
 	}
 
 }
+
 
 

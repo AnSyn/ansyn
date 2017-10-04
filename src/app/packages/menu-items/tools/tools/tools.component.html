@@ -1,37 +1,52 @@
 <div class='tools-menu-item-container'>
 	<div>
-		<button (click)='toggleShadowMouse()' class='shadow-mouse-button tool-item'
-				[class.active]="flags.get('shadow_mouse')"
-				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled">
+		<button class="tooltip-value right"
+				(click)='toggleShadowMouse()'
+				[class.mode-on]="flags.get('shadow_mouse')"
+				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled"
+				value="Shadow mouse cursor">
 			<i class="icon-tools--shadow-mouse"></i>
 		</button>
-		<span class="tooltiptext">Shadow mouse cursor</span>
 	</div>
 
 	<div>
-		<button (click)="toggleExpandGoTo()" [disabled]="isGeoOptionsDisabled">
+
+		<button class="tooltip-value right"
+				(click)="toggleExpandGoTo()"
+				[class.active]="expandGoTo"
+				[disabled]="isGeoOptionsDisabled"
+				value="Go To">
 			<i class="icon-tools--go-to-location"></i>
 		</button>
-		<span class="tooltiptext">Go To</span>
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
 	<div class='image-processing'>
-		<button (click)='toggleImageProcessing()'
-				[class.active]="flags.get('auto_image_processing')"
-				[disabled]="flags.get('auto_image_processing_disabled')">
+		<button class="tooltip-value right"
+				(click)='toggleImageProcessing()'
+				[class.mode-on]="flags.get('auto_image_processing')"
+				[disabled]="flags.get('auto_image_processing_disabled')"
+				value="Automatic Image Enhancement">
 			<i class="icon-automatic-image-processing"></i>
 		</button>
-		<span class="tooltiptext">Automatic Image Enhancement</span>
 	</div>
 
-	<div #displayOverlayDiv class="display-overlay-visualizer" [class.active]="displayModeOn">
-		<button (click)="toggleExpandVisualizers()" [disabled]="isGeoOptionsDisabled"
-				style="width: 24px;height: 24px;">
+	<div class="display-overlay-visualizer">
+		<button
+				class="tooltip-value right"
+				(click)="toggleExpandVisualizers()"
+				[disabled]="isGeoOptionsDisabled"
+				value="Display Overlays"
+				[class.mode-on]="displayModeOn"
+				[class.active]="expandOverlaysDisplayMode">
 		</button>
-		<span class="tooltiptext">Display Overlays</span>
-		<ansyn-overlays-display-mode [disabled]="isGeoOptionsDisabled" [(expand)]="expandOverlaysDisplayMode"
-									 [(modeOn)]="displayModeOn"></ansyn-overlays-display-mode>
+
+		<ansyn-overlays-display-mode
+			[disabled]="isGeoOptionsDisabled"
+			[(expand)]="expandOverlaysDisplayMode"
+			[(modeOn)]="displayModeOn">
+
+		</ansyn-overlays-display-mode>
 	</div>
 
 	<!--<div class="user-annotations" [class.active]="userAnnotationsToolOpen">-->

@@ -30,9 +30,6 @@ export class ToolsComponent implements OnInit {
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged(isEqual);
 
-	// for tests
-	@ViewChild('displayOverlayDiv') displayOverlayDiv: ElementRef;
-
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) {
 

@@ -1,3 +1,5 @@
+@import '~@ansyn/core/less/common';
+
 :host {
 	display: block;
 	div.tools-menu-item-container {
@@ -24,13 +26,23 @@
 					opacity: .6;
 					cursor: not-allowed;
 				}
+
 				&.active {
 					background-color: rgb(41, 127, 155);
 				}
-				&:hover ~ span.tooltiptext {
-					visibility: visible;
-					opacity: 1;
+
+				&.mode-on {
+					box-shadow: 0 0 2px 1px #2f2e47;
 				}
+
+				&:hover:not(.active):not(:disabled){
+					~ span.tooltiptext {
+						visibility: visible;
+						opacity: 1;
+					}
+					background-color: rgb(41, 127, 155);
+				}
+
 			}
 
 			span.tooltiptext {
@@ -52,11 +64,11 @@
 
 			&.display-overlay-visualizer {
 				button {
-					background: rgba(255, 255, 255, 0.25) url(/assets/icons/tools/polygons.svg) no-repeat center center;
-				}
-				&.active {
-					button {
-					}
+					background-image: url(/assets/icons/tools/polygons.svg);
+					background-repeat: no-repeat;
+					background-position: center center;
+					width: 24px;
+					height: 24px;
 				}
 			}
 

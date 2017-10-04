@@ -44,9 +44,45 @@ export class ContextMenuComponent implements OnInit {
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
+	angleList = []; // ['Draw', 'Turn', 'Show']
+
 	contextMenuShowAction: ContextMenuShowAction;
 
-	private point: GeoJSON.Point;
+	point: GeoJSON.Point;
+
+	overlayButtons: any[] = [
+		{
+			name: 'last',
+			subList: 'nextSensors',
+			action: this.clickLast.bind(this),
+		},
+		{
+			name: 'first',
+			subList: 'prevSensors',
+			action: this.clickFirst.bind(this),
+		},
+		{
+			name: 'next',
+			subList: 'nextSensors',
+			action: this.clickNext.bind(this),
+		},
+		{
+			name: 'prev',
+			subList: 'prevSensors',
+			action: this.clickPrev.bind(this),
+		},
+		{
+			name: 'best',
+			subList: 'allSensors',
+			action: this.clickBest.bind(this),
+		},
+		{
+			name: 'angle',
+			subList: 'angleList',
+			action: () => {
+			},
+		}
+	];
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -111,10 +147,15 @@ export class ContextMenuComponent implements OnInit {
 			this.prevSensors = _uniq(sensorsOnly.slice(0, this.displayedOverlayIndex));
 			this.nextSensors = _uniq(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length));
 		}
+		console.log(this.overlayButtons);
 	}
 
 	hide() {
 		this.elem.nativeElement.blur();
+	}
+
+	isClick($event: MouseEvent): boolean {
+		return $event.which === 1;
 	}
 
 	clickNext($event: MouseEvent, subFilter?: string) {

@@ -1,99 +1,29 @@
 <nav class="menu">
 
-	<button class="menu-open-button" (mousedown)="setPinPoint()">
+	<button class="menu-open-button" (mousedown)="isClick($event) && setPinPoint($event)">
 		<span class="pointer icon-map-pin-point"></span>
 	</button>
 
 	<div class="buttons-area">
-		<button class="menu-item next"
-				[disabled]="_isEmpty(nextSensors)"
-				(mousedown)="clickNext($event)">
-			<i class="icon-context--next"></i>
-			<span>Next</span>
+
+		<button
+			*ngFor="let data of overlayButtons"
+			class="menu-item"
+			[ngClass]="data.name"
+			[disabled]="_isEmpty(this[data.subList])"
+			(mousedown)="isClick($event) && data.action($event)">
+			<i class="icon-context--{{data.name}}"></i>
+			<span>{{data.name | titlecase}}</span>
 			<div class="sub-buttons-list">
 				<button
 					class="tooltip-value"
-					*ngFor="let filter of nextSensors"
-					(mousedown)="clickNext($event, filter)"
+					*ngFor="let filter of this[data.subList]"
+					(mousedown)="isClick($event) && data.action($event, filter)"
 					[value]="filter">
 					<span>{{filter}}</span>
 				</button>
 			</div>
 		</button>
 
-		<button class="menu-item prev"
-				[disabled]="_isEmpty(prevSensors)"
-				(mousedown)="clickPrev($event)">
-			<i class="icon-context--prev"></i>
-			<span>Prev</span>
-			<div class="sub-buttons-list">
-				<button
-					class="tooltip-value"
-					*ngFor="let filter of prevSensors"
-					(mousedown)="clickPrev($event, filter)"
-					[value]="filter">
-					<span>{{filter}}</span>
-				</button>
-			</div>
-		</button>
-
-		<button class="menu-item first"
-				[disabled]="_isEmpty(prevSensors)"
-				(mousedown)="clickFirst($event)">
-			<i class="icon-context--first"></i>
-			<span>First</span>
-			<div class="sub-buttons-list">
-				<button
-					class="tooltip-value"
-					*ngFor="let filter of prevSensors"
-					(mousedown)="clickFirst($event, filter)"
-					[value]="filter">
-					<span>{{filter}}</span>
-				</button>
-			</div>
-		</button>
-
-		<button class="menu-item last"
-				[disabled]="_isEmpty(nextSensors)"
-				(mousedown)="clickLast($event)">
-			<i class="icon-context-last"></i>
-			<span>Last</span>
-			<div class="sub-buttons-list">
-				<button
-					class="tooltip-value"
-					*ngFor="let filter of nextSensors"
-					(mousedown)="clickLast($event, filter)"
-					[value]="filter">
-					<span>{{filter}}</span>
-				</button>
-			</div>
-		</button>
-
-
-		<button class="menu-item best"
-				[disabled]="_isEmpty(allSensors)"
-				(mousedown)="clickBest($event)">
-			<i class="icon-context-best"></i>
-			<span>Best</span>
-			<div class="sub-buttons-list">
-				<button
-					class="tooltip-value"
-					*ngFor="let filter of allSensors"
-					(mousedown)="clickBest($event, filter)"
-					[value]="filter">
-					<span>{{filter}}</span>
-				</button>
-			</div>
-		</button>
-
-		<button class="menu-item angle" disabled>
-			<i class="icon-context--angle"></i>
-			<span>Angle</span>
-			<div class="sub-buttons-list">
-				<button>Draw</button>
-				<button>Turn</button>
-				<button>Show</button>
-			</div>
-		</button>
 	</div>
 </nav>

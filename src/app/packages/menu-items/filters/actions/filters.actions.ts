@@ -19,7 +19,7 @@ export type FiltersActions = any;
 export class InitializeFiltersAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS;
 
-	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] }, showAll?: boolean }) {
+	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] } }) {
 	}
 }
 

@@ -28,6 +28,12 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 
 @Injectable()
 export class CasesAppEffects {
+	/**
+	 * @type Effect
+	 * @name setShowFavoritesFlagOnFilters$
+	 * @ofType SelectCaseAction
+	 * @action EnableOnlyFavortiesSelectionAction
+	 */
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -35,6 +41,13 @@ export class CasesAppEffects {
 			return new EnableOnlyFavortiesSelectionAction(payload.state.favoritesOverlays && !!payload.state.favoritesOverlays.length);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onDisplayOverlay$
+	 * @ofType DisplayOverlayAction
+	 * @action SetMapsDataActionStore
+	 * @dependencies map
+	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -52,6 +65,13 @@ export class CasesAppEffects {
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}).share();
 
+	/**
+	 * @type Effect
+	 * @name onCopyShareCaseLink$
+	 * @ofType CopyCaseLinkAction
+	 * @action SetToastMessageStoreAction
+	 * @dependencies cases
+	 */
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
 		.ofType(CasesActionTypes.COPY_CASE_LINK)
@@ -66,10 +86,17 @@ export class CasesAppEffects {
 		})
 		.map((sCase: Case) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			const result = copyFromContent(shareLink);
+			copyFromContent(shareLink);
 			return new SetToastMessageStoreAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
+	/**
+	 * @type Effect
+	 * @name onOpenShareLink$
+	 * @ofType OpenShareLink
+	 * @dependencies cases
+	 * @dispatch: false
+	 */
 	@Effect({ dispatch: false })
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
@@ -81,6 +108,13 @@ export class CasesAppEffects {
 			window.open(shareLink);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onLoadContexts$
+	 * @ofType LoadContextsAction
+	 * @action LoadContextsSuccessAction
+	 * @dependencies cases
+	 */
 	@Effect()
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)

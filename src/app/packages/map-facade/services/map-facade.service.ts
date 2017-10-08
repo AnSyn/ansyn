@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
-	AddMapInstacneAction,
+	AddMapInstanceAction,
 	ContextMenuShowAction,
 	DbclickFeatureTriggerAction,
 	HoverFeatureTriggerAction,
@@ -70,7 +70,7 @@ export class MapFacadeService {
 		this.initEmitters();
 
 		imageryCommunicatorService.instanceCreated.subscribe((communicatorsIds) => {
-			this.store.dispatch(new AddMapInstacneAction(communicatorsIds));
+			this.store.dispatch(new AddMapInstanceAction(communicatorsIds));
 		});
 
 		imageryCommunicatorService.instanceRemoved.subscribe((communicatorsIds) => {

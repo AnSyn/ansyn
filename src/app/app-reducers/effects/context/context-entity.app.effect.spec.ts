@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
-import { AddMapInstacneAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstanceAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
@@ -132,7 +132,7 @@ describe('ContextEntityAppEffects', () => {
 	it('displayEntityFromNewMap$ should display context entity from selected case on new map', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		const communicators: Array<string> = ['imagery2'];
-		effectsRunner.queue(new AddMapInstacneAction({
+		effectsRunner.queue(new AddMapInstanceAction({
 			currentCommunicatorId: 'imagery2',
 			communicatorsIds: communicators
 		}));
@@ -144,7 +144,7 @@ describe('ContextEntityAppEffects', () => {
 	it('displayEntityFromNewMap$ should NOT display on new map if doesn\'t exist in case', () => {
 		cases[0].state.contextEntities = null;
 		const communicators: Array<string> = ['imagery2'];
-		effectsRunner.queue(new AddMapInstacneAction({
+		effectsRunner.queue(new AddMapInstanceAction({
 			currentCommunicatorId: 'imagery2',
 			communicatorsIds: communicators
 		}));

@@ -11,6 +11,13 @@ import { isEmpty } from 'lodash';
 @Injectable()
 export class LayersAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name selectCase$
+	 * @ofType SelectCaseAction
+	 * @filter The selected case is not empty
+	 * @action BeginLayerTreeLoadAction
+	 */
 	@Effect()
 	selectCase$: Observable<Action> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -19,6 +26,6 @@ export class LayersAppEffects {
 			return new BeginLayerTreeLoadAction({ caseId: payload.id });
 		}).share();
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>) {
+	constructor(private actions$: Actions) {
 	}
 }

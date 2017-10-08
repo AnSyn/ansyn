@@ -20,7 +20,14 @@ import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 @Injectable()
 export class OverlaysAppEffects {
 
-
+	/**
+	 * @type Effect
+	 * @name onOverlaysMarkupsChanged$
+	 * @ofType LoadOverlaysSuccessAction
+	 * @dependencies cases
+	 * @filter There is a selected case
+	 * @action OverlaysMarkupAction
+	 */
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -31,6 +38,13 @@ export class OverlaysAppEffects {
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
+	/**
+	 * @type Effect
+	 * @name selectCase$
+	 * @ofType SelectCaseAction
+	 * @filter There is an imagery count and the case is not empty
+	 * @action LoadOverlaysAction
+	 */
 	@Effect()
 	selectCase$: Observable<LoadOverlaysAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -46,6 +60,13 @@ export class OverlaysAppEffects {
 			return new LoadOverlaysAction(overlayFilter);
 		});
 
+	/**
+	 * @type Effect
+	 * @name selectCaseWithImageryCount$
+	 * @ofType SelectCaseAction
+	 * @filter There is an imagery count and the case is not empty
+	 * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
+	 */
 	@Effect()
 	selectCaseWithImageryCount$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -80,7 +101,7 @@ export class OverlaysAppEffects {
 
 
 	@Effect()
-	initTimelineStata$: Observable<SetTimelineStateAction> = this.actions$
+	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCount !== -1)
 		.withLatestFrom(this.store$.select('overlays'), (action, overlay: IOverlayState) => overlay.timelineState)

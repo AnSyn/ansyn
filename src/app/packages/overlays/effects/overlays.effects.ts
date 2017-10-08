@@ -68,7 +68,7 @@ export class OverlaysEffects {
 		});
 
 	@Effect()
-	initTimelineStata$: Observable<SetTimelineStateAction> = this.actions$
+	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map((action: LoadOverlaysAction) => {
 			const from = new Date(action.payload.from);

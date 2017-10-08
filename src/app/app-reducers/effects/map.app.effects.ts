@@ -35,7 +35,7 @@ import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	AddMapInstacneAction,
+	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
 	EnableMapGeoOptionsActionStore,
 	PinPointTriggerAction,
@@ -71,6 +71,14 @@ import {
 @Injectable()
 export class MapAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name onMapSingleClick$
+	 * @ofType MapSingleClickAction
+	 * @dependencies cases, status_bar
+	 * @filter In pin point search
+	 * @action UpdateStatusFlagsAction, PinPointTriggerAction
+	 */
 	@Effect()
 	onMapSingleClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
@@ -91,6 +99,13 @@ export class MapAppEffects {
 			];
 		});
 
+	/**
+	 * @type Effect
+	 * @name onPinPointTrigger$
+	 * @ofType PinPointTriggerAction
+	 * @dependencies cases, status_bar
+	 * @action UpdateCaseAction, LoadOverlaysAction
+	 */
 	@Effect()
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
@@ -127,6 +142,14 @@ export class MapAppEffects {
 		});
 
 
+	/**
+	 * @type Effect
+	 * @name onMapSingleClickPinLocation$
+	 * @ofType MapSingleClickAction
+	 * @dependencies tools
+	 * @filter In pin location mode
+	 * @action SetPinLocationModeAction, SetActiveCenter
+	 */
 	@Effect()
 	onMapSingleClickPinLocation$: Observable<SetActiveCenter | SetPinLocationModeAction> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
@@ -142,16 +165,36 @@ export class MapAppEffects {
 			];
 		});
 
+	/**
+	 * @type Effect
+	 * @name onStartMapShadow$
+	 * @ofType StartMouseShadow
+	 * @action StartMapShadowAction
+	 */
 	@Effect()
 	onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
 		.map(() => new StartMapShadowAction());
 
+	/**
+	 * @type Effect
+	 * @name onEndMapShadow$
+	 * @ofType StopMouseShadow
+	 * @action StopMapShadowAction
+	 */
 	@Effect()
 	onEndMapShadow$: Observable<StopMapShadowAction> = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
 		.map(() => new StopMapShadowAction());
 
+	/**
+	 * @type Effect
+	 * @name onDisplayOverlay$
+	 * @ofType DisplayOverlayAction
+	 * @dependencies map
+	 * @filter There is a full overlay
+	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?
+	 */
 	@Effect()
 	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -196,12 +239,20 @@ export class MapAppEffects {
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id })));
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayOverlayOnNewMapInstance$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @dependencies map
+	 * @filter There is mapsList, and it has a an overlay with id from payload
+	 * @action DisplayOverlayAction
+	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('map'))
-		.filter(([action, mapsState]: [AddMapInstacneAction, IMapState]) => !isEmpty(mapsState.mapsList))
-		.map(([action, mapsState]: [AddMapInstacneAction, IMapState]) => {
+		.filter(([action, mapsState]: [AddMapInstanceAction, IMapState]) => !isEmpty(mapsState.mapsList))
+		.map(([action, mapsState]: [AddMapInstanceAction, IMapState]) => {
 			return mapsState.mapsList
 				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
 		})
@@ -211,6 +262,12 @@ export class MapAppEffects {
 			return new DisplayOverlayAction({ overlay: caseMapState.data.overlay, map_id: caseMapState.id });
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayOverlayFromCase$
+	 * @ofType SelectCaseAction
+	 * @dependencies map
+	 */
 	@Effect()
 	displayOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -227,12 +284,25 @@ export class MapAppEffects {
 			}, []);
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayOverlayFromCase$
+	 * @ofType DisplayOverlayAction
+	 * @action AddOverlayToLoadingOverlaysAction
+	 */
 	@Effect()
 	setOverlayAsLoading$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.map((action: DisplayOverlayAction) =>
 			new AddOverlayToLoadingOverlaysAction(action.payload.overlay.id));
 
+	/**
+	 * @type Effect
+	 * @name onOverlayFromURL$
+	 * @ofType DisplayOverlayAction
+	 * @filter There is no full overlay
+	 * @action RequestOverlayByIDFromBackendAction
+	 */
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -243,6 +313,12 @@ export class MapAppEffects {
 				map_id: action.payload.map_id
 			}));
 
+	/**
+	 * @type Effect
+	 * @name overlayLoadingSuccess$
+	 * @ofType DisplayOverlaySuccessAction
+	 * @action RemoveOverlayFromLoadingOverlaysAction
+	 */
 	@Effect()
 	overlayLoadingSuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
@@ -251,6 +327,12 @@ export class MapAppEffects {
 			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id);
 		});
 
+	/**
+	 * @type Effect
+	 * @name overlayLoadingFailed$
+	 * @ofType DisplayOverlayFailedAction
+	 * @action SetToastMessageStoreAction, RemoveOverlayFromLoadingOverlaysAction
+	 */
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
@@ -263,6 +345,12 @@ export class MapAppEffects {
 			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		]);
 
+	/**
+	 * @type Effect
+	 * @name addVectorLayer$
+	 * @ofType SelectLayerAction
+	 * @dependencies cases
+	 */
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
@@ -275,6 +363,12 @@ export class MapAppEffects {
 			imagery.addVectorLayer(action.payload);
 		});
 
+	/**
+	 * @type Effect
+	 * @name removeVectorLayer$
+	 * @ofType UnselectLayerAction
+	 * @dependencies cases
+	 */
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
@@ -285,6 +379,14 @@ export class MapAppEffects {
 			imagery.removeVectorLayer(action.payload);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onCommunicatorChange$
+	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction, MapInstanceChangedAction
+	 * @dependencies cases
+	 * @filter There is at least one communicator, and exact length of maps
+	 * @action CompositeMapShadowAction, AnnotationVisualizerAgentAction
+	 */
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
@@ -301,6 +403,13 @@ export class MapAppEffects {
 			})
 		]);
 
+	/**
+	 * @type Effect
+	 * @name onAddCommunicatorShowPinPoint$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @dependencies cases, status_bar
+	 * @filter There is a pinPointIndicator or pinPointSearch
+	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
@@ -320,10 +429,15 @@ export class MapAppEffects {
 
 		});
 
+	/**
+	 * @type Effect
+	 * @name onAddCommunicatorInitPlugin$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.map((action: AddMapInstacneAction) => {
+		.map((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.s_pluginType);
@@ -332,8 +446,15 @@ export class MapAppEffects {
 			}
 		});
 
+	/**
+	 * @type Effect
+	 * @name onSelectCaseByIdAddPinPointIndicator$
+	 * @ofType SelectCaseAction
+	 * @dependencies cases, status_bar
+	 * @filter There is a pinPointIndicator or pinPointSearch
+	 */
 	@Effect({ dispatch: false })
-	onSelectCaseByIdAddPinPointIndicatore$: Observable<any> = this.actions$
+	onSelectCaseByIdAddPinPointIndicator$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
 		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
@@ -344,12 +465,16 @@ export class MapAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name onSynchronizeAppMaps$
+	 * @ofType SynchronizeMapsAction
+	 * @dependencies cases
+	 */
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select('cases'), (action: SynchronizeMapsAction, casesState: ICasesState) => {
-			return [action, casesState];
-		})
+		.withLatestFrom(this.store$.select('cases'), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
 		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
 			const mapToSyncTo = casesState.selectedCase.state.maps.data.find((map) => map.id === action.payload.mapId);
 			casesState.selectedCase.state.maps.data.forEach((mapItem: CaseMapState) => {
@@ -360,11 +485,17 @@ export class MapAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name activeMapGeoRegistrationChanged$$
+	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter mapsList.length > 0
+	 * @action EnableMapGeoOptionsActionStore
+	 */
 	@Effect()
-	activeMapGeoRegistartionChanged$: Observable<any> = this.actions$
-		.ofType(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+	activeMapGeoRegistrationChanged$$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select('map'))
 		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
 		.map(([action, mapState]: [Action, IMapState]) => {
@@ -381,8 +512,15 @@ export class MapAppEffects {
 			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
 		});
 
+	/**
+	 * @type Effect
+	 * @name backToWorldGeoRegistration$
+	 * @ofType BackToWorldAction
+	 * @dependencies map
+	 * @filter Exists a communicator for the mapId
+	 */
 	@Effect({ dispatch: false })
-	backToWorldGeoRegistartion$: Observable<any> = this.actions$
+	backToWorldGeoRegistration$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select('map'))
 		.map(([action, mapState]: [any, any]): any[] => {
@@ -396,6 +534,12 @@ export class MapAppEffects {
 			mapComm.setActiveMap('openLayersMap', position);
 		});
 
+	/**
+	 * @type Effect
+	 * @name changeMapGeoOptionsMode$
+	 * @ofType EnableMapGeoOptionsActionStore
+	 * @action SetMapGeoEnabledModeToolsActionStore, SetMapGeoEnabledModeStatusBarActionStore
+	 */
 	@Effect()
 	changeMapGeoOptionsMode$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ENABLE_MAP_GEO_OPTIONS)
@@ -407,6 +551,13 @@ export class MapAppEffects {
 			];
 		});
 
+	/**
+	 * @type Effect
+	 * @name onLayoutChange$
+	 * @ofType ChangeLayoutAction
+	 * @dependencies cases, status_bar
+	 * @action UpdateCaseAction?, SetLayoutAction
+	 */
 	@Effect()
 	onLayoutChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
@@ -432,6 +583,13 @@ export class MapAppEffects {
 			return actions;
 		});
 
+	/**
+	 * @type Effect
+	 * @name setOverlaysNotInCase$
+	 * @ofType SetFiltersAction, SetMapsDataActionStore
+	 * @dependencies overlays, map
+	 * @action SetOverlayNotInCaseAction
+	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.STORE.SET_MAPS_DATA)
@@ -452,6 +610,13 @@ export class MapAppEffects {
 			return new SetOverlayNotInCaseAction(overlaysNoInCase);
 		});
 
+	/**
+	 * @type Effect
+	 * @name markupOnMapsDataChanges$
+	 * @ofType ActiveMapChangedAction, MapsListChangedAction
+	 * @dependencies cases
+	 * @action OverlaysMarkupAction
+	 */
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)

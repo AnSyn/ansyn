@@ -12,7 +12,7 @@
 
 	width: 0;
 	height: 0;
-	z-index: @context-menu-depth;
+	z-index: @z-index-context-menu;
 
 	&:focus {
 		nav.menu {
@@ -127,7 +127,7 @@
 			position: relative;
 			top: 0;
 			left: 0;
-			z-index: 4000;
+			z-index: @z-index-context-menu;
 			cursor: pointer;
 			background: #FFFFFF;
 			color: #30A2C6;
@@ -193,7 +193,7 @@
 				&:hover {
 					.sub-buttons-list {
 						//transition: visibility ease-out 200ms, z-index ease-out 200ms;
-						z-index: 5;
+						z-index: @z-index-context-menu-sub-buttons-list;
 					}
 				}
 
@@ -252,7 +252,7 @@
 						//}
 
 						&:hover {
-							z-index: @context-menu-depth;
+							z-index: @z-index-context-menu;
 							background: #0b3e48;
 							//&:after {
 							//	opacity: 1;

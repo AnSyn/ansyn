@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'icons';
+@import "~@ansyn/core/less/z-index-globals";
 
 body {
 	margin: 0;
@@ -141,11 +142,11 @@ button[disabled] {
 	justify-content: center;
 	display: flex;
 	align-items: center;
-	z-index: 9999999;
+	z-index: @z-index-spinner;
 }
 
 .spinner-before:before {
-	z-index: 1000;
+	z-index: @z-index-spinner-before;
 	content: ' ';
 	margin: 0 auto 1rem;
 	width: 50px;
@@ -162,7 +163,7 @@ button[disabled] {
 }
 
 .spinner-text {
-	z-index: 9999999;
+	z-index: @z-index-spinner;
 	color: white;
 	top: 50px;
 	justify-content: center;

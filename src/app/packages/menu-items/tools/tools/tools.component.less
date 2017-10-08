@@ -1,3 +1,4 @@
+@import "~@ansyn/core/less/z-index-globals";
 @import '~@ansyn/core/less/tooltip';
 
 :host {
@@ -42,7 +43,6 @@
 					}
 					background-color: rgb(41, 127, 155);
 				}
-
 			}
 
 			span.tooltiptext {
@@ -59,7 +59,7 @@
 				top: -5px;
 				left: 105%;
 				position: absolute;
-				z-index: 2;
+				z-index: @z-index-tools-tooltiptext;
 			}
 
 			&.display-overlay-visualizer {

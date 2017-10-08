@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@import "~@ansyn/core/less/z-index-globals";
 
 :host {
 	width: 0;
@@ -10,7 +11,7 @@
 	background: @application-main-color;
 	visibility: hidden;
 	transition: .2s;
-	z-index: 2;
+	z-index: @z-index-go-to-component;
 	overflow: hidden;
 	&.expand {
 		form {
@@ -30,7 +31,7 @@
 		background: transparent;
 		cursor: pointer;
 		outline: none;
-		z-index: 1;
+		z-index: @z-index-go-to-close;
 		&:hover {
 			color: #2e2d46;
 		}

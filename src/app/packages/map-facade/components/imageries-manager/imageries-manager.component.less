@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@import "~@ansyn/core/less/z-index-globals";
 
 @height-minus-status: calc(~"100% - @{status-bar-height}");
 
@@ -20,7 +21,7 @@
 
 		&.pin-point {
 			// Center cursor image to mouse pointer center
-			cursor: url('/assets/cursors/pin-point2.cur') 17 17, pointer;
+			cursor: url('/assets/cursors/pin-point.cur') 17 17, pointer;
 		}
 
 		&:not(.layout1) {
@@ -38,7 +39,7 @@
 			top: 0;
 			left: 0;
 			box-sizing: border-box;
-			z-index: 4;
+			z-index: @z-index-imageries-active-border;
 			border: none;
 			pointer-events: none;
 

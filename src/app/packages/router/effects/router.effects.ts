@@ -11,6 +11,11 @@ import { Router } from '@angular/router';
 @Injectable()
 export class RouterEffects {
 
+	/**
+	 * @type Effect
+	 * @name onNavigateCase$
+	 * @ofType NavigateCaseTriggerAction
+	 */
 	@Effect({ dispatch: false })
 	onNavigateCase$: Observable<any> = this.actions$
 		.ofType(RouterActionTypes.NAVIGATE_CASE)

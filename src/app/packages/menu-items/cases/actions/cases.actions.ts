@@ -78,15 +78,15 @@ export class UpdateCaseAction implements Action {
 	}
 }
 
-export class UpdateCaseBackendSuccessAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
+export class UpdateCaseBackendAction implements Action {
+	type = CasesActionTypes.UPDATE_CASE_BACKEND;
 
 	constructor(public payload: Case) {
 	}
 }
 
-export class UpdateCaseBackendAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND;
+export class UpdateCaseBackendSuccessAction implements Action {
+	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
 
 	constructor(public payload: Case) {
 	}

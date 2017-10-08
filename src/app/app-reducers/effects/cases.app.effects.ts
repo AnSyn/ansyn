@@ -21,7 +21,7 @@ import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.acti
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
 import { BaseContextSourceProvider, ContextCriteria } from '@ansyn/context';
-import { EnableOnlyFavortiesSelectionAction } from '@ansyn/menu-items/filters/';
+import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -32,13 +32,13 @@ export class CasesAppEffects {
 	 * @type Effect
 	 * @name setShowFavoritesFlagOnFilters$
 	 * @ofType SelectCaseAction
-	 * @action EnableOnlyFavortiesSelectionAction
+	 * @action EnableOnlyFavoritesSelectionAction
 	 */
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(({ payload }: SelectCaseAction) => {
-			return new EnableOnlyFavortiesSelectionAction(payload.state.favoritesOverlays && !!payload.state.favoritesOverlays.length);
+			return new EnableOnlyFavoritesSelectionAction(payload.state.favoritesOverlays && !!payload.state.favoritesOverlays.length);
 		});
 
 	/**

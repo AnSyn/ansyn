@@ -6,17 +6,30 @@ import {
 	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import * as MapActions from '@ansyn/map-facade/actions';
+import { PinLocationModeTriggerAction } from '@ansyn/map-facade/actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ToolsMapEffects {
-	@Effect()
-	updatePinLocationState$: any = this.actions$
-		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.map(({ payload }) => new MapActions.PinLocationModeTriggerAction(payload));
 
+	/**
+	 * @type Effect
+	 * @name updatePinLocationState$
+	 * @ofType SetPinLocationModeAction
+	 * @action PinLocationModeTriggerAction
+	 */
+	@Effect()
+	updatePinLocationState$: Observable<PinLocationModeTriggerAction> = this.actions$
+		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
+		.map(({ payload }) => new PinLocationModeTriggerAction(payload));
+
+	/**
+	 * @type Effect
+	 * @name onLayoutsChangeSetMouseShadowEnable$
+	 * @ofType SetLayoutAction
+	 * @action DisableMouseShadow?, StopMouseShadow?, EnableMouseShadow?
+	 */
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_LAYOUT)

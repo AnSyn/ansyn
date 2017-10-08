@@ -10,9 +10,16 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class CasesMapEffects {
-	/* Maps update case */
+
+	/**
+	 * @type Effect
+	 * @name onMapsDataChange$
+	 * @ofType SetMapsDataActionStore
+	 * @dependencies cases, map
+	 * @action UpdateCaseAction
+	 */
 	@Effect()
-	onMapsDataChange$: Observable<Action> = this.actions$
+	onMapsDataChange$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(toPayload)
 		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('map'))
@@ -31,7 +38,12 @@ export class CasesMapEffects {
 			return new UpdateCaseAction(updatedCase);
 		});
 
-	/* Case update maps */
+	/**
+	 * @type Effect
+	 * @name selectCaseByIdUpdateMapsData$
+	 * @ofType SelectCaseAction
+	 * @action SetMapsDataActionStore
+	 */
 	@Effect()
 	selectCaseByIdUpdateMapsData$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)

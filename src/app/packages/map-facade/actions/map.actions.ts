@@ -49,7 +49,6 @@ export class EnableMapGeoOptionsActionStore implements Action {
 	type = MapActionTypes.ENABLE_MAP_GEO_OPTIONS;
 
 	constructor(public payload: { mapId: string, isEnabled: boolean }) {
-		// code...
 	}
 }
 
@@ -57,7 +56,6 @@ export class BackToWorldAction implements Action {
 	type = MapActionTypes.BACK_TO_WORLD;
 
 	constructor(public payload: { mapId: string } = { mapId: undefined }) {
-		// code...
 	}
 }
 
@@ -91,13 +89,13 @@ export class AddMapInstanceAction implements Action {
 
 // TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
 export class MapInstanceChangedAction extends AddMapInstanceAction {
-	public mapInstanceChangedPayload;
+	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 
-	constructor(payload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {
-		// code...
-		super({ currentCommunicatorId: payload.id, communicatorsIds: payload.communicatorsIds });
-		this.mapInstanceChangedPayload = payload;
-		this.type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
+	constructor(public mapInstanceChangedPayload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {
+		super({
+			currentCommunicatorId: mapInstanceChangedPayload.id,
+			communicatorsIds: mapInstanceChangedPayload.communicatorsIds
+		});
 	}
 }
 

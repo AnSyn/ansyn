@@ -51,7 +51,7 @@ export class ToggleOnlyFavoriteAction implements Action {
 	}
 }
 
-export class EnableOnlyFavortiesSelectionAction implements Action {
+export class EnableOnlyFavoritesSelectionAction implements Action {
 	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
 
 	constructor(public payload?: any) {

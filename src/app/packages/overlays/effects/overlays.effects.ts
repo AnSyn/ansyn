@@ -25,8 +25,15 @@ import 'rxjs/add/operator/share';
 @Injectable()
 export class OverlaysEffects {
 
+	/**
+	 * @type Effect
+	 * @name onDisplayOverlayFromStore$
+	 * @ofType DisplayOverlayFromStoreAction
+	 * @dependencies overlays
+	 * @action DisplayOverlayAction
+	 */
 	@Effect()
-	onDisplayOverlayFromStore$: Observable<any> = this.actions$
+	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlayState): any => {
 			return { overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id };
@@ -35,38 +42,62 @@ export class OverlaysEffects {
 			return new DisplayOverlayAction({ overlay, map_id });
 		}).share();
 
+	/**
+	 * @type Effect
+	 * @name onOverlaysMarkupChanged$
+	 * @ofType OverlaysMarkupAction
+	 */
 	@Effect({ dispatch: false })
 	onOverlaysMarkupChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.share();
 
+	/**
+	 * @type Effect
+	 * @name onRedrawTimeline$
+	 * @ofType RedrawTimelineAction
+	 */
 	@Effect({ dispatch: false })
 	onRedrawTimeline$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
 		.map(() => true)
 		.share();
 
+	/**
+	 * @type Effect
+	 * @name loadOverlays$
+	 * @ofType LoadOverlaysAction
+	 * @action LoadOverlaysSuccessAction
+	 */
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
-				.map(data => {
-					return new LoadOverlaysSuccessAction(data);
-				})
+				.map(data => new LoadOverlaysSuccessAction(data))
 				.catch(() => Observable.of(new LoadOverlaysSuccessAction([])));
 		});
 
+	/**
+	 * @type Effect
+	 * @name onRequestOverlayByID$
+	 * @ofType RequestOverlayByIDFromBackendAction
+	 * @action DisplayOverlayAction
+	 */
 	@Effect()
 	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId) // this.overlaysService.fetchData("",action.payload)
-				.map((overlay: Overlay) => {
-					return new DisplayOverlayAction({ overlay, map_id: action.payload.map_id });
-				});
+				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, map_id: action.payload.map_id }));
 		});
 
+	/**
+	 * @type Effect
+	 * @name initTimelineState$
+	 * @ofType LoadOverlaysAction
+	 * @action SetTimelineStateAction
+	 */
 	@Effect()
 	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
@@ -76,6 +107,14 @@ export class OverlaysEffects {
 			return new SetTimelineStateAction({ from, to });
 		});
 
+	/**
+	 * @type Effect
+	 * @name goPrevDisplay$
+	 * @ofType GoPrevDisplayAction
+	 * @dependencies overlays
+	 * @filter Exists a previous overlay
+	 * @action DisplayOverlayFromStoreAction
+	 */
 	@Effect()
 	goPrevDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
@@ -86,6 +125,14 @@ export class OverlaysEffects {
 		.filter(prevOverlayId => !_isNil(prevOverlayId))
 		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
 
+	/**
+	 * @type Effect
+	 * @name goNextDisplay$
+	 * @ofType GoNextDisplayAction
+	 * @dependencies overlays
+	 * @filter Exists a next overlay
+	 * @action DisplayOverlayFromStoreAction
+	 */
 	@Effect()
 	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
@@ -97,7 +144,15 @@ export class OverlaysEffects {
 		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
 
 
-	// this method moves the timeline to active displayed overlay if exists in timeline
+	/**
+	 * @type Effect
+	 * @name displayOverlaySetTimeline$
+	 * @description this method moves the timeline to active displayed overlay if exists in timeline
+	 * @ofType DisplayOverlayAction
+	 * @dependencies overlays, cases
+	 * @filter isActiveMap && displayedOverlay && displayedOverlay is exeeding timelineState
+	 * @action SetTimelineStateAction
+	 */
 	@Effect()
 	displayOverlaySetTimeline$ = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)

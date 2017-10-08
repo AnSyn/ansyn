@@ -22,6 +22,13 @@ export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUC
 @Injectable()
 export class FiltersEffects {
 
+	/**
+	 * @type Effect
+	 * @name initializeFilters$
+	 * @ofType InitializeFiltersAction
+	 * @dependencies filters
+	 * @action InitializeFiltersSuccessAction
+	 */
 	@Effect()
 	initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS)

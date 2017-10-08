@@ -16,6 +16,13 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 @Injectable()
 export class ContextMenuAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name setContextFilter$
+	 * @ofType ContextMenuShowAction
+	 * @dependencies overlays
+	 * @action ContextMenuGetFilteredOverlaysAction
+	 */
 	@Effect()
 	setContextFilter$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
@@ -27,6 +34,12 @@ export class ContextMenuAppEffects {
 		})
 		.map((filteredOverlays: Overlay[]) => new ContextMenuGetFilteredOverlaysAction(filteredOverlays));
 
+	/**
+	 * @type Effect
+	 * @name onContextMenuDisplayAction$
+	 * @ofType ContextMenuDisplayAction
+	 * @action DisplayOverlayFromStoreAction
+	 */
 	@Effect()
 	onContextMenuDisplayAction$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.DISPLAY)

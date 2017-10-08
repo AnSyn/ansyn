@@ -17,6 +17,12 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 @Injectable()
 export class ContextEntityAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name displayEntityFromCase$
+	 * @ofType SelectCaseAction
+	 * @filter case has contextEntities
+	 */
 	@Effect({ dispatch: false })
 	displayEntityFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -28,6 +34,13 @@ export class ContextEntityAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayEntityFromNewMap$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @dependencies cases, map
+	 * @filter selected case has contextEntities
+	 */
 	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
@@ -39,6 +52,13 @@ export class ContextEntityAppEffects {
 			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayEntityFromNewMap$
+	 * @ofType DisplayOverlayAction
+	 * @dependencies cases, map
+	 * @filter selected case has contextEntities
+	 */
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -51,6 +71,13 @@ export class ContextEntityAppEffects {
 			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayEntityTimeFromBackToWorld$
+	 * @ofType BackToWorldAction
+	 * @dependencies cases
+	 * @filter selected case has contextEntities
+	 */
 	@Effect({ dispatch: false })
 	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)

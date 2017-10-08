@@ -9,12 +9,16 @@ import { MenuActionTypes } from '../actions';
 
 @Injectable()
 export class MenuEffects {
+
+	/**
+	 * @type Effect
+	 * @name onSelectMenuItem$
+	 * @ofType SelectMenuItemAction
+	 */
 	@Effect({ dispatch: false })
 	onSelectMenuItem$: Observable<any> = this.actions$
 		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
-		.map((action) => {
-			return action;
-		}).share();
+		.share();
 
 	constructor(private actions$: Actions) {
 	}

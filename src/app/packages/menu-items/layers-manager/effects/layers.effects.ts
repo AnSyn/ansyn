@@ -23,6 +23,14 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class LayersEffects {
+
+	/**
+	 * @type Effect
+	 * @name beginLayerTreeLoad$
+	 * @ofType BeginLayerTreeLoadAction
+	 * @dependencies layers
+	 * @action UnselectLayerAction?, LayerTreeLoadedAction?, SelectLayerAction?, ErrorLoadingLayersAction?
+	 */
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.ofType(LayersActionTypes.BEGIN_LAYER_TREE_LOAD)

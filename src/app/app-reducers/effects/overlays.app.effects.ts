@@ -99,7 +99,14 @@ export class OverlaysAppEffects {
 				});
 		});
 
-
+	/**
+	 * @type Effect
+	 * @name initTimelineState$
+	 * @ofType LoadOverlaysSuccessAction
+	 * @filter There is an imagery count
+	 * @dependencies overlays
+	 * @action SetTimelineStateAction
+	 */
 	@Effect()
 	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -112,6 +119,14 @@ export class OverlaysAppEffects {
 			return new SetTimelineStateAction({ from: fromTenth, to: toTenth });
 		});
 
+	/**
+	 * @type Effect
+	 * @name displayLatestOverlay$
+	 * @ofType SetFiltersAction
+	 * @dependencies overlays
+	 * @filter defaultOverlay is latest and displayedOverlays is not empty
+	 * @action DisplayOverlayFromStoreAction
+	 */
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS)

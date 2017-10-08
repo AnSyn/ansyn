@@ -42,6 +42,13 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 @Injectable()
 export class VisualizersAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name onHoverFeatureSetMarkup$
+	 * @ofType HoverFeatureTriggerAction
+	 * @dependencies cases
+	 * @action OverlaysMarkupAction
+	 */
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
@@ -51,8 +58,14 @@ export class VisualizersAppEffects {
 			return new OverlaysMarkupAction(markups);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onMouseOverDropAction$
+	 * @ofType MouseOverDropAction, MouseOutDropAction
+	 * @action HoverFeatureTriggerAction
+	 */
 	@Effect()
-	onMouseOverDropAction$: Observable<any> = this.actions$
+	onMouseOverDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
 		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
 		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
 		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
@@ -60,6 +73,11 @@ export class VisualizersAppEffects {
 			visualizerType: FootprintPolylineVisualizerType
 		}));
 
+	/**
+	 * @type Effect
+	 * @name onHoverFeatureEmitSyncHoverFeature$
+	 * @ofType HoverFeatureTriggerAction
+	 */
 	@Effect({ dispatch: false })
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
@@ -72,15 +90,27 @@ export class VisualizersAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name onDbclickFeaturePolylineDisplayAction$
+	 * @ofType DbclickFeatureTriggerAction
+	 * @filter TODO
+	 * @action DisplayOverlayFromStoreAction
+	 */
 	@Effect()
-	onDbclickFeaturePolylineDisplayAction$: Observable<any> = this.actions$
+	onDbclickFeaturePolylineDisplayAction$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
 		.map(toPayload)
 		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizerType)
 		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
 
+	/**
+	 * @type Effect
+	 * @name markupVisualizer$
+	 * @ofType OverlaysMarkupAction
+	 */
 	@Effect({ dispatch: false })
-	markupVisualizer$: Observable<any> = this.actions$
+	markupVisualizer$: Observable<void> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.map((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
@@ -91,6 +121,13 @@ export class VisualizersAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name updateCaseFromTools$
+	 * @ofType ShowOverlaysFootprintAction
+	 * @dependencies map
+	 * @action SetMapsDataActionStore, DrawOverlaysOnMapTriggerAction
+	 */
 	@Effect()
 	updateCaseFromTools$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
@@ -106,12 +143,23 @@ export class VisualizersAppEffects {
 			];
 		});
 
-
+	/**
+	 * @type Effect
+	 * @name shouldDrawOverlaysOnMap$
+	 * @ofType SetFiltersAction, MapInstanceChangedAction
+	 * @action DrawOverlaysOnMapTriggerAction
+	 */
 	@Effect()
-	shouldDrawOverlaysOnMap$: Observable<any> = this.actions$
+	shouldDrawOverlaysOnMap$: Observable<DrawOverlaysOnMapTriggerAction> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
+	/**
+	 * @type Effect
+	 * @name drawOverlaysOnMap$
+	 * @ofType DrawOverlaysOnMapTriggerAction
+	 * @dependencies overlays, cases
+	 */
 	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
@@ -124,6 +172,12 @@ export class VisualizersAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name gotoIconVisibilityOnGoToWindowChanged$
+	 * @ofType GoToExpandAction
+	 * @dependencies tools, map
+	 */
 	@Effect({ dispatch: false })
 	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
@@ -137,6 +191,13 @@ export class VisualizersAppEffects {
 			const activeMap = MapFacadeService.activeMap(map);
 			this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
 		});
+
+	/**
+	 * @type Effect
+	 * @name OnGoToInputChanged$
+	 * @ofType GoToInputChangeAction
+	 * @dependencies map
+	 */
 	@Effect({ dispatch: false })
 	OnGoToInputChanged$ = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
@@ -150,36 +211,43 @@ export class VisualizersAppEffects {
 		.map(([mapState, coords]: [IMapState, any[]]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			this.drawGotoIconOnMap(activeMap, coords);
-
 		});
+
+	/**
+	 * @type Effect
+	 * @name annotationVisualizerAgent$
+	 * @ofType AnnotationVisualizerAgentAction
+	 * @dependencies cases
+	 * @action UpdateCaseAction?
+	 */
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom(this.store$.select('cases'))
-
 		.map(([action, cases]: [Action, ICasesState]) => {
 			const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
-			let releventMapsIds = [];
+			let relevantMapsIds = [];
 
 			// we also need to add specific ids for maps that the layers are disabled or
 			// I can check that in the maps == all in the state of the map instance
-			if (action.payload.maps === 'all') {
-				releventMapsIds = selectedCase.state.maps.data.map(m => m.id);
-			}
-			else if (action.payload.maps === 'active') {
-				releventMapsIds.push(selectedCase.state.maps.active_map_id);
-			}
-			else if (action.payload.maps === 'others') {
-				releventMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.active_map_id)
-					.map(m => m.id);
-			}
-			else {
-				return;
+			switch (action.payload.maps) {
+				case 'all':
+					relevantMapsIds = selectedCase.state.maps.data.map(m => m.id);
+					break;
+				case 'active':
+					relevantMapsIds.push(selectedCase.state.maps.active_map_id);
+					break;
+				case 'others':
+					relevantMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.active_map_id)
+						.map(m => m.id);
+					break;
+				default:
+					return;
 			}
 
 
-			const visualizers = releventMapsIds
+			const visualizers = relevantMapsIds
 				.map(id => {
 					const communicator = this.imageryCommunicatorService.provide(id);
 					if (!communicator) {
@@ -244,7 +312,7 @@ export class VisualizersAppEffects {
 
 			return { selectedCase, update };
 		})
-		.filter(result => result.update)
+		.filter(({ update }) => update)
 		.map(result => {
 			return new UpdateCaseAction(result.selectedCase);
 		});

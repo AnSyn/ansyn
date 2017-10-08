@@ -1,7 +1,7 @@
-<div class='tools-menu-item-container'>
+<div class="tools-menu-item-container">
 	<div>
 		<button class="tooltip-value right"
-				(click)='toggleShadowMouse()'
+				(click)="toggleShadowMouse()"
 				[class.mode-on]="flags.get('shadow_mouse')"
 				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled"
 				value="Shadow mouse cursor">
@@ -20,9 +20,9 @@
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
-	<div class='image-processing'>
+	<div class="image-processing">
 		<button class="tooltip-value right"
-				(click)='toggleImageProcessing()'
+				(click)="toggleImageProcessing()"
 				[class.mode-on]="flags.get('auto_image_processing')"
 				[disabled]="flags.get('auto_image_processing_disabled')"
 				value="Automatic Image Enhancement">
@@ -47,11 +47,4 @@
 		</ansyn-overlays-display-mode>
 	</div>
 
-	<!--<div class="user-annotations" [class.active]="userAnnotationsToolOpen">-->
-	<!--<button (click)="toggleAnnotationMenu()">-->
-	<!--<span class="icon-annotation&#45;&#45;edit"></span>-->
-	<!--</button>-->
-	<!--<span class="tooltiptext">User Annotations</span>-->
-	<!--<ansyn-annotations-control [expand]="userAnnotationsToolOpen"></ansyn-annotations-control>-->
-	<!--</div>-->
 </div>

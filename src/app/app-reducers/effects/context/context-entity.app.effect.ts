@@ -1,5 +1,5 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { AddMapInstacneAction, BackToWorldAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstanceAction, BackToWorldAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
@@ -32,8 +32,8 @@ export class ContextEntityAppEffects {
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
-		.filter(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
-		.map(([action, caseState, mapStore]: [AddMapInstacneAction, ICasesState, IMapState]) => {
+		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
+		.map(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);

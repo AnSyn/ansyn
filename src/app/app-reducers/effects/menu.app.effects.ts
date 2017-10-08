@@ -16,6 +16,12 @@ import { Store } from '@ngrx/store';
 @Injectable()
 export class MenuAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name onContainerChanged$
+	 * @ofType ContainerChangedTriggerAction
+	 * @action UpdateMapSizeAction, RedrawTimelineAction
+	 */
 	@Effect()
 	onContainerChanged$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED)
@@ -24,16 +30,35 @@ export class MenuAppEffects {
 			new RedrawTimelineAction(true)
 		]);
 
+	/**
+	 * @type Effect
+	 * @name onGoToExpand$
+	 * @ofType GoToExpandAction
+	 * @action SetClickOutside
+	 */
 	@Effect()
 	onGoToExpand$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
 
+	/**
+	 * @type Effect
+	 * @name unselectMenuItem$
+	 * @ofType UnSelectMenuItemAction
+	 * @action GoToExpandAction
+	 */
 	@Effect()
 	unselectMenuItem$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(MenuActionTypes.UNSELECT_MENU_ITEM)
 		.map(() => new GoToExpandAction(false));
 
+	/**
+	 * @type Effect
+	 * @name updateFiltersBadge$
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction
+	 * @dependencies filters
+	 * @action SetBadgeAction
+	 */
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.actions$
 		.ofType(...facetChangesActionType)

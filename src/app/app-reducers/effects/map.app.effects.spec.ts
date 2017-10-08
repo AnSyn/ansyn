@@ -16,7 +16,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
-	AddMapInstacneAction,
+	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
 	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
@@ -354,13 +354,13 @@ describe('MapAppEffects', () => {
 			const expectedResult1 = new CompositeMapShadowAction();
 			const expectedResult2 = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
 
-			effectsRunner.queue(new AddMapInstacneAction({
+			effectsRunner.queue(new AddMapInstanceAction({
 				currentCommunicatorId: 'imagery2',
 				communicatorsIds: communicators
 			}));
 
 			communicators.push('imagery3');
-			effectsRunner.queue(new AddMapInstacneAction({
+			effectsRunner.queue(new AddMapInstanceAction({
 				currentCommunicatorId: 'imagery3',
 				communicatorsIds: communicators
 			}));
@@ -395,7 +395,7 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'addPinPointIndicator');
 			spyOn(communicator, 'createMapSingleClickEvent');
-			const action = new AddMapInstacneAction({
+			const action = new AddMapInstanceAction({
 				communicatorsIds: ['tmpId1', 'tmpId2'],
 				currentCommunicatorId: 'tmpId2'
 			});
@@ -462,7 +462,7 @@ describe('MapAppEffects', () => {
 			spyOn(communicator, 'getPlugin').and.callFake(() => plugin);
 			spyOn(plugin, 'init');
 
-			const action = new AddMapInstacneAction({
+			const action = new AddMapInstanceAction({
 				communicatorsIds: ['tmpId1'],
 				currentCommunicatorId: 'tmpId1'
 			});
@@ -710,7 +710,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 
-			effectsRunner.queue(new AddMapInstacneAction({
+			effectsRunner.queue(new AddMapInstanceAction({
 				currentCommunicatorId: 'imagery1',
 				communicatorsIds: communicators
 			}));
@@ -732,7 +732,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery2'];
 
-			effectsRunner.queue(new AddMapInstacneAction({
+			effectsRunner.queue(new AddMapInstanceAction({
 				currentCommunicatorId: 'imagery2',
 				communicatorsIds: communicators
 			}));
@@ -773,7 +773,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('activeMapGeoRegistartionChanged$', () => {
+	describe('activeMapGeoRegistrationChanged$$', () => {
 		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
 			const testOverlay: Overlay = { id: 'test_overlay_id1', isGeoRegistered: false } as Overlay;
 			mapState.mapsList = <any> [
@@ -792,7 +792,7 @@ describe('MapAppEffects', () => {
 
 			effectsRunner.queue(new ActiveMapChangedAction(''));
 			let resultAction = null;
-			mapAppEffects.activeMapGeoRegistartionChanged$.subscribe(_result => {
+			mapAppEffects.activeMapGeoRegistrationChanged$$.subscribe(_result => {
 				const validActionType = _result instanceof EnableMapGeoOptionsActionStore;
 				expect(validActionType).toBe(true);
 				resultAction = _result;

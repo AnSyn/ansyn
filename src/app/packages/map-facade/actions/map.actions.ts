@@ -82,7 +82,7 @@ export class UpdateMapSizeAction implements Action {
 	}
 }
 
-export class AddMapInstacneAction implements Action {
+export class AddMapInstanceAction implements Action {
 	type = MapActionTypes.ADD_MAP_INSTANCE;
 
 	constructor(public payload: { currentCommunicatorId: string, communicatorsIds: string[] }) {
@@ -90,7 +90,7 @@ export class AddMapInstacneAction implements Action {
 }
 
 // TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
-export class MapInstanceChangedAction extends AddMapInstacneAction {
+export class MapInstanceChangedAction extends AddMapInstanceAction {
 	public mapInstanceChangedPayload;
 
 	constructor(payload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {

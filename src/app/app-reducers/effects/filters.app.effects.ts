@@ -19,6 +19,13 @@ import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filter
 @Injectable()
 export class FiltersAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name onLoadContexts$
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
+	 * @action SetFiltersAction
+	 * @dependencies filters, cases
+	 */
 	@Effect()
 	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
@@ -42,6 +49,13 @@ export class FiltersAppEffects {
 			});
 		});
 
+	/**
+	 * @type Effect
+	 * @name updateCaseFacets$
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
+	 * @action UpdateCaseAction
+	 * @dependencies filters, cases
+	 */
 	@Effect()
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
@@ -49,6 +63,13 @@ export class FiltersAppEffects {
 		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
+	/**
+	 * @type Effect
+	 * @name initializeFilters$
+	 * @ofType LoadOverlaysSuccessAction
+	 * @dependencies cases, overlays
+	 * @action InitializeFiltersAction
+	 */
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -68,6 +89,12 @@ export class FiltersAppEffects {
 			return new InitializeFiltersAction({ overlays, facets, showAll });
 		});
 
+	/**
+	 * @type Effect
+	 * @name resetFilters$
+	 * @ofType LoadOverlaysAction
+	 * @action ResetFiltersAction
+	 */
 	@Effect()
 	resetFilters$: Observable<ResetFiltersAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)

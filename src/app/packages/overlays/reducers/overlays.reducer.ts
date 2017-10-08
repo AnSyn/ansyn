@@ -3,6 +3,10 @@ import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
+export interface TimelineState {
+	from: Date;
+	to: Date;
+}
 
 export interface IOverlayState {
 	loaded: boolean;
@@ -14,7 +18,7 @@ export interface IOverlayState {
 	filters: any[];
 	filteredOverlays: string[];
 	queryParams: any;
-	timelineState: { from: Date, to: Date };
+	timelineState: TimelineState;
 	count: number;
 }
 

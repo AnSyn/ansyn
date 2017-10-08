@@ -17,7 +17,7 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.RESET_FILTERS, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
+export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
 @Injectable()
 export class FiltersEffects {
@@ -45,6 +45,12 @@ export class FiltersEffects {
 						metadata.accumulateData(overlay[filter.modelName]);
 					});
 
+					metadata.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
+						if (!value.count) {
+							mapObj.delete(key);
+						}
+					});
+
 					// Check if filters were previously deselected, and if so deselect them now
 					if (oldFiltersArray) {
 						const oldFilterArray = oldFiltersArray
@@ -69,8 +75,7 @@ export class FiltersEffects {
 						}
 					}
 
-					// If show all is set, select all
-					if (action.payload.showAll) {
+					if (!action.payload.facets.filters) {
 						metadata.showAll();
 					}
 
@@ -99,13 +104,7 @@ export class FiltersEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		if (facets && !facets.filters) {
-			facets.filters = [];
-		}
-
-		const currentFilterInit = facets.filters.find(field => {
-			return field.fieldName === filter.modelName;
-		});
+		const currentFilterInit = facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata);
 

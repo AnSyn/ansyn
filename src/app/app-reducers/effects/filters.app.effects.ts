@@ -13,7 +13,6 @@ import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 
 @Injectable()
@@ -74,19 +73,11 @@ export class FiltersAppEffects {
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
-			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays).map(([key, overlay]: [string, Overlay]) => overlay);
-
-			const showAll = isNil(casesState.selectedCase.state.facets.filters);
-
-			// what is going here  ?? who updates the contextValues imageryCount  and why it is not in the store please add the correct remarks
-			if (this.casesService.contextValues.imageryCount !== -1) {
-				this.casesService.contextValues.imageryCount = -1;
-			}
-
-			return [overlaysArray, casesState.selectedCase.state.facets, showAll];
+			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
+			return [overlaysArray, casesState.selectedCase.state.facets];
 		})
-		.map(([overlays, facets, showAll]: [Overlay[], any, boolean]) => {
-			return new InitializeFiltersAction({ overlays, facets, showAll });
+		.map(([overlays, facets]: [Overlay[], any]) => {
+			return new InitializeFiltersAction({ overlays, facets });
 		});
 
 	/**
@@ -100,8 +91,7 @@ export class FiltersAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
 
-	constructor(private actions$: Actions,
-				private store$: Store<IAppState>, private casesService: CasesService) {
+	constructor(private actions$: Actions, private store$: Store<IAppState>) {
 	}
 
 	updateCaseFacets(selectedCase: Case, filtersState: IFiltersState): Case {

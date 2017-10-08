@@ -16,6 +16,7 @@ import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { TimelineState } from '../../packages/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -111,11 +112,12 @@ export class OverlaysAppEffects {
 	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCount !== -1)
-		.withLatestFrom(this.store$.select('overlays'), (action, overlay: IOverlayState) => overlay.timelineState)
-		.map((timelineState) => {
-			const tenth = (timelineState.to.getTime() - timelineState.from.getTime()) / 10;
-			const fromTenth = new Date(timelineState.from.getTime() - tenth);
-			const toTenth = new Date(timelineState.to.getTime() + tenth);
+		.do(() => this.casesService.contextValues.imageryCount = -1)
+		.withLatestFrom(this.store$.select<IOverlayState>('overlays').pluck <IOverlayState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
+		.map(({ from, to }: TimelineState) => {
+			const tenth = (to.getTime() - from.getTime()) / 10;
+			const fromTenth = new Date(from.getTime() - tenth);
+			const toTenth = new Date(to.getTime() + tenth);
 			return new SetTimelineStateAction({ from: fromTenth, to: toTenth });
 		});
 

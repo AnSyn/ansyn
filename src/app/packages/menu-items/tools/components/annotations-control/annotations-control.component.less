@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@import "~@ansyn/core/less/z-index-globals";
 
 @tools-box-width: 290px;
 @tools-box-height: 46px;
@@ -15,7 +16,7 @@
 	transition-property: width;
 	transition-duration: 0.1s;
 	transition-delay: 0s;
-	z-index: 2;
+	z-index: @z-index-annotations-control;
 
 	&.expand {
 

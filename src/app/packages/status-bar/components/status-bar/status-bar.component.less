@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/common";
+@import "~@ansyn/core/less/z-index-globals";
 
 @share-link-padding-bottom: 20px;
 
@@ -36,7 +37,7 @@ div.status-bar-container {
 		align-items: center;
 		padding: 0 10px;
 		box-sizing: border-box;
-		z-index: 1;
+		z-index: @z-index-status-bar-navigation-area;
 		button {
 			outline: none;
 			width: 24px;

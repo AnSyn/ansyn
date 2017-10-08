@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/z-index-globals";
+
 :host {
 	cursor: default;
 }
@@ -8,7 +10,7 @@ div.status {
 	top: 0;
 	text-align: center;
 	background: rgba(3, 1, 6, 0.36);
-	z-index: 1;
+	z-index: @z-index-imagery-status;
 	padding: 7px 5px;
 	box-sizing: border-box;
 	&.active {

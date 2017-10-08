@@ -1,3 +1,5 @@
+@import "~@ansyn/core/less/z-index-globals";
+
 :host {
 	width: 0;
 	height: 33px;
@@ -8,7 +10,7 @@
 	background: #1c8094;
 	visibility: hidden;
 	transition: .2s;
-	z-index: 2;
+	z-index: @z-index-overlays-display-mode-component;
 	overflow: hidden;
 	&.expand {
 		form {

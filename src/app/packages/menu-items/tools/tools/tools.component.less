@@ -18,7 +18,6 @@
 				padding: 0;
 
 				border: none;
-				font-size: 24px;
 				color: white;
 				background: rgba(255, 255, 255, 0.25);
 				box-sizing: border-box;
@@ -38,18 +37,6 @@
 
 				&.active {
 					border: 1px solid #09F9E8;
-				}
-
-				&.mode-on {
-					box-shadow: 0 0 2px 1px #2f2e47;
-				}
-
-				&:hover:not(.active):not(:disabled) {
-					~ span.tooltiptext {
-						visibility: visible;
-						opacity: 1;
-					}
-					background-color: rgb(41, 127, 155);
 				}
 			}
 
@@ -75,8 +62,6 @@
 					background-image: url(/assets/icons/tools/polygons.svg);
 					background-repeat: no-repeat;
 					background-position: center center;
-					width: 24px;
-					height: 24px;
 				}
 			}
 

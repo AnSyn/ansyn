@@ -2,7 +2,7 @@
 	<div>
 		<button class="tooltip-value right"
 				(click)="toggleShadowMouse()"
-				[class.mode-on]="flags.get('shadow_mouse')"
+				[class.active]="flags.get('shadow_mouse')"
 				[disabled]="flags.get('shadow_mouse_disabled') || isGeoOptionsDisabled"
 				value="Shadow mouse cursor">
 			<i class="icon-tools--shadow-mouse"></i>
@@ -23,7 +23,7 @@
 	<div class="image-processing">
 		<button class="tooltip-value right"
 				(click)="toggleImageProcessing()"
-				[class.mode-on]="flags.get('auto_image_processing')"
+				[class.active]="flags.get('auto_image_processing')"
 				[disabled]="flags.get('auto_image_processing_disabled')"
 				value="Automatic Image Enhancement">
 			<i class="icon-automatic-image-processing"></i>

@@ -62,7 +62,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: { count: number, isChecked: boolean }) => value.isChecked);
+		return Array.from(this.enumsFields.values()).some((value: { count: number, isChecked: boolean }) => !value.isChecked);
 	}
 
 	showAll(): void {

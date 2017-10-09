@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { MapActionTypes, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';

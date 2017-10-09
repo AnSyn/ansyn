@@ -55,7 +55,7 @@ export class MenuAppEffects {
 	/**
 	 * @type Effect
 	 * @name updateFiltersBadge$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction
 	 * @dependencies filters
 	 * @action SetBadgeAction
 	 */

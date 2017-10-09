@@ -20,8 +20,8 @@ export class FiltersAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onLoadContexts$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
+	 * @name updateOverlayFilters$
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
 	 * @action SetFiltersAction
 	 * @dependencies filters, cases
 	 */
@@ -51,7 +51,7 @@ export class FiltersAppEffects {
 	/**
 	 * @type Effect
 	 * @name updateCaseFacets$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ResetFiltersAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
 	 * @action UpdateCaseAction
 	 * @dependencies filters, cases
 	 */
@@ -98,7 +98,7 @@ export class FiltersAppEffects {
 		const cloneSelectedCase: Case = cloneDeep(selectedCase);
 		const { facets } = cloneSelectedCase.state;
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
-
+		facets.filters = [];
 		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
 
 			const currentFilter: any = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);

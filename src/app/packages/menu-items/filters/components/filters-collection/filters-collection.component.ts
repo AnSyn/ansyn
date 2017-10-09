@@ -1,12 +1,10 @@
 import { FiltersService } from '../../services/filters.service';
 import { Component, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
 import { IFiltersState } from '../../reducer/filters.reducer';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
-import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-filters',
@@ -20,17 +18,15 @@ import { isEqual } from 'lodash';
 export class FiltersCollectionComponent implements OnDestroy {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
-	public filters: any[];
+	public filters: Filter[] = this.filtersService.getFilters();
 
 	public subscribers = {
 		filters: undefined
 	} as any;
 
-	initialFilters$: Observable<Filter[]> = this.filtersService.loadFilters();
-
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
 		this.subscribers.filters = this.store.select('filters')
-			.distinctUntilChanged(isEqual)
+			.distinctUntilChanged()
 			.map((state: IFiltersState) => {
 				return {
 					showOnlyFavorites: state.showOnlyFavorites,
@@ -51,9 +47,6 @@ export class FiltersCollectionComponent implements OnDestroy {
 				this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
 			});
 
-		this.subscribers.intialFilters = this.initialFilters$.subscribe(filters => {
-			this.filters = filters;
-		});
 	}
 
 	showOnlyFavorites(data) {

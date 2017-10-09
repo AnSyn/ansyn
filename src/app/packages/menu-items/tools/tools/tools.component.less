@@ -16,7 +16,6 @@
 			button {
 				margin: 0;
 				padding: 0;
-
 				border: none;
 				color: white;
 				background: rgba(255, 255, 255, 0.25);
@@ -35,8 +34,12 @@
 					cursor: not-allowed;
 				}
 
-				&.active {
+				&.mode-on {
 					border: 1px solid #09F9E8;
+				}
+
+				&:hover:not(:disabled), &.active {
+					background-color: rgb(41, 127, 155);
 				}
 			}
 
@@ -54,7 +57,7 @@
 				top: -5px;
 				left: 105%;
 				position: absolute;
-				z-index: @z-index-tools-tooltiptext;
+				z-index: 2;
 			}
 
 			&.display-overlay-visualizer {

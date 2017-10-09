@@ -1,21 +1,20 @@
 @import "~@ansyn/core/less/common";
 
 @share-link-padding-bottom: 20px;
+@navigation-bar-width: 133px;
+@status-bar-right-width: 605px;
 
 div.status-bar-container {
-	position: relative;
 	display: flex;
 	width: 100%;
 	height: 35px;
 	transform: translate(0, -100%);
-	justify-content: flex-end;
-
 	.favorite-icon {
 		font-size: 25px;
 
 		.path2:before {
 			color: #000000;
-			margin-left: 0px;
+			margin-left: 0;
 		}
 		&.active .path2:before {
 			color: gold;
@@ -27,12 +26,13 @@ div.status-bar-container {
 	}
 
 	div.navigation-area {
-		position: absolute;
 		background: white;
-		width: 133px;
+		width: @navigation-bar-width;
 		height: 100%;
 		display: flex;
 		justify-content: space-between;
+		flex-shrink: 0;
+		align-self: flex-end;
 		align-items: center;
 		padding: 0 10px;
 		box-sizing: border-box;
@@ -57,34 +57,37 @@ div.status-bar-container {
 	}
 
 	div.status-bar {
+		flex-grow: 1;
+		max-width: calc(100% ~"-" @navigation-bar-width);
 		background: @status-color;
 		height: 100%;
-		width: 100%;
 		display: flex;
 		box-sizing: border-box;
 		padding: 0 5px;
-		justify-content: flex-end;
 		align-items: center;
 		font-size: 14px;
 
 		div.left-side {
+			flex-grow: 1;
 			display: flex;
-			width: 50%;
-			position: relative;
+			max-width: calc(100% ~"-" @status-bar-right-width);
 			justify-content: space-between;
-
+			margin-right: 5px;
 			.back-to-world-view {
 				margin-left: 7px;
 				align-self: center;
-				position: absolute;
 				left: 0;
 				button {
-					width: 160px;
+					width: 130px;
 					background: black;
 					color: white;
 					border: none;
 					line-height: 20px;
 				}
+			}
+			.overlay-text {
+				overflow: hidden;
+				margin: auto;
 			}
 
 			button.active {
@@ -92,13 +95,6 @@ div.status-bar-container {
 			}
 		}
 
-		div.middle {
-			width: 100%;
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-		}
 		.overlays-count {
 			min-width: 54px;
 		}
@@ -142,15 +138,15 @@ div.status-bar-container {
 		}
 
 		div.right-side {
+			margin-left: auto;
 			display: flex;
-			width: 50%;
+			width: @status-bar-right-width;
 			height: 70%;
 			justify-content: space-between;
-			align-items: center;
-			border-left: 2px white solid;
-			padding-right: 133px;
 			box-sizing: border-box;
-
+			&.show-separator {
+				border-left: 2px white solid;
+			}
 			div.selected-case {
 				padding: 5px;
 				margin: 0;
@@ -252,7 +248,7 @@ div.status-bar-container {
 				}
 				.layout-combobox {
 					img {
-						hegiht: 14px;
+						height: 14px;
 						margin-right: 4px;
 					}
 

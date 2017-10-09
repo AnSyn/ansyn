@@ -11,7 +11,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
-import { first, isEqual } from 'lodash';
+import { first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
@@ -65,18 +65,18 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	public loading: boolean;
 	public noDrops: boolean;
 
-	public drops$: Observable<any> = this.store.select('overlays')
+	public drops$: Observable<any> = this.store.select <IOverlayState>('overlays')
 		.skip(1)
-		.distinctUntilChanged(this.overlaysService.compareOverlays)
-		.map((overlaysState: IOverlayState) => {
-			const drops = this.overlaysService.parseOverlayDataForDispaly(overlaysState.overlays, overlaysState.filteredOverlays, overlaysState.specialObjects);
-			const { timelineState, loaded } = overlaysState;
-			return { drops, timelineState, loaded };
+		.do(({ timelineState }: IOverlayState) => this.setConfigurationTime(timelineState.from, timelineState.to))
+		.map(({ overlays, filteredOverlays, specialObjects }: IOverlayState) => this.overlaysService.parseOverlayDataForDispaly(overlays, filteredOverlays, specialObjects))
+		.do((drops): void => {
+			this.store.dispatch(new UpdateOverlaysCountAction(drops[0].data.length));
+			this.noDrops = Boolean(first(drops).data.length === 0);
 		});
 
 	public timelineState$: Observable<any> = this.store.select('overlays')
 		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
-		.distinctUntilChanged(isEqual)
+		.distinctUntilChanged()
 		.filter(timelineState => {
 			return timelineState && timelineState.to && timelineState.from && this.currentTimelineState.from && this.currentTimelineState.to;
 		})
@@ -86,7 +86,7 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	public overlaysLoader$: Observable<any> = this.store.select('overlays')
 		.map((overlayState: IOverlayState) => overlayState.loading)
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged();
 
 
 	/*
@@ -148,15 +148,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 				}
 			});
 
-		this.subscribers.zoomHandler = this.emitter.provide('timeline:zoomStream')
-			.throttleTime(100)
-			.subscribe(result => {
-				let sum = 0;
-				result.counts.forEach(i => sum += i.count);
-				this.store.dispatch(new UpdateOverlaysCountAction(sum));
-			});
-
-
 		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
 			.subscribe(result => {
 				this.currentTimelineState = { from: result.dates.from, to: result.dates.to };
@@ -186,17 +177,11 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 
 	setSubscribers(): void {
 
-		this.subscribers.overlays = this.drops$.subscribe((data) => {
-			const count = this.calcOverlayCountViaDrops(data.drops);
-			this.store.dispatch(new UpdateOverlaysCountAction(count));
-
-			this.setConfigurationTime(data.timelineState.from, data.timelineState.to);
-			this.drops = data.drops;
-			this.noDrops = Boolean(first(this.drops).data.length === 0);
+		this.subscribers.drops = this.drops$.subscribe((drops) => {
+			this.drops = drops;
 		});
 
 		this.subscribers.timelineState = this.timelineState$
-
 			.subscribe(timelineState => {
 				this.setConfigurationTime(timelineState.from, timelineState.to);
 			});
@@ -204,9 +189,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
 			this.loading = loading;
 		});
-
-		/*this.subscribers.selected = this.selectedOverlays$
-			.subscribe(selectedOverlays => this.selectedOverlays = selectedOverlays);*/
 
 		this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
 			this.setConfigurationTime(this.currentTimelineState.from, this.currentTimelineState.to);
@@ -222,20 +204,6 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 	setConfigurationTime(from: Date, to: Date) {
 		this.configuration.start = from;
 		this.configuration.end = to;
-	}
-
-	calcOverlayCountViaDrops(drops) {
-		return drops.reduce((count, row) => {
-			return count + row.data.reduce((rowCount, overlay) => {
-				const isIn = this.configuration.start <= overlay.date && overlay.date <= this.configuration.end;
-				if (isIn && !overlay.shape) {
-					return rowCount + 1;
-				} else {
-					return rowCount;
-				}
-			}, 0);
-		}, 0);
-
 	}
 
 }

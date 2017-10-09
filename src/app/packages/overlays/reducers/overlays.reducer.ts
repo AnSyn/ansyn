@@ -19,7 +19,6 @@ export interface IOverlayState {
 	filteredOverlays: string[];
 	queryParams: any;
 	timelineState: TimelineState;
-	count: number;
 }
 
 export const overlayInitialState: IOverlayState = {
@@ -33,15 +32,11 @@ export const overlayInitialState: IOverlayState = {
 	filters: [],
 	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
-	filteredOverlays: [],
-	count: 0
+	filteredOverlays: []
 };
 
 export function OverlayReducer(state = overlayInitialState, action: overlay.OverlaysActions): IOverlayState {
 	switch (action.type) {
-
-		case overlay.OverlaysActionTypes.UPDATE_OVERLAYS_COUNT:
-			return { ...state, count: action.payload };
 
 		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -92,8 +87,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 			return Object.assign({}, state, {
 				loading: false,
 				loaded: true,
-				overlays: stateOverlays,
-				count: 0
+				overlays: stateOverlays
 			});
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:

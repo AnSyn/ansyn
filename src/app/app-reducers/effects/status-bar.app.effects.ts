@@ -281,9 +281,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	setOverlayCount$ = this.actions$
 		.ofType(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
-		.map(({ payload }) => {
-			return new SetOverlaysCountAction(payload);
-		});
+		.map(({ payload }) => new SetOverlaysCountAction(payload));
 
 	/**
 	 * @type Effect

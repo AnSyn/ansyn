@@ -72,13 +72,11 @@ export class FiltersAppEffects {
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('overlays'), (action: any, casesState: ICasesState, overlaysState: IOverlayState): any => {
+		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('overlays'), (action: any, selectedCase: Case, overlaysState: IOverlayState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
-			return [overlaysArray, casesState.selectedCase.state.facets];
+			return [overlaysArray, selectedCase.state.facets];
 		})
-		.map(([overlays, facets]: [Overlay[], any]) => {
-			return new InitializeFiltersAction({ overlays, facets });
-		});
+		.map(([overlays, facets]: [Overlay[], any]) => new InitializeFiltersAction({ overlays, facets }));
 
 	/**
 	 * @type Effect

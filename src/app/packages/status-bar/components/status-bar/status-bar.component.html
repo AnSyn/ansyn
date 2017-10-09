@@ -5,7 +5,7 @@
 				<button (click)="clickBackToWorldView()">Back to base map</button>
 			</div>
 
-			<div class="middle">
+			<div class="overlay-text">
 				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
 			</div>
 
@@ -16,7 +16,7 @@
 
 		</div>
 
-		<div class="right-side">
+		<div class="right-side" [ngClass]="{'show-separator': !hideOverlay}">
 
 			<div class="selected-case layout-item pop-on-hover">
 				<i class="icon-status-bar--case"></i>

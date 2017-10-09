@@ -15,7 +15,7 @@ import { toPayload } from '@ngrx/effects';
 interface OverlayButton {
 	name: string;
 	subList: string;
-	action: Function
+	action: ($event: MouseEvent, subFilter?: string) => void;
 }
 
 @Component({

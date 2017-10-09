@@ -167,7 +167,38 @@ describe('ContextMenuComponent', () => {
 		});
 		component.displayOverlayEvent($event, { id: '6' });
 		expect(store.dispatch).toHaveBeenCalledWith(new ContextMenuDisplayAction('6'));
+	});
+
+	describe('mousedown event should call action only on left click', () => {
+		let menuOpenButton: HTMLButtonElement;
+		beforeEach(() => {
+			menuOpenButton = fixture.nativeElement.querySelector('button.menu-open-button');
+		});
+
+		it('isClick should have been call on mousedown', () => {
+			spyOn(component, 'isClick');
+			const mouseDown = new MouseEvent('mousedown');
+			menuOpenButton.dispatchEvent(mouseDown);
+			expect(component.isClick).toHaveBeenCalled();
+		});
+
+		it('action (setPinPoint) should have been call', () => {
+			spyOn(component, 'setPinPoint');
+			// button 0 = witch 1.
+			const mouseDown = new MouseEvent('mousedown', { button: 0 });
+			menuOpenButton.dispatchEvent(mouseDown);
+			expect(component.setPinPoint).toHaveBeenCalled();
+		});
+
+		it('action (setPinPoint) should not have been call', () => {
+			spyOn(component, 'setPinPoint');
+			// button 1 = witch 2.
+			const mouseDown = new MouseEvent('mousedown', { button: 1 });
+			menuOpenButton.dispatchEvent(mouseDown);
+			expect(component.setPinPoint).not.toHaveBeenCalled();
+		});
 
 	});
+
 
 });

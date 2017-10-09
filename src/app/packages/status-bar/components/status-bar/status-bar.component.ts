@@ -44,7 +44,7 @@ export class StatusBarComponent implements OnInit {
 	hideOverlay$: Observable<boolean> = this.status_bar$
 		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
 		.distinctUntilChanged();
-	overlays_count$: Observable<number> = this.status_bar$.pluck<IStatusBarState, number>('overlays_count').distinctUntilChanged();
+	overlaysCount$: Observable<number> = this.status_bar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	overlayNotInCase$: Observable<boolean> = this.status_bar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
@@ -61,7 +61,7 @@ export class StatusBarComponent implements OnInit {
 	hideOverlay: boolean;
 	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
-	overlays_count: number;
+	overlaysCount: number;
 	overlayNotInCase: boolean;
 
 	@Input() selectedCaseName: string;
@@ -170,8 +170,8 @@ export class StatusBarComponent implements OnInit {
 			this.hideOverlay = _hideOverlay;
 		});
 
-		this.overlays_count$.subscribe(_overlay_count => {
-			this.overlays_count = _overlay_count;
+		this.overlaysCount$.subscribe(overlaysCount => {
+			this.overlaysCount = overlaysCount;
 		});
 
 		this.overlayNotInCase$.subscribe(_overlayNotInCase => {

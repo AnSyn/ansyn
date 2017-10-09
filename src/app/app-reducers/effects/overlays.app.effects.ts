@@ -14,9 +14,8 @@ import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlayState, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { TimelineState } from '../../packages/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {

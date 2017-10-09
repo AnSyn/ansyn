@@ -3,15 +3,25 @@
 	<ng-template [ngIf]="coordinates">
 		<div class="input-box">
 			<label for="geo-lng-input">lat</label>
-			<input id="geo-lat-input" type="number" [(ngModel)]="coordinates[1]" name="lat"
-				   (input)="onInputs(coordinates)" (blur)="onBlur()"
-				   autocomplete="false" required/>
+			<input id="geo-lat-input" type="number"
+				   [(ngModel)]="coordinates[1]"
+				   name="lat"
+				   (ngModelChange)="onInputs(coordinates)"
+				   (blur)="onBlur()"
+				   (mousewheel)="$event.preventDefault()"
+				   autocomplete="false"
+				   required/>
 		</div>
 
 		<div class="input-box">
 			<label for="geo-lng-input">long</label>
-			<input id="geo-lng-input" type="number" [(ngModel)]="coordinates[0]" name="lng"
-				   (input)="onInputs(coordinates)" (blur)="onBlur()"
+			<input id="geo-lng-input"
+				   type="number"
+				   [(ngModel)]="coordinates[0]"
+				   name="lng"
+				   (ngModelChange)="onInputs(coordinates)"
+				   (blur)="onBlur()"
+				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false" required/>
 		</div>
 		<div class="geo-copy-to-clipboard" (click)="copyToClipBoard()">

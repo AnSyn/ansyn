@@ -4,20 +4,31 @@
 	<ng-template [ngIf]="coordinates">
 		<div class="input-box">
 			<label for="utm-x-input">x</label>
-			<input id="utm-x-input" type="number" [(ngModel)]="coordinates[0]" name="x"
+			<input id="utm-x-input" type="number"
+				   [(ngModel)]="coordinates[0]"
+				   name="x"
 				   (ngModelChange)="onInputs(coordinates)"
+				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false"/>
 		</div>
 		<div class="input-box">
 			<label for="utm-y-input">y</label>
-			<input id="utm-y-input" type="number" [(ngModel)]="coordinates[1]" name="y"
+			<input id="utm-y-input"
+				   type="number"
+				   [(ngModel)]="coordinates[1]"
+				   name="y"
 				   (ngModelChange)="onInputs(coordinates)"
+				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false"/>
 		</div>
 		<div class="input-box">
 			<label for="utm-z-input">z</label>
-			<input id="utm-z-input" type="number" [(ngModel)]="coordinates[2]" name="z"
+			<input id="utm-z-input"
+				   type="number"
+				   [(ngModel)]="coordinates[2]"
+				   name="z"
 				   (ngModelChange)="onInputs(coordinates)"
+				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false"/>
 		</div>
 		<div class="utm-copy-to-clipboard" (click)="copyToClipBoard()">

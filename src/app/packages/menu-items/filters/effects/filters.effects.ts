@@ -33,57 +33,56 @@ export class FiltersEffects {
 	initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS)
 		.withLatestFrom(this.store$.select('filters'))
-		.switchMap(([action, filtersState]: [InitializeFiltersAction, IFiltersState]) => {
-			return this.filtersService.loadFilters().map((filters: Filter[]) => {
-				const filterMetadatas: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
-				const oldFiltersArray = filtersState.oldFilters ? Array.from(filtersState.oldFilters) : [];
+		.map(([action, filtersState]: [InitializeFiltersAction, IFiltersState]) => {
+			const filters: Filter[] = this.filtersService.getFilters();
+			const filterMetadata: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
+			const oldFiltersArray = filtersState.oldFilters ? Array.from(filtersState.oldFilters) : [];
 
-				filters.forEach((filter: Filter) => {
-					const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
+			filters.forEach((filter: Filter) => {
+				const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
 
-					action.payload.overlays.forEach((overlay: any) => {
-						metadata.accumulateData(overlay[filter.modelName]);
-					});
-
-					metadata.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
-						if (!value.count) {
-							mapObj.delete(key);
-						}
-					});
-
-					// Check if filters were previously deselected, and if so deselect them now
-					if (oldFiltersArray) {
-						const oldFilterArray = oldFiltersArray
-							.find(([oldFilterKey, oldFilter]: [Filter, FilterMetadata]) => oldFilterKey.modelName === filter.modelName);
-
-
-						if (oldFilterArray) {
-							const [oldFilterKey, oldFilter] = oldFilterArray;
-							const oldFilterFields = oldFilter.enumsFields;
-							const filterFields = metadata.enumsFields;
-
-							filterFields.forEach((value, key) => {
-								let isChecked = true;
-								if (oldFilterFields.has(key)) {
-									const oldFilter = oldFilterFields.get(key);
-									if (!oldFilter.isChecked) {
-										isChecked = false;
-									}
-								}
-								value.isChecked = isChecked;
-							});
-						}
-					}
-
-					if (!action.payload.facets.filters) {
-						metadata.showAll();
-					}
-
-					filterMetadatas.set(filter, metadata);
+				action.payload.overlays.forEach((overlay: any) => {
+					metadata.accumulateData(overlay[filter.modelName]);
 				});
 
-				return new InitializeFiltersSuccessAction(filterMetadatas);
+				metadata.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
+					if (!value.count) {
+						mapObj.delete(key);
+					}
+				});
+
+				// Check if filters were previously deselected, and if so deselect them now
+				if (oldFiltersArray) {
+					const oldFilterArray = oldFiltersArray
+						.find(([oldFilterKey, oldFilter]: [Filter, FilterMetadata]) => oldFilterKey.modelName === filter.modelName);
+
+
+					if (oldFilterArray) {
+						const [oldFilterKey, oldFilter] = oldFilterArray;
+						const oldFilterFields = oldFilter.enumsFields;
+						const filterFields = metadata.enumsFields;
+
+						filterFields.forEach((value, key) => {
+							let isChecked = true;
+							if (oldFilterFields.has(key)) {
+								const oldFilter = oldFilterFields.get(key);
+								if (!oldFilter.isChecked) {
+									isChecked = false;
+								}
+							}
+							value.isChecked = isChecked;
+						});
+					}
+				}
+
+				if (!action.payload.facets.filters) {
+					metadata.showAll();
+				}
+
+				filterMetadata.set(filter, metadata);
 			});
+
+			return new InitializeFiltersSuccessAction(filterMetadata);
 		}).share();
 
 	constructor(private actions$: Actions,
@@ -96,8 +95,8 @@ export class FiltersEffects {
 		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			const filterType = filter.type;
 
-			return function resolverFilteringFunction(FilterMetadatas: FilterMetadata[]): FilterMetadata {
-				return FilterMetadatas.find((item) => item.type === filterType);
+			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
+				return filterMetadata.find((item) => item.type === filterType);
 			};
 		})();
 

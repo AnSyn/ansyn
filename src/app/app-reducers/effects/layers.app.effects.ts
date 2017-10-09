@@ -2,8 +2,7 @@ import { BeginLayerTreeLoadAction } from '@ansyn/menu-items/layers-manager/actio
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../';
+import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
 import { isEmpty } from 'lodash';

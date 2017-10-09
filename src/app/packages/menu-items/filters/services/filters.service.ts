@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
@@ -12,12 +11,8 @@ export class FiltersService {
 	constructor(@Inject(filtersConfig) private config: IFiltersConfig) {
 	}
 
-	loadFilters(): Observable<Filter[]> {
-
-		if (!this.config) {
-			return Observable.of([] as any);
-		}
-		return Observable.of(this.config.filters);
+	getFilters(): Filter[] {
+		return this.config.filters;
 	}
 
 }

@@ -48,7 +48,7 @@ export class ContextMenuComponent implements OnInit {
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
-	angleList: Array<'Draw'|'Turn'|'Show'> = [];
+	angleList: Array<'Draw' | 'Turn' | 'Show'> = [];
 	point: GeoJSON.Point;
 
 	overlayButtons: OverlayButton[] = [

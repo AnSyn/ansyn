@@ -12,6 +12,11 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '../../../core/models/case.model';
 import { toPayload } from '@ngrx/effects';
 
+interface OverlayButton {
+	name: string;
+	subList: string;
+	action: Function
+}
 
 @Component({
 	selector: 'ansyn-context-menu',
@@ -37,20 +42,16 @@ export class ContextMenuComponent implements OnInit {
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
 
-
 	displayedOverlay: Overlay;
 	filteredOverlays: Overlay[];
 	displayedOverlayIndex: number;
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
-	angleList = []; // ['Draw', 'Turn', 'Show']
-
-	contextMenuShowAction: ContextMenuShowAction;
-
+	angleList: Array<'Draw'|'Turn'|'Show'> = [];
 	point: GeoJSON.Point;
 
-	overlayButtons: any[] = [
+	overlayButtons: OverlayButton[] = [
 		{
 			name: 'last',
 			subList: 'nextSensors',
@@ -122,7 +123,6 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	show(action: ContextMenuShowAction) {
-		this.contextMenuShowAction = action;
 		this.point = action.payload.point;
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.e.y}px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.e.x}px`);
@@ -147,7 +147,6 @@ export class ContextMenuComponent implements OnInit {
 			this.prevSensors = _uniq(sensorsOnly.slice(0, this.displayedOverlayIndex));
 			this.nextSensors = _uniq(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length));
 		}
-		console.log(this.overlayButtons);
 	}
 
 	hide() {

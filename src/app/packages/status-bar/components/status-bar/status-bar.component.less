@@ -22,10 +22,6 @@ div.status-bar-container {
 		}
 	}
 
-	i {
-		font-size: 18px;
-	}
-
 	div.navigation-area {
 		background: white;
 		width: @navigation-bar-width;
@@ -69,31 +65,12 @@ div.status-bar-container {
 		font-size: 14px;
 
 		div.left-side {
+			position: relative;
 			flex-grow: 1;
-			display: flex;
-			max-width: calc(100% ~"-" @status-bar-right-width);
+			top: -14px;
+			max-width: 50%;
 			justify-content: space-between;
 			margin-right: 5px;
-			.back-to-world-view {
-				margin-left: 7px;
-				align-self: center;
-				left: 0;
-				button {
-					width: 130px;
-					background: black;
-					color: white;
-					border: none;
-					line-height: 20px;
-				}
-			}
-			.overlay-text {
-				overflow: hidden;
-				margin: auto;
-			}
-
-			button.active {
-				box-shadow: inset 0 0 2px #FFFFFF;
-			}
 		}
 
 		.overlays-count {
@@ -148,6 +125,11 @@ div.status-bar-container {
 			&.show-separator {
 				border-left: 2px white solid;
 			}
+
+			i {
+				font-size: 18px;
+			}
+
 			div.selected-case {
 				padding: 5px;
 				margin: 0;

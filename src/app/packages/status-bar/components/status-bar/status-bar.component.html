@@ -1,19 +1,12 @@
 <div class="status-bar-container">
 	<div class="status-bar">
 		<div class="left-side" *ngIf="!hideOverlay">
-			<div class="back-to-world-view" [hidden]="!overlay">
-				<button (click)="clickBackToWorldView()">Back to base map</button>
-			</div>
-
-			<div class="overlay-text">
-				<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
-			</div>
-
-			<ansyn-overlays-status-notifications
+			<ansyn-imagery-status
+				[overlay]="overlay"
 				[notInCase]="overlayNotInCase"
-				[geoRegisteration]="showGeoRegistrationError()">
-			</ansyn-overlays-status-notifications>
-
+				[active]="true"
+				[disableGeoOptions]="showGeoRegistrationError()">
+			</ansyn-imagery-status>
 		</div>
 
 		<div class="right-side" [class.show-separator]="!hideOverlay">
@@ -23,12 +16,10 @@
 				<span class="name">{{selectedCaseName}}</span>
 				<div class="pop-hover default-case">
 					<div class="pop-hover-content">
-
 						<button class="share-link" (click)="copyLink()">
 							<span class="icon-status-bar--share-link"></span>
 							<span>Share link</span>
 						</button>
-
 					</div>
 				</div>
 			</div>

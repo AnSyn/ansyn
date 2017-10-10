@@ -6,9 +6,15 @@ import { OverlayGeoRegistrationErrorComponent } from './components/overlay-geo-r
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { OverlaysStatusNotificationsComponent } from './components/overlays-status-notifications/overlays-status-notifications.component';
+import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 
-const coreComponents = [OverlayTextComponent, OverlayGeoRegistrationErrorComponent, AnsynCheckboxComponent, OverlaysStatusNotificationsComponent];
-
+const coreComponents = [
+	OverlayTextComponent,
+	OverlayGeoRegistrationErrorComponent,
+	AnsynCheckboxComponent,
+	OverlaysStatusNotificationsComponent,
+	ImageryStatusComponent
+];
 
 @NgModule({
 	imports: [

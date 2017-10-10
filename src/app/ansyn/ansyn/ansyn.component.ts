@@ -46,7 +46,7 @@ export class AnsynComponent implements OnInit {
 
 	isFavoriteOverlay$ = this.selectedCase$
 		.withLatestFrom(this.activeMap$)
-		.filter(([selectedCase]) => !_isNil(selectedCase.state.favoritesOverlays))
+		.filter(([selectedCase]) => Boolean(selectedCase.state.favoritesOverlays))
 		.distinctUntilChanged(([oldCase], [newCase]): boolean => _isEqual(oldCase.state.favoritesOverlays, newCase.state.favoritesOverlays))
 		.map(([selectedCase, activeMap]: [Case, CaseMapState]) => {
 			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.includes(activeMap.data.overlay.id));
@@ -73,7 +73,7 @@ export class AnsynComponent implements OnInit {
 			.filter(([overlay, selectedCase]: [Overlay, Case]) => Boolean(selectedCase))
 			.subscribe(([overlay, selectedCase]: [Overlay, Case]) => {
 				this.displayedOverlay = overlay;
-				if (Boolean(overlay)) {
+				if (overlay) {
 					this.isFavoriteOverlay = selectedCase.state.favoritesOverlays.includes(overlay.id);
 				} else {
 					this.isFavoriteOverlay = false;

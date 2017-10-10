@@ -2,6 +2,18 @@
 
 :host {
 	cursor: default;
+
+	&.with-background {
+		.status {
+			background: rgba(0, 0, 0, 0.36);
+			box-sizing: border-box;
+			padding: 7px 5px;
+
+			&.active {
+				background: rgba(0, 0, 0, 0.66);
+			}
+		}
+	}
 }
 
 div.status {
@@ -9,14 +21,7 @@ div.status {
 	width: 100%;
 	top: 0;
 	text-align: center;
-	background: rgba(3, 1, 6, 0.36);
 	z-index: @z-index-imagery-status;
-	padding: 7px 5px;
-	box-sizing: border-box;
-	&.active {
-		background: rgba(3, 1, 6, 0.66);
-	}
-
 }
 
 .status-container {
@@ -26,6 +31,8 @@ div.status {
 		display: flex;
 		width: 100%;
 		justify-content: center;
+		overflow: hidden;
+
 		div.sensor-and-date {
 			display: flex;
 			justify-content: center;
@@ -40,42 +47,39 @@ div.status {
 	}
 
 	.left-buttons-container {
-		position: absolute;
-		left: 0;
-		top: 0;
 		display: flex;
-		height: 100%;
 		align-items: center;
 
-		button.back-to-world-view {
-			width: 160px;
-			background: black;
+		button {
 			color: white;
-			border: none;
-			cursor: pointer;
-			align-self: center;
-		}
+			vertical-align: middle;
+			font-size: 14px;
+			padding: 4px 6px;
+			flex-shrink: 0;
 
-		.status-bar-link-maps-icon {
-			opacity: 0.8;
-			align-self: center;
-			margin-left: 2px;
-			background: transparent;
-			border: none;
-			outline: none;
-			padding: 0;
-
-			&:hover:not(:disabled) {
-				opacity: 1;
-				cursor: pointer;
+			&.back-to-world-view {
+				background: black;
+				border: 1px solid grey;
 			}
 
-			&:disabled {
-				opacity: .6;
-			}
+			&.small-icon-button {
+				margin-left: 10px;
+				font-size: 20px;
+				opacity: 0.8;
+				align-self: center;
+				background: transparent;
+				border: none;
+				outline: none;
+				padding: 0;
 
-			img {
-				height: 16px;
+				&:hover:not(:disabled) {
+					opacity: 1;
+					cursor: pointer;
+				}
+
+				&:disabled {
+					opacity: .6;
+				}
 			}
 		}
 

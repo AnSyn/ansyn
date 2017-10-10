@@ -1,0 +1,35 @@
+<div class="status" [class.active]="active">
+	<div class="status-container">
+
+		<div class="left-buttons-container">
+			<button (click)="backToWorldView()" class="back-to-world-view" *ngIf="overlay">
+				<i class="icon-context--prev"></i>
+				Back to base map
+			</button>
+
+			<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
+			<button *ngIf="mapsList.length > 1" [disabled]="disableGeoOptions"
+					class="small-icon-button status-bar-link-maps-icon"
+					(click)="toggleMapSynchronization()">
+				<i class="icon-temporary-link"></i>
+			</button>
+
+			<button [disabled]="true" class="small-icon-button status-bar-hide-layers-icon"
+					(click)="toggleMapSynchronization()">
+				<i class="icon-hide-layers"></i>
+			</button>
+
+			<button (click)="toggleFavorite()" class="small-icon-button status-bar-favorite-icon" *ngIf="overlay">
+				<!-- TODO icon change to favorites -->
+				<i class="icon-annotation--circle"></i>
+			</button>
+		</div>
+
+		<div class="status-bar-title" data-title="{{map_id}}">
+			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
+		</div>
+
+		<ansyn-overlays-status-notifications [notInCase]="notInCase"
+											 [geoRegisteration]="disableGeoOptions"></ansyn-overlays-status-notifications>
+	</div>
+</div>

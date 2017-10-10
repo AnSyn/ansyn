@@ -63,13 +63,14 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
 			const queryParams = action.payload || {};
-			return Object.assign({}, state, {
+			return {
+				...state,
 				loading: true,
 				queryParams,
 				overlays: new Map(),
 				filters: [],
 				filteredOverlays: []
-			});
+			};
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 
@@ -84,11 +85,12 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 			});
 
 			// we already initiliazing the state
-			return Object.assign({}, state, {
+			return {
+				...state,
 				loading: false,
 				loaded: true,
 				overlays: stateOverlays
-			});
+			};
 
 		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({}, state, {
@@ -114,7 +116,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				filteredOverlays: res
 			};
 
-		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS :
+		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS:
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;
 
 			const specialObjects = new Map<string, OverlaySpecialObject>();
@@ -125,16 +127,17 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 			return { ...state, specialObjects };
 
 		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
-			const { from, to } = action.payload as { to: Date, from: Date };
+			const { from, to } = action.payload.state;
 
 			const result: number = from.getTime() - to.getTime();
 			if (result > 0) {
 				return state;
 			}
 
-			return Object.assign({}, state, {
-				timelineState: action.payload
-			});
+			return {
+				...state,
+				timelineState: action.payload.state
+			};
 
 		default:
 			return state;

@@ -103,9 +103,9 @@ describe('Overlays Effects ', () => {
 		const action = new RedrawTimelineAction();
 		runner.queue(action);
 		let count = 0;
-		overlaysEffects.onRedrawTimeline$.subscribe((result: boolean) => {
+		overlaysEffects.onRedrawTimeline$.subscribe((result: RedrawTimelineAction) => {
 			count++;
-			expect(result).toBe(true);
+			expect(result instanceof RedrawTimelineAction).toBeTruthy();
 		});
 		expect(count).toBe(1);
 	});
@@ -160,7 +160,7 @@ describe('Overlays Effects ', () => {
 				to: new Date(5000)
 			};
 			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
-			store.dispatch(new SetTimelineStateAction(timelineState));
+			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
 
 			const action = new DisplayOverlayFromStoreAction({ id: '1234' });
 			runner.queue(action);
@@ -168,7 +168,7 @@ describe('Overlays Effects ', () => {
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
 				expect(result instanceof SetTimelineStateAction).toBeTruthy();
 				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
-				expect(result.payload).toEqual(getTimeStateByOverlayResult);
+				expect(result.payload).toEqual({ state: getTimeStateByOverlayResult });
 			});
 		});
 
@@ -186,7 +186,7 @@ describe('Overlays Effects ', () => {
 				to: new Date(10000)
 			};
 			store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
-			store.dispatch(new SetTimelineStateAction(timelineState));
+			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
 
 			const action = new DisplayOverlayFromStoreAction({ id: '5678' });
 			runner.queue(action);
@@ -194,7 +194,7 @@ describe('Overlays Effects ', () => {
 			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
 				expect(result instanceof SetTimelineStateAction).toBeTruthy();
 				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
-				expect(result.payload).toEqual(getTimeStateByOverlayResult);
+				expect(result.payload).toEqual({ state: getTimeStateByOverlayResult });
 			});
 		});
 	});

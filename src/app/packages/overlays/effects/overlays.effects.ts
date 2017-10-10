@@ -11,8 +11,10 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
+	RedrawTimelineAction,
 	RequestOverlayByIDFromBackendAction,
-	SetTimelineStateAction
+	SetTimelineStateAction,
+	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
@@ -60,7 +62,6 @@ export class OverlaysEffects {
 	@Effect({ dispatch: false })
 	onRedrawTimeline$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
-		.map(() => true)
 		.share();
 
 	/**
@@ -104,7 +105,8 @@ export class OverlaysEffects {
 		.map((action: LoadOverlaysAction) => {
 			const from = new Date(action.payload.from);
 			const to = new Date(action.payload.to);
-			return new SetTimelineStateAction({ from, to });
+			const state = { from, to };
+			return new SetTimelineStateAction({ state });
 		});
 
 	/**
@@ -166,13 +168,48 @@ export class OverlaysEffects {
 			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
 		})
 		.map(([isActiveMap, displayedOverlay, timelineState]: [Overlay, Overlay, any]) => {
-			const timeState = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-			return new SetTimelineStateAction(timeState);
-		})
-		.share();
+			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			return new SetTimelineStateAction({ state });
+		});
+
+	/**
+	 * @type Effect
+	 * @name drops$
+	 * @description this method parse overlays for display ( drops )
+	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
+	 * @dependencies overlays
+	 */
+
+	@Effect({ dispatch: false })
+	drops$: Observable<any[]> = this.actions$
+		.ofType(OverlaysActionTypes.LOAD_OVERLAYS,
+			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+			OverlaysActionTypes.SET_FILTERS,
+			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
+		.map(({ overlays, filteredOverlays, specialObjects }: IOverlayState) => this.overlaysService.parseOverlayDataForDispaly(overlays, filteredOverlays, specialObjects))
+		.do((drops) => this.store$.dispatch(new UpdateOverlaysCountAction(drops[0].data.length)));
+
+	/**
+	 * @type Effect
+	 * @name timelineRedrew$
+	 * @description this method should redrew timeline on changes
+	 * @ofType SetTimelineStateAction
+	 * @filter noRedrew value
+	 * @action RedrawTimelineAction
+	 */
+
+	@Effect()
+	timelineRedrew$: Observable<RedrawTimelineAction> = this.actions$
+		.ofType(OverlaysActionTypes.SET_TIMELINE_STATE)
+		.filter(({ payload }: SetTimelineStateAction) => !payload.noRedrew)
+		.map(() => new RedrawTimelineAction());
+
 
 	constructor(private actions$: Actions,
 				private store$: Store<IOverlayState>,
 				private overlaysService: OverlaysService) {
 	}
+
+
 }

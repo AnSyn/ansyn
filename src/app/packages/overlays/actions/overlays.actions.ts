@@ -149,7 +149,7 @@ export class SetFiltersAction implements Action {
 export class SetTimelineStateAction implements Action {
 	type = OverlaysActionTypes.SET_TIMELINE_STATE;
 
-	constructor(public payload: { state: TimelineState, noRedrew?: boolean }) {
+	constructor(public payload: { state: TimelineState, noRedraw?: boolean }) {
 	}
 }
 

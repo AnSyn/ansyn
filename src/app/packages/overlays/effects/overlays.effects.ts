@@ -195,14 +195,14 @@ export class OverlaysEffects {
 	 * @name timelineRedrew$
 	 * @description this method should redrew timeline on changes
 	 * @ofType SetTimelineStateAction
-	 * @filter noRedrew value
+	 * @filter noRedraw value
 	 * @action RedrawTimelineAction
 	 */
 
 	@Effect()
 	timelineRedrew$: Observable<RedrawTimelineAction> = this.actions$
 		.ofType(OverlaysActionTypes.SET_TIMELINE_STATE)
-		.filter(({ payload }: SetTimelineStateAction) => !payload.noRedrew)
+		.filter(({ payload }: SetTimelineStateAction) => !payload.noRedraw)
 		.map(() => new RedrawTimelineAction());
 
 

@@ -6,6 +6,7 @@ import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
 import { OverlaySpecialObject } from '@ansyn/core/models';
+import { TimelineState } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -148,7 +149,7 @@ export class SetFiltersAction implements Action {
 export class SetTimelineStateAction implements Action {
 	type = OverlaysActionTypes.SET_TIMELINE_STATE;
 
-	constructor(public payload: { from: Date, to: Date }) {
+	constructor(public payload: { state: TimelineState, noRedrew?: boolean }) {
 	}
 }
 

@@ -2,9 +2,8 @@ import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angu
 import * as d3 from 'd3';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
-import { DebugElement } from '@angular/core';
+import { DebugElement, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 describe('TimelineComponent', () => {
@@ -63,7 +62,7 @@ describe('TimelineComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TimelineComponent);
 		component = fixture.componentInstance;
-		component.redraw$ = new BehaviorSubject(Math.random());
+		component.redraw$ = new EventEmitter();
 		fixture.detectChanges();
 	});
 

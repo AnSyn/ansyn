@@ -2,7 +2,7 @@ import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provide
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
-import { IOverlayState } from '../reducers/overlays.reducer';
+import { IOverlayState, TimelineState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/catch';
@@ -115,7 +115,7 @@ export class OverlaysService {
 			&& isEqual(data.specialObjects, data1.specialObjects);
 	}
 
-	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: { from: Date, to: Date }): { from: Date, to: Date } {
+	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: TimelineState): TimelineState {
 		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
 		const deltaTenth: number = (delta) * 0.1;
 		let from: Date, to: Date;

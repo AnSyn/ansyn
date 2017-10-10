@@ -117,7 +117,7 @@ export class OverlaysAppEffects {
 			const tenth = (to.getTime() - from.getTime()) / 10;
 			const fromTenth = new Date(from.getTime() - tenth);
 			const toTenth = new Date(to.getTime() + tenth);
-			return new SetTimelineStateAction({ from: fromTenth, to: toTenth });
+			return new SetTimelineStateAction({ state: { from: fromTenth, to: toTenth } });
 		});
 
 	/**

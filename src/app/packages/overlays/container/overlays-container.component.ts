@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import * as overlaysAction from '../actions/overlays.actions';
 import {
@@ -7,8 +7,7 @@ import {
 	OverlaysMarkupAction,
 	SelectOverlayAction,
 	SetTimelineStateAction,
-	UnSelectOverlayAction,
-	UpdateOverlaysCountAction
+	UnSelectOverlayAction
 } from '../actions/overlays.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
 import { first } from 'lodash';
@@ -19,10 +18,8 @@ import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';
-import { IOverlayState } from '../reducers/overlays.reducer';
+import { IOverlayState, TimelineState } from '../reducers/overlays.reducer';
 import { schemeCategory10 } from 'd3';
-import { OverlaysService } from '../services/overlays.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -51,89 +48,93 @@ const animations: any[] = [
 	destroyFunc: 'ngOnDestroy',
 })
 
-export class OverlaysContainerComponent implements OnInit, AfterViewInit {
-	public drops: any[] = [];
-	public redraw$: BehaviorSubject<number>;
-	public configuration: any;
-	public currentTimelineState = {
-		from: undefined,
-		to: undefined
+export class OverlaysContainerComponent implements OnInit {
+	drops: any[] = [];
+	redraw$: EventEmitter<any> = new EventEmitter();
+	selectedOverlays: Array<string> = [];
+	subscribers: any = {};
+	overlaysMarkup: any = [];
+	loading: boolean;
+	noDrops: boolean;
+	timelineState: TimelineState;
+	configuration: any = {
+		start: new Date(new Date().getTime() - 3600000 * 24 * 365),
+		margin: {
+			top: 60,
+			left: 50,
+			bottom: 40,
+			right: 50,
+		},
+		end: new Date(),
+		eventLineColor: (d, i) => schemeCategory10[i],
+		date: d => new Date(d.date),
+		displayLabels: false,
+		shapes: {
+			star: {
+				fill: 'green',
+				offsetY: 20,
+			}
+		}
 	};
-	public selectedOverlays: Array<string> = [];
-	public subscribers: any = {};
-	public overlaysMarkup: any = [];
-	public loading: boolean;
-	public noDrops: boolean;
 
-	public drops$: Observable<any> = this.store.select <IOverlayState>('overlays')
-		.skip(1)
-		.do(({ timelineState }: IOverlayState) => this.setConfigurationTime(timelineState.from, timelineState.to))
-		.map(({ overlays, filteredOverlays, specialObjects }: IOverlayState) => this.overlaysService.parseOverlayDataForDispaly(overlays, filteredOverlays, specialObjects))
-		.do((drops): void => {
-			this.store.dispatch(new UpdateOverlaysCountAction(drops[0].data.length));
-			this.noDrops = Boolean(first(drops).data.length === 0);
-		});
+	overlaysState$: Observable<IOverlayState> = this.store$.select <IOverlayState>('overlays');
 
-	public timelineState$: Observable<any> = this.store.select('overlays')
-		.map((overlaysState: IOverlayState) => overlaysState.timelineState)
-		.distinctUntilChanged()
-		.filter(timelineState => {
-			return timelineState && timelineState.to && timelineState.from && this.currentTimelineState.from && this.currentTimelineState.to;
-		})
-		.filter(timelineState => {
-			return (timelineState.from.getTime() !== this.currentTimelineState.from.getTime() || timelineState.to.getTime() !== this.currentTimelineState.to.getTime());
-		});
-
-	public overlaysLoader$: Observable<any> = this.store.select('overlays')
-		.map((overlayState: IOverlayState) => overlayState.loading)
+	timelineState$: Observable<TimelineState> = this.overlaysState$
+		.pluck <IOverlayState, TimelineState>('timelineState')
 		.distinctUntilChanged();
 
+	overlaysLoader$: Observable<any> = this.overlaysState$
+		.pluck <IOverlayState, boolean>('loading')
+		.distinctUntilChanged();
 
-	/*
-		// this is not needed for now maybe will be needed for later use
-		public selectedOverlays$ = this.store.select('overlays')
-		.skip(1)
-		.distinctUntilChanged((data: IOverlayState, data1: IOverlayState) => isEqual(data.queryParams, data1.queryParams))
-		.map((data: IOverlayState) => data.selectedOverlays);
-	*/
-
-	constructor(private store: Store<IOverlayState>,
-				private overlaysService: OverlaysService,
+	constructor(private store$: Store<IOverlayState>,
 				private emitter: TimelineEmitterService,
-				private effects: OverlaysEffects) {
-		this.redraw$ = new BehaviorSubject(0);
-
-		this.configuration = {
-			start: new Date(new Date().getTime() - 3600000 * 24 * 365),
-			margin: {
-				top: 60,
-				left: 50,
-				bottom: 40,
-				right: 50,
-			},
-			end: new Date(),
-			eventLineColor: (d, i) => schemeCategory10[i],
-			date: d => new Date(d.date),
-			displayLabels: false,
-			shapes: {
-				star: {
-					fill: 'green',
-					offsetY: 20,
-				}
-
-			}
-
-		};
-
-		this.currentTimelineState.from = this.configuration.start;
-		this.currentTimelineState.to = this.configuration.end;
+				private effects$: OverlaysEffects) {
 	}
 
 	ngOnInit(): void {
-		this.setSubscribers();
+		this.setStoreSubscribers();
+		this.setEmitterSubscribers();
 	}
 
-	ngAfterViewInit(): void {
+	// maybe to move this to the service
+	toggleOverlay(id): void {
+		if (this.selectedOverlays.includes(id)) {
+			this.store$.dispatch(new UnSelectOverlayAction(id));
+		} else {
+			this.store$.dispatch(new SelectOverlayAction(id));
+		}
+	}
+
+	setStoreSubscribers(): void {
+
+		this.subscribers.drops = this.effects$.drops$.subscribe((drops) => {
+			this.drops = drops;
+			this.noDrops = !(first(drops).data.length);
+		});
+
+		this.subscribers.timelineState = this.timelineState$
+			.subscribe(timelineState => {
+				this.timelineState = timelineState;
+				this.configuration.start = timelineState.from;
+				this.configuration.end = timelineState.to;
+			});
+
+		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
+			this.loading = loading;
+		});
+
+		this.subscribers.onRedrawTimeline = this.effects$.onRedrawTimeline$.subscribe(() => {
+			this.redraw$.emit();
+		});
+
+		this.subscribers.overlaysMarkup = this.effects$.onOverlaysMarkupChanged$
+			.subscribe((action: OverlaysMarkupAction) => {
+				this.overlaysMarkup = action.payload;
+			});
+	}
+
+	setEmitterSubscribers() {
 
 		this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
 			.subscribe(data => this.toggleOverlay(data.element.id));
@@ -142,68 +143,26 @@ export class OverlaysContainerComponent implements OnInit, AfterViewInit {
 			.subscribe(data => {
 				const id = data.element.id;
 				startTimingLog(`LOAD_OVERLAY_${id}`);
-				this.store.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: id }));
+				this.store$.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: id }));
 				if (!this.selectedOverlays.includes(id)) {
-					this.store.dispatch(new SelectOverlayAction(id));
+					this.store$.dispatch(new SelectOverlayAction(id));
 				}
 			});
 
 		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
-			.subscribe(result => {
-				this.currentTimelineState = { from: result.dates.from, to: result.dates.to };
-				this.store.dispatch(new SetTimelineStateAction({ from: result.dates.from, to: result.dates.to }));
+			.subscribe((result: { dates: TimelineState }) => {
+				this.store$.dispatch(new SetTimelineStateAction({ state: { ...result.dates }, noRedrew: true }));
 			});
 
 		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')
 			.subscribe(result => {
-				this.store.dispatch(new MouseOverDropAction(result.id));
+				this.store$.dispatch(new MouseOverDropAction(result.id));
 			});
 
 		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')
 			.subscribe(result => {
-				this.store.dispatch(new MouseOutDropAction(result.id));
+				this.store$.dispatch(new MouseOutDropAction(result.id));
 			});
-
-	}
-
-	// maybe to move this to the service
-	toggleOverlay(id): void {
-		if (this.selectedOverlays.includes(id)) {
-			this.store.dispatch(new UnSelectOverlayAction(id));
-		} else {
-			this.store.dispatch(new SelectOverlayAction(id));
-		}
-	}
-
-	setSubscribers(): void {
-
-		this.subscribers.drops = this.drops$.subscribe((drops) => {
-			this.drops = drops;
-		});
-
-		this.subscribers.timelineState = this.timelineState$
-			.subscribe(timelineState => {
-				this.setConfigurationTime(timelineState.from, timelineState.to);
-			});
-
-		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
-			this.loading = loading;
-		});
-
-		this.subscribers.onRedrawTimeline = this.effects.onRedrawTimeline$.subscribe(() => {
-			this.setConfigurationTime(this.currentTimelineState.from, this.currentTimelineState.to);
-			this.redraw$.next(Math.random());
-		});
-
-		this.subscribers.overlaysMarkup = this.effects.onOverlaysMarkupChanged$
-			.subscribe((action: OverlaysMarkupAction) => {
-				this.overlaysMarkup = action.payload;
-			});
-	}
-
-	setConfigurationTime(from: Date, to: Date) {
-		this.configuration.start = from;
-		this.configuration.end = to;
-	}
+	};
 
 }

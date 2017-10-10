@@ -3,11 +3,10 @@
 	 [ngClass]="{'pin-location': pinLocationMode, 'pin-point': pinPointMode}">
 
 	<ng-template [ngIf]="mapsList">
-		<div
-			*ngFor="let mapData of mapsList; count as count"
-			class='map-container-wrapper'
-			(click)="clickMapContainer(mapData.id)"
-			(dblclick)="dbclick()">
+		<div *ngFor="let mapData of mapsList; count as count"
+			 class="map-container-wrapper"
+			 (click)="clickMapContainer(mapData.id)"
+			 (dblclick)="dbclick()">
 			<ansyn-imagery-container class="map"
 									 [disableGeoOptions]="isGeoOptionsDisabled(mapData.id)"
 									 [mapState]="mapData"

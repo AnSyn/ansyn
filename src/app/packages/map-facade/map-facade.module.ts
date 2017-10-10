@@ -6,7 +6,6 @@ import { ImageriesManagerComponent } from './components/imageries-manager/imager
 import { ImageryModule } from '../imagery/imagery.module';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
-import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { CoreModule } from '@ansyn/core';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
 	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule, FormsModule],
 	providers: [MapFacadeService],
-	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ImageryStatusComponent, ContextMenuComponent],
+	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ContextMenuComponent],
 	exports: [ImageriesManagerComponent]
 })
 

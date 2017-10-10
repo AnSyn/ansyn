@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryStatusComponent } from './imagery-status.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { CoreModule } from '@ansyn/core';
-import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
+import { BackToWorldAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 
 
 describe('', () => {
@@ -44,12 +44,7 @@ describe('', () => {
 
 	it('expect backToWorldView get event, call stopPropagation and call dispatch with backToWorldViewAction', () => {
 		spyOn(store, 'dispatch');
-		const $event: any = jasmine.createSpyObj({
-			stopPropagation: () => {
-			}
-		});
-		component.backToWorldView($event);
-		expect($event.stopPropagation).toHaveBeenCalled();
+		component.backToWorldView();
 		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: component.map_id }));
 	});
 });

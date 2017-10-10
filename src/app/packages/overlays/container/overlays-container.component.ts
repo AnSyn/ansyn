@@ -151,7 +151,7 @@ export class OverlaysContainerComponent implements OnInit {
 
 		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
 			.subscribe((result: { dates: TimelineState }) => {
-				this.store$.dispatch(new SetTimelineStateAction({ state: { ...result.dates }, noRedrew: true }));
+				this.store$.dispatch(new SetTimelineStateAction({ state: { ...result.dates }, noRedraw: true }));
 			});
 
 		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')

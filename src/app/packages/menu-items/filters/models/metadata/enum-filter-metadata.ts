@@ -39,6 +39,9 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	filterFunc(overlay: any, filteringParams: { key: string, metadata: EnumFilterMetadata }): boolean {
+		if (!overlay) {
+			return false;
+		}
 		const selectedFields: string[] = [];
 		filteringParams.metadata.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
 			if (value.isChecked) {

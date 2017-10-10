@@ -78,12 +78,13 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	private baseFeatureStyle(isActive, isFavorites, isDisplayed, { stroke, fill }) {
 		const [colors, width] = isFavorites ? [stroke.colors, stroke.width * 0.6] : [stroke.colors, stroke.width];
 		const color = isActive ? colors['active'] : isDisplayed ? colors['displayed'] : colors[''];
-		return this.getStyleWithStroke(width, color, fill);
+		const zIndex = isActive ? 2 : 1;
+		return this.getStyleWithStroke(width, color, fill, zIndex);
 	}
 
-	private getStyleWithStroke(width, color, fill?) {
+	private getStyleWithStroke(width, color, fill?, zIndex?) {
 		const stroke = new Stroke({ width, color });
-		const styleObj = fill ? { stroke, fill } : { stroke };
+		const styleObj = fill ? { stroke, fill, zIndex } : { stroke, zIndex };
 		return new Style(styleObj);
 	}
 

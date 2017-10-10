@@ -61,11 +61,6 @@ describe('StatusBarComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	});
 	describe('clicks', () => {
-		it('clickBackToWorldView should dispatch action BackToWorldView', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickBackToWorldView();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new BackToWorldViewAction());
-		});
 		it('clickGoPrev should dispatch action GoPrevAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.clickGoPrev();

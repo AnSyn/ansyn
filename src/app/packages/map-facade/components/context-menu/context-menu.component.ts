@@ -4,7 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
-import { get as _get, isEmpty as _isEmpty, isNil as _isNil, uniq as _uniq } from 'lodash';
+import { isEmpty as _isEmpty, uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn\/core/models/overlay.model';
@@ -43,13 +43,44 @@ export class ContextMenuComponent implements OnInit {
 		.distinctUntilChanged();
 
 	displayedOverlay: Overlay;
-	filteredOverlays: Overlay[];
 	displayedOverlayIndex: number;
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
 	angleList: Array<'Draw' | 'Turn' | 'Show'> = [];
 	point: GeoJSON.Point;
+
+	private _filteredOverlays: Overlay[];
+	private _prevfilteredOverlays = [];
+	private _nextfilteredOverlays = [];
+
+	set filteredOverlays(value) {
+		this._filteredOverlays = value;
+		this.allSensors = this.pluckFilterField(value);
+	}
+
+	set prevfilteredOverlays(value) {
+		this._prevfilteredOverlays = value;
+		this.prevSensors = this.pluckFilterField(value);
+	}
+
+	set nextfilteredOverlays(value) {
+		this._nextfilteredOverlays = value;
+		this.nextSensors = this.pluckFilterField(value);
+	}
+
+	get filteredOverlays() {
+		return this._filteredOverlays;
+	}
+
+	get prevfilteredOverlays() {
+		return this._prevfilteredOverlays;
+	}
+
+	get nextfilteredOverlays() {
+		return this._nextfilteredOverlays;
+	}
+
 
 	overlayButtons: OverlayButton[] = [
 		{
@@ -110,9 +141,14 @@ export class ContextMenuComponent implements OnInit {
 				private renderer: Renderer2) {
 	}
 
+	pluckFilterField(overlays: Overlay[]) {
+		return _uniq(overlays.map((overlay: Overlay) => overlay[this.filterField]));
+	}
+
 	ngOnInit(): void {
 		this.filteredOverlays$.subscribe((filteredOverlays: Overlay[]) => {
-			this.filteredOverlays = filteredOverlays;
+			this.filteredOverlays = filteredOverlays
+				.filter(({ id }) => id !== (this.displayedOverlay && this.displayedOverlay.id));
 		});
 
 		this.displayedOverlay$.subscribe((displayedOverlay: Overlay) => {
@@ -131,21 +167,17 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	initializeSensors() {
-		const sensorsOnly = this.filteredOverlays
-			.filter(({ id }) => _get(this.displayedOverlay, 'id') !== id)
-			.map((overlay: Overlay) => overlay[this.filterField]);
-		this.allSensors = _uniq(sensorsOnly);
-		this.displayedOverlayIndex = this.filteredOverlays
-			.findIndex(({ id }) => _get(this.displayedOverlay, 'id') === id);
-
-		if (this.displayedOverlayIndex === -1) {
-			if (_isNil(this.displayedOverlay)) {
-				this.prevSensors = [];
-				this.nextSensors = Array.from(this.allSensors);
-			}
+		if (!this.displayedOverlay) {
+			this.prevfilteredOverlays = [];
+			this.nextfilteredOverlays = [...this.filteredOverlays];
 		} else {
-			this.prevSensors = _uniq(sensorsOnly.slice(0, this.displayedOverlayIndex));
-			this.nextSensors = _uniq(sensorsOnly.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length));
+
+			this.prevfilteredOverlays = this.filteredOverlays
+				.filter((overlay: Overlay) => overlay.date < this.displayedOverlay.date)
+				.reverse();
+
+			this.nextfilteredOverlays = this.filteredOverlays
+				.filter((overlay: Overlay) => this.displayedOverlay.date < overlay.date);
 		}
 	}
 
@@ -158,25 +190,24 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	clickNext($event: MouseEvent, subFilter?: string) {
-		const nextOverlay = this.filteredOverlays
-			.slice(this.displayedOverlayIndex + 1, this.filteredOverlays.length)
+		const nextOverlay = this.nextfilteredOverlays
 			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, nextOverlay);
 	}
 
 	clickPrev($event: MouseEvent, subFilter?: string) {
-		const prevOverlay = this.filteredOverlays
-			.slice(0, this.displayedOverlayIndex)
-			.reverse()
+		const prevOverlay = this.prevfilteredOverlays
 			.find((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
 	clickBest($event: MouseEvent, subFilter?: string) {
-		const sensorOnly = this.filteredOverlays.filter((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
-		const bestOverlay = sensorOnly.reduce((minValue, value) => {
-			return value.bestResolution < minValue.bestResolution ? value : minValue;
-		});
+		const sensorOnly = this.filteredOverlays
+			.filter((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
+		const bestOverlay = sensorOnly
+			.reduce((minValue, value) => {
+				return value.bestResolution < minValue.bestResolution ? value : minValue;
+			});
 		this.displayOverlayEvent($event, bestOverlay);
 	}
 

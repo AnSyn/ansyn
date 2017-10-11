@@ -216,20 +216,21 @@ describe('OverlaysService', () => {
 	it('parseOverlayDataForDisplay function with special objects', () => {
 
 		const mockData = {
-			overlays: new Map()
-		};
+			overlays: new Map(),
+			filteredOverlays: ['13']
+		} as IOverlayState;
 
 		overlaysTmpData.forEach(item => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = overlaysService.parseOverlayDataForDispaly(mockData.overlays, ['13']);
+		const result = OverlaysService.parseOverlayDataForDispaly(mockData);
 		expect(result[0].data.length).toBe(1);
 
-		const specialObjects = new Map<string, OverlaySpecialObject>();
-		specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
+		mockData.specialObjects = new Map<string, OverlaySpecialObject>();
+		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
-		const result2 = overlaysService.parseOverlayDataForDispaly(mockData.overlays, ['13'], specialObjects);
+		const result2 = OverlaysService.parseOverlayDataForDispaly(mockData);
 		expect(result2[0].data.length).toBe(2);
 	});
 

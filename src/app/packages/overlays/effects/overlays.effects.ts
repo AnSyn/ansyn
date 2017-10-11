@@ -193,6 +193,13 @@ export class OverlaysEffects {
 		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
 		.map(OverlaysService.parseOverlayDataForDispaly);
 
+	/**
+	 * @type Effect
+	 * @name dropsCount$
+	 * @description this method should calculate drops count
+	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
+	 * @action UpdateOverlaysCountAction
+	 */
 
 	@Effect()
 	dropsCount$: Observable<UpdateOverlaysCountAction> = this.actions$

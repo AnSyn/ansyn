@@ -46,7 +46,7 @@ import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IOverlaysState, overlaysInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, OverlayReducer, overlaysInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 

@@ -217,7 +217,8 @@ describe('OverlaysService', () => {
 
 		const mockData = {
 			overlays: new Map(),
-			filteredOverlays: ['13']
+			filteredOverlays: ['13'],
+			specialObjects: new Map<string, OverlaySpecialObject>()
 		} as IOverlaysState;
 
 		overlaysTmpData.forEach(item => {
@@ -227,7 +228,6 @@ describe('OverlaysService', () => {
 		const result = OverlaysService.parseOverlayDataForDispaly(mockData);
 		expect(result[0].data.length).toBe(1);
 
-		mockData.specialObjects = new Map<string, OverlaySpecialObject>();
 		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
 		const result2 = OverlaysService.parseOverlayDataForDispaly(mockData);

@@ -52,7 +52,7 @@ export class TimelineComponent implements OnInit {
 
 	@HostListener('window:resize')
 	onresize() {
-		this.redraw$.next(0);
+		this.redraw$.emit();
 	}
 
 	@Input()

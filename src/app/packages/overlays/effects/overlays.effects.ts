@@ -27,6 +27,13 @@ import 'rxjs/add/operator/share';
 @Injectable()
 export class OverlaysEffects {
 
+	static DropsChangesActionType = [
+		OverlaysActionTypes.LOAD_OVERLAYS,
+		OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+		OverlaysActionTypes.SET_FILTERS,
+		OverlaysActionTypes.SET_SPECIAL_OBJECTS
+	];
+
 	/**
 	 * @type Effect
 	 * @name onDisplayOverlayFromStore$
@@ -182,13 +189,18 @@ export class OverlaysEffects {
 
 	@Effect({ dispatch: false })
 	drops$: Observable<any[]> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS,
-			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.SET_FILTERS,
-			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
+		.ofType(...OverlaysEffects.DropsChangesActionType)
 		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
-		.map(({ overlays, filteredOverlays, specialObjects }: IOverlayState) => this.overlaysService.parseOverlayDataForDispaly(overlays, filteredOverlays, specialObjects))
-		.do((drops) => this.store$.dispatch(new UpdateOverlaysCountAction(drops[0].data.length)));
+		.map(OverlaysService.parseOverlayDataForDispaly);
+
+
+	@Effect()
+	dropsCount$: Observable<UpdateOverlaysCountAction> = this.actions$
+		.ofType(...OverlaysEffects.DropsChangesActionType)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
+		.map(OverlaysService.parseOverlayDataForDispaly)
+		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
+
 
 	/**
 	 * @type Effect

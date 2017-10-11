@@ -1,7 +1,7 @@
 import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { OverlaysActionTypes, OverlaysActions } from '../actions/overlays.actions';
+import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 
 export interface TimelineState {
 	from: Date;

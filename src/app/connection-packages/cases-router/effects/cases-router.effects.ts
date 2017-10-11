@@ -3,7 +3,7 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
-import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil, get as _get } from 'lodash';
+import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';

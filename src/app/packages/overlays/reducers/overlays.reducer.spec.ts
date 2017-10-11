@@ -1,4 +1,4 @@
-import { IOverlaysState, overlaysInitialState, OverlayReducer } from './overlays.reducer';
+import { IOverlaysState, OverlayReducer, overlaysInitialState } from './overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,

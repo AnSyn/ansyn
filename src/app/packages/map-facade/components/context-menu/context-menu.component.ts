@@ -168,7 +168,7 @@ export class ContextMenuComponent implements OnInit {
 
 	initializeSensors() {
 		if (!this.displayedOverlay) {
-			this.prevfilteredOverlays = [];
+			this.prevfilteredOverlays = [...this.filteredOverlays];
 			this.nextfilteredOverlays = [...this.filteredOverlays];
 		} else {
 

@@ -46,7 +46,7 @@ import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IOverlayState, overlayInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysInitialState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -94,7 +94,7 @@ describe('MapAppEffects', () => {
 	let icaseState: ICasesState;
 	let statusBarState: IStatusBarState;
 	let mapState: IMapState;
-	let overlaysState: IOverlayState;
+	let overlaysState: IOverlaysState;
 	let casesService: CasesService;
 	let baseSourceProviders: BaseMapSourceProvider[];
 	let imageryCommunicatorServiceMock = {
@@ -202,7 +202,7 @@ describe('MapAppEffects', () => {
 		icaseState = { cases, selectedCase } as any;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
-		overlaysState = cloneDeep(overlayInitialState);
+		overlaysState = cloneDeep(overlaysInitialState);
 		fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
 		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];

@@ -1,4 +1,4 @@
-import { IOverlayState, overlayInitialState, OverlayReducer } from './overlays.reducer';
+import { IOverlaysState, overlaysInitialState, OverlayReducer } from './overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
@@ -51,7 +51,7 @@ describe('Overlay Reducer', () => {
 
 		const queryParams = { search: '9399ejf' };
 		const action = new LoadOverlaysAction(queryParams);
-		const mockOverlayInitialState = cloneDeep(overlayInitialState);
+		const mockOverlayInitialState = cloneDeep(overlaysInitialState);
 
 		mockOverlayInitialState.overlays.set('tmp', <any> 'value');
 		expect(mockOverlayInitialState.overlays.size).toBe(1);
@@ -67,7 +67,7 @@ describe('Overlay Reducer', () => {
 		const fakeId = 'iu34-2322';
 		const action = new SelectOverlayAction(fakeId);
 
-		const result: IOverlayState = OverlayReducer(overlayInitialState, action);
+		const result: IOverlaysState = OverlayReducer(overlaysInitialState, action);
 		expect(result.selectedOverlays.includes(fakeId)).toBeTruthy();
 
 	});
@@ -76,7 +76,7 @@ describe('Overlay Reducer', () => {
 		const fakeId = 'iu34-2322';
 		const action = new SelectOverlayAction(fakeId);
 
-		let result: IOverlayState = OverlayReducer(overlayInitialState, action);
+		let result: IOverlaysState = OverlayReducer(overlaysInitialState, action);
 
 		expect(result.selectedOverlays.includes(fakeId)).toBeTruthy();
 
@@ -90,13 +90,13 @@ describe('Overlay Reducer', () => {
 
 
 	it('should load all overlays', () => {
-		overlayInitialState.overlays = new Map();
+		overlaysInitialState.overlays = new Map();
 
 
 		const overlays = [o1, o2] as any;
 
 		const action = new LoadOverlaysSuccessAction(overlays);
-		const result = OverlayReducer(overlayInitialState, action);
+		const result = OverlayReducer(overlaysInitialState, action);
 
 		expect(Array.from(result.overlays.keys())[0]).toBe('13');
 		expect(result.overlays.size).toBe(2);
@@ -109,7 +109,7 @@ describe('Overlay Reducer', () => {
 
 
 		const action = new LoadOverlaysSuccessAction([o1, o2, o3, o4] as any);
-		const result = OverlayReducer(overlayInitialState, action);
+		const result = OverlayReducer(overlaysInitialState, action);
 
 		const actionTestA = new SetFiltersAction({
 			showOnlyFavorites: false,
@@ -145,7 +145,7 @@ describe('Overlay Reducer', () => {
 		data.push({ id: 'fkdsjl', date: new Date(), shape: 'star' });
 		const action = new SetSpecialObjectsActionStore(data);
 
-		const result = OverlayReducer(overlayInitialState, action);
+		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.specialObjects.size).toBe(1);
 		expect(result.specialObjects.get('fkdsjl'));
 	});
@@ -154,7 +154,7 @@ describe('Overlay Reducer', () => {
 		const data1 = { to: new Date(), from: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
 
 		const action = new SetTimelineStateAction({ state: data1 });
-		const result = OverlayReducer(overlayInitialState, action);
+		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.timelineState.from.getTime()).toBe(data1.from.getTime());
 		expect(result.timelineState.to.getTime()).toBe(data1.to.getTime());
 	});
@@ -163,7 +163,7 @@ describe('Overlay Reducer', () => {
 		const data1 = { from: new Date(), to: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
 
 		const action = new SetTimelineStateAction({ state: data1 });
-		const result = OverlayReducer(overlayInitialState, action);
+		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.timelineState.from.getTime()).not.toBe(data1.from.getTime());
 		expect(result.timelineState.to.getTime()).not.toBe(data1.to.getTime());
 	});

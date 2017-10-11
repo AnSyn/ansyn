@@ -26,7 +26,7 @@ import {
 	FootprintPolylineVisualizer,
 	FootprintPolylineVisualizerType
 } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -163,10 +163,10 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlayState, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selectedCase];
 		})
-		.map(([overlaysState, selectedCase]: [IOverlayState, Case]) => {
+		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
 			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
@@ -323,7 +323,7 @@ export class VisualizersAppEffects {
 				private imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlayState) {
+	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
@@ -380,7 +380,7 @@ export class VisualizersAppEffects {
 		}
 	}
 
-	getEntitiesToDraw(overlayState: IOverlayState): IVisualizerEntity[] {
+	getEntitiesToDraw(overlayState: IOverlaysState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
 		return overlaysToDraw.map(({ id, footprint }) => {
 			const featureJson: GeoJSON.Feature<any> = {

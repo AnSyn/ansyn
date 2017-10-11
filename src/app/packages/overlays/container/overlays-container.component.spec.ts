@@ -12,7 +12,7 @@ import { OverlaysEffects } from '../effects/overlays.effects';
 
 import { State, Store, StoreModule } from '@ngrx/store';
 
-import { IOverlayState, OverlayReducer } from '../reducers/overlays.reducer';
+import { IOverlaysState, OverlayReducer } from '../reducers/overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
@@ -47,10 +47,10 @@ describe('OverlayContainerComponent', () => {
 	let overlaysEffects: OverlaysEffects;
 	let de: DebugElement;
 
-	let storeFixture: StoreFixture<IOverlayState>;
-	let store: Store<IOverlayState>;
-	let state: State<{ overlays: IOverlayState }>;
-	let getState: () => IOverlayState;
+	let storeFixture: StoreFixture<IOverlaysState>;
+	let store: Store<IOverlaysState>;
+	let state: State<{ overlays: IOverlaysState }>;
+	let getState: () => IOverlaysState;
 
 	let timelineEmitterService: TimelineEmitterService;
 
@@ -88,8 +88,8 @@ describe('OverlayContainerComponent', () => {
 		storeFixture = createStore(OverlayReducer);
 		store = storeFixture.store;
 		getState = storeFixture.getState;
-		state = <State<any>> storeFixture.state; // (overlayInitialState);
-		// state = overlayInitialState;
+		state = <State<any>> storeFixture.state; // (overlaysInitialState);
+		// state = overlaysInitialState;
 	}));
 
 	beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {

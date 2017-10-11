@@ -18,7 +18,7 @@ import '@ansyn/core/utils/store-element';
 import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';
-import { IOverlayState, TimelineState } from '../reducers/overlays.reducer';
+import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
 import { schemeCategory10 } from 'd3';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
@@ -77,17 +77,17 @@ export class OverlaysContainerComponent implements OnInit {
 		}
 	};
 
-	overlaysState$: Observable<IOverlayState> = this.store$.select <IOverlayState>('overlays');
+	overlaysState$: Observable<IOverlaysState> = this.store$.select <IOverlaysState>('overlays');
 
 	timelineState$: Observable<TimelineState> = this.overlaysState$
-		.pluck <IOverlayState, TimelineState>('timelineState')
+		.pluck <IOverlaysState, TimelineState>('timelineState')
 		.distinctUntilChanged();
 
 	overlaysLoader$: Observable<any> = this.overlaysState$
-		.pluck <IOverlayState, boolean>('loading')
+		.pluck <IOverlaysState, boolean>('loading')
 		.distinctUntilChanged();
 
-	constructor(private store$: Store<IOverlayState>,
+	constructor(private store$: Store<IOverlaysState>,
 				private emitter: TimelineEmitterService,
 				private effects$: OverlaysEffects) {
 	}

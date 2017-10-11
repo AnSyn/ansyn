@@ -18,7 +18,7 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
-import { IOverlayState } from '../reducers/overlays.reducer';
+import { IOverlaysState } from '../reducers/overlays.reducer';
 import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';
 import { isEqual, isNil as _isNil } from 'lodash';
@@ -44,7 +44,7 @@ export class OverlaysEffects {
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
-		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlayState): any => {
+		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlaysState): any => {
 			return { overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id };
 		})
 		.map(({ overlay, map_id }: any) => {
@@ -165,7 +165,7 @@ export class OverlaysEffects {
 	@Effect()
 	displayOverlaySetTimeline$ = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlayState, cases: ICasesState) => {
+		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlaysState, cases: ICasesState) => {
 			const displayedOverlay = overlays.overlays.get(action.payload.overlay.id);
 			const timelineState = overlays.timelineState;
 			const isActiveMap: boolean = _isNil(action.payload.map_id) || isEqual(cases.selectedCase.state.maps.active_map_id, action.payload.map_id);
@@ -190,7 +190,7 @@ export class OverlaysEffects {
 	@Effect({ dispatch: false })
 	drops$: Observable<any[]> = this.actions$
 		.ofType(...OverlaysEffects.DropsChangesActionType)
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlaysState) => overlays)
 		.map(OverlaysService.parseOverlayDataForDispaly);
 
 	/**
@@ -204,7 +204,7 @@ export class OverlaysEffects {
 	@Effect()
 	dropsCount$: Observable<UpdateOverlaysCountAction> = this.actions$
 		.ofType(...OverlaysEffects.DropsChangesActionType)
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => overlays)
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlaysState) => overlays)
 		.map(OverlaysService.parseOverlayDataForDispaly)
 		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
 
@@ -226,7 +226,7 @@ export class OverlaysEffects {
 
 
 	constructor(private actions$: Actions,
-				private store$: Store<IOverlayState>,
+				private store$: Store<IOverlaysState>,
 				private overlaysService: OverlaysService) {
 	}
 

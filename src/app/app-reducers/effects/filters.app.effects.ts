@@ -9,7 +9,7 @@ import { IAppState } from '../app-reducers.module';
 import { Filter, FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
@@ -72,7 +72,7 @@ export class FiltersAppEffects {
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('overlays'), (action: any, selectedCase: Case, overlaysState: IOverlayState): any => {
+		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('overlays'), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
 			return [overlaysArray, selectedCase.state.facets];
 		})

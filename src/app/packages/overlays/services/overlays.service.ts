@@ -11,7 +11,6 @@ import 'rxjs/add/operator/map';
 
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
-import { OverlaySpecialObject } from '../../core/models/overlay.model';
 
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
@@ -74,6 +73,17 @@ export class OverlaysService {
 		});
 	}
 
+
+	static parseOverlayDataForDispaly({ overlays, filteredOverlays, specialObjects }: IOverlayState): Array<any> {
+		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
+
+		specialObjects.forEach((value) => {
+			overlaysData.push(value);
+		});
+
+		return [{ name: undefined, data: overlaysData }];
+	}
+
 	constructor(@Inject(OverlaysConfig) private config: IOverlaysConfig, private _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
@@ -95,18 +105,6 @@ export class OverlaysService {
 
 	getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
-	}
-
-	parseOverlayDataForDispaly(overlays: Map<string, Overlay>, ids, specialObject?: Map<string, OverlaySpecialObject>): Array<any> {
-		const overlaysData = OverlaysService.pluck(overlays, ids, ['id', 'date']);
-
-		if (specialObject) {
-			specialObject.forEach((value) => {
-				overlaysData.push(value);
-			});
-		}
-
-		return [{ name: undefined, data: overlaysData }];
 	}
 
 	compareOverlays(data: IOverlayState, data1: IOverlayState) {

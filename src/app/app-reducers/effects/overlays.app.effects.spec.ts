@@ -13,7 +13,7 @@ import { Case, CasesReducer, CasesService, SelectCaseByIdAction } from '@ansyn/m
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { IOverlayState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
@@ -31,7 +31,7 @@ describe('OverlaysAppEffects', () => {
 
 	let icaseState: ICasesState;
 	let toolsState: IToolsState;
-	let overlaysState: IOverlayState;
+	let overlaysState: IOverlaysState;
 	let imageryCommunicatorServiceMock = {
 		provide: () => {
 		}

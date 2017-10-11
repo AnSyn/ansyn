@@ -14,7 +14,7 @@ import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlayState, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
@@ -112,7 +112,7 @@ export class OverlaysAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCount !== -1)
 		.do(() => this.casesService.contextValues.imageryCount = -1)
-		.withLatestFrom(this.store$.select<IOverlayState>('overlays').pluck <IOverlayState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
+		.withLatestFrom(this.store$.select<IOverlaysState>('overlays').pluck <IOverlaysState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
 		.map(({ from, to }: TimelineState) => {
 			const tenth = (to.getTime() - from.getTime()) / 10;
 			const fromTenth = new Date(from.getTime() - tenth);
@@ -132,7 +132,7 @@ export class OverlaysAppEffects {
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS)
 		.filter(action => this.casesService.contextValues.defaultOverlay === 'latest')
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlayState) => {
+		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlaysState) => {
 			return overlays.filteredOverlays;
 		})
 		.filter((displayedOverlays) => !isEmpty(displayedOverlays))

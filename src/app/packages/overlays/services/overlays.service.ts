@@ -2,7 +2,7 @@ import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provide
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
-import { IOverlayState, TimelineState } from '../reducers/overlays.reducer';
+import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/catch';
@@ -74,7 +74,7 @@ export class OverlaysService {
 	}
 
 
-	static parseOverlayDataForDispaly({ overlays, filteredOverlays, specialObjects }: IOverlayState): Array<any> {
+	static parseOverlayDataForDispaly({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
 
 		specialObjects.forEach((value) => {
@@ -107,7 +107,7 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
 
-	compareOverlays(data: IOverlayState, data1: IOverlayState) {
+	compareOverlays(data: IOverlaysState, data1: IOverlaysState) {
 		return isEqual(data.filteredOverlays, data1.filteredOverlays)
 			&& isEqual(data.filters, data1.filters)
 			&& isEqual(data.specialObjects, data1.specialObjects);

@@ -15,7 +15,7 @@ import { IMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IToolsState, ToolsReducer } from '@ansyn/menu-items/tools';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
@@ -30,7 +30,7 @@ import { CasesMapModule } from '@ansyn/cases-map/cases-map.module';
 
 
 export interface IAppState {
-	overlays: IOverlayState;
+	overlays: IOverlaysState;
 	cases: ICasesState;
 	menu: IMenuState;
 	layers: ILayerState;

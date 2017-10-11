@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
-import { IOverlayState, overlayInitialState } from '../reducers/overlays.reducer';
+import { IOverlaysState, overlaysInitialState } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
@@ -218,7 +218,7 @@ describe('OverlaysService', () => {
 		const mockData = {
 			overlays: new Map(),
 			filteredOverlays: ['13']
-		} as IOverlayState;
+		} as IOverlaysState;
 
 		overlaysTmpData.forEach(item => {
 			mockData.overlays.set(item.id, item);
@@ -245,8 +245,8 @@ describe('OverlaysService', () => {
 			mockData.filteredOverlays.push(item.id);
 		});
 
-		const overlayState1: IOverlayState = Object.assign({}, overlayInitialState);
-		const overlayState2: IOverlayState = Object.assign({}, overlayInitialState);
+		const overlayState1: IOverlaysState = Object.assign({}, overlaysInitialState);
+		const overlayState2: IOverlaysState = Object.assign({}, overlaysInitialState);
 		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeTruthy();
 
 		overlayState1.filteredOverlays = mockData.filteredOverlays;

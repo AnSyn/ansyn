@@ -1,14 +1,14 @@
-import * as overlay from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { OverlaysActionTypes, OverlaysActions } from '../actions/overlays.actions';
 
 export interface TimelineState {
 	from: Date;
 	to: Date;
 }
 
-export interface IOverlayState {
+export interface IOverlaysState {
 	loaded: boolean;
 	loading: boolean;
 	overlays: Map<string, Overlay>;
@@ -21,7 +21,7 @@ export interface IOverlayState {
 	timelineState: TimelineState;
 }
 
-export const overlayInitialState: IOverlayState = {
+export const overlaysInitialState: IOverlaysState = {
 	loaded: false,
 	loading: false,
 	overlays: new Map(),
@@ -35,10 +35,10 @@ export const overlayInitialState: IOverlayState = {
 	filteredOverlays: []
 };
 
-export function OverlayReducer(state = overlayInitialState, action: overlay.OverlaysActions): IOverlayState {
+export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 
-		case overlay.OverlaysActionTypes.SELECT_OVERLAY:
+		case OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
 			if (!selected.includes(action.payload)) {
@@ -48,7 +48,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				selectedOverlays: selected
 			});
 
-		case overlay.OverlaysActionTypes.UNSELECT_OVERLAY:
+		case OverlaysActionTypes.UNSELECT_OVERLAY:
 			const selected1 = state.selectedOverlays.slice();
 			const index = selected1.indexOf(action.payload);
 			if (index > -1) {
@@ -61,7 +61,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				return state;
 			}
 
-		case overlay.OverlaysActionTypes.LOAD_OVERLAYS:
+		case OverlaysActionTypes.LOAD_OVERLAYS:
 			const queryParams = action.payload || {};
 			return {
 				...state,
@@ -72,7 +72,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				filteredOverlays: []
 			};
 
-		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
+		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 
 			const overlays = OverlaysService.sort(action.payload);
 
@@ -92,12 +92,12 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				overlays: stateOverlays
 			};
 
-		case overlay.OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
+		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({}, state, {
 				loading: false
 			});
 
-		case overlay.OverlaysActionTypes.SET_FILTERS:
+		case OverlaysActionTypes.SET_FILTERS:
 			let overlaysToFilter = state.overlays;
 
 			if (action.payload.showOnlyFavorites) {
@@ -116,7 +116,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 				filteredOverlays: res
 			};
 
-		case overlay.OverlaysActionTypes.SET_SPECIAL_OBJECTS:
+		case OverlaysActionTypes.SET_SPECIAL_OBJECTS:
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;
 
 			const specialObjects = new Map<string, OverlaySpecialObject>();
@@ -126,7 +126,7 @@ export function OverlayReducer(state = overlayInitialState, action: overlay.Over
 
 			return { ...state, specialObjects };
 
-		case overlay.OverlaysActionTypes.SET_TIMELINE_STATE:
+		case OverlaysActionTypes.SET_TIMELINE_STATE:
 			const { from, to } = action.payload.state;
 
 			const result: number = from.getTime() - to.getTime();

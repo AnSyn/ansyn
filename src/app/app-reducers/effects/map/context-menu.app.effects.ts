@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { IOverlayState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -27,7 +27,7 @@ export class ContextMenuAppEffects {
 	setContextFilter$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.withLatestFrom(this.store$.select('overlays'))
-		.map(([action, overlaysState]: [ContextMenuShowAction, IOverlayState]) => {
+		.map(([action, overlaysState]: [ContextMenuShowAction, IOverlaysState]) => {
 			return overlaysState.filteredOverlays
 				.map((id: string): Overlay => overlaysState.overlays.get(id))
 				.filter(({ footprint }) => inside(action.payload.point, footprint));

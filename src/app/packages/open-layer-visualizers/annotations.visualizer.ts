@@ -33,6 +33,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public namePrefix = 'Annotate-';
 	public data;
 	public drawEndPublisher = new Subject();
+	public annotationContextMenuHandler = new Subject();
 
 	// add special type for this one
 	public style: any = {
@@ -108,19 +109,38 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			layers: [this.layer]
 		})
 
-		this.selectInteraction.on('select', openLayesrBrowserEvent => {
-			const target = openLayesrBrowserEvent.originalEvent.target;
-			const callback = event => {
-				event.stopPropagation();
-				this.selectInteraction.getFeatures().clear();
-				target.removeEventListener('contextmenu', callback)
-				document.createElement('div');
+		this.selectInteraction.on('select', data => {
+				const target = data.mapBrowserEvent.originalEvent.target;
+				const selectedfeature = data.selected.shift();
+				const pixels = this.getFeaturePositionInPixels(selectedfeature);
+				const boundingRect = target.getBoundingClientRect();
 
+				console.log(data.mapBrowserEvent.originalEvent);
+				const callback = event => {
+					event.stopPropagation();
+					event.preventDefault();
+					data.target.getFeatures().clear();
+					this.annotationContextMenuHandler.next({
+						action: "openMenu",
+						features: selectedfeature,
+						pixels: { left: pixels[1][0] + boundingRect.left, top: pixels[1][1] + boundingRect.top }
+					});
+					target.removeEventListener('contextmenu', callback)
+				}
+
+				target.addEventListener('contextmenu', callback);
 			}
-			target.addEventListener('contextmenu', callback);
-		})
-
+		)
 	}
+
+	getFeaturePositionInPixels(feature) {
+		const geometry = feature.getGeometry();
+		const extent = geometry.getExtent();
+		const bottomLeft = this._imap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]);
+		const topRight = this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]]);
+		return [bottomLeft, topRight];
+	}
+
 
 	addSelectInteraction() {
 		this._imap.mapObject.addInteraction(this.selectInteraction)

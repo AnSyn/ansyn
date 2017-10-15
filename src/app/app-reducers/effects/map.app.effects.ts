@@ -66,7 +66,7 @@ import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { getPolygonByPointAndRadius } from '../../packages/core/utils/geo';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 @Injectable()
 export class MapAppEffects {

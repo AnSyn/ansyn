@@ -4,7 +4,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { StatusBarModule } from '../../status-bar.module';
 import {
-	BackToWorldViewAction,
 	ChangeLayoutAction,
 	ExpandAction,
 	FavoriteAction,
@@ -79,8 +78,9 @@ describe('StatusBarComponent', () => {
 
 		it('clickFavorite should dispatch action FavoriteAction', () => {
 			spyOn(component.store, 'dispatch');
+			component.overlay = { id: 'overlayIdBS' };
 			component.clickFavorite();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction());
+			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction(component.overlay.id));
 		});
 	});
 	it('onkeyup should call goNext when keycode = "39" and clickGoPrev when keycode = "37", and remove "active" class from next,prev buttons', () => {

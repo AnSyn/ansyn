@@ -61,12 +61,12 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
 import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 @Injectable()
 export class MapAppEffects {
@@ -113,7 +113,7 @@ export class MapAppEffects {
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
-			const region = getPolygonByPoint(action.payload).geometry;
+			const region = getPolygonByPointAndRadius(action.payload).geometry;
 
 			// draw on all maps
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {

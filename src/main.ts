@@ -55,7 +55,7 @@ const getProviders = (conf): any[] => {
 	];
 };
 
-const bootsrapApplicationModule = (): void => {
+const bootstrapApplicationModule = (): void => {
 	fetch('/assets/config/app.config.json')
 		.then(response => response.json())
 		.then(conf => {
@@ -70,4 +70,4 @@ const bootsrapApplicationModule = (): void => {
 		});
 };
 
-bootsrapApplicationModule();
+bootstrapApplicationModule();

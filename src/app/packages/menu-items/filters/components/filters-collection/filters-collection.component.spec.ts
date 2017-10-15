@@ -4,7 +4,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
-import { MockComponent } from '../../../../core/test/mock-component';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { Subject } from 'rxjs/Subject';
 

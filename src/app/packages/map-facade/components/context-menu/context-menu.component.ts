@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn\/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
-import { CaseMapState } from '../../../core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { toPayload } from '@ngrx/effects';
 
 interface OverlayButton {

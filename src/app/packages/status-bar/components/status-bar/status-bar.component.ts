@@ -243,7 +243,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickFavorite(): void {
-		this.store.dispatch(new FavoriteAction());
+		this.store.dispatch(new FavoriteAction(this.overlay.id));
 	}
 
 	clickBackToWorldView(): void {

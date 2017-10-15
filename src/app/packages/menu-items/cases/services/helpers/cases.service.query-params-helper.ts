@@ -8,7 +8,7 @@ import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
 import { Point } from 'geojson';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
-import { getPolygonByPointAndRadius } from '../../../../core/utils/geo';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 export class QueryParamsHelper {
 

@@ -45,7 +45,7 @@ export class CasesRouterEffects {
 		.map(toPayload)
 		.filter(({ caseId }) => !_isNil(caseId))
 		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
-		.filter(([{ caseId }, cases]) => caseId !== (cases.selectedCase && cases.selectedCase.id))
+		.filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id)
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 
 	/**

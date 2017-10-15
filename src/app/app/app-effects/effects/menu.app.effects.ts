@@ -43,6 +43,7 @@ export class MenuAppEffects {
 		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
 
+	@Effect()
 	autoCloseMenu$: Observable<Action> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
 		.map(({ payload }) => new SetClickOutside(payload));
@@ -54,7 +55,7 @@ export class MenuAppEffects {
 	 * @action GoToExpandAction
 	 */
 	@Effect()
-	unselectMenuItem$: Observable<UpdateMapSizeAction> = this.actions$
+	unselectMenuItem$: Observable<Action> = this.actions$
 		.ofType(MenuActionTypes.UNSELECT_MENU_ITEM)
 		.map(() => new GoToExpandAction(false));
 

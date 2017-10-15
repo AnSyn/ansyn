@@ -1,0 +1,22 @@
+@import '~@ansyn/core/less/z-index-globals';
+@import '~@ansyn/core/less/common';
+
+:host {
+	z-index: @annotation-cotext-menu;
+	position: fixed;
+	.wrapper {
+		visibility: hidden;
+		border: 1px solid white;
+		width: 20px;
+		height: 20px;
+		background-color: @application-main-color;
+		color: white;
+	}
+	&:focus {
+		.wrapper {
+			visibility: visible;
+		}
+
+	}
+
+}

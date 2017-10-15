@@ -17,6 +17,7 @@ import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions
 import { CaseMapState, defaultMapType, Overlay, Position } from '@ansyn/core';
 import { cloneDeep, range } from 'lodash';
 import { UUID } from 'angular2-uuid';
+import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
 
 @Injectable()
 export class MapFacadeService {
@@ -96,9 +97,10 @@ export class MapFacadeService {
 			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
 
 			const annotationVisualizer = communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-			if (annotationVisualizer) {
-				this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
-			}
+
+			this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
+			this._subscribers.push(annotationVisualizer.annotationContextMenuHandler.subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
+
 		});
 
 	}
@@ -146,5 +148,11 @@ export class MapFacadeService {
 			maps: 'others'
 		}));
 	}
+
+	annotationContextMenuHandlerSubscriber(payload) {
+		console.log('a');
+		this.store.dispatch(new AnnotationContextMenuTriggerAction(payload))
+	}
+
 
 }

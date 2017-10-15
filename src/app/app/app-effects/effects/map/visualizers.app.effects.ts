@@ -45,8 +45,12 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 
+
+
+
 @Injectable()
 export class VisualizersAppEffects {
+	public selectedCase$;
 
 	/**
 	 * @type Effect
@@ -240,6 +244,15 @@ export class VisualizersAppEffects {
 			this.drawGotoIconOnMap(activeMap, coords);
 		});
 
+	@Effect()
+	annotationData$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.STORE.ANNOTATION_DATA)
+		.withLatestFrom(this.selectedCase$)
+		.map(([action, selectedCase]: [Action, Case]) => {
+			console.log(selectedCase.state.annotationsLayer);
+
+		})
+
 	/**
 	 * @type Effect
 	 * @name annotationVisualizerAgent$
@@ -250,9 +263,10 @@ export class VisualizersAppEffects {
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.map(([action, cases]: [AnnotationVisualizerAgentAction, ICasesState]) => {
-			const selectedCase: Case = _cloneDeep(cases.selectedCase);
+		.withLatestFrom(this.selectedCase$)
+
+		.map(([action, selectedCase]: [AnnotationVisualizerAgentAction, Case]) => {
+			//const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
 			let relevantMapsIds = [];
 
@@ -351,6 +365,9 @@ export class VisualizersAppEffects {
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private imageryCommunicatorService: ImageryCommunicatorService) {
+
+		this.selectedCase$ = this.store$.select(casesStateSelector)
+					.map( (cases: ICasesState) => _cloneDeep(cases.selected_case));
 	}
 
 	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState) {

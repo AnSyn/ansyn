@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { CaseMapState, MapsLayout, Position } from '@ansyn/core';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { Overlay, Options } from '@ansyn/core/models';
+
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -34,14 +35,16 @@ export const MapActionTypes = {
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_FAVORITE: 'SET_FAVORITE',
 	STORE: {
-		SET_MAPS_DATA: 'SET_MAPS_DATA'
+		SET_MAPS_DATA: 'SET_MAPS_DATA',
+		ANNOTATION_DATA: 'ANNOTATION_DATA'
 	},
 	TRIGGER: {
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		PIN_POINT: 'PIN_POINT',
 		PIN_POINT_MODE: 'PIN_POINT_MODE',
-		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE'
+		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
+		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU'
 	}
 };
 
@@ -267,6 +270,20 @@ export class PinPointModeTriggerAction implements Action {
 
 	constructor(public payload: boolean) {
 	}
+}
+
+export class AnnotationContextMenuTriggerAction implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
+	constructor(public payload: { action: string, feature: Object }){
+
+	}
+}
+
+export class AnnotationData implements Action {
+	type = MapActionTypes.STORE.ANNOTATION_DATA;
+	constructor(public payload: Options){
+
+	};
 }
 
 export class SetFavoriteAction implements Action {

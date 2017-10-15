@@ -2,31 +2,45 @@
 	<div class="status-container">
 
 		<div class="left-buttons-container">
-			<button (click)="backToWorldView()" class="back-to-world-view" *ngIf="overlay">
+			<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
 				<i class="icon-context--prev"></i>
 				Back to base map
 			</button>
 
 			<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
-			<button *ngIf="mapsList.length > 1" [disabled]="disableGeoOptions"
+			<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
 					class="small-icon-button status-bar-link-maps-icon"
-					(click)="toggleMapSynchronization()">
+					(click)="toggleMapSynchronization.emit()">
 				<i class="icon-temporary-link"></i>
 			</button>
 
 			<button [disabled]="true" class="small-icon-button status-bar-hide-layers-icon"
-					(click)="toggleMapSynchronization()">
+					(click)="toggleMapSynchronization.emit()">
 				<i class="icon-hide-layers"></i>
 			</button>
 
-			<button (click)="toggleFavorite()" class="small-icon-button status-bar-favorite-icon" *ngIf="overlay">
+			<button *ngIf="overlay" class="small-icon-button status-bar-favorite-icon"
+					(click)="toggleFavorite.emit()">
 				<!-- TODO icon change to favorites -->
 				<i class="icon-annotation--circle"></i>
 			</button>
 		</div>
 
 		<div class="status-bar-title" data-title="{{map_id}}">
-			<ansyn-overlay-text [overlay]="overlay"></ansyn-overlay-text>
+			<ng-template [ngIf]="overlay" [ngIfElse]="noOverlay">
+				<div class="sensor-and-date">
+					<span class="sensor-name" [title]="overlay.sensorName">
+						{{overlay.sensorName}}&nbsp;
+					</span>
+					<span class="date">
+						{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}}
+					</span>
+				</div>
+			</ng-template>
+
+			<ng-template #noOverlay>
+				<span>Base Map</span>
+			</ng-template>
 		</div>
 
 		<ansyn-overlays-status-notifications [notInCase]="notInCase"

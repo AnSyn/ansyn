@@ -208,7 +208,7 @@ export class StatusBarAppEffects {
 			const actions = [];
 			const activeMap = selectedCase.state.maps.data.find(item => item.id === selectedCase.state.maps.active_map_id);
 
-			// lagecy support
+			// legacy support
 			if (!selectedCase.state.favoritesOverlays) {
 				selectedCase.state.favoritesOverlays = [];
 			}

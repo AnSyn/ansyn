@@ -6,7 +6,11 @@
 						  [overlay]="overlay"
 						  [active]="active"
 						  [disableGeoOptions]="disableGeoOptions"
-						  [notInCase]="notInCase">
+						  [notInCase]="notInCase"
+						  [mapsAmount]="mapsAmount"
+						  (backToWorldView)="backToWorldView()"
+						  (toggleMapSynchronization)="toggleMapSynchronization()"
+						  (toggleFavorite)="toggleFavorite()">
 	</ansyn-imagery-status>
 
 

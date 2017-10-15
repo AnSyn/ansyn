@@ -286,7 +286,7 @@ describe('StatusBarAppEffects', () => {
 	});
 
 	it('onFavorite$ with favorites and showOnlyFavorites off', () => {
-		effectsRunner.queue(new FavoriteAction());
+		effectsRunner.queue(new FavoriteAction('overlayId1'));
 		let counter = 0;
 		statusBarAppEffects.onFavorite$.subscribe((result) => {
 			counter++;
@@ -295,7 +295,7 @@ describe('StatusBarAppEffects', () => {
 			}
 
 		});
-		expect(counter).toBe(3);
+		expect(counter).toBe(1);
 	});
 
 	it('onFavorite$ with favorites and showOnlyFavorites on (unfavorite)', () => {
@@ -313,6 +313,6 @@ describe('StatusBarAppEffects', () => {
 			}
 
 		});
-		expect(count).toBe(4);
+		expect(count).toBe(1);
 	});
 });

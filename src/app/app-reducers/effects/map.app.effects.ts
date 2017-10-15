@@ -67,8 +67,8 @@ import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { EnableOnlyFavoritesSelectionAction } from '../../packages/menu-items/filters/actions/filters.actions';
-import { SyncFilteredOverlays } from '../../packages/overlays/actions/overlays.actions';
+import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapAppEffects {

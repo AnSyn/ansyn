@@ -31,6 +31,7 @@ export const MapActionTypes = {
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
+	SET_FAVORITE: 'SET_FAVORITE',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA'
 	},
@@ -260,3 +261,9 @@ export class PinPointModeTriggerAction implements Action {
 	}
 }
 
+export class SetFavoriteAction implements Action {
+	type: string = MapActionTypes.SET_FAVORITE;
+
+	constructor(public payload?: string) { // overlayId
+	}
+}

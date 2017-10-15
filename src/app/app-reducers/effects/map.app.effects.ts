@@ -26,7 +26,7 @@ import {
 	StartMapShadowAction,
 	StopMapShadowAction
 } from '@ansyn/map-facade';
-import { isEmpty, isNil } from 'lodash';
+import { cloneDeep, isEmpty, isNil } from 'lodash';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -67,6 +67,8 @@ import {
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
+import { EnableOnlyFavoritesSelectionAction } from '../../packages/menu-items/filters/actions/filters.actions';
+import { SyncFilteredOverlays } from '../../packages/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -624,11 +626,49 @@ export class MapAppEffects {
 		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));
 
+	/**
+	 * @type Effect
+	 * @name onFavorite$
+	 * @ofType SetFavoriteAction
+	 * @dependencies cases
+	 * @action UpdateCaseAction?, SyncFilteredOverlays, OverlaysMarkupAction, EnableOnlyFavoritesSelectionAction
+	 */
+	@Effect()
+	onFavorite$: Observable<Action> = this.actions$
+		.ofType(MapActionTypes.SET_FAVORITE)
+		.withLatestFrom(this.store$.select('cases'), (action: Action, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
+		.mergeMap(([action, selectedCase]: [Action, Case]) => {
+
+			console.log(action);
+
+			const actions = [];
+
+			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {
+				selectedCase.state.favoritesOverlays = selectedCase.state.favoritesOverlays.filter(overlay => overlay !== action.payload);
+				if (selectedCase.state.facets.showOnlyFavorites) {
+					actions.push(new SyncFilteredOverlays());
+				}
+			} else {
+				selectedCase.state.favoritesOverlays.push(action.payload);
+			}
+
+			console.log(selectedCase.state.favoritesOverlays);
+
+			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
+
+			console.log(overlaysMarkup);
+
+			// order does matter! update case must be the first action, since all other relies on it
+			actions.unshift(new UpdateCaseAction(selectedCase));
+			actions.push(new OverlaysMarkupAction(overlaysMarkup));
+			actions.push(new EnableOnlyFavoritesSelectionAction(Boolean(selectedCase.state.favoritesOverlays.length)));
+
+			return actions;
+		});
 
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]) {
 	}
-
 }

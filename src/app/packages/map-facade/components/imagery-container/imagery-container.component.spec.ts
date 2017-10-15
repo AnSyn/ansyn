@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
 import { MockComponent } from '@ansyn/core/test';
-import { CoreModule } from '../../../core/core.module';
+import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
 
 describe('ImageryContainerComponent', () => {

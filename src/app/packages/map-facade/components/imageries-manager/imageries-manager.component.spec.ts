@@ -9,8 +9,8 @@ import { Dispatcher, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IMapState, MapReducer } from '../../reducers/map.reducer';
 import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
-import { ImageryStatusComponent } from '../../../core/components/imagery-status/imagery-status.component';
-import { OverlaysStatusNotificationsComponent } from '../../../core/components/overlays-status-notifications/overlays-status-notifications.component';
+import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
+import { OverlaysStatusNotificationsComponent } from '@ansyn/core/components/overlays-status-notifications/overlays-status-notifications.component';
 
 const mock_ansyn_context_menu = MockComponent({
 	selector: 'ansyn-context-menu',

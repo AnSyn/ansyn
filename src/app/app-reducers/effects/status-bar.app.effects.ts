@@ -36,12 +36,13 @@ import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/';
-import { OverlaysActionTypes, SyncFilteredOverlays } from '@ansyn/overlays/actions';
+import { OverlaysActionTypes } from '@ansyn/overlays/actions';
 import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SetFavoriteAction } from '../../packages/map-facade/actions/map.actions';
 
 
 @Injectable()
@@ -192,45 +193,12 @@ export class StatusBarAppEffects {
 	 * @type Effect
 	 * @name onFavorite$
 	 * @ofType FavoriteAction
-	 * @dependencies cases
-	 * @filter There is an active map overlay
-	 * @action UpdateCaseAction?, SyncFilteredOverlays, OverlaysMarkupAction, EnableOnlyFavoritesSelectionAction
+	 * @action SetFavoriteAction
 	 */
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
 		.ofType(StatusBarActionsTypes.FAVORITE)
-		.withLatestFrom(this.store.select('cases'), (action: Action, cases: ICasesState): Case => cloneDeep(cases.selectedCase))
-		.filter((selectedCase: Case) => {
-			const activeMap = selectedCase.state.maps.data.find(item => item.id === selectedCase.state.maps.active_map_id);
-			return !isEmpty(activeMap.data.overlay);
-		})
-		.mergeMap((selectedCase: Case) => {
-			const actions = [];
-			const activeMap = selectedCase.state.maps.data.find(item => item.id === selectedCase.state.maps.active_map_id);
-
-			// legacy support
-			if (!selectedCase.state.favoritesOverlays) {
-				selectedCase.state.favoritesOverlays = [];
-			}
-
-			if (selectedCase.state.favoritesOverlays.includes(activeMap.data.overlay.id)) {
-				pull(selectedCase.state.favoritesOverlays, activeMap.data.overlay.id);
-				if (selectedCase.state.facets.showOnlyFavorites) {
-					actions.push(new SyncFilteredOverlays());
-				}
-			} else {
-				selectedCase.state.favoritesOverlays.push(activeMap.data.overlay.id);
-			}
-
-			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
-
-			// order does matter! update case must be the first action, since all other relies on it
-			actions.unshift(new UpdateCaseAction(selectedCase));
-			actions.push(new OverlaysMarkupAction(overlaysMarkup));
-			actions.push(new EnableOnlyFavoritesSelectionAction(Boolean(selectedCase.state.favoritesOverlays.length)));
-
-			return actions;
-		});
+		.map((action) => new SetFavoriteAction(action.payload));
 
 	/**
 	 * @type Effect

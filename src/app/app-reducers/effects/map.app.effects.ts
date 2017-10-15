@@ -638,9 +638,6 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.SET_FAVORITE)
 		.withLatestFrom(this.store$.select('cases'), (action: Action, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
 		.mergeMap(([action, selectedCase]: [Action, Case]) => {
-
-			console.log(action);
-
 			const actions = [];
 
 			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {
@@ -652,11 +649,7 @@ export class MapAppEffects {
 				selectedCase.state.favoritesOverlays.push(action.payload);
 			}
 
-			console.log(selectedCase.state.favoritesOverlays);
-
 			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
-
-			console.log(overlaysMarkup);
 
 			// order does matter! update case must be the first action, since all other relies on it
 			actions.unshift(new UpdateCaseAction(selectedCase));

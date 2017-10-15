@@ -32,9 +32,6 @@ export class ContextMenuComponent implements OnInit {
 
 	mapState$ = this.store.select <IMapState>('map');
 
-	filteredOverlays$: Observable<Overlay[]> = this.mapEffects$
-		.getFilteredOverlays$
-		.map <Action, Overlay[]>(toPayload);
 
 	displayedOverlay$: Observable<Overlay> = this.mapState$
 		.map(MapFacadeService.activeMap)
@@ -42,8 +39,21 @@ export class ContextMenuComponent implements OnInit {
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
 
-	displayedOverlay: Overlay;
-	displayedOverlayIndex: number;
+	filteredOverlays$: Observable<Overlay[]> = this.mapEffects$
+		.getFilteredOverlays$
+		.map <Action, Overlay[]>(toPayload)
+		.withLatestFrom(this.displayedOverlay$, (filteredOverlays: Overlay[], displayedOverlay: Overlay) => {
+			const displayedOverlayId = (displayedOverlay && displayedOverlay.id);
+			return [
+				filteredOverlays.filter(({ id }) => id !== displayedOverlayId),
+				displayedOverlay && displayedOverlay.date
+			];
+		})
+		.do(([filteredOverlays, displayedOverlayDate]: [Overlay[], Date]) => {
+			this.initializeSensors(filteredOverlays, displayedOverlayDate);
+		})
+		.map(([filteredOverlays]: [Overlay[], Date]) => filteredOverlays);
+
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
@@ -146,14 +156,8 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.filteredOverlays$.subscribe((filteredOverlays: Overlay[]) => {
-			this.filteredOverlays = filteredOverlays
-				.filter(({ id }) => id !== (this.displayedOverlay && this.displayedOverlay.id));
-		});
-
-		this.displayedOverlay$.subscribe((displayedOverlay: Overlay) => {
-			this.displayedOverlay = displayedOverlay;
-		});
+		this.filteredOverlays$
+			.subscribe((filteredOverlays: Overlay[]) => this.filteredOverlays = filteredOverlays);
 
 		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
 	}
@@ -163,21 +167,20 @@ export class ContextMenuComponent implements OnInit {
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.e.y}px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.e.x}px`);
 		this.elem.nativeElement.focus();
-		this.initializeSensors();
 	}
 
-	initializeSensors() {
-		if (!this.displayedOverlay) {
-			this.prevfilteredOverlays = [...this.filteredOverlays];
-			this.nextfilteredOverlays = [...this.filteredOverlays];
+	initializeSensors(filteredOverlays, displayedOverlayDate?) {
+		if (!displayedOverlayDate) {
+			this.prevfilteredOverlays = [...filteredOverlays];
+			this.nextfilteredOverlays = [...filteredOverlays];
 		} else {
 
-			this.prevfilteredOverlays = this.filteredOverlays
-				.filter((overlay: Overlay) => overlay.date < this.displayedOverlay.date)
+			this.prevfilteredOverlays = filteredOverlays
+				.filter((overlay: Overlay) => overlay.date < displayedOverlayDate)
 				.reverse();
 
-			this.nextfilteredOverlays = this.filteredOverlays
-				.filter((overlay: Overlay) => this.displayedOverlay.date < overlay.date);
+			this.nextfilteredOverlays = filteredOverlays
+				.filter((overlay: Overlay) => displayedOverlayDate < overlay.date);
 		}
 	}
 

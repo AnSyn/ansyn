@@ -64,50 +64,44 @@ describe('ContextMenuComponent', () => {
 	it('show should: save action, set {top, left} on host element(by renderer), call focus(host element) and initializeSensors', () => {
 		const elem = fixture.nativeElement;
 		spyOn(elem, 'focus');
-		spyOn(component, 'initializeSensors');
 		expect(elem.style.top).not.toEqual('2px');
 		expect(elem.style.left).not.toEqual('1px');
 		const action = <ContextMenuShowAction> { payload: { e: { x: 1, y: 2 } } };
 		component.show(action);
-		expect(component.initializeSensors).toHaveBeenCalled();
 		expect(elem.focus).toHaveBeenCalled();
 		expect(elem.style.top).toEqual('2px');
 		expect(elem.style.left).toEqual('1px');
 	});
 
 	it('clickNext should calculate next overlay(via subFilter) and call displayOverlayEvent', () => {
-		component.filteredOverlays = [
+		component.nextfilteredOverlays = [
 			{ id: '1', [component.filterField]: 'a' },
 			{ id: '2', [component.filterField]: 'b' },
 			{ id: '3', [component.filterField]: 'a' }
 		] as any[];
-		component.displayedOverlayIndex = 0;
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickNext($event);
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[1]);
+		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.nextfilteredOverlays[0]);
 
-		component.displayedOverlayIndex = 0;
-		component.clickNext($event, 'a');
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[2]);
+		component.clickNext($event, 'b');
+		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.nextfilteredOverlays[1]);
 	});
 
 	it('clickPrev should calculate prev overlay(via subFilter) and call displayOverlayEvent', () => {
-		component.filteredOverlays = [
+		component.prevfilteredOverlays = [
 			{ id: '1', [component.filterField]: 'b' },
 			{ id: '2', [component.filterField]: 'a' },
 			{ id: '3', [component.filterField]: 'c' },
 			{ id: '4', [component.filterField]: 'b' },
 		] as any[];
-		component.displayedOverlayIndex = 3; // b
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickPrev($event);
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[2]);
+		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.prevfilteredOverlays[0]);
 
-		component.displayedOverlayIndex = 3;
-		component.clickPrev($event, 'b');
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[0]);
+		component.clickPrev($event, 'a');
+		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.prevfilteredOverlays[1]);
 	});
 
 	it('clickLast should calculate last overlay(via subFilter) and call displayOverlayEvent', () => {
@@ -133,13 +127,11 @@ describe('ContextMenuComponent', () => {
 			{ id: '3', [component.filterField]: 'c' },
 			{ id: '4', [component.filterField]: 'c' },
 		] as any[];
-		component.displayedOverlayIndex = 3;
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickFirst($event);
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[0]);
 
-		component.displayedOverlayIndex = 3;
 		component.clickFirst($event, 'c');
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[1]);
 	});

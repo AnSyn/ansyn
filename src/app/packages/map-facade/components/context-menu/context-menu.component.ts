@@ -46,13 +46,13 @@ export class ContextMenuComponent implements OnInit {
 			const displayedOverlayId = (displayedOverlay && displayedOverlay.id);
 			return [
 				filteredOverlays.filter(({ id }) => id !== displayedOverlayId),
-				displayedOverlay && displayedOverlay.date
+				displayedOverlay
 			];
 		})
-		.do(([filteredOverlays, displayedOverlayDate]: [Overlay[], Date]) => {
-			this.initializeSensors(filteredOverlays, displayedOverlayDate);
+		.do(([filteredOverlays, displayedOverlay]: [Overlay[], Overlay]) => {
+			this.initializeSensors(filteredOverlays, displayedOverlay);
 		})
-		.map(([filteredOverlays]: [Overlay[], Date]) => filteredOverlays);
+		.map(([filteredOverlays]: [Overlay[], Overlay]) => filteredOverlays);
 
 	nextSensors = [];
 	prevSensors = [];
@@ -169,12 +169,12 @@ export class ContextMenuComponent implements OnInit {
 		this.elem.nativeElement.focus();
 	}
 
-	initializeSensors(filteredOverlays, displayedOverlayDate?) {
-		if (!displayedOverlayDate) {
+	initializeSensors(filteredOverlays, displayedOverlay?) {
+		if (!displayedOverlay) {
 			this.prevfilteredOverlays = [...filteredOverlays];
 			this.nextfilteredOverlays = [...filteredOverlays];
 		} else {
-
+			const displayedOverlayDate = displayedOverlay.date;
 			this.prevfilteredOverlays = filteredOverlays
 				.filter((overlay: Overlay) => overlay.date < displayedOverlayDate)
 				.reverse();
@@ -205,12 +205,9 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	clickBest($event: MouseEvent, subFilter?: string) {
-		const sensorOnly = this.filteredOverlays
-			.filter((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField]);
-		const bestOverlay = sensorOnly
-			.reduce((minValue, value) => {
-				return value.bestResolution < minValue.bestResolution ? value : minValue;
-			});
+		const bestOverlay = this.filteredOverlays
+			.filter((overlay: Overlay) => !subFilter || subFilter === overlay[this.filterField])
+			.reduce((minValue, value) => value.bestResolution < minValue.bestResolution ? value : minValue);
 		this.displayOverlayEvent($event, bestOverlay);
 	}
 

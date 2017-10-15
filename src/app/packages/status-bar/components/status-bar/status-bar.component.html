@@ -5,7 +5,9 @@
 				[overlay]="overlay"
 				[notInCase]="overlayNotInCase"
 				[active]="true"
-				[disableGeoOptions]="showGeoRegistrationError()">
+				[disableGeoOptions]="showGeoRegistrationError()"
+				(backToWorldView)="clickBackToWorldView()"
+				(toggleFavorite)="clickFavorite()">
 			</ansyn-imagery-status>
 		</div>
 

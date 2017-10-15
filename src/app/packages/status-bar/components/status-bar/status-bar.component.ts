@@ -245,4 +245,8 @@ export class StatusBarComponent implements OnInit {
 	clickFavorite(): void {
 		this.store.dispatch(new FavoriteAction());
 	}
+
+	clickBackToWorldView(): void {
+		this.store.dispatch(new BackToWorldViewAction());
+	}
 }

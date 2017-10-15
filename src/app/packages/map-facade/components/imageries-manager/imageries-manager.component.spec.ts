@@ -9,6 +9,8 @@ import { Dispatcher, Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IMapState, MapReducer } from '../../reducers/map.reducer';
 import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
+import { ImageryStatusComponent } from '../../../core/components/imagery-status/imagery-status.component';
+import { OverlaysStatusNotificationsComponent } from '../../../core/components/overlays-status-notifications/overlays-status-notifications.component';
 
 const mock_ansyn_context_menu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -17,7 +19,7 @@ const mock_ansyn_context_menu = MockComponent({
 });
 const mock_ansyn_imagery_container = MockComponent({
 	selector: 'ansyn-imagery-container',
-	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase']
+	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase', 'mapsAmount']
 });
 
 describe('ImageriesManagerComponent', () => {
@@ -36,8 +38,16 @@ describe('ImageriesManagerComponent', () => {
 				Dispatcher,
 				MapFacadeService
 			],
-			imports: [StoreModule.provideStore({ key: 'value', map: MapReducer })],
-			declarations: [ImageriesManagerComponent, mock_ansyn_context_menu, mock_ansyn_imagery_container],
+			imports: [
+				StoreModule.provideStore({ key: 'value', map: MapReducer })
+			],
+			declarations: [
+				ImageriesManagerComponent,
+				mock_ansyn_context_menu,
+				mock_ansyn_imagery_container,
+				ImageryStatusComponent,
+				OverlaysStatusNotificationsComponent
+			],
 
 		})
 			.compileComponents();

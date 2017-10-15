@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OverlayGeoRegistrationErrorComponent } from './overlay-geo-registration-error.component';
 
-describe('OverlayTextComponent', () => {
+describe('OverlayGeoRegistrationErrorComponent', () => {
 	let component: OverlayGeoRegistrationErrorComponent;
 	let fixture: ComponentFixture<OverlayGeoRegistrationErrorComponent>;
 

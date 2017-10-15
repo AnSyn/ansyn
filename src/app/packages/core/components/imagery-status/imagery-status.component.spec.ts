@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryStatusComponent } from './imagery-status.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { CoreModule } from '@ansyn/core';
-import { BackToWorldAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
+import { Overlay } from '../../models/overlay.model';
 
 
 describe('', () => {
@@ -12,18 +12,18 @@ describe('', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CoreModule, StoreModule.provideStore({})],
-			declarations: [ImageryStatusComponent]
+			imports: [CoreModule, StoreModule.provideStore({})]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component.map_id = 'test';
+		component.overlay = {} as Overlay;
+		component.mapsAmount = 2;
 		fixture.detectChanges();
-		store = _store;
 	}));
 
 	it('should be created', () => {
@@ -31,20 +31,26 @@ describe('', () => {
 	});
 
 	it('check click on backToWorldView', () => {
-		spyOn(store, 'dispatch');
+		spyOn(component.backToWorldView, 'emit');
 		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: 'test' }));
+		expect(component.backToWorldView.emit).toHaveBeenCalled();
 	});
 
 	it('check click on toggleMapSynchronization', () => {
-		spyOn(store, 'dispatch');
-		fixture.nativeElement.querySelector('.status-bar-link-maps-icon img').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new SynchronizeMapsAction({ mapId: 'test' }));
+		spyOn(component.toggleMapSynchronization, 'emit');
+		fixture.nativeElement.querySelector('.status-bar-link-maps-icon').click();
+		expect(component.toggleMapSynchronization.emit).toHaveBeenCalled();
 	});
 
-	it('expect backToWorldView get event, call stopPropagation and call dispatch with backToWorldViewAction', () => {
-		spyOn(store, 'dispatch');
-		component.backToWorldView();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldAction({ mapId: component.map_id }));
+	it('check click on toggleFavorite', () => {
+		spyOn(component.toggleFavorite, 'emit');
+		fixture.nativeElement.querySelector('.status-bar-favorite-icon').click();
+		expect(component.toggleFavorite.emit).toHaveBeenCalled();
+	});
+
+	it('should not show link when 1 map', () => {
+		component.mapsAmount = 1;
+		fixture.detectChanges();
+		expect(fixture.nativeElement.querySelector('.status-bar-link-maps-icon')).toBeNull();
 	});
 });

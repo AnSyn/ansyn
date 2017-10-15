@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from './utils/toast/toast.module';
-import { OverlayTextComponent } from './components/overlay-text/overlay-text.component';
 import { OverlayGeoRegistrationErrorComponent } from './components/overlay-geo-registration-error/overlay-geo-registration-error.component';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
@@ -9,7 +8,6 @@ import { OverlaysStatusNotificationsComponent } from './components/overlays-stat
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 
 const coreComponents = [
-	OverlayTextComponent,
 	OverlayGeoRegistrationErrorComponent,
 	AnsynCheckboxComponent,
 	OverlaysStatusNotificationsComponent,

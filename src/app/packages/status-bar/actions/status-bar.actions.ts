@@ -85,7 +85,7 @@ export class ExpandAction implements Action {
 export class FavoriteAction implements Action {
 	type: string = StatusBarActionsTypes.FAVORITE;
 
-	constructor() {
+	constructor(public mapId?: string) {
 	}
 }
 

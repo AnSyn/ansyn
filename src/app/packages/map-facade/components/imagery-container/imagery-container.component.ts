@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
+import { Store } from '@ngrx/store';
+import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
+import { FavoriteAction } from '../../../status-bar/actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -13,6 +16,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	@Input() mapState: CaseMapState;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
+	@Input() mapsAmount = 1;
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 
 	private _showSpinner: boolean;
@@ -36,7 +40,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	private _spinner: Spinner;
 
-	constructor() {
+	constructor(private store: Store<any>) {
 		this.showSpinner = true;
 	}
 
@@ -57,5 +61,17 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this._spinner = null;
+	}
+
+	backToWorldView() {
+		this.store.dispatch(new BackToWorldAction({ mapId: this.mapState.id }));
+	}
+
+	toggleMapSynchronization() {
+		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));
+	}
+
+	toggleFavorite() {
+		this.store.dispatch(new FavoriteAction());
 	}
 }

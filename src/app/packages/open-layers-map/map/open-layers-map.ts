@@ -377,9 +377,6 @@ export class OpenLayersMap implements IMap {
 	}
 
 	public setBoundingBox(bbox: GeoJSON.Point[]) {
-		// if(configuration.General.logActions ){
-		// 	console.log(`'Set Map extent to: ${JSON.stringify(bbox)}'`);
-		// }
 		const geoViewExtent: Extent = Utils.BoundingBoxToOLExtent(bbox);
 		const view = this._mapObject.getView();
 		const viewProjection = view.getProjection();

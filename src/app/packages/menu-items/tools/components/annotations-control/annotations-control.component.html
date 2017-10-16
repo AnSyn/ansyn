@@ -1,10 +1,10 @@
 <ul class="annotations-options">
-	<li (click)="createInteraction('Point')"><span class="icon-annotation--point "></span></li>
-	<li (click)="createInteraction('LineString')"><span class="icon-annotation--line "></span></li>
+	<li (click)="createInteraction('Point')"><span class="icon-annotation-point "></span></li>
+	<li (click)="createInteraction('LineString')"><span class="icon-annotation-line "></span></li>
 	<li (click)="createInteraction('Polygon')"><span class="icon-annotation-polygon "></span></li>
-	<li (click)="createInteraction('Circle')"><span class="icon-annotation--circle "></span></li>
-	<li (click)="createInteraction('Rectangle')"><span class="icon-annotation--square "></span></li>
-	<li (click)="createInteraction('Arrow')"><span class="icon-annotation--arrow "></span></li>
+	<li (click)="createInteraction('Circle')"><span class="icon-annotation-circle "></span></li>
+	<li (click)="createInteraction('Rectangle')"><span class="icon-annotation-square "></span></li>
+	<li (click)="createInteraction('Arrow')"><span class="icon-annotation-arrow "></span></li>
 	<li class="spliter">
 		<div></div>
 	</li>
@@ -25,7 +25,7 @@
 	</li>
 	<li class="expanded-selection color-selection">
 		<div (click)="toggleColorSelection($event)">
-			<span class="icon-annotation--color "></span>
+			<span class="icon-annotation-color "></span>
 		</div>
 		<ul #colorSelection tabindex="40" class="color-selection-expand">
 			<li (click)="openColorInput($event)">

@@ -10,17 +10,6 @@ div.status-bar-container {
 	width: 100%;
 	height: 35px;
 	transform: translate(0, -100%);
-	.favorite-icon {
-		font-size: 25px;
-
-		.path2:before {
-			color: #000000;
-			margin-left: 0;
-		}
-		&.active .path2:before {
-			color: gold;
-		}
-	}
 
 	div.navigation-area {
 		background: white;
@@ -34,6 +23,9 @@ div.status-bar-container {
 		padding: 0 10px;
 		box-sizing: border-box;
 		z-index: @z-index-status-bar-navigation-area;
+		i {
+			font-size: 25px;
+		}
 		button {
 			outline: none;
 			width: 24px;
@@ -49,6 +41,16 @@ div.status-bar-container {
 			}
 			&.active {
 				box-shadow: 0 0 2px 2px #666;
+			}
+		}
+
+		.favorite-icon {
+			&:before {
+				color: #000000;
+				margin-left: 0;
+			}
+			&.active:before {
+				color: gold;
 			}
 		}
 	}
@@ -168,7 +170,7 @@ div.status-bar-container {
 							display: flex;
 							align-items: center;
 
-							span.icon-status-bar--share-link {
+							span.icon-status-bar-share-link {
 								margin-right: 3px;
 								font-size: 18px;
 							}

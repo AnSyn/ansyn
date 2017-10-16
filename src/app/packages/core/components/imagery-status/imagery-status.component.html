@@ -3,7 +3,7 @@
 
 		<div class="left-buttons-container">
 			<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
-				<i class="icon-context--prev"></i>
+				<i class="icon-context-menu-prev"></i>
 				Back to base map
 			</button>
 
@@ -16,13 +16,13 @@
 
 			<button [disabled]="true" class="small-icon-button status-bar-hide-layers-icon"
 					(click)="toggleMapSynchronization.emit()">
-				<i class="icon-hide-layers"></i>
+				<i class="icon-layers-hide"></i>
 			</button>
 
 			<button *ngIf="overlay" class="small-icon-button status-bar-favorite-icon"
 					(click)="toggleFavorite.emit()">
 				<!-- TODO icon change to favorites -->
-				<i class="icon-annotation--circle"></i>
+				<i class="icon-favorites"></i>
 			</button>
 		</div>
 

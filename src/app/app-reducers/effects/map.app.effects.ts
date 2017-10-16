@@ -478,11 +478,12 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
 		.withLatestFrom(this.store$.select('cases'), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
 		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
-			const mapToSyncTo = casesState.selectedCase.state.maps.data.find((map) => map.id === action.payload.mapId);
+			const mapId = action.payload.mapId;
+			const currentMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
 			casesState.selectedCase.state.maps.data.forEach((mapItem: CaseMapState) => {
-				if (mapToSyncTo.id !== mapItem.id) {
+				if (mapId !== mapItem.id) {
 					const comm = this.imageryCommunicatorService.provide(mapItem.id);
-					comm.setPosition(mapToSyncTo.data.position);
+					comm.setPosition(currentMapPosition);
 				}
 			});
 		});

@@ -49,7 +49,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 				anchor: [0.5, 46],
 				anchorXUnits: 'fraction',
 				anchorYUnits: 'pixels',
-				src: '/assets/icons/filters.png'
+				src: '/assets/icons/filters.svg'
 			}))
 		});
 

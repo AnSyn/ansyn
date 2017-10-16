@@ -54,12 +54,11 @@
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
 					<i (click)="toggleMapPointSearch()" class="icon-status-bar-edit-pin-point"></i>
 				</div>
-				<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt=""
-						 class="status-bar-image-right">
+				<div class='status-bar-eye-icon' (click)="togglePinPointIndicatorView()"
+					 [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+					<i class="icon-status-bar-show-pin-point status-bar-image-right"></i>
 				</div>
 			</div>
-
 
 			<div class="selection-combobox layout-item time-selection">
 				<div class="status-bar-calender-icon">

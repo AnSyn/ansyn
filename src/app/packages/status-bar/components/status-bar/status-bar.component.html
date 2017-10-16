@@ -108,7 +108,7 @@
 			<img src="/assets/icons/status-bar/prev-icon.svg"/>
 		</button>
 
-		<button (click)="clickFavorite()">
+		<button (click)="clickFavorite()" [disabled]="!overlay">
 			<span class="icon-status-bar--favorite favorite-icon" [class.active]="isFavoriteOverlayDisplayed">
 				<span class="path2"></span>
 			</span>

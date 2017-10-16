@@ -14,12 +14,12 @@
 		<div class="right-side" [class.show-separator]="!hideOverlay">
 
 			<div class="selected-case layout-item pop-on-hover">
-				<i class="icon-status-bar--case"></i>
+				<i class="icon-status-bar-case"></i>
 				<span class="name">{{selectedCaseName}}</span>
 				<div class="pop-hover default-case">
 					<div class="pop-hover-content">
 						<button class="share-link" (click)="copyLink()">
-							<span class="icon-status-bar--share-link"></span>
+							<span class="icon-status-bar-share-link"></span>
 							<span>Share link</span>
 						</button>
 					</div>
@@ -29,8 +29,8 @@
 
 			<div class="selection-combobox layout-item type-selection">
 
-				<div class='status-bar-orientation-icon'>
-					<img src="/assets/icons/status-bar/orientation-icon.svg" class="status-bar-image-left">
+				<div class="status-bar-orientation-icon">
+					<i class="icon-status-bar-orientation status-bar-image-left"></i>
 				</div>
 
 				<select name="orientation" [(ngModel)]="orientation" (ngModelChange)="orientationChange(orientation)">
@@ -42,7 +42,7 @@
 
 			<div class="selection-combobox layout-item geo-selection">
 				<div class='status-bar-world-icon'>
-					<i class="icon-status-bar--geo"></i>
+					<i class="icon-status-bar-geo"></i>
 				</div>
 
 
@@ -52,7 +52,7 @@
 				</select>
 
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-					<i (click)="toggleMapPointSearch()" class="icon-status-bar--edit-pin-point"></i>
+					<i (click)="toggleMapPointSearch()" class="icon-status-bar-edit-pin-point"></i>
 				</div>
 				<div class='status-bar-eye-icon' [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 					<img (click)="togglePinPointIndicatorView()" src="/assets/eye.svg" alt=""
@@ -63,13 +63,13 @@
 
 			<div class="selection-combobox layout-item time-selection">
 				<div class="status-bar-calender-icon">
-					<i class="icon-status-bar--time"></i>
+					<i class="icon-status-bar-time"></i>
 				</div>
 				<select name="query-timeline">
 					<option>Start - End</option>
 				</select>
 				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
-					<i (click)="toggleTimelineStartEndSearch()" class="icon-case--edit"></i>
+					<i (click)="toggleTimelineStartEndSearch()" class="icon-case-edit"></i>
 				</div>
 				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">
@@ -86,7 +86,7 @@
 			</div>
 
 			<div class="layout-combobox layout-item">
-				<img src="/assets/icons/status-bar/no-of-screen-icon.svg" class="status-bar-image-left" hidden>
+				<i class="icon-no-of-screens status-bar-image-left" hidden></i>
 				<ansyn-combo-box
 					[options]="layouts"
 					[(selectedIndex)]="selected_layout_index"
@@ -95,7 +95,7 @@
 			</div>
 
 			<div class="overlays-count layout-item">
-				<img src="/assets/icons/status-bar/imagery-count-icon.svg" class="status-bar-image-left">
+				<i class="icon-status-bar-imagery-count status-bar-image-left"></i>
 				{{overlaysCount}}
 			</div>
 
@@ -105,21 +105,19 @@
 
 	<div class="navigation-area">
 		<button (click)="clickGoPrev()" #goPrev>
-			<img src="/assets/icons/status-bar/prev-icon.svg"/>
+			<i class="icon-status-bar-prev"></i>
 		</button>
 
 		<button (click)="clickFavorite()" [disabled]="!overlay">
-			<span class="icon-status-bar--favorite favorite-icon" [class.active]="isFavoriteOverlayDisplayed">
-				<span class="path2"></span>
-			</span>
+			<i class="icon-favorites favorite-icon" [class.active]="isFavoriteOverlayDisplayed"></i>
 		</button>
 
 		<button (click)="clickGoNext()" #goNext>
-			<img src="/assets/icons/status-bar/next-icon.svg"/>
+			<i class="icon-status-bar-next"></i>
 		</button>
 
 		<button class="expand" (click)="clickExpand()">
-			<img src="/assets/icons/status-bar/expand-icon.svg"/>
+			<i class="icon-status-bar-expand"></i>
 		</button>
 	</div>
 </div>

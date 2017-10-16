@@ -1,7 +1,7 @@
 <div class="combo-container">
 
 	<button class="trigger" #optionsTrigger (click)="toggleShow()">
-		<img [src]="'/assets/icons/status-bar/screen/' + (selectedIndex + 1) + '.svg'"/>
+		<i class="icon-screen-{{selectedIndex + 1}}"></i>
 		<span class="arrow" *ngIf="optionsContainer.style.visibility !== 'visible'; else close">
 				▼
 			</span>
@@ -14,7 +14,7 @@
 
 	<div class="options-container" #optionsContainer tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<div class="option" *ngFor="let option of options; index as index" (click)="selectOption(index);">
-			<img [src]="'/assets/icons/status-bar/screen/' + (index + 1) + '.svg'"/>
+			<i class="icon-screen-{{index + 1}}"></i>
 		</div>
 	</div>
 </div>

@@ -122,9 +122,17 @@ export class CommunicatorEntity {
 	}
 
 	public setPosition(position: MapPosition) {
-		if (this.ActiveMap) {
-			this.ActiveMap.setPosition(position);
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
 		}
+		this.ActiveMap.setPosition(position);
+	}
+
+	public getPosition(): MapPosition {
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
+		}
+		return this.ActiveMap.getPosition();
 	}
 
 	public getPlugin(pluginName: string): IMapPlugin {

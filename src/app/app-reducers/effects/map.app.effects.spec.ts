@@ -478,6 +478,9 @@ describe('MapAppEffects', () => {
 			const communicator = {
 				setPosition: () => {
 				},
+				getPosition: () => {
+					return {};
+				}
 			};
 
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);

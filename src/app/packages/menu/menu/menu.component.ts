@@ -70,7 +70,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	@ViewChild('menuWrapper') menuWrapper: ElementRef;
 	@Input() version;
 
-	menuState$: Observable<IMenuState> = this.store.select('menu');
+	menuState$: Observable<IMenuState> = this.store.select(menuStateSelector);
 
 	isPinned$ = this.menuState$
 		.pluck<IMenuState, boolean>('isPinned')

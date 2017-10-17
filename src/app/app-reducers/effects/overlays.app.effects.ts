@@ -16,6 +16,8 @@ import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -31,7 +33,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([action, cases]: [Action, ICasesState]) => !isEmpty(cases.selectedCase))
 		.map(([action, cases]: [Action, ICasesState]) => {
 			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selectedCase);
@@ -112,7 +114,7 @@ export class OverlaysAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCount !== -1)
 		.do(() => this.casesService.contextValues.imageryCount = -1)
-		.withLatestFrom(this.store$.select<IOverlaysState>('overlays').pluck <IOverlaysState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
+		.withLatestFrom(this.store$.select(overlaysStateSelector).pluck <IOverlaysState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
 		.map(({ from, to }: TimelineState) => {
 			const tenth = (to.getTime() - from.getTime()) / 10;
 			const fromTenth = new Date(from.getTime() - tenth);
@@ -132,7 +134,7 @@ export class OverlaysAppEffects {
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS)
 		.filter(action => this.casesService.contextValues.defaultOverlay === 'latest')
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlaysState) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return overlays.filteredOverlays;
 		})
 		.filter((displayedOverlays) => !isEmpty(displayedOverlays))

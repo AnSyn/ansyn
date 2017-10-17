@@ -45,7 +45,7 @@ export class FilterContainerComponent implements OnInit {
 
 
 	metadataFromState$: Observable<any> = this.store
-		.select('filters')
+		.select(filtersStateSelector)
 		.distinctUntilChanged(isEqual)
 		.map((state: IFiltersState) => {
 			return state.filters;

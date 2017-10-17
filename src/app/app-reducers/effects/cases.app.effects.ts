@@ -51,7 +51,7 @@ export class CasesAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 
 			const updatedMapsList = [...mapState.mapsList];
@@ -75,7 +75,7 @@ export class CasesAppEffects {
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
 		.ofType(CasesActionTypes.COPY_CASE_LINK)
-		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload);
 			if (isNil(sCase)) {
 				if (state.selectedCase.id === action.payload) {
@@ -100,7 +100,7 @@ export class CasesAppEffects {
 	@Effect({ dispatch: false })
 	onOpenShareLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
-		.withLatestFrom(this.store$.select('cases'), (action: CopyCaseLinkAction, state: ICasesState) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
 			return state.selectedCase;
 		})
 		.map((sCase: Case) => {
@@ -118,7 +118,7 @@ export class CasesAppEffects {
 	@Effect()
 	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CONTEXTS)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.switchMap(([action, state]: any[]) => {
 			let observable: Observable<Context[]>;
 			if (state.contextsLoaded) {

@@ -25,7 +25,7 @@ export class FiltersCollectionComponent implements OnDestroy {
 	} as any;
 
 	constructor(private filtersService: FiltersService, public store: Store<IFiltersState>) {
-		this.subscribers.filters = this.store.select('filters')
+		this.subscribers.filters = this.store.select(filtersStateSelector)
 			.distinctUntilChanged()
 			.map((state: IFiltersState) => {
 				return {

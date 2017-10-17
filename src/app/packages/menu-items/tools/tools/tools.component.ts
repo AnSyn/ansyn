@@ -17,7 +17,7 @@ import { isEqual } from 'lodash';
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit {
-	public gotoExpand$: Observable<boolean> = this.store.select<IToolsState>('tools')
+	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
 	public expandGoTo: boolean;
@@ -26,7 +26,7 @@ export class ToolsComponent implements OnInit {
 	public userAnnotationsToolOpen: boolean;
 	public flags: Map<string, boolean>;
 	public isGeoOptionsDisabled: boolean;
-	public flags$: Observable<Map<string, boolean>> = this.store.select('tools')
+	public flags$: Observable<Map<string, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged(isEqual);
 

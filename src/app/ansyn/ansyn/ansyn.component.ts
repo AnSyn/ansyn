@@ -13,6 +13,9 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
+import { menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -21,17 +24,17 @@ import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 })
 
 export class AnsynComponent implements OnInit {
-	selectedCase$: Observable<Case> = this.store.select('cases')
+	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
 		.pluck('selectedCase')
 		.filter(selectedCase => !_isNil(selectedCase))
 		.distinctUntilChanged();
 
-	isPinned$ = this.store.select<IMenuState>('menu')
+	isPinned$ = this.store.select(menuStateSelector)
 		.pluck<IMenuState, boolean>('isPinned')
 		.distinctUntilChanged()
 		.skip(1);
 
-	mapState$: Observable<IMapState> = this.store.select('map');
+	mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
 		.map(MapFacadeService.activeMap)

@@ -69,6 +69,12 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
@@ -86,7 +92,7 @@ export class MapAppEffects {
 	@Effect()
 	onMapSingleClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
 		.filter(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.mergeMap(([action]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
 			// draw on all maps
@@ -113,7 +119,7 @@ export class MapAppEffects {
 	@Effect()
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
@@ -157,7 +163,7 @@ export class MapAppEffects {
 	@Effect()
 	onMapSingleClickPinLocation$: Observable<SetActiveCenter | SetPinLocationModeAction> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select('tools'), (action, state: IToolsState): any => ({
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, state: IToolsState): any => ({
 			action,
 			pin_location: state.flags.get('pin_location')
 		}))
@@ -202,7 +208,7 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('map'), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
 			const overlay = action.payload.overlay;
 			const map_id = action.payload.map_id ? action.payload.map_id : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, map_id);
@@ -253,7 +259,7 @@ export class MapAppEffects {
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapsState]: [AddMapInstanceAction, IMapState]) => !isEmpty(mapsState.mapsList))
 		.map(([action, mapsState]: [AddMapInstanceAction, IMapState]) => {
 			return mapsState.mapsList
@@ -274,7 +280,7 @@ export class MapAppEffects {
 	@Effect()
 	displayOverlayFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapState]: [SelectCaseAction, IMapState]) => {
 			return mapState.mapsList.reduce((previusResult, data: CaseMapState) => {
 				const communicatorHandler = this.imageryCommunicatorService.provide(data.id);
@@ -357,7 +363,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.map(([action, state]: [SelectLayerAction, ICasesState]) => {
 			return [action, state.selectedCase.state.maps.active_map_id];
 		})
@@ -375,7 +381,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<void> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.map(([action, state]: [UnselectLayerAction, ICasesState]) => [action, state.selectedCase.state.maps.active_map_id])
 		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
 			let imagery = this.imageryCommunicatorService.provide(active_map_id);
@@ -393,7 +399,7 @@ export class MapAppEffects {
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([action, caseState]: [Action, ICasesState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
 			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selectedCase.state.maps.data.length;
@@ -416,7 +422,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, caseState, statusBarState]: [any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action, caseState, statusBarState]: [any, any, any]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
@@ -459,7 +465,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onSelectCaseByIdAddPinPointIndicator$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('status_bar'))
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.do(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
 			const point = getPointByPolygon(caseState.selectedCase.state.region);
@@ -477,7 +483,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select('cases'), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
 		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
 			const mapId = action.payload.mapId;
 			const currentMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
@@ -500,7 +506,7 @@ export class MapAppEffects {
 	@Effect()
 	activeMapGeoRegistrationChanged$$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
 		.map(([action, mapState]: [Action, IMapState]) => {
 			let activeMapState;
@@ -526,7 +532,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	backToWorldGeoRegistration$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [any, any]): any[] => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
@@ -565,7 +571,7 @@ export class MapAppEffects {
 	@Effect()
 	onLayoutChange$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('status_bar'), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
+		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(statusBarStateSelector), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
 			return [selectedCase, statusbar.layouts[payload], payload];
 		})
 		.mergeMap(([selectedCase, layout, layoutIndex]: any[]) => {
@@ -597,7 +603,7 @@ export class MapAppEffects {
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('map'), (action, { filteredOverlays }, mapState: IMapState) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, { filteredOverlays }, mapState: IMapState) => {
 			return [filteredOverlays, mapState.mapsList];
 		})
 		.map(([filteredOverlays, mapsList]: [any[], CaseMapState[]]) => {
@@ -624,7 +630,7 @@ export class MapAppEffects {
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), (action, selectedCase) => selectedCase)
+		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), (action, selectedCase) => selectedCase)
 		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));
 
@@ -638,7 +644,7 @@ export class MapAppEffects {
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.SET_FAVORITE)
-		.withLatestFrom(this.store$.select('cases'), (action: Action, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: Action, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
 		.mergeMap(([action, selectedCase]: [Action, Case]) => {
 			const actions = [];
 

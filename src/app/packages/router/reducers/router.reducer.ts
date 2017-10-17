@@ -1,5 +1,6 @@
 import { Params } from '@angular/router';
 import { RouterActions, RouterActionTypes } from '../actions/router.actions';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IRouterState {
 	caseId: string;
@@ -12,6 +13,7 @@ export const RouterInitialState: IRouterState = {
 	queryParams: {}
 };
 
+export const routerStateSelector = createFeatureSelector<IRouterState>('router');
 
 export function RouterReducer(state = RouterInitialState, action: RouterActions): IRouterState {
 	switch (action.type) {

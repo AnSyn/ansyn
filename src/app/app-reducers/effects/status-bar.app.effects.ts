@@ -53,7 +53,7 @@ export class StatusBarAppEffects {
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select('status_bar'))
+		.withLatestFrom(this.store.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(() => {
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
@@ -72,7 +72,7 @@ export class StatusBarAppEffects {
 	updatePinPointIndicatorAction$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointIndicator)
-		.withLatestFrom(this.store.select('status_bar'), this.store.select('cases'))
+		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
 
 			const value: boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
@@ -98,7 +98,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$
 		.ofType(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
-		.withLatestFrom(this.store.select('cases'), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
+		.withLatestFrom(this.store.select(casesStateSelector), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
 			return state.selectedCase.id;
 		})
 		.map((case_id: string) => {
@@ -140,7 +140,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	statusBarChanges$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER, StatusBarActionsTypes.SET_TIME)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState): any[] => [action, state.selectedCase])
+		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState): any[] => [action, state.selectedCase])
 		.filter(([action, selectedCase]) => !isEmpty(selectedCase))
 		.mergeMap(([action, selectedCase]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) => {
 			const updatedCase = cloneDeep(selectedCase);
@@ -217,7 +217,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	onGoPrevNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select('cases'), (action, casesState: ICasesState) => {
+		.withLatestFrom(this.store.select(casesStateSelector), (action, casesState: ICasesState) => {
 			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.active_map_id === map.id);
 			const overlayId = get(activeMap.data.overlay, 'id');
 			return [action.type, overlayId];
@@ -255,7 +255,7 @@ export class StatusBarAppEffects {
 	@Effect()
 	setOverlaysNotFromCase$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_OVERLAYS_NOT_IN_CASE)
-		.withLatestFrom(this.store.select('map'), ({ payload }, mapState: IMapState) => [payload, MapFacadeService.activeMap(mapState)])
+		.withLatestFrom(this.store.select(mapStateSelector), ({ payload }, mapState: IMapState) => [payload, MapFacadeService.activeMap(mapState)])
 		.map(([overlaysNotInCase, activeMap]: [Map<string, boolean>, CaseMapState]) => {
 			if (activeMap.data.overlay) {
 				const { id } = activeMap.data.overlay;
@@ -278,7 +278,7 @@ export class StatusBarAppEffects {
 	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
 		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select('status_bar').pluck('flags'))
+		.withLatestFrom(this.store.select(statusBarStateSelector).pluck('flags'))
 		.map(([action, flags]: [any, Map<any, any>]) => flags.get(statusBarFlagsItems.pinPointSearch))
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 

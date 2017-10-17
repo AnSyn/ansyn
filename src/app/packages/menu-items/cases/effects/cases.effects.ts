@@ -22,7 +22,7 @@ import {
 	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { CasesService } from '../services/cases.service';
-import { ICasesState } from '../reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
 import { Case } from '@ansyn/core';
 import { isEqual } from 'lodash';
 
@@ -42,7 +42,7 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-		.withLatestFrom(this.store.select('cases'))
+		.withLatestFrom(this.store.select(casesStateSelector))
 		.switchMap(([action, state]: [LoadCasesAction, ICasesState]) => {
 			let last_case: Case = state.cases[state.cases.length - 1];
 			let last_id = last_case ? last_case.id : '-1';
@@ -78,7 +78,7 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
+		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
 		.mergeMap(([modalCaseId, selectedCaseId]) => {
 			const actions: Action[] = [];
 			if (isEqual(modalCaseId, selectedCaseId)) {
@@ -114,7 +114,7 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCaseBackendSuccess$: Observable<LoadCasesAction> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS)
-		.withLatestFrom(this.store.select('cases'))
+		.withLatestFrom(this.store.select(casesStateSelector))
 		.filter(([action, state]: [DeleteCaseBackendSuccessAction, ICasesState]) => {
 			const casesLength = state.cases.length;
 			const limit = this.casesService.paginationLimit;
@@ -134,7 +134,7 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.withLatestFrom(this.store.select('cases'), (action, state: ICasesState) => [action, CasesService.defaultCase.id])
+		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, CasesService.defaultCase.id])
 		.filter(([action, default_case_id]: [UpdateCaseAction, string]) => action.payload.id !== default_case_id)
 		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
 		.share();
@@ -204,7 +204,7 @@ export class CasesEffects {
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASE)
-		.withLatestFrom(this.store.select('cases'))
+		.withLatestFrom(this.store.select(casesStateSelector))
 		.switchMap(([action, state]: [LoadCaseAction, ICasesState]) => {
 			const existingCase = state.cases.find(caseVal => caseVal.id === action.payload);
 			if (existingCase) {
@@ -246,7 +246,7 @@ export class CasesEffects {
 		.switchMap((action: LoadDefaultCaseAction) => {
 			return this.actions$
 				.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
-				.withLatestFrom(this.store.select('cases'), (_, cases) => cases)
+				.withLatestFrom(this.store.select(casesStateSelector), (_, cases) => cases)
 				.map((state: ICasesState) => {
 					const contextName = action.payload.context;
 					let defaultCaseQueryParams: Case;
@@ -271,7 +271,7 @@ export class CasesEffects {
 	@Effect()
 	onSelectCaseById$: Observable<SelectCaseAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store.select('cases'))
+		.withLatestFrom(this.store.select(casesStateSelector))
 		.map(([{ payload }, casesState]: [SelectCaseByIdAction, ICasesState]): [Case, string] => [
 			casesState.cases.find(({ id }) => id === payload),
 			casesState.selectedCase.id

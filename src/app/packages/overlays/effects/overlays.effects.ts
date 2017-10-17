@@ -18,8 +18,8 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
-import { IOverlaysState } from '../reducers/overlays.reducer';
-import { ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
+import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
+import { casesStateSelector, ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';
 import { isEqual, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
@@ -37,7 +37,7 @@ export class OverlaysEffects {
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
-		.withLatestFrom(this.store$.select('overlays'), (action: DisplayOverlayFromStoreAction, state: IOverlaysState): any => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), (action: DisplayOverlayFromStoreAction, state: IOverlaysState): any => {
 			return { overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id };
 		})
 		.map(({ overlay, map_id }: any) => {
@@ -120,7 +120,7 @@ export class OverlaysEffects {
 	@Effect()
 	goPrevDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
-		.withLatestFrom((this.store$.select('overlays').pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
+		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index - 1];
 		})
@@ -138,7 +138,7 @@ export class OverlaysEffects {
 	@Effect()
 	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
-		.withLatestFrom((this.store$.select('overlays').pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
+		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index + 1];
 		})
@@ -158,7 +158,7 @@ export class OverlaysEffects {
 	@Effect()
 	displayOverlaySetTimeline$ = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action: DisplayOverlayAction, overlays: IOverlaysState, cases: ICasesState) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, cases: ICasesState) => {
 			const displayedOverlay = overlays.overlays.get(action.payload.overlay.id);
 			const timelineState = overlays.timelineState;
 			const isActiveMap: boolean = _isNil(action.payload.map_id) || isEqual(cases.selectedCase.state.maps.active_map_id, action.payload.map_id);
@@ -186,7 +186,7 @@ export class OverlaysEffects {
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
 			OverlaysActionTypes.SET_FILTERS,
 			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
-		.withLatestFrom(this.store$.select('overlays'), (action, overlays: IOverlaysState) => overlays)
+		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => overlays)
 		.map(OverlaysService.parseOverlayDataForDispaly);
 
 	/**

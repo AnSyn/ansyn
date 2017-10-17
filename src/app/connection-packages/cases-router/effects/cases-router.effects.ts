@@ -10,6 +10,8 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
+import { routerStateSelector } from '@ansyn/router/reducers/router.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class CasesRouterEffects {
@@ -27,7 +29,7 @@ export class CasesRouterEffects {
 		.ofType(RouterActionTypes.SET_STATE)
 		.map(toPayload)
 		.filter(({ caseId }) => _isNil(caseId))
-		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
+		.withLatestFrom(this.store$.select(casesStateSelector), (payload, cases) => [payload, cases])
 		.filter(([payload, cases]: [string, ICasesState]) => (_isEmpty(cases.selectedCase) || !_isEqual(cases.selectedCase.id, CasesService.defaultCase.id)))
 		.map(([{ queryParams }]) => new LoadDefaultCaseAction(queryParams));
 
@@ -44,7 +46,7 @@ export class CasesRouterEffects {
 		.ofType(RouterActionTypes.SET_STATE)
 		.map(toPayload)
 		.filter(({ caseId }) => !_isNil(caseId))
-		.withLatestFrom(this.store$.select('cases'), (payload, cases) => [payload, cases])
+		.withLatestFrom(this.store$.select(casesStateSelector), (payload, cases) => [payload, cases])
 		.filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id)
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 
@@ -59,7 +61,7 @@ export class CasesRouterEffects {
 	@Effect()
 	selectCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select('router'), ({ payload }: SelectCaseAction, router: IRouterState): any[] => {
+		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: SelectCaseAction, router: IRouterState): any[] => {
 			return [payload, router.caseId];
 		})
 		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== CasesService.defaultCase.id && selectedCase.id !== routerCaseId)
@@ -76,7 +78,7 @@ export class CasesRouterEffects {
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select('router'), ({ payload }, routerState: IRouterState): any => [payload, routerState])
+		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }, routerState: IRouterState): any => [payload, routerState])
 		.filter(([selectedCase, { caseId, queryParams }]: [Case, IRouterState]) => {
 			const caseIdRouterNotEmpty = Boolean(caseId);
 			const queryParamsNotEmpty = Boolean(queryParams);

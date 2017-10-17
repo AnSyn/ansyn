@@ -11,7 +11,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
-import { ICasesState } from '../../reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
@@ -43,7 +43,7 @@ export class SaveCaseComponent implements OnInit {
 		return true;
 	};
 
-	selectedCase$: Observable<Case> = this.store.select('cases')
+	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
 		.pluck('selectedCase')
 		.distinctUntilChanged()
 		.map(_cloneDeep);

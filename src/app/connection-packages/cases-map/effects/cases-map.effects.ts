@@ -7,6 +7,8 @@ import { Case } from '@ansyn/core/models/case.model';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class CasesMapEffects {
@@ -22,7 +24,7 @@ export class CasesMapEffects {
 	onMapsDataChange$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(toPayload)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('map'))
+		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(mapStateSelector))
 		.map(([action, selectedCase, mapState]: [any, Case, IMapState]) => {
 			const updatedCase = {
 				...selectedCase,

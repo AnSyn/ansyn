@@ -37,7 +37,7 @@ export class LayersEffects {
 		.switchMap((action: BeginLayerTreeLoadAction) => {
 			return this.dataLayersService.getAllLayersInATree(action.payload.caseId);
 		})
-		.withLatestFrom(this.store.select('layers'))
+		.withLatestFrom(this.store.select(layersStateSelector))
 		.mergeMap(([layersBundle, store]: [LayerRootsBundle, ILayerState]) => {
 			let actionsArray = [];
 

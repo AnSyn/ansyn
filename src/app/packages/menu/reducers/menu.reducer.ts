@@ -3,6 +3,7 @@ import { SetBadgeAction } from '../actions/menu.actions';
 import { MenuItem } from '../models';
 import { isDevMode } from '@angular/core';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
@@ -17,6 +18,8 @@ export const initialMenuState: IMenuState = {
 	isPinned: sessionData().isPinned,
 	clickOutside: true
 };
+
+export const menuStateSelector = createFeatureSelector<IMenuState>('map');
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 

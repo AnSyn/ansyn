@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { IToolsState } from '../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
@@ -16,7 +16,7 @@ export class OverlaysDisplayModeComponent {
 	private needToDispatchAction = true;
 	public _visualizerType: OverlayDisplayMode;
 
-	private selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select('tools')
+	private selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select(toolsStateSelector)
 		.map((state: IToolsState) => {
 			return state.activeOverlaysFootprintMode;
 		});

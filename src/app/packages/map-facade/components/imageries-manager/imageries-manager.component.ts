@@ -19,7 +19,7 @@ import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.a
 
 export class ImageriesManagerComponent implements OnInit {
 
-	mapState$: Observable<IMapState> = this.store.select('map');
+	mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
 	public selected_layout$: Observable<MapsLayout> = this.mapState$
 		.pluck<IMapState, MapsLayout>('layout')

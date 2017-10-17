@@ -24,10 +24,10 @@ export class GoToComponent implements OnInit {
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
-	public gotoExpand$: Observable<boolean> = this.store$.select<IToolsState>('tools')
+	public gotoExpand$: Observable<boolean> = this.store$.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
-	activeCenter$: Observable<number[]> = this.store$.select('tools')
+	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector)
 		.pluck<any, any>('activeCenter')
 		.distinctUntilChanged();
 
@@ -38,7 +38,7 @@ export class GoToComponent implements OnInit {
 		to: []
 	};
 
-	pin_location_mode$: Observable<boolean> = this.store$.select('tools')
+	pin_location_mode$: Observable<boolean> = this.store$.select(toolsStateSelector)
 		.map((state: IToolsState) => state.flags.get('pin_location'))
 		.distinctUntilChanged(isEqual);
 

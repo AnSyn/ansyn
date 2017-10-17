@@ -63,7 +63,7 @@ describe('VisualizersAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer, map: MapReducer })
+				StoreModule.forRoot({ cases: CasesReducer, map: MapReducer })
 			],
 			providers: [
 				VisualizersAppEffects,

@@ -51,7 +51,7 @@ describe('CasesAppEffects', () => {
 			imports: [
 				HttpClientModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
+				StoreModule.forRoot({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
 				CoreModule,
 				RouterTestingModule,
 				ContextModule.forRoot(MOCK_TEST_CONFIG)

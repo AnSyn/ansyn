@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 	imports: [
 		CommonModule,
 		HttpClientModule,
-		EffectsModule.run(OverlaysEffects)
+		EffectsModule.forFeature([OverlaysEffects])
 	],
 
 	declarations: [

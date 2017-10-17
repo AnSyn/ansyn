@@ -39,7 +39,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
-				StoreModule.provideStore({ key: 'value', map: MapReducer })
+				StoreModule.forRoot({ key: 'value', map: MapReducer })
 			],
 			declarations: [
 				ImageriesManagerComponent,

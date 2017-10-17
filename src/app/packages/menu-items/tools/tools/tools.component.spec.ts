@@ -25,7 +25,7 @@ describe('ToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.provideStore({ tools: ToolsReducer })],
+			imports: [StoreModule.forRoot({ tools: ToolsReducer })],
 			declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode, mock_annotations_control]
 		})
 			.compileComponents();

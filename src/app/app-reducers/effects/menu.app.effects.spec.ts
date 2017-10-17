@@ -18,7 +18,7 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule, StoreModule.provideStore({ menu: MenuReducer, cases: CasesReducer })],
+			imports: [EffectsTestingModule, StoreModule.forRoot({ menu: MenuReducer, cases: CasesReducer })],
 			providers: [MenuAppEffects]
 
 		}).compileComponents();

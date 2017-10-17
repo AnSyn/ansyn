@@ -3,7 +3,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { CasesMapEffects } from './effects/cases-map.effects';
 
 @NgModule({
-	imports: [EffectsModule.run(CasesMapEffects)]
+	imports: [EffectsModule.forFeature([CasesMapEffects])]
 })
 export class CasesMapModule {
 }

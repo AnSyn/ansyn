@@ -31,7 +31,7 @@ describe('FiltersCollectionComponent', () => {
 				mock_ansyn_checkbox,
 				mock_anysn_filter_container
 			],
-			imports: [FiltersModule, StoreModule.provideStore({ filters: FiltersReducer })],
+			imports: [FiltersModule, StoreModule.forRoot({ filters: FiltersReducer })],
 			providers: [{ provide: filtersConfig, useValue: { filters: null } }]
 		})
 			.compileComponents();

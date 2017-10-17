@@ -22,7 +22,7 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 		CoreModule,
 		InfiniteScrollModule,
 		FormsModule,
-		EffectsModule.run(CasesEffects),
+		EffectsModule.forFeature([CasesEffects]),
 		BrowserAnimationsModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],

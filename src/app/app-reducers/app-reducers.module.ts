@@ -53,35 +53,34 @@ const reducers = {
 	filters: FiltersReducer,
 	router: RouterReducer
 };
-
-const appReducer = compose(combineReducers)(reducers);
-
-export function reducer(state: any, action: any) {
-	// if(configuration.General.logActions ){
-	// const date = new Date();
-	// console.log(action.type, `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`);
-	// console.log(state, action);
-	// }
-	return appReducer(state, action);
-}
+//
+// const appReducer = compose(combineReducers)(reducers);
+//
+// export function reducer(state: any, action: any) {
+// 	// if(configuration.General.logActions ){
+// 	// const date = new Date();
+// 	// console.log(action.type, `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`);
+// 	// console.log(state, action);
+// 	// }
+// 	return appReducer(state, action);
+// }
 
 @NgModule({
 	imports: [
-		StoreModule.provideStore(reducer),
-		StoreDevtoolsModule.instrumentOnlyWithExtension({
-			maxAge: 5
-		}),
-		EffectsModule.run(OverlaysAppEffects),
-		EffectsModule.run(MapAppEffects),
-		EffectsModule.run(CasesAppEffects),
-		EffectsModule.run(MenuAppEffects),
-		EffectsModule.run(LayersAppEffects),
-		EffectsModule.run(StatusBarAppEffects),
-		EffectsModule.run(FiltersAppEffects),
-		EffectsModule.run(ToolsAppEffects),
-		EffectsModule.run(ContextMenuAppEffects),
-		EffectsModule.run(ContextEntityAppEffects),
-		EffectsModule.run(VisualizersAppEffects),
+		StoreModule.forRoot(reducers),
+		EffectsModule.forRoot([
+			OverlaysAppEffects,
+			MapAppEffects,
+			CasesAppEffects,
+			MenuAppEffects,
+			LayersAppEffects,
+			StatusBarAppEffects,
+			FiltersAppEffects,
+			ToolsAppEffects,
+			ContextMenuAppEffects,
+			ContextEntityAppEffects,
+			VisualizersAppEffects
+		]),
 		CasesRouterModule,
 		ToolsMapsModule,
 		CasesMapModule

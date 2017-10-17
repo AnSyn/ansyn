@@ -12,7 +12,7 @@ import { LayerTreeComponent } from './components/layer-tree/layer-tree.component
 	imports: [
 		CommonModule,
 		TreeModule,
-		EffectsModule.run(LayersEffects)
+		EffectsModule.forFeature([LayersEffects])
 	],
 	declarations: [LayersManagerComponent, LayerTreeComponent],
 	entryComponents: [LayersManagerComponent],

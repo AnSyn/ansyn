@@ -12,7 +12,7 @@ describe('ImageryContainerComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
-				StoreModule.provideStore({})
+				StoreModule.forRoot({})
 			],
 			declarations: [
 				ImageryContainerComponent,

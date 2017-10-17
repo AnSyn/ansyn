@@ -8,7 +8,7 @@ import { StoreModule } from '@ngrx/store';
 describe('RouterFacadeService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule, StoreModule.provideStore({ router: RouterReducer })],
+			imports: [RouterTestingModule, StoreModule.forRoot({ router: RouterReducer })],
 			providers: [AnsynRouterService]
 		});
 	});

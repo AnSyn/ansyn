@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 	imports: [
 		CommonModule,
 		RouterModule,
-		EffectsModule.run(RouterEffects)
+		EffectsModule.forFeature([RouterEffects])
 	],
 	declarations: [],
 	providers: [

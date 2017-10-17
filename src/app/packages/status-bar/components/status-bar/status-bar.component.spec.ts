@@ -19,7 +19,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.provideStore({ status_bar: StatusBarReducer })],
+			imports: [StatusBarModule, StoreModule.forRoot({ status_bar: StatusBarReducer })],
 		})
 			.compileComponents();
 	}));

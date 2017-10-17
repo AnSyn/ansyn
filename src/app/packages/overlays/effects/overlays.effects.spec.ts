@@ -59,7 +59,7 @@ describe('Overlays Effects ', () => {
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
 			EffectsTestingModule,
-			StoreModule.provideStore({ overlays: OverlayReducer, cases: CasesReducer })
+			StoreModule.forRoot({ overlays: OverlayReducer, cases: CasesReducer })
 		],
 		providers: [
 			OverlaysEffects, {

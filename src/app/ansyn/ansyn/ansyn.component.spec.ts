@@ -75,7 +75,7 @@ describe('AnsynComponent', () => {
 			],
 			imports: [
 				RouterTestingModule,
-				StoreModule.provideStore({})]
+				StoreModule.forRoot({})]
 		}).compileComponents();
 	});
 

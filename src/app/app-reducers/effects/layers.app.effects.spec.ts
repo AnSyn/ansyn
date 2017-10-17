@@ -13,7 +13,7 @@ describe('LayersAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule, StoreModule.provideStore({ layers: LayersReducer })],
+			imports: [EffectsTestingModule, StoreModule.forRoot({ layers: LayersReducer })],
 			providers: [LayersAppEffects]
 
 		}).compileComponents();

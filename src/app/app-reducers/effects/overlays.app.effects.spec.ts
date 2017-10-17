@@ -83,7 +83,7 @@ describe('OverlaysAppEffects', () => {
 				EffectsTestingModule,
 				HttpClientModule,
 
-				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
+				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
 			],
 			providers: [
 				OverlaysAppEffects,

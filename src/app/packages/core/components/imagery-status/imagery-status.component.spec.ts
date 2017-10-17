@@ -12,7 +12,7 @@ describe('', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CoreModule, StoreModule.provideStore({})]
+			imports: [CoreModule, StoreModule.forRoot({})]
 		})
 			.compileComponents();
 	}));

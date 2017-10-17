@@ -19,6 +19,7 @@ import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
+import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -86,7 +87,7 @@ describe('CasesAppEffects', () => {
 	it('setShowFavoritesFlagOnFilters$', () => {
 		effectsRunner.queue(new SelectCaseAction(selectedCase));
 		let count = 0;
-		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe((result: Action) => {
+		casesAppEffects.setShowFavoritesFlagOnFilters$.subscribe((result: EnableOnlyFavoritesSelectionAction) => {
 			expect(result.type).toBe(FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION);
 			expect(result.payload).toBe(true);
 			count++;

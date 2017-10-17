@@ -42,7 +42,7 @@ import {
 	PinPointTriggerAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SetLayoutAction,
-	SetOverlayNotInCaseAction,
+	SetOverlaysNotInCaseAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -77,6 +77,8 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
+import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -330,8 +332,8 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	overlayLoadingSuccess$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.do((action) => endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
 		.map((action) => {
 			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id);
 		});
@@ -344,8 +346,8 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
-		.do((action: Action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
+		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
+		.do((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
 		.mergeMap((action) => [
 			new SetToastMessageStoreAction({
 				toastText: statusBarToastMessages.showOverlayErrorToast,
@@ -400,7 +402,7 @@ export class MapAppEffects {
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, caseState]: [Action, ICasesState]) => {
+		.filter(([action, caseState]: [any, ICasesState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
 			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selectedCase.state.maps.data.length;
 		})
@@ -570,7 +572,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onLayoutChange$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.CHANGE_LAYOUT)
+		.ofType<ChangeLayoutAction>(StatusBarActionsTypes.CHANGE_LAYOUT)
 		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(statusBarStateSelector), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
 			return [selectedCase, statusbar.layouts[payload], payload];
 		})
@@ -617,7 +619,7 @@ export class MapAppEffects {
 				}
 			});
 
-			return new SetOverlayNotInCaseAction(overlaysNoInCase);
+			return new SetOverlaysNotInCaseAction(overlaysNoInCase);
 		});
 
 	/**
@@ -644,8 +646,8 @@ export class MapAppEffects {
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.SET_FAVORITE)
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: Action, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
-		.mergeMap(([action, selectedCase]: [Action, Case]) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: SetFavoriteAction, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
+		.mergeMap(([action, selectedCase]: [SetFavoriteAction, Case]) => {
 			const actions = [];
 
 			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {

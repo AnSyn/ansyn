@@ -6,7 +6,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
+	DisplayOverlayFromStoreAction, GoNextDisplayAction, GoPrevDisplayAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
@@ -72,7 +72,7 @@ export class OverlaysEffects {
 	 */
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
+		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
 				.map(data => new LoadOverlaysSuccessAction(data))
@@ -119,7 +119,7 @@ export class OverlaysEffects {
 	 */
 	@Effect()
 	goPrevDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType(OverlaysActionTypes.GO_PREV_DISPLAY)
+		.ofType<GoPrevDisplayAction>(OverlaysActionTypes.GO_PREV_DISPLAY)
 		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index - 1];
@@ -137,7 +137,7 @@ export class OverlaysEffects {
 	 */
 	@Effect()
 	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType(OverlaysActionTypes.GO_NEXT_DISPLAY)
+		.ofType<GoNextDisplayAction>(OverlaysActionTypes.GO_NEXT_DISPLAY)
 		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index + 1];

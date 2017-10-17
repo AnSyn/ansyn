@@ -12,6 +12,7 @@ import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class ContextMenuAppEffects {

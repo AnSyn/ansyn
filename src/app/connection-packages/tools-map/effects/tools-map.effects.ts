@@ -9,6 +9,8 @@ import {
 import { PinLocationModeTriggerAction } from '@ansyn/map-facade/actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
+import { SetLayoutAction } from '@ansyn/map-facade/actions/map.actions';
+import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsMapEffects {
@@ -21,7 +23,7 @@ export class ToolsMapEffects {
 	 */
 	@Effect()
 	updatePinLocationState$: Observable<PinLocationModeTriggerAction> = this.actions$
-		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
+		.ofType<SetPinLocationModeAction>(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
 		.map(({ payload }) => new PinLocationModeTriggerAction(payload));
 
 	/**
@@ -32,7 +34,7 @@ export class ToolsMapEffects {
 	 */
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SET_LAYOUT)
+		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
 		.mergeMap(({ payload }) => {
 			if (payload.maps_count === 1) {
 				return [

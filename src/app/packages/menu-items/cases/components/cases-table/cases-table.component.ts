@@ -10,7 +10,7 @@ import {
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs/Observable';
-import { ICasesState } from '../../reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { range as _range } from 'lodash';
@@ -33,7 +33,7 @@ const animations: any[] = [
 export class CasesTableComponent implements OnInit {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
-	caseState$: Observable<ICasesState> = this.store$.select <ICasesState>('cases');
+	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 
 	cases$: Observable<Case[]> = this.caseState$
 		.pluck <ICasesState, Case[]>('cases')

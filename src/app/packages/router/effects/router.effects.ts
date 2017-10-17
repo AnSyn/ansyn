@@ -5,7 +5,7 @@ import 'rxjs/add/operator/share';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { RouterActionTypes } from '../actions/router.actions';
+import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class RouterEffects {
 	 */
 	@Effect({ dispatch: false })
 	onNavigateCase$: Observable<any> = this.actions$
-		.ofType(RouterActionTypes.NAVIGATE_CASE)
+		.ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE)
 		.do(({ payload }) => {
 			if (payload) {
 				this.router.navigate(['case', payload]);

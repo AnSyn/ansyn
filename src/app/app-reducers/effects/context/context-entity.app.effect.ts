@@ -9,10 +9,12 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { isNil as _isNil } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
-import { ContextEntityVisualizer, ContextEntityVisualizerType } from 'app/app-visualizers/context-entity.visualizer';
+import { ContextEntityVisualizer, ContextEntityVisualizerType } from '../../../app-visualizers/context-entity.visualizer';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class ContextEntityAppEffects {

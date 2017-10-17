@@ -12,6 +12,7 @@ import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { IAppState } from '../app-reducers.module';
 import { Store } from '@ngrx/store';
+import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 
 @Injectable()
 export class MenuAppEffects {
@@ -38,7 +39,7 @@ export class MenuAppEffects {
 	 */
 	@Effect()
 	onGoToExpand$: Observable<UpdateMapSizeAction> = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
+		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
 
 	/**
@@ -62,7 +63,7 @@ export class MenuAppEffects {
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.actions$
 		.ofType(...facetChangesActionType)
-		.withLatestFrom(this.store$.select <IFiltersState>('filters'), (action, filtersState: IFiltersState) => filtersState)
+		.withLatestFrom(this.store$.select(filtersStateSelector), (action, filtersState: IFiltersState) => filtersState)
 		.map(({ filters, showOnlyFavorites }: IFiltersState) => {
 			let badge = '0';
 

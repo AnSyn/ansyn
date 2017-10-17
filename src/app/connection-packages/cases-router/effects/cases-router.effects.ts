@@ -77,7 +77,7 @@ export class CasesRouterEffects {
 	 */
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
+		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }, routerState: IRouterState): any => [payload, routerState])
 		.filter(([selectedCase, { caseId, queryParams }]: [Case, IRouterState]) => {
 			const caseIdRouterNotEmpty = Boolean(caseId);

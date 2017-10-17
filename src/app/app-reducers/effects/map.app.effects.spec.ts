@@ -141,7 +141,7 @@ describe('MapAppEffects', () => {
 			imports: [
 				HttpClientModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({
+				StoreModule.forRoot({
 					cases: CasesReducer,
 					status_bar: StatusBarReducer,
 					overlays: OverlayReducer,
@@ -249,7 +249,7 @@ describe('MapAppEffects', () => {
 
 		effectsRunner.queue(action);
 
-		mapAppEffects.onMapSingleClick$.concat().subscribe((_result: Action) => {
+		mapAppEffects.onMapSingleClick$.concat().subscribe((_result: UpdateStatusFlagsAction | PinPointTriggerAction | any) => {
 			let result = _result instanceof UpdateStatusFlagsAction || _result instanceof PinPointTriggerAction;
 			expect(result).toBe(true);
 
@@ -280,7 +280,7 @@ describe('MapAppEffects', () => {
 
 		effectsRunner.queue(action);
 
-		mapAppEffects.onPinPointTrigger$.concat().subscribe((_result: Action) => {
+		mapAppEffects.onPinPointTrigger$.concat().subscribe((_result: UpdateCaseAction | LoadOverlaysAction) => {
 			let result = _result instanceof UpdateCaseAction || _result instanceof LoadOverlaysAction;
 			expect(result).toBe(true);
 

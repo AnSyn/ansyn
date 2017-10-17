@@ -7,10 +7,10 @@ import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep, isEqual } from 'lodash';
-
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { casesStateSelector } from '../../cases/reducers/cases.reducer';
 
 @Component({
 	selector: 'ansyn-map-sand-box',

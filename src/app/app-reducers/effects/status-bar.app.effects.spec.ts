@@ -61,7 +61,7 @@ describe('StatusBarAppEffects', () => {
 			imports: [
 				HttpClientModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({
+				StoreModule.forRoot({
 					status_bar: StatusBarReducer,
 					cases: CasesReducer,
 					overlays: OverlayReducer

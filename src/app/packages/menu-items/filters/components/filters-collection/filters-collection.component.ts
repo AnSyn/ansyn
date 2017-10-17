@@ -2,7 +2,7 @@ import { FiltersService } from '../../services/filters.service';
 import { Component, OnDestroy } from '@angular/core';
 import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
-import { IFiltersState } from '../../reducer/filters.reducer';
+import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { DestroySubscribers } from 'ng2-destroy-subscribers';
 

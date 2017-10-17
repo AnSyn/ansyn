@@ -80,7 +80,7 @@ describe('OverlayContainerComponent', () => {
 			],
 			imports: [
 				HttpClientModule,
-				StoreModule.provideStore({ overlays: OverlayReducer })
+				StoreModule.forRoot({ overlays: OverlayReducer })
 			]
 		})
 			.compileComponents();

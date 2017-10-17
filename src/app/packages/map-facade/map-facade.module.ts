@@ -11,7 +11,7 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [EffectsModule.run(MapEffects), ImageryModule, CommonModule, CoreModule, FormsModule],
+	imports: [EffectsModule.forFeature([MapEffects]), ImageryModule, CommonModule, CoreModule, FormsModule],
 	providers: [MapFacadeService],
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ContextMenuComponent],
 	exports: [ImageriesManagerComponent]

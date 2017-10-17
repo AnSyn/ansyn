@@ -12,7 +12,7 @@ import { InitializeMenuItemsAction } from './actions/menu.actions';
 export const MENU_ITEMS = new InjectionToken<MenuItem[]>('MENU_ITEMS');
 
 @NgModule({
-	imports: [CommonModule, CoreModule, EffectsModule.run(MenuEffects), BrowserAnimationsModule],
+	imports: [CommonModule, CoreModule, EffectsModule.forFeature([MenuEffects]), BrowserAnimationsModule],
 	declarations: [MenuComponent],
 	exports: [MenuComponent]
 })

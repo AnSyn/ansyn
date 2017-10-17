@@ -27,7 +27,7 @@ describe('ContextMenuAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ cases: CasesReducer, overlays: OverlayReducer, map: MapReducer })
+				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer, map: MapReducer })
 			],
 			providers: [
 				ContextMenuAppEffects

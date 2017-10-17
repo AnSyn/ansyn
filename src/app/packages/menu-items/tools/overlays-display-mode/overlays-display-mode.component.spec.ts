@@ -13,7 +13,7 @@ describe('overlaysDisplayModeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.provideStore({ tools: ToolsReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ tools: ToolsReducer })],
 			declarations: [OverlaysDisplayModeComponent]
 		}).compileComponents();
 	}));

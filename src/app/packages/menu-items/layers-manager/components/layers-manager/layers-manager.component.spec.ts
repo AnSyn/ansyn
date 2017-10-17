@@ -16,7 +16,7 @@ describe('LayersManagerComponent', () => {
 			imports: [
 				LayersManagerModule,
 				HttpClientModule,
-				StoreModule.provideStore({ layers: LayersReducer })
+				StoreModule.forRoot({ layers: LayersReducer })
 			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})

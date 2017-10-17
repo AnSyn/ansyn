@@ -46,7 +46,7 @@ describe('CasesEffects', () => {
 			imports: [
 				HttpClientModule,
 				EffectsTestingModule,
-				StoreModule.provideStore(reducer),
+				StoreModule.forRoot(reducer),
 				RouterTestingModule
 			],
 			providers: [CasesEffects,

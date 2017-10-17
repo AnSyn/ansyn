@@ -3,7 +3,7 @@ import { CasesRouterEffects } from './effects/cases-router.effects';
 import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
-	imports: [EffectsModule.run(CasesRouterEffects)]
+	imports: [EffectsModule.forFeature([CasesRouterEffects])]
 })
 export class CasesRouterModule {
 }

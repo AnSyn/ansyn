@@ -3,7 +3,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ToolsMapEffects } from './effects/tools-map.effects';
 
 @NgModule({
-	imports: [EffectsModule.run(ToolsMapEffects)]
+	imports: [EffectsModule.forFeature([ToolsMapEffects])]
 })
 export class ToolsMapsModule {
 }

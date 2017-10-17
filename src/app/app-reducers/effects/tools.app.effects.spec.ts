@@ -78,7 +78,7 @@ describe('ToolsAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				EffectsTestingModule,
-				StoreModule.provideStore({ tools: ToolsReducer, cases: CasesReducer })
+				StoreModule.forRoot({ tools: ToolsReducer, cases: CasesReducer })
 			],
 			providers: [
 				ToolsAppEffects,

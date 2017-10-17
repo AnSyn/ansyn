@@ -33,7 +33,7 @@ describe('EditCaseComponent', () => {
 			imports: [
 				HttpClientModule,
 				CasesModule,
-				StoreModule.provideStore({ cases: CasesReducer }),
+				StoreModule.forRoot({ cases: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]

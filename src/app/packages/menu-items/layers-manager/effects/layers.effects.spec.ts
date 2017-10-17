@@ -23,7 +23,7 @@ describe('LayersEffects', () => {
 			imports: [
 				HttpClientModule,
 				EffectsTestingModule,
-				StoreModule.provideStore({ layers: LayersReducer })
+				StoreModule.forRoot({ layers: LayersReducer })
 			],
 			providers: [LayersEffects, DataLayersService, {
 				provide: layersConfig,

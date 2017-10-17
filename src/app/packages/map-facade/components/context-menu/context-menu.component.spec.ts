@@ -19,7 +19,7 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, EffectsTestingModule, StoreModule.provideStore({ map: MapReducer })],
+			imports: [FormsModule, EffectsTestingModule, StoreModule.forRoot({ map: MapReducer })],
 			declarations: [ContextMenuComponent],
 			providers: [{ provide: MapEffects, useValue: mockMapEffects }]
 		}).compileComponents();

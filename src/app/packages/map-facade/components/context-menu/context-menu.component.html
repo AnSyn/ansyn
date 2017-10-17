@@ -12,7 +12,7 @@
 			[ngClass]="data.name"
 			[disabled]="_isEmpty(this[data.subList])"
 			(mousedown)="isClick($event) && data.action($event)">
-			<i class="icon-context-{{data.name}}"></i>
+			<i class="icon-context-menu-{{data.name}}"></i>
 			<span>{{data.name | titlecase}}</span>
 			<div class="sub-buttons-list">
 				<button

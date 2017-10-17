@@ -5,16 +5,30 @@
 	z-index: @annotation-cotext-menu;
 	position: fixed;
 	.wrapper {
+		position:absolute;
 		visibility: hidden;
-		border: 1px solid white;
 		width: 20px;
 		height: 20px;
 		background-color: @application-main-color;
 		color: white;
+		align-items: center;
+		right:-23px;
+		top:1px;
 	}
 	&:focus {
+		border:1px dashed @application-main-color;
 		.wrapper {
 			visibility: visible;
+			button {
+				background: @application-main-color;
+				color: white;
+				border: 1px solid #2E2D46;
+				font-size: 19px;
+				font-weight: bold;
+				outline: none;
+
+			}
+
 		}
 
 	}

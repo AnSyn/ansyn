@@ -47,10 +47,15 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 
 
 
+import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import GeoJSON from 'ol/format/geojson';
+import { AnnotationVisualizerAgentAction } from '../../../packages/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class VisualizersAppEffects {
-	public selectedCase$;
+	public selectedCase$ = this.store$.select<ICasesState>('cases')
+		.pluck<ICasesState, Case>('selectedCase')
+		.map(_cloneDeep)
 
 	/**
 	 * @type Effect
@@ -248,8 +253,31 @@ export class VisualizersAppEffects {
 	annotationData$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.STORE.ANNOTATION_DATA)
 		.withLatestFrom(this.selectedCase$)
-		.map(([action, selectedCase]: [Action, Case]) => {
-			console.log(selectedCase.state.annotationsLayer);
+		.mergeMap(([action, selectedCase]: [Action, Case]) => {
+			const annotationsLayer = JSON.parse((<string>selectedCase.state.annotationsLayer));
+			const geoJsonFormat = new GeoJSON();
+
+			const featureIndex = annotationsLayer.features.findIndex(featureString => {
+				const feature = geoJsonFormat.readFeature(featureString);
+				return feature.values_.id === action.payload.feature.values_.id
+			});
+
+			switch (action.payload.action) {
+				case "remove":
+					annotationsLayer.features.splice(featureIndex, 1);
+
+					selectedCase.state = { ...selectedCase.state, annotationsLayer: JSON.stringify(annotationsLayer) }
+					break;
+			}
+
+			return [
+				new UpdateCaseAction(selectedCase),
+				new AnnotationVisualizerAgentAction({
+					maps: 'all',
+					action: 'show'
+				})
+			]
+
 
 		})
 
@@ -266,7 +294,7 @@ export class VisualizersAppEffects {
 		.withLatestFrom(this.selectedCase$)
 
 		.map(([action, selectedCase]: [AnnotationVisualizerAgentAction, Case]) => {
-			//const selectedCase: Case = _cloneDeep(cases.selectedCase);
+			// const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
 			let relevantMapsIds = [];
 

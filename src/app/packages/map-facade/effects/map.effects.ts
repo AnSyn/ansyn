@@ -28,7 +28,6 @@ export class MapEffects {
 	@Effect({dispatch: false})
 	annotationContextMenuTrigger$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
-		.do( res => console.log(res))
 		.share();
 
 	/**

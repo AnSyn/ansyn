@@ -111,19 +111,31 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.selectInteraction.on('select', data => {
 				const target = data.mapBrowserEvent.originalEvent.target;
-				const selectedfeature = data.selected.shift();
-				const pixels = this.getFeaturePositionInPixels(selectedfeature);
+				const selectedFeature = data.selected.shift();
 				const boundingRect = target.getBoundingClientRect();
+				let pixels;
+				if (selectedFeature.geometryName_ === 'Annotate-Arrow') {
+					pixels = this.arrowLinesToPixels(selectedFeature);
+					pixels.top += boundingRect.top;
+					pixels.left += boundingRect.left;
+				} else {
+					pixels = this.getFeaturePositionInPixels(selectedFeature);
+					pixels = {
+						left: pixels[0][0] + boundingRect.left,
+						top: pixels[1][1] + boundingRect.top,
+						width: pixels[1][0] - pixels[0][0],
+						height: pixels[0][1] - pixels[1][1]
+					}
+				}
 
-				console.log(data.mapBrowserEvent.originalEvent);
 				const callback = event => {
 					event.stopPropagation();
 					event.preventDefault();
 					data.target.getFeatures().clear();
 					this.annotationContextMenuHandler.next({
 						action: "openMenu",
-						features: selectedfeature,
-						pixels: { left: pixels[1][0] + boundingRect.left, top: pixels[1][1] + boundingRect.top }
+						feature: selectedFeature,
+						pixels
 					});
 					target.removeEventListener('contextmenu', callback)
 				}
@@ -133,12 +145,53 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		)
 	}
 
+	arrowLinesToPixels(selectedFeature) {
+		const mainExtent = selectedFeature.getGeometry().getExtent();
+		const mainLine = this.getExtentAsPixels(mainExtent).map(pair => pair.map(Math.round));
+
+		const line1Extent = selectedFeature.getStyle()[1].getGeometry().getExtent();
+		const line1 = this.getExtentAsPixels(line1Extent).map(pair => pair.map(Math.round));
+
+		const line2Extent = selectedFeature.getStyle()[2].getGeometry().getExtent();
+		const line2 = this.getExtentAsPixels(line2Extent).map(pair => pair.map(Math.round));
+
+		const points = mainLine.concat(line1).concat(line2);
+		let width = 0, height = 0, top = Infinity, left = Infinity;
+
+		points.forEach(point1 => {
+			if (point1[0] < left) {
+				left = point1[0];
+			}
+
+			if (point1[1] < top) {
+				top = point1[1];
+			}
+
+			points.forEach(point2 => {
+				const horizonal = Math.abs(point1[0] - point2[0]);
+				if (horizonal > width) {
+					width = horizonal;
+				}
+
+				const vertical = Math.abs(point1[1] - point2[1]);
+				if (vertical > height) {
+					height = vertical;
+				}
+			});
+		});
+
+		return { top, left, width, height };
+	}
+
 	getFeaturePositionInPixels(feature) {
 		const geometry = feature.getGeometry();
 		const extent = geometry.getExtent();
-		const bottomLeft = this._imap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]);
-		const topRight = this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]]);
-		return [bottomLeft, topRight];
+		return this.getExtentAsPixels(extent); // [bottomLeft, topRight];
+	}
+
+	getExtentAsPixels(extent) {
+		return [this._imap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
+			this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])]
 	}
 
 
@@ -172,13 +225,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		// readFeatures throw exceptions so I am using this method
 
+
+		this.features = data.features;
 		const features = this.createFeturesFromGeoJson(data.features);
+
 		this._source.addFeatures(features);
 	}
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
 		const features = geoJsonFeatures.map((d) => this.geoJsonFormat.readFeature(d));
-		// @TODO reset this.features
 		(<Array<any>>features).forEach(feature => {
 
 			const properties = feature.getProperties();
@@ -237,7 +292,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geoJsonSingleFeature = JSON.stringify(circleGeo);
 		}
 
-		// @TODO add convertion from the map project to the 4326 project and save it in the properties.data.coordinates
+		// @TODO add conversion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
 		this.drawEndPublisher.next(this.features);
@@ -341,7 +396,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const dy = end[1] - start[1];
 		const rotation = Math.atan2(dy, dx);
 		const lineLength = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		// console.log(lineLength);
 		const factor = lineLength * 0.1;
 		const lineStr1 = new LineString([end, [end[0] - factor, end[1] + factor]]);
 		lineStr1.rotate(rotation, end);

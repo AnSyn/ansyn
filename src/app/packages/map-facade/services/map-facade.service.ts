@@ -150,7 +150,6 @@ export class MapFacadeService {
 	}
 
 	annotationContextMenuHandlerSubscriber(payload) {
-		console.log('a');
 		this.store.dispatch(new AnnotationContextMenuTriggerAction(payload))
 	}
 

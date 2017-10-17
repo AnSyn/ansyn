@@ -20,6 +20,7 @@
 			</button>
 
 			<button *ngIf="overlay" class="small-icon-button status-bar-favorite-icon"
+					[class.is-active]="isFavoriteOverlayDisplayed"
 					(click)="toggleFavorite.emit()">
 				<!-- TODO icon change to favorites -->
 				<i class="icon-favorites"></i>

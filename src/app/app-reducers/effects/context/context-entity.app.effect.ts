@@ -44,7 +44,7 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
@@ -62,7 +62,7 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select('cases'), this.store$.select('map'))
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [DisplayOverlayAction, ICasesState, IMapState]) => {
 			const mapId = action.payload.map_id ? action.payload.map_id : mapStore.activeMapId;
@@ -81,7 +81,7 @@ export class ContextEntityAppEffects {
 	@Effect({ dispatch: false })
 	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState]: [BackToWorldAction, ICasesState]) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.active_map_id;

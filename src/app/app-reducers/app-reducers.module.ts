@@ -4,8 +4,7 @@ import { ILayerState, LayersReducer } from '@ansyn/menu-items/layers-manager/red
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { OverlayReducer } from '@ansyn/overlays';
 import { CasesReducer, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { compose } from '@ngrx/core/compose';
-import { combineReducers, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { IMenuState, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
@@ -17,7 +16,6 @@ import { IStatusBarState, StatusBarReducer } from '@ansyn/status-bar/reducers/st
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IToolsState, ToolsReducer } from '@ansyn/menu-items/tools';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';

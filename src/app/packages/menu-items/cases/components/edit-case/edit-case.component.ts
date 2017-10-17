@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
-import { ICasesState } from '../../reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
@@ -39,7 +39,7 @@ export class EditCaseComponent implements OnInit {
 		return true;
 	};
 
-	casesState$: Observable<ICasesState> = this.store.select<ICasesState>('cases');
+	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
 	activeCase$: Observable<Case> = this.casesState$
 		.distinctUntilChanged()

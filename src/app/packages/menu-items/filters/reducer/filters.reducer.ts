@@ -1,6 +1,7 @@
 import { Filter } from '../models/filter';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IFiltersState {
 	filters: Map<Filter, FilterMetadata>;
@@ -17,6 +18,8 @@ export const initialFiltersState: IFiltersState = {
 	showOnlyFavorites: false,
 	enableOnlyFavoritesSelection: false
 };
+
+export const filtersStateSelector = createFeatureSelector<IFiltersState>('filters');
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
 	switch (action.type) {

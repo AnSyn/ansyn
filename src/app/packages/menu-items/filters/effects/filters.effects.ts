@@ -4,7 +4,7 @@ import {
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction
 } from '../actions/filters.actions';
-import { IFiltersState } from '../reducer/filters.reducer';
+import { filtersStateSelector, IFiltersState } from '../reducer/filters.reducer';
 import { FiltersService } from '../services/filters.service';
 import { Filter } from '../models/filter';
 import 'rxjs/add/operator/map';
@@ -32,7 +32,7 @@ export class FiltersEffects {
 	@Effect()
 	initializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType(FiltersActionTypes.INITIALIZE_FILTERS)
-		.withLatestFrom(this.store$.select('filters'))
+		.withLatestFrom(this.store$.select(filtersStateSelector))
 		.map(([action, filtersState]: [InitializeFiltersAction, IFiltersState]) => {
 			const filters: Filter[] = this.filtersService.getFilters();
 			const filterMetadata: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();

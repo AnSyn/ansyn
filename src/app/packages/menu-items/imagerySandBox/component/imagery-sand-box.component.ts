@@ -33,7 +33,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	}
 
 	public ngOnInit() {
-		this.store.select('cases')
+		this.store.select(casesStateSelector)
 			.distinctUntilChanged(isEqual)
 			.subscribe((cases: ICasesState) => {
 				this.selectedCase = cloneDeep(cases.selectedCase);

@@ -2,6 +2,7 @@ import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IMapState {
 	communicators: {};
@@ -22,6 +23,8 @@ export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
 };
+
+export const mapStateSelector = createFeatureSelector<IMapState>('map');
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
 

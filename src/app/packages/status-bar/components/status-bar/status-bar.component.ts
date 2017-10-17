@@ -27,7 +27,7 @@ import { MapsLayout } from '@ansyn/core';
 
 export class StatusBarComponent implements OnInit {
 
-	status_bar$: Observable<IStatusBarState> = this.store.select('status_bar');
+	status_bar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 
 	layouts$: Observable<MapsLayout[]> = this.status_bar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
 

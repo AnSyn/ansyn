@@ -1,5 +1,6 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IToolsState {
 	flags: Map<string, boolean>;
@@ -15,6 +16,8 @@ export const toolsInitialState: IToolsState = {
 };
 
 toolsInitialState.flags.set('geo_registered_options_enabled', true);
+
+export const toolsStateSelector = createFeatureSelector<IToolsState>('tools');
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<string, boolean>;

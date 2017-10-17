@@ -1,5 +1,6 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { MapsLayout } from '@ansyn/core';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface IToastMessage {
 	toastText: string;
@@ -55,6 +56,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	overlaysCount: 0,
 	overlayNotInCase: false
 };
+
+export const statusBarStateSelector = createFeatureSelector<IStatusBarState>('status_bar');
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState {
 	switch (action.type) {

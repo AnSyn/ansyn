@@ -2,6 +2,7 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
 import { get as _get } from 'lodash';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface ICasesState {
 	cases: Case[];
@@ -23,6 +24,7 @@ export const initialCasesState: ICasesState = {
 	updatingBackend: false
 };
 
+export const casesStateSelector = createFeatureSelector<ICasesState>('cases');
 
 export function CasesReducer(state: ICasesState = initialCasesState, action: CasesActions) {
 

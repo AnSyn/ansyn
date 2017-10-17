@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { layersStateSelector } from '../../reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -13,7 +14,7 @@ import { Store } from '@ngrx/store';
 })
 export class LayersManagerComponent {
 
-	public nodes: Observable<ILayerTreeNode[]> = this.store.select('layers').map((state: ILayerState) => state.layers);
+	public nodes: Observable<ILayerTreeNode[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);
 
 	constructor(private store: Store<ILayerState>) {
 	}

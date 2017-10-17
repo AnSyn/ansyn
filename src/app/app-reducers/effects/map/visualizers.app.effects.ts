@@ -38,6 +38,10 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -52,7 +56,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'))
+		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'))
 		.map(([action, selectedCase]: [HoverFeatureTriggerAction, Case]) => {
 			const markups = CasesService.getOverlaysMarkup(selectedCase, action.payload.id);
 			return new OverlaysMarkupAction(markups);
@@ -132,7 +136,7 @@ export class VisualizersAppEffects {
 	updateCaseFromTools$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.map(toPayload)
-		.withLatestFrom(this.store$.select('map'))
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([payload, mapState]: [OverlayDisplayMode, IMapState]) => {
 			const mapsList = [...mapState.mapsList];
 			const activeMap = MapFacadeService.activeMap(mapState);
@@ -163,7 +167,7 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select('overlays'), this.store$.select('cases'), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selectedCase];
 		})
 		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
@@ -182,9 +186,9 @@ export class VisualizersAppEffects {
 	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
 		.withLatestFrom(
-			this.store$.select<IToolsState>('tools').pluck<IToolsState, boolean>('gotoExpand'),
-			this.store$.select('map'),
-			this.store$.select('tools').pluck('activeCenter'),
+			this.store$.select(toolsStateSelector).pluck<IToolsState, boolean>('gotoExpand'),
+			this.store$.select(mapStateSelector),
+			this.store$.select(toolsStateSelector).pluck('activeCenter'),
 			(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]
 		)
 		.map(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
@@ -202,7 +206,7 @@ export class VisualizersAppEffects {
 	OnGoToInputChanged$ = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
 		.withLatestFrom(
-			this.store$.select('map'),
+			this.store$.select(mapStateSelector),
 			(action, mapState) => {
 				return [mapState, action.payload];
 
@@ -223,7 +227,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom(this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.map(([action, cases]: [Action, ICasesState]) => {
 			const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;

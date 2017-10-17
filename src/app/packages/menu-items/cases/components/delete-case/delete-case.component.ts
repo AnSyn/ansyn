@@ -31,7 +31,7 @@ const animations: any[] = [
 export class DeleteCaseComponent {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
-	selectedCaseName$: Observable<string> = this.store.select('cases').map(this.getActiveCaseName);
+	selectedCaseName$: Observable<string> = this.store.select(casesStateSelector).map(this.getActiveCaseName);
 
 	@Output() submitCase = new EventEmitter();
 

@@ -2,6 +2,7 @@ import { ILayerState } from './layers.reducer';
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
+import { createFeatureSelector } from '@ngrx/store';
 
 export interface ILayerState {
 	layers: ILayerTreeNodeRoot[];
@@ -12,6 +13,8 @@ export const initialLayersState: ILayerState = {
 	layers: [],
 	selectedLayers: []
 };
+
+export const layersStateSelector = createFeatureSelector<ILayerState>('layers');
 
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions) {
 	switch (action.type) {

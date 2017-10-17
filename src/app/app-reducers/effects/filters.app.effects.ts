@@ -14,6 +14,9 @@ import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
+import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -28,7 +31,7 @@ export class FiltersAppEffects {
 	@Effect()
 	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases'))
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(casesStateSelector))
 		.map(([action, filtersState, casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState, ICasesState]) => {
 			const parsedFilters = Array.from(filtersState.filters)
 				.map(([key, value]) => ({
@@ -58,7 +61,7 @@ export class FiltersAppEffects {
 	@Effect()
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
 		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select('filters'), this.store$.select('cases').pluck('selectedCase'))
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(casesStateSelector).pluck('selectedCase'))
 		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
@@ -72,7 +75,7 @@ export class FiltersAppEffects {
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select('cases').pluck('selectedCase'), this.store$.select('overlays'), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
+		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(overlaysStateSelector), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
 			return [overlaysArray, selectedCase.state.facets];
 		})

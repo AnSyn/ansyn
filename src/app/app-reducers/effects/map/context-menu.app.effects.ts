@@ -26,7 +26,7 @@ export class ContextMenuAppEffects {
 	@Effect()
 	setContextFilter$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
-		.withLatestFrom(this.store$.select('overlays'))
+		.withLatestFrom(this.store$.select(overlaysStateSelector))
 		.map(([action, overlaysState]: [ContextMenuShowAction, IOverlaysState]) => {
 			return overlaysState.filteredOverlays
 				.map((id: string): Overlay => overlaysState.overlays.get(id))

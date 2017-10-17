@@ -114,7 +114,7 @@ export class MapEffects {
 	@Effect()
 	onLayoutsChange$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(MapActionTypes.SET_LAYOUT)
-		.withLatestFrom(this.store$.select('map').pluck<any, any>('mapsList'), this.store$.select('map').pluck('activeMapId'))
+		.withLatestFrom(this.store$.select(mapStateSelector).pluck<any, any>('mapsList'), this.store$.select(mapStateSelector).pluck('activeMapId'))
 		.filter(([{ payload }, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
 		.map(([{ payload }, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
 		.map((newData) => new SetMapsDataActionStore(newData));
@@ -130,7 +130,7 @@ export class MapEffects {
 	@Effect()
 	positionChanged$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
-		.withLatestFrom(this.store$.select('map'), (action: PositionChangedAction, state: IMapState): any => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
 			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
 		.filter(([selectedMap]) => !_isEmpty(selectedMap))
@@ -149,7 +149,7 @@ export class MapEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select('map'), (action: BackToWorldAction, mapState: IMapState) => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldAction, mapState: IMapState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			return [action, mapId, mapState.mapsList];
 		})

@@ -42,7 +42,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onActiveMapChanges$: Observable<ActiveMapChangedAction | DisableImageProcessing | SetAutoImageProcessingSuccess> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)
 		.filter(activeMap => Boolean(activeMap))
 		.mergeMap((activeMap) => {
@@ -66,7 +66,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<SetActiveOverlaysFootprintModeAction> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState) => mapState)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => mapState)
 		.map(MapFacadeService.activeMap)
 		.mergeMap(activeMap =>
 			[
@@ -103,7 +103,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select('map'), (action: DisplayOverlaySuccessAction, mapState: IMapState): IMapState => mapState)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlaySuccessAction, mapState: IMapState): IMapState => mapState)
 		.map <IMapState, CaseMapState>(MapFacadeService.activeMap)
 		.mergeMap((activeMap: CaseMapState) => {
 			const { isAutoImageProcessingActive } = activeMap.data;
@@ -149,7 +149,7 @@ export class ToolsAppEffects {
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select('map'), (action: SetAutoImageProcessing, mapsState: IMapState) => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: SetAutoImageProcessing, mapsState: IMapState) => {
 			return [action, mapsState];
 		})
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
@@ -182,7 +182,7 @@ export class ToolsAppEffects {
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
-		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
 		.filter(communicator => !_isNil(communicator))
 		.map((communicator: CommunicatorEntity) => {
 			const activeMapCenter = communicator.getCenter();
@@ -218,7 +218,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO)
-		.withLatestFrom(this.store$.select('map'), (action, mapState: IMapState): any => ({
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): any => ({
 			action,
 			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
 		}))

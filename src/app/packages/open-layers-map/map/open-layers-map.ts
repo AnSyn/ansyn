@@ -345,9 +345,6 @@ export class OpenLayersMap implements IMap {
 		view.setCenter(olCenter);
 		view.setRotation(position.rotation);
 		view.setZoom(position.zoom);
-		if (position.boundingBox) {
-			this.setBoundingBox(position.boundingBox);
-		}
 	}
 
 	public getPosition(): MapPosition {

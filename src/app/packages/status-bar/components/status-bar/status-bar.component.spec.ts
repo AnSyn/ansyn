@@ -56,9 +56,10 @@ describe('StatusBarComponent', () => {
 		fixture.nativeElement.querySelector('.status-bar-edit-icon i').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 
-		fixture.nativeElement.querySelector('.status-bar-eye-icon img').click();
+		fixture.nativeElement.querySelector('.status-bar-eye-icon i').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	});
+
 	describe('clicks', () => {
 		it('clickGoPrev should dispatch action GoPrevAction', () => {
 			spyOn(component.store, 'dispatch');

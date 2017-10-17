@@ -6,7 +6,6 @@ export interface StoreFixture<T> {
 	state: State<T>;
 	cleanup: () => void;
 	getState: () => T;
-	replaceReducer: (reducer) => void;
 }
 
 export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): StoreFixture<T> {
@@ -18,8 +17,8 @@ export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): St
 	const cleanup = () => {
 
 	};
-	const replaceReducer = reducer => {
-		store.replaceReducer(reducer);
-	};
-	return { store, state, cleanup, getState, replaceReducer };
+	// const replaceReducer = reducer => {
+	// 	store.replaceReducer(reducer);
+	// };
+	return { store, state, cleanup, getState };
 }

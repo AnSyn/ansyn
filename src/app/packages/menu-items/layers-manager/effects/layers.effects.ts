@@ -1,4 +1,4 @@
-import { ILayerState } from '../reducers/layers.reducer';
+import { ILayerState, layersStateSelector } from '../reducers/layers.reducer';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import {
 	BeginLayerTreeLoadAction,

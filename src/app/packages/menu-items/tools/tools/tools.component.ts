@@ -8,7 +8,7 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState } from '../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
 
 @Component({

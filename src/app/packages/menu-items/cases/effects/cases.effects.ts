@@ -60,7 +60,7 @@ export class CasesEffects {
 	 */
 	@Effect()
 	onAddCase$: Observable<AddCaseSuccessAction> = this.actions$
-		.ofType(CasesActionTypes.ADD_CASE)
+		.ofType<AddCaseAction>(CasesActionTypes.ADD_CASE)
 		.switchMap((action) => {
 			return this.casesService.createCase(action.payload)
 				.map((added_case: Case) => {

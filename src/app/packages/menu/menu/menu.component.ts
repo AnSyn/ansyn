@@ -14,7 +14,7 @@ import {
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { MenuItem } from '../models';
 import { Observable } from 'rxjs/Observable';
-import { IMenuState } from '../reducers/menu.reducer';
+import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -121,7 +121,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	}
 
 	get selectedMenuItem(): MenuItem {
-		return this.menuItems.get(this.selectedMenuItemName);
+		return this.menuItems && this.menuItems.get(this.selectedMenuItemName);
 	}
 
 	@HostListener('click', ['$event'])

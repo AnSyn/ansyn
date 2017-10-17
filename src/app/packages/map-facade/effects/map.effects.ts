@@ -7,15 +7,15 @@ import {
 	ActiveMapChangedAction,
 	BackToWorldAction,
 	MapActionTypes,
-	MapsListChangedAction,
-	PositionChangedAction,
+	MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
+	PositionChangedAction, SetLayoutAction,
 	SetMapsDataActionStore
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 import { Action, Store } from '@ngrx/store';
-import { IMapState } from '../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
 
@@ -113,7 +113,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onLayoutsChange$: Observable<SetMapsDataActionStore> = this.actions$
-		.ofType(MapActionTypes.SET_LAYOUT)
+		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
 		.withLatestFrom(this.store$.select(mapStateSelector).pluck<any, any>('mapsList'), this.store$.select(mapStateSelector).pluck('activeMapId'))
 		.filter(([{ payload }, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
 		.map(([{ payload }, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
@@ -205,7 +205,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	pinPointModeTriggerAction$: Observable<boolean> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.PIN_POINT_MODE)
+		.ofType<PinPointModeTriggerAction>(MapActionTypes.TRIGGER.PIN_POINT_MODE)
 		.map(({ payload }) => payload);
 
 	/**
@@ -215,7 +215,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
+		.ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
 		.map(({ payload }) => payload);
 
 	/**

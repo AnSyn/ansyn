@@ -42,6 +42,10 @@ import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reduc
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	AnnotationVisualizerAgentAction,
+	GoToInputChangeAction
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -85,7 +89,7 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.map((action): void => {
+		.map((action: HoverFeatureTriggerAction): void => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
 				const visualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 				if (visualizer) {
@@ -207,7 +211,7 @@ export class VisualizersAppEffects {
 		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
 		.withLatestFrom(
 			this.store$.select(mapStateSelector),
-			(action, mapState) => {
+			(action: GoToInputChangeAction, mapState) => {
 				return [mapState, action.payload];
 
 			}
@@ -228,7 +232,7 @@ export class VisualizersAppEffects {
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom(this.store$.select(casesStateSelector))
-		.map(([action, cases]: [Action, ICasesState]) => {
+		.map(([action, cases]: [AnnotationVisualizerAgentAction, ICasesState]) => {
 			const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
 			let relevantMapsIds = [];

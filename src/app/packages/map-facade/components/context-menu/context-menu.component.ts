@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } from '@angular/core';
-import { IMapState } from '../../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
@@ -30,7 +30,7 @@ export class ContextMenuComponent implements OnInit {
 		return ContextMenuComponent.filterField;
 	}
 
-	mapState$ = this.store.select <IMapState>('map');
+	mapState$ = this.store.select(mapStateSelector);
 
 
 	displayedOverlay$: Observable<Overlay> = this.mapState$

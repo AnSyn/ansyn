@@ -27,6 +27,8 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { GoToAction, ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -90,7 +92,7 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
+		.ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.map((action) => new SetActiveOverlaysFootprintModeAction(action.payload));
 
 	/**
@@ -102,7 +104,7 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlaySuccessAction, mapState: IMapState): IMapState => mapState)
 		.map <IMapState, CaseMapState>(MapFacadeService.activeMap)
 		.mergeMap((activeMap: CaseMapState) => {
@@ -217,7 +219,7 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO)
+		.ofType<GoToAction>(ToolsActionsTypes.GO_TO)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): any => ({
 			action,
 			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)

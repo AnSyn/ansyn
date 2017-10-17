@@ -1,5 +1,5 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { IToolsState } from '../../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
 	GoToAction,

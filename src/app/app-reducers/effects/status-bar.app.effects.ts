@@ -37,6 +37,13 @@ import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
+import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { SetOverlaysNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
+import { UpdateOverlaysCountAction } from '@ansyn/overlays/actions/overlays.actions';
+import { FavoriteAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 
 @Injectable()
@@ -51,7 +58,7 @@ export class StatusBarAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	updatePinPointSearchAction$: Observable<void> = this.actions$
-		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
 		.withLatestFrom(this.store.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
@@ -70,7 +77,7 @@ export class StatusBarAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	updatePinPointIndicatorAction$: Observable<void> = this.actions$
-		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointIndicator)
 		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
@@ -191,7 +198,7 @@ export class StatusBarAppEffects {
 	 */
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
-		.ofType(StatusBarActionsTypes.FAVORITE)
+		.ofType<FavoriteAction>(StatusBarActionsTypes.FAVORITE)
 		.map((action) => new SetFavoriteAction(action.payload));
 
 	/**
@@ -242,19 +249,19 @@ export class StatusBarAppEffects {
 	 */
 	@Effect()
 	setOverlayCount$ = this.actions$
-		.ofType(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
+		.ofType<UpdateOverlaysCountAction>(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
 		.map(({ payload }) => new SetOverlaysCountAction(payload));
 
 	/**
 	 * @type Effect
 	 * @name setOverlaysNotFromCase$
-	 * @ofType SetOverlayNotInCaseAction
+	 * @ofType SetOverlaysNotInCaseAction
 	 * @dependencies map
 	 * @action SetOverlayNotInCaseAction
 	 */
 	@Effect()
 	setOverlaysNotFromCase$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SET_OVERLAYS_NOT_IN_CASE)
+		.ofType<SetOverlaysNotInCaseAction>(MapActionTypes.SET_OVERLAYS_NOT_IN_CASE)
 		.withLatestFrom(this.store.select(mapStateSelector), ({ payload }, mapState: IMapState) => [payload, MapFacadeService.activeMap(mapState)])
 		.map(([overlaysNotInCase, activeMap]: [Map<string, boolean>, CaseMapState]) => {
 			if (activeMap.data.overlay) {
@@ -276,7 +283,7 @@ export class StatusBarAppEffects {
 	 */
 	@Effect()
 	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
-		.ofType(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
 		.withLatestFrom(this.store.select(statusBarStateSelector).pluck('flags'))
 		.map(([action, flags]: [any, Map<any, any>]) => flags.get(statusBarFlagsItems.pinPointSearch))

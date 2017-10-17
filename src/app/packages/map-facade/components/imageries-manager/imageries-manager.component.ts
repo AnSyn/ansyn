@@ -5,7 +5,7 @@ import { MapEffects } from '../../effects/map.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { IMapState } from '../../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';

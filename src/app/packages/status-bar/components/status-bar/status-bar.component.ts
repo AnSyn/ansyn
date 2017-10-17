@@ -1,6 +1,9 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, IToastMessage, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState, IToastMessage, statusBarFlagsItems,
+	statusBarStateSelector
+} from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction,
 	ChangeLayoutAction,

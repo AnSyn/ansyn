@@ -226,7 +226,7 @@ export class SetLayoutAction implements Action {
 	}
 }
 
-export class SetOverlayNotInCaseAction implements Action {
+export class SetOverlaysNotInCaseAction implements Action {
 	type = MapActionTypes.SET_OVERLAYS_NOT_IN_CASE;
 
 	constructor(public payload: Map<string, boolean>) {

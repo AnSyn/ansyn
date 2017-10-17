@@ -64,7 +64,6 @@ export function getExtentIntersectionRatioInPolygon(extent: GeoJSON.Point[], foo
 	try {
 		let intersectionArea = 0;
 		footprint.coordinates.forEach(coordinates => {
-			console.log(intersect(polygon(coordinates), extentPolygon));
 			intersectionArea += area(intersect(extentPolygon, polygon(coordinates)));
 		});
 

@@ -3,6 +3,8 @@ import * as  bboxPolygon from '@turf/bbox-polygon';
 import * as center from '@turf/center';
 import * as inside from '@turf/inside';
 import { polygon } from '@turf/helpers';
+import * as area from '@turf/area';
+import * as intersect from '@turf/intersect';
 
 export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Point[] {
 	const footprintFeature: GeoJSON.Feature<any> = {
@@ -24,23 +26,25 @@ export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Poin
 	return boundingBox;
 }
 
-export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): boolean {
-
-	const coordinates = [];
+function extentToPolygon(extent: GeoJSON.Point[]) {
+	let coordinates = [];
 	if (extent.length === 2) {
+		// Keep this order otherwise self intersection!
 		coordinates.push(extent[0].coordinates);
 		coordinates.push([extent[0].coordinates[0], extent[1].coordinates[1]]);
-		coordinates.push([extent[1].coordinates[0], extent[0].coordinates[1]]);
 		coordinates.push(extent[1].coordinates);
+		coordinates.push([extent[1].coordinates[0], extent[0].coordinates[1]]);
 	} else {
-		extent.forEach((p: GeoJSON.Point) => {
-			coordinates.push(p.coordinates);
-		});
+		coordinates = extent.map((p: GeoJSON.Point) => p.coordinates);
 	}
 
-	coordinates.push(extent[0].coordinates);
+	coordinates.push(coordinates[0]);
 
-	const extentPoly = polygon([coordinates]);
+	return polygon([coordinates]);
+}
+
+export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): boolean {
+	const extentPoly = extentToPolygon(extent);
 
 	const footprintFeature: GeoJSON.Feature<any> = {
 		'type': 'Feature',
@@ -50,4 +54,22 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 
 	const centerPoint = center(extentPoly);
 	return inside(centerPoint, footprintFeature);
+}
+
+export function getExtentIntersectionRatioInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): number {
+	const extentPolygon = extentToPolygon(extent);
+
+	const extentArea = area(extentPolygon);
+
+	try {
+		let intersectionArea = 0;
+		footprint.coordinates.forEach(coordinates => {
+			console.log(intersect(polygon(coordinates), extentPolygon));
+			intersectionArea += area(intersect(extentPolygon, polygon(coordinates)));
+		});
+
+		return intersectionArea / extentArea;
+	} catch (e) {
+		return 0;
+	}
 }

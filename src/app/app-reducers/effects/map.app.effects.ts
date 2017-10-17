@@ -69,6 +69,7 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { getExtentIntersectionRatioInPolygon } from '@ansyn/core/utils/calc-extent';
 
 @Injectable()
 export class MapAppEffects {
@@ -208,11 +209,10 @@ export class MapAppEffects {
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.flatMap(([overlay, map_id, position]: [Overlay, string, Position]) => {
-
-			const isInside = isExtentContainedInPolygon(position.boundingBox, overlay.footprint);
+			const intersection = getExtentIntersectionRatioInPolygon(position.boundingBox, overlay.footprint);
 
 			let extent;
-			if (isInside) {
+			if (intersection > 0.1) {
 				extent = position.boundingBox;
 			} else {
 				extent = calcGeoJSONExtent(overlay.footprint);

@@ -56,7 +56,7 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 	return inside(centerPoint, footprintFeature);
 }
 
-export function getExtentIntersectionRatioInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): number {
+export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): number {
 	const extentPolygon = extentToPolygon(extent);
 
 	const extentArea = area(extentPolygon);

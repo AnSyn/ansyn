@@ -491,7 +491,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('onDisplayOverlay$ communicator should set Layer on map, by getExtentIntersectionRatioInPolygon', () => {
+	describe('onDisplayOverlay$ communicator should set Layer on map, by getFootprintIntersectionRatioInExtent', () => {
 		const fake_layer = {};
 		const fake_extent = [1, 2, 3, 4];
 		let fakeCommunicator: CommunicatorEntity;

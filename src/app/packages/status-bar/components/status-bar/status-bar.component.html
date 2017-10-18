@@ -42,20 +42,20 @@
 
 
 			<div class="selection-combobox layout-item geo-selection">
-				<div class='status-bar-world-icon'>
+				<div class="status-bar-world-icon">
 					<i class="icon-status-bar-geo"></i>
 				</div>
 
 
-				<select name="timeline" name="geoFilter" [(ngModel)]="geoFilter"
+				<select name="geoFilter" [(ngModel)]="geoFilter"
 						(ngModelChange)="geoFilterChange(geoFilter)">
 					<option *ngFor="let geo of geoFilters" [value]="geo">{{geo | titlecase}}</option>
 				</select>
 
 				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-					<i (click)="toggleMapPointSearch()" class="icon-status-bar-edit-pin-point"></i>
+					<i (click)="toggleMapPointSearch()" class="icon-edit"></i>
 				</div>
-				<div class='status-bar-eye-icon' (click)="togglePinPointIndicatorView()"
+				<div class="status-bar-eye-icon" (click)="togglePinPointIndicatorView()"
 					 [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 					<i class="icon-status-bar-show-pin-point status-bar-image-right"></i>
 				</div>
@@ -69,7 +69,7 @@
 					<option>Start - End</option>
 				</select>
 				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
-					<i (click)="toggleTimelineStartEndSearch()" class="icon-case-edit"></i>
+					<i (click)="toggleTimelineStartEndSearch()" class="icon-edit"></i>
 				</div>
 				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
 					<div class="pop-hover-content">

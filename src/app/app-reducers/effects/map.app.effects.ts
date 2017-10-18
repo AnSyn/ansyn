@@ -643,11 +643,12 @@ export class MapAppEffects {
 
 			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {
 				selectedCase.state.favoritesOverlays = selectedCase.state.favoritesOverlays.filter(overlay => overlay !== action.payload);
-				if (selectedCase.state.facets.showOnlyFavorites) {
-					actions.push(new SyncFilteredOverlays());
-				}
 			} else {
 				selectedCase.state.favoritesOverlays.push(action.payload);
+			}
+			// if showOnlyFavorites filter active - sync filter with favorites change
+			if (selectedCase.state.facets.showOnlyFavorites) {
+				actions.push(new SyncFilteredOverlays());
 			}
 
 			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);

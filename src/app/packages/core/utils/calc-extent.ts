@@ -26,7 +26,7 @@ export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Poin
 	return boundingBox;
 }
 
-function extentToPolygon(extent: GeoJSON.Point[]) {
+export function extentToPolygon(extent: GeoJSON.Point[]) {
 	let coordinates = [];
 	if (extent.length === 2) {
 		// Keep this order otherwise self intersection!

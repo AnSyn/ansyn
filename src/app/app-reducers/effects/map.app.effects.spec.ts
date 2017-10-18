@@ -491,48 +491,13 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	// describe('backToWorldView$', () => {
-	// 	it('listen to BackToWorldAction with overlay',() => {
-	//
-	// 		// data: [
-	// 		// 	{id: 'imagery1', data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}},
-	// 		// 	{id: 'imagery2', data: {position: {zoom: 3, center: 4}}},
-	// 		// 	{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
-	// 		// ],
-	// 		const testOverlay: Overlay = {id: 'testOverlay1', name: 'testOverlay1', photoTime: new Date().toDateString(), date: null, azimuth: 0, isFullOverlay: true, isGeoRegistered: true};
-	// 		icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
-	// 		const communicator = {
-	// 			loadInitialMapSource: () => {},
-	// 		};
-	//
-	// 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-	// 		spyOn(communicator, 'loadInitialMapSource');
-	// 		spyOn(CasesService, 'getOverlaysMarkup');
-	// 		effectsRunner.queue(new BackToWorldAction({mapId: 'imagery1'}));
-	// 		mapAppEffects.backToWorldView$.subscribe(_result => {
-	// 			let result = _result instanceof UpdateCaseAction || _result instanceof OverlaysMarkupAction;
-	// 			expect(result).toBe(true);
-	//
-	// 			if(_result instanceof OverlaysMarkupAction){
-	// 				expect(CasesService.getOverlaysMarkup).toHaveBeenCalled();
-	// 			}
-	// 			if(_result instanceof UpdateCaseAction ){
-	// 				const resultCase: Case = _result.payload;
-	// 				expect(resultCase.state.maps.data[0].data.overlay).toEqual(null);
-	// 			}
-	// 		});
-	// 		expect(communicator.loadInitialMapSource).toHaveBeenCalled();
-	// 	});
-	// });
-
-	describe('onDisplayOverlay$ communicator should set Layer on map, by isExtentContainedInPolygon', () => {
+	describe('onDisplayOverlay$ communicator should set Layer on map, by getExtentIntersectionRatioInPolygon', () => {
 		const fake_layer = {};
 		const fake_extent = [1, 2, 3, 4];
-		let fakeCommuincator: CommunicatorEntity;
+		let fakeCommunicator: CommunicatorEntity;
 
 		beforeEach(() => {
-
-			fakeCommuincator = <any> {
+			fakeCommunicator = <any> {
 				ActiveMap: { MapType: 'ol' },
 				resetView: () => {
 				}
@@ -555,40 +520,9 @@ describe('MapAppEffects', () => {
 			});
 
 			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
-			spyOn(fakeCommuincator, 'resetView');
-		});
-
-		it('isExtentContainedInPolygon "false"', () => {
-
-			Object.defineProperty(utils, 'isExtentContainedInPolygon', {
-				writable: true,
-				configurable: true,
-				value: () => {
-				}
-			});
-			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(false);
-			effectsRunner.queue(new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery1' }));
-			let subscribeResult = undefined;
-			mapAppEffects.onDisplayOverlay$.subscribe(result => {
-				subscribeResult = result;
-				expect(utils.calcGeoJSONExtent).toHaveBeenCalled();
-				expect(fakeCommuincator.resetView).toHaveBeenCalledWith(fake_layer, fake_extent);
-			});
-			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({ id: fake_overlay.id }));
-		});
-
-		it('isExtentContainedInPolygon "true"', () => {
-			spyOn(utils, 'isExtentContainedInPolygon').and.returnValue(true);
-			effectsRunner.queue(new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery1' }));
-			let subscribeResult = undefined;
-			mapAppEffects.onDisplayOverlay$.subscribe(result => {
-				subscribeResult = result;
-				expect(utils.calcGeoJSONExtent).not.toHaveBeenCalled();
-				expect(fakeCommuincator.resetView).toHaveBeenCalledWith(fake_layer, imagery1PositionBoundingBox);
-			});
-			expect(subscribeResult).toEqual(new DisplayOverlaySuccessAction({ id: fake_overlay.id }));
+			spyOn(fakeCommunicator, 'resetView');
 		});
 
 		it('setOverlayAsLoading$ is called', () => {

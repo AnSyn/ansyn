@@ -69,7 +69,7 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { getExtentIntersectionRatioInPolygon } from '@ansyn/core/utils/calc-extent';
+import { getExtentIntersectionRatioInPolygon } from '@ansyn/core/utils';
 
 @Injectable()
 export class MapAppEffects {

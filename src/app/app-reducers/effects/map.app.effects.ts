@@ -69,7 +69,8 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { getExtentIntersectionRatioInPolygon } from '@ansyn/core/utils';
+import { getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils';
+import { IMapConfig } from '../../packages/imagery/model/iimagery-config';
 
 @Injectable()
 export class MapAppEffects {
@@ -209,7 +210,7 @@ export class MapAppEffects {
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.flatMap(([overlay, map_id, position]: [Overlay, string, Position]) => {
-			const intersection = getExtentIntersectionRatioInPolygon(position.boundingBox, overlay.footprint);
+			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			let extent;
 			if (intersection > 0.1) {

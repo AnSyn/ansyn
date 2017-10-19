@@ -7,11 +7,15 @@ import { createFeatureSelector } from '@ngrx/store';
 export interface ILayerState {
 	layers: ILayerTreeNodeRoot[];
 	selectedLayers: ILayerTreeNodeLeaf[];
+	displayAnnotationsLayer?: boolean;
+
 }
 
 export const initialLayersState: ILayerState = {
 	layers: [],
-	selectedLayers: []
+	selectedLayers: [],
+	displayAnnotationsLayer: false
+
 };
 
 export const layersFeatureKey = 'layers';
@@ -48,6 +52,13 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 				...state.selectedLayers.slice(0, unselectedLayerIndex),
 				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
 			return Object.assign({}, state, { selectedLayers: newSelectedArray });
+
+		case LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER:
+			return { ...state, displayAnnotationsLayer: true };
+
+		case LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER:
+			return { ...state, displayAnnotationsLayer: false };
+
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;

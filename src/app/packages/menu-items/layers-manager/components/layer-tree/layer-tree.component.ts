@@ -4,6 +4,9 @@ import { TreeActionMappingService } from '../../services/tree-action-mapping.ser
 import { TreeComponent, TreeNode } from 'angular-tree-component';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
+import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
+import { ILayerState } from '../../reducers/layers.reducer';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'ansyn-layer-tree',
@@ -15,6 +18,7 @@ import { Observable } from 'rxjs/Observable';
 export class LayerTreeComponent implements OnInit, AfterViewInit {
 
 	public options;
+	public annotationLayerChecked = true;
 
 	@ViewChild(TreeComponent) treeComponent: TreeComponent;
 
@@ -22,7 +26,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
 	@Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
-	constructor(private actionMappingService: TreeActionMappingService, private myElement: ElementRef) {
+	constructor(public store: Store<ILayerState>, public actionMappingService: TreeActionMappingService, public myElement: ElementRef) {
 	}
 
 	ngOnInit() {
@@ -33,10 +37,25 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 			useVirtualScroll: true,
 			nodeHeight: 24
 		};
+
+		this.store.select<ILayerState>('layers')
+			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
+			.subscribe(result => {
+				this.annotationLayerChecked = result;
+			})
 	}
 
 	ngAfterViewInit() {
 		this.treeComponent.treeModel.virtualScroll.setViewport(this.myElement.nativeElement);
+	}
+
+	annotationLayerClick($event, data) {
+		this.annotationLayerChecked = !this.annotationLayerChecked;
+		if (this.annotationLayerChecked) {
+			this.store.dispatch(new ShowAnnotationsLayer({ update: true }))
+		} else {
+			this.store.dispatch(new HideAnnotationsLayer({ update: true }))
+		}
 	}
 
 	public onDivClicked(event, node: TreeNode): void {

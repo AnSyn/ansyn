@@ -50,6 +50,8 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import GeoJSON from 'ol/format/geojson';
 import { AnnotationVisualizerAgentAction } from '../../../packages/menu-items/tools/actions/tools.actions';
+import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -254,7 +256,7 @@ export class VisualizersAppEffects {
 		.ofType(MapActionTypes.STORE.ANNOTATION_DATA)
 		.withLatestFrom(this.selectedCase$)
 		.mergeMap(([action, selectedCase]: [Action, Case]) => {
-			const annotationsLayer = JSON.parse((<string>selectedCase.state.annotationsLayer));
+			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
 			const geoJsonFormat = new GeoJSON();
 
 			const featureIndex = annotationsLayer.features.findIndex(featureString => {
@@ -266,7 +268,11 @@ export class VisualizersAppEffects {
 				case "remove":
 					annotationsLayer.features.splice(featureIndex, 1);
 
-					selectedCase.state = { ...selectedCase.state, annotationsLayer: JSON.stringify(annotationsLayer) }
+					selectedCase.state = {
+						...selectedCase.state, layers: {
+							...selectedCase.state.layers, annotationsLayer: JSON.stringify(annotationsLayer)
+						}
+					}
 					break;
 			}
 
@@ -291,9 +297,8 @@ export class VisualizersAppEffects {
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom(this.selectedCase$)
-
-		.map(([action, selectedCase]: [AnnotationVisualizerAgentAction, Case]) => {
+		.withLatestFrom<Action, Case, ILayerState>(this.selectedCase$, this.store$.select('layers'))
+		.map(([action, selectedCase, layerState]: [AnnotationVisualizerAgentAction, Case, ILayerState]) => {
 			// const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
 			let relevantMapsIds = [];
@@ -315,7 +320,6 @@ export class VisualizersAppEffects {
 					return;
 			}
 
-
 			const visualizers = relevantMapsIds
 				.map(id => {
 					const communicator = this.imageryCommunicatorService.provide(id);
@@ -329,13 +333,15 @@ export class VisualizersAppEffects {
 			visualizers.forEach(visualizer => {
 				switch (action.payload.action) {
 					case 'addLayer':
+						visualizer.removeLayer();
 						visualizer.addLayer();
 						break;
 					case 'show':
+						visualizer.removeLayer();
 						visualizer.addLayer();
 						visualizer.removeInteraction();
 						visualizer.addSelectInteraction();
-						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
+						visualizer.drawFeatures(selectedCase.state.layers.annotationsLayer);
 						break;
 					case 'createInteraction':
 						if (action.payload.type === 'Rectangle') {
@@ -362,17 +368,22 @@ export class VisualizersAppEffects {
 						visualizer.changeFill(action.payload.value);
 						break;
 					case 'refreshDrawing':
-						visualizer.drawFeatures(selectedCase.state.annotationsLayer);
+						visualizer.drawFeatures(selectedCase.state.layers.annotationsLayer);
 						break;
 					case 'saveDrawing':
-						selectedCase.state.annotationsLayer = visualizer.getGeoJson();
+						selectedCase.state.layers.annotationsLayer = visualizer.getGeoJson();
 						update = true;
 						break;
 					case 'endDrawing':
 						/*selectedCase.state.annotationsLayer = visualizer.getGeoJson();
 						update = true;*/
 						visualizer.removeInteraction();
-						visualizer.addSelectInteraction();
+						if (layerState.displayAnnotationsLayer) {
+							visualizer.addSelectInteraction();
+						} else {
+							visualizer.removeLayer();
+						}
+
 						break;
 					case 'removeLayer': {
 						visualizer.removeInteraction();

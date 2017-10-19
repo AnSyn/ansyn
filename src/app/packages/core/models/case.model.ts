@@ -26,7 +26,7 @@ export interface CaseState {
 	orientation: string,
 	geoFilter: string,
 	favoritesOverlays?: string[],
-	annotationsLayer?: FeatureCollection<any> | string
+	layers?: CaseLayersState
 }
 
 export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
@@ -40,6 +40,11 @@ export interface CaseTimeState {
 export interface CaseFacetsState {
 	filters: { fieldName: string, metadata: any }[];
 	showOnlyFavorites?: boolean;
+}
+
+export interface CaseLayersState {
+	annotationsLayer?: FeatureCollection<any> | string,
+	displayAnnotationsLayer?: boolean
 }
 
 export interface CaseMapsState {

@@ -6,4 +6,4 @@ export * from './geo';
 export * from './store-helpers';
 export * from './covert-projections';
 export * from './logs/timer-logs';
-export * from './infinite-scroll';
+export { deepMerge } from './deep-merge';

@@ -67,7 +67,8 @@
 				},
 				"geoFilter": "pin-point",
 				"orientation": "original",
-				"favoritesOverlays": []
+				"favoritesOverlays": [],
+				"layers": {}
 			}
 		},
 		"casesQueryParamsKeys": [

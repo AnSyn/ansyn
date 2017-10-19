@@ -8,11 +8,11 @@ import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@an
 
 export class AnsynCheckboxComponent implements OnInit {
 	public _checked;
-	public _disabled;
+	public _disabled = false;
+
 
 	@Output() inputClicked = new EventEmitter<any>();
 	@Input('id') id;
-
 
 	@Input()
 	set checked(value) {

@@ -1,3 +1,11 @@
+<h2>Private Layers</h2>
+
+<ansyn-checkbox
+	id="annotation-layer"
+	[checked]="annotationLayerChecked"
+	text="Annotations"
+	(inputClicked)="annotationLayerClick($event)"></ansyn-checkbox>
+
 <tree-root class="tree"
 		   [focused]="true"
 		   [nodes]="source | async"

@@ -3,14 +3,13 @@ import { Actions, Effect } from '@ngrx/effects';
 import {
 	DisableMouseShadow,
 	EnableMouseShadow,
+	SetPinLocationModeAction,
 	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { PinLocationModeTriggerAction } from '@ansyn/map-facade/actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { MapActionTypes, SetLayoutAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
-import { SetLayoutAction } from '@ansyn/map-facade/actions/map.actions';
-import { SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsMapEffects {

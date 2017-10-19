@@ -24,7 +24,6 @@ import {
 import { CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
 import { Case } from '@ansyn/core';
-import { isEqual } from 'lodash';
 
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
@@ -81,7 +80,7 @@ export class CasesEffects {
 		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
 		.mergeMap(([modalCaseId, selectedCaseId]) => {
 			const actions: Action[] = [];
-			if (isEqual(modalCaseId, selectedCaseId)) {
+			if (modalCaseId === selectedCaseId) {
 				actions.push(new LoadDefaultCaseAction());
 			}
 			actions.push(new DeleteCaseBackendAction(modalCaseId));

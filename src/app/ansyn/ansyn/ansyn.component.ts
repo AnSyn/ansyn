@@ -11,11 +11,9 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
-import { menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-app',

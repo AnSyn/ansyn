@@ -7,16 +7,14 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app-reducers.module';
 import { Filter, FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
-import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
-import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class FiltersAppEffects {

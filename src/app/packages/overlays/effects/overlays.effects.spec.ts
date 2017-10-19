@@ -1,13 +1,11 @@
-import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { inject, TestBed } from '@angular/core/testing';
-import { Action, Store, StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
 	OverlaysMarkupAction,
 	RedrawTimelineAction,
 	RequestOverlayByIDFromBackendAction,
@@ -20,6 +18,9 @@ import { OverlayReducer } from '../reducers/overlays.reducer';
 import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { cold, hot } from 'jasmine-marbles';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { IOverlaysConfig } from '../models/overlays.config';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -39,6 +40,11 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 
 describe('Overlays Effects ', () => {
+	let actions: Observable<any>;
+	let overlaysEffects: OverlaysEffects;
+	let overlaysService: OverlaysService | any;
+	let overlaysConfig: IOverlaysConfig;
+
 	const overlays = <Overlay[]>[
 		{
 			id: '12',
@@ -55,10 +61,11 @@ describe('Overlays Effects ', () => {
 			footprint: {}
 		}
 	];
+
 	let store: Store<IAppState>;
+
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
-			EffectsTestingModule,
 			StoreModule.forRoot({ overlays: OverlayReducer, cases: CasesReducer })
 		],
 		providers: [
@@ -66,152 +73,100 @@ describe('Overlays Effects ', () => {
 				provide: OverlaysService,
 				useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
 			},
+			provideMockActions(() => actions),
 			{ provide: OverlaysConfig, useValue: {} },
 			{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 		]
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store, OverlaysEffects, OverlaysService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService) => {
 		store = _store;
+		overlaysEffects = _overlaysEffects;
+		overlaysService = _overlaysService;
+		overlaysConfig = TestBed.get(OverlaysConfig);
 	}));
 
-	function setup() {
-		return {
-			runner: TestBed.get(EffectsRunner),
-			overlaysEffects: TestBed.get(OverlaysEffects),
-			overlaysService: TestBed.get(OverlaysService),
-			overlaysConfig: TestBed.get(OverlaysConfig)
-		};
-	}
-
 	it('effect - onOverlaysMarkupChanged$', () => {
-		const { runner, overlaysEffects } = setup();
 		const action = new OverlaysMarkupAction({});
-
-		runner.queue(action);
-		let count = 0;
-		overlaysEffects.onOverlaysMarkupChanged$.subscribe((action: Action) => {
-			count++;
-			expect(action.type).toEqual(OverlaysActionTypes.OVERLAYS_MARKUPS);
-		});
-
-		expect(count).toBe(1);
+		actions = hot('--a--', { a: action });
+		const expectedResults = cold('--b--', { b: action });
+		expect(overlaysEffects.onOverlaysMarkupChanged$).toBeObservable(expectedResults);
 	});
 
 	it('effect - onRedrawTimeline$', () => {
-		const { runner, overlaysEffects } = setup();
 		const action = new RedrawTimelineAction();
-		runner.queue(action);
-		let count = 0;
-		overlaysEffects.onRedrawTimeline$.subscribe((result: RedrawTimelineAction) => {
-			count++;
-			expect(result instanceof RedrawTimelineAction).toBeTruthy();
-		});
-		expect(count).toBe(1);
+		actions = hot('--a--', { a: action });
+		const expectedResults = cold('--b--', { b: action });
+		expect(overlaysEffects.onRedrawTimeline$).toBeObservable(expectedResults);
 	});
 
 	it('it should load all the overlays', () => {
-		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 		let tmp = <Overlay[]>[];
-		overlays.forEach(i => tmp.push(Object.assign({}, i, {
-			// date: new Date(i.photoTime),
-			// sourceType: overlaysConfig.overlaySource
-		})));
-		const expectedResult = new LoadOverlaysSuccessAction(tmp);
-
+		overlays.forEach(i => tmp.push(Object.assign({}, i, {})));
 		overlaysService.search.and.returnValue(Observable.of(overlays));
-
-		runner.queue(new LoadOverlaysAction());
-
-		let result = null;
-		overlaysEffects.loadOverlays$.subscribe(_result => {
-			result = _result;
-		});
-		expect(result).toEqual(expectedResult);
+		actions = hot('--a--', { a: new LoadOverlaysAction() });
+		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(tmp) });
+		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
 
 	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {
-		const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
-
-		const fakeOverlay = new Overlay();
-		fakeOverlay.id = 'test';
-
-		const expectedResult = new DisplayOverlayAction(<any>{ overlay: fakeOverlay, map_id: 'testMapId' });
+		const fakeOverlay = <Overlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
-
-		runner.queue(new RequestOverlayByIDFromBackendAction({ overlayId: 'test', map_id: 'testMapId' }));
-
-		let result = null;
-		overlaysEffects.onRequestOverlayByID$.subscribe(_result => {
-			result = _result;
+		actions = hot('--a--', {
+			a: new RequestOverlayByIDFromBackendAction({
+				overlayId: 'test',
+				map_id: 'testMapId'
+			})
 		});
-		expect(result).toEqual(expectedResult);
+		const expectedResults = cold('--b--', {
+			b: new DisplayOverlayAction(<any>{
+				overlay: fakeOverlay,
+				map_id: 'testMapId'
+			})
+		});
+		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);
+
 	});
 
 	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
 		it('should be moved forwards', () => {
-			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
-
-			const overlays = [{ id: '1234', date: new Date(6000) }];
-			const timelineState = {
-				from: new Date(0),
-				to: new Date(5000)
-			};
-			store.dispatch(new LoadOverlaysSuccessAction(overlays as any));
+			const timelineState = { from: new Date(0), to: new Date(5000) };
 			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
-
-			const action = new DisplayOverlayFromStoreAction({ id: '1234' });
-			runner.queue(action);
-
-			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
-				expect(result instanceof SetTimelineStateAction).toBeTruthy();
-				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
-				expect(result.payload).toEqual({ state: getTimeStateByOverlayResult });
-			});
+			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) } });
+			actions = hot('--a--', { a: action });
+			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
+			expect(overlaysEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
 		});
 
 		it('should be moved backwards', () => {
-
-			const { runner, overlaysEffects, overlaysService, overlaysConfig } = setup();
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
-
-			const loadedOverlays = [
-				{ id: '5678', date: new Date(4000) }
-			];
 			const timelineState = {
 				from: new Date(5000),
 				to: new Date(10000)
 			};
-			store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
 			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
-
-			const action = new DisplayOverlayFromStoreAction({ id: '5678' });
-			runner.queue(action);
-
-			overlaysEffects.displayOverlaySetTimeline$.subscribe((result: SetTimelineStateAction) => {
-				expect(result instanceof SetTimelineStateAction).toBeTruthy();
-				expect(overlaysService.getTimeStateByOverlay).toHaveBeenCalled();
-				expect(result.payload).toEqual({ state: getTimeStateByOverlayResult });
-			});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(4000) } }) });
+			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
+			expect(overlaysEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
 		});
 	});
 
 	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
-		const { runner, overlaysEffects } = setup();
 		const loadedOverlays = [
 			{ id: 'tmp', image: 'tmp_img' },
 			{ id: 'tmp2', image: 'tmp_img2' }
 		];
 		store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
-		const action = new DisplayOverlayFromStoreAction({ id: 'tmp', map_id: '4444' });
-		runner.queue(action);
-		let result: DisplayOverlayAction;
-		overlaysEffects.onDisplayOverlayFromStore$.subscribe(_result => result = _result);
-		expect(result.constructor).toEqual(DisplayOverlayAction);
-		expect(result.payload.overlay).toEqual(loadedOverlays[0] as any);
-		expect(result.payload.map_id).toEqual('4444');
+		actions = hot('--a--', { a: new DisplayOverlayFromStoreAction({ id: 'tmp', map_id: '4444' }) });
+		const expectedResults = cold('--b--', {
+			b: new DisplayOverlayAction({
+				overlay: <any>loadedOverlays[0],
+				map_id: '4444'
+			})
+		});
+		expect(overlaysEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 	});
 });

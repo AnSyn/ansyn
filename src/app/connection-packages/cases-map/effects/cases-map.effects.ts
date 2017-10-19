@@ -6,9 +6,8 @@ import { Store } from '@ngrx/store';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class CasesMapEffects {

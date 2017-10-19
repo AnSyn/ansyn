@@ -18,17 +18,17 @@ import { isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	AnnotationVisualizerAgentAction,
+	GoToAction,
 	SetActiveOverlaysFootprintModeAction,
-	SetPinLocationModeAction
+	SetPinLocationModeAction,
+	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { GoToAction, ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class ToolsAppEffects {

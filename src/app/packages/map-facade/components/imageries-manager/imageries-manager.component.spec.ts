@@ -5,7 +5,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
-import { Dispatcher, Store, StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IMapState, MapReducer } from '../../reducers/map.reducer';
 import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
@@ -35,7 +35,6 @@ describe('ImageriesManagerComponent', () => {
 				MapEffects,
 				ImageryCommunicatorService,
 				Actions,
-				Dispatcher,
 				MapFacadeService
 			],
 			imports: [

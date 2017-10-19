@@ -5,13 +5,11 @@ import { Store } from '@ngrx/store';
 import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
 import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
-import { IRouterState } from '@ansyn/router/reducers/router.reducer';
+import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
-import { routerStateSelector } from '@ansyn/router/reducers/router.reducer';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class CasesRouterEffects {

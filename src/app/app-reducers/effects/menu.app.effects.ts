@@ -8,11 +8,10 @@ import 'rxjs/add/operator/withLatestFrom';
 import { GoToExpandAction, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetBadgeAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { IAppState } from '../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 
 @Injectable()
 export class MenuAppEffects {

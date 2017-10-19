@@ -96,8 +96,9 @@ export class MapFacadeService {
 			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
 
 			const annotationVisualizer = communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-			this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
-
+			if (annotationVisualizer) {
+				this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
+			}
 		});
 
 	}

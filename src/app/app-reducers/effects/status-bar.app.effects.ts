@@ -25,6 +25,24 @@ import { cloneDeep, get, isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import {
+	BackToWorldAction,
+	PinPointModeTriggerAction,
+	SetFavoriteAction,
+	SetOverlaysNotInCaseAction
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
+	LoadOverlaysAction,
+	UpdateOverlaysCountAction
+} from '@ansyn/overlays/actions/overlays.actions';
+import {
+	FavoriteAction,
+	SetGeoFilterAction,
+	SetOrientationAction,
+	SetTimeAction
+} from '@ansyn/status-bar/actions/status-bar.actions';
 import { BackToWorldAction, PinPointModeTriggerAction, SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
 import { GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -35,15 +53,10 @@ import { OverlaysActionTypes } from '@ansyn/overlays/actions';
 import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetOverlaysNotInCaseAction } from '@ansyn/map-facade/actions/map.actions';
-import { UpdateOverlaysCountAction } from '@ansyn/overlays/actions/overlays.actions';
-import { FavoriteAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 
 @Injectable()

@@ -6,7 +6,9 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction, GoNextDisplayAction, GoPrevDisplayAction,
+	DisplayOverlayFromStoreAction,
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
@@ -19,10 +21,10 @@ import {
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
-import { casesStateSelector, ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 import { Overlay } from '../models/overlay.model';
-import { isEqual, isNil as _isNil } from 'lodash';
+import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
+import { IMapState, mapStateSelector } from '../../map-facade/reducers/map.reducer';
 
 @Injectable()
 export class OverlaysEffects {
@@ -158,10 +160,10 @@ export class OverlaysEffects {
 	@Effect()
 	displayOverlaySetTimeline$ = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, cases: ICasesState) => {
-			const displayedOverlay = overlays.overlays.get(action.payload.overlay.id);
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
+			const displayedOverlay = action.payload.overlay;
 			const timelineState = overlays.timelineState;
-			const isActiveMap: boolean = _isNil(action.payload.map_id) || isEqual(cases.selectedCase.state.maps.active_map_id, action.payload.map_id);
+			const isActiveMap = !action.payload.map_id || map.activeMapId === action.payload.map_id;
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {

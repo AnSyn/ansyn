@@ -1,5 +1,5 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
+
 import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -17,49 +17,49 @@ import {
 import * as turf from '@turf/turf';
 import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { Observable } from 'rxjs/Observable';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { cold, hot } from 'jasmine-marbles';
+import { Overlay } from '../../../packages/core/models/overlay.model';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
 	let store: Store<any>;
-	let effectsRunner: EffectsRunner;
-
+	let actions: Observable<any>;
+	const fakeOverlays = [
+		{ id: '1', footprint: 'in' },
+		{ id: '2', footprint: 'in' },
+		{ id: '3', footprint: 'out' },
+		{ id: '4', footprint: 'out' },
+		{ id: '5', footprint: 'in' }
+	] as Overlay[];
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				EffectsTestingModule,
+
 				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer, map: MapReducer })
 			],
 			providers: [
+				provideMockActions(() => actions),
 				ContextMenuAppEffects
 			]
 
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, ContextMenuAppEffects, EffectsRunner], (_store: Store<any>, _contextMenuAppEffects: ContextMenuAppEffects, _effectsRunner: EffectsRunner) => {
+	beforeEach(inject([Store, ContextMenuAppEffects], (_store: Store<any>, _contextMenuAppEffects: ContextMenuAppEffects) => {
 		store = _store;
 		contextMenuAppEffects = _contextMenuAppEffects;
-		effectsRunner = _effectsRunner;
-
-		store.dispatch(new LoadOverlaysSuccessAction([
-			{ id: '1', footprint: 'in' },
-			{ id: '2', footprint: 'in' },
-			{ id: '3', footprint: 'out' },
-			{ id: '4', footprint: 'out' },
-			{ id: '5', footprint: 'in' }
-		] as any[]));
-
+		store.dispatch(new LoadOverlaysSuccessAction(fakeOverlays));
 		spyOn(OverlaysService, 'filter').and.returnValue(['1', '2', '3', '4', '5']);
 
 		store.dispatch(new SetFiltersAction({}));
 	}));
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-		effectsRunner.queue(new ContextMenuDisplayAction('fakeId'));
-		let result: DisplayOverlayFromStoreAction;
-		contextMenuAppEffects.onContextMenuDisplayAction$.subscribe(_result => result = _result);
-		expect(result.constructor).toEqual(DisplayOverlayFromStoreAction);
-		expect(result.payload.id).toEqual('fakeId');
+		actions = hot('--a--', { a: new ContextMenuDisplayAction('fakeId') });
+		const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
+		expect(contextMenuAppEffects.onContextMenuDisplayAction$).toBeObservable(expectedResults);
 	});
 
 	it('setContextFilter$ should get point and filter filteredOverlays by footprint', () => {
@@ -71,11 +71,9 @@ describe('ContextMenuAppEffects', () => {
 			e: new MouseEvent(null, null)
 		});
 		spyOnProperty(turf, 'inside', 'get').and.returnValue((point, footprint) => footprint === 'in');
-		effectsRunner.queue(showAction);
-		let result: ContextMenuGetFilteredOverlaysAction;
-		contextMenuAppEffects.setContextFilter$.subscribe(_result => result = _result);
-		expect(result.constructor).toEqual(ContextMenuGetFilteredOverlaysAction);
-		expect(result.payload.length).toEqual(3);
+		actions = hot('--a--', { a: showAction });
+		const expectedResults = cold('--b--', { b: new ContextMenuGetFilteredOverlaysAction(fakeOverlays.filter((o) => o.footprint === 'in')) });
+		expect(contextMenuAppEffects.setContextFilter$).toBeObservable(expectedResults);
 	});
 
 });

@@ -8,11 +8,10 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
 import { Store } from '@ngrx/store';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class ContextMenuAppEffects {

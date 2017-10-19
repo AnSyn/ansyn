@@ -6,7 +6,6 @@ import { MapReducer } from '../../reducers/map.reducer';
 import { MapEffects } from '../../effects/map.effects';
 import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
-import { EffectsTestingModule } from '@ngrx/effects/testing';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -19,7 +18,7 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, EffectsTestingModule, StoreModule.forRoot({ map: MapReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ map: MapReducer })],
 			declarations: [ContextMenuComponent],
 			providers: [{ provide: MapEffects, useValue: mockMapEffects }]
 		}).compileComponents();

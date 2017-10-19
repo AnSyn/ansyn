@@ -33,7 +33,11 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { DisplayOverlayAction } from '@ansyn/overlays';
-import { IStatusBarState, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	statusBarStateSelector,
+	statusBarToastMessages
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	AddMapInstanceAction,
@@ -41,6 +45,7 @@ import {
 	EnableMapGeoOptionsActionStore,
 	PinPointTriggerAction,
 	RemoveOverlayFromLoadingOverlaysAction,
+	SetFavoriteAction,
 	SetLayoutAction,
 	SetOverlaysNotInCaseAction,
 	SynchronizeMapsAction
@@ -60,19 +65,17 @@ import {
 	SetMapGeoEnabledModeToolsActionStore,
 	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
 import {
+	ChangeLayoutAction,
 	SetMapGeoEnabledModeStatusBarActionStore,
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
@@ -137,13 +140,11 @@ export class MapAppEffects {
 			// draw the point on the map
 			const selectedCase = {
 				...caseState.selectedCase,
-				state: { ...caseState.selectedCase.state, region: region }
+				state: { ...caseState.selectedCase.state, region }
 			};
 
 			return [
-				// update case
 				new UpdateCaseAction(selectedCase),
-				// load overlays
 				new LoadOverlaysAction({
 					to: selectedCase.state.time.to,
 					from: selectedCase.state.time.from,
@@ -363,15 +364,13 @@ export class MapAppEffects {
 	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
-	addVectorLayer$: Observable<void> = this.actions$
+	addVectorLayer$: Observable<any> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.map(([action, state]: [SelectLayerAction, ICasesState]) => {
-			return [action, state.selectedCase.state.maps.active_map_id];
-		})
-		.map(([action, active_map_id]: [SelectLayerAction, string]) => {
-			const imagery = this.imageryCommunicatorService.provide(active_map_id);
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [SelectLayerAction, IMapState]) => {
+			const imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
 			imagery.addVectorLayer(action.payload);
+			return action;
 		});
 
 	/**
@@ -381,13 +380,13 @@ export class MapAppEffects {
 	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
-	removeVectorLayer$: Observable<void> = this.actions$
+	removeVectorLayer$: Observable<any> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.map(([action, state]: [UnselectLayerAction, ICasesState]) => [action, state.selectedCase.state.maps.active_map_id])
-		.map(([action, active_map_id]: [UnselectLayerAction, string]) => {
-			let imagery = this.imageryCommunicatorService.provide(active_map_id);
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [UnselectLayerAction, IMapState]) => {
+			let imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
 			imagery.removeVectorLayer(action.payload);
+			return action;
 		});
 
 	/**
@@ -401,10 +400,10 @@ export class MapAppEffects {
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, caseState]: [any, ICasesState]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([action, mapState]: [any, IMapState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
-			return communicatorsIds.length > 1 && communicatorsIds.length === caseState.selectedCase.state.maps.data.length;
+			return communicatorsIds.length > 1 && communicatorsIds.length === mapState.mapsList.length;
 		})
 		.mergeMap(() => [
 			new CompositeMapShadowAction(),
@@ -437,7 +436,7 @@ export class MapAppEffects {
 			if (statusBarState.flags.get(statusBarFlagsItems.pinPointSearch)) {
 				communicatorHandler.createMapSingleClickEvent();
 			}
-
+			return action;
 		});
 
 	/**
@@ -448,7 +447,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.map((action: AddMapInstanceAction) => {
+		.do((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.s_pluginType);
@@ -495,6 +494,7 @@ export class MapAppEffects {
 					comm.setPosition(currentMapPosition);
 				}
 			});
+			return action;
 		});
 
 	/**

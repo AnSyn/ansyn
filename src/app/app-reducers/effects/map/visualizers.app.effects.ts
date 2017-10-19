@@ -1,5 +1,5 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
-import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import {
 	DrawOverlaysOnMapTriggerAction,
@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app-reducers.module';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
 	DisplayOverlayFromStoreAction,
@@ -26,26 +26,22 @@ import {
 	FootprintPolylineVisualizer,
 	FootprintPolylineVisualizerType
 } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/hitmap-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import {
+	AnnotationVisualizerAgentAction,
+	GoToInputChangeAction,
+	ToolsActionsTypes
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
-import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	AnnotationVisualizerAgentAction,
-	GoToInputChangeAction
-} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class VisualizersAppEffects {

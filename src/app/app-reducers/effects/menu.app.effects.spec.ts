@@ -1,6 +1,5 @@
 import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
 import { AddCaseSuccessAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
-import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
@@ -9,25 +8,30 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { IAppState } from '../';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
+import { Observable } from 'rxjs/Observable';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { cold, hot } from 'jasmine-marbles';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
-	let effectsRunner: EffectsRunner;
 	let app_state: IAppState;
 	let store: Store<any>;
+	let actions: Observable<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [EffectsTestingModule, StoreModule.forRoot({ menu: MenuReducer, cases: CasesReducer })],
-			providers: [MenuAppEffects]
+			imports: [StoreModule.forRoot({ menu: MenuReducer, cases: CasesReducer })],
+			providers: [
+				provideMockActions(() => actions),
+				MenuAppEffects
+			]
 
 		}).compileComponents();
 	}));
 
 
-	beforeEach(inject([MenuAppEffects, EffectsRunner], (_menuAppEffects: MenuAppEffects, _effectsRunner: EffectsRunner) => {
+	beforeEach(inject([MenuAppEffects], (_menuAppEffects: MenuAppEffects) => {
 		menuAppEffects = _menuAppEffects;
-		effectsRunner = _effectsRunner;
 	}));
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
@@ -84,14 +88,9 @@ describe('MenuAppEffects', () => {
 	}));
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
-		let count = 0;
-		let action: ContainerChangedTriggerAction = new ContainerChangedTriggerAction();
-		effectsRunner.queue(action);
-		menuAppEffects.onContainerChanged$.subscribe((_result: UpdateMapSizeAction | RedrawTimelineAction | any) => {
-			expect(_result instanceof UpdateMapSizeAction || _result instanceof RedrawTimelineAction).toBeTruthy();
-			count = count + 1;
-		});
-		expect(count).toEqual(2);
+		actions = hot('--a--', { a: new ContainerChangedTriggerAction() });
+		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction(true) });
+		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
 });

@@ -7,8 +7,11 @@ import {
 	ActiveMapChangedAction,
 	BackToWorldAction,
 	MapActionTypes,
-	MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
-	PositionChangedAction, SetLayoutAction,
+	MapsListChangedAction,
+	PinLocationModeTriggerAction,
+	PinPointModeTriggerAction,
+	PositionChangedAction,
+	SetLayoutAction,
 	SetMapsDataActionStore
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';

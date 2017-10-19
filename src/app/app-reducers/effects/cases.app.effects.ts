@@ -22,11 +22,10 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
 import { BaseContextSourceProvider, ContextCriteria } from '@ansyn/context';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class CasesAppEffects {

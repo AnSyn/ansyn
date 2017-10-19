@@ -22,7 +22,6 @@ export const ToolsActionsTypes = {
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
 	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU')
-
 };
 
 export class StartMouseShadow implements Action {
@@ -151,7 +150,7 @@ export class EnableImageProcessing implements Action {
 export class AnnotationVisualizerAgentAction implements Action {
 	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
 
-	constructor(public payload: any) {
+	constructor(public payload) {
 	}
 }
 

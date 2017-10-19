@@ -8,11 +8,29 @@ export const LayersActionTypes = {
 
 	SELECT_LAYER: 'SELECT_LAYER',
 	UNSELECT_LAYER: 'UNSELECT_LAYER',
+	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
+	COMMANDS: {
+		SHOW_ANNOTATIONS_LAYER: 'SHOW_ANNOTATIONS_LAYER',
+		HIDE_ANNOTATIONS_LAYER: 'HIDE_ANNOTATIONS_LAYER'
+	}
 
-	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS'
 };
 
 export type LayersActions = any;
+
+export class ShowAnnotationsLayer implements Action{
+	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER;
+
+	constructor(public payload: { update: boolean }) {
+	}
+}
+
+export class HideAnnotationsLayer implements Action{
+	type = LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER;
+
+	constructor(public payload: {update: boolean}) {}
+}
+
 
 export class BeginLayerTreeLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;

@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
-import { Injectable } from '@angular/core';
+import {  Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -21,15 +21,26 @@ import {
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
-import { CasesService } from '../services/cases.service';
+import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
 import { Case } from '@ansyn/core';
-
+import { deepMerge } from '@ansyn/core/utils';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
+import { ICasesConfig } from '../models/cases-config';
+
 
 @Injectable()
 export class CasesEffects {
+
+	@Effect()
+	supportOldCaseVersions$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.map(({ payload }: SelectCaseAction) => {
+			const newCase = deepMerge(this.caseConfig.defaultCase, payload);
+			return new UpdateCaseAction(newCase);
+
+		});
 
 	/**
 	 * @type Effect
@@ -298,7 +309,8 @@ export class CasesEffects {
 
 	constructor(private actions$: Actions,
 				private casesService: CasesService,
-				private store: Store<ICasesState>) {
+				private store: Store<ICasesState>,
+				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 }
 

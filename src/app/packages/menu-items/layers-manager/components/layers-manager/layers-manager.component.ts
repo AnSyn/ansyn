@@ -12,6 +12,7 @@ import { layersStateSelector } from '../../reducers/layers.reducer';
 	templateUrl: './layers-manager.component.html',
 	styleUrls: ['./layers-manager.component.less']
 })
+
 export class LayersManagerComponent {
 
 	public nodes: Observable<ILayerTreeNode[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);

@@ -49,6 +49,7 @@ import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions
 import { IOverlaysState, OverlayReducer, overlaysInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -150,6 +151,10 @@ describe('MapAppEffects', () => {
 				MapAppEffects,
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
+				{
+					provide: mapFacadeConfig,
+					useValue: {}
+				},
 				{
 					provide: OverlaysConfig, useValue: {
 					'baseUrl': 'http://localhost:9001/api/v1/',

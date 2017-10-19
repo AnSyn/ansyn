@@ -10,7 +10,7 @@ import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { IdahoOverlaysSourceConfig } from './app/app-providers/overlay-source-providers/idaho-source-provider';
 import { LoginConfig } from '@ansyn/login';
 import { enableProdMode } from '@angular/core';
-import { mapFacadeConfig } from './app/packages/map-facade/models/map-facade.config';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 const getProviders = (conf): any[] => {
 	return [

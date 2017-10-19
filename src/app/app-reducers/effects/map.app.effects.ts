@@ -70,7 +70,7 @@ import {
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '../../packages/map-facade/models/map-facade.config';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 @Injectable()
 export class MapAppEffects {

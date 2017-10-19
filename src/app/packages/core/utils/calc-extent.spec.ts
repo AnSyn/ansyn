@@ -51,7 +51,6 @@ describe('calc-extent', () => {
 			const polygon = extentToPolygon(extent);
 
 			expect(polygon.geometry.type).toBe('Polygon');
-			console.log(polygon.geometry.coordinates);
 			expect(polygon.geometry.coordinates).toEqual([[[0, 5], [0, 1], [4, 1], [4, 5], [0, 5]]]);
 		});
 	});

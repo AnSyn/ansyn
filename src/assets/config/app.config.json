@@ -117,6 +117,9 @@
 			}
 		]
 	},
+	"mapFacadeConfig": {
+		"overlayCoverage": 0.1
+	},
 	"filtersConfig": {
 		"filters": [
 			{

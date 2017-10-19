@@ -10,6 +10,7 @@ import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { IdahoOverlaysSourceConfig } from './app/app-providers/overlay-source-providers/idaho-source-provider';
 import { LoginConfig } from '@ansyn/login';
 import { enableProdMode } from '@angular/core';
+import { mapFacadeConfig } from './app/packages/map-facade/models/map-facade.config';
 
 const getProviders = (conf): any[] => {
 	return [
@@ -51,11 +52,14 @@ const getProviders = (conf): any[] => {
 			provide: LoginConfig,
 			useValue: conf.loginConfig
 		},
-
+		{
+			provide: mapFacadeConfig,
+			useValue: conf.mapFacadeConfig
+		}
 	];
 };
 
-const bootsrapApplicationModule = (): void => {
+const bootstrapApplicationModule = (): void => {
 	fetch('/assets/config/app.config.json')
 		.then(response => response.json())
 		.then(conf => {
@@ -70,4 +74,4 @@ const bootsrapApplicationModule = (): void => {
 		});
 };
 
-bootsrapApplicationModule();
+bootstrapApplicationModule();

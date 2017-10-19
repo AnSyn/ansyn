@@ -49,8 +49,8 @@ import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/acti
 import {
 	calcGeoJSONExtent,
 	endTimingLog,
+	getFootprintIntersectionRatioInExtent,
 	getPointByPolygon,
-	isExtentContainedInPolygon,
 	startTimingLog
 } from '@ansyn/core/utils';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
@@ -69,8 +69,8 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils';
-import { IMapConfig } from '../../packages/imagery/model/iimagery-config';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '../../packages/map-facade/models/map-facade.config';
 
 @Injectable()
 export class MapAppEffects {
@@ -213,7 +213,7 @@ export class MapAppEffects {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			let extent;
-			if (intersection > 0.1) {
+			if (intersection > this.config.overlayCoverage) {
 				extent = position.boundingBox;
 			} else {
 				extent = calcGeoJSONExtent(overlay.footprint);
@@ -665,6 +665,7 @@ export class MapAppEffects {
 	constructor(private actions$: Actions,
 				private store$: Store<IAppState>,
 				private imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[]) {
 	}
 }

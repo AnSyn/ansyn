@@ -15,7 +15,6 @@ import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ContextProxySourceService } from './context-source-providers/context-proxy-source.service';
-import { MapVisualizer } from '@ansyn/imagery/imagery.module';
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { FootprintPolygonVisualizer } from '@ansyn/open-layer-visualizers/overlays/polygon-visualizer';
 import { ContextEntityVisualizer } from '../app-visualizers/context-entity.visualizer';
@@ -23,6 +22,7 @@ import { FootprintHitmapVisualizer } from '@ansyn/open-layer-visualizers/overlay
 import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
+import { MapVisualizer } from '../packages/imagery/model/imap-visualizer';
 
 @NgModule({
 	imports: [

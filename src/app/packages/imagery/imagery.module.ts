@@ -1,13 +1,10 @@
-import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery-component/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { ImageryProviderService } from './provider-service/provider.service';
 import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './configuration.token';
-import { IMapVisualizer } from './model/imap-visualizer';
-
-export const MapVisualizer: InjectionToken<IMapVisualizer> = new InjectionToken('map-visualizer');
 
 @NgModule({
 	imports: [CommonModule],

@@ -1,5 +1,5 @@
 import { IMap } from './imap';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, InjectionToken } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 
 export interface IVisualizerEntity {
@@ -72,5 +72,6 @@ export interface IMapVisualizer {
 	 */
 
 	setHoverFeature(id: string);
-
 }
+
+export const MapVisualizer: InjectionToken<IMapVisualizer> = new InjectionToken('map-visualizer');

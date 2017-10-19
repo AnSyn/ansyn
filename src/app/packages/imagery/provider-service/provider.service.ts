@@ -1,9 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
+import { MapVisualizer } from '../imagery.module';
+import { IMapVisualizer } from '../model/imap-visualizer';
 
 export interface IProvidedMap {
 	mapType: string;
 	mapComponent: any;
+}
+
+export interface InjectedMapVisualizer {
+	type: string;
+	visualizer: IMapVisualizer
 }
 
 @Injectable()
@@ -13,12 +20,13 @@ export class ImageryProviderService {
 	private _mapPluginProviders: { [mapType: string]: [{ 'pluginClass': any }] };
 	private _mapVisualizersProviders: Map<string, [{ 'visualizerClass': any, args: any }]>;
 
-	constructor() {
-		// console.error(mapVisualizers);
-
+	constructor(@Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[]) {
 		this._mapProviders = {};
 		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();
+
+		mapVisualizers.forEach(mapVisualizer =>
+			this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer));
 	}
 
 	public registerMapProvider(mapName: string, mapType: string, component: any) {

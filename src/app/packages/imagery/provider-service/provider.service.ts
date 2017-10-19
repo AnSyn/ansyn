@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
 
-
 export interface IProvidedMap {
 	mapType: string;
 	mapComponent: any;
@@ -15,6 +14,8 @@ export class ImageryProviderService {
 	private _mapVisualizersProviders: Map<string, [{ 'visualizerClass': any, args: any }]>;
 
 	constructor() {
+		// console.error(mapVisualizers);
+
 		this._mapProviders = {};
 		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();

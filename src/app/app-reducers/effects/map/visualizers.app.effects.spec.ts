@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
@@ -22,12 +22,10 @@ import { AddCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/
 import { Case } from '@ansyn/core/models/case.model';
 import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
-import { casesFeatureKey } from '../../../packages/menu-items/cases/reducers/cases.reducer';
-import { mapFeatureKey } from '../../../packages/map-facade/reducers/map.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

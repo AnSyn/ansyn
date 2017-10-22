@@ -3,7 +3,7 @@ import { AddCaseSuccessAction, CasesReducer, SelectCaseByIdAction } from '@ansyn
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { IAppState } from '../';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -11,8 +11,7 @@ import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions'
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { menuFeatureKey } from '../../packages/menu/reducers/menu.reducer';
-import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

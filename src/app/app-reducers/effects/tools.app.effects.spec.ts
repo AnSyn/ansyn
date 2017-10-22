@@ -5,7 +5,7 @@ import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	GoToAction,
 	PullActiveCenter,
@@ -26,12 +26,10 @@ import {
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { toolsFeatureKey } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -104,9 +102,7 @@ describe('ToolsAppEffects', () => {
 			[casesStateSelector, icaseState],
 			[mapStateSelector, imapState]
 		]);
-		spyOn(store, 'select').and.callFake(type => {
-			return Observable.of(fakeStore.get(type));
-		});
+		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ToolsAppEffects], (_imageryCommunicatorService: ImageryCommunicatorService, _toolsAppEffects: ToolsAppEffects) => {

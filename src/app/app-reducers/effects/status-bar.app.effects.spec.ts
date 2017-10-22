@@ -8,26 +8,27 @@ import {
 	SetTimeAction,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { statusBarFlagsItems, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import {
+	statusBarFeatureKey,
+	statusBarFlagsItems,
+	StatusBarReducer
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { AddCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
 import { BackToWorldViewAction, ExpandAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarFeatureKey } from '../../packages/status-bar/reducers/status-bar.reducer';
-import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
-import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

@@ -112,9 +112,7 @@ describe('AnsynComponent', () => {
 		]);
 
 
-		spyOn(store, 'select').and.callFake(type => {
-			return mockStore.get(type);
-		});
+		spyOn(store, 'select').and.callFake(type => mockStore.get(type));
 
 
 	}));

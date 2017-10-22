@@ -26,9 +26,7 @@ describe('overlaysDisplayModeComponent', () => {
 			[toolsStateSelector, { activeOverlaysFootprintMode: 'None' }],
 		]);
 
-		spyOn(store, 'select').and.callFake(type => {
-			return Observable.of(fakeStore.get(type));
-		});
+		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(() => {

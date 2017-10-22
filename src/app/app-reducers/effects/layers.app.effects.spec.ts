@@ -1,4 +1,4 @@
-import { LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { layersFeatureKey, LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { BeginLayerTreeLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -9,7 +9,6 @@ import { Case } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { layersFeatureKey } from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;

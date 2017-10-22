@@ -2,18 +2,16 @@ import { async, inject, TestBed } from '@angular/core/testing';
 
 import { ContextEntityAppEffects } from './context-entity.app.effect';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstanceAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -102,9 +100,7 @@ describe('ContextEntityAppEffects', () => {
 			[casesStateSelector, icaseState],
 			[mapStateSelector, iMapState]
 		]);
-		spyOn(store, 'select').and.callFake(type => {
-			return Observable.of(fakeStore.get(type));
-		});
+		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([Store, ContextEntityAppEffects, ImageryCommunicatorService], (_store: Store<any>, _ContextEntityAppEffects: ContextEntityAppEffects, _imageryCommunicatorService: ImageryCommunicatorService) => {

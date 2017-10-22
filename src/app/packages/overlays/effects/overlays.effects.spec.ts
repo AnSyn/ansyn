@@ -102,7 +102,7 @@ describe('Overlays Effects ', () => {
 
 	it('it should load all the overlays', () => {
 		let tmp = <Overlay[]>[];
-		overlays.forEach(i => tmp.push(Object.assign({}, i, {})));
+		overlays.forEach(overlay => tmp.push({ ...overlay }));
 		overlaysService.search.and.returnValue(Observable.of(overlays));
 		actions = hot('--a--', { a: new LoadOverlaysAction() });
 		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(tmp) });

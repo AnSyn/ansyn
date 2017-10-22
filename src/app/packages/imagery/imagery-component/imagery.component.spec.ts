@@ -5,9 +5,6 @@ import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
-import { MapVisualizer } from '../model/imap-visualizer.token';
-import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
-import { ContextEntityVisualizer } from '../../../app-visualizers/context-entity.visualizer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -52,14 +49,6 @@ describe('ImageryComponent', () => {
 			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
-				{
-					provide: MapVisualizer,
-					multi: true,
-					useValue: {
-						type: 'someType',
-						visualizer: 'some visualizer'
-					}
-				},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
 					provide: ConfigurationToken, useValue: {

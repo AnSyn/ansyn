@@ -52,7 +52,6 @@ import GeoJSON from 'ol/format/geojson';
 import { AnnotationVisualizerAgentAction } from '../../../packages/menu-items/tools/actions/tools.actions';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
-
 @Injectable()
 export class VisualizersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>('cases')
@@ -320,7 +319,7 @@ export class VisualizersAppEffects {
 					return;
 			}
 
-			const visualizers = relevantMapsIds
+			const visualizers: Array<AnnotationsVisualizer> = relevantMapsIds
 				.map(id => {
 					const communicator = this.imageryCommunicatorService.provide(id);
 					if (!communicator) {
@@ -441,29 +440,34 @@ export class VisualizersAppEffects {
 	}
 
 	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true) {
+		if (!mapData) {
+			return;
+		}
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
-			const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
-			if (!gotoVisualizer) {
-				return;
-			}
-			if (gotoExpand) {
-				const gotoPoint: GeoJSON.Point = {
-					type: 'Point',
-					coordinates: point
-				};
-				const gotoFeatureJson: GeoJSON.Feature<any> = {
-					type: 'Feature',
-					geometry: gotoPoint,
-					properties: {}
-				};
-				gotoVisualizer.clearEntities();
-				gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-			} else {
-				gotoVisualizer.clearEntities();
-			}
-
+			return;
 		}
+		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+		if (!gotoVisualizer) {
+			return;
+		}
+		if (gotoExpand) {
+			const gotoPoint: GeoJSON.Point = {
+				type: 'Point',
+				coordinates: point
+			};
+			const gotoFeatureJson: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: gotoPoint,
+				properties: {}
+			};
+			gotoVisualizer.clearEntities();
+			gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
+		} else {
+			gotoVisualizer.clearEntities();
+		}
+
+
 	}
 
 	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]) {

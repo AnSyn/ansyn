@@ -73,5 +73,3 @@ export interface IMapVisualizer {
 
 	setHoverFeature(id: string);
 }
-
-export const MapVisualizer: InjectionToken<IMapVisualizer> = new InjectionToken('map-visualizer');

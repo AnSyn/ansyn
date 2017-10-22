@@ -1,11 +1,27 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryProviderService } from './provider.service';
+import { MapVisualizer } from '../model/imap-visualizer.token';
+import { OpenLayersVisualizerMapType } from '../../open-layer-visualizers/open-layer-visualizers.module';
+import { ContextEntityVisualizer } from '../../../app-visualizers/context-entity.visualizer';
 
 describe('ImageryProviderService', () => {
 	let imageryProviderService: ImageryProviderService;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({ declarations: [], providers: [ImageryProviderService] }).compileComponents();
+		TestBed.configureTestingModule({
+			declarations: [],
+			providers: [
+				ImageryProviderService,
+				{
+					provide: MapVisualizer,
+					multi: true,
+					useValue: {
+						type: OpenLayersVisualizerMapType,
+						visualizer: ContextEntityVisualizer
+					}
+				}
+			]
+		}).compileComponents();
 	}));
 
 	beforeEach(inject([ImageryProviderService], (_ImageryProviderService) => {

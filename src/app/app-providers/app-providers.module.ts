@@ -22,7 +22,7 @@ import { FootprintHitmapVisualizer } from '@ansyn/open-layer-visualizers/overlay
 import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
-import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer';
+import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 
 @NgModule({
 	imports: [

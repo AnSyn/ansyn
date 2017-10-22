@@ -1,6 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { EditCaseComponent } from './edit-case.component';
-import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
 import { Observable } from 'rxjs/Observable';
@@ -35,7 +35,7 @@ describe('EditCaseComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ cases: CasesReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]

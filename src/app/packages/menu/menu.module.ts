@@ -6,13 +6,20 @@ import { EffectsModule } from '@ngrx/effects';
 import { MenuEffects } from './effects/menu.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MenuItem } from './models/menu-item.model';
-import { Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
+import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
 
 export const MENU_ITEMS = new InjectionToken<MenuItem[]>('MENU_ITEMS');
 
 @NgModule({
-	imports: [CommonModule, CoreModule, EffectsModule.forFeature([MenuEffects]), BrowserAnimationsModule],
+	imports: [
+		CommonModule,
+		CoreModule,
+		StoreModule.forFeature(menuFeatureKey, MenuReducer),
+		EffectsModule.forFeature([MenuEffects]),
+		BrowserAnimationsModule
+	],
 	declarations: [MenuComponent],
 	exports: [MenuComponent]
 })

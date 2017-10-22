@@ -9,9 +9,18 @@ import { ImageryContainerComponent } from './components/imagery-container/imager
 import { CoreModule } from '@ansyn/core';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { FormsModule } from '@angular/forms';
+import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
-	imports: [EffectsModule.forFeature([MapEffects]), ImageryModule, CommonModule, CoreModule, FormsModule],
+	imports: [
+		StoreModule.forFeature(mapFeatureKey, MapReducer),
+		EffectsModule.forFeature([MapEffects]),
+		ImageryModule,
+		CommonModule,
+		CoreModule,
+		FormsModule
+	],
 	providers: [MapFacadeService],
 	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ContextMenuComponent],
 	exports: [ImageriesManagerComponent]

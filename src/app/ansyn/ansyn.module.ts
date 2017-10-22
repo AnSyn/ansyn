@@ -32,6 +32,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
 	imports: [
+		CasesModule,
+		OverlaysModule,
 		CommonModule,
 		AppProvidersModule,
 		OpenLayerCenterMarkerPluginModule,
@@ -43,8 +45,6 @@ import { HttpClientModule } from '@angular/common/http';
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynMenuItems),
-		OverlaysModule,
-		CasesModule,
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,

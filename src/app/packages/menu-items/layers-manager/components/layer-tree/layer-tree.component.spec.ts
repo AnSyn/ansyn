@@ -7,7 +7,7 @@ import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
 import { StoreModule } from '@ngrx/store';
-import { LayersReducer } from '../../reducers/layers.reducer';
+import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 
@@ -29,7 +29,7 @@ describe('LayerTreeComponent', () => {
 				LayersManagerModule,
 				HttpClientModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ layers: LayersReducer })
+				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
 		})

@@ -25,6 +25,9 @@ import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlay
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { statusBarFeatureKey } from '../../packages/status-bar/reducers/status-bar.reducer';
+import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -57,9 +60,9 @@ describe('StatusBarAppEffects', () => {
 				HttpClientModule,
 
 				StoreModule.forRoot({
-					status_bar: StatusBarReducer,
-					cases: CasesReducer,
-					overlays: OverlayReducer
+					[statusBarFeatureKey]: StatusBarReducer,
+					[casesFeatureKey]: CasesReducer,
+					[overlaysFeatureKey]: OverlayReducer
 				})
 			],
 			providers: [
@@ -141,7 +144,7 @@ describe('StatusBarAppEffects', () => {
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(statusBarAppEffects.updatePinPointSearchAction$).toBeObservable(expectedResults);
-		expect(imagery1.createMapSingleClickEvent['calls'].count()).toBe(2);
+		expect(imagery1.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
 	});
 
 	it('updatePinPointIndicatorAction$ - add', () => {

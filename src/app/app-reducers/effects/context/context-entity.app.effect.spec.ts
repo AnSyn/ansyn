@@ -12,6 +12,8 @@ import { MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.red
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -73,7 +75,7 @@ describe('ContextEntityAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 
-				StoreModule.forRoot({ cases: CasesReducer, map: MapReducer })
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer, [mapFeatureKey]: MapReducer })
 			],
 			providers: [
 				provideMockActions(() => actions),

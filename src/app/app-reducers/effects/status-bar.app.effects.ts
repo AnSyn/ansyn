@@ -63,7 +63,7 @@ export class StatusBarAppEffects {
 	 * @type Effect
 	 * @name updatePinPointSearchAction$
 	 * @ofType UpdateStatusFlagsAction
-	 * @dependencies status_bar
+	 * @dependencies statusBar
 	 * @filter update pinPointSearch and in pinPointSearch
 	 */
 	@Effect({ dispatch: false })
@@ -80,7 +80,7 @@ export class StatusBarAppEffects {
 	 * @type Effect
 	 * @name updatePinPointIndicatorAction$
 	 * @ofType UpdateStatusFlagsAction
-	 * @dependencies status_bar, cases
+	 * @dependencies statusBar, cases
 	 * @filter update pinPointIndicator
 	 */
 	@Effect({ dispatch: false })
@@ -284,7 +284,7 @@ export class StatusBarAppEffects {
 	 * @type Effect
 	 * @name updatePinPointModeAction$
 	 * @ofType UpdateStatusFlagsAction
-	 * @dependencies status_bar
+	 * @dependencies statusBar
 	 * @filter is action pinPointSearch
 	 * @action PinPointModeTriggerAction
 	 */

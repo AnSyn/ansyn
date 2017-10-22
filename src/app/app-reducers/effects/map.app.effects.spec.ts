@@ -59,6 +59,10 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { mapFeatureKey } from '../../packages/map-facade/reducers/map.reducer';
+import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
+import { statusBarFeatureKey } from '../../packages/status-bar/reducers/status-bar.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -151,10 +155,10 @@ describe('MapAppEffects', () => {
 				HttpClientModule,
 
 				StoreModule.forRoot({
-					cases: CasesReducer,
-					status_bar: StatusBarReducer,
-					overlays: OverlayReducer,
-					map: MapReducer
+					[casesFeatureKey]: CasesReducer,
+					[statusBarFeatureKey]: StatusBarReducer,
+					[overlaysFeatureKey]: OverlayReducer,
+					[mapFeatureKey]: MapReducer
 				})],
 			providers: [
 				MapAppEffects,
@@ -261,7 +265,7 @@ describe('MapAppEffects', () => {
 		const b = new PinPointTriggerAction(lonLat);
 		const expectedResults = cold('--(ab)--', { a, b });
 		expect(mapAppEffects.onMapSingleClick$).toBeObservable(expectedResults);
-		expect(imagery1.removeSingleClickEvent['calls'].count()).toBe(3);
+		expect(imagery1.removeSingleClickEvent).toHaveBeenCalledTimes(3);
 	});
 
 	it('onPinPointTrigger$ effect', () => {
@@ -290,7 +294,7 @@ describe('MapAppEffects', () => {
 
 		const expectedResults = cold('--(ab)--', { a, b });
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
-		expect(imagery1.addPinPointIndicator['calls'].count()).toBe(3);
+		expect(imagery1.addPinPointIndicator).toHaveBeenCalledTimes(3);
 	});
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {

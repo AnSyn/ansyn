@@ -5,7 +5,7 @@ import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { StoreModule } from '@ngrx/store';
-import { CasesReducer } from '../../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,7 +21,7 @@ describe('ModalContainerComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ cases: CasesReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [

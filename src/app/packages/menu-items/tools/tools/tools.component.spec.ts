@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { GoToExpandAction, StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
-import { ToolsReducer } from '../reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 
 
@@ -25,7 +25,7 @@ describe('ToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ tools: ToolsReducer })],
+			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
 			declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode, mock_annotations_control]
 		})
 			.compileComponents();

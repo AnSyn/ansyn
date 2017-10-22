@@ -56,8 +56,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	overlaysCount: 0,
 	overlayNotInCase: false
 };
-
-export const statusBarStateSelector = createFeatureSelector<IStatusBarState>('status_bar');
+export const statusBarFeatureKey = 'statusBar';
+export const statusBarStateSelector = createFeatureSelector<IStatusBarState>(statusBarFeatureKey);
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState {
 	switch (action.type) {

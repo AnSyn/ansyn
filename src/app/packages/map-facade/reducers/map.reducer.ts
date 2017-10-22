@@ -24,7 +24,9 @@ export const initialMapState: IMapState = {
 	mapsList: [],
 };
 
-export const mapStateSelector = createFeatureSelector<IMapState>('map');
+export const mapFeatureKey = 'map';
+
+export const mapStateSelector = createFeatureSelector<IMapState>(mapFeatureKey);
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
 

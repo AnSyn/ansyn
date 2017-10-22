@@ -4,11 +4,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { RouterEffects } from './effects/router.effects';
 import { AnsynRouterService } from './services/router.service';
 import { RouterModule } from '@angular/router';
+import { routerFeatureKey, RouterReducer } from './reducers/router.reducer';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		RouterModule,
+		StoreModule.forFeature(routerFeatureKey, RouterReducer),
 		EffectsModule.forFeature([RouterEffects])
 	],
 	declarations: [],

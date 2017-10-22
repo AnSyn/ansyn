@@ -14,6 +14,8 @@ export const initialLayersState: ILayerState = {
 	selectedLayers: []
 };
 
+export const layersFeatureKey = 'layers';
+
 export const layersStateSelector = createFeatureSelector<ILayerState>('layers');
 
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions) {

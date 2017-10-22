@@ -1,6 +1,6 @@
 import { SaveCaseAsAction } from '../../actions/cases.actions';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
@@ -34,7 +34,7 @@ describe('SaveCaseComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ cases: CasesReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]

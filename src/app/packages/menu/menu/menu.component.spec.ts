@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { MenuComponent } from './menu.component';
 import { MenuItem } from '../models';
 import { Store, StoreModule } from '@ngrx/store';
-import { IMenuState, MenuReducer } from '../reducers/menu.reducer';
+import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reducer';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction } from '../actions/menu.actions';
@@ -15,7 +15,7 @@ describe('MenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule, StoreModule.forRoot({ menu: MenuReducer })],
+			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer })],
 			declarations: [MenuComponent]
 		}).compileComponents();
 	}));

@@ -10,11 +10,14 @@ import { OverlaysConfig, OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from './effects/overlays.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		HttpClientModule,
+		StoreModule.forFeature(overlaysFeatureKey, OverlayReducer),
 		EffectsModule.forFeature([OverlaysEffects])
 	],
 

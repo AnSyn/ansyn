@@ -16,8 +16,8 @@ export const toolsInitialState: IToolsState = {
 };
 
 toolsInitialState.flags.set('geo_registered_options_enabled', true);
-
-export const toolsStateSelector = createFeatureSelector<IToolsState>('tools');
+export const toolsFeatureKey = 'tools';
+export const toolsStateSelector = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<string, boolean>;

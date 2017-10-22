@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MapFacadeService } from './map-facade.service';
 import { StoreModule } from '@ngrx/store';
 import { ImageryModule } from '@ansyn/imagery';
-import { MapReducer } from '../reducers/map.reducer';
+import { mapFeatureKey, MapReducer } from '../reducers/map.reducer';
 
 describe('MapFacadeService', () => {
 	beforeEach(() => {
@@ -11,7 +11,7 @@ describe('MapFacadeService', () => {
 			providers: [
 				MapFacadeService
 			],
-			imports: [ImageryModule, StoreModule.forRoot({ map: MapReducer })]
+			imports: [ImageryModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })]
 		});
 	});
 

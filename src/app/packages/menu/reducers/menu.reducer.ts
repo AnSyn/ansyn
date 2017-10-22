@@ -19,7 +19,9 @@ export const initialMenuState: IMenuState = {
 	clickOutside: true
 };
 
-export const menuStateSelector = createFeatureSelector<IMenuState>('menu');
+export const menuFeatureKey = 'menu';
+
+export const menuStateSelector = createFeatureSelector<IMenuState>(menuFeatureKey);
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 

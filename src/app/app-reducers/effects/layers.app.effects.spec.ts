@@ -9,6 +9,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { layersFeatureKey } from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -16,7 +17,7 @@ describe('LayersAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ layers: LayersReducer })],
+			imports: [StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })],
 			providers: [
 				provideMockActions(() => actions),
 				LayersAppEffects

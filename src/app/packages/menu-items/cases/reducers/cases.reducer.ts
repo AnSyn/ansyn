@@ -24,7 +24,9 @@ export const initialCasesState: ICasesState = {
 	updatingBackend: false
 };
 
-export const casesStateSelector = createFeatureSelector<ICasesState>('cases');
+export const casesFeatureKey = 'cases';
+
+export const casesStateSelector = createFeatureSelector<ICasesState>(casesFeatureKey);
 
 export function CasesReducer(state: ICasesState = initialCasesState, action: CasesActions) {
 

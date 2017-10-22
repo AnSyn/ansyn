@@ -87,7 +87,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onMapSingleClick$
 	 * @ofType MapSingleClickAction
-	 * @dependencies cases, status_bar
+	 * @dependencies cases, statusBar
 	 * @filter In pin point search
 	 * @action UpdateStatusFlagsAction, PinPointTriggerAction
 	 */
@@ -115,7 +115,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onPinPointTrigger$
 	 * @ofType PinPointTriggerAction
-	 * @dependencies cases, status_bar
+	 * @dependencies cases, statusBar
 	 * @action UpdateCaseAction, LoadOverlaysAction
 	 */
 	@Effect()
@@ -414,7 +414,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onAddCommunicatorShowPinPoint$
 	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
-	 * @dependencies cases, status_bar
+	 * @dependencies cases, statusBar
 	 * @filter There is a pinPointIndicator or pinPointSearch
 	 */
 	@Effect({ dispatch: false })
@@ -457,7 +457,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onSelectCaseByIdAddPinPointIndicator$
 	 * @ofType SelectCaseAction
-	 * @dependencies cases, status_bar
+	 * @dependencies cases, statusBar
 	 * @filter There is a pinPointIndicator or pinPointSearch
 	 */
 	@Effect({ dispatch: false })
@@ -564,7 +564,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onLayoutChange$
 	 * @ofType ChangeLayoutAction
-	 * @dependencies cases, status_bar
+	 * @dependencies cases, statusBar
 	 * @action UpdateCaseAction?, SetLayoutAction
 	 */
 	@Effect()

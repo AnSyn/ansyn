@@ -1,6 +1,6 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { StoreModule } from '@ngrx/store';
-import { FiltersReducer } from '../../reducer/filters.reducer';
+import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersModule } from '../../filters.module';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -12,7 +12,7 @@ describe('EnumFilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FiltersModule, StoreModule.forRoot({ filters: FiltersReducer })]
+			imports: [FiltersModule, StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })]
 		})
 			.compileComponents();
 	}));

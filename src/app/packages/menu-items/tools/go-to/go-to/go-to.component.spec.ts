@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { GoToComponent } from './go-to.component';
 import { toolsConfig } from '../../models';
 import { Store, StoreModule } from '@ngrx/store';
-import { IToolsState, ToolsReducer } from '../../reducers/tools.reducer';
+import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import * as utilcovertProjectionss from '@ansyn/core/utils/covert-projections';
@@ -14,7 +14,7 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, StoreModule.forRoot({ tools: ToolsReducer })],
+			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
 			providers: [
 				{
 					provide: toolsConfig, useValue: {

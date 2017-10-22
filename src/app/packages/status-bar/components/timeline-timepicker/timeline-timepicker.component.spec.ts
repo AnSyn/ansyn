@@ -1,17 +1,16 @@
 import { TimelineTimepickerComponent } from './timeline-timepicker.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusBarModule } from '../../status-bar.module';
+import { StoreModule } from '@ngrx/store';
 
 
 describe('TimelineTimepickerComponent', () => {
-	// const FlatpickrService = new  InjectionToken<Flatpickr>("flickr");
 	let component: TimelineTimepickerComponent;
 	let fixture: ComponentFixture<TimelineTimepickerComponent>;
-	// let flatpickr: Flatpickr;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule],
+			imports: [StoreModule.forRoot([]), StatusBarModule],
 		}).compileComponents();
 	});
 

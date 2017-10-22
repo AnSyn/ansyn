@@ -1,7 +1,10 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems, StatusBarReducer } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState, statusBarFeatureKey, statusBarFlagsItems,
+	StatusBarReducer
+} from '../../reducers/status-bar.reducer';
 import { StatusBarModule } from '../../status-bar.module';
 import {
 	ChangeLayoutAction,
@@ -19,7 +22,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.forRoot({ status_bar: StatusBarReducer })],
+			imports: [StatusBarModule, StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer })],
 		})
 			.compileComponents();
 	}));

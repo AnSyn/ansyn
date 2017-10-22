@@ -25,8 +25,10 @@ export class ImageryProviderService {
 		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();
 
-		mapVisualizers.forEach(mapVisualizer =>
-			this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer));
+		if (mapVisualizers) {
+			mapVisualizers.forEach(mapVisualizer =>
+				this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer));
+		}
 	}
 
 	public registerMapProvider(mapName: string, mapType: string, component: any) {

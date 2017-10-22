@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 02/08/2017.
- */
 import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';

@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 15/06/2017.
- */
 export class Spinner {
 
 	private element;

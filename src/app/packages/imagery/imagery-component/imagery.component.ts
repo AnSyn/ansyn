@@ -1,6 +1,3 @@
-/**
- * Created by AsafMasa on 25/04/2017.
- */
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import {
 	Component,

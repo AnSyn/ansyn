@@ -1,7 +1,3 @@
-/**
- * Created by AsafMas on 06/06/2017.
- */
-
 export class MapPosition {
 	public zoom: number;
 	public rotation?: number;

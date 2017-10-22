@@ -3,16 +3,14 @@ import { OpenLayersMap } from './open-layers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { MapPosition } from '../../imagery/model/map-position';
 
-/**
- * Created by AsafMas on 07/05/2017.
- */
+
 @Component({
 	selector: 'ansyn-ol-component',
 	template: `
 		<div #olMap></div>
 	`,
 	styles: [
-		`div {
+			`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;

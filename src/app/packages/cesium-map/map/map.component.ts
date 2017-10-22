@@ -1,20 +1,15 @@
-/**
- * Created by AsafMas on 11/05/2017.
- */
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { CesiumMap } from './cesium-map';
 
-/**
- * Created by AsafMas on 07/05/2017.
- */
+
 @Component({
 	selector: 'ansyn-cesium-component',
 	template: `
 		<div #cesiumMap>Working!</div>
 	`,
 	styles: [
-		`div{
+			`div {
 			width: 100%;
 			height: 100%;
 		}`]

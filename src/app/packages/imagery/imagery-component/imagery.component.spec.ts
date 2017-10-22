@@ -1,6 +1,3 @@
-/**
- * Created by AsafMasa on 26/04/2017.
- */
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';

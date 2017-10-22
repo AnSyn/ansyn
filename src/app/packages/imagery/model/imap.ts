@@ -1,9 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { MapPosition } from './map-position';
 
-/**
- * Created by AsafMas on 06/06/2017.
- */
 
 export interface IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;

@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 03/07/2017.
- */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 

@@ -1,7 +1,3 @@
-/**
- * Created by AsafMas on 21/05/2017.
- */
-
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import TileWMS from 'ol/source/tilewms';

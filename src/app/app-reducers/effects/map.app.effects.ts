@@ -8,7 +8,8 @@ import {
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
-	RequestOverlayByIDFromBackendAction
+	RequestOverlayByIDFromBackendAction,
+	SyncFilteredOverlays
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { BaseMapSourceProvider, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -68,7 +69,6 @@ import {
 	SetToastMessageStoreAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SyncFilteredOverlays } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapAppEffects {

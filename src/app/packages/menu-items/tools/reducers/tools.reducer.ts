@@ -1,6 +1,3 @@
-/**
- * Created by ohad1 on 02/04/2017.
- */
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
 

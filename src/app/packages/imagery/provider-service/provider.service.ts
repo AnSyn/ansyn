@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
 
-/**
- * Created by AsafMasa on 24/04/2017.
- */
 
 export interface IProvidedMap {
 	mapType: string;

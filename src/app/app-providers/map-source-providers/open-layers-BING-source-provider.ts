@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 26/06/2017.
- */
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';

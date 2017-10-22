@@ -9,6 +9,7 @@ import { CasesReducer } from '../../reducers/cases.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -19,10 +20,13 @@ describe('ModalContainerComponent', () => {
 			imports: [
 				HttpClientModule,
 				CasesModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ cases: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
+			providers: [
+				{ provide: casesConfig, useValue: { baseUrl: null } }
+			]
 		})
 			.compileComponents();
 	}));

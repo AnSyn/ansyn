@@ -29,7 +29,8 @@ import {
 	IStatusBarState,
 	statusBarFlagsItems,
 	StatusBarInitialState,
-	StatusBarReducer
+	StatusBarReducer,
+	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -43,18 +44,20 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { IMapState, initialMapState, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, initialMapState, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IOverlaysState, OverlayReducer, overlaysInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	OverlayReducer,
+	overlaysInitialState,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesStateSelector } from '../../packages/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '../../packages/map-facade/reducers/map.reducer';
-import { overlaysStateSelector } from '../../packages/overlays/reducers/overlays.reducer';
-import { statusBarStateSelector } from '../../packages/status-bar/reducers/status-bar.reducer';
-import { getPolygonByPoint } from '../../packages/core/utils/geo';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
@@ -194,7 +197,6 @@ describe('MapAppEffects', () => {
 					useValue: imageryCommunicatorServiceMock
 				},
 				provideMockActions(() => actions),
-
 				{
 					provide: CasesService,
 					useValue: {
@@ -220,19 +222,15 @@ describe('MapAppEffects', () => {
 		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
 		mapState.activeMapId = icaseState.selectedCase.state.maps.active_map_id;
+		const fakeStore = new Map<any, any>([
+			[casesStateSelector, icaseState],
+			[statusBarStateSelector, statusBarState],
+			[overlaysStateSelector, overlaysState],
+			[mapStateSelector, mapState]
+		]);
 
 		spyOn(store, 'select').and.callFake(type => {
-			switch (type) {
-				case casesStateSelector:
-					return Observable.of(icaseState);
-				case statusBarStateSelector:
-					return Observable.of(statusBarState);
-				case overlaysStateSelector:
-					return Observable.of(overlaysState);
-				case mapStateSelector:
-					return Observable.of(mapState);
-
-			}
+			return Observable.of(fakeStore.get(type));
 		});
 	}));
 

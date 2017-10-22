@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
-import { ToolsReducer } from '../reducers/tools.reducer';
+import { ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
@@ -22,10 +22,12 @@ describe('overlaysDisplayModeComponent', () => {
 		store = _store;
 		spyOn(store, 'dispatch');
 
-		const fakeStore = { tools: { activeOverlaysFootprintMode: 'None' } };
+		const fakeStore = new Map<any, any>([
+			[toolsStateSelector, { activeOverlaysFootprintMode: 'None' }],
+		]);
 
 		spyOn(store, 'select').and.callFake(type => {
-			return Observable.of(fakeStore[type]);
+			return Observable.of(fakeStore.get(type));
 		});
 	}));
 

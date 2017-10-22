@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { StoreModule } from '@ngrx/store';
 import { LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;
@@ -27,6 +28,7 @@ describe('LayerTreeComponent', () => {
 			imports: [
 				LayersManagerModule,
 				HttpClientModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ layers: LayersReducer })
 			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]

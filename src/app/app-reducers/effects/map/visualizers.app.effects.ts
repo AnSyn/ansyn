@@ -83,9 +83,9 @@ export class VisualizersAppEffects {
 	 * @ofType HoverFeatureTriggerAction
 	 */
 	@Effect({ dispatch: false })
-	onHoverFeatureEmitSyncHoverFeature$: Observable<void> = this.actions$
+	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.map((action: HoverFeatureTriggerAction): void => {
+		.do((action: HoverFeatureTriggerAction): void => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
 				const visualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 				if (visualizer) {
@@ -114,9 +114,9 @@ export class VisualizersAppEffects {
 	 * @ofType OverlaysMarkupAction
 	 */
 	@Effect({ dispatch: false })
-	markupVisualizer$: Observable<void> = this.actions$
+	markupVisualizer$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
-		.map((action: OverlaysMarkupAction) => {
+		.do((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
 				const footprintPolyline = <FootprintPolylineVisualizer>communicator.getVisualizer(FootprintPolylineVisualizerType);
 				if (footprintPolyline) {

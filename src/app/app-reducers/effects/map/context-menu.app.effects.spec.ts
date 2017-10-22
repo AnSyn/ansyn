@@ -2,8 +2,8 @@ import { async, inject, TestBed } from '@angular/core/testing';
 
 import { ContextMenuAppEffects } from './context-menu.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { OverlayReducer } from '@ansyn/overlays/reducers/overlays.reducer';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	ContextMenuDisplayAction,
 	ContextMenuGetFilteredOverlaysAction,
@@ -15,15 +15,12 @@ import {
 	SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
-import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;

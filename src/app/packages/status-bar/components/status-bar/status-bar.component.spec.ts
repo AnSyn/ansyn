@@ -2,7 +2,9 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import {
-	IStatusBarState, statusBarFeatureKey, statusBarFlagsItems,
+	IStatusBarState,
+	statusBarFeatureKey,
+	statusBarFlagsItems,
 	StatusBarReducer
 } from '../../reducers/status-bar.reducer';
 import { StatusBarModule } from '../../status-bar.module';

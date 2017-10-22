@@ -79,6 +79,7 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { MapInstanceChangedAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -361,7 +362,7 @@ export class MapAppEffects {
 	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
-	addVectorLayer$: Observable<any> = this.actions$
+	addVectorLayer$: Observable<SelectLayerAction> = this.actions$
 		.ofType(LayersActionTypes.SELECT_LAYER)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [SelectLayerAction, IMapState]) => {
@@ -377,7 +378,7 @@ export class MapAppEffects {
 	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
-	removeVectorLayer$: Observable<any> = this.actions$
+	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [UnselectLayerAction, IMapState]) => {
@@ -418,15 +419,15 @@ export class MapAppEffects {
 	 * @filter There is a pinPointIndicator or pinPointSearch
 	 */
 	@Effect({ dispatch: false })
-	onAddCommunicatorShowPinPoint$: Observable<any> = this.actions$
+	onAddCommunicatorShowPinPoint$: Observable<AddMapInstanceAction | MapInstanceChangedAction> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
-		.filter(([action, caseState, statusBarState]: [any, any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
-		.map(([action, caseState, statusBarState]: [any, any, any]) => {
+		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.map(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 
 			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				const point = getPointByPolygon(caseState.selectedCase.state.region);
+				const point = getPointByPolygon(casesState.selectedCase.state.region);
 				communicatorHandler.addPinPointIndicator(point.coordinates);
 			}
 
@@ -479,7 +480,7 @@ export class MapAppEffects {
 	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
-	onSynchronizeAppMaps$: Observable<any> = this.actions$
+	onSynchronizeAppMaps$: Observable<SynchronizeMapsAction> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
 		.withLatestFrom(this.store$.select(casesStateSelector), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
 		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {

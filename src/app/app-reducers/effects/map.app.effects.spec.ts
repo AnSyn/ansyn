@@ -27,6 +27,7 @@ import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overla
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import {
 	IStatusBarState,
+	statusBarFeatureKey,
 	statusBarFlagsItems,
 	StatusBarInitialState,
 	StatusBarReducer,
@@ -44,11 +45,18 @@ import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { IMapState, initialMapState, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	IMapState,
+	initialMapState,
+	mapFeatureKey,
+	MapReducer,
+	mapStateSelector
+} from '@ansyn/map-facade/reducers/map.reducer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
+	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -56,13 +64,9 @@ import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
-import { mapFeatureKey } from '../../packages/map-facade/reducers/map.reducer';
-import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
-import { statusBarFeatureKey } from '../../packages/status-bar/reducers/status-bar.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -233,9 +237,7 @@ describe('MapAppEffects', () => {
 			[mapStateSelector, mapState]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => {
-			return Observable.of(fakeStore.get(type));
-		});
+		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([MapAppEffects, ImageryCommunicatorService, CasesService, BaseMapSourceProvider], (_mapAppEffects: MapAppEffects, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseMapSourceProvider[]) => {

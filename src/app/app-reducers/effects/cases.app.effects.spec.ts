@@ -13,7 +13,7 @@ import { ContextModule } from '@ansyn/context/context.module';
 import { ContextTestSourceService } from '@ansyn/context/providers/context-test-source.service';
 import { MOCK_TEST_CONFIG } from '@ansyn/context/providers/context-test-source.service.spec';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
@@ -22,7 +22,6 @@ import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

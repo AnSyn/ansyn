@@ -51,6 +51,7 @@ import { HttpClientModule } from '@angular/common/http';
 		AlgorithmsModule,
 		SettingsModule,
 		ImagerySandBoxModule,
+		// Do not change order AppReducer depends on the above
 		AppReducersModule,
 		MapFacadeModule,
 		ImageryModule,

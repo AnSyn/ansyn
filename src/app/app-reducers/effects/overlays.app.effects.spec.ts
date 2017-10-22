@@ -13,24 +13,22 @@ import { Case, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import {
 	IToolsState,
+	toolsFeatureKey,
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
-import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
-import { toolsFeatureKey } from '../../packages/menu-items/tools/reducers/tools.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -119,24 +117,20 @@ describe('OverlaysAppEffects', () => {
 
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
-		spyOn(store, 'select').and.callFake((type) => {
-			switch (type) {
-				case casesStateSelector:
-					return Observable.of({
-						selectedCase: caseItem,
-						cases: [caseItem]
-					});
-				case overlaysStateSelector:
-					return Observable.of({
-						filteredOverlays: ['first', 'last']
-					});
-				case toolsStateSelector:
-					toolsState = cloneDeep(toolsInitialState);
-					return Observable.of(toolsState);
-				default:
-					return Observable.empty();
-			}
-		});
+		toolsState = cloneDeep(toolsInitialState);
+
+		const fakeStore = new Map<any, any>([
+			[casesStateSelector, {
+				selectedCase: caseItem,
+				cases: [caseItem]
+			}],
+			[overlaysStateSelector, {
+				filteredOverlays: ['first', 'last']
+			}],
+			[toolsStateSelector, toolsState]
+		]);
+
+		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([CasesService, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _imageryCommunicatorService: ImageryCommunicatorService, _overlaysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {

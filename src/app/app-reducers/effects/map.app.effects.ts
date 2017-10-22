@@ -77,11 +77,8 @@ import {
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
-import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class MapAppEffects {

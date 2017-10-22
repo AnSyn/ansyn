@@ -43,9 +43,6 @@ import {
 	SetOrientationAction,
 	SetTimeAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { BackToWorldAction, PinPointModeTriggerAction, SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
-import { GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
-import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/';

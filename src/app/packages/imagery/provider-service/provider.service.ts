@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
-import { MapVisualizer } from '../imagery.module';
 import { IMapVisualizer } from '../model/imap-visualizer';
+import { MapVisualizer } from '../model/imap-visualizer.token';
 
 export interface IProvidedMap {
 	mapType: string;

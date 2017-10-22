@@ -93,6 +93,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.style.stroke.width = width;
 	}
 
+	removeLayer() {
+		this._imap.removeLayer(this.layer);
+		this.layer = undefined;
+	}
+
 	addLayer(id = this.type) {
 		const layer = new VectorLayer();
 		// if id is empty then set the current type name as id
@@ -194,17 +199,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])]
 	}
 
-
 	addSelectInteraction() {
 		this._imap.mapObject.addInteraction(this.selectInteraction)
 	}
 
 	removeSelectInteraction() {
 		this._imap.mapObject.removeInteraction(this.selectInteraction);
-	}
-
-	removeLayer() {
-		this._imap.removeLayer(this.layer);
 	}
 
 	redrawFromGeoJson() {
@@ -223,12 +223,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (typeof data === 'string') {
 			data = JSON.parse(data);
 		}
-		// readFeatures throw exceptions so I am using this method
 
-
+		// readFeatures throw an exceptions so I am using this method
 		this.features = data.features;
 		const features = this.createFeturesFromGeoJson(data.features);
-
+		let oldFeatures = this._source.getFeatures();
+		if (oldFeatures.length > 0 ) {
+			for (let i = oldFeatures.length - 1; i >= 0; i--) {
+				if (oldFeatures[i].getProperties().id === features[i].getProperties().id) {
+					// remove old from features
+					features.splice(i, 1);
+				}
+			}
+		}
 		this._source.addFeatures(features);
 	}
 

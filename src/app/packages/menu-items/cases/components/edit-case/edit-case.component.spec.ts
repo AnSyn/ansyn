@@ -9,6 +9,7 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { CasesService } from '../../services/cases.service';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -33,6 +34,7 @@ describe('EditCaseComponent', () => {
 			imports: [
 				HttpClientModule,
 				CasesModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ cases: CasesReducer }),
 				RouterTestingModule
 			],

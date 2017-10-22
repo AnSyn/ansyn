@@ -8,6 +8,10 @@ import { Case } from '@ansyn/core/models/case.model';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { initialMenuState } from '@ansyn/menu/reducers/menu.reducer';
+import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -82,13 +86,13 @@ describe('AnsynComponent', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		handler = new Subject();
+		const mockStore = new Map<any, any>([
 
-		const mockStore = {
-			cases: handler,
-			tools: Observable.of({
+			[casesStateSelector, handler],
+			[toolsStateSelector, Observable.of({
 				flags: new Map<string, any>()
-			}),
-			map: Observable.of({
+			})],
+			[mapStateSelector, Observable.of({
 				mapsList: [
 					{
 						id: 'imagery1',
@@ -104,13 +108,15 @@ describe('AnsynComponent', () => {
 					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
 				activeMapId: 'imagery1'
-			}),
-			menu: Observable.of(initialMenuState)
-		};
+			})],
+			[menuStateSelector, Observable.of(initialMenuState)]
+		]);
+
 
 		spyOn(store, 'select').and.callFake(type => {
-			return mockStore[type];
+			return mockStore.get(type);
 		});
+
 
 	}));
 

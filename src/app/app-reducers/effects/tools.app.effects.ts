@@ -197,9 +197,9 @@ export class ToolsAppEffects {
 	 * @ofType SetPinLocationModeAction
 	 */
 	@Effect({ dispatch: false })
-	updatePinLocationAction$: Observable<void> = this.actions$
+	updatePinLocationAction$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.map((action: SetPinLocationModeAction) => {
+		.do((action: SetPinLocationModeAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator) => {
 				if (action.payload) {
 					communicator.createMapSingleClickEvent();

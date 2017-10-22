@@ -20,7 +20,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Overlay } from '../../../packages/core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;

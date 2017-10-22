@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -16,6 +17,7 @@ describe('LayersManagerComponent', () => {
 			imports: [
 				LayersManagerModule,
 				HttpClientModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ layers: LayersReducer })
 			],
 			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]

@@ -30,7 +30,7 @@ export class ContextEntityAppEffects {
 	displayEntityFromCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => !_isNil(payload.state.contextEntities))
-		.map(({ payload }: SelectCaseAction) => {
+		.do(({ payload }: SelectCaseAction) => {
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);
@@ -48,7 +48,9 @@ export class ContextEntityAppEffects {
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
+		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {
+			return !_isNil(caseState.selectedCase.state.contextEntities);
+		})
 		.map(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
@@ -85,7 +87,9 @@ export class ContextEntityAppEffects {
 	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
 		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selectedCase.state.contextEntities))
+		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => {
+			return !_isNil(caseState.selectedCase.state.contextEntities);
+		})
 		.map(([action, caseState]: [BackToWorldAction, ICasesState]) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.active_map_id;
 			const communicatorHandler = this.communicatorService.provide(mapId);

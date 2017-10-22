@@ -8,6 +8,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { Observable } from 'rxjs/Observable';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -32,6 +33,7 @@ describe('SaveCaseComponent', () => {
 			imports: [
 				HttpClientModule,
 				CasesModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ cases: CasesReducer }),
 				RouterTestingModule
 			],

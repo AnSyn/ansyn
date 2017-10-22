@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -31,6 +32,7 @@ describe('DeleteCaseComponent', () => {
 			imports: [
 				HttpClientModule,
 				CasesModule,
+				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ cases: CasesReducer }),
 				RouterTestingModule
 			],

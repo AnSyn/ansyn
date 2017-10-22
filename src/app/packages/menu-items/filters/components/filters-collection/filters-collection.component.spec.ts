@@ -7,6 +7,7 @@ import { filtersConfig } from '../../services/filters.service';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { Subject } from 'rxjs/Subject';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -31,7 +32,11 @@ describe('FiltersCollectionComponent', () => {
 				mock_ansyn_checkbox,
 				mock_anysn_filter_container
 			],
-			imports: [FiltersModule, StoreModule.forRoot({ filters: FiltersReducer })],
+			imports: [
+				FiltersModule,
+				EffectsModule.forRoot([]),
+				StoreModule.forRoot({ filters: FiltersReducer })
+			],
 			providers: [{ provide: filtersConfig, useValue: { filters: null } }]
 		})
 			.compileComponents();

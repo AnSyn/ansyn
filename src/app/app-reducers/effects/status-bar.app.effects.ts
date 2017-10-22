@@ -72,9 +72,7 @@ export class StatusBarAppEffects {
 	@Effect({ dispatch: false })
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select(statusBarStateSelector))
-		.filter(([action, statusBarState]: [any, any]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch && action.payload.value)
 		.map(() => {
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				communicator.createMapSingleClickEvent();
@@ -94,8 +92,7 @@ export class StatusBarAppEffects {
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointIndicator)
 		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
-
-			const value: boolean = statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator);
+			const value: boolean = action.payload.value;
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				if (value) {
 					const point = getPointByPolygon(casesState.selectedCase.state.region);

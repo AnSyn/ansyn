@@ -21,6 +21,9 @@ import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
@@ -37,7 +40,11 @@ describe('ContextMenuAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 
-				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer, map: MapReducer })
+				StoreModule.forRoot({
+					[casesFeatureKey]: CasesReducer,
+					[overlaysFeatureKey]: OverlayReducer,
+					[mapFeatureKey]: MapReducer
+				})
 			],
 			providers: [
 				provideMockActions(() => actions),

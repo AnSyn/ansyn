@@ -3,7 +3,7 @@ import { CasesTableComponent } from './cases-table.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { LoadCasesAction, OpenModalAction, SelectCaseByIdAction } from '../../actions/cases.actions';
 import { casesConfig } from '@ansyn/menu-items/cases';
@@ -22,7 +22,7 @@ describe('CasesTableComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ cases: CasesReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]

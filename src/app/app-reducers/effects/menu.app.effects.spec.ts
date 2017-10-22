@@ -11,6 +11,8 @@ import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions'
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { menuFeatureKey } from '../../packages/menu/reducers/menu.reducer';
+import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -20,7 +22,7 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ menu: MenuReducer, cases: CasesReducer })],
+			imports: [StoreModule.forRoot({ [menuFeatureKey]: MenuReducer, [casesFeatureKey]: CasesReducer })],
 			providers: [
 				provideMockActions(() => actions),
 				MenuAppEffects

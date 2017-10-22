@@ -12,7 +12,7 @@ import { OverlaysEffects } from '../effects/overlays.effects';
 
 import { State, Store, StoreModule } from '@ngrx/store';
 
-import { IOverlaysState, OverlayReducer } from '../reducers/overlays.reducer';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
@@ -80,7 +80,7 @@ describe('OverlayContainerComponent', () => {
 			],
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ overlays: OverlayReducer })
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 			]
 		})
 			.compileComponents();

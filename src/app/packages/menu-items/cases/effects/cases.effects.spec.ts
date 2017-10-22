@@ -3,7 +3,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 
 import { CasesService } from '../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer } from '../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
 	AddCaseSuccessAction,
@@ -29,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -40,7 +41,7 @@ describe('CasesEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer, [overlaysFeatureKey]: OverlayReducer }),
 				RouterTestingModule
 			],
 			providers: [CasesEffects,

@@ -20,6 +20,9 @@ import { Case } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
+import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -52,7 +55,11 @@ describe('CasesAppEffects', () => {
 			imports: [
 				HttpClientModule,
 
-				StoreModule.forRoot({ overlays: OverlayReducer, cases: CasesReducer, map: MapReducer }),
+				StoreModule.forRoot({
+					[overlaysFeatureKey]: OverlayReducer,
+					[casesFeatureKey]: CasesReducer,
+					[mapFeatureKey]: MapReducer
+				}),
 				CoreModule,
 				RouterTestingModule,
 				ContextModule.forRoot(MOCK_TEST_CONFIG)

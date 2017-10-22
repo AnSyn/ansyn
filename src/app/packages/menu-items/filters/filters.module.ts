@@ -11,12 +11,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
 import { SortPipe } from './pipes/sort.pipe';
 import { FiltersEffects } from './effects/filters.effects';
+import { StoreModule } from '@ngrx/store';
+import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
 		BrowserAnimationsModule,
+		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
 		EffectsModule.forFeature([FiltersEffects])
 	],
 	declarations: [

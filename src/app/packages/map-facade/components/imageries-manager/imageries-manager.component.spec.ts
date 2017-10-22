@@ -7,7 +7,7 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IMapState, MapReducer } from '../../reducers/map.reducer';
+import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { OverlaysStatusNotificationsComponent } from '@ansyn/core/components/overlays-status-notifications/overlays-status-notifications.component';
@@ -38,7 +38,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
-				StoreModule.forRoot({ key: 'value', map: MapReducer })
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			],
 			declarations: [
 				ImageriesManagerComponent,

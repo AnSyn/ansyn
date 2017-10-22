@@ -26,6 +26,8 @@ import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
+import { casesFeatureKey } from '../../../packages/menu-items/cases/reducers/cases.reducer';
+import { mapFeatureKey } from '../../../packages/map-facade/reducers/map.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -64,7 +66,7 @@ describe('VisualizersAppEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({ cases: CasesReducer, map: MapReducer })
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer, [mapFeatureKey]: MapReducer })
 			],
 			providers: [
 				VisualizersAppEffects,

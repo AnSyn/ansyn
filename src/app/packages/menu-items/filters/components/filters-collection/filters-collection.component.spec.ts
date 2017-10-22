@@ -1,7 +1,7 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { FiltersModule } from '../../filters.module';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { FiltersReducer } from '../../reducer/filters.reducer';
+import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
 import { MockComponent } from '@ansyn/core/test/mock-component';
@@ -35,7 +35,7 @@ describe('FiltersCollectionComponent', () => {
 			imports: [
 				FiltersModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ filters: FiltersReducer })
+				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
 			],
 			providers: [{ provide: filtersConfig, useValue: { filters: null } }]
 		})

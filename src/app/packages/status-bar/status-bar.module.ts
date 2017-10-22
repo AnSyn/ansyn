@@ -5,14 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
+import { StoreModule } from '@ngrx/store';
+import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 
 
 @NgModule({
 	imports: [
 		FormsModule,
 		CommonModule,
-		CoreModule
-
+		CoreModule,
+		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
 	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent],
 	exports: [StatusBarComponent]

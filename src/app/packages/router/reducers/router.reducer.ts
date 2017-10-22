@@ -12,8 +12,8 @@ export const RouterInitialState: IRouterState = {
 	caseId: '',
 	queryParams: {}
 };
-
-export const routerStateSelector = createFeatureSelector<IRouterState>('router');
+export const routerFeatureKey = 'router';
+export const routerStateSelector = createFeatureSelector<IRouterState>(routerFeatureKey);
 
 export function RouterReducer(state = RouterInitialState, action: RouterActions): IRouterState {
 	switch (action.type) {

@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { ToolsReducer } from '../../reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 
 
 describe('AnnotationsControlComponent', () => {
@@ -14,7 +14,7 @@ describe('AnnotationsControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent],
-			imports: [FormsModule, StoreModule.forRoot({ tools: ToolsReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
 			/*	providers: [{
 						provide: 'DOCUMENT',  useClass: MockDocument
 					}]*/
@@ -99,7 +99,7 @@ describe('AnnotationsControlComponent', () => {
 		fixture.detectChanges();
 		result = component.colorSelection.nativeElement.classList.contains('open');
 		expect(result).toBe(false);
-		expect(component.clickOutside['calls'].count()).toBe(0);
+		expect(component.clickOutside).toHaveBeenCalledTimes(0);
 		expect(component.subscriber.unsubscribe).toHaveBeenCalled();
 
 	});

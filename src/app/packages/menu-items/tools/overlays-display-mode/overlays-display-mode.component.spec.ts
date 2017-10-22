@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
-import { ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,7 +13,7 @@ describe('overlaysDisplayModeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ tools: ToolsReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
 			declarations: [OverlaysDisplayModeComponent]
 		}).compileComponents();
 	}));

@@ -30,6 +30,8 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { toolsFeatureKey } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -82,7 +84,7 @@ describe('ToolsAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 
-				StoreModule.forRoot({ tools: ToolsReducer, cases: CasesReducer })
+				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer, [casesFeatureKey]: CasesReducer })
 			],
 			providers: [
 				ToolsAppEffects,

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { CasesReducer, ICasesState } from '../../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
@@ -33,7 +33,7 @@ describe('DeleteCaseComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ cases: CasesReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]

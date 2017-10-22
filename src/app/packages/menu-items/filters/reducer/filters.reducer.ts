@@ -19,6 +19,8 @@ export const initialFiltersState: IFiltersState = {
 	enableOnlyFavoritesSelection: false
 };
 
+export const filtersFeatureKey = 'filters';
+
 export const filtersStateSelector = createFeatureSelector<IFiltersState>('filters');
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {

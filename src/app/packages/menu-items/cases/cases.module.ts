@@ -15,9 +15,12 @@ import { CasesEffects } from './effects/cases.effects';
 import { casesConfig, CasesService } from './services/cases.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
+import { StoreModule } from '@ngrx/store';
+import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 
 @NgModule({
 	imports: [
+		StoreModule.forFeature(casesFeatureKey, CasesReducer),
 		CommonModule,
 		CoreModule,
 		InfiniteScrollModule,

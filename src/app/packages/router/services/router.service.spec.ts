@@ -2,13 +2,13 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { AnsynRouterService } from './router.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RouterReducer } from '../reducers/router.reducer';
+import { routerFeatureKey, RouterReducer } from '../reducers/router.reducer';
 import { StoreModule } from '@ngrx/store';
 
 describe('RouterFacadeService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule, StoreModule.forRoot({ router: RouterReducer })],
+			imports: [RouterTestingModule, StoreModule.forRoot({ [routerFeatureKey]: RouterReducer })],
 			providers: [AnsynRouterService]
 		});
 	});

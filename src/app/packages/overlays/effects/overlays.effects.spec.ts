@@ -14,8 +14,8 @@ import {
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
-import { OverlayReducer } from '../reducers/overlays.reducer';
-import { CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
+import { casesFeatureKey, CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../../app-reducers/app-reducers.module';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
@@ -66,7 +66,7 @@ describe('Overlays Effects ', () => {
 
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
-			StoreModule.forRoot({ overlays: OverlayReducer, cases: CasesReducer })
+			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer, [casesFeatureKey]: CasesReducer })
 		],
 		providers: [
 			OverlaysEffects, {

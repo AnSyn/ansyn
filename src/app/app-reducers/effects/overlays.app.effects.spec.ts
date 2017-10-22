@@ -28,6 +28,9 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { casesFeatureKey } from '../../packages/menu-items/cases/reducers/cases.reducer';
+import { overlaysFeatureKey } from '../../packages/overlays/reducers/overlays.reducer';
+import { toolsFeatureKey } from '../../packages/menu-items/tools/reducers/tools.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -86,7 +89,11 @@ describe('OverlaysAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ cases: CasesReducer, overlays: OverlayReducer, tools: ToolsReducer }),
+				StoreModule.forRoot({
+					[casesFeatureKey]: CasesReducer,
+					[overlaysFeatureKey]: OverlayReducer,
+					[toolsFeatureKey]: ToolsReducer
+				}),
 			],
 			providers: [
 				OverlaysAppEffects,

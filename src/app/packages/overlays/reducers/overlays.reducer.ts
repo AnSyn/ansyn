@@ -35,8 +35,8 @@ export const overlaysInitialState: IOverlaysState = {
 	timelineState: { from: new Date(), to: new Date() },
 	filteredOverlays: []
 };
-
-export const overlaysStateSelector = createFeatureSelector<IOverlaysState>('overlays');
+export const overlaysFeatureKey = 'overlays';
+export const overlaysStateSelector = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
 
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {

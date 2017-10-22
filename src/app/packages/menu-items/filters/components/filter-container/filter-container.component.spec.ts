@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
-import { FiltersReducer } from '../../reducer/filters.reducer';
+import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersModule } from '../../filters.module';
 import { FilterContainerComponent } from './filter-container.component';
 
@@ -10,7 +10,7 @@ describe('FilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FiltersModule, StoreModule.forRoot({ filters: FiltersReducer })]
+			imports: [FiltersModule, StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })]
 		})
 			.compileComponents();
 	}));

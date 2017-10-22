@@ -1,7 +1,5 @@
 import { MapPosition } from './model/map-position';
-/**
- * Created by AsafMasa on 24/04/2017.
- */
+
 
 export { MapPosition } from './model/map-position';
 export { IMap } from './model/imap';

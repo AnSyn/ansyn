@@ -1,8 +1,3 @@
-/**
- * Created by ohad1 on 02/04/2017.
- */
-
-
 import { GeometryObject } from 'geojson';
 
 export class Overlay {

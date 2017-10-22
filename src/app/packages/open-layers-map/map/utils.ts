@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 12/07/2017.
- */
 import Extent from 'ol/extent';
 import Coordinate from 'ol/coordinate';
 

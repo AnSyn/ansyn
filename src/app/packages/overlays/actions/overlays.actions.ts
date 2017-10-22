@@ -1,7 +1,3 @@
-/**
- * Created by ohad1 on 02/04/2017.
- */
-
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';

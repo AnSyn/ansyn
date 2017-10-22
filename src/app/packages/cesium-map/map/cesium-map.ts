@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 11/05/2017.
- */
 import { IMap, MapPosition } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';

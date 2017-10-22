@@ -2,16 +2,14 @@ import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } fro
 import { OpenLayersDisabledMap } from './open-layers-disabled-map';
 import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 
-/**
- * Created by AsafMas on 07/05/2017.
- */
+
 @Component({
 	selector: 'ansyn-ol-component',
 	template: `
 		<div #olMap></div>
 	`,
 	styles: [
-		`div{
+			`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;
@@ -19,7 +17,7 @@ import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 			top: 0;
 			display: block;
 			box-sizing: border-box;
-			
+
 		}`]
 })
 

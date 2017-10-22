@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 10/05/2017.
- */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';

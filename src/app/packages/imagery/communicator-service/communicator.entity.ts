@@ -7,9 +7,6 @@ import { MapPosition } from '../model/map-position';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
 
-/**
- * Created by AsafMasa on 27/04/2017.
- */
 
 export class CommunicatorEntity {
 	private _managerSubscriptions;

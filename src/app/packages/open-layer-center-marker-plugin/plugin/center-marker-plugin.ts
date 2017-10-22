@@ -1,7 +1,3 @@
-/**
- * Created by AsafMas on 04/06/2017.
- */
-
 import { CommunicatorEntity, IMap, IMapPlugin } from '@ansyn/imagery';
 import Vector from 'ol/source/vector';
 import Feature from 'ol/feature';

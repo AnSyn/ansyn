@@ -1,6 +1,3 @@
-/**
- * Created by AsafMas on 02/08/2017.
- */
 import { IMap, IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 

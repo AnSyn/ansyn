@@ -21,17 +21,12 @@ import {
 } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { cloneDeep, get, isEmpty, pull } from 'lodash';
+import { cloneDeep, get, isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BackToWorldAction, PinPointModeTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import {
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	LoadOverlaysAction,
-	OverlaysMarkupAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { BackToWorldAction, PinPointModeTriggerAction, SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
+import { GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -42,7 +37,6 @@ import { MapActionTypes } from '@ansyn/map-facade/actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetFavoriteAction } from '@ansyn/map-facade/actions/map.actions';
 
 
 @Injectable()

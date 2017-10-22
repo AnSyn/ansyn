@@ -8,9 +8,7 @@ import { ImageryProviderService, IProvidedMap } from '../../provider-service/pro
 import { MapPosition } from '../../model/map-position';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 
-/**
- * Created by AsafMasa on 27/04/2017.
- */
+
 export class ImageryComponentManager {
 
 	private _activeMap: IMap;

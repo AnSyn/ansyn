@@ -1,8 +1,4 @@
 /**
- * Created by ohad1 on 02/04/2017.
- */
-
-/**
  * This function coerces a string into a string literal type.
  * Using tagged union types in TypeScript 2.0, this enables
  * powerful typechecking of our reducers.

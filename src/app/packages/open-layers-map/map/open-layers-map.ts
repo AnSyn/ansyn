@@ -1,7 +1,3 @@
-/**
- * Created by AsafMasa on 25/04/2017.
- */
-
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { MapPosition } from '@ansyn/imagery/model/map-position';

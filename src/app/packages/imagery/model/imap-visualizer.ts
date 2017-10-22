@@ -1,5 +1,5 @@
 import { IMap } from './imap';
-import { EventEmitter, InjectionToken } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 
 export interface IVisualizerEntity {

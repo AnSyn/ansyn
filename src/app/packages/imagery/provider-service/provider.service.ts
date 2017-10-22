@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { MapVisualizer } from '../model/imap-visualizer.token';
@@ -20,7 +20,7 @@ export class ImageryProviderService {
 	private _mapPluginProviders: { [mapType: string]: [{ 'pluginClass': any }] };
 	private _mapVisualizersProviders: Map<string, [{ 'visualizerClass': any, args: any }]>;
 
-	constructor(@Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[]) {
+	constructor(@Optional() @Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[]) {
 		this._mapProviders = {};
 		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();

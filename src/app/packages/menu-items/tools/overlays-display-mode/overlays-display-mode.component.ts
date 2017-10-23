@@ -11,12 +11,13 @@ import { Observable } from 'rxjs/Observable';
 	styleUrls: ['./overlays-display-mode.component.less']
 })
 export class OverlaysDisplayModeComponent {
-	private _expand: boolean;
-	private _modeOn: boolean;
-	private needToDispatchAction = true;
+	public _expand = false;
+	public _modeOn = false;
+	public needToDispatchAction = true;
+	public _disabled = false;
 	public _visualizerType: OverlayDisplayMode;
 
-	private selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select(toolsStateSelector)
+	public selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select(toolsStateSelector)
 		.map((state: IToolsState) => {
 			return state.activeOverlaysFootprintMode;
 		});
@@ -48,7 +49,14 @@ export class OverlaysDisplayModeComponent {
 		return this._expand;
 	}
 
-	@Input() disabled: boolean;
+	@Input()
+	set disabled(value) {
+		this._disabled = value;
+	}
+
+	get disabled() {
+		return this._disabled;
+	}
 
 	@Output() modeOnChange = new EventEmitter();
 
@@ -62,7 +70,7 @@ export class OverlaysDisplayModeComponent {
 		return this._modeOn;
 	}
 
-	constructor(private store$: Store<IToolsState>) {
+	constructor(public store$: Store<IToolsState>) {
 		this.needToDispatchAction = false;
 		this.visualizerType = 'None';
 		this.needToDispatchAction = true;

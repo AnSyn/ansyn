@@ -1,6 +1,7 @@
 import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
+import { Subject } from 'rxjs/Subject';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -13,8 +14,13 @@ export type IMarkupEvent = { id: string, class: boolean }[];
 export interface IMapVisualizer {
 	type: string;
 	onDisposedEvent: EventEmitter<any>;
+
 	onHoverFeature: EventEmitter<any>;
 	doubleClickFeature: EventEmitter<any>;
+
+
+	events: Map<string, Subject<any>>;
+
 	subscribers: Subscriber<any>[]
 
 	/**

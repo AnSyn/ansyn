@@ -5,11 +5,13 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { OverlaysStatusNotificationsComponent } from './components/overlays-status-notifications/overlays-status-notifications.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+import { ReplacingComponent } from './components/replacing/replacing.component';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
 	OverlaysStatusNotificationsComponent,
-	ImageryStatusComponent
+	ImageryStatusComponent,
+	ReplacingComponent
 ];
 
 

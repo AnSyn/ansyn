@@ -2,6 +2,7 @@ import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.vis
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import {
+	AnnotationData,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
 	MapActionTypes,
@@ -49,12 +50,13 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import GeoJSON from 'ol/format/geojson';
-import { AnnotationVisualizerAgentAction } from '../../../packages/menu-items/tools/actions/tools.actions';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+
+
 
 @Injectable()
 export class VisualizersAppEffects {
-	public selectedCase$ = this.store$.select<ICasesState>('cases')
+	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
 		.pluck<ICasesState, Case>('selectedCase')
 		.map(_cloneDeep)
 
@@ -253,9 +255,9 @@ export class VisualizersAppEffects {
 
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.STORE.ANNOTATION_DATA)
+		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
 		.withLatestFrom(this.selectedCase$)
-		.mergeMap(([action, selectedCase]: [Action, Case]) => {
+		.mergeMap(([action, selectedCase]) => {
 			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
 			const geoJsonFormat = new GeoJSON();
 
@@ -296,8 +298,8 @@ export class VisualizersAppEffects {
 	 */
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom<Action, Case, ILayerState>(this.selectedCase$, this.store$.select('layers'))
+		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
+		.withLatestFrom<AnnotationVisualizerAgentAction, Case, ILayerState>(this.selectedCase$, this.store$.select(layersStateSelector))
 		.map(([action, selectedCase, layerState]: [AnnotationVisualizerAgentAction, Case, ILayerState]) => {
 			// const selectedCase: Case = _cloneDeep(cases.selectedCase);
 			let update = false;
@@ -405,8 +407,7 @@ export class VisualizersAppEffects {
 				private store$: Store<IAppState>,
 				private imageryCommunicatorService: ImageryCommunicatorService) {
 
-		this.selectedCase$ = this.store$.select(casesStateSelector)
-					.map( (cases: ICasesState) => _cloneDeep(cases.selected_case));
+
 	}
 
 	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState) {

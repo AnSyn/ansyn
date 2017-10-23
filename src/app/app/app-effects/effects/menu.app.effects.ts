@@ -5,7 +5,7 @@ import { MenuActionTypes } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
-import { GoToExpandAction, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { GoToExpandAction, SetAutoCloseMenu, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetBadgeAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
@@ -43,7 +43,7 @@ export class MenuAppEffects {
 
 	@Effect()
 	autoCloseMenu$: Observable<Action> = this.actions$
-		.ofType(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
+		.ofType<SetAutoCloseMenu>(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
 		.map(({ payload }) => new SetClickOutside(payload));
 
 	/**

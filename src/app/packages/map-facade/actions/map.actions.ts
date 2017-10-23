@@ -275,7 +275,7 @@ export class PinPointModeTriggerAction implements Action {
 export class AnnotationContextMenuTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
 
-	constructor(public payload: { action: string, feature: Object }) {
+	constructor(public payload: { action: string, feature: Object, pixels: { top, height, left, width } }) {
 
 	}
 }

@@ -84,7 +84,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import 'rxjs/add/observable/fromPromise';
 
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 
 @Injectable()
@@ -399,13 +399,13 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom<Action, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select('layers'))
-		.filter(([action, mapState, layerState]: [Action, IMapState, ILayerState]) => {
+		.ofType<any>(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.withLatestFrom<any, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select(layersStateSelector))
+		.filter(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
 			return communicatorsIds.length > 1 && communicatorsIds.length === mapState.mapsList.length;
 		})
-		.mergeMap(([action, caseState, layerState]: [Action, ICasesState, ILayerState]) => {
+		.mergeMap(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
 			const actionResults = [new CompositeMapShadowAction()];
 			if (layerState.displayAnnotationsLayer) {
 				actionResults.push(new AnnotationVisualizerAgentAction({

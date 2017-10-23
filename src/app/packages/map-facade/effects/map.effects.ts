@@ -4,7 +4,7 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction,
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
@@ -27,7 +27,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 export class MapEffects {
 	@Effect({dispatch: false})
 	annotationContextMenuTrigger$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
+		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
 		.share();
 
 	/**

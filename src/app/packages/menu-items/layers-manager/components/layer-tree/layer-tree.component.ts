@@ -5,7 +5,7 @@ import { TreeComponent, TreeNode } from 'angular-tree-component';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
-import { ILayerState } from '../../reducers/layers.reducer';
+import { ILayerState, layersStateSelector } from '../../reducers/layers.reducer';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -38,7 +38,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 			nodeHeight: 24
 		};
 
-		this.store.select<ILayerState>('layers')
+		this.store.select<ILayerState>(layersStateSelector)
 			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
 			.subscribe(result => {
 				this.annotationLayerChecked = result;

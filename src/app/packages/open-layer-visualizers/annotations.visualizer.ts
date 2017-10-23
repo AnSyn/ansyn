@@ -19,6 +19,12 @@ import { Subject } from 'rxjs/Subject';
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
 
+enum MouseClick {
+	Left = 1,
+	Scroll = 2,
+	Right = 3
+}
+
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public _source: VectorSource;
 	public layer: VectorLayer;
@@ -32,8 +38,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public fill;
 	public namePrefix = 'Annotate-';
 	public data;
-	public drawEndPublisher = new Subject();
-	public annotationContextMenuHandler = new Subject();
 
 	// add special type for this one
 	public style: any = {
@@ -61,6 +65,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new GeoJSON();
 		this.features = [];
 		this.fill = true;
+
+		this.events.set('drawEndPublisher', new Subject());
+		this.events.set('annotationContextMenuHandler', new Subject());
 	}
 
 	onInit(mapId: string, map: IMap) {
@@ -110,15 +117,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.layer.setZIndex(200000);
 
 		this.selectInteraction = new Select({
-			condition: event => event.originalEvent.which === 3 && event.type === 'pointerdown',
+			// event.originalEvent.which === 3 &&
+			condition: event => event.originalEvent.which === MouseClick.Right &&  event.type === 'pointerdown',
 			layers: [this.layer]
 		})
 
 		this.selectInteraction.on('select', data => {
+				console.log(data.mapBrowserEvent.originalEvent.which);
 				const target = data.mapBrowserEvent.originalEvent.target;
 				const selectedFeature = data.selected.shift();
 				const boundingRect = target.getBoundingClientRect();
 				let pixels;
+
 				if (selectedFeature.geometryName_ === 'Annotate-Arrow') {
 					pixels = this.arrowLinesToPixels(selectedFeature);
 					pixels.top += boundingRect.top;
@@ -137,7 +147,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					event.stopPropagation();
 					event.preventDefault();
 					data.target.getFeatures().clear();
-					this.annotationContextMenuHandler.next({
+					this.events.get('annotationContextMenuHandler').next({
 						action: "openMenu",
 						feature: selectedFeature,
 						pixels
@@ -200,10 +210,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	addSelectInteraction() {
+		this.removeSelectInteraction();
 		this._imap.mapObject.addInteraction(this.selectInteraction)
 	}
 
 	removeSelectInteraction() {
+		console.log('remove interaction');
 		this._imap.mapObject.removeInteraction(this.selectInteraction);
 	}
 
@@ -228,7 +240,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.features = data.features;
 		const features = this.createFeturesFromGeoJson(data.features);
 		let oldFeatures = this._source.getFeatures();
-		if (oldFeatures.length > 0 ) {
+		if (oldFeatures.length > 0) {
 			for (let i = oldFeatures.length - 1; i >= 0; i--) {
 				if (oldFeatures[i].getProperties().id === features[i].getProperties().id) {
 					// remove old from features
@@ -237,6 +249,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 		}
 		this._source.addFeatures(features);
+		this._imap.mapObject.render();
 	}
 
 	createFeturesFromGeoJson(geoJsonFeatures) {
@@ -302,7 +315,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// @TODO add conversion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
-		this.drawEndPublisher.next(this.features);
+		this.events.get('drawEndPublisher').next(this.features);
 		// this.collection = featureCollection(this.features);
 	}
 

@@ -130,7 +130,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.do((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const footprintPolyline = <FootprintPolylineVisualizer>communicator.getVisualizer(FootprintPolylineVisualizerType);
+				const footprintPolyline = (<FootprintPolylineVisualizer>communicator.getVisualizer(FootprintPolylineVisualizerType));
 				if (footprintPolyline) {
 					footprintPolyline.setMarkupFeatures(action.payload);
 				}
@@ -238,6 +238,7 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	OnGoToInputChanged$ = this.actions$
 		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
+		.skip(1)
 		.withLatestFrom(
 			this.store$.select(mapStateSelector),
 			(action: GoToInputChangeAction, mapState) => {
@@ -466,8 +467,6 @@ export class VisualizersAppEffects {
 		} else {
 			gotoVisualizer.clearEntities();
 		}
-
-
 	}
 
 	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]) {

@@ -92,15 +92,17 @@ export class MapFacadeService {
 			communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
 				this._subscribers.push(visualizer.onHoverFeature.subscribe(this.hoverFeature.bind(this)));
 				this._subscribers.push(visualizer.doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
+
+				if (visualizer.events.has('drawEndPublisher')) {
+					this._subscribers.push(visualizer.events.get('drawEndPublisher').subscribe(this.drawEndSubscriber.bind(this)));
+				}
+
+				if (visualizer.events.has('annotationContextMenuHandler')) {
+					this._subscribers.push(visualizer.events.get('annotationContextMenuHandler').subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
+				}
 			});
 
 			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
-
-			const annotationVisualizer = communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-
-			this._subscribers.push(annotationVisualizer.drawEndPublisher.subscribe(this.drawEndSubscriber.bind(this)));
-			this._subscribers.push(annotationVisualizer.annotationContextMenuHandler.subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
-
 		});
 
 	}

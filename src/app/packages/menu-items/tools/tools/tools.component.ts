@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	AnnotationVisualizerAgentAction,
-	GoToExpandAction, SetAutoCloseMenu,
+	GoToExpandAction,
+	SetAutoCloseMenu,
 	SetAutoImageProcessing,
 	StartMouseShadow,
 	StopMouseShadow
@@ -20,15 +21,17 @@ export class ToolsComponent implements OnInit {
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
-	public expandGoTo: boolean;
-	public expandOverlaysDisplayMode: boolean;
-	public displayModeOn: boolean;
-	public userAnnotationsToolOpen: boolean;
+	public expandGoTo = false;
+	public expandOverlaysDisplayMode = false;
+	public displayModeOn = false;
+	public userAnnotationsToolOpen = false;
 	public flags: Map<string, boolean>;
-	public isGeoOptionsDisabled: boolean;
+	public isGeoOptionsDisabled = false;
 	public flags$: Observable<Map<string, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged(isEqual);
+
+
 
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) {

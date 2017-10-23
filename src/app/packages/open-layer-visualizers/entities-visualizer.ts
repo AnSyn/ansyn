@@ -9,6 +9,7 @@ import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
 import VectorLayer from 'ol/layer/vector';
 import { Subscriber } from 'rxjs/Subscriber';
+import { Subject } from 'rxjs/Subject';
 
 export const EntitiesVisualizerType = 'EntitiesVisualizerType';
 
@@ -26,6 +27,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	strokeColor = 'blue';
 	fillColor = 'transparent';
 	containerLayerOpacity = 1;
+	events: Map<string, Subject<any>>;
 
 	onDisposedEvent: EventEmitter<any> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
@@ -39,7 +41,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 			defaultDataProjection: 'EPSG:4326',
 			featureProjection: 'EPSG:4326'
 		});
-
+		this.events = new Map <string, Subject<any>>();
 		this._idToEntity = new Map<string, { feature: null, originalEntity: null }>();
 	}
 

@@ -31,18 +31,6 @@ export class AnnotationContextMenuComponent {
 					this.pixels.left -= 2;
 					this.pixels.width += 2;
 					break;
-				case 'Arrow':
-					console.log(this.feature);
-					const arrowDirection = this.pixels.height - this.pixels.width;
-					// |||||||
-					/*if ( arrowDirection > 0   ) {
-
-					}
-					// ----------
-					else {
-
-					}*/
-					break;
 				case 'Point':
 					this.pixels.top -= 12;
 					this.pixels.height += 22;
@@ -67,5 +55,6 @@ export class AnnotationContextMenuComponent {
 			feature: this.feature,
 			action: "remove"
 		}))
+		this.host.nativeElement.setAttribute('style', "");
 	}
 }

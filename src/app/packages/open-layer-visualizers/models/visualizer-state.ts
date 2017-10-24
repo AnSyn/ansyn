@@ -5,4 +5,8 @@ export interface VisualizerStateStyle {
 
 	initial?: VisualizerStyle;
 	hover?: Partial<VisualizerStyle>;
+
+	entities?: {
+		[key: string]: Partial<VisualizerStyle>;
+	};
 }

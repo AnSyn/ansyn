@@ -14,6 +14,7 @@ import GeoJSON from 'ol/format/geojson';
 import { featureCollection } from '@turf/helpers';
 import { FeatureCollection } from 'geojson';
 import { Subject } from 'rxjs/Subject';
+import { VisualizerStateStyle } from './models/visualizer-state';
 
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
@@ -26,7 +27,7 @@ enum MouseClick {
 }
 
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	public _source: VectorSource;
+	public source: VectorSource;
 	public layer: VectorLayer;
 
 	public interactionHandler: Draw;
@@ -39,29 +40,25 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public namePrefix = 'Annotate-';
 	public data;
 
-	// add special type for this one
-	public style: any = {
-		stroke: {
-			color: '#3399CC',
-			width: 2
-		},
-		fill: {
-			color: 'rgba(255,255,255,0.4)'
-		},
-		point: {
-			radius: 4
-		},
-		line: {
-			width: 2
-		}
+	constructor(style?: Partial<VisualizerStateStyle>) {
+		super(AnnotationVisualizerType, style, {
+			initial: {
+				stroke: {
+					color: '#3399CC',
+					width: 2
+				},
+				fill: {
+					color: 'rgba(255,255,255,0.4)'
+				},
+				point: {
+					radius: 4
+				},
+				line: {
+					width: 2
+				}
+			}
+		});
 
-	};
-
-	constructor(style?: any) {
-		super(AnnotationVisualizerType, []);
-		if (style) {
-			this.style = style;
-		}
 		this.geoJsonFormat = new GeoJSON();
 		this.features = [];
 		this.fill = true;
@@ -70,9 +67,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.set('annotationContextMenuHandler', new Subject());
 	}
 
-	onInit(mapId: string, map: IMap) {
-		this._imap = map;
-		this._mapId = mapId;
+	onInit(mapId: string, map: IMap<any>) {
+		this.iMap = map;
+		this.mapId = mapId;
 	}
 
 	onResetView() {
@@ -89,15 +86,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeStroke(color) {
-		this.style.stroke.color = color;
+		this.updateStyle({ initial: { stroke: { color } } });
 	}
 
 	changeFill(color) {
-		this.style.fill.color = color;
+		this.updateStyle({ initial: { fill: { color } } });
 	}
 
 	changeLine(width) {
-		this.style.stroke.width = width;
+		this.updateStyle({ initial: { stroke: { width } } });
 	}
 
 	removeLayer() {
@@ -109,10 +106,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const layer = new VectorLayer();
 		// if id is empty then set the current type name as id
 		layer.set('id', id);
-		this.layer = this._imap.addLayerIfNotExist(layer);
+		this.layer = this.iMap.addLayerIfNotExist(layer);
 
-		this._source = new VectorSource({ wrapX: false });
-		this.layer.setSource(this._source);
+		this.source = new VectorSource({ wrapX: false });
+		this.layer.setSource(this.source);
 		this.layer.setStyle(this.styleFunction.bind(this));
 		this.layer.setZIndex(200000);
 
@@ -205,7 +202,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	getExtentAsPixels(extent) {
-		return [this._imap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
+		return [this.iMap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
 			this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])]
 	}
 
@@ -224,10 +221,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	redrawFromGeoJson() {
 		// const geoFeatures = this.collection;
-		this._source.clear();
+		this.source.clear();
 		this.collection = undefined;
 		const features = this.createFeturesFromGeoJson(this.features);
-		this._source.addFeatures(features);
+		this.source.addFeatures(features);
 	}
 
 	drawFeatures(data) {
@@ -252,7 +249,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		}
-		this._source.addFeatures(features);
+		this.source.addFeatures(features);
 		this._imap.mapObject.render();
 	}
 
@@ -282,7 +279,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	removeInteraction() {
 		if (this.interactionHandler) {
-			this._imap.mapObject.removeInteraction(this.interactionHandler);
+			this.iMap.mapObject.removeInteraction(this.interactionHandler);
 		}
 	}
 
@@ -293,7 +290,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		data.feature.setProperties({
 			id: Date.now(),
-			style: this.style,
+			style: this.visualizerStyle,
 			geometryName,
 			data: {}
 		});
@@ -332,7 +329,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 			this.removeSelectInteraction();
-			this._imap.mapObject.addInteraction(this.interactionHandler);
+			this.iMap.mapObject.addInteraction(this.interactionHandler);
 		}
 	}
 
@@ -348,7 +345,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.currentInteraction = type;
 
 		this.interactionHandler = new Draw({
-			source: this._source,
+			source: this.source,
 			type: type,
 			geometryName: `${this.namePrefix}${type}`,
 
@@ -367,7 +364,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		this.currentInteraction = 'Arrow';
 		this.interactionHandler = new Draw({
-			source: this._source,
+			source: this.source,
 			type: 'LineString',
 			geometryName: `${this.namePrefix}Arrow`,
 		});
@@ -386,7 +383,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const type = 'Circle';
 		const geometryFunction = Draw.createBox(4);
 		this.interactionHandler = new Draw({
-			source: this._source,
+			source: this.source,
 			type: type,
 			geometryFunction,
 			geometryName: `${this.namePrefix}Box`
@@ -394,9 +391,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.addInteraction();
 	}
 
-	createLayer() {
-		this._source = new VectorLayer({
-			source: this._source,
+	protected initLayers() {
+		this.source = new VectorLayer({
+			source: this.source,
 			style: this.styleFunction.bind(this)
 		});
 	}
@@ -404,15 +401,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	arrowStyle(feature, resolution) {
 		const geometry = feature.getGeometry();
 
-		const styles = [
-			// linestring
-			new Style({
-				stroke: new Stroke({
-					color: this.style.stroke.color,
-					width: this.style.stroke.width
-				})
-			})
-		];
+		const styles = [new Style({ stroke: new Stroke(this.visualizerStyle.initial.stroke) })];
+
 		const cordinates = geometry.getCoordinates();
 		// draw the arrows on the last segment
 		const start = cordinates[cordinates.length - 2];
@@ -428,10 +418,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const lineStr2 = new LineString([end, [end[0] - factor, end[1] - factor]]);
 		lineStr2.rotate(rotation, end);
 
-		const stroke = new Stroke({
-			color: this.style.stroke.color,
-			width: this.style.stroke.width
-		});
+		const stroke = new Stroke(this.visualizerStyle.initial.stroke);
 
 		styles.push(new Style({
 			geometry: lineStr1,
@@ -446,7 +433,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	styleFunction(feature, resolution, style = this.style) {
+	styleFunction(feature, resolution, style = this.visualizerStyle.initial) {
 		if (feature.getGeometryName() === `${this.namePrefix}Arrow`) {
 			return this.arrowStyle(feature, resolution);
 		}
@@ -467,13 +454,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			});
 		}
 		return new Style({
-			stroke: new Stroke({
-				color: style.stroke.color,
-				width: style.stroke.width
-			}),
-			fill: new Fill({
-				color: style.fill.color,
-			})
+			stroke: new Stroke(style.stroke),
+			fill: new Fill(style.fill)
 		});
 	}
 
@@ -481,5 +463,4 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super.dispose();
 		this.removeLayer();
 	}
-
 }

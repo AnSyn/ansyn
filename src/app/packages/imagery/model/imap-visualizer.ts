@@ -28,7 +28,7 @@ export interface IMapVisualizer {
 	 * @param {string} mapId
 	 * @param {IMap} map
 	 */
-	onInit(mapId: string, map: IMap);
+	onInit(mapId: string, map: IMap<any>);
 
 	/**
 	 * @description This function is called after map resetView() is called. use this method to:
@@ -64,7 +64,7 @@ export interface IMapVisualizer {
 	 * @description Get All Entities
 	 * @returns {IVisualizerEntity[]}
 	 */
-	getEntites(): IVisualizerEntity[];
+	getEntities(): IVisualizerEntity[];
 
 	/**
 	 * @description This function is called before the map is destroyed

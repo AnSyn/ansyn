@@ -4,7 +4,7 @@ import { MapPosition } from './map-position';
 
 
 export interface IMapComponent {
-	mapCreated: EventEmitter<IMap>;
+	mapCreated: EventEmitter<IMap<any>>;
 
 	createMap(layers: any, position?: MapPosition): void;
 }

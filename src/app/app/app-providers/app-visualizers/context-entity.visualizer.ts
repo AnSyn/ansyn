@@ -13,19 +13,23 @@ import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
+import { VisualizerStateStyle } from '../packages/open-layer-visualizers/models/visualizer-state';
 
 export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
 
 export class ContextEntityVisualizer extends EntitiesVisualizer {
-
 	iconStyle: Style;
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Point>;
 
-	constructor(args: any) {
-		super(ContextEntityVisualizerType, args);
-		this.fillColor = 'transparent';
-		this.strokeColor = '#3DCC33';
+	constructor(style: VisualizerStateStyle) {
+		super(ContextEntityVisualizerType, style, {
+			initial: {
+				stroke: {
+					color: '#3DCC33'
+				}
+			}
+		});
 
 		this.iconStyle = new Icon({
 			scale: 1,
@@ -36,7 +40,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	featureStyle(feature: Feature, resolution) {
 		const featureId = `${feature.getId()}_context`;
-		let style = this._styleCache[featureId];
+		let style = this.styleCache[featureId];
 		if (!style) {
 			const superStyle = super.featureStyle(feature, resolution);
 			const textStyle = new Text({
@@ -62,13 +66,13 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			if (!this.referenceDate) {
 				textStyle.setText('');
 			} else {
-				const originalEntity = this._idToEntity.get(feature.getId()).originalEntity;
+				const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
 				const entityDate = (<IContextEntity>originalEntity).date;
 				const timeDiff = getTimeDiff(this.referenceDate, entityDate);
 				const timeFormat = getTimeDiffFormat(timeDiff);
 				textStyle.setText(timeFormat);
 			}
-			this._styleCache[featureId] = style;
+			this.styleCache[featureId] = style;
 		}
 		return style;
 	}
@@ -79,9 +83,9 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			return this.idToCachedCenter.get(featureId);
 		}
 
-		const entityMap = this._idToEntity.get(featureId);
+		const entityMap = this.idToEntity.get(featureId);
 		const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);
-		const view = this._imap.mapObject.getView();
+		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 		const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
 		const point = new Point(lonLatCords);
@@ -100,6 +104,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	setReferenceDate(date: Date) {
 		this.referenceDate = date;
-		this._styleCache = {};
+		this.styleCache = {};
 	}
 }

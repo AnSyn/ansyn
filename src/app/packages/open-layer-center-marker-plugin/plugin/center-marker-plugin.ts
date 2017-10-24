@@ -94,7 +94,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 			return;
 		}
 
-		const map: IMap = this._imageryCommunicator.ActiveMap;
+		const map: IMap<any> = this._imageryCommunicator.ActiveMap;
 
 		const center = map.mapObject.getView().getCenter();
 

@@ -1,94 +1,187 @@
 import { IMap, IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
+import { merge } from 'lodash';
 
-import Vector from 'ol/source/vector';
+import SourceVector from 'ol/source/vector';
 import Feature from 'ol/feature';
 import GeoJSON from 'ol/format/geojson';
 import Style from 'ol/style/style';
+import condition from 'ol/events/condition';
+import MultiPolygon from 'ol/geom/multipolygon';
+
+import Select from 'ol/interaction/select';
 import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
+import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
+import Vector from 'ol/layer/vector';
 import { Subscriber } from 'rxjs/Subscriber';
+import { VisualizerStyle } from './models/visualizer-style';
+import { VisualizerStateStyle } from './models/visualizer-state';
+import { OpenLayersMap } from '../open-layers-map/map/open-layers-map';
 import { Subject } from 'rxjs/Subject';
 
-export const EntitiesVisualizerType = 'EntitiesVisualizerType';
+export interface FeatureIdentifier {
+	feature: Feature,
+	originalEntity: IVisualizerEntity
+}
 
-export class EntitiesVisualizer implements IMapVisualizer {
+export const VisualizerStates = {
+	INITIAL: 'initial',
+	HOVER: 'hover'
+};
 
-	type: string;
-	_imap: IMap;
-	_mapId: string;
-	_source: Vector;
-	_featuresCollection: Feature[];
-	_footprintsVector: VectorLayer;
-	_styleCache: any;
-	_default4326GeoJSONFormat: GeoJSON;
-	_idToEntity: Map<string, { feature: Feature, originalEntity: IVisualizerEntity }>;
-	strokeColor = 'blue';
-	fillColor = 'transparent';
-	containerLayerOpacity = 1;
-	events: Map<string, Subject<any>>;
+export abstract class EntitiesVisualizer implements IMapVisualizer {
 
-	onDisposedEvent: EventEmitter<any> = new EventEmitter();
+	protected iMap: IMap<OpenLayersMap>;
+	protected mapId: string;
+	protected source: Vector;
+	protected featuresCollection: Feature[];
+	protected footprintsVector: VectorLayer;
+	protected default4326GeoJSONFormat: GeoJSON = new GeoJSON({
+		defaultDataProjection: 'EPSG:4326',
+		featureProjection: 'EPSG:4326'
+	});
+	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	protected hoverLayer: Vector;
+
+	protected styleCache: any;
+	protected disableCache = false;
+
+	protected visualizerStyle: VisualizerStateStyle = {
+		opacity: 1,
+		initial: {
+			fill: {
+				color: 'transparent'
+			},
+			stroke: {
+				color: 'blue',
+				width: 3
+			}
+		}
+	};
+
+	private interactions: { doubleClick: Select, pointerMove: Select } = { doubleClick: null, pointerMove: null };
+	protected enabledInteractions = { doubleClick: false, pointMove: false };
+
+	onDisposedEvent: EventEmitter<void> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
 	doubleClickFeature: EventEmitter<any> = new EventEmitter();
 	subscribers: Subscriber<any>[] = [];
 
-	constructor(visualizerType: string, args: any) {
-		this.type = visualizerType;
+	constructor(public type: string, visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
+	}
 
-		this._default4326GeoJSONFormat = new GeoJSON({
-			defaultDataProjection: 'EPSG:4326',
-			featureProjection: 'EPSG:4326'
-		});
+	onInit(mapId: string, map: IMap<OpenLayersMap>) {
+		this.iMap = map;
+		this.mapId = mapId;
 		this.events = new Map<string, Subject<any>>();
-		this._idToEntity = new Map<string, { feature: null, originalEntity: null }>();
+		this.initLayers();
 	}
 
-	onInit(mapId: string, map: IMap) {
-		this._imap = map;
-		this._mapId = mapId;
-		this.createLayer();
+	protected initLayers() {
+		this.createStaticLayers();
+
+		if (this.enabledInteractions.pointMove) {
+			this.createHoverLayer();
+		}
+
+		this.resetInteractions();
 	}
 
-	createLayer() {
-		this._featuresCollection = [];
-		this._source = new Vector({
-			features: this._featuresCollection
-		});
+	protected createStaticLayers() {
+		this.featuresCollection = [];
+		this.source = new SourceVector({ features: this.featuresCollection });
 
-		this._styleCache = {};
-		this._footprintsVector = new VectorLayer({
-			source: this._source,
+		this.styleCache = {};
+		this.footprintsVector = new VectorLayer({
+			source: this.source,
 			style: this.featureStyle.bind(this),
-			opacity: this.containerLayerOpacity
+			opacity: this.visualizerStyle.opacity
 		});
-		this._imap.addLayer(this._footprintsVector);
+
+		this.iMap.addLayer(this.footprintsVector);
 	}
 
-	featureStyle(feature: Feature, resolution?) {
+	protected createHoverLayer() {
+		this.hoverLayer = new VectorLayer({
+			source: new SourceVector(),
+			style: (feature) => this.featureStyle(feature, VisualizerStates.HOVER),
+		});
+
+		this.iMap.mapObject.addLayer(this.hoverLayer);
+	}
+
+	private resetInteractions(): void {
+		if (this.enabledInteractions.doubleClick) {
+			if (this.interactions.doubleClick) {
+				this.iMap.mapObject.removeInteraction(this.interactions.doubleClick);
+			}
+			this.addDoubleClickInteraction();
+		}
+
+		if (this.enabledInteractions.pointMove) {
+			if (this.interactions.pointerMove) {
+				this.iMap.mapObject.removeInteraction(this.interactions.pointerMove);
+			}
+			this.addPointerMoveInteraction();
+		}
+	}
+
+	private fixStyleValues(feature: Feature, styleSettings: any) {
+		Object.keys(styleSettings).forEach(key => {
+			if (styleSettings[key]) {
+				switch (typeof styleSettings[key]) {
+					case 'function':
+						styleSettings[key] = styleSettings[key](feature);
+						break;
+					case 'object':
+						this.fixStyleValues(feature, styleSettings[key]);
+						break;
+				}
+			}
+		});
+	}
+
+	private createStyle(feature: Feature, style: Partial<VisualizerStyle>, fallback: Partial<VisualizerStyle> = {}) {
+		const styleSettings = merge({}, fallback, style);
+		this.fixStyleValues(feature, styleSettings);
+
+		const styleObject: any = {};
+
+		if (styleSettings.stroke) {
+			styleObject.stroke = new Stroke(styleSettings.stroke);
+		}
+
+		if (styleSettings.fill) {
+			styleObject.fill = new Fill(styleSettings.fill);
+		}
+
+		if (styleSettings.icon) {
+			styleObject.image = new Icon(styleSettings.icon);
+		}
+
+		if (styleSettings.zIndex) {
+			styleObject.zIndex = styleSettings.zIndex;
+		}
+
+		return new Style(styleObject);
+	}
+
+	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
 		const featureId = feature.getId();
 
-		let style = this._styleCache[featureId];
-		if (!style) {
-			style = new Style({
-				stroke: new Stroke({
-					color: this.strokeColor,
-					width: 3
-				}),
-				fill: new Fill({
-					color: this.fillColor
-				})
-				// add text here
-			});
-			this._styleCache[featureId] = style;
+		if (this.disableCache || !this.styleCache[featureId]) {
+			this.styleCache[featureId] = this.createStyle(feature, this.visualizerStyle[state], this.visualizerStyle[VisualizerStates.INITIAL]);
 		}
-		return style;
+
+		return this.styleCache[featureId];
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		const logicalEntitiesCopy = [...logicalEntities];
-		const view = this._imap.mapObject.getView();
+		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 
 		const featuresArray = [];
@@ -98,9 +191,9 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		};
 
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
-			const existingEntity = this._idToEntity.get(entity.id);
+			const existingEntity = this.idToEntity.get(entity.id);
 			if (existingEntity) {
-				const newGeometry = this._default4326GeoJSONFormat.readGeometry(entity.featureJson.geometry, {
+				const newGeometry = this.default4326GeoJSONFormat.readGeometry(entity.featureJson.geometry, {
 					dataProjection: 'EPSG:4326',
 					featureProjection: projection.getCode()
 				});
@@ -110,27 +203,27 @@ export class EntitiesVisualizer implements IMapVisualizer {
 				const clonedFeatureJson = { ...entity.featureJson };
 				clonedFeatureJson.id = entity.id;
 				featuresCollectionToAdd.features.push(clonedFeatureJson);
-				this._idToEntity.set(entity.id, { originalEntity: entity, feature: null });
+				this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
 			}
 		});
 
 		const featuresCollectionGeojson = JSON.stringify(featuresCollectionToAdd);
-		const features = this._default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
+		const features = this.default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
 			dataProjection: 'EPSG:4326',
 			featureProjection: projection.getCode()
 		});
 
 		features.forEach((feature: Feature) => {
 			const id: string = <string>feature.getId();
-			const existingEntity = this._idToEntity.get(id);
-			this._idToEntity.set(id, { ...existingEntity, feature: feature });
+			const existingEntity = this.idToEntity.get(id);
+			this.idToEntity.set(id, { ...existingEntity, feature: feature });
 		});
-		this._source.addFeatures(features);
+		this.source.addFeatures(features);
 	}
 
 	setEntities(logicalEntities: IVisualizerEntity[]) {
 		const removedEntities = [];
-		this._idToEntity.forEach(((value, key: string) => {
+		this.idToEntity.forEach(((value, key: string) => {
 			const item = logicalEntities.find((entity) => entity.id === key);
 			if (!item) {
 				removedEntities.push(key);
@@ -145,28 +238,28 @@ export class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	removeEntity(logicalEntityId: string) {
-		const entityToRemove = this._idToEntity.get(logicalEntityId);
+		const entityToRemove = this.idToEntity.get(logicalEntityId);
 		if (entityToRemove) {
-			this._idToEntity.delete(logicalEntityId);
-			this._source.removeFeature(entityToRemove.feature);
+			this.idToEntity.delete(logicalEntityId);
+			this.source.removeFeature(entityToRemove.feature);
 		}
 	}
 
 	clearEntities() {
-		this._idToEntity.clear();
-		this._source.clear(true);
+		this.idToEntity.clear();
+		this.source.clear(true);
 	}
 
-	getEntites(): IVisualizerEntity[] {
+	getEntities(): IVisualizerEntity[] {
 		const entities: IVisualizerEntity[] = [];
-		this._idToEntity.forEach((val, key) => entities.push(val.originalEntity));
+		this.idToEntity.forEach((val, key) => entities.push(val.originalEntity));
 		return entities;
 	}
 
 	onResetView() {
-		const currentEntities: IVisualizerEntity[] = this.getEntites();
+		const currentEntities: IVisualizerEntity[] = this.getEntities();
 		this.clearEntities();
-		this.createLayer();
+		this.initLayers();
 		this.addOrUpdateEntities(currentEntities);
 	}
 
@@ -176,15 +269,67 @@ export class EntitiesVisualizer implements IMapVisualizer {
 		this.subscribers = [];
 	}
 
-	setHoverFeature(id: string) {
-
+	updateStyle(style: Partial<VisualizerStateStyle>) {
+		merge(this.visualizerStyle, style);
+		this.styleCache = {};
 	}
 
-	setStyleOptions(strokeColor: string, fillColor: string, containerLayerOpacity: number) {
-		this.strokeColor = strokeColor;
-		this.fillColor = fillColor;
-		this.containerLayerOpacity = containerLayerOpacity;
-		this._styleCache = {};
-		this._imap.mapObject.render();
+	onSelectFeature($event) {
+		const event = { visualizerType: this.type };
+		if ($event.selected.length > 0) {
+			const id = $event.selected[0].getId();
+			const hoverFeature = this.hoverLayer.getSource().getFeatureById(id);
+			if (!hoverFeature || hoverFeature.getId() !== id) {
+				this.onHoverFeature.emit({ ...event, id });
+			}
+		} else {
+			this.onHoverFeature.emit({ ...event });
+		}
+	}
+
+	addPointerMoveInteraction() {
+		this.interactions.pointerMove = new Select({
+			condition: condition.pointerMove,
+			style: () => new Style(),
+			layers: [this.footprintsVector]
+		});
+		this.interactions.pointerMove.on('select', this.onSelectFeature.bind(this));
+		this.iMap.mapObject.addInteraction(this.interactions.pointerMove);
+	}
+
+	onDoubleClickFeature($event) {
+		if ($event.selected.length > 0) {
+			const visualizerType = this.type;
+			const id = $event.selected[0].getId();
+			this.doubleClickFeature.emit({ visualizerType, id });
+		}
+	}
+
+	addDoubleClickInteraction() {
+		this.interactions.doubleClick = new Select({
+			condition: condition.doubleClick,
+			style: () => new Style({}),
+			layers: [this.footprintsVector]
+		});
+		this.interactions.doubleClick.on('select', this.onDoubleClickFeature.bind(this));
+		this.iMap.mapObject.addInteraction(this.interactions.doubleClick);
+	}
+
+	private createHoverFeature(selectedFeature: Feature): void {
+		const selectedFeatureCoordinates = [[...selectedFeature.getGeometry().getCoordinates()]];
+		const hoverFeature = new Feature(new MultiPolygon(selectedFeatureCoordinates));
+		hoverFeature.setId(selectedFeature.getId());
+		this.hoverLayer.getSource().addFeature(hoverFeature);
+	}
+
+	setHoverFeature(id) {
+		this.hoverLayer.getSource().clear();
+
+		if (id) {
+			const polyline = this.source.getFeatureById(id);
+			if (polyline) {
+				this.createHoverFeature(polyline);
+			}
+		}
 	}
 }

@@ -7,8 +7,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 @Component({
 	selector: 'ansyn-ol-component',
 	template: `
-		<div #olMap></div>
-	`,
+		<div #olMap></div>`,
 	styles: [
 			`div {
 			position: absolute;
@@ -29,10 +28,10 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 	@ViewChild('olMap') mapElement: ElementRef;
 
 	private _map: OpenLayersMap;
-	public mapCreated: EventEmitter<IMap>;
+	public mapCreated: EventEmitter<IMap<any>>;
 
 	constructor() {
-		this.mapCreated = new EventEmitter<IMap>();
+		this.mapCreated = new EventEmitter<IMap<any>>();
 	}
 
 	ngOnInit(): void {

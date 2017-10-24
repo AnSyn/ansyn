@@ -32,7 +32,7 @@ import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { FootprintHitmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/hitmap-visualizer';
+import { FootprintHeatmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import {
 	AnnotationVisualizerAgentAction,
@@ -420,7 +420,7 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
-			const hitMapvisualizer = communicator.getVisualizer(FootprintHitmapVisualizerType);
+			const hitMapvisualizer = communicator.getVisualizer(FootprintHeatmapVisualizerType);
 			if (!polylineVisualizer || !hitMapvisualizer) {
 				return;
 			}
@@ -451,28 +451,29 @@ export class VisualizersAppEffects {
 		if (!mapData) {
 			return;
 		}
+
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
+		if (!communicator) {
 			return;
-		}
-		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
-		if (!gotoVisualizer) {
-			return;
-		}
-		if (gotoExpand) {
-			const gotoPoint: GeoJSON.Point = {
-				type: 'Point',
-				coordinates: point
-			};
-			const gotoFeatureJson: GeoJSON.Feature<any> = {
-				type: 'Feature',
-				geometry: gotoPoint,
-				properties: {}
-			};
-			gotoVisualizer.clearEntities();
-			gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-		} else {
-			gotoVisualizer.clearEntities();
+		}const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+			if (!gotoVisualizer) {
+				return;
+			}
+			if (gotoExpand) {
+				const gotoPoint: GeoJSON.Point = {
+					type: 'Point',
+					coordinates: point
+				};
+				const gotoFeatureJson: GeoJSON.Feature<any> = {
+					type: 'Feature',
+					geometry: gotoPoint,
+					properties: {}
+				};
+				gotoVisualizer.clearEntities();
+				gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
+			} else {
+				gotoVisualizer.clearEntities();
+
 		}
 	}
 

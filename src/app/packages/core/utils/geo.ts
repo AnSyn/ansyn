@@ -1,4 +1,4 @@
-import { FeatureCollection, GeometryObject, Point } from 'geojson';
+import { FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
 import { feature, point } from '@turf/helpers';
 import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
@@ -21,4 +21,28 @@ export function getPointByPolygon(geometry: GeometryObject | FeatureCollection<a
 	else {
 		return <Point>centerOfMass(feature(<GeometryObject>geometry)).geometry;
 	}
+}
+
+export  function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
+	if (!multiPolygon) {
+		return null;
+	}
+
+	return {
+		type: "Polygon",
+		coordinates: multiPolygon.coordinates[0]
+	};
+}
+
+export  function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
+	if (!polygon) {
+		return null;
+	}
+	const coordinates = [];
+	coordinates.push(polygon.coordinates);
+
+	return {
+		type: "MultiPolygon",
+		coordinates: coordinates
+	};
 }

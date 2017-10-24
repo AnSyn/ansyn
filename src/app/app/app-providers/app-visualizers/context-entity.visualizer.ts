@@ -13,7 +13,7 @@ import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
-import { VisualizerStateStyle } from '../packages/open-layer-visualizers/models/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
 
 export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
 

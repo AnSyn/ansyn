@@ -11,7 +11,7 @@ import { IMapVisualizer } from '../../model/imap-visualizer';
 
 export class ImageryComponentManager {
 
-	private _activeMap: IMap;
+	private _activeMap: IMap<any>;
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
@@ -82,7 +82,7 @@ export class ImageryComponentManager {
 		this._mapComponentRef = this.mapComponentElem.createComponent(factory);
 
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
-		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
+		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap<any>) => {
 			this.internalSetActiveMap(map);
 			this.buildActiveMapPlugins(activeMapName);
 			this.buildActiveMapVisualizers(activeMapName, map);
@@ -149,7 +149,7 @@ export class ImageryComponentManager {
 		return this._plugins;
 	}
 
-	private buildActiveMapVisualizers(activeMapType: string, map: IMap) {
+	private buildActiveMapVisualizers(activeMapType: string, map: IMap<any>) {
 		// Create Map visualizer's
 
 		const mapVisualizersConfig: [{ visualizerClass: any, args: any }] = this.imageryProviderService.getVisualizersConfig(activeMapType);
@@ -166,7 +166,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public createVisualizers(existingVisualizersConfig: [{ visualizerClass: any, args: any }], map: IMap): IMapVisualizer[] {
+	public createVisualizers(existingVisualizersConfig: [{ visualizerClass: any, args: any }], map: IMap<any>): IMapVisualizer[] {
 		const visualizers: IMapVisualizer[] = [];
 
 		existingVisualizersConfig.forEach(provider => {
@@ -191,7 +191,7 @@ export class ImageryComponentManager {
 		return this._visualizers;
 	}
 
-	private internalSetActiveMap(activeMap: IMap) {
+	private internalSetActiveMap(activeMap: IMap<any>) {
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();
 	}
@@ -228,7 +228,7 @@ export class ImageryComponentManager {
 		this._id = value;
 	}
 
-	public get ActiveMap(): IMap {
+	public get ActiveMap(): IMap<any> {
 		return this._activeMap;
 	}
 

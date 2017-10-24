@@ -1,13 +1,17 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
+import { VisualizerStateStyle } from '../models/visualizer-state';
 
 export const FootprintPolygonVisualizerType = 'FootprintPolygonVisualizer';
 
 export class FootprintPolygonVisualizer extends EntitiesVisualizer {
-
-	constructor(args: any) {
-		super(FootprintPolygonVisualizerType, args);
-		this.fillColor = 'transparent';
-		this.strokeColor = 'yellow';
-		this.containerLayerOpacity = 0.5;
+	constructor(style: Partial<VisualizerStateStyle>) {
+		super(FootprintPolygonVisualizerType, style, {
+			opacity: 0.5,
+			initial: {
+				stroke: {
+					color: 'yellow'
+				}
+			}
+		});
 	}
 }

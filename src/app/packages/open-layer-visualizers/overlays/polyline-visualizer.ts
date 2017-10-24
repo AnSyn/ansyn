@@ -1,176 +1,85 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import Select from 'ol/interaction/select';
-import condition from 'ol/events/condition';
 import Style from 'ol/style/style';
-import Vector from 'ol/layer/vector';
-import SourceVector from 'ol/source/vector';
 import Stroke from 'ol/style/stroke';
-import Fill from 'ol/style/fill';
 import MultiPolygon from 'ol/geom/multipolygon';
 import Feature from 'ol/feature';
 import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
-import { cloneDeep as _cloneDeep, isNil as _isNil } from 'lodash';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { cloneDeep as _cloneDeep } from 'lodash';
+import { VisualizerStateStyle } from '../models/visualizer-state';
 
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
 
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
-	hoverLayerSource: SourceVector;
-	hoverLayer: Vector;
-	selectPointerMove: Select;
-	selectDoubleClick: Select;
+	disableCache = true; // TODO remove!
+
 	markups: any[] = [];
 
-	styleProperties = {
-		hoverFeature: {
-			stroke: {
-				colors: {
-					active: `#27b2cf`,
-					displayed: `#9524ad`,
-					hover: `#9524ad`,
-					favorites: 'yellow',
-					'': `#9524ad`
-				},
-				width: 5
+	protected enabledInteractions = { doubleClick: true, pointMove: true };
+
+	constructor(style: Partial<VisualizerStateStyle>) {
+		super(FootprintPolylineVisualizerType, style);
+
+		this.updateStyle({
+			opacity: 0.5,
+			initial: {
+				zIndex: this.getZIndex.bind(this),
+				fill: null,
+				stroke: {
+					width: 3,
+					color: this.getStrokeColor.bind(this)
+				}
 			},
-			fill: new Fill({ color: 'rgba(255,255,255,0.4)' })
-		},
-		staticFeature: {
-			stroke: {
-				colors: {
-					active: `#27b2cf`,
-					displayed: `#9524ad`,
-					hover: `rgb(211, 147, 225)`,
-					favorites: 'yellow',
-					'': `rgb(211, 147, 225)`
+			hover: {
+				zIndex: 4,
+				fill: {
+					color: 'rgba(255, 255, 255, 0.4)'
 				},
-				width: 3
-			}
-		}
-	};
-
-	interactionsStyle = new Style({
-		stroke: new Stroke({
-			color: 'transparent',
-			width: 5
-		}),
-	});
-
-	constructor(args: any) {
-		super(FootprintPolylineVisualizerType, args);
-		this.fillColor = 'transparent';
-		this.strokeColor = 'rgb(211, 147, 225)';
-		this.containerLayerOpacity = 0.5;
-	}
-
-	getFeatureStyles(classes, featureStyle) {
-		const isFavorites = classes.includes('favorites');
-		const isActive = classes.includes('active');
-		const isDisplayed = classes.includes('displayed');
-		const baseHoverStyle = this.baseFeatureStyle(isActive, isFavorites, isDisplayed, featureStyle);
-		return isFavorites ? [this.baseFavoritesStyle(featureStyle), baseHoverStyle] : [baseHoverStyle];
-	}
-
-	private baseFavoritesStyle({ stroke, fill }) {
-		return this.getStyleWithStroke(stroke.width, stroke.colors['favorites'], fill);
-	}
-
-	private baseFeatureStyle(isActive, isFavorites, isDisplayed, { stroke, fill }) {
-		const [colors, width] = isFavorites ? [stroke.colors, stroke.width * 0.6] : [stroke.colors, stroke.width];
-		const color = isActive ? colors['active'] : isDisplayed ? colors['displayed'] : colors[''];
-		const zIndex = isActive ? 2 : 1;
-		return this.getStyleWithStroke(width, color, fill, zIndex);
-	}
-
-	private getStyleWithStroke(width, color, fill?, zIndex?) {
-		const stroke = new Stroke({ width, color });
-		const styleObj = fill ? { stroke, fill, zIndex } : { stroke, zIndex };
-		return new Style(styleObj);
-	}
-
-	onInit(mapId: string, map: IMap) {
-		super.onInit(mapId, map);
-		this.initHoverPolygonLayer();
-	}
-
-	createLayer() {
-		super.createLayer();
-		this.resetInteractions();
-	}
-
-	resetInteractions(): void {
-		this._imap.mapObject.removeInteraction(this.selectDoubleClick);
-		this._imap.mapObject.removeInteraction(this.selectPointerMove);
-		this.addPointerMoveInteraction();
-		this.addDoubleClickInteraction();
-	}
-
-	initHoverPolygonLayer() {
-		this.hoverLayerSource = new SourceVector();
-		this.hoverLayer = new Vector({
-			source: this.hoverLayerSource,
-			style: (feature: Feature) => {
-				const markClass = this.getMarkClass(feature.getId());
-				return this.getFeatureStyles(markClass, this.styleProperties.hoverFeature);
+				stroke: {
+					width: 5
+				}
 			}
 		});
-		this.hoverLayer.setZIndex(100000);
-		this._imap.mapObject.addLayer(this.hoverLayer);
 	}
 
-	getMarkClass(featureId): any {
+	private getMarkupClasses(featureId: string): string[] {
 		return this.markups
 			.filter(({ id }) => id === featureId)
 			.map(mark => mark.class);
 	}
 
-	addPointerMoveInteraction() {
-		this.selectPointerMove = new Select({
-			condition: condition.pointerMove,
-			style: () => this.interactionsStyle,
-			layers: [this._footprintsVector]
-		});
-		this.selectPointerMove.on('select', this.onSelectFeature.bind(this));
-		this._imap.mapObject.addInteraction(this.selectPointerMove);
+	private propsByFeature(feature: Feature) {
+		const classes = this.getMarkupClasses(feature.getId());
+
+		const isFavorites = classes.includes('favorites');
+		const isActive = classes.includes('active');
+		const isDisplayed = classes.includes('displayed');
+
+		return { isFavorites, isActive, isDisplayed };
 	}
 
-	addDoubleClickInteraction() {
-		this.selectDoubleClick = new Select({
-			condition: condition.doubleClick,
-			style: () => this.interactionsStyle,
-			layers: [this._footprintsVector]
-		});
-		this.selectDoubleClick.on('select', this.onDoubleClickFeature.bind(this));
-		this._imap.mapObject.addInteraction(this.selectDoubleClick);
+	private getZIndex(feature: Feature) {
+		const { isActive, isFavorites } = this.propsByFeature(feature);
+
+		return isActive ? 3 : isFavorites ? 2 : 1;
 	}
 
-	onSelectFeature($event) {
-		const event = { visualizerType: this.type };
-		if ($event.selected.length > 0) {
-			const id = $event.selected[0].getId();
-			const hoverFeature = this.hoverLayerSource.getFeatureById(id);
-			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.onHoverFeature.emit({ ...event, id });
-			}
-		} else {
-			this.onHoverFeature.emit({ ...event });
+	private getStrokeColor(feature: Feature) {
+		const { isFavorites, isActive, isDisplayed } = this.propsByFeature(feature);
+
+		if (isFavorites) {
+			return 'yellow';
 		}
-	}
 
-	onDoubleClickFeature($event) {
-		if ($event.selected.length > 0) {
-			const visualizerType = this.type;
-			const id = $event.selected[0].getId();
-			this.doubleClickFeature.emit({ visualizerType, id });
+		if (isActive) {
+			return '#27b2cf';
 		}
-	}
 
-	createHoverFeature(selectedFeature): void {
-		this.hoverLayerSource.clear();
-		const selectedFeatureCoordinates = [[...selectedFeature.getGeometry().getCoordinates()]];
-		const hoverFeature = new Feature(new MultiPolygon(selectedFeatureCoordinates));
-		hoverFeature.setId(selectedFeature.getId());
-		this.hoverLayerSource.addFeature(hoverFeature);
+		if (isDisplayed) {
+			return '#9524ad';
+		}
+
+		return '#d393e1';
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
@@ -178,7 +87,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		super.addOrUpdateEntities(conversion);
 	}
 
-	convertPolygonToPolyline(logicalEntities: IVisualizerEntity[]): IVisualizerEntity[] {
+	private convertPolygonToPolyline(logicalEntities: IVisualizerEntity[]): IVisualizerEntity[] {
 		const clonedLogicalEntities = _cloneDeep(logicalEntities);
 		clonedLogicalEntities
 			.filter((entity: IVisualizerEntity) => entity.featureJson.geometry.type === 'MultiPolygon')
@@ -190,30 +99,12 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return clonedLogicalEntities;
 	}
 
-	setHoverFeature(id) {
-		super.setHoverFeature(id);
-		if (_isNil(id)) {
-			this.hoverLayerSource.clear();
-		} else {
-			const polyline = this._source.getFeatureById(id);
-			if (!_isNil(polyline)) {
-				this.createHoverFeature(polyline);
-			}
-		}
-	}
-
-	featureStyle(feature: Feature, resolution?) {
-		const markClasses = this.getMarkClass(feature.getId());
-		return this.getFeatureStyles(markClasses, this.styleProperties.staticFeature);
-	}
 
 	setMarkupFeatures(markups: IMarkupEvent) {
 		this.markups = markups;
-		this.hoverLayerSource.refresh();
-		if (this._source) {
-			this._source.refresh();
+		this.hoverLayer.getSource().refresh();
+		if (this.source) {
+			this.source.refresh();
 		}
 	}
-
-
 }

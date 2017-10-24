@@ -11,7 +11,7 @@ import Layer from 'ol/layer/layer';
 import Raster from 'ol/source/raster';
 import ImageLayer from 'ol/layer/image';
 
-export class OpenLayersDisabledMap implements IMap {
+export class OpenLayersDisabledMap implements IMap<any> {
 	static mapType = 'openLayersMap';
 
 	centerChanged: EventEmitter<GeoJSON.Point>;

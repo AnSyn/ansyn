@@ -18,7 +18,7 @@ import { ContextProxySourceService } from './context-source-providers/context-pr
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { FootprintPolygonVisualizer } from '@ansyn/open-layer-visualizers/overlays/polygon-visualizer';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
-import { FootprintHitmapVisualizer } from '@ansyn/open-layer-visualizers/overlays/hitmap-visualizer';
+import { FootprintHeatmapVisualizer } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
@@ -64,7 +64,7 @@ import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 			multi: true,
 			useValue: {
 				type: OpenLayersVisualizerMapType,
-				visualizer: FootprintHitmapVisualizer
+				visualizer: FootprintHeatmapVisualizer
 			}
 		}, {
 			provide: MapVisualizer,

@@ -27,7 +27,7 @@ import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 
 
-export class OpenLayersMap implements IMap {
+export class OpenLayersMap implements IMap<Map> {
 	static mapType = 'openLayersMap';
 
 	public mapType: string;

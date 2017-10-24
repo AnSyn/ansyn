@@ -144,8 +144,8 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		});
 	}
 
-	private createStyle(feature: Feature, style: Partial<VisualizerStyle>, fallback: Partial<VisualizerStyle> = {}) {
-		const styleSettings = merge({}, fallback, style);
+	private createStyle(feature: Feature, ...styles: Array<Partial<VisualizerStyle>>) {
+		const styleSettings: Partial<VisualizerStyle> = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
 		const styleObject: any = {};
@@ -173,7 +173,17 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		const featureId = feature.getId();
 
 		if (this.disableCache || !this.styleCache[featureId]) {
-			this.styleCache[featureId] = this.createStyle(feature, this.visualizerStyle[state], this.visualizerStyle[VisualizerStates.INITIAL]);
+			const styles = [
+				this.visualizerStyle[VisualizerStates.INITIAL], // Weakest
+				this.visualizerStyle[state]
+			];
+
+			if (feature.style) {
+				styles.push(feature.style[this.visualizerStyle[VisualizerStates.INITIAL]]);
+				styles.push(feature.style[this.visualizerStyle[state]]);
+			}
+
+			this.styleCache[featureId] = this.createStyle(feature, ...styles);
 		}
 
 		return this.styleCache[featureId];
@@ -322,14 +332,21 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		this.hoverLayer.getSource().addFeature(hoverFeature);
 	}
 
-	setHoverFeature(id) {
+	setHoverFeature(featureId: string) {
 		this.hoverLayer.getSource().clear();
 
-		if (id) {
-			const polyline = this.source.getFeatureById(id);
-			if (polyline) {
-				this.createHoverFeature(polyline);
+		if (featureId) {
+			const feature = this.source.getFeatureById(featureId);
+			if (feature) {
+				this.createHoverFeature(feature);
 			}
 		}
+	}
+
+	updateFeatureStyle(featureId: string, style: Partial<VisualizerStateStyle>) {
+		const feature = this.source.getFeatureById(featureId);
+
+		feature.style = feature.style ? merge({}, feature.style, style) : style;
+		delete this.styleCache[featureId];
 	}
 }

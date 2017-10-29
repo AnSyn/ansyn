@@ -79,7 +79,7 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { getPolygonByPointAndRadius } from '../../packages/core/utils/geo';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 @Injectable()
 export class MapAppEffects {

@@ -68,7 +68,7 @@ export class ContextEntityAppEffects {
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [DisplayOverlayAction, ICasesState, IMapState]) => {
-			const mapId = action.payload.map_id ? action.payload.map_id : mapStore.activeMapId;
+			const mapId = action.payload.mapId ? action.payload.mapId : mapStore.activeMapId;
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, mapId);
 			const communicatorHandler = this.communicatorService.provide(mapId);
 			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
@@ -87,7 +87,7 @@ export class ContextEntityAppEffects {
 		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState]: [BackToWorldAction, ICasesState]) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.active_map_id;
+			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.activeMapId;
 			const communicatorHandler = this.communicatorService.provide(mapId);
 			this.setContextOverlayDate(communicatorHandler, null);
 		});

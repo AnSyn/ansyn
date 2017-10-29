@@ -15,13 +15,13 @@ describe('FiltersCollectionComponent', () => {
 	let store;
 	let handler: Subject<any>;
 
-	const mock_ansyn_checkbox = MockComponent({
+	const mockAnsynCheckbox = MockComponent({
 		selector: 'ansyn-checkbox',
 		inputs: ['id', 'checked', 'disabled', 'text'],
 		outputs: ['click']
 	});
 
-	const mock_anysn_filter_container = MockComponent({
+	const mockAnysnFilterContainer = MockComponent({
 		selector: 'ansyn-filter-container',
 		inputs: ['filter']
 	});
@@ -29,8 +29,8 @@ describe('FiltersCollectionComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				mock_ansyn_checkbox,
-				mock_anysn_filter_container
+				mockAnsynCheckbox,
+				mockAnysnFilterContainer
 			],
 			imports: [
 				FiltersModule,

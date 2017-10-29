@@ -65,6 +65,6 @@ describe('DataLayersService', () => {
 
 		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
 		dataLayersService.getAllLayersInATree('caseId');
-		expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}?case_id=caseId`);
+		expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}?caseId=caseId`);
 	});
 });

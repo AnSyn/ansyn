@@ -173,7 +173,7 @@ export class RemoveOverlayFromLoadingOverlaysAction implements Action {
 export class SetMapAutoImageProcessing implements Action {
 	type = MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING;
 
-	constructor(public payload: { mapId: string, toggle_value: boolean }) {
+	constructor(public payload: { mapId: string, toggleValue: boolean }) {
 	}
 }
 

@@ -18,7 +18,7 @@ export class CasesService {
 	static defaultCase: Case;
 
 	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
-	base_url;
+	baseUrl;
 	paginationLimit = 15;
 	queryParamsKeys;
 
@@ -30,7 +30,7 @@ export class CasesService {
 	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {
 		const result = [];
 
-		const activeMapId = caseValue.state.maps.active_map_id;
+		const activeMapId = caseValue.state.maps.activeMapId;
 
 		caseValue.state.maps.data.forEach((map: CaseMapState) => {
 			if (!isEmpty(map.data.overlay)) {
@@ -54,19 +54,19 @@ export class CasesService {
 	}
 
 	constructor(private http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
-		this.base_url = this.config.baseUrl;
+		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 		CasesService.defaultCase = config.defaultCase;
 	}
 
-	loadCases(last_id: string = '-1'): Observable<any> {
-		const url = `${this.base_url}/pagination/${last_id}?limit=${this.paginationLimit}`;
+	loadCases(lastId: string = '-1'): Observable<any> {
+		const url = `${this.baseUrl}/pagination/${lastId}?limit=${this.paginationLimit}`;
 		return this.http.get(url);
 	}
 
 	createCase(selectedCase: Case): Observable<Case> {
-		const url = `${this.base_url}`;
+		const url = `${this.baseUrl}`;
 		return this.http.post<Case>(url, selectedCase);
 	}
 
@@ -77,28 +77,28 @@ export class CasesService {
 	}
 
 	updateCase(selectedCase: Case): Observable<Case> {
-		const url = `${this.base_url}`;
+		const url = `${this.baseUrl}`;
 		return this.http.put<Case>(url, selectedCase);
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {
-		const url = `${this.base_url}/${selectedCaseId}`;
+		const url = `${this.baseUrl}/${selectedCaseId}`;
 		return this.http.delete(url);
 	}
 
 	loadContexts(): Observable<any> {
-		const url = `${this.base_url}/contexts`;
+		const url = `${this.baseUrl}/contexts`;
 		return this.http.get(url);
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		const url = `${this.base_url}/${selectedCaseId}`;
+		const url = `${this.baseUrl}/${selectedCaseId}`;
 		return this.http.get(url);
 
 	}
 
-	enhanceDefaultCase(default_case: Case): void {
-		default_case.last_modified = new Date();
+	enhanceDefaultCase(defaultCase: Case): void {
+		defaultCase.lastModified = new Date();
 	}
 
 	get decodeCaseObjects() {

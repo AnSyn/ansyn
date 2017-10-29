@@ -240,10 +240,10 @@ export class VisualizersAppEffects {
 					relevantMapsIds = selectedCase.state.maps.data.map(m => m.id);
 					break;
 				case 'active':
-					relevantMapsIds.push(selectedCase.state.maps.active_map_id);
+					relevantMapsIds.push(selectedCase.state.maps.activeMapId);
 					break;
 				case 'others':
-					relevantMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.active_map_id)
+					relevantMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.activeMapId)
 						.map(m => m.id);
 					break;
 				default:

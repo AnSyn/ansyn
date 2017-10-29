@@ -90,10 +90,10 @@ export class MapEffects {
 	onToggleImageProcessing$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
 		.map(toPayload)
-		.map(({ mapId, toggle_value }) => [this.communicatorsService.provide(mapId), toggle_value])
+		.map(({ mapId, toggleValue }) => [this.communicatorsService.provide(mapId), toggleValue])
 		.filter(([comm]) => !_isNil(comm))
-		.do(([comm, toggle_value]) => {
-			comm.setAutoImageProcessing(toggle_value);
+		.do(([comm, toggleValue]) => {
+			comm.setAutoImageProcessing(toggleValue);
 		});
 
 	/**
@@ -111,14 +111,14 @@ export class MapEffects {
 	 * @name onLayoutsChange$
 	 * @ofType SetLayoutAction
 	 * @dependencies map
-	 * @filter maps_count and mapsList length are not equal
+	 * @filter mapsCount and mapsList length are not equal
 	 * @action SetMapsDataActionStore
 	 */
 	@Effect()
 	onLayoutsChange$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
 		.withLatestFrom(this.store$.select(mapStateSelector).pluck<any, any>('mapsList'), this.store$.select(mapStateSelector).pluck('activeMapId'))
-		.filter(([{ payload }, mapsList]) => payload.maps_count !== mapsList.length && mapsList.length > 0)
+		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
 		.map(([{ payload }, mapsList, activeMapId]) => MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
 		.map((newData) => new SetMapsDataActionStore(newData));
 

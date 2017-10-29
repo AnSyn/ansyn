@@ -30,7 +30,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	private _mapComponentSettings: ImageryComponentSettings;
 
-	@ViewChild('map_component_elem', { read: ViewContainerRef }) map_component_elem: ViewContainerRef;
+	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
 
 	@Input()
 	set mapComponentSettings(value) {
@@ -84,7 +84,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		this._manager = new ImageryComponentManager(
 			this.imageryProviderService,
 			this.componentFactoryResolver,
-			this.map_component_elem,
+			this.mapComponentElem,
 			this._mapComponentRef,
 			this.baseSourceProviders,
 			this.config,

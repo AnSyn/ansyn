@@ -121,7 +121,7 @@ describe('MapAppEffects', () => {
 		communicatorsAsArray: () => {
 		}
 	};
-	let fake_overlay: Overlay;
+	let fakeOverlay: Overlay;
 
 	const imagery1PositionBoundingBox = { test: 1 };
 
@@ -148,7 +148,7 @@ describe('MapAppEffects', () => {
 					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Hitmap' } },
 					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
-				active_map_id: 'imagery1'
+				activeMapId: 'imagery1'
 			}
 		} as any
 	}];
@@ -226,10 +226,10 @@ describe('MapAppEffects', () => {
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
 		overlaysState = cloneDeep(overlaysInitialState);
-		fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
-		overlaysState.overlays.set(fake_overlay.id, fake_overlay);
+		fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
+		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
-		mapState.activeMapId = icaseState.selectedCase.state.maps.active_map_id;
+		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
 			[statusBarStateSelector, statusBarState],
@@ -429,8 +429,8 @@ describe('MapAppEffects', () => {
 	});
 
 	describe('onDisplayOverlay$ communicator should set Layer on map, by getFootprintIntersectionRatioInExtent', () => {
-		const fake_layer = {};
-		const fake_extent = [1, 2, 3, 4];
+		const fakeLayer = {};
+		const fakeExtent = [1, 2, 3, 4];
 		let fakeCommunicator: CommunicatorEntity;
 
 		beforeEach(() => {
@@ -443,7 +443,7 @@ describe('MapAppEffects', () => {
 			const fakeSourceLoader = {
 				createAsync: () => {
 					return {
-						then: (callback) => callback(fake_layer)
+						then: (callback) => callback(fakeLayer)
 					};
 				}
 			};
@@ -456,21 +456,21 @@ describe('MapAppEffects', () => {
 				}
 			});
 
-			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fake_extent);
+			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fakeExtent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');
 		});
 
 		it('setOverlayAsLoading$ is called', () => {
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery1' }) });
-			const expectedResults = cold('--b--', { b: new AddOverlayToLoadingOverlaysAction(fake_overlay.id) });
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery1' }) });
+			const expectedResults = cold('--b--', { b: new AddOverlayToLoadingOverlaysAction(fakeOverlay.id) });
 			expect(mapAppEffects.setOverlayAsLoading$).toBeObservable(expectedResults);
 		});
 
 		it('should NOT dispatch/do anything if "overlay.isFullOverlay = false"', () => {
 			const testOverlay: Overlay = {
-				id: 'test_overlay_id',
+				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -478,7 +478,7 @@ describe('MapAppEffects', () => {
 				isFullOverlay: false,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, map_id: 'imagery1' }) });
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 		});
@@ -487,7 +487,7 @@ describe('MapAppEffects', () => {
 	describe('onOverlayFromURL$', () => {
 		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay.isFullOverlay = false"', () => {
 			const testOverlay: Overlay = {
-				id: 'test_overlay_id',
+				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -495,12 +495,12 @@ describe('MapAppEffects', () => {
 				isFullOverlay: false,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, map_id: 'imagery1' }) });
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
 					overlayId: testOverlay.id,
-					map_id: 'imagery1'
+					mapId: 'imagery1'
 				})
 			});
 
@@ -509,7 +509,7 @@ describe('MapAppEffects', () => {
 
 		it('should NOT dispatch anything if "overlay.isFullOverlay = true"', () => {
 			const testOverlay: Overlay = {
-				id: 'test_overlay_id',
+				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -518,7 +518,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, map_id: 'imagery1' }) });
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
@@ -527,7 +527,7 @@ describe('MapAppEffects', () => {
 	describe('overlayLoadingSuccess$', () => {
 		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction', () => {
 			icaseState.selectedCase.state.maps.data[0].data.overlay = {
-				id: 'test_overlay_id',
+				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -535,8 +535,8 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'test_overlay_id' }) });
-			const expectedResults = cold('--b--', { b: new RemoveOverlayFromLoadingOverlaysAction('test_overlay_id') });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'testOverlayId' }) });
+			const expectedResults = cold('--b--', { b: new RemoveOverlayFromLoadingOverlaysAction('testOverlayId') });
 			expect(mapAppEffects.overlayLoadingSuccess$).toBeObservable(expectedResults);
 		});
 	});
@@ -544,7 +544,7 @@ describe('MapAppEffects', () => {
 	describe('displayOverlayOnNewMapInstance$', () => {
 		it('displayOverlayOnNewMapInstance$ should dispatch DisplayOverlayAction when communicator added that contains overlay', () => {
 			const overlay = {
-				id: 'test_overlay_id',
+				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -561,7 +561,7 @@ describe('MapAppEffects', () => {
 					communicatorsIds: communicators
 				})
 			});
-			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, map_id: 'imagery1' }) });
+			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, mapId: 'imagery1' }) });
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
 		});
 
@@ -582,7 +582,7 @@ describe('MapAppEffects', () => {
 	describe('displayOverlayFromCase$', () => {
 		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay', () => {
 			const testOverlay: Overlay = {
-				id: 'test_overlay_id1',
+				id: 'testOverlayId1',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				date: null,
@@ -596,8 +596,8 @@ describe('MapAppEffects', () => {
 			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			actions = hot('--a--', { a: new SelectCaseAction(icaseState.selectedCase) });
-			const a = new DisplayOverlayAction({ overlay: testOverlay, map_id: mapState.mapsList[0].id });
-			const b = new DisplayOverlayAction({ overlay: testOverlay, map_id: mapState.mapsList[1].id });
+			const a = new DisplayOverlayAction({ overlay: testOverlay, mapId: mapState.mapsList[0].id });
+			const b = new DisplayOverlayAction({ overlay: testOverlay, mapId: mapState.mapsList[1].id });
 			const expectedResults = cold('--(ab)--', { a, b });
 			expect(mapAppEffects.displayOverlayFromCase$).toBeObservable(expectedResults);
 		});
@@ -605,7 +605,7 @@ describe('MapAppEffects', () => {
 
 	describe('activeMapGeoRegistrationChanged$$', () => {
 		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = { id: 'test_overlay_id1', isGeoRegistered: false } as Overlay;
+			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
 			mapState.mapsList = <any> [
 				{
 					...icaseState.selectedCase.state.maps.data[0],
@@ -616,7 +616,7 @@ describe('MapAppEffects', () => {
 					data: { ...icaseState.selectedCase.state.maps.data[1].data, overlay: testOverlay }
 				},
 			];
-			mapState.activeMapId = icaseState.selectedCase.state.maps.active_map_id;
+			mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
 			const fakeCommuincator = { id: 'test' };
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });

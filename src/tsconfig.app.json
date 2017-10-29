@@ -21,6 +21,9 @@
 			"event-drops"
 		]
 	},
+	"files": [
+		"typings.d.ts"
+	],
 	"exclude": [
 		"test.ts",
 		"**/*.spec.ts"

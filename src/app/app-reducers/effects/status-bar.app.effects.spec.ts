@@ -115,10 +115,10 @@ describe('StatusBarAppEffects', () => {
 					]
 				},
 				maps: {
-					active_map_id: 'active_map_id',
+					activeMapId: 'activeMapId',
 					data: [
 						{
-							id: 'active_map_id',
+							id: 'activeMapId',
 							data: { overlay: { id: 'overlayId1' } }
 						}
 					]
@@ -187,13 +187,13 @@ describe('StatusBarAppEffects', () => {
 		expect(imagery1.removePinPointIndicator).toHaveBeenCalledTimes(3);
 	});
 
-	it('selectCase$ should get layers_index, orientation, geoFilter and time from selectedCase and return all update status-bar actions', () => {
-		const layouts_index = 2;
+	it('selectCase$ should get layersIndex, orientation, geoFilter and time from selectedCase and return all update status-bar actions', () => {
+		const layoutsIndex = 2;
 		const caseItem: Case = <any> {
 			id: '31b33526-6447-495f-8b52-83be3f6b55bd',
 			state: {
 				maps: {
-					layouts_index
+					layoutsIndex
 				},
 				orientation: 'orientation',
 				geoFilter: 'geoFilter',
@@ -201,7 +201,7 @@ describe('StatusBarAppEffects', () => {
 			}
 		};
 		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
-		const a = new ChangeLayoutAction(layouts_index);
+		const a = new ChangeLayoutAction(layoutsIndex);
 		const b = new SetOrientationAction('orientation');
 		const c = new SetGeoFilterAction('geoFilter');
 		const d = new SetTimeAction({ from: new Date(0), to: new Date(100) });

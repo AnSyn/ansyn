@@ -50,7 +50,7 @@ describe('LayersEffects', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};

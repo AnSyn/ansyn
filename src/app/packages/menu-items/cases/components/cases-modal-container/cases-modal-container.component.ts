@@ -8,12 +8,12 @@ import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 
-const animations_during = '0.2s';
+const animationsDuring = '0.2s';
 
 const animations: any[] = [
 	trigger('blackScreen', [
-		transition(':enter', [style({ opacity: 0 }), animate(animations_during, style({ opacity: 1 }))]),
-		transition(':leave', [style({ opacity: 1 }), animate(animations_during, style({ opacity: 0 }))]),
+		transition(':enter', [style({ opacity: 0 }), animate(animationsDuring, style({ opacity: 1 }))]),
+		transition(':leave', [style({ opacity: 1 }), animate(animationsDuring, style({ opacity: 0 }))]),
 	])
 ];
 
@@ -24,14 +24,14 @@ const animations: any[] = [
 	animations
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
-	@ViewChild('modal_content', { read: ViewContainerRef }) modal_content: ViewContainerRef;
+	@ViewChild('modalContent', { read: ViewContainerRef }) modalContent: ViewContainerRef;
 	modal$: Observable<boolean> = this.store.select(casesStateSelector)
 		.pluck <ICasesState, boolean>('modal')
 		.distinctUntilChanged();
 
 	modal: boolean;
 
-	selected_component_ref;
+	selectedComponentRef;
 
 	constructor(public casesEffects: CasesEffects, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<ICasesState>) {
 	}
@@ -51,12 +51,12 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 
 	buildTemplate(action: OpenModalAction) {
 		let factory = this.componentFactoryResolver.resolveComponentFactory(action.payload.component);
-		this.selected_component_ref = this.modal_content.createComponent(factory);
+		this.selectedComponentRef = this.modalContent.createComponent(factory);
 	}
 
 	destroyTemplate() {
-		if (this.selected_component_ref) {
-			this.selected_component_ref.destroy();
+		if (this.selectedComponentRef) {
+			this.selectedComponentRef.destroy();
 		}
 	}
 

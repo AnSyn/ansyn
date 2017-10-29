@@ -10,18 +10,18 @@ import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 
-const animations_during = '0.2s';
+const animationsDuring = '0.2s';
 
 const animations: any[] = [
 	trigger('modalContent', [
 		transition(':enter', [style({
 			'backgroundColor': '#27b2cf',
 			transform: 'translate(0, -100%)'
-		}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
 		transition(':leave', [style({
 			'backgroundColor': 'white',
 			transform: 'translate(0, 0)'
-		}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
 	])
 ];
 
@@ -84,16 +84,16 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getEmptyCase(selectedCase: Case): Case {
-		const activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.active_map_id);
+		const activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
 
 		return {
 			name: '',
 			owner: '',
-			last_modified: new Date(),
+			lastModified: new Date(),
 			state: {
 				maps: {
-					layouts_index: 0,
-					active_map_id: activeMap.id,
+					layoutsIndex: 0,
+					activeMapId: activeMap.id,
 					data: [activeMap],
 				},
 				time: {

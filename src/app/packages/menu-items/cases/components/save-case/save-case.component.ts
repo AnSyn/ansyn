@@ -15,18 +15,18 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
-const animations_during = '0.2s';
+const animationsDuring = '0.2s';
 
 const animations: any[] = [
 	trigger('modalContent', [
 		transition(':enter', [style({
 			'backgroundColor': '#27b2cf',
 			transform: 'translate(0, -100%)'
-		}), animate(animations_during, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': 'white', transform: 'translate(0, 0)' }))]),
 		transition(':leave', [style({
 			'backgroundColor': 'white',
 			transform: 'translate(0, 0)'
-		}), animate(animations_during, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
 	])
 ];
 
@@ -48,13 +48,13 @@ export class SaveCaseComponent implements OnInit {
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 
-	case_model: Case;
+	caseModel: Case;
 
-	@ViewChild('name_input') name_input: ElementRef;
+	@ViewChild('nameInput') nameInput: ElementRef;
 
 	@HostListener('@modalContent.done')
 	selectText() {
-		this.name_input.nativeElement.select();
+		this.nameInput.nativeElement.select();
 	}
 
 	constructor(private store: Store<ICasesState>) {
@@ -62,7 +62,7 @@ export class SaveCaseComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.selectedCase$.subscribe((selectedCase: Case) => {
-			this.case_model = selectedCase;
+			this.caseModel = selectedCase;
 		});
 	}
 
@@ -71,7 +71,7 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
-		this.store.dispatch(new SaveCaseAsAction(this.case_model));
+		this.store.dispatch(new SaveCaseAsAction(this.caseModel));
 		this.close();
 	}
 }

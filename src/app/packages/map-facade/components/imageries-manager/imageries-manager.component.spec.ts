@@ -12,12 +12,12 @@ import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actio
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { OverlaysStatusNotificationsComponent } from '@ansyn/core/components/overlays-status-notifications/overlays-status-notifications.component';
 
-const mock_ansyn_context_menu = MockComponent({
+const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
 	inputs: ['show', 'top', 'left'],
 	outputs: ['showChange']
 });
-const mock_ansyn_imagery_container = MockComponent({
+const mockAnsynImageryContainer = MockComponent({
 	selector: 'ansyn-imagery-container',
 	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase', 'mapsAmount', 'isFavoriteOverlayDisplayed']
 });
@@ -42,8 +42,8 @@ describe('ImageriesManagerComponent', () => {
 			],
 			declarations: [
 				ImageriesManagerComponent,
-				mock_ansyn_context_menu,
-				mock_ansyn_imagery_container,
+				mockAnsynContextMenu,
+				mockAnsynImageryContainer,
 				ImageryStatusComponent,
 				OverlaysStatusNotificationsComponent
 			],
@@ -67,13 +67,13 @@ describe('ImageriesManagerComponent', () => {
 			{ id: 'imagery2', data: { overlay: {} } }
 		];
 		const activeMapId = 'imagery1';
-		const selected_layout: any = {
+		const selectedLayout: any = {
 			id: '1',
 			description: '',
-			maps_count: 2
+			mapsCount: 2
 		};
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
-		store.dispatch(new SetLayoutAction(selected_layout));
+		store.dispatch(new SetLayoutAction(selectedLayout));
 		fixture.detectChanges();
 	});
 
@@ -183,7 +183,7 @@ describe('ImageriesManagerComponent', () => {
 	it('change selected layout to \'layout1\' and make sure \'ol-rotate\' style updates', () => {
 		const element = document.createElement('div');
 		element.innerHTML = '<div class="ol-rotate">ol-rotate</div>';
-		component.setSelectedLayout({ id: 'layout1', description: 'full screen', maps_count: 1 });
+		component.setSelectedLayout({ id: 'layout1', description: 'full screen', mapsCount: 1 });
 		fixture.detectChanges();
 
 		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.map'));
@@ -194,7 +194,7 @@ describe('ImageriesManagerComponent', () => {
 		expect(wrapperDivs.map(olRotate =>
 			getComputedStyle(olRotate).top
 		)).not.toEqual(['40px']);
-		component.setSelectedLayout({ id: 'layout6', description: 'full', maps_count: 4 });
+		component.setSelectedLayout({ id: 'layout6', description: 'full', mapsCount: 4 });
 		fixture.detectChanges();
 		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.ol-rotate'));
 		expect(wrapperDivs.length).toEqual(1);

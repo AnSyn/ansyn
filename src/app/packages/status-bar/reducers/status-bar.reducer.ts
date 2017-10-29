@@ -9,7 +9,7 @@ export interface IToastMessage {
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];
-	selected_layout_index: number;
+	selectedLayoutIndex: number;
 	flags: Map<string, boolean>;
 	toastMessage: IToastMessage,
 	orientations: string[],
@@ -24,7 +24,7 @@ export interface IStatusBarState {
 export const statusBarFlagsItems = {
 	pinPointIndicator: 'PIN_POINT_INDICATOR',
 	pinPointSearch: 'PIN_POINT_SEARCH',
-	geo_registered_options_enabled: 'geo_registered_options_enabled'
+	geoRegisteredOptionsEnabled: 'geoRegisteredOptionsEnabled'
 };
 
 export const statusBarToastMessages = {
@@ -33,19 +33,19 @@ export const statusBarToastMessages = {
 };
 
 const layouts: MapsLayout[] = [
-	{ id: 'layout1', description: 'full screen', maps_count: 1 },
-	{ id: 'layout2', description: '2 maps full', maps_count: 2 },
-	{ id: 'layout3', description: 'full', maps_count: 2 },
-	{ id: 'layout4', description: 'full', maps_count: 3 },
-	{ id: 'layout5', description: 'full', maps_count: 3 },
-	{ id: 'layout6', description: 'full', maps_count: 4 }
+	{ id: 'layout1', description: 'full screen', mapsCount: 1 },
+	{ id: 'layout2', description: '2 maps full', mapsCount: 2 },
+	{ id: 'layout3', description: 'full', mapsCount: 2 },
+	{ id: 'layout4', description: 'full', mapsCount: 3 },
+	{ id: 'layout5', description: 'full', mapsCount: 3 },
+	{ id: 'layout6', description: 'full', mapsCount: 4 }
 ];
 
-const selected_layout_index = 0;
+const selectedLayoutIndex = 0;
 
 export const StatusBarInitialState: IStatusBarState = {
 	layouts,
-	selected_layout_index,
+	selectedLayoutIndex,
 	flags: new Map<string, boolean>(),
 	toastMessage: null,
 	orientations: ['original'],
@@ -64,11 +64,11 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			const tmpMap = new Map(state.flags);
-			tmpMap.set(statusBarFlagsItems.geo_registered_options_enabled, action.payload);
+			tmpMap.set(statusBarFlagsItems.geoRegisteredOptionsEnabled, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case StatusBarActionsTypes.CHANGE_LAYOUT:
-			return Object.assign({}, state, { selected_layout_index: action.payload });
+			return Object.assign({}, state, { selectedLayoutIndex: action.payload });
 
 		case StatusBarActionsTypes.COPY_SELECTED_CASE_LINK:
 			return Object.assign({}, state);

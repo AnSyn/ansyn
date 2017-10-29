@@ -15,7 +15,7 @@ export const toolsInitialState: IToolsState = {
 	gotoExpand: false
 };
 
-toolsInitialState.flags.set('geo_registered_options_enabled', true);
+toolsInitialState.flags.set('geoRegisteredOptionsEnabled', true);
 export const toolsFeatureKey = 'tools';
 export const toolsStateSelector = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
@@ -25,31 +25,31 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('geo_registered_options_enabled', action.payload);
+			tmpMap.set('geoRegisteredOptionsEnabled', action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.START_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse', true);
+			tmpMap.set('shadowMouse', true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse', false);
+			tmpMap.set('shadowMouse', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse_disabled', true);
+			tmpMap.set('shadowMouseDisabled', true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadow_mouse_disabled', false);
+			tmpMap.set('shadowMouseDisabled', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
@@ -57,7 +57,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
-			tmpMap.set('pin_location', action.payload);
+			tmpMap.set('pinLocation', action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.GO_TO:
@@ -69,21 +69,21 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('auto_image_processing', action.payload);
+			tmpMap.set('autoImageProcessing', action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('auto_image_processing_disabled', false);
-			tmpMap.set('auto_image_processing', false);
+			tmpMap.set('autoImageProcessingDisabled', false);
+			tmpMap.set('autoImageProcessing', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.DISABLE_AUTO_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('auto_image_processing_disabled', true);
-			tmpMap.set('auto_image_processing', false);
+			tmpMap.set('autoImageProcessingDisabled', true);
+			tmpMap.set('autoImageProcessing', false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:

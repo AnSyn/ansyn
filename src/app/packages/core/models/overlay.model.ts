@@ -2,7 +2,7 @@ import { GeometryObject } from 'geojson';
 
 export class Overlay {
 	id: string;
-	footprint?: any; // @TODO add type geojson_multipoligon,
+	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType?: string;
 	sensorName?: string;
 	channel?: string;

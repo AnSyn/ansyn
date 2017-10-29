@@ -64,7 +64,7 @@ describe('ContextEntityAppEffects', () => {
 					{ id: 'imagery2', data: { overlay: { date: new Date() } } },
 					{ id: 'imagery3', data: { overlay: { date: new Date() } } }
 				],
-				active_map_id: 'imagery1'
+				activeMapId: 'imagery1'
 			}
 		} as any
 	}];
@@ -94,7 +94,7 @@ describe('ContextEntityAppEffects', () => {
 		const icaseState = { cases, selectedCase } as any;
 		const iMapState = {
 			mapsList: selectedCase.state.maps.data,
-			activeMapId: selectedCase.state.maps.active_map_id
+			activeMapId: selectedCase.state.maps.activeMapId
 		};
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
@@ -165,8 +165,8 @@ describe('ContextEntityAppEffects', () => {
 	it('displayEntityTimeFromOverlay$ should display set overlay date to context visualizer', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		spyOn(visualizer, 'setReferenceDate');
-		let fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true };
-		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery2' }) });
+		let fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true };
+		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery2' }) });
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(contextEntityAppEffects.displayEntityTimeFromOverlay$).toBeObservable(expectedResults);
 		expect(visualizer.setReferenceDate).toHaveBeenCalled();
@@ -176,8 +176,8 @@ describe('ContextEntityAppEffects', () => {
 	it('displayEntityTimeFromOverlay$ should NOT display set overlay date to context visualizer', () => {
 		cases[0].state.contextEntities = null;
 		spyOn(visualizer, 'setReferenceDate');
-		let fake_overlay = <any>{ id: 'overlayId', isFullOverlay: true };
-		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fake_overlay, map_id: 'imagery2' }) });
+		let fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true };
+		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery2' }) });
 		const expectedResults = cold('-');
 		expect(contextEntityAppEffects.displayEntityTimeFromOverlay$).toBeObservable(expectedResults);
 		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();

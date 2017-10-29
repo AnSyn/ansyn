@@ -78,7 +78,7 @@ describe('OverlaysAppEffects', () => {
 					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
 					{ id: 'imagery3', data: {} },
 				],
-				active_map_id: 'imagery1'
+				activeMapId: 'imagery1'
 			}
 		}
 	} as any;

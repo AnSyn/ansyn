@@ -1,9 +1,3 @@
-/* SystemJS module definition */
-/*declare var module: {
- id: string;
- };
- */
-
 declare module '*.json' {
 	const value: any;
 	export default value;
@@ -11,7 +5,7 @@ declare module '*.json' {
 
 declare module '*package.json' {
 	const value: {
-		version: string
+		version: string;
 	};
 	export default value;
 }

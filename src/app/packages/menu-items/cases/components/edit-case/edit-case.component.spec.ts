@@ -17,16 +17,16 @@ describe('EditCaseComponent', () => {
 	let store: Store<ICasesState>;
 	let casesService: CasesService;
 
-	let fake_iCasesState: ICasesState = {
+	let fakeICasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
-			{ id: 'fake_id2', name: 'fake_name2', state: { selected_context_id: null } }
+			{ id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+			{ id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
 		],
-		modalCaseId: 'fake_id1',
+		modalCaseId: 'fakeId1',
 		modal: true,
 		contexts: [],
 		contextsLoaded: true,
-		selectedCase: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
+		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
 	} as any;
 
 	beforeEach(async(() => {
@@ -44,7 +44,7 @@ describe('EditCaseComponent', () => {
 
 	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fake_iCasesState));
+		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
 
 		fixture = TestBed.createComponent(EditCaseComponent);
 		component = fixture.componentInstance;
@@ -90,11 +90,11 @@ describe('EditCaseComponent', () => {
 			template = fixture.nativeElement;
 		});
 
-		xit('input name text should current case_model name', async(() => {
+		xit('input name text should current caseModel name', async(() => {
 			let input = template.querySelector('input[name=\'name\']');
 			fixture.detectChanges();
 			fixture.whenStable().then(() => {
-				expect(input.value).toEqual(fake_iCasesState.cases[0].name);
+				expect(input.value).toEqual(fakeICasesState.cases[0].name);
 			});
 		}));
 	});

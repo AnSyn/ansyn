@@ -40,10 +40,10 @@ export class OverlaysEffects {
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action: DisplayOverlayFromStoreAction, state: IOverlaysState): any => {
-			return { overlay: state.overlays.get(action.payload.id), map_id: action.payload.map_id };
+			return { overlay: state.overlays.get(action.payload.id), mapId: action.payload.mapId };
 		})
-		.map(({ overlay, map_id }: any) => {
-			return new DisplayOverlayAction({ overlay, map_id });
+		.map(({ overlay, mapId }: any) => {
+			return new DisplayOverlayAction({ overlay, mapId });
 		}).share();
 
 	/**
@@ -92,7 +92,7 @@ export class OverlaysEffects {
 		.ofType(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId) // this.overlaysService.fetchData("",action.payload)
-				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, map_id: action.payload.map_id }));
+				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, mapId: action.payload.mapId }));
 		});
 
 	/**
@@ -163,7 +163,7 @@ export class OverlaysEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
 			const displayedOverlay = action.payload.overlay;
 			const timelineState = overlays.timelineState;
-			const isActiveMap = !action.payload.map_id || map.activeMapId === action.payload.map_id;
+			const isActiveMap = !action.payload.mapId || map.activeMapId === action.payload.mapId;
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {

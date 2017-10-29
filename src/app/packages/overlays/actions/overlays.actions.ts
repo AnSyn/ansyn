@@ -61,7 +61,7 @@ export class LoadOverlaysAction implements Action {
 export class RequestOverlayByIDFromBackendAction implements Action {
 	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
 
-	constructor(public payload: { overlayId: string, map_id?: string }) {
+	constructor(public payload: { overlayId: string, mapId?: string }) {
 	}
 }
 
@@ -89,14 +89,14 @@ export class ClearFilterAction implements Action {
 export class DisplayOverlayFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
 
-	constructor(public payload: { id: string, map_id?: string }) {
+	constructor(public payload: { id: string, mapId?: string }) {
 	}
 }
 
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: Overlay, map_id?: string }) {
+	constructor(public payload: { overlay: Overlay, mapId?: string }) {
 	}
 }
 

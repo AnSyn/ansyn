@@ -27,7 +27,7 @@ export class ImageryComponentManager {
 
 	constructor(private imageryProviderService: ImageryProviderService,
 				private componentFactoryResolver: ComponentFactoryResolver,
-				private map_component_elem: ViewContainerRef,
+				private mapComponentElem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,
 				private _baseSourceProviders: BaseMapSourceProvider[],
 				private config: IImageryConfig,
@@ -79,7 +79,7 @@ export class ImageryComponentManager {
 		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
-		this._mapComponentRef = this.map_component_elem.createComponent(factory);
+		this._mapComponentRef = this.mapComponentElem.createComponent(factory);
 
 		const mapComponent: IMapComponent = this._mapComponentRef.instance;
 		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {

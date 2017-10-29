@@ -32,7 +32,7 @@ describe('CasesAppEffects', () => {
 		id: 'case1',
 		state: {
 			maps: {
-				active_map_id: '5555',
+				activeMapId: '5555',
 				data: [
 					{
 						id: '5555',

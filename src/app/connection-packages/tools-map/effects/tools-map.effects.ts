@@ -35,7 +35,7 @@ export class ToolsMapEffects {
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
 		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
 		.mergeMap(({ payload }) => {
-			if (payload.maps_count === 1) {
+			if (payload.mapsCount === 1) {
 				return [
 					new DisableMouseShadow(),
 					new StopMouseShadow()

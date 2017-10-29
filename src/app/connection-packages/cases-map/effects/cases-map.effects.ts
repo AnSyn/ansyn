@@ -32,7 +32,7 @@ export class CasesMapEffects {
 					maps: {
 						...selectedCase.state.maps,
 						data: [...mapState.mapsList],
-						active_map_id: mapState.activeMapId
+						activeMapId: mapState.activeMapId
 					}
 				}
 			} as Case;
@@ -49,8 +49,8 @@ export class CasesMapEffects {
 	selectCaseByIdUpdateMapsData$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(({ payload }: SelectCaseAction) => _cloneDeep(payload.state.maps))
-		.map(({ active_map_id, data }) => {
-			return new SetMapsDataActionStore({ mapsList: data, activeMapId: active_map_id });
+		.map(({ activeMapId, data }) => {
+			return new SetMapsDataActionStore({ mapsList: data, activeMapId: activeMapId });
 		});
 
 	constructor(private actions$: Actions, private store$: Store<any>) {

@@ -20,7 +20,7 @@ describe('', () => {
 	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.map_id = 'test';
+		component.mapId = 'test';
 		component.overlay = {} as Overlay;
 		component.mapsAmount = 2;
 		fixture.detectChanges();

@@ -15,7 +15,7 @@ import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer'
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
-	let app_state: IAppState;
+	let appState: IAppState;
 	let store: Store<any>;
 	let actions: Observable<any>;
 
@@ -38,23 +38,23 @@ describe('MenuAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 
-		app_state = {
+		appState = {
 			cases: {
 				cases: [{
 					id: 'case1',
 					state: {
-						selected_overlays_ids: []
+						selectedOverlaysIds: []
 					}
 				},
 					{
 						id: 'case2',
 						state: {
-							selected_overlays_ids: []
+							selectedOverlaysIds: []
 						}
 					}]
 			},
 			menu: {
-				menu_items: [{
+				menuItems: [{
 					name: 'Cases',
 					component: null,
 					iconClass: null
@@ -66,12 +66,12 @@ describe('MenuAppEffects', () => {
 						iconClass: null
 
 					}],
-				selected_menu_item_index: 1
+				selectedMenuItemIndex: 1
 			}
 		} as any;
 
-		store.dispatch(new AddCaseSuccessAction(app_state.cases.cases[0]));
-		store.dispatch(new SelectCaseByIdAction(app_state.cases.cases[0].id));
+		store.dispatch(new AddCaseSuccessAction(appState.cases.cases[0]));
+		store.dispatch(new SelectCaseByIdAction(appState.cases.cases[0].id));
 		store.dispatch(new AddMenuItemAction({
 			name: 'Cases',
 			component: null,

@@ -18,13 +18,13 @@ export class QueryParamsHelper {
 		return this.casesService.config.defaultCase;
 	}
 
-	updateCaseViaQueryParmas(q_params: Params = {}, defaultCase: Case = this.defaultCase) {
-		const s_case = cloneDeep(defaultCase);
-		const q_params_keys = Object.keys(q_params);
-		q_params_keys.forEach((key) => {
-			s_case.state[key] = this.decodeCaseObjects(key, q_params[key]);
+	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: Case = this.defaultCase) {
+		const sCase = cloneDeep(defaultCase);
+		const qParamsKeys = Object.keys(qParams);
+		qParamsKeys.forEach((key) => {
+			sCase.state[key] = this.decodeCaseObjects(key, qParams[key]);
 		});
-		return s_case;
+		return sCase;
 	}
 
 	updateCaseViaContext(selectedContext: Context, caseModel: Case, qParams: Params = {}) {
@@ -32,8 +32,8 @@ export class QueryParamsHelper {
 			return { ...this.defaultCase, name: caseModel.name };
 		}
 		let updatedCaseModel = cloneDeep(caseModel);
-		updatedCaseModel.state.selected_context_id = selectedContext.id;
-		['region', 'facets', 'time', 'layout_index', 'geoFilter', 'orientation'].forEach(key => {
+		updatedCaseModel.state.selectedContextId = selectedContext.id;
+		['region', 'facets', 'time', 'layoutIndex', 'geoFilter', 'orientation'].forEach(key => {
 			if (selectedContext[key]) {
 				updatedCaseModel.state[key] = selectedContext[key];
 			}
@@ -68,12 +68,12 @@ export class QueryParamsHelper {
 		return updatedCaseModel;
 	}
 
-	generateQueryParamsViaCase(s_case: Case): string {
+	generateQueryParamsViaCase(sCase: Case): string {
 		const url = `/`;
 		const urlTree = this.casesService.urlSerializer.parse(url);
-		const keys = this.casesService.queryParamsKeys.filter(key => s_case.state[key]);
+		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key]);
 		keys.forEach(key => {
-			urlTree.queryParams[key] = this.encodeCaseObjects(key, s_case.state[key]);
+			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key]);
 		});
 		const baseLocation = this.casesService.config.useHash ? `${location.origin}/#` : location.origin;
 		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);

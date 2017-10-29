@@ -115,13 +115,13 @@ describe('Overlays Effects ', () => {
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
 				overlayId: 'test',
-				map_id: 'testMapId'
+				mapId: 'testMapId'
 			})
 		});
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayAction(<any>{
 				overlay: fakeOverlay,
-				map_id: 'testMapId'
+				mapId: 'testMapId'
 			})
 		});
 		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);
@@ -156,15 +156,15 @@ describe('Overlays Effects ', () => {
 
 	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
 		const loadedOverlays = [
-			{ id: 'tmp', image: 'tmp_img' },
-			{ id: 'tmp2', image: 'tmp_img2' }
+			{ id: 'tmp', image: 'tmpImg' },
+			{ id: 'tmp2', image: 'tmpImg2' }
 		];
 		store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
-		actions = hot('--a--', { a: new DisplayOverlayFromStoreAction({ id: 'tmp', map_id: '4444' }) });
+		actions = hot('--a--', { a: new DisplayOverlayFromStoreAction({ id: 'tmp', mapId: '4444' }) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayAction({
 				overlay: <any>loadedOverlays[0],
-				map_id: '4444'
+				mapId: '4444'
 			})
 		});
 		expect(overlaysEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);

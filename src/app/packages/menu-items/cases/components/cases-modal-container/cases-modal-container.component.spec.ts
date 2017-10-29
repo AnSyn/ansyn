@@ -45,19 +45,19 @@ describe('ModalContainerComponent', () => {
 		let action: OpenModalAction = new OpenModalAction({ component: EditCaseComponent });
 		component.buildTemplate(action);
 		expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
-		expect(component.selected_component_ref.instance instanceof EditCaseComponent).toBeTruthy();
+		expect(component.selectedComponentRef.instance instanceof EditCaseComponent).toBeTruthy();
 
 		action = new OpenModalAction({ component: DeleteCaseComponent });
 		component.buildTemplate(action);
 		expect(fixture.nativeElement.querySelector('ansyn-delete-case')).toBeDefined();
-		expect(component.selected_component_ref.instance instanceof DeleteCaseComponent).toBeTruthy();
+		expect(component.selectedComponentRef.instance instanceof DeleteCaseComponent).toBeTruthy();
 	});
 
 	it('destroyTemplate should destory modal component', () => {
-		component.selected_component_ref = { destroy: () => null };
-		spyOn(component.selected_component_ref, 'destroy');
+		component.selectedComponentRef = { destroy: () => null };
+		spyOn(component.selectedComponentRef, 'destroy');
 		component.destroyTemplate();
-		expect(component.selected_component_ref.destroy).toHaveBeenCalled();
+		expect(component.selectedComponentRef.destroy).toHaveBeenCalled();
 	});
 
 

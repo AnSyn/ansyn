@@ -12,7 +12,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};
@@ -57,7 +57,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};
@@ -101,7 +101,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};
@@ -145,7 +145,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};
@@ -189,7 +189,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fake_url',
+			url: 'fakeUrl',
 			isIndeterminate: false,
 			children: <ILayerTreeNode[]>[]
 		};

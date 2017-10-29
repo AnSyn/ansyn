@@ -64,7 +64,7 @@ describe('ToolsAppEffects', () => {
 						}
 					}
 				],
-				active_map_id: 'imagery1'
+				activeMapId: 'imagery1'
 			}
 		} as any
 	}];
@@ -97,7 +97,7 @@ describe('ToolsAppEffects', () => {
 		const selectedCase = cases[0];
 		icaseState = cloneDeep({ cases, selectedCase }) as any;
 		imapState.mapsList = selectedCase.state.maps.data;
-		imapState.activeMapId = selectedCase.state.maps.active_map_id;
+		imapState.activeMapId = selectedCase.state.maps.activeMapId;
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
 			[mapStateSelector, imapState]
@@ -221,7 +221,7 @@ describe('ToolsAppEffects', () => {
 			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id' }) });
 			const expectedResults = cold('--(abc)--', {
 				a: new EnableImageProcessing(),
-				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggle_value: true }),
+				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: true }),
 				c: new SetAutoImageProcessingSuccess(true)
 			});
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
@@ -229,8 +229,8 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onActiveMapChangesSetOverlaysFootprintMode$ should change footprint mode', () => {
-		const active_map = MapFacadeService.activeMap(imapState);
-		active_map.data.overlayDisplayMode = <any> 'whatever';
+		const activeMap = MapFacadeService.activeMap(imapState);
+		activeMap.data.overlayDisplayMode = <any> 'whatever';
 
 		actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 
@@ -254,7 +254,7 @@ describe('ToolsAppEffects', () => {
 		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id' }) });
 		const expectedResults = cold('--(abc)--', {
 			a: new EnableImageProcessing(),
-			b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggle_value: false }),
+			b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: false }),
 			c: new SetAutoImageProcessingSuccess(false),
 		});
 		expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
@@ -278,7 +278,7 @@ describe('ToolsAppEffects', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);
 		activeMap.data.isAutoImageProcessingActive = true;
 		actions = hot('--a--', { a: new SetAutoImageProcessing() });
-		const a = new SetMapAutoImageProcessing({ mapId: 'imagery1', toggle_value: false });
+		const a = new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: false });
 		const b = new SetMapsDataActionStore({ mapsList: imapState.mapsList });
 		const c = new SetAutoImageProcessingSuccess(false);
 		const expectedResults = cold('--(abc)--', { a, b, c });

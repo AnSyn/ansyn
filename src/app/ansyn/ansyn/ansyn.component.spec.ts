@@ -18,14 +18,14 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mock_menu = MockComponent({ selector: 'ansyn-menu', inputs: ['version'] });
-	const mock_status = MockComponent({
+	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version'] });
+	const mockStatus = MockComponent({
 		selector: 'ansyn-status-bar',
 		inputs: ['selectedCaseName', 'overlay', 'isFavoriteOverlayDisplayed']
 	});
-	const mock_overlays_container = MockComponent({ selector: 'ansyn-overlays-container' });
-	const mock_empty_component = MockComponent({ selector: 'ansyn-empty' });
-	const mock_imagery_view = MockComponent({ selector: 'ansyn-imageries-manager' });
+	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
+	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
+	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
 
 	const cases: Case[] = [{
 		id: 'tmp',
@@ -58,7 +58,7 @@ describe('AnsynComponent', () => {
 					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 } } },
 					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
-				active_map_id: 'imagery1'
+				activeMapId: 'imagery1'
 			}
 		} as any
 	}];
@@ -69,12 +69,12 @@ describe('AnsynComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynComponent,
-				mock_imagery_view,
-				mock_menu,
-				mock_overlays_container,
-				mock_status,
-				mock_imagery_view,
-				mock_empty_component
+				mockImageryView,
+				mockMenu,
+				mockOverlaysContainer,
+				mockStatus,
+				mockImageryView,
+				mockEmptyComponent
 			],
 			imports: [
 				RouterTestingModule,

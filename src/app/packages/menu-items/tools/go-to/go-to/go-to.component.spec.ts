@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import * as utilcovertProjectionss from '@ansyn/core/utils/covert-projections';
+import * as utilCovertProjections from '@ansyn/core/utils/covert-projections';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -41,12 +41,15 @@ describe('GoToComponent', () => {
 	});
 
 	describe('submitGoTo', () => {
-		it('should dispatch  GoToAction with convertByProjectionDatum result', () => {
+		it('should dispatch GoToAction with convertByProjectionDatum result', () => {
 			spyOn(store, 'dispatch');
-			spyOn(utilcovertProjectionss, 'convertByProjectionDatum').and.returnValue([0, 0]);
+
+			spyOn(utilCovertProjections, 'convertByProjectionDatum').and.returnValue([0, 0]);
+
 			component.submitGoTo();
 			expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0, 0]));
 		});
+
 		it('"submit" button should call submitGoTo', () => {
 			spyOn(component, 'submitGoTo');
 			const submitBtn = fixture.nativeElement.querySelector('button[type="submit"]');
@@ -56,10 +59,10 @@ describe('GoToComponent', () => {
 		});
 	});
 
-	it('togglePinLocation should dispatch SetPinLocationModeAction and toggle pin_location_mode)', () => {
+	it('togglePinLocation should dispatch SetPinLocationModeAction and toggle pinLocationMode)', () => {
 		spyOn(store, 'dispatch');
 		component.togglePinLocation();
-		expect(store.dispatch).toHaveBeenCalledWith(new SetPinLocationModeAction(!component.pin_location_mode));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetPinLocationModeAction(!component.pinLocationMode));
 	});
 
 	it('close() should change expand to false', () => {

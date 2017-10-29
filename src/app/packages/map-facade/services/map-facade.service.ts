@@ -43,7 +43,7 @@ export class MapFacadeService {
 
 		/* mapsList*/
 		const activeMap = oldMapsList.find(({ id }) => id === oldActiveMapId);
-		range(layout.maps_count).forEach((index) => {
+		range(layout.mapsCount).forEach((index) => {
 			if (oldMapsList[index]) {
 				mapsList.push(oldMapsList[index]);
 			} else {
@@ -105,7 +105,7 @@ export class MapFacadeService {
 
 	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
 	onActiveMapChanged($event: { id: string, oldMapInstanceName: string, newMapInstanceName: string }) {
-		const args = { ...$event, communicatorsIds: this.imageryCommunicatorService.initiliziedCommunicators };
+		const args = { ...$event, communicatorsIds: this.imageryCommunicatorService.initializedCommunicators };
 		this.store.dispatch(new MapInstanceChangedAction(args));
 	}
 

@@ -3,22 +3,22 @@ import { ElementRef } from '@angular/core/src/linker/element_ref';
 
 describe('InfiniteScrollDirective', () => {
 	let directive: InfiniteScrollDirective;
-	let element_fake: ElementRef;
+	let elementFake: ElementRef;
 
 	beforeEach(() => {
-		element_fake = <any> {
+		elementFake = <any> {
 			nativeElement: {
 				addEventListener: () => {
 				}
 			}
 		};
-		spyOn(element_fake.nativeElement, 'addEventListener');
-		directive = new InfiniteScrollDirective(element_fake);
+		spyOn(elementFake.nativeElement, 'addEventListener');
+		directive = new InfiniteScrollDirective(elementFake);
 	});
 
 	it('should create an instance', () => {
 		expect(directive).toBeTruthy();
-		expect(element_fake.nativeElement.addEventListener).toHaveBeenCalled();
+		expect(elementFake.nativeElement.addEventListener).toHaveBeenCalled();
 	});
 
 	it('should check if scroll top on bottom', () => {

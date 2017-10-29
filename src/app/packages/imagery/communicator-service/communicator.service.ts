@@ -11,7 +11,7 @@ export class ImageryCommunicatorService {
 	public instanceRemoved = new EventEmitter();
 
 
-	public initiliziedCommunicators: Array<string> = [];
+	public initializedCommunicators: Array<string> = [];
 
 	constructor() {
 		this._communicators = {};
@@ -39,27 +39,27 @@ export class ImageryCommunicatorService {
 		}
 
 		this._communicators[componentManager.id] = new CommunicatorEntity(componentManager);
-		this.initiliziedCommunicators.push(componentManager.id);
+		this.initializedCommunicators.push(componentManager.id);
 		this.instanceCreated.emit({
-			communicatorsIds: this.initiliziedCommunicators,
+			communicatorsIds: this.initializedCommunicators,
 			currentCommunicatorId: componentManager.id
 		});
 	}
 
-	public replaceCommunicatorId(old_id, new_id) {
-		this.communicators[new_id] = this.communicators[old_id];
-		this.communicators[new_id]._manager.id = new_id;
-		delete this.communicators[old_id];
+	public replaceCommunicatorId(oldId, newId) {
+		this.communicators[newId] = this.communicators[oldId];
+		this.communicators[newId]._manager.id = newId;
+		delete this.communicators[oldId];
 		this.instanceRemoved.emit({
-			communicatorsIds: this.initiliziedCommunicators,
-			currentCommunicatorId: old_id
+			communicatorsIds: this.initializedCommunicators,
+			currentCommunicatorId: oldId
 		});
 
-		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(old_id), 1);
-		this.initiliziedCommunicators.push(new_id);
+		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(oldId), 1);
+		this.initializedCommunicators.push(newId);
 		this.instanceCreated.emit({
-			communicatorsIds: this.initiliziedCommunicators,
-			currentCommunicatorId: new_id
+			communicatorsIds: this.initializedCommunicators,
+			currentCommunicatorId: newId
 		});
 	}
 
@@ -71,9 +71,9 @@ export class ImageryCommunicatorService {
 		this._communicators[id].dispose();
 		this._communicators[id] = null;
 		delete (this._communicators[id]);
-		this.initiliziedCommunicators.splice(this.initiliziedCommunicators.indexOf(id), 1);
+		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(id), 1);
 		this.instanceRemoved.emit({
-			communicatorsIds: this.initiliziedCommunicators,
+			communicatorsIds: this.initializedCommunicators,
 			currentCommunicatorId: id
 		});
 	}

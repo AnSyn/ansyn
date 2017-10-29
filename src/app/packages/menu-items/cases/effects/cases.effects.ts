@@ -43,11 +43,11 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_CASES)
 		.withLatestFrom(this.store.select(casesStateSelector))
 		.switchMap(([action, state]: [LoadCasesAction, ICasesState]) => {
-			let last_case: Case = state.cases[state.cases.length - 1];
-			let last_id = last_case ? last_case.id : '-1';
-			return this.casesService.loadCases(last_id)
-				.map(new_cases => {
-					return new LoadCasesSuccessAction(new_cases);
+			let lastCase: Case = state.cases[state.cases.length - 1];
+			let lastId = lastCase ? lastCase.id : '-1';
+			return this.casesService.loadCases(lastId)
+				.map(newCases => {
+					return new LoadCasesSuccessAction(newCases);
 				});
 		}).share();
 
@@ -62,8 +62,8 @@ export class CasesEffects {
 		.ofType<AddCaseAction>(CasesActionTypes.ADD_CASE)
 		.switchMap((action) => {
 			return this.casesService.createCase(action.payload)
-				.map((added_case: Case) => {
-					return new AddCaseSuccessAction(added_case);
+				.map((addedCase: Case) => {
+					return new AddCaseSuccessAction(addedCase);
 				});
 		}).share();
 
@@ -134,7 +134,7 @@ export class CasesEffects {
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
 		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, CasesService.defaultCase.id])
-		.filter(([action, default_case_id]: [UpdateCaseAction, string]) => action.payload.id !== default_case_id)
+		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId)
 		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
 		.share();
 
@@ -148,8 +148,8 @@ export class CasesEffects {
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
 		.switchMap((action: UpdateCaseAction) => {
-			return this.casesService.wrapUpdateCase(action.payload).map(updated_case => {
-				return new UpdateCaseBackendSuccessAction(updated_case);
+			return this.casesService.wrapUpdateCase(action.payload).map(updatedCase => {
+				return new UpdateCaseBackendSuccessAction(updatedCase);
 			});
 		}).share();
 

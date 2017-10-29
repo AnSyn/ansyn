@@ -56,7 +56,7 @@ export class CasesAppEffects {
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 
 			const updatedMapsList = [...mapState.mapsList];
-			const mapId = action.payload.map_id || mapState.activeMapId;
+			const mapId = action.payload.mapId || mapState.activeMapId;
 
 			updatedMapsList.forEach((map) => {
 				if (mapId === map.id) {

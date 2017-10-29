@@ -21,7 +21,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
-	public selected_layout$: Observable<MapsLayout> = this.mapState$
+	public selectedLayout$: Observable<MapsLayout> = this.mapState$
 		.pluck<IMapState, MapsLayout>('layout')
 		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
@@ -37,7 +37,7 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck<IMapState, CaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
-	public selected_layout;
+	public selectedLayout;
 	public pointerMoveUnsubscriber: any;
 	public publisherMouseShadowMapId: string;
 	public listenersMouseShadowMapsId: Array<string>;
@@ -74,7 +74,7 @@ export class ImageriesManagerComponent implements OnInit {
 			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
 		});
 
-		this.selected_layout$.subscribe(this.setSelectedLayout.bind(this));
+		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 
 		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
 			this.overlaysNotInCase = _overlaysNotInCase;
@@ -102,17 +102,17 @@ export class ImageriesManagerComponent implements OnInit {
 		return existIndex !== -1;
 	}
 
-	setClassImageriesContainer(new_class, old_class?) {
-		if (old_class) {
-			this.imageriesContainer.nativeElement.classList.remove(old_class);
+	setClassImageriesContainer(newClass, oldClass?) {
+		if (oldClass) {
+			this.imageriesContainer.nativeElement.classList.remove(oldClass);
 		}
-		this.imageriesContainer.nativeElement.classList.add(new_class);
+		this.imageriesContainer.nativeElement.classList.add(newClass);
 		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
-	setSelectedLayout(_selected_layout: MapsLayout) {
-		this.setClassImageriesContainer(_selected_layout.id, this.selected_layout && this.selected_layout.id);
-		this.selected_layout = _selected_layout;
+	setSelectedLayout(_selectedLayout: MapsLayout) {
+		this.setClassImageriesContainer(_selectedLayout.id, this.selectedLayout && this.selectedLayout.id);
+		this.selectedLayout = _selectedLayout;
 	}
 
 	setActiveMapId(_activeMapId) {
@@ -168,7 +168,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 
 	startPointerMoveProcess() {
-		if (this.selected_layout.maps_count < 2) {
+		if (this.selectedLayout.mapsCount < 2) {
 			return;
 		}
 		const communicators = this.communicatorProvider.communicators;

@@ -43,7 +43,7 @@ describe('MenuComponent', () => {
 	it('buildCurrentComponent should create factory from selectedMenuItem component, and createComponent from factory', () => {
 		spyOn(menuComponent, 'anyMenuItemSelected').and.returnValue(true);
 		const mockMenuItem: MenuItem = {
-			component: 'fake_comp',
+			component: 'fakeComp',
 		} as MenuItem;
 		const fakeFactory = 'fakeFactory';
 		spyOnProperty(menuComponent, 'selectedMenuItem', 'get').and.returnValue(mockMenuItem);

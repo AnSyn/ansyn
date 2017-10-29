@@ -32,28 +32,28 @@ import { MapsLayout } from '@ansyn/core';
 
 export class StatusBarComponent implements OnInit {
 
-	status_bar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
+	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 
-	layouts$: Observable<MapsLayout[]> = this.status_bar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
+	layouts$: Observable<MapsLayout[]> = this.statusBar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
 
-	selected_layout_index$: Observable<number> = this.status_bar$.pluck<IStatusBarState, number>('selected_layout_index').distinctUntilChanged();
+	selectedLayoutIndex$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('selectedLayoutIndex').distinctUntilChanged();
 
-	orientations$: Observable<string[]> = this.status_bar$.pluck<IStatusBarState, string[]>('orientations').distinctUntilChanged();
-	orientation$: Observable<string> = this.status_bar$.pluck<IStatusBarState, string>('orientation').distinctUntilChanged();
-	geoFilters$: Observable<string[]> = this.status_bar$.pluck<IStatusBarState, string[]>('geoFilters').distinctUntilChanged();
-	geoFilter$: Observable<string> = this.status_bar$.pluck<IStatusBarState, string>('geoFilter').distinctUntilChanged();
+	orientations$: Observable<string[]> = this.statusBar$.pluck<IStatusBarState, string[]>('orientations').distinctUntilChanged();
+	orientation$: Observable<string> = this.statusBar$.pluck<IStatusBarState, string>('orientation').distinctUntilChanged();
+	geoFilters$: Observable<string[]> = this.statusBar$.pluck<IStatusBarState, string[]>('geoFilters').distinctUntilChanged();
+	geoFilter$: Observable<string> = this.statusBar$.pluck<IStatusBarState, string>('geoFilter').distinctUntilChanged();
 
-	flags$ = this.status_bar$.pluck('flags').distinctUntilChanged();
-	toastMessage$ = this.status_bar$.pluck('toastMessage').distinctUntilChanged();
-	time$: Observable<{ from: Date, to: Date }> = this.status_bar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
-	hideOverlay$: Observable<boolean> = this.status_bar$
-		.map((state: IStatusBarState) => state.layouts[state.selected_layout_index].maps_count > 1)
+	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
+	toastMessage$ = this.statusBar$.pluck('toastMessage').distinctUntilChanged();
+	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
+	hideOverlay$: Observable<boolean> = this.statusBar$
+		.map((state: IStatusBarState) => state.layouts[state.selectedLayoutIndex].mapsCount > 1)
 		.distinctUntilChanged();
-	overlaysCount$: Observable<number> = this.status_bar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
-	overlayNotInCase$: Observable<boolean> = this.status_bar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
+	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
+	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
 
 	layouts: MapsLayout[] = [];
-	selected_layout_index: number;
+	selectedLayoutIndex: number;
 	showToast: boolean;
 	showAlertIcon: boolean;
 	toastText: string;
@@ -123,8 +123,8 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	setSubscribers() {
-		this.selected_layout_index$.subscribe((_selected_layout_index: number) => {
-			this.selected_layout_index = _selected_layout_index;
+		this.selectedLayoutIndex$.subscribe((_selectedLayoutIndex: number) => {
+			this.selectedLayoutIndex = _selectedLayoutIndex;
 		});
 
 		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
@@ -185,7 +185,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	showGeoRegistrationError(): boolean {
-		const key = statusBarFlagsItems.geo_registered_options_enabled;
+		const key = statusBarFlagsItems.geoRegisteredOptionsEnabled;
 		return this.flags.has(key) && !this.flags.get(key);
 	}
 
@@ -199,8 +199,8 @@ export class StatusBarComponent implements OnInit {
 		this.toggleTimelineStartEndSearch();
 	}
 
-	layoutSelectChange(selected_layout_index: number): void {
-		this.store.dispatch(new ChangeLayoutAction(selected_layout_index));
+	layoutSelectChange(selectedLayoutIndex: number): void {
+		this.store.dispatch(new ChangeLayoutAction(selectedLayoutIndex));
 	}
 
 	orientationChange(_orientation) {

@@ -3,10 +3,10 @@ export const defaultCase = {
 	name: 'Default case',
 	state: {
 		maps: {
-			layouts_index: 0,
-			active_map_id: 'default_imagery1',
+			layoutsIndex: 0,
+			activeMapId: 'defaultImagery1',
 			data: [{
-				'id': 'default_imagery1',
+				'id': 'defaultImagery1',
 				'mapType': 'openLayersMap',
 				'data': {
 					'position': {

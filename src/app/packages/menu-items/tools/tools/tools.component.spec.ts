@@ -11,13 +11,13 @@ describe('ToolsComponent', () => {
 	let fixture: ComponentFixture<ToolsComponent>;
 	let store: Store<any>;
 
-	const mock_annotations_control = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand'] });
-	const mock_go_to = MockComponent({
+	const mockAnnotationsControl = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand'] });
+	const mockGoTo = MockComponent({
 		selector: 'ansyn-go-to',
 		inputs: ['expand', 'disabled'],
 		outputs: ['onGoTo', 'expandChange']
 	});
-	const mock_overlays_display_mode = MockComponent({
+	const mockOverlaysDisplayMode = MockComponent({
 		selector: 'ansyn-overlays-display-mode',
 		inputs: ['expand', 'disabled', 'modeOn'],
 		outputs: ['expandChange', 'modeOnChange']
@@ -26,7 +26,7 @@ describe('ToolsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
-			declarations: [ToolsComponent, mock_go_to, mock_overlays_display_mode, mock_annotations_control]
+			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl]
 		})
 			.compileComponents();
 	}));
@@ -49,17 +49,17 @@ describe('ToolsComponent', () => {
 	it('check the mouse shadow toggle button', () => {
 		const button = fixture.debugElement.nativeElement.querySelector('button:first-child');
 		component.flags = new Map();
-		component.flags.set('shadow_mouse', false);
+		component.flags.set('shadowMouse', false);
 
-		// expect(component.flags.get('shadow_mouse')).toBe(false);
+		// expect(component.flags.get('shadowMouse')).toBe(false);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
 
-		component.flags.set('shadow_mouse', true);
-		// expect(component.flags.get('shadow_mouse')).toBe(true);
+		component.flags.set('shadowMouse', true);
+		// expect(component.flags.get('shadowMouse')).toBe(true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
-		// expect(component.flags.get('shadow_mouse')).toBe(false);
+		// expect(component.flags.get('shadowMouse')).toBe(false);
 
 	});
 

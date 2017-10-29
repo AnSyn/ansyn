@@ -15,17 +15,17 @@ describe('SaveCaseComponent', () => {
 	let fixture: ComponentFixture<SaveCaseComponent>;
 	let store: Store<ICasesState>;
 
-	let fake_iCasesState: ICasesState = {
+	let fakeICasesState: ICasesState = {
 		cases: [
-			{ id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
-			{ id: 'fake_id2', name: 'fake_name2', state: { selected_context_id: null } }
+			{ id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+			{ id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
 		],
-		modalCaseId: 'fake_id1',
+		modalCaseId: 'fakeId1',
 		modal: true,
 		contexts: [],
 		contextsLoaded: true,
-		selectedCase: { id: 'fake_id1', name: 'fake_name1', state: { selected_context_id: null } },
-		default_case: { id: 'fake_id3', name: 'fake_name3', state: { selected_context_id: null } }
+		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+		defaultCase: { id: 'fakeId3', name: 'fakeName3', state: { selectedContextId: null } }
 	} as any;
 
 	beforeEach(async(() => {
@@ -44,7 +44,7 @@ describe('SaveCaseComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fake_iCasesState));
+		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
 
 		fixture = TestBed.createComponent(SaveCaseComponent);
 		component = fixture.componentInstance;
@@ -59,7 +59,7 @@ describe('SaveCaseComponent', () => {
 	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
 		spyOn(component, 'close');
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(component.case_model));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(component.caseModel));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

@@ -11,7 +11,8 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
-import { convertByProjectionDatum, CoordinatesSystem } from '@ansyn/core/utils';
+import { CoordinatesSystem } from '@ansyn/core/utils';
+import { convertByProjectionDatum } from '@ansyn/core/utils/covert-projections';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 
@@ -38,11 +39,11 @@ export class GoToComponent implements OnInit {
 		to: []
 	};
 
-	pin_location_mode$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => state.flags.get('pin_location'))
+	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
+		.map((state: IToolsState) => state.flags.get('pinLocation'))
 		.distinctUntilChanged(isEqual);
 
-	pin_location_mode: boolean;
+	pinLocationMode: boolean;
 
 	@HostBinding('class.expand')
 	set expand(value) {
@@ -69,8 +70,8 @@ export class GoToComponent implements OnInit {
 			this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 		});
 
-		this.pin_location_mode$.subscribe((_pin_location_mode) => {
-			this.pin_location_mode = _pin_location_mode;
+		this.pinLocationMode$.subscribe((_pinLocationMode) => {
+			this.pinLocationMode = _pinLocationMode;
 		});
 
 		this.gotoExpand$.subscribe((_gotoExpand) => {
@@ -99,7 +100,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	togglePinLocation() {
-		this.store$.dispatch(new SetPinLocationModeAction(!this.pin_location_mode));
+		this.store$.dispatch(new SetPinLocationModeAction(!this.pinLocationMode));
 	}
 
 	close() {

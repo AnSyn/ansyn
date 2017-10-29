@@ -36,11 +36,11 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state);
 
 		case CasesActionTypes.ADD_CASE_SUCCESS:
-			const cases_added: Case[] = [
+			const casesAdded: Case[] = [
 				action.payload,
 				...state.cases,
 			];
-			return Object.assign({}, state, { cases: cases_added });
+			return Object.assign({}, state, { cases: casesAdded });
 
 		case CasesActionTypes.OPEN_MODAL:
 			return { ...state, modalCaseId: action.payload.caseId, modal: true };
@@ -49,17 +49,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return { ...state, modalCaseId: null, modal: false };
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const active_case: Case = { ...action.payload, last_modified: new Date() };
-			const isSelectedCase = active_case.id === _get(state.selectedCase, 'id');
-			const caseIndex: number = state.cases.findIndex(({ id }) => id === active_case.id);
+			const activeCase: Case = { ...action.payload, lastModified: new Date() };
+			const isSelectedCase = activeCase.id === _get(state.selectedCase, 'id');
+			const caseIndex: number = state.cases.findIndex(({ id }) => id === activeCase.id);
 			if (caseIndex > -1) {
 				const before = state.cases.slice(0, caseIndex);
 				const after = state.cases.slice(caseIndex + 1, state.cases.length);
-				const cases: Case[] = [...before, active_case, ...after];
-				return isSelectedCase ? { ...state, cases, selectedCase: active_case } : { ...state, cases };
+				const cases: Case[] = [...before, activeCase, ...after];
+				return isSelectedCase ? { ...state, cases, selectedCase: activeCase } : { ...state, cases };
 			}
 			if (isSelectedCase) {
-				return { ...state, selectedCase: active_case };
+				return { ...state, selectedCase: activeCase };
 			}
 			/* No Case to update */
 			return { ...state };
@@ -73,20 +73,20 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state, { updatingBackend: false });
 
 		case CasesActionTypes.LOAD_CASES_SUCCESS:
-			let cases_loaded: Case[] = [
+			let casesLoaded: Case[] = [
 				...state.cases,
 				...action.payload
 			];
-			return { ...state, cases: cases_loaded };
+			return { ...state, cases: casesLoaded };
 
 		case CasesActionTypes.DELETE_CASE:
-			const case_to_remove_index: number = state.cases.findIndex((case_value: Case) => case_value.id === state.modalCaseId);
-			if (case_to_remove_index === -1) {
+			const caseToRemoveIndex: number = state.cases.findIndex((caseValue: Case) => caseValue.id === state.modalCaseId);
+			if (caseToRemoveIndex === -1) {
 				return state;
 			}
 			const cases: Case[] = [
-				...state.cases.slice(0, case_to_remove_index),
-				...state.cases.slice(case_to_remove_index + 1, state.cases.length),
+				...state.cases.slice(0, caseToRemoveIndex),
+				...state.cases.slice(caseToRemoveIndex + 1, state.cases.length),
 			];
 			return Object.assign({}, state, { cases });
 

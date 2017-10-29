@@ -5,7 +5,7 @@ export interface Context {
 	name: string;
 
 	/* optionals */
-	layout_index?: number;
+	layoutIndex?: number;
 	zoom?: number;
 	imageryCount?: number;
 	timeFilter?: string;

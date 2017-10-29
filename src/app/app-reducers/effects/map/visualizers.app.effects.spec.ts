@@ -39,20 +39,20 @@ describe('VisualizersAppEffects', () => {
 			{
 				maps:
 					{
-						active_map_id: 'active_map_id',
+						activeMapId: 'activeMapId',
 						data: [
 							{
-								id: 'active_map_id',
+								id: 'activeMapId',
 								data: {
 									overlayDisplayMode: 'Polygon'
 								}
 							},
 							{
-								id: 'not_active_map_id',
+								id: 'notActiveMapId',
 								data: {}
 							},
 							{
-								id: 'not_active_map_id',
+								id: 'notActiveMapId',
 								data: {}
 							},
 
@@ -84,7 +84,7 @@ describe('VisualizersAppEffects', () => {
 		store.dispatch(new SelectCaseAction(selectedCase));
 		store.dispatch(new SetMapsDataActionStore({
 			mapsList: selectedCase.state.maps.data,
-			activeMapId: selectedCase.state.maps.active_map_id
+			activeMapId: selectedCase.state.maps.activeMapId
 		}));
 	}));
 

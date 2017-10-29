@@ -26,11 +26,11 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			/*
 			this will work every request for tile source and will have slightly effect on performance (one function call) nothing wo worry about
 			 */
-			super.startTimingLog('tile_load-' + metaData.id);
+			super.startTimingLog('tileLoad-' + metaData.id);
 		});
 
 		source.once('tileloadend', () => {
-			super.endTimingLog('tile_load-' + metaData.id);
+			super.endTimingLog('tileLoad-' + metaData.id);
 		});
 
 		return new ImageLayer({

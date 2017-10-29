@@ -52,7 +52,7 @@ describe('CasesTableComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseByIdAction('id'));
 	});
 
-	it('onCasesAdded should change tbodyElement scrollTop to 0( only if tbody_element is not undefined )', () => {
+	it('onCasesAdded should change tbodyElement scrollTop to 0( only if tbodyElement is not undefined )', () => {
 		component.tbodyElement = <any> {
 			nativeElement: { scrollTop: 100 }
 		};

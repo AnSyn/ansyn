@@ -6,7 +6,7 @@ export interface Case {
 	readonly id?: string;
 	name?: string;
 	owner?: string;
-	last_modified?: Date;
+	lastModified?: Date;
 	state?: CaseState;
 }
 
@@ -17,7 +17,7 @@ export interface IContextEntity {
 }
 
 export interface CaseState {
-	selected_context_id?: string;
+	selectedContextId?: string;
 	maps?: CaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
@@ -43,8 +43,8 @@ export interface CaseFacetsState {
 }
 
 export interface CaseMapsState {
-	layouts_index: number,
-	active_map_id: string,
+	layoutsIndex: number,
+	activeMapId: string,
 	data: CaseMapState[]
 }
 

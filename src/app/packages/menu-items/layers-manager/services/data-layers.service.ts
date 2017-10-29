@@ -36,8 +36,8 @@ export class DataLayersService {
 	}
 
 	public getAllLayersInATree(caseId?: string): Observable<LayerRootsBundle> {
-		const url_string: string = this.baseUrl + (caseId ? `?case_id=${caseId}` : '');
-		return this.http.get(url_string)
+		const urlString: string = this.baseUrl + (caseId ? `?caseId=${caseId}` : '');
+		return this.http.get(urlString)
 			.map(this.extractData.bind(this))
 			.catch(this.handleError);
 	}

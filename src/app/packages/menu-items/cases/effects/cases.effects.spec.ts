@@ -65,8 +65,8 @@ describe('CasesEffects', () => {
 		expect(casesEffects).toBeDefined();
 	});
 
-	it('loadCases$ should call casesService.loadCases with case last_id from state, and return LoadCasesSuccessAction', () => {
-		let loadedCases: Case[] = [{ id: 'loaded_case1' }, { id: 'loaded_case2' }, { id: 'loaded_case1' }];
+	it('loadCases$ should call casesService.loadCases with case lastId from state, and return LoadCasesSuccessAction', () => {
+		let loadedCases: Case[] = [{ id: 'loadedCase1' }, { id: 'loadedCase2' }, { id: 'loadedCase1' }];
 		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new LoadCasesSuccessAction(loadedCases) });
@@ -74,7 +74,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
-		let newCasePayload: Case = { id: 'new_case_id', name: 'new_case_name' };
+		let newCasePayload: Case = { id: 'newCaseId', name: 'newCaseName' };
 		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const expectedResults = cold('--a--', { a: new AddCaseSuccessAction(newCasePayload) });
@@ -84,7 +84,7 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 
-		let deletedCase: Case = { id: 'new_case_id', name: 'new_case_name' };
+		let deletedCase: Case = { id: 'newCaseId', name: 'newCaseName' };
 		store.dispatch(new AddCaseSuccessAction(deletedCase));
 		store.dispatch(new SelectCaseAction(deletedCase));
 		store.dispatch(new OpenModalAction({ component: '', caseId: deletedCase.id }));
@@ -96,7 +96,7 @@ describe('CasesEffects', () => {
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});
 
-	it('onUpdateCase$ should call casesService.updateCase with action.payload("updated_case"), and return UpdateCaseAction', () => {
+	it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
 		const updatedCase: Case = { id: 'updatedCaseId' };
 		actions = hot('--a--', { a: new UpdateCaseAction(updatedCase) });
 		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
@@ -104,7 +104,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('addCaseSuccess$ should select the case being added', () => {
-		let addedCase: Case = { id: 'new_case_id', name: 'new_case_name' };
+		let addedCase: Case = { id: 'newCaseId', name: 'newCaseName' };
 		actions = hot('--a--', { a: new AddCaseSuccessAction(addedCase) });
 		const expectedResults = cold('--b--', { b: new SelectCaseByIdAction(addedCase.id) });
 		expect(casesEffects.addCaseSuccess$).toBeObservable(expectedResults);

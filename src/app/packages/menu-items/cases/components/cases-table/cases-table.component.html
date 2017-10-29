@@ -42,11 +42,11 @@
 				</div>
 
 				<div class="cases-table-body-col">
-					{{ cases[caseIndex].last_modified | date:"MM/dd/yy hh:mm" }}
+					{{ cases[caseIndex].lastModified | date:"MM/dd/yy hh:mm" }}
 				</div>
 
 				<!--menu-->
-				<div class="case_menu-container">
+				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
 						<button (click)="removeCase(cases[caseIndex].id)">
 							<i class="icon-delete"></i>

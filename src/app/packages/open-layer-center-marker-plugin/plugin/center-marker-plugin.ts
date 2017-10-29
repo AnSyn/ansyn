@@ -8,7 +8,7 @@ import VectorLayer from 'ol/layer/vector';
 import { MapPosition } from '../../imagery/model/map-position';
 
 export class CenterMarkerPlugin implements IMapPlugin {
-	static s_pluginType = 'openLayerCenterMarker';
+	static sPluginType = 'openLayerCenterMarker';
 	pluginType: string;
 	private _subscriptions;
 	private _imageryCommunicator: CommunicatorEntity;
@@ -36,7 +36,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	}
 
 	constructor() {
-		this.pluginType = CenterMarkerPlugin.s_pluginType;
+		this.pluginType = CenterMarkerPlugin.sPluginType;
 
 		this._isEnabled = false;
 

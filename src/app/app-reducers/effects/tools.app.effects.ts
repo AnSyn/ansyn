@@ -113,7 +113,7 @@ export class ToolsAppEffects {
 				new EnableImageProcessing(),
 				new SetMapAutoImageProcessing({
 					mapId: activeMap.id,
-					toggle_value: isAutoImageProcessingActive
+					toggleValue: isAutoImageProcessingActive
 				}),
 				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 			];
@@ -167,7 +167,7 @@ export class ToolsAppEffects {
 				});
 
 			return [
-				new SetMapAutoImageProcessing({ mapId: activeMapId, toggle_value: shouldAutoImageProcessing }),
+				new SetMapAutoImageProcessing({ mapId: activeMapId, toggleValue: shouldAutoImageProcessing }),
 				new SetMapsDataActionStore({ mapsList: updatedMapsList }),
 				new SetAutoImageProcessingSuccess(shouldAutoImageProcessing)
 			];

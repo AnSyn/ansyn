@@ -115,8 +115,8 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store.select(casesStateSelector), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
 			return state.selectedCase.id;
 		})
-		.map((case_id: string) => {
-			return new CopyCaseLinkAction(case_id);
+		.map((caseId: string) => {
+			return new CopyCaseLinkAction(caseId);
 		});
 
 	/**
@@ -131,7 +131,7 @@ export class StatusBarAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
 		.mergeMap(({ payload }: SelectCaseAction) => {
-			const layoutsIndex = payload.state.maps.layouts_index;
+			const layoutsIndex = payload.state.maps.layoutsIndex;
 			return [
 				new ChangeLayoutAction(+layoutsIndex),
 				new SetOrientationAction(payload.state.orientation),
@@ -232,7 +232,7 @@ export class StatusBarAppEffects {
 	onGoPrevNext$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
 		.withLatestFrom(this.store.select(casesStateSelector), (action, casesState: ICasesState) => {
-			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.active_map_id === map.id);
+			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.activeMapId === map.id);
 			const overlayId = get(activeMap.data.overlay, 'id');
 			return [action.type, overlayId];
 		})

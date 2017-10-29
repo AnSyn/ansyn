@@ -47,7 +47,7 @@ describe('Overlay Reducer', () => {
 		};
 	});
 
-	it('should activate load_overlay reducer', () => {
+	it('should activate loadOverlay reducer', () => {
 
 		const queryParams = { search: '9399ejf' };
 		const action = new LoadOverlaysAction(queryParams);

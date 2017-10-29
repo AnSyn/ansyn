@@ -38,7 +38,7 @@ export class ToolsComponent implements OnInit {
 	ngOnInit() {
 		this.flags$.subscribe(_flags => {
 			this.flags = _flags;
-			this.isGeoOptionsDisabled = !this.flags.get('geo_registered_options_enabled');
+			this.isGeoOptionsDisabled = !this.flags.get('geoRegisteredOptionsEnabled');
 		});
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			this.expandGoTo = _gotoExpand;
@@ -46,7 +46,7 @@ export class ToolsComponent implements OnInit {
 	}
 
 	toggleShadowMouse() {
-		const value = this.flags.get('shadow_mouse');
+		const value = this.flags.get('shadowMouse');
 
 		if (value) {
 			this.store.dispatch(new StopMouseShadow());

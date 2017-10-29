@@ -23,18 +23,18 @@ export function getPointByPolygon(geometry: GeometryObject | FeatureCollection<a
 	}
 }
 
-export  function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
+export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
 	if (!multiPolygon) {
 		return null;
 	}
 
 	return {
-		type: "Polygon",
+		type: 'Polygon',
 		coordinates: multiPolygon.coordinates[0]
 	};
 }
 
-export  function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
+export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
 	if (!polygon) {
 		return null;
 	}
@@ -42,7 +42,7 @@ export  function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
 	coordinates.push(polygon.coordinates);
 
 	return {
-		type: "MultiPolygon",
+		type: 'MultiPolygon',
 		coordinates: coordinates
 	};
 }

@@ -9,7 +9,7 @@ import { Overlay } from '../../models/overlay.model';
 export class ImageryStatusComponent {
 	@Input() disableGeoOptions: boolean;
 	@Input() notInCase: boolean;
-	@Input() map_id: string = null;
+	@Input() mapId: string = null;
 	@Input() overlay: Overlay;
 	@Input() active: boolean;
 	@Input() mapsAmount = 1;

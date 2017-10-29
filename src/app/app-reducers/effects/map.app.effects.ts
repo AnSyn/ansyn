@@ -43,6 +43,7 @@ import {
 	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
 	EnableMapGeoOptionsActionStore,
+	MapInstanceChangedAction,
 	PinPointTriggerAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SetFavoriteAction,
@@ -79,7 +80,6 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { MapInstanceChangedAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -166,9 +166,9 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select(toolsStateSelector), (action, state: IToolsState): any => ({
 			action,
-			pin_location: state.flags.get('pin_location')
+			pinLocation: state.flags.get('pinLocation')
 		}))
-		.filter(({ action, pin_location }) => pin_location)
+		.filter(({ action, pinLocation }) => pinLocation)
 		.mergeMap(({ action }) => {
 			return [
 				new SetPinLocationModeAction(false),
@@ -211,12 +211,12 @@ export class MapAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
 			const overlay = action.payload.overlay;
-			const map_id = action.payload.map_id ? action.payload.map_id : mapState.activeMapId;
-			const map = MapFacadeService.mapById(mapState.mapsList, map_id);
-			return [overlay, map_id, map.data.position];
+			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
+			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
+			return [overlay, mapId, map.data.position];
 		})
 		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.flatMap(([overlay, map_id, position]: [Overlay, string, Position]) => {
+		.flatMap(([overlay, mapId, position]: [Overlay, string, Position]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			let extent;
@@ -226,7 +226,7 @@ export class MapAppEffects {
 				extent = calcGeoJSONExtent(overlay.footprint);
 			}
 
-			const communicator = this.imageryCommunicatorService.provide(map_id);
+			const communicator = this.imageryCommunicatorService.provide(mapId);
 
 			const mapType = communicator.ActiveMap.mapType;
 
@@ -269,7 +269,7 @@ export class MapAppEffects {
 		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
 		.map((caseMapState: CaseMapState) => {
 			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
-			return new DisplayOverlayAction({ overlay: caseMapState.data.overlay, map_id: caseMapState.id });
+			return new DisplayOverlayAction({ overlay: caseMapState.data.overlay, mapId: caseMapState.id });
 		});
 
 	/**
@@ -288,7 +288,7 @@ export class MapAppEffects {
 				// if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
 					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
-					previusResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, map_id: data.id }));
+					previusResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, mapId: data.id }));
 				}
 				return previusResult;
 			}, []);
@@ -320,7 +320,7 @@ export class MapAppEffects {
 		.map((action: DisplayOverlayAction) =>
 			new RequestOverlayByIDFromBackendAction({
 				overlayId: action.payload.overlay.id,
-				map_id: action.payload.map_id
+				mapId: action.payload.mapId
 			}));
 
 	/**
@@ -448,7 +448,7 @@ export class MapAppEffects {
 		.do((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
-			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.s_pluginType);
+			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
 			if (centerMarkerPluggin) {
 				centerMarkerPluggin.init(communicatorHandler);
 			}
@@ -583,7 +583,7 @@ export class MapAppEffects {
 						...selectedCase.state,
 						maps: {
 							...selectedCase.state.maps,
-							layouts_index: layoutIndex
+							layoutsIndex: layoutIndex
 						}
 					}
 				} as any;

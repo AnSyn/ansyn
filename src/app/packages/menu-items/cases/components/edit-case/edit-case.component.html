@@ -16,7 +16,7 @@
 					name="context" required [disabled]="editMode">
 				<option
 					*ngFor="let context of contextsList"
-					[selected]="context.id === caseModel.state.selected_context_id">
+					[selected]="context.id === caseModel.state.selectedContextId">
 					{{context.name}}
 				</option>
 			</select>

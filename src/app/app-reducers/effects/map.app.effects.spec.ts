@@ -7,18 +7,12 @@ import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
-import {
-	ActiveMapChangedAction,
-	CompositeMapShadowAction,
-	StartMapShadowAction,
-	StopMapShadowAction
-} from '@ansyn/map-facade';
+import { CompositeMapShadowAction, StartMapShadowAction, StopMapShadowAction } from '@ansyn/map-facade';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
-	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
@@ -603,30 +597,4 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('activeMapGeoRegistrationChanged$$', () => {
-		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
-			mapState.mapsList = <any> [
-				{
-					...icaseState.selectedCase.state.maps.data[0],
-					data: { ...icaseState.selectedCase.state.maps.data[0].data, overlay: testOverlay }
-				},
-				{
-					...icaseState.selectedCase.state.maps.data[1],
-					data: { ...icaseState.selectedCase.state.maps.data[1].data, overlay: testOverlay }
-				},
-			];
-			mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
-			const fakeCommuincator = { id: 'test' };
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-			const expectedResults = cold('--b--', {
-				b: new EnableMapGeoOptionsActionStore({
-					mapId: 'imagery1',
-					isEnabled: false
-				})
-			});
-			expect(mapAppEffects.activeMapGeoRegistrationChanged$$).toBeObservable(expectedResults);
-		});
-	});
 });

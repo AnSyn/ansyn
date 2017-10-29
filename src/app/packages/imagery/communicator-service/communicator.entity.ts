@@ -201,7 +201,7 @@ export class CommunicatorEntity {
 
 	// ======shadow mouse end
 
-	// ======pinPointIndicator
+	// ====== treat map click event (used for pinPointIndicator)
 	public createMapSingleClickEvent() {
 		(<any>this.ActiveMap).addSingleClickEvent();
 	}
@@ -210,13 +210,5 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).removeSingleClickEvent();
 	}
 
-	public addPinPointIndicator(latLon: Array<number>) {
-		(<any>this.ActiveMap).addPinPointIndicator(latLon);
-	}
-
-	public removePinPointIndicator() {
-		(<any>this.ActiveMap).removePinPointIndicator();
-	}
-
-	// ======end pinPointIndicator
+	// ======end treat map click event (used for pinPointIndicator)
 }

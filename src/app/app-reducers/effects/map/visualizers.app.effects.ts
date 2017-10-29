@@ -5,7 +5,8 @@ import {
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
 	MapActionTypes,
-	SetMapsDataActionStore
+	SetMapsDataActionStore,
+	PinPointTriggerAction,
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -42,6 +43,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IconVisualizerType } from '../../../packages/open-layer-visualizers/icon.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -165,12 +167,12 @@ export class VisualizersAppEffects {
 	 * @dependencies overlays, cases
 	 */
 	@Effect({ dispatch: false })
-	drawOverlaysOnMap$: Observable<void> = this.actions$
+	drawOverlaysOnMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selectedCase];
 		})
-		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
+		.do(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
 			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
@@ -194,6 +196,27 @@ export class VisualizersAppEffects {
 		.map(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
 			const activeMap = MapFacadeService.activeMap(map);
 			this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
+		});
+
+	/**
+	 * @type Effect
+	 * @name OnGoToInputChanged$
+	 * @ofType GoToInputChangeAction
+	 * @dependencies map
+	 */
+	@Effect({ dispatch: false })
+	drawPinPoint$ = this.actions$
+		.ofType(MapActionTypes.DRAW_PIN_POINT_ON_MAP)
+		.withLatestFrom(
+			this.store$.select(mapStateSelector),
+			(action: PinPointTriggerAction, mapState: IMapState) => {
+				return [mapState, action.payload];
+			}
+		)
+		.map(([mapState, coords]: [IMapState, any[]]) => {
+			mapState.mapsList.forEach( (map: CaseMapState) => {
+				this.drawPinPointIconOnMap(map, coords);
+			});
 		});
 
 	/**
@@ -381,6 +404,27 @@ export class VisualizersAppEffects {
 				gotoVisualizer.clearEntities();
 			}
 
+		}
+	}
+
+	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]) {
+		const communicator = this.imageryCommunicatorService.provide(mapData.id);
+		if (communicator) {
+			const IconVisualizer = communicator.getVisualizer(IconVisualizerType);
+			if (!IconVisualizer) {
+				return;
+			}
+			const gotoPoint: GeoJSON.Point = {
+				type: 'Point',
+				coordinates: point
+			};
+			const gotoFeatureJson: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: gotoPoint,
+				properties: {}
+			};
+			IconVisualizer.clearEntities();
+			IconVisualizer.setEntities([{id: 'pinPoint', featureJson: gotoFeatureJson}]);
 		}
 	}
 

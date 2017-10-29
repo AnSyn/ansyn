@@ -26,8 +26,6 @@ import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 
-import Collection from 'ol/collection';
-
 
 export class OpenLayersMap implements IMap {
 	static mapType = 'openLayersMap';
@@ -161,8 +159,6 @@ export class OpenLayersMap implements IMap {
 
 		this._mapObject.setView(view);
 		this.addLayer(layer);
-
-		this.internalAfterSetMainLayer(beforeArgs);
 	}
 
 	addInteraction(interaction) {
@@ -185,12 +181,6 @@ export class OpenLayersMap implements IMap {
 			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
 		}
 		return { pinPointLonLatGeo: lonLatCords };
-	}
-
-	private internalAfterSetMainLayer(args: { pinPointLonLatGeo }) {
-		if (args.pinPointLonLatGeo) {
-			this.addPinPointIndicator(args.pinPointLonLatGeo);
-		}
 	}
 
 	private fitCurrentView(layer: Layer, extent?: GeoJSON.Point[]) {
@@ -421,54 +411,6 @@ export class OpenLayersMap implements IMap {
 		this.singleClick.emit({ lonLat: lonLat });
 	}
 
-
-	public addPinPointIndicator(lonLat) {
-		const layer = this.getLayerById(this._pinPointIndicatorLayerId);
-
-		const view = this._mapObject.getView();
-		const projection = view.getProjection();
-		const lonLatCords = proj.fromLonLat(lonLat, projection);
-
-		const iconStyle = new Icon({
-			scale: 1,
-			src: '/assets/pinpoint-indicator.svg' // for further usage either bring from configuration or create svg
-		});
-
-		if (layer) {
-			layer.set('visible', true);
-			const feature = (<any>layer).getSource().getFeatures()[0];
-			feature.setGeometry(new Point(lonLatCords));
-			layer.getStyle().setImage(iconStyle);
-		}
-		else {
-			const feature = new Feature({
-				geometry: new Point(lonLatCords),
-				id: 'pinPointIndicatorFeature'
-			});
-
-			const featuresCollection = new Collection([feature]);
-
-			const vectorLayer: VectorLayer = new VectorLayer({
-				source: new Vector({
-					features: featuresCollection
-				}),
-				style: new Style({
-					image: iconStyle
-				})
-			});
-
-			vectorLayer.setZIndex(12000);
-			vectorLayer.set('id', this._pinPointIndicatorLayerId);
-
-			this.addLayer(vectorLayer);
-		}
-	}
-
-	public removePinPointIndicator() {
-		this.removeLayerById(this._pinPointIndicatorLayerId);
-	}
-
-	// *****-- pin point paint on the map end --********
 
 	// *****-- shadow mouse functionality--********
 

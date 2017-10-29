@@ -23,6 +23,7 @@ import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overl
 import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
+import { IconVisualizer } from '../packages/open-layer-visualizers/icon.visualizer';
 
 @NgModule({
 	imports: [
@@ -86,7 +87,14 @@ import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 				type: OpenLayersVisualizerMapType,
 				visualizer: GoToVisualizer
 			}
-		}
+		}, {
+			provide: MapVisualizer,
+			multi: true,
+			useValue: {
+				type: OpenLayersVisualizerMapType,
+				visualizer: IconVisualizer
+			}
+		},
 	]
 })
 export class AppProvidersModule {

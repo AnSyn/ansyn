@@ -30,7 +30,7 @@ describe('CasesService', () => {
 
 		it('updateCaseViaQueryParmas should get qParams values and set them on case state (after parsing them)', () => {
 			spyOn(queryParamsHelper, 'decodeCaseObjects').and.callFake((key, val) => val);
-			const fakeQ_params = {
+			const fakeQParams = {
 				'a': 'b',
 				'c': 'd'
 			};
@@ -40,10 +40,10 @@ describe('CasesService', () => {
 				state: {}
 			} as any;
 
-			fakeCase = queryParamsHelper.updateCaseViaQueryParmas(fakeQ_params, fakeCase);
+			fakeCase = queryParamsHelper.updateCaseViaQueryParmas(fakeQParams, fakeCase);
 			expect(queryParamsHelper.decodeCaseObjects).toHaveBeenCalledTimes(2);
-			expect(fakeCase.state['a']).toEqual(fakeQ_params['a']);
-			expect(fakeCase.state['c']).toEqual(fakeQ_params['c']);
+			expect(fakeCase.state['a']).toEqual(fakeQParams['a']);
+			expect(fakeCase.state['c']).toEqual(fakeQParams['c']);
 		});
 
 		it('generateQueryParamsViaCase should parse url to qParams object (after parsing) ', () => {
@@ -57,7 +57,7 @@ describe('CasesService', () => {
 				}
 			} as any;
 
-			const fakeQ_params = queryParamsHelper.generateQueryParamsViaCase(fakeCase);
+			const fakeQParams = queryParamsHelper.generateQueryParamsViaCase(fakeCase);
 			expect(queryParamsHelper.encodeCaseObjects).toHaveBeenCalledTimes(4);
 
 		});

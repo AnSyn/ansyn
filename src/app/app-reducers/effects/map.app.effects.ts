@@ -68,7 +68,6 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { CaseMapState, Position } from '@ansyn/core/models';
 import {
 	ChangeLayoutAction,
@@ -80,6 +79,7 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { getPolygonByPointAndRadius } from '../../packages/core/utils/geo';
 
 @Injectable()
 export class MapAppEffects {
@@ -126,7 +126,7 @@ export class MapAppEffects {
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 
 			// create the region
-			const region = getPolygonByPoint(action.payload).geometry;
+			const region = getPolygonByPointAndRadius(action.payload).geometry;
 
 			// draw on all maps
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
@@ -448,9 +448,9 @@ export class MapAppEffects {
 		.do((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
-			const centerMarkerPluggin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
-			if (centerMarkerPluggin) {
-				centerMarkerPluggin.init(communicatorHandler);
+			const centerMarkerPlugin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
+			if (centerMarkerPlugin) {
+				centerMarkerPlugin.init(communicatorHandler);
 			}
 		});
 

@@ -37,6 +37,11 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
+import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+
+
+
 @Injectable()
 export class ToolsAppEffects {
 
@@ -73,23 +78,37 @@ export class ToolsAppEffects {
 	 * @action SetActiveOverlaysFootprintModeAction, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentAction
 	 */
 	@Effect()
-	onActiveMapChangesSetOverlaysFootprintMode$: Observable<SetActiveOverlaysFootprintModeAction> = this.actions$
+	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => mapState)
-		.map(MapFacadeService.activeMap)
-		.mergeMap(activeMap =>
-			[
-				new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode),
-				new AnnotationVisualizerAgentAction({
-					action: 'removeLayer',
-					maps: 'all'
-				}),
-				new AnnotationVisualizerAgentAction({
-					action: 'show',
-					maps: 'all'
-				})
-			]
+		.withLatestFrom(
+			this.store$.select(mapStateSelector),
+			this.store$.select(layersStateSelector),
+			this.store$.select(toolsStateSelector),
+			(action, mapState: IMapState, layerState: ILayerState, toolsState: IToolsState) => [action, mapState, layerState, toolsState])
+		.map(([action, mapState, layerState, toolsState]: [ActiveMapChangedAction, IMapState, ILayerState, IToolsState]): [CaseMapState, ILayerState, IToolsState] => [MapFacadeService.activeMap(mapState), layerState, toolsState])
+		.mergeMap(([activeMap, layerState, toolsState]: [CaseMapState, ILayerState, IToolsState]) => {
+				const result = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
+				if (layerState.displayAnnotationsLayer) {
+					result.push(new AnnotationVisualizerAgentAction({
+						action: 'show',
+						maps: 'all'
+					}))
+				}
+				else if (toolsState.flags.get('annotations')) {
+					result.push(new AnnotationVisualizerAgentAction({
+						action: 'show',
+						maps: 'active'
+					}))
+					result.push(new AnnotationVisualizerAgentAction({
+						action: 'removeLayer',
+						maps: 'others'
+					}))
+				}
+				return result;
+			}
 		);
+
+
 
 	/**
 	 * @type Effect

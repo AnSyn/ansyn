@@ -7,21 +7,27 @@ export interface IToolsState {
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
+	annotationMode: string;
 }
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<string, boolean>(),
 	activeCenter: [0, 0],
-	gotoExpand: false
+	gotoExpand: false,
+	annotationMode: undefined
 };
 
 toolsInitialState.flags.set('geoRegisteredOptionsEnabled', true);
+toolsInitialState.flags.set('annotations', true);
 export const toolsFeatureKey = 'tools';
 export const toolsStateSelector = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<string, boolean>;
 	switch (action.type) {
+		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
+			return {...state, annotationMode: action.payload };
+
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 
 			tmpMap = new Map(state.flags);
@@ -61,7 +67,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.GO_TO:
-			return { ...state };
+			return state;
 
 		case ToolsActionsTypes.GO_TO_EXPAND:
 			return { ...state, gotoExpand: action.payload };
@@ -86,8 +92,19 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set('autoImageProcessing', false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
+		case ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE:
 
+			tmpMap = new Map(state.flags);
+			tmpMap.set('annotations', false);
+			return { ...state, flags: tmpMap };
+
+		case ToolsActionsTypes.FLAGS.ANNOTATION_OPEN:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('annotations', true);
+			return { ...state, flags: tmpMap };
+
+		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
 			return { ...state, activeOverlaysFootprintMode: action.payload };
 
 		default:

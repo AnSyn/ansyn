@@ -221,13 +221,6 @@ export class MapAppEffects {
 		.flatMap(([overlay, mapId, position]: [Overlay, string, Position]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
-			let extent;
-			if (intersection > this.config.overlayCoverage) {
-				extent = position.boundingBox;
-			} else {
-				extent = calcGeoJSONExtent(overlay.footprint);
-			}
-
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 
 			const mapType = communicator.ActiveMap.mapType;
@@ -238,7 +231,9 @@ export class MapAppEffects {
 			return Observable.fromPromise(sourceLoader.createAsync(overlay))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
-						communicator.resetView(layer, extent);
+						if (intersection < this.config.overlayCoverage) {
+							communicator.resetView(layer, calcGeoJSONExtent(overlay.footprint));
+						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
 							communicator.setActiveMap('disabledOpenLayersMap', position, layer);

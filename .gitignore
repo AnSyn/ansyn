@@ -20,7 +20,8 @@ node_modules
 .settings/
 *.sublime-workspace
 *.sublime-project
-.metadata
+.metadata/
+
 
 # IDE - VSCode
 .vscode/*

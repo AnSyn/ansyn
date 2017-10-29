@@ -6,6 +6,7 @@ import 'rxjs/add/operator/do';
 import {
 	ActiveMapChangedAction,
 	BackToWorldAction,
+	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
 	MapsListChangedAction,
 	PinLocationModeTriggerAction,
@@ -230,6 +231,54 @@ export class MapEffects {
 	getFilteredOverlays$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
 		.share();
+
+	/**
+	 * @type Effect
+	 * @name backToWorldGeoRegistration$
+	 * @ofType BackToWorldAction
+	 * @dependencies map
+	 * @filter Exists a communicator for the mapId
+	 */
+	@Effect({ dispatch: false })
+	backToWorldGeoRegistration$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [any, any]): any[] => {
+			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
+			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
+			const mapComm = this.communicatorsService.provide(action.payload.mapId);
+			return [mapComm, map.data.position];
+		})
+		.filter(([mapComm]) => !(mapComm))
+		.do(([mapComm, position]: any[]) => {
+			mapComm.setActiveMap('openLayersMap', position);
+		});
+
+	/**
+	 * @type Effect
+	 * @name activeMapGeoRegistrationChanged$
+	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter mapsList.length > 0
+	 * @action EnableMapGeoOptionsActionStore
+	 */
+	@Effect()
+	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
+		.map(([action, mapState]: [Action, IMapState]) => {
+			const activeMapState = MapFacadeService.activeMap(mapState);
+			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
+			return [action, isGeoRegistered, activeMapState, mapState];
+		})
+		.filter(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
+			const isEnabled = mapState.mapIdToGeoOptions.get(activeMapState.id);
+			return isEnabled !== isGeoRegistered;
+		})
+		.map(([action, isGeoRegistered, activeMapState]: [Action, boolean, CaseMapState, IMapState]): any => {
+			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
+		});
 
 	constructor(private actions$: Actions,
 				private mapFacadeService: MapFacadeService,

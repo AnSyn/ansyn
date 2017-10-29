@@ -51,6 +51,7 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { SetAnnotationMode } from '../../../packages/menu-items/tools/actions/tools.actions';
 
 
 
@@ -398,8 +399,11 @@ export class VisualizersAppEffects {
 			return { selectedCase, update };
 		})
 		.filter(({ update }) => update)
-		.map(result => {
-			return new UpdateCaseAction(result.selectedCase);
+		.mergeMap(result => {
+			return [
+				new UpdateCaseAction(result.selectedCase),
+				new SetAnnotationMode(undefined)
+			]
 		});
 
 

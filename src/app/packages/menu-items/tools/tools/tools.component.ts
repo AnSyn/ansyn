@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+	AnnotationClose,
+	AnnotationOpen,
 	AnnotationVisualizerAgentAction,
 	GoToExpandAction,
 	SetAutoCloseMenu,
@@ -17,7 +19,7 @@ import { isEqual } from 'lodash';
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.less']
 })
-export class ToolsComponent implements OnInit {
+export class ToolsComponent implements OnInit, OnDestroy {
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
@@ -46,6 +48,14 @@ export class ToolsComponent implements OnInit {
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			this.expandGoTo = _gotoExpand;
 		});
+	}
+
+	ngOnDestroy() {
+		this.store.dispatch(new AnnotationClose(false));
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: 'removeInteraction',
+			maps: 'active'
+		}));
 	}
 
 	toggleShadowMouse() {
@@ -77,14 +87,16 @@ export class ToolsComponent implements OnInit {
 		// send event to the store that saying the annotation option is enabled
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
 		if (this.userAnnotationsToolOpen) {
-			this.store.dispatch(new SetAutoCloseMenu(false))
+			this.store.dispatch(new AnnotationOpen(true))
+			this.store.dispatch(new SetAutoCloseMenu(false));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: 'show',
 				maps: 'active'
 			}));
 
 		} else {
-			this.store.dispatch(new SetAutoCloseMenu(true))
+			this.store.dispatch(new AnnotationClose(false));
+			this.store.dispatch(new SetAutoCloseMenu(true));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: 'endDrawing',
 				maps: 'active'

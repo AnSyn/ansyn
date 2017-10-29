@@ -59,7 +59,6 @@ export class LayersAppEffects {
 	hideAnnotationsLayer$: Observable<any> = this.actions$
 		.ofType<HideAnnotationsLayer>(LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER)
 		.withLatestFrom<HideAnnotationsLayer, Case>(this.selectedCase$)
-		.do(res => console.log(res))
 		.mergeMap(([action, selectedCase]: [HideAnnotationsLayer, Case]) => {
 
 			const actions = [new AnnotationVisualizerAgentAction({

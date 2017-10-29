@@ -1,10 +1,21 @@
 <ul class="annotations-options">
-	<li (click)="createInteraction('Point')"><span class="icon-annotation-point "></span></li>
-	<li (click)="createInteraction('LineString')"><span class="icon-annotation-line "></span></li>
-	<li (click)="createInteraction('Polygon')"><span class="icon-annotation-polygon "></span></li>
-	<li (click)="createInteraction('Circle')"><span class="icon-annotation-circle "></span></li>
-	<li (click)="createInteraction('Rectangle')"><span class="icon-annotation-square "></span></li>
-	<li (click)="createInteraction('Arrow')"><span class="icon-annotation-arrow "></span></li>
+	<li [class.mode-on]="mode === 'Point'" (click)="createInteraction('Point')">
+		<span class="icon-annotation-point "></span></li>
+	<li [class.mode-on]="mode === 'LineString'" (click)="createInteraction('LineString')">
+		<span class="icon-annotation-line "></span>
+	</li>
+	<li [class.mode-on]="mode === 'Polygon'" (click)="createInteraction('Polygon')">
+		<span class="icon-annotation-polygon "></span>
+	</li>
+	<li [class.mode-on]="mode === 'Circle'" (click)="createInteraction('Circle')">
+		<span class="icon-annotation-circle "></span>
+	</li>
+	<li [class.mode-on]="mode === 'Rectangle'" (click)="createInteraction('Rectangle')">
+		<span class="icon-annotation-square "></span>
+	</li>
+	<li [class.mode-on]="mode === 'Arrow'" (click)="createInteraction('Arrow')">
+		<span class="icon-annotation-arrow "></span>
+	</li>
 	<li class="spliter">
 		<div></div>
 	</li>

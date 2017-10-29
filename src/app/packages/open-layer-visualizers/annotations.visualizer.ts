@@ -228,13 +228,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	drawFeatures(data) {
-		if (data === undefined) {
+		if (data === undefined || this._source === undefined) {
 			return;
 		}
 
 		if (typeof data === 'string') {
 			data = JSON.parse(data);
 		}
+
 
 		// readFeatures throw an exceptions so I am using this method
 		this.features = data.features;
@@ -317,6 +318,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.features.push(geoJsonSingleFeature);
 		this.events.get('drawEndPublisher').next(this.features);
 		// this.collection = featureCollection(this.features);
+		this.removeInteraction();
+		this.addSelectInteraction();
 	}
 
 	addInteraction() {

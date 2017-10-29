@@ -1,11 +1,22 @@
-import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	HostBinding,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Renderer2,
+	ViewChild
+} from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
+import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
+import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 
 
 @Component({
@@ -13,13 +24,14 @@ import { DOCUMENT } from '@angular/common';
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnDestroy {
+export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	private _isExpended: boolean;
 	public lineWidthTrigger: boolean;
 	public colorSelectionTrigger = false;
 	public colorOptionsFill: any;
 	public colorOptionsStroke: any;
 	public subscriber;
+	public mode: string;
 
 	@ViewChild('lineWidthSelection') lineWidthSelection: ElementRef;
 	@ViewChild('colorSelection') colorSelection: ElementRef;
@@ -36,9 +48,25 @@ export class AnnotationsControlComponent implements OnDestroy {
 	}
 
 	constructor(public renderer: Renderer2, public store: Store<any>, @Inject(DOCUMENT) public document: any) {
+		this.mode = undefined;
+	}
+
+	ngOnInit() {
+		this.mode = undefined;
+
+		this.store.select<IToolsState>(toolsStateSelector)
+			.pluck<IToolsState, string>('annotationMode')
+			.distinctUntilChanged()
+			.subscribe(value => {
+				this.setModeStyle(value);
+			})
 	}
 
 	openLineWidthSelection() {
+		// this.mode = undefined;
+		if (this.mode !== undefined) {
+			this.createInteraction(this.mode);
+		}
 		if (this.lineWidthTrigger) {
 			this.lineWidthTrigger = false;
 			return;
@@ -46,6 +74,10 @@ export class AnnotationsControlComponent implements OnDestroy {
 		if (this.document.activeElement !== this.lineWidthSelection.nativeElement) {
 			this.lineWidthSelection.nativeElement.focus();
 		}
+	}
+
+	setModeStyle(value) {
+		this.mode = value;
 	}
 
 	closeLineWidthSelection() {
@@ -57,6 +89,10 @@ export class AnnotationsControlComponent implements OnDestroy {
 
 	toggleColorSelection($event) {
 		$event.stopPropagation();
+		if (this.mode !== undefined) {
+			this.createInteraction(this.mode);
+		}
+
 		this.colorSelectionTrigger = !this.colorSelectionTrigger;
 		this.colorSelection.nativeElement.classList.toggle('open');
 
@@ -74,19 +110,24 @@ export class AnnotationsControlComponent implements OnDestroy {
 					this.colorSelectionTrigger = false;
 					this.colorSelection.nativeElement.classList.remove('open');
 					this.subscriber.unsubscribe();
+					this.mode = undefined;
 				}
 			});
 	}
 
 	createInteraction(type) {
+
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: 'createInteraction',
 			type,
 			maps: 'active'
 		}));
+
+		this.store.dispatch(new SetAnnotationMode(this.mode === type ? undefined : type));
 	}
 
 	openColorInput($event) {
+
 		let element = $event.target.closest('li');
 		if (!element) {
 			element = $event.target;
@@ -95,6 +136,7 @@ export class AnnotationsControlComponent implements OnDestroy {
 	}
 
 	selectLineWidth($event) {
+
 		const lineWidth = $event.target.dataset.index;
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: 'changeLine',
@@ -124,6 +166,11 @@ export class AnnotationsControlComponent implements OnDestroy {
 		if (this.subscriber) {
 			this.subscriber.unsubscribe();
 		}
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			action: 'removeLayer',
+			value: this.colorOptionsStroke,
+			maps: 'all'
+		}));
 	}
 
 }

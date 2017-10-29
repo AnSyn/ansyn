@@ -65,8 +65,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { getPolygonByPointAndRadius } from '../../packages/core/utils/geo';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -281,7 +281,7 @@ describe('MapAppEffects', () => {
 		spyOn(imagery1, 'addPinPointIndicator');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: new PinPointTriggerAction(lonLat) });
-		const region = getPolygonByPoint(lonLat).geometry;
+		const region = getPolygonByPointAndRadius(lonLat).geometry;
 		const a = new UpdateCaseAction({
 			...icaseState.selectedCase,
 			state: { ...icaseState.selectedCase.state, region }

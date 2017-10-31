@@ -9,7 +9,7 @@ export function getPolygonByPoint(lonLat: number[]): GeoJSON.Feature<GeoJSON.Pol
 	return bboxPolygon(bbox(point(lonLat)));
 }
 
-export function getPolygonByPointAndRadius(lonLat: number[], radius = 0.0001): GeoJSON.Feature<GeoJSON.Polygon> {
+export function getPolygonByPointAndRadius(lonLat: number[], radius = 0.001): GeoJSON.Feature<GeoJSON.Polygon> {
 	const tPoint = point(lonLat);
 	return bboxPolygon(bbox(circle(tPoint, radius)));
 }

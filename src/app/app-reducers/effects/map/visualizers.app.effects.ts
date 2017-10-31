@@ -43,7 +43,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IconVisualizerType } from '../../../packages/open-layer-visualizers/icon.visualizer';
+import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {

@@ -1,0 +1,123 @@
+932d592e8c95e2c5c54b69586d762ed96427d62c | yuvalbl         | 2017-10-29 17:06:17 +0200 | Fixed 767 refactor(pinpoint): externalize as visualizer
+
+591617c8a6f2978141a167940921beeb3ec41eec | YairTawil       | 2017-10-29 15:04:15 +0200 | fix(map-effects): Transfer map app effects to map effects
+
+68cacdaa32f2406289dc1748f651c8727bc5ed0b | Amit Moryossef  | 2017-10-29 09:26:20 +0200 | fix(): change snake case to lowerCamelCase
+
+c2bcdf9cc55ffc5f9cb52e13c5723248c7347c32 | Amit Moryossef  | 2017-10-29 09:13:27 +0200 | fix(): change snake case to lowerCamelCase
+
+16d6e14adf752f7bd908e84dd347a6a3b3d1a734 | asafMasa        | 2017-10-24 18:03:55 +0300 | merge for 528 fix
+
+d13fdec1805eba389010681457e5d50e40c7bc6a | YairTawil       | 2017-10-24 09:11:21 +0300 | fix(flatpickr): upgrade version
+
+8fb3e6188405ae836bc7bf07efc9263f36ae6e60 | YairTawil       | 2017-10-22 16:35:44 +0300 | fix(ngrx): fix PR request changes
+
+395776fe36ec40723e1679219adc715141c31c4c | YairTawil       | 2017-10-22 16:19:32 +0300 | refactor(ngrx): change packages store to forFeature
+
+6afeefd4245d4897696ad295d5c469d0ae5c0506 | YairTawil       | 2017-10-22 11:36:29 +0300 | lint()
+
+568addf7dce121214dd487ce054a5643d95d453f | YairTawil       | 2017-10-22 11:27:40 +0300 | fix(): remove unnecessary comment
+
+7327c23089ca02f5611a31300dbdfd60845f918e | YairTawil       | 2017-10-22 11:16:33 +0300 |   refactor(ngrx): all test should use jasmine-marbles(hot, cold) tools
+
+97cfd00b19e206c6662101a4886f3dc97a3aabec | YairTawil       | 2017-10-19 18:09:33 +0300 | refactor(ngrx): all test should use jasmine-marbles(hot, cold) tools
+
+67d8b44e94db276759af56624d8ea0b8347fa648 | YairTawil       | 2017-10-17 11:56:52 +0300 | refactor(ngrx): add types for actions(instead of ngrx default 'Action')
+
+b376a21f9d0cae56e7c408a3022db4102719b4ba | YairTawil       | 2017-10-17 10:43:12 +0300 | refactor(ngrx): create selectors for all features
+
+f5d7f4f2115376c7f3ce3be7179cafb3db3904a3 | YairTawil       | 2017-10-17 10:06:59 +0300 | refactor(ngrx): refactor all 'StoreModule' and 'EffectsModule'
+
+82e4625f5df22908c0c1a0d16ebb9e8618d5279f | YairTawil       | 2017-10-17 09:52:39 +0300 | refactor(ngrx): upgrade ngrx packages on packages.json
+
+6b69472326ec862c6b78a8e748f4c74fa1173e71 | Amit Moryossef  | 2017-10-22 16:14:06 +0300 | fix(goto): re-add the marker file
+
+2f4cfe129e4594be89778759b749f91d1d9cf6ce | Amit Moryossef  | 2017-10-22 15:51:10 +0300 | fix(visualizations): add optional check
+
+234e8e0f0061faab134454f528a04dfbfcf67d61 | Amit Moryossef  | 2017-10-22 14:58:14 +0300 | fix(visualizers): add CR changes
+
+7b3663b4589aa119028b5224858cf1bc2d12c246 | Amit Moryossef  | 2017-10-22 09:17:41 +0300 | test(imagery): inject map visualizers to spec
+
+bff238fb61da923bd520ddffbe90f364c33c0ac7 | Amit Moryossef  | 2017-10-19 16:45:35 +0300 | fix(visualizers): fix-packages
+
+3c3bcab73697ed2d1e0895f6e1680a00d09f88fc | Amit Moryossef  | 2017-10-19 16:42:38 +0300 | feat(visualizers): register visualizers from the imagery provider
+
+879fb2d96fd6ecd535b045e66dc4ce27729bd379 | Amit Moryossef  | 2017-10-19 16:05:09 +0300 | feat(visualizer): inject all visualizers
+
+ed0c111a46fb8832d114a92ea928f2d004c0a672 | Amit Moryossef  | 2017-10-22 11:16:54 +0300 | fix(config): add map config to template
+
+94e9ba609a6b8352ed83c5830d3766d4feb13546 | Amit Moryossef  | 2017-10-19 14:59:06 +0300 | test(map-app-effects): fix tests
+
+294beadbfdfd0b1c9867fdf2ea7909b26496fe02 | Amit Moryossef  | 2017-10-19 10:49:52 +0300 | feat(map-app-effects): add overlay coverage to config
+
+3fcffd3185110a3f6712e0a6726f981ccd426fa7 | Amit Moryossef  | 2017-10-18 14:30:00 +0300 | test(calc-extent): add testing to calc extent
+
+ad3d1d31be7fcb5b9f889afb528cefef23b3d0a5 | Amit Moryossef  | 2017-10-18 09:18:54 +0300 | test(map-app-effects): remove irrelevant tests
+
+142f4e68ec18e40b36559ec55410ef5fc207dba5 | Amit Moryossef  | 2017-10-17 18:14:23 +0300 | fix(map-overlay): forgot console log
+
+ed78f0e1e527406de25b3a82d91d2ee7c141748c | Amit Moryossef  | 2017-10-17 18:11:45 +0300 | fix(map-overlay): jump to overlay if the intersection with the screen is less than 10%
+
+c9b01c077768c9dc8b306a31b59c4777a755c608 | Amit Moryossef  | 2017-10-22 09:23:20 +0300 | refactor(): remove created by comments, blame to see who wrote lines
+
+74551d9d1b15c307e07b2496776e34a8ab676ca3 | Amit Moryossef  | 2017-10-22 09:23:20 +0300 | refactor(): remove created by comments, blame to see who wrote lines
+
+662b5ee24c8da4e915ec00c8d92ac5848c05d814 | Amit Moryossef  | 2017-10-19 16:08:01 +0300 | fix(mouse-shadow): re-add the mouse shadow svg file
+
+71f762141e5fa650c0dc4689b9cdafc82560e682 | Amit Moryossef  | 2017-10-18 13:28:53 +0300 | fix(icons): final icons fix
+
+083d7968399f9323e95346d46d6a6816eba2a2c0 | yuvalbl         | 2017-10-18 13:07:12 +0300 | Fixed
+
+2b77be3c9bdfd46d50b93ef197a2153f0415f9b8 | Amit Moryossef  | 2017-10-17 14:17:46 +0300 | fix(open-layers-map): make sync accurate
+
+0d4f011f297dfea4896743dca8c1f3d62abbfce4 | YairTawil       | 2017-10-17 12:34:18 +0300 | fix(tools): new icons path
+
+4334cf665cbac74376e3a7170c769ee22eb5efba | YairTawil       | 2017-10-17 12:22:57 +0300 | fix(context-menu): icons path
+
+6738b506073bd84b529358f24f4a9601c4a07e99 | Amit Moryossef  | 2017-10-17 10:12:51 +0300 | test(status-bar): fix icon selector
+
+c2d1128089a1eb5783a5d79f379640a45463cfcf | Amit Moryossef  | 2017-10-17 09:43:23 +0300 | feat(favorite): shine when active
+
+00049b0177133df11498f930356426d4f8727ed1 | Amit Moryossef  | 2017-10-17 09:01:27 +0300 | fix(icon): rename icon in file
+
+c06c753cc430b7633dacab7b27db4f8cd54838f7 | Amit Moryossef  | 2017-10-16 17:31:03 +0300 | feat(icons): new font more icons
+
+74b8876d434e072386da98b4029f6e36e5b0ed97 | Amit Moryossef  | 2017-10-16 17:19:47 +0300 | test(synchronize): add getPosition method
+
+900d0b5c742e41c788cbb3371c0cf57275d004ca | Amit Moryossef  | 2017-10-16 16:38:44 +0300 | fix(icons): most icons fixed with the new font
+
+80914c00650b85c1e37c8878b150c3d021f2bf1e | YairTawil       | 2017-10-16 17:56:26 +0300 | fix(git): remvoe '* text=auto' from git attributes
+
+86979fa32b94068b930562f262f5b5d64a09f3f5 | Amit Moryossef  | 2017-10-16 12:39:34 +0300 | chore(version): new version
+
+cf39a12862af77c73d682e8dffe2ea8a9fcbb55b | Amit Moryossef  | 2017-10-15 16:56:08 +0300 | fix(map.app.effects): remove console log
+
+2bb3bdcd3bfab4470401ce961f828ce600efa984 | Amit Moryossef  | 2017-10-15 16:48:43 +0300 | test(status-bar): fix status bar tests for favorite
+
+4769c0bc36b3c84d263014197b6a9dd269d1a3e9 | Amit Moryossef  | 2017-10-15 16:35:44 +0300 | fix(favorite): favorite is out of status bar
+
+27804265a29190bd23f58831862fead1193cce48 | Amit Moryossef  | 2017-10-15 15:05:25 +0300 | fix(imagery-status): separate from store
+
+6f25692ed196dc1784218754f656e02064e4f2c5 | Amit Moryossef  | 2017-10-10 15:56:41 +0300 | test(imagery-status): tests now continue
+
+939eedebb7ba57daf9c1c716a0c220e61698640e | Amit Moryossef  | 2017-10-10 14:45:05 +0300 | refactor(imagery-status): move imagery status to a shared component
+
+c4a76bcaafeac253ad657d414da9a715af436b27 | YairTawil       | 2017-10-15 10:40:48 +0300 | fix(context-menu): CR request changes
+
+19f83101980d08d0b7c336e218d954e13dc3aac0 | YairTawil       | 2017-10-15 09:53:14 +0300 | test(context-menu): unit tests via changes
+
+26a853cf6def7a735c2fa751e95af7ae4a8f0ca7 | YairTawil       | 2017-10-11 17:24:25 +0300 | fix(context-menu):base map - enable 'prev' and 'first'
+
+b5f3b5bf40ff57039d79d3319b25d895c732505a | YairTawil       | 2017-10-11 17:23:26 +0300 | fix(context-menu): enabled buttons are falsely enabled
+
+6a51ba89c13b84541f4aea23a5cf7aa15750bae7 | YairTawil       | 2017-10-15 10:44:37 +0300 | fix(overlays): CR request changes
+
+e58147550102ffd7762c7d34ec76c2146da558a7 | YairTawil       | 2017-10-11 11:13:54 +0300 | list(master)
+
+2f6b3be78508898683ae7a5255ccdda3f7ecbed5 | YairTawil       | 2017-10-11 10:18:59 +0300 | refactor(overlays): rename IOverlayState, overlayInitialState ( 'overlays' instead of 'overlay' )
+
+a01fe0726924d05d856aee84f45b25ad22171009 | YairTawil       | 2017-10-11 10:07:30 +0300 | test(overlays-service): change test for parseOverlayDataForDispaly via changes
+
+13aceca8ebc926dd7aa377374e8264b40eefb1f7 | YairTawil       | 2017-10-11 10:03:09 +0300 | fix(effect-descriptors): add descriptor for 'dropsCount$'
+
+2c5436a7bc47b7f734183420b241b1b943c43f2a | YairTawil       | 2017-10-11 09:56:17 +0300 | fix(overlays): another effect instead of manual dispatch

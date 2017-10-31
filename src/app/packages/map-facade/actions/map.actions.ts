@@ -27,6 +27,7 @@ export const MapActionTypes = {
 		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
+	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
@@ -144,6 +145,13 @@ export class MapSingleClickAction implements Action {
 
 export class PinPointTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_POINT;
+
+	constructor(public payload: GeoJSON.Position) {
+	}
+}
+
+export class DrawPinPointAction implements Action {
+	type = MapActionTypes.DRAW_PIN_POINT_ON_MAP;
 
 	constructor(public payload: GeoJSON.Position) {
 	}

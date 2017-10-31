@@ -76,16 +76,12 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
 			const items = Object.keys(statusBarFlagsItems).map(k => statusBarFlagsItems[k]);
 			if (!items.includes(action.payload.key)) {
-				return state;
+				throw new Error(`action.payload.key: ${action.payload.key} does not exit in statusBarFlagsItems.`);
 			}
 
 			const newMap = new Map(state.flags);
 
-			if (!newMap.get(action.payload.key)) {
-				newMap.set(action.payload.key, false);
-			}
-
-			const value = action.payload.value !== undefined ? action.payload.value : !newMap.get(action.payload.key);
+			const value = action.payload.value || !newMap.get(action.payload.key);
 
 			newMap.set(action.payload.key, value);
 

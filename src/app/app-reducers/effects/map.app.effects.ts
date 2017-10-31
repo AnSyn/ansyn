@@ -79,6 +79,8 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
+import { MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 @Injectable()
@@ -95,9 +97,9 @@ export class MapAppEffects {
 	@Effect()
 	onMapSingleClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
-		.filter(([action, caseState, statusBarState]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
-		.mergeMap(([action]: [UpdateStatusFlagsAction, ICasesState, IStatusBarState]) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: MapSingleClickAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
+		.filter(([action, caseState, statusBarState]: [MapSingleClickAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.mergeMap(([action]: [MapSingleClickAction, ICasesState, IStatusBarState]) => {
 			// draw on all maps
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				// this is for the others communicators
@@ -117,23 +119,18 @@ export class MapAppEffects {
 	 * @name onPinPointTrigger$
 	 * @ofType PinPointTriggerAction
 	 * @dependencies cases, statusBar
-	 * @action UpdateCaseAction, LoadOverlaysAction
+	 * @action UpdateCaseAction, LoadOverlaysAction, DrawPinPointAction
+	 * @description
+	 * draw pin point, update case and load overlays.
+	 * draw pin point is done by DrawPinPointAction
 	 */
 	@Effect()
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: UpdateStatusFlagsAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: PinPointTriggerAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
-
 			// create the region
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
-
-			// draw on all maps
-			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-					communicator.addPinPointIndicator(action.payload);
-				}
-			});
 
 			// draw the point on the map
 			const selectedCase = {
@@ -142,6 +139,7 @@ export class MapAppEffects {
 			};
 
 			return [
+				new DrawPinPointAction(action.payload),
 				new UpdateCaseAction(selectedCase),
 				new LoadOverlaysAction({
 					to: selectedCase.state.time.to,
@@ -417,24 +415,25 @@ export class MapAppEffects {
 	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
 	 * @dependencies cases, statusBar
 	 * @filter There is a pinPointIndicator or pinPointSearch
+	 * @actions DrawPinPointAction?
 	 */
-	@Effect({ dispatch: false })
-	onAddCommunicatorShowPinPoint$: Observable<AddMapInstanceAction | MapInstanceChangedAction> = this.actions$
+	@Effect()
+	onAddCommunicatorShowPinPoint$: Observable<DrawPinPointAction> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator) || statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 
-			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				const point = getPointByPolygon(casesState.selectedCase.state.region);
-				communicatorHandler.addPinPointIndicator(point.coordinates);
-			}
-
 			if (statusBarState.flags.get(statusBarFlagsItems.pinPointSearch)) {
 				communicatorHandler.createMapSingleClickEvent();
 			}
-			return action;
+
+			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+				const point = getPointByPolygon(casesState.selectedCase.state.region);
+				return new DrawPinPointAction(point.coordinates);
+			}
+			return null;
 		});
 
 	/**
@@ -460,17 +459,16 @@ export class MapAppEffects {
 	 * @ofType SelectCaseAction
 	 * @dependencies cases, statusBar
 	 * @filter There is a pinPointIndicator or pinPointSearch
+	 * @actions DrawPinPointAction
 	 */
-	@Effect({ dispatch: false })
-	onSelectCaseByIdAddPinPointIndicator$: Observable<any> = this.actions$
+	@Effect()
+	onSelectCaseByIdAddPinPointIndicator$: Observable<DrawPinPointAction> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
-		.do(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
+		.map(([action, caseState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
 			const point = getPointByPolygon(caseState.selectedCase.state.region);
-			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				communicator.addPinPointIndicator(point.coordinates);
-			});
+			return new DrawPinPointAction(point.coordinates);
 		});
 
 	/**

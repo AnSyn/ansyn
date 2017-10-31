@@ -212,12 +212,4 @@ export class OpenLayersDisabledMap implements IMap {
 	addSingleClickEvent() {
 
 	}
-
-	addPinPointIndicator(latLon: any) {
-
-	}
-
-	removePinPointIndicator() {
-
-	}
 }

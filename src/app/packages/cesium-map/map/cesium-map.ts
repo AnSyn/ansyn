@@ -104,11 +104,4 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	addPinPointIndicator(latLon: any) {
-		throw new Error('Method not implemented.');
-	}
-
-	removePinPointIndicator() {
-		throw new Error('Method not implemented.');
-	}
 }

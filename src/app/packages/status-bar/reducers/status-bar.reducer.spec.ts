@@ -19,14 +19,14 @@ describe('Status Bar Reducer', () => {
 
 	});
 
-	it('update status flags - \'bed\' value', () => {
+	it('update status flags - \'bad\' value', () => {
 		const action = new UpdateStatusFlagsAction({
 			key: 'TMP',
 			value: true
 		});
 
-		const newState = StatusBarReducer(_reducerState, action);
-		expect(newState.flags.size).toBe(0);
+		// const newState = StatusBarReducer(_reducerState, action);
+		expect(() => StatusBarReducer(_reducerState, action)).toThrow();
 
 	});
 });

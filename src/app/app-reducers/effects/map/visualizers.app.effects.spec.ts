@@ -8,7 +8,8 @@ import {
 	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
-	SetMapsDataActionStore
+	SetMapsDataActionStore,
+	DrawPinPointAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	DisplayOverlayFromStoreAction,
@@ -26,6 +27,8 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
+import { DrawPinPointAction } from "../../../packages/map-facade/actions/map.actions";
+
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -195,10 +198,23 @@ describe('VisualizersAppEffects', () => {
 
 	it('drawOverlaysOnMap$ should call drawOverlayOnMap() for each map(from selected case)', () => {
 		spyOn(visualizersAppEffects, 'drawOverlaysOnMap');
-		actions = hot('--a--', { a: new DrawOverlaysOnMapTriggerAction() });
-		const expectedResults = cold('--b--', {});
+		const action = new DrawOverlaysOnMapTriggerAction();
+		actions = hot('--a--', { a: action });
+		// undefined because: drawOverlaysOnMap$ map don't have a return
+		const expectedResults = cold('--b--', { b: undefined });
+
 		expect(visualizersAppEffects.drawOverlaysOnMap$).toBeObservable(expectedResults);
 		expect(visualizersAppEffects.drawOverlaysOnMap).toHaveBeenCalledTimes(3);
 	});
 
+	it('drawPinPoint$ should call drawPinPointIconOnMap() for each map(from selected case)', () => {
+		spyOn(visualizersAppEffects, 'drawPinPointIconOnMap');
+		const action = new DrawPinPointAction([-70.33666666666667, 25.5]);
+		actions = hot('--a--', { a: action });
+		// undefined because: drawPinPoint$ map don't have a return
+		const expectedResults = cold('--b--', { b: undefined });
+
+		expect(visualizersAppEffects.drawPinPoint$).toBeObservable(expectedResults);
+		expect(visualizersAppEffects.drawPinPointIconOnMap).toHaveBeenCalledTimes(3);
+	});
 });

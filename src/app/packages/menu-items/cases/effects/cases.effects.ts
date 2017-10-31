@@ -33,9 +33,14 @@ import { ICasesConfig } from '../models/cases-config';
 @Injectable()
 export class CasesEffects {
 
+	/**
+	 * @type Effect
+	 * @ofType SelectCaseAction
+	 * @action UpdateCaseAction
+	 */
 	@Effect()
 	supportOldCaseVersions$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
+		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
 		.map(({ payload }: SelectCaseAction) => {
 			const newCase = deepMerge(this.caseConfig.defaultCase, payload);
 			return new UpdateCaseAction(newCase);

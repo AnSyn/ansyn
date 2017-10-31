@@ -31,6 +31,12 @@ import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/la
 @Injectable()
 export class CasesAppEffects {
 
+	/**
+	 * @type Effect
+	 * @name updateAnnotationLayersFlags$
+	 * @ofType SelectCaseAction
+	 * @action ShowAnnotationsLayer?, HideAnnotationsLayer?
+	 */
 	@Effect()
 	updateAnnotationLayersFlags$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
@@ -65,7 +71,7 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 

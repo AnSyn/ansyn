@@ -254,6 +254,12 @@ export class VisualizersAppEffects {
 			this.drawGotoIconOnMap(activeMap, coords);
 		});
 
+	/**
+	 * @type Effect
+	 * @name annotationData$
+	 * @ofType AnnotationData
+	 * @action UpdateCaseAction, AnnotationVisualizerAgentAction
+	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
 		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
@@ -295,7 +301,7 @@ export class VisualizersAppEffects {
 	 * @name annotationVisualizerAgent$
 	 * @ofType AnnotationVisualizerAgentAction
 	 * @dependencies cases
-	 * @action UpdateCaseAction?
+	 * @action UpdateCaseAction?,SetAnnotationMode?
 	 */
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$

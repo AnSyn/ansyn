@@ -41,6 +41,12 @@ export class MenuAppEffects {
 		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
 
+	/**
+	 * @type Effect
+	 * @name autoCloseMenu$
+	 * @ofType SetAutoCloseMenu
+	 * @action SetClickOutside
+	 */
 	@Effect()
 	autoCloseMenu$: Observable<Action> = this.actions$
 		.ofType<SetAutoCloseMenu>(ToolsActionsTypes.SET_AUTOCLOSE_MENU)

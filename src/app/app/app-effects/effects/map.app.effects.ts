@@ -395,7 +395,7 @@ export class MapAppEffects {
 	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction, MapInstanceChangedAction
 	 * @dependencies cases
 	 * @filter There is at least one communicator, and exact length of maps
-	 * @action CompositeMapShadowAction, AnnotationVisualizerAgentAction
+	 * @action CompositeMapShadowAction, AnnotationVisualizerAgentAction?
 	 */
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$

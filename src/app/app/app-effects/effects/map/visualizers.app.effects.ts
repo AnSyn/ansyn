@@ -420,28 +420,28 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
-			const hitMapvisualizer = communicator.getVisualizer(FootprintHeatmapVisualizerType);
-			if (!polylineVisualizer || !hitMapvisualizer) {
+			const hitMapVisualizer = communicator.getVisualizer(FootprintHeatmapVisualizerType);
+			if (!polylineVisualizer || !hitMapVisualizer) {
 				return;
 			}
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
 				case 'Hitmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					hitMapvisualizer.setEntities(entitiesToDraw);
+					hitMapVisualizer.setEntities(entitiesToDraw);
 					polylineVisualizer.clearEntities();
 					break;
 				}
 				case 'Polygon': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					polylineVisualizer.setEntities(entitiesToDraw);
-					hitMapvisualizer.clearEntities();
+					hitMapVisualizer.clearEntities();
 					break;
 				}
 				case 'None':
 				default: {
 					polylineVisualizer.clearEntities();
-					hitMapvisualizer.clearEntities();
+					hitMapVisualizer.clearEntities();
 				}
 			}
 		}
@@ -506,7 +506,10 @@ export class VisualizersAppEffects {
 				geometry: footprint,
 				properties: {}
 			};
-			return { id, featureJson };
+			return {
+				id,
+				featureJson
+			};
 		});
 	}
 

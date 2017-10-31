@@ -1,18 +1,26 @@
 import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
+import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
+import Vector from 'ol/layer/vector';
 import { Subject } from 'rxjs/Subject';
 
 export interface IVisualizerEntity {
 	id: string;
 	featureJson: GeoJSON.Feature<any>;
-	state?: 'static' | 'activeDisplad'
+	state?: 'static' | 'activeDisplad';
+
+	type?: string,
+	style?: Partial<VisualizerStateStyle>
 }
 
 export type IMarkupEvent = { id: string, class: boolean }[];
 
 export interface IMapVisualizer {
 	type: string;
+
+	source: Vector;
+
 	onDisposedEvent: EventEmitter<any>;
 
 	onHoverFeature: EventEmitter<any>;

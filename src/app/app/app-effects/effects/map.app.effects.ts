@@ -233,6 +233,8 @@ export class MapAppEffects {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, calcGeoJSONExtent(overlay.footprint));
+						} else {
+							communicator.resetView(layer);
 						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {

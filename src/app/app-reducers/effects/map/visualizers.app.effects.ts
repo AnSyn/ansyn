@@ -172,7 +172,7 @@ export class VisualizersAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
 			return [overlaysState, casesState.selectedCase];
 		})
-		.do(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
+		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
 			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});

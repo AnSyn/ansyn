@@ -61,6 +61,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { getPolygonByPoint } from '@ansyn/core/utils/geo';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -276,21 +277,23 @@ describe('MapAppEffects', () => {
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: new PinPointTriggerAction(lonLat) });
 		const region = getPolygonByPoint(lonLat).geometry;
-		const a = new UpdateCaseAction({
+
+		const a = new DrawPinPointAction(lonLat);
+		const b = new UpdateCaseAction({
 			...icaseState.selectedCase,
 			state: { ...icaseState.selectedCase.state, region }
 		});
 
-		const b = new LoadOverlaysAction({
+		const c = new LoadOverlaysAction({
 			to: icaseState.selectedCase.state.time.to,
 			from: icaseState.selectedCase.state.time.from,
 			polygon: region,
 			caseId: icaseState.selectedCase.id
 		});
 
-		const expectedResults = cold('--(ab)--', { a, b });
+
+		const expectedResults = cold('--(abc)--', { a, b, c });
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
-		expect(imagery1.addPinPointIndicator).toHaveBeenCalledTimes(3);
 	});
 
 	it('addVectorLayer$ should add the selected Layer to the map', () => {
@@ -342,23 +345,20 @@ describe('MapAppEffects', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
 		const communicator = {
-			addPinPointIndicator: () => {
-			},
 			createMapSingleClickEvent: () => {
 			}
 		};
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-		spyOn(communicator, 'addPinPointIndicator');
 		spyOn(communicator, 'createMapSingleClickEvent');
 		const action = new AddMapInstanceAction({
 			communicatorsIds: ['tmpId1', 'tmpId2'],
 			currentCommunicatorId: 'tmpId2'
 		});
+		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
+		const expectedResults = cold('--b--', { b: new DrawPinPointAction(lonLat) });
 		expect(mapAppEffects.onAddCommunicatorShowPinPoint$).toBeObservable(expectedResults);
 
-		expect(communicator.addPinPointIndicator).toHaveBeenCalled();
 		expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
 	});
 

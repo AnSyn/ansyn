@@ -75,7 +75,7 @@ export class ToolsAppEffects {
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
 	 * @ofType ActiveMapChangedAction
 	 * @dependencies map
-	 * @action SetActiveOverlaysFootprintModeAction, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentAction
+	 * @action SetActiveOverlaysFootprintModeAction, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentAction?
 	 */
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$
@@ -107,8 +107,6 @@ export class ToolsAppEffects {
 				return result;
 			}
 		);
-
-
 
 	/**
 	 * @type Effect

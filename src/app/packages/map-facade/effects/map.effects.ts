@@ -25,6 +25,12 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class MapEffects {
+
+	/**
+	 * @type Effect
+	 * @name annotationContextMenuTrigger$
+	 * @ofType AnnotationContextMenuTriggerAction
+	 */
 	@Effect({dispatch: false})
 	annotationContextMenuTrigger$ = this.actions$
 		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)

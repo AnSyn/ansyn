@@ -21,7 +21,8 @@ import { IAppState } from '../app-reducers.module';
 export class LayersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
 		.pluck<ICasesState, Case>('selectedCase')
-		.map(_cloneDeep)
+		.map(_cloneDeep);
+
 	/**
 	 * @type Effect
 	 * @name selectCase$
@@ -37,6 +38,12 @@ export class LayersAppEffects {
 			return new BeginLayerTreeLoadAction({ caseId: payload.id });
 		}).share();
 
+	/**
+	 * @type Effect
+	 * @name showAnnotationsLayer$,
+	 * @ofType ShowAnnotationsLayer
+	 * @action AnnotationVisualizerAgentAction,UpdateCaseAction?
+	 */
 	@Effect()
 	showAnnotationsLayer$: Observable<any> = this.actions$
 		.ofType<ShowAnnotationsLayer>(LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER)
@@ -55,6 +62,12 @@ export class LayersAppEffects {
 			return actions;
 		});
 
+	/**
+	 * @type Effect
+	 * @name hideAnnotationsLayer$,
+	 * @ofType HideAnnotationsLayer
+	 * @action AnnotationVisualizerAgentAction,UpdateCaseAction?
+	 */
 	@Effect()
 	hideAnnotationsLayer$: Observable<any> = this.actions$
 		.ofType<HideAnnotationsLayer>(LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER)

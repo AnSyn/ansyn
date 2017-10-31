@@ -243,9 +243,6 @@ describe('MapAppEffects', () => {
 		baseSourceProviders = _baseSourceProviders;
 	}));
 
-	it('should be defined', () => {
-		expect(mapAppEffects).toBeTruthy();
-	});
 
 	it('onMapSingleClick$ effect', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);

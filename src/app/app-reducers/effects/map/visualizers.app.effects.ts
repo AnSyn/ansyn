@@ -214,7 +214,7 @@ export class VisualizersAppEffects {
 			}
 		)
 		.map(([mapState, coords]: [IMapState, any[]]) => {
-			mapState.mapsList.forEach( (map: CaseMapState) => {
+			mapState.mapsList.forEach((map: CaseMapState) => {
 				this.drawPinPointIconOnMap(map, coords);
 			});
 		});

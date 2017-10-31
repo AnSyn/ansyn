@@ -22,8 +22,8 @@ export const StatusBarActionsTypes = {
 	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT',
 	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY'
 };
-
-export type StatusActions = ChangeLayoutAction | UpdateStatusFlagsAction | SetToastMessageStoreAction;
+// some actions does not have payload
+export type StatusActions = any;
 
 export class ChangeLayoutAction implements Action {
 	type: string = StatusBarActionsTypes.CHANGE_LAYOUT;
@@ -49,7 +49,7 @@ export class SetToastMessageStoreAction implements Action {
 export class UpdateStatusFlagsAction implements Action {
 	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
 
-	constructor(public payload: any) {
+	constructor(public payload: { key: string, value?: boolean }) {
 		// code...
 	}
 }

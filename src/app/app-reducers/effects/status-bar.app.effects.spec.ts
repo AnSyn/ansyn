@@ -29,6 +29,7 @@ import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlay
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -134,7 +135,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('updatePinPointSearchAction$', () => {
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true });
-
+		store.dispatch(action);
 		// mock communicatorsAsArray
 		const imagery1 = {
 			createMapSingleClickEvent: () => {
@@ -152,19 +153,12 @@ describe('StatusBarAppEffects', () => {
 
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true });
 		store.dispatch(action);
-		const imagery1 = {
-			addPinPointIndicator: () => {
-			},
-			removePinPointIndicator: () => {
-			}
-		};
+		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addPinPointIndicator');
-		spyOn(imagery1, 'removePinPointIndicator');
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: undefined });
+
+		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
 		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
-		expect(imagery1.addPinPointIndicator).toHaveBeenCalledTimes(3);
 	});
 
 	it('updatePinPointIndicatorAction$ - remove', () => {
@@ -172,19 +166,12 @@ describe('StatusBarAppEffects', () => {
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false });
 		store.dispatch(action);
 		// mock communicatorsAsArray
-		const imagery1 = {
-			addPinPointIndicator: () => {
-			},
-			removePinPointIndicator: () => {
-			}
-		};
+		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addPinPointIndicator');
-		spyOn(imagery1, 'removePinPointIndicator');
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: undefined });
+
+		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
 		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
-		expect(imagery1.removePinPointIndicator).toHaveBeenCalledTimes(3);
 	});
 
 	it('selectCase$ should get layersIndex, orientation, geoFilter and time from selectedCase and return all update status-bar actions', () => {

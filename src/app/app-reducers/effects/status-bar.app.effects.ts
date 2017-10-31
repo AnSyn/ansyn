@@ -54,6 +54,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { DrawPinPointAction } from "../../packages/map-facade/actions/map.actions";
 
 
 @Injectable()
@@ -65,11 +66,15 @@ export class StatusBarAppEffects {
 	 * @ofType UpdateStatusFlagsAction
 	 * @dependencies statusBar
 	 * @filter update pinPointSearch and in pinPointSearch
+	 * @description
+	 * add click event to map (for searching overlay according to pin point on click)
 	 */
 	@Effect({ dispatch: false })
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch && action.payload.value)
+		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
+		.withLatestFrom(this.store.select(statusBarStateSelector))
+		.filter(([action, statusBarState]: [UpdateStatusFlagsAction, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.map(() => {
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				communicator.createMapSingleClickEvent();
@@ -81,25 +86,18 @@ export class StatusBarAppEffects {
 	 * @name updatePinPointIndicatorAction$
 	 * @ofType UpdateStatusFlagsAction
 	 * @dependencies statusBar, cases
-	 * @filter update pinPointIndicator
+	 * @filter update pinPointIndicator and has casesState.selectedCase
+	 * @actions DrawPinPointAction
 	 */
-	@Effect({ dispatch: false })
-	updatePinPointIndicatorAction$: Observable<void> = this.actions$
+	@Effect()
+	updatePinPointIndicatorAction$: Observable<DrawPinPointAction> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointIndicator)
 		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
+		.filter(([action, statusBarState, casesState]) => Boolean(casesState.selectedCase))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
-			const value: boolean = action.payload.value;
-			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
-				if (value) {
-					const point = getPointByPolygon(casesState.selectedCase.state.region);
-					const latLon = point.coordinates;
-					communicator.addPinPointIndicator(latLon);
-				} else {
-					communicator.removePinPointIndicator();
-				}
-
-			});
+			const point = getPointByPolygon(casesState.selectedCase.state.region);
+			return new DrawPinPointAction(point.coordinates);
 		});
 
 	/**

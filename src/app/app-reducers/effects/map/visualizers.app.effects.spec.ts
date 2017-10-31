@@ -8,7 +8,8 @@ import {
 	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
-	SetMapsDataActionStore
+	SetMapsDataActionStore,
+	DrawPinPointAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	DisplayOverlayFromStoreAction,
@@ -26,7 +27,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
-import { DrawPinPointAction } from "../../../packages/map-facade/actions/map.actions";
+
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

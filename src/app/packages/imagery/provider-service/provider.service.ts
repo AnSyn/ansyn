@@ -2,6 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { MapVisualizer } from '../model/imap-visualizer.token';
+import { VisualizersConfig } from '../../core/tokens/visualizers-config.token';
 
 export interface IProvidedMap {
 	mapType: string;
@@ -17,17 +18,18 @@ export interface InjectedMapVisualizer {
 export class ImageryProviderService {
 
 	private _mapProviders: { [id: string]: IProvidedMap };
-	private _mapPluginProviders: { [mapType: string]: [{ 'pluginClass': any }] };
-	private _mapVisualizersProviders: Map<string, [{ 'visualizerClass': any, args: any }]>;
+	private _mapPluginProviders: { [mapType: string]: [{ pluginClass: any }] };
+	private _mapVisualizersProviders: Map<string, [{ visualizerClass: any, args: any }]>;
 
-	constructor(@Optional() @Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[]) {
+	constructor(@Optional() @Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[],
+				@Inject(VisualizersConfig) visualizersConfig: any) {
 		this._mapProviders = {};
 		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();
 
 		if (mapVisualizers) {
 			mapVisualizers.forEach(mapVisualizer =>
-				this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer));
+				this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer, visualizersConfig[mapVisualizer.visualizer.type]));
 		}
 	}
 

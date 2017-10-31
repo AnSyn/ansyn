@@ -1,6 +1,7 @@
 import { Position } from './position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
+import { IVisualizerEntity } from '../../imagery/model/imap-visualizer';
 
 export interface Case {
 	readonly id?: string;
@@ -10,9 +11,7 @@ export interface Case {
 	state?: CaseState;
 }
 
-export interface IContextEntity {
-	id: string;
-	featureJson: GeoJSON.Feature<any>;
+export interface IContextEntity extends IVisualizerEntity {
 	date: Date;
 }
 

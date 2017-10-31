@@ -1,7 +1,4 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import Select from 'ol/interaction/select';
-import Style from 'ol/style/style';
-import Stroke from 'ol/style/stroke';
 import MultiPolygon from 'ol/geom/multipolygon';
 import Feature from 'ol/feature';
 import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
@@ -11,22 +8,24 @@ import { VisualizerStateStyle } from '../models/visualizer-state';
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
 
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
-	disableCache = true; // TODO remove!
+	static type = FootprintPolylineVisualizerType;
 
 	markups: any[] = [];
-
-	protected enabledInteractions = { doubleClick: true, pointMove: true };
 
 	constructor(style: Partial<VisualizerStateStyle>) {
 		super(FootprintPolylineVisualizerType, style);
 
+		this.enableInteraction('pointMove');
+		this.enableInteraction('doubleClick');
+
+		// No access to `this` in super constructor
 		this.updateStyle({
 			opacity: 0.5,
 			initial: {
 				zIndex: this.getZIndex.bind(this),
 				fill: null,
 				stroke: {
-					width: 3,
+					width: this.getStrokeWidth.bind(this),
 					color: this.getStrokeColor.bind(this)
 				}
 			},
@@ -82,6 +81,16 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return '#d393e1';
 	}
 
+	private getStrokeWidth(feature: Feature) {
+		const { isActive, isDisplayed } = this.propsByFeature(feature);
+
+		if (isActive || isDisplayed) {
+			return 5;
+		}
+
+		return 3;
+	}
+
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		const conversion = this.convertPolygonToPolyline(logicalEntities);
 		super.addOrUpdateEntities(conversion);
@@ -98,7 +107,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			});
 		return clonedLogicalEntities;
 	}
-
 
 	setMarkupFeatures(markups: IMarkupEvent) {
 		this.markups = markups;

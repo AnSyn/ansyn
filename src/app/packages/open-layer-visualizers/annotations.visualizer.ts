@@ -27,6 +27,8 @@ enum MouseClick {
 }
 
 export class AnnotationsVisualizer extends EntitiesVisualizer {
+	static type = AnnotationVisualizerType;
+
 	public source: VectorSource;
 	public layer: VectorLayer;
 
@@ -102,7 +104,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.layer = undefined;
 	}
 
-	addLayer(id = this.type) {
+	addLayer(id = AnnotationsVisualizer.type) {
 		const layer = new VectorLayer();
 		// if id is empty then set the current type name as id
 		layer.set('id', id);

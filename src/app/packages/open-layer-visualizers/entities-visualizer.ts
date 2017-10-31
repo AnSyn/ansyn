@@ -31,11 +31,15 @@ export const VisualizerStates = {
 	HOVER: 'hover'
 };
 
+export const EntitiesVisualizerType = 'EntitiesVisualizer';
+
+
 export abstract class EntitiesVisualizer implements IMapVisualizer {
+	static type = EntitiesVisualizerType;
 
 	protected iMap: IMap<OpenLayersMap>;
 	protected mapId: string;
-	protected source: Vector;
+	public source: Vector;
 	protected featuresCollection: Feature[];
 	protected footprintsVector: VectorLayer;
 	protected default4326GeoJSONFormat: GeoJSON = new GeoJSON({
@@ -45,7 +49,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected hoverLayer: Vector;
 
-	protected styleCache: any;
+	// TODO false!
 	protected disableCache = false;
 
 	protected visualizerStyle: VisualizerStateStyle = {
@@ -62,7 +66,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	};
 
 	private interactions: { doubleClick: Select, pointerMove: Select } = { doubleClick: null, pointerMove: null };
-	protected enabledInteractions = { doubleClick: false, pointMove: false };
+	private enabledInteractions = { doubleClick: false, pointMove: false };
 
 	onDisposedEvent: EventEmitter<void> = new EventEmitter();
 	onHoverFeature: EventEmitter<any> = new EventEmitter();
@@ -71,6 +75,15 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	constructor(public type: string, visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
+	}
+
+	protected enableInteraction(interaction: string) {
+		this.enabledInteractions[interaction] = true;
+	}
+
+	private getEntity(feature: Feature): IVisualizerEntity {
+		const entity = this.idToEntity.get(feature.getId());
+		return entity && entity.originalEntity;
 	}
 
 	onInit(mapId: string, map: IMap<OpenLayersMap>) {
@@ -94,7 +107,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection });
 
-		this.styleCache = {};
 		this.footprintsVector = new VectorLayer({
 			source: this.source,
 			style: this.featureStyle.bind(this),
@@ -129,6 +141,15 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		}
 	}
 
+	private purgeCache(feature?: Feature) {
+		if (feature) {
+			console.log('purged');
+			delete feature.styleCache;
+		} else {
+			this.source.getFeatures().concat(this.hoverLayer.getSource().getFeatures()).forEach(f => this.purgeCache(f));
+		}
+	}
+
 	private fixStyleValues(feature: Feature, styleSettings: any) {
 		Object.keys(styleSettings).forEach(key => {
 			if (styleSettings[key]) {
@@ -145,48 +166,52 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	private createStyle(feature: Feature, ...styles: Array<Partial<VisualizerStyle>>) {
-		const styleSettings: Partial<VisualizerStyle> = merge({}, ...styles);
+		const styleSettings: any = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
-		const styleObject: any = {};
-
 		if (styleSettings.stroke) {
-			styleObject.stroke = new Stroke(styleSettings.stroke);
+			styleSettings.stroke = new Stroke(styleSettings.stroke);
 		}
 
 		if (styleSettings.fill) {
-			styleObject.fill = new Fill(styleSettings.fill);
+			styleSettings.fill = new Fill(styleSettings.fill);
 		}
 
 		if (styleSettings.icon) {
-			styleObject.image = new Icon(styleSettings.icon);
+			styleSettings.image = new Icon(styleSettings.icon);
 		}
 
-		if (styleSettings.zIndex) {
-			styleObject.zIndex = styleSettings.zIndex;
+		if (styleSettings.label) {
+			styleSettings.text = new Text(this.createStyle(feature, styleSettings.label));
 		}
 
-		return new Style(styleObject);
+		return new Style(styleSettings);
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
-		const featureId = feature.getId();
-
-		if (this.disableCache || !this.styleCache[featureId]) {
+		if (this.disableCache || !feature.styleCache) {
 			const styles = [
 				this.visualizerStyle[VisualizerStates.INITIAL], // Weakest
 				this.visualizerStyle[state]
 			];
 
-			if (feature.style) {
-				styles.push(feature.style[this.visualizerStyle[VisualizerStates.INITIAL]]);
-				styles.push(feature.style[this.visualizerStyle[state]]);
+			const entity = this.getEntity(feature);
+			if (entity) {
+				if (entity.type && this.visualizerStyle.entities && this.visualizerStyle.entities[entity.type]) {
+					styles.push(this.visualizerStyle.entities[entity.type][VisualizerStates.INITIAL]);
+					styles.push(this.visualizerStyle.entities[entity.type][state]);
+				}
+
+				if (entity.style) {
+					styles.push(entity.style[VisualizerStates.INITIAL]);
+					styles.push(entity.style[state]);
+				}
 			}
 
-			this.styleCache[featureId] = this.createStyle(feature, ...styles);
+			feature.styleCache = this.createStyle(feature, ...styles);
 		}
 
-		return this.styleCache[featureId];
+		return feature.styleCache;
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
@@ -281,7 +306,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	updateStyle(style: Partial<VisualizerStateStyle>) {
 		merge(this.visualizerStyle, style);
-		this.styleCache = {};
 	}
 
 	onSelectFeature($event) {
@@ -308,9 +332,13 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	onDoubleClickFeature($event) {
+		this.purgeCache();
+
 		if ($event.selected.length > 0) {
+			const feature = $event.selected[0];
+
 			const visualizerType = this.type;
-			const id = $event.selected[0].getId();
+			const id = feature.getId();
 			this.doubleClickFeature.emit({ visualizerType, id });
 		}
 	}
@@ -346,7 +374,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	updateFeatureStyle(featureId: string, style: Partial<VisualizerStateStyle>) {
 		const feature = this.source.getFeatureById(featureId);
 
-		feature.style = feature.style ? merge({}, feature.style, style) : style;
-		delete this.styleCache[featureId];
+		const entity = this.getEntity(feature.getId());
+		if (entity) {
+			entity.style = entity.style ? merge({}, entity.style, style) : style;
+		}
+
+		this.purgeCache(feature);
 	}
 }

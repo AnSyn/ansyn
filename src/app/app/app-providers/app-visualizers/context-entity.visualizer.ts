@@ -1,6 +1,4 @@
 import { EntitiesVisualizer } from '@ansyn/open-layer-visualizers/entities-visualizer';
-import Stroke from 'ol/style/stroke';
-import Fill from 'ol/style/fill';
 
 import proj from 'ol/proj';
 import Point from 'ol/geom/point';
@@ -34,13 +32,13 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				geometry: this.getGeometry.bind(this),
 				label: {
 					font: '12px Calibri,sans-serif',
-					fill: new Fill({
+					fill: {
 						color: '#fff'
-					}),
-					stroke: new Stroke({
+					},
+					stroke: {
 						color: '#000',
 						width: 3
-					}),
+					},
 					offsetY: 30,
 					text: this.getText.bind(this)
 				}

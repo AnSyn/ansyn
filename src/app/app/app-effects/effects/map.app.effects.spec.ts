@@ -62,6 +62,10 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import {
+	ILayerState, initialLayersState,
+	layersStateSelector
+} from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -108,6 +112,8 @@ describe('MapAppEffects', () => {
 	let statusBarState: IStatusBarState;
 	let mapState: IMapState;
 	let overlaysState: IOverlaysState;
+	let layerState: ILayerState;
+
 	let casesService: CasesService;
 	let baseSourceProviders: BaseMapSourceProvider[];
 	const imageryCommunicatorServiceMock = {
@@ -218,18 +224,24 @@ describe('MapAppEffects', () => {
 		store = _store;
 		const selectedCase = cases[0];
 		icaseState = { cases, selectedCase } as any;
+
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
 		overlaysState = cloneDeep(overlaysInitialState);
+		layerState = cloneDeep(initialLayersState);
+
 		fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
+
+
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
 			[statusBarStateSelector, statusBarState],
 			[overlaysStateSelector, overlaysState],
-			[mapStateSelector, mapState]
+			[mapStateSelector, mapState],
+			[layersStateSelector, layerState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -324,19 +336,41 @@ describe('MapAppEffects', () => {
 		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
 	});
 
-	it('onCommunicatorChange$ return action composite map shadow', () => {
-		const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
-		actions = hot('--a--', {
-			a: new AddMapInstanceAction({
-				currentCommunicatorId: 'imagery2',
-				communicatorsIds: communicators
-			})
+	describe('onCommunicatorChange$', () => {
+		it('display annotation layer', () => {
+			// here I am setting the data that will be returend after this.store select clue: reference
+			layerState.displayAnnotationsLayer = true;
+
+			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
+			actions = hot('--a--', {
+				a: new AddMapInstanceAction({
+					currentCommunicatorId: 'imagery2',
+					communicatorsIds: communicators
+				})
+			});
+			const a = new CompositeMapShadowAction();
+			const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
+			const expectedResults = cold('--(ab)--', { a, b });
+			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});
-		const a = new CompositeMapShadowAction();
-		const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
-		const expectedResults = cold('--(ab)--', { a, b });
-		expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
-	});
+
+		it('dont display annotation layer', () => {
+			// here I am setting the data that will be returend after this.store select clue: reference
+			layerState.displayAnnotationsLayer = false;
+
+			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
+			actions = hot('--a--', {
+				a: new AddMapInstanceAction({
+					currentCommunicatorId: 'imagery2',
+					communicatorsIds: communicators
+				})
+			});
+			const a = new CompositeMapShadowAction();
+			const expectedResults = cold('--(a)--', { a });
+			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
+		});
+
+	})
 
 	it('onAddCommunicatorShowPinPoint$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);

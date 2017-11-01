@@ -58,8 +58,6 @@ describe('LayersAppEffects', () => {
 		});
 	});
 
-
-
 	describe('check hide show annotaion layers', () => {
 
 		beforeEach(inject([Store], (_store: Store<any>) => {

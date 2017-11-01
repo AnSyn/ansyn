@@ -268,6 +268,7 @@ export class VisualizersAppEffects {
 			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
 			const geoJsonFormat = new GeoJSON();
 
+			// @TODO move the remove to a function
 			const featureIndex = annotationsLayer.features.findIndex(featureString => {
 				const feature = geoJsonFormat.readFeature(featureString);
 				return feature.values_.id === action.payload.feature.values_.id
@@ -309,6 +310,7 @@ export class VisualizersAppEffects {
 		.withLatestFrom<AnnotationVisualizerAgentAction, Case, ILayerState>(this.selectedCase$, this.store$.select(layersStateSelector))
 		.map(([action, selectedCase, layerState]: [AnnotationVisualizerAgentAction, Case, ILayerState]) => {
 			// const selectedCase: Case = _cloneDeep(cases.selectedCase);
+
 			let update = false;
 			let relevantMapsIds = [];
 
@@ -399,6 +401,8 @@ export class VisualizersAppEffects {
 						visualizer.removeLayer();
 						break;
 					}
+					default:
+						break;
 				}
 			});
 

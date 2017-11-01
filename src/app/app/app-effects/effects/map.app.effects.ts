@@ -44,7 +44,8 @@ import {
 	SetLayoutAction,
 	SetMapsDataActionStore,
 	SetOverlaysNotInCaseAction,
-	SynchronizeMapsAction
+	SynchronizeMapsAction,
+	RaiseMessageAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
@@ -325,6 +326,22 @@ export class MapAppEffects {
 			}),
 			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		]);
+
+	/**
+	 * @type Effect
+	 * @name raiseMessageAction$
+	 * @ofType RaiseMessageAction
+	 * @action SetToastMessageStoreAction
+	 */
+	@Effect()
+	raiseMessageAction$: Observable<SetToastMessageStoreAction> = this.actions$
+		.ofType<RaiseMessageAction>(MapActionTypes.MESSAGE_RAISED)
+		.map((action: RaiseMessageAction) => {
+			return new SetToastMessageStoreAction({
+				toastText: action.payload.message,
+				showWarningIcon: action.payload.isError
+			})}
+		);
 
 	/**
 	 * @type Effect

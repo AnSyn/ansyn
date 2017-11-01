@@ -643,15 +643,7 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.displayOverlayFromCase$).toBeObservable(expectedResults);
 		});
 	});
-
-	// raiseMessageAction$: Observable<SetToastMessageStoreAction> = this.actions$
-	// 	.ofType<RaiseMessageAction>(MapActionTypes.MESSAGE_RAISED)
-	// 	.map((action: RaiseMessageAction) => {
-	// 		return new SetToastMessageStoreAction({
-	// 			toastText: action.payload.message,
-	// 			showWarningIcon: action.payload.isError
-	// 		})}
-	// 	);
+	
 	describe('raiseMessageAction$', () => {
 		it('should dispatch SetToastMessageStoreAction', () => {
 			actions = hot('--a--', { a: new RaiseMessageAction({ message: 'test', isError: true }) });

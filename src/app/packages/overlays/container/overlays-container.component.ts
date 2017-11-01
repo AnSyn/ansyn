@@ -15,7 +15,6 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
 import '@ansyn/core/utils/store-element';
-import '@ansyn/core/utils/compare';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '../reducers/overlays.reducer';

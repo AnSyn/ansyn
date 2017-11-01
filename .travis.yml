@@ -6,12 +6,11 @@ node_js:
   - 'node'
 
 services:
-  - docker # required, but travis uses older version of docker :(
+  - docker
 
 before_install:
   - npm install -g yarn --cache-min 999999999
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-
 
 # Use yarn for faster installs
 install:
@@ -31,13 +30,32 @@ cache:
   directories:
      - ./node_modules
 
-after_success:
-  - npm run build:backwards # build production AOT build
-  - docker --version  # document the version travis is using
+deploy:
+  # deploy develop to the staging environment
+  - provider: script
+    script: scripts/deploy.sh staging
+    on:
+      branch: develop
+  # deploy master to production
+  - provider: script
+    script: scripts/deploy.sh production
+    on:
+      branch: master
+
+before_deploy:
+  - npm run build:backwards
+  - docker --version
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
-  #- eval $(aws ecr get-login --region us-west-2) # needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
-  #- docker build -t ansyn/client-chrome.v.44 .
-  #- docker tag ansyn/client-chrome.v.44:latest 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44:latest
-  #- docker push 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44:latest
-  - echo "deployment succeded"
+
+deploy:
+  # deploy develop to the staging environment
+  - provider: script
+    script: scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
+    on:
+      branch: travis
+  # deploy master to production
+  - provider: script
+    script: scripts/deploy.sh ansyn/client $TRAVIS_TAG
+    on:
+      tags: true

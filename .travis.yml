@@ -1,0 +1,31 @@
+sudo: required # is required to use docker service in travis
+
+language: node_js
+
+node_js:
+  - 'node'
+
+services:
+  - docker # required, but travis uses older version of docker :(
+
+# install:
+#  - npm i -g @angular/cli # put your normal pre-testing installs here
+
+script:
+  - npm run test
+
+cache:
+  yarn: true
+  directories:
+     - ./node_modules
+
+after_success:
+  - npm run build:backwards # build production AOT build
+  - docker --version  # document the version travis is using
+  - pip install --user awscli # install aws cli w/o sudo
+  - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+  #- eval $(aws ecr get-login --region us-west-2) # needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
+  #- docker build -t ansyn/client-chrome.v.44 .
+  #- docker tag ansyn/client-chrome.v.44:latest 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44:latest
+  #- docker push 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44:latest
+  - echo "deployment succeded"

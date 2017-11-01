@@ -8,11 +8,8 @@ node_js:
 services:
   - docker # required, but travis uses older version of docker :(
 
-# install:
-#  - npm i -g @angular/cli # put your normal pre-testing installs here
-
 script:
-  - npm run test
+  - npm run test:single-run
 
 cache:
   yarn: true

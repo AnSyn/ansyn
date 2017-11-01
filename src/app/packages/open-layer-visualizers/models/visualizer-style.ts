@@ -3,8 +3,8 @@ interface Fill {
 }
 
 interface Stroke {
-	color?: string;
-	width?: number;
+	color?: any;
+	width?: any;
 }
 
 export interface VisualizerStyle {

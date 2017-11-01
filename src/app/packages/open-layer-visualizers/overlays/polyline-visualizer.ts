@@ -35,7 +35,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 					color: 'rgba(255, 255, 255, 0.4)'
 				},
 				stroke: {
-					width: 5
+					width: 5,
+					color: (feature) => this.getStrokeColor(feature, '#9524ad')
 				}
 			}
 		});
@@ -63,7 +64,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return isActive ? 3 : isFavorites ? 2 : 1;
 	}
 
-	private getStrokeColor(feature: Feature) {
+	private getStrokeColor(feature: Feature, defaultColor: string = '#d393e1') {
 		const { isFavorites, isActive, isDisplayed } = this.propsByFeature(feature);
 
 		if (isFavorites) {
@@ -74,11 +75,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			return '#27b2cf';
 		}
 
-		if (isDisplayed) {
-			return '#9524ad';
-		}
-
-		return '#d393e1';
+		return defaultColor;
 	}
 
 	private getStrokeWidth(feature: Feature) {

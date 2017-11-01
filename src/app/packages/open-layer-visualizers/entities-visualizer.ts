@@ -117,6 +117,10 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	protected createHoverLayer() {
+		if (this.hoverLayer) {
+			this.iMap.mapObject.removeLayer(this.hoverLayer);
+		}
+
 		this.hoverLayer = new VectorLayer({
 			source: new SourceVector(),
 			style: (feature) => this.featureStyle(feature, VisualizerStates.HOVER),
@@ -143,7 +147,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	private purgeCache(feature?: Feature) {
 		if (feature) {
-			console.log('purged');
 			delete feature.styleCache;
 		} else {
 			this.source.getFeatures().concat(this.hoverLayer.getSource().getFeatures()).forEach(f => this.purgeCache(f));

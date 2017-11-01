@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { SetAutoCloseMenu } from '../../packages/menu-items/tools/actions/tools.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -93,5 +94,11 @@ describe('MenuAppEffects', () => {
 		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction(true) });
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
+
+	it('@Effect autoCloseMenu$',() => {
+		actions = hot('--a--', {
+			a: new SetAutoCloseMenu(true)
+		})
+	})
 
 });

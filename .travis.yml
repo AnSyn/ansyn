@@ -8,6 +8,17 @@ node_js:
 services:
   - docker # required, but travis uses older version of docker :(
 
+addons:
+  chrome: stable
+
+before_install:
+  - npm install -g yarn --cache-min 999999999
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+
+# Use yarn for faster installs
+install:
+  - yarn
+
 script:
   - npm run test:single-run
 

@@ -49,13 +49,14 @@ before_deploy:
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
 
 deploy:
-  # deploy develop to the staging environment
   - provider: script
     script: scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
     on:
       branch: travis
-  # deploy master to production
   - provider: script
     script: scripts/deploy.sh ansyn/client $TRAVIS_TAG
     on:
       tags: true
+
+notifications:
+  email: false

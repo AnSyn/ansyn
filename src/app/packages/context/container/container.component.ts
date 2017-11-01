@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseContextSourceProvider, ContextCriteria } from '../context.interface';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/fromPromise';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';

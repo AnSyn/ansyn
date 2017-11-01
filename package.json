@@ -3,7 +3,8 @@
 	"version": "0.2.0",
 	"license": "MIT",
 	"scripts": {
-		"postinstall": "npm link ./src/app/connection-packages/tools-map ./src/app/connection-packages/cases-map ./src/app/connection-packages/cases-router ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin ./src/app/packages/type-container",
+		"postinstall": "npm run links",
+		"links": "npm link ./src/app/connection-packages/tools-map ./src/app/connection-packages/cases-map ./src/app/connection-packages/cases-router ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/utils ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin ./src/app/packages/type-container",
 		"unlinks": "npm unlink @ansyn/tools-map @ansyn/cases-map @ansyn/cases-router @ansyn/router @ansyn/login @ansyn/context @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/utils @ansyn/timeline @ansyn/imagery @ansyn/overlays @ansyn/open-layers-map @ansyn/map-facade @ansyn/cesium-map @ansyn/status-bar @ansyn/open-layer-center-marker-plugin @ansyn/type-container @ansyn/open-layer-visualizers",
 		"start": "ng serve",
 		"build": "ng build",
@@ -38,6 +39,16 @@
 		"@ngrx/effects": "^4.0.5",
 		"@ngrx/store": "^4.0.3",
 		"@turf/turf": "^4.7.3",
+
+		"@types/d3": "^4.9.0",
+		"@types/jasmine": "~2.5.53",
+		"@types/jasminewd2": "~2.0.2",
+		"@types/node": "^6.0.89",
+		"@types/lodash": "^4.14.77",
+		"@types/rison": "0.0.6",
+		"@types/wellknown": "^0.5.0",
+		"typescript": "^2.5.2",
+
 		"angular-tree-component": "^3.7.2",
 		"angular2-uuid": "latest",
 		"ansyn-event-drops": "^0.4.11",

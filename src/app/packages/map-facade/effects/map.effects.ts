@@ -249,7 +249,7 @@ export class MapEffects {
 			const mapComm = this.communicatorsService.provide(action.payload.mapId);
 			return [mapComm, map.data.position];
 		})
-		.filter(([mapComm]) => !(mapComm))
+		.filter(([mapComm]) => Boolean(mapComm))
 		.do(([mapComm, position]: any[]) => {
 			mapComm.setActiveMap('openLayersMap', position);
 		});

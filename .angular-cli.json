@@ -21,10 +21,6 @@
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less",
-				"../node_modules/ansyn-event-drops/dist/style.css",
-				"../node_modules/ol/ol.css",
-				"../node_modules/flatpickr/dist/flatpickr.css"
 			],
 			"scripts": [
 			],
@@ -52,10 +48,6 @@
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less",
-				"../node_modules/ansyn-event-drops/dist/style.css",
-				"../node_modules/ol/ol.css",
-				"../node_modules/flatpickr/dist/flatpickr.css"
 			],
 			"scripts": [
 			],

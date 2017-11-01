@@ -7,9 +7,9 @@ import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
 	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
+	DrawPinPointAction,
 	HoverFeatureTriggerAction,
-	SetMapsDataActionStore,
-	DrawPinPointAction
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	DisplayOverlayFromStoreAction,

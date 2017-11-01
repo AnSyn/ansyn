@@ -13,6 +13,7 @@ import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
+	DrawPinPointAction,
 	MapSingleClickAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
@@ -60,7 +61,6 @@ import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {

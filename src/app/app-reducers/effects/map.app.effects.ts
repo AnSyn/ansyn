@@ -79,6 +79,8 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
+import { MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';

@@ -7,6 +7,7 @@ export const IconVisualizerType = 'IconVisualizer';
 
 export class IconVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
+
 	// constructor(iconPath: string, args: any) {
 	constructor(args: any) {
 		super(IconVisualizerType, args);

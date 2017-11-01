@@ -5,8 +5,8 @@ import {
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
 	MapActionTypes,
-	SetMapsDataActionStore,
 	PinPointTriggerAction,
+	SetMapsDataActionStore,
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -424,7 +424,7 @@ export class VisualizersAppEffects {
 				properties: {}
 			};
 			IconVisualizer.clearEntities();
-			IconVisualizer.setEntities([{id: 'pinPoint', featureJson: gotoFeatureJson}]);
+			IconVisualizer.setEntities([{ id: 'pinPoint', featureJson: gotoFeatureJson }]);
 		}
 	}
 

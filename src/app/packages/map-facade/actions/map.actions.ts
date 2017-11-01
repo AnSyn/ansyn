@@ -31,6 +31,7 @@ export const MapActionTypes = {
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_FAVORITE: 'SET_FAVORITE',
+	MESSAGE_RAISED: 'MESSAGE_RAISED',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
 		ANNOTATION_DATA: 'ANNOTATION_DATA'
@@ -46,6 +47,13 @@ export const MapActionTypes = {
 };
 
 export type MapActions = any;
+
+export class RaiseMessageAction implements Action {
+	type = MapActionTypes.MESSAGE_RAISED;
+
+	constructor(public payload: { message: string, isError: boolean }) {
+	}
+}
 
 export class EnableMapGeoOptionsActionStore implements Action {
 	type = MapActionTypes.ENABLE_MAP_GEO_OPTIONS;

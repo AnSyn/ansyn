@@ -61,6 +61,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import { RaiseMessageAction } from '@ansyn/map-facade/actions/map.actions';
+import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import {
 	IToolsState, toolsInitialState,
 	toolsStateSelector
@@ -642,4 +644,19 @@ describe('MapAppEffects', () => {
 		});
 	});
 
+	// raiseMessageAction$: Observable<SetToastMessageStoreAction> = this.actions$
+	// 	.ofType<RaiseMessageAction>(MapActionTypes.MESSAGE_RAISED)
+	// 	.map((action: RaiseMessageAction) => {
+	// 		return new SetToastMessageStoreAction({
+	// 			toastText: action.payload.message,
+	// 			showWarningIcon: action.payload.isError
+	// 		})}
+	// 	);
+	describe('raiseMessageAction$', () => {
+		it('should dispatch SetToastMessageStoreAction', () => {
+			actions = hot('--a--', { a: new RaiseMessageAction({ message: 'test', isError: true }) });
+			const expectedResults = cold('--b--', { b: new SetToastMessageStoreAction({toastText: 'test', showWarningIcon: true}) });
+			expect(mapAppEffects.raiseMessageAction$).toBeObservable(expectedResults);
+		});
+	});
 });

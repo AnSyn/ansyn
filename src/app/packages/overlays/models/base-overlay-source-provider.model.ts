@@ -16,5 +16,7 @@ export abstract class BaseOverlaySourceProvider {
 
 	abstract getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any>;
 
+	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
+
 	abstract getById(id: string): Observable<Overlay>;
 }

@@ -107,6 +107,10 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
 	}
 
+	getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
+		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
+	}
+
 	compareOverlays(data: IOverlaysState, data1: IOverlaysState) {
 		return isEqual(data.filteredOverlays, data1.filteredOverlays)
 			&& isEqual(data.filters, data1.filters)

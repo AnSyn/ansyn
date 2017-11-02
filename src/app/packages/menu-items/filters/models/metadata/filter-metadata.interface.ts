@@ -1,11 +1,11 @@
 export abstract class FilterMetadata {
 	type: string;
 
-	enumsFields: Map<string, { count: number, isChecked: boolean }>;
-
 	abstract initializeFilter(value: any): void;
 
 	abstract accumulateData(value: any): void;
+
+	abstract postInitializeFilter(value: any): void;
 
 	abstract updateMetadata(value: any): void;
 
@@ -17,3 +17,4 @@ export abstract class FilterMetadata {
 
 	abstract showAll(): void;
 }
+

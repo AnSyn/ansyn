@@ -54,6 +54,12 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			.catch(this.handleError);
 	}
 
+	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
+		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
+		return <Observable<any>>this.http.post<Array<Overlay>>(url, params)
+			.catch(this.handleError);
+	}
+
 	private extractArrayData(data: IdahoResponse): Array<Overlay> {
 		return data ? data.idahoResult.map((element) => {
 			return this.parseData(element, data.token);

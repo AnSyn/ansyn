@@ -8,9 +8,11 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
 	SetFiltersAction,
-	SetTimelineStateAction
+	SetTimelineStateAction,
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlaySuccessAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Case, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
+import { Case, CasesReducer, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
@@ -36,6 +38,8 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { SetTimeAction, statusBarStateSelector, ChangeLayoutAction } from '@ansyn/status-bar';
+import { mapStateSelector, SetPendingOverlaysAction, SetLayoutSuccessAction, RemovePendingOverlayAction, SynchronizeMapsAction } from '@ansyn/map-facade';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -49,7 +53,6 @@ describe('OverlaysAppEffects', () => {
 		provide: () => {
 		}
 	};
-	const overlaysState = overlaysInitialState;
 	const caseItem: Case = {
 		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
 		'state': {
@@ -90,6 +93,16 @@ describe('OverlaysAppEffects', () => {
 		}
 	} as any;
 
+	const overlaysState: any = {
+		filteredOverlays: ['first', 'last'],
+		overlays: new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
+		['last', { 'photoTime': new Date() }]])
+	};
+
+	const mapState: any = {'mapsList': [{'id': '1'}, {'id': '2'}]};
+
+	const statusBarState: any = {'layouts': [{'mapsCount': 3}]};
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -106,14 +119,22 @@ describe('OverlaysAppEffects', () => {
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{ provide: OverlaysConfig, useValue: {} },
 				{
-					provide: OverlaysService,
-					useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
-				},
-				{
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null,
-						contextValues: { imageryCount: -1 }
+						'contextValues': {'imageryCountBefore' : -1, 'imageryCountAfter': -1, 'defaultOverlay': '', 'time': new Date()}	
+					}
+				},
+				{
+					provide: OverlaysService,
+					useValue: {
+						getStartDateViaLimitFasets: () => {
+							return Observable.of({'startDate': new Date('2014-06-27T08:43:03.624Z'), 'endDate': new Date('2015-06-27T08:43:03.624Z')});
+						},
+						getStartAndEndDateViaRangeFacets: () => {
+							return Observable.of({'startDate': new Date('2014-06-27T08:43:03.624Z'), 'endDate': new Date('2015-06-27T08:43:03.624Z')});
+						},
+						getTimeStateByOverlay: () => {}
 					}
 				},
 				{
@@ -136,10 +157,13 @@ describe('OverlaysAppEffects', () => {
 				cases: [caseItem]
 			}],
 			[overlaysStateSelector, overlaysState],
-			[toolsStateSelector, toolsState]
+			[toolsStateSelector, toolsState],
+			[mapStateSelector, mapState],
+			[statusBarStateSelector, statusBarState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+
 	}));
 
 	beforeEach(inject([CasesService, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _imageryCommunicatorService: ImageryCommunicatorService, _overlaysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {
@@ -161,7 +185,7 @@ describe('OverlaysAppEffects', () => {
 		expect(overlaysAppEffects.onOverlaysMarkupsChanged$).toBeObservable(expectedResults);
 	});
 
-	it('On selectCase$ call to loadOverlaysAction with case params ', () => {
+	it('On selectCase$ without imagery count call to loadOverlaysAction with case params ', () => {
 		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
 		const expectedResults = cold('--b--', {
 			b: new LoadOverlaysAction({
@@ -172,6 +196,34 @@ describe('OverlaysAppEffects', () => {
 			})
 		});
 		expect(overlaysAppEffects.selectCase$).toBeObservable(expectedResults);
+	});
+
+	it('On selectCaseWithImageryCountBeforeAndAfter$ with imageryCountBefore != -1 and imageryCountAfter != -1 call to loadOverlaysAction with case params ', () => {
+		casesService.contextValues = {'imageryCountBefore' : 1, 'imageryCountAfter': 1, 'defaultOverlay': 'nearest', 'time': new Date()};
+
+		const expectedCase = cloneDeep(caseItem);
+		const expectedFromDate = new Date('2014-06-27T08:43:03.624Z');
+		const expectedToDate = new Date('2015-06-27T08:43:03.624Z');
+
+		expectedCase.state.time.from = expectedFromDate.toISOString();
+		expectedCase.state.time.to = expectedToDate.toISOString();
+
+		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
+
+		const a = new UpdateCaseAction(expectedCase);
+
+		const b = new SetTimeAction({'from': expectedFromDate, 'to': expectedToDate});
+
+		const c = new LoadOverlaysAction({
+			to: expectedCase.state.time.to,
+			from: expectedCase.state.time.from,
+			polygon: caseItem.state.region,
+			caseId: caseItem.id
+		});
+
+		const expectedResults = cold('--(abc)--', { a, b, c });
+
+		expect(overlaysAppEffects.selectCaseWithImageryCountBeforeAndAfter$).toBeObservable(expectedResults);
 	});
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
@@ -185,10 +237,95 @@ describe('OverlaysAppEffects', () => {
 		expect(overlaysAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
 	});
 
+	it(`displayTwoNearestOverlay$ effect with one overlay before and one date after 
+	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
+		casesService.contextValues.defaultOverlay = 'nearest';
+		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		
+		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		const expectedResults = cold('--b--', {
+			b: new DisplayMultipleOverlaysFromStoreAction(['first', 'last'])
+		});
+		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	});
+
+	it(`displayTwoNearestOverlay$ effect with overlay before
+	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+		overlaysState.overlays = new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }]]);
+		overlaysState.filteredOverlays = ['first']
+
+		casesService.contextValues.defaultOverlay = 'nearest';
+		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		
+		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		const expectedResults = cold('--b--', {
+			b: new DisplayMultipleOverlaysFromStoreAction(['first', undefined])
+		});
+		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	});
+
+	it(`displayTwoNearestOverlay$ effect with overlay after
+	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+		overlaysState.overlays = new Map<string, any>([['last', { 'photoTime': new Date('2016-06-27T08:43:03.624Z') }]]);
+		overlaysState.filteredOverlays = ['last']
+
+		casesService.contextValues.defaultOverlay = 'nearest';
+		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		
+		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		const expectedResults = cold('--b--', {
+			b: new DisplayMultipleOverlaysFromStoreAction([undefined, 'last'])
+		});
+		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	});
+
+	it(`displayMultipleOverlays$ effect with overlays count smaller than map count
+	should call DisplayOverlayFromStoreAction`, () => {
+		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['first', 'last']) });
+		const expectedResults = cold('--(bcd)--', {
+			b: new DisplayOverlayFromStoreAction({'id': 'first', 'mapId': '1'}),
+			c: new DisplayOverlayFromStoreAction({'id': 'last', 'mapId': '2'}),
+			d: new SynchronizeMapsAction({mapId: '1'})			
+		});
+		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
+	});
+
+	it(`displayMultipleOverlays$ effect with overlays count larger than map count
+	should call SetPendingOverlaysAction and ChangeLayoutAction`, () => {
+		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['one', 'two', 'three']) });
+		const expectedResults = cold('--(bc)--', {
+			b: new SetPendingOverlaysAction(['one', 'two', 'three']),
+			c: new ChangeLayoutAction(0)
+		});
+		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
+	});
+
+	it(`displayPendingOverlaysOnChangeLayoutSuccess$ effect with overlays
+	should call DisplayOverlayFromStoreAction`, () => {
+		mapState['pendingOverlays'] = ['first', 'last'];
+		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
+		const expectedResults = cold('--(bcd)--', {
+			b: new DisplayOverlayFromStoreAction({'id': 'first', 'mapId': '1'}),
+			c: new DisplayOverlayFromStoreAction({'id': 'last', 'mapId': '2'}),
+			d: new SynchronizeMapsAction({mapId: '1'})			
+		});
+		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
+	});
+
+	it(`removePendingOverlayOnDisplay$ effect with overlay
+	should call RemovePendingOverlayAction with that overlay`, () => {
+		mapState['pendingOverlays'] = ['first', 'last'];
+		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({'id': 'first'}) });
+		const expectedResults = cold('--b--', {
+			b: new RemovePendingOverlayAction('first')
+		});
+		expect(overlaysAppEffects.removePendingOverlayOnDisplay$).toBeObservable(expectedResults);
+	});
+
 	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
 		it('should be moved forwards', () => {
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
-			(<any>overlaysService.getTimeStateByOverlay).and.callFake(() => getTimeStateByOverlayResult);
+			spyOn(overlaysService, 'getTimeStateByOverlay').and.callFake(() => getTimeStateByOverlayResult);
 			overlaysState.timelineState = { from: new Date(0), to: new Date(5000) };
 			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) } });
 			actions = hot('--a--', { a: action });
@@ -198,7 +335,7 @@ describe('OverlaysAppEffects', () => {
 
 		it('should be moved backwards', () => {
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
-			(<any>overlaysService.getTimeStateByOverlay).and.callFake(() => getTimeStateByOverlayResult);
+			spyOn(overlaysService, 'getTimeStateByOverlay').and.callFake(() => getTimeStateByOverlayResult);
 			overlaysState.timelineState = {
 				from: new Date(5000),
 				to: new Date(10000)
@@ -209,5 +346,4 @@ describe('OverlaysAppEffects', () => {
 			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
 		});
 	});
-
 });

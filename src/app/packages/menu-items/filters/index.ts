@@ -5,5 +5,6 @@ export { IFiltersState, FiltersReducer } from './reducer/filters.reducer';
 export * from './actions/filters.actions';
 export { FilterMetadata } from './models/metadata/filter-metadata.interface';
 export { EnumFilterMetadata } from './models/metadata/enum-filter-metadata';
+export { SliderFilterMetadata } from './models/metadata/slider-filter-metadata';
 export { FiltersService } from './services/filters.service';
 export { Filter } from './models/filter';

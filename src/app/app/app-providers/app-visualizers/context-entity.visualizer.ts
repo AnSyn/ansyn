@@ -2,7 +2,10 @@ import { EntitiesVisualizer } from '@ansyn/open-layer-visualizers/entities-visua
 
 import proj from 'ol/proj';
 import Point from 'ol/geom/point';
-
+import Polygon from 'ol/geom/polygon';
+import Text from 'ol/style/text';
+import Fill from 'ol/style/fill';
+import Stroke from 'ol/style/stroke';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
@@ -30,18 +33,18 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 					src: '/assets/icons/map/entity-marker.svg'
 				},
 				geometry: this.getGeometry.bind(this),
-				label: {
+				text: new Text({
 					font: '12px Calibri,sans-serif',
-					fill: {
+					fill: new Fill({
 						color: '#fff'
-					},
-					stroke: {
+					}),
+					stroke: new Stroke({
 						color: '#000',
 						width: 3
-					},
+					}),
 					offsetY: 30,
 					text: this.getText.bind(this)
-				}
+				})
 			}
 		});
 	}
@@ -64,13 +67,24 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		}
 
 		const entityMap = this.idToEntity.get(featureId);
-		const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
-		const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
-		const point = new Point(lonLatCords);
-		this.idToCachedCenter.set(featureId, point);
-		return point;
+
+		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
+			const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);		
+			const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
+			const point = new Point(lonLatCords);
+
+			this.idToCachedCenter.set(featureId, point);
+			return point;
+		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
+			const polygon = entityMap.originalEntity.featureJson.geometry as Polygon;		
+			const lonLatCords = proj.fromLonLat(polygon.coordinates, projection);
+			const projectedPolygon = new Polygon(lonLatCords);
+
+			this.idToCachedCenter.set(featureId, projectedPolygon);
+			return projectedPolygon;
+		}
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {

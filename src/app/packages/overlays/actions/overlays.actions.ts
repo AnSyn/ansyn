@@ -13,6 +13,7 @@ export const OverlaysActionTypes = {
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
 	DISPLAY_OVERLAY_FROM_STORE: type('[Overlay] Display Overlay From Store'),
+	DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE: type('[Overlay] Display Multiple Overlays From Store'),	
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
 	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
@@ -90,6 +91,13 @@ export class DisplayOverlayFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
 
 	constructor(public payload: { id: string, mapId?: string }) {
+	}
+}
+
+export class DisplayMultipleOverlaysFromStoreAction implements Action {
+	type = OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE;
+
+	constructor(public payload: string[]) {
 	}
 }
 
@@ -194,6 +202,7 @@ export class MouseOutDropAction implements Action {
 
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
+	| DisplayMultipleOverlaysFromStoreAction
 	| DisplayOverlayAction
 	| DisplayOverlaySuccessAction
 	| DisplayOverlayFailedAction

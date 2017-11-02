@@ -7,7 +7,8 @@ export interface Context {
 	/* optionals */
 	layoutIndex?: number;
 	zoom?: number;
-	imageryCount?: number;
+	imageryCountBefore?: number;
+	imageryCountAfter?: number;	
 	timeFilter?: string;
 	geoFilter?: string;
 	orientation?: string;

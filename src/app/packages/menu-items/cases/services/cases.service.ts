@@ -3,6 +3,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/of';
 import { Case, CaseMapState } from '../models/case.model';
 import { isEmpty } from 'lodash';
@@ -23,8 +24,10 @@ export class CasesService {
 	queryParamsKeys;
 
 	public contextValues = {
-		imageryCount: -1,
-		defaultOverlay: ''
+		imageryCountBefore: -1,
+		imageryCountAfter: -1,
+		defaultOverlay: '',
+		time: undefined
 	};
 
 	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {

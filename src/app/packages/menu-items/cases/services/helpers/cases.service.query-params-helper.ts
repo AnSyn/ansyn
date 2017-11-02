@@ -8,6 +8,7 @@ import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
 import { Point } from 'geojson';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import * as centroid from '@turf/centroid';
 
 export class QueryParamsHelper {
 
@@ -39,7 +40,7 @@ export class QueryParamsHelper {
 			}
 		});
 
-		['defaultOverlay', 'imageryCount'].forEach(key => {
+		['defaultOverlay', 'imageryCountBefore', 'imageryCountAfter'].forEach(key => {
 			if (selectedContext[key]) {
 				this.casesService.contextValues[key] = selectedContext[key];
 			}
@@ -60,6 +61,66 @@ export class QueryParamsHelper {
 							updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 							updatedCaseModel.state.region = getPolygonByPointAndRadius(coordinates).geometry;
 						}
+						break;
+					case 'geometry':
+						const geometryString = qParams.geometry;
+						if (geometryString) {
+							const geoJsonGeomtry: GeoJSON.GeoJsonObject = <GeoJSON.GeoJsonObject>wellknown.parse(geometryString);
+							
+							if (geoJsonGeomtry.type === 'Point') {
+								const geoPoint: Point = <Point>geoJsonGeomtry;
+								geoPoint.coordinates = geoPoint.coordinates.reverse()
+
+								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
+
+								updatedCaseModel.state.contextEntities = [];
+
+								const feature: GeoJSON.Feature<any> = {
+									'type': 'Feature',
+									'properties': {},
+									'geometry': geoPoint
+								}
+
+								updatedCaseModel.state.contextEntities.push({
+									id: '1',
+									date: qParams.time ? new Date(qParams.time) : new Date(),
+									featureJson: feature
+								});
+							}
+							else if (geoJsonGeomtry.type === 'Polygon') {
+								const geoPolygon: GeoJSON.Polygon = <GeoJSON.Polygon>geoJsonGeomtry;
+								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
+								
+								const feature: GeoJSON.Feature<any> = {
+									"type": "Feature",
+									"geometry": geoPolygon,
+									"properties": {}
+								}
+								const centroidOfGeometry = centroid(feature);
+
+								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = centroidOfGeometry.geometry);
+								updatedCaseModel.state.region = geoPolygon;
+
+								updatedCaseModel.state.contextEntities = [];
+
+								updatedCaseModel.state.contextEntities.push(
+									{
+										id: '1',
+										date: qParams.time ? new Date(qParams.time) : new Date(),
+										featureJson: feature
+									},
+									{
+										id: '2',
+										date: qParams.time ? new Date(qParams.time) : new Date(),
+										featureJson: centroidOfGeometry
+									},
+								);
+							}
+						}
+						break;
+					case 'time':
+						this.casesService.contextValues['time'] = qParams.time;
 						break;
 				}
 			});

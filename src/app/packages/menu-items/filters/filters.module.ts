@@ -13,6 +13,9 @@ import { SortPipe } from './pipes/sort.pipe';
 import { FiltersEffects } from './effects/filters.effects';
 import { StoreModule } from '@ngrx/store';
 import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
+import { SliderModule } from 'primeng/primeng';
+import { FormsModule } from '@angular/forms';
+import { SliderFilterContainerComponent } from './components/slider-filter-container/slider-filter-container.component';
 
 @NgModule({
 	imports: [
@@ -20,6 +23,8 @@ import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
 		CoreModule,
 		BrowserAnimationsModule,
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
+		SliderModule,
+		FormsModule,
 		EffectsModule.forFeature([FiltersEffects])
 	],
 	declarations: [
@@ -27,6 +32,7 @@ import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
 		FilterContainerComponent,
 		MapIteratorPipe,
 		EnumFilterContainerComponent,
+		SliderFilterContainerComponent,
 		SortPipe],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [FiltersService]

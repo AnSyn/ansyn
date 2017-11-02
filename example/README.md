@@ -1,29 +1,93 @@
-# ExampleAnsynV5
+## ExampleAnsyn
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0-rc.6.
 
-## Development server
+## Installation:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+ - Initizlize app: `ng new my-app` 
+ - Run `npm install ansyn`
+ - Add assets and styles on `angular-cli.json`:
+ ```json
+ "assets": [
+    { "glob": "**/*", "input": "../node_modules/ansyn/src/assets/", "output": "./assets/" }
+  ],
+  "styles": [
+    "../node_modules/ansyn/src/styles/styles.less"
+  ],
+  ...
+  "defaults": {
+    "styleExt": "less"
+  }
+ ```
+ - Fetch ansyn config on `main.ts`:
+ ```typescript
+import { fetchConfigProviders } from 'ansyn/src/app/app-providers';
 
-## Code scaffolding
+fetchConfigProviders.then(providers => platformBrowserDynamic(providers).bootstrapModule(AppModule));
+```
+ - Add `AppAnsynModule` to your list of module imports:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```typescript
+import { AppAnsynModule } from 'ansyn';
 
-## Build
+@NgModule({
+  imports: [
+    AppAnsynModule
+  ],
+})
+export class AppModule { 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+}
+``` 
+- finaly add ansyn component tag on `AppComponent`:
 
-## Running unit tests
+```html
+<ansyn-root></ansyn-root>
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Usage
+- provide `BaseOverlaySourceProvider` with your custom provider for example:
+```typescript
+providers: [
+  { provide: BaseOverlaySourceProvider, useClass: OverlayCustomProviderService }
+]
 
-## Running end-to-end tests
+@Injectable()
+export class OverlayCustomProviderService extends IdahoSourceProvider {
+  fetch(fetchParams: IFetchParams) {
+    // ...code
+    return super.fetch(fetchParams);
+  }
+}
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+- provide `MapAppEffects` with your custom effects provider for example:
 
-## Further help
+  * make sure your `actions$` is protected or public (**not** private) 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```typescript
+providers: [
+  { provide: MapAppEffects, useClass: CustomMapAppEffect }
+]
 
+@Injectable()
+export class CustomMapAppEffect extends MapAppEffects {
+  // Use super(this) for onDisplayOverlay$ add filter, map, do etc.
+  onDisplayOverlay$: Observable<any> = this.onDisplayOverlay$
+    .filter(() => true)
+    .map(data => data)
+    .do(() => {
+      // ...code
+    });
 
+  // Override (=) onStartMapShadow$
+  onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
+    .ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
+    .map(() => new StartMapShadowAction())
+    .do(() => {
+      // ...code
+    });
+}
+```
+
+# Good luck! 🙂

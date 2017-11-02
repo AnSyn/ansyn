@@ -20,7 +20,7 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector, TimelineState } from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
 import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
@@ -166,10 +166,10 @@ export class OverlaysEffects {
 			const isActiveMap = !action.payload.mapId || map.activeMapId === action.payload.mapId;
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
-		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, any]) => {
+		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
 			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
 		})
-		.map(([isActiveMap, displayedOverlay, timelineState]: [Overlay, Overlay, any]) => {
+		.map(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
 			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			return new SetTimelineStateAction({ state });
 		});

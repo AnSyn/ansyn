@@ -81,6 +81,7 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import 'rxjs/add/observable/fromPromise';
 
 @Injectable()
 export class MapAppEffects {
@@ -554,7 +555,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, { filteredOverlays }, mapState: IMapState) => {
 			return [filteredOverlays, mapState.mapsList];
 		})
-		.map(([filteredOverlays, mapsList]: [any[], CaseMapState[]]) => {
+		.map(([filteredOverlays, mapsList]: [string[], CaseMapState[]]) => {
 			const overlaysNoInCase = new Map<string, boolean>();
 
 			mapsList.forEach(({ data }) => {

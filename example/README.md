@@ -63,7 +63,9 @@ export class OverlayCustomProviderService extends IdahoSourceProvider {
 
 - provide `MapAppEffects` with your custom effects provider for example:
 
-  * make sure your `actions$` is protected or public (**not** private) 
+  Make sure your `actions$` is protected or public (**not** private).
+  
+  Anyway, If actions$ is private, you can get it that way: `(<any>this).actions$` but...
 
 ```typescript
 providers: [
@@ -81,7 +83,7 @@ export class CustomMapAppEffect extends MapAppEffects {
     });
 
   // Override (=) onStartMapShadow$
-  onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
+  onStartMapShadow$: Observable<StartMapShadowAction> = this.actions$
     .ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
     .map(() => new StartMapShadowAction())
     .do(() => {

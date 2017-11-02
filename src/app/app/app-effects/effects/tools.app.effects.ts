@@ -41,7 +41,6 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 
-
 @Injectable()
 export class ToolsAppEffects {
 

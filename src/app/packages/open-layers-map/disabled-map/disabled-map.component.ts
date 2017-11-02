@@ -9,7 +9,7 @@ import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 		<div #olMap></div>
 	`,
 	styles: [
-		`div {
+			`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;

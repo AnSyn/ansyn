@@ -2,9 +2,8 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { MapFacadeService } from './map-facade.service';
 import { Store, StoreModule } from '@ngrx/store';
-import { ImageryModule } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryModule } from '@ansyn/imagery';
 import { IMapState, mapFeatureKey, MapReducer } from '../reducers/map.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
 import { AnnotationVisualizerAgentAction } from '../../menu-items/tools/actions/tools.actions';
 
@@ -22,7 +21,7 @@ describe('MapFacadeService', () => {
 		});
 	});
 
-	beforeEach(inject([MapFacadeService, Store], ( _mapFacadeService: MapFacadeService, _store: Store<IMapState>) => {
+	beforeEach(inject([MapFacadeService, Store], (_mapFacadeService: MapFacadeService, _store: Store<IMapState>) => {
 		service = _mapFacadeService;
 		store = _store;
 	}));
@@ -39,8 +38,8 @@ describe('MapFacadeService', () => {
 
 
 		it('when annotations contextmenu call the trigger is dispached', () => {
-			const payload = {hello: "world" };
-			const action = new 	AnnotationContextMenuTriggerAction(<any>payload)
+			const payload = { hello: "world" };
+			const action = new AnnotationContextMenuTriggerAction(<any>payload)
 			service.annotationContextMenuHandlerSubscriber(payload);
 			expect(store.dispatch).toHaveBeenCalledTimes(1);
 			expect(store.dispatch).toHaveBeenCalledWith(action);
@@ -59,7 +58,7 @@ describe('MapFacadeService', () => {
 
 			service.drawEndSubscriber({});
 			expect(store.dispatch).toHaveBeenCalledTimes(2);
-			const  allArgs = store.dispatch['calls']['allArgs']();
+			const allArgs = store.dispatch['calls']['allArgs']();
 			expect(allArgs).toEqual([[firstAction], [secondAction]]);
 
 		})

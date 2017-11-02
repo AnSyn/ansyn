@@ -5,7 +5,13 @@ import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { toolsFeatureKey, ToolsReducer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import {
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	GoToAction,
 	PullActiveCenter,
@@ -31,13 +37,10 @@ import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
-	ILayerState, initialLayersState,
+	ILayerState,
+	initialLayersState,
 	layersStateSelector
-} from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	IToolsState, toolsInitialState,
-	toolsStateSelector
-} from '../../packages/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -115,7 +118,7 @@ describe('ToolsAppEffects', () => {
 			[casesStateSelector, icaseState],
 			[mapStateSelector, imapState],
 			[layersStateSelector, layerState],
-			[toolsStateSelector, toolsState ]
+			[toolsStateSelector, toolsState]
 		]);
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
@@ -125,7 +128,7 @@ describe('ToolsAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
 
-	afterEach(( ) => {
+	afterEach(() => {
 		layerState = cloneDeep(initialLayersState);
 		toolsState = cloneDeep(toolsInitialState);
 	})
@@ -274,7 +277,6 @@ describe('ToolsAppEffects', () => {
 			toolsState.flags.set('annotations', true);
 			imapState.activeMap = imapState.mapsList[0];
 			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-
 
 
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });

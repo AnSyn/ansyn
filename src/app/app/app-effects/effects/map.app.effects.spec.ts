@@ -63,9 +63,10 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
-	ILayerState, initialLayersState,
+	ILayerState,
+	initialLayersState,
 	layersStateSelector
-} from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';

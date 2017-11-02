@@ -22,10 +22,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import {
-	HideAnnotationsLayer,
-	ShowAnnotationsLayer
-} from '../../packages/menu-items/layers-manager/actions/layers.actions';
+import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -121,32 +118,34 @@ describe('CasesAppEffects', () => {
 
 
 	it('updateAnnotationLayersFlags$', () => {
-		actions = hot('--a--', { a: new SelectCaseAction(<Case>{
-			state : {
-				layers: {
-					displayAnnotationsLayer: true
+		actions = hot('--a--', {
+			a: new SelectCaseAction(<Case>{
+				state: {
+					layers: {
+						displayAnnotationsLayer: true
+					}
 				}
-			}
-		})});
+			})
+		});
 
-		let expectedResult = cold('--b--', { b: new ShowAnnotationsLayer({update: false})});
+		let expectedResult = cold('--b--', { b: new ShowAnnotationsLayer({ update: false }) });
 		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
 	});
 
 	it('updateAnnotationLayersFlags$', () => {
-		actions = hot('--a--', { a: new SelectCaseAction(<Case>{
-			state : {
-				layers: {
-					displayAnnotationsLayer: false
+		actions = hot('--a--', {
+			a: new SelectCaseAction(<Case>{
+				state: {
+					layers: {
+						displayAnnotationsLayer: false
+					}
 				}
-			}
-		})});
+			})
+		});
 
-		let expectedResult = cold('--b--', { b: new HideAnnotationsLayer({update: false})});
+		let expectedResult = cold('--b--', { b: new HideAnnotationsLayer({ update: false }) });
 		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
 	});
-
-
 
 
 });

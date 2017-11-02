@@ -27,7 +27,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	let tmpMap: Map<string, boolean>;
 	switch (action.type) {
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			return {...state, annotationMode: action.payload };
+			return { ...state, annotationMode: action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 

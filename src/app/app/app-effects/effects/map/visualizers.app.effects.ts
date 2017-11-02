@@ -37,6 +37,8 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 import {
 	AnnotationVisualizerAgentAction,
 	GoToInputChangeAction,
+	SetAnnotationMode,
+	ShowOverlaysFootprintAction,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -51,11 +53,6 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	SetAnnotationMode,
-	ShowOverlaysFootprintAction
-} from '../../../packages/menu-items/tools/actions/tools.actions';
-
 
 
 @Injectable()

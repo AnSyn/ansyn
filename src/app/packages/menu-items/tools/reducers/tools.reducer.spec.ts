@@ -1,6 +1,7 @@
-import { ToolsReducer, IToolsState, toolsInitialState } from './tools.reducer' ;
-import { AnnotationClose, AnnotationOpen, SetAnnotationMode, ToolsActionsTypes } from '../actions/tools.actions';
+import { toolsInitialState, ToolsReducer } from './tools.reducer';
+import { AnnotationClose, AnnotationOpen, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
+
 describe("ToolsReducer", () => {
 
 	it('check initial state ', () => {

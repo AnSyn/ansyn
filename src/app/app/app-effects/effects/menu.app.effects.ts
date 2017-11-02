@@ -11,7 +11,7 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { IAppState } from '../app.effects.module';
-import { Store, Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 
 @Injectable()
 export class MenuAppEffects {

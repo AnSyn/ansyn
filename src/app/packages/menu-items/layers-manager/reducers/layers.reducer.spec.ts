@@ -1,4 +1,8 @@
-import { LayerTreeLoadedAction, SelectLayerAction, UnselectLayerAction } from '../actions/layers.actions';
+import {
+	HideAnnotationsLayer,
+	LayerTreeLoadedAction, SelectLayerAction, ShowAnnotationsLayer,
+	UnselectLayerAction
+} from '../actions/layers.actions';
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { ILayerTreeNode } from '../models/layer-tree-node';
@@ -227,4 +231,16 @@ describe('LayersReducer', () => {
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([]);
 	});
+
+	it("SHOW_ANNOTATION_LAYER", () => {
+		const action = new ShowAnnotationsLayer({update: true});
+		const result: ILayerState = LayersReducer(initialLayersState, action);
+		expect(result.displayAnnotationsLayer).toBe(true);
+	})
+
+	it("HIDE_ANNOTATION_LAYER", () => {
+		const action = new HideAnnotationsLayer({update: true});
+		const result: ILayerState = LayersReducer(initialLayersState, action);
+		expect(result.displayAnnotationsLayer).toBe(false);
+	})
 });

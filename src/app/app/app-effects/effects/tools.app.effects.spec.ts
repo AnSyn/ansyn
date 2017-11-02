@@ -30,6 +30,14 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import {
+	ILayerState, initialLayersState,
+	layersStateSelector
+} from '../../packages/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	IToolsState, toolsInitialState,
+	toolsStateSelector
+} from '../../packages/menu-items/tools/reducers/tools.reducer';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -37,7 +45,8 @@ describe('ToolsAppEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let icaseState: ICasesState;
-
+	let layerState: ILayerState = cloneDeep(initialLayersState);
+	let toolsState: IToolsState = cloneDeep(toolsInitialState);
 
 	const cases: Case[] = [{
 		state: {
@@ -72,7 +81,10 @@ describe('ToolsAppEffects', () => {
 		mapsList: [
 			{
 				id: 'imagery1',
-				data: { position: { zoom: 1, center: 2 }, isAutoImageProcessingActive: true, overlay: 'overlay' }
+				data: {
+					position: { zoom: 1, center: 2 },
+					isAutoImageProcessingActive: true, overlay: 'overlay'
+				}
 			}
 		],
 		activeMapId: 'imagery1'
@@ -98,18 +110,25 @@ describe('ToolsAppEffects', () => {
 		icaseState = cloneDeep({ cases, selectedCase }) as any;
 		imapState.mapsList = selectedCase.state.maps.data;
 		imapState.activeMapId = selectedCase.state.maps.activeMapId;
+
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
-			[mapStateSelector, imapState]
+			[mapStateSelector, imapState],
+			[layersStateSelector, layerState],
+			[toolsStateSelector, toolsState ]
 		]);
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ToolsAppEffects], (_imageryCommunicatorService: ImageryCommunicatorService, _toolsAppEffects: ToolsAppEffects) => {
 		toolsAppEffects = _toolsAppEffects;
-
 		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
+
+	afterEach(( ) => {
+		layerState = cloneDeep(initialLayersState);
+		toolsState = cloneDeep(toolsInitialState);
+	})
 
 
 	it('getActiveCenter$ should get center from active communicator and return SetCenterAction', () => {
@@ -228,25 +247,69 @@ describe('ToolsAppEffects', () => {
 		});
 	});
 
-	it('onActiveMapChangesSetOverlaysFootprintMode$ should change footprint mode', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		activeMap.data.overlayDisplayMode = <any> 'whatever';
+	describe('@Effect onActiveMapChangesSetOverlaysFootprintMode$', () => {
+		it(' layerState.displayAnnotationsLayer is true', () => {
+			layerState.displayAnnotationsLayer = true;
+			toolsState.flags.set('annotations', true);
+			imapState.activeMap = imapState.mapsList[0];
+			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
 
-		actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+			// activeMap.data.overlayDisplayMode = <any> 'whatever';
 
-		const expectedResults = cold('--(abc)--', {
-			a: new SetActiveOverlaysFootprintModeAction(<any>'whatever'),
-			b: new AnnotationVisualizerAgentAction({
-				action: 'removeLayer',
-				maps: 'all'
-			}),
-			c: new AnnotationVisualizerAgentAction({
-				action: 'show',
-				maps: 'all'
-			})
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+
+			const expectedResults = cold('--(ab)--', {
+				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever'),
+				b: new AnnotationVisualizerAgentAction({
+					action: 'show',
+					maps: 'all'
+				})
+			});
+
+			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
 		});
-		expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
-	});
+
+		it(' layerState.displayAnnotationsLayer is false, annotations is open', () => {
+			layerState.displayAnnotationsLayer = false;
+			toolsState.flags.set('annotations', true);
+			imapState.activeMap = imapState.mapsList[0];
+			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
+
+
+
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+
+			const expectedResults = cold('--(abc)--', {
+				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever'),
+				b: new AnnotationVisualizerAgentAction({
+					action: 'show',
+					maps: 'active'
+				}),
+				c: new AnnotationVisualizerAgentAction({
+					action: 'removeLayer',
+					maps: 'others'
+				})
+			});
+
+			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
+		});
+
+		it(' layerState.displayAnnotationsLayer is false and the menu item is close', () => {
+			layerState.displayAnnotationsLayer = false;
+			toolsState.flags.set('annotations', false);
+			imapState.activeMap = imapState.mapsList[0];
+			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
+
+
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+
+			const expectedResults = cold('--(a)--', {
+				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever')
+			});
+
+			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
+		});
+	})
 
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);

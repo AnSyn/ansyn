@@ -84,8 +84,10 @@ export class ToolsAppEffects {
 			this.store$.select(mapStateSelector),
 			this.store$.select(layersStateSelector),
 			this.store$.select(toolsStateSelector),
-			(action, mapState: IMapState, layerState: ILayerState, toolsState: IToolsState) => [action, mapState, layerState, toolsState])
-		.map(([action, mapState, layerState, toolsState]: [ActiveMapChangedAction, IMapState, ILayerState, IToolsState]): [CaseMapState, ILayerState, IToolsState] => [MapFacadeService.activeMap(mapState), layerState, toolsState])
+			(action, mapState: IMapState, layerState: ILayerState, toolsState: IToolsState) =>
+				[action, mapState, layerState, toolsState])
+		.map(([action, mapState, layerState, toolsState]: [ActiveMapChangedAction, IMapState, ILayerState, IToolsState]): [CaseMapState, ILayerState, IToolsState] =>
+			[MapFacadeService.activeMap(mapState), layerState, toolsState])
 		.mergeMap(([activeMap, layerState, toolsState]: [CaseMapState, ILayerState, IToolsState]) => {
 				const result = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 				if (layerState.displayAnnotationsLayer) {
@@ -94,6 +96,9 @@ export class ToolsAppEffects {
 						maps: 'all'
 					}))
 				}
+				// if the annotation menu is open and we switched active map
+				// and the layer is disabled we need to switch the annotation view to
+				// new active map
 				else if (toolsState.flags.get('annotations')) {
 					result.push(new AnnotationVisualizerAgentAction({
 						action: 'show',

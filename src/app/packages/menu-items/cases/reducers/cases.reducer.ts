@@ -3,6 +3,8 @@ import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
 import { get as _get } from 'lodash';
 import { createFeatureSelector } from '@ngrx/store';
+import { CasesService } from '../services/cases.service';
+import { deepMerge } from '@ansyn/core/utils';
 
 export interface ICasesState {
 	cases: Case[];
@@ -97,7 +99,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return Object.assign({}, state, { updatingBackend: false });
 
 		case CasesActionTypes.SELECT_CASE:
-			return { ...state, selectedCase: action.payload };
+			const selectedCase = deepMerge(CasesService.defaultCase, action.payload);
+			return { ...state, selectedCase };
 
 		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
 			return Object.assign({}, state, { contexts: action.payload, contextsLoaded: true });

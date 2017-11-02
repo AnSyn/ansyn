@@ -24,7 +24,6 @@ import {
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
 import { Case } from '@ansyn/core';
-import { deepMerge } from '@ansyn/core/utils';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
@@ -38,14 +37,14 @@ export class CasesEffects {
 	 * @ofType SelectCaseAction
 	 * @action UpdateCaseAction
 	 */
-	@Effect()
+	/*@Effect()
 	supportOldCaseVersions$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
 		.map(({ payload }: SelectCaseAction) => {
 			const newCase = deepMerge(this.caseConfig.defaultCase, payload);
 			return new UpdateCaseAction(newCase);
 
-		});
+		});*/
 
 	/**
 	 * @type Effect

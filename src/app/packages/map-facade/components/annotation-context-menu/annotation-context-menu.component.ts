@@ -21,6 +21,7 @@ export class AnnotationContextMenuComponent {
 	}
 
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
+
 		this.mapEffect.annotationContextMenuTrigger$.subscribe(({ payload }) => {
 			this.feature = payload.feature;
 			this.pixels = payload.pixels;
@@ -40,14 +41,10 @@ export class AnnotationContextMenuComponent {
 
 			}
 
-			let styleString = `top: ${this.pixels.top}px;left:${this.pixels.left}px;width: ${this.pixels.width}px;  height: ${this.pixels.height}px;`;
+			let styleString = `top:${this.pixels.top}px;left:${this.pixels.left}px;width:${this.pixels.width}px;height:${this.pixels.height}px;`;
 			this.host.nativeElement.setAttribute('style', styleString);
 			this.host.nativeElement.focus();
 		});
-	}
-
-	arrowExtent(line1, line2, line3) {
-
 	}
 
 	removeFeature() {
@@ -55,6 +52,6 @@ export class AnnotationContextMenuComponent {
 			feature: this.feature,
 			action: "remove"
 		}))
-		this.host.nativeElement.setAttribute('style', "");
+		this.host.nativeElement.setAttribute('style', '');
 	}
 }

@@ -55,6 +55,8 @@ describe('VisualizersAppEffects', () => {
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
 
+	const geoJsonDataAsString = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-8864905.04168913,4968343.241604401],[-7561221.649244596,4968343.241604401],[-7561221.649244596,5520348.311595516],[-8864905.04168913,5520348.311595516],[-8864905.04168913,4968343.241604401]]]},"properties":{"id":1509537610583,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-10928571.403085884,4456440.158943544],[-10523551.35427145,4456440.158943544],[-10523551.35427145,5345021.014580127],[-10928571.403085884,5345021.014580127],[-10928571.403085884,4456440.158943544]]]},"properties":{"id":1509537616256,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-11363070.980878033,6262825.420860147]},"properties":{"id":1509537618448,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Circle","data":{},"radius":940276.8116146456}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-10040630.493284997,5896798.762447442],[-8994697.493933458,6116608.3346863]]},"properties":{"id":1509537621288,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-LineString","data":{}}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-7214037.4120918205,6124373.010826077],[-6661961.022834513,5167945.174800512]]},"properties":{"id":1509537624378,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Arrow","data":{}}}]}';
+
 
 	const selectedCase: Case = {
 		id: '1234-5678',
@@ -126,7 +128,6 @@ describe('VisualizersAppEffects', () => {
 	}));
 
 	describe('@Effect annotationData$', () => {
-		const geoJsonDataAsString = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-8864905.04168913,4968343.241604401],[-7561221.649244596,4968343.241604401],[-7561221.649244596,5520348.311595516],[-8864905.04168913,5520348.311595516],[-8864905.04168913,4968343.241604401]]]},"properties":{"id":1509537610583,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-10928571.403085884,4456440.158943544],[-10523551.35427145,4456440.158943544],[-10523551.35427145,5345021.014580127],[-10928571.403085884,5345021.014580127],[-10928571.403085884,4456440.158943544]]]},"properties":{"id":1509537616256,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-11363070.980878033,6262825.420860147]},"properties":{"id":1509537618448,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Circle","data":{},"radius":940276.8116146456}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-10040630.493284997,5896798.762447442],[-8994697.493933458,6116608.3346863]]},"properties":{"id":1509537621288,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-LineString","data":{}}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-7214037.4120918205,6124373.010826077],[-6661961.022834513,5167945.174800512]]},"properties":{"id":1509537624378,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Arrow","data":{}}}]}';
 		it("remove feature from the annotationLayer", () => {
 			// const geoJsonData = Json.parse(geoJsonDataAsString);
 			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
@@ -234,6 +235,7 @@ describe('VisualizersAppEffects', () => {
 		});
 
 		it("check show action", () => {
+			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
 				action: 'show',
@@ -246,7 +248,7 @@ describe('VisualizersAppEffects', () => {
 			expect(fakeVisualizer.addLayer).toHaveBeenCalled();
 			expect(fakeVisualizer.removeInteraction).toHaveBeenCalled();
 			expect(fakeVisualizer.addSelectInteraction).toHaveBeenCalled();
-			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith({});
+			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith(geoJsonDataAsString);
 		});
 
 		const testCreateInteraction = [
@@ -306,6 +308,7 @@ describe('VisualizersAppEffects', () => {
 		});
 
 		it('check refreshDrawing layer', () => {
+			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
 				action: 'refreshDrawing',
@@ -315,7 +318,7 @@ describe('VisualizersAppEffects', () => {
 			expect(visualizersAppEffects.annotationVisualizerAgent$).toBeObservable(cold('-'));
 
 			// toHaveBeenCalledWith = selectedCase.state.layers.annotationsLayer
-			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith({});
+			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith(geoJsonDataAsString);
 
 		});
 

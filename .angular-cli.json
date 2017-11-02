@@ -21,6 +21,7 @@
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
+				"./styles/styles.less"
 			],
 			"scripts": [
 			],
@@ -48,6 +49,7 @@
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
+				"./styles/styles.less"
 			],
 			"scripts": [
 			],

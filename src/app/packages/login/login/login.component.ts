@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { isNil as _isNil } from 'lodash';
-
+import 'rxjs/add/observable/fromPromise';
 
 @Component({
 	selector: 'ansyn-login',

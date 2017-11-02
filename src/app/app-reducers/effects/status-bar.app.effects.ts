@@ -290,8 +290,8 @@ export class StatusBarAppEffects {
 	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select(statusBarStateSelector).pluck('flags'))
-		.map(([action, flags]: [any, Map<any, any>]) => flags.get(statusBarFlagsItems.pinPointSearch))
+		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, Map<string, boolean>>('flags'))
+		.map(([action, flags]: [any, Map<string, boolean>]) => flags.get(statusBarFlagsItems.pinPointSearch))
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
 	constructor(private actions$: Actions,

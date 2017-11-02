@@ -98,14 +98,15 @@ describe('ToolsComponent', () => {
 		component.userAnnotationsToolOpen = false;
 		component.toggleAnnotationMenu();
 		const args = store.dispatch['calls'].mostRecent();
+		expect(store.dispatch).toHaveBeenCalledTimes(3);
 		expect(args.args[0].payload.action).toBe('show');
-
 	});
 
 	it('toogle annotation menu close', () => {
 		component.userAnnotationsToolOpen = true;
 		component.toggleAnnotationMenu();
 		const args = store.dispatch['calls'].mostRecent();
+		expect(store.dispatch).toHaveBeenCalledTimes(3);
 		expect(args.args[0].payload.action).toBe('endDrawing');
 	});
 });

@@ -11,14 +11,15 @@ export interface IToolsState {
 }
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<string, boolean>(),
+	flags: new Map<string, boolean>([
+		['geoRegisteredOptionsEnabled', true],
+		['annotations', true]
+	]),
 	activeCenter: [0, 0],
 	gotoExpand: false,
 	annotationMode: undefined
 };
 
-toolsInitialState.flags.set('geoRegisteredOptionsEnabled', true);
-toolsInitialState.flags.set('annotations', true);
 export const toolsFeatureKey = 'tools';
 export const toolsStateSelector = createFeatureSelector<IToolsState>(toolsFeatureKey);
 

@@ -9,7 +9,10 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { Overlay } from '../../core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
-import { ActiveMapChangedAction, EnableMapGeoOptionsActionStore } from '../actions/map.actions';
+import {
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction,
+	EnableMapGeoOptionsActionStore
+} from '../actions/map.actions';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -49,6 +52,16 @@ describe('MapEffects', () => {
 		expect(mapEffects).toBeDefined();
 	});
 
+	it('check that the action annotationContextMenuTrigger$ was triggerd', () => {
+
+		const action = new AnnotationContextMenuTriggerAction((<any>{}))
+
+
+		actions = hot('--a--', {a : action});
+		const expectedResult = cold('--b--',{b: action});
+		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
+
+	})
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {

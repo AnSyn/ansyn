@@ -13,6 +13,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SetAutoCloseMenu } from '../../packages/menu-items/tools/actions/tools.actions';
+import { SetClickOutside } from '../../packages/menu/actions/menu.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -95,10 +96,15 @@ describe('MenuAppEffects', () => {
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
-	it('@Effect autoCloseMenu$',() => {
+	it('@Effect autoCloseMenu$', () => {
+		const payload = true;
 		actions = hot('--a--', {
-			a: new SetAutoCloseMenu(true)
+			a: new SetAutoCloseMenu(payload)
 		})
+		const expectedResult = cold('--b--', {
+			b : new SetClickOutside(payload)
+		})
+		expect(menuAppEffects.autoCloseMenu$).toBeObservable(expectedResult);
 	})
 
 });

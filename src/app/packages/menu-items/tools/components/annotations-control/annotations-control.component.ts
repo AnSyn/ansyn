@@ -63,7 +63,6 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	}
 
 	openLineWidthSelection() {
-		// this.mode = undefined;
 		if (this.mode !== undefined) {
 			this.createInteraction(this.mode);
 		}

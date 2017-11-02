@@ -11,8 +11,16 @@ import {
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { CasesService } from '../services/cases.service';
+import { cloneDeep } from 'lodash';
+import * as config from '../../../../../assets/config/app.config.json';
+
 
 describe('CasesReducer', () => {
+
+	beforeEach(() => {
+		CasesService.defaultCase =	(<any>config).casesConfig.defaultCase;
+	});
 
 	it('CASE_SUCCESS action should add new case to state', () => {
 		let newCase: Case = {
@@ -38,9 +46,12 @@ describe('CasesReducer', () => {
 
 	it('SELECT_CASE action should set selectedCase from payload', () => {
 		const fakeCase = { id: 'fakeCaseId' } as Case;
-		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
+
+		let action: SelectCaseAction = new SelectCaseAction(cloneDeep(fakeCase));
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selectedCase).toEqual(fakeCase);
+		expect(result.selectedCase.id).toEqual(fakeCase.id);
+		expect(result.selectedCase.state.favoritesOverlays).toBeDefined();
+
 	});
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {

@@ -1,19 +1,24 @@
 import { layersConfig } from '@ansyn/menu-items/layers-manager';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';
 import { LayersManagerModule } from '../../layers-manager.module';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { TreeNode } from 'angular-tree-component';
 import { Observable } from 'rxjs/Observable';
-import { StoreModule } from '@ngrx/store';
-import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
+import { Store, StoreModule } from '@ngrx/store';
+import { ILayerState, layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
+import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
+import { CoreModule } from '@ansyn/core/core.module';
+import { Subject } from 'rxjs/Subject';
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;
 	let fixture: ComponentFixture<LayerTreeComponent>;
+	let store: Store<ILayerState>;
+	let handler: Subject<any>;
 
 	function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
 		flattenedArray.push(rootNode);
@@ -27,6 +32,7 @@ describe('LayerTreeComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				LayersManagerModule,
+				CoreModule,
 				HttpClientModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
@@ -36,10 +42,53 @@ describe('LayerTreeComponent', () => {
 			.compileComponents();
 	}));
 
+	beforeEach(inject([Store], (_store: Store<ILayerState>) => {
+		store = _store;
+		handler = new Subject();
+		spyOn(store, 'select').and.returnValue(handler);
+	}));
+
 	beforeEach(() => {
 		fixture = TestBed.createComponent(LayerTreeComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+	});
+
+
+
+	describe('Check onInit subscribers', () => {
+
+
+		it('listen to ILayerState changes', () => {
+			component.annotationLayerChecked = false;
+			handler.next({
+				displayAnnotationsLayer: true,
+				layers: [],
+				selectedLayers: []
+			});
+			expect(component.annotationLayerChecked).toBe(true);
+
+			handler.next({
+				displayAnnotationsLayer: false,
+				layers: [],
+				selectedLayers: []
+			});
+			expect(component.annotationLayerChecked).toBe(false);
+		});
+	})
+
+	it('annotation layer checkbox click - state: annotation layer disabled', () => {
+		spyOn(store, 'dispatch')
+		component.annotationLayerChecked = false;
+		component.annotationLayerClick({}, {});
+		expect(store.dispatch).toHaveBeenCalledWith(new ShowAnnotationsLayer({ update: true }));
+	});
+
+	it('annotation layer checkbox click - state: annotation layer enabled', () => {
+		spyOn(store, 'dispatch')
+		component.annotationLayerChecked = true;
+		component.annotationLayerClick({}, {});
+		expect(store.dispatch).toHaveBeenCalledWith(new HideAnnotationsLayer({ update: true }));
 	});
 
 	it('should create', () => {

@@ -27,6 +27,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	BackToWorldAction,
+	DrawPinPointAction,
 	PinPointModeTriggerAction,
 	SetFavoriteAction,
 	SetOverlaysNotInCaseAction
@@ -54,7 +55,6 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 
 
 @Injectable()

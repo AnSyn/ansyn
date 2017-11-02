@@ -20,6 +20,6 @@ import { AnsynModule } from './ansyn/ansyn.module';
 	bootstrap: [AppComponent]
 })
 
-export class AppModule {
+export class AppAnsynModule {
 
 }

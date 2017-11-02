@@ -14,6 +14,7 @@ import { first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/store-element';
 import { OverlaysEffects } from '../effects/overlays.effects';
 import { Store } from '@ngrx/store';

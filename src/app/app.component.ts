@@ -8,7 +8,7 @@ import '@ansyn/core/utils/clone-deep';
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.less']
 })
-export class AppComponent implements AfterViewInit {
+export class AppAnsynComponent implements AfterViewInit {
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {
 	}

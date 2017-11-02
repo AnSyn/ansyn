@@ -1,6 +1,6 @@
 import { EnumFilterMetadata, FilterMetadata } from '@ansyn/menu-items/filters';
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
+import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginModule } from '@ansyn/login/login.module';
 import { AnsynModule } from './ansyn/ansyn.module';
@@ -10,14 +10,15 @@ import { AnsynModule } from './ansyn/ansyn.module';
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true }
 	],
 	declarations: [
-		AppComponent,
+		AppAnsynComponent,
 	],
+	exports: [AppAnsynComponent],
 	imports: [
 		LoginModule,
 		AnsynModule,
 		AppRoutingModule
 	],
-	bootstrap: [AppComponent]
+	bootstrap: [AppAnsynComponent]
 })
 
 export class AppAnsynModule {

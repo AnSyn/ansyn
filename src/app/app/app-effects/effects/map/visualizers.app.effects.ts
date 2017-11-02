@@ -51,7 +51,10 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { SetAnnotationMode } from '../../../packages/menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	ShowOverlaysFootprintAction
+} from '../../../packages/menu-items/tools/actions/tools.actions';
 
 
 
@@ -149,13 +152,13 @@ export class VisualizersAppEffects {
 	 */
 	@Effect()
 	updateCaseFromTools$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
-		.map(toPayload)
+		.ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.mergeMap(([payload, mapState]: [OverlayDisplayMode, IMapState]) => {
+		.mergeMap(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
 			const mapsList = [...mapState.mapsList];
+			// @TODO this is reference --- not good - need to be changed
 			const activeMap = MapFacadeService.activeMap(mapState);
-			activeMap.data.overlayDisplayMode = payload;
+			activeMap.data.overlayDisplayMode = action.payload;
 			return [
 				new SetMapsDataActionStore({ mapsList }),
 				new DrawOverlaysOnMapTriggerAction()

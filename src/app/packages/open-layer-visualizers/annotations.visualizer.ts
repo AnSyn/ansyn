@@ -215,7 +215,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	removeSelectInteraction() {
-		console.log('remove interaction');
 		this._imap.mapObject.removeInteraction(this.selectInteraction);
 	}
 

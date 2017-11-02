@@ -21,6 +21,9 @@ const mockAnsynImageryContainer = MockComponent({
 	selector: 'ansyn-imagery-container',
 	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase', 'mapsAmount', 'isFavoriteOverlayDisplayed']
 });
+const mockAnnotationContextMenu = MockComponent({
+	selector: "ansyn-annotations-context-menu"
+});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
@@ -28,6 +31,8 @@ describe('ImageriesManagerComponent', () => {
 	let mapEffects: MapEffects;
 	let communicatorProvider: ImageryCommunicatorService;
 	let store: Store<IMapState>;
+
+
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -44,12 +49,12 @@ describe('ImageriesManagerComponent', () => {
 				ImageriesManagerComponent,
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
+				mockAnnotationContextMenu,
 				ImageryStatusComponent,
 				OverlaysStatusNotificationsComponent
 			],
 
-		})
-			.compileComponents();
+		}).compileComponents();
 	}));
 
 	beforeEach(inject([MapEffects, ImageryCommunicatorService, Store], (_mapEffects: MapEffects, _imageryCommunicatorService: ImageryCommunicatorService, _store: Store<IMapState>) => {
@@ -100,7 +105,7 @@ describe('ImageriesManagerComponent', () => {
 		spyOn(component, 'startPointerMoveProcess');
 		// component.maps.data
 		// I want to fake and observable and then call him and check if the function has been called
-		// I can dispathc the actions
+		// I can dispatch the actions
 		mapEffects.onComposeMapShadowMouse$ = Observable.create(observer => {
 			observer.next();
 		});

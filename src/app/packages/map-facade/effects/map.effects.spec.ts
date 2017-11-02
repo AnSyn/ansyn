@@ -58,7 +58,7 @@ describe('MapEffects', () => {
 
 
 		actions = hot('--a--', {a : action});
-		const expectedResult = cold('--b--',{b: action});
+		const expectedResult = cold('--b--', {b: action});
 		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
 
 	})

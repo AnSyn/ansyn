@@ -45,6 +45,7 @@ import {
 import { UpdateCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
 import { AnnotationData } from '../../../packages/map-facade/actions/map.actions';
 import GeoJSON from 'ol/format/geojson';
+import { IMapState, initialMapState, mapStateSelector } from '../../../packages/map-facade/reducers/map.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -54,6 +55,7 @@ describe('VisualizersAppEffects', () => {
 
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
+	let mapState: IMapState = cloneDeep(initialMapState);
 
 	const geoJsonDataAsString = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-8864905.04168913,4968343.241604401],[-7561221.649244596,4968343.241604401],[-7561221.649244596,5520348.311595516],[-8864905.04168913,5520348.311595516],[-8864905.04168913,4968343.241604401]]]},"properties":{"id":1509537610583,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-10928571.403085884,4456440.158943544],[-10523551.35427145,4456440.158943544],[-10523551.35427145,5345021.014580127],[-10928571.403085884,5345021.014580127],[-10928571.403085884,4456440.158943544]]]},"properties":{"id":1509537616256,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-11363070.980878033,6262825.420860147]},"properties":{"id":1509537618448,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Circle","data":{},"radius":940276.8116146456}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-10040630.493284997,5896798.762447442],[-8994697.493933458,6116608.3346863]]},"properties":{"id":1509537621288,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-LineString","data":{}}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-7214037.4120918205,6124373.010826077],[-6661961.022834513,5167945.174800512]]},"properties":{"id":1509537624378,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Arrow","data":{}}}]}';
 
@@ -115,7 +117,8 @@ describe('VisualizersAppEffects', () => {
 		caseState.selectedCase = selectedCase;
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, caseState],
-			[layersStateSelector, layersState]
+			[layersStateSelector, layersState],
+			[mapStateSelector, mapState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -471,13 +474,20 @@ describe('VisualizersAppEffects', () => {
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"', () => {
-		const updatedMapsList = [...selectedCase.state.maps.data];
+		mapState.mapsList = [...selectedCase.state.maps.data];
+		mapState.activeMapId = selectedCase.state.maps.activeMapId;
+		const updatedMapsList = cloneDeep(mapState.mapsList);
 		updatedMapsList[0].data.overlayDisplayMode = 'Hitmap';
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction('Hitmap') });
+
+		actions = hot('--a--', {
+			a: new ShowOverlaysFootprintAction('Hitmap')
+		});
+
 		const expectedResults = cold('--(ab)--', {
 			a: new SetMapsDataActionStore({ mapsList: updatedMapsList }),
 			b: new DrawOverlaysOnMapTriggerAction()
 		});
+
 		expect(visualizersAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
 	});
 

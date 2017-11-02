@@ -12,6 +12,8 @@ export interface IMapState {
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
+	pendingMapsCount: number; // number of maps to be opened
+	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
 
 export const initialMapState: IMapState = {
@@ -21,7 +23,9 @@ export const initialMapState: IMapState = {
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
 	activeMapId: null,
-	mapsList: []
+	mapsList: [],
+	pendingMapsCount: 0,
+	pendingOverlays: []
 };
 
 export const mapFeatureKey = 'map';
@@ -72,6 +76,23 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
 
+		case MapActionTypes.SET_PENDING_MAPS_COUNT:
+			return { ...state, pendingMapsCount: action.payload };
+
+		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
+			const currentCount = state.pendingMapsCount;
+			const newCount = currentCount === 0 ? currentCount : currentCount - 1;
+
+			return { ...state, pendingMapsCount: newCount };
+
+		case MapActionTypes.SET_PENDING_OVERLAYS:
+			return { ...state, pendingOverlays: action.payload };
+
+		case MapActionTypes.REMOVE_PENDING_OVERLAY:
+			const pendingOverlaysClone = state.pendingOverlays.slice();
+			pendingOverlaysClone.splice(pendingOverlaysClone.indexOf(action.payload), 1);
+
+			return { ...state, pendingOverlays: pendingOverlaysClone };
 		default:
 			return state;
 	}

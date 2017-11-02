@@ -45,37 +45,12 @@ export class FiltersEffects {
 					metadata.accumulateData(overlay[filter.modelName]);
 				});
 
-				metadata.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
-					if (!value.count) {
-						mapObj.delete(key);
-					}
-				});
+				metadata.postInitializeFilter({oldFiltersArray: oldFiltersArray, modelName: filter.modelName})
 
-				// Check if filters were previously deselected, and if so deselect them now
-				if (oldFiltersArray) {
-					const oldFilterArray = oldFiltersArray
-						.find(([oldFilterKey, oldFilter]: [Filter, FilterMetadata]) => oldFilterKey.modelName === filter.modelName);
-
-
-					if (oldFilterArray) {
-						const [oldFilterKey, oldFilter] = oldFilterArray;
-						const oldFilterFields = oldFilter.enumsFields;
-						const filterFields = metadata.enumsFields;
-
-						filterFields.forEach((value, key) => {
-							let isChecked = true;
-							if (oldFilterFields.has(key)) {
-								const oldFilter = oldFilterFields.get(key);
-								if (!oldFilter.isChecked) {
-									isChecked = false;
-								}
-							}
-							value.isChecked = isChecked;
-						});
-					}
-				}
-
-				if (!action.payload.facets.filters) {
+				const currentFilterInit = action.payload.facets.filters && 
+					action.payload.facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+					
+				if (!currentFilterInit) {
 					metadata.showAll();
 				}
 

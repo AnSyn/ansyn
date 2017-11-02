@@ -6,35 +6,81 @@ import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { isNil as _isNil } from 'lodash';
+import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import {
 	ContextEntityVisualizer,
 	ContextEntityVisualizerType
 } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, OverlaysActionTypes, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+
 
 @Injectable()
 export class ContextEntityAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name displayEntityFromCase$
+	 * @name displayEntityFromSelectedCase$
 	 * @ofType SelectCaseAction
 	 * @filter case has contextEntities
 	 */
-	@Effect({ dispatch: false })
-	displayEntityFromCase$: Observable<any> = this.actions$
+	@Effect()	
+	displayEntityFromSelectedCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => !_isNil(payload.state.contextEntities))
-		.do(({ payload }: SelectCaseAction) => {
+		.mergeMap(({ payload }: SelectCaseAction) => {
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);
 			});
+
+			const actions = [];
+
+			payload.state.contextEntities.forEach(contextEntity => {
+				const specialObject: OverlaySpecialObject = {
+					id: contextEntity.id,
+					date: contextEntity.date,
+					shape: 'star'
+				} as OverlaySpecialObject;
+				actions.push(new SetSpecialObjectsActionStore([specialObject]));
+			})
+
+			return actions;
+		});
+
+	/**
+ * @type Effect
+ * @name displayEntityFromUpdatedCase$
+ * @ofType UpdatetCaseAction
+ * @filter case has contextEntities
+ */
+	@Effect()
+	displayEntityFromUpdatedCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.UPDATE_CASE)
+		.filter(({ payload }: UpdateCaseAction) => !_isNil(payload.state.contextEntities))
+		.distinctUntilChanged((x: UpdateCaseAction, y: UpdateCaseAction) => _isEqual(x.payload.state.contextEntities, y.payload.state.contextEntities))
+		.mergeMap(({ payload }: UpdateCaseAction) => {
+			payload.state.maps.data.forEach((mapState: CaseMapState) => {
+				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
+				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);
+			});
+
+			const actions = [];
+
+			payload.state.contextEntities.forEach(contextEntity => {
+				const specialObject: OverlaySpecialObject = {
+					id: contextEntity.id,
+					date: contextEntity.date,
+					shape: 'star'
+				} as OverlaySpecialObject;
+				actions.push(new SetSpecialObjectsActionStore([specialObject]));
+			})
+
+			return actions;
 		});
 
 	/**
@@ -55,46 +101,9 @@ export class ContextEntityAppEffects {
 			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);
 		});
 
-	/**
-	 * @type Effect
-	 * @name displayEntityFromNewMap$
-	 * @ofType DisplayOverlayAction
-	 * @dependencies cases, map
-	 * @filter selected case has contextEntities
-	 */
-	@Effect({ dispatch: false })
-	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, caseState]: [DisplayOverlayAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
-		.map(([action, caseState, mapStore]: [DisplayOverlayAction, ICasesState, IMapState]) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : mapStore.activeMapId;
-			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, mapId);
-			const communicatorHandler = this.communicatorService.provide(mapId);
-			this.setContextOverlayDate(communicatorHandler, mapState.data.overlay.date);
-		});
-
-	/**
-	 * @type Effect
-	 * @name displayEntityTimeFromBackToWorld$
-	 * @ofType BackToWorldAction
-	 * @dependencies cases
-	 * @filter selected case has contextEntities
-	 */
-	@Effect({ dispatch: false })
-	displayEntityTimeFromBackToWorld$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, caseState]: [BackToWorldAction, ICasesState]) => !_isNil(caseState.selectedCase.state.contextEntities))
-		.map(([action, caseState]: [BackToWorldAction, ICasesState]) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : caseState.selectedCase.state.maps.activeMapId;
-			const communicatorHandler = this.communicatorService.provide(mapId);
-			this.setContextOverlayDate(communicatorHandler, null);
-		});
-
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected communicatorService: ImageryCommunicatorService) {
+		protected store$: Store<IAppState>,
+		protected communicatorService: ImageryCommunicatorService) {
 	}
 
 	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {
@@ -102,16 +111,8 @@ export class ContextEntityAppEffects {
 		if (communicatorHandler) {
 			const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
 			if (visualizer) {
-				visualizer.setReferenceDate(overlayDate);
 				visualizer.setEntities(contextEntities);
 			}
-		}
-	}
-
-	private setContextOverlayDate(communicatorHandler: CommunicatorEntity, overlayDate: Date) {
-		const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-		if (visualizer) {
-			visualizer.setReferenceDate(overlayDate);
 		}
 	}
 }

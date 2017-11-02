@@ -25,6 +25,7 @@ import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import {
 	IStatusBarState,

@@ -7,9 +7,9 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Case } from '@ansyn/core/models/case.model';
 import { AddMapInstanceAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 
@@ -117,20 +117,54 @@ describe('ContextEntityAppEffects', () => {
 		expect(contextEntityAppEffects).toBeTruthy();
 	});
 
-	it('displayEntityFromCase$ display context entity from selected case', () => {
+	it('displayEntityFromSelectedCase$ display context entity from selected case', () => {
 		const action = new SelectCaseAction(cases[0]);
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(contextEntityAppEffects.displayEntityFromCase$).toBeObservable(expectedResults);
+
+		const expectedResults = cold('--b--', { b: new SetSpecialObjectsActionStore([
+			{					
+				id: '1',
+				date: new Date('2015-04-17T03:55:12.129Z'),
+				shape: 'star'
+			}
+		]) });
+
+		expect(contextEntityAppEffects.displayEntityFromSelectedCase$).toBeObservable(expectedResults);
 		expect(visualizer.setEntities).toHaveBeenCalledTimes(3);
 	});
 
-	it('displayEntityFromCase$ DOESN\'T display context entity from selected case if context entity isn\'t provided', () => {
+	it('displayEntityFromSelectedCase$ DOESN\'T display context entity from selected case if context entity isn\'t provided', () => {
 		cases[0].state.contextEntities = null;
 		const action = new SelectCaseAction(cases[0]);
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('-');
-		expect(contextEntityAppEffects.displayEntityFromCase$).toBeObservable(expectedResults);
+		expect(contextEntityAppEffects.displayEntityFromSelectedCase$).toBeObservable(expectedResults);
+		expect(visualizer.setEntities).not.toHaveBeenCalled();
+	});
+
+	it('displayEntityFromUpdatedCase$ display context entity from updated case', () => {
+		cases[0].state.contextEntities = fakeContextEntities;		
+		const action = new UpdateCaseAction(cases[0]);
+		actions = hot('--a--', { a: action });
+
+		const expectedResults = cold('--b--', { b: new SetSpecialObjectsActionStore([
+			{					
+				id: '1',
+				date: new Date('2015-04-17T03:55:12.129Z'),
+				shape: 'star'
+			}
+		]) });
+
+		expect(contextEntityAppEffects.displayEntityFromUpdatedCase$).toBeObservable(expectedResults);
+		expect(visualizer.setEntities).toHaveBeenCalledTimes(3);
+	});
+
+	it('displayEntityFromUpdatedCase$ DOESN\'T display context entity from updated case if context entity isn\'t provided', () => {
+		cases[0].state.contextEntities = null;
+		const action = new UpdateCaseAction(cases[0]);
+		actions = hot('--a--', { a: action });
+		const expectedResults = cold('-');
+		expect(contextEntityAppEffects.displayEntityFromUpdatedCase$).toBeObservable(expectedResults);
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 
@@ -159,48 +193,6 @@ describe('ContextEntityAppEffects', () => {
 		});
 		const expectedResults = cold('-');
 		expect(contextEntityAppEffects.displayEntityFromNewMap$).toBeObservable(expectedResults);
-		expect(visualizer.setEntities).not.toHaveBeenCalled();
-	});
-
-	it('displayEntityTimeFromOverlay$ should display set overlay date to context visualizer', () => {
-		cases[0].state.contextEntities = fakeContextEntities;
-		spyOn(visualizer, 'setReferenceDate');
-		let fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true };
-		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery2' }) });
-		const expectedResults = cold('--b--', { b: undefined });
-		expect(contextEntityAppEffects.displayEntityTimeFromOverlay$).toBeObservable(expectedResults);
-		expect(visualizer.setReferenceDate).toHaveBeenCalled();
-		expect(visualizer.setEntities).not.toHaveBeenCalled();
-	});
-
-	it('displayEntityTimeFromOverlay$ should NOT display set overlay date to context visualizer', () => {
-		cases[0].state.contextEntities = null;
-		spyOn(visualizer, 'setReferenceDate');
-		let fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true };
-		actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery2' }) });
-		const expectedResults = cold('-');
-		expect(contextEntityAppEffects.displayEntityTimeFromOverlay$).toBeObservable(expectedResults);
-		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();
-		expect(visualizer.setEntities).not.toHaveBeenCalled();
-	});
-
-	it('displayEntityTimeFromBackToWorld$ should display set overlay date to context visualizer', () => {
-		cases[0].state.contextEntities = fakeContextEntities;
-		spyOn(visualizer, 'setReferenceDate');
-		actions = hot('--a--', { a: new BackToWorldAction({ mapId: 'imagery2' }) });
-		const expectedResults = cold('--b--', { b: undefined });
-		expect(contextEntityAppEffects.displayEntityTimeFromBackToWorld$).toBeObservable(expectedResults);
-		expect(visualizer.setReferenceDate).toHaveBeenCalled();
-		expect(visualizer.setEntities).not.toHaveBeenCalled();
-	});
-
-	it('displayEntityTimeFromBackToWorld$ should NOT display set overlay date to context visualizer', () => {
-		cases[0].state.contextEntities = null;
-		spyOn(visualizer, 'setReferenceDate');
-		actions = hot('--a--', { a: new BackToWorldAction({ mapId: 'imagery2' }) });
-		const expectedResults = cold('-');
-		expect(contextEntityAppEffects.displayEntityTimeFromBackToWorld$).toBeObservable(expectedResults);
-		expect(visualizer.setReferenceDate).not.toHaveBeenCalled();
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 });

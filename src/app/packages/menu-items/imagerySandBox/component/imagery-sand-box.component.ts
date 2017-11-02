@@ -140,7 +140,9 @@ export class ImagerySandBoxComponent implements OnInit {
 
 
 	public insertContextEntity() {
-		this.selectedCase.state.contextEntities = [];
+		const clonedCase = cloneDeep(this.selectedCase);
+
+		clonedCase.state.contextEntities = [];
 
 		const feature: GeoJSON.Feature<any> = {
 			'type': 'Feature',
@@ -170,12 +172,11 @@ export class ImagerySandBoxComponent implements OnInit {
 			}
 		};
 
-		this.selectedCase.state.contextEntities.push({
+		clonedCase.state.contextEntities.push({
 			id: '1',
 			date: new Date('2015-04-17T03:55:12.129Z'),
 			featureJson: feature
 		});
-		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
-		this.store.dispatch(new SelectCaseByIdAction(this.selectedCase.id));
+		this.store.dispatch(new UpdateCaseAction(clonedCase));
 	}
 }

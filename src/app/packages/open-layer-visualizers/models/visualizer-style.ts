@@ -23,7 +23,7 @@ export interface VisualizerStyle {
 		src: string;
 	};
 	geometry?: any;
-	label?: {
+	text?: {
 		font?: string,
 		fill?: Fill;
 		stroke?: Stroke,

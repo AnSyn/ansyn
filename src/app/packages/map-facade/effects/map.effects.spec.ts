@@ -9,10 +9,17 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { Overlay } from '../../core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	EnableMapGeoOptionsActionStore
+import { 
+	ActiveMapChangedAction, 
+	AnnotationContextMenuTriggerAction,	
+	EnableMapGeoOptionsActionStore, 
+	SetLayoutAction, 
+	SetPendingMapsCountAction ,
+	SetMapsDataActionStore,
+	AddMapInstanceAction,
+	DecreasePendingMapsCountAction,
+	RemoveMapInstanceAction,
+	SetLayoutSuccessAction
 } from '../actions/map.actions';
 
 describe('MapEffects', () => {
@@ -21,6 +28,11 @@ describe('MapEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let mapState: IMapState = cloneDeep(initialMapState);
+
+	const mapFacadeService: any = {
+		activeMap: (mapState: IMapState) => MapFacadeService.activeMap(mapState),
+		isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay)
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -83,6 +95,63 @@ describe('MapEffects', () => {
 				})
 			});
 			expect(mapEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onLayoutsChange$', () => {
+		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
+			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({'mapsList': <any>'Mock', 'activeMapId': 'imagery1' });
+			mapState.mapsList = <any> [
+				{ id: 'imagery1' },
+				{ id: 'imagery2' },
+			];
+
+			mapState.activeMapId = 'imagery1';
+
+			actions = hot('--a--', { a: new SetLayoutAction({'id': 'dfgdfg', 'description': 'string', 'mapsCount': 3 })});
+
+			const expectedResults = cold('--(bc)--', {
+				b: new SetPendingMapsCountAction(1),
+				c: new SetMapsDataActionStore({'mapsList': <any>'Mock', 'activeMapId': 'imagery1' })
+			});
+			expect(mapEffects.onLayoutsChange$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onMapCreatedDecreasePendingCount$', () => {
+		it('AddMapInstance should call DecreasePendingMapsCountAction', () => {
+			mapState.pendingMapsCount = 1;
+
+			actions = hot('--a--', { a: new AddMapInstanceAction({'currentCommunicatorId': '', 'communicatorsIds': ['']}) });
+
+			const expectedResults = cold('--b--', {
+				b: new DecreasePendingMapsCountAction()
+			});
+			expect(mapEffects.onMapCreatedDecreasePendingCount$).toBeObservable(expectedResults);
+		});
+
+		it('RemoveMapInstanceAction should call DecreasePendingMapsCountAction', () => {
+			mapState.pendingMapsCount = 1;
+			
+			actions = hot('--a--', { a: new RemoveMapInstanceAction({}) });
+
+			const expectedResults = cold('--b--', {
+				b: new DecreasePendingMapsCountAction()
+			});
+			expect(mapEffects.onMapCreatedDecreasePendingCount$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onMapPendingCountReachedZero$', () => {
+		it('onMapPendingCountReachedZero$ should call SetLayoutSuccessAction', () => {
+			mapState.pendingMapsCount = 0;
+			
+			actions = hot('--a--', { a: new DecreasePendingMapsCountAction() });
+
+			const expectedResults = cold('--b--', {
+				b: new SetLayoutSuccessAction()
+			});
+			expect(mapEffects.onMapPendingCountReachedZero$).toBeObservable(expectedResults);
 		});
 	});
 });

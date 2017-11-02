@@ -29,6 +29,7 @@ export const MapActionTypes = {
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',	
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_FAVORITE: 'SET_FAVORITE',
 	MESSAGE_RAISED: 'MESSAGE_RAISED',
@@ -43,7 +44,11 @@ export const MapActionTypes = {
 		PIN_POINT_MODE: 'PIN_POINT_MODE',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU'
-	}
+	},
+	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
+	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
+	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
+	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY'
 };
 
 export type MapActions = any;
@@ -221,6 +226,12 @@ export class SetLayoutAction implements Action {
 	}
 }
 
+export class SetLayoutSuccessAction implements Action {
+	type = MapActionTypes.SET_LAYOUT_SUCCESS;
+
+	constructor() {}
+}
+
 export class SetOverlaysNotInCaseAction implements Action {
 	type = MapActionTypes.SET_OVERLAYS_NOT_IN_CASE;
 
@@ -276,5 +287,32 @@ export class SetFavoriteAction implements Action {
 	type: string = MapActionTypes.SET_FAVORITE;
 
 	constructor(public payload?: string) { // overlayId
+	}
+}
+
+export class SetPendingMapsCountAction implements Action {
+	type: string = MapActionTypes.SET_PENDING_MAPS_COUNT;
+
+	constructor(public payload: number) {
+	}
+}
+
+export class DecreasePendingMapsCountAction implements Action {
+	type: string = MapActionTypes.DECREASE_PENDING_MAPS_COUNT;
+
+	constructor() { }
+}
+
+export class SetPendingOverlaysAction implements Action {
+	type: string = MapActionTypes.SET_PENDING_OVERLAYS;
+
+	constructor(public payload: string[]) {
+	}
+}
+
+export class RemovePendingOverlayAction implements Action {
+	type: string = MapActionTypes.REMOVE_PENDING_OVERLAY;
+
+	constructor(public payload: string) {
 	}
 }

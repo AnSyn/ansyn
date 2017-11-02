@@ -25,7 +25,7 @@ import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visuali
 import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 
 @NgModule({
@@ -106,7 +106,8 @@ import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shado
 			}
 		},
 		// Source provider for filters
-		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true }
+		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
+		{ provide: FilterMetadata, useClass: SliderFilterMetadata , multi: true }
 
 	]
 })

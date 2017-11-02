@@ -1,4 +1,3 @@
-import { Client, SearchResponse } from 'elasticsearch';
 import { Observable } from 'rxjs/Observable';
 import { BaseContextSourceProvider, Context, ContextCriteria } from '@ansyn/context/context.interface';
 import { ContextConfig, IContextConfig } from '@ansyn/context';

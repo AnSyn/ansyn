@@ -39,16 +39,13 @@
 		"@ngrx/effects": "^4.0.5",
 		"@ngrx/store": "^4.0.3",
 		"@turf/turf": "^4.7.3",
-
 		"@types/d3": "^4.9.0",
 		"@types/jasmine": "~2.5.53",
 		"@types/jasminewd2": "~2.0.2",
-		"@types/node": "^6.0.89",
 		"@types/lodash": "^4.14.77",
+		"@types/node": "^6.0.89",
 		"@types/rison": "0.0.6",
 		"@types/wellknown": "^0.5.0",
-		"typescript": "^2.5.2",
-
 		"angular-tree-component": "^3.7.2",
 		"angular2-uuid": "latest",
 		"ansyn-event-drops": "^0.4.11",
@@ -57,7 +54,6 @@
 		"crypto-js": "^3.1.9-1",
 		"d3": "4.7.0",
 		"debounce": "^1.0.0",
-		"elasticsearch": "^13.2.0",
 		"enhanced-resolve": "^3.3.0",
 		"flatpickr": "^4.0.6",
 		"lodash": "^4.17.4",
@@ -71,7 +67,7 @@
 		"zone.js": "^0.8.14"
 	},
 	"devDependencies": {
-		"@angular/cli": "^1.5.0-beta.1",
+		"@angular/cli": "1.5.0-rc.6",
 		"@angular/compiler-cli": "^4.3.0",
 		"@angular/language-service": "^4.3.0",
 		"@types/d3": "^4.9.0",
@@ -99,7 +95,7 @@
 		"replace": "^0.3.0",
 		"ts-node": "~3.2.0",
 		"tslint": "~5.3.2",
-		"typescript": "^2.5.2",
+		"typescript": ">=2.1.0 <2.4.0",
 		"webpack": "^3.6.0"
 	}
 }

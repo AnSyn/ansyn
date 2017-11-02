@@ -19,7 +19,7 @@ import * as config from '../../../../../assets/config/app.config.json';
 describe('CasesReducer', () => {
 
 	beforeEach(() => {
-		CasesService.defaultCase =	(<any>config).casesConfig.defaultCase;
+		CasesService.defaultCase = (<any>config).casesConfig.defaultCase;
 	});
 
 	it('CASE_SUCCESS action should add new case to state', () => {

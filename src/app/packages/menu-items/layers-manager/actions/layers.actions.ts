@@ -18,17 +18,18 @@ export const LayersActionTypes = {
 
 export type LayersActions = any;
 
-export class ShowAnnotationsLayer implements Action{
+export class ShowAnnotationsLayer implements Action {
 	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER;
 
 	constructor(public payload: { update: boolean }) {
 	}
 }
 
-export class HideAnnotationsLayer implements Action{
+export class HideAnnotationsLayer implements Action {
 	type = LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER;
 
-	constructor(public payload: {update: boolean}) {}
+	constructor(public payload: { update: boolean }) {
+	}
 }
 
 

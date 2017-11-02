@@ -7,13 +7,12 @@ import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { IAppState } from '../';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
-import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
+import { ContainerChangedTriggerAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { SetAutoCloseMenu } from '../../packages/menu-items/tools/actions/tools.actions';
-import { SetClickOutside } from '../../packages/menu/actions/menu.actions';
+import { SetAutoCloseMenu } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -102,7 +101,7 @@ describe('MenuAppEffects', () => {
 			a: new SetAutoCloseMenu(payload)
 		})
 		const expectedResult = cold('--b--', {
-			b : new SetClickOutside(payload)
+			b: new SetClickOutside(payload)
 		})
 		expect(menuAppEffects.autoCloseMenu$).toBeObservable(expectedResult);
 	})

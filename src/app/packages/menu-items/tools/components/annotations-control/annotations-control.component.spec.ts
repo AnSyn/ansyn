@@ -3,8 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
-import { noUndefined } from '@angular/compiler/src/util';
-import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
 
 
 describe('AnnotationsControlComponent', () => {
@@ -160,7 +159,10 @@ describe('AnnotationsControlComponent', () => {
 	it('open color input', () => {
 		const element = jasmine.createSpyObj(['getElementsByTagName'])
 		const closest = jasmine.createSpy('closest').and.returnValue(element);
-		element.getElementsByTagName.and.returnValue([{click : () => {}}]);
+		element.getElementsByTagName.and.returnValue([{
+			click: () => {
+			}
+		}]);
 		const $event = {
 			target: {
 				closest

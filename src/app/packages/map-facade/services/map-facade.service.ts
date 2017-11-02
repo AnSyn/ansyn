@@ -12,7 +12,6 @@ import {
 	PositionChangedAction,
 	RemoveMapInstanceAction
 } from '../actions';
-import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CaseMapState, defaultMapType, Overlay, Position } from '@ansyn/core';
 import { cloneDeep, range } from 'lodash';

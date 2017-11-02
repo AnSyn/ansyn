@@ -1,10 +1,17 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 
 import { Store, StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	ICasesState,
+	initialCasesState
+} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
+	AnnotationData,
 	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	DrawPinPointAction,
@@ -19,11 +26,25 @@ import {
 	SetFiltersAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { AddCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import {
+	AddCaseSuccessAction,
+	SelectCaseAction,
+	UpdateCaseAction
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { ShowOverlaysFootprintAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import {
+	AnnotationVisualizerAgentAction,
+	SetAnnotationMode,
+	ShowOverlaysFootprintAction
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FootprintPolylineVisualizerType } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	IMapState,
+	initialMapState,
+	mapFeatureKey,
+	MapReducer,
+	mapStateSelector
+} from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
@@ -31,21 +52,9 @@ import {
 	ILayerState,
 	initialLayersState,
 	layersStateSelector
-} from '../../../packages/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	casesStateSelector,
-	ICasesState,
-	initialCasesState
-} from '../../../packages/menu-items/cases/reducers/cases.reducer';
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
-import {
-	AnnotationVisualizerAgentAction,
-	SetAnnotationMode
-} from '../../../packages/menu-items/tools/actions/tools.actions';
-import { UpdateCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
-import { AnnotationData } from '../../../packages/map-facade/actions/map.actions';
 import GeoJSON from 'ol/format/geojson';
-import { IMapState, initialMapState, mapStateSelector } from '../../../packages/map-facade/reducers/map.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -147,22 +156,22 @@ describe('VisualizersAppEffects', () => {
 			layer.features.splice(featureIndex, 1);
 			newSelectCase.state.layers.annotationsLayer = JSON.stringify(layer);
 
-			const action =  new AnnotationData({
+			const action = new AnnotationData({
 				action: 'remove',
 				feature: {
 					values_: {
-						id : featureId
+						id: featureId
 					}
 				}
 			});
-			actions = hot('--a--', {a: action});
+			actions = hot('--a--', { a: action });
 
 			const expectedResult = cold('--(bc)--', {
 				b: new UpdateCaseAction(newSelectCase),
 				c: new AnnotationVisualizerAgentAction({
-						maps: 'all',
-						action: 'show'
-					})
+					maps: 'all',
+					action: 'show'
+				})
 			});
 
 			expect(visualizersAppEffects.annotationData$).toBeObservable(expectedResult);
@@ -174,7 +183,7 @@ describe('VisualizersAppEffects', () => {
 	describe("@Effect annotationVisualizerAgent$ ", () => {
 		let fakeVisualizer;
 		let fakeCommunicator;
-		const getGeoJsonValue = {"test": "works"};
+		const getGeoJsonValue = { "test": "works" };
 
 		beforeEach(() => {
 			fakeVisualizer = jasmine.createSpyObj([
@@ -350,7 +359,7 @@ describe('VisualizersAppEffects', () => {
 		});
 
 		it("check saveDrawing action ", () => {
-			const newCase  = cloneDeep(selectedCase);
+			const newCase = cloneDeep(selectedCase);
 			newCase.state.layers.annotationsLayer = (<any>getGeoJsonValue);
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'active',

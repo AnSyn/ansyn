@@ -41,7 +41,7 @@ export class EntitiesVisualizer implements IMapVisualizer {
 			defaultDataProjection: 'EPSG:4326',
 			featureProjection: 'EPSG:4326'
 		});
-		this.events = new Map <string, Subject<any>>();
+		this.events = new Map<string, Subject<any>>();
 		this._idToEntity = new Map<string, { feature: null, originalEntity: null }>();
 	}
 

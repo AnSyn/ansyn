@@ -10,7 +10,8 @@ import { cloneDeep } from 'lodash';
 import { Overlay } from '../../core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction,
+	ActiveMapChangedAction,
+	AnnotationContextMenuTriggerAction,
 	EnableMapGeoOptionsActionStore
 } from '../actions/map.actions';
 
@@ -57,8 +58,8 @@ describe('MapEffects', () => {
 		const action = new AnnotationContextMenuTriggerAction((<any>{}))
 
 
-		actions = hot('--a--', {a : action});
-		const expectedResult = cold('--b--', {b: action});
+		actions = hot('--a--', { a: action });
+		const expectedResult = cold('--b--', { b: action });
 		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
 
 	})

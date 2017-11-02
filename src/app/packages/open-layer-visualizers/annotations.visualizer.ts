@@ -118,7 +118,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.selectInteraction = new Select({
 			// event.originalEvent.which === 3 &&
-			condition: event => event.originalEvent.which === MouseClick.Right &&  event.type === 'pointerdown',
+			condition: event => event.originalEvent.which === MouseClick.Right && event.type === 'pointerdown',
 			layers: [this.layer]
 		})
 

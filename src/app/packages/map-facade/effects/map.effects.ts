@@ -4,7 +4,8 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction,
+	ActiveMapChangedAction,
+	AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
@@ -31,7 +32,7 @@ export class MapEffects {
 	 * @name annotationContextMenuTrigger$
 	 * @ofType AnnotationContextMenuTriggerAction
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$
 		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
 		.share();

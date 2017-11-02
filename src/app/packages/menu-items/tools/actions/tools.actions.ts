@@ -22,7 +22,7 @@ export const ToolsActionsTypes = {
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
 	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
-	FLAGS : {
+	FLAGS: {
 		ANNOTATION_OPEN: type('ANNOTATION_OPEN'),
 		ANNOTATION_CLOSE: type('ANNOTATION_CLOSE')
 	},
@@ -42,6 +42,7 @@ export class StartMouseShadow implements Action {
 
 export class SetAnnotationMode implements Action {
 	type = ToolsActionsTypes.STORE.SET_ANNOTATION_MODE;
+
 	constructor(public payload: string) {
 
 	}
@@ -178,6 +179,7 @@ export class SetAutoCloseMenu implements Action {
 
 export class AnnotationOpen implements Action {
 	type = ToolsActionsTypes.FLAGS.ANNOTATION_OPEN;
+
 	constructor(public payload: boolean) {
 
 	}
@@ -185,6 +187,7 @@ export class AnnotationOpen implements Action {
 
 export class AnnotationClose implements Action {
 	type = ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE;
+
 	constructor(public payload: boolean) {
 
 	}

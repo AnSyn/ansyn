@@ -34,7 +34,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged(isEqual);
 
 
-
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(private store: Store<any>) {
 

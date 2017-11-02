@@ -33,7 +33,6 @@ describe('ImageriesManagerComponent', () => {
 	let store: Store<IMapState>;
 
 
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			providers: [

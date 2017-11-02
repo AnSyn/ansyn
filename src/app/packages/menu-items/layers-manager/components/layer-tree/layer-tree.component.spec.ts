@@ -55,7 +55,6 @@ describe('LayerTreeComponent', () => {
 	});
 
 
-
 	describe('Check onInit subscribers', () => {
 
 

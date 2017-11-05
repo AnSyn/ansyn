@@ -7,7 +7,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
-import { CompositeMapShadowAction, StartMapShadowAction, StopMapShadowAction } from '@ansyn/map-facade';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
 import {
@@ -337,25 +336,21 @@ describe('MapAppEffects', () => {
 		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
 	});
 
-	describe('onCommunicatorChange$', () => {
+	describe('onCommunicatorChange$ ', () => {
 		it('display annotation layer', () => {
 			// here I am setting the data that will be returend after this.store select clue: reference
 			layerState.displayAnnotationsLayer = true;
-
-			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
-			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
-					currentCommunicatorId: 'imagery2',
-					communicatorsIds: communicators
-				})
-			});
-			const a = new CompositeMapShadowAction();
-			const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
-			const expectedResults = cold('--(ab)--', { a, b });
-			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
+		const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
+		actions = hot('--a--', {
+			a: new AddMapInstanceAction({
+				currentCommunicatorId: 'imagery2',
+				communicatorsIds: communicators
+			})
 		});
-
-		it('dont display annotation layer', () => {
+		const  b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
+		const expectedResults = cold('--b--', { b: b });
+		expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
+	});it('dont display annotation layer', () => {
 			// here I am setting the data that will be returend after this.store select clue: reference
 			layerState.displayAnnotationsLayer = false;
 

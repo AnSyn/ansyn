@@ -8,9 +8,6 @@ export const MapActionTypes = {
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	ADD_MAP_INSTANCE: 'ADD_MAP_INSTANCE',
 	REMOVE_MAP_INSTACNE: 'REMOVE_MAP_INSTACNE',
-	STOP_MAP_SHADOW_ACTIONS: 'STOP_MAP_SHADOW_ACTIONS',
-	START_MAP_SHADOW_ACTIONS: 'START_MAP_SHADOW_ACTIONS',
-	COMPOSITE_MAP_SHADOW_ACTION: 'COMPOSITE_MAP_SHADOW_ACTION',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
@@ -111,31 +108,10 @@ export class RemoveMapInstanceAction implements Action {
 	}
 }
 
-export class StopMapShadowAction implements Action {
-	type = MapActionTypes.STOP_MAP_SHADOW_ACTIONS;
-
-	constructor(public payload?: any) {
-	}
-}
-
-export class StartMapShadowAction implements Action {
-	type = MapActionTypes.START_MAP_SHADOW_ACTIONS;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class SynchronizeMapsAction implements Action {
 	type = MapActionTypes.SYNCHRONIZE_MAPS;
 
 	constructor(public payload: { mapId: string }) {
-	}
-}
-
-export class CompositeMapShadowAction implements Action {
-	type = MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION;
-
-	constructor(public payload?: any) {
 	}
 }
 

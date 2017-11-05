@@ -6,6 +6,7 @@ import { IMapPlugin } from '../model/imap-plugin';
 import { MapPosition } from '../model/map-position';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
+import { Observable } from 'rxjs/Observable';
 
 
 export class CommunicatorEntity {
@@ -14,7 +15,6 @@ export class CommunicatorEntity {
 
 	public positionChanged: EventEmitter<{ id: string, position: MapPosition }>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public pointerMove: EventEmitter<any>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
@@ -22,7 +22,6 @@ export class CommunicatorEntity {
 	constructor(private _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: MapPosition }>();
-		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
@@ -38,10 +37,6 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: MapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
-		}));
-
-		this._managerSubscriptions.push(this._manager.pointerMove.subscribe((latLon: Array<any>) => {
-			this.pointerMove.emit(latLon);
 		}));
 
 		this._managerSubscriptions.push(this._manager.singleClick.subscribe((event: any) => {
@@ -183,20 +178,9 @@ export class CommunicatorEntity {
 	// CommunicatorEntity methods end
 
 	// ======shadow mouse start
-	public setMouseShadowListener(enable: boolean) {
+	public setMouseShadowListener(enable: boolean): Observable<any> {
 		this.ActiveMap.setPointerMove(enable);
-	}
-
-	public startMouseShadowVectorLayer() {
-		(<any>this.ActiveMap).startMouseShadowVectorLayer();
-	}
-
-	public stopMouseShadowVectorLayer() {
-		(<any>this.ActiveMap).stopMouseShadowVectorLayer();
-	}
-
-	public drawShadowMouse(latLon) {
-		(<any>this.ActiveMap).drawShadowMouse(latLon);
+		return this.ActiveMap.getPointerMove();
 	}
 
 	// ======shadow mouse end

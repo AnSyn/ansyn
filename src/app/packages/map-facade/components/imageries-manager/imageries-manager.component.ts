@@ -38,10 +38,6 @@ export class ImageriesManagerComponent implements OnInit {
 		.distinctUntilChanged();
 
 	public selectedLayout;
-	public pointerMoveUnsubscriber: any;
-	public publisherMouseShadowMapId: string;
-	public listenersMouseShadowMapsId: Array<string>;
-	public shadowMouseProcess: boolean;
 
 	clickTimeout: number;
 	preventDbClick: boolean;
@@ -57,10 +53,7 @@ export class ImageriesManagerComponent implements OnInit {
 	mapsList: CaseMapState[];
 	activeMapId: string;
 
-	constructor(private mapEffects: MapEffects, private communicatorProvider: ImageryCommunicatorService, private store: Store<IMapState>) {
-		this.shadowMouseProcess = false;
-		this.publisherMouseShadowMapId = null;
-		this.listenersMouseShadowMapsId = [];
+	constructor(private mapEffects: MapEffects, private store: Store<IMapState>) {
 	}
 
 	ngOnInit() {
@@ -117,24 +110,9 @@ export class ImageriesManagerComponent implements OnInit {
 
 	setActiveMapId(_activeMapId) {
 		this.activeMapId = _activeMapId;
-		if (this.publisherMouseShadowMapId && this.publisherMouseShadowMapId !== this.activeMapId) {
-			this.changeShadowMouseTarget();
-		}
 	}
 
 	initListeners() {
-		this.mapEffects.onComposeMapShadowMouse$.subscribe(res => {
-			this.changeShadowMouseTarget();
-		});
-
-		this.mapEffects.onStopMapShadowMouse$.subscribe(res => {
-			this.stopPointerMoveProcess();
-		});
-
-		this.mapEffects.onStartMapShadowMouse$.subscribe(res => {
-			this.startPointerMoveProcess();
-		});
-
 		this.mapEffects.pinPointModeTriggerAction$.subscribe((_pinPointMode: boolean) => {
 			this.pinPointMode = _pinPointMode;
 		});
@@ -157,72 +135,6 @@ export class ImageriesManagerComponent implements OnInit {
 		if (this.activeMapId !== value) {
 			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
 		}
-	}
-
-	changeShadowMouseTarget() {
-		if (this.publisherMouseShadowMapId) {
-			this.stopPointerMoveProcess();
-			this.startPointerMoveProcess();
-		}
-	}
-
-
-	startPointerMoveProcess() {
-		if (this.selectedLayout.mapsCount < 2) {
-			return;
-		}
-		const communicators = this.communicatorProvider.communicators;
-
-		this.mapsList.forEach((mapItem: CaseMapState) => {
-			if (mapItem.id === this.activeMapId) {
-				this.publisherMouseShadowMapId = mapItem.id;
-				if (communicators[mapItem.id]) {
-					communicators[mapItem.id].setMouseShadowListener(true);
-				}
-				// @TODO add take until instead of unsubscribe ?? or not todo
-				this.pointerMoveUnsubscriber = communicators[mapItem.id].pointerMove.subscribe(latLon => {
-					this.drawShadowMouse(latLon);
-				});
-			} else {
-				if (communicators[mapItem.id]) {
-					communicators[mapItem.id].startMouseShadowVectorLayer();
-				}
-				this.listenersMouseShadowMapsId.push(mapItem.id);
-			}
-		});
-		this.shadowMouseProcess = true;
-	}
-
-	drawShadowMouse(latLon) {
-		const communicators = this.communicatorProvider.communicators;
-		this.listenersMouseShadowMapsId.forEach(id => {
-			if (communicators[id]) {
-				communicators[id].drawShadowMouse(latLon);
-			}
-		});
-	}
-
-	stopPointerMoveProcess() {
-		const communicators = this.communicatorProvider.communicators;
-
-		if (communicators[this.publisherMouseShadowMapId]) {
-			communicators[this.publisherMouseShadowMapId].setMouseShadowListener(false);
-		}
-		if (this.pointerMoveUnsubscriber) {
-			this.pointerMoveUnsubscriber.unsubscribe();
-		}
-
-		if (this.listenersMouseShadowMapsId.length > 0) {
-			this.listenersMouseShadowMapsId.forEach(id => {
-				if (communicators[id]) {
-					communicators[id].stopMouseShadowVectorLayer();
-				}
-			});
-			this.listenersMouseShadowMapsId = [];
-		}
-
-		this.publisherMouseShadowMapId = null;
-		this.shadowMouseProcess = false;
 	}
 
 	dbclick() {

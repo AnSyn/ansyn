@@ -1,13 +1,14 @@
 import { inject, TestBed } from '@angular/core/testing';
-
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import {
+	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
-	SetFiltersAction
+	SetFiltersAction,
+	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Case, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -29,6 +30,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { overlaysInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -42,7 +45,7 @@ describe('OverlaysAppEffects', () => {
 		provide: () => {
 		}
 	};
-
+	const overlaysState = overlaysInitialState;
 	const caseItem: Case = {
 		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
 		'state': {
@@ -96,9 +99,12 @@ describe('OverlaysAppEffects', () => {
 			providers: [
 				OverlaysAppEffects,
 				provideMockActions(() => actions),
-				OverlaysService,
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{ provide: OverlaysConfig, useValue: {} },
+				{
+					provide: OverlaysService,
+					useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
+				},
 				{
 					provide: CasesService,
 					useValue: {
@@ -118,15 +124,14 @@ describe('OverlaysAppEffects', () => {
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		toolsState = cloneDeep(toolsInitialState);
+		overlaysState.filteredOverlays = ['first', 'last'];
 
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, {
 				selectedCase: caseItem,
 				cases: [caseItem]
 			}],
-			[overlaysStateSelector, {
-				filteredOverlays: ['first', 'last']
-			}],
+			[overlaysStateSelector, overlaysState],
 			[toolsStateSelector, toolsState]
 		]);
 
@@ -174,6 +179,31 @@ describe('OverlaysAppEffects', () => {
 			})
 		});
 		expect(overlaysAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
+	});
+
+	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
+		it('should be moved forwards', () => {
+			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
+			(<any>overlaysService.getTimeStateByOverlay).and.callFake(() => getTimeStateByOverlayResult);
+			overlaysState.timelineState = { from: new Date(0), to: new Date(5000) };
+			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) } });
+			actions = hot('--a--', { a: action });
+			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
+			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
+		});
+
+		it('should be moved backwards', () => {
+			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
+			(<any>overlaysService.getTimeStateByOverlay).and.callFake(() => getTimeStateByOverlayResult);
+			overlaysState.timelineState = {
+				from: new Date(5000),
+				to: new Date(10000)
+			};
+
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(4000) } }) });
+			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
+			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
+		});
 	});
 
 });

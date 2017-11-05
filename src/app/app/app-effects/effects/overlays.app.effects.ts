@@ -2,6 +2,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
+	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
@@ -17,6 +18,8 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -143,6 +146,32 @@ export class OverlaysAppEffects {
 			return new DisplayOverlayFromStoreAction({ id: lastOverlayId });
 		})
 		.share();
+
+	/**
+	 * @type Effect
+	 * @name displayOverlaySetTimeline$
+	 * @description this method moves the timeline to active displayed overlay if exists in timeline
+	 * @ofType DisplayOverlayAction
+	 * @dependencies overlays, map
+	 * @filter isActiveMap && displayedOverlay && displayedOverlay is exeeding timelineState
+	 * @action SetTimelineStateAction
+	 */
+	@Effect()
+	displayOverlaySetTimeline$ = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
+			const displayedOverlay = action.payload.overlay;
+			const timelineState = overlays.timelineState;
+			const isActiveMap = !action.payload.mapId || map.activeMapId === action.payload.mapId;
+			return [isActiveMap, displayedOverlay, timelineState];
+		})
+		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
+			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
+		})
+		.map(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
+			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			return new SetTimelineStateAction({ state });
+		});
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,

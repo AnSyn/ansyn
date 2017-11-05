@@ -8,14 +8,12 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
 	RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction,
-	SetTimelineStateAction
+	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
 import { OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
-import { casesFeatureKey, CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -24,15 +22,15 @@ import { IOverlaysConfig } from '../models/overlays.config';
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+	public fetch(fetchParams: IFetchParams): any {
 		return Observable.empty();
 	}
 
-	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
+	public getStartDateViaLimitFasets(params: { facets, limit, region }): any {
 		return Observable.empty();
 	};
 
-	public getById(id: string): Observable<Overlay> {
+	public getById(id: string): any {
 		return Observable.empty();
 	};
 }
@@ -65,7 +63,7 @@ describe('Overlays Effects ', () => {
 
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
-			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer, [casesFeatureKey]: CasesReducer })
+			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 		],
 		providers: [
 			OverlaysEffects, {
@@ -125,32 +123,6 @@ describe('Overlays Effects ', () => {
 		});
 		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);
 
-	});
-
-	describe('displayOverlaySetTimeline$ should have been dispatch when overlay is displaying on active map, and timeline should be moved', () => {
-		it('should be moved forwards', () => {
-			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
-			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
-			const timelineState = { from: new Date(0), to: new Date(5000) };
-			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
-			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) } });
-			actions = hot('--a--', { a: action });
-			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
-			expect(overlaysEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
-		});
-
-		it('should be moved backwards', () => {
-			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
-			overlaysService.getTimeStateByOverlay.and.callFake(() => getTimeStateByOverlayResult);
-			const timelineState = {
-				from: new Date(5000),
-				to: new Date(10000)
-			};
-			store.dispatch(new SetTimelineStateAction({ state: timelineState }));
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(4000) } }) });
-			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
-			expect(overlaysEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
-		});
 	});
 
 	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {

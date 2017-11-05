@@ -75,9 +75,7 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
-import { MapSingleClickAction } from '@ansyn/map-facade/actions/map.actions';
-import { StartMouseShadow } from '@ansyn/packages/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import 'rxjs/add/observable/fromPromise';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -390,14 +388,14 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onAddCommunicatorShowPinPoint$
+	 * @name onAddCommunicatorShowVisualizers$
 	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
 	 * @dependencies cases, statusBar
 	 * @filter There is a pinPointIndicator or pinPointSearch
 	 * @actions DrawPinPointAction?, StartMouseShadow?
 	 */
 	@Effect()
-	onAddCommunicatorShowVisualizer$: Observable<any> = this.actions$
+	onAddCommunicatorShowVisualizers$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(
 			this.store$.select(casesStateSelector),

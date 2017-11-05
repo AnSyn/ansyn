@@ -1,6 +1,7 @@
 import { IMap, MapPosition } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
+import { Observable } from 'rxjs/Observable';
 
 export class CesiumMap implements IMap {
 	static mapType = 'cesium';
@@ -8,6 +9,9 @@ export class CesiumMap implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
+	singleClick: EventEmitter<any> = new EventEmitter<any>();
+	contextMenu: EventEmitter<any> = new EventEmitter<any>();
+
 	mapType: string;
 	mapObject: any;
 
@@ -67,7 +71,7 @@ export class CesiumMap implements IMap {
 	}
 
 	getPointerMove() {
-		throw new Error('Method not implemented.');
+		return new Observable();
 	}
 
 	removeSingleClickEvent() {

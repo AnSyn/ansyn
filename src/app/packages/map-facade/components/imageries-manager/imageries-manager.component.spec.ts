@@ -114,49 +114,6 @@ describe('ImageriesManagerComponent', () => {
 		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery2');
 	}));
 
-	it('activate shadow mouse', () => {
-		// spyOn(communicatorProvider,'communicators');
-		component.startPointerMoveProcess();
-
-		expect(communicatorProvider.communicators.imagery1).toBeTruthy();
-
-		expect(component.listenersMouseShadowMapsId.length).toBe(1);
-
-		expect(communicatorProvider.communicators.imagery1
-			.setMouseShadowListener).toHaveBeenCalled();
-
-		expect(communicatorProvider.communicators.imagery2
-			.startMouseShadowVectorLayer).toHaveBeenCalled();
-
-		expect(component.shadowMouseProcess).toBe(true);
-
-
-	});
-
-	it('draw shadow mouse', () => {
-		const latLon = [10, 10];
-		component.listenersMouseShadowMapsId = ['imagery2'];
-		component.drawShadowMouse((latLon));
-		expect(communicatorProvider.communicators.imagery2.drawShadowMouse).toHaveBeenCalledWith(latLon);
-	});
-
-	it('stop shadow mouse listeners', () => {
-		component.startPointerMoveProcess();
-
-		expect(component.pointerMoveUnsubscriber).toBeTruthy();
-		spyOn(component.pointerMoveUnsubscriber, 'unsubscribe');
-		component.stopPointerMoveProcess();
-
-		expect(communicatorProvider.communicators.imagery1.setMouseShadowListener).toHaveBeenCalled();
-		expect(component.pointerMoveUnsubscriber.unsubscribe).toHaveBeenCalled();
-		expect(communicatorProvider.communicators.imagery2.stopMouseShadowVectorLayer).toHaveBeenCalled();
-
-		expect(component.listenersMouseShadowMapsId.length).toBe(0);
-		expect(component.publisherMouseShadowMapId).toBe(null);
-		expect(component.shadowMouseProcess).toBe(false);
-
-
-	});
 
 	it('change selected layout to \'layout1\' and make sure \'ol-rotate\' style updates', () => {
 		const element = document.createElement('div');

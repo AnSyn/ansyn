@@ -22,6 +22,9 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 
+script:
+  - npm run echo
+
 cache:
   yarn: true
   directories:

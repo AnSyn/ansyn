@@ -12,6 +12,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	markups: any[] = [];
 
+	protected disableCache = true;
+
 	constructor(style: Partial<VisualizerStateStyle>) {
 		super(FootprintPolylineVisualizerType, style);
 
@@ -27,15 +29,14 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				stroke: {
 					width: this.getStrokeWidth.bind(this),
 					color: this.getStrokeColor.bind(this)
-				}
+				},
+				shadow: this.getShadow.bind(this)
 			},
 			hover: {
 				zIndex: 4,
-				fill: {
-					color: 'rgba(255, 255, 255, 0.4)'
-				},
+				fill: { color: 'rgba(255, 255, 255, 0.4)' },
 				stroke: {
-					width: 5,
+					width: (feature) => this.getStrokeWidth(feature, 5),
 					color: (feature) => this.getStrokeColor(feature, '#9524ad')
 				}
 			}
@@ -65,11 +66,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private getStrokeColor(feature: Feature, defaultColor: string = '#d393e1') {
-		const { isFavorites, isActive, isDisplayed } = this.propsByFeature(feature);
-
-		if (isFavorites) {
-			return 'yellow';
-		}
+		const { isActive } = this.propsByFeature(feature);
 
 		if (isActive) {
 			return '#27b2cf';
@@ -78,14 +75,31 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return defaultColor;
 	}
 
-	private getStrokeWidth(feature: Feature) {
-		const { isActive, isDisplayed } = this.propsByFeature(feature);
+	private getShadow(feature: Feature) {
+		const { isFavorites } = this.propsByFeature(feature);
+
+		if (!isFavorites) {
+			return;
+		}
+
+		return {
+			width: 5,
+			color: 'yellow'
+		};
+	}
+
+	private getStrokeWidth(feature: Feature, defaultStroke = 3) {
+		const { isActive, isDisplayed, isFavorites } = this.propsByFeature(feature);
+
+		if (isFavorites) {
+			return 3;
+		}
 
 		if (isActive || isDisplayed) {
 			return 5;
 		}
 
-		return 3;
+		return defaultStroke;
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {

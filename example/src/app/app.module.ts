@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { OverlayCustomProviderService } from './custom-providers/overlay-custom-provider.service';
-import { CustomMapAppEffect } from './custom-effects/map.app.effects';
+import { CustomMapAppEffect } from './custom-effects/custom-map.app.effects';
 import { AppAnsynModule, BaseOverlaySourceProvider, MapAppEffects } from 'ansyn';
 
 @NgModule({

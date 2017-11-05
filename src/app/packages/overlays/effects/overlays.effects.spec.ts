@@ -16,7 +16,6 @@ import { OverlaysEffects } from './overlays.effects';
 import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
 import { OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
 import { casesFeatureKey, CasesReducer } from '../../menu-items/cases/reducers/cases.reducer';
-import { IAppState } from '../../../app-reducers/app-reducers.module';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -62,7 +61,7 @@ describe('Overlays Effects ', () => {
 		}
 	];
 
-	let store: Store<IAppState>;
+	let store: Store<any>;
 
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [

@@ -21,10 +21,10 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 	@ViewChild('cesiumMap') mapElement: ElementRef;
 
 	private _map: CesiumMap;
-	public mapCreated: EventEmitter<IMap<any>>;
+	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
-		this.mapCreated = new EventEmitter<IMap<any>>();
+		this.mapCreated = new EventEmitter<IMap>();
 	}
 
 	createMap(layers: any) {

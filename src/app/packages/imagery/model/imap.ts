@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { MapPosition } from './map-position';
 
-export interface IMap<T> {
+export interface IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;

@@ -85,7 +85,7 @@ export class CommunicatorEntity {
 		this._manager.loadInitialMapSource(extent);
 	}
 
-	public get ActiveMap(): IMap<any> {
+	public get ActiveMap(): IMap {
 		if (this._manager) {
 			return this._manager.ActiveMap;
 		}

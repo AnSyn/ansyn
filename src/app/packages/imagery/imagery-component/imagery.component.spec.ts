@@ -5,7 +5,7 @@ import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
-import { VisualizersConfig } from '../../core/tokens/visualizers-config.token';
+import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 class SourceProviderMock1 implements BaseMapSourceProvider {
 	mapType = 'mapType1';

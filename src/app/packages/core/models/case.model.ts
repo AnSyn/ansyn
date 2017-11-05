@@ -1,7 +1,7 @@
 import { Position } from './position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
-import { IVisualizerEntity } from '../../imagery/model/imap-visualizer';
+import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 
 export interface Case {
 	readonly id?: string;

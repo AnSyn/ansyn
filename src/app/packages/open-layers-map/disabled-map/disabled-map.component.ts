@@ -28,10 +28,10 @@ export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 	@ViewChild('olMap') mapElement: ElementRef;
 
 	private _map: OpenLayersDisabledMap;
-	public mapCreated: EventEmitter<IMap<any>>;
+	public mapCreated: EventEmitter<IMap>;
 
 	constructor() {
-		this.mapCreated = new EventEmitter<IMap<any>>();
+		this.mapCreated = new EventEmitter<IMap>();
 	}
 
 	ngOnInit(): void {

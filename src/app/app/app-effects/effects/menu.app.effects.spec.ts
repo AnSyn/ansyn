@@ -99,11 +99,11 @@ describe('MenuAppEffects', () => {
 		const payload = true;
 		actions = hot('--a--', {
 			a: new SetAutoCloseMenu(payload)
-		})
+		});
 		const expectedResult = cold('--b--', {
 			b: new SetClickOutside(payload)
-		})
+		});
 		expect(menuAppEffects.autoCloseMenu$).toBeObservable(expectedResult);
-	})
+	});
 
 });

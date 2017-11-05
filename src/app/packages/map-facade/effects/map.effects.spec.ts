@@ -55,14 +55,14 @@ describe('MapEffects', () => {
 
 	it('check that the action annotationContextMenuTrigger$ was triggerd', () => {
 
-		const action = new AnnotationContextMenuTriggerAction((<any>{}))
+		const action = new AnnotationContextMenuTriggerAction((<any>{}));
 
 
 		actions = hot('--a--', { a: action });
 		const expectedResult = cold('--b--', { b: action });
 		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
 
-	})
+	});
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {

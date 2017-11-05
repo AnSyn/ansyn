@@ -64,7 +64,7 @@ describe('AnnotationsControlComponent', () => {
 	it('Function setModeStyle', () => {
 		component.setModeStyle('value');
 		expect(component.mode).toBe('value');
-	})
+	});
 
 	it('close line width selection', () => {
 		spyOn(component.lineWidthSelection.nativeElement, 'blur');
@@ -128,8 +128,8 @@ describe('AnnotationsControlComponent', () => {
 			component.mode = undefined;
 			component.toggleColorSelection($event);
 			expect(component.createInteraction).not.toHaveBeenCalled();
-		})
-	})
+		});
+	});
 
 	it('createInteraction', () => {
 		component.mode = undefined;
@@ -153,7 +153,7 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('open color input', () => {
-		const element = jasmine.createSpyObj(['getElementsByTagName'])
+		const element = jasmine.createSpyObj(['getElementsByTagName']);
 		const closest = jasmine.createSpy('closest').and.returnValue(element);
 		element.getElementsByTagName.and.returnValue([{
 			click: () => {
@@ -200,6 +200,6 @@ describe('AnnotationsControlComponent', () => {
 		});
 		component.ngOnDestroy();
 		expect(store.dispatch).toHaveBeenCalledWith(action);
-	})
+	});
 
 });

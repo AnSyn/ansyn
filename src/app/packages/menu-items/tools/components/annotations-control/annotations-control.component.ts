@@ -59,7 +59,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 			.distinctUntilChanged()
 			.subscribe(value => {
 				this.setModeStyle(value);
-			})
+			});
 	}
 
 	openLineWidthSelection() {

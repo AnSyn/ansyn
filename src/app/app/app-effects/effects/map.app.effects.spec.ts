@@ -371,7 +371,7 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});
 
-	})
+	});
 
 	it('onAddCommunicatorShowPinPoint$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);

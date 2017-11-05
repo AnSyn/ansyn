@@ -21,7 +21,7 @@ import {
 	ICasesState,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -162,7 +162,7 @@ describe('LayersAppEffects', () => {
 
 		afterEach(() => {
 			caseState.selectedCase = <Case> {};
-		})
+		});
 
 	});
 

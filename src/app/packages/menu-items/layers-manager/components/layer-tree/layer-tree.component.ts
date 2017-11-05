@@ -42,7 +42,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
 			.subscribe(result => {
 				this.annotationLayerChecked = result;
-			})
+			});
 	}
 
 	ngAfterViewInit() {
@@ -52,9 +52,9 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 	annotationLayerClick($event, data) {
 		this.annotationLayerChecked = !this.annotationLayerChecked;
 		if (this.annotationLayerChecked) {
-			this.store.dispatch(new ShowAnnotationsLayer({ update: true }))
+			this.store.dispatch(new ShowAnnotationsLayer({ update: true }));
 		} else {
-			this.store.dispatch(new HideAnnotationsLayer({ update: true }))
+			this.store.dispatch(new HideAnnotationsLayer({ update: true }));
 		}
 	}
 

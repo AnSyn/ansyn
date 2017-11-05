@@ -14,7 +14,12 @@ import { Case, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
@@ -31,7 +36,6 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { overlaysInitialState } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

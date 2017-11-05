@@ -1,26 +1,26 @@
-import { deepMerge } from './deep-merge'
+import { deepMerge } from './deep-merge';
 
 describe('deepmerge function', () => {
 	let obj1, obj2;
 
 	beforeEach(() => {
 		obj1 = {
-			"temp": "temp",
-			"arr": [1, 2],
-			"arr2": [1, 2],
-			"obj": {
-				"value1": "value1",
-				"value2": "value2"
+			'temp': 'temp',
+			'arr': [1, 2],
+			'arr2': [1, 2],
+			'obj': {
+				'value1': 'value1',
+				'value2': 'value2'
 			}
-		}
+		};
 		obj2 = {
-			"temp": "temp",
-			"arr": [1],
-			"obj": {
-				"value1": "value",
-				"value3": "value3"
+			'temp': 'temp',
+			'arr': [1],
+			'obj': {
+				'value1': 'value',
+				'value3': 'value3'
 			}
-		}
+		};
 	});
 
 	it('check deep merge with merge', () => {

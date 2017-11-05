@@ -140,17 +140,17 @@ describe('VisualizersAppEffects', () => {
 	}));
 
 	describe('@Effect annotationData$', () => {
-		it("remove feature from the annotationLayer", () => {
+		it('remove feature from the annotationLayer', () => {
 			// const geoJsonData = Json.parse(geoJsonDataAsString);
 			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
-			const featureId = 1509537616256
+			const featureId = 1509537616256;
 
 			const newSelectCase = cloneDeep(selectedCase);
 			const layer = JSON.parse(geoJsonDataAsString);
 			const geoJsonFormat = new GeoJSON();
 			const featureIndex = layer.features.findIndex(featureString => {
 				const feature = geoJsonFormat.readFeature(featureString);
-				return feature.values_.id === featureId
+				return feature.values_.id === featureId;
 			});
 
 			layer.features.splice(featureIndex, 1);
@@ -176,14 +176,14 @@ describe('VisualizersAppEffects', () => {
 
 			expect(visualizersAppEffects.annotationData$).toBeObservable(expectedResult);
 
-		})
+		});
 
 	});
 
-	describe("@Effect annotationVisualizerAgent$ ", () => {
+	describe('@Effect annotationVisualizerAgent$ ', () => {
 		let fakeVisualizer;
 		let fakeCommunicator;
-		const getGeoJsonValue = { "test": "works" };
+		const getGeoJsonValue = { 'test': 'works' };
 
 		beforeEach(() => {
 			fakeVisualizer = jasmine.createSpyObj([
@@ -233,7 +233,7 @@ describe('VisualizersAppEffects', () => {
 			});
 		});
 
-		it("check addLayer action", () => {
+		it('check addLayer action', () => {
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
 				action: 'addLayer',
@@ -246,7 +246,7 @@ describe('VisualizersAppEffects', () => {
 			expect(fakeVisualizer.addLayer).toHaveBeenCalled();
 		});
 
-		it("check show action", () => {
+		it('check show action', () => {
 			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
@@ -283,7 +283,7 @@ describe('VisualizersAppEffects', () => {
 				} else {
 					expect(fakeVisualizer[item.func]).toHaveBeenCalled();
 				}
-			})
+			});
 		});
 
 		it('check remove interaction', () => {
@@ -302,7 +302,7 @@ describe('VisualizersAppEffects', () => {
 			{ type: 'changeLine', func: 'changeLine' },
 			{ type: 'changeStrokeColor', func: 'changeStroke' },
 			{ type: 'changeFillColor', func: 'changeFill' }
-		]
+		];
 
 		testChangesActions.forEach(item => {
 			const value = 'temp';
@@ -316,7 +316,7 @@ describe('VisualizersAppEffects', () => {
 				expect(visualizersAppEffects.annotationVisualizerAgent$).toBeObservable(cold('-'));
 
 				expect(fakeVisualizer[item.func]).toHaveBeenCalledWith(value);
-			})
+			});
 		});
 
 		it('check refreshDrawing layer', () => {
@@ -358,7 +358,7 @@ describe('VisualizersAppEffects', () => {
 			expect(fakeVisualizer.removeLayer).toHaveBeenCalled();
 		});
 
-		it("check saveDrawing action ", () => {
+		it('check saveDrawing action ', () => {
 			const newCase = cloneDeep(selectedCase);
 			newCase.state.layers.annotationsLayer = (<any>getGeoJsonValue);
 			const action = new AnnotationVisualizerAgentAction({

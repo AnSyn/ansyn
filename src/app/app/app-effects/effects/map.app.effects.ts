@@ -408,7 +408,7 @@ export class MapAppEffects {
 				actionResults.push(new AnnotationVisualizerAgentAction({
 					maps: 'all',
 					action: 'show',
-				}))
+				}));
 			}
 
 			return actionResults;

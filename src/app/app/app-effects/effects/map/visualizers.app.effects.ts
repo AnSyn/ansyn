@@ -54,7 +54,7 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 export class VisualizersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
 		.pluck<ICasesState, Case>('selectedCase')
-		.map(_cloneDeep)
+		.map(_cloneDeep);
 
 	/**
 	 * @type Effect
@@ -266,11 +266,11 @@ export class VisualizersAppEffects {
 			// @TODO move the remove to a function
 			const featureIndex = annotationsLayer.features.findIndex(featureString => {
 				const feature = geoJsonFormat.readFeature(featureString);
-				return feature.values_.id === action.payload.feature.values_.id
+				return feature.values_.id === action.payload.feature.values_.id;
 			});
 
 			switch (action.payload.action) {
-				case "remove":
+				case 'remove':
 					annotationsLayer.features.splice(featureIndex, 1);
 
 					selectedCase.state = {
@@ -278,7 +278,7 @@ export class VisualizersAppEffects {
 						layers: {
 							...selectedCase.state.layers, annotationsLayer: JSON.stringify(annotationsLayer)
 						}
-					}
+					};
 					break;
 			}
 
@@ -288,10 +288,10 @@ export class VisualizersAppEffects {
 					maps: 'all',
 					action: 'show'
 				})
-			]
+			];
 
 
-		})
+		});
 
 	/**
 	 * @type Effect
@@ -405,7 +405,7 @@ export class VisualizersAppEffects {
 			return [
 				new UpdateCaseAction(result.selectedCase),
 				new SetAnnotationMode(undefined)
-			]
+			];
 		});
 
 
@@ -455,24 +455,25 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (!communicator) {
 			return;
-		}const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
-			if (!gotoVisualizer) {
-				return;
-			}
-			if (gotoExpand) {
-				const gotoPoint: GeoJSON.Point = {
-					type: 'Point',
-					coordinates: point
-				};
-				const gotoFeatureJson: GeoJSON.Feature<any> = {
-					type: 'Feature',
-					geometry: gotoPoint,
-					properties: {}
-				};
-				gotoVisualizer.clearEntities();
-				gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-			} else {
-				gotoVisualizer.clearEntities();
+		}
+		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+		if (!gotoVisualizer) {
+			return;
+		}
+		if (gotoExpand) {
+			const gotoPoint: GeoJSON.Point = {
+				type: 'Point',
+				coordinates: point
+			};
+			const gotoFeatureJson: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: gotoPoint,
+				properties: {}
+			};
+			gotoVisualizer.clearEntities();
+			gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
+		} else {
+			gotoVisualizer.clearEntities();
 
 		}
 	}

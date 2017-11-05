@@ -93,7 +93,7 @@ export class ToolsAppEffects {
 					result.push(new AnnotationVisualizerAgentAction({
 						action: 'show',
 						maps: 'all'
-					}))
+					}));
 				}
 				// if the annotation menu is open and we switched active map
 				// and the layer is disabled we need to switch the annotation view to
@@ -102,11 +102,11 @@ export class ToolsAppEffects {
 					result.push(new AnnotationVisualizerAgentAction({
 						action: 'show',
 						maps: 'active'
-					}))
+					}));
 					result.push(new AnnotationVisualizerAgentAction({
 						action: 'removeLayer',
 						maps: 'others'
-					}))
+					}));
 				}
 				return result;
 			}

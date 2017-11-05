@@ -9,6 +9,7 @@ import { LoginConfig } from '@ansyn/login';
 import { enableProdMode } from '@angular/core';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
+import { VisualizersConfig } from '../../packages/core/tokens/visualizers-config.token';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -53,6 +54,10 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: mapFacadeConfig,
 			useValue: conf.mapFacadeConfig
+		},
+		{
+			provide: VisualizersConfig,
+			useValue: conf.visualizersConfig
 		}
 	];
 };

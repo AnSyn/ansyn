@@ -86,7 +86,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		// send event to the store that saying the annotation option is enabled
 		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
 		if (this.userAnnotationsToolOpen) {
-			this.store.dispatch(new AnnotationOpen(true))
+			this.store.dispatch(new AnnotationOpen(true));
 			this.store.dispatch(new SetAutoCloseMenu(false));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				action: 'show',

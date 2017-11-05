@@ -8,7 +8,7 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
 
-describe("AnnotationContextMenuComponent", () => {
+describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	let de: DebugElement;
@@ -35,7 +35,7 @@ describe("AnnotationContextMenuComponent", () => {
 	});
 
 	beforeEach(inject([Store], (_store: Store<IMapState>) => {
-		store = _store
+		store = _store;
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -52,9 +52,9 @@ describe("AnnotationContextMenuComponent", () => {
 		});
 
 		const tests = [
-			{ type: "Circle", result: "top:100px;left:100px;width:100px;height:100px;" },
-			{ type: "Box", result: "top:98px;left:98px;width:102px;height:101px;" },
-			{ type: "Point", result: "top:88px;left:88px;width:122px;height:122px;" }
+			{ type: 'Circle', result: 'top:100px;left:100px;width:100px;height:100px;' },
+			{ type: 'Box', result: 'top:98px;left:98px;width:102px;height:101px;' },
+			{ type: 'Point', result: 'top:88px;left:88px;width:122px;height:122px;' }
 		];
 
 		tests.forEach(item => {
@@ -92,7 +92,7 @@ describe("AnnotationContextMenuComponent", () => {
 		expect(store.dispatch).toHaveBeenCalledTimes(1);
 		expect(component.host.nativeElement.setAttribute).toHaveBeenCalledWith('style', '');
 
-	})
+	});
 
 
 });

@@ -234,15 +234,15 @@ describe('LayersReducer', () => {
 		expect(result.selectedLayers).toEqual([]);
 	});
 
-	it("SHOW_ANNOTATION_LAYER", () => {
+	it('SHOW_ANNOTATION_LAYER', () => {
 		const action = new ShowAnnotationsLayer({ update: true });
 		const result: ILayerState = LayersReducer(initialLayersState, action);
 		expect(result.displayAnnotationsLayer).toBe(true);
-	})
+	});
 
-	it("HIDE_ANNOTATION_LAYER", () => {
+	it('HIDE_ANNOTATION_LAYER', () => {
 		const action = new HideAnnotationsLayer({ update: true });
 		const result: ILayerState = LayersReducer(initialLayersState, action);
 		expect(result.displayAnnotationsLayer).toBe(false);
-	})
+	});
 });

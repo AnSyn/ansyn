@@ -18,7 +18,11 @@ fi
 
 echo "start deploying version $version on target $target"
 
-eval $(aws ecr get-login --no-include-email --region us-west-2)
+aws ecr get-login --no-include-email --region us-west-2
+
+pwd
+
+ls
 
 docker build -t "$target:$version" .
 

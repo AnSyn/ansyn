@@ -4,6 +4,10 @@ WORKDIR /opt/ansyn/app
 
 RUN npm install -g http-server
 
+RUN pwd
+
+RUN ls
+
 COPY ./dist /opt/ansyn/app
 
 COPY ./confd/*.toml /etc/confd/conf.d/

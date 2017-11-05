@@ -39,7 +39,6 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 		};
 
 		this.store.select<ILayerState>(layersStateSelector)
-			.do(console.log)
 			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
 			.subscribe(result => {
 				this.annotationLayerChecked = result;

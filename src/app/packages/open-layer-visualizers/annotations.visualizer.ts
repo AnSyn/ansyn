@@ -210,8 +210,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	addSelectInteraction() {
+		if (!Boolean(this.layer)) {
+			return;
+		}
 		this.removeSelectInteraction();
 		this._imap.mapObject.addInteraction(this.selectInteraction)
+
 	}
 
 	removeSelectInteraction() {

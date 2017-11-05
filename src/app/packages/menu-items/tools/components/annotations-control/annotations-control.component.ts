@@ -103,7 +103,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	}
 
 	clickOutside() {
-		this.subscriber = Observable.fromEvent(document, 'click')
+		this.subscriber = Observable.fromEvent(this.document, 'click')
 			.subscribe((event: any) => {
 				if (!event.target.closest('.expanded-selection.color-selection')) {
 					this.colorSelectionTrigger = false;

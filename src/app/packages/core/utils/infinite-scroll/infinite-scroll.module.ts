@@ -9,5 +9,6 @@ import { InfiniteScrollDirective } from './infinite-scroll.directive';
 	declarations: [InfiniteScrollDirective],
 	exports: [InfiniteScrollDirective]
 })
+
 export class InfiniteScrollModule {
 }

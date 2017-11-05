@@ -27,7 +27,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
-import { StartMouseShadow, StopMouseShadow } from '../../../packages/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

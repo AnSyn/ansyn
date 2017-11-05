@@ -62,6 +62,10 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
+	IToolsState, toolsInitialState,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import {
 	ILayerState,
 	initialLayersState,
 	layersStateSelector
@@ -113,7 +117,7 @@ describe('MapAppEffects', () => {
 	let mapState: IMapState;
 	let overlaysState: IOverlaysState;
 	let layerState: ILayerState;
-
+	let toolsState: IToolsState;
 	let casesService: CasesService;
 	let baseSourceProviders: BaseMapSourceProvider[];
 	const imageryCommunicatorServiceMock = {
@@ -230,6 +234,7 @@ describe('MapAppEffects', () => {
 		overlaysState = cloneDeep(overlaysInitialState);
 		layerState = cloneDeep(initialLayersState);
 
+		toolsState = cloneDeep(toolsInitialState);
 		fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
@@ -241,7 +246,9 @@ describe('MapAppEffects', () => {
 			[statusBarStateSelector, statusBarState],
 			[overlaysStateSelector, overlaysState],
 			[mapStateSelector, mapState],
-			[layersStateSelector, layerState]
+			[layersStateSelector, layerState],
+			[mapStateSelector, mapState],
+			[toolsStateSelector, toolsState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -367,10 +374,10 @@ describe('MapAppEffects', () => {
 		});
 
 	});
-
-	it('onAddCommunicatorShowPinPoint$ on add communicator show pinpoint', () => {
+	it('onAddCommunicatorShowVisualizers$ on add communicator (shadow mouse OFF) show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+
 		const communicator = {
 			createMapSingleClickEvent: () => {
 			}
@@ -383,24 +390,32 @@ describe('MapAppEffects', () => {
 		});
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: new DrawPinPointAction(lonLat) });
-		expect(mapAppEffects.onAddCommunicatorShowPinPoint$).toBeObservable(expectedResults);
+		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat)});
 
+		expect(mapAppEffects.onAddCommunicatorShowVisualizers$).toBeObservable(expectedResults);
 		expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
 	});
 
-	it('onStartMapShadow$ listen to start map shadow action', () => {
-		actions = hot('--a--', { a: new StartMouseShadow() });
-		const expectedResults = cold('--b--', { b: new StartMapShadowAction() });
-		expect(mapAppEffects.onStartMapShadow$).toBeObservable(expectedResults);
-	});
-
-	describe('onEndMapShadow$', () => {
-		it('listen to stop map shadow action', () => {
-			actions = hot('--a--', { a: new StopMouseShadow() });
-			const expectedResults = cold('--b--', { b: new StopMapShadowAction() });
-			expect(mapAppEffects.onEndMapShadow$).toBeObservable(expectedResults);
+	it('onAddCommunicatorShowVisualizers$ on add communicator (shadow mouse ON) show pinpoint and start shadow mouse', () => {
+		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+		toolsState.flags.set('shadowMouse', true);
+		const communicator = {
+			createMapSingleClickEvent: () => {
+			}
+		};
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+		spyOn(communicator, 'createMapSingleClickEvent');
+		const action = new AddMapInstanceAction({
+			communicatorsIds: ['tmpId1', 'tmpId2'],
+			currentCommunicatorId: 'tmpId2'
 		});
+		const lonLat = [-70.33666666666667, 25.5];
+		actions = hot('--a--', { a: action });
+		const expectedResults = cold('--(ab)--', { a: new DrawPinPointAction(lonLat), b: new StartMouseShadow()});
+
+		expect(mapAppEffects.onAddCommunicatorShowVisualizers$).toBeObservable(expectedResults);
+		expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
 	});
 
 	describe('onAddCommunicatorInitPlugin$', () => {

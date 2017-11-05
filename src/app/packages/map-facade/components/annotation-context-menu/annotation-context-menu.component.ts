@@ -50,8 +50,8 @@ export class AnnotationContextMenuComponent {
 	removeFeature() {
 		this.store.dispatch(new AnnotationData({
 			feature: this.feature,
-			action: "remove"
-		}))
+			action: 'remove'
+		}));
 		this.host.nativeElement.setAttribute('style', '');
 	}
 }

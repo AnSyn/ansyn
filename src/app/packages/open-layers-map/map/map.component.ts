@@ -9,7 +9,7 @@ import { MapPosition } from '../../imagery/model/map-position';
 	template: `
 		<div #olMap></div>`,
 	styles: [
-			`div {
+		`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;

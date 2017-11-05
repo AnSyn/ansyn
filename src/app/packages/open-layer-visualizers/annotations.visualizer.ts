@@ -100,7 +100,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	removeLayer() {
-		this._imap.removeLayer(this.layer);
+		this.iMap.removeLayer(this.layer);
 		this.layer = undefined;
 	}
 
@@ -119,7 +119,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			// event.originalEvent.which === 3 &&
 			condition: event => event.originalEvent.which === MouseClick.Right && event.type === 'pointerdown',
 			layers: [this.layer]
-		})
+		});
 
 		this.selectInteraction.on('select', data => {
 				console.log(data.mapBrowserEvent.originalEvent.which);
@@ -139,7 +139,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						top: pixels[1][1] + boundingRect.top,
 						width: pixels[1][0] - pixels[0][0],
 						height: pixels[0][1] - pixels[1][1]
-					}
+					};
 				}
 
 				const callback = event => {
@@ -147,16 +147,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					event.preventDefault();
 					data.target.getFeatures().clear();
 					this.events.get('annotationContextMenuHandler').next({
-						action: "openMenu",
+						action: 'openMenu',
 						feature: selectedFeature,
 						pixels
 					});
-					target.removeEventListener('contextmenu', callback)
-				}
+					target.removeEventListener('contextmenu', callback);
+				};
 
 				target.addEventListener('contextmenu', callback);
 			}
-		)
+		);
 	}
 
 	arrowLinesToPixels(selectedFeature) {
@@ -182,9 +182,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 
 			points.forEach(point2 => {
-				const horizonal = Math.abs(point1[0] - point2[0]);
-				if (horizonal > width) {
-					width = horizonal;
+				const horizontal = Math.abs(point1[0] - point2[0]);
+				if (horizontal > width) {
+					width = horizontal;
 				}
 
 				const vertical = Math.abs(point1[1] - point2[1]);
@@ -205,20 +205,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	getExtentAsPixels(extent) {
 		return [this.iMap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
-			this._imap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])]
+			this.iMap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])];
 	}
 
 	addSelectInteraction() {
-		if (!Boolean(this.layer)) {
+		if (!this.layer) {
 			return;
 		}
+
 		this.removeSelectInteraction();
-		this._imap.mapObject.addInteraction(this.selectInteraction)
+		this.iMap.mapObject.addInteraction(this.selectInteraction);
 
 	}
 
 	removeSelectInteraction() {
-		this._imap.mapObject.removeInteraction(this.selectInteraction);
+		this.iMap.mapObject.removeInteraction(this.selectInteraction);
 	}
 
 	redrawFromGeoJson() {
@@ -230,7 +231,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	drawFeatures(data) {
-		if (data === undefined || this._source === undefined) {
+		if (data === undefined || this.source === undefined) {
 			return;
 		}
 
@@ -242,7 +243,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// readFeatures throw an exceptions so I am using this method
 		this.features = data.features;
 		const features = this.createFeturesFromGeoJson(data.features);
-		let oldFeatures = this._source.getFeatures();
+		let oldFeatures = this.source.getFeatures();
 		if (oldFeatures.length > 0) {
 			for (let i = oldFeatures.length - 1; i >= 0; i--) {
 				if (oldFeatures[i].getProperties().id === features[i].getProperties().id) {
@@ -252,7 +253,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 		}
 		this.source.addFeatures(features);
-		this._imap.mapObject.render();
+		this.iMap.mapObject.render();
 	}
 
 	createFeturesFromGeoJson(geoJsonFeatures) {

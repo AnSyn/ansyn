@@ -15,6 +15,7 @@ import Fill from 'ol/style/fill';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import Vector from 'ol/layer/vector';
+import olMap from 'ol/map';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
@@ -37,7 +38,7 @@ export const EntitiesVisualizerType = 'EntitiesVisualizer';
 export abstract class EntitiesVisualizer implements IMapVisualizer {
 	static type = EntitiesVisualizerType;
 
-	protected iMap: IMap<OpenLayersMap>;
+	protected iMap: IMap<olMap>;
 	protected mapId: string;
 	public source: Vector;
 	protected featuresCollection: Feature[];
@@ -67,10 +68,12 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	private interactions: { doubleClick: Select, pointerMove: Select } = { doubleClick: null, pointerMove: null };
 	private enabledInteractions = { doubleClick: false, pointMove: false };
 
-	onDisposedEvent: EventEmitter<void> = new EventEmitter();
-	onHoverFeature: EventEmitter<any> = new EventEmitter();
-	doubleClickFeature: EventEmitter<any> = new EventEmitter();
+	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
+	onHoverFeature: EventEmitter<any> = new EventEmitter<any>();
+	doubleClickFeature: EventEmitter<any> = new EventEmitter<any>();
 	subscribers: Subscriber<any>[] = [];
+
+	events: Map<string, Subject<any>> = new Map<string, Subject<any>>();
 
 	constructor(public type: string, visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);

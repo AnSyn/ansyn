@@ -28,7 +28,7 @@ describe('MapFacadeService', () => {
 
 	it('service is initilaized', () => {
 		expect(service).toBeTruthy();
-	})
+	});
 
 	describe('check all dispatch events', () => {
 
@@ -38,8 +38,8 @@ describe('MapFacadeService', () => {
 
 
 		it('when annotations contextmenu call the trigger is dispached', () => {
-			const payload = { hello: "world" };
-			const action = new AnnotationContextMenuTriggerAction(<any>payload)
+			const payload = { hello: 'world' };
+			const action = new AnnotationContextMenuTriggerAction(<any>payload);
 			service.annotationContextMenuHandlerSubscriber(payload);
 			expect(store.dispatch).toHaveBeenCalledTimes(1);
 			expect(store.dispatch).toHaveBeenCalledWith(action);
@@ -61,7 +61,7 @@ describe('MapFacadeService', () => {
 			const allArgs = store.dispatch['calls']['allArgs']();
 			expect(allArgs).toEqual([[firstAction], [secondAction]]);
 
-		})
-	})
+		});
+	});
 
 });

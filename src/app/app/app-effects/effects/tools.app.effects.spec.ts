@@ -96,7 +96,7 @@ describe('ToolsAppEffects', () => {
 	beforeEach(() => {
 		layerState = cloneDeep(initialLayersState);
 		toolsState = cloneDeep(toolsInitialState);
-	})
+	});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -308,7 +308,7 @@ describe('ToolsAppEffects', () => {
 
 			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
 		});
-	})
+	});
 
 	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);

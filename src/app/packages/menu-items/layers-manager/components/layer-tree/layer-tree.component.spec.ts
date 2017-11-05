@@ -74,17 +74,17 @@ describe('LayerTreeComponent', () => {
 			});
 			expect(component.annotationLayerChecked).toBe(false);
 		});
-	})
+	});
 
 	it('annotation layer checkbox click - state: annotation layer disabled', () => {
-		spyOn(store, 'dispatch')
+		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = false;
 		component.annotationLayerClick({}, {});
 		expect(store.dispatch).toHaveBeenCalledWith(new ShowAnnotationsLayer({ update: true }));
 	});
 
 	it('annotation layer checkbox click - state: annotation layer enabled', () => {
-		spyOn(store, 'dispatch')
+		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = true;
 		component.annotationLayerClick({}, {});
 		expect(store.dispatch).toHaveBeenCalledWith(new HideAnnotationsLayer({ update: true }));

@@ -17,7 +17,6 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { IAppState } from '../app.effects.module';
 
 
-
 @Injectable()
 export class LayersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
@@ -57,7 +56,7 @@ export class LayersAppEffects {
 
 			if (Boolean(action.payload.update)) {
 				selectedCase.state.layers.displayAnnotationsLayer = true;
-				actions.push(new UpdateCaseAction(selectedCase))
+				actions.push(new UpdateCaseAction(selectedCase));
 			}
 
 			return actions;
@@ -82,7 +81,7 @@ export class LayersAppEffects {
 
 			if (Boolean(action.payload.update)) {
 				selectedCase.state.layers.displayAnnotationsLayer = false;
-				actions.push(new UpdateCaseAction(selectedCase))
+				actions.push(new UpdateCaseAction(selectedCase));
 			}
 
 			return actions;

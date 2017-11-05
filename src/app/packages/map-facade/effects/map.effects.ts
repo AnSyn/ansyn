@@ -64,36 +64,6 @@ export class MapEffects {
 
 	/**
 	 * @type Effect
-	 * @name onStopMapShadowMouse$
-	 * @ofType StopMapShadowAction
-	 */
-	@Effect({ dispatch: false })
-	onStopMapShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.STOP_MAP_SHADOW_ACTIONS)
-		.share();
-
-	/**
-	 * @type Effect
-	 * @name onStartMapShadowMouse$
-	 * @ofType StartMapShadowAction
-	 */
-	@Effect({ dispatch: false })
-	onStartMapShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.START_MAP_SHADOW_ACTIONS)
-		.share();
-
-	/**
-	 * @type Effect
-	 * @name onComposeMapShadowMouse$
-	 * @ofType CompositeMapShadowAction
-	 */
-	@Effect({ dispatch: false })
-	onComposeMapShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.COMPOSITE_MAP_SHADOW_ACTION)
-		.share();
-
-	/**
-	 * @type Effect
 	 * @name onToggleImageProcessing$
 	 * @ofType SetMapAutoImageProcessing
 	 * @filter There is a communicator

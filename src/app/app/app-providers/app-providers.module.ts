@@ -24,6 +24,7 @@ import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
+import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 
 @NgModule({
 	imports: [
@@ -93,6 +94,13 @@ import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 			useValue: {
 				type: OpenLayersVisualizerMapType,
 				visualizer: IconVisualizer
+			}
+		}, {
+			provide: MapVisualizer,
+			multi: true,
+			useValue: {
+				type: OpenLayersVisualizerMapType,
+				visualizer: MouseShadowVisualizer
 			}
 		},
 	]

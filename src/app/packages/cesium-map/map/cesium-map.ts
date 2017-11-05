@@ -8,9 +8,6 @@ export class CesiumMap implements IMap {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any> = new EventEmitter<any>();
-	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-
 	mapType: string;
 	mapObject: any;
 
@@ -69,6 +66,10 @@ export class CesiumMap implements IMap {
 	setPointerMove(enable: boolean) {
 	}
 
+	getPointerMove() {
+		throw new Error('Method not implemented.');
+	}
+
 	removeSingleClickEvent() {
 
 	}
@@ -86,18 +87,6 @@ export class CesiumMap implements IMap {
 	}
 
 	dispose() {
-	}
-
-	startMouseShadowVectorLayer() {
-		throw new Error('Method not implemented.');
-	}
-
-	stopMouseShadowVectorLayer() {
-		throw new Error('Method not implemented.');
-	}
-
-	drawShadowMouse(latLon: any) {
-		throw new Error('Method not implemented.');
 	}
 
 	addSingleClickEvent() {

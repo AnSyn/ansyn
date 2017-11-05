@@ -15,7 +15,6 @@ export class ImageryComponentManager {
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
-	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -204,10 +203,6 @@ export class ImageryComponentManager {
 
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: MapPosition) => {
 			this.positionChanged.emit(position);
-		}));
-
-		this._subscriptions.push(this._activeMap.pointerMove.subscribe((lonLat: Array<any>) => {
-			this.pointerMove.emit(lonLat);
 		}));
 
 		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {

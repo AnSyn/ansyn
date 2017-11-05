@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { MapPosition } from './map-position';
+import { Observable } from 'rxjs/Observable';
 
 export interface IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
@@ -43,16 +44,11 @@ export interface IMap<T = any> {
 
 	dispose(): void;
 
-	// TODO: move them to plugins
 	setPointerMove(enable: boolean);
 
+	getPointerMove(): Observable<any>;
+
 	removeSingleClickEvent();
-
-	startMouseShadowVectorLayer();
-
-	stopMouseShadowVectorLayer();
-
-	drawShadowMouse(latLon);
 
 	addSingleClickEvent();
 

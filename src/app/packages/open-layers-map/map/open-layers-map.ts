@@ -10,12 +10,8 @@ import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
 
-import Feature from 'ol/feature';
 import GeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
-
-import Style from 'ol/style/style';
-import Icon from 'ol/style/icon';
 
 import Vector from 'ol/source/vector';
 import Raster from 'ol/source/raster';
@@ -40,10 +36,8 @@ export class OpenLayersMap implements IMap<Map> {
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 
-	private _shadowMouselayerId = 'shadowMouse';
 	private _pinPointIndicatorLayerId = 'pinPointIndicator';
 	private _flags = {
-		pointerMoveListener: null,
 		singleClickHandler: null
 	};
 
@@ -134,7 +128,6 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	private setMainLayer(layer: Layer) {
-		const beforeArgs = this.internalBeforeSetMainLayer();
 		this.removeAllLayers();
 
 		const oldview = this._mapObject.getView();
@@ -395,7 +388,7 @@ export class OpenLayersMap implements IMap<Map> {
 		}
 	}
 
-	// *****--pin point paint on the map--********
+	// *****-- click events --********
 	public addSingleClickEvent() {
 		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);
 	}
@@ -412,7 +405,7 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 
-	// *****-- shadow mouse functionality--********
+	// *****-- pointer move --********
 
 	public onPointerMove(e) {
 		const view = this._mapObject.getView();
@@ -421,59 +414,18 @@ export class OpenLayersMap implements IMap<Map> {
 		this.pointerMove.emit(lonLat);
 	};
 
-	public drawShadowMouse(lonLat) {
-		const layer = this.getLayerById(this._shadowMouselayerId);
-		if (!layer) {
-			return;
-		}
-		const feature = (<any>layer).getSource().getFeatures()[0];
-		const view = this._mapObject.getView();
-		const projection = view.getProjection();
-		const lonLatCords = proj.fromLonLat(lonLat, projection);
-		feature.setGeometry(new Point(lonLatCords));
-		this.mapObject.render();
-	}
-
 	public setPointerMove(enable: boolean) {
+		// clear previous move listeners
+		this.mapObject['un']('pointermove', this.onPointerMove, this);
+		this.pointerMove = new EventEmitter<any>();
+
 		if (enable) {
 			this.mapObject.on('pointermove', this.onPointerMove, this);
 		}
-		else {
-			this.mapObject['un']('pointermove', this.onPointerMove, this);
-		}
 	}
 
-	public startMouseShadowVectorLayer() {
-		const layer = this.getLayerById(this._shadowMouselayerId);
-
-		if (layer) {
-			layer.set('visible', true);
-		}
-		else {
-			const feature = new Feature({
-				id: 'shadowMousePosition'
-			});
-
-			const vectorLayer: VectorLayer = new VectorLayer({
-				source: new Vector({
-					features: [feature]
-				}),
-				style: new Style({
-					image: new Icon({
-						scale: 1,
-						src: '/assets/icons/tools/mouse-shadow.svg' // for further usage either bring from configuration or create svg
-					})
-				})
-			});
-
-			vectorLayer.setZIndex(12000);
-			vectorLayer.set('id', this._shadowMouselayerId);
-			this.addLayer(vectorLayer);
-		}
-	}
-
-	public stopMouseShadowVectorLayer() {
-		this.removeLayerById(this._shadowMouselayerId);
+	public getPointerMove() {
+		return this.pointerMove;
 	}
 
 	// *****-- shadow mouse functionality end --********

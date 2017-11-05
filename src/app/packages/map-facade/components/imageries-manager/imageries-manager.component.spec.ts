@@ -98,32 +98,6 @@ describe('ImageriesManagerComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('check that all events are called ', () => {
-		spyOn(component, 'changeShadowMouseTarget');
-		spyOn(component, 'stopPointerMoveProcess');
-		spyOn(component, 'startPointerMoveProcess');
-		// component.maps.data
-		// I want to fake and observable and then call him and check if the function has been called
-		// I can dispatch the actions
-		mapEffects.onComposeMapShadowMouse$ = Observable.create(observer => {
-			observer.next();
-		});
-
-		mapEffects.onStopMapShadowMouse$ = Observable.create(observer => {
-			observer.next();
-		});
-
-		mapEffects.onStartMapShadowMouse$ = Observable.create(observer => {
-			observer.next();
-		});
-
-		component.initListeners();
-		expect(component.changeShadowMouseTarget).toHaveBeenCalled();
-		expect(component.stopPointerMoveProcess).toHaveBeenCalled();
-		expect(component.startPointerMoveProcess).toHaveBeenCalled();
-
-	});
-
 	it('emit change action event and change the active map id ', fakeAsync(() => {
 		spyOn(component, 'changeActiveImagery');
 

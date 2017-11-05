@@ -1,6 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { IMap, MapPosition } from '@ansyn/imagery';
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
+import { Observable } from 'rxjs/Observable';
 
 import Map from 'ol/map';
 import View from 'ol/view';
@@ -171,6 +172,10 @@ export class OpenLayersDisabledMap implements IMap {
 	setPointerMove(enable: boolean) {
 	}
 
+	getPointerMove() {
+		return new Observable();
+	}
+
 	removeSingleClickEvent() {
 	}
 
@@ -194,18 +199,6 @@ export class OpenLayersDisabledMap implements IMap {
 	}
 
 	dispose() {
-
-	}
-
-	startMouseShadowVectorLayer() {
-
-	}
-
-	stopMouseShadowVectorLayer() {
-
-	}
-
-	drawShadowMouse(latLon: any) {
 
 	}
 

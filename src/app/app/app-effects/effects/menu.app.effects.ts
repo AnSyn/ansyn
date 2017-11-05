@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes } from '@ansyn/menu';
+import { MenuActionTypes, UnSelectMenuItemAction } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
@@ -37,7 +37,7 @@ export class MenuAppEffects {
 	 * @action SetClickOutside
 	 */
 	@Effect()
-	onGoToExpand$: Observable<Action> = this.actions$
+	onGoToExpand$: Observable<SetClickOutside> = this.actions$
 		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
 		.map(({ payload }) => new SetClickOutside(!payload));
 
@@ -48,7 +48,7 @@ export class MenuAppEffects {
 	 * @action SetClickOutside
 	 */
 	@Effect()
-	autoCloseMenu$: Observable<Action> = this.actions$
+	autoCloseMenu$: Observable<SetClickOutside> = this.actions$
 		.ofType<SetAutoCloseMenu>(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
 		.map(({ payload }) => new SetClickOutside(payload));
 
@@ -59,8 +59,8 @@ export class MenuAppEffects {
 	 * @action GoToExpandAction
 	 */
 	@Effect()
-	unselectMenuItem$: Observable<Action> = this.actions$
-		.ofType(MenuActionTypes.UNSELECT_MENU_ITEM)
+	unselectMenuItem$: Observable<GoToExpandAction> = this.actions$
+		.ofType<UnSelectMenuItemAction>(MenuActionTypes.UNSELECT_MENU_ITEM)
 		.map(() => new GoToExpandAction(false));
 
 	/**

@@ -5,6 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
 
+// @TODO add click-outside test
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -129,11 +130,6 @@ describe('AnnotationsControlComponent', () => {
 			expect(component.createInteraction).not.toHaveBeenCalled();
 		})
 	})
-
-
-	xit('click outside', () => {
-
-	});
 
 	it('createInteraction', () => {
 		component.mode = undefined;

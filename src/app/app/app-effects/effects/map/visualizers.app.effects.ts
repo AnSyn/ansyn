@@ -274,7 +274,8 @@ export class VisualizersAppEffects {
 					annotationsLayer.features.splice(featureIndex, 1);
 
 					selectedCase.state = {
-						...selectedCase.state, layers: {
+						...selectedCase.state,
+						layers: {
 							...selectedCase.state.layers, annotationsLayer: JSON.stringify(annotationsLayer)
 						}
 					}
@@ -296,15 +297,14 @@ export class VisualizersAppEffects {
 	 * @type Effect
 	 * @name annotationVisualizerAgent$
 	 * @ofType AnnotationVisualizerAgentAction
-	 * @dependencies cases
-	 * @action UpdateCaseAction?,SetAnnotationMode?
+	 * @dependencies cases, layers
+	 * @action UpdateCaseAction?, SetAnnotationMode?
 	 */
 	@Effect()
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom<AnnotationVisualizerAgentAction, Case, ILayerState>(this.selectedCase$, this.store$.select(layersStateSelector))
 		.map(([action, selectedCase, layerState]: [AnnotationVisualizerAgentAction, Case, ILayerState]) => {
-			// const selectedCase: Case = _cloneDeep(cases.selectedCase);
 
 			let update = false;
 			let relevantMapsIds = [];
@@ -391,12 +391,9 @@ export class VisualizersAppEffects {
 						}
 
 						break;
-					case 'removeLayer': {
+					case 'removeLayer':
 						visualizer.removeInteraction();
 						visualizer.removeLayer();
-						break;
-					}
-					default:
 						break;
 				}
 			});

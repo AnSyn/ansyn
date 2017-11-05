@@ -31,7 +31,7 @@ cache:
      - ./node_modules
 
 before_deploy:
-  - sudo npm run build --output-path=dist
+  - npm run build --output-path=dist
   - docker --version
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path

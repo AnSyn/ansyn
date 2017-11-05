@@ -41,7 +41,7 @@ deploy:
     script: sh -x scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
     skip_cleanup: true
     on:
-      branch: travis
+      branch: master
   - provider: script
     script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG
     skip_cleanup: true

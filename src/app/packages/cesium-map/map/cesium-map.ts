@@ -2,7 +2,7 @@ import { IMap, MapPosition } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 
-export class CesiumMap implements IMap<any> {
+export class CesiumMap implements IMap {
 	static mapType = 'cesium';
 
 	centerChanged: EventEmitter<GeoJSON.Point>;

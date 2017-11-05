@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { IMapPlugin } from '../model/imap-plugin';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { MapVisualizer } from '../model/imap-visualizer.token';
-import { VisualizersConfig } from '../../core/tokens/visualizers-config.token';
+import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 export interface IProvidedMap {
 	mapType: string;

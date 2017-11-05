@@ -69,7 +69,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.set('annotationContextMenuHandler', new Subject());
 	}
 
-	onInit(mapId: string, map: IMap<any>) {
+	onInit(mapId: string, map: IMap) {
 		this.iMap = map;
 		this.mapId = mapId;
 	}

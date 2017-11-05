@@ -36,7 +36,7 @@ export interface IMapVisualizer {
 	 * @param {string} mapId
 	 * @param {IMap} map
 	 */
-	onInit(mapId: string, map: IMap<any>);
+	onInit(mapId: string, map: IMap);
 
 	/**
 	 * @description This function is called after map resetView() is called. use this method to:

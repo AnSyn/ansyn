@@ -23,7 +23,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
-  - npm run echo
+  - npm run test:single-run
 
 cache:
   yarn: true

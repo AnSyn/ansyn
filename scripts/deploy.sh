@@ -20,10 +20,6 @@ echo "start deploying version $version on target $target"
 
 aws ecr get-login --no-include-email --region us-west-2
 
-pwd
-
-ls -la
-
 docker build -t "$target:$version" .
 
 docker tag "$target:$version" "$target:latest"

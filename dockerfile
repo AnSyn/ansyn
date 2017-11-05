@@ -6,7 +6,7 @@ RUN npm install -g http-server
 
 RUN pwd
 
-RUN ls
+RUN ls -la
 
 COPY ./dist /opt/ansyn/app
 

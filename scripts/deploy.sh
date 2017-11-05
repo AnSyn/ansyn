@@ -10,9 +10,9 @@ fi
 
 version=$2
 echo "version $version"
-if [ -z "$target" ]
+if [ -z "$version" ]
 then
-	echo "Missing deployment target"
+	echo "Missing deployment version"
 	exit 1
 fi
 

@@ -357,7 +357,8 @@ describe('MapAppEffects', () => {
 		const  b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
 		const expectedResults = cold('--b--', { b: b });
 		expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
-	});it('dont display annotation layer', () => {
+	});
+		it('dont display annotation layer', () => {
 			// here I am setting the data that will be returend after this.store select clue: reference
 			layerState.displayAnnotationsLayer = false;
 
@@ -368,8 +369,7 @@ describe('MapAppEffects', () => {
 					communicatorsIds: communicators
 				})
 			});
-			const a = new CompositeMapShadowAction();
-			const expectedResults = cold('--(a)--', { a });
+			const expectedResults = cold('--(a)--', { a: undefined} );
 			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});
 

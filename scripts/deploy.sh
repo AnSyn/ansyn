@@ -24,7 +24,7 @@ docker build -t "$target:$version" .
 
 docker tag "$target:$version" "$target:latest"
 
-docker tag "$target:latest" 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client:latest
+docker tag "$target:latest" "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:latest"
 
 docker tag "$target:latest" "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:$version"
 

@@ -14,7 +14,8 @@ import { cloneDeep as _cloneDeep, isEmpty } from 'lodash';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IAppState } from '../app-reducers.module';
+import { IAppState } from '../app.effects.module';
+
 
 
 @Injectable()

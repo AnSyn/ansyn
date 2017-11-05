@@ -361,7 +361,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name addVectorLayer$
 	 * @ofType SelectLayerAction
-	 * @dependencies cases
+	 * @dependencies map
 	 */
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<SelectLayerAction> = this.actions$
@@ -377,7 +377,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name removeVectorLayer$
 	 * @ofType UnselectLayerAction
-	 * @dependencies cases
+	 * @dependencies map
 	 */
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
@@ -393,7 +393,7 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onCommunicatorChange$
 	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction, MapInstanceChangedAction
-	 * @dependencies cases
+	 * @dependencies cases, map, layers
 	 * @filter There is at least one communicator, and exact length of maps
 	 * @action CompositeMapShadowAction, AnnotationVisualizerAgentAction?
 	 */

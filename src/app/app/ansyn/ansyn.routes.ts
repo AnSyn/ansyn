@@ -1,7 +1,8 @@
-import { ReplacingComponent } from '@ansyn/core/';
+import { PlaceholderComponent } from '@ansyn/core/';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AuthGuard, UnAuthGuard } from '@ansyn/login/guards';
 import { Routes } from '@angular/router';
+
 
 export const ansynRoutes: Routes = [
 	{
@@ -15,7 +16,7 @@ export const ansynRoutes: Routes = [
 		children: [
 			{
 				path: 'case/:caseId',
-				component: ReplacingComponent,
+				component: PlaceholderComponent,
 				data: {
 					name: 'caseChild'
 				}

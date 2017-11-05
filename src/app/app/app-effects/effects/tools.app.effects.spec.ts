@@ -48,8 +48,8 @@ describe('ToolsAppEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let icaseState: ICasesState;
-	let layerState: ILayerState = cloneDeep(initialLayersState);
-	let toolsState: IToolsState = cloneDeep(toolsInitialState);
+	let layerState: ILayerState;
+	let toolsState: IToolsState;
 
 	const cases: Case[] = [{
 		state: {
@@ -93,6 +93,11 @@ describe('ToolsAppEffects', () => {
 		activeMapId: 'imagery1'
 	};
 
+	beforeEach(() => {
+		layerState = cloneDeep(initialLayersState);
+		toolsState = cloneDeep(toolsInitialState);
+	})
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -127,12 +132,6 @@ describe('ToolsAppEffects', () => {
 		toolsAppEffects = _toolsAppEffects;
 		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
-
-	afterEach(() => {
-		layerState = cloneDeep(initialLayersState);
-		toolsState = cloneDeep(toolsInitialState);
-	})
-
 
 	it('getActiveCenter$ should get center from active communicator and return SetCenterAction', () => {
 		const activeCommunicator = {
@@ -256,8 +255,6 @@ describe('ToolsAppEffects', () => {
 			toolsState.flags.set('annotations', true);
 			imapState.activeMap = imapState.mapsList[0];
 			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-
-			// activeMap.data.overlayDisplayMode = <any> 'whatever';
 
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 

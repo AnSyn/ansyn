@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'ansyn-replace',
+	selector: 'ansyn-placeholder',
 	template: '',
 	styleUrls: []
 })
 
-export class ReplacingComponent {
+export class PlaceholderComponent {
 
 	constructor() {
 	}

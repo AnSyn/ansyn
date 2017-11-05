@@ -73,7 +73,7 @@ export class ToolsAppEffects {
 	 * @type Effect
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
 	 * @ofType ActiveMapChangedAction
-	 * @dependencies map
+	 * @dependencies map, layers, tools
 	 * @action SetActiveOverlaysFootprintModeAction, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentAction?
 	 */
 	@Effect()

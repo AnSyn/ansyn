@@ -22,7 +22,7 @@ aws ecr get-login --no-include-email --region us-west-2
 
 pwd
 
-ls
+ls -la
 
 docker build -t "$target:$version" .
 

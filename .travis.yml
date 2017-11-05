@@ -38,11 +38,11 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
+    script: sh -x scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
     on:
       branch: travis
   - provider: script
-    script: scripts/deploy.sh ansyn/client $TRAVIS_TAG
+    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG
     on:
       tags: true
 

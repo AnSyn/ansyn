@@ -49,7 +49,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected hoverLayer: Vector;
 
-	// TODO false!
 	protected disableCache = false;
 
 	protected visualizerStyle: VisualizerStateStyle = {
@@ -172,6 +171,13 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		const styleSettings: any = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
+		let secondaryStyle: any = {};
+
+		if (styleSettings.shadow) {
+			secondaryStyle.stroke = new Stroke(styleSettings.shadow);
+			delete styleSettings.shadow;
+		}
+
 		if (styleSettings.stroke) {
 			styleSettings.stroke = new Stroke(styleSettings.stroke);
 		}
@@ -186,6 +192,10 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		if (styleSettings.label) {
 			styleSettings.text = new Text(this.createStyle(feature, styleSettings.label));
+		}
+
+		if (Object.keys(secondaryStyle).length !== 0) {
+			return [styleSettings, secondaryStyle].map(s => new Style(s));
 		}
 
 		return new Style(styleSettings);

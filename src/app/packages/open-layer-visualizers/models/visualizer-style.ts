@@ -11,6 +11,7 @@ export interface VisualizerStyle {
 	zIndex?: number;
 	fill?: Fill;
 	stroke?: Stroke;
+	shadow?: Stroke;
 	point?: {
 		radius: number;
 	};

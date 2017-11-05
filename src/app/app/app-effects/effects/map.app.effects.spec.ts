@@ -110,7 +110,7 @@ describe('MapAppEffects', () => {
 	let overlaysState: IOverlaysState;
 	let casesService: CasesService;
 	let baseSourceProviders: BaseMapSourceProvider[];
-	let imageryCommunicatorServiceMock = {
+	const imageryCommunicatorServiceMock = {
 		provide: () => {
 		},
 		communicatorsAsArray: () => {

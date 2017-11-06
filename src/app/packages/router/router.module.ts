@@ -14,7 +14,7 @@ import { StoreModule } from '@ngrx/store';
 		StoreModule.forFeature(routerFeatureKey, RouterReducer),
 		EffectsModule.forFeature([RouterEffects])
 	],
-	declarations: [],
+	exports: [RouterModule],
 	providers: [
 		AnsynRouterService,
 		{

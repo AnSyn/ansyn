@@ -79,7 +79,6 @@ import { StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions'
 import 'rxjs/add/observable/fromPromise';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { dispatch } from 'd3-dispatch';
 
 
 @Injectable()

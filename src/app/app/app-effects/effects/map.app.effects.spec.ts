@@ -378,15 +378,10 @@ describe('MapAppEffects', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
 		const communicator = {
 			createMapSingleClickEvent: () => {
-				console.log('Ta da!')
 			}
 		};
 		// this.imageryCommunicatorService.provide
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => {
-			console.log('fake!')
-				return communicator
-			}
-		);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 		spyOn(communicator, 'createMapSingleClickEvent');
 
 		const action = new AddMapInstanceAction({

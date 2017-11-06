@@ -9,7 +9,6 @@ export * from './open-layer-visualizers';
 export * from './open-layers-map';
 export * from './router';
 export * from './status-bar';
-export * from './type-container';
 export * from './menu-items';
 export * from './overlays';
 export * from './core/models/general.config';

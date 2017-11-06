@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { UrlSerializer } from '@angular/router';
+import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
 import { Case } from '../../models/case.model';
 import { CasesService } from '../cases.service';
@@ -10,16 +10,22 @@ import { HttpClientModule } from '@angular/common/http';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
-
+	let urlSerializer: UrlSerializer;
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
-			providers: [CasesService, UrlSerializer, MockCasesConfig]
+			providers: [CasesService, {
+				provide: UrlSerializer, useValue: {
+					parse: () => {
+					}
+				}
+			}, MockCasesConfig]
 		});
 	});
 
-	beforeEach(inject([CasesService], (_casesService: CasesService) => {
+	beforeEach(inject([CasesService, UrlSerializer], (_casesService: CasesService, _urlSerializer: UrlSerializer) => {
 		casesService = _casesService;
+		urlSerializer = _urlSerializer;
 	}));
 	let queryParamsHelper: QueryParamsHelper;
 
@@ -48,7 +54,7 @@ describe('CasesService', () => {
 
 		it('generateQueryParamsViaCase should parse url to qParams object (after parsing) ', () => {
 			spyOn(queryParamsHelper, 'encodeCaseObjects').and.callFake((key, val) => val);
-			spyOn((<any>queryParamsHelper).casesService.urlSerializer, 'parse').and.returnValue({ queryParams: {} });
+			spyOn(urlSerializer, 'parse').and.returnValue({ queryParams: {} });
 
 			let fakeCase: Case = {
 				id: '12345678',

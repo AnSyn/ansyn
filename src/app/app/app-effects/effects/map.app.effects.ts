@@ -79,6 +79,7 @@ import { StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions'
 import 'rxjs/add/observable/fromPromise';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { dispatch } from 'd3-dispatch';
 
 
 @Injectable()
@@ -388,38 +389,57 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onAddCommunicatorShowVisualizers$
+	 * @name onAddCommunicatorDoPinpointSearch
 	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
 	 * @dependencies cases, statusBar
-	 * @filter There is a pinPointIndicator or pinPointSearch
-	 * @actions DrawPinPointAction?, StartMouseShadow?
+	 * @filter pinPointSearch flag on
+	 */
+	@Effect({ dispatch: false })
+	onAddCommunicatorDoPinpointSearch$: Observable<any>  = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.withLatestFrom(this.store$.select(statusBarStateSelector))
+		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.do(([action]: [any]) => {
+			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
+			communicatorHandler.createMapSingleClickEvent()
+		});
+
+	/**
+	 * @type Effect
+	 * @name onAddCommunicatorShowPinPointIndicator$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @dependencies cases, statusBar
+	 * @filter pinPointIndicator flag on
+	 * @actions DrawPinPointAction
 	 */
 	@Effect()
-	onAddCommunicatorShowVisualizers$: Observable<any> = this.actions$
+	onAddCommunicatorShowPinPointIndicator$: Observable<any>  = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(
-			this.store$.select(casesStateSelector),
-			this.store$.select(statusBarStateSelector),
-			this.store$.select(toolsStateSelector))
-		.mergeMap(([action, casesState, statusBarState, toolsState]: [any, ICasesState, IStatusBarState, IToolsState]) => {
-			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
-			const actions = new Array<Action>();
-			if (statusBarState.flags.get(statusBarFlagsItems.pinPointSearch)) {
-				communicatorHandler.createMapSingleClickEvent();
-			}
-
-			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				const point = getPointByPolygon(casesState.selectedCase.state.region);
-				// draw pin point
-				actions.push(new DrawPinPointAction(point.coordinates));
-			}
-			if (toolsState.flags.get('shadowMouse')) {
-				// start mouse shadow
-				actions.push(new StartMouseShadow());
-			}
-
-			return (actions.length > 0) ? actions : null;
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
+		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
+			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+		.map(([action, casesState]: [any, ICasesState]) => {
+			const point = getPointByPolygon(casesState.selectedCase.state.region);
+			return new DrawPinPointAction(point.coordinates);
 		});
+
+	/**
+	 * @type Effect
+	 * @name onAddCommunicatorShowShadowMouse$
+	 * @ofType AddMapInstanceAction, MapInstanceChangedAction, SetMapsDataActionStore
+	 * @dependencies cases, statusBar
+	 * @filter shadowMouse flag on
+	 * @actions StartMouseShadow
+	 */
+	@Effect()
+	onAddCommunicatorShowShadowMouse$: Observable<any>  = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,  MapActionTypes.STORE.SET_MAPS_DATA)
+		.withLatestFrom(this.store$.select(toolsStateSelector))
+		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
+		.map(() => new StartMouseShadow());
+
+
+
 
 	/**
 	 * @type Effect
@@ -535,18 +555,14 @@ export class MapAppEffects {
 	 * @action SetOverlayNotInCaseAction
 	 */
 	@Effect()
+	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(
-			this.store$.select(overlaysStateSelector),
-			this.store$.select(mapStateSelector),
-			this.store$.select(toolsStateSelector),
-			(action, { filteredOverlays }, mapState: IMapState, toolsState: IToolsState) => {
-				return [filteredOverlays, mapState.mapsList, toolsState]
-			})
-		.mergeMap(([filteredOverlays, mapsList, toolsState]: [string[], CaseMapState[], IToolsState]) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, { filteredOverlays }, mapState: IMapState) => {
+			return [filteredOverlays, mapState.mapsList];
+		})
+		.map(([filteredOverlays, mapsList]: [string[], CaseMapState[]]) => {
 			const overlaysNoInCase = new Map<string, boolean>();
-			const actions = new Array<Action>();
 
 			mapsList.forEach(({ data }) => {
 				const { overlay } = data;
@@ -556,12 +572,7 @@ export class MapAppEffects {
 				}
 			});
 
-			actions.push(new SetOverlaysNotInCaseAction(overlaysNoInCase));
-			if (toolsState.flags.get('shadowMouse')) {
-				// end previous mouse shadow
-				actions.push(new StartMouseShadow());
-			}
-			return actions;
+			return new SetOverlaysNotInCaseAction(overlaysNoInCase);
 		});
 
 	/**

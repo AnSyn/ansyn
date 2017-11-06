@@ -374,16 +374,35 @@ describe('MapAppEffects', () => {
 		});
 
 	});
-	it('onAddCommunicatorShowVisualizers$ on add communicator (shadow mouse OFF) show pinpoint', () => {
+	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-
 		const communicator = {
 			createMapSingleClickEvent: () => {
+				console.log('Ta da!')
 			}
 		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+		// this.imageryCommunicatorService.provide
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => {
+			console.log('fake!')
+				return communicator
+			}
+		);
 		spyOn(communicator, 'createMapSingleClickEvent');
+
+		const action = new AddMapInstanceAction({
+			communicatorsIds: ['tmpId1'],
+			currentCommunicatorId: 'tmpId1'
+		});
+		actions = hot('--a--', { a: action });
+
+		// no need to check observable itself
+		mapAppEffects.onAddCommunicatorDoPinpointSearch$.subscribe(() => {
+			expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
+		});
+	});
+
+	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
+		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
 		const action = new AddMapInstanceAction({
 			communicatorsIds: ['tmpId1', 'tmpId2'],
 			currentCommunicatorId: 'tmpId2'
@@ -392,30 +411,19 @@ describe('MapAppEffects', () => {
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat)});
 
-		expect(mapAppEffects.onAddCommunicatorShowVisualizers$).toBeObservable(expectedResults);
-		expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
+		expect(mapAppEffects.onAddCommunicatorShowPinPointIndicator$).toBeObservable(expectedResults);
 	});
 
-	it('onAddCommunicatorShowVisualizers$ on add communicator (shadow mouse ON) show pinpoint and start shadow mouse', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set('shadowMouse', true);
-		const communicator = {
-			createMapSingleClickEvent: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-		spyOn(communicator, 'createMapSingleClickEvent');
 		const action = new AddMapInstanceAction({
 			communicatorsIds: ['tmpId1', 'tmpId2'],
 			currentCommunicatorId: 'tmpId2'
 		});
-		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--(ab)--', { a: new DrawPinPointAction(lonLat), b: new StartMouseShadow()});
+		const expectedResults = cold('--a--', { a: new StartMouseShadow()});
 
-		expect(mapAppEffects.onAddCommunicatorShowVisualizers$).toBeObservable(expectedResults);
-		expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
+		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
 	});
 
 	describe('onAddCommunicatorInitPlugin$', () => {

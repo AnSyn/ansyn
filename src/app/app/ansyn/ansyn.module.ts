@@ -26,15 +26,24 @@ import {
 } from '@ansyn/menu-items';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { AnsynRouterModule } from '@ansyn/router';
-import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+
+const MenuItemsModules = [
+	CasesModule,
+	FiltersModule,
+	LayersManagerModule,
+	ToolsModule,
+	AlgorithmsModule,
+	SettingsModule,
+	ImagerySandBoxModule,
+];
 
 @NgModule({
 	imports: [
-		CasesModule,
-		OverlaysModule,
 		CommonModule,
 		AppProvidersModule,
+		...MenuItemsModules,
+		OverlaysModule,
 		OpenLayerCenterMarkerPluginModule,
 		OpenLayerMapModule,
 		BrowserModule,
@@ -44,20 +53,11 @@ import { HttpClientModule } from '@angular/common/http';
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynMenuItems),
-		FiltersModule,
-		LayersManagerModule,
-		ToolsModule,
-		AlgorithmsModule,
-		SettingsModule,
-		ImagerySandBoxModule,
-		// Do not change order AppReducer depends on the above
 		AppEffectsModule,
 		MapFacadeModule,
 		ImageryModule,
 		StatusBarModule,
-		ContextModule,
-		AnsynRouterModule,
-		RouterModule
+		AnsynRouterModule
 	],
 	declarations: [AnsynComponent]
 })

@@ -47,7 +47,7 @@
 		"@types/node": "^6.0.89",
 		"@types/rison": "0.0.6",
 		"@types/wellknown": "^0.5.0",
-		"angular-tree-component": "^3.7.2",
+		"angular-tree-component": "^5.1.2",
 		"angular2-uuid": "latest",
 		"ansyn-event-drops": "^0.4.11",
 		"configurable.js": "0.1.0",
@@ -66,8 +66,6 @@
 		"rxjs": "^5.5.2",
 		"wellknown": "^0.5.0",
 		"zone.js": "^0.8.14"
-
-
 	},
 	"devDependencies": {
 		"@angular/cli": "1.5.0",

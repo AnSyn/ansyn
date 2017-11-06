@@ -15,7 +15,7 @@ import { casesStateSelector } from '../../cases/reducers/cases.reducer';
 @Component({
 	selector: 'ansyn-map-sand-box',
 	templateUrl: './imagery-sand-box.component.html',
-	styleUrls: [`./imagery-sand-box.component.less`]
+	styleUrls: ['./imagery-sand-box.component.less']
 
 
 })

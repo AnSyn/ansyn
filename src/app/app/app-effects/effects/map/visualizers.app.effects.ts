@@ -47,7 +47,7 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { MouseShadowVisualizerType } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import { StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
@@ -263,13 +263,8 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	onEndMapShadow$ = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			(action: PinPointTriggerAction, mapState: IMapState) => {
-				return [mapState, action.payload];
-			}
-		)
-		.map(([mapState]: [IMapState, any[]]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map( ([action, mapState]: [StopMouseShadow, IMapState]) => {
 			mapState.mapsList.forEach((map: CaseMapState) => {
 				// remove all listeners and drawers
 				this.clearShadowMouse(map);

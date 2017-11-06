@@ -372,18 +372,14 @@ export class MapAppEffects {
 		.withLatestFrom<any, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select(layersStateSelector))
 		.filter(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
 			const communicatorsIds = action.payload.communicatorsIds;
-			return communicatorsIds.length > 1 && communicatorsIds.length === mapState.mapsList.length;
+			return layerState.displayAnnotationsLayer &&
+				communicatorsIds.length > 1 && communicatorsIds.length === mapState.mapsList.length;
 		})
-		.mergeMap(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
-			const actions = new Array<Action>();
-			if (layerState.displayAnnotationsLayer) {
-				actions.push(new AnnotationVisualizerAgentAction({
-					maps: 'all',
-					action: 'show',
-				}));
-			}
-
-			return actions;
+		.map(() => {
+			return new AnnotationVisualizerAgentAction({
+				maps: 'all',
+				action: 'show',
+			})
 		});
 
 	/**

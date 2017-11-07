@@ -7,7 +7,7 @@ import {
 	HoverFeatureTriggerAction,
 	MapActionTypes,
 	PinPointTriggerAction,
-	SetMapsDataActionStore,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -39,6 +39,8 @@ import {
 	GoToInputChangeAction,
 	SetAnnotationMode,
 	ShowOverlaysFootprintAction,
+	StartMouseShadow,
+	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -47,7 +49,6 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { MouseShadowVisualizerType } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
@@ -240,7 +241,7 @@ export class VisualizersAppEffects {
 		.withLatestFrom(
 			this.store$.select(mapStateSelector) // ,
 		)
-		.map( ([action, mapState]: [StartMouseShadow, IMapState]) => {
+		.map(([action, mapState]: [StartMouseShadow, IMapState]) => {
 			let shadowMouseProducer: Observable<any>;
 			const shadowMouseConsumers = new Array<CaseMapState>();
 			mapState.mapsList.forEach((map: CaseMapState) => {
@@ -264,7 +265,7 @@ export class VisualizersAppEffects {
 	onEndMapShadow$ = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map( ([action, mapState]: [StopMouseShadow, IMapState]) => {
+		.map(([action, mapState]: [StopMouseShadow, IMapState]) => {
 			mapState.mapsList.forEach((map: CaseMapState) => {
 				// remove all listeners and drawers
 				this.clearShadowMouse(map);
@@ -499,24 +500,25 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (!communicator) {
 			return;
-		}const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
-			if (!gotoVisualizer) {
-				return;
-			}
-			if (gotoExpand) {
-				const gotoPoint: GeoJSON.Point = {
-					type: 'Point',
-					// calculate projection?coordinates: point
-				};
-				const gotoFeatureJson: GeoJSON.Feature<any> = {
-					type: 'Feature',
-					geometry: gotoPoint,
-					properties: {}
-				};
-				gotoVisualizer.clearEntities();
-				gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-			} else {
-				gotoVisualizer.clearEntities();
+		}
+		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+		if (!gotoVisualizer) {
+			return;
+		}
+		if (gotoExpand) {
+			const gotoPoint: GeoJSON.Point = {
+				type: 'Point'
+				// calculate projection?coordinates: point
+			};
+			const gotoFeatureJson: GeoJSON.Feature<any> = {
+				type: 'Feature',
+				geometry: gotoPoint,
+				properties: {}
+			};
+			gotoVisualizer.clearEntities();
+			gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
+		} else {
+			gotoVisualizer.clearEntities();
 
 
 		}
@@ -540,7 +542,7 @@ export class VisualizersAppEffects {
 				properties: {}
 			};
 			iconVisualizer.clearEntities();
-			iconVisualizer.setEntities([{id: 'pinPoint', featureJson: pinFeatureJson}]);
+			iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
 		}
 	}
 
@@ -561,7 +563,7 @@ export class VisualizersAppEffects {
 		}
 	}
 
-    // add shadow mouse consumer (listen to producer)
+	// add shadow mouse consumer (listen to producer)
 	addShadowMouseConsumer(mapData: CaseMapState, pointerMoveProducer: Observable<any>) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && pointerMoveProducer) {

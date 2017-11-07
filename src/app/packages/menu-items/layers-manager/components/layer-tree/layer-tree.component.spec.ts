@@ -111,7 +111,7 @@ describe('LayerTreeComponent', () => {
 			]
 		}];
 
-		component.source = Observable.of(allFalseNodes);
+		component.source$ = Observable.of(allFalseNodes);
 		fixture.detectChanges();
 		component.ngAfterViewInit();
 		fixture.detectChanges();
@@ -145,7 +145,7 @@ describe('LayerTreeComponent', () => {
 			]
 		}];
 
-		component.source = Observable.of(allFalseNodes);
+		component.source$ = Observable.of(allFalseNodes);
 		fixture.detectChanges();
 		component.ngAfterViewInit();
 		fixture.detectChanges();
@@ -201,7 +201,7 @@ describe('LayerTreeComponent', () => {
 			]
 		}];
 
-		component.source = Observable.of(allFalseNodes);
+		component.source$ = Observable.of(allFalseNodes);
 		fixture.detectChanges();
 		component.ngAfterViewInit();
 		fixture.detectChanges();
@@ -264,7 +264,7 @@ describe('LayerTreeComponent', () => {
 			]
 		}];
 
-		component.source = Observable.of(allFalseNodes);
+		component.source$ = Observable.of(allFalseNodes);
 		fixture.detectChanges();
 		component.ngAfterViewInit();
 		fixture.detectChanges();
@@ -339,7 +339,7 @@ describe('LayerTreeComponent', () => {
 			}
 		});
 
-		component.source = Observable.of(allTrueNodes);
+		component.source$ = Observable.of(allTrueNodes);
 		fixture.detectChanges();
 		component.ngAfterViewInit();
 		fixture.detectChanges();

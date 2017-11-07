@@ -22,7 +22,7 @@ import { StoreModule } from '@ngrx/store';
 			useFactory: useFactoryInitializer,
 			deps: [AnsynRouterService],
 			multi: true
-		},
+		}
 	]
 })
 

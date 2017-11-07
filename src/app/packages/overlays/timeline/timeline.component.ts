@@ -165,7 +165,7 @@ export class TimelineComponent implements OnInit {
 
 		const dataSet = this.drops.map(entities => ({
 			name: entities.name || '',
-			data: entities.data,
+			data: entities.data
 		}));
 
 		const element = select(this.context.nativeElement)

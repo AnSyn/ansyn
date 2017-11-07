@@ -12,7 +12,7 @@ import { LoginConfigService } from './services/login-config.service';
 	imports: [
 		BrowserModule,
 		FormsModule,
-		HttpClientModule,
+		HttpClientModule
 	],
 	declarations: [LoginComponent],
 	providers: [AuthGuard, AuthService, UnAuthGuard, LoginConfigService]

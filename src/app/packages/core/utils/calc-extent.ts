@@ -1,3 +1,4 @@
+import * as GeoJSON from 'geojson';
 import * as  bbox from '@turf/bbox';
 import * as  bboxPolygon from '@turf/bbox-polygon';
 import * as center from '@turf/center';

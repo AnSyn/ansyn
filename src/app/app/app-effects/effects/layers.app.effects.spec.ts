@@ -35,7 +35,7 @@ describe('LayersAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({
 				[layersFeatureKey]: LayersReducer,
-				[casesFeatureKey]: CasesReducer,
+				[casesFeatureKey]: CasesReducer
 			})],
 			providers: [
 				provideMockActions(() => actions),

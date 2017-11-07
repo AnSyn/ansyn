@@ -24,7 +24,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer })],
+			imports: [StatusBarModule, StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer })]
 		})
 			.compileComponents();
 	}));

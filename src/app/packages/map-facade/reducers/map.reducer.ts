@@ -2,7 +2,7 @@ import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface IMapState {
 	communicators: {};
@@ -21,12 +21,12 @@ export const initialMapState: IMapState = {
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
 	activeMapId: null,
-	mapsList: [],
+	mapsList: []
 };
 
 export const mapFeatureKey = 'map';
 
-export const mapStateSelector = createFeatureSelector<IMapState>(mapFeatureKey);
+export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureSelector<IMapState>(mapFeatureKey);
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
 

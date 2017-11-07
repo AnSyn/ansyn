@@ -22,8 +22,8 @@ describe('RouterAppEffects', () => {
 			],
 			providers: [
 				RouterAppEffects,
-				provideMockActions(() => actions),
-			],
+				provideMockActions(() => actions)
+			]
 		});
 	});
 

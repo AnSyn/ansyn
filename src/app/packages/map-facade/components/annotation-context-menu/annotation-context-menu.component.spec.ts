@@ -71,7 +71,7 @@ describe('AnnotationContextMenuComponent', () => {
 							left: 100,
 							width: 100
 						}
-					},
+					}
 				};
 				(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
 

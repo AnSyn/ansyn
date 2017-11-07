@@ -10,7 +10,7 @@ describe('TimelineTimepickerComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot([]), StatusBarModule],
+			imports: [StoreModule.forRoot([]), StatusBarModule]
 		}).compileComponents();
 	});
 

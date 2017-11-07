@@ -1,8 +1,8 @@
-interface Fill {
+export interface Fill {
 	color: string;
 }
 
-interface Stroke {
+export interface Stroke {
 	color?: any;
 	width?: any;
 }

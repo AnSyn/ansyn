@@ -17,7 +17,7 @@ import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],
 	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
-	entryComponents: [ToolsComponent],
+	entryComponents: [ToolsComponent]
 })
 
 export class ToolsModule {

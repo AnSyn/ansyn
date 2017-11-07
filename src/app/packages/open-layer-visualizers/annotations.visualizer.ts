@@ -15,12 +15,13 @@ import { featureCollection } from '@turf/helpers';
 import { FeatureCollection } from 'geojson';
 import { Subject } from 'rxjs/Subject';
 import { VisualizerStateStyle } from './models/visualizer-state';
+import { VisualizerStyle } from './models/visualizer-style';
 
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
 
-enum MouseClick {
+export enum MouseClick {
 	Left = 1,
 	Scroll = 2,
 	Right = 3
@@ -83,7 +84,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return JSON.stringify(this.getFeatures());
 	}
 
-	getFeatures() {
+	getFeatures(): any {
 		return featureCollection(this.features);
 	}
 
@@ -350,7 +351,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.interactionHandler = new Draw({
 			source: this.source,
 			type: type,
-			geometryName: `${this.namePrefix}${type}`,
+			geometryName: `${this.namePrefix}${type}`
 
 
 		});
@@ -369,7 +370,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.interactionHandler = new Draw({
 			source: this.source,
 			type: 'LineString',
-			geometryName: `${this.namePrefix}Arrow`,
+			geometryName: `${this.namePrefix}Arrow`
 		});
 		this.addInteraction();
 	}
@@ -436,7 +437,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	styleFunction(feature, resolution, style = this.visualizerStyle.initial) {
+	styleFunction(feature, resolution, style: VisualizerStyle = this.visualizerStyle.initial) {
 		if (feature.getGeometryName() === `${this.namePrefix}Arrow`) {
 			return this.arrowStyle(feature, resolution);
 		}

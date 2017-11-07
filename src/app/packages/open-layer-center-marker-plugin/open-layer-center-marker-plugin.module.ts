@@ -5,7 +5,7 @@ import { CenterMarkerPlugin } from './plugin/center-marker-plugin';
 
 @NgModule({
 	imports: [CommonModule, ImageryModule],
-	providers: [],
+	providers: []
 })
 
 export class OpenLayerCenterMarkerPluginModule {

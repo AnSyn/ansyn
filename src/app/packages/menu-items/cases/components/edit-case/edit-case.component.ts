@@ -21,7 +21,7 @@ const animations: any[] = [
 		transition(':leave', [style({
 			'backgroundColor': 'white',
 			transform: 'translate(0, 0)'
-		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))])
 	])
 ];
 
@@ -94,7 +94,7 @@ export class EditCaseComponent implements OnInit {
 				maps: {
 					layoutsIndex: 0,
 					activeMapId: activeMap.id,
-					data: [activeMap],
+					data: [activeMap]
 				},
 				time: {
 					type: 'absulote',

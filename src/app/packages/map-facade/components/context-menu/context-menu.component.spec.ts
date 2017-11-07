@@ -92,7 +92,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '1', [component.filterField]: 'b' },
 			{ id: '2', [component.filterField]: 'a' },
 			{ id: '3', [component.filterField]: 'c' },
-			{ id: '4', [component.filterField]: 'b' },
+			{ id: '4', [component.filterField]: 'b' }
 		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -108,7 +108,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '1', [component.filterField]: 'c' },
 			{ id: '2', [component.filterField]: 'c' },
 			{ id: '3', [component.filterField]: 'c' },
-			{ id: '4', [component.filterField]: 'b' },
+			{ id: '4', [component.filterField]: 'b' }
 		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -124,7 +124,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '1', [component.filterField]: 'a' },
 			{ id: '2', [component.filterField]: 'c' },
 			{ id: '3', [component.filterField]: 'c' },
-			{ id: '4', [component.filterField]: 'c' },
+			{ id: '4', [component.filterField]: 'c' }
 		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');
@@ -140,7 +140,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '1', [component.filterField]: 'c', bestResolution: 3.5 },
 			{ id: '2', [component.filterField]: 'c', bestResolution: 1.25 }, // best of "c" (index 1)
 			{ id: '3', [component.filterField]: 'b', bestResolution: 0.5 }, // best (index 2)
-			{ id: '4', [component.filterField]: 'c', bestResolution: 1.5 },
+			{ id: '4', [component.filterField]: 'c', bestResolution: 1.5 }
 		] as any[];
 		const $event = <MouseEvent> null;
 		spyOn(component, 'displayOverlayEvent');

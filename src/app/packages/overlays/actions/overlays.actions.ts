@@ -27,7 +27,7 @@ export const OverlaysActionTypes = {
 	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
-	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
+	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP')
 };
 
 export class SelectOverlayAction implements Action {

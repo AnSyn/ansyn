@@ -125,7 +125,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		this.hoverLayer = new VectorLayer({
 			source: new SourceVector(),
-			style: (feature) => this.featureStyle(feature, VisualizerStates.HOVER),
+			style: (feature) => this.featureStyle(feature, VisualizerStates.HOVER)
 		});
 
 		this.iMap.mapObject.addLayer(this.hoverLayer);

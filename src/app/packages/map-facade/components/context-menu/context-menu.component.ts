@@ -12,7 +12,7 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { toPayload } from '@ngrx/effects';
 
-interface OverlayButton {
+export interface OverlayButton {
 	name: string;
 	subList: string;
 	action: ($event: MouseEvent, subFilter?: string) => void;
@@ -96,33 +96,33 @@ export class ContextMenuComponent implements OnInit {
 		{
 			name: 'last',
 			subList: 'nextSensors',
-			action: this.clickLast.bind(this),
+			action: this.clickLast.bind(this)
 		},
 		{
 			name: 'first',
 			subList: 'prevSensors',
-			action: this.clickFirst.bind(this),
+			action: this.clickFirst.bind(this)
 		},
 		{
 			name: 'next',
 			subList: 'nextSensors',
-			action: this.clickNext.bind(this),
+			action: this.clickNext.bind(this)
 		},
 		{
 			name: 'prev',
 			subList: 'prevSensors',
-			action: this.clickPrev.bind(this),
+			action: this.clickPrev.bind(this)
 		},
 		{
 			name: 'best',
 			subList: 'allSensors',
-			action: this.clickBest.bind(this),
+			action: this.clickBest.bind(this)
 		},
 		{
 			name: 'angle',
 			subList: 'angleList',
 			action: () => {
-			},
+			}
 		}
 	];
 

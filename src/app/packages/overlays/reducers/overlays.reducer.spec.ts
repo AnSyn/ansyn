@@ -6,7 +6,7 @@ import {
 	SetFiltersAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
-	UnSelectOverlayAction,
+	UnSelectOverlayAction
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';

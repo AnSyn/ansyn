@@ -317,7 +317,7 @@ describe('ToolsAppEffects', () => {
 		const expectedResults = cold('--(abc)--', {
 			a: new EnableImageProcessing(),
 			b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: false }),
-			c: new SetAutoImageProcessingSuccess(false),
+			c: new SetAutoImageProcessingSuccess(false)
 		});
 		expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 	});

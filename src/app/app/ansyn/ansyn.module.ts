@@ -35,7 +35,7 @@ const MenuItemsModules = [
 	ToolsModule,
 	AlgorithmsModule,
 	SettingsModule,
-	ImagerySandBoxModule,
+	ImagerySandBoxModule
 ];
 
 @NgModule({

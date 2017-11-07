@@ -15,12 +15,12 @@ import 'rxjs/add/operator/distinctUntilChanged';
 	animations: [
 		trigger('rotateArrow', [
 			state('true', style({
-				transform: 'rotateZ(-45deg) translateY(35%) translateX(50%)',
+				transform: 'rotateZ(-45deg) translateY(35%) translateX(50%)'
 			})),
 			state('false', style({
-				transform: 'rotateZ(135deg) translateY(-75%)',
+				transform: 'rotateZ(135deg) translateY(-75%)'
 			})),
-			transition('1 <=> 0', animate('0.1s')),
+			transition('1 <=> 0', animate('0.1s'))
 		]),
 		trigger('fieldsTrigger', [
 			state('true', style({

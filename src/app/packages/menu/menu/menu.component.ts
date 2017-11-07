@@ -31,9 +31,9 @@ const animations: any[] = [
 			state('0', style({
 				transform: 'translateX(-100%)'
 			})),
-			transition('1 <=> 0', animate('0.3s ease-in-out')),
+			transition('1 <=> 0', animate('0.3s ease-in-out'))
 		]
-	),
+	)
 ];
 
 @Component({

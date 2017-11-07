@@ -90,7 +90,7 @@ describe('VisualizersAppEffects', () => {
 							{
 								id: 'notActiveMapId2',
 								data: {}
-							},
+							}
 
 						]
 					},
@@ -289,7 +289,7 @@ describe('VisualizersAppEffects', () => {
 		it('check remove interaction', () => {
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'removeInteraction',
+				action: 'removeInteraction'
 
 			});
 			actions = hot('--a--', { a: action });
@@ -323,7 +323,7 @@ describe('VisualizersAppEffects', () => {
 			selectedCase.state.layers.annotationsLayer = geoJsonDataAsString;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'refreshDrawing',
+				action: 'refreshDrawing'
 			});
 
 			actions = hot('--a--', { a: action });
@@ -338,7 +338,7 @@ describe('VisualizersAppEffects', () => {
 			layersState.displayAnnotationsLayer = true;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'endDrawing',
+				action: 'endDrawing'
 			});
 			actions = hot('--a--', { a: action });
 			expect(visualizersAppEffects.annotationVisualizerAgent$).toBeObservable(cold('-'));
@@ -350,7 +350,7 @@ describe('VisualizersAppEffects', () => {
 			layersState.displayAnnotationsLayer = false;
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'endDrawing',
+				action: 'endDrawing'
 			});
 			actions = hot('--a--', { a: action });
 			expect(visualizersAppEffects.annotationVisualizerAgent$).toBeObservable(cold('-'));
@@ -363,7 +363,7 @@ describe('VisualizersAppEffects', () => {
 			newCase.state.layers.annotationsLayer = (<any>getGeoJsonValue);
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'active',
-				action: 'saveDrawing',
+				action: 'saveDrawing'
 			});
 			actions = hot('--a--', { a: action });
 
@@ -379,7 +379,7 @@ describe('VisualizersAppEffects', () => {
 		it('check remove layer', () => {
 			const action = new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'removeLayer',
+				action: 'removeLayer'
 
 			});
 

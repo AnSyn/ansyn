@@ -25,7 +25,6 @@ before_script:
 script:
   - npm run test:single-run
   - npm run check-template
-  - npm run build:backwards
 
 cache:
   yarn: true
@@ -33,6 +32,7 @@ cache:
      - ./node_modules
 
 before_deploy:
+  - npm run build:backwards
   - docker --version
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path

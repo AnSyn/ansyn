@@ -15,7 +15,7 @@ import { SetToastMessageStoreAction } from '@ansyn/status-bar';
 import {
 	CopyCaseLinkAction,
 	LoadContextsSuccessAction,
-	SelectCaseAction,
+	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';

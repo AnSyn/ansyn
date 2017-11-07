@@ -1,6 +1,6 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface IToolsState {
 	flags: Map<string, boolean>;
@@ -21,7 +21,7 @@ export const toolsInitialState: IToolsState = {
 };
 
 export const toolsFeatureKey = 'tools';
-export const toolsStateSelector = createFeatureSelector<IToolsState>(toolsFeatureKey);
+export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<string, boolean>;

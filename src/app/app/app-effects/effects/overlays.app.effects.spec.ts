@@ -83,7 +83,7 @@ describe('OverlaysAppEffects', () => {
 				data: [
 					{ id: 'imagery1', data: { overlayDisplayMode: 'Hitmap' } },
 					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
-					{ id: 'imagery3', data: {} },
+					{ id: 'imagery3', data: {} }
 				],
 				activeMapId: 'imagery1'
 			}
@@ -98,7 +98,7 @@ describe('OverlaysAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[toolsFeatureKey]: ToolsReducer
-				}),
+				})
 			],
 			providers: [
 				OverlaysAppEffects,

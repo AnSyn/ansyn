@@ -18,7 +18,7 @@ const coreComponents = [
 @NgModule({
 	imports: [
 		CommonModule,
-		ToastModule,
+		ToastModule
 	],
 	providers: [GenericTypeResolverService],
 	exports: [ToastModule, ...coreComponents],

@@ -2,7 +2,7 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { Context } from '../models/context.model';
 import { get as _get } from 'lodash';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
 import { deepMerge } from '@ansyn/core/utils';
 
@@ -28,7 +28,7 @@ export const initialCasesState: ICasesState = {
 
 export const casesFeatureKey = 'cases';
 
-export const casesStateSelector = createFeatureSelector<ICasesState>(casesFeatureKey);
+export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
 
 export function CasesReducer(state: ICasesState = initialCasesState, action: CasesActions) {
 
@@ -40,7 +40,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 		case CasesActionTypes.ADD_CASE_SUCCESS:
 			const casesAdded: Case[] = [
 				action.payload,
-				...state.cases,
+				...state.cases
 			];
 			return Object.assign({}, state, { cases: casesAdded });
 
@@ -88,7 +88,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			}
 			const cases: Case[] = [
 				...state.cases.slice(0, caseToRemoveIndex),
-				...state.cases.slice(caseToRemoveIndex + 1, state.cases.length),
+				...state.cases.slice(caseToRemoveIndex + 1, state.cases.length)
 			];
 			return Object.assign({}, state, { cases });
 

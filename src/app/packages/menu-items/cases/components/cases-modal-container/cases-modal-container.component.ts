@@ -13,7 +13,7 @@ const animationsDuring = '0.2s';
 const animations: any[] = [
 	trigger('blackScreen', [
 		transition(':enter', [style({ opacity: 0 }), animate(animationsDuring, style({ opacity: 1 }))]),
-		transition(':leave', [style({ opacity: 1 }), animate(animationsDuring, style({ opacity: 0 }))]),
+		transition(':leave', [style({ opacity: 1 }), animate(animationsDuring, style({ opacity: 0 }))])
 	])
 ];
 

@@ -7,7 +7,7 @@ import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/ove
 import {
 	ContextMenuDisplayAction,
 	ContextMenuGetFilteredOverlaysAction,
-	ContextMenuShowAction,
+	ContextMenuShowAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	DisplayOverlayFromStoreAction,
@@ -70,7 +70,7 @@ describe('ContextMenuAppEffects', () => {
 		const showAction = new ContextMenuShowAction({
 			point: {
 				type: 'Point',
-				coordinates: [0, 0],
+				coordinates: [0, 0]
 			},
 			e: new MouseEvent(null, null)
 		});

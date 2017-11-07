@@ -69,7 +69,7 @@ describe('CasesAppEffects', () => {
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null } },
 				// Provide context provider
-				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService },
+				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService }
 			]
 		}).compileComponents();
 	}));

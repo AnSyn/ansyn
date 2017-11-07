@@ -2,7 +2,7 @@ import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface TimelineState {
 	from: Date;
@@ -36,7 +36,7 @@ export const overlaysInitialState: IOverlaysState = {
 	filteredOverlays: []
 };
 export const overlaysFeatureKey = 'overlays';
-export const overlaysStateSelector = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
+export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
 
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {

@@ -25,7 +25,7 @@ describe('MapEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			],
 			providers: [
 				MapEffects,
@@ -70,7 +70,7 @@ describe('MapEffects', () => {
 
 			mapState.mapsList = <any> [
 				{ id: 'imagery1', data: { overlay: testOverlay } },
-				{ id: 'imagery2', data: { overlay: testOverlay } },
+				{ id: 'imagery2', data: { overlay: testOverlay } }
 			];
 			mapState.activeMapId = 'imagery1';
 			const fakeCommuincator = { id: 'test' };

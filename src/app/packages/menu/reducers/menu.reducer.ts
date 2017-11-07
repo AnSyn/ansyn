@@ -3,7 +3,7 @@ import { SetBadgeAction } from '../actions/menu.actions';
 import { MenuItem } from '../models';
 import { isDevMode } from '@angular/core';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
@@ -21,7 +21,7 @@ export const initialMenuState: IMenuState = {
 
 export const menuFeatureKey = 'menu';
 
-export const menuStateSelector = createFeatureSelector<IMenuState>(menuFeatureKey);
+export const menuStateSelector: MemoizedSelector<any, IMenuState> = createFeatureSelector<IMenuState>(menuFeatureKey);
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 

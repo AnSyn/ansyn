@@ -15,7 +15,7 @@ describe('MapFacadeService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				MapFacadeService,
-				ImageryCommunicatorService,
+				ImageryCommunicatorService
 			],
 			imports: [ImageryModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })]
 		});

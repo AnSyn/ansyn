@@ -26,7 +26,7 @@ const animations: any[] = [
 		transition(':leave', [style({
 			'backgroundColor': 'white',
 			transform: 'translate(0, 0)'
-		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))]),
+		}), animate(animationsDuring, style({ 'backgroundColor': '#27b2cf', transform: 'translate(0, -100%)' }))])
 	])
 ];
 

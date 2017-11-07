@@ -10,7 +10,7 @@ describe('ImageryProviderService', () => {
 			declarations: [],
 			providers: [
 				ImageryProviderService,
-				{ provide: VisualizersConfig, useValue: {} },
+				{ provide: VisualizersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

@@ -23,7 +23,7 @@ describe('GoToComponent', () => {
 						to: ''
 					}
 				}
-				},
+				}
 			]
 		})
 			.compileComponents();

@@ -51,7 +51,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				ImageryStatusComponent,
 				OverlaysStatusNotificationsComponent
-			],
+			]
 
 		}).compileComponents();
 	}));

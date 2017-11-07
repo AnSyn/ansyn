@@ -395,7 +395,7 @@ export class MapAppEffects {
 		.map(() => {
 			return new AnnotationVisualizerAgentAction({
 				maps: 'all',
-				action: 'show',
+				action: 'show'
 			})
 		});
 

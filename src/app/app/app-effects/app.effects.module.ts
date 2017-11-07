@@ -50,8 +50,8 @@ export interface IAppState {
 			ContextEntityAppEffects,
 			RouterAppEffects,
 			VisualizersAppEffects
-		]),
-	],
+		])
+	]
 })
 
 export class AppEffectsModule {

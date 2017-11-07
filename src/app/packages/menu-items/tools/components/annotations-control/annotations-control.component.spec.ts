@@ -16,7 +16,7 @@ describe('AnnotationsControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent],
-			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
 			/*	providers: [{
 						provide: 'DOCUMENT',  useClass: MockDocument
 					}]*/

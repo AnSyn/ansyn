@@ -427,12 +427,12 @@ describe('MapAppEffects', () => {
 		it('on add communicator set pluggin with data', () => {
 			const plugin = {
 				init: () => {
-				},
+				}
 			};
 
 			const communicator = {
 				getPlugin: () => {
-				},
+				}
 			};
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPlugin').and.callFake(() => plugin);

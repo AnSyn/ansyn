@@ -23,7 +23,7 @@ describe('overlaysDisplayModeComponent', () => {
 		spyOn(store, 'dispatch');
 
 		const fakeStore = new Map<any, any>([
-			[toolsStateSelector, { activeOverlaysFootprintMode: 'None' }],
+			[toolsStateSelector, { activeOverlaysFootprintMode: 'None' }]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));

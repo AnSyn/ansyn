@@ -10,7 +10,7 @@ const animations: any[] = [
 		transition(':leave', [style({ opacity: 1, transform: 'translate(0, 0)' }), animate('0.2s', style({
 			opacity: 0,
 			transform: 'translate(0, 100%)'
-		}))]),
+		}))])
 	])
 ];
 

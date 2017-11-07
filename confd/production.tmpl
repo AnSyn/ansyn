@@ -66,7 +66,8 @@
                 },
                 "geoFilter": "pin-point",
                 "orientation": "original",
-                "favoritesOverlays": []
+                "favoritesOverlays": [],
+                "layers": {}
             }
         },
         "casesQueryParamsKeys": ["facets", "time", "maps", "region"],
@@ -141,9 +142,45 @@
     },
 	"loginConfig": {
 		"baseUrl": "{{ getv "/ansyn/login/baseurl"}}",
-		"active": true
+		"active": true,
+		"authorizedPath": "/"
 	},
 	"visualizersConfig": {
-
+		"exampleFootprintHeatmapVisualizer": {
+			"initial": {
+				"fill": {
+					"color": "red"
+				},
+				"stroke": {
+					"color": "green",
+					"width": 3
+				}
+			},
+			"hover": {
+				"fill": {
+					"color": "green"
+				},
+				"stroke": {
+					"color": "yellow",
+					"width": 3
+				}
+			},
+			"entities": {
+				"yellow": {
+					"initial": {
+						"fill": {
+							"color": "yellow"
+						}
+					}
+				},
+				"blue": {
+					"initial": {
+						"fill": {
+							"color": "blue"
+						}
+					}
+				}
+			}
+		}
 	}
 }

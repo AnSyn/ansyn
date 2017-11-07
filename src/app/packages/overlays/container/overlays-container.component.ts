@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import * as overlaysAction from '../actions/overlays.actions';
 import {
@@ -9,7 +9,6 @@ import {
 	SetTimelineStateAction,
 	UnSelectOverlayAction
 } from '../actions/overlays.actions';
-import { DestroySubscribers } from 'ng2-destroy-subscribers';
 import { first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
@@ -33,7 +32,7 @@ const animations: any[] = [
 		transition(':leave', [
 			style({ opacity: 1 }),
 			animate('0.2s', style({ opacity: 0 }))
-		]),
+		])
 	])
 ];
 
@@ -44,11 +43,7 @@ const animations: any[] = [
 	animations
 })
 
-@DestroySubscribers({
-	destroyFunc: 'ngOnDestroy',
-})
-
-export class OverlaysContainerComponent implements OnInit {
+export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	drops: any[] = [];
 	redraw$: EventEmitter<any> = new EventEmitter();
 	selectedOverlays: Array<string> = [];
@@ -63,7 +58,7 @@ export class OverlaysContainerComponent implements OnInit {
 			top: 60,
 			left: 50,
 			bottom: 40,
-			right: 50,
+			right: 50
 		},
 		end: new Date(),
 		eventLineColor: (d, i) => schemeCategory10[i],
@@ -72,7 +67,7 @@ export class OverlaysContainerComponent implements OnInit {
 		shapes: {
 			star: {
 				fill: 'green',
-				offsetY: 20,
+				offsetY: 20
 			}
 		}
 	};
@@ -165,4 +160,7 @@ export class OverlaysContainerComponent implements OnInit {
 			});
 	};
 
+	ngOnDestroy(): void {
+		Object.keys(this.subscribers).forEach((s) => this.subscribers[s].unsubscribe());
+	}
 }

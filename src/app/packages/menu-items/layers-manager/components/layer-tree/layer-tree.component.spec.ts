@@ -79,14 +79,14 @@ describe('LayerTreeComponent', () => {
 	it('annotation layer checkbox click - state: annotation layer disabled', () => {
 		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = false;
-		component.annotationLayerClick({}, {});
+		component.annotationLayerClick();
 		expect(store.dispatch).toHaveBeenCalledWith(new ShowAnnotationsLayer({ update: true }));
 	});
 
 	it('annotation layer checkbox click - state: annotation layer enabled', () => {
 		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = true;
-		component.annotationLayerClick({}, {});
+		component.annotationLayerClick();
 		expect(store.dispatch).toHaveBeenCalledWith(new HideAnnotationsLayer({ update: true }));
 	});
 

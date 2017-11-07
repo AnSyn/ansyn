@@ -507,8 +507,9 @@ export class VisualizersAppEffects {
 		}
 		if (gotoExpand) {
 			const gotoPoint: GeoJSON.Point = {
-				type: 'Point'
-				// calculate projection?coordinates: point
+				type: 'Point',
+				// calculate projection?
+				coordinates: point
 			};
 			const gotoFeatureJson: GeoJSON.Feature<any> = {
 				type: 'Feature',

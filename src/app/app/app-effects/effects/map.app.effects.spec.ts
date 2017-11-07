@@ -343,7 +343,7 @@ describe('MapAppEffects', () => {
 		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
 	});
 
-	describe('onCommunicatorChange$ ', () => {
+	describe('onCommunicatorChange$', () => {
 		it('display annotation layer', () => {
 			// here I am setting the data that will be returend after this.store select clue: reference
 			layerState.displayAnnotationsLayer = true;
@@ -355,7 +355,7 @@ describe('MapAppEffects', () => {
 				})
 			});
 			const  b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
-			const expectedResults = cold('--b--', { b: b });
+			const expectedResults = cold('--b--', { b });
 			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});
 		it('dont display annotation layer', () => {

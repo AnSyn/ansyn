@@ -22,7 +22,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
 	@ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-	@Input() source: Observable<ILayerTreeNode[]>;
+	@Input() source$: Observable<ILayerTreeNode[]>;
 
 	@Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
 
@@ -30,6 +30,11 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
+
+		this.source$.subscribe((data) => {
+			console.log("nodes ", data);
+		});
+
 		this.options = {
 			getChildren: () => new Promise((resolve, reject) => {
 			}),
@@ -49,7 +54,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 		this.treeComponent.treeModel.virtualScroll.setViewport(this.myElement.nativeElement);
 	}
 
-	annotationLayerClick($event, data) {
+	annotationLayerClick() {
 		this.annotationLayerChecked = !this.annotationLayerChecked;
 		if (this.annotationLayerChecked) {
 			this.store.dispatch(new ShowAnnotationsLayer({ update: true }));

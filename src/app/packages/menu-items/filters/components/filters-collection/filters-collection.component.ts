@@ -4,15 +4,11 @@ import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
-import { DestroySubscribers } from 'ng2-destroy-subscribers';
 
 @Component({
 	selector: 'ansyn-filters',
 	templateUrl: './filters-collection.component.html',
 	styleUrls: ['./filters-collection.component.less']
-})
-@DestroySubscribers({
-	destroyFunc: 'ngOnDestroy',
 })
 
 export class FiltersCollectionComponent implements OnDestroy {
@@ -54,7 +50,7 @@ export class FiltersCollectionComponent implements OnDestroy {
 	}
 
 	ngOnDestroy() {
-
+		Object.keys(this.subscribers).forEach((s) => this.subscribers[s].unsubscribe());
 	}
 
 }

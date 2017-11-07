@@ -30,11 +30,6 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
-
-		this.source$.subscribe((data) => {
-			console.log("nodes ", data);
-		});
-
 		this.options = {
 			getChildren: () => new Promise((resolve, reject) => {
 			}),

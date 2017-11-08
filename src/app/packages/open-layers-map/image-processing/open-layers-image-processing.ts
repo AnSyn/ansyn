@@ -122,10 +122,13 @@ export class OpenLayersImageProcessing {
 			operationsFunctionsString += ']';
 
 			globalLib['operations'] = operationsFunctionsString;
-
-			raster.setOperation(cascadeOperations, globalLib);
+			if (raster.setOperation) {
+				raster.setOperation(cascadeOperations, globalLib);
+			}
 		} else {
-			raster.setOperation(basicOperation);
+			if (raster.setOperation) {
+				raster.setOperation(basicOperation);
+			}
 		}
 	}
 }

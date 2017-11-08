@@ -101,7 +101,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = 0;
 		overlay.sourceType = IdahoOverlaySourceType;
 		overlay.isFullOverlay = true;
-		overlay.isGeoRegistered = false;
+		overlay.isGeoRegistered = true;
 
 		return overlay;
 	}

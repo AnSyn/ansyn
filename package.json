@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"scripts": {
 		"postinstall": "npm run links",
-		"links": "npm link ./src/app/app ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin",
-		"unlinks": "npm unlink @ansyn/app @ansyn/router @ansyn/login @ansyn/context @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/imagery @ansyn/overlays @ansyn/open-layers-map @ansyn/map-facade @ansyn/cesium-map @ansyn/status-bar @ansyn/open-layer-center-marker-plugin @ansyn/open-layer-visualizers",
+		"links": "npm link ./src/assets ./src/app/app ./src/app/packages/router ./src/app/packages/login ./src/app/packages/open-layer-visualizers ./src/app/packages/context ./src/app/packages/overlays ./src/app/packages/core ./src/app/packages/menu ./src/app/packages/menu-items ./src/app/packages/imagery ./src/app/packages/open-layers-map ./src/app/packages/map-facade ./src/app/packages/cesium-map ./src/app/packages/status-bar ./src/app/packages/open-layer-center-marker-plugin",
+		"unlinks": "npm unlink @ansyn/assets @ansyn/app @ansyn/router @ansyn/login @ansyn/context @ansyn/core @ansyn/menu @ansyn/menu-items @ansyn/imagery @ansyn/overlays @ansyn/open-layers-map @ansyn/map-facade @ansyn/cesium-map @ansyn/status-bar @ansyn/open-layer-center-marker-plugin @ansyn/open-layer-visualizers",
 		"start": "ng serve",
 		"build": "ng build",
 		"start:aot": "ng serve --aot true",

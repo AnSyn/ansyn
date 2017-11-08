@@ -11,8 +11,8 @@
 
 	<div>
 		<button class="tooltip-value right"
-				(click)="toggleExpandGoTo()"
-				[class.active]="expandGoTo"
+				(click)="toggleSubMenu(subMenuEnum.goTo)"
+				[class.active]="expandedSubMenu === subMenuEnum.goTo"
 				[disabled]="isGeoOptionsDisabled"
 				value="Go To">
 			<i class="icon-tools-go-to"></i>
@@ -20,9 +20,9 @@
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
-	<div class="image-processing">
+	<div class="image-auto-processing">
 		<button class="tooltip-value right"
-				(click)="toggleImageProcessing()"
+				(click)="toggleAutoImageProcessing()"
 				[class.mode-on]="flags.get('autoImageProcessing')"
 				[disabled]="flags.get('autoImageProcessingDisabled')"
 				value="Automatic Image Enhancement">
@@ -30,29 +30,37 @@
 		</button>
 	</div>
 
+	<div class="image-manual-processing">
+		<button class="tooltip-value right"
+				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
+				value="Manual Image Enhancement">
+			<i class="icon-tools-image-processing"></i>
+		</button>
+	</div>
+
 	<div class="display-overlay-visualizer">
 		<button
 			class="tooltip-value right"
-			(click)="toggleExpandVisualizers()"
+			(click)="toggleSubMenu(subMenuEnum.overlays)"
 			[disabled]="isGeoOptionsDisabled"
 			value="Display Overlays"
 			[class.mode-on]="displayModeOn"
-			[class.active]="expandOverlaysDisplayMode">
+			[class.active]="expandedSubMenu === subMenuEnum.overlays">
 			<i class="icon-tools-polygons"></i>
 		</button>
 
 		<ansyn-overlays-display-mode
 			[disabled]="isGeoOptionsDisabled"
-			[(expand)]="expandOverlaysDisplayMode"
+			[expand]="expandedSubMenu === subMenuEnum.overlays"
 			[(modeOn)]="displayModeOn">
 		</ansyn-overlays-display-mode>
 	</div>
 
 	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
-		<button (click)="toggleAnnotationMenu()">
+		<button (click)="toggleSubMenu(subMenuEnum.annotations)">
 			<span class="icon-edit"></span>
 		</button>
 		<span class="tooltiptext">User Annotations</span>
-		<ansyn-annotations-control [expand]="userAnnotationsToolOpen"></ansyn-annotations-control>
+		<ansyn-annotations-control [expand]="expandedSubMenu === subMenuEnum.annotations"></ansyn-annotations-control>
 	</div>
 </div>

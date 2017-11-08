@@ -14,6 +14,8 @@ import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
 
+enum SubMenuEnum { goTo = 1, manualImageProcessing, overlays, annotations }
+
 @Component({
 	selector: 'ansyn-tools',
 	templateUrl: './tools.component.html',
@@ -23,8 +25,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
-	public expandGoTo = false;
-	public expandOverlaysDisplayMode = false;
+
+	public subMenuEnum = SubMenuEnum;
+	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
 	public userAnnotationsToolOpen = false;
 	public flags: Map<string, boolean>;
@@ -45,7 +48,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.isGeoOptionsDisabled = !this.flags.get('geoRegisteredOptionsEnabled');
 		});
 		this.gotoExpand$.subscribe(_gotoExpand => {
-			this.expandGoTo = _gotoExpand;
+			if (_gotoExpand) {
+				this.expandedSubMenu = SubMenuEnum.goTo
+			}
 		});
 	}
 
@@ -67,25 +72,27 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleExpandGoTo() {
-		this.expandOverlaysDisplayMode = false;
-		this.store.dispatch(new GoToExpandAction(!this.expandGoTo));
-
-	}
-
-	toggleExpandVisualizers() {
-		this.store.dispatch(new GoToExpandAction(false));
-		this.expandOverlaysDisplayMode = !this.expandOverlaysDisplayMode;
-	}
-
-	toggleImageProcessing() {
+	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing);
 	}
 
-	toggleAnnotationMenu() {
+	toggleSubMenu(subMenu: SubMenuEnum) {
+		// update new state of expandedSubMenu;
+		const lastExpandedSubMenu = this.expandedSubMenu;
+		this.expandedSubMenu = (subMenu !== this.expandedSubMenu) ? subMenu : null;
+		// if toggle goto - dispatch;
+		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo ) {
+			this.store.dispatch(new GoToExpandAction(this.expandedSubMenu === SubMenuEnum.goTo));
+		}
+		// if toggle annotations - treat annotations toggle
+		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations ) {
+			this.toggleAnnotationMenu(this.expandedSubMenu === SubMenuEnum.annotations);
+		}
+	}
+
+	toggleAnnotationMenu(subMenuOpen) {
 		// send event to the store that saying the annotation option is enabled
-		this.userAnnotationsToolOpen = !this.userAnnotationsToolOpen;
-		if (this.userAnnotationsToolOpen) {
+		if (subMenuOpen) {
 			this.store.dispatch(new AnnotationOpen(true));
 			this.store.dispatch(new SetAutoCloseMenu(false));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
@@ -101,8 +108,5 @@ export class ToolsComponent implements OnInit, OnDestroy {
 				maps: 'active'
 			}));
 		}
-
-
 	}
-
 }

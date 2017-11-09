@@ -26,8 +26,6 @@ import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 
 @NgModule({

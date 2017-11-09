@@ -39,13 +39,13 @@ import {
 	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
 	PinPointTriggerAction,
+	RaiseMessageAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SetFavoriteAction,
 	SetLayoutAction,
 	SetMapsDataActionStore,
 	SetOverlaysNotInCaseAction,
-	SynchronizeMapsAction,
-	RaiseMessageAction
+	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
@@ -60,7 +60,8 @@ import {
 	AnnotationVisualizerAgentAction,
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetPinLocationModeAction
+	SetPinLocationModeAction,
+	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
@@ -76,7 +77,6 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import 'rxjs/add/observable/fromPromise';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -337,10 +337,11 @@ export class MapAppEffects {
 	raiseMessageAction$: Observable<SetToastMessageStoreAction> = this.actions$
 		.ofType<RaiseMessageAction>(MapActionTypes.MESSAGE_RAISED)
 		.map((action: RaiseMessageAction) => {
-			return new SetToastMessageStoreAction({
-				toastText: action.payload.message,
-				showWarningIcon: action.payload.isError
-			})}
+				return new SetToastMessageStoreAction({
+					toastText: action.payload.message,
+					showWarningIcon: action.payload.isError
+				});
+			}
 		);
 
 	/**
@@ -396,7 +397,7 @@ export class MapAppEffects {
 			return new AnnotationVisualizerAgentAction({
 				maps: 'all',
 				action: 'show'
-			})
+			});
 		});
 
 	/**
@@ -407,13 +408,13 @@ export class MapAppEffects {
 	 * @filter pinPointSearch flag on
 	 */
 	@Effect({ dispatch: false })
-	onAddCommunicatorDoPinpointSearch$: Observable<any>  = this.actions$
+	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.do(([action]: [any]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
-			communicatorHandler.createMapSingleClickEvent()
+			communicatorHandler.createMapSingleClickEvent();
 		});
 
 	/**
@@ -425,7 +426,7 @@ export class MapAppEffects {
 	 * @actions DrawPinPointAction
 	 */
 	@Effect()
-	onAddCommunicatorShowPinPointIndicator$: Observable<any>  = this.actions$
+	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
@@ -444,13 +445,11 @@ export class MapAppEffects {
 	 * @actions StartMouseShadow
 	 */
 	@Effect()
-	onAddCommunicatorShowShadowMouse$: Observable<any>  = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,  MapActionTypes.STORE.SET_MAPS_DATA)
+	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(toolsStateSelector))
 		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
 		.map(() => new StartMouseShadow());
-
-
 
 
 	/**

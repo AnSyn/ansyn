@@ -7,6 +7,7 @@ export const MouseShadowVisualizerType = 'MouseShadowVisualizer';
 
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
+
 	// constructor(iconPath: string, args: any) {
 	constructor(args: any) {
 		super(MouseShadowVisualizerType, args);

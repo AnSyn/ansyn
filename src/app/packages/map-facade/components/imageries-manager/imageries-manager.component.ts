@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CaseMapState, Overlay } from '@ansyn/core/models';
 import { get as _get, isNil as _isNil } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';

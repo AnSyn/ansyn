@@ -8,12 +8,13 @@ import { MapAppEffects } from './map.app.effects';
 import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
-import { StartMouseShadow, StopMouseShadow } from '@ansyn/menu-items/tools';
+import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
 	DrawPinPointAction,
 	MapSingleClickAction,
+	RaiseMessageAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -27,7 +28,7 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetToastMessageStoreAction, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	DisplayOverlayAction,
@@ -61,12 +62,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { RaiseMessageAction } from '@ansyn/map-facade/actions/map.actions';
-import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import {
-	IToolsState, toolsInitialState,
-	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	ILayerState,
 	initialLayersState,
@@ -356,7 +352,7 @@ describe('MapAppEffects', () => {
 					communicatorsIds: communicators
 				})
 			});
-			const  b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
+			const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
 			const expectedResults = cold('--b--', { b });
 			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});
@@ -406,7 +402,7 @@ describe('MapAppEffects', () => {
 		});
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat)});
+		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat) });
 
 		expect(mapAppEffects.onAddCommunicatorShowPinPointIndicator$).toBeObservable(expectedResults);
 	});
@@ -418,7 +414,7 @@ describe('MapAppEffects', () => {
 			currentCommunicatorId: 'tmpId2'
 		});
 		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--a--', { a: new StartMouseShadow()});
+		const expectedResults = cold('--a--', { a: new StartMouseShadow() });
 
 		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
 	});
@@ -643,11 +639,16 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.displayOverlayFromCase$).toBeObservable(expectedResults);
 		});
 	});
-	
+
 	describe('raiseMessageAction$', () => {
 		it('should dispatch SetToastMessageStoreAction', () => {
 			actions = hot('--a--', { a: new RaiseMessageAction({ message: 'test', isError: true }) });
-			const expectedResults = cold('--b--', { b: new SetToastMessageStoreAction({toastText: 'test', showWarningIcon: true}) });
+			const expectedResults = cold('--b--', {
+				b: new SetToastMessageStoreAction({
+					toastText: 'test',
+					showWarningIcon: true
+				})
+			});
 			expect(mapAppEffects.raiseMessageAction$).toBeObservable(expectedResults);
 		});
 	});

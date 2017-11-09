@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
+import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
 import { Case } from '../../models/case.model';
 import { CasesService } from '../cases.service';

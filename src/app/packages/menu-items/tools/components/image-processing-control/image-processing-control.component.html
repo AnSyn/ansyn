@@ -1,0 +1,10 @@
+<ul class="image-processing-options">
+	<li>
+		<label>Contrast</label><br>
+		<input type="range" min="0" max="100" [(ngModel)]="imgProcessParams.contrast" (change)="manualImageProcess()">
+	</li>
+	<li>
+		<label>Brightness</label><br>
+		<input type="range" min="0" max="100" [(ngModel)]="imgProcessParams.gamma" (change)="manualImageProcess()">
+	</li>
+</ul>

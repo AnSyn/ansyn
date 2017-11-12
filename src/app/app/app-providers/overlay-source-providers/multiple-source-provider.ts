@@ -23,8 +23,6 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		super();
 
 		this.prepareWhitelist();
-
-		console.log(this.sourceConfigs);
 	}
 
 	private coverageToFeature(coordinates: number[][][]): GeoJSON.Feature<GeoJSON.Polygon> {

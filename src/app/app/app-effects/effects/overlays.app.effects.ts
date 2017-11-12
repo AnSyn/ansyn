@@ -87,7 +87,7 @@ export class OverlaysAppEffects {
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter === -1)
 		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
 		.switchMap(({ payload }: SelectCaseAction) => {
-			return this.overlaysService.getStartDateViaLimitFasets({
+			return this.overlaysService.getStartDateViaLimitFacets({
 				region: payload.state.region,
 				limit: this.casesService.contextValues.imageryCountBefore,
 				facets: payload.state.facets

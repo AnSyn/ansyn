@@ -5,6 +5,7 @@ import { Response } from '@angular/http';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 
@@ -28,9 +29,10 @@ export interface IIdahoOverlaySourceConfig {
 
 @Injectable()
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
+	sourceType = IdahoOverlaySourceType;
+
 	constructor(protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super();
-		this.sourceType = IdahoOverlaySourceType;
 	}
 
 	public getById(id: string): Observable<Overlay> {
@@ -41,6 +43,10 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		if (fetchParams.region.type === 'MultiPolygon') {
+			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+		}
+
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
 		return <Observable<Overlay[]>>this.http.post(url, fetchParams)
 			.map(this.extractArrayData.bind(this))
@@ -48,7 +54,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<Array<Overlay>> {
+	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<Array<Overlay>> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
 		return <Observable<Overlay[]>>this.http.post<Array<Overlay>>(url, params)
 			.catch(this.handleError);
@@ -83,7 +89,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	private parseData(idahoElement: any, token: string): Overlay {
+	protected parseData(idahoElement: any, token: string): Overlay {
 
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
@@ -105,7 +111,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
 		overlay.azimuth = 0;
-		overlay.sourceType = IdahoOverlaySourceType;
+		overlay.sourceType = this.sourceType;
 		overlay.isFullOverlay = true;
 		overlay.isGeoRegistered = true;
 

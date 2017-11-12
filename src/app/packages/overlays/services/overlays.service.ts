@@ -103,8 +103,8 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getById(id);
 	}
 
-	getStartDateViaLimitFasets(params: { facets, limit, region }): Observable<any> {
-		return this._overlaySourceProvider.getStartDateViaLimitFasets(params);
+	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
+		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {

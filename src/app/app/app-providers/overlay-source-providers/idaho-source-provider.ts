@@ -43,6 +43,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -89,8 +90,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	protected parseData(idahoElement: any, token: string): Overlay {
-
+	private parseData(idahoElement: any, token: string): Overlay {
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;

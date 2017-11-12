@@ -4,7 +4,7 @@ import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 import { Feature } from 'geojson';
 
-interface DateRange {
+export interface DateRange {
 	start: Date;
 	end: Date;
 }
@@ -58,22 +58,25 @@ export abstract class BaseOverlaySourceProvider {
 		};
 
 		const fetchPromises = filters
-			.filter(f => {
+			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(f.coverage, regionFeature);
 				if (!intersection) {
 					return false;
 				}
 				return area(intersection) > 0;
 			})
+			// Make sure they have a common time range
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
 			.map(f => {
 				const region = intersect(f.coverage, regionFeature).geometry;
 
+				// Create new filters, by the common region and time
 				let newFetchParams: IFetchParams = {
-					region,
-					timeRange: fetchParams.timeRange
+					region: intersect(f.coverage, regionFeature).geometry,
+					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
 				};
 
+				// Add sensor if exists on the filter
 				if (f.sensor) {
 					newFetchParams.sensors = [f.sensor];
 				}
@@ -81,9 +84,9 @@ export abstract class BaseOverlaySourceProvider {
 				return this.fetch(newFetchParams).toPromise();
 			});
 
-		const multipleFetches = Promise.all(fetchPromises)
-			.then(overlaysArr => overlaysArr.reduce((a, b) => a.concat(b), []))
-			.then(overlays => overlays.sort((o1, o2) => o1.date > o2.date ? -1 : 1));
+		const multipleFetches = Promise.all(fetchPromises) // Wait for every fetch to resolve
+			.then(overlaysArr => overlaysArr.reduce((a, b) => a.concat(b), [])) // merge the overlays
+			.then(overlays => overlays.sort((o1, o2) => o1.date > o2.date ? -1 : 1)); // sort the result
 
 		return Observable.from(multipleFetches);
 	}

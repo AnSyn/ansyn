@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, DateRange } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
@@ -7,7 +7,20 @@ import * as area from '@turf/area';
 import * as difference from '@turf/difference';
 import { OverlayFilter } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
-type IMultipleOverlaysSourceConfig = any;
+interface FiltersList {
+	name: string,
+	dates: DateRange[]
+	sensorNames: string[],
+	coverage: number[][][][]
+}
+
+interface IMultipleOverlaysSourceConfig {
+	[key: string]: {
+		whitelist: FiltersList[],
+		blacklist: FiltersList[]
+	}
+}
+
 type IMultipleOverlaysSources = BaseOverlaySourceProvider;
 
 export const MultipleOverlaysSourceConfig: InjectionToken<IMultipleOverlaysSourceConfig> = new InjectionToken('multiple-overlays-source-config');
@@ -48,7 +61,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 			let whiteFilters = [];
 
-			// Separate all sensors and date ranges
+			// Separate all sensors, date ranges, and polygons
 			config.whitelist.forEach(filter => {
 				filter.sensorNames.forEach(sensor => {
 					filter.coverage.forEach(polygon => {
@@ -66,7 +79,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			if (config.blacklist) {
 				let blackFilters = [];
 
-				// Remove filters that are blacklisted
+				// Separate all sensors, date ranges, and polygons
 				config.blacklist.forEach(filter => {
 					filter.sensorNames.forEach(sensor => {
 						filter.coverage.forEach(polygon => {
@@ -81,13 +94,16 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 					});
 				});
 
+				// Sort blackFilters by date (creates less work for the filter
 				blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
 
+				// Remove filters that are blacklisted
 				whiteFilters = whiteFilters
 					.map(filter => filterFilter(filter, blackFilters))
 					.reduce((a, b) => a.concat(b), []);
 			}
 
+			// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
 			if (whiteFilters.length > 0) {
 				this.sourceConfigs.push({
 					provider,
@@ -111,7 +127,6 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<Array<Overlay>> {
-		// TODO
 		return Observable.empty();
 	}
 }

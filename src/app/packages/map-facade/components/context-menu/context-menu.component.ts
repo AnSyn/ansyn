@@ -146,9 +146,9 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	constructor(protected store: Store<IMapState>,
-				private mapEffects$: MapEffects,
-				private elem: ElementRef,
-				private renderer: Renderer2) {
+				protected mapEffects$: MapEffects,
+				protected elem: ElementRef,
+				protected renderer: Renderer2) {
 	}
 
 	pluckFilterField(overlays: Overlay[]) {

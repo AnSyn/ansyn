@@ -83,8 +83,8 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged();
 
 	constructor(protected store$: Store<IOverlaysState>,
-				private emitter: TimelineEmitterService,
-				private effects$: OverlaysEffects) {
+				protected emitter: TimelineEmitterService,
+				protected effects$: OverlaysEffects) {
 	}
 
 	ngOnInit(): void {

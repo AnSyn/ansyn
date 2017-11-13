@@ -46,7 +46,7 @@ export class ContextMenuAppEffects {
 		.map(toPayload)
 		.map(id => new DisplayOverlayFromStoreAction({ id }));
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private store$: Store<IAppState>) {
 	}
 

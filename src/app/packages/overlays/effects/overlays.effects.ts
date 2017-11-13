@@ -194,9 +194,9 @@ export class OverlaysEffects {
 		.map(() => new RedrawTimelineAction());
 
 
-	constructor(private actions$: Actions,
-				private store$: Store<IOverlaysState>,
-				private overlaysService: OverlaysService) {
+	constructor(protected actions$: Actions,
+				protected store$: Store<IOverlaysState>,
+				protected overlaysService: OverlaysService) {
 	}
 
 

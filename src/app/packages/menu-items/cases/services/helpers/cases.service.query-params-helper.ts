@@ -11,7 +11,7 @@ import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 export class QueryParamsHelper {
 
-	constructor(private casesService: CasesService) {
+	constructor(protected casesService: CasesService) {
 	}
 
 	get defaultCase() {

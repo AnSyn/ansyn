@@ -292,6 +292,6 @@ export class ToolsAppEffects {
 			return [new EnableMouseShadow()];
 		});
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>, private imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

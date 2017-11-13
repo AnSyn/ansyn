@@ -52,7 +52,7 @@ export class ImageriesManagerComponent implements OnInit {
 	mapsList: CaseMapState[];
 	activeMapId: string;
 
-	constructor(private mapEffects: MapEffects, private store: Store<IMapState>) {
+	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>) {
 	}
 
 	ngOnInit() {

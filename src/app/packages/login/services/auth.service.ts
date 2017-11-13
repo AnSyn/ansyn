@@ -17,7 +17,7 @@ export class AuthService {
 		return this.config.authorizedPath;
 	}
 
-	constructor(private httpClient: HttpClient, private loginConfigService: LoginConfigService) {
+	constructor(protected httpClient: HttpClient, protected loginConfigService: LoginConfigService) {
 	}
 
 	logout() {

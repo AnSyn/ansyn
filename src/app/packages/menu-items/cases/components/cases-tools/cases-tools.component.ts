@@ -12,7 +12,7 @@ import { OpenModalAction } from '../../actions/cases.actions';
 })
 export class CasesToolsComponent {
 
-	constructor(private store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>) {
 	}
 
 	showEditCaseModal(): void {

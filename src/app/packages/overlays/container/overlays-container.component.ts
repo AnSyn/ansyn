@@ -82,7 +82,7 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 		.pluck <IOverlaysState, boolean>('loading')
 		.distinctUntilChanged();
 
-	constructor(private store$: Store<IOverlaysState>,
+	constructor(protected store$: Store<IOverlaysState>,
 				private emitter: TimelineEmitterService,
 				private effects$: OverlaysEffects) {
 	}

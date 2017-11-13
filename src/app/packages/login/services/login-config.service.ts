@@ -10,7 +10,7 @@ export class LoginConfigService {
 		return this._config;
 	}
 
-	constructor(@Inject(LoginConfig) private _config: ILoginConfig) {
+	constructor(@Inject(LoginConfig) protected _config: ILoginConfig) {
 	}
 
 }

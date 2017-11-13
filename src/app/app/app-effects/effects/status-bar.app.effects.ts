@@ -293,7 +293,7 @@ export class StatusBarAppEffects {
 		.map(([action, flags]: [any, Map<string, boolean>]) => flags.get(statusBarFlagsItems.pinPointSearch))
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private store: Store<IAppState>,
 				public imageryCommunicator: ImageryCommunicatorService,
 				public overlaysService: OverlaysService,

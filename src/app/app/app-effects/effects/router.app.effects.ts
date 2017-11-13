@@ -84,6 +84,6 @@ export class RouterAppEffects {
 		})
 		.map(() => new NavigateCaseTriggerAction());
 
-	constructor(private actions$: Actions, private store$: Store<any>) {
+	constructor(protected actions$: Actions, protected store$: Store<any>) {
 	}
 }

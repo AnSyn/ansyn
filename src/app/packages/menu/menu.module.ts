@@ -37,7 +37,7 @@ export class MenuModule {
 		};
 	}
 
-	constructor(private store: Store<any>, @Inject(MENU_ITEMS) menuItems: MenuItem[]) {
+	constructor(protected store: Store<any>, @Inject(MENU_ITEMS) menuItems: MenuItem[]) {
 		store.dispatch(new InitializeMenuItemsAction(menuItems));
 	}
 }

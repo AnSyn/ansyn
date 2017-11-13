@@ -90,7 +90,7 @@ export class FiltersAppEffects {
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>) {
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 
 	updateCaseFacets(selectedCase: Case, filtersState: IFiltersState): Case {

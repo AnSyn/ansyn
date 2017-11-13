@@ -297,7 +297,7 @@ export class CasesEffects {
 		});
 
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private casesService: CasesService,
 				private store: Store<ICasesState>,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {

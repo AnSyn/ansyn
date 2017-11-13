@@ -24,7 +24,7 @@ export class ImageryComponentManager {
 	private _plugins: IMapPlugin[] = [];
 	private _visualizers: IMapVisualizer[] = [];
 
-	constructor(private imageryProviderService: ImageryProviderService,
+	constructor(protected imageryProviderService: ImageryProviderService,
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private mapComponentElem: ViewContainerRef,
 				private _mapComponentRef: ComponentRef<any>,

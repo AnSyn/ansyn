@@ -27,7 +27,7 @@ export class RouterEffects {
 			}
 		});
 
-	constructor(private actions$: Actions, private router: Router) {
+	constructor(protected actions$: Actions, protected router: Router) {
 	}
 
 }

@@ -10,7 +10,7 @@ import '@ansyn/core/utils/clone-deep';
 })
 export class AppAnsynComponent implements AfterViewInit {
 
-	constructor(public renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {
+	constructor(public renderer: Renderer2, @Inject(DOCUMENT) protected document: Document) {
 	}
 
 	ngAfterViewInit() {

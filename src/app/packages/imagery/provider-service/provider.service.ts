@@ -21,7 +21,7 @@ export class ImageryProviderService {
 	private _mapPluginProviders: { [mapType: string]: [{ pluginClass: any }] };
 	private _mapVisualizersProviders: Map<string, [{ visualizerClass: any, args: any }]>;
 
-	constructor(@Optional() @Inject(MapVisualizer) private mapVisualizers: InjectedMapVisualizer[],
+	constructor(@Optional() @Inject(MapVisualizer) protected mapVisualizers: InjectedMapVisualizer[],
 				@Inject(VisualizersConfig) visualizersConfig: any) {
 		this._mapProviders = {};
 		this._mapPluginProviders = {};

@@ -96,7 +96,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	constructor(private imageryCommunicatorService: ImageryCommunicatorService,
+	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				private componentFactoryResolver: ComponentFactoryResolver,
 				private imageryProviderService: ImageryProviderService,
 				@Inject(BaseMapSourceProvider) private baseSourceProviders: BaseMapSourceProvider[],

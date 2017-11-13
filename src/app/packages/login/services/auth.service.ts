@@ -3,8 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
-import 'rxjs/add/operator/do';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class AuthService {

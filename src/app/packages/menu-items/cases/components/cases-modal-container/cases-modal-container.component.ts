@@ -33,7 +33,7 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 
 	selectedComponentRef;
 
-	constructor(public casesEffects: CasesEffects, private componentFactoryResolver: ComponentFactoryResolver, private store: Store<ICasesState>) {
+	constructor(public casesEffects: CasesEffects, protected componentFactoryResolver: ComponentFactoryResolver, protected store: Store<ICasesState>) {
 	}
 
 	close() {

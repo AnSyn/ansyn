@@ -8,7 +8,7 @@ import { debounce } from 'lodash';
 export class InfiniteScrollDirective {
 	@Output('ansynInfiniteScroll') ansynInfiniteScroll = new EventEmitter();
 
-	constructor(private elementRef: ElementRef) {
+	constructor(protected elementRef: ElementRef) {
 		elementRef.nativeElement.addEventListener('scroll', debounce(this.onScroll.bind(this), 300));
 	}
 

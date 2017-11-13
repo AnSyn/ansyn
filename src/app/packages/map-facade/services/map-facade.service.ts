@@ -66,7 +66,7 @@ export class MapFacadeService {
 		return { ...mapsListChange };
 	}
 
-	constructor(private store: Store<IMapState>, private imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
 		this.initEmitters();
 
 		imageryCommunicatorService.instanceCreated.subscribe((communicatorsIds) => {

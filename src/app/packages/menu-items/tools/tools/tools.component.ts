@@ -35,7 +35,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 
 	// @TODO display the shadow mouse only if there more then one map .
-	constructor(private store: Store<any>) {
+	constructor(protected store: Store<any>) {
 
 	}
 

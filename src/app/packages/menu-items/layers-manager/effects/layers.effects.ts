@@ -61,7 +61,7 @@ export class LayersEffects {
 		})
 		.share();
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private dataLayersService: DataLayersService,
 				private store: Store<ILayerState>) {
 	}

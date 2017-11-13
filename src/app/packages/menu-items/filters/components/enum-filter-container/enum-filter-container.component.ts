@@ -11,7 +11,7 @@ export class EnumFilterContainerComponent {
 	@Input() metadata: EnumFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
-	constructor(private myElement: ElementRef) {
+	constructor(protected myElement: ElementRef) {
 	}
 
 	onInputClicked(key: string) {

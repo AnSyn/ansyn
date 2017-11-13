@@ -8,7 +8,7 @@ export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken(
 
 @Injectable()
 export class FiltersService {
-	constructor(@Inject(filtersConfig) private config: IFiltersConfig) {
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
 	getFilters(): Filter[] {

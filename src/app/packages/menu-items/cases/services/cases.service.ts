@@ -53,7 +53,7 @@ export class CasesService {
 		return result;
 	}
 
-	constructor(private http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
+	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;

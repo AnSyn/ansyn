@@ -51,7 +51,7 @@ export class FilterContainerComponent implements OnInit {
 			return state.filters;
 		});
 
-	constructor(private store: Store<IFiltersState>) {
+	constructor(protected store: Store<IFiltersState>) {
 	}
 
 	get disabledButton() {

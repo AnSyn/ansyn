@@ -38,7 +38,7 @@ export class DeleteCaseComponent {
 	// TODO check if this works instead of hosting -Amit
 	// @HostBinding('@modalContent') modalContent = true;
 
-	constructor(private store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>) {
 	}
 
 	getActiveCaseName(caseState: ICasesState): string {

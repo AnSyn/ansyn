@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class AnsynRouterService {
 
-	constructor(private store: Store<IRouterState>, private injector: Injector) {
+	constructor(protected store: Store<IRouterState>, protected injector: Injector) {
 	}
 
 	get router(): Router {

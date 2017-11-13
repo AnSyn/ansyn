@@ -31,7 +31,7 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(private http: HttpClient, @Inject(layersConfig) private config: ILayersManagerConfig) {
+	constructor(protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 

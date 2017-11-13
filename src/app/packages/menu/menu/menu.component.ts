@@ -100,9 +100,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	isBuildNeeded: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-				private store: Store<IMenuState>,
-				private renderer: Renderer2,
-				@Inject(DOCUMENT) private document: Document) {
+				protected store: Store<IMenuState>,
+				protected renderer: Renderer2,
+				@Inject(DOCUMENT) protected document: Document) {
 
 		this.menuItems$.subscribe((_menuItems) => {
 			this.menuItems = _menuItems;

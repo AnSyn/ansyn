@@ -55,7 +55,7 @@ export class CasesTableComponent implements OnInit {
 	modalCaseId: string;
 	selectedCaseId: string;
 
-	constructor(private store$: Store<ICasesState>, private casesEffects: CasesEffects) {
+	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
 		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));
 	}
 

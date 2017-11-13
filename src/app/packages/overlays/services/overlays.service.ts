@@ -84,7 +84,7 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}
 
-	constructor(@Inject(OverlaysConfig) private config: IOverlaysConfig, private _overlaySourceProvider: BaseOverlaySourceProvider) {
+	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig, protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {

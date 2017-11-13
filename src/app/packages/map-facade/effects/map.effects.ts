@@ -261,7 +261,7 @@ export class MapEffects {
 			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
 		});
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private mapFacadeService: MapFacadeService,
 				private communicatorsService: ImageryCommunicatorService,
 				private store$: Store<any>) {

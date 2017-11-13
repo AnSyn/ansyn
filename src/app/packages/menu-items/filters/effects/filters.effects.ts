@@ -85,10 +85,10 @@ export class FiltersEffects {
 			return new InitializeFiltersSuccessAction(filterMetadata);
 		}).share();
 
-	constructor(private actions$: Actions,
-				private filtersService: FiltersService,
-				private store$: Store<IFiltersState>,
-				private genericTypeResolverService: GenericTypeResolverService) {
+	constructor(protected actions$: Actions,
+				protected filtersService: FiltersService,
+				protected store$: Store<IFiltersState>,
+				protected genericTypeResolverService: GenericTypeResolverService) {
 	}
 
 	initializeMetadata(filter: Filter, facets: { filters: { fieldName: string, metadata: any }[] }): FilterMetadata {

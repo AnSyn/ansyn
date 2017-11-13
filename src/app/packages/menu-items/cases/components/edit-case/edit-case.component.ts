@@ -61,7 +61,7 @@ export class EditCaseComponent implements OnInit {
 		this.nameInput.nativeElement.select();
 	}
 
-	constructor(private store: Store<ICasesState>, private casesService: CasesService) {
+	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}
 
 	addDefaultContext(context: Context[]): Context[] {

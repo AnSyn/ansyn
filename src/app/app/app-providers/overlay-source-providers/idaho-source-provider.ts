@@ -28,7 +28,7 @@ export interface IIdahoOverlaySourceConfig {
 
 @Injectable()
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
-	constructor(private http: HttpClient, @Inject(IdahoOverlaysSourceConfig) private _overlaySourceConfig: IIdahoOverlaySourceConfig) {
+	constructor(protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super();
 		this.sourceType = IdahoOverlaySourceType;
 	}

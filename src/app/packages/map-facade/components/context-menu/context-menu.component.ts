@@ -145,7 +145,7 @@ export class ContextMenuComponent implements OnInit {
 		return _isEmpty;
 	}
 
-	constructor(private store: Store<IMapState>,
+	constructor(protected store: Store<IMapState>,
 				private mapEffects$: MapEffects,
 				private elem: ElementRef,
 				private renderer: Renderer2) {

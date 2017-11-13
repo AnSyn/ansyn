@@ -39,7 +39,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	private _spinner: Spinner;
 
-	constructor(private store: Store<any>) {
+	constructor(protected store: Store<any>) {
 		this.showSpinner = true;
 	}
 

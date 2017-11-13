@@ -98,7 +98,7 @@ export class TimelineComponent implements OnInit {
 	}
 
 
-	constructor(private emitter: TimelineEmitterService) {
+	constructor(protected emitter: TimelineEmitterService) {
 	}
 
 	ngOnInit() {

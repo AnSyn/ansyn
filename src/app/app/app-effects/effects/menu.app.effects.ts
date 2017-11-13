@@ -93,6 +93,6 @@ export class MenuAppEffects {
 		})
 		.share();
 
-	constructor(private actions$: Actions, private store$: Store<IAppState>) {
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 }

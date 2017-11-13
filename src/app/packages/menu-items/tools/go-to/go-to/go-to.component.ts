@@ -82,7 +82,7 @@ export class GoToComponent implements OnInit {
 		});
 	}
 
-	constructor(private store$: Store<IToolsState>, @Inject(toolsConfig) private config: IToolsConfig) {
+	constructor(protected store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 
 	submitGoTo(): void {

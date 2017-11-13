@@ -17,7 +17,7 @@ export class LayersManagerComponent {
 
 	public nodes$: Observable<ILayerTreeNode[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);
 
-	constructor(private store: Store<ILayerState>) {
+	constructor(protected store: Store<ILayerState>) {
 	}
 
 	public onNodeActivationChanged(args: NodeActivationChangedEventArgs) {

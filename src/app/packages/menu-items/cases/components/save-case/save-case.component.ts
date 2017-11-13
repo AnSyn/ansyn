@@ -57,7 +57,7 @@ export class SaveCaseComponent implements OnInit {
 		this.nameInput.nativeElement.select();
 	}
 
-	constructor(private store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>) {
 	}
 
 	ngOnInit(): void {

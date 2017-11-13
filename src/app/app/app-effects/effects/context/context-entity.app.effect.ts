@@ -92,7 +92,7 @@ export class ContextEntityAppEffects {
 			this.setContextOverlayDate(communicatorHandler, null);
 		});
 
-	constructor(private actions$: Actions,
+	constructor(protected actions$: Actions,
 				private store$: Store<IAppState>,
 				private communicatorService: ImageryCommunicatorService) {
 	}

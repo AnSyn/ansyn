@@ -24,9 +24,9 @@ export class LoginComponent implements OnInit {
 
 	tryAgainMsg: boolean;
 
-	constructor(private authService: AuthService,
-				private activatedRoute: ActivatedRoute,
-				private router: Router) {
+	constructor(protected authService: AuthService,
+				protected activatedRoute: ActivatedRoute,
+				protected router: Router) {
 	}
 
 	ngOnInit(): void {

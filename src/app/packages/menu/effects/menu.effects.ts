@@ -20,6 +20,6 @@ export class MenuEffects {
 		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
 		.share();
 
-	constructor(private actions$: Actions) {
+	constructor(protected actions$: Actions) {
 	}
 }

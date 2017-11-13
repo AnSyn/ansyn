@@ -227,7 +227,7 @@ export class MapEffects {
 		.map(([action, mapState]: [any, any]): any[] => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-			const mapComm = this.communicatorsService.provide(action.payload.mapId);
+			const mapComm = this.communicatorsService.provide(mapId);
 			return [mapComm, map.data.position];
 		})
 		.filter(([mapComm]) => Boolean(mapComm))

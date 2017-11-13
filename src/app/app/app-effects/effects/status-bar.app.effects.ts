@@ -294,7 +294,7 @@ export class StatusBarAppEffects {
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
 	constructor(protected actions$: Actions,
-				private store: Store<IAppState>,
+				protected store: Store<IAppState>,
 				public imageryCommunicator: ImageryCommunicatorService,
 				public overlaysService: OverlaysService,
 				public casesService: CasesService) {

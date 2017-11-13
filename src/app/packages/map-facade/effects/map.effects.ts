@@ -262,8 +262,8 @@ export class MapEffects {
 		});
 
 	constructor(protected actions$: Actions,
-				private mapFacadeService: MapFacadeService,
-				private communicatorsService: ImageryCommunicatorService,
-				private store$: Store<any>) {
+				protected mapFacadeService: MapFacadeService,
+				protected communicatorsService: ImageryCommunicatorService,
+				protected store$: Store<any>) {
 	}
 }

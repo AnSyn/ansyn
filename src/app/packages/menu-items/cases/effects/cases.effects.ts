@@ -298,8 +298,8 @@ export class CasesEffects {
 
 
 	constructor(protected actions$: Actions,
-				private casesService: CasesService,
-				private store: Store<ICasesState>,
+				protected casesService: CasesService,
+				protected store: Store<ICasesState>,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 }

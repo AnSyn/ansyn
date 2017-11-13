@@ -25,12 +25,12 @@ export class ImageryComponentManager {
 	private _visualizers: IMapVisualizer[] = [];
 
 	constructor(protected imageryProviderService: ImageryProviderService,
-				private componentFactoryResolver: ComponentFactoryResolver,
-				private mapComponentElem: ViewContainerRef,
-				private _mapComponentRef: ComponentRef<any>,
-				private _baseSourceProviders: BaseMapSourceProvider[],
-				private config: IImageryConfig,
-				private _id: string) {
+				protected componentFactoryResolver: ComponentFactoryResolver,
+				protected mapComponentElem: ViewContainerRef,
+				protected _mapComponentRef: ComponentRef<any>,
+				protected _baseSourceProviders: BaseMapSourceProvider[],
+				protected config: IImageryConfig,
+				protected _id: string) {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 

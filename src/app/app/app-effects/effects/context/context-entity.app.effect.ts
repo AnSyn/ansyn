@@ -93,8 +93,8 @@ export class ContextEntityAppEffects {
 		});
 
 	constructor(protected actions$: Actions,
-				private store$: Store<IAppState>,
-				private communicatorService: ImageryCommunicatorService) {
+				protected store$: Store<IAppState>,
+				protected communicatorService: ImageryCommunicatorService) {
 	}
 
 	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {

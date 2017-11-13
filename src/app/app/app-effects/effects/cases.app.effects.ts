@@ -155,8 +155,8 @@ export class CasesAppEffects {
 		}).share();
 
 	constructor(protected actions$: Actions,
-				private store$: Store<IAppState>,
-				private casesService: CasesService,
+				protected store$: Store<IAppState>,
+				protected casesService: CasesService,
 				public contextSourceService: BaseContextSourceProvider) {
 	}
 }

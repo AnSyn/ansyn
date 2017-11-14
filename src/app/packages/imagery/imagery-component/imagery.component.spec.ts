@@ -6,8 +6,9 @@ import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { Store } from '@ngrx/store';
 
-class SourceProviderMock1 implements BaseMapSourceProvider {
+class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
 	sourceType = 'sourceType1';
 
@@ -53,6 +54,7 @@ describe('ImageryComponent', () => {
 			providers: [
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
+				{ provide: Store, useValue: null },
 				{
 					provide: ConfigurationToken, useValue: {
 					'geoMapsInitialMapSource': [{

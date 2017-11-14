@@ -104,7 +104,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
 	};
 }

@@ -35,7 +35,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		super();
 	}
 
-	public getById(id: string): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
 		return <Observable<Overlay>>this.http.get(url)
 			.map(this.extractData.bind(this))

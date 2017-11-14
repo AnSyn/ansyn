@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider, IFetchParams, DateRange } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, DateRange, IFetchParams } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
@@ -29,7 +29,7 @@ export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = 
 @Injectable()
 export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
-	private sourceConfigs: Array<{filters: OverlayFilter[], provider: BaseOverlaySourceProvider}> = [];
+	private sourceConfigs: Array<{ filters: OverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) private overlaysSources: IMultipleOverlaysSources[]) {
@@ -70,7 +70,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 								start: date.start ? new Date(date.start) : null,
 								end: date.end ? new Date(date.end) : null,
 							};
-							whiteFilters.push({ sensor, timeRange: dateObj, coverage: this.coverageToFeature(polygon) });
+							whiteFilters.push({
+								sensor,
+								timeRange: dateObj,
+								coverage: this.coverageToFeature(polygon)
+							});
 						});
 					});
 				});
@@ -88,7 +92,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 									start: date.start ? new Date(date.start) : null,
 									end: date.end ? new Date(date.end) : null,
 								};
-								blackFilters.push({ sensor, timeRange: dateObj, coverage: this.coverageToFeature(polygon) });
+								blackFilters.push({
+									sensor,
+									timeRange: dateObj,
+									coverage: this.coverageToFeature(polygon)
+								});
 							});
 						});
 					});
@@ -113,8 +121,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	public getById(id: string): Observable<Overlay> {
-		throw new Error('need more info, id is insufficient');
+	public getById(id: string, sourceType: string): Observable<Overlay> {
+		return this.overlaysSources.find(s => s.sourceType === sourceType).getById(id, sourceType);
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {

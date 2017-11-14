@@ -25,7 +25,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 		 */
 		const source = new XYZ({
-			url: metaData.imageUrl + 'gvyhgf',
+			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
 		});

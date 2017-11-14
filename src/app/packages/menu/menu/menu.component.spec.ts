@@ -101,6 +101,7 @@ describe('MenuComponent', () => {
 
 	it('onIsPinnedChange should toggle "pinned" class on container element and should send ContainerChangedTriggerAction', () => {
 		spyOn(store, 'dispatch');
+		spyOn(menuComponent, 'forceRedraw').and.callFake(() => ({then: (c) => c()}));
 
 		menuComponent.isPinned = true;
 		menuComponent.onIsPinnedChange();

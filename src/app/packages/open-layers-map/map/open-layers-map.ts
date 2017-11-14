@@ -382,11 +382,28 @@ export class OpenLayersMap implements IMap<Map> {
 		}
 
 		if (shouldPerform) {
-			this._imageProcessing.addOperation(rasterSource, 'Sharpness');
-			this._imageProcessing.addOperation(rasterSource, 'Histogram');
+			// the determine the order which by the image processing will occur
+			const processingParams = {
+				Histogram: { auto: true },
+				Sharpness: { auto: true }
+			};
+			this._imageProcessing.processUsingRaster(rasterSource, processingParams);
 		} else {
 			this._imageProcessing.removeAllRasterOperations(rasterSource);
 		}
+	}
+
+	public setManualImageProcessing(processingParams: Object) {
+		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
+		if (!imageLayer) {
+			return;
+		}
+
+		let rasterSource: Raster = <Raster>imageLayer.getSource();
+		if (!rasterSource) {
+			return;
+		}
+		this._imageProcessing.processUsingRaster(rasterSource, processingParams);
 	}
 
 	// *****-- click events --********

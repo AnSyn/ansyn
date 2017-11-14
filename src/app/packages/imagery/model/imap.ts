@@ -42,6 +42,8 @@ export interface IMap<T = any> {
 
 	setAutoImageProcessing(shouldPerform: boolean): void;
 
+	setManualImageProcessing(processingParams: Object): void;
+
 	dispose(): void;
 
 	setPointerMove(enable: boolean);

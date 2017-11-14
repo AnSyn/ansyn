@@ -174,7 +174,11 @@ export class CommunicatorEntity {
 			this.ActiveMap.setAutoImageProcessing(shouldPerform);
 		}
 	}
-
+	public setManualImageProcessing(processingParams: Object): void {
+		if (this.ActiveMap) {
+			this.ActiveMap.setManualImageProcessing(processingParams);
+		}
+	}
 	// CommunicatorEntity methods end
 
 	// ======shadow mouse start

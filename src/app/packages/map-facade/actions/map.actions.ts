@@ -15,6 +15,7 @@ export const MapActionTypes = {
 	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
 	SET_MAP_AUTO_IMAGE_PROCESSING: 'SET_MAP_AUTO_IMAGE_PROCESSING',
+	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
 		GET_FILTERED_OVERLAYS: 'GET_FILTERED_OVERLAYS',
@@ -181,6 +182,13 @@ export class SetMapAutoImageProcessing implements Action {
 	type = MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING;
 
 	constructor(public payload: { mapId: string, toggleValue: boolean }) {
+	}
+}
+
+export class SetMapManualImageProcessing implements Action {
+	type = MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: { mapId: string, processingParams: Object}) {
 	}
 }
 

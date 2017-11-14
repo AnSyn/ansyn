@@ -8,6 +8,7 @@ import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-d
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
+import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
 
 @NgModule({
 	imports: [
@@ -16,7 +17,7 @@ import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],
-	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
 	entryComponents: [ToolsComponent]
 })
 

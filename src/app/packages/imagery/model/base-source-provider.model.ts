@@ -1,6 +1,6 @@
-import { SetToastMessageStoreAction } from '../../status-bar/actions/status-bar.actions';
+import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
-import { SetProgressBarAction } from '../../map-facade/actions/map.actions';
+import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
 import { Injectable } from '@angular/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 

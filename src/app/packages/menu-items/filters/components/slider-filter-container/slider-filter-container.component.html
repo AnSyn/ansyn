@@ -1,14 +1,14 @@
 <div class="upper-row">
-    <div class="min">
-        {{metadata.min}}    
-    </div>
-    <div class="range">
-        {{rangeValues[0] / factor}} - {{rangeValues[1] / factor}}
-    </div>
-    <div class="max">
-        {{metadata.max}}            
-    </div>
+	<div class="min">
+		{{metadata.min}}
+	</div>
+	<div class="range">
+		{{rangeValues[0] / factor}} - {{rangeValues[1] / factor}}
+	</div>
+	<div class="max">
+		{{metadata.max}}
+	</div>
 </div>
 
 <p-slider class='slider' [(ngModel)]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
-[min]="factor * metadata.min" [max]="factor * metadata.max" [step]="factor / 10"></p-slider>
+		  [min]="factor * metadata.min" [max]="factor * metadata.max" [step]="factor / 10"></p-slider>

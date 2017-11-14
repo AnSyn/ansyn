@@ -9,17 +9,17 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { Overlay } from '../../core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
-import { 
-	ActiveMapChangedAction, 
-	AnnotationContextMenuTriggerAction,	
-	EnableMapGeoOptionsActionStore, 
-	SetLayoutAction, 
-	SetPendingMapsCountAction ,
-	SetMapsDataActionStore,
+import {
+	ActiveMapChangedAction,
 	AddMapInstanceAction,
+	AnnotationContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
+	EnableMapGeoOptionsActionStore,
 	RemoveMapInstanceAction,
-	SetLayoutSuccessAction
+	SetLayoutAction,
+	SetLayoutSuccessAction,
+	SetMapsDataActionStore,
+	SetPendingMapsCountAction
 } from '../actions/map.actions';
 
 describe('MapEffects', () => {
@@ -100,7 +100,10 @@ describe('MapEffects', () => {
 
 	describe('onLayoutsChange$', () => {
 		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
-			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({'mapsList': <any>'Mock', 'activeMapId': 'imagery1' });
+			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({
+				'mapsList': <any>'Mock',
+				'activeMapId': 'imagery1'
+			});
 			mapState.mapsList = <any> [
 				{ id: 'imagery1' },
 				{ id: 'imagery2' },
@@ -108,11 +111,17 @@ describe('MapEffects', () => {
 
 			mapState.activeMapId = 'imagery1';
 
-			actions = hot('--a--', { a: new SetLayoutAction({'id': 'dfgdfg', 'description': 'string', 'mapsCount': 3 })});
+			actions = hot('--a--', {
+				a: new SetLayoutAction({
+					'id': 'dfgdfg',
+					'description': 'string',
+					'mapsCount': 3
+				})
+			});
 
 			const expectedResults = cold('--(bc)--', {
 				b: new SetPendingMapsCountAction(1),
-				c: new SetMapsDataActionStore({'mapsList': <any>'Mock', 'activeMapId': 'imagery1' })
+				c: new SetMapsDataActionStore({ 'mapsList': <any>'Mock', 'activeMapId': 'imagery1' })
 			});
 			expect(mapEffects.onLayoutsChange$).toBeObservable(expectedResults);
 		});
@@ -122,7 +131,12 @@ describe('MapEffects', () => {
 		it('AddMapInstance should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;
 
-			actions = hot('--a--', { a: new AddMapInstanceAction({'currentCommunicatorId': '', 'communicatorsIds': ['']}) });
+			actions = hot('--a--', {
+				a: new AddMapInstanceAction({
+					'currentCommunicatorId': '',
+					'communicatorsIds': ['']
+				})
+			});
 
 			const expectedResults = cold('--b--', {
 				b: new DecreasePendingMapsCountAction()
@@ -132,7 +146,7 @@ describe('MapEffects', () => {
 
 		it('RemoveMapInstanceAction should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;
-			
+
 			actions = hot('--a--', { a: new RemoveMapInstanceAction({}) });
 
 			const expectedResults = cold('--b--', {
@@ -145,7 +159,7 @@ describe('MapEffects', () => {
 	describe('onMapPendingCountReachedZero$', () => {
 		it('onMapPendingCountReachedZero$ should call SetLayoutSuccessAction', () => {
 			mapState.pendingMapsCount = 0;
-			
+
 			actions = hot('--a--', { a: new DecreasePendingMapsCountAction() });
 
 			const expectedResults = cold('--b--', {

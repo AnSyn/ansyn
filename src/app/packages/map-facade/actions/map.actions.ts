@@ -29,7 +29,7 @@ export const MapActionTypes = {
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
-	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',	
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_FAVORITE: 'SET_FAVORITE',
 	MESSAGE_RAISED: 'MESSAGE_RAISED',
@@ -229,7 +229,8 @@ export class SetLayoutAction implements Action {
 export class SetLayoutSuccessAction implements Action {
 	type = MapActionTypes.SET_LAYOUT_SUCCESS;
 
-	constructor() {}
+	constructor() {
+	}
 }
 
 export class SetOverlaysNotInCaseAction implements Action {
@@ -300,7 +301,8 @@ export class SetPendingMapsCountAction implements Action {
 export class DecreasePendingMapsCountAction implements Action {
 	type: string = MapActionTypes.DECREASE_PENDING_MAPS_COUNT;
 
-	constructor() { }
+	constructor() {
+	}
 }
 
 export class SetPendingOverlaysAction implements Action {

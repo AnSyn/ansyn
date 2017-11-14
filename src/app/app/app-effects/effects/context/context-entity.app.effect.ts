@@ -1,19 +1,19 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { AddMapInstanceAction, BackToWorldAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstanceAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
-import { CommunicatorEntity, ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { isNil as _isNil } from 'lodash';
+import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import {
 	ContextEntityVisualizer,
 	ContextEntityVisualizerType
 } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { DisplayOverlayAction, OverlaysActionTypes, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
@@ -28,7 +28,7 @@ export class ContextEntityAppEffects {
 	 * @ofType SelectCaseAction
 	 * @filter case has contextEntities
 	 */
-	@Effect()	
+	@Effect()
 	displayEntityFromSelectedCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => !_isNil(payload.state.contextEntities))
@@ -47,11 +47,11 @@ export class ContextEntityAppEffects {
 					shape: 'star'
 				} as OverlaySpecialObject;
 				actions.push(new SetSpecialObjectsActionStore([specialObject]));
-			})
+			});
 
 			return actions;
 		});
-		
+
 	/**
 	 * @type Effect
 	 * @name displayEntityFromNewMap$
@@ -71,8 +71,8 @@ export class ContextEntityAppEffects {
 		});
 
 	constructor(protected actions$: Actions,
-		protected store$: Store<IAppState>,
-		protected communicatorService: ImageryCommunicatorService) {
+				protected store$: Store<IAppState>,
+				protected communicatorService: ImageryCommunicatorService) {
 	}
 
 	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {

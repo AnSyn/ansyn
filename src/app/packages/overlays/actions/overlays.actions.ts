@@ -13,7 +13,7 @@ export const OverlaysActionTypes = {
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
 	DISPLAY_OVERLAY_FROM_STORE: type('[Overlay] Display Overlay From Store'),
-	DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE: type('[Overlay] Display Multiple Overlays From Store'),	
+	DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE: type('[Overlay] Display Multiple Overlays From Store'),
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
 	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
@@ -62,7 +62,7 @@ export class LoadOverlaysAction implements Action {
 export class RequestOverlayByIDFromBackendAction implements Action {
 	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
 
-	constructor(public payload: { overlayId: string, mapId?: string }) {
+	constructor(public payload: { overlayId: string, sourceType: string, mapId?: string }) {
 	}
 }
 

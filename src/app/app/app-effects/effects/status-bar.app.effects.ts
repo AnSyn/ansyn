@@ -108,7 +108,7 @@ export class StatusBarAppEffects {
 	 */
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$
-		.ofType(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
+		.ofType<CopySelectedCaseLinkAction>(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
 		.withLatestFrom(this.store.select(casesStateSelector), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
 			return state.selectedCase.id;
 		})

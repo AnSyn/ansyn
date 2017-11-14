@@ -71,14 +71,14 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const projection = view.getProjection();
 
 		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
-			const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);		
+			const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);
 			const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
 			const point = new Point(lonLatCords);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
-			const polygon = entityMap.originalEntity.featureJson.geometry as Polygon;		
+			const polygon = entityMap.originalEntity.featureJson.geometry as Polygon;
 			const lonLatCords = proj.fromLonLat(polygon.coordinates, projection);
 			const projectedPolygon = new Polygon(lonLatCords);
 

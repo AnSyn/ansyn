@@ -66,10 +66,10 @@ export class QueryParamsHelper {
 						const geometryString = qParams.geometry;
 						if (geometryString) {
 							const geoJsonGeomtry: GeoJSON.GeoJsonObject = <GeoJSON.GeoJsonObject>wellknown.parse(geometryString);
-							
+
 							if (geoJsonGeomtry.type === 'Point') {
 								const geoPoint: Point = <Point>geoJsonGeomtry;
-								geoPoint.coordinates = geoPoint.coordinates.reverse()
+								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
 								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
@@ -80,7 +80,7 @@ export class QueryParamsHelper {
 									'type': 'Feature',
 									'properties': {},
 									'geometry': geoPoint
-								}
+								};
 
 								updatedCaseModel.state.contextEntities.push({
 									id: '1',
@@ -91,12 +91,12 @@ export class QueryParamsHelper {
 							else if (geoJsonGeomtry.type === 'Polygon') {
 								const geoPolygon: GeoJSON.Polygon = <GeoJSON.Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
-								
+
 								const feature: GeoJSON.Feature<any> = {
-									"type": "Feature",
-									"geometry": geoPolygon,
-									"properties": {}
-								}
+									'type': 'Feature',
+									'geometry': geoPolygon,
+									'properties': {}
+								};
 								const centroidOfGeometry = centroid(feature);
 
 								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = centroidOfGeometry.geometry);
@@ -150,7 +150,10 @@ export class QueryParamsHelper {
 				const clonedvalue: CaseMapsState = cloneDeep(value);
 				clonedvalue.data.forEach((caseMapState: CaseMapState) => {
 					if (caseMapState.data.overlay) {
-						caseMapState.data.overlay = <any>{ id: caseMapState.data.overlay.id };
+						caseMapState.data.overlay = <any>{
+							id: caseMapState.data.overlay.id,
+							sourceType: caseMapState.data.overlay.sourceType,
+						};
 					}
 				});
 				return rison.encode(clonedvalue);

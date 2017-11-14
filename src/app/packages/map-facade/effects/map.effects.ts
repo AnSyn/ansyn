@@ -7,6 +7,7 @@ import {
 	ActiveMapChangedAction,
 	AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
+	DecreasePendingMapsCountAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
 	MapsListChangedAction,
@@ -14,11 +15,9 @@ import {
 	PinPointModeTriggerAction,
 	PositionChangedAction,
 	SetLayoutAction,
+	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction,
-	AddMapInstanceAction,
-	DecreasePendingMapsCountAction,
-	SetLayoutSuccessAction
+	SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -106,7 +105,7 @@ export class MapEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector).pluck<any, any>('mapsList'), this.store$.select(mapStateSelector).pluck('activeMapId'))
 		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
 		.mergeMap(([{ payload }, mapsList, activeMapId]) => [
-			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)), 
+			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)),
 			new SetMapsDataActionStore(MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))]);
 
 	/**
@@ -114,7 +113,7 @@ export class MapEffects {
 	 * @name onMapCreatedDecreasePendingCount$
 	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction
 	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is greater than 0 
+	 * @filter pendingMapsCount is greater than 0
 	 * @action DecreasePendingMapsCountAction
 	 */
 	@Effect()
@@ -122,22 +121,22 @@ export class MapEffects {
 		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]) => mapState.pendingMapsCount > 0)
-		.map(() => new DecreasePendingMapsCountAction())
+		.map(() => new DecreasePendingMapsCountAction());
 
 	/**
 	 * @type Effect
 	 * @name onMapPendingCountReachedZero$
 	 * @ofType DecreasePendingMapsCountAction
 	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is 0 
+	 * @filter pendingMapsCount is 0
 	 * @action SetLayoutSuccessAction
 	 */
 	@Effect()
 	onMapPendingCountReachedZero$: Observable<any> = this.actions$
-	.ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT)
-	.withLatestFrom(this.store$.select(mapStateSelector))
-	.filter(([action, mapState]) => mapState.pendingMapsCount === 0)
-	.map(() => new SetLayoutSuccessAction())
+		.ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([action, mapState]) => mapState.pendingMapsCount === 0)
+		.map(() => new SetLayoutSuccessAction());
 
 	/**
 	 * @type Effect

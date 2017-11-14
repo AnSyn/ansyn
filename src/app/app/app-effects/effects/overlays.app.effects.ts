@@ -2,31 +2,31 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
+	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
-	SetTimelineStateAction,
-	DisplayOverlaySuccessAction
+	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
-import { isEmpty, last, filter } from 'lodash';
+import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { SetTimeAction, statusBarStateSelector, IStatusBarState, ChangeLayoutAction } from '@ansyn/status-bar';
+import { ChangeLayoutAction, IStatusBarState, SetTimeAction, statusBarStateSelector } from '@ansyn/status-bar';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { 
-	mapStateSelector, 
-	SetPendingOverlaysAction, 
-	RemovePendingOverlayAction, 
-	MapActionTypes, 
-	IMapState, 
-	SynchronizeMapsAction 
+import {
+	IMapState,
+	MapActionTypes,
+	mapStateSelector,
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
+	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CaseMapState } from '@ansyn/core';
 
@@ -124,7 +124,7 @@ export class OverlaysAppEffects {
 	selectCaseWithImageryCountBeforeAndAfter$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(() => {
-			return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter !== -1
+			return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter !== -1;
 		})
 		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
 		.switchMap(({ payload }: SelectCaseAction) => {
@@ -228,7 +228,7 @@ export class OverlaysAppEffects {
 			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			return new SetTimelineStateAction({ state });
 		});
-		
+
 	/**
 	 * @type Effect
 	 * @name displayTwoNearestOverlay$
@@ -248,7 +248,7 @@ export class OverlaysAppEffects {
 		.map(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => {
 
 			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < this.casesService.contextValues.time);
-			
+
 			const overlaysAfter = filteredOverlays.find(overlay => overlays.get(overlay).photoTime > this.casesService.contextValues.time);
 
 			return new DisplayMultipleOverlaysFromStoreAction([overlaysBefore, overlaysAfter].filter(overlay => overlay));
@@ -281,7 +281,7 @@ export class OverlaysAppEffects {
 					actionsArray.push(new DisplayOverlayFromStoreAction({ id: overlay, mapId: mapId }));
 				}
 
-				actionsArray.push(new SynchronizeMapsAction({mapId: mapsList[0].id}))
+				actionsArray.push(new SynchronizeMapsAction({ mapId: mapsList[0].id }));
 
 				return actionsArray;
 			}
@@ -316,7 +316,7 @@ export class OverlaysAppEffects {
 				actionsArray.push(new DisplayOverlayFromStoreAction({ id: overlay, mapId: mapId }));
 			}
 
-			actionsArray.push(new SynchronizeMapsAction({mapId: mapState.mapsList[0].id}))
+			actionsArray.push(new SynchronizeMapsAction({ mapId: mapState.mapsList[0].id }));
 
 			return actionsArray;
 		});
@@ -327,13 +327,13 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.includes(action.payload.id))
 		.map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
-			return new RemovePendingOverlayAction(action.payload.id)	
+			return new RemovePendingOverlayAction(action.payload.id);
 		});
 
 	constructor(public actions$: Actions,
-		public store$: Store<IAppState>,
-		public casesService: CasesService,
-		public overlaysService: OverlaysService) {
+				public store$: Store<IAppState>,
+				public casesService: CasesService,
+				public overlaysService: OverlaysService) {
 	}
 
 }

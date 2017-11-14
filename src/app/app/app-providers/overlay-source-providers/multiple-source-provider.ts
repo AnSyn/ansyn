@@ -137,6 +137,10 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<Array<Overlay>> {
 		return Observable.empty();
 	}
+
+	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
+		return Observable.empty();
+	}
 }
 
 export function filterFilter(whiteFilter: OverlayFilter, blackFilters: OverlayFilter[]): OverlayFilter[] {

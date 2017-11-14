@@ -45,11 +45,11 @@ export class FiltersEffects {
 					metadata.accumulateData(overlay[filter.modelName]);
 				});
 
-				metadata.postInitializeFilter({oldFiltersArray: oldFiltersArray, modelName: filter.modelName})
+				metadata.postInitializeFilter({ oldFiltersArray: oldFiltersArray, modelName: filter.modelName });
 
-				const currentFilterInit = action.payload.facets.filters && 
+				const currentFilterInit = action.payload.facets.filters &&
 					action.payload.facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-					
+
 				if (!currentFilterInit) {
 					metadata.showAll();
 				}

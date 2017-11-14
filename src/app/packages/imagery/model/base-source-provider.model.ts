@@ -2,6 +2,7 @@ import { SetToastMessageStoreAction } from '../../status-bar/actions/status-bar.
 import { Store } from '@ngrx/store';
 import { SetProgressBarAction } from '../../map-facade/actions/map.actions';
 import { Injectable } from '@angular/core';
+import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -32,16 +33,18 @@ export abstract class BaseMapSourceProvider {
 				tilesCounter.total = 0;
 				tilesCounter.success = 0;
 				tilesCounter.error = 0;
+
+				endTimingLog(this.mapType)
 			}
 
-			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error ) / tilesCounter.total : 1;
+			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error) / tilesCounter.total : 1;
 
 			this.store.dispatch(new SetProgressBarAction({progress, mapId}));
 		};
 
-		source.on('tileloadstart', () => {
-			tilesCounter.total++;
-		});
+		source.once('tileloadstart', () => startTimingLog(this.mapType));
+
+		source.on('tileloadstart', () => tilesCounter.total++);
 
 		source.on('tileloadend', () => {
 			tilesCounter.success++;
@@ -52,14 +55,14 @@ export abstract class BaseMapSourceProvider {
 			tilesCounter.error++;
 
 			let message;
-			switch (tilesCounter.error) {
-				case tilesCounter.total:
+			switch (tilesCounter.error) { // How many tiles errored?
+				case tilesCounter.total: // All of em
 					message = 'Failed to load overlay';
 					break;
-				case 1:
+				case 1: // Only 1
 					message = 'Failed to load a tile';
 					break;
-				default:
+				default: // More than 1, but not all
 					message = 'Failed to load ' + tilesCounter.error + ' tiles';
 			}
 

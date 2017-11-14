@@ -1,5 +1,6 @@
 import { SetToastMessageStoreAction } from '../../status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
+import { SetProgressBarAction } from '../../map-facade/actions/map.actions';
 
 export abstract class BaseMapSourceProvider {
 
@@ -33,7 +34,7 @@ export abstract class BaseMapSourceProvider {
 
 			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error ) / tilesCounter.total : 1;
 
-			// this.store.dispatch(new SetProgressBarAction({progress, mapId}));
+			this.store.dispatch(new SetProgressBarAction({progress, mapId}));
 		};
 
 		source.on('tileloadstart', () => {
@@ -45,7 +46,7 @@ export abstract class BaseMapSourceProvider {
 			resetCounterWhenDone();
 		});
 
-		source.on('tileloaderror', (error) => {
+		source.on('tileloaderror', () => {
 			tilesCounter.error++;
 
 			let message;

@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { stat } from 'fs';
 
 export interface IMapState {
 	communicators: {};
@@ -35,6 +36,13 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
 
 	switch (action.type) {
+		case MapActionTypes.SET_PROGRESS_BAR:
+			const map = state.mapsList.find(map => map.id === action.payload.mapId);
+			if (map) {
+				map.progress = action.payload.progress;
+			}
+			return state;
+
 		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
 			const mapIdToGeoOptionsClone = new Map(state.mapIdToGeoOptions);
 			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);

@@ -1,5 +1,4 @@
 <div class="imagery" #imageryViewContainer>
-
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"
@@ -13,6 +12,9 @@
 						  (toggleFavorite)="toggleFavorite()">
 	</ansyn-imagery-status>
 
+	<div class="map-loader-wrapper" [class.lowered]="showStatus && active">
+		<div class="map-loader" [style.width]="getProgress()"></div>
+	</div>
 
 	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
 </div>

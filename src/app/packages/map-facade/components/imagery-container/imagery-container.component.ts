@@ -3,6 +3,7 @@ import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { BackToWorldAction, SetFavoriteAction, SynchronizeMapsAction } from '../../actions/map.actions';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -72,5 +73,12 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	toggleFavorite() {
 		this.store.dispatch(new SetFavoriteAction(this.overlay.id));
+	}
+
+	getProgress() {
+		if (this.mapState.progress && this.mapState.progress !== 1) {
+			return this.mapState.progress * 100 + '%';
+		}
+		return 0;
 	}
 }

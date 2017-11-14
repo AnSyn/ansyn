@@ -69,7 +69,7 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
-class SourceProviderMock1 implements BaseMapSourceProvider {
+class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
 	sourceType = 'sourceType1';
 

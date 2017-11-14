@@ -7,5 +7,6 @@ export class ImageryComponentSettings implements CaseMapState {
 		position: MapPosition,
 		overlay?: Overlay;
 	};
+	progress: number;
 	mapType: string;
 }

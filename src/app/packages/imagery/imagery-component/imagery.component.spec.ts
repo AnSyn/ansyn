@@ -42,6 +42,7 @@ describe('ImageryComponent', () => {
 	const imageryData: ImageryComponentSettings = {
 		id: 'imagery1',
 		mapType: 'openLayersMap',
+		progress: 0,
 		data: { position: { center: geoPoint, zoom: 0 } }
 	};
 

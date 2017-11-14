@@ -12,10 +12,6 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerBingSourceProviderMapType;
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
-	constructor(store: Store<any>) {
-		super(store);
-	}
-
 	create(metaData: any, mapId: string): any {
 		return metaData.styles.map(style => {
 			const source = new BingMaps({

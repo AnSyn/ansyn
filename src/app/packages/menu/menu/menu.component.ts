@@ -102,6 +102,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
+				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document) {
 
 		this.menuItems$.subscribe((_menuItems) => {
@@ -125,8 +126,18 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('click', ['$event'])
-	clickCompnent($event: MouseEvent) {
+	clickComponent($event: MouseEvent) {
 		$event.stopPropagation();
+	}
+
+	forceRedraw() {
+		return new Promise(resolve => {
+			this.elementRef.nativeElement.style.display = 'none';
+			requestAnimationFrame(() => {
+				this.elementRef.nativeElement.style.display = '';
+				resolve();
+			});
+		});
 	}
 
 	onIsPinnedChange() {
@@ -138,7 +149,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
 		} else {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
-		this.store.dispatch(new ContainerChangedTriggerAction());
+
+		this.forceRedraw()
+			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {

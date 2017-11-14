@@ -2,6 +2,7 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import TileWMS from 'ol/source/tilewms';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
@@ -11,6 +12,10 @@ export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerTileWMSSourceProviderMapType;
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
+
+	constructor(store: Store<any>) {
+		super(store);
+	}
 
 	create(metaData: any, mapId: string): any {
 		const layers = metaData.layers.join(',');

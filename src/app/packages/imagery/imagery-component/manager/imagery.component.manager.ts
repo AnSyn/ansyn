@@ -71,7 +71,7 @@ export class ImageryComponentManager {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
 		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === relevantMapConfig.mapType && item.sourceType === relevantMapConfig.mapSource);
-		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
+		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata, this.id);
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: MapPosition, layer?: any): void {

@@ -62,6 +62,7 @@ export interface CaseMapState {
 		isAutoImageProcessingActive?: boolean,
 		overlayDisplayMode?: OverlayDisplayMode
 	};
+	progress: number;
 	mapType: string;
 }
 

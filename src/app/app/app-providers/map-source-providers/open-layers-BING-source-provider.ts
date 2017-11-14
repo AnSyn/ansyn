@@ -2,6 +2,7 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
 export const OpenLayerBingSourceProviderSourceType = 'BING';
@@ -10,6 +11,10 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerBingSourceProviderMapType;
 	public sourceType = OpenLayerBingSourceProviderSourceType;
+
+	constructor(store: Store<any>) {
+		super(store);
+	}
 
 	create(metaData: any, mapId: string): any {
 		return metaData.styles.map(style => {

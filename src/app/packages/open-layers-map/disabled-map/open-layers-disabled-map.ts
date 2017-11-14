@@ -191,11 +191,28 @@ export class OpenLayersDisabledMap implements IMap {
 		}
 
 		if (shouldPerform) {
-			this._imageProcessing.addOperation(rasterSource, 'Sharpness');
-			this._imageProcessing.addOperation(rasterSource, 'Histogram');
+			// the determine the order which by the image processing will occur
+			const processingParams = {
+				Histogram: { auto: true },
+				Sharpness: { auto: true }
+			};
+			this._imageProcessing.processUsingRaster(rasterSource, processingParams);
 		} else {
 			this._imageProcessing.removeAllRasterOperations(rasterSource);
 		}
+	}
+
+	public setManualImageProcessing(processingParams: Object) {
+		let imageLayer: ImageLayer = <ImageLayer>this.mainLayer;
+		if (!imageLayer) {
+			return;
+		}
+
+		let rasterSource: Raster = <Raster>imageLayer.getSource();
+		if (!rasterSource) {
+			return;
+		}
+		this._imageProcessing.processUsingRaster(rasterSource, processingParams);
 	}
 
 	dispose() {

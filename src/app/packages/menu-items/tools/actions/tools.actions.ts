@@ -16,6 +16,7 @@ export const ToolsActionsTypes = {
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
+	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
 	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING'),
@@ -160,6 +161,13 @@ export class EnableImageProcessing implements Action {
 	type = ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING;
 
 	constructor(public payload?: any) {
+	};
+}
+
+export class SetManualImageProcessing implements Action {
+	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: { processingParams: Object}) {
 	};
 }
 

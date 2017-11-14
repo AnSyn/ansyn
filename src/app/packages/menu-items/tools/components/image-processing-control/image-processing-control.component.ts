@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
-// import { SetManualImageProcessing } from '../../actions/tools.actions';
+import { SetManualImageProcessing } from '../../actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -12,8 +12,8 @@ export class ImageProcessingControlComponent {
 	private _isExpended: boolean;
 
 	public imgProcessParams = {
-		contrast: 50,
-		gamma: 30
+		Contrast: 0,
+		Brightness: 0
 	};
 
 	@HostBinding('class.expand') @Input()
@@ -28,7 +28,7 @@ export class ImageProcessingControlComponent {
 
 	}
 	manualImageProcess() {
-		// this.store$.dispatch(new SetManualImageProcessing(this.imgProcessParams));
+		this.store$.dispatch(new SetManualImageProcessing({ processingParams: this.imgProcessParams }));
 	}
 
 	close() {

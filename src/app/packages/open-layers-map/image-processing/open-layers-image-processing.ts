@@ -1,14 +1,26 @@
 import Raster from 'ol/source/raster';
 
+export type supportedOperations = 'Histogram_Auto' | 'Histogram_manual' | 'Contrast' | 'Brightness' | 'Sharpness';
+
+export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Contrast', 'Brightness', 'Sharpness', ];
+
+export const IMG_PROCESS_DEFAULTS = {
+	SHARPNESS: 50,
+	HISTOGRAM_LOW: 0,
+	HISTOGRAM_HIGH: 100,
+	CONTRAST: 50,
+	BRIGHTNESS: 50
+};
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 
 export interface IRasterOperation {
 	name: string,
 	operation: pixelOperation,
+	value?: any,
+	defaultValue: any,
 	lib: {}
 }
 
-export type supportedOperations = 'Histogram' | 'Sharpness';
 
 export const operations = [];
 
@@ -16,28 +28,50 @@ export class OpenLayersImageProcessing {
 
 	_rasterToOperations: Map<Raster, IRasterOperation[]>;
 	_operations: Map<string, IRasterOperation>;
+	_operationsAsStrings: Map<string, string>;
+	_libsAsStrings: Map<string, string>;
 
 	constructor() {
 		this._rasterToOperations = new Map<Raster, IRasterOperation[]>();
 		this._operations = new Map<string, IRasterOperation>();
+		this._operationsAsStrings = new Map<string, string>();
+		this._libsAsStrings = new Map<string, string>();
 
 		this.initializeOperations();
 	}
 
 	initializeOperations() {
-		this.initializeHistogramEqualization();
+		this.initializeAutoHistogramEqualization();
 		this.initializeSharpness();
+		this.initializeContrast();
+		this.initializeBrightness();
 	}
 
-	initializeHistogramEqualization() {
+	addOperation(operation) {
+		this._operations.set(operation.name, operation);
+		this._operationsAsStrings.set(operation.name, operation.operation.toString());
+		for (let property in operation.lib) {
+			if (operation.lib.hasOwnProperty(property) && !this._libsAsStrings.get(property)) {
+				this._libsAsStrings.set(property, operation.lib[property]);
+			}
+		}
+	}
+
+	initializeAutoHistogramEqualization() {
 		const lib = {
 			buildHistogramLut: buildHistogramLut,
 			performHistogram: performHistogram,
 			rgb2YCbCr: rgb2YCbCr,
 			yCbCr2RGB: yCbCr2RGB
 		};
-
-		this._operations.set('Histogram', { name: 'Histogram', operation: histogramEqualization, lib: lib });
+		const operation = {
+			name: 'Histogram_Auto',
+			operation: histogramEqualization,
+			// value: {low: IMG_PROCESS_DEFAULTS.HISTOGRAM_LOW, high: IMG_PROCESS_DEFAULTS.HISTOGRAM_HIGH},
+			defaultValue: {low: IMG_PROCESS_DEFAULTS.HISTOGRAM_LOW, high: IMG_PROCESS_DEFAULTS.HISTOGRAM_HIGH},
+			lib: lib
+		};
+		this.addOperation(operation);
 	}
 
 	initializeSharpness() {
@@ -47,102 +81,115 @@ export class OpenLayersImageProcessing {
                 0, -1, 0]`,
 			normalizeColor: normalizeColor
 		};
-
-		this._operations.set('Sharpness', { name: 'Sharpness', operation: performSharpness, lib: lib });
-
+		const operation = {
+			name: 'Sharpness',
+			operation: performSharpness,
+			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
+			defaultValue: IMG_PROCESS_DEFAULTS.SHARPNESS,
+			lib: lib
+		};
+		this.addOperation(operation);
 	}
 
-	addOperation(raster: Raster, name: supportedOperations) {
-		const currentOperations = this._rasterToOperations.get(raster);
-		const requestedOperation = this._operations.get(name);
-
-		if (!requestedOperation) {
-			throw new Error(`No operation defined under the name ${name}`);
-		}
-
-		if (!currentOperations) {
-			this._rasterToOperations.set(raster, [requestedOperation]);
-		} else {
-			currentOperations.push({
-				name: requestedOperation.name,
-				operation: requestedOperation.operation,
-				lib: requestedOperation.lib
-			});
-		}
-
-		this.syncOperations(raster);
+	initializeContrast() {
+		const lib = {
+			forEachRGBPixel: forEachRGBPixel
+		};
+		const operation = {
+			name: 'Contrast',
+			operation: performContrast,
+			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
+			defaultValue: IMG_PROCESS_DEFAULTS.CONTRAST,
+			lib: lib
+		};
+		this.addOperation(operation);
 	}
 
-	removeOperation(raster: Raster, name: supportedOperations) {
-		const currentOperations = this._rasterToOperations.get(raster);
-		if (currentOperations) {
-			const operationToRemove = currentOperations.find((operation) => operation.name === name);
-			const index = currentOperations.indexOf(operationToRemove);
+	initializeBrightness() {
+		const lib = {
+			forEachRGBPixel: forEachRGBPixel
+		};
+		const operation = {
+			name: 'Brightness',
+			operation: performBrightness,
+			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
+			defaultValue: IMG_PROCESS_DEFAULTS.CONTRAST,
+			lib: lib
+		};
+		this.addOperation(operation);
+	}
+	processUsingRaster(raster: Raster, processingParams: Object) {
+		const operationsArguments = processingParams;
+		console.log(operationsArguments)
 
-			if (index > -1) {
-				currentOperations.splice(index, 1);
-
-				if (currentOperations.length === 0) {
-					this._rasterToOperations.delete(raster);
+		this._rasterToOperations.delete(raster);
+		// collection operation by processingParams
+		const operations  = new Array<IRasterOperation>();
+		// todo: by order
+		IMG_PROCESS_ORDER.forEach(processKey => {
+			if (operationsArguments[processKey]) {
+				const operation = this._operations.get(operationsArguments[processKey]);
+				if (operation) {
+					operations.push(operation)
 				}
 			}
-		}
+		});
 
-		this.syncOperations(raster);
+		// set operations and process
+		if (operations.length > 0) {
+			this.syncOperations(raster, operations, processingParams);
+		} else {
+			raster.setOperation(resetOperation);
+		}
 	}
 
 	removeAllRasterOperations(raster: Raster) {
 		this._rasterToOperations.delete(raster);
-
-		this.syncOperations(raster);
+		raster.setOperation(resetOperation);
+		// this.syncOperations(raster);
 	}
+	// convert object to string and make functions into arrays (so OL can process it)
+	syncOperations(raster: Raster, operations: IRasterOperation[], operationsArguments: Object) {
+		let globalLib = {};
 
-	syncOperations(raster: Raster) {
-		const currentOperations = this._rasterToOperations.get(raster);
-		if (currentOperations) {
-			let globalLib = {};
-			const operationsArray = [];
+		let operationsFunctionsString = '[';
+		let operationsArgumentsString = '[';
+		for (let i = 0; i < operations.length; i++) {
+			operationsFunctionsString += this._operationsAsStrings.get(operations[i].name);
+			operationsArgumentsString += operationsArguments[operations[i].name];
 
-			currentOperations.forEach((operation: IRasterOperation) => {
-				operationsArray.push(operation.operation);
-				for (let property in operation.lib) {
-					if (operation.lib.hasOwnProperty(property)) {
-						globalLib[property] = operation.lib[property];
-					}
-				}
-			});
-
-			let operationsFunctionsString = '[';
-			operationsArray.forEach((func) => {
-				operationsFunctionsString += func.toString() + ',';
-			});
-
-			operationsFunctionsString = operationsFunctionsString.replace(/,\s*$/, '');
-
-			operationsFunctionsString += ']';
-
-			globalLib['operations'] = operationsFunctionsString;
-			if (raster.setOperation) {
-				raster.setOperation(cascadeOperations, globalLib);
-			}
-		} else {
-			if (raster.setOperation) {
-				raster.setOperation(basicOperation);
+			if (i < operations.length - 1) {
+				operationsFunctionsString += ',';
+				operationsArgumentsString += ',';
 			}
 		}
+		operationsFunctionsString += ']';
+		operationsArgumentsString += ']';
+
+		globalLib['operations'] = operationsFunctionsString;
+		globalLib['operationsArgs'] = operationsArgumentsString;
+
+		this._libsAsStrings.forEach( (lib, libName) => globalLib[libName] = lib);
+
+		raster.setOperation(cascadeOperations, globalLib);
 	}
 }
 
 // ------ General Operation Start ------ //
 
-function basicOperation(pixels, data) {
+function resetOperation(pixels, data) {
+	// return the original pixels collection
 	return pixels[0];
 }
 
 function cascadeOperations(pixels, data) {
 	let imageData = pixels[0];
-	this['operations'].forEach((operation) => {
-		imageData = operation(imageData);
+	const operations = this['operations'];
+	const operationsArgs = this['operationsArgs'];
+
+	operations.forEach((operation, index) => {
+		console.log('do ' + operation.name + ' with: ', operationsArgs[index])
+		imageData = operation(imageData, operationsArgs[index]);
 	});
 	return imageData;
 }
@@ -300,3 +347,62 @@ function normalizeColor(color) {
 }
 
 // ------ Sharpness End ------ //
+
+// ------ Contrast start ------ //
+function performContrast(imageData, contrast) {
+	const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+	const performOnSegment = (segment) => {
+		return factor * (segment - 128) + 128;
+	};
+	const performOnPixel = (pixel) => {
+		return {
+			r: performOnSegment(pixel.r),
+			g: performOnSegment(pixel.g),
+			b: performOnSegment(pixel.b),
+			a: performOnSegment(pixel.r)
+		}
+	};
+	this['forEachRGBPixel'](imageData, performOnPixel);
+
+	return imageData;
+}
+// ------ Contrast End ------ //
+
+// ------ Brightness start ------ //
+function performBrightness(imageData, brightness) {
+	const performOnSegment = (segment) => segment + brightness;
+	const performOnPixel = (pixel) => {
+		return {
+			r: performOnSegment(pixel.r),
+			g: performOnSegment(pixel.g),
+			b: performOnSegment(pixel.b),
+			a: performOnSegment(pixel.r)
+		}
+	};
+
+	this['forEachRGBPixel'](imageData, performOnPixel);
+
+	return imageData;
+}
+// ------ Brightness End ------ //
+
+function forEachRGBPixel(imageData, conversionFn) {
+	const pixel = { r: 0, g: 0, b: 0, a: 0 };
+	let convertedPixel;
+
+	for (let index = 0; index < imageData.data.length; index += 4) {
+		pixel.r = imageData.data[index];
+		pixel.g = imageData.data[index + 1];
+		pixel.b = imageData.data[index + 2];
+		pixel.a = imageData.data[index + 3];
+		// do conversion
+		convertedPixel = conversionFn(pixel);
+
+		imageData.data[index + 0] = convertedPixel.r;	// Red
+		imageData.data[index + 1] = convertedPixel.g;	// Green
+		imageData.data[index + 2] = convertedPixel.b;	// Blue
+		imageData.data[index + 3] = convertedPixel.a;	// Alpha
+	}
+
+	return imageData;
+}

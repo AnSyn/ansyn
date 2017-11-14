@@ -18,6 +18,7 @@ import {
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
 	SetPendingMapsCountAction
+	SetMapManualImageProcessing
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -25,6 +26,7 @@ import 'rxjs/add/operator/share';
 import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 
 
 @Injectable()
@@ -79,6 +81,22 @@ export class MapEffects {
 		.filter(([comm]) => !_isNil(comm))
 		.do(([comm, toggleValue]) => {
 			comm.setAutoImageProcessing(toggleValue);
+		});
+
+	/**
+	 * @type Effect
+	 * @name onSetManualImageProcessing$
+	 * @ofType SetMapManualImageProcessing
+	 * @filter There is a communicator
+	 */
+	@Effect({ dispatch: false })
+	onSetManualImageProcessing$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
+		.do(a => console.log('asda') )
+		.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
+		.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
+		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity])  => {
+			communicator.setManualImageProcessing(action.payload.processingParams);
 		});
 
 	/**

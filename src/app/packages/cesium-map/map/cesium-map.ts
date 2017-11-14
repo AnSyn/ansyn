@@ -67,6 +67,10 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
+	setManualImageProcessing(processingParams: Object): void {
+		throw new Error('Method not implemented.');
+	}
+
 	setPointerMove(enable: boolean) {
 	}
 

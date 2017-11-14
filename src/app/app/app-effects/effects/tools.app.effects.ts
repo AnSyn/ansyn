@@ -39,6 +39,8 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { SetMapManualImageProcessing } from '@ansyn/map-facade/actions/map.actions';
+import { SetManualImageProcessing } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 
 @Injectable()
@@ -199,6 +201,25 @@ export class ToolsAppEffects {
 				new SetMapsDataActionStore({ mapsList: updatedMapsList }),
 				new SetAutoImageProcessingSuccess(shouldAutoImageProcessing)
 			];
+		});
+	/**
+	 * @type Effect
+	 * @name onManualImageProcessing$
+	 * @ofType ofType
+	 * @filter There is a active map
+	 * @dependencies map, withLatestFrom
+	 * @action SetMapManualImageProcessing
+	 */
+	@Effect()
+	onManualImageProcessing$: Observable<SetManualImageProcessing> = this.actions$
+		.ofType(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: SetManualImageProcessing, mapsState: IMapState) => {
+			return [action, mapsState];
+		})
+		.filter(([action, mapsState]: [SetManualImageProcessing, IMapState]) => Boolean(mapsState.activeMapId))
+		.map(([action, mapsState]: [SetManualImageProcessing, IMapState]) => {
+		console.log('Ta da action!', action)
+			return new SetMapManualImageProcessing({ mapId: mapsState.activeMapId, processingParams: action.payload.processingParams });
 		});
 
 	/**

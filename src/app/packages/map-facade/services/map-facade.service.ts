@@ -49,6 +49,7 @@ export class MapFacadeService {
 			} else {
 				const mapStateCopy: CaseMapState = {
 					id: UUID.UUID(),
+					progress: 0,
 					data: { position: cloneDeep(activeMap.data.position) },
 					mapType: defaultMapType
 				};

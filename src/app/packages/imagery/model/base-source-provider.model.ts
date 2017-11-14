@@ -1,7 +1,9 @@
 import { SetToastMessageStoreAction } from '../../status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
 import { SetProgressBarAction } from '../../map-facade/actions/map.actions';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class BaseMapSourceProvider {
 
 	abstract mapType: string;

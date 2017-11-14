@@ -3,7 +3,6 @@ import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
-import { stat } from 'fs';
 
 export interface IMapState {
 	communicators: {};

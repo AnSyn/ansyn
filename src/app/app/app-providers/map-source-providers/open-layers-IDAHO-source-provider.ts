@@ -15,10 +15,6 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	constructor(store: Store<any>) {
-		super(store);
-	}
-
 	create(metaData: any, mapId: string): any {
 		const source = new XYZ({
 			url: metaData.imageUrl,

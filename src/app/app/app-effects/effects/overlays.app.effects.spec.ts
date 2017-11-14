@@ -259,7 +259,7 @@ describe('OverlaysAppEffects', () => {
 		
 		actions = hot('--a--', { a: new SetFiltersAction([]) });
 		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction(['first', undefined])
+			b: new DisplayMultipleOverlaysFromStoreAction(['first'])
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
@@ -274,7 +274,7 @@ describe('OverlaysAppEffects', () => {
 		
 		actions = hot('--a--', { a: new SetFiltersAction([]) });
 		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([undefined, 'last'])
+			b: new DisplayMultipleOverlaysFromStoreAction(['last'])
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});

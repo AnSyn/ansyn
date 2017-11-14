@@ -51,38 +51,7 @@ export class ContextEntityAppEffects {
 
 			return actions;
 		});
-
-	/**
- * @type Effect
- * @name displayEntityFromUpdatedCase$
- * @ofType UpdatetCaseAction
- * @filter case has contextEntities
- */
-	@Effect()
-	displayEntityFromUpdatedCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE)
-		.filter(({ payload }: UpdateCaseAction) => !_isNil(payload.state.contextEntities))
-		.distinctUntilChanged((x: UpdateCaseAction, y: UpdateCaseAction) => _isEqual(x.payload.state.contextEntities, y.payload.state.contextEntities))
-		.mergeMap(({ payload }: UpdateCaseAction) => {
-			payload.state.maps.data.forEach((mapState: CaseMapState) => {
-				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
-				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);
-			});
-
-			const actions = [];
-
-			payload.state.contextEntities.forEach(contextEntity => {
-				const specialObject: OverlaySpecialObject = {
-					id: contextEntity.id,
-					date: contextEntity.date,
-					shape: 'star'
-				} as OverlaySpecialObject;
-				actions.push(new SetSpecialObjectsActionStore([specialObject]));
-			})
-
-			return actions;
-		});
-
+		
 	/**
 	 * @type Effect
 	 * @name displayEntityFromNewMap$

@@ -145,9 +145,9 @@ export class CasesAppEffects {
 			if (state.contextsLoaded) {
 				observable = Observable.of(state.contexts);
 			} else {
-				const criteria = new ContextCriteria({ start: 0, limit: 200 });
-				observable = this.contextSourceService.find(criteria);
-				// observable = this.casesService.loadContexts();
+				// const criteria = new ContextCriteria({ start: 0, limit: 200 });
+				// observable = this.contextSourceService.find(criteria);
+				observable = this.casesService.loadContexts();
 			}
 			return observable.map((contexts: Context[]) => {
 				return new LoadContextsSuccessAction(contexts);

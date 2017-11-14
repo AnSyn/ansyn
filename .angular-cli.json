@@ -21,10 +21,7 @@
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less",
-				"../node_modules/font-awesome/css/font-awesome.min.css",
-				"../node_modules/primeng/resources/primeng.min.css",
-				"../node_modules/primeng/resources/themes/omega/theme.css"			
+				"./styles/styles.less"			
 			],
 			"scripts": [
 			],

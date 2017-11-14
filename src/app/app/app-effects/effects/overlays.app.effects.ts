@@ -15,7 +15,7 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
-import { isEmpty, first, last, filter } from 'lodash';
+import { isEmpty, last, filter } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { SetTimeAction, statusBarStateSelector, IStatusBarState, ChangeLayoutAction } from '@ansyn/status-bar';
@@ -247,25 +247,11 @@ export class OverlaysAppEffects {
 		.filter(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => !isEmpty(filteredOverlays))
 		.map(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => {
 
-			const overlaysBefore = filter(filteredOverlays, function (overlay) {
-				return overlays.get(overlay).photoTime < this.casesService.contextValues.time;
-			}.bind(this))
-				.sort(function (a, b) {
-					return new Date(overlays.get(b).photoTime).getTime() -
-						new Date(overlays.get(a).photoTime).getTime();
-				});
+			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < this.casesService.contextValues.time);
+			
+			const overlaysAfter = filteredOverlays.find(overlay => overlays.get(overlay).photoTime > this.casesService.contextValues.time);
 
-			const overlaysAfter = filter(filteredOverlays, function (overlay) {
-				return overlays.get(overlay).photoTime > this.casesService.contextValues.time;
-			}.bind(this))
-				.sort(function (a, b) {
-					return new Date(overlays.get(a).photoTime).getTime() - 
-					new Date(overlays.get(b).photoTime).getTime();
-				});
-
-			this.casesService.contextValues.defaultOverlay = '';
-
-			return new DisplayMultipleOverlaysFromStoreAction([first(overlaysBefore), first(overlaysAfter)]);
+			return new DisplayMultipleOverlaysFromStoreAction([overlaysBefore, overlaysAfter].filter(overlay => overlay));
 		})
 		.share();
 
@@ -280,7 +266,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE)
-		.filter((action: DisplayMultipleOverlaysFromStoreAction) => !action.payload.every((overlay) => !overlay))
+		.filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0)
 		.withLatestFrom(this.store$.select(statusBarStateSelector), this.store$.select(mapStateSelector).pluck<any, any>('mapsList'))
 		.mergeMap(([action, statusBarState, mapsList]: [DisplayMultipleOverlaysFromStoreAction, IStatusBarState, CaseMapState[]]) => {
 			const validOverlays = action.payload.filter((overlay) => overlay);

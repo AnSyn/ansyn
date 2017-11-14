@@ -45,6 +45,13 @@ export class SliderFilterMetadata implements FilterMetadata {
     }
 
     postInitializeFilter(value: any): void {
+        if (this.start < this.min) {
+            this.start = this.min;
+        }
+
+        if (this.end > this.max) {
+            this.end = this.max;
+        }
     }
 
     filterFunc(overlay: any, filteringParams: { key: string, metadata: SliderFilterMetadata }): boolean {

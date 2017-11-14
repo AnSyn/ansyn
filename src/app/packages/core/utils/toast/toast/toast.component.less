@@ -1,11 +1,12 @@
 @import '../../../less/z-index-globals';
+@import '../../../less/common';
 
 div.toast {
 	background: rgba(0, 0, 0, 0.7);
 	position: fixed;
 	z-index: @z-index-toast;
 	color: white;
-	left: 10px;
+	left: calc(@menu-width + 10px);
 	bottom: 10px;
 	padding: 10px 20px;
 	transform: translate(0, 0);

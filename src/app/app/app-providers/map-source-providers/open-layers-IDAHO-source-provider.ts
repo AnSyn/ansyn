@@ -2,14 +2,22 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import { ProjectableRaster } from '@ansyn/open-layers-map';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
+@Injectable()
 export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
+
+	constructor(protected store: Store<any>) {
+		super();
+	}
 
 	create(metaData: any): any {
 		/*
@@ -17,7 +25,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 		 */
 		const source = new XYZ({
-			url: metaData.imageUrl,
+			url: metaData.imageUrl + 'gvyhgf',
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
 		});
@@ -31,6 +39,13 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 		source.once('tileloadend', () => {
 			super.endTimingLog('tileLoad-' + metaData.id);
+		});
+
+		source.once('tileloaderror', (error) => {
+			this.store.dispatch(new SetToastMessageStoreAction({
+				toastText: 'Failed to load tile',
+				showWarningIcon: true
+			}));
 		});
 
 		return new ImageLayer({

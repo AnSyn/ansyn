@@ -116,6 +116,7 @@ describe('Overlays Effects ', () => {
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
 				overlayId: 'test',
+				sourceType: 'IDAHO',
 				mapId: 'testMapId'
 			})
 		});

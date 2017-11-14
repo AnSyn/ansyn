@@ -1,7 +1,4 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
-import { StoreModule } from '@ngrx/store';
-import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
-import { FiltersModule } from '../../filters.module';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SortPipe } from '../../pipes/sort.pipe';
 import { MapIteratorPipe } from '../../pipes/map-iterator.pipe';
@@ -27,6 +24,6 @@ describe('EnumFilterContainerComponent', () => {
 	});
 
 	it('should be created', () => {
-	  expect(component).toBeTruthy();
+		expect(component).toBeTruthy();
 	});
 });

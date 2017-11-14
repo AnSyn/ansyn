@@ -8,7 +8,7 @@ export interface Context {
 	layoutIndex?: number;
 	zoom?: number;
 	imageryCountBefore?: number;
-	imageryCountAfter?: number;	
+	imageryCountAfter?: number;
 	timeFilter?: string;
 	geoFilter?: string;
 	orientation?: string;

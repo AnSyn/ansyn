@@ -1,75 +1,74 @@
-import { Filter } from './../filter';
 import { FilterMetadata } from './filter-metadata.interface';
 
 export class SliderFilterMetadata implements FilterMetadata {
 
-    min: number;
-    max: number;
+	min: number;
+	max: number;
 
-    start: number;
-    end: number;
+	start: number;
+	end: number;
 
-    type: string;
+	type: string;
 
-    constructor() {
-        this.type = 'Slider';
+	constructor() {
+		this.type = 'Slider';
 
-        this.min = Number.MAX_SAFE_INTEGER;
-        this.max = Number.MIN_SAFE_INTEGER;
+		this.min = Number.MAX_SAFE_INTEGER;
+		this.max = Number.MIN_SAFE_INTEGER;
 
-        this.start = Number.MAX_SAFE_INTEGER;
-        this.end = Number.MIN_SAFE_INTEGER;
-    }
+		this.start = Number.MAX_SAFE_INTEGER;
+		this.end = Number.MIN_SAFE_INTEGER;
+	}
 
-    updateMetadata(range: { start: number, end: number }): void {
-        if (!range || range.start > range.end) {
-            return;
-        }
+	updateMetadata(range: { start: number, end: number }): void {
+		if (!range || range.start > range.end) {
+			return;
+		}
 
-        this.start = range.start;
-        this.end = range.end;
-    }
+		this.start = range.start;
+		this.end = range.end;
+	}
 
-    accumulateData(value: number): void {
-        if (value < this.min) {
-            this.min = value;
-        }
+	accumulateData(value: number): void {
+		if (value < this.min) {
+			this.min = value;
+		}
 
-        if (value > this.max) {
-            this.max = value;
-        }
-    }
+		if (value > this.max) {
+			this.max = value;
+		}
+	}
 
-    initializeFilter(range: { start: number, end: number }): void {
-        this.updateMetadata(range);
-    }
+	initializeFilter(range: { start: number, end: number }): void {
+		this.updateMetadata(range);
+	}
 
-    postInitializeFilter(value: any): void {
-        if (this.start < this.min) {
-            this.start = this.min;
-        }
+	postInitializeFilter(value: any): void {
+		if (this.start < this.min) {
+			this.start = this.min;
+		}
 
-        if (this.end > this.max) {
-            this.end = this.max;
-        }
-    }
+		if (this.end > this.max) {
+			this.end = this.max;
+		}
+	}
 
-    filterFunc(overlay: any, filteringParams: { key: string, metadata: SliderFilterMetadata }): boolean {
+	filterFunc(overlay: any, filteringParams: { key: string, metadata: SliderFilterMetadata }): boolean {
 
-        return overlay[filteringParams.key] >= filteringParams.metadata.start &&
-            overlay[filteringParams.key] <= filteringParams.metadata.end;
-    }
+		return overlay[filteringParams.key] >= filteringParams.metadata.start &&
+			overlay[filteringParams.key] <= filteringParams.metadata.end;
+	}
 
-    getMetadataForOuterState(): { start: number, end: number } {
-        return { start: this.start, end: this.end };
-    }
+	getMetadataForOuterState(): { start: number, end: number } {
+		return { start: this.start, end: this.end };
+	}
 
-    isFiltered(): boolean {
-        return this.start > this.min || this.end < this.max;
-    }
+	isFiltered(): boolean {
+		return this.start > this.min || this.end < this.max;
+	}
 
-    showAll(): void {
-        this.start = this.min;
-        this.end = this.max;
-    }
+	showAll(): void {
+		this.start = this.min;
+		this.end = this.max;
+	}
 }

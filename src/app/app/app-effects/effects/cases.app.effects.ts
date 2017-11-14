@@ -20,7 +20,7 @@ import {
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
-import { BaseContextSourceProvider, ContextCriteria } from '@ansyn/context';
+import { BaseContextSourceProvider } from '@ansyn/context';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -95,7 +95,7 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
-		.ofType(CasesActionTypes.COPY_CASE_LINK)
+		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
 		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload);
 			if (isNil(sCase)) {

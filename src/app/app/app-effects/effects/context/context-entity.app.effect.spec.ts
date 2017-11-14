@@ -5,11 +5,11 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
-import { AddMapInstanceAction, BackToWorldAction } from '@ansyn/map-facade/actions/map.actions';
+import { AddMapInstanceAction } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
-import { DisplayOverlayAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 
@@ -121,13 +121,15 @@ describe('ContextEntityAppEffects', () => {
 		const action = new SelectCaseAction(cases[0]);
 		actions = hot('--a--', { a: action });
 
-		const expectedResults = cold('--b--', { b: new SetSpecialObjectsActionStore([
-			{					
-				id: '1',
-				date: new Date('2015-04-17T03:55:12.129Z'),
-				shape: 'star'
-			}
-		]) });
+		const expectedResults = cold('--b--', {
+			b: new SetSpecialObjectsActionStore([
+				{
+					id: '1',
+					date: new Date('2015-04-17T03:55:12.129Z'),
+					shape: 'star'
+				}
+			])
+		});
 
 		expect(contextEntityAppEffects.displayEntityFromSelectedCase$).toBeObservable(expectedResults);
 		expect(visualizer.setEntities).toHaveBeenCalledTimes(3);

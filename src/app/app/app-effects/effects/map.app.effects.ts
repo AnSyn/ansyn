@@ -78,7 +78,6 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import 'rxjs/add/observable/fromPromise';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
@@ -288,11 +287,12 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.filter((action: DisplayOverlayAction) => !action.payload.overlay.isFullOverlay)
 		.map((action: DisplayOverlayAction) =>
 			new RequestOverlayByIDFromBackendAction({
 				overlayId: action.payload.overlay.id,
+				sourceType: action.payload.overlay.sourceType,
 				mapId: action.payload.mapId
 			}));
 

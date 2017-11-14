@@ -2,26 +2,21 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import {
+	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
 	SetFiltersAction,
-	SetTimelineStateAction,
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlaySuccessAction
+	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Case, CasesReducer, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import {
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	overlaysStateSelector
-} from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
@@ -38,8 +33,14 @@ import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/red
 import { cold, hot } from 'jasmine-marbles';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { SetTimeAction, statusBarStateSelector, ChangeLayoutAction } from '@ansyn/status-bar';
-import { mapStateSelector, SetPendingOverlaysAction, SetLayoutSuccessAction, RemovePendingOverlayAction, SynchronizeMapsAction } from '@ansyn/map-facade';
+import { ChangeLayoutAction, SetTimeAction, statusBarStateSelector } from '@ansyn/status-bar';
+import {
+	mapStateSelector,
+	RemovePendingOverlayAction,
+	SetLayoutSuccessAction,
+	SetPendingOverlaysAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -96,12 +97,12 @@ describe('OverlaysAppEffects', () => {
 	const overlaysState: any = {
 		filteredOverlays: ['first', 'last'],
 		overlays: new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
-		['last', { 'photoTime': new Date() }]])
+			['last', { 'photoTime': new Date() }]])
 	};
 
-	const mapState: any = {'mapsList': [{'id': '1'}, {'id': '2'}]};
+	const mapState: any = { 'mapsList': [{ 'id': '1' }, { 'id': '2' }] };
 
-	const statusBarState: any = {'layouts': [{'mapsCount': 3}]};
+	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -122,19 +123,31 @@ describe('OverlaysAppEffects', () => {
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null,
-						'contextValues': {'imageryCountBefore' : -1, 'imageryCountAfter': -1, 'defaultOverlay': '', 'time': new Date()}	
+						'contextValues': {
+							'imageryCountBefore': -1,
+							'imageryCountAfter': -1,
+							'defaultOverlay': '',
+							'time': new Date()
+						}
 					}
 				},
 				{
 					provide: OverlaysService,
 					useValue: {
 						getStartDateViaLimitFasets: () => {
-							return Observable.of({'startDate': new Date('2014-06-27T08:43:03.624Z'), 'endDate': new Date('2015-06-27T08:43:03.624Z')});
+							return Observable.of({
+								'startDate': new Date('2014-06-27T08:43:03.624Z'),
+								'endDate': new Date('2015-06-27T08:43:03.624Z')
+							});
 						},
 						getStartAndEndDateViaRangeFacets: () => {
-							return Observable.of({'startDate': new Date('2014-06-27T08:43:03.624Z'), 'endDate': new Date('2015-06-27T08:43:03.624Z')});
+							return Observable.of({
+								'startDate': new Date('2014-06-27T08:43:03.624Z'),
+								'endDate': new Date('2015-06-27T08:43:03.624Z')
+							});
 						},
-						getTimeStateByOverlay: () => {}
+						getTimeStateByOverlay: () => {
+						}
 					}
 				},
 				{
@@ -199,7 +212,12 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	it('On selectCaseWithImageryCountBeforeAndAfter$ with imageryCountBefore != -1 and imageryCountAfter != -1 call to loadOverlaysAction with case params ', () => {
-		casesService.contextValues = {'imageryCountBefore' : 1, 'imageryCountAfter': 1, 'defaultOverlay': 'nearest', 'time': new Date()};
+		casesService.contextValues = {
+			'imageryCountBefore': 1,
+			'imageryCountAfter': 1,
+			'defaultOverlay': 'nearest',
+			'time': new Date()
+		};
 
 		const expectedCase = cloneDeep(caseItem);
 		const expectedFromDate = new Date('2014-06-27T08:43:03.624Z');
@@ -212,7 +230,7 @@ describe('OverlaysAppEffects', () => {
 
 		const a = new UpdateCaseAction(expectedCase);
 
-		const b = new SetTimeAction({'from': expectedFromDate, 'to': expectedToDate});
+		const b = new SetTimeAction({ 'from': expectedFromDate, 'to': expectedToDate });
 
 		const c = new LoadOverlaysAction({
 			to: expectedCase.state.time.to,
@@ -241,7 +259,7 @@ describe('OverlaysAppEffects', () => {
 	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
-		
+
 		actions = hot('--a--', { a: new SetFiltersAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['first', 'last'])
@@ -252,11 +270,11 @@ describe('OverlaysAppEffects', () => {
 	it(`displayTwoNearestOverlay$ effect with overlay before
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
 		overlaysState.overlays = new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }]]);
-		overlaysState.filteredOverlays = ['first']
+		overlaysState.filteredOverlays = ['first'];
 
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
-		
+
 		actions = hot('--a--', { a: new SetFiltersAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['first'])
@@ -267,11 +285,11 @@ describe('OverlaysAppEffects', () => {
 	it(`displayTwoNearestOverlay$ effect with overlay after
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
 		overlaysState.overlays = new Map<string, any>([['last', { 'photoTime': new Date('2016-06-27T08:43:03.624Z') }]]);
-		overlaysState.filteredOverlays = ['last']
+		overlaysState.filteredOverlays = ['last'];
 
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
-		
+
 		actions = hot('--a--', { a: new SetFiltersAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['last'])
@@ -283,9 +301,9 @@ describe('OverlaysAppEffects', () => {
 	should call DisplayOverlayFromStoreAction`, () => {
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['first', 'last']) });
 		const expectedResults = cold('--(bcd)--', {
-			b: new DisplayOverlayFromStoreAction({'id': 'first', 'mapId': '1'}),
-			c: new DisplayOverlayFromStoreAction({'id': 'last', 'mapId': '2'}),
-			d: new SynchronizeMapsAction({mapId: '1'})			
+			b: new DisplayOverlayFromStoreAction({ 'id': 'first', 'mapId': '1' }),
+			c: new DisplayOverlayFromStoreAction({ 'id': 'last', 'mapId': '2' }),
+			d: new SynchronizeMapsAction({ mapId: '1' })
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
 	});
@@ -305,9 +323,9 @@ describe('OverlaysAppEffects', () => {
 		mapState['pendingOverlays'] = ['first', 'last'];
 		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
 		const expectedResults = cold('--(bcd)--', {
-			b: new DisplayOverlayFromStoreAction({'id': 'first', 'mapId': '1'}),
-			c: new DisplayOverlayFromStoreAction({'id': 'last', 'mapId': '2'}),
-			d: new SynchronizeMapsAction({mapId: '1'})			
+			b: new DisplayOverlayFromStoreAction({ 'id': 'first', 'mapId': '1' }),
+			c: new DisplayOverlayFromStoreAction({ 'id': 'last', 'mapId': '2' }),
+			d: new SynchronizeMapsAction({ mapId: '1' })
 		});
 		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
 	});
@@ -315,7 +333,7 @@ describe('OverlaysAppEffects', () => {
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
 		mapState['pendingOverlays'] = ['first', 'last'];
-		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({'id': 'first'}) });
+		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ 'id': 'first' }) });
 		const expectedResults = cold('--b--', {
 			b: new RemovePendingOverlayAction('first')
 		});

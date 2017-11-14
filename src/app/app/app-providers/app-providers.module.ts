@@ -42,8 +42,8 @@ import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-pr
 		// Source provider for overlays
 		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
 
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true},
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true},
+		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
 
 		// Source provider for contexts
 		{ provide: BaseContextSourceProvider, useClass: ContextProxySourceService },
@@ -115,7 +115,7 @@ import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-pr
 		},
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: SliderFilterMetadata , multi: true }
+		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true }
 
 	]
 })

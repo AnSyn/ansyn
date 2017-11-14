@@ -261,7 +261,7 @@ describe('EnumFilterMetadata', () => {
             expect(result).toBeTruthy();
         });
 
-        it('isFiltered should return false if no values are selected', () => {
+        it('isFiltered should return true if no values are selected', () => {
             enumFilterMetadata.accumulateData('firstFeild');
             enumFilterMetadata.accumulateData('secondFeild');
             enumFilterMetadata.accumulateData('secondFeild');
@@ -271,7 +271,7 @@ describe('EnumFilterMetadata', () => {
 
             const result: any = enumFilterMetadata.isFiltered();
 
-            expect(result).toBeFalsy();
+            expect(result).toBeTruthy();
         });
     });
 

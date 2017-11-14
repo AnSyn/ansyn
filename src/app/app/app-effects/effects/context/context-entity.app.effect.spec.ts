@@ -142,32 +142,6 @@ describe('ContextEntityAppEffects', () => {
 		expect(visualizer.setEntities).not.toHaveBeenCalled();
 	});
 
-	it('displayEntityFromUpdatedCase$ display context entity from updated case', () => {
-		cases[0].state.contextEntities = fakeContextEntities;		
-		const action = new UpdateCaseAction(cases[0]);
-		actions = hot('--a--', { a: action });
-
-		const expectedResults = cold('--b--', { b: new SetSpecialObjectsActionStore([
-			{					
-				id: '1',
-				date: new Date('2015-04-17T03:55:12.129Z'),
-				shape: 'star'
-			}
-		]) });
-
-		expect(contextEntityAppEffects.displayEntityFromUpdatedCase$).toBeObservable(expectedResults);
-		expect(visualizer.setEntities).toHaveBeenCalledTimes(3);
-	});
-
-	it('displayEntityFromUpdatedCase$ DOESN\'T display context entity from updated case if context entity isn\'t provided', () => {
-		cases[0].state.contextEntities = null;
-		const action = new UpdateCaseAction(cases[0]);
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('-');
-		expect(contextEntityAppEffects.displayEntityFromUpdatedCase$).toBeObservable(expectedResults);
-		expect(visualizer.setEntities).not.toHaveBeenCalled();
-	});
-
 	it('displayEntityFromNewMap$ should display context entity from selected case on new map', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		const communicators: Array<string> = ['imagery2'];

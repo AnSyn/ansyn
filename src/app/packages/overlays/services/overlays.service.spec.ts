@@ -323,7 +323,7 @@ describe('OverlaysService', () => {
 	});
 
 	it('check the method getOverlayById with mock data', () => {
-		overlaysService.getOverlayById('test').subscribe((result: any) => {
+		overlaysService.getOverlayById('test', 'IDAHO').subscribe((result: any) => {
 			expect(result).toBeTruthy();
 		});
 	});

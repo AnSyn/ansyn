@@ -534,13 +534,15 @@ describe('MapAppEffects', () => {
 				date: null,
 				azimuth: 0,
 				isFullOverlay: false,
-				isGeoRegistered: true
+				isGeoRegistered: true,
+				sourceType: 'IDAHO'
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
 					overlayId: testOverlay.id,
+					sourceType: 'IDAHO',
 					mapId: 'imagery1'
 				})
 			});

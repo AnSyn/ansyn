@@ -15,38 +15,18 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	constructor(protected store: Store<any>) {
-		super();
+	constructor(store: Store<any>) {
+		super(store);
 	}
 
-	create(metaData: any): any {
-		/*
-		const source = layer.getSource();
-
-		 */
+	create(metaData: any, mapId: string): any {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
 		});
 
-		source.once('tileloadstart', () => {
-			/*
-			this will work every request for tile source and will have slightly effect on performance (one function call) nothing wo worry about
-			 */
-			super.startTimingLog('tileLoad-' + metaData.id);
-		});
-
-		source.once('tileloadend', () => {
-			super.endTimingLog('tileLoad-' + metaData.id);
-		});
-
-		source.once('tileloaderror', (error) => {
-			this.store.dispatch(new SetToastMessageStoreAction({
-				toastText: 'Failed to load tile',
-				showWarningIcon: true
-			}));
-		});
+		this.monitorSource(source, mapId);
 
 		return new ImageLayer({
 			source: new ProjectableRaster({
@@ -57,8 +37,8 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		});
 	}
 
-	createAsync(metaData: any): Promise<any> {
-		let layer = this.create(metaData);
+	createAsync(metaData: any, mapId: string): Promise<any> {
+		let layer = this.create(metaData, mapId);
 		return Promise.resolve(layer);
 	}
 }

@@ -33,6 +33,7 @@ export const MapActionTypes = {
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_FAVORITE: 'SET_FAVORITE',
 	MESSAGE_RAISED: 'MESSAGE_RAISED',
+	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
 		ANNOTATION_DATA: 'ANNOTATION_DATA'
@@ -57,6 +58,13 @@ export class RaiseMessageAction implements Action {
 	type = MapActionTypes.MESSAGE_RAISED;
 
 	constructor(public payload: { message: string, isError: boolean }) {
+	}
+}
+
+export class SetProgressBarAction implements Action {
+	type = MapActionTypes.SET_PROGRESS_BAR;
+
+	constructor(public payload: { mapId: string, progress: number }) {
 	}
 }
 

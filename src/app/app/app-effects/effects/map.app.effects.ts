@@ -202,7 +202,7 @@ export class MapAppEffects {
 			// assuming that there is one provider
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
-			return Observable.fromPromise(sourceLoader.createAsync(overlay))
+			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {

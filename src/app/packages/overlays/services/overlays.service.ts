@@ -99,8 +99,8 @@ export class OverlaysService {
 		});
 	}
 
-	getOverlayById(id: string): Observable<Overlay> {
-		return this._overlaySourceProvider.getById(id);
+	getOverlayById(id: string, sourceType: string): Observable<Overlay> {
+		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
 	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {

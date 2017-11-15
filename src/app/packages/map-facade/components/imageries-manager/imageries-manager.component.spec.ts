@@ -10,7 +10,6 @@ import { Observable } from 'rxjs/Observable';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
-import { OverlaysStatusNotificationsComponent } from '@ansyn/core/components/overlays-status-notifications/overlays-status-notifications.component';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -49,8 +48,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
-				ImageryStatusComponent,
-				OverlaysStatusNotificationsComponent
+				ImageryStatusComponent
 			]
 
 		}).compileComponents();

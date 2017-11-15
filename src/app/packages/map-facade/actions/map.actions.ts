@@ -31,7 +31,6 @@ export const MapActionTypes = {
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
-	SET_FAVORITE: 'SET_FAVORITE',
 	MESSAGE_RAISED: 'MESSAGE_RAISED',
 	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
@@ -290,13 +289,6 @@ export class AnnotationData implements Action {
 	constructor(public payload: Options) {
 
 	};
-}
-
-export class SetFavoriteAction implements Action {
-	type: string = MapActionTypes.SET_FAVORITE;
-
-	constructor(public payload?: string) { // overlayId
-	}
 }
 
 export class SetPendingMapsCountAction implements Action {

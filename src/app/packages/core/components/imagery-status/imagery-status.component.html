@@ -1,50 +1,42 @@
-<div class="status" [class.active]="active">
-	<div class="status-container">
+<div class="buttons">
+	<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
+		<i class="icon-context-menu-prev"></i>
+		Back to base map
+	</button>
 
-		<div class="left-buttons-container">
-			<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
-				<i class="icon-context-menu-prev"></i>
-				Back to base map
-			</button>
+	<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
+			class="small-icon-button link-maps"
+			(click)="toggleMapSynchronization.emit()">
+		<i class="icon-temporary-link"></i>
+	</button>
 
-			<!--TODO Change When need to set by selection [class.active]="isSynchronized -->
-			<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
-					class="small-icon-button status-bar-link-maps-icon"
-					(click)="toggleMapSynchronization.emit()">
-				<i class="icon-temporary-link"></i>
-			</button>
+	<button class="small-icon-button hide-layers"
+			(click)="toggleMapLayers()">
+		<i class="icon-layers-hide"></i>
+	</button>
 
-			<button [disabled]="true" class="small-icon-button status-bar-hide-layers-icon"
-					(click)="toggleMapSynchronization.emit()">
-				<i class="icon-layers-hide"></i>
-			</button>
+	<button *ngIf="overlay" class="small-icon-button set-favorite"
+			[class.active]="isFavoriteOverlayDisplayed"
+			(click)="toggleFavorite()">
+		<i class="icon-favorites"></i>
+	</button>
+</div>
 
-			<button *ngIf="overlay" class="small-icon-button status-bar-favorite-icon"
-					[class.is-active]="isFavoriteOverlayDisplayed"
-					(click)="toggleFavorite.emit()">
-				<!-- TODO icon change to favorites -->
-				<i class="icon-favorites"></i>
-			</button>
-		</div>
+<div class="description">
+	<div *ngIf="overlay">
+		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
+	</div>
+	<div *ngIf="!overlay">
+		Base Map
+	</div>
+</div>
 
-		<div class="status-bar-title" data-title="{{mapId}}">
-			<ng-template [ngIf]="overlay" [ngIfElse]="noOverlay">
-				<div class="sensor-and-date">
-					<span class="sensor-name" [title]="overlay.sensorName">
-						{{overlay.sensorName}}&nbsp;
-					</span>
-					<span class="date">
-						{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}}
-					</span>
-				</div>
-			</ng-template>
+<div class="notification">
+	<div class="geo-registered" *ngIf="disableGeoOptions">
+		This Image Has No Geo-Registration
+	</div>
 
-			<ng-template #noOverlay>
-				<span>Base Map</span>
-			</ng-template>
-		</div>
-
-		<ansyn-overlays-status-notifications [notInCase]="notInCase"
-											 [geoRegisteration]="disableGeoOptions"></ansyn-overlays-status-notifications>
+	<div class="not-from-case" *ngIf="notInCase">
+		This Overlay Is Not a Part of the Case
 	</div>
 </div>

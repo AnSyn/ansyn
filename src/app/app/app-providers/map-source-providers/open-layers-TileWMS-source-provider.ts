@@ -2,7 +2,6 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import TileWMS from 'ol/source/tilewms';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 export const OpenLayerTileWMSSourceProviderMapType = 'openLayersMap';
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';

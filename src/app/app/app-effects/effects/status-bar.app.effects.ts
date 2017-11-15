@@ -29,7 +29,6 @@ import {
 	BackToWorldAction,
 	DrawPinPointAction,
 	PinPointModeTriggerAction,
-	SetFavoriteAction,
 	SetOverlaysNotInCaseAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -38,12 +37,7 @@ import {
 	LoadOverlaysAction,
 	UpdateOverlaysCountAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	FavoriteAction,
-	SetGeoFilterAction,
-	SetOrientationAction,
-	SetTimeAction
-} from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
@@ -193,17 +187,6 @@ export class StatusBarAppEffects {
 	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
 		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
 		.map(() => new BackToWorldAction());
-
-	/**
-	 * @type Effect
-	 * @name onFavorite$
-	 * @ofType FavoriteAction
-	 * @action SetFavoriteAction
-	 */
-	@Effect()
-	onFavorite$: Observable<Action> = this.actions$
-		.ofType<FavoriteAction>(StatusBarActionsTypes.FAVORITE)
-		.map((action) => new SetFavoriteAction(action.payload));
 
 	/**
 	 * @type Effect

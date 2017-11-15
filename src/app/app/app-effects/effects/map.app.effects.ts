@@ -42,7 +42,6 @@ import {
 	PinPointTriggerAction,
 	RaiseMessageAction,
 	RemoveOverlayFromLoadingOverlaysAction,
-	SetFavoriteAction,
 	SetLayoutAction,
 	SetMapsDataActionStore,
 	SetOverlaysNotInCaseAction,
@@ -80,6 +79,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { CoreActionTypes, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 
 @Injectable()
@@ -602,7 +602,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
+		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
 		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), (action, selectedCase) => selectedCase)
 		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
 		.map(markups => new OverlaysMarkupAction(markups));
@@ -610,15 +610,15 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onFavorite$
-	 * @ofType SetFavoriteAction
+	 * @ofType ToggleFavoriteAction
 	 * @dependencies cases
 	 * @action UpdateCaseAction?, SyncFilteredOverlays, OverlaysMarkupAction, EnableOnlyFavoritesSelectionAction
 	 */
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
-		.ofType(MapActionTypes.SET_FAVORITE)
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: SetFavoriteAction, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
-		.mergeMap(([action, selectedCase]: [SetFavoriteAction, Case]) => {
+		.ofType<ToggleFavoriteAction>(CoreActionTypes.TOGGLE_OVERLAY_FAVORITE)
+		.withLatestFrom(this.store$.select(casesStateSelector), (action: ToggleFavoriteAction, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
+		.mergeMap(([action, selectedCase]: [ToggleFavoriteAction, Case]) => {
 			const actions = [];
 
 			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {

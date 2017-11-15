@@ -2,8 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { BackToWorldAction, SetFavoriteAction, SynchronizeMapsAction } from '../../actions/map.actions';
-import { DomSanitizer } from '@angular/platform-browser';
+import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -69,10 +68,6 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 
 	toggleMapSynchronization() {
 		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));
-	}
-
-	toggleFavorite() {
-		this.store.dispatch(new SetFavoriteAction(this.overlay.id));
 	}
 
 	getProgress() {

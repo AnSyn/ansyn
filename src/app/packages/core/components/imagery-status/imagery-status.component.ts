@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
+import { Store } from '@ngrx/store';
+import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -7,15 +9,25 @@ import { Overlay } from '../../models/overlay.model';
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent {
+	@HostBinding('class.active') @Input() active: boolean;
 	@Input() disableGeoOptions: boolean;
 	@Input() notInCase: boolean;
 	@Input() mapId: string = null;
 	@Input() overlay: Overlay;
-	@Input() active: boolean;
 	@Input() mapsAmount = 1;
 	@Input() isFavoriteOverlayDisplayed = false;
 
 	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
-	@Output() toggleFavorite = new EventEmitter<void>();
+
+	constructor(protected store: Store<any>) {
+	}
+
+	toggleFavorite() {
+		this.store.dispatch(new ToggleFavoriteAction(this.overlay.id));
+	}
+
+	toggleMapLayers() {
+		this.store.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+	}
 }

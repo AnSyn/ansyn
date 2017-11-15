@@ -12,7 +12,6 @@ export const StatusBarActionsTypes = {
 	GO_PREV: 'GO_PREV',
 	GO_NEXT: 'GO_NEXT',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
-	FAVORITE: 'FAVORITE',
 	EXPAND: 'EXPAND',
 
 	SET_ORIENTATION: 'SET_ORIENTATION',
@@ -79,13 +78,6 @@ export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
 
 	constructor() {
-	}
-}
-
-export class FavoriteAction implements Action {
-	type: string = StatusBarActionsTypes.FAVORITE;
-
-	constructor(public payload?: string) {
 	}
 }
 

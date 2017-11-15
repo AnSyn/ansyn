@@ -2,7 +2,6 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
 export const OpenLayerBingSourceProviderSourceType = 'BING';

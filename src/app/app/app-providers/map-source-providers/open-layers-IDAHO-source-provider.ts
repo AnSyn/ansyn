@@ -3,8 +3,6 @@ import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import { ProjectableRaster } from '@ansyn/open-layers-map';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';

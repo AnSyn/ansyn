@@ -2,7 +2,6 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 export const OpenLayerOSMSourceProviderMapType = 'openLayersMap';
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
@@ -29,7 +28,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 
 		this.monitorSource(source, mapId);
 
-		const openSeaMapLayer = new TileLayer({source});
+		const openSeaMapLayer = new TileLayer({ source });
 		return [osmLayer, openSeaMapLayer];
 	}
 

@@ -42,9 +42,9 @@ describe('ImageryStatusComponent', () => {
 	});
 
 	it('check click on toggleFavorite', () => {
-		spyOn(component.toggleFavorite, 'emit');
+		spyOn(component, 'toggleFavorite');
 		fixture.nativeElement.querySelector('.set-favorite').click();
-		expect(component.toggleFavorite.emit).toHaveBeenCalled();
+		expect(component.toggleFavorite).toHaveBeenCalled();
 	});
 
 	it('should not show link when 1 map', () => {

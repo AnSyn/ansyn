@@ -179,10 +179,10 @@ export class MapAppEffects {
 	 * @ofType DisplayOverlayAction
 	 * @dependencies map
 	 * @filter There is a full overlay
-	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?
+	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageStoreAction?
 	 */
 	@Effect()
-	onDisplayOverlay$: Observable<DisplayOverlaySuccessAction> = this.actions$
+	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
 			const overlay = action.payload.overlay;
@@ -200,6 +200,13 @@ export class MapAppEffects {
 
 			// assuming that there is one provider
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
+
+			if (!sourceLoader) {
+				return Observable.of(new SetToastMessageStoreAction({
+					toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
+					showWarningIcon: true
+				}));
+			}
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {

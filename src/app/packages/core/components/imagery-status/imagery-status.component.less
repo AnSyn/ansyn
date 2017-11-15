@@ -1,61 +1,31 @@
 @import "../../less/z-index-globals";
+@import "../../less/common";
 
 :host {
-	cursor: default;
+	position: absolute;
+	z-index: @z-index-imagery-status;
+	display: flex;
+	width: 100%;
+	line-height: 24px;
+	color: white;
 
 	&.with-background {
-		.status {
-			background: rgba(0, 0, 0, 0.36);
-			box-sizing: border-box;
-			padding: 7px 5px;
+		background: rgba(0, 0, 0, 0.36);
+		box-sizing: border-box;
+		padding: 7px 5px;
 
-			&.active {
-				background: rgba(0, 0, 0, 0.66);
-			}
-		}
-	}
-}
-
-div.status {
-	position: absolute;
-	width: 100%;
-	top: 0;
-	text-align: center;
-	z-index: @z-index-imagery-status;
-}
-
-.status-container {
-	display: flex;
-	justify-content: space-between;
-	.status-bar-title {
-		display: flex;
-		width: 100%;
-		justify-content: center;
-		overflow: hidden;
-
-		div.sensor-and-date {
-			display: flex;
-			justify-content: center;
-			span.sensor-name {
-				display: block;
-				max-width: 100px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
+		&.active {
+			background: rgba(0, 0, 0, 0.66);
 		}
 	}
 
-	.left-buttons-container {
-		display: flex;
-		align-items: center;
+	.buttons {
+		flex-shrink: 0;
 
 		button {
-			color: white;
-			vertical-align: middle;
-			font-size: 14px;
 			padding: 4px 6px;
-			flex-shrink: 0;
+			vertical-align: middle;
+			color: white;
 
 			&.back-to-world-view {
 				background: black;
@@ -63,43 +33,58 @@ div.status {
 			}
 
 			&.small-icon-button {
-				margin-left: 10px;
-				font-size: 20px;
-				opacity: 0.8;
-				align-self: center;
+				margin-left: 3px;
+				font-size: 17px;
 				background: transparent;
 				border: none;
 				outline: none;
-				padding: 0;
+				padding: 2px 4px;
 
 				&:hover:not(:disabled) {
-					opacity: 1;
-					cursor: pointer;
+					background: black;
 				}
 
 				&:disabled {
 					opacity: .6;
 				}
 			}
-		}
 
-		button.active {
-			box-shadow: inset 0 0 2px #FFFFFF;
+			&.set-favorite.active i {
+				text-shadow: 0 0 9px yellow;
+			}
 		}
 	}
 
-	div.sensor-and-date {
-		display: flex;
-		justify-content: center;
-		span {
-			display: block;
+	.description {
+		padding: 0 10px;
+		width: 100%;
+		min-width: 0;
+		text-align: center;
+
+		div {
+			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
-			text-overflow: ellipsis;
 		}
 	}
 
-	.status-bar-favorite-icon.is-active i {
-		text-shadow: 0 0 9px yellow;
+	.notification {
+		div {
+			padding: 0 5px;
+			font-size: 12px;
+			margin: 0 2.5px;
+
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+
+			&.geo-registered {
+				background-color: #a70b0b;
+			}
+
+			&.not-from-case {
+				background-color: @application-main-color;
+			}
+		}
 	}
 }

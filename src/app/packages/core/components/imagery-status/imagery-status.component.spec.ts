@@ -5,7 +5,7 @@ import { CoreModule } from '@ansyn/core';
 import { Overlay } from '../../models/overlay.model';
 
 
-describe('', () => {
+describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
 	let store: Store<any>;
@@ -13,8 +13,7 @@ describe('', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CoreModule, StoreModule.forRoot({})]
-		})
-			.compileComponents();
+		}).compileComponents();
 	}));
 
 	beforeEach(inject([], () => {
@@ -38,19 +37,19 @@ describe('', () => {
 
 	it('check click on toggleMapSynchronization', () => {
 		spyOn(component.toggleMapSynchronization, 'emit');
-		fixture.nativeElement.querySelector('.status-bar-link-maps-icon').click();
+		fixture.nativeElement.querySelector('.link-maps').click();
 		expect(component.toggleMapSynchronization.emit).toHaveBeenCalled();
 	});
 
 	it('check click on toggleFavorite', () => {
 		spyOn(component.toggleFavorite, 'emit');
-		fixture.nativeElement.querySelector('.status-bar-favorite-icon').click();
+		fixture.nativeElement.querySelector('.set-favorite').click();
 		expect(component.toggleFavorite.emit).toHaveBeenCalled();
 	});
 
 	it('should not show link when 1 map', () => {
 		component.mapsAmount = 1;
 		fixture.detectChanges();
-		expect(fixture.nativeElement.querySelector('.status-bar-link-maps-icon')).toBeNull();
+		expect(fixture.nativeElement.querySelector('.link-maps')).toBeNull();
 	});
 });

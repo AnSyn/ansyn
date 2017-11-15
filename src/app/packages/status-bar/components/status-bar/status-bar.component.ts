@@ -11,7 +11,6 @@ import {
 	ChangeLayoutAction,
 	CopySelectedCaseLinkAction,
 	ExpandAction,
-	FavoriteAction,
 	GoNextAction,
 	GoPrevAction,
 	OpenShareLink,
@@ -23,6 +22,7 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
+import { ToggleFavoriteAction } from '../../../core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -47,7 +47,7 @@ export class StatusBarComponent implements OnInit {
 	toastMessage$ = this.statusBar$.pluck('toastMessage').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
 	hideOverlay$: Observable<boolean> = this.statusBar$
-		.map((state: IStatusBarState) => state.layouts[state.selectedLayoutIndex].mapsCount > 1)
+		.map((state: IStatusBarState) => state.layouts[state.selectedLayoutIndex] && state.layouts[state.selectedLayoutIndex].mapsCount > 1)
 		.distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
@@ -248,7 +248,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickFavorite(): void {
-		this.store.dispatch(new FavoriteAction(this.overlay.id));
+		this.store.dispatch(new ToggleFavoriteAction(this.overlay.id));
 	}
 
 	clickBackToWorldView(): void {

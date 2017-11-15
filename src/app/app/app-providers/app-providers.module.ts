@@ -27,11 +27,6 @@ import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import {
-	MultipleOverlaysSource,
-	MultipleOverlaysSourceProvider
-} from './overlay-source-providers/multiple-source-provider';
-import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-provider2';
 
 @NgModule({
 	imports: [
@@ -40,10 +35,10 @@ import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-pr
 	],
 	providers: [
 		// Source provider for overlays
-		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
+		{ provide: BaseOverlaySourceProvider, useClass: IdahoSourceProvider },
 
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
+		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
 
 		// Source provider for contexts
 		{ provide: BaseContextSourceProvider, useClass: ContextProxySourceService },

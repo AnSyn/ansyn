@@ -11,11 +11,11 @@ import { StatusBarModule } from '../../status-bar.module';
 import {
 	ChangeLayoutAction,
 	ExpandAction,
-	FavoriteAction,
 	GoNextAction,
 	GoPrevAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
+import { ToggleFavoriteAction } from '../../../core/actions/core.actions';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -82,11 +82,11 @@ describe('StatusBarComponent', () => {
 			expect(component.store.dispatch).toHaveBeenCalledWith(new ExpandAction());
 		});
 
-		it('clickFavorite should dispatch action FavoriteAction', () => {
+		it('clickFavorite should dispatch action ToggleFavoriteAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.overlay = { id: 'overlayIdBS' };
 			component.clickFavorite();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new FavoriteAction(component.overlay.id));
+			expect(component.store.dispatch).toHaveBeenCalledWith(new ToggleFavoriteAction(component.overlay.id));
 		});
 	});
 	it('onkeyup should call goNext when keycode = "39" and clickGoPrev when keycode = "37", and remove "active" class from next,prev buttons', () => {

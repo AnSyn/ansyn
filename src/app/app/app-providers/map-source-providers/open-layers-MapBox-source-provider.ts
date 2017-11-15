@@ -2,7 +2,6 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 export const OpenLayerMapBoxSourceProviderMapType = 'openLayersMap';
 export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';

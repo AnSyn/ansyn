@@ -225,38 +225,4 @@ describe('StatusBarAppEffects', () => {
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(statusBarAppEffects.onExpand$).toBeObservable(expectedResults);
 	});
-
-	// it('onFavorite$ with favorites and showOnlyFavorites off', () => {
-	// 	actions = hot('--a--', { a: new FavoriteAction('overlayId1') });
-	// 	const expectedResults = cold('--b--', { b: new SetFavoriteAction('overlayId1') });
-	// 	expect(statusBarAppEffects.onFavorite$).toBeObservable(expectedResults);
-	//
-	// 	let counter = 0;
-	// 	statusBarAppEffects.onFavorite$.subscribe((result) => {
-	// 		counter++;
-	// 		if (result instanceof UpdateCaseAction) {
-	// 			expect(result.payload.state.favoritesOverlays[0]).toBe('overlayId1');
-	// 		}
-	//
-	// 	});
-	// 	expect(counter).toBe(1);
-	// });
-	//
-	// it('onFavorite$ with favorites and showOnlyFavorites on (unfavorite)', () => {
-	// 	const testCase = cloneDeep(fakeCase);
-	// 	testCase.state.facets.showOnlyFavorites = true;
-	// 	testCase.state.favoritesOverlays.push('overlayId1');
-	// 	store.dispatch(new UpdateCaseAction(testCase));
-	// 	actions = hot('--a--', { a: new FavoriteAction() });
-	// 	let count = 0;
-	// 	statusBarAppEffects.onFavorite$.subscribe((result) => {
-	// 		count++;
-	// 		if (result instanceof UpdateCaseAction) {
-	// 			expect(count).toBe(1);
-	// 			expect(result.payload.state.favoritesOverlays.length).toBe(0);
-	// 		}
-	//
-	// 	});
-	// 	expect(count).toBe(1);
-	// });
 });

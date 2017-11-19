@@ -57,11 +57,7 @@
 						]
 					]
 				},
-				"time": {
-					"type": "absolute",
-					"from": "2016-08-24T10:31:10.560Z",
-					"to": "2017-08-24T10:31:30.142Z"
-				},
+				"time": null,
 				"facets": {
 					"filters": null
 				},

@@ -14,7 +14,7 @@ export class ImageProcessingControlComponent {
 		Contrast: 0,
 		Brightness: 0
 	};
-	public imgProcessParams: Object;
+	public imgProcessParams: any;	// instead of Object, for Travis testing
 
 	@HostBinding('class.expand') @Input()
 	set expand(value) {

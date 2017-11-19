@@ -18,8 +18,9 @@ export const ToolsActionsTypes = {
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
-	ENABLE_AUTO_IMAGE_PROCESSING: type('ENABLE_AUTO_IMAGE_PROCESSING'),
-	DISABLE_AUTO_IMAGE_PROCESSING: type('DISABLE_AUTO_IMAGE_PROCESSING'),
+	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
+	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
+	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
 	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
@@ -151,14 +152,14 @@ export class SetAutoImageProcessingSuccess implements Action {
 }
 
 export class DisableImageProcessing implements Action {
-	type = ToolsActionsTypes.DISABLE_AUTO_IMAGE_PROCESSING;
+	type = ToolsActionsTypes.DISABLE_IMAGE_PROCESSING;
 
 	constructor(public payload?: any) {
 	};
 }
 
 export class EnableImageProcessing implements Action {
-	type = ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING;
+	type = ToolsActionsTypes.ENABLE_IMAGE_PROCESSING;
 
 	constructor(public payload?: any) {
 	};
@@ -166,6 +167,13 @@ export class EnableImageProcessing implements Action {
 
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: { processingParams: Object}) {
+	};
+}
+
+export class SetManualImageProcessingArguments implements Action {
+	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
 
 	constructor(public payload: { processingParams: Object}) {
 	};

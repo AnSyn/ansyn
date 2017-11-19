@@ -22,9 +22,9 @@
 
 	<div class="image-auto-processing">
 		<button class="tooltip-value right"
-				(click)="toggleAutoImageProcessing()"
+				(click)="toggleAutoImageProcessing();"
 				[class.mode-on]="flags.get('autoImageProcessing')"
-				[disabled]="flags.get('autoImageProcessingDisabled')"
+				[disabled]="flags.get('imageProcessingDisabled')"
 				value="Automatic Image Enhancement">
 			<i class="icon-automatic-image-processing"></i>
 		</button>
@@ -33,10 +33,11 @@
 	<div class="image-manual-processing">
 		<button class="tooltip-value right"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
+				[disabled]="flags.get('imageProcessingDisabled')"
 				value="Manual Image Enhancement">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing"></ansyn-image-processing-control>
+		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing" #imageManualProcessing></ansyn-image-processing-control>
 	</div>
 
 	<div class="display-overlay-visualizer">

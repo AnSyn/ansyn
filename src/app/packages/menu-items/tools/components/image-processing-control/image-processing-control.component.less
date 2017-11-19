@@ -4,6 +4,24 @@
 @tools-box-width: 220px;
 @tools-box-height: 220px;
 
+// input range styles (see https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
+@track-color: white;
+@thumb-color: white;
+
+@thumb-radius: 50%;
+@thumb-size: 20px;
+@thumb-border-width: 1px;
+@thumb-border-color: white;
+
+@reset-btn-width: 20%;
+@track-width: 75%;
+@track-height: 2px;
+@track-border-width: 1px;
+@track-border-color: white;
+
+@track-radius: 5px;
+@contrast: 5%;
+
 :host {
 	width: 0;
 	height: @tools-box-height;
@@ -12,18 +30,17 @@
 	right: 0;
 	transform: translateX(100%);
 	background: @application-main-color;
-	//v
 	transition-property: width;
 	transition-duration: 0.1s;
 	transition-delay: 0s;
 	z-index: @z-index-image-processing-control;
-
+	color: white;
 	&.expand {
-
 		width: @tools-box-width;
 		height: @tools-box-height;
 		transition-delay: 0.1s;
 		.image-processing-options {
+			padding: 0 20px;
 			visibility: visible;
 			transition-delay: 0.1s;
 		}
@@ -34,56 +51,98 @@
 		visibility: hidden;
 		& > li {
 			list-style-type: none;
-
-			span {
-				color: white;
-				font-size: 35px;
-			}
-			&:hover,
-			&.mode-on {
-				background-color: rgb(41, 127, 155);
+			> button {
+				vertical-align: top;
+				width: @reset-btn-width;
 			}
 
-			&.spliter {
-				display: flex;
-				align-items: center;
-				height: 100%;
-				margin: 0 4px;
-				div {
-					height: 70%;
-					border: 1px solid black;
-					opacity: 0.4;
-				}
-
+			.track() {
+				width: @track-width;
+				height: @track-height;
+				cursor: pointer;
+				animate: 0.2s;
 			}
-			&:last-child {
-				padding-right: 2px;
+
+			.thumb() {
+				border: @thumb-border-width solid @thumb-border-color;
+				height: @thumb-size;
+				width: @thumb-size;
+				border-radius: @thumb-radius;
+				background: @thumb-color;
+				cursor: pointer;
 			}
 			button {
 				background: transparent;
 				padding: 0;
 				border: none;
 				outline: 0 none;
+				color: white;
 			}
-		}
-		li.expanded-selection {
-			position: relative;
+			// slider styles
+			input[type=range] {
+				-webkit-appearance: none;
+				margin: @thumb-size/2 0;
+				width: @track-width;
 
-			ul {
-				text-align: center;
-				transition: height 0.3s;
-				background: @application-main-color;
-				& > li {
-					list-style-type: none;
-					border: 1px solid white;
-					cursor: pointer;
-					font-size: 14px;
-					color: white;
-					padding: 4px;
+				&:focus {
+					outline: none;
+				}
 
+				&::-webkit-slider-runnable-track {
+					.track();
+					background: @track-color;
+					border-radius: @track-radius;
+					border: @track-border-width solid @track-border-color;
+				}
+
+				&::-webkit-slider-thumb {
+					.thumb();
+					-webkit-appearance: none;
+					margin-top: ((-@track-border-width * 2 + @track-height) / 2) - (@thumb-size / 2);
+				}
+
+				&:focus::-webkit-slider-runnable-track {
+					background: lighten(@track-color, @contrast);
+				}
+
+				&::-moz-range-track {
+					.track();
+					background: @track-color;
+					border-radius: @track-radius;
+					border: @track-border-width solid @track-border-color;
+				}
+				&::-moz-range-thumb {
+					.thumb();
+				}
+
+				&::-ms-track {
+					.track();
+					background: transparent;
+					border-color: transparent;
+					border-width: @thumb-size 0;
+					color: transparent;
+				}
+
+				&::-ms-fill-lower {
+					background: darken(@track-color, @contrast);
+					border: @track-border-width solid @track-border-color;
+					border-radius: @track-radius*2;
+				}
+				&::-ms-fill-upper {
+					background: @track-color;
+					border: @track-border-width solid @track-border-color;
+					border-radius: @track-radius*2;
+				}
+				&::-ms-thumb {
+					.thumb();
+				}
+				&:focus::-ms-fill-lower {
+					background: @track-color;
+				}
+				&:focus::-ms-fill-upper {
+					background: lighten(@track-color, @contrast);
 				}
 			}
 		}
-
 	}
 }

@@ -25,7 +25,7 @@ before_script:
 script:
   - npm run test:single-run
   - npm run check-template
-  - npm run build:backwards
+  - npm run build:backwards:prod
 
 cache:
   yarn: true

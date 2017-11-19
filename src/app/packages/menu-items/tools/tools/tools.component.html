@@ -22,7 +22,7 @@
 
 	<div class="image-auto-processing">
 		<button class="tooltip-value right"
-				(click)="toggleAutoImageProcessing();"
+				(click)="toggleAutoImageProcessing()"
 				[class.mode-on]="flags.get('autoImageProcessing')"
 				[disabled]="flags.get('imageProcessingDisabled')"
 				value="Automatic Image Enhancement">

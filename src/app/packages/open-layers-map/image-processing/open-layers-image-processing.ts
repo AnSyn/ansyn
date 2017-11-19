@@ -1,23 +1,12 @@
 import Raster from 'ol/source/raster';
 
-export type supportedOperations = 'Histogram_Auto' | 'Histogram_manual' | 'Contrast' | 'Brightness' | 'Sharpness';
-
 export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Contrast', 'Brightness', 'Sharpness', ];
 
-export const IMG_PROCESS_DEFAULTS = {
-	SHARPNESS: 50,
-	HISTOGRAM_LOW: 0,
-	HISTOGRAM_HIGH: 100,
-	CONTRAST: 50,
-	BRIGHTNESS: 50
-};
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 
 export interface IRasterOperation {
 	name: string,
 	operation: pixelOperation,
-	value?: any,
-	defaultValue: any,
 	lib: {}
 }
 
@@ -26,17 +15,12 @@ export const operations = [];
 
 export class OpenLayersImageProcessing {
 
-	_rasterToOperations: Map<Raster, IRasterOperation[]>;
-	_operations: Map<string, IRasterOperation>;
-	_operationsAsStrings: Map<string, string>;
-	_libsAsStrings: Map<string, string>;
+	_rasterToOperations = new Map<Raster, IRasterOperation[]>();
+	_operations = new Map<string, IRasterOperation>();
+	_operationsAsStrings = new Map<string, string>();
+	_libsAsStrings = new Map<string, string>();
 
 	constructor() {
-		this._rasterToOperations = new Map<Raster, IRasterOperation[]>();
-		this._operations = new Map<string, IRasterOperation>();
-		this._operationsAsStrings = new Map<string, string>();
-		this._libsAsStrings = new Map<string, string>();
-
 		this.initializeOperations();
 	}
 
@@ -50,11 +34,9 @@ export class OpenLayersImageProcessing {
 	addOperation(operation) {
 		this._operations.set(operation.name, operation);
 		this._operationsAsStrings.set(operation.name, operation.operation.toString());
-		for (let property in operation.lib) {
-			if (operation.lib.hasOwnProperty(property) && !this._libsAsStrings.get(property)) {
-				this._libsAsStrings.set(property, operation.lib[property]);
-			}
-		}
+		Object.keys(operation.lib).forEach((property) => {
+			this._libsAsStrings.set(property, operation.lib[property]);
+		});
 	}
 
 	initializeAutoHistogramEqualization() {
@@ -67,8 +49,6 @@ export class OpenLayersImageProcessing {
 		const operation = {
 			name: 'Histogram_Auto',
 			operation: histogramEqualization,
-			// value: {low: IMG_PROCESS_DEFAULTS.HISTOGRAM_LOW, high: IMG_PROCESS_DEFAULTS.HISTOGRAM_HIGH},
-			defaultValue: {low: IMG_PROCESS_DEFAULTS.HISTOGRAM_LOW, high: IMG_PROCESS_DEFAULTS.HISTOGRAM_HIGH},
 			lib: lib
 		};
 		this.addOperation(operation);
@@ -84,8 +64,6 @@ export class OpenLayersImageProcessing {
 		const operation = {
 			name: 'Sharpness',
 			operation: performSharpness,
-			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
-			defaultValue: IMG_PROCESS_DEFAULTS.SHARPNESS,
 			lib: lib
 		};
 		this.addOperation(operation);
@@ -98,8 +76,6 @@ export class OpenLayersImageProcessing {
 		const operation = {
 			name: 'Contrast',
 			operation: performContrast,
-			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
-			defaultValue: IMG_PROCESS_DEFAULTS.CONTRAST,
 			lib: lib
 		};
 		this.addOperation(operation);
@@ -112,16 +88,13 @@ export class OpenLayersImageProcessing {
 		const operation = {
 			name: 'Brightness',
 			operation: performBrightness,
-			// value: IMG_PROCESS_DEFAULTS.SHARPNESS,
-			defaultValue: IMG_PROCESS_DEFAULTS.CONTRAST,
 			lib: lib
 		};
 		this.addOperation(operation);
 	}
+
 	processUsingRaster(raster: Raster, processingParams: Object) {
 		const operationsArguments = processingParams;
-		console.log(operationsArguments)
-
 		this._rasterToOperations.delete(raster);
 		// collection operation by processingParams
 		const operations  = new Array<IRasterOperation>();
@@ -146,8 +119,8 @@ export class OpenLayersImageProcessing {
 	removeAllRasterOperations(raster: Raster) {
 		this._rasterToOperations.delete(raster);
 		raster.setOperation(resetOperation);
-		// this.syncOperations(raster);
 	}
+
 	// convert object to string and make functions into arrays (so OL can process it)
 	syncOperations(raster: Raster, operations: IRasterOperation[], operationsArguments: Object) {
 		let globalLib = {};

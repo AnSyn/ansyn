@@ -92,7 +92,6 @@ export class MapEffects {
 	@Effect({ dispatch: false })
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.do(a => console.log('asda') )
 		.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
 		.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
 		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity])  => {

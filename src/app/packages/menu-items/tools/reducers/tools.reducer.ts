@@ -113,7 +113,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams  };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
-			return { ...state, activeOverlaysFootprintMode: action.payload};
+			return { ...state, activeOverlaysFootprintMode: action.payload };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS:
 			return { ...state, manualImageProcessingParams: action.payload.processingParams };

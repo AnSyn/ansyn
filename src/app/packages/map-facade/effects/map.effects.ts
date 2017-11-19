@@ -17,7 +17,7 @@ import {
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction
+	SetPendingMapsCountAction,
 	SetMapManualImageProcessing
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';

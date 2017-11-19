@@ -22,17 +22,23 @@ describe('ToolsComponent', () => {
 		inputs: ['expand', 'disabled', 'modeOn'],
 		outputs: ['expandChange', 'modeOnChange']
 	});
+	const mockImageManualProcessing = MockComponent({
+		selector: 'ansyn-image-processing-control',
+		inputs: ['expand', 'resetAllParams']
+	});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
-			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl]
+			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ToolsComponent);
+		// Add manualProcessingControls function: resetAllParams (accessible from ToolsComponent)
+		fixture.componentInstance.manualProcessingControls['resetAllParams'] = () => {};
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -56,26 +62,16 @@ describe('ToolsComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
 
 		component.flags.set('shadowMouse', true);
-		// expect(component.flags.get('shadowMouse')).toBe(true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
-		// expect(component.flags.get('shadowMouse')).toBe(false);
-
 	});
+	it('on toggleAutoImageProcessing should call update resetAllParams', () => {
+		component.flags.set('autoImageProcessing', false);
+		spyOn(component.manualProcessingControls, 'resetAllParams');
+		const button = fixture.debugElement.nativeElement.querySelector('div.image-auto-processing button');
+		button.click();
 
-	it('toggleExpandGoTo should toggle expandGoTo and close expandOverlaysDisplayMode', () => {
-		component.expandGoTo = true;
-		component.toggleExpandGoTo();
-		expect(store.dispatch).toHaveBeenCalledWith(new GoToExpandAction(!component.expandGoTo));
-		expect(component.expandOverlaysDisplayMode).toBeFalsy();
-	});
-
-	it('toggleExpandVisualizers should toggle expandOverlaysDisplayMode and close expandGoTo', () => {
-		component.expandOverlaysDisplayMode = true;
-		component.toggleExpandVisualizers();
-		expect(store.dispatch).toHaveBeenCalledWith(new GoToExpandAction(false));
-		component.toggleExpandVisualizers();
-		expect(component.expandOverlaysDisplayMode).toBeTruthy();
+		expect(component.manualProcessingControls.resetAllParams).toHaveBeenCalled();
 	});
 
 	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {
@@ -86,17 +82,11 @@ describe('ToolsComponent', () => {
 		component.displayModeOn = false;
 		fixture.detectChanges();
 		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
-		component.expandOverlaysDisplayMode = true;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('active')).toBeTruthy();
-		component.expandOverlaysDisplayMode = false;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('active')).toBeFalsy();
 	});
 
 	it('toogle annotation menu open', () => {
 		component.userAnnotationsToolOpen = false;
-		component.toggleAnnotationMenu();
+		component.toggleAnnotationMenu(true);
 		const args = store.dispatch['calls'].mostRecent();
 		expect(store.dispatch).toHaveBeenCalledTimes(3);
 		expect(args.args[0].payload.action).toBe('show');
@@ -104,7 +94,7 @@ describe('ToolsComponent', () => {
 
 	it('toogle annotation menu close', () => {
 		component.userAnnotationsToolOpen = true;
-		component.toggleAnnotationMenu();
+		component.toggleAnnotationMenu(false);
 		const args = store.dispatch['calls'].mostRecent();
 		expect(store.dispatch).toHaveBeenCalledTimes(3);
 		expect(args.args[0].payload.action).toBe('endDrawing');

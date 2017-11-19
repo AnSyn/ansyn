@@ -15,7 +15,7 @@ import {
 	GoPrevAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
-import { ToggleFavoriteAction } from '../../../core/actions/core.actions';
+import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;

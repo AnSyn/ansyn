@@ -22,7 +22,7 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
-import { ToggleFavoriteAction } from '../../../core/actions/core.actions';
+import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',

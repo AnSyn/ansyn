@@ -14,14 +14,14 @@ import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
 
-enum SubMenuEnum { goTo = 1, manualImageProcessing, overlays, annotations }
+enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
 @Component({
 	selector: 'ansyn-tools',
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.less']
 })
-export class ToolsComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ToolsComponent implements OnInit, OnDestroy {
 	@ViewChild('imageManualProcessing') manualProcessingControls;
 
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
@@ -56,12 +56,9 @@ export class ToolsComponent implements OnInit, AfterViewChecked, OnDestroy {
 				this.expandedSubMenu = SubMenuEnum.goTo
 			}
 		});
-	}
-
-	ngAfterViewChecked() {
 		this.manualImageProcessingParams$.subscribe((processParams) => {
-			if (isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
-				if (!processParams || processParams === null) {
+			if (!isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
+				if (!processParams) {
 					this.manualProcessingControls.resetAllParams();
 				} else {
 					this.manualProcessingControls.imgProcessParams = processParams;
@@ -89,7 +86,7 @@ export class ToolsComponent implements OnInit, AfterViewChecked, OnDestroy {
 	}
 
 	toggleAutoImageProcessing() {
-		this.store.dispatch(new SetAutoImageProcessing);
+		this.store.dispatch(new SetAutoImageProcessing());
 		this.manualProcessingControls.resetAllParams();
 	}
 

@@ -149,7 +149,7 @@ export class ToolsAppEffects {
 			let manualProcessArgs = null;
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
-			if (selectedCase.state.overlaysManualProcessArgs) {
+			if (selectedCase.state.overlaysManualProcessArgs && selectedCase.state.overlaysManualProcessArgs.get) {
 				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs.get(action.payload.id)
 			}
 			if (activeMapState.data.isAutoImageProcessingActive) {

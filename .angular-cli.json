@@ -16,12 +16,12 @@
 			"main": "main.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
-			"tsconfig": "tsconfig.backwards.json",
+			"tsconfig": "tsconfig.app.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"showCircularDependencies": false,
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less"			
+				"./styles/styles.less"
 			],
 			"scripts": [
 			],

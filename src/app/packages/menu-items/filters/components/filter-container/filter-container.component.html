@@ -15,17 +15,19 @@
 	</div>
 
 	<div class="fields" #fields [@fieldsTrigger]="show">
-		<ansyn-enum-filter-container
-			*ngIf="metadataFromState && metadataFromState?.type === 'Enum'"
-			[metadata]="metadataFromState"
-			(onMetadataChange)="onMetadataChange($event)">
-		</ansyn-enum-filter-container>
+		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
+			<ansyn-enum-filter-container
+				*ngSwitchCase="'Enum'"
+				[metadata]="metadataFromState"
+				(onMetadataChange)="onMetadataChange($event)">
+			</ansyn-enum-filter-container>
 
-		<ansyn-slider-filter-container
-			*ngIf="metadataFromState && metadataFromState?.type === 'Slider'"
-			[metadata]="metadataFromState"
-			(onMetadataChange)="onMetadataChange($event)">
-		</ansyn-slider-filter-container>
+			<ansyn-slider-filter-container
+				*ngSwitchCase="'Slider'"
+				[metadata]="metadataFromState"
+				(onMetadataChange)="onMetadataChange($event)">
+			</ansyn-slider-filter-container>
+		</div>
 	</div>
 
 	<div *ngIf="!metadataFromState">

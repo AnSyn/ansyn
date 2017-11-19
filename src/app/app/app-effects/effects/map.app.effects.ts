@@ -360,7 +360,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	addVectorLayer$: Observable<SelectLayerAction> = this.actions$
-		.ofType(LayersActionTypes.SELECT_LAYER)
+		.ofType<SelectLayerAction>(LayersActionTypes.SELECT_LAYER)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [SelectLayerAction, IMapState]) => {
 			const imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);

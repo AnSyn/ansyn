@@ -1,10 +1,9 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
-import * as d3 from 'd3';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-
+import * as d3 from 'd3';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -78,23 +77,29 @@ describe('TimelineComponent', () => {
 
 		const moveToFront = {
 			moveToFront: () => {
-			}, classed: () => {
-				return {
-					style: () => {
-					}
-				};
-			}, style: () => {
+			},
+			classed: () => ({
+				style: () => {
+				}
+			}),
+			style: () => {
 			}
 		};
 
 		spyOn(document, 'querySelector').and.callFake(value => document.createElement('circle'));
 		spyOn(moveToFront, 'moveToFront');
+		Object.defineProperty(d3, 'selectAll', {
+			writable: true,
+			configurable: true,
+			value: () => {
+			}
+		});
 		spyOn(d3, 'selectAll').and.callFake(() => moveToFront);
 
-		component.markup = [{
-			id: 'eea59ff38abb348fd71ec4716250f21fc94edd0f',
-			class: 'active'
-		}, { id: '2040299a8fe6c586a702382b50a63d7abb8fcff3', class: 'displayed' }];
+		component.markup = [
+			{ id: 'eea59ff38abb348fd71ec4716250f21fc94edd0f', class: 'active' },
+			{ id: '2040299a8fe6c586a702382b50a63d7abb8fcff3', class: 'displayed' }
+		];
 
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="eea59ff38abb348fd71ec4716250f21fc94edd0f"]');
 		expect(document.querySelector).toHaveBeenCalledWith('circle[data-id="2040299a8fe6c586a702382b50a63d7abb8fcff3"]');
@@ -104,9 +109,6 @@ describe('TimelineComponent', () => {
 
 	it('should check that click was called instead of double click', fakeAsync(() => {
 		const event = component.clickEvent();
-		const data = {
-			id: '100'
-		};
 
 		function createElement(className) {
 			const element = document.createElement('div');
@@ -120,9 +122,8 @@ describe('TimelineComponent', () => {
 		document.body.appendChild(list);
 		expect(document.querySelector('.list')['childNodes'].length).toBe(2);
 
-		const handler = spyOn(timeLineEmitterService, 'provide').and.returnValue(new Subject());
+		spyOn(timeLineEmitterService, 'provide').and.returnValue(new Subject());
 
-		spyOn(d3, 'event').and.returnValue({});
 		let mouseEventResult = { clientX: 10, clientY: 15 } as MouseEvent;
 		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		tick(400);
@@ -145,7 +146,6 @@ describe('TimelineComponent', () => {
 		event({ key: 'value' }, 1, list.childNodes, mouseEventResult);
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:click');
 		expect(timeLineEmitterService.provide).not.toHaveBeenCalledWith('timeline:dblclick');
-
 	}));
 
 	it('update drops variable will call eventDrops method', () => {

@@ -100,6 +100,16 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 
 		case CasesActionTypes.SELECT_CASE:
 			const selectedCase = deepMerge(CasesService.defaultCase, action.payload);
+			if (!selectedCase.state.time) {
+				const end = new Date(); // today
+				const start = new Date(end.getTime() - 365 * 24 * 60 * 60 * 1000); // 1 year ago
+				selectedCase.state.time = {
+					type: "absolute",
+					from: start.toISOString(),
+					to: end.toISOString()
+				}
+			}
+
 			return { ...state, selectedCase };
 
 		case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:

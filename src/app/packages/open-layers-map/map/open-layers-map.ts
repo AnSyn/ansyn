@@ -269,6 +269,7 @@ export class OpenLayersMap implements IMap<Map> {
 	// In the future we'll use @ansyn/map-source-provider
 	public addVectorLayer(layer: any): void {
 		const vectorLayer = new TileLayer({
+			zIndex: 1,
 			source: new OSM({
 				attributions: [
 					layer.name

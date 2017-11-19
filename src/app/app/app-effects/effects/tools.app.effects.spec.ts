@@ -17,7 +17,8 @@ import {
 	PullActiveCenter,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
-	SetPinLocationModeAction
+	SetPinLocationModeAction,
+	SetManualImageProcessingArguments
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
@@ -31,7 +32,7 @@ import {
 } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import { SetMapsDataActionStore, SetMapManualImageProcessing } from '@ansyn/map-facade/actions/map.actions';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
@@ -77,7 +78,10 @@ describe('ToolsAppEffects', () => {
 					}
 				],
 				activeMapId: 'imagery1'
-			}
+			},
+			overlaysManualProcessArgs: new Map<string, Object>([
+				['overlay_123', { Contrast: 50, Brightness: 20}]
+			])
 		} as any
 	}];
 	const imapState: any = {
@@ -236,14 +240,46 @@ describe('ToolsAppEffects', () => {
 	});
 
 	describe('onDisplayOverlaySuccess', () => {
-		it('onDisplayOverlaySuccess with image processing as true should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
+		it('onDisplayOverlaySuccess with image processing as true should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = true;
 			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id' }) });
-			const expectedResults = cold('--(abc)--', {
+			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
 				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: true }),
-				c: new SetAutoImageProcessingSuccess(true)
+				c: new SetManualImageProcessingArguments({ processingParams: undefined }),
+				d: new SetAutoImageProcessingSuccess(true)
+			});
+			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
+		});
+
+
+		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.isAutoImageProcessingActive = false;
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id' }) });
+			const expectedResults = cold('--(abc)--', {
+				a: new EnableImageProcessing(),
+				b: new SetManualImageProcessingArguments({ processingParams: undefined }),
+				c: new SetAutoImageProcessingSuccess(false)
+			});
+			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onDisplayOverlaySuccess', () => {
+		it('onDisplayOverlaySuccess with image manual processing params should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
+			const activeMap = MapFacadeService.activeMap(imapState);
+			activeMap.data.isAutoImageProcessingActive = false;
+			const processingParams = { Contrast: 50, Brightness: 20 };
+
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'overlay_123' }) });
+
+			const expectedResults = cold('--(abcd)--', {
+				a: new EnableImageProcessing(),
+				b: new SetMapManualImageProcessing({ mapId: 'imagery1', processingParams: processingParams }),
+				c: new SetManualImageProcessingArguments({ processingParams: processingParams }),
+				d: new SetAutoImageProcessingSuccess(false)
 			});
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 		});
@@ -308,18 +344,6 @@ describe('ToolsAppEffects', () => {
 
 			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
 		});
-	});
-
-	it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		activeMap.data.isAutoImageProcessingActive = false;
-		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id' }) });
-		const expectedResults = cold('--(abc)--', {
-			a: new EnableImageProcessing(),
-			b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: false }),
-			c: new SetAutoImageProcessingSuccess(false)
-		});
-		expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 	});
 
 	describe('backToWorldView', () => {

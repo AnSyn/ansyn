@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	AnnotationClose,
 	AnnotationOpen,
@@ -21,7 +21,7 @@ enum SubMenuEnum { goTo = 1, manualImageProcessing, overlays, annotations }
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.less']
 })
-export class ToolsComponent implements OnInit, OnDestroy {
+export class ToolsComponent implements OnInit, AfterViewChecked, OnDestroy {
 	@ViewChild('imageManualProcessing') manualProcessingControls;
 
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
@@ -56,9 +56,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 				this.expandedSubMenu = SubMenuEnum.goTo
 			}
 		});
+	}
+
+	ngAfterViewChecked() {
 		this.manualImageProcessingParams$.subscribe((processParams) => {
-			console.warn('aaa', processParams)
-			if (!isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
+			if (isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
 				if (!processParams || processParams === null) {
 					this.manualProcessingControls.resetAllParams();
 				} else {

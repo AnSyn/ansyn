@@ -8,6 +8,7 @@ export interface IToolsState {
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
 	annotationMode: string;
+	manualImageProcessingParams: Object;
 }
 
 export const toolsInitialState: IToolsState = {
@@ -17,7 +18,8 @@ export const toolsInitialState: IToolsState = {
 	]),
 	activeCenter: [0, 0],
 	gotoExpand: false,
-	annotationMode: undefined
+	annotationMode: undefined,
+	manualImageProcessingParams: null
 };
 
 export const toolsFeatureKey = 'tools';
@@ -79,17 +81,17 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set('autoImageProcessing', action.payload);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.ENABLE_AUTO_IMAGE_PROCESSING:
+		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('autoImageProcessingDisabled', false);
+			tmpMap.set('imageProcessingDisabled', false);
 			tmpMap.set('autoImageProcessing', false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.DISABLE_AUTO_IMAGE_PROCESSING:
+		case ToolsActionsTypes.DISABLE_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('autoImageProcessingDisabled', true);
+			tmpMap.set('imageProcessingDisabled', true);
 			tmpMap.set('autoImageProcessing', false);
 			return { ...state, flags: tmpMap };
 
@@ -105,8 +107,16 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set('annotations', true);
 			return { ...state, flags: tmpMap };
 
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
+			tmpMap = new Map(state.flags);
+			tmpMap.set('autoImageProcessing', false);
+			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams  };
+
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
-			return { ...state, activeOverlaysFootprintMode: action.payload };
+			return { ...state, activeOverlaysFootprintMode: action.payload};
+
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS:
+			return { ...state, manualImageProcessingParams: action.payload.processingParams };
 
 		default:
 			return state;

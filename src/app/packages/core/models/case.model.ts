@@ -25,6 +25,7 @@ export interface CaseState {
 	orientation: string,
 	geoFilter: string,
 	favoritesOverlays?: string[],
+	overlaysManualProcessArgs: Map<string, Object>
 	layers?: CaseLayersState
 }
 

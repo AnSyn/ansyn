@@ -1,10 +1,12 @@
 <ul class="image-processing-options">
 	<li>
 		<label>Contrast</label><br>
-		<input type="range" min="-128" max="128" [(ngModel)]="imgProcessParams.Contrast" (change)="manualImageProcess()">
+		<input type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Contrast" (change)="manualImageProcess()">
+		<button class="button-reset" (click)="backToDefault('Contrast')">reset</button>
 	</li>
 	<li>
 		<label>Brightness</label><br>
-		<input type="range" min="-50" max="50" [(ngModel)]="imgProcessParams.Brightness" (change)="manualImageProcess()">
+		<input type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Brightness" (change)="manualImageProcess()">
+		<button class="button-reset" (click)="backToDefault('Brightness')">reset</button>
 	</li>
 </ul>

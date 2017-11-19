@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, OnChanges, ViewChild } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
@@ -10,11 +10,11 @@ import { SetManualImageProcessing } from '../../actions/tools.actions';
 })
 export class ImageProcessingControlComponent {
 	private _isExpended: boolean;
-
-	public imgProcessParams = {
+	private _imgProcessParamDefaults = {
 		Contrast: 0,
 		Brightness: 0
 	};
+	public imgProcessParams: Object;
 
 	@HostBinding('class.expand') @Input()
 	set expand(value) {
@@ -25,10 +25,19 @@ export class ImageProcessingControlComponent {
 		return this._isExpended;
 	}
 	constructor(public store$: Store<IToolsState>) {
+		this.resetAllParams()
+	}
 
+	resetAllParams() {
+		this.imgProcessParams = Object.assign({}, this._imgProcessParamDefaults)
 	}
 	manualImageProcess() {
 		this.store$.dispatch(new SetManualImageProcessing({ processingParams: this.imgProcessParams }));
+	}
+
+	backToDefault(processParam) {
+		this.imgProcessParams[processParam] = this._imgProcessParamDefaults[processParam];
+		this.manualImageProcess();
 	}
 
 	close() {

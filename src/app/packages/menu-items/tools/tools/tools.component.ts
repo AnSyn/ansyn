@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	AnnotationClose,
 	AnnotationOpen,
@@ -22,6 +22,8 @@ enum SubMenuEnum { goTo = 1, manualImageProcessing, overlays, annotations }
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit, OnDestroy {
+	@ViewChild('imageManualProcessing') manualProcessingControls;
+
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
@@ -35,7 +37,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public flags$: Observable<Map<string, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged(isEqual);
-
+	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
+		.map((tools: IToolsState) => tools.manualImageProcessingParams)
+		.distinctUntilChanged();
 
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(protected store: Store<any>) {
@@ -50,6 +54,16 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			if (_gotoExpand) {
 				this.expandedSubMenu = SubMenuEnum.goTo
+			}
+		});
+		this.manualImageProcessingParams$.subscribe((processParams) => {
+			console.warn('aaa', processParams)
+			if (!isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
+				if (!processParams || processParams === null) {
+					this.manualProcessingControls.resetAllParams();
+				} else {
+					this.manualProcessingControls.imgProcessParams = processParams;
+				}
 			}
 		});
 	}
@@ -74,6 +88,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing);
+		this.manualProcessingControls.resetAllParams();
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {

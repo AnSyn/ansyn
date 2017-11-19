@@ -128,7 +128,7 @@ export class OpenLayersImageProcessing {
 		// todo: by order
 		IMG_PROCESS_ORDER.forEach(processKey => {
 			if (operationsArguments[processKey]) {
-				const operation = this._operations.get(operationsArguments[processKey]);
+				const operation = this._operations.get(processKey);
 				if (operation) {
 					operations.push(operation)
 				}
@@ -156,7 +156,7 @@ export class OpenLayersImageProcessing {
 		let operationsArgumentsString = '[';
 		for (let i = 0; i < operations.length; i++) {
 			operationsFunctionsString += this._operationsAsStrings.get(operations[i].name);
-			operationsArgumentsString += operationsArguments[operations[i].name];
+			operationsArgumentsString += JSON.stringify(operationsArguments[operations[i].name]);
 
 			if (i < operations.length - 1) {
 				operationsFunctionsString += ',';
@@ -350,6 +350,7 @@ function normalizeColor(color) {
 
 // ------ Contrast start ------ //
 function performContrast(imageData, contrast) {
+	const DEFAULT_VALUE = 0;
 	const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 	const performOnSegment = (segment) => {
 		return factor * (segment - 128) + 128;
@@ -359,10 +360,12 @@ function performContrast(imageData, contrast) {
 			r: performOnSegment(pixel.r),
 			g: performOnSegment(pixel.g),
 			b: performOnSegment(pixel.b),
-			a: performOnSegment(pixel.r)
+			a: pixel.a
 		}
 	};
-	this['forEachRGBPixel'](imageData, performOnPixel);
+	if (contrast !== DEFAULT_VALUE) {
+		imageData = this['forEachRGBPixel'](imageData, performOnPixel);
+	}
 
 	return imageData;
 }
@@ -370,18 +373,20 @@ function performContrast(imageData, contrast) {
 
 // ------ Brightness start ------ //
 function performBrightness(imageData, brightness) {
+	const DEFAULT_VALUE = 0;
 	const performOnSegment = (segment) => segment + brightness;
 	const performOnPixel = (pixel) => {
 		return {
 			r: performOnSegment(pixel.r),
 			g: performOnSegment(pixel.g),
 			b: performOnSegment(pixel.b),
-			a: performOnSegment(pixel.r)
+			a: pixel.a
 		}
 	};
 
-	this['forEachRGBPixel'](imageData, performOnPixel);
-
+	if (brightness !== DEFAULT_VALUE) {
+		imageData = this['forEachRGBPixel'](imageData, performOnPixel);
+	}
 	return imageData;
 }
 // ------ Brightness End ------ //

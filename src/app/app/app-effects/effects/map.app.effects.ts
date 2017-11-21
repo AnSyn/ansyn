@@ -40,7 +40,6 @@ import {
 	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
 	PinPointTriggerAction,
-	RaiseMessageAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SetLayoutAction,
 	SetMapsDataActionStore,
@@ -68,8 +67,7 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { CaseMapState, Position } from '@ansyn/core/models';
 import {
 	ChangeLayoutAction,
-	SetMapGeoEnabledModeStatusBarActionStore,
-	SetToastMessageStoreAction
+	SetMapGeoEnabledModeStatusBarActionStore
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -80,6 +78,7 @@ import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { CoreActionTypes, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 
 @Injectable()
@@ -179,7 +178,7 @@ export class MapAppEffects {
 	 * @ofType DisplayOverlayAction
 	 * @dependencies map
 	 * @filter There is a full overlay
-	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageStoreAction?
+	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageAction?
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
@@ -202,7 +201,7 @@ export class MapAppEffects {
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
 			if (!sourceLoader) {
-				return Observable.of(new SetToastMessageStoreAction({
+				return Observable.of(new SetToastMessageAction({
 					toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
 					showWarningIcon: true
 				}));
@@ -321,36 +320,19 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name overlayLoadingFailed$
 	 * @ofType DisplayOverlayFailedAction
-	 * @action SetToastMessageStoreAction, RemoveOverlayFromLoadingOverlaysAction
+	 * @action SetToastMessageAction, RemoveOverlayFromLoadingOverlaysAction
 	 */
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.do((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
 		.mergeMap((action) => [
-			new SetToastMessageStoreAction({
+			new SetToastMessageAction({
 				toastText: statusBarToastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}),
 			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
 		]);
-
-	/**
-	 * @type Effect
-	 * @name raiseMessageAction$
-	 * @ofType RaiseMessageAction
-	 * @action SetToastMessageStoreAction
-	 */
-	@Effect()
-	raiseMessageAction$: Observable<SetToastMessageStoreAction> = this.actions$
-		.ofType<RaiseMessageAction>(MapActionTypes.MESSAGE_RAISED)
-		.map((action: RaiseMessageAction) => {
-				return new SetToastMessageStoreAction({
-					toastText: action.payload.message,
-					showWarningIcon: action.payload.isError
-				});
-			}
-		);
 
 	/**
 	 * @type Effect

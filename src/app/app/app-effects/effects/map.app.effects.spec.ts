@@ -14,7 +14,6 @@ import {
 	AddOverlayToLoadingOverlaysAction,
 	DrawPinPointAction,
 	MapSingleClickAction,
-	RaiseMessageAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -28,7 +27,7 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SetToastMessageStoreAction, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	DisplayOverlayAction,
@@ -643,19 +642,6 @@ describe('MapAppEffects', () => {
 			const b = new DisplayOverlayAction({ overlay: testOverlay, mapId: mapState.mapsList[1].id });
 			const expectedResults = cold('--(ab)--', { a, b });
 			expect(mapAppEffects.displayOverlayFromCase$).toBeObservable(expectedResults);
-		});
-	});
-
-	describe('raiseMessageAction$', () => {
-		it('should dispatch SetToastMessageStoreAction', () => {
-			actions = hot('--a--', { a: new RaiseMessageAction({ message: 'test', isError: true }) });
-			const expectedResults = cold('--b--', {
-				b: new SetToastMessageStoreAction({
-					toastText: 'test',
-					showWarningIcon: true
-				})
-			});
-			expect(mapAppEffects.raiseMessageAction$).toBeObservable(expectedResults);
 		});
 	});
 });

@@ -22,17 +22,17 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 })
 
 export class AnsynComponent implements OnInit {
-	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
+	selectedCase$: Observable<Case> = this.store$.select(casesStateSelector)
 		.pluck('selectedCase')
 		.filter(selectedCase => !_isNil(selectedCase))
 		.distinctUntilChanged();
 
-	isPinned$ = this.store.select(menuStateSelector)
+	isPinned$ = this.store$.select(menuStateSelector)
 		.pluck<IMenuState, boolean>('isPinned')
 		.distinctUntilChanged()
 		.skip(1);
 
-	mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+	mapState$: Observable<IMapState> = this.store$.select(mapStateSelector);
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
 		.map(MapFacadeService.activeMap)
@@ -59,11 +59,11 @@ export class AnsynComponent implements OnInit {
 	version = (<any>packageJson).version;
 	isPinnedClass: string;
 
-	constructor(protected store: Store<IAppState>) {
+	constructor(protected store$: Store<IAppState>) {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(new LoadContextsAction());
+		this.store$.dispatch(new LoadContextsAction());
 
 		this.selectedCaseName$.subscribe(_selectedCaseName => {
 			this.selectedCaseName = _selectedCaseName;
@@ -89,5 +89,4 @@ export class AnsynComponent implements OnInit {
 			this.isPinnedClass = _isPinned ? 'isPinned' : 'isNotPinned';
 		});
 	}
-
 }

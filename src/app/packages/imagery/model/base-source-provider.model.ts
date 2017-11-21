@@ -1,9 +1,9 @@
-import { SetToastMessageStoreAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
 import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
 import { Injectable } from '@angular/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 import { statusBarToastMessages } from '../../status-bar/reducers/status-bar.reducer';
+import { SetToastMessageAction } from '../../core/actions/core.actions';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -69,7 +69,7 @@ export abstract class BaseMapSourceProvider {
 				message = 'Failed to load ' + tilesCounter.error + ' tiles';
 			}
 
-			this.store.dispatch(new SetToastMessageStoreAction({
+			this.store.dispatch(new SetToastMessageAction({
 				toastText: message,
 				showWarningIcon: true
 			}));

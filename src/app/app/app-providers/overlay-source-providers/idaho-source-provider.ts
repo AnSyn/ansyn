@@ -6,7 +6,7 @@ import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
-import { StartAndEndDate } from '../../../packages/overlays/models/base-overlay-source-provider.model';
+import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 

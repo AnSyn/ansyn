@@ -222,7 +222,7 @@ export class ToolsAppEffects {
 	 * @name resetManualImageProcessingArguments$
 	 * @ofType SetAutoImageProcessing
 	 * @dependencies withLatestFrom, filter, map
-	 * @action UpdateCaseAction?
+	 * @action UpdateCaseAction, SetManualImageProcessingArguments
 	 */
 	@Effect()
 	resetManualImageProcessingArguments$: Observable<any> = this.actions$
@@ -250,10 +250,10 @@ export class ToolsAppEffects {
 	/**
 	 * @type Effect
 	 * @name onManualImageProcessing$
-	 * @ofType ofType
+	 * @ofType SetManualImageProcessing
 	 * @filter There is a active map
 	 * @dependencies map, withLatestFrom
-	 * @action SetMapManualImageProcessing
+	 * @action UpdateCaseAction, SetMapsDataActionStore, SetMapManualImageProcessing
 	 */
 	@Effect()
 	onManualImageProcessing$: Observable<any> = this.actions$

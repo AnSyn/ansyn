@@ -199,8 +199,7 @@ describe('SliderFilterMetadata', () => {
 	});
 
 	describe('showAll', () => {
-
-		it('showAll shuold set the range to be min-max', () => {
+		it('showAll should remove the range filter', () => {
 			const initialStart: number = sliderFilterMetadata.start;
 			const initialEnd: number = sliderFilterMetadata.end;
 			const initialMin: number = sliderFilterMetadata.min;
@@ -213,7 +212,7 @@ describe('SliderFilterMetadata', () => {
 
 			const result: any = sliderFilterMetadata.getMetadataForOuterState();
 
-			expect(result).toEqual({ start: 7, end: 8 });
+			expect(result).toBeNull();
 		});
 	});
 });

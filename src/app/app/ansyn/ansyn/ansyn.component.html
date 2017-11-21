@@ -1,17 +1,14 @@
 <div class="app animations" [ngClass]="isPinnedClass">
-
 	<div class="menu">
 		<ansyn-menu [version]="version"></ansyn-menu>
 	</div>
 
 	<div class="layer">
-
 		<div class="maps-container">
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 		</div>
 
 		<div class="status-timeline-container">
-
 			<div class="status">
 				<ansyn-status-bar
 					[selectedCaseName]="selectedCaseName"
@@ -23,9 +20,11 @@
 			<div class="app-timeline-container">
 				<ansyn-overlays-container></ansyn-overlays-container>
 			</div>
-
 		</div>
-
 	</div>
 </div>
+
 <router-outlet></router-outlet>
+
+<!-- App overlays -->
+<ansyn-toast [duration]="4"></ansyn-toast>

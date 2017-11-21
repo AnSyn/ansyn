@@ -2,16 +2,10 @@ import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.acti
 import { MapsLayout } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
-export interface IToastMessage {
-	toastText: string;
-	showWarningIcon?: boolean;
-}
-
 export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selectedLayoutIndex: number;
 	flags: Map<string, boolean>;
-	toastMessage: IToastMessage,
 	orientations: string[],
 	geoFilters: string[],
 	orientation: string;
@@ -47,7 +41,6 @@ export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selectedLayoutIndex,
 	flags: new Map<string, boolean>(),
-	toastMessage: null,
 	orientations: ['original'],
 	geoFilters: ['pin-point'],
 	orientation: 'original',
@@ -86,12 +79,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			newMap.set(action.payload.key, value);
 
 			return { ...state, flags: newMap };
-
-		case StatusBarActionsTypes.SET_TOAST_MESSAGE:
-			if (!action.payload) {
-				return { ...state, toastMessage: null };
-			}
-			return { ...state, toastMessage: action.payload };
 
 		case StatusBarActionsTypes.SET_ORIENTATION:
 			return { ...state, orientation: action.payload };

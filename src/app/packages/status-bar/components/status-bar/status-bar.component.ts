@@ -1,11 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-	IStatusBarState,
-	IToastMessage,
-	statusBarFlagsItems,
-	statusBarStateSelector
-} from '../../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFlagsItems, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction,
 	ChangeLayoutAction,
@@ -17,12 +12,11 @@ import {
 	SetGeoFilterAction,
 	SetOrientationAction,
 	SetTimeAction,
-	SetToastMessageStoreAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
-import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -44,7 +38,6 @@ export class StatusBarComponent implements OnInit {
 	geoFilter$: Observable<string> = this.statusBar$.pluck<IStatusBarState, string>('geoFilter').distinctUntilChanged();
 
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
-	toastMessage$ = this.statusBar$.pluck('toastMessage').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
 	hideOverlay$: Observable<boolean> = this.statusBar$
 		.map((state: IStatusBarState) => state.layouts[state.selectedLayoutIndex] && state.layouts[state.selectedLayoutIndex].mapsCount > 1)
@@ -54,9 +47,7 @@ export class StatusBarComponent implements OnInit {
 
 	layouts: MapsLayout[] = [];
 	selectedLayoutIndex: number;
-	showToast: boolean;
-	showAlertIcon: boolean;
-	toastText: string;
+
 	orientations: string[] = [];
 	orientation: string;
 	geoFilters: string[] = [];
@@ -107,9 +98,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	constructor(public store: Store<IStatusBarState>, public renderer: Renderer2) {
-		this.showToast = false;
-		this.toastText = '';
-		this.showAlertIcon = false;
 	}
 
 	ngOnInit(): void {
@@ -129,18 +117,6 @@ export class StatusBarComponent implements OnInit {
 
 		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
 			this.layouts = _layouts;
-		});
-
-		this.toastMessage$.subscribe((_toastFlags: IToastMessage) => {
-			if (!_toastFlags) {
-				this.showToast = false;
-				this.showAlertIcon = false;
-				this.toastText = '';
-			} else {
-				this.toastText = _toastFlags.toastText;
-				this.showAlertIcon = _toastFlags.showWarningIcon;
-				this.showToast = true;
-			}
 		});
 
 		this.orientations$.subscribe((_orientations) => {
@@ -209,12 +185,6 @@ export class StatusBarComponent implements OnInit {
 
 	geoFilterChange(_geoFilter) {
 		this.store.dispatch(new SetGeoFilterAction(_geoFilter));
-	}
-
-	onShowToastChange(value: boolean) {
-		if (!value) {
-			this.store.dispatch(new SetToastMessageStoreAction());
-		}
 	}
 
 	copyLink(): void {

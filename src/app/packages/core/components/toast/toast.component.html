@@ -1,0 +1,5 @@
+<div class="toast" *ngIf="toastMessage$ | async" [@toastAnimation]>
+	<i *ngIf="(toastMessage$ | async)?.showWarningIcon" class="icon-status-bar-alert"></i>
+	{{(toastMessage$ | async)?.toastText}}
+	<span (click)="closeToast()">×</span>
+</div>

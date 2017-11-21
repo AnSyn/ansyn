@@ -11,7 +11,6 @@ import { IAppState } from '../';
 import { isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { SetToastMessageStoreAction } from '@ansyn/status-bar';
 import {
 	CopyCaseLinkAction,
 	LoadContextsSuccessAction,
@@ -27,6 +26,7 @@ import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class CasesAppEffects {
@@ -90,7 +90,7 @@ export class CasesAppEffects {
 	 * @type Effect
 	 * @name onCopyShareCaseLink$
 	 * @ofType CopyCaseLinkAction
-	 * @action SetToastMessageStoreAction
+	 * @action SetToastMessageAction
 	 * @dependencies cases
 	 */
 	@Effect()
@@ -108,7 +108,7 @@ export class CasesAppEffects {
 		.map((sCase: Case) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
 			copyFromContent(shareLink);
-			return new SetToastMessageStoreAction({ toastText: statusBarToastMessages.showLinkCopyToast });
+			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
 	/**

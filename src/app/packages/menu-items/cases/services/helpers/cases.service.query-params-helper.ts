@@ -56,7 +56,7 @@ export class QueryParamsHelper {
 					case 'geopoint':
 						const geopointStr = qParams.geopoint;
 						if (geopointStr) {
-							const coordinates = geopointStr.split(',').map(strToNum => +strToNum).reverse();
+							const coordinates = geopointStr.split(',').map(Number).reverse();
 							const geoPoint: Point = { type: 'Point', coordinates };
 							updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 							updatedCaseModel.state.region = getPolygonByPointAndRadius(coordinates).geometry;
@@ -87,8 +87,7 @@ export class QueryParamsHelper {
 									date: qParams.time ? new Date(qParams.time) : new Date(),
 									featureJson: feature
 								});
-							}
-							else if (geoJsonGeomtry.type === 'Polygon') {
+							} else if (geoJsonGeomtry.type === 'Polygon') {
 								const geoPolygon: GeoJSON.Polygon = <GeoJSON.Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
 

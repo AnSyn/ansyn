@@ -262,14 +262,14 @@ export class MapAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapState]: [SelectCaseAction, IMapState]) => {
-			return mapState.mapsList.reduce((previusResult, data: CaseMapState) => {
+			return mapState.mapsList.reduce((previousResult, data: CaseMapState) => {
 				const communicatorHandler = this.imageryCommunicatorService.provide(data.id);
 				// if overlay exists and map is loaded
 				if (data.data.overlay && communicatorHandler) {
 					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
-					previusResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, mapId: data.id }));
+					previousResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, mapId: data.id }));
 				}
-				return previusResult;
+				return previousResult;
 			}, []);
 		});
 

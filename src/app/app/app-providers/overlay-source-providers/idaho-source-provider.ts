@@ -6,6 +6,7 @@ import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
+import { StartAndEndDate } from '../../../packages/overlays/models/base-overlay-source-provider.model';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 
@@ -55,9 +56,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<Array<Overlay>> {
+	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
-		return <Observable<Overlay[]>>this.http.post<Array<Overlay>>(url, params)
+		return <Observable<StartAndEndDate>>this.http.post<Array<Overlay>>(url, params)
 			.catch(this.handleError);
 	}
 

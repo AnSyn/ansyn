@@ -38,8 +38,6 @@ export class FiltersEffects {
 			const filterMetadata: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
 			const oldFiltersArray = filtersState.oldFilters ? Array.from(filtersState.oldFilters) : [];
 
-			console.warn(action.payload.facets)
-
 			filters.forEach((filter: Filter) => {
 				const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
 

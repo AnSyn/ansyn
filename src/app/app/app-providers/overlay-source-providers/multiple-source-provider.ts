@@ -6,7 +6,7 @@ import * as intersect from '@turf/intersect';
 import * as area from '@turf/area';
 import * as difference from '@turf/difference';
 import { OverlayFilter } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { StartAndEndDate } from '../../../packages/overlays/models/base-overlay-source-provider.model';
+import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
 interface FiltersList {
 	name: string,

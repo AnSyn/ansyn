@@ -21,6 +21,11 @@ export interface OverlayFilter {
 	timeRange: DateRange
 }
 
+export interface StartAndEndDate {
+	startDate: string,
+	endDate: string
+}
+
 export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): DateRange {
 	if (!blackRange.end || (whiteRange.end && whiteRange.end <= blackRange.end)) {
 		if (!blackRange.start || whiteRange.end > blackRange.start) {
@@ -93,7 +98,7 @@ export abstract class BaseOverlaySourceProvider {
 
 	abstract fetch(fetchParams: IFetchParams): Observable<Overlay[]>;
 
-	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any>;
+	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate>;
 
 	abstract getById(id: string, sourceType: string): Observable<Overlay>;
 

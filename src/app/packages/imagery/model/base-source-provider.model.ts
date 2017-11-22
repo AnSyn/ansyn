@@ -7,6 +7,12 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 @Injectable()
 export abstract class BaseMapSourceProvider {
 
+	messages: {
+		all: 'Failed to load overlay',
+		partial: 'Failed to load {{amount}} tiles',
+		one: 'Failed to load a tile'
+	};
+
 	abstract mapType: string;
 
 	abstract sourceType: string;
@@ -61,11 +67,12 @@ export abstract class BaseMapSourceProvider {
 			let message;
 
 			if (isFirstLoad && tilesCounter.error === tilesCounter.total) { // All of em, on first load
-				message = 'Failed to load overlay';
+				message = this.messages.all;
 			} else if (tilesCounter.error === 1) { // Only 1
-				message = 'Failed to load a tile';
+				message = this.messages.one;
 			} else { // More than 1, but not all
-				message = 'Failed to load ' + tilesCounter.error + ' tiles';
+				message = this.messages.partial.replace('{{amount}}', String(tilesCounter.error))
+
 			}
 
 			this.store.dispatch(new SetToastMessageAction({

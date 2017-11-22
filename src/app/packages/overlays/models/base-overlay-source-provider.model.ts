@@ -60,9 +60,10 @@ export abstract class BaseOverlaySourceProvider {
 		const fetchPromises = filters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(f.coverage, regionFeature);
-				if (!intersection) {
+				if (!intersection || !intersection.geometry) {
 					return false;
 				}
+				console.log(intersection)
 				return area(intersection) > 0;
 			})
 			// Make sure they have a common time range

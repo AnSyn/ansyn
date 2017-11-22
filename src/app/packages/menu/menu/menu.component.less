@@ -4,6 +4,11 @@
 div.menu-wrapper {
 	height: 100vh;
 	display: flex;
+
+	.menu:not(.expanded), .container {
+		box-shadow: 0 0 10px black;
+	}
+
 	div.menu {
 		position: relative;
 		background: @menu-color;
@@ -58,7 +63,6 @@ div.menu-wrapper {
 		z-index: @z-index-menu-container;
 		height: 100vh;
 		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
-		box-shadow: 0 0 10px black;
 
 		&.pinned {
 			position: relative;

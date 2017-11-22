@@ -10,6 +10,6 @@
 	r: 8;
 }
 
-:host /deep/ circle.hover:not(.active) {
-	fill: #bd0fe2;
+:host /deep/ circle.hover:not(.active), :host /deep/ circle.displayed:not(.active) {
+	fill: @overlays-dots-color-hover;
 }

@@ -12,7 +12,9 @@ export class ImageProcessingControlComponent {
 	private _isExpended: boolean;
 	private _imgProcessParamDefaults = {
 		Contrast: 0,
-		Brightness: 0
+		Brightness: 0,
+		Gamma: 100,
+		Saturation: 100
 	};
 	public imgProcessParams: any;	// instead of Object, for Travis testing
 

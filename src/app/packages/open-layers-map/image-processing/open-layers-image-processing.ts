@@ -1,6 +1,6 @@
 import Raster from 'ol/source/raster';
 
-export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Contrast', 'Brightness', 'Sharpness'];
+export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Gamma', 'Contrast', 'Saturation', 'Brightness', 'Sharpness'];
 
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 
@@ -27,8 +27,26 @@ export class OpenLayersImageProcessing {
 	initializeOperations() {
 		this.initializeAutoHistogramEqualization();
 		this.initializeSharpness();
-		this.initializeContrast();
-		this.initializeBrightness();
+		this.initializeBasicOperations([
+			{ name: 'Contrast', perform: performContrast },
+			{ name: 'Brightness', perform: performBrightness },
+			{ name: 'Gamma', perform: performGamma },
+			{ name: 'Saturation', perform: performSaturation},
+		])
+	}
+
+	// initialize all Basic Operations
+	initializeBasicOperations(basicOperations) {
+		const standardOperationLib = {
+			forEachRGBPixel: forEachRGBPixel
+		};
+		basicOperations.forEach(oper => {
+			this.addOperation({
+				name: oper.name,
+				operation: oper.perform,
+				lib: standardOperationLib
+			});
+		});
 	}
 
 	addOperation(operation) {
@@ -69,30 +87,6 @@ export class OpenLayersImageProcessing {
 		this.addOperation(operation);
 	}
 
-	initializeContrast() {
-		const lib = {
-			forEachRGBPixel: forEachRGBPixel
-		};
-		const operation = {
-			name: 'Contrast',
-			operation: performContrast,
-			lib: lib
-		};
-		this.addOperation(operation);
-	}
-
-	initializeBrightness() {
-		const lib = {
-			forEachRGBPixel: forEachRGBPixel
-		};
-		const operation = {
-			name: 'Brightness',
-			operation: performBrightness,
-			lib: lib
-		};
-		this.addOperation(operation);
-	}
-
 	processUsingRaster(raster: Raster, processingParams: Object) {
 		const operationsArguments = processingParams;
 		this._rasterToOperations.delete(raster);
@@ -100,7 +94,7 @@ export class OpenLayersImageProcessing {
 		const operations = new Array<IRasterOperation>();
 		// todo: by order
 		IMG_PROCESS_ORDER.forEach(processKey => {
-			if (operationsArguments[processKey]) {
+			if (operationsArguments.hasOwnProperty(processKey)) {
 				const operation = this._operations.get(processKey);
 				if (operation) {
 					operations.push(operation);
@@ -150,12 +144,12 @@ export class OpenLayersImageProcessing {
 
 // ------ General Operation Start ------ //
 
-function resetOperation(pixels, data) {
+function resetOperation(pixels) {
 	// return the original pixels collection
 	return pixels[0];
 }
 
-function cascadeOperations(pixels, data) {
+function cascadeOperations(pixels) {
 	let imageData = pixels[0];
 	const operations = this['operations'];
 	const operationsArgs = this['operationsArgs'];
@@ -325,7 +319,7 @@ function normalizeColor(color) {
 function performContrast(imageData, contrast) {
 	const DEFAULT_VALUE = 0;
 	const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-	const performOnSegment = (segment) => {
+	const performOnSegment = (segment: number) => {
 		return factor * (segment - 128) + 128;
 	};
 	const performOnPixel = (pixel) => {
@@ -348,7 +342,7 @@ function performContrast(imageData, contrast) {
 // ------ Brightness start ------ //
 function performBrightness(imageData, brightness) {
 	const DEFAULT_VALUE = 0;
-	const performOnSegment = (segment) => segment + brightness;
+	const performOnSegment = (segment: number) => segment + brightness;
 	const performOnPixel = (pixel) => {
 		return {
 			r: performOnSegment(pixel.r),
@@ -365,6 +359,58 @@ function performBrightness(imageData, brightness) {
 }
 
 // ------ Brightness End ------ //
+
+// ------ Gamma start ------ //
+// based on:
+// http://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-6-gamma-correction/
+function performGamma(imageData, gamma) {
+	// gamma sent range [1-200], should be converted to [0.01-2.00], hence gamma / 100
+	const DEFAULT_VALUE = 1;
+	const gammaCorrection = 1 / (gamma / 100);
+
+	const performOnSegment = (segment: number) => 255 * Math.pow((segment / 255), gammaCorrection);
+	const performOnPixel = (pixel) => {
+		return {
+			r: performOnSegment(pixel.r),
+			g: performOnSegment(pixel.g),
+			b: performOnSegment(pixel.b),
+			a: pixel.a
+		}
+	};
+
+	if (gammaCorrection !== DEFAULT_VALUE) {
+		imageData = this['forEachRGBPixel'](imageData, performOnPixel);
+	}
+	return imageData;
+}
+// ------ Gamma  End ------ //
+
+// ------ Saturation start ------ //
+// based on:
+// https://stackoverflow.com/questions/13348129/using-native-javascript-to-desaturate-a-colour
+function performSaturation(imageData, saturation) {
+	// saturation sent range [1-100], should be converted to [0.01-1.00], hence saturation / 100
+	const DEFAULT_VALUE = 1;
+	saturation = saturation / 100;
+
+	const performOnSegment = (segment: number, gray: number) => {
+		return Math.round(segment * saturation + gray * (1 - saturation));
+	};
+	const performOnPixel = (pixel) => {
+		const gray = pixel.r * 0.3086 + pixel.g * 0.6094 + pixel.b * 0.0820; // gray range [1-255]
+		return {
+			r: performOnSegment(pixel.r, gray),
+			g: performOnSegment(pixel.g, gray),
+			b: performOnSegment(pixel.b, gray),
+			a: pixel.a
+		}
+	};
+	if (saturation !== DEFAULT_VALUE) {
+		imageData = this['forEachRGBPixel'](imageData, performOnPixel);
+	}
+	return imageData;
+}
+// ------ Saturation  End ------ //
 
 function forEachRGBPixel(imageData, conversionFn) {
 	const pixel = { r: 0, g: 0, b: 0, a: 0 };

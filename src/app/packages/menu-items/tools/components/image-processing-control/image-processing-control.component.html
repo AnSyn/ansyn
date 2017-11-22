@@ -11,4 +11,14 @@
 			   (change)="manualImageProcess()">
 		<button class="button-reset" (click)="backToDefault('Brightness')">reset</button>
 	</li>
+	<li>
+		<label>Gamma</label><br>
+		<input type="range" min="1" max="200" [(ngModel)]="imgProcessParams.Gamma" (change)="manualImageProcess()">
+		<button class="button-reset" (click)="backToDefault('Gamma')">reset</button>
+	</li>
+	<li>
+		<label>Saturation</label><br>
+		<input type="range" min="1" max="100" [(ngModel)]="imgProcessParams.Saturation" (change)="manualImageProcess()">
+		<button class="button-reset" (click)="backToDefault('Saturation')">reset</button>
+	</li>
 </ul>

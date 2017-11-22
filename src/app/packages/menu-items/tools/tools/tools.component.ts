@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	AnnotationClose,
 	AnnotationOpen,
@@ -53,7 +53,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		});
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			if (_gotoExpand) {
-				this.expandedSubMenu = SubMenuEnum.goTo
+				this.expandedSubMenu = SubMenuEnum.goTo;
 			}
 		});
 		this.manualImageProcessingParams$.subscribe((processParams) => {
@@ -95,11 +95,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const lastExpandedSubMenu = this.expandedSubMenu;
 		this.expandedSubMenu = (subMenu !== this.expandedSubMenu) ? subMenu : null;
 		// if toggle goto - dispatch;
-		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo ) {
+		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
 			this.store.dispatch(new GoToExpandAction(this.expandedSubMenu === SubMenuEnum.goTo));
 		}
 		// if toggle annotations - treat annotations toggle
-		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations ) {
+		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations) {
 			this.toggleAnnotationMenu(this.expandedSubMenu === SubMenuEnum.annotations);
 		}
 	}

@@ -1,6 +1,6 @@
 import Raster from 'ol/source/raster';
 
-export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Contrast', 'Brightness', 'Sharpness', ];
+export const IMG_PROCESS_ORDER = ['Histogram_Auto', 'Histogram_manual', 'Contrast', 'Brightness', 'Sharpness'];
 
 export type pixelOperation = (pixels: ImageData[], data: Object) => (ImageData);
 
@@ -97,13 +97,13 @@ export class OpenLayersImageProcessing {
 		const operationsArguments = processingParams;
 		this._rasterToOperations.delete(raster);
 		// collection operation by processingParams
-		const operations  = new Array<IRasterOperation>();
+		const operations = new Array<IRasterOperation>();
 		// todo: by order
 		IMG_PROCESS_ORDER.forEach(processKey => {
 			if (operationsArguments[processKey]) {
 				const operation = this._operations.get(processKey);
 				if (operation) {
-					operations.push(operation)
+					operations.push(operation);
 				}
 			}
 		});
@@ -142,7 +142,7 @@ export class OpenLayersImageProcessing {
 		globalLib['operations'] = operationsFunctionsString;
 		globalLib['operationsArgs'] = operationsArgumentsString;
 
-		this._libsAsStrings.forEach( (lib, libName) => globalLib[libName] = lib);
+		this._libsAsStrings.forEach((lib, libName) => globalLib[libName] = lib);
 
 		raster.setOperation(cascadeOperations, globalLib);
 	}
@@ -161,7 +161,7 @@ function cascadeOperations(pixels, data) {
 	const operationsArgs = this['operationsArgs'];
 
 	operations.forEach((operation, index) => {
-		console.log('do ' + operation.name + ' with: ', operationsArgs[index])
+		console.log('do ' + operation.name + ' with: ', operationsArgs[index]);
 		imageData = operation(imageData, operationsArgs[index]);
 	});
 	return imageData;
@@ -334,7 +334,7 @@ function performContrast(imageData, contrast) {
 			g: performOnSegment(pixel.g),
 			b: performOnSegment(pixel.b),
 			a: pixel.a
-		}
+		};
 	};
 	if (contrast !== DEFAULT_VALUE) {
 		imageData = this['forEachRGBPixel'](imageData, performOnPixel);
@@ -342,6 +342,7 @@ function performContrast(imageData, contrast) {
 
 	return imageData;
 }
+
 // ------ Contrast End ------ //
 
 // ------ Brightness start ------ //
@@ -354,7 +355,7 @@ function performBrightness(imageData, brightness) {
 			g: performOnSegment(pixel.g),
 			b: performOnSegment(pixel.b),
 			a: pixel.a
-		}
+		};
 	};
 
 	if (brightness !== DEFAULT_VALUE) {
@@ -362,6 +363,7 @@ function performBrightness(imageData, brightness) {
 	}
 	return imageData;
 }
+
 // ------ Brightness End ------ //
 
 function forEachRGBPixel(imageData, conversionFn) {

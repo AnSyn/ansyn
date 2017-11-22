@@ -104,10 +104,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 				const end = new Date(); // today
 				const start = new Date(end.getTime() - 365 * 24 * 60 * 60 * 1000); // 1 year ago
 				selectedCase.state.time = {
-					type: "absolute",
+					type: 'absolute',
 					from: start.toISOString(),
 					to: end.toISOString()
-				}
+				};
 			}
 
 			return { ...state, selectedCase };

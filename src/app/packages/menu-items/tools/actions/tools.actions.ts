@@ -168,14 +168,14 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { processingParams: Object}) {
+	constructor(public payload: { processingParams: Object }) {
 	};
 }
 
 export class SetManualImageProcessingArguments implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
 
-	constructor(public payload: { processingParams: Object}) {
+	constructor(public payload: { processingParams: Object }) {
 	};
 }
 

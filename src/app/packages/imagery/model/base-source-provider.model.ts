@@ -2,8 +2,7 @@ import { Store } from '@ngrx/store';
 import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
 import { Injectable } from '@angular/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { statusBarToastMessages } from '../../status-bar/reducers/status-bar.reducer';
-import { SetToastMessageAction } from '../../core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -62,7 +61,7 @@ export abstract class BaseMapSourceProvider {
 			let message;
 
 			if (isFirstLoad && tilesCounter.error === tilesCounter.total) { // All of em, on first load
-				message = statusBarToastMessages.showOverlayErrorToast;
+				message = 'Failed to load overlay';
 			} else if (tilesCounter.error === 1) { // Only 1
 				message = 'Failed to load a tile';
 			} else { // More than 1, but not all

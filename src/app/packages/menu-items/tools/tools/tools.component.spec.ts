@@ -1,5 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { GoToExpandAction, StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
+import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
@@ -38,7 +38,8 @@ describe('ToolsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ToolsComponent);
 		// Add manualProcessingControls function: resetAllParams (accessible from ToolsComponent)
-		fixture.componentInstance.manualProcessingControls['resetAllParams'] = () => {};
+		fixture.componentInstance.manualProcessingControls['resetAllParams'] = () => {
+		};
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

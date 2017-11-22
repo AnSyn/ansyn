@@ -437,8 +437,10 @@ export class VisualizersAppEffects {
 
 						break;
 					case 'removeLayer':
-						visualizer.removeInteraction();
-						visualizer.removeLayer();
+						if (!layerState.displayAnnotationsLayer) {
+							visualizer.removeInteraction();
+							visualizer.removeLayer();
+						}
 						break;
 				}
 			});

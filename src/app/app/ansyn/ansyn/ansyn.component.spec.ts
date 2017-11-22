@@ -19,6 +19,7 @@ describe('AnsynComponent', () => {
 	let handler: Subject<any>;
 
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version'] });
+	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockStatus = MockComponent({
 		selector: 'ansyn-status-bar',
 		inputs: ['selectedCaseName', 'overlay', 'isFavoriteOverlayDisplayed']
@@ -71,6 +72,7 @@ describe('AnsynComponent', () => {
 				AnsynComponent,
 				mockImageryView,
 				mockMenu,
+				mockToast,
 				mockOverlaysContainer,
 				mockStatus,
 				mockImageryView,

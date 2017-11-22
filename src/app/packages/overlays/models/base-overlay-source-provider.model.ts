@@ -63,7 +63,6 @@ export abstract class BaseOverlaySourceProvider {
 				if (!intersection || !intersection.geometry) {
 					return false;
 				}
-				console.log(intersection)
 				return area(intersection) > 0;
 			})
 			// Make sure they have a common time range

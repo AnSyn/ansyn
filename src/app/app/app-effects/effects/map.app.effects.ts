@@ -77,8 +77,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { CoreActionTypes, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { CoreActionTypes, SetToastMessageAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 
 @Injectable()

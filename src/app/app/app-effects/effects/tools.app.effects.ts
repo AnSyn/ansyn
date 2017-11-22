@@ -14,7 +14,7 @@ import {
 import { CasesActionTypes } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
-import { isNil as _isNil, cloneDeep } from 'lodash';
+import { cloneDeep, isNil as _isNil } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	AnnotationVisualizerAgentAction,
@@ -22,6 +22,8 @@ import {
 	EnableMouseShadow,
 	GoToAction,
 	SetActiveOverlaysFootprintModeAction,
+	SetManualImageProcessing,
+	SetManualImageProcessingArguments,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
@@ -33,14 +35,13 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import {
 	PinLocationModeTriggerAction,
 	SetLayoutAction,
+	SetMapManualImageProcessing,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { SetMapManualImageProcessing } from '@ansyn/map-facade/actions/map.actions';
-import { SetManualImageProcessing, SetManualImageProcessingArguments } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
@@ -151,11 +152,14 @@ export class ToolsAppEffects {
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
 			if (selectedCase.state.overlaysManualProcessArgs && selectedCase.state.overlaysManualProcessArgs.get) {
-				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs.get(action.payload.id)
+				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs.get(action.payload.id);
 			}
 			if (activeMap.data.isAutoImageProcessingActive) {
 				// auto process action
-				actions.push(new SetMapAutoImageProcessing({mapId: activeMap.id, toggleValue: activeMap.data.isAutoImageProcessingActive}));
+				actions.push(new SetMapAutoImageProcessing({
+					mapId: activeMap.id,
+					toggleValue: activeMap.data.isAutoImageProcessingActive
+				}));
 			} else if (manualProcessArgs) {
 				// manual process action
 				actions.push(new SetMapManualImageProcessing({
@@ -211,7 +215,10 @@ export class ToolsAppEffects {
 			const activeMap: CaseMapState = mapsState.mapsList.find(map => map.id === mapsState.activeMapId);
 
 			return [
-				new SetMapAutoImageProcessing({ mapId: mapsState.activeMapId, toggleValue: activeMap.data.isAutoImageProcessingActive }),
+				new SetMapAutoImageProcessing({
+					mapId: mapsState.activeMapId,
+					toggleValue: activeMap.data.isAutoImageProcessingActive
+				}),
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
 				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 			];
@@ -263,7 +270,7 @@ export class ToolsAppEffects {
 				return [action, cloneDeep(cases.selectedCase), mapsState];
 			})
 		.filter(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
-			return Boolean(selectedCase.state.maps.activeMapId && mapsState)
+			return Boolean(selectedCase.state.maps.activeMapId && mapsState);
 		})
 		.mergeMap(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
 			const allMapsState = selectedCase.state.maps;
@@ -274,8 +281,11 @@ export class ToolsAppEffects {
 			return [
 				new UpdateCaseAction(selectedCase),
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
-				new SetMapManualImageProcessing({ mapId: allMapsState.activeMapId, processingParams: action.payload.processingParams })
-			]
+				new SetMapManualImageProcessing({
+					mapId: allMapsState.activeMapId,
+					processingParams: action.payload.processingParams
+				})
+			];
 		});
 
 	/**
@@ -372,6 +382,7 @@ export class ToolsAppEffects {
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }
+
 // update per-overlay manual processing param (saved in case)
 function updateOverlaysManualProcessArgs(selectedCase: Case, overlayId: string, processingParams?: Object) {
 	if (!processingParams) {

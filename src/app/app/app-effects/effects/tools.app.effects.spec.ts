@@ -17,8 +17,8 @@ import {
 	PullActiveCenter,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
-	SetPinLocationModeAction,
-	SetManualImageProcessingArguments
+	SetManualImageProcessingArguments,
+	SetPinLocationModeAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
@@ -32,7 +32,7 @@ import {
 } from '@ansyn/menu-items/tools';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { SetMapsDataActionStore, SetMapManualImageProcessing } from '@ansyn/map-facade/actions/map.actions';
+import { SetMapManualImageProcessing, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
@@ -80,7 +80,7 @@ describe('ToolsAppEffects', () => {
 				activeMapId: 'imagery1'
 			},
 			overlaysManualProcessArgs: new Map<string, Object>([
-				['overlay_123', { Contrast: 50, Brightness: 20}]
+				['overlay_123', { Contrast: 50, Brightness: 20 }]
 			])
 		} as any
 	}];

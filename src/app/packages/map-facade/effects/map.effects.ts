@@ -16,9 +16,9 @@ import {
 	PositionChangedAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
+	SetMapManualImageProcessing,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction,
-	SetMapManualImageProcessing
+	SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -94,7 +94,7 @@ export class MapEffects {
 		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
 		.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
 		.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
-		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity])  => {
+		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => {
 			communicator.setManualImageProcessing(action.payload.processingParams);
 		});
 

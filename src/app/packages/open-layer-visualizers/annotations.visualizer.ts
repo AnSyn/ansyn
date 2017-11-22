@@ -102,6 +102,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	removeLayer() {
 		this.iMap.removeLayer(this.layer);
+		this.features = [];
 		this.layer = undefined;
 	}
 

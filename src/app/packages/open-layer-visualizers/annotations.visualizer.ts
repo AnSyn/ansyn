@@ -294,7 +294,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		data.feature.setProperties({
 			id: Date.now(),
-			style: this.visualizerStyle,
+			style: this.visualizerStyle.initial,
 			geometryName,
 			data: {}
 		});

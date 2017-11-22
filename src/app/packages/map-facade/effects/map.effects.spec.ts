@@ -7,7 +7,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
-import { Overlay } from '../../core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
 import {
 	ActiveMapChangedAction,

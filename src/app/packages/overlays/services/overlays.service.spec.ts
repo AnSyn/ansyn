@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { OverlaySpecialObject } from '../../core/models/overlay.model';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

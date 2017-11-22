@@ -3,7 +3,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
 import { MapFacadeService } from './services/map-facade.service';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
-import { ImageryModule } from '../imagery/imagery.module';
+import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
 import { CoreModule } from '@ansyn/core';

@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from './entities-visualizer';
-import { IMap } from '../imagery/model/imap';
+import { IMap } from '@ansyn/imagery/model/imap';
 import Draw from 'ol/interaction/draw';
 import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';

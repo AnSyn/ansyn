@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersMap } from './open-layers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
-import { MapPosition } from '../../imagery/model/map-position';
+import { MapPosition } from '@ansyn/imagery/model/map-position';
 
 
 @Component({

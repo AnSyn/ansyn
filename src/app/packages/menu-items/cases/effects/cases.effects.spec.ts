@@ -29,7 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

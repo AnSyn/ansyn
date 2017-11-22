@@ -5,7 +5,7 @@ import Point from 'ol/geom/point';
 import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { MapPosition } from '../../imagery/model/map-position';
+import { MapPosition } from '@ansyn/imagery/model/map-position';
 
 export class CenterMarkerPlugin implements IMapPlugin {
 	static sPluginType = 'openLayerCenterMarker';

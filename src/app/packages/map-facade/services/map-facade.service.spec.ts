@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService, ImageryModule } from '@ansyn/imagery';
 import { IMapState, mapFeatureKey, MapReducer } from '../reducers/map.reducer';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
-import { AnnotationVisualizerAgentAction } from '../../menu-items/tools/actions/tools.actions';
+import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('MapFacadeService', () => {
 	let service: MapFacadeService;

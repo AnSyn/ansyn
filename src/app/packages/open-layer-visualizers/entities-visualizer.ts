@@ -19,7 +19,7 @@ import olMap from 'ol/map';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { OpenLayersMap } from '../open-layers-map/map/open-layers-map';
+import { OpenLayersMap } from '@ansyn/open-layers-map/map/open-layers-map';
 import { Subject } from 'rxjs/Subject';
 
 export interface FeatureIdentifier {

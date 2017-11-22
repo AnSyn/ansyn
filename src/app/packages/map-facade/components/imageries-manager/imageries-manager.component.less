@@ -89,23 +89,6 @@
 				width: 50%;
 				height: 50%;
 				&:first-child {
-					width: 100%;
-					height: 50%;
-				}
-				&:not(:first-child) {
-					div.active-border {
-						height: @height-minus-status;
-					}
-				}
-			}
-		}
-
-		&.layout5 {
-			div.map-container-wrapper {
-				position: relative;
-				width: 50%;
-				height: 50%;
-				&:first-child {
 					width: 50%;
 					height: 100%;
 				}
@@ -116,6 +99,22 @@
 				}
 			}
 			flex-direction: column;
+		}
+		&.layout5 {
+			div.map-container-wrapper {
+				position: relative;
+				width: 50%;
+				height: 50%;
+				&:first-child {
+					width: 100%;
+					height: 50%;
+				}
+				&:not(:first-child) {
+					div.active-border {
+						height: @height-minus-status;
+					}
+				}
+			}
 		}
 		&.layout6 {
 			div.map-container-wrapper {

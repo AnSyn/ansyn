@@ -32,6 +32,7 @@ import {
 	MultipleOverlaysSourceProvider
 } from './overlay-source-providers/multiple-source-provider';
 import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-provider2';
+import { OpenLayerIDAHO2SourceProvider } from './map-source-providers/open-layers-IDAHO2-source-provider';
 
 @NgModule({
 	imports: [
@@ -53,6 +54,7 @@ import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-pr
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 
 		// Map visualizers

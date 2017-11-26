@@ -1,7 +1,7 @@
 {
     "production": true,
     "casesConfig": {
-        "baseUrl": "{{ getv "/ansyn/cases/baseurl" }}",
+        "baseUrl": "{{ getv "/ansyn/cases/baseurl" "NO-VALUE" }}",
         "paginationLimit": 16,
         "defaultCase": {
             "id": "1234-5678",
@@ -71,13 +71,13 @@
         "useHash": true
     },
     "layersManagerConfig": {
-        "layersByCaseIdUrl": "{{ getv "/ansyn/layers/baseurl"}}"
+        "layersByCaseIdUrl": "{{ getv "/ansyn/layers/baseurl" "NO-VALUE" }}"
     },
     "overlaysConfig": {
-        "baseUrl": "{{ getv "/ansyn/overlay/baseurl"}}",
+        "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "NO-VALUE" }}",
         "overlaysByCaseId": "case/:id/overlays",
-        "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find"}}",
-        "defaultApi": "{{getv "/ansyn/overlay/api/default"}}",
+        "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "NO-VALUE" }}",
+        "defaultApi": "{{getv "/ansyn/overlay/api/default" "NO-VALUE" }}",
         "searchByCase": false,
         "overlaySource": "IDAHO",
         "polygonGenerationDistance": 0.1
@@ -116,12 +116,12 @@
     },
     "contextConfig": {
 		"elastic": {
-            "uri": "{{getv "/ansyn/context/db/elastic/url"}}",
+            "uri": "{{ getv "/ansyn/context/db/elastic/url" "NO-VALUE" }}",
 			"bucket": "context",
 			"auth": "elastic:changeme"
 		},
 		"proxy": {
-			"uri": "{{getv "/ansyn/context/db/proxy/url"}}",
+			"uri": "{{ getv "/ansyn/context/db/proxy/url" "NO-VALUE" }}",
 			"bucket": "contexts",
 			"apiObject" : "Http"
 		}
@@ -139,7 +139,7 @@
         }
     },
 	"loginConfig": {
-		"baseUrl": "{{ getv "/ansyn/login/baseurl"}}",
+		"baseUrl": "{{ getv "/ansyn/login/baseurl" "NO-VALUE" }}",
 		"active": true,
 		"authorizedPath": "/"
 	},

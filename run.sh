@@ -2,4 +2,4 @@ set -e
 
 confd -onetime -backend ${CONFD_BACKEND:-env}
 
-http-server -p -g 8081 --gzip
+http-server -g -p 8081 --gzip

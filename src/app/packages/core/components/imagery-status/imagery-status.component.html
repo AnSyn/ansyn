@@ -7,18 +7,18 @@
 	<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
 			class="small-icon-button link-maps"
 			(click)="toggleMapSynchronization.emit()">
-		<i class="icon-temporary-link"></i>
+		<i class="icon icon-temporary-link"></i>
 	</button>
 
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()">
-		<i class="icon-layers-hide"></i>
+		<i class="icon icon-layers-hide"></i>
 	</button>
 
 	<button *ngIf="overlay" class="small-icon-button set-favorite"
 			[class.active]="isFavoriteOverlayDisplayed"
 			(click)="toggleFavorite()">
-		<i class="icon-favorites"></i>
+		<i class="icon icon-favorites"></i>
 	</button>
 </div>
 

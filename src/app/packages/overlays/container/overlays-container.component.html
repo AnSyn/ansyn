@@ -1,5 +1,5 @@
 <!-- <button (click)="demo()" >click</button> -->
-<div class='overlays-container'>
+<div class="overlays-container">
 
 	<div class="overlays-status" *ngIf="!(loading || !noDrops) " [@timeline-status]>
 		<div class="text-container">
@@ -16,6 +16,6 @@
 		</div>
 	</div>
 
-	<ansyn-timeline [drops]='drops' [configuration]='configuration' [redraw$]='redraw$'
+	<ansyn-timeline [drops]="drops" [configuration]="configuration" [redraw$]="redraw$"
 					[markup]="overlaysMarkup"></ansyn-timeline>
 </div>

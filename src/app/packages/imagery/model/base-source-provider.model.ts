@@ -7,7 +7,7 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 @Injectable()
 export abstract class BaseMapSourceProvider {
 
-	messages: {
+	messages = {
 		all: 'Failed to load overlay',
 		partial: 'Failed to load {{amount}} tiles',
 		one: 'Failed to load a tile'
@@ -72,7 +72,6 @@ export abstract class BaseMapSourceProvider {
 				message = this.messages.one;
 			} else { // More than 1, but not all
 				message = this.messages.partial.replace('{{amount}}', String(tilesCounter.error))
-
 			}
 
 			this.store.dispatch(new SetToastMessageAction({

@@ -15,6 +15,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -72,7 +73,7 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(overlaysStateSelector), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
 			return [overlaysArray, selectedCase.state.facets];
@@ -87,7 +88,7 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	resetFilters$: Observable<ResetFiltersAction> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
+		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
@@ -99,7 +100,6 @@ export class FiltersAppEffects {
 		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
 		facets.filters = [];
 		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
-
 			const currentFilter: any = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
 
@@ -120,6 +120,6 @@ export class FiltersAppEffects {
 	}
 
 	isMetadataEmpty(metadata: any): boolean {
-		return isNil(metadata) || ((Array.isArray(metadata)) && isEmpty(metadata));
+		return isNil(metadata) || (Array.isArray(metadata) && isEmpty(metadata));
 	}
 }

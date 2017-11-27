@@ -151,8 +151,8 @@ export class ToolsAppEffects {
 			let manualProcessArgs = null;
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
-			if (selectedCase.state.overlaysManualProcessArgs && selectedCase.state.overlaysManualProcessArgs.get) {
-				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs.get(action.payload.id);
+			if (selectedCase.state.overlaysManualProcessArgs) {
+				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.id];
 			}
 			if (activeMap.data.isAutoImageProcessingActive) {
 				// auto process action
@@ -243,7 +243,7 @@ export class ToolsAppEffects {
 		.filter(([activeMap, overlayId, selectedCase]: [CaseMapState, string, Case]) => {
 			const isAutoProcessOn = activeMap.data.isAutoImageProcessingActive;
 			const ManualProcessArgs = selectedCase.state.overlaysManualProcessArgs;
-			return Boolean(isAutoProcessOn && ManualProcessArgs && ManualProcessArgs.get(overlayId));
+			return Boolean(isAutoProcessOn && ManualProcessArgs && ManualProcessArgs[overlayId]);
 		})
 		.mergeMap(([activeMap, overlayId, selectedCase]: [CaseMapState, string, Case]) => {
 			updateOverlaysManualProcessArgs(selectedCase, overlayId, null);
@@ -389,9 +389,9 @@ function updateOverlaysManualProcessArgs(selectedCase: Case, overlayId: string, 
 		processingParams = null;
 	}
 	if (!selectedCase.state.overlaysManualProcessArgs) {
-		selectedCase.state.overlaysManualProcessArgs = new Map<string, Object>();
+		selectedCase.state.overlaysManualProcessArgs = new Object();
 	}
-	selectedCase.state.overlaysManualProcessArgs.set(overlayId, processingParams);
+	selectedCase.state.overlaysManualProcessArgs[overlayId] = processingParams;
 	return selectedCase;
 }
 

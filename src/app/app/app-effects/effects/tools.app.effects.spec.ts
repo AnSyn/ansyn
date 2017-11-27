@@ -79,9 +79,9 @@ describe('ToolsAppEffects', () => {
 				],
 				activeMapId: 'imagery1'
 			},
-			overlaysManualProcessArgs: new Map<string, Object>([
-				['overlay_123', { Contrast: 50, Brightness: 20 }]
-			])
+			overlaysManualProcessArgs: {
+				'overlay_123': { Contrast: 50, Brightness: 20 }
+			}
 		} as any
 	}];
 	const imapState: any = {

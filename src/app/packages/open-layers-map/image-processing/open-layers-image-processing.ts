@@ -94,7 +94,7 @@ export class OpenLayersImageProcessing {
 		const operations = new Array<IRasterOperation>();
 		// todo: by order
 		IMG_PROCESS_ORDER.forEach(processKey => {
-			if (operationsArguments.hasOwnProperty(processKey)) {
+			if (operationsArguments && operationsArguments.hasOwnProperty(processKey)) {
 				const operation = this._operations.get(processKey);
 				if (operation) {
 					operations.push(operation);

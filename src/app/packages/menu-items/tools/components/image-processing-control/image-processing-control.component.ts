@@ -2,6 +2,7 @@ import { Component, HostBinding, Input } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -36,7 +37,11 @@ export class ImageProcessingControlComponent {
 	}
 
 	manualImageProcess() {
-		this.store$.dispatch(new SetManualImageProcessing({ processingParams: this.imgProcessParams }));
+		let dispatchValue = this.imgProcessParams;
+		if (isEqual(this.imgProcessParams, this._imgProcessParamDefaults)) {
+			dispatchValue = null;
+		}
+		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
 	}
 
 	backToDefault(processParam) {

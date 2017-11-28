@@ -1,6 +1,6 @@
 import * as GeoJSON from 'geojson';
-import * as  bbox from '@turf/bbox';
-import * as  bboxPolygon from '@turf/bbox-polygon';
+import * as bbox from '@turf/bbox';
+import * as bboxPolygon from '@turf/bbox-polygon';
 import * as center from '@turf/center';
 import * as inside from '@turf/inside';
 import { polygon } from '@turf/helpers';
@@ -62,14 +62,13 @@ export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Point[], f
 
 	const extentArea = area(extentPolygon);
 
-	try {
-		let intersectionArea = 0;
-		footprint.coordinates.forEach(coordinates => {
-			intersectionArea += area(intersect(extentPolygon, polygon(coordinates)));
-		});
+	let intersectionArea = 0;
+	footprint.coordinates.forEach(coordinates => {
+		const intersection = intersect(extentPolygon, polygon(coordinates));
+		if (intersection) {
+			intersectionArea += area(intersection);
+		}
+	});
 
-		return intersectionArea / extentArea;
-	} catch (e) {
-		return 0;
-	}
+	return intersectionArea / extentArea;
 }

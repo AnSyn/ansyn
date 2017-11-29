@@ -43,8 +43,7 @@
 	</div>
 
 	<div class="display-overlay-visualizer">
-		<button
-			class="tooltip-value right"
+		<button class="tooltip-value right"
 			(click)="toggleSubMenu(subMenuEnum.overlays)"
 			[disabled]="isGeoOptionsDisabled"
 			value="Display Overlays"
@@ -61,7 +60,8 @@
 	</div>
 
 	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
-		<button (click)="toggleSubMenu(subMenuEnum.annotations)"
+		<button class="tooltip-value right"
+				(click)="toggleSubMenu(subMenuEnum.annotations)"
 				value="Annotations">
 			<span class="icon-edit"></span>
 		</button>

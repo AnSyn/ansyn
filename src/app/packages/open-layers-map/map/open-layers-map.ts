@@ -50,7 +50,6 @@ export class OpenLayersMap implements IMap<Map> {
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		// this._imageProcessing = new OpenLayersImageProcessing();
 
 		this.initMap(element, layers, position);
 	}
@@ -254,7 +253,6 @@ export class OpenLayersMap implements IMap<Map> {
 		}
 
 		if (layer.getSource() instanceof Raster) {
-			// this._imageProcessing.removeAllRasterOperations(layer.getSource());
 			this._imageProcessing.processImage(null);
 		}
 

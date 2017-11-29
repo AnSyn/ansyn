@@ -22,7 +22,9 @@ export class OpenLayersImageProcessing {
 
 	constructor(layerSource?: Raster) {
 		this.initializeOperations();
-		this.initializeRaster(layerSource);
+		if (layerSource) {
+			this.initializeRaster(layerSource);
+		}
 	}
 
 	initializeRaster(layerRaster: Raster) {
@@ -113,7 +115,7 @@ function cascadeOperations(pixels, data) {
 					operationArgs = that.buildHistogramLut(imageData, operationArgs);
 				}
 				conversionFn.push({
-					fn: operationFn,
+					fn: operationFn.bind(that),
 					args: operationArgs
 				});
 			}
@@ -215,10 +217,10 @@ function buildHistogramLut(imageData) {
 }
 
 function performHistogram(pixel, histogramLut) {
-	const yCbCr = rgb2YCbCr(pixel);
+	const yCbCr = this['rgb2YCbCr'](pixel);
 	yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
 
-	const resultPixel = yCbCr2RGB(yCbCr);
+	const resultPixel = this['yCbCr2RGB'](yCbCr);
 	resultPixel.a = pixel.a;
 	return resultPixel;
 }

@@ -33,6 +33,7 @@
 	<div class="image-manual-processing">
 		<button class="tooltip-value right"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
+				[class.mode-on]="manualProcessingControls.imgProcessActive"
 				[disabled]="flags.get('imageProcessingDisabled')"
 				value="Manual Image Enhancement">
 			<i class="icon-tools-image-processing"></i>
@@ -60,7 +61,8 @@
 	</div>
 
 	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
-		<button (click)="toggleSubMenu(subMenuEnum.annotations)">
+		<button (click)="toggleSubMenu(subMenuEnum.annotations)"
+				value="Annotations">
 			<span class="icon-edit"></span>
 		</button>
 		<span class="tooltiptext">User Annotations</span>

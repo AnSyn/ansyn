@@ -50,7 +50,7 @@ export class OpenLayersMap implements IMap<Map> {
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		this._imageProcessing = new OpenLayersImageProcessing();
+		// this._imageProcessing = new OpenLayersImageProcessing();
 
 		this.initMap(element, layers, position);
 	}
@@ -128,6 +128,7 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	private setMainLayer(layer: Layer) {
+		this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
 		this.removeAllLayers();
 
 		const oldview = this._mapObject.getView();
@@ -253,7 +254,8 @@ export class OpenLayersMap implements IMap<Map> {
 		}
 
 		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing.removeAllRasterOperations(layer.getSource());
+			// this._imageProcessing.removeAllRasterOperations(layer.getSource());
+			this._imageProcessing.processImage(null);
 		}
 
 	}
@@ -375,21 +377,15 @@ export class OpenLayersMap implements IMap<Map> {
 		if (!imageLayer) {
 			return;
 		}
-
-		let rasterSource: Raster = <Raster>imageLayer.getSource();
-		if (!rasterSource) {
-			return;
-		}
-
 		if (shouldPerform) {
 			// the determine the order which by the image processing will occur
 			const processingParams = {
 				Histogram: { auto: true },
 				Sharpness: { auto: true }
 			};
-			this._imageProcessing.processUsingRaster(rasterSource, processingParams);
+			this._imageProcessing.processImage(processingParams);
 		} else {
-			this._imageProcessing.removeAllRasterOperations(rasterSource);
+			this._imageProcessing.processImage(null);
 		}
 	}
 
@@ -398,12 +394,7 @@ export class OpenLayersMap implements IMap<Map> {
 		if (!imageLayer) {
 			return;
 		}
-
-		let rasterSource: Raster = <Raster>imageLayer.getSource();
-		if (!rasterSource) {
-			return;
-		}
-		this._imageProcessing.processUsingRaster(rasterSource, processingParams);
+		this._imageProcessing.processImage(processingParams);
 	}
 
 	// *****-- click events --********

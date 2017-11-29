@@ -9,7 +9,6 @@ import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
 import Layer from 'ol/layer/layer';
-import Raster from 'ol/source/raster';
 import ImageLayer from 'ol/layer/image';
 
 export class OpenLayersDisabledMap implements IMap {
@@ -84,9 +83,6 @@ export class OpenLayersDisabledMap implements IMap {
 	setMainLayer(layer: Layer, currentView: View, position?: MapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
-			if (this.mainLayer.getSource() instanceof Raster) {
-				this._imageProcessing.removeAllRasterOperations(this.mainLayer.getSource());
-			}
 			this.mapObject.render();
 		}
 
@@ -184,21 +180,15 @@ export class OpenLayersDisabledMap implements IMap {
 		if (!imageLayer) {
 			return;
 		}
-
-		let rasterSource: Raster = <Raster>imageLayer.getSource();
-		if (!rasterSource) {
-			return;
-		}
-
 		if (shouldPerform) {
 			// the determine the order which by the image processing will occur
 			const processingParams = {
 				Histogram: { auto: true },
 				Sharpness: { auto: true }
 			};
-			this._imageProcessing.processUsingRaster(rasterSource, processingParams);
+			this._imageProcessing.processImage(processingParams);
 		} else {
-			this._imageProcessing.removeAllRasterOperations(rasterSource);
+			this._imageProcessing.processImage(null);
 		}
 	}
 
@@ -207,12 +197,7 @@ export class OpenLayersDisabledMap implements IMap {
 		if (!imageLayer) {
 			return;
 		}
-
-		let rasterSource: Raster = <Raster>imageLayer.getSource();
-		if (!rasterSource) {
-			return;
-		}
-		this._imageProcessing.processUsingRaster(rasterSource, processingParams);
+		this._imageProcessing.processImage(processingParams);
 	}
 
 	dispose() {

@@ -10,7 +10,7 @@ export interface DateRange {
 }
 
 export interface IFetchParams {
-	region: any; // TODO GeoJSON.DirectGeometryObject;
+	region: GeoJSON.DirectGeometryObject;
 	sensors?: string[];
 	timeRange: DateRange;
 }

@@ -58,13 +58,13 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
-		return <Observable<StartAndEndDate>>this.http.post<Array<Overlay>>(url, params)
+		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
 			.catch(this.handleError);
 	}
 
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
+	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
-		return <Observable<any>>this.http.post<Array<Overlay>>(url, params)
+		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
 			.catch(this.handleError);
 	}
 

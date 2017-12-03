@@ -1,4 +1,4 @@
-import { cloneDeep, isEmpty, isNil } from 'lodash';
+import { cloneDeep, isNil } from 'lodash';
 import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -8,14 +8,20 @@ import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import { Filter, FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { SetFiltersAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	SetFiltersAction
+} from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
+import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -90,6 +96,45 @@ export class FiltersAppEffects {
 	resetFilters$: Observable<ResetFiltersAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
+
+
+	/**
+	 * @type Effect
+	 * @name updateFiltersBadge$
+	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction
+	 * @dependencies filters
+	 * @action SetBadgeAction
+	 */
+	@Effect()
+	updateFiltersBadge$: Observable<any> = this.actions$
+		.ofType(...facetChangesActionType)
+		.withLatestFrom(this.store$.select(filtersStateSelector), (action, filtersState: IFiltersState) => filtersState)
+		.map(({ filters, showOnlyFavorites }: IFiltersState) => {
+			let badge = '0';
+
+			if (showOnlyFavorites) {
+				badge = '★';
+			} else {
+				const enumFilterValues = Array.from(filters.values());
+				// .filter(value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
+
+				badge = enumFilterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => {
+					switch (filterMetadata.constructor) {
+						case EnumFilterMetadata:
+							const someUnchecked = Array.from((<EnumFilterMetadata>filterMetadata).enumsFields.values()).some(({ isChecked }) => !isChecked);
+							return someUnchecked ? badgeNum + 1 : badgeNum;
+						case SliderFilterMetadata:
+							const someNotInfinity = (<SliderFilterMetadata>filterMetadata).start !== -Infinity || (<SliderFilterMetadata>filterMetadata).end !== Infinity;
+							return someNotInfinity ? badgeNum + 1 : badgeNum;
+						default:
+							return badgeNum;
+					}
+				}, 0).toString();
+			}
+
+			return new SetBadgeAction({ key: 'Filters', badge });
+		})
+		.share();
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

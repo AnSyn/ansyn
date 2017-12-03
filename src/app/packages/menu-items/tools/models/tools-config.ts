@@ -8,7 +8,7 @@ export interface IToolsConfig {
 	},
 	Proj4: {
 		ed50: string;
-		ed5036: string;
+		ed50Customized: string;
 	}
 }
 

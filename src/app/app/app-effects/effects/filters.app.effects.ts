@@ -116,7 +116,6 @@ export class FiltersAppEffects {
 				badge = '★';
 			} else {
 				const enumFilterValues = Array.from(filters.values());
-				// .filter(value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
 
 				badge = enumFilterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => {
 					switch (filterMetadata.constructor) {

@@ -3,7 +3,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
 import { CoreModule } from '@ansyn/core';
-import { InfiniteScrollModule } from '@ansyn/core/utils';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
 import { EditCaseComponent } from './components/edit-case/edit-case.component';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
+import { InfiniteScrollModule } from 'ng-infinitescroll';
 
 @NgModule({
 	imports: [

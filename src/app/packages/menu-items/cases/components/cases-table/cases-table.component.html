@@ -16,7 +16,7 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" #tbodyElement>
+	<div class="cases-table-body" (infiniteScroll)="loadCases()" #tbodyElement>
 
 		<div class="cases-table-body-row"
 			 *ngFor="let caseIndex of _range(cases.length)"

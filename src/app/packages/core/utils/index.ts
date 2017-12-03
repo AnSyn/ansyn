@@ -7,4 +7,3 @@ export * from './store-helpers';
 export * from './covert-projections';
 export * from './logs/timer-logs';
 export * from './deep-merge';
-export * from './infinite-scroll';

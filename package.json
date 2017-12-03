@@ -61,8 +61,7 @@
 		"rison": "^0.1.1",
 		"rxjs": "^5.5.2",
 		"wellknown": "^0.5.0",
-		"zone.js": "^0.8.14",
-		"@types/geojson": "1.0.6"
+		"zone.js": "^0.8.14"
 	},
 	"devDependencies": {
 		"@angular/cli": "1.5.2",

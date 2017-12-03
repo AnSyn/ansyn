@@ -32,8 +32,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	private sourceConfigs: Array<{ filters: OverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
-	constructor(@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) private overlaysSources: IMultipleOverlaysSources[]) {
+	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
+				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[]) {
 		super();
 
 		this.prepareWhitelist();

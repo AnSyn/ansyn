@@ -1,5 +1,5 @@
-import { CoordinatesSystem } from '@ansyn/core/utils/covert-projections';
 import { InjectionToken } from '@angular/core';
+import { CoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {
 	GoTo: {

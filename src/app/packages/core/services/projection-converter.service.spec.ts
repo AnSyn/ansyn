@@ -1,11 +1,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
-import { ProjectionConverterService } from './projection-converter.service.ts';
+import { ProjectionConverterService } from './projection-converter.service';
+import { toolsConfig } from '../../menu-items/tools/models';
 
 describe('ProjectionConverterService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [ProjectionConverterService]
+			providers: [ProjectionConverterService, { provide: toolsConfig, useValue: { Proj4: 'fakeWhatever' } }]
 		});
 	});
 

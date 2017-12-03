@@ -15,6 +15,7 @@ before_install:
 # Use yarn for faster installs
 install:
   - yarn
+  - npm ls --depth=0
 
 # Init GUI
 before_script:

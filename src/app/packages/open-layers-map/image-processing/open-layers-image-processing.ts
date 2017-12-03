@@ -59,8 +59,7 @@ export class OpenLayersImageProcessing {
 		};
 	}
 
-	processImage(processingParams: Object) {
-		const operationsArguments = processingParams;
+	processImage(operationsArguments: Object) {
 		// collection operation by processingParams
 		const pixelOperations: ProcessOperation[] = [];
 		const imageOperations: ProcessOperation[] = [];

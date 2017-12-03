@@ -43,12 +43,9 @@ export class ImageProcessingControlComponent {
 	}
 
 	manualImageProcess() {
-		let dispatchValue = this.imgProcessParams;
-		if (isEqual(this.imgProcessParams, this._imgProcessParamDefaults)) {
-			dispatchValue = null;
-		}
-		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
 		this.imgProcessActive = !isEqual(this.imgProcessParams, this._imgProcessParamDefaults);
+		let dispatchValue = (this.imgProcessActive) ? this.imgProcessParams : undefined;
+		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
 	}
 
 	backToDefault(processParam) {

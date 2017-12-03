@@ -1,11 +1,11 @@
 {
 	"name": "@ansyn/router",
-	"version": "1.0.0",
+	"version": "0.2.2",
 	"description": "Ansyn router create connections between: router, store and cases",
 	"main": "index.ts",
 	"scripts": {
 		"test": "npm test"
 	},
 	"author": "",
-	"license": "ISC"
+	"license": "MIT"
 }

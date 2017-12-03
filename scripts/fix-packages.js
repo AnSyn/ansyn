@@ -22,8 +22,7 @@ const packages = [
 	'open-layers-map',
 	'overlays',
 	'router',
-	'status-bar',
-	'utils'
+	'status-bar'
 ];
 
 packages.forEach((pkg) => {

@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/core",
-	"version": "0.0.1",
+	"version": "0.2.2",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -8,12 +8,12 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "~2.4.0",
-		"@angular/core": "^2.4.0",
-		"@types/geojson": "^1.0.3",
-		"@turf/turf": "^4.4.0",
+		"@angular/common": "^5.0.0",
+		"@angular/core": "^5.0.0",
+		"@types/geojson": "1.0.6",
+		"@turf/turf": "^4.7.3",
 		"proj4": "^2.4.3"
 	}
 }

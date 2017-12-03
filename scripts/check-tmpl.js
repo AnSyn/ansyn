@@ -4,7 +4,7 @@ const path = require('path');
 function isSame(source, other, trace = '', tabs = 0) {
 	if (source && typeof source === 'object' && !Array.isArray(source)) {
 		Object.keys(source).forEach(key => {
-			console.log('  '.repeat(tabs), 'should have', key);
+			// console.log('  '.repeat(tabs), 'should have', key);
 			if (!(key in other)) {
 				throw new Error(trace + '.' + key + ' does not exist');
 			}

@@ -16,11 +16,11 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { Case } from '@ansyn/core/models/case.model';
 import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { Filter } from '../../../packages/menu-items/filters/models/filter';
-import { FilterMetadata } from '../../../packages/menu-items/filters/models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata } from '../../../packages/menu-items/filters/models/metadata/enum-filter-metadata';
-import { SetBadgeAction } from '../../../packages/menu/actions/menu.actions';
-import { menuFeatureKey, MenuReducer } from '../../../packages/menu/reducers/menu.reducer';
+import { Filter } from '@ansyn/menu-items/filters/models/filter';
+import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

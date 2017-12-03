@@ -148,7 +148,7 @@ export class ToolsAppEffects {
 
 			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];
-			let manualProcessArgs = null;
+			let manualProcessArgs;
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
 			if (selectedCase.state.overlaysManualProcessArgs) {
@@ -248,7 +248,7 @@ export class ToolsAppEffects {
 		.mergeMap(([activeMap, overlayId, selectedCase]: [CaseMapState, string, Case]) => {
 			updateOverlaysManualProcessArgs(selectedCase, overlayId, null);
 			return [
-				new SetManualImageProcessingArguments({ processingParams: null }),
+				new SetManualImageProcessingArguments({ processingParams: undefined }),
 				new UpdateCaseAction(selectedCase)
 			];
 		});
@@ -385,9 +385,6 @@ export class ToolsAppEffects {
 
 // update per-overlay manual processing param (saved in case)
 function updateOverlaysManualProcessArgs(selectedCase: Case, overlayId: string, processingParams?: Object) {
-	if (!processingParams) {
-		processingParams = null;
-	}
 	if (!selectedCase.state.overlaysManualProcessArgs) {
 		selectedCase.state.overlaysManualProcessArgs = new Object();
 	}

@@ -19,7 +19,7 @@ export const toolsInitialState: IToolsState = {
 	activeCenter: [0, 0],
 	gotoExpand: false,
 	annotationMode: undefined,
-	manualImageProcessingParams: null
+	manualImageProcessingParams: undefined
 };
 
 export const toolsFeatureKey = 'tools';

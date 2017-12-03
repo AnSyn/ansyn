@@ -7,6 +7,7 @@ import { PlaceholderComponent } from './components/placeholder/placeholder.compo
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
+import { ProjectionConverterService } from './services/projection-converter.service';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -20,7 +21,7 @@ const coreComponents = [
 		CommonModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer)
 	],
-	providers: [GenericTypeResolverService],
+	providers: [GenericTypeResolverService, ProjectionConverterService],
 	exports: coreComponents,
 	declarations: coreComponents
 })

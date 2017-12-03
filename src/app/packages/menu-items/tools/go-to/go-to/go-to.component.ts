@@ -11,11 +11,10 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
 import { isEqual } from 'lodash';
-import { CoordinatesSystem } from '@ansyn/core/utils';
-import { convertByProjectionDatum } from '@ansyn/core/utils/covert-projections';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { CoordinatesSystem } from '@ansyn/core/models';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -87,7 +86,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	submitGoTo(): void {
-		const goToInput = convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
+		const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
 		this.store$.dispatch(new GoToAction(goToInput));
 	}
 
@@ -96,7 +95,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
-		this.inputs[inputKey] = convertByProjectionDatum(coords, convertFrom, convertTo);
+		this.inputs[inputKey] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, convertTo);
 		this.dispatchInputUpdated(coords, convertFrom);
 	}
 
@@ -109,7 +108,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	private dispatchInputUpdated(coords: number[], convertFrom: CoordinatesSystem) {
-		const toWgs84 = convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
+		const toWgs84 = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
 		this.store$.dispatch(new GoToInputChangeAction(toWgs84));
 	}
 }

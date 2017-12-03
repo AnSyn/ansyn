@@ -1,13 +1,8 @@
 import { isEqual as _isEqual } from 'lodash';
 import * as proj4 from 'proj4';
-import { Injectable, Injector } from '@angular/core';
-import { IToolsConfig } from '@ansyn/menu-items/tools/models';
-
-export interface CoordinatesSystem {
-	datum: 'wgs84' | 'ed50';
-	projection: 'geo' | 'utm';
-}
-
+import { Inject, Injectable } from '@angular/core';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
+import { CoordinatesSystem } from '../models';
 export interface UtmZone {
 	zone: number;
 	utmProj: string;
@@ -15,7 +10,7 @@ export interface UtmZone {
 
 @Injectable()
 export class ProjectionConverterService {
-	constructor(protected injector: Injector, protected toolsConfig: IToolsConfig) {
+	constructor(@Inject(toolsConfig) protected toolsConfigProj: IToolsConfig) {
 	}
 
 	convertByProjectionDatum(coords: number[], from: CoordinatesSystem, to: CoordinatesSystem) {
@@ -39,7 +34,7 @@ export class ProjectionConverterService {
 
 		if (fromEd50Utm && toWgs84Geo) {
 			const zone = coords[2];
-			const utmProj = this.toolsConfig.Proj4.ed50.replace('${zone}', zone.toString());
+			const utmProj = this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
 			console.log(utmProj + 'dfdfd');
 			const conv = (<any>proj4).default(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
 			return [...conv];
@@ -48,6 +43,6 @@ export class ProjectionConverterService {
 
 	getZoneUtmProj(lng: number, hemisphere: number): UtmZone {
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-		return { zone: zone, utmProj: this.toolsConfig.Proj4.ed50.replace('${zone}', zone.toString()) };
+		return { zone: zone, utmProj: this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString()) };
 	}
 }

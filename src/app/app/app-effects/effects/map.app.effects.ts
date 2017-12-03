@@ -181,15 +181,15 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): any[] => {
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): [Overlay, string, Position] => {
 			const overlay = action.payload.overlay;
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
 			return [overlay, mapId, map.data.position];
 		})
-		.filter(([overlay]: [Overlay]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.flatMap(([overlay, mapId, position]: [Overlay, string, Position]) => {
+		.filter(([overlay, _1, _2]: [Overlay, string, Position]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<any, any>(([overlay, mapId, position]: [Overlay, string, Position]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			const communicator = this.imageryCommunicatorService.provide(mapId);

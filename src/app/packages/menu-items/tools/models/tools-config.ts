@@ -5,6 +5,10 @@ export interface IToolsConfig {
 	GoTo: {
 		from: CoordinatesSystem;
 		to: CoordinatesSystem;
+	},
+	Proj4: {
+		ed50: string;
+		ed5036: string;
 	}
 }
 

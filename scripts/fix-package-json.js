@@ -1,26 +1,8 @@
 const fs = require('fs');
 
-const packages = [
-	'cesium-map',
-	'context',
-	'core',
-	'imagery',
-	'login',
-	'map-facade',
-	'menu',
-	'menu-items',
-	'open-layer-center-marker-plugin',
-	'open-layer-visualizers',
-	'open-layers-map',
-	'overlays',
-	'router',
-	'status-bar'
-];
-
 const mainPackage = JSON.parse(String(fs.readFileSync('package.json', 'utf8')));
 
-packages.forEach((pkg) => {
-	const fileName = 'src/app/packages/' + pkg + '/package.json';
+function fix(fileName) {
 	const packageJson = JSON.parse(String(fs.readFileSync(fileName, 'utf8')));
 	packageJson.version = mainPackage.version;
 	packageJson.license = mainPackage.license;
@@ -42,4 +24,29 @@ packages.forEach((pkg) => {
 	}
 
 	fs.writeFileSync(fileName, JSON.stringify(packageJson, null, '\t'));
+}
+
+fix('src/app/app/package.json');
+fix('src/assets/package.json');
+
+const packages = [
+	'cesium-map',
+	'context',
+	'core',
+	'imagery',
+	'login',
+	'map-facade',
+	'menu',
+	'menu-items',
+	'open-layer-center-marker-plugin',
+	'open-layer-visualizers',
+	'open-layers-map',
+	'overlays',
+	'router',
+	'status-bar'
+];
+
+packages.forEach((pkg) => {
+	const fileName = 'src/app/packages/' + pkg + '/package.json';
+	fix(fileName);
 });

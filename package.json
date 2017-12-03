@@ -47,7 +47,7 @@
 		"@turf/turf": "^4.7.3",
 		"angular-tree-component": "^6.0.0",
 		"angular2-uuid": "1.1.1",
-		"ansyn-event-drops": "^0.4.12",
+		"ansyn-event-drops": "^0.4.11",
 		"core-js": "^2.4.1",
 		"crypto-js": "^3.1.9-1",
 		"d3": "^4.11.0",

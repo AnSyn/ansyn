@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
@@ -180,7 +180,7 @@ export class MapAppEffects {
 	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageAction?
 	 */
 	@Effect()
-	onDisplayOverlay$: Observable<any> = this.actions$
+	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): [Overlay, string, Position] => {
 			const overlay = action.payload.overlay;
@@ -188,8 +188,8 @@ export class MapAppEffects {
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
 			return [overlay, mapId, map.data.position];
 		})
-		.filter(([overlay, _1, _2]: [Overlay, string, Position]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<any, any>(([overlay, mapId, position]: [Overlay, string, Position]) => {
+		.filter(([overlay]: [Overlay, string, Position]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<[Overlay, string, Position], any>(([overlay, mapId, position]: [Overlay, string, Position]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			const communicator = this.imageryCommunicatorService.provide(mapId);

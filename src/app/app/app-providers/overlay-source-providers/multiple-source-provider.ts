@@ -155,7 +155,22 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		const startEnd = Promise.all(this.sourceConfigs
+			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
+			.then(dates => dates.map(d =>
+				({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
+			.then(dates => dates.reduce((d1, d2) => {
+				if (!d1) {
+					return d2;
+				}
+				return {
+					startDate: d1.startDate < d2.startDate ? d1.startDate : d2.startDate,
+					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate,
+				};
+			}, null))
+			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
+
+		return Observable.from(startEnd);
 	}
 }
 

@@ -4,34 +4,42 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	filtersFeatureKey,
 	FiltersReducer,
 	filtersStateSelector
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { InitializeFiltersAction, SetFiltersAction, UpdateCaseAction } from '../../../index';
-import {
-	InitializeFiltersSuccessAction,
-	ResetFiltersAction
-} from '@ansyn/menu-items/filters/actions/filters.actions';
+import { InitializeFiltersAction, SetFiltersAction, SliderFilterMetadata, UpdateCaseAction } from '../../../index';
+import { InitializeFiltersSuccessAction, ResetFiltersAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import {
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysStateSelector
-} from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { Filter } from '../../../packages/menu-items/filters/models/filter';
+import { FilterMetadata } from '../../../packages/menu-items/filters/models/metadata/filter-metadata.interface';
+import { EnumFilterMetadata } from '../../../packages/menu-items/filters/models/metadata/enum-filter-metadata';
+import { SetBadgeAction } from '../../../packages/menu/actions/menu.actions';
+import { menuFeatureKey, MenuReducer } from '../../../packages/menu/reducers/menu.reducer';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
+
+	const filterMetadata: FilterMetadata = new EnumFilterMetadata();
+	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
+	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
+	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
+
+	const filterKey: Filter = { modelName: 'enumModel1', displayName: 'Enum Model', type: 'Enum' };
+	const filterKey2: Filter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: 'Enum' };
+	const filterKey3: Filter = { modelName: 'SliderModel', displayName: 'Slider Model', type: 'Slider' };
+	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: 'Slider' };
+
+	const filters = new Map([ [filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4] ]);
+
+
 	const selectedCase: Case = {
 		id: 'case1',
 		state: {
@@ -52,7 +60,8 @@ describe('Filters app effects', () => {
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
 					[filtersFeatureKey]: FiltersReducer,
-					[overlaysFeatureKey]: OverlayReducer
+					[overlaysFeatureKey]: OverlayReducer,
+					[menuFeatureKey]: MenuReducer
 				})
 			],
 			providers: [
@@ -65,6 +74,7 @@ describe('Filters app effects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		store.dispatch(new SelectCaseAction(selectedCase));
+		store.dispatch(new InitializeFiltersSuccessAction(filters))
 	}));
 
 	beforeEach(inject([FiltersAppEffects], (_filtersAppEffects: FiltersAppEffects) => {
@@ -114,6 +124,24 @@ describe('Filters app effects', () => {
 		actions = hot('--a--', { a: new LoadOverlaysAction() });
 		const expectedResults = cold('--b--', { b: new ResetFiltersAction() });
 		expect(filtersAppEffects.resetFilters$).toBeObservable(expectedResults);
+	});
+
+	fit('updateFiltersBadge$ should calculate filters number', () => {
+		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', { count: 10, isChecked: true }); // (isChecked) => no changes
+		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', { count: 10, isChecked: false }); // (!isChecked) => 1
+
+		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', { count: 10, isChecked: true }); // (isChecked) => no changes
+		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', { count: 10, isChecked: false }); // (!isChecked) => 2
+
+		(<SliderFilterMetadata>filterMetadata3).start = -Infinity;
+		(<SliderFilterMetadata>filterMetadata3).end = Infinity; // (start = -Infinity && end = Infinity ) => no changes
+
+		(<SliderFilterMetadata>filterMetadata3).start = -2;
+		(<SliderFilterMetadata>filterMetadata3).end = 2; // (start !== -Infinity || end !== Infinity ) => 3
+
+		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
+		const expectedResults = cold('--b--', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
+		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
 
 	it('updateCaseFacets function', (done) => {

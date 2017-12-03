@@ -127,9 +127,7 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	private setMainLayer(layer: Layer) {
-		this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
 		this.removeAllLayers();
-
 		const oldview = this._mapObject.getView();
 		const currentZoom = oldview.getZoom();
 		const currentCenter = oldview.getCenter();
@@ -149,9 +147,15 @@ export class OpenLayersMap implements IMap<Map> {
 			projection: layer.getSource().getProjection(),
 			minZoom: 2.5
 		});
-
 		this._mapObject.setView(view);
 		this.addLayer(layer);
+
+		if (layer.getSource() instanceof Raster) {
+			this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
+		} else {
+			this._imageProcessing = null;
+		}
+
 	}
 
 	addInteraction(interaction) {
@@ -252,7 +256,7 @@ export class OpenLayersMap implements IMap<Map> {
 			this._mapObject.render();
 		}
 
-		if (layer.getSource() instanceof Raster) {
+		if (this._imageProcessing) {
 			this._imageProcessing.processImage(null);
 		}
 
@@ -372,7 +376,7 @@ export class OpenLayersMap implements IMap<Map> {
 
 	public setAutoImageProcessing(shouldPerform: boolean = false): void {
 		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer) {
+		if (!imageLayer || !this._imageProcessing) {
 			return;
 		}
 		if (shouldPerform) {
@@ -389,7 +393,7 @@ export class OpenLayersMap implements IMap<Map> {
 
 	public setManualImageProcessing(processingParams: Object) {
 		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer) {
+		if (!imageLayer || !this._imageProcessing) {
 			return;
 		}
 		this._imageProcessing.processImage(processingParams);

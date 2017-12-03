@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/menu",
-	"version": "0.0.1",
+	"version": "0.2.2",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -8,10 +8,10 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "~2.4.0",
-		"@angular/core": "^2.4.0",
-		"@ansyn/core": "^0.0.1"
+		"@angular/common": "^5.0.0",
+		"@angular/core": "^5.0.0",
+		"@ansyn/core": "0.2.2"
 	}
 }

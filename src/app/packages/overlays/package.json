@@ -1,14 +1,14 @@
 {
 	"name": "@ansyn/overlays",
-	"version": "1.0.0",
+	"version": "0.2.2",
 	"description": "overlays component to show data with graphic touch",
 	"main": "index.ts",
 	"scripts": {
 		"test": "npm test"
 	},
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"peerDependencies": {
-		"ansyn-event-drops": "^0.4.1"
+		"ansyn-event-drops": "^0.4.11"
 	}
 }

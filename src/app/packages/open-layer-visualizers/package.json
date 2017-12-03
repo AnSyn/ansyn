@@ -1,17 +1,17 @@
 {
 	"name": "@ansyn/open-layer-visualizers",
-	"version": "0.0.1",
+	"version": "0.2.2",
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"peerDependencies": {
-		"ol": "^4.3.1",
-		"@angular/common": "~2.4.0",
-		"@angular/core": "^2.4.0",
-		"@ansyn/imagery": "~0.0.0"
+		"ol": "^4.5.0",
+		"@angular/common": "^5.0.0",
+		"@angular/core": "^5.0.0",
+		"@ansyn/imagery": "0.2.2"
 	}
 }

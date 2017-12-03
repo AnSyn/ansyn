@@ -120,6 +120,6 @@ export class FiltersAppEffects {
 	}
 
 	isMetadataEmpty(metadata: any): boolean {
-		return isNil(metadata) || (Array.isArray(metadata) && isEmpty(metadata));
+		return isNil(metadata); // || (Array.isArray(metadata) && isEmpty(metadata));
 	}
 }

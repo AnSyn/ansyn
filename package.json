@@ -20,12 +20,14 @@
 		"log": "git log --pretty=format:\"%H | %<(15)%an | %ad | %s%n\" --since=\"12 hours ago\" --date=\"iso8601\" > git-hash-log.txt",
 		"e2e": "ng e2e",
 		"fix-packages": "node scripts/fix-packages",
+		"fix-package-json": "node scripts/fix-package-json",
 		"check-template": "node scripts/check-tmpl",
 		"docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3"
 	},
 	"precommit": [
-		"lint",
 		"fix-packages",
+		"fix-package-json",
+		"lint",
 		"check-template"
 	],
 	"private": true,
@@ -44,7 +46,7 @@
 		"@ngrx/store": "^4.1.1",
 		"@turf/turf": "^4.7.3",
 		"angular-tree-component": "^6.0.0",
-		"angular2-uuid": "latest",
+		"angular2-uuid": "1.1.1",
 		"ansyn-event-drops": "^0.4.11",
 		"core-js": "^2.4.1",
 		"crypto-js": "^3.1.9-1",
@@ -59,7 +61,7 @@
 		"proj4": "^2.4.3",
 		"reselect": "^3.0.0",
 		"rison": "^0.1.1",
-		"rxjs": "^5.5.2",
+		"rxjs": "5.5.2",
 		"wellknown": "^0.5.0",
 		"zone.js": "^0.8.14"
 	},

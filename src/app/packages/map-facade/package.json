@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/map-facade",
-	"version": "0.0.1",
+	"version": "0.2.2",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -8,13 +8,13 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "~2.4.0",
-		"@angular/core": "^2.4.0",
-		"@ansyn/core": "^0.0.1",
-		"@ngrx/effects": "^2.0.2",
-		"@ngrx/core": "~1.2.0",
-		"@ngrx/store": "^2.2.1"
+		"@angular/common": "^5.0.0",
+		"@angular/core": "^5.0.0",
+		"@ansyn/core": "0.2.2",
+		"@ngrx/effects": "^4.1.1",
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^4.1.1"
 	}
 }

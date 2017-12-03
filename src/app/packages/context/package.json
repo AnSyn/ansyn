@@ -1,6 +1,7 @@
 {
 	"name": "@ansyn/context",
-	"version": "0.0.1",
+	"version": "0.2.2",
 	"main": "index.ts",
-	"dependencies": {}
+	"dependencies": {},
+	"license": "MIT"
 }

@@ -27,7 +27,6 @@ export class ProjectionConverterService {
 			const lng = coords[0];
 			const hemisphere = coords[1];
 			const zoneUtmProj = this.getZoneUtmProj(lng, hemisphere);
-			console.log(zoneUtmProj.utmProj);
 			const conv = (<any>proj4).default('EPSG:4326', zoneUtmProj.utmProj, coords);
 			return [...conv, zoneUtmProj.zone];
 		}
@@ -35,7 +34,6 @@ export class ProjectionConverterService {
 		if (fromEd50Utm && toWgs84Geo) {
 			const zone = coords[2];
 			const utmProj = this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
-			console.log(utmProj + 'dfdfd');
 			const conv = (<any>proj4).default(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
 			return [...conv];
 		}

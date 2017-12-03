@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { ProjectionConverterService } from './projection-converter.service';
-import { toolsConfig } from '../../menu-items/tools/models';
+import { toolsConfig } from '@ansyn/menu-items/tools/models';
 
 describe('ProjectionConverterService', () => {
 	beforeEach(() => {

@@ -63,36 +63,6 @@ export class MenuAppEffects {
 		.ofType<UnSelectMenuItemAction>(MenuActionTypes.UNSELECT_MENU_ITEM)
 		.map(() => new GoToExpandAction(false));
 
-	/**
-	 * @type Effect
-	 * @name updateFiltersBadge$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction
-	 * @dependencies filters
-	 * @action SetBadgeAction
-	 */
-	@Effect()
-	updateFiltersBadge$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType)
-		.withLatestFrom(this.store$.select(filtersStateSelector), (action, filtersState: IFiltersState) => filtersState)
-		.map(({ filters, showOnlyFavorites }: IFiltersState) => {
-			let badge = '0';
-
-			if (showOnlyFavorites) {
-				badge = '★';
-			} else {
-				const enumFilterValues = Array.from(filters.values())
-					.filter(value => value instanceof EnumFilterMetadata) as EnumFilterMetadata[];
-
-				badge = enumFilterValues.reduce((badgeNum: number, { enumsFields }) => {
-					const someUnchecked = Array.from(enumsFields.values()).some(({ isChecked }) => !isChecked);
-					return someUnchecked ? badgeNum + 1 : badgeNum;
-				}, 0).toString();
-			}
-
-			return new SetBadgeAction({ key: 'Filters', badge });
-		})
-		.share();
-
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 }

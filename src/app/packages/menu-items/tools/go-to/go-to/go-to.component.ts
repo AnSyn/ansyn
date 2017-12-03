@@ -15,6 +15,7 @@ import { CoordinatesSystem } from '@ansyn/core/utils';
 import { convertByProjectionDatum } from '@ansyn/core/utils/covert-projections';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
+import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -65,8 +66,8 @@ export class GoToComponent implements OnInit {
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
-			this.inputs.from = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
-			this.inputs.to = convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+			this.inputs.from = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
+			this.inputs.to = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
 			this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 		});
 
@@ -82,7 +83,7 @@ export class GoToComponent implements OnInit {
 		});
 	}
 
-	constructor(protected store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
+	constructor(protected store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig, protected projectionConverterService: ProjectionConverterService) {
 	}
 
 	submitGoTo(): void {

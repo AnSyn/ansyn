@@ -5,12 +5,14 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import { CoreModule } from '../../../../core';
+import { CoreModule } from '@ansyn/core';
+import { ProjectionConverterService } from '@ansyn/core/services';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
 	let fixture: ComponentFixture<GoToComponent>;
 	let store: Store<IToolsState>;
+	let projectionConverterService: ProjectionConverterService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -18,19 +20,24 @@ describe('GoToComponent', () => {
 			providers: [
 				{
 					provide: toolsConfig, useValue: {
-					GoTo: {
-						from: '',
-						to: ''
+						GoTo: {
+							from: '',
+							to: ''
+						},
+						Proj4: {
+							ed50Extended: '',
+							ed50: ''
+						}
 					}
-				}
 				}
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<IToolsState>) => {
+	beforeEach(inject([Store, ProjectionConverterService], (_store: Store<IToolsState>, _projectionConverterService: ProjectionConverterService) => {
 		store = _store;
+		projectionConverterService = _projectionConverterService;
 		fixture = TestBed.createComponent(GoToComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -41,14 +48,14 @@ describe('GoToComponent', () => {
 	});
 
 	describe('submitGoTo', () => {
-		// it('should dispatch GoToAction with convertByProjectionDatum result', () => {
-		// 	spyOn(store, 'dispatch');
-		//
-		// 	spyOn(utilCovertProjections, 'convertByProjectionDatum').and.returnValue([0, 0]);
-		//
-		// 	component.submitGoTo();
-		// 	expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0, 0]));
-		// });
+		it('should dispatch GoToAction with convertByProjectionDatum result', () => {
+			spyOn(store, 'dispatch');
+
+			spyOn(projectionConverterService, 'convertByProjectionDatum').and.returnValue([0, 0]);
+
+			component.submitGoTo();
+			expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0, 0]));
+		});
 
 		it('"submit" button should call submitGoTo', () => {
 			spyOn(component, 'submitGoTo');

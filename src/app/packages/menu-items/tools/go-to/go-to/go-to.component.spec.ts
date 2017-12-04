@@ -25,8 +25,8 @@ describe('GoToComponent', () => {
 							to: ''
 						},
 						Proj4: {
-							ed50Extended: '',
-							ed50: ''
+							ed50: "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
+							ed50Customized: ""
 						}
 					}
 				}

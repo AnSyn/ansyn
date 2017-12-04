@@ -3,6 +3,7 @@ import * as proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 import { CoordinatesSystem } from '../models';
+
 export interface UtmZone {
 	zone: number;
 	utmProj: string;
@@ -33,7 +34,7 @@ export class ProjectionConverterService {
 
 		if (fromEd50Utm && toWgs84Geo) {
 			const zone = coords[2];
-			const utmProj = this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
+			const utmProj = this.getUtmFromConf(zone);
 			const conv = (<any>proj4).default(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
 			return [...conv];
 		}
@@ -41,6 +42,10 @@ export class ProjectionConverterService {
 
 	getZoneUtmProj(lng: number, hemisphere: number): UtmZone {
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-		return { zone: zone, utmProj: this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString()) };
+		return { zone: zone, utmProj: this.getUtmFromConf(zone) };
+	}
+
+	getUtmFromConf(zone: number): string {
+		return this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString())
 	}
 }

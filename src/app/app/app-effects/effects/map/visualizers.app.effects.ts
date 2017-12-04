@@ -534,18 +534,20 @@ export class VisualizersAppEffects {
 			if (!iconVisualizer) {
 				return;
 			}
-			const pinPoint: GeoJSON.Point = {
-				type: 'Point',
-				// calculate projection?
-				coordinates: point
-			};
-			const pinFeatureJson: GeoJSON.Feature<any> = {
-				type: 'Feature',
-				geometry: pinPoint,
-				properties: {}
-			};
 			iconVisualizer.clearEntities();
-			iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
+			if (point) {
+				const pinPoint: GeoJSON.Point = {
+					type: 'Point',
+					// calculate projection?
+					coordinates: point
+				};
+				const pinFeatureJson: GeoJSON.Feature<any> = {
+					type: 'Feature',
+					geometry: pinPoint,
+					properties: {}
+				};
+				iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
+			}
 		}
 	}
 

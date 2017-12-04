@@ -14,7 +14,7 @@ import {
 	LoadCasesSuccessAction,
 	LoadDefaultCaseAction,
 	OpenModalAction,
-	SaveCaseAsAction,
+	SaveCaseAsAction, SaveCaseAsSuccessAction,
 	SelectCaseAction,
 	SelectCaseByIdAction,
 	UpdateCaseAction,
@@ -106,7 +106,7 @@ describe('CasesEffects', () => {
 	it('addCaseSuccess$ should select the case being added', () => {
 		let addedCase: Case = { id: 'newCaseId', name: 'newCaseName' };
 		actions = hot('--a--', { a: new AddCaseSuccessAction(addedCase) });
-		const expectedResults = cold('--b--', { b: new SelectCaseByIdAction(addedCase.id) });
+		const expectedResults = cold('--b--', { b: new SelectCaseAction(addedCase) });
 		expect(casesEffects.addCaseSuccess$).toBeObservable(expectedResults);
 	});
 
@@ -154,8 +154,9 @@ describe('CasesEffects', () => {
 
 	it('onSaveCaseAs$ should add a default case', () => {
 		const selectedCase = { id: 'selectedCaseId' } as Case;
+		spyOn(casesService, 'createCase').and.returnValue(Observable.of(selectedCase))
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
-		const expectedResults = cold('--b--', { b: new AddCaseAction(selectedCase) });
+		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
 	});
 

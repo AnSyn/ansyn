@@ -89,8 +89,11 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
 		.filter(([action, statusBarState, casesState]) => Boolean(casesState.selectedCase))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
-			const point = getPointByPolygon(casesState.selectedCase.state.region);
-			return new DrawPinPointAction(point.coordinates);
+			let coordinates = null;
+			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+				coordinates = getPointByPolygon(casesState.selectedCase.state.region).coordinates;
+			}
+			return new DrawPinPointAction(coordinates);
 		});
 
 	/**

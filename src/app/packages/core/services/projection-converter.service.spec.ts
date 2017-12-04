@@ -5,10 +5,11 @@ import { toolsConfig } from '@ansyn/menu-items/tools/models';
 
 describe('ProjectionConverterService', () => {
 	let projectionConverterService: ProjectionConverterService;
-	let loned50 = 578040;
-	let latd50 = 4507589;
-	let lonwgs84 = -74.07609;
-	let latwgs84 = 40.71401;
+	const loned50 = 578040;
+	const latd50 = 4507589;
+	const lonwgs84 = -74.07609;
+	const latwgs84 = 40.71401;
+	const zoneForTest = 18;
 
 
 	beforeEach(() => {
@@ -36,11 +37,11 @@ describe('ProjectionConverterService', () => {
 		const result = projectionConverterService.convertByProjectionDatum([lonwgs84, latwgs84],
 			{ datum: 'wgs84', projection: 'geo' },
 			{ datum: 'ed50', projection: 'utm' }).map((num) => Math.floor(num));
-		expect(result).toEqual([loned50, latd50, 18]);
+		expect(result).toEqual([loned50, latd50, zoneForTest]);
 	});
 
 	it('should convert ed50', () => {
-		const result = projectionConverterService.convertByProjectionDatum([loned50, latd50, 18],
+		const result = projectionConverterService.convertByProjectionDatum([loned50, latd50, zoneForTest],
 			{ datum: 'ed50', projection: 'utm' },
 			{ datum: 'wgs84', projection: 'geo' }).map((num) => +num.toFixed(5));
 		expect(result).toEqual([lonwgs84, latwgs84]);

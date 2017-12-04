@@ -6,7 +6,7 @@ import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/
 import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
 import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SaveCaseAsSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
@@ -58,31 +58,12 @@ export class RouterAppEffects {
 	 */
 	@Effect()
 	selectCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: SelectCaseAction, router: IRouterState): any[] => {
+		.ofType(CasesActionTypes.SELECT_CASE, CasesActionTypes.SAVE_CASE_AS_SUCCESS)
+		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: (SelectCaseAction | SaveCaseAsSuccessAction), router: IRouterState): any[] => {
 			return [payload, router.caseId];
 		})
 		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== CasesService.defaultCase.id && selectedCase.id !== routerCaseId)
 		.map(([selectedCase]: [Case]) => new NavigateCaseTriggerAction(selectedCase.id));
-
-	/**
-	 * @type Effect
-	 * @name selectDefaultCaseUpdateRouter$
-	 * @ofType SelectCaseAction
-	 * @dependencies router
-	 * @filter Selected case is default, and router or query not empty
-	 * @action NavigateCaseTriggerAction
-	 */
-	@Effect()
-	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
-		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }, routerState: IRouterState): any => [payload, routerState])
-		.filter(([selectedCase, { caseId, queryParams }]: [Case, IRouterState]) => {
-			const caseIdRouterNotEmpty = Boolean(caseId);
-			const queryParamsNotEmpty = Boolean(queryParams);
-			return selectedCase.id === CasesService.defaultCase.id && (caseIdRouterNotEmpty || queryParamsNotEmpty);
-		})
-		.map(() => new NavigateCaseTriggerAction());
 
 	constructor(protected actions$: Actions, protected store$: Store<any>) {
 	}

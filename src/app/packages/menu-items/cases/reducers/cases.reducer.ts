@@ -33,6 +33,13 @@ export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeat
 export function CasesReducer(state: ICasesState = initialCasesState, action: CasesActions) {
 
 	switch (action.type) {
+		case CasesActionTypes.SAVE_CASE_AS_SUCCESS: {
+			const casesAdded: Case[] = [
+				action.payload,
+				...state.cases
+			];
+			return { ...state, cases: casesAdded, selectedCase: action.payload };
+		}
 
 		case CasesActionTypes.ADD_CASE:
 			return Object.assign({}, state);

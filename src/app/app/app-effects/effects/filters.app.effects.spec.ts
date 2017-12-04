@@ -4,26 +4,40 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { casesFeatureKey, CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	initialCasesState
+} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	filtersFeatureKey,
 	FiltersReducer,
-	filtersStateSelector
+	initialFiltersState
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { SetFiltersAction, SliderFilterMetadata, UpdateCaseAction } from '../../../index';
-import { InitializeFiltersSuccessAction, ResetFiltersAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SetFiltersAction, SliderFilterMetadata } from '../../../index';
+import {
+	InitializeFiltersAction,
+	InitializeFiltersSuccessAction,
+	ResetFiltersAction
+} from '@ansyn/menu-items/filters/actions/filters.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { LoadOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
-import { LoadOverlaysSuccessAction } from '../../../packages/overlays/actions/overlays.actions';
-import { overlaysStateSelector } from '../../../packages/overlays/reducers/overlays.reducer';
-import { InitializeFiltersAction } from '../../../packages/menu-items/filters/actions/filters.actions';
+import { initialMenuState, menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+import 'rxjs/add/observable/of';
+import { filtersStateSelector } from '../../../packages/menu-items/filters/reducer/filters.reducer';
+import { menuStateSelector } from '../../../packages/menu/reducers/menu.reducer';
+import { UpdateCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -34,14 +48,15 @@ describe('Filters app effects', () => {
 	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
 	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
 	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
-
 	const filterKey: Filter = { modelName: 'enumModel1', displayName: 'Enum Model', type: 'Enum' };
 	const filterKey2: Filter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: 'Enum' };
 	const filterKey3: Filter = { modelName: 'SliderModel', displayName: 'Slider Model', type: 'Slider' };
 	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: 'Slider' };
-
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
+	const filtersState = { ...initialFiltersState };
+	const casesState = { ...initialCasesState };
+	const overlaysState = { ...overlaysInitialState };
 
 	const selectedCase: Case = {
 		id: 'case1',
@@ -76,8 +91,15 @@ describe('Filters app effects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new SelectCaseAction(selectedCase));
-		store.dispatch(new InitializeFiltersSuccessAction(filters));
+		const fakeStore = new Map(<any>[
+			[overlaysStateSelector, overlaysState],
+			[filtersStateSelector, filtersState],
+			[casesStateSelector, casesState],
+			[menuStateSelector, initialMenuState]
+		]);
+		filtersState.filters = new Map();
+		casesState.selectedCase = selectedCase;
+		spyOn(store, 'select').and.callFake((type) => Observable.of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([FiltersAppEffects], (_filtersAppEffects: FiltersAppEffects) => {
@@ -85,6 +107,7 @@ describe('Filters app effects', () => {
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
+		filtersState.filters = new Map();
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
 		const expectedResults = cold('--b--', {
 			b: new SetFiltersAction({
@@ -96,31 +119,19 @@ describe('Filters app effects', () => {
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 
-	// @ToDo test for updateCaseFacets$ effect without 'select'
-	// it('updateCaseFacets$ effect', (done) => {
-	// 	actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-	// 	store.select(filtersStateSelector).subscribe(filtersState => {
-	// 		store.select(casesStateSelector).pluck('selectedCase').subscribe(selectedCase => {
-	// 			const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
-	// 			const expectedResults = cold('--b--', { b: new UpdateCaseAction(update) });
-	// 			expect(filtersAppEffects.updateCaseFacets$).toBeObservable(expectedResults);
-	// 			done();
-	// 		});
-	// 	});
-	// });
+	it('updateCaseFacets$ effect', () => {
+		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
+		const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
+		const expectedResults = cold('--b--', { b: new UpdateCaseAction(update) });
+		expect(filtersAppEffects.updateCaseFacets$).toBeObservable(expectedResults);
+	});
 
-	it('initializeFilters$ effect', (done) => {
+	it('initializeFilters$ effect', () => {
 		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
-
-		store.select(overlaysStateSelector).subscribe(overlaysState => {
-			const overlays = Array.from(overlaysState.overlays.values());
-			store.select(casesStateSelector).pluck('selectedCase').subscribe(selectedCase => {
-				const facets = (<Case>selectedCase).state.facets;
-				const expectedResults = cold('--b--', { b: new InitializeFiltersAction({ overlays, facets }) });
-				expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
-				done();
-			});
-		});
+		const overlays = Array.from(overlaysState.overlays.values());
+		const facets = (<Case>selectedCase).state.facets;
+		const expectedResults = cold('--b--', { b: new InitializeFiltersAction({ overlays, facets }) });
+		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
 	});
 
 	it('resetFilters$ effect', () => {
@@ -130,6 +141,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('updateFiltersBadge$ should calculate filters number', () => {
+		filtersState.filters = filters;
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', { count: 10, isChecked: true }); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', { count: 10, isChecked: false }); // (!isChecked) => 1
 
@@ -147,17 +159,11 @@ describe('Filters app effects', () => {
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
 
-	// @ToDo test for updateCaseFacets function without 'select'
-	// fit('updateCaseFacets function', (done) => {
-	// 	store.select(filtersStateSelector).subscribe(filtersState => {
-	// 		store.select(casesStateSelector).pluck('selectedCase').subscribe(selectedCase => {
-	// 			(<any>selectedCase).state.facets = { filters: [], showOnlyFavorites: false };
-	// 			const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
-	// 			expect(update).toEqual(selectedCase);
-	// 			done();
-	// 		});
-	// 	});
-	// });
+	it('updateCaseFacets function', () => {
+		(<any>selectedCase).state.facets = { filters: [], showOnlyFavorites: false };
+		const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
+		expect(update).toEqual(selectedCase);
+	});
 
 	describe('isMetadataEmpty', () => {
 		const empty = [undefined, null];

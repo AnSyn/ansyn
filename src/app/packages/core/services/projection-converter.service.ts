@@ -1,5 +1,5 @@
 import { isEqual as _isEqual } from 'lodash';
-import * as proj4 from 'proj4';
+import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 import { CoordinatesSystem } from '../models';
@@ -28,24 +28,26 @@ export class ProjectionConverterService {
 			const lng = coords[0];
 			const hemisphere = coords[1];
 			const zoneUtmProj = this.getZoneUtmProj(lng, hemisphere);
-			const conv = (<any>proj4).default('EPSG:4326', zoneUtmProj.utmProj, coords);
+			const conv = proj4('EPSG:4326', zoneUtmProj.utmProj, coords);
 			return [...conv, zoneUtmProj.zone];
 		}
 
 		if (fromEd50Utm && toWgs84Geo) {
 			const zone = coords[2];
 			const utmProj = this.getUtmFromConf(zone);
-			const conv = (<any>proj4).default(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
+			const conv = proj4(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
 			return [...conv];
 		}
 	}
 
+	// leave hemisphere alone for future use :)
 	getZoneUtmProj(lng: number, hemisphere: number): UtmZone {
+		// source of calculation: https://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
 		return { zone: zone, utmProj: this.getUtmFromConf(zone) };
 	}
 
 	getUtmFromConf(zone: number): string {
-		return this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString())
+		return this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
 	}
 }

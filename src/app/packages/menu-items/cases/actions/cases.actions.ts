@@ -32,6 +32,8 @@ export const CasesActionTypes = {
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
+	SAVE_CASE_AS_SUCCESS: 'SAVE_CASE_AS_SUCCESS',
+
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
@@ -171,6 +173,12 @@ export class LoadDefaultCaseAction implements Action {
 
 export class SaveCaseAsAction implements Action {
 	type = CasesActionTypes.SAVE_CASE_AS;
+
+	constructor(public payload: Case) {
+	}
+}
+export class SaveCaseAsSuccessAction implements Action {
+	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
 	constructor(public payload: Case) {
 	}

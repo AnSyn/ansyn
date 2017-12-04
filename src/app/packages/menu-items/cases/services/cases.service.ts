@@ -100,10 +100,6 @@ export class CasesService {
 
 	}
 
-	enhanceDefaultCase(defaultCase: Case): void {
-		defaultCase.lastModified = new Date();
-	}
-
 	get decodeCaseObjects() {
 		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
 	}

@@ -14,7 +14,7 @@ import {
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadCasesSuccessAction,
-	LoadDefaultCaseAction,
+	LoadDefaultCaseAction, SaveCaseAsSuccessAction,
 	SelectCaseAction,
 	SelectCaseByIdAction,
 	UpdateCaseAction,
@@ -191,8 +191,9 @@ export class CasesEffects {
 	 * @action SelectCaseByIdAction
 	 */
 	@Effect()
-	addCaseSuccess$: Observable<SelectCaseByIdAction> = this.actions$.ofType(CasesActionTypes.ADD_CASE_SUCCESS)
-		.map((action: AddCaseSuccessAction) => new SelectCaseByIdAction(action.payload.id))
+	addCaseSuccess$: Observable<SelectCaseAction> = this.actions$
+		.ofType(CasesActionTypes.ADD_CASE_SUCCESS)
+		.map((action: AddCaseSuccessAction) => new SelectCaseAction(action.payload))
 		.share();
 
 	/**
@@ -286,14 +287,12 @@ export class CasesEffects {
 	 * @action AddCaseAction
 	 */
 	@Effect()
-	onSaveCaseAs$: Observable<AddCaseAction> = this.actions$
+	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.SAVE_CASE_AS)
 		.map(toPayload)
-		.map((defaultCase: Case) => {
-			this.casesService.enhanceDefaultCase(defaultCase);
-			defaultCase.owner = 'Default Owner'; // TODO: replace with id from authentication service
-
-			return new AddCaseAction(defaultCase);
+		.switchMap((savedCase: Case) => {
+			return this.casesService.createCase(savedCase)
+				.map((addedCase: Case) => new SaveCaseAsSuccessAction(addedCase));
 		});
 
 

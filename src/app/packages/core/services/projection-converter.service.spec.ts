@@ -4,13 +4,45 @@ import { ProjectionConverterService } from './projection-converter.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models';
 
 describe('ProjectionConverterService', () => {
+	let projectionConverterService: ProjectionConverterService;
+	let loned50 = 578040;
+	let latd50 = 4507589;
+	let lonwgs84 = -74.07609;
+	let latwgs84 = 40.71401;
+
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [ProjectionConverterService, { provide: toolsConfig, useValue: { Proj4: 'fakeWhatever' } }]
+			providers: [ProjectionConverterService, {
+				provide: toolsConfig, useValue: {
+					Proj4: {
+						ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
+						ed50Customized: ''
+					}
+				}
+			}]
 		});
 	});
 
-	it('should be created', inject([ProjectionConverterService], (service: ProjectionConverterService) => {
-		expect(service).toBeTruthy();
+	beforeEach(inject([ProjectionConverterService], (_projectionConverterService: ProjectionConverterService) => {
+		projectionConverterService = _projectionConverterService;
 	}));
+
+	it('should be created', () => {
+		expect(projectionConverterService).toBeTruthy();
+	});
+
+	it('should convert wgs84geo', () => {
+		const result = projectionConverterService.convertByProjectionDatum([lonwgs84, latwgs84],
+			{ datum: 'wgs84', projection: 'geo' },
+			{ datum: 'ed50', projection: 'utm' }).map((num) => Math.floor(num));
+		expect(result).toEqual([loned50, latd50, 18]);
+	});
+
+	it('should convert ed50', () => {
+		const result = projectionConverterService.convertByProjectionDatum([loned50, latd50, 18],
+			{ datum: 'ed50', projection: 'utm' },
+			{ datum: 'wgs84', projection: 'geo' }).map((num) => +num.toFixed(5));
+		expect(result).toEqual([lonwgs84, latwgs84]);
+	});
 });

@@ -325,7 +325,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	updateStyle(style: Partial<VisualizerStateStyle>) {
-		console.warn(style)
 		merge(this.visualizerStyle, style);
 		this.purgeCache();
 	}

@@ -1,14 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	HostBinding,
-	Inject,
-	Input,
-	OnDestroy,
-	OnInit,
-	Renderer2,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 
@@ -28,8 +18,8 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	private _isExpended: boolean;
 	public lineWidthTrigger: boolean;
 	public colorSelectionTrigger = false;
-	public colorOptionsFill: any;
-	public colorOptionsStroke: any;
+	public colorOptionsFill: any = '#FFFFFF';
+	public colorOptionsStroke: any = '#3399CC';
 	public subscriber;
 	public mode: string;
 
@@ -47,13 +37,11 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 		return this._isExpended;
 	}
 
-	constructor(public renderer: Renderer2, public store: Store<any>, @Inject(DOCUMENT) public document: any) {
-		this.mode = undefined;
+	constructor(public store: Store<any>,
+				@Inject(DOCUMENT) public document: any) {
 	}
 
 	ngOnInit() {
-		this.mode = undefined;
-
 		this.store.select<IToolsState>(toolsStateSelector)
 			.pluck<IToolsState, string>('annotationMode')
 			.distinctUntilChanged()
@@ -88,7 +76,8 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 
 	toggleColorSelection($event) {
 		$event.stopPropagation();
-		if (this.mode !== undefined) {
+
+		if (this.mode) {
 			this.createInteraction(this.mode);
 		}
 

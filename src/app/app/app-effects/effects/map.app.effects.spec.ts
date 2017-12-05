@@ -67,6 +67,7 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { MapInstanceChangedAction } from '../../../packages/map-facade/actions/map.actions';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -352,7 +353,7 @@ describe('MapAppEffects', () => {
 			actions = hot('--a--', {
 				a: new AddMapInstanceAction({
 					currentCommunicatorId: 'imagery2',
-					communicatorsIds: communicators
+					communicatorIds: communicators
 				})
 			});
 			const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
@@ -367,7 +368,7 @@ describe('MapAppEffects', () => {
 			actions = hot('--a--', {
 				a: new AddMapInstanceAction({
 					currentCommunicatorId: 'imagery2',
-					communicatorsIds: communicators
+					communicatorIds: communicators
 				})
 			});
 			const expectedResults = cold('-');
@@ -386,7 +387,7 @@ describe('MapAppEffects', () => {
 		spyOn(communicator, 'createMapSingleClickEvent');
 
 		const action = new AddMapInstanceAction({
-			communicatorsIds: ['tmpId1'],
+			communicatorIds: ['tmpId1'],
 			currentCommunicatorId: 'tmpId1'
 		});
 		actions = hot('--a--', { a: action });
@@ -399,8 +400,8 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const action = new AddMapInstanceAction({
-			communicatorsIds: ['tmpId1', 'tmpId2'],
+		const action = new MapInstanceChangedAction({
+			communicatorIds: ['tmpId1', 'tmpId2'],
 			currentCommunicatorId: 'tmpId2'
 		});
 		const lonLat = [-70.33666666666667, 25.5];
@@ -412,8 +413,8 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set('shadowMouse', true);
-		const action = new AddMapInstanceAction({
-			communicatorsIds: ['tmpId1', 'tmpId2'],
+		const action = new MapInstanceChangedAction({
+			communicatorIds: ['tmpId1', 'tmpId2'],
 			currentCommunicatorId: 'tmpId2'
 		});
 		actions = hot('--a--', { a: action });
@@ -436,8 +437,8 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPlugin').and.callFake(() => plugin);
 			spyOn(plugin, 'init');
-			const action = new AddMapInstanceAction({
-				communicatorsIds: ['tmpId1'],
+			const action = new MapInstanceChangedAction({
+				communicatorIds: ['tmpId1'],
 				currentCommunicatorId: 'tmpId1'
 			});
 			actions = hot('--a--', { a: action });
@@ -598,9 +599,9 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new MapInstanceChangedAction({
 					currentCommunicatorId: 'imagery1',
-					communicatorsIds: communicators
+					communicatorIds: communicators
 				})
 			});
 			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, mapId: 'imagery1' }) });
@@ -613,7 +614,7 @@ describe('MapAppEffects', () => {
 			actions = hot('--a--', {
 				a: new AddMapInstanceAction({
 					currentCommunicatorId: 'imagery2',
-					communicatorsIds: communicators
+					communicatorIds: communicators
 				})
 			});
 			const expectedResults = cold('-');

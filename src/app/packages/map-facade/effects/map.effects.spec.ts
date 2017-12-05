@@ -134,7 +134,7 @@ describe('MapEffects', () => {
 			actions = hot('--a--', {
 				a: new AddMapInstanceAction({
 					'currentCommunicatorId': '',
-					'communicatorsIds': ['']
+					'communicatorIds': ['']
 				})
 			});
 

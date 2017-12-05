@@ -41,7 +41,7 @@ export class ImageryCommunicatorService {
 		this._communicators[componentManager.id] = new CommunicatorEntity(componentManager);
 		this.initializedCommunicators.push(componentManager.id);
 		this.instanceCreated.emit({
-			communicatorsIds: this.initializedCommunicators,
+			communicatorIds: this.initializedCommunicators,
 			currentCommunicatorId: componentManager.id
 		});
 	}
@@ -51,14 +51,14 @@ export class ImageryCommunicatorService {
 		this.communicators[newId]._manager.id = newId;
 		delete this.communicators[oldId];
 		this.instanceRemoved.emit({
-			communicatorsIds: this.initializedCommunicators,
+			communicatorIds: this.initializedCommunicators,
 			currentCommunicatorId: oldId
 		});
 
 		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(oldId), 1);
 		this.initializedCommunicators.push(newId);
 		this.instanceCreated.emit({
-			communicatorsIds: this.initializedCommunicators,
+			communicatorIds: this.initializedCommunicators,
 			currentCommunicatorId: newId
 		});
 	}
@@ -73,7 +73,7 @@ export class ImageryCommunicatorService {
 		delete (this._communicators[id]);
 		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(id), 1);
 		this.instanceRemoved.emit({
-			communicatorsIds: this.initializedCommunicators,
+			communicatorIds: this.initializedCommunicators,
 			currentCommunicatorId: id
 		});
 	}

@@ -356,9 +356,9 @@ export class MapAppEffects {
 		.ofType<any>(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom<any, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select(layersStateSelector))
 		.filter(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
-			const communicatorsIds = action.payload.communicatorsIds;
+			const communicatorIds = action.payload.communicatorIds;
 			return layerState.displayAnnotationsLayer &&
-				communicatorsIds.length > 1 && communicatorsIds.length === mapState.mapsList.length;
+				communicatorIds.length > 1 && communicatorIds.length === mapState.mapsList.length;
 		})
 		.map(() => {
 			return new AnnotationVisualizerAgentAction({

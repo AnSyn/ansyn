@@ -6,6 +6,7 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MapEffects } from '../../effects/map.effects';
 import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -20,7 +21,7 @@ describe('ContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
 			declarations: [ContextMenuComponent],
-			providers: [{ provide: MapEffects, useValue: mockMapEffects }]
+			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {provide: mapFacadeConfig, useValue: {sensorTypeShortcuts: {}}}]
 		}).compileComponents();
 	}));
 

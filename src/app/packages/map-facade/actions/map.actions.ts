@@ -98,7 +98,7 @@ export class UpdateMapSizeAction implements Action {
 export class AddMapInstanceAction implements Action {
 	type = MapActionTypes.ADD_MAP_INSTANCE;
 
-	constructor(public payload: { currentCommunicatorId: string, communicatorsIds: string[] }) {
+	constructor(public payload: { currentCommunicatorId: string, communicatorIds: string[] }) {
 	}
 }
 
@@ -106,10 +106,10 @@ export class AddMapInstanceAction implements Action {
 export class MapInstanceChangedAction extends AddMapInstanceAction {
 	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 
-	constructor(public mapInstanceChangedPayload: { id: string, communicatorsIds: string[], oldMapInstanceName: string, newMapInstanceName: string }) {
+	constructor(public mapInstanceChangedPayload: { currentCommunicatorId: string, communicatorIds: string[], oldMapInstanceName?: string, newMapInstanceName?: string }) {
 		super({
-			currentCommunicatorId: mapInstanceChangedPayload.id,
-			communicatorsIds: mapInstanceChangedPayload.communicatorsIds
+			currentCommunicatorId: mapInstanceChangedPayload.currentCommunicatorId,
+			communicatorIds: mapInstanceChangedPayload.communicatorIds
 		});
 	}
 }

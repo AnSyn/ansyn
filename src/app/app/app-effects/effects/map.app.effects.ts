@@ -236,7 +236,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapsState]: [AddMapInstanceAction, IMapState]) => !isEmpty(mapsState.mapsList))
 		.map(([action, mapsState]: [AddMapInstanceAction, IMapState]) => {
@@ -376,7 +376,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.do(([action]: [any]) => {
@@ -394,7 +394,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
@@ -413,7 +413,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(toolsStateSelector))
 		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
 		.map(() => new StartMouseShadow());
@@ -426,7 +426,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.do((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);

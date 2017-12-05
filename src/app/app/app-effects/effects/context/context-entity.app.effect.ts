@@ -61,7 +61,7 @@ export class ContextEntityAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {

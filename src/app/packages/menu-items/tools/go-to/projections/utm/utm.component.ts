@@ -1,6 +1,7 @@
 import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
+import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 
 @Component({
 	selector: 'ansyn-utm',
@@ -57,9 +58,11 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		if (!c.value) {
 			return { empty: true };
 		}
-		const someEmpty = c.value.some(empty => !empty);
+		const someEmpty = c.value.some(empty => !empty && empty !== 0);
 		if (someEmpty) {
 			return { empty: true };
+		} else if (!ProjectionConverterService.isValidUTM(c.value)) {
+			return { invalid: true };
 		}
 		return null;
 	}

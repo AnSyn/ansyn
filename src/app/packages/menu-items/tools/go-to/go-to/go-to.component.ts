@@ -65,9 +65,11 @@ export class GoToComponent implements OnInit {
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
-			this.inputs.from = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
-			this.inputs.to = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
-			this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
+			if (this.projectionConverterService.isValidConvertion(this.activeCenter, this.activeCenterProjDatum)) {
+				this.inputs.from = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
+				this.inputs.to = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
+			}
 		});
 
 		this.pinLocationMode$.subscribe((_pinLocationMode) => {
@@ -86,8 +88,11 @@ export class GoToComponent implements OnInit {
 	}
 
 	submitGoTo(): void {
-		const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
-		this.store$.dispatch(new GoToAction(goToInput));
+		const conversionValid = this.projectionConverterService.isValidConvertion(this.inputs.from, this.from);
+		if (conversionValid) {
+			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
+			this.store$.dispatch(new GoToAction(goToInput));
+		}
 	}
 
 	copyToClipBoard(value: string) {
@@ -95,8 +100,11 @@ export class GoToComponent implements OnInit {
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
-		this.inputs[inputKey] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, convertTo);
-		this.dispatchInputUpdated(coords, convertFrom);
+		const conversionValid = this.projectionConverterService.isValidConvertion(coords, convertFrom);
+		if (conversionValid) {
+			this.inputs[inputKey] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, convertTo);
+			this.dispatchInputUpdated(coords, convertFrom);
+		}
 	}
 
 	togglePinLocation() {
@@ -108,7 +116,10 @@ export class GoToComponent implements OnInit {
 	}
 
 	private dispatchInputUpdated(coords: number[], convertFrom: CoordinatesSystem) {
-		const toWgs84 = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
-		this.store$.dispatch(new GoToInputChangeAction(toWgs84));
+		const conversionValid = this.projectionConverterService.isValidConvertion(coords, convertFrom);
+		if (conversionValid) {
+			const toWgs84 = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
+			this.store$.dispatch(new GoToInputChangeAction(toWgs84));
+		}
 	}
 }

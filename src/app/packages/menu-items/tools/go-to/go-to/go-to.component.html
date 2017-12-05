@@ -47,7 +47,7 @@
 
 	<div class="buttons-area">
 
-		<button type="submit" [disabled]="!form.valid || disabled">Go</button>
+		<button type="submit" [disabled]="form.invalid || disabled">Go</button>
 		<button [disabled]="disabled" class="pin-location" type="button" (click)="togglePinLocation()"
 				[class.active]="pinLocationMode">
 			<span>Pin location</span>

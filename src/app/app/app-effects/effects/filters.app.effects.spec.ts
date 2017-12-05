@@ -35,9 +35,9 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { initialMenuState, menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
-import { filtersStateSelector } from '../../../packages/menu-items/filters/reducer/filters.reducer';
-import { menuStateSelector } from '../../../packages/menu/reducers/menu.reducer';
-import { UpdateCaseAction } from '../../../packages/menu-items/cases/actions/cases.actions';
+import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

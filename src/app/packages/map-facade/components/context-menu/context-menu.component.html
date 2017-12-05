@@ -5,7 +5,6 @@
 	</button>
 
 	<div class="buttons-area">
-
 		<button
 			*ngFor="let data of overlayButtons"
 			class="menu-item"
@@ -20,10 +19,9 @@
 					*ngFor="let filter of this[data.subList]"
 					(mousedown)="isClick($event) && data.action($event, filter)"
 					[value]="filter">
-					<span>{{filter}}</span>
+					<span>{{getSensorType(filter)}}</span>
 				</button>
 			</div>
 		</button>
-
 	</div>
 </nav>

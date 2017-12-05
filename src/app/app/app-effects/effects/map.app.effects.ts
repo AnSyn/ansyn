@@ -252,28 +252,6 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name displayOverlayFromCase$
-	 * @ofType SelectCaseAction
-	 * @dependencies map
-	 */
-	@Effect()
-	displayOverlayFromCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.mergeMap(([action, mapState]: [SelectCaseAction, IMapState]) => {
-			return mapState.mapsList.reduce((previousResult, data: CaseMapState) => {
-				const communicatorHandler = this.imageryCommunicatorService.provide(data.id);
-				// if overlay exists and map is loaded
-				if (data.data.overlay && communicatorHandler) {
-					startTimingLog(`LOAD_OVERLAY_${data.data.overlay.id}`);
-					previousResult.push(new DisplayOverlayAction({ overlay: data.data.overlay, mapId: data.id }));
-				}
-				return previousResult;
-			}, []);
-		});
-
-	/**
-	 * @type Effect
-	 * @name displayOverlayFromCase$
 	 * @ofType DisplayOverlayAction
 	 * @action AddOverlayToLoadingOverlaysAction
 	 */

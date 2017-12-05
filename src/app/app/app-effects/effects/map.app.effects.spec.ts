@@ -621,27 +621,4 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('displayOverlayFromCase$', () => {
-		it('After case is selected/loaded should dispatch DisplayOverlayAction for each map that has overlay', () => {
-			const testOverlay: Overlay = {
-				id: 'testOverlayId1',
-				name: 'testOverlay1',
-				photoTime: new Date().toDateString(),
-				date: null,
-				azimuth: 0,
-				isFullOverlay: true,
-				isGeoRegistered: true
-			};
-			mapState.mapsList[0].data.overlay = testOverlay;
-			mapState.mapsList[1].data.overlay = testOverlay;
-
-			const fakeCommuincator = { id: 'test' };
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
-			actions = hot('--a--', { a: new SelectCaseAction(icaseState.selectedCase) });
-			const a = new DisplayOverlayAction({ overlay: testOverlay, mapId: mapState.mapsList[0].id });
-			const b = new DisplayOverlayAction({ overlay: testOverlay, mapId: mapState.mapsList[1].id });
-			const expectedResults = cold('--(ab)--', { a, b });
-			expect(mapAppEffects.displayOverlayFromCase$).toBeObservable(expectedResults);
-		});
-	});
 });

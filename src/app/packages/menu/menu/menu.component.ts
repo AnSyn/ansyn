@@ -2,6 +2,7 @@ import {
 	AfterViewInit,
 	Component,
 	ComponentFactoryResolver,
+	ComponentRef,
 	ElementRef,
 	HostListener,
 	Inject,
@@ -52,6 +53,7 @@ const animations: any[] = [
 
 export class MenuComponent implements OnInit, AfterViewInit {
 	_componentElem;
+	currentComponent: ComponentRef<any>;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -185,7 +187,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	buildCurrentComponent(): void {
 		if (this.anyMenuItemSelected()) {
 			const factory = this.componentFactoryResolver.resolveComponentFactory(this.selectedMenuItem.component);
-			this.componentElem.createComponent(factory);
+			this.currentComponent = this.componentElem.createComponent(factory);
 		}
 	}
 
@@ -213,6 +215,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	}
 
 	onExpandStart() {
+		if (this.currentComponent && this.currentComponent.instance.onAnimation) {
+			this.currentComponent.instance.onAnimation();
+		}
 		this.onAnimation = true;
 	}
 

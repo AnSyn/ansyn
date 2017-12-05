@@ -9,6 +9,6 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"ansyn-event-drops": "^0.4.11"
+		"ansyn-event-drops": "^0.4.12"
 	}
 }

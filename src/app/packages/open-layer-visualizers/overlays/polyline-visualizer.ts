@@ -60,16 +60,19 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private getZIndex(feature: Feature) {
-		const { isActive, isFavorites } = this.propsByFeature(feature);
+		const { isActive, isFavorites, isDisplayed } = this.propsByFeature(feature);
 
-		return isActive ? 3 : isFavorites ? 2 : 1;
+		return isActive ? 4 : isFavorites ? 3 : isDisplayed ? 2 : 1;
 	}
 
 	private getStrokeColor(feature: Feature, defaultColor: string = '#d393e1') {
-		const { isActive } = this.propsByFeature(feature);
+		const { isActive, isDisplayed } = this.propsByFeature(feature);
 
 		if (isActive) {
 			return '#27b2cf';
+		}
+		if (isDisplayed) {
+			return '#9524ad';
 		}
 
 		return defaultColor;

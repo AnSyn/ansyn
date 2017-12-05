@@ -144,7 +144,7 @@ export class ToolsAppEffects {
 				return [action, cloneDeep(cases.selectedCase), mapsState];
 			})
 		.mergeMap(([action, selectedCase, mapsState]: [DisplayOverlaySuccessAction, Case, IMapState]) => {
-			const activeMap: CaseMapState = mapsState.mapsList.find(map => map.id === mapsState.activeMapId);
+			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
 
 			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];

@@ -23,7 +23,7 @@ function fix(fileName) {
 		});
 	}
 
-	fs.writeFileSync(fileName, JSON.stringify(packageJson, null, '\t'));
+	fs.writeFileSync(fileName, JSON.stringify(packageJson, null, '\t') + '\n');
 }
 
 fix('src/app/app/package.json');

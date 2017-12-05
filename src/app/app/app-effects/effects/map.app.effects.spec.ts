@@ -67,7 +67,7 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { MapInstanceChangedAction } from '../../../packages/map-facade/actions/map.actions';
+import { MapInstanceChangedAction } from '@ansyn/map-facade/actions/map.actions';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';

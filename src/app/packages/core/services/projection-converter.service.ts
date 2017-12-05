@@ -32,8 +32,8 @@ export class ProjectionConverterService {
 
 	constructor(@Inject(toolsConfig) protected toolsConfigProj: IToolsConfig) {
 	}
-
-	isValidConvertion(coords: number[], from: CoordinatesSystem): boolean {
+	// isValidConversion
+	isValidConversion(coords: number[], from: CoordinatesSystem): boolean {
 		let isValid = Boolean(coords);
 
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';

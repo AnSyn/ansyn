@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Renderer2 } from '@angular/core';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +11,8 @@ import { Overlay } from '@ansyn\/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { toPayload } from '@ngrx/effects';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 export interface OverlayButton {
 	name: string;
@@ -148,7 +150,8 @@ export class ContextMenuComponent implements OnInit {
 	constructor(protected store: Store<IMapState>,
 				protected mapEffects$: MapEffects,
 				protected elem: ElementRef,
-				protected renderer: Renderer2) {
+				protected renderer: Renderer2,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 
 	pluckFilterField(overlays: Overlay[]) {
@@ -233,5 +236,13 @@ export class ContextMenuComponent implements OnInit {
 
 	setPinPoint() {
 		this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));
+	}
+
+	getSensorType(sensorType: string) {
+		if (sensorType in this.config.sensorTypeShortcuts) {
+			return this.config.sensorTypeShortcuts[sensorType];
+		}
+
+		return sensorType;
 	}
 }

@@ -1,5 +1,6 @@
 export interface IMapFacadeConfig {
-	overlayCoverage: number
+	overlayCoverage: number,
+	sensorTypeShortcuts: Object
 }
 
 

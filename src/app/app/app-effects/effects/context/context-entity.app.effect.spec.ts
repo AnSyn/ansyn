@@ -12,7 +12,7 @@ import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/r
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { MapInstanceChangedAction } from '../../../../packages/map-facade/actions/map.actions';
+import { MapInstanceChangedAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;

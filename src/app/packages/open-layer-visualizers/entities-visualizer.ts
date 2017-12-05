@@ -150,8 +150,12 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	private purgeCache(feature?: Feature) {
 		if (feature) {
 			delete feature.styleCache;
-		} else {
-			this.source.getFeatures().concat(this.hoverLayer.getSource().getFeatures()).forEach(f => this.purgeCache(f));
+		} else if (this.source) {
+			let features = this.source.getFeatures();
+			if (this.hoverLayer && this.hoverLayer.getSource()) {
+				features = features.concat(this.hoverLayer.getSource().getFeatures());
+			}
+			features.forEach(f => this.purgeCache(f));
 		}
 	}
 
@@ -321,7 +325,9 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	updateStyle(style: Partial<VisualizerStateStyle>) {
+		console.warn(style)
 		merge(this.visualizerStyle, style);
+		this.purgeCache();
 	}
 
 	onSelectFeature($event) {

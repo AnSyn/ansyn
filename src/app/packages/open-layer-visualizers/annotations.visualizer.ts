@@ -7,6 +7,7 @@ import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Select from 'ol/interaction/select';
 import Fill from 'ol/style/fill';
+import color from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
@@ -39,7 +40,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public geoJsonFormat: GeoJSON;
 	public features: Array<any>;
 	public collection: FeatureCollection<any>;
-	public fill;
 	public namePrefix = 'Annotate-';
 	public data;
 
@@ -51,7 +51,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					width: 2
 				},
 				fill: {
-					color: 'rgba(255,255,255,0.4)'
+					color: '#FFFFFF'
 				},
 				point: {
 					radius: 4
@@ -64,7 +64,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.geoJsonFormat = new GeoJSON();
 		this.features = [];
-		this.fill = true;
 
 		this.events.set('drawEndPublisher', new Subject());
 		this.events.set('annotationContextMenuHandler', new Subject());
@@ -107,15 +106,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	addLayer(id = AnnotationsVisualizer.type) {
-		const layer = new VectorLayer();
+		this.source = new VectorSource({ wrapX: false });
+
+		const layer = new VectorLayer({
+			source: this.source,
+			zIndex: 200000,
+			style: this.styleFunction.bind(this)
+		});
+
 		// if id is empty then set the current type name as id
 		layer.set('id', id);
 		this.layer = this.iMap.addLayerIfNotExist(layer);
-
-		this.source = new VectorSource({ wrapX: false });
-		this.layer.setSource(this.source);
-		this.layer.setStyle(this.styleFunction.bind(this));
-		this.layer.setZIndex(200000);
 
 		this.selectInteraction = new Select({
 			// event.originalEvent.which === 3 &&
@@ -261,7 +262,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	createFeturesFromGeoJson(geoJsonFeatures) {
 		const features = geoJsonFeatures.map((d) => this.geoJsonFormat.readFeature(d));
 		(<Array<any>>features).forEach(feature => {
-
 			const properties = feature.getProperties();
 			let geometry;
 
@@ -328,10 +328,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	addInteraction() {
-
-
 		if (this.interactionHandler) {
-
 			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 			this.removeSelectInteraction();
 			this.iMap.mapObject.addInteraction(this.interactionHandler);
@@ -439,6 +436,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	styleFunction(feature, resolution, style: VisualizerStyle = this.visualizerStyle.initial) {
+		const fillColor = style.fill.color;
+		const newFill = color.asArray(fillColor).slice();
+		newFill[3] = 0.4;
+		const fill = new Fill({color: newFill});
+
 		if (feature.getGeometryName() === `${this.namePrefix}Arrow`) {
 			return this.arrowStyle(feature, resolution);
 		}
@@ -447,9 +449,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return new Style({
 				image: new Circle({
 					radius: style.point.radius,
-					fill: new Fill({
-						color: style.fill.color
-					}),
+					fill,
 					stroke: new Stroke({
 						color: style.stroke.color,
 						width: style.point.radius / 2
@@ -458,9 +458,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				zIndex: Infinity
 			});
 		}
+
 		return new Style({
 			stroke: new Stroke(style.stroke),
-			fill: new Fill(style.fill)
+			fill
 		});
 	}
 

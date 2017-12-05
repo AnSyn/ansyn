@@ -43,13 +43,13 @@
 				<span class="text">fill</span>
 				<span class="color" [style.background]="colorOptionsFill"></span>
 				<input type="color" [(ngModel)]="colorOptionsFill" [ngModelOptions]="{standalone: true}"
-					   (change)="changeFillColor() "/>
+					   (change)="changeFillColor()" title="fill"/>
 			</li>
 			<li (click)="openColorInput($event)">
 				<span class="text">stroke</span>
 				<span class="color" [style.background]="colorOptionsStroke"></span>
 				<input type="color" [(ngModel)]="colorOptionsStroke" [ngModelOptions]="{standalone: true}"
-					   (change)="changeStrokeColor()"/>
+					   (change)="changeStrokeColor()" title="stroke" />
 			</li>
 		</ul>
 	</li>

@@ -46,7 +46,7 @@ describe('ImageryCommunicatorService', () => {
 		spyOn(imageryCommunicatorService.instanceCreated, 'emit');
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({
-				communicatorsIds: ['1'],
+				communicatorIds: ['1'],
 				currentCommunicatorId: '1'
 			}
 		);
@@ -101,7 +101,7 @@ describe('ImageryCommunicatorService', () => {
 		const id = componentManager2.id;
 		imageryCommunicatorService.remove(id);
 		expect(imageryCommunicatorService.instanceRemoved.emit).toHaveBeenCalledWith({
-				communicatorsIds: [componentManager1.id],
+				communicatorIds: [componentManager1.id],
 				currentCommunicatorId: id
 			}
 		);

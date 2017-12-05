@@ -70,12 +70,12 @@ export class MapFacadeService {
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
 		this.initEmitters();
 
-		imageryCommunicatorService.instanceCreated.subscribe((communicatorsIds) => {
-			this.store.dispatch(new AddMapInstanceAction(communicatorsIds));
+		imageryCommunicatorService.instanceCreated.subscribe((communicatorIds) => {
+			this.store.dispatch(new AddMapInstanceAction(communicatorIds));
 		});
 
-		imageryCommunicatorService.instanceRemoved.subscribe((communicatorsIds) => {
-			this.store.dispatch(new RemoveMapInstanceAction(communicatorsIds));
+		imageryCommunicatorService.instanceRemoved.subscribe((communicatorIds) => {
+			this.store.dispatch(new RemoveMapInstanceAction(communicatorIds));
 		});
 
 	}
@@ -109,7 +109,7 @@ export class MapFacadeService {
 
 	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
 	onActiveMapChanged($event: { id: string, oldMapInstanceName: string, newMapInstanceName: string }) {
-		const args = { ...$event, communicatorsIds: this.imageryCommunicatorService.initializedCommunicators };
+		const args = { oldMapInstanceName: $event.oldMapInstanceName, newMapInstanceName: $event.newMapInstanceName, currentCommunicatorId: $event.id,  communicatorIds: this.imageryCommunicatorService.initializedCommunicators };
 		this.store.dispatch(new MapInstanceChangedAction(args));
 	}
 

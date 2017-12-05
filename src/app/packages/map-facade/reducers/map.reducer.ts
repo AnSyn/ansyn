@@ -52,7 +52,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
-			return { ...state, communicators: action.payload.communicatorsIds };
+			return { ...state, communicators: action.payload.communicatorIds };
 
 		case MapActionTypes.SET_LOADING_OVERLAYS:
 			return { ...state, loadingOverlays: action.payload };

@@ -1,6 +1,6 @@
 import { Case } from '../../models/case.model';
 import { Params } from '@angular/router';
-import { cloneDeep, isEmpty } from 'lodash';
+import { cloneDeep, isEmpty, forEach } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
@@ -9,6 +9,7 @@ import { Context } from '../../models/context.model';
 import { Point } from 'geojson';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
+import { CaseState } from '@ansyn/core/models/case.model';
 
 export class QueryParamsHelper {
 
@@ -131,15 +132,15 @@ export class QueryParamsHelper {
 	generateQueryParamsViaCase(sCase: Case): string {
 		const url = `/`;
 		const urlTree = this.casesService.urlSerializer.parse(url);
-		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key]);
+		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key], sCase.state);
 		keys.forEach(key => {
-			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key]);
+			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key], sCase.state);
 		});
 		const baseLocation = this.casesService.config.useHash ? `${location.origin}/#` : location.origin;
 		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);
 	}
 
-	encodeCaseObjects(key, value) {
+	encodeCaseObjects(key, value, caseState: CaseState) {
 		switch (key) {
 			case 'facets':
 				return rison.encode(value);
@@ -158,6 +159,18 @@ export class QueryParamsHelper {
 				return rison.encode(clonedvalue);
 			case 'region':
 				return wellknown.stringify(value);
+			case 'overlaysManualProcessArgs':
+				// collect process arguments only for overlays currently loaded by map
+				const activeMapsManualProcessArgs = {};
+				forEach(caseState.overlaysManualProcessArgs, (processArgs, overlayId) => {
+					const loadedOverlay =  caseState.maps.data.find((caseMapState: CaseMapState) => {
+						return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
+					});
+					if (loadedOverlay) {
+						activeMapsManualProcessArgs[overlayId] = processArgs;
+					}
+				});
+				return rison.encode(activeMapsManualProcessArgs);
 			default:
 				return wellknown.stringify(value);
 		}

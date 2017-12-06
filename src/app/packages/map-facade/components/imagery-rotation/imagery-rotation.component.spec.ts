@@ -10,7 +10,6 @@ describe('ImageryRotationComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				CoreModule,
 				StoreModule.forRoot({})
 			],
 			declarations: [

@@ -55,7 +55,7 @@ export class ContextEntityAppEffects {
 	/**
 	 * @type Effect
 	 * @name displayEntityFromNewMap$
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @ofType MapInstanceChangedAction
 	 * @dependencies cases, map
 	 * @filter selected case has contextEntities
 	 */

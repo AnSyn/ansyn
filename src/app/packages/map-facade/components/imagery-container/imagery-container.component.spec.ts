@@ -3,6 +3,7 @@ import { ImageryContainerComponent } from './imagery-container.component';
 import { MockComponent } from '@ansyn/core/test';
 import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
+import { ImageryRotationComponent } from '../imagery-rotation/imagery-rotation.component';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -20,10 +21,7 @@ describe('ImageryContainerComponent', () => {
 					selector: 'ansyn-imagery-view',
 					inputs: ['mapComponentSettings']
 				}),
-				MockComponent({
-					selector: 'ansyn-imagery-rotation',
-					inputs: ['mapState']
-				})
+				ImageryRotationComponent
 			]
 		}).compileComponents();
 	}));

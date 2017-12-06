@@ -111,29 +111,5 @@ describe('ImageriesManagerComponent', () => {
 		tick(500);
 		expect(component.changeActiveImagery).toHaveBeenCalledWith('imagery2');
 	}));
-
-
-	it('change selected layout to \'layout1\' and make sure \'ol-rotate\' style updates', () => {
-		const element = document.createElement('div');
-		element.innerHTML = '<div class="ol-rotate">ol-rotate</div>';
-		component.setSelectedLayout({ id: 'layout1', description: 'full screen', mapsCount: 1 });
-		fixture.detectChanges();
-
-		let mapDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.map'));
-		mapDivs[0].appendChild(element);
-
-		let wrapperDivs: Array<any> = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.ol-rotate'));
-		expect(wrapperDivs.length).toEqual(1);
-		expect(wrapperDivs.map(olRotate =>
-			getComputedStyle(olRotate).top
-		)).not.toEqual(['40px']);
-		component.setSelectedLayout({ id: 'layout6', description: 'full', mapsCount: 4 });
-		fixture.detectChanges();
-		wrapperDivs = Array.from(fixture.debugElement.nativeElement.querySelectorAll('.ol-rotate'));
-		expect(wrapperDivs.length).toEqual(1);
-		expect(wrapperDivs.map(olRotate =>
-			getComputedStyle(olRotate).top
-		)).toEqual(['40px']);
-	});
 });
 

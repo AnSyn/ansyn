@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { StoreModule } from '@ngrx/store';
 import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
+import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
 
 @NgModule({
 	imports: [
@@ -23,7 +24,13 @@ import { AnnotationContextMenuComponent } from './components/annotation-context-
 		FormsModule
 	],
 	providers: [MapFacadeService],
-	declarations: [ImageriesManagerComponent, ImageryContainerComponent, ContextMenuComponent, AnnotationContextMenuComponent],
+	declarations: [
+		ImageriesManagerComponent,
+		ImageryRotationComponent,
+		ImageryContainerComponent,
+		ContextMenuComponent,
+		AnnotationContextMenuComponent
+	],
 	exports: [ImageriesManagerComponent]
 })
 

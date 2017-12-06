@@ -36,6 +36,8 @@ export interface IMap<T = any> {
 
 	getPosition(): MapPosition;
 
+	setRotation(rotation: number): void;
+
 	updateSize(): void;
 
 	addGeojsonLayer(data: GeoJSON.GeoJsonObject);

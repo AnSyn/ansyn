@@ -78,7 +78,8 @@ export class OpenLayersMap implements IMap<Map> {
 			layers: layers,
 			renderer: 'canvas',
 			controls: [new Rotate({
-				autoHide: false
+				autoHide: true,
+				className: 'ol-hidden'
 			})],
 			view: new View({
 				center: proj.fromLonLat([center[0], center[1]]),
@@ -327,8 +328,9 @@ export class OpenLayersMap implements IMap<Map> {
 		const projection = view.getProjection();
 		const olCenter = proj.transform([position.center.coordinates[0], position.center.coordinates[1]], 'EPSG:4326', projection);
 		view.setCenter(olCenter);
-		view.setRotation(position.rotation);
 		view.setZoom(position.zoom);
+
+		this.setRotation(position.rotation);
 	}
 
 	public getPosition(): MapPosition {
@@ -339,6 +341,11 @@ export class OpenLayersMap implements IMap<Map> {
 		let boundingBox = this.getMapExtentInGeo();
 
 		return { center, zoom, rotation, boundingBox };
+	}
+
+	public setRotation(rotation: number) {
+		const view = this._mapObject.getView();
+		view.setRotation(rotation);
 	}
 
 	private getMapExtentInGeo() {

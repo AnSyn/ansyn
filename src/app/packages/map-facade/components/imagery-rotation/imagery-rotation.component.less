@@ -1,0 +1,28 @@
+@import "~@ansyn/core/less/common";
+@import "~@ansyn/core/less/z-index-globals";
+
+:host {
+	text-align: center;
+
+	border: 3px solid @menu-color;
+	border-radius: 50%;
+	box-shadow: 0 0 0 1px white, inset 0 0 0 1px white;
+
+	.north {
+		position: absolute;
+		transform: translate(-50%);
+		background: white;
+		padding: 0 3px;
+		top: -10px;
+		left: 50%;
+		font-size: 12px;
+		color: red;
+	}
+
+	img {
+		width: 40px;
+		height: 40px;
+		margin-top: 5px;
+		border-radius: 50%;
+	}
+}

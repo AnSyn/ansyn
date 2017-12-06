@@ -19,7 +19,12 @@ describe('ImageryContainerComponent', () => {
 				MockComponent({
 					selector: 'ansyn-imagery-view',
 					inputs: ['mapComponentSettings']
-				})]
+				}),
+				MockComponent({
+					selector: 'ansyn-imagery-rotation',
+					inputs: ['mapState']
+				})
+			]
 		}).compileComponents();
 	}));
 

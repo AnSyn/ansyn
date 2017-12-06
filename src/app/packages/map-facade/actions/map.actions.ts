@@ -48,7 +48,8 @@ export const MapActionTypes = {
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
-	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY'
+	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
+	SET_MAP_ROTATION: 'SET_MAP_ROTATION'
 };
 
 export type MapActions = any;
@@ -316,5 +317,12 @@ export class RemovePendingOverlayAction implements Action {
 	type: string = MapActionTypes.REMOVE_PENDING_OVERLAY;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class SetMapRotationAction implements Action {
+	type: string = MapActionTypes.SET_MAP_ROTATION;
+
+	constructor(public payload: { mapId: string, radians: number }) {
 	}
 }

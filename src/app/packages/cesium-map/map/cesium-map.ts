@@ -55,6 +55,10 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
+	setRotation(rotation: number): void {
+		throw new Error('Method not implemented.');
+	}
+
 	updateSize(): void {
 		throw new Error('Method not implemented.');
 	}

@@ -9,13 +9,12 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 	styleUrls: ['./imagery-rotation.component.less']
 })
 export class ImageryRotationComponent {
-	@ViewChild('mapRotationWrapper') mapRotationWrapper: ElementRef;
-
 	@Input() mapState: CaseMapState;
 
 	private isRotating = false;
 
-	constructor(protected store: Store<any>) {
+	constructor(protected elementRef: ElementRef,
+				protected store: Store<any>) {
 	}
 
 	stopPropagation($event: Event) {
@@ -43,7 +42,7 @@ export class ImageryRotationComponent {
 
 		this.isRotating = true;
 
-		const element = this.mapRotationWrapper.nativeElement;
+		const element = this.elementRef.nativeElement;
 
 		const boundingRect = element.getBoundingClientRect();
 

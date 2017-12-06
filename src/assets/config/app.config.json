@@ -71,7 +71,8 @@
 			"facets",
 			"time",
 			"maps",
-			"region"
+			"region",
+			"overlaysManualProcessArgs"
 		],
 		"updateCaseDebounceTime": 700,
 		"useHash": true

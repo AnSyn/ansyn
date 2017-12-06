@@ -52,6 +52,7 @@ describe('GoToComponent', () => {
 			spyOn(store, 'dispatch');
 
 			spyOn(projectionConverterService, 'convertByProjectionDatum').and.returnValue([0, 0]);
+			spyOn(projectionConverterService, 'isValidConversion').and.returnValue(true);
 
 			component.submitGoTo();
 			expect(store.dispatch).toHaveBeenCalledWith(new GoToAction([0, 0]));

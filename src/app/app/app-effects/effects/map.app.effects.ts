@@ -229,7 +229,7 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name displayOverlayOnNewMapInstance$
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @ofType MapInstanceChangedAction
 	 * @dependencies map
 	 * @filter There is mapsList, and it has a an overlay with id from payload
 	 * @action DisplayOverlayAction
@@ -370,7 +370,7 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onAddCommunicatorDoPinpointSearch
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @ofType MapInstanceChangedAction
 	 * @dependencies cases, statusBar
 	 * @filter pinPointSearch flag on
 	 */
@@ -387,7 +387,7 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onAddCommunicatorShowPinPointIndicator$
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @ofType MapInstanceChangedAction
 	 * @dependencies cases, statusBar
 	 * @filter pinPointIndicator flag on
 	 * @actions DrawPinPointAction
@@ -406,7 +406,7 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onAddCommunicatorShowShadowMouse$
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction, SetMapsDataActionStore
+	 * @ofType MapInstanceChangedAction, SetMapsDataActionStore
 	 * @dependencies cases, statusBar
 	 * @filter shadowMouse flag on
 	 * @actions StartMouseShadow
@@ -422,7 +422,7 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onAddCommunicatorInitPlugin$
-	 * @ofType AddMapInstanceAction, MapInstanceChangedAction
+	 * @ofType MapInstanceChangedAction
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$

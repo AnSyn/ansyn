@@ -11,7 +11,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 export class ImageryRotationComponent {
 	@Input() mapState: CaseMapState;
 
-	private isRotating = false;
+	isRotating = false;
 
 	constructor(protected elementRef: ElementRef,
 				protected store: Store<any>) {

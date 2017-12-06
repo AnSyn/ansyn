@@ -127,6 +127,13 @@ export class CommunicatorEntity {
 		return this.ActiveMap.getPosition();
 	}
 
+	public setRotation(rotation: number) {
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
+		}
+		this.ActiveMap.setRotation(rotation);
+	}
+
 	public getPlugin(pluginName: string): IMapPlugin {
 		return this._manager.plugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
 	}

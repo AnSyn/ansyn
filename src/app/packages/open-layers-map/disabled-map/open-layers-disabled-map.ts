@@ -158,6 +158,9 @@ export class OpenLayersDisabledMap implements IMap {
 		return { center, zoom, rotation };
 	}
 
+	setRotation(rotation: number): void {
+	}
+
 	updateSize(): void {
 		this.mapObject.updateSize();
 	}

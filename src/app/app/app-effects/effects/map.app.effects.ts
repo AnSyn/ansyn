@@ -20,7 +20,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
+import { MapActionTypes, MapFacadeService, SetMapRotationAction } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -474,6 +474,20 @@ export class MapAppEffects {
 				}
 			});
 			return action;
+		});
+
+	/**
+	 * @type Effect
+	 * @name onSynchronizeAppMaps$
+	 * @ofType SynchronizeMapsAction
+	 * @dependencies cases
+	 */
+	@Effect({ dispatch: false })
+	onSetMapRotationAction$: Observable<SetMapRotationAction> = this.actions$
+		.ofType<SetMapRotationAction>(MapActionTypes.SET_MAP_ROTATION)
+		.do(action => {
+			const comm = this.imageryCommunicatorService.provide(action.payload.mapId);
+			comm.setRotation(action.payload.radians);
 		});
 
 	/**

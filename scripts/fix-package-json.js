@@ -23,7 +23,9 @@ function fix(fileName) {
 		});
 	}
 
-	fs.writeFileSync(fileName, JSON.stringify(packageJson, null, '\t') + '\n');
+	let newContent = JSON.stringify(packageJson, null, '\t');
+	newContent = newContent.split('\n').join('\r\n');
+	fs.writeFileSync(fileName, newContent + '\r\n');
 }
 
 fix('src/app/app/package.json');

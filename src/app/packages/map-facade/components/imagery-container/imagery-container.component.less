@@ -1,39 +1,41 @@
 @import "~@ansyn/core/less/common";
 @import "~@ansyn/core/less/z-index-globals";
 
-div.imagery {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	//border: 2px solid black;
-	box-sizing: border-box;
-}
+:host {
+	div.imagery {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		//border: 2px solid black;
+		box-sizing: border-box;
+	}
 
-.map-loader-wrapper {
-	position: absolute;
-	z-index: @z-index-map-loader;
-	width: 100%;
-	background-color: @menu-color;
-
-	&.lowered {
+	.map-loader-wrapper {
 		position: absolute;
-		top: 3px;
-		width: calc(~"100% - 6px");
-		margin-left: 3px;
+		z-index: @z-index-map-loader;
+		width: 100%;
+		background-color: @menu-color;
+
+		&.lowered {
+			position: absolute;
+			top: 3px;
+			width: calc(~"100% - 6px");
+			margin-left: 3px;
+		}
+
+		.map-loader {
+			height: 3px;
+			background-color: @overlays-dots-color;
+		}
 	}
 
-	.map-loader {
-		height: 3px;
-		background-color: @overlays-dots-color;
+	ansyn-imagery-rotation {
+		width: 50px;
+		height: 50px;
+
+		position: absolute;
+		z-index: @z-index-map-rotation;
+		top: 20px;
+		right: 20px;
 	}
-}
-
-ansyn-imagery-rotation {
-	width: 50px;
-	height: 50px;
-
-	position: absolute;
-	z-index: @z-index-map-rotation;
-	top: 20px;
-	right: 20px;
 }

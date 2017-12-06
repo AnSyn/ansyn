@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { ImageryRotationComponent } from './imagery-rotation.component';
+import { CoreModule } from '../../../core/core.module';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
@@ -10,6 +10,7 @@ describe('ImageryRotationComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				CoreModule,
 				StoreModule.forRoot({})
 			],
 			declarations: [

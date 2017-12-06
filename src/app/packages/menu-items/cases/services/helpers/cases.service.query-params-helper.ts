@@ -140,7 +140,7 @@ export class QueryParamsHelper {
 		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);
 	}
 
-	encodeCaseObjects(key, value, caseState: CaseState) {
+	encodeCaseObjects(key, value, caseState?: CaseState) {
 		switch (key) {
 			case 'facets':
 				return rison.encode(value);
@@ -162,14 +162,16 @@ export class QueryParamsHelper {
 			case 'overlaysManualProcessArgs':
 				// collect process arguments only for overlays currently loaded by map
 				const activeMapsManualProcessArgs = {};
-				forEach(caseState.overlaysManualProcessArgs, (processArgs, overlayId) => {
-					const loadedOverlay =  caseState.maps.data.find((caseMapState: CaseMapState) => {
-						return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
+				if (caseState) {
+					forEach(caseState.overlaysManualProcessArgs, (processArgs, overlayId) => {
+						const loadedOverlay = caseState.maps.data.find((caseMapState: CaseMapState) => {
+							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
+						});
+						if (loadedOverlay) {
+							activeMapsManualProcessArgs[overlayId] = processArgs;
+						}
 					});
-					if (loadedOverlay) {
-						activeMapsManualProcessArgs[overlayId] = processArgs;
-					}
-				});
+				}
 				return rison.encode(activeMapsManualProcessArgs);
 			default:
 				return wellknown.stringify(value);

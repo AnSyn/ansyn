@@ -132,7 +132,7 @@ export class QueryParamsHelper {
 	generateQueryParamsViaCase(sCase: Case): string {
 		const url = `/`;
 		const urlTree = this.casesService.urlSerializer.parse(url);
-		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key], sCase.state);
+		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key]);
 		keys.forEach(key => {
 			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key], sCase.state);
 		});

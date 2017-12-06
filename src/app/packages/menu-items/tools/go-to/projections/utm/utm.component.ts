@@ -58,9 +58,9 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		if (!c.value) {
 			return { empty: true };
 		}
-		const someEmpty = c.value.some(empty => !empty && empty !== 0);
-		if (someEmpty) {
-			return { empty: true };
+		const someNotNumber = c.value.some(value => typeof value !== 'number');
+		if (someNotNumber) {
+			return { invalid: true };
 		} else if (!ProjectionConverterService.isValidUTM(c.value)) {
 			return { invalid: true };
 		}

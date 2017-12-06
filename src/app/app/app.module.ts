@@ -13,7 +13,7 @@ export function MetaReducer(reducer) {
 	};
 }
 
-export const metaReducers = [DevReducer];
+export const metaReducers = [MetaReducer];
 
 @NgModule({
 	imports: [

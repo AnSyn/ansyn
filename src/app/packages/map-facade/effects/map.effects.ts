@@ -16,7 +16,7 @@ import {
 	PositionChangedAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetMapManualImageProcessing,
+	SetMapManualImageProcessing, SetMapRotationAction,
 	SetMapsDataActionStore,
 	SetPendingMapsCountAction
 } from '../actions/map.actions';
@@ -310,6 +310,20 @@ export class MapEffects {
 		})
 		.map(([action, isGeoRegistered, activeMapState]: [Action, boolean, CaseMapState, IMapState]): any => {
 			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
+		});
+
+	/**
+	 * @type Effect
+	 * @name onSynchronizeAppMaps$
+	 * @ofType SynchronizeMapsAction
+	 * @dependencies cases
+	 */
+	@Effect({ dispatch: false })
+	onSetMapRotationAction$: Observable<SetMapRotationAction> = this.actions$
+		.ofType<SetMapRotationAction>(MapActionTypes.SET_MAP_ROTATION)
+		.do(action => {
+			const comm = this.communicatorsService.provide(action.payload.mapId);
+			comm.setRotation(action.payload.radians);
 		});
 
 	constructor(protected actions$: Actions,

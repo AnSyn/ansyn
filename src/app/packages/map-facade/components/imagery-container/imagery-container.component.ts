@@ -18,8 +18,6 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	@Input() mapsAmount = 1;
 	@ViewChild('imageryViewContainer') imageryViewContainer: ElementRef;
 
-	@ViewChild('mapRotationWrapper') mapRotationWrapper: ElementRef;
-
 	private _showSpinner: boolean;
 
 	@Input('showSpinner')

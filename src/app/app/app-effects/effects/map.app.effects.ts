@@ -478,20 +478,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
-	 * @dependencies cases
-	 */
-	@Effect({ dispatch: false })
-	onSetMapRotationAction$: Observable<SetMapRotationAction> = this.actions$
-		.ofType<SetMapRotationAction>(MapActionTypes.SET_MAP_ROTATION)
-		.do(action => {
-			const comm = this.imageryCommunicatorService.provide(action.payload.mapId);
-			comm.setRotation(action.payload.radians);
-		});
-
-	/**
-	 * @type Effect
 	 * @name changeMapGeoOptionsMode$
 	 * @ofType EnableMapGeoOptionsActionStore
 	 * @action SetMapGeoEnabledModeToolsActionStore, SetMapGeoEnabledModeStatusBarActionStore

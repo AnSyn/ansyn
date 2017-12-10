@@ -9,6 +9,7 @@ import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
+import Group from 'ol/layer/group';
 
 import GeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
@@ -25,16 +26,17 @@ import VectorLayer from 'ol/layer/vector';
 
 export class OpenLayersMap implements IMap<Map> {
 	static mapType = 'openLayersMap';
+	static groupLayers = new Map<string, Group>(['layers']);
 
-	public mapType: string;
+	public mapType: string = OpenLayersMap.mapType;
 	private _mapObject: Map;
 	private _mapLayers = [];
 	private _mapVectorLayers = [];
-	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public positionChanged: EventEmitter<MapPosition>;
-	public pointerMove: EventEmitter<any>;
-	public singleClick: EventEmitter<any>;
-	public contextMenu: EventEmitter<any>;
+	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
+	public singleClick: EventEmitter<any> = new EventEmitter<any>();
+	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
 	private _pinPointIndicatorLayerId = 'pinPointIndicator';
 	private _flags = {
@@ -44,12 +46,12 @@ export class OpenLayersMap implements IMap<Map> {
 	private _imageProcessing: OpenLayersImageProcessing;
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
-		this.mapType = OpenLayersMap.mapType;
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<MapPosition>();
-		this.pointerMove = new EventEmitter<any>();
-		this.singleClick = new EventEmitter<any>();
-		this.contextMenu = new EventEmitter<any>();
+		if (!OpenLayersMap.groupLayers.get('layers')) {
+			OpenLayersMap.groupLayers.set('layers', new Group({
+				layers: [],
+				name: 'layers'
+			}));
+		}
 
 		this.initMap(element, layers, position);
 	}
@@ -62,7 +64,6 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
-
 		let center = [16, 38];
 		let zoom = 12;
 		let rotation = 0;
@@ -111,6 +112,8 @@ export class OpenLayersMap implements IMap<Map> {
 			const point = this.positionToPoint(e.offsetX, e.offsetY);
 			this.contextMenu.emit({ point, e });
 		});
+
+		this.setGroupLayers();
 	}
 
 
@@ -118,6 +121,7 @@ export class OpenLayersMap implements IMap<Map> {
 
 	public resetView(layer: any, extent?: GeoJSON.Point[]) {
 		this.setMainLayer(layer);
+
 		if (extent) {
 			this.fitCurrentView(layer, extent);
 		}
@@ -125,6 +129,11 @@ export class OpenLayersMap implements IMap<Map> {
 
 	public getLayerById(id: string) {
 		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id)[0];
+	}
+
+	private setGroupLayers() {
+		console.error('Add group', OpenLayersMap.groupLayers.get('layers'));
+		this.addLayer(OpenLayersMap.groupLayers.get('layers'));
 	}
 
 	private setMainLayer(layer: Layer) {
@@ -157,6 +166,7 @@ export class OpenLayersMap implements IMap<Map> {
 			this._imageProcessing = null;
 		}
 
+		this.setGroupLayers();
 	}
 
 	addInteraction(interaction) {
@@ -214,9 +224,19 @@ export class OpenLayersMap implements IMap<Map> {
 		});
 	}
 
-	public addLayer(layer: any) {
-		this._mapLayers.push(layer);
-		this._mapObject.addLayer(layer);
+	public addLayer(layer: any, groupName?: string) {
+		if (!groupName) {
+			this._mapLayers.push(layer);
+			this._mapObject.addLayer(layer);
+		} else {
+			const group = OpenLayersMap.groupLayers.get(groupName);
+			if (!group) {
+				throw new Error('Tried to add a layer to a non-existent group');
+			}
+
+			group.getLayers().getArray().push(layer);
+			this._mapObject.render();
+		}
 	}
 
 	/**
@@ -239,6 +259,14 @@ export class OpenLayersMap implements IMap<Map> {
 
 
 	public removeAllLayers() {
+		try {
+			OpenLayersMap.groupLayers.forEach((name, layer) => {
+				this._mapObject.removeLayer(layer);
+			});
+		} catch (e) {
+			console.warn(e);
+		}
+
 		while (this._mapLayers.length > 0) {
 			this.removeLayer(this._mapLayers[0]);
 		}
@@ -246,15 +274,28 @@ export class OpenLayersMap implements IMap<Map> {
 		this._mapLayers = [];
 	}
 
-	public removeLayer(layer: any): void {
+	public removeLayer(layer: any, groupName?: string): void {
 		if (!layer) {
+			console.error(layer, groupName);
 			return;
 		}
-		const index = this._mapLayers.indexOf(layer);
-		if (index > -1) {
-			this._mapLayers.splice(index, 1);
-			this._mapObject.removeLayer(layer);
-			this._mapObject.render();
+
+		if (!groupName) {
+			const index = this._mapLayers.indexOf(layer);
+			if (index > -1) {
+				this._mapLayers.splice(index, 1);
+				this._mapObject.removeLayer(layer);
+				this._mapObject.render();
+			}
+		} else {
+			const group = OpenLayersMap.groupLayers.get(groupName);
+			if (!group) {
+				throw new Error('Tried to add a layer to a non-existent group');
+			}
+
+			// let layersArray = group.getLayers().getArray().filter(l => l.id !== layer)
+			//
+			// console.warn(group.getLayers().getArray());
 		}
 
 		if (this._imageProcessing) {
@@ -272,7 +313,7 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	// In the future we'll use @ansyn/map-source-provider
-	public addVectorLayer(layer: any): void {
+	public addVectorLayer(layer: any, groupName?: string): void {
 		const vectorLayer = new TileLayer({
 			zIndex: 1,
 			source: new OSM({
@@ -284,13 +325,12 @@ export class OpenLayersMap implements IMap<Map> {
 				crossOrigin: null
 			})
 		});
-		this._mapObject.addLayer(vectorLayer);
-		this._mapVectorLayers[layer.id] = vectorLayer;
+		vectorLayer.id = layer.id;
+		this.addLayer(vectorLayer, groupName);
 	}
 
-	public removeVectorLayer(layer: any): void {
-		this._mapObject.removeLayer(this._mapVectorLayers[layer.id]);
-		delete this._mapVectorLayers[layer.id];
+	public removeVectorLayer(layer: any, groupName?: string): void {
+		this.removeLayer(layer, groupName);
 	}
 
 	public get mapObject() {

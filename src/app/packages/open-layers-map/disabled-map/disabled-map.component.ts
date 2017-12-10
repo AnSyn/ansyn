@@ -24,11 +24,13 @@ import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	static mapName = 'disabledOpenLayersMap';
+	static groupLayers = new Map<string, any>();
 
 	@ViewChild('olMap') mapElement: ElementRef;
 
 	private _map: OpenLayersDisabledMap;
 	public mapCreated: EventEmitter<IMap>;
+
 
 	constructor() {
 		this.mapCreated = new EventEmitter<IMap>();

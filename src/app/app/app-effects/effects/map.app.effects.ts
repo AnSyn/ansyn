@@ -20,7 +20,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes, MapFacadeService, SetMapRotationAction } from '@ansyn/map-facade';
+import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -323,7 +323,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [SelectLayerAction, IMapState]) => {
 			const imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
-			imagery.addVectorLayer(action.payload);
+			imagery.addVectorLayer(action.payload, 'layers');
 			return action;
 		});
 
@@ -339,7 +339,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [UnselectLayerAction, IMapState]) => {
 			let imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
-			imagery.removeVectorLayer(action.payload);
+			imagery.removeVectorLayer(action.payload, 'layers');
 			return action;
 		});
 

@@ -58,6 +58,10 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 			this.lineWidthTrigger = false;
 			return;
 		}
+		if (this.colorSelectionTrigger) {
+			// close color selection if open
+			this.toggleColorSelection(null);
+		}
 		if (this.document.activeElement !== this.lineWidthSelection.nativeElement) {
 			this.lineWidthSelection.nativeElement.focus();
 		}
@@ -75,7 +79,9 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	}
 
 	toggleColorSelection($event) {
-		$event.stopPropagation();
+		if ($event) {
+			$event.stopPropagation();
+		}
 
 		if (this.mode) {
 			this.createInteraction(this.mode);

@@ -1,4 +1,5 @@
 @import "~@ansyn/core/less/z-index-globals";
+@import '~@ansyn/core/less/tooltip';
 
 :host {
 	width: 0;
@@ -11,7 +12,6 @@
 	visibility: hidden;
 	transition: .2s;
 	z-index: @z-index-overlays-display-mode-component;
-	overflow: hidden;
 	&.expand {
 		form {
 			visibility: visible;

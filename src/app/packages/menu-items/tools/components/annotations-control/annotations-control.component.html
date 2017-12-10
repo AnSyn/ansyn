@@ -1,27 +1,27 @@
 <ul class="annotations-options">
 	<li [class.mode-on]="mode === 'Point'" (click)="createInteraction('Point')">
-		<span class="icon-annotation-point "></span></li>
+		<span class="tooltip-value bottom icon-annotation-point" value="Point"></span></li>
 	<li [class.mode-on]="mode === 'LineString'" (click)="createInteraction('LineString')">
-		<span class="icon-annotation-line "></span>
+		<span class="tooltip-value bottom icon-annotation-line" value="Line"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Polygon'" (click)="createInteraction('Polygon')">
-		<span class="icon-annotation-polygon "></span>
+		<span class="tooltip-value bottom icon-annotation-polygon" value="Polygon"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Circle'" (click)="createInteraction('Circle')">
-		<span class="icon-annotation-circle "></span>
+		<span class="tooltip-value bottom icon-annotation-circle" value="Circle"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Rectangle'" (click)="createInteraction('Rectangle')">
-		<span class="icon-annotation-square "></span>
+		<span class="tooltip-value bottom icon-annotation-square" value="Rectangle"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Arrow'" (click)="createInteraction('Arrow')">
-		<span class="icon-annotation-arrow "></span>
+		<span class="tooltip-value bottom icon-annotation-arrow" value="Arrow"></span>
 	</li>
 	<li class="spliter">
 		<div></div>
 	</li>
 	<li class="expanded-selection">
 		<div (mouseup)="openLineWidthSelection()" (mousedown)="closeLineWidthSelection()">
-			<span class="icon-annotation-weight"></span>
+			<span class="tooltip-value bottom icon-annotation-weight" value="Width"></span>
 		</div>
 		<ul (mousedown)="selectLineWidth($event)" #lineWidthSelection tabindex="30" class="line-width-expand">
 			<li tabindex="31" data-index="1">1</li>
@@ -36,7 +36,7 @@
 	</li>
 	<li class="expanded-selection color-selection">
 		<div (click)="toggleColorSelection($event)">
-			<span class="icon-annotation-color "></span>
+			<span class="tooltip-value bottom icon-annotation-color" value="Color"></span>
 		</div>
 		<ul #colorSelection tabindex="40" class="color-selection-expand">
 			<li (click)="openColorInput($event)">

@@ -49,5 +49,8 @@ deploy:
     on:
       tags: true
 
+after_deploy:
+  - node scripts/kill-tasks.js
+
 notifications:
   email: false

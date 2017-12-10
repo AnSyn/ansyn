@@ -33,6 +33,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 
 	coordinates: number[] = [0, 0];
+	validationErr: ValidationErrors = null;
 
 	onChanges = (value) => {
 	};
@@ -64,15 +65,18 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 
 	validate(c: AbstractControl): ValidationErrors {
 		if (!c.value) {
-			return { empty: true };
+			this.validationErr = { empty: true };
+			return this.validationErr;
 		}
 		const lng = c.value[0];
 		const lat = c.value[1];
 		if (_isNil(lng) || _isNil(lat)) {
-			return { empty: true };
+			this.validationErr = { empty: true };
 		} else if (!ProjectionConverterService.isValidWGS84(c.value)) {
-			return { invalid: true };
+			this.validationErr = { invalid: true };
+		} else {
+			this.validationErr = null;
 		}
-		return null;
+		return this.validationErr;
 	}
 }

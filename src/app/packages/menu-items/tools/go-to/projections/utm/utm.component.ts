@@ -1,5 +1,8 @@
 import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import {
+	AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors,
+	Validator
+} from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 
@@ -25,6 +28,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 
 	coordinates: number[] = [0, 0, 0];
+	validationErr: ValidationErrors = null;
 
 	onChanges = (value) => {
 	};
@@ -54,17 +58,20 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		this.copyToClipBoardHandler.emit(this.coordinates.join(' '));
 	}
 
-	validate(c: AbstractControl): { [key: string]: any; } {
+	validate(c: AbstractControl): ValidationErrors {
 		if (!c.value) {
-			return { empty: true };
+			this.validationErr = { empty: true };
+			return this.validationErr;
 		}
 		const someNotNumber = c.value.some(value => typeof value !== 'number');
 		if (someNotNumber) {
-			return { empty: true };
+			this.validationErr = { empty: true };
 		} else if (!ProjectionConverterService.isValidUTM(c.value)) {
-			return { invalid: true };
+			this.validationErr = { invalid: true };
+		} else {
+			this.validationErr = null;
 		}
-		return null;
+		return this.validationErr;
 	}
 
 }

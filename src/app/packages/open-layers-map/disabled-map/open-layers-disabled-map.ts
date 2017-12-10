@@ -10,6 +10,7 @@ import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
+import Raster from 'ol/source/raster';
 
 export class OpenLayersDisabledMap implements IMap {
 	static mapType = 'openLayersMap';
@@ -33,8 +34,6 @@ export class OpenLayersDisabledMap implements IMap {
 		this.pointerMove = new EventEmitter<any>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		this._imageProcessing = new OpenLayersImageProcessing();
-
 		this.initMap(element, layers, position);
 	}
 
@@ -93,6 +92,12 @@ export class OpenLayersDisabledMap implements IMap {
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
+		}
+
+		if (layer.getSource() instanceof Raster) {
+			this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
+		} else {
+			this._imageProcessing = null;
 		}
 	}
 

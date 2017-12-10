@@ -5,15 +5,22 @@ import { Observable } from 'rxjs/Observable';
 
 export class CesiumMap implements IMap {
 	static mapType = 'cesium';
+	static groupLayers = new Map<string, any>();
 
-	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<MapPosition>;
+	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
-	mapType: string;
+	mapType: string = CesiumMap.mapType;
 	mapObject: any;
+
+	constructor(element: HTMLElement) {
+		this.mapObject = {};
+
+
+	}
 
 	getCenter(): GeoJSON.Point {
 		throw new Error('Method not implemented.');
@@ -91,12 +98,6 @@ export class CesiumMap implements IMap {
 	}
 
 
-	constructor(element: HTMLElement) {
-		this.mapType = CesiumMap.mapType;
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<MapPosition>();
-		this.mapObject = {};
-	}
 
 	dispose() {
 	}

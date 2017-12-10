@@ -24,13 +24,13 @@ export interface IMap<T = any> {
 	 */
 	resetView(layer: any, extent?: GeoJSON.Point[]): void;
 
-	addLayer(layer: any): void;
+	addLayer(layer: any, groupName?: string): void;
 
-	removeLayer(layer: any): void;
+	removeLayer(layer: any, groupName?: string): void;
 
-	addVectorLayer(layer: any): void;
+	addVectorLayer(layer: any, groupName?: string): void;
 
-	removeVectorLayer(layer: any): void;
+	removeVectorLayer(layer: any, groupName?: string): void;
 
 	setPosition(MapPosition): void;
 

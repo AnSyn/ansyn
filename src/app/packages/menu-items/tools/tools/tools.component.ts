@@ -62,6 +62,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 					this.manualProcessingControls.resetAllParams();
 				} else {
 					this.manualProcessingControls.imgProcessParams = processParams;
+					this.manualProcessingControls.imgProcessActive = true;
 				}
 			}
 		});

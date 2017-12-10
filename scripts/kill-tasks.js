@@ -8,11 +8,11 @@ exec('aws --region us-west-2 ecs list-tasks --cluster ansyn-app-cluster', (error
 			console.log(stdout);
 			console.log(stderr);
 			if (error !== null) {
-				console.log(`exec error: ${error}`);
+				throw new Error(`exec error: ${error}`);
 			}
 		});
 	});
 	if (error !== null) {
-		console.log(`exec error: ${error}`);
+		throw new Error(`exec error: ${error}`);
 	}
 });

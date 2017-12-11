@@ -10,7 +10,7 @@
 	"license": "MIT",
 	"peerDependencies": {
 		"@ansyn/imagery": "0.2.2",
-		"@angular/common": "^5.0.0",
-		"@angular/core": "^5.0.0"
+		"@angular/common": "5.1.0",
+		"@angular/core": "5.1.0"
 	}
 }

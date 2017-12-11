@@ -96,13 +96,13 @@ describe('StatusBarComponent', () => {
 		spyOn(component, 'clickGoPrev');
 		spyOn(component, 'clickGoNext');
 		const $event = {
-			code: 'ArrowRight',
+			which: 39,
 			currentTarget: { document: { activeElement: {} } }
 		};
 		component.onkeyup(<any>$event);
 		expect(component.goNext.nativeElement.classList.remove).toHaveBeenCalledWith('active');
 		expect(component.clickGoNext).toHaveBeenCalled();
-		$event.code = 'ArrowLeft';
+		$event.which = 37;
 		component.onkeyup(<any>$event);
 		expect(component.goPrev.nativeElement.classList.remove).toHaveBeenCalledWith('active');
 		expect(component.clickGoPrev).toHaveBeenCalled();
@@ -112,12 +112,12 @@ describe('StatusBarComponent', () => {
 		spyOn(component.goPrev.nativeElement.classList, 'add');
 		spyOn(component.goNext.nativeElement.classList, 'add');
 		const $event = {
-			code: 'ArrowRight',
+			which: 39,
 			currentTarget: { document: { activeElement: {} } }
 		};
 		component.onkeydown(<any>$event);
 		expect(component.goNext.nativeElement.classList.add).toHaveBeenCalledWith('active');
-		$event.code = 'ArrowLeft';
+		$event.which = 37;
 		component.onkeydown(<any>$event);
 		expect(component.goPrev.nativeElement.classList.add).toHaveBeenCalledWith('active');
 	});

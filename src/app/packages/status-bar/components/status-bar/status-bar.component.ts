@@ -16,7 +16,7 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
-import { SetToastMessageAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -73,10 +73,10 @@ export class StatusBarComponent implements OnInit {
 			return;
 		}
 
-		if ($event.code === 'ArrowRight') {
+		if ($event.which === 39) {
 			this.renderer.addClass(this.goNext.nativeElement, 'active');
 		}
-		else if ($event.code === 'ArrowLeft') {
+		else if ($event.which === 37) {
 			this.renderer.addClass(this.goPrev.nativeElement, 'active');
 		}
 	}
@@ -87,11 +87,11 @@ export class StatusBarComponent implements OnInit {
 			return;
 		}
 
-		if ($event.code === 'ArrowRight') {
+		if ($event.which === 39) {
 			this.clickGoNext();
 			this.renderer.removeClass(this.goNext.nativeElement, 'active');
 		}
-		else if ($event.code === 'ArrowLeft') {
+		else if ($event.which === 37) {
 			this.clickGoPrev();
 			this.renderer.removeClass(this.goPrev.nativeElement, 'active');
 		}

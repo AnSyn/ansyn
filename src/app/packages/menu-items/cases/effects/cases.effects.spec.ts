@@ -155,7 +155,7 @@ describe('CasesEffects', () => {
 
 	it('onSaveCaseAs$ should add a default case', () => {
 		const selectedCase = { id: 'selectedCaseId' } as Case;
-		spyOn(casesService, 'createCase').and.returnValue(Observable.of(selectedCase))
+		spyOn(casesService, 'createCase').and.returnValue(Observable.of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);

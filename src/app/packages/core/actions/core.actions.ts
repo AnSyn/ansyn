@@ -5,7 +5,7 @@ import { IToastMessage } from '../reducers/core.reducer';
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('TOGGLE_MAP_LAYERS'),
 	TOGGLE_OVERLAY_FAVORITE: type('TOGGLE_FAVORITE'),
-	SET_TOAST_MESSAGE: type('SET_TOAST_MESSAGE'),
+	SET_TOAST_MESSAGE: type('SET_TOAST_MESSAGE')
 };
 
 export type CoreActions = ToggleMapLayersAction | ToggleFavoriteAction | SetToastMessageAction;

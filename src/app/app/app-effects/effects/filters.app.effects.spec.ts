@@ -13,6 +13,7 @@ import {
 import {
 	filtersFeatureKey,
 	FiltersReducer,
+	filtersStateSelector,
 	initialFiltersState
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFiltersAction, SliderFilterMetadata } from '../../../index';
@@ -33,10 +34,8 @@ import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { initialMenuState, menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+import { initialMenuState, menuFeatureKey, MenuReducer, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
-import { filtersStateSelector } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('Filters app effects', () => {

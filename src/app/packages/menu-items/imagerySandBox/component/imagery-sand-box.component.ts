@@ -89,29 +89,6 @@ export class ImagerySandBoxComponent implements OnInit {
 		});
 	}
 
-	public togglePointerMoveEvent() {
-		// TODO take from active
-		this._isMouseShadowEnabled = !this._isMouseShadowEnabled;
-		const communicators = this.imageryCommunicatorService.communicators;
-		const key = Object.keys(communicators)[0];
-		communicators[key].setMouseShadowListener(this._isMouseShadowEnabled);
-		communicators[key]['pointerMove'].subscribe(latLon => {
-			this.drawShadowMouse(latLon);
-		});
-	}
-
-	public startListenToPointerMove() {
-		const communicators = this.imageryCommunicatorService.communicators;
-		const key = Object.keys(communicators)[1];
-		communicators[key].toggleMouseShadowVectorLayer();
-	}
-
-	public drawShadowMouse(latLon) {
-		const communicators = this.imageryCommunicatorService.communicators;
-		const key = Object.keys(communicators)[1];
-		communicators[key].drawShadowMouse(latLon);
-	}
-
 	public reloadOverlays($event) {
 		const from = new Date(this.overlaysFrom);
 		const to = new Date(this.overlaysTo);
@@ -137,7 +114,6 @@ export class ImagerySandBoxComponent implements OnInit {
 		} as  OverlaySpecialObject;
 		this.store.dispatch(new SetSpecialObjectsActionStore([specialObject]));
 	}
-
 
 	public insertContextEntity() {
 		const clonedCase = cloneDeep(this.selectedCase);

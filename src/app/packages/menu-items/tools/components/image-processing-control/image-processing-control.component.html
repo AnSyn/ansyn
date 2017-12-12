@@ -16,19 +16,22 @@
 	<li>
 		<label for="image-processing-brightness">Brightness</label><br>
 		<input id="image-processing-brightness"
-			   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Brightness" (change)="throttledManualImageProcess()">
+			   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Brightness"
+			   (change)="throttledManualImageProcess()">
 		<button class="button-reset" (click)="backToDefault('Brightness')">reset</button>
 	</li>
 	<li>
 		<label for="image-processing-gamma">Gamma</label><br>
 		<input id="image-processing-gamma"
-			   type="range" min="1" max="200" [(ngModel)]="imgProcessParams.Gamma" (change)="throttledManualImageProcess()">
+			   type="range" min="1" max="200" [(ngModel)]="imgProcessParams.Gamma"
+			   (change)="throttledManualImageProcess()">
 		<button class="button-reset" (click)="backToDefault('Gamma')">reset</button>
 	</li>
 	<li>
 		<label for="image-processing-saturation">Saturation</label><br>
 		<input id="image-processing-saturation"
-			type="range" min="1" max="100" [(ngModel)]="imgProcessParams.Saturation" (change)="throttledManualImageProcess()">
+			   type="range" min="1" max="100" [(ngModel)]="imgProcessParams.Saturation"
+			   (change)="throttledManualImageProcess()">
 		<button class="button-reset" (click)="backToDefault('Saturation')">reset</button>
 	</li>
 </ul>

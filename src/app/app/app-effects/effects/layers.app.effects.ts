@@ -15,6 +15,7 @@ import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions
 import { Case } from '@ansyn/core/models/case.model';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app.effects.module';
+import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
 
 
 @Injectable()
@@ -86,6 +87,17 @@ export class LayersAppEffects {
 
 			return actions;
 		});
+
+	/**
+	 * @type Effect
+	 * @name renderMaps$,
+	 * @ofType SelectLayerAction, UnselectLayerAction
+	 * @action
+	 */
+	@Effect()
+	redrawMaps$: Observable<any> = this.actions$
+		.ofType<any>(LayersActionTypes.SELECT_LAYER, LayersActionTypes.UNSELECT_LAYER)
+		.map(action => new ContainerChangedTriggerAction());
 
 	constructor(public actions$: Actions, public store$: Store<IAppState>) {
 	}

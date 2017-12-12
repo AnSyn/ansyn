@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes, UnSelectMenuItemAction } from '@ansyn/menu';
+import { MenuActionTypes } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
 import { GoToExpandAction, SetAutoCloseMenu, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetBadgeAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
+import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
 

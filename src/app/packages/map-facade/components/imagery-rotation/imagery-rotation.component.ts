@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetMapRotationAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';

@@ -25,7 +25,7 @@ export class ImageryCommunicatorService {
 		return this._communicators[id];
 	}
 
-	get communicators(): any {
+	get communicators(): { [id: string]: CommunicatorEntity } {
 		return this._communicators;
 	}
 

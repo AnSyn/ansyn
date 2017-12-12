@@ -19,7 +19,7 @@ export class CommunicatorEntity {
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
 
-	constructor(protected _manager: ImageryComponentManager) {
+	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: MapPosition }>();
 		this.singleClick = new EventEmitter<any>();

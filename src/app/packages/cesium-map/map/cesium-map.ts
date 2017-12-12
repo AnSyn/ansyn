@@ -34,6 +34,10 @@ export class CesiumMap implements IMap {
 		throw new Error('Method not implemented.');
 	}
 
+	toggleGroup(groupName: string) {
+		throw new Error('Method not implemented.');
+	}
+
 	resetView(layer: any): void {
 		throw new Error('Method not implemented.');
 	}
@@ -96,7 +100,6 @@ export class CesiumMap implements IMap {
 	addLayerIfNotExist() {
 
 	}
-
 
 
 	dispose() {

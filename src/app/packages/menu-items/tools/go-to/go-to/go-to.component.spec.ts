@@ -20,15 +20,15 @@ describe('GoToComponent', () => {
 			providers: [
 				{
 					provide: toolsConfig, useValue: {
-						GoTo: {
-							from: '',
-							to: ''
-						},
-						Proj4: {
-							ed50: "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
-							ed50Customized: ""
-						}
+					GoTo: {
+						from: '',
+						to: ''
+					},
+					Proj4: {
+						ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
+						ed50Customized: ''
 					}
+				}
 				}
 			]
 		})

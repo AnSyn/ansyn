@@ -14,6 +14,7 @@ export class ProjectionConverterService {
 	static isValidCoordinates(coords: number[], minLength: number) {
 		return coords.length >= minLength && coords.every(c => typeof c === 'number');
 	}
+
 	// WGS84 ranges: -90 < lat < 90  -180 < lon <180
 	static isValidWGS84(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 2);
@@ -21,6 +22,7 @@ export class ProjectionConverterService {
 		const validLat = coordinatesValid && inRange(coords[1], -89.9999, 90);
 		return validLat && validLong;
 	}
+
 	// UTM ranges: -16198192 <= x < 17198193, 0 < zone <= 60
 	static isValidUTM(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
@@ -32,6 +34,7 @@ export class ProjectionConverterService {
 
 	constructor(@Inject(toolsConfig) protected toolsConfigProj: IToolsConfig) {
 	}
+
 	// isValidConversion
 	isValidConversion(coords: number[], from: CoordinatesSystem): boolean {
 		let isValid = Boolean(coords);
@@ -46,7 +49,7 @@ export class ProjectionConverterService {
 		if (isValid && fromEd50Utm) {
 			isValid = ProjectionConverterService.isValidUTM(coords);
 		}
-		return isValid
+		return isValid;
 	}
 
 

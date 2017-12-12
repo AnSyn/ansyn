@@ -13,6 +13,7 @@ import {
 	AddMapInstanceAction,
 	AddOverlayToLoadingOverlaysAction,
 	DrawPinPointAction,
+	MapInstanceChangedAction,
 	MapSingleClickAction,
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
@@ -28,7 +29,6 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
@@ -67,7 +67,6 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { MapInstanceChangedAction } from '@ansyn/map-facade/actions/map.actions';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -326,7 +325,7 @@ describe('MapAppEffects', () => {
 		actions = hot('--a--', { a: new SelectLayerAction(staticLeaf) });
 		const expectedResults = cold('--b--', { b: new SelectLayerAction(staticLeaf) });
 		expect(mapAppEffects.addVectorLayer$).toBeObservable(expectedResults);
-		expect(imagery1.addVectorLayer).toHaveBeenCalledWith(staticLeaf);
+		expect(imagery1.addVectorLayer).toHaveBeenCalledWith(staticLeaf, 'layers');
 	});
 
 	it('removeVectorLayer$ should remove the unselected Layer to the map', () => {
@@ -342,7 +341,7 @@ describe('MapAppEffects', () => {
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: action });
 		expect(mapAppEffects.removeVectorLayer$).toBeObservable(expectedResults);
-		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf);
+		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf, 'layers');
 	});
 
 	describe('onCommunicatorChange$', () => {

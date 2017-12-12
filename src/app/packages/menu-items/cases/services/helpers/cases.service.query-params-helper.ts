@@ -1,6 +1,6 @@
 import { Case } from '../../models/case.model';
 import { Params } from '@angular/router';
-import { cloneDeep, isEmpty, forEach } from 'lodash';
+import { cloneDeep, forEach, isEmpty } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
@@ -114,7 +114,7 @@ export class QueryParamsHelper {
 										id: '2',
 										date: qParams.time ? new Date(qParams.time) : new Date(),
 										featureJson: centroidOfGeometry
-									},
+									}
 								);
 							}
 						}
@@ -152,7 +152,7 @@ export class QueryParamsHelper {
 					if (caseMapState.data.overlay) {
 						caseMapState.data.overlay = <any>{
 							id: caseMapState.data.overlay.id,
-							sourceType: caseMapState.data.overlay.sourceType,
+							sourceType: caseMapState.data.overlay.sourceType
 						};
 					}
 				});

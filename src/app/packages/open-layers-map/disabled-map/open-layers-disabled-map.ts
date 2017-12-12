@@ -7,7 +7,7 @@ import Map from 'ol/map';
 import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
-import Rotate from 'ol/control/rotate';
+import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
@@ -37,9 +37,7 @@ export class OpenLayersDisabledMap extends IMap {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
-			controls: [new Rotate({
-				autoHide: false
-			})]
+			controls: [new ScaleLine()]
 		});
 		this.setMainLayer(layers[0], null, position);
 		const containerElem = <HTMLElement> this.mapObject.getViewport();

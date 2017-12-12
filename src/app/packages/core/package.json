@@ -10,10 +10,10 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "^5.0.0",
-		"@angular/core": "^5.0.0",
+		"@angular/common": "5.1.0",
+		"@angular/core": "5.1.0",
 		"@types/geojson": "1.0.6",
-		"@turf/turf": "^4.7.3",
-		"proj4": "^2.4.3"
+		"@turf/turf": "4.7.3",
+		"proj4": "2.4.3"
 	}
 }

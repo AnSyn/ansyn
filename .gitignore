@@ -45,7 +45,7 @@ testem.log
 /e2e/*.map
 
 #log
-git-hash-log.txt
+log.csv
 
 # System Files
 .DS_Store

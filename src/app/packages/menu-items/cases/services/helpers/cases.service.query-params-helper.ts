@@ -48,7 +48,7 @@ export class QueryParamsHelper {
 		});
 
 		if (selectedContext.zoom) {
-			updatedCaseModel.state.maps.data.forEach(map => map.data.position.zoom = selectedContext.zoom);
+			// updatedCaseModel.state.maps.data.forEach(map => map.data.position.zoom = selectedContext.zoom);
 		}
 
 		if (selectedContext.requirements && !isEmpty(qParams)) {
@@ -59,7 +59,7 @@ export class QueryParamsHelper {
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(Number).reverse();
 							const geoPoint: Point = { type: 'Point', coordinates };
-							updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+							// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 							updatedCaseModel.state.region = getPolygonByPointAndRadius(coordinates).geometry;
 						}
 						break;
@@ -72,7 +72,7 @@ export class QueryParamsHelper {
 								const geoPoint: Point = <Point>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
-								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
+								// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
 
 								updatedCaseModel.state.contextEntities = [];
@@ -99,7 +99,7 @@ export class QueryParamsHelper {
 								};
 								const centroidOfGeometry = centroid(feature);
 
-								updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = centroidOfGeometry.geometry);
+								// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = centroidOfGeometry.geometry);
 								updatedCaseModel.state.region = geoPolygon;
 
 								updatedCaseModel.state.contextEntities = [];

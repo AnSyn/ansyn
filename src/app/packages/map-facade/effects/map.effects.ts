@@ -194,7 +194,7 @@ export class MapEffects {
 
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
-			comm.loadInitialMapSource(selectedMap.data.position.boundingBox);
+			comm.loadInitialMapSource(selectedMap.data.position.extent);
 
 			const updatedMapsList = [...mapsList];
 			updatedMapsList.forEach(

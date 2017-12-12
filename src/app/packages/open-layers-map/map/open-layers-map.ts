@@ -106,13 +106,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
-		let center = [16, 38];
-		let zoom = 12;
+		let center = [0, 0];
+		let zoom = 1;
 		let rotation = 0;
 
 		if (position) {
-			center = position.center.coordinates;
-			zoom = position.zoom;
 			rotation = position.rotation;
 		}
 
@@ -122,7 +120,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			renderer: 'canvas',
 			controls: [new ScaleLine()],
 			view: new View({
-				center: proj.fromLonLat([center[0], center[1]]),
+				center: proj.fromLonLat(center),
 				zoom: zoom,
 				rotation: rotation,
 				minZoom: 2.5
@@ -131,8 +129,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		this._mapLayers = layers;
 
-		if (position && position.boundingBox) {
-			this.setBoundingBox(position.boundingBox);
+		if (position && position.extent) {
+			this.fitToExtent(position.extent);
 		}
 
 		this._mapObject.on('moveend', () => {
@@ -158,11 +156,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	// IMap Start
 
-	public resetView(layer: any, extent?: GeoJSON.Point[]) {
+	public resetView(layer: any, extent?: [number, number, number, number], resolution?: number) {
 		this.setMainLayer(layer);
 
 		if (extent) {
-			this.fitCurrentView(layer, extent);
+			this.fitToExtent(extent, resolution);
 		}
 	}
 
@@ -170,7 +168,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id)[0];
 	}
 
-	private setGroupLayers() {
+	setGroupLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show) {
 				this.addLayer(OpenLayersMap.groupLayers.get(group));
@@ -189,27 +187,25 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.showGroups.set(groupName, newState);
 	}
 
-	private setMainLayer(layer: Layer) {
+	setMainLayer(layer: Layer) {
 		this.removeAllLayers();
 		const oldview = this._mapObject.getView();
-		const currentZoom = oldview.getZoom();
-		const currentCenter = oldview.getCenter();
-		const currentRotation = oldview.getRotation();
-
-		const projection = oldview.getProjection();
-		let newCenter = proj.transform([currentCenter[0], currentCenter[1]], projection, layer.getSource().getProjection());
-
-		if (!newCenter) {
-			newCenter = [0, 0];
-		}
+		const rotation = oldview.getRotation();
+		const oldProjection = oldview.getProjection();
+		const projection = layer.getSource().getProjection();
+		const viewExtent = oldview.calculateExtent(this.mapObject.getSize());
+		const extent = proj.transformExtent(viewExtent, oldProjection, projection);
+		const resolution = oldview.getResolution();
 
 		const view: any = new View({
-			center: newCenter,
-			zoom: currentZoom,
-			rotation: currentRotation,
-			projection: layer.getSource().getProjection(),
-			minZoom: 2.5
+			rotation,
+			projection,
+			minZoom: 2.5,
 		});
+
+		view.fit(extent, this.mapObject.getSize());
+		view.setResolution(resolution);
+
 		this._mapObject.setView(view);
 		this.addLayer(layer);
 
@@ -231,7 +227,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 
-	private internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
+	internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
 		const pinPointIndicatorLayer: Layer = <Layer>this.getLayerById(this._pinPointIndicatorLayerId);
 		let lonLatCords;
 		if (pinPointIndicatorLayer) {
@@ -244,37 +240,14 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return { pinPointLonLatGeo: lonLatCords };
 	}
 
-	private fitCurrentView(layer: Layer, extent?: GeoJSON.Point[]) {
-		const view = this._mapObject.getView();
-		const viewProjection = view.getProjection();
-		const layerExtent = layer.getExtent();
-		let projectedViewExtent;
-
-		if (layerExtent && extent) {
-			const positionExtent = Utils.BoundingBoxToOLExtent(extent);
-			projectedViewExtent = proj.transformExtent(positionExtent, 'EPSG:4326', viewProjection);
-			const intersects = Extent.intersects(layerExtent, projectedViewExtent);
-			if (intersects) {
-				this.fitToExtent(projectedViewExtent);
-			} else {
-				this.fitToExtent(layerExtent);
-			}
-		} else if (layerExtent) {
-			this.fitToExtent(layerExtent);
+	fitToExtent(extent: Extent, resolution?: number) {
+		const view = this.mapObject.getView();
+		const projection = view.getProjection();
+		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
+		view.fit(transformExtent, {size: this.mapObject.getSize(), constrainResolution: false});
+		if (resolution) {
+			view.setResolution(resolution);
 		}
-		else if (extent) {
-			const positionExtent = Utils.BoundingBoxToOLExtent(extent);
-			projectedViewExtent = proj.transformExtent(positionExtent, 'EPSG:4326', viewProjection);
-			this.fitToExtent(projectedViewExtent);
-		}
-	}
-
-	private fitToExtent(extent: Extent) {
-		const view = this._mapObject.getView();
-		view.fit(extent, {
-			size: this._mapObject.getSize(),
-			constrainResolution: false
-		});
 	}
 
 	public addLayer(layer: any) {
@@ -371,23 +344,18 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public setPosition(position: MapPosition): void {
-		const view = this._mapObject.getView();
-		const projection = view.getProjection();
-		const olCenter = proj.transform([position.center.coordinates[0], position.center.coordinates[1]], 'EPSG:4326', projection);
-		view.setCenter(olCenter);
-		view.setZoom(position.zoom);
-
+		this.fitToExtent(position.extent, position.resolution);
 		this.setRotation(position.rotation);
 	}
 
 	public getPosition(): MapPosition {
 		const view = this._mapObject.getView();
-		let center: GeoJSON.Point = this.getCenter();
-		let zoom: number = view.getZoom();
-		let rotation: number = view.getRotation();
-		let boundingBox = this.getMapExtentInGeo();
-
-		return { center, zoom, rotation, boundingBox };
+		const projection = view.getProjection();
+		const rotation: number = view.getRotation();
+		const transformExtent = view.calculateExtent(this.mapObject.getSize());
+		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
+		const resolution = view.getResolution();
+		return { extent, rotation, resolution };
 	}
 
 	public setRotation(rotation: number) {
@@ -409,14 +377,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 			center: location,
 			duration: 2000
 		});
-	}
-
-	public setBoundingBox(bbox: GeoJSON.Point[]) {
-		const geoViewExtent: Extent = Utils.BoundingBoxToOLExtent(bbox);
-		const view = this._mapObject.getView();
-		const viewProjection = view.getProjection();
-		const projectedViewExtent = proj.transformExtent(geoViewExtent, 'EPSG:4326', viewProjection);
-		this.fitToExtent(projectedViewExtent);
 	}
 
 	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {

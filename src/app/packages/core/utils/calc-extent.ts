@@ -1,50 +1,35 @@
 import * as GeoJSON from 'geojson';
 import * as bbox from '@turf/bbox';
-import * as bboxPolygon from '@turf/bbox-polygon';
 import * as center from '@turf/center';
 import * as inside from '@turf/inside';
 import { polygon } from '@turf/helpers';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 
-export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): GeoJSON.Point[] {
+export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): [number, number, number, number] {
 	const footprintFeature: GeoJSON.Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
 		'geometry': footprint
 	};
 
-	const bboxResult = bbox(footprintFeature);
-	const bboxPolygonResult = bboxPolygon(bboxResult);
-	let boundingBox: GeoJSON.Point[] = [];
-	bboxPolygonResult.geometry.coordinates[0].forEach((p) => {
-		const coord: GeoJSON.Point = {
-			coordinates: [p[0], p[1], p.length > 2 ? p[2] : 0],
-			type: 'Point'
-		};
-		boundingBox.push(coord);
-	});
-	return boundingBox;
+	return bbox(footprintFeature);
 }
 
-export function extentToPolygon(extent: GeoJSON.Point[]) {
-	let coordinates = [];
-	if (extent.length === 2) {
-		// Keep this order otherwise self intersection!
-		coordinates.push(extent[0].coordinates);
-		coordinates.push([extent[0].coordinates[0], extent[1].coordinates[1]]);
-		coordinates.push(extent[1].coordinates);
-		coordinates.push([extent[1].coordinates[0], extent[0].coordinates[1]]);
-	} else {
-		coordinates = extent.map((p: GeoJSON.Point) => p.coordinates);
-	}
+export function extentToPolygon(extent: [number, number, number, number]) {
+	const coordinates = [];
 
-	coordinates.push(coordinates[0]);
+	// Keep this order otherwise self intersection!
+	coordinates.push([extent[0], extent[1]]);
+	coordinates.push([extent[0], extent[3]]);
+	coordinates.push([extent[2], extent[3]]);
+	coordinates.push([extent[2], extent[1]]);
+	coordinates.push([extent[0], extent[1]]);
 
 	return polygon([coordinates]);
 }
 
-export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): boolean {
+export function isExtentContainedInPolygon(extent: [number, number, number, number], footprint: GeoJSON.MultiPolygon): boolean {
 	const extentPoly = extentToPolygon(extent);
 
 	const footprintFeature: GeoJSON.Feature<any> = {
@@ -57,7 +42,7 @@ export function isExtentContainedInPolygon(extent: GeoJSON.Point[], footprint: G
 	return inside(centerPoint, footprintFeature);
 }
 
-export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Point[], footprint: GeoJSON.MultiPolygon): number {
+export function getFootprintIntersectionRatioInExtent(extent: [number, number, number, number], footprint: GeoJSON.MultiPolygon): number {
 	const extentPolygon = extentToPolygon(extent);
 
 	const extentArea = area(extentPolygon);

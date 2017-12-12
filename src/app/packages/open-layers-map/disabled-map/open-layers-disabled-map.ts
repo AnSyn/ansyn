@@ -63,9 +63,6 @@ export class OpenLayersDisabledMap extends IMap {
 
 	}
 
-	setBoundingBox(bbox: GeoJSON.Point[]) {
-	}
-
 	addLayerIfNotExist(layer: Layer) {
 
 	}
@@ -73,7 +70,7 @@ export class OpenLayersDisabledMap extends IMap {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any, extent?: GeoJSON.Point[]): void {
+	resetView(layer: any, extent?: [number, number, number, number]): void {
 		const view = this.mapObject.getView();
 		this.setMainLayer(layer, view);
 	}
@@ -102,26 +99,26 @@ export class OpenLayersDisabledMap extends IMap {
 
 	generateNewView(layer: Layer, oldview: View, position: CaseMapPosition): any {
 		let newCenter = [0, 0];
-		let newZoom;
-		let newRotation;
+		let newZoom = 12;
+		let newRotation = 0;
 		const newProjection = layer.getSource().getProjection();
 
 		if (!oldview) {
-			newCenter = position ? position.center.coordinates : newCenter;
-			newZoom = position ? position.zoom : 12;
-			newRotation = position ? position.rotation : 0;
+			// newCenter = position ? position.center.coordinates : newCenter;
+			// newZoom = position ? position.zoom : newZoom;
+			newRotation = position ? position.rotation : newRotation;
 		} else {
-			newZoom = position ? position.zoom : oldview.getZoom();
+			// newZoom = position ? position.zoom : oldview.getZoom();
 			newRotation = position ? position.rotation : oldview.getRotation();
 
 			const oldCenter = oldview.getCenter();
 			const oldProjection = oldview.getProjection();
-			const center = proj.transform([oldCenter[0], oldCenter[1]], oldProjection, 'EPSG:4326');
+			const center = proj.transform(oldCenter, oldProjection, 'EPSG:4326');
 			if (center) {
 				newCenter = center;
 			}
 		}
-		newCenter = proj.transform([newCenter[0], newCenter[1]], 'EPSG:4326', newProjection);
+		newCenter = proj.transform(newCenter, 'EPSG:4326', newProjection);
 		return new View({
 			center: newCenter,
 			zoom: newZoom,
@@ -149,11 +146,12 @@ export class OpenLayersDisabledMap extends IMap {
 
 	getPosition(): CaseMapPosition {
 		const view = this.mapObject.getView();
-		let center: GeoJSON.Point = this.getCenter();
-		let zoom: number = view.getZoom();
+		const projection = view.getProjection();
 		let rotation: number = view.getRotation();
-
-		return { center, zoom, rotation };
+		const transformExtent = view.calculateExtent(this.mapObject.getSize());
+		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
+		const resolution = view.getResolution();
+		return { rotation, extent, resolution };
 	}
 
 	setRotation(rotation: number): void {

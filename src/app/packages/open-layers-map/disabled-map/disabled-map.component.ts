@@ -24,7 +24,7 @@ import { IMap, IMapComponent, MapPosition } from '@ansyn/imagery';
 export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	static mapName = 'disabledOpenLayersMap';
-	static groupLayers = new Map<string, any>();
+	static mapClass = OpenLayersDisabledMap;
 
 	@ViewChild('olMap') mapElement: ElementRef;
 

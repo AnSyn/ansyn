@@ -24,6 +24,7 @@ import { MapPosition } from '@ansyn/imagery/model/map-position';
 export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	static mapName = 'openLayersMap';
+	static mapClass = OpenLayersMap;
 
 	@ViewChild('olMap') mapElement: ElementRef;
 

@@ -6,6 +6,7 @@ import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-lay
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoginConfig } from '@ansyn/login';
+import { LoggerConfig } from '@ansyn/core/services/logger.service';
 import { enableProdMode } from '@angular/core';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
@@ -63,6 +64,10 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: MultipleOverlaysSourceConfig,
 			useValue: conf.multipleOverlaysSource
+		},
+		{
+			provide: LoggerConfig,
+			useValue: conf.loggerConfig
 		}
 	];
 };

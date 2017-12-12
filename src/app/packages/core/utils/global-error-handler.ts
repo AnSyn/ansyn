@@ -8,12 +8,15 @@ export class GlobalErrorHandler implements ErrorHandler {
 	// use inject to add service dynamically
 	// see: https://medium.com/@amcdnl/global-error-handling-with-angular2-6b992bdfb59c
 	constructor(private injector: Injector) {}
+
 	handleError(error) {
-		this.logger = this.injector.get(LoggerService);
+		if (!this.logger) {
+			this.logger = this.injector.get(LoggerService);
+		}
 		if (error.stack) {
-			this.logger.warn(error.stack);
+			this.logger.error(error.stack);
 		} else {
-			this.logger.warn(error.toString());
+			this.logger.error(error.toString());
 		}
 		// IMPORTANT: Rethrow the error otherwise it gets swallowed
 		throw error;

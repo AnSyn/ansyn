@@ -12,7 +12,7 @@ import {
 	SyncFilteredOverlays
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { BaseMapSourceProvider, ImageryCommunicatorService } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
 import {
 	LayersActionTypes,
 	SelectLayerAction,
@@ -318,17 +318,19 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name addVectorLayer$
+	 * @name addGroupLayer$
 	 * @ofType SelectLayerAction
-	 * @dependencies map
 	 */
 	@Effect({ dispatch: false })
-	addVectorLayer$: Observable<SelectLayerAction> = this.actions$
+	addGroupLayer$: Observable<SelectLayerAction> = this.actions$
 		.ofType<SelectLayerAction>(LayersActionTypes.SELECT_LAYER)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [SelectLayerAction, IMapState]) => {
-			const imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
-			imagery.addVectorLayer(action.payload, 'layers');
+		.map((action: SelectLayerAction) => {
+			const providers = this.imageryProviderService.getProviders();
+			Object.keys(providers).forEach(pName => {
+				const provider = providers[pName];
+				provider.mapComponent.mapClass.addGroupVectorLayer(action.payload, 'layers');
+			});
+
 			return action;
 		});
 
@@ -341,10 +343,13 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [UnselectLayerAction, IMapState]) => {
-			let imagery = this.imageryCommunicatorService.provide(mapState.activeMapId);
-			imagery.removeVectorLayer(action.payload, 'layers');
+		.map((action: UnselectLayerAction) => {
+			const providers = this.imageryProviderService.getProviders();
+			Object.keys(providers).forEach(pName => {
+				const provider = providers[pName];
+				provider.mapComponent.mapClass.removeVectorLayer(action.payload, 'layers');
+			});
+
 			return action;
 		});
 
@@ -671,6 +676,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected imageryProviderService: ImageryProviderService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { MapPosition } from './map-position';
 import { Observable } from 'rxjs/Observable';
 
-export interface IMap<T = any> {
+export abstract class IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
 	positionChanged: EventEmitter<MapPosition>;
 	pointerMove: EventEmitter<any>;
@@ -11,54 +11,57 @@ export interface IMap<T = any> {
 	mapType: string;
 	mapObject: T;
 
-	getCenter(): GeoJSON.Point;
+	static addGroupLayer(layer: any, groupName: string) {
+	}
 
-	setCenter(center: GeoJSON.Point, animation: boolean);
+	static removeGroupLayer(layer: any, groupName: string) {
+	}
 
-	setBoundingBox(bbox: GeoJSON.Point[]);
+	static addGroupVectorLayer(layer: any, groupName: string) {
+	}
 
-	toggleGroup(groupName: string);
+	abstract getCenter(): GeoJSON.Point;
+
+	abstract setCenter(center: GeoJSON.Point, animation: boolean);
+
+	abstract setBoundingBox(bbox: GeoJSON.Point[]);
+
+	abstract toggleGroup(groupName: string);
 
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	resetView(layer: any, extent?: GeoJSON.Point[]): void;
+	abstract resetView(layer: any, extent?: GeoJSON.Point[]): void;
 
-	addLayer(layer: any, groupName?: string): void;
+	abstract addLayer(layer: any): void;
 
-	removeLayer(layer: any, groupName?: string): void;
+	abstract removeLayer(layer: any): void;
 
-	addVectorLayer(layer: any, groupName?: string): void;
+	abstract setPosition(MapPosition): void;
 
-	removeVectorLayer(layer: any, groupName?: string): void;
+	abstract getPosition(): MapPosition;
 
-	setPosition(MapPosition): void;
+	abstract setRotation(rotation: number): void;
 
-	getPosition(): MapPosition;
+	abstract updateSize(): void;
 
-	setRotation(rotation: number): void;
+	abstract addGeojsonLayer(data: GeoJSON.GeoJsonObject);
 
-	updateSize(): void;
+	abstract setAutoImageProcessing(shouldPerform: boolean): void;
 
-	addGeojsonLayer(data: GeoJSON.GeoJsonObject);
+	abstract setManualImageProcessing(processingParams: Object): void;
 
-	setAutoImageProcessing(shouldPerform: boolean): void;
+	abstract dispose(): void;
 
-	setManualImageProcessing(processingParams: Object): void;
+	abstract setPointerMove(enable: boolean);
 
-	dispose(): void;
+	abstract getPointerMove(): Observable<any>;
 
-	setPointerMove(enable: boolean);
+	abstract addSingleClickEvent();
 
-	getPointerMove(): Observable<any>;
+	abstract removeSingleClickEvent();
 
-	removeSingleClickEvent();
-
-	addSingleClickEvent();
-
-	removeSingleClickEvent();
-
-	addLayerIfNotExist(layer: any);
+	abstract addLayerIfNotExist(layer: any);
 }

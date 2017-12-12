@@ -77,10 +77,6 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		this.init();
-	}
-
-	private init() {
 		this._manager = new ImageryComponentManager(
 			this.imageryProviderService,
 			this.componentFactoryResolver,

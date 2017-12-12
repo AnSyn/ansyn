@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 
-export class CesiumMap implements IMap {
+export class CesiumMap extends IMap {
 	static mapType = 'cesium';
 	static groupLayers = new Map<string, any>();
 
@@ -17,9 +17,9 @@ export class CesiumMap implements IMap {
 	mapObject: any;
 
 	constructor(element: HTMLElement) {
+		super();
+
 		this.mapObject = {};
-
-
 	}
 
 	getCenter(): GeoJSON.Point {
@@ -47,14 +47,6 @@ export class CesiumMap implements IMap {
 	}
 
 	removeLayer(layer: any): void {
-		throw new Error('Method not implemented.');
-	}
-
-	addVectorLayer(layer: any): void {
-		throw new Error('Method not implemented.');
-	}
-
-	removeVectorLayer(layer: any): void {
 		throw new Error('Method not implemented.');
 	}
 

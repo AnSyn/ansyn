@@ -164,18 +164,6 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public addVectorLayer(layer: any, groupName?: string): void {
-		if (this.ActiveMap) {
-			this.ActiveMap.addVectorLayer(layer, groupName);
-		}
-	}
-
-	public removeVectorLayer(layer: any, groupName?: string): void {
-		if (this.ActiveMap) {
-			this.ActiveMap.removeVectorLayer(layer, groupName);
-		}
-	}
-
 	public setAutoImageProcessing(shouldPerform: boolean): void {
 		if (this.ActiveMap) {
 			this.ActiveMap.setAutoImageProcessing(shouldPerform);

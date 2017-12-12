@@ -41,6 +41,10 @@ export class ImageryProviderService {
 		this._mapProviders[mapName] = { mapType: mapType, mapComponent: component };
 	}
 
+	getProviders() {
+		return this._mapProviders;
+	}
+
 	public registerPlugin(mapType: string, pluginClass: any) {
 
 		if (!this._mapPluginProviders[mapType]) {

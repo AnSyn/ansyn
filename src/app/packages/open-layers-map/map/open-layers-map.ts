@@ -24,7 +24,7 @@ import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 
 
-export class OpenLayersMap implements IMap<OLMap> {
+export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
 	static groupLayers = new Map<string, Group>();
 
@@ -46,7 +46,46 @@ export class OpenLayersMap implements IMap<OLMap> {
 
 	private _imageProcessing: OpenLayersImageProcessing;
 
+	static addGroupLayer(layer: any, groupName: string) {
+		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (!group) {
+			throw new Error('Tried to add a layer to a non-existent group');
+		}
+
+		group.getLayers().getArray().push(layer);
+	}
+
+	static removeGroupLayer(layer: any, groupName: string) {
+		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (!group) {
+			throw new Error('Tried to add a layer to a non-existent group');
+		}
+
+		const layersArray = group.getLayers().getArray();
+		let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
+		group.getLayers().getArray().splice(removeLayer, 1);
+	}
+
+	static addGroupVectorLayer(layer: any, groupName: string) {
+		const vectorLayer = new TileLayer({
+			zIndex: 1,
+			source: new OSM({
+				attributions: [
+					layer.name
+				],
+				opaque: false,
+				url: layer.url,
+				crossOrigin: null
+			})
+		});
+		vectorLayer.id = layer.id;
+
+		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
+	}
+
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
+		super();
+
 		if (!OpenLayersMap.groupLayers.get('layers')) {
 			OpenLayersMap.groupLayers.set('layers', new Group({
 				layers: [],
@@ -241,18 +280,9 @@ export class OpenLayersMap implements IMap<OLMap> {
 		});
 	}
 
-	public addLayer(layer: any, groupName?: string) {
-		if (!groupName) {
-			this._mapLayers.push(layer);
-			this._mapObject.addLayer(layer);
-		} else {
-			const group = OpenLayersMap.groupLayers.get(groupName);
-			if (!group) {
-				throw new Error('Tried to add a layer to a non-existent group');
-			}
-
-			group.getLayers().getArray().push(layer);
-		}
+	public addLayer(layer: any) {
+		this._mapLayers.push(layer);
+		this._mapObject.addLayer(layer);
 	}
 
 	/**
@@ -287,27 +317,16 @@ export class OpenLayersMap implements IMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	public removeLayer(layer: any, groupName?: string): void {
+	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
 		}
 
-		if (!groupName) {
-			const index = this._mapLayers.indexOf(layer);
-			if (index > -1) {
-				this._mapLayers.splice(index, 1);
-				this._mapObject.removeLayer(layer);
-				this._mapObject.render();
-			}
-		} else {
-			const group = OpenLayersMap.groupLayers.get(groupName);
-			if (!group) {
-				throw new Error('Tried to add a layer to a non-existent group');
-			}
-
-			const layersArray = group.getLayers().getArray();
-			let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
-			group.getLayers().getArray().splice(removeLayer, 1);
+		const index = this._mapLayers.indexOf(layer);
+		if (index > -1) {
+			this._mapLayers.splice(index, 1);
+			this._mapObject.removeLayer(layer);
+			this._mapObject.render();
 		}
 
 		if (this._imageProcessing) {
@@ -322,27 +341,6 @@ export class OpenLayersMap implements IMap<OLMap> {
 			// layer.set('visible',false);
 			this.removeLayer(layer);
 		}
-	}
-
-	// In the future we'll use @ansyn/map-source-provider
-	public addVectorLayer(layer: any, groupName?: string): void {
-		const vectorLayer = new TileLayer({
-			zIndex: 1,
-			source: new OSM({
-				attributions: [
-					layer.name
-				],
-				opaque: false,
-				url: layer.url,
-				crossOrigin: null
-			})
-		});
-		vectorLayer.id = layer.id;
-		this.addLayer(vectorLayer, groupName);
-	}
-
-	public removeVectorLayer(layer: any, groupName?: string): void {
-		this.removeLayer(layer, groupName);
 	}
 
 	public get mapObject() {

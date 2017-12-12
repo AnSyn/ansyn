@@ -12,28 +12,24 @@ import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 
-export class OpenLayersDisabledMap implements IMap {
+export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
 
-	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<MapPosition>;
-	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any>;
-	contextMenu: EventEmitter<any>;
-	mapType: string;
+	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	pointerMove: EventEmitter<any> = new EventEmitter<any>();
+	singleClick: EventEmitter<any> = new EventEmitter<any>();
+	contextMenu: EventEmitter<any> = new EventEmitter<any>();
+	mapType: string = OpenLayersDisabledMap.mapType;
 	mapObject: any;
 
 	mainLayer: Layer;
 
-	private _imageProcessing: OpenLayersImageProcessing;
+	_imageProcessing: OpenLayersImageProcessing;
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
-		this.mapType = OpenLayersDisabledMap.mapType;
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<MapPosition>();
-		this.pointerMove = new EventEmitter<any>();
-		this.singleClick = new EventEmitter<any>();
-		this.contextMenu = new EventEmitter<any>();
+		super();
+
 		this.initMap(element, layers, position);
 	}
 

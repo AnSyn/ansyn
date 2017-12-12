@@ -144,12 +144,6 @@ export class OpenLayersDisabledMap extends IMap {
 	removeLayer(layer: any): void {
 	}
 
-	addVectorLayer(layer: any): void {
-	}
-
-	removeVectorLayer(layer: any): void {
-	}
-
 	setPosition(MapPosition): void {
 	}
 

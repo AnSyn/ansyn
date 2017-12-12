@@ -1,12 +1,12 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -40,7 +40,7 @@ describe('ImageryComponent', () => {
 		coordinates: [15.7, 37.9]
 	};
 
-	const imageryData: ImageryComponentSettings = {
+	const imageryData: CaseMapState = {
 		id: 'imagery1',
 		mapType: 'openLayersMap',
 		progress: 0,

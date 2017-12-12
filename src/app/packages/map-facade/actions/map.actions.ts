@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { CaseMapState, MapsLayout, Position } from '@ansyn/core';
+import { CaseMapState, MapsLayout, CaseMapPosition } from '@ansyn/core';
 import { Options, Overlay } from '@ansyn/core/models';
 
 
@@ -85,7 +85,7 @@ export class ActiveMapChangedAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: Position }) {
+	constructor(public payload: { id: string, position: CaseMapPosition }) {
 	}
 }
 

@@ -13,7 +13,7 @@ export * from './menu-items';
 export * from './overlays';
 export * from './core/models/general.config';
 export * from './core/models/maps-layout';
-export * from './core/models/position.model';
+export * from './core/models/case-map-position.model';
 export * from './core/core.module';
 export * from './core/utils';
 export * from './core/services';

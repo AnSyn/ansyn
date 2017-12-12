@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
-import { IMap, MapPosition } from '@ansyn/imagery';
+import { IMap } from '@ansyn/imagery';
+
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,12 +12,13 @@ import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<MapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -33,7 +35,7 @@ export class OpenLayersDisabledMap extends IMap {
 		this.initMap(element, layers, position);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: MapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -76,7 +78,7 @@ export class OpenLayersDisabledMap extends IMap {
 		this.setMainLayer(layer, view);
 	}
 
-	setMainLayer(layer: Layer, currentView: View, position?: MapPosition) {
+	setMainLayer(layer: Layer, currentView: View, position?: CaseMapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
@@ -98,7 +100,7 @@ export class OpenLayersDisabledMap extends IMap {
 		}
 	}
 
-	generateNewView(layer: Layer, oldview: View, position: MapPosition): any {
+	generateNewView(layer: Layer, oldview: View, position: CaseMapPosition): any {
 		let newCenter = [0, 0];
 		let newZoom;
 		let newRotation;
@@ -142,10 +144,10 @@ export class OpenLayersDisabledMap extends IMap {
 	removeLayer(layer: any): void {
 	}
 
-	setPosition(MapPosition): void {
+	setPosition(position: CaseMapPosition): void {
 	}
 
-	getPosition(): MapPosition {
+	getPosition(): CaseMapPosition {
 		const view = this.mapObject.getView();
 		let center: GeoJSON.Point = this.getCenter();
 		let zoom: number = view.getZoom();

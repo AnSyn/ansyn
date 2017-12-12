@@ -173,6 +173,9 @@
 			"ed50Customized": ""
 		}
 	},
+	"loggerConfig": {
+		"env": "DEV"
+	},
 	"loginConfig": {
 		"baseUrl": "http://localhost:9001/api/v1/login",
 		"active": true,

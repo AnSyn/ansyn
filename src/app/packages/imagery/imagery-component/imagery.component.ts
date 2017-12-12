@@ -13,11 +13,11 @@ import {
 import { ImageryProviderService } from '../provider-service/provider.service';
 import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ImageryComponentSettings } from '../model/imagery-component-settings';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
 import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/take';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 
 @Component({
@@ -28,7 +28,7 @@ import 'rxjs/add/operator/take';
 
 export class ImageryComponent implements OnInit, OnDestroy {
 
-	private _mapComponentSettings: ImageryComponentSettings;
+	private _mapComponentSettings: CaseMapState;
 
 	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
 

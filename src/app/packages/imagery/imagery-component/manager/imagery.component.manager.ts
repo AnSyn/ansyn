@@ -5,7 +5,7 @@ import { IMapPlugin } from '../../model/imap-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/provider.service';
-import { MapPosition } from '../../model/map-position';
+import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 
 
@@ -14,7 +14,7 @@ export class ImageryComponentManager {
 	private _activeMap: IMap;
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -74,7 +74,7 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata, this.id);
 	}
 
-	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: MapPosition, layer?: any): void {
+	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): void {
 		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
@@ -111,7 +111,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public setActiveMap(activeMapName: string, position?: MapPosition, layer?: any) {
+	public setActiveMap(activeMapName: string, position?: CaseMapPosition, layer?: any) {
 		if (this.activeMapName !== activeMapName) {
 			const oldMapName = this.activeMapName;
 			// console.log(`Set active map to : ${activeMapName}`);
@@ -201,7 +201,7 @@ export class ImageryComponentManager {
 			this.centerChanged.emit(center);
 		}));
 
-		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: MapPosition) => {
+		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit(position);
 		}));
 

@@ -13,7 +13,7 @@ import {
 	RemoveMapInstanceAction
 } from '../actions';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { CaseMapState, defaultMapType, Overlay, Position } from '@ansyn/core';
+import { CaseMapState, defaultMapType, Overlay, CaseMapPosition } from '@ansyn/core';
 import { cloneDeep, range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
@@ -123,7 +123,7 @@ export class MapFacadeService {
 		this._subscribers = [];
 	}
 
-	positionChanged($event: { id: string, position: Position }) {
+	positionChanged($event: { id: string, position: CaseMapPosition }) {
 		this.store.dispatch(new PositionChangedAction($event));
 	}
 

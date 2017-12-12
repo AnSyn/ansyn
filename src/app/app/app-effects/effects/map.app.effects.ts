@@ -64,7 +64,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapState, Position } from '@ansyn/core/models';
+import { CaseMapState, CaseMapPosition } from '@ansyn/core/models';
 import {
 	ChangeLayoutAction,
 	SetMapGeoEnabledModeStatusBarActionStore
@@ -187,14 +187,14 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): [Overlay, string, Position] => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): [Overlay, string, CaseMapPosition] => {
 			const overlay = action.payload.overlay;
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
 			return [overlay, mapId, map.data.position];
 		})
-		.filter(([overlay]: [Overlay, string, Position]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<[Overlay, string, Position], any>(([overlay, mapId, position]: [Overlay, string, Position]) => {
+		.filter(([overlay]: [Overlay, string, CaseMapPosition]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<[Overlay, string, CaseMapPosition], any>(([overlay, mapId, position]: [Overlay, string, CaseMapPosition]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
 
 			const communicator = this.imageryCommunicatorService.provide(mapId);

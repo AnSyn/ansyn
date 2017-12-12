@@ -1,10 +1,10 @@
 import { EventEmitter } from '@angular/core';
-import { MapPosition } from './map-position';
 import { Observable } from 'rxjs/Observable';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export abstract class IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<MapPosition>;
+	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any>;
 	contextMenu: EventEmitter<any>;
@@ -39,11 +39,11 @@ export abstract class IMap<T = any> {
 
 	abstract removeLayer(layer: any): void;
 
-	abstract setPosition(MapPosition): void;
-
-	abstract getPosition(): MapPosition;
+	abstract setPosition(position: CaseMapPosition): void;
 
 	abstract setRotation(rotation: number): void;
+
+	abstract getPosition(): CaseMapPosition;
 
 	abstract updateSize(): void;
 

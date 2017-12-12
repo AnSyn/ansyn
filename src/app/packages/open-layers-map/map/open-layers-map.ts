@@ -9,6 +9,7 @@ import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import Rotate from 'ol/control/rotate';
+import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
 
 import GeoJSON from 'ol/format/geojson';
@@ -120,10 +121,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
-			controls: [new Rotate({
-				autoHide: true,
-				className: 'ol-hidden'
-			})],
+			controls: [
+				new ScaleLine()
+			],
 			view: new View({
 				center: proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,

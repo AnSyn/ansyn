@@ -7,6 +7,7 @@ import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef 
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/provider.service';
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../../model/imap-visualizer';
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 
 export class ImageryComponentManager {
@@ -34,7 +35,7 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(extent?: [number, number, number, number]) {
+	public loadInitialMapSource(extent?: CaseMapExtent) {
 		if (this._activeMap) {
 			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 				this.resetView(layers[0], extent);
@@ -47,7 +48,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public resetView(layer: any, extent?: [number, number, number, number]) {
+	public resetView(layer: any, extent?: CaseMapExtent) {
 		if (this._activeMap) {
 			this._activeMap.resetView(layer, extent);
 			this.resetVisualizers();

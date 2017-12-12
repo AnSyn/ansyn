@@ -7,6 +7,7 @@ import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 
 export class CommunicatorEntity {
@@ -76,7 +77,7 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(extent?: [number, number, number, number]) {
+	public loadInitialMapSource(extent?: CaseMapExtent) {
 		this._manager.loadInitialMapSource(extent);
 	}
 
@@ -146,7 +147,7 @@ export class CommunicatorEntity {
 		return this._manager.visualizers;
 	}
 
-	public resetView(layer: any, extent?: [number, number, number, number]) {
+	public resetView(layer: any, extent?: CaseMapExtent) {
 		if (this._manager) {
 			this._manager.resetView(layer, extent);
 		}

@@ -22,6 +22,7 @@ import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 
 export class OpenLayersMap extends IMap<OLMap> {
@@ -156,7 +157,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	// IMap Start
 
-	public resetView(layer: any, extent?: [number, number, number, number], resolution?: number) {
+	public resetView(layer: any, extent?: CaseMapExtent, resolution?: number) {
 		this.setMainLayer(layer);
 
 		if (extent) {

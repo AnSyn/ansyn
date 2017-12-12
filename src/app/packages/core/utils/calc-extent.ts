@@ -5,8 +5,9 @@ import * as inside from '@turf/inside';
 import { polygon } from '@turf/helpers';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
+import { CaseMapExtent } from '../models/case-map-position.model';
 
-export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): [number, number, number, number] {
+export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): CaseMapExtent {
 	const footprintFeature: GeoJSON.Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
@@ -16,7 +17,7 @@ export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon): [number, num
 	return bbox(footprintFeature);
 }
 
-export function extentToPolygon(extent: [number, number, number, number]) {
+export function extentToPolygon(extent: CaseMapExtent) {
 	const coordinates = [];
 
 	// Keep this order otherwise self intersection!
@@ -29,7 +30,7 @@ export function extentToPolygon(extent: [number, number, number, number]) {
 	return polygon([coordinates]);
 }
 
-export function isExtentContainedInPolygon(extent: [number, number, number, number], footprint: GeoJSON.MultiPolygon): boolean {
+export function isExtentContainedInPolygon(extent: CaseMapExtent, footprint: GeoJSON.MultiPolygon): boolean {
 	const extentPoly = extentToPolygon(extent);
 
 	const footprintFeature: GeoJSON.Feature<any> = {
@@ -42,7 +43,7 @@ export function isExtentContainedInPolygon(extent: [number, number, number, numb
 	return inside(centerPoint, footprintFeature);
 }
 
-export function getFootprintIntersectionRatioInExtent(extent: [number, number, number, number], footprint: GeoJSON.MultiPolygon): number {
+export function getFootprintIntersectionRatioInExtent(extent: CaseMapExtent, footprint: GeoJSON.MultiPolygon): number {
 	const extentPolygon = extentToPolygon(extent);
 
 	const extentArea = area(extentPolygon);

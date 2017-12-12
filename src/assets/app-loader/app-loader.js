@@ -1,3 +1,5 @@
+import {AnsynLogger} from "../../app/packages/core/utils/ansyn-logger";
+
 document.write(`<div class="skeleton-wrapper">
 					<div class="skeleton-container">
 						<div class="skeleton-map">
@@ -54,7 +56,12 @@ document.write(`<div class="skeleton-wrapper">
 				</div>`);
 
 
-window.onerror = function () {
+window.onerror = function (e) {
+	if (e.stack) {
+		AnsynLogger.activeLogger.error(e.stack);
+	} else {
+		AnsynLogger.activeLogger.error(e.toString());
+	}
 	const text = document.querySelector('.skeleton-text');
 	// In case there was a fatal error, show it on the loading screen
 	if(text) {

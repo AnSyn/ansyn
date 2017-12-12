@@ -195,7 +195,7 @@ export class MapAppEffects {
 		})
 		.filter(([overlay]: [Overlay, string, CaseMapPosition]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.mergeMap<[Overlay, string, CaseMapPosition], any>(([overlay, mapId, position]: [Overlay, string, CaseMapPosition]) => {
-			const intersection = getFootprintIntersectionRatioInExtent(position.boundingBox, overlay.footprint);
+			const intersection = getFootprintIntersectionRatioInExtent(position.extent, overlay.footprint);
 
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 

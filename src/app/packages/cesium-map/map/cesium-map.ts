@@ -31,10 +31,6 @@ export class CesiumMap extends IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setBoundingBox(bbox: GeoJSON.Point[]) {
-		throw new Error('Method not implemented.');
-	}
-
 	toggleGroup(groupName: string) {
 		throw new Error('Method not implemented.');
 	}

@@ -24,8 +24,6 @@ export abstract class IMap<T = any> {
 
 	abstract setCenter(center: GeoJSON.Point, animation: boolean);
 
-	abstract setBoundingBox(bbox: GeoJSON.Point[]);
-
 	abstract toggleGroup(groupName: string);
 
 	/**
@@ -33,7 +31,7 @@ export abstract class IMap<T = any> {
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, extent?: GeoJSON.Point[]): void;
+	abstract resetView(layer: any, extent?: [number, number, number, number]): void;
 
 	abstract addLayer(layer: any): void;
 

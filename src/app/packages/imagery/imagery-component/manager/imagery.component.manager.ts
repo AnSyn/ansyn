@@ -34,7 +34,7 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
+	public loadInitialMapSource(extent?: [number, number, number, number]) {
 		if (this._activeMap) {
 			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 				this.resetView(layers[0], extent);
@@ -47,7 +47,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public resetView(layer: any, extent?: GeoJSON.Point[]) {
+	public resetView(layer: any, extent?: [number, number, number, number]) {
 		if (this._activeMap) {
 			this._activeMap.resetView(layer, extent);
 			this.resetVisualizers();

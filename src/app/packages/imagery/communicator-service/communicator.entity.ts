@@ -76,7 +76,7 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(extent?: GeoJSON.Point[]) {
+	public loadInitialMapSource(extent?: [number, number, number, number]) {
 		this._manager.loadInitialMapSource(extent);
 	}
 
@@ -146,7 +146,7 @@ export class CommunicatorEntity {
 		return this._manager.visualizers;
 	}
 
-	public resetView(layer: any, extent?: GeoJSON.Point[]) {
+	public resetView(layer: any, extent?: [number, number, number, number]) {
 		if (this._manager) {
 			this._manager.resetView(layer, extent);
 		}

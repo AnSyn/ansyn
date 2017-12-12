@@ -1,17 +1,18 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
-interface ILoggerConfig {
-	env: 'DEV' | 'PROD',
-}
-export const LoggerConfig: InjectionToken<any> = new InjectionToken('logger-config');
 
-@Injectable()
-export class LoggerService {
-	env = 'ENV';
-	standardPrefix = '';
-	constructor(@Inject(LoggerConfig) protected loggerConfig: ILoggerConfig) {
-		this.env = this.loggerConfig.env;
+interface MinimalLogger{
+	error(msg: string);
+	warn(msg: string);
+	info(msg: string);
+}
+
+export class AnsynLogger implements MinimalLogger {
+	static activeLogger = new AnsynLogger('ENV');	// default logger (unknown environment)
+	env: string;
+	standardPrefix: string;
+
+	constructor(environment: string) {
+		this.env = environment;
 		this.standardPrefix = `Ansyn[${this.env}]`
 	}
 
@@ -42,18 +43,17 @@ export class LoggerService {
 
 	private _output(severity: Severity, msg: string) {
 		switch (severity) {
-			case 'CRITICAL':
-			case 'ERROR':
-				console.error(msg);
-				break;
-			case 'WARNING':
-				console.warn(msg);
-				break;
-			case 'INFO':
-			case 'DEBUG':
-				console.log(msg);
-				break;
+			// case 'CRITICAL':
+			// case 'ERROR':
+			// 	console.error(msg);
+			// 	break;
+			// case 'WARNING':
+			// 	console.warn(msg);
+			// 	break;
+			// case 'INFO':
+			// case 'DEBUG':
+			// 	console.log(msg);
+			// 	break;
 		}
 	}
-
 }

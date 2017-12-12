@@ -13,6 +13,7 @@ import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
@@ -70,7 +71,7 @@ export class OpenLayersDisabledMap extends IMap {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any, extent?: [number, number, number, number]): void {
+	resetView(layer: any, extent?: CaseMapExtent): void {
 		const view = this.mapObject.getView();
 		this.setMainLayer(layer, view);
 	}

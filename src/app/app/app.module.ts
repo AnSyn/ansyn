@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginModule } from '@ansyn/login/login.module';
@@ -6,6 +6,7 @@ import { AnsynModule } from './ansyn/ansyn.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
+import { GlobalErrorHandler } from '@ansyn/core/utils/global-error-handler';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
@@ -22,7 +23,13 @@ export const metaReducers = [MetaReducer];
 		EffectsModule.forRoot([]),
 		LoginModule,
 		AnsynModule,
-		AppRoutingModule
+		AppRoutingModule,
+	],
+	providers: [
+		{
+			provide: ErrorHandler,
+			useClass: GlobalErrorHandler
+		}
 	],
 	declarations: [AppAnsynComponent],
 	exports: [AppAnsynComponent],

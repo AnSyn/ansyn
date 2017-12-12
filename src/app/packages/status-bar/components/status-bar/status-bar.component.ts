@@ -73,10 +73,10 @@ export class StatusBarComponent implements OnInit {
 			return;
 		}
 
-		if ($event.which === 39) {
+		if ($event.which === 39) { // ArrowRight
 			this.renderer.addClass(this.goNext.nativeElement, 'active');
 		}
-		else if ($event.which === 37) {
+		else if ($event.which === 37) { // ArrowLeft
 			this.renderer.addClass(this.goPrev.nativeElement, 'active');
 		}
 	}
@@ -87,11 +87,11 @@ export class StatusBarComponent implements OnInit {
 			return;
 		}
 
-		if ($event.which === 39) {
+		if ($event.which === 39) { // ArrowRight
 			this.clickGoNext();
 			this.renderer.removeClass(this.goNext.nativeElement, 'active');
 		}
-		else if ($event.which === 37) {
+		else if ($event.which === 37) { // ArrowLeft
 			this.clickGoPrev();
 			this.renderer.removeClass(this.goPrev.nativeElement, 'active');
 		}

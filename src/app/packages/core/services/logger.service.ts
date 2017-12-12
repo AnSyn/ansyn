@@ -1,56 +1,59 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 
-export type Severity = 'critical' | 'error' | 'warning' | 'info' | 'debug'
+export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 interface ILoggerConfig {
 	env: 'DEV' | 'PROD',
 }
-export const LoggerConfig: InjectionToken<ILoggerConfig> = new InjectionToken('logger-config');
+export const LoggerConfig: InjectionToken<any> = new InjectionToken('logger-config');
 
 @Injectable()
 export class LoggerService {
-	env;
-	// constructor(@Inject(LoggerConfig) protected loggerConfig: ILoggerConfig) {
-	constructor() {
-		console.log('Logger is On!')
+	env = 'ENV';
+	standardPrefix = '';
+	constructor(@Inject(LoggerConfig) protected loggerConfig: ILoggerConfig) {
+		this.env = this.loggerConfig.env;
+		this.standardPrefix = `Ansyn[${this.env}]`
 	}
 
 	critical(msg: string) {
-		this._log('critical', msg);
+		this._log('CRITICAL', msg, true);
 	}
 	error(msg: string) {
-		this._log('error', msg);
+		this._log('ERROR', msg, true);
 	}
 	warn(msg: string) {
-		this._log('warning', msg);
+		this._log('WARNING', msg);
 	}
 	info(msg: string) {
-		this._log('info', msg);
+		this._log('INFO', msg);
 	}
 	debug(msg: string) {
-		this._log('debug', msg);
+		this._log('DEBUG', msg);
 	}
 
-	//
+	private _log(severity: Severity, msg: string, includeBrowserData?: boolean) {
+		let prefix = `${this.standardPrefix}[${Date()}]`;
+		if (includeBrowserData) {
+			prefix += `[window:${window.innerWidth}x${window.innerHeight}][userAgent: ${navigator.userAgent}]`
+		}
+		const str = `${prefix}[${severity}] ${msg}`;
+		this._output(severity, str);
+	}
+
 	private _output(severity: Severity, msg: string) {
 		switch (severity) {
-			case 'critical':
-			case 'error':
+			case 'CRITICAL':
+			case 'ERROR':
 				console.error(msg);
 				break;
-			case 'warning':
+			case 'WARNING':
 				console.warn(msg);
 				break;
-			case 'info':
-			case 'debug':
+			case 'INFO':
+			case 'DEBUG':
 				console.log(msg);
 				break;
 		}
 	}
-	private _log(severity: Severity, msg: string) {
-		// if (typeof msg !== 'string') {
-		// 	msg = JSON.stringify(msg);
-		// }
-		const str = `Ansyn[${this.env}][${Date()}][${severity}]:${msg}`;
-		this._output(severity, str);
-	}
+
 }

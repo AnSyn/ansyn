@@ -6,7 +6,6 @@ import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
-import { CaseMapState } from '@ansyn/core/models/case.model';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -34,18 +33,6 @@ describe('ImageryComponent', () => {
 	let fixture: ComponentFixture<ImageryComponent>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let imageryProviderService: ImageryProviderService;
-
-	const geoPoint: GeoJSON.Point = {
-		type: 'Point',
-		coordinates: [15.7, 37.9]
-	};
-
-	const imageryData: CaseMapState = {
-		id: 'imagery1',
-		mapType: 'openLayersMap',
-		progress: 0,
-		data: { position: { center: geoPoint, zoom: 0 } }
-	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

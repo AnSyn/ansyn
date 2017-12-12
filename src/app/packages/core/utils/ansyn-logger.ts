@@ -7,41 +7,50 @@ interface MinimalLogger{
 }
 
 export class AnsynLogger implements MinimalLogger {
-	static activeLogger = new AnsynLogger('ENV');	// default logger (unknown environment)
+	protected static _activeLogger = new AnsynLogger('ENV');	// default logger (unknown environment)
+	// when extending AnsynLogger - override the following get/set functions
+	public static set activeLogger(logger: AnsynLogger) {
+		AnsynLogger._activeLogger = logger;
+	}
+	public  static get activeLogger(): AnsynLogger {
+		return AnsynLogger._activeLogger;
+	}
+
 	env: string;
 	standardPrefix: string;
 
-	constructor(environment: string) {
-		this.env = environment;
+
+
+	constructor(env: string) {
 		this.standardPrefix = `Ansyn[${this.env}]`
 	}
 
 	critical(msg: string) {
-		this._log('CRITICAL', msg, true);
+		this.log('CRITICAL', msg, true);
 	}
 	error(msg: string) {
-		this._log('ERROR', msg, true);
+		this.log('ERROR', msg, true);
 	}
 	warn(msg: string) {
-		this._log('WARNING', msg);
+		this.log('WARNING', msg);
 	}
 	info(msg: string) {
-		this._log('INFO', msg);
+		this.log('INFO', msg);
 	}
 	debug(msg: string) {
-		this._log('DEBUG', msg);
+		this.log('DEBUG', msg);
 	}
 
-	private _log(severity: Severity, msg: string, includeBrowserData?: boolean) {
+	protected log(severity: Severity, msg: string, includeBrowserData?: boolean) {
 		let prefix = `${this.standardPrefix}[${Date()}]`;
 		if (includeBrowserData) {
 			prefix += `[window:${window.innerWidth}x${window.innerHeight}][userAgent: ${navigator.userAgent}]`
 		}
 		const str = `${prefix}[${severity}] ${msg}`;
-		this._output(severity, str);
+		this.output(severity, str);
 	}
 
-	private _output(severity: Severity, msg: string) {
+	protected output(severity: Severity, msg: string) {
 		switch (severity) {
 			// case 'CRITICAL':
 			// case 'ERROR':

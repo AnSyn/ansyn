@@ -3,15 +3,13 @@ import { AnsynLogger } from '@ansyn/core/utils/ansyn-logger';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-	logger = AnsynLogger.activeLogger;
-
 	constructor() {}
 
 	handleError(error) {
 		if (error.stack) {
-			this.logger.error(error.stack);
+			AnsynLogger.activeLogger.error(error.stack);
 		} else {
-			this.logger.error(error.toString());
+			AnsynLogger.activeLogger.error(error.toString());
 		}
 		// IMPORTANT: Rethrow the error otherwise it gets swallowed
 		throw error;

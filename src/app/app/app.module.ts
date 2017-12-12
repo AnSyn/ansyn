@@ -39,5 +39,9 @@ export const metaReducers = [MetaReducer];
 })
 
 export class AppAnsynModule {
-
+	constructor() {
+		window.onerror = function (e) {
+			AnsynLogger.activeLogger.error(e.toString());
+		}
+	}
 }

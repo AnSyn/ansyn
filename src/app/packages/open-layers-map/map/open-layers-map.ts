@@ -4,7 +4,7 @@ import { MapPosition } from '@ansyn/imagery/model/map-position';
 import { Utils } from './utils';
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 
-import Map from 'ol/map';
+import OLMap from 'ol/map';
 import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
@@ -24,14 +24,15 @@ import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 
 
-export class OpenLayersMap implements IMap<Map> {
+export class OpenLayersMap implements IMap<OLMap> {
 	static mapType = 'openLayersMap';
-	static groupLayers = new Map<string, Group>(['layers']);
+	static groupLayers = new Map<string, Group>();
+
+	private showGroups = new Map<string, boolean>();
 
 	public mapType: string = OpenLayersMap.mapType;
-	private _mapObject: Map;
+	private _mapObject: OLMap;
 	private _mapLayers = [];
-	private _mapVectorLayers = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
@@ -52,6 +53,8 @@ export class OpenLayersMap implements IMap<Map> {
 				name: 'layers'
 			}));
 		}
+
+		this.showGroups.set('layers', true);
 
 		this.initMap(element, layers, position);
 	}
@@ -74,7 +77,7 @@ export class OpenLayersMap implements IMap<Map> {
 			rotation = position.rotation;
 		}
 
-		this._mapObject = new Map({
+		this._mapObject = new OLMap({
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
@@ -132,8 +135,22 @@ export class OpenLayersMap implements IMap<Map> {
 	}
 
 	private setGroupLayers() {
-		console.error('Add group', OpenLayersMap.groupLayers.get('layers'));
-		this.addLayer(OpenLayersMap.groupLayers.get('layers'));
+		this.showGroups.forEach((show, group) => {
+			if (show) {
+				this.addLayer(OpenLayersMap.groupLayers.get(group));
+			}
+		});
+	}
+
+	toggleGroup(groupName: string) {
+		const newState = !this.showGroups.get(groupName);
+		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (newState) {
+			this.addLayer(group);
+		} else {
+			this._mapObject.removeLayer(group);
+		}
+		this.showGroups.set(groupName, newState);
 	}
 
 	private setMainLayer(layer: Layer) {
@@ -235,7 +252,6 @@ export class OpenLayersMap implements IMap<Map> {
 			}
 
 			group.getLayers().getArray().push(layer);
-			this._mapObject.render();
 		}
 	}
 
@@ -257,15 +273,12 @@ export class OpenLayersMap implements IMap<Map> {
 		return existingLayer;
 	}
 
-
 	public removeAllLayers() {
-		try {
-			OpenLayersMap.groupLayers.forEach((name, layer) => {
-				this._mapObject.removeLayer(layer);
-			});
-		} catch (e) {
-			console.warn(e);
-		}
+		this.showGroups.forEach((show, group) => {
+			if (show) {
+				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
+			}
+		});
 
 		while (this._mapLayers.length > 0) {
 			this.removeLayer(this._mapLayers[0]);
@@ -276,7 +289,6 @@ export class OpenLayersMap implements IMap<Map> {
 
 	public removeLayer(layer: any, groupName?: string): void {
 		if (!layer) {
-			console.error(layer, groupName);
 			return;
 		}
 
@@ -293,9 +305,9 @@ export class OpenLayersMap implements IMap<Map> {
 				throw new Error('Tried to add a layer to a non-existent group');
 			}
 
-			// let layersArray = group.getLayers().getArray().filter(l => l.id !== layer)
-			//
-			// console.warn(group.getLayers().getArray());
+			const layersArray = group.getLayers().getArray();
+			let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
+			group.getLayers().getArray().splice(removeLayer, 1);
 		}
 
 		if (this._imageProcessing) {

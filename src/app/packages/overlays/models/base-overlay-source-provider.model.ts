@@ -59,7 +59,7 @@ export abstract class BaseOverlaySourceProvider {
 		// They are strings!
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
-			end: new Date(fetchParams.timeRange.end),
+			end: new Date(fetchParams.timeRange.end)
 		};
 
 		const fetchPromises = filters

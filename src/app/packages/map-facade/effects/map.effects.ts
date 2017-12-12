@@ -16,7 +16,8 @@ import {
 	PositionChangedAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetMapManualImageProcessing, SetMapRotationAction,
+	SetMapManualImageProcessing,
+	SetMapRotationAction,
 	SetMapsDataActionStore,
 	SetPendingMapsCountAction
 } from '../actions/map.actions';

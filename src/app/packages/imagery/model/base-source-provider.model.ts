@@ -71,7 +71,7 @@ export abstract class BaseMapSourceProvider {
 			} else if (tilesCounter.error === 1) { // Only 1
 				message = this.messages.one;
 			} else { // More than 1, but not all
-				message = this.messages.partial.replace('{{amount}}', String(tilesCounter.error))
+				message = this.messages.partial.replace('{{amount}}', String(tilesCounter.error));
 			}
 
 			this.store.dispatch(new SetToastMessageAction({

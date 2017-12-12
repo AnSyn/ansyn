@@ -4,18 +4,18 @@ describe('BaseOverlaySourceProvider', () => {
 	describe('timeIntersection', () => {
 		const range2015 = {
 			start: new Date('2015-01-01'),
-			end: new Date('2015-12-31'),
+			end: new Date('2015-12-31')
 		};
 
 		const rangeHalf15Half16 = {
 			start: new Date('2015-06-01'),
-			end: new Date('2016-05-31'),
+			end: new Date('2016-05-31')
 		};
 
 
 		const range2016 = {
 			start: new Date('2016-01-01'),
-			end: new Date('2016-12-31'),
+			end: new Date('2016-12-31')
 		};
 
 		const rangeAlways = {

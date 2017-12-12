@@ -439,7 +439,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const fillColor = style.fill.color;
 		const newFill = color.asArray(fillColor).slice();
 		newFill[3] = 0.4;
-		const fill = new Fill({color: newFill});
+		const fill = new Fill({ color: newFill });
 
 		if (feature.getGeometryName() === `${this.namePrefix}Arrow`) {
 			return this.arrowStyle(feature, resolution);

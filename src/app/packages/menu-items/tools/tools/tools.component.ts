@@ -103,10 +103,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.toggleAnnotationMenu(this.expandedSubMenu === SubMenuEnum.annotations);
 		}
 	}
+
 	onAnimation() {
 		this.store.dispatch(new GoToExpandAction(false));
 		this.expandedSubMenu = null;
 	}
+
 	toggleAnnotationMenu(subMenuOpen) {
 		// send event to the store that saying the annotation option is enabled
 		if (subMenuOpen) {

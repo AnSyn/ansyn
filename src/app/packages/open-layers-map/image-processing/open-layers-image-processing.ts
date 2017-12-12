@@ -2,12 +2,12 @@ import Raster from 'ol/source/raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
-	{ ArgumentName: 'Histogram',	skipOnValue: 0,		},
-	{ ArgumentName: 'Gamma',		skipOnValue: 100,	},
-	{ ArgumentName: 'Contrast',		skipOnValue: 0, 	},
-	{ ArgumentName: 'Saturation',	skipOnValue: 100,	},
-	{ ArgumentName: 'Brightness',	skipOnValue: 0, 	},
-	{ ArgumentName: 'Sharpness',	skipOnValue: 0, 	perImage: true},
+	{ ArgumentName: 'Histogram', skipOnValue: 0 },
+	{ ArgumentName: 'Gamma', skipOnValue: 100 },
+	{ ArgumentName: 'Contrast', skipOnValue: 0 },
+	{ ArgumentName: 'Saturation', skipOnValue: 100 },
+	{ ArgumentName: 'Brightness', skipOnValue: 0 },
+	{ ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true }
 ];
 
 interface ProcessOperation {
@@ -100,14 +100,14 @@ function cascadeOperations(pixels, data) {
 	const imageOperations = data.imageOperations;
 	const imageData = pixels[0];
 	const that = this;
-	const conversionFn: {fn, args}[] = [];
+	const conversionFn: { fn, args }[] = [];
 	let outputImageData = imageData;
 
 	if (pixelOperations) {
 		// collect per-pixel operations (function + arguments)
 		Object.keys(pixelOperations).forEach(key => {
 			const operation = pixelOperations[key];
-			const operationFn  = that.getFunctionByArgument(operation.type);
+			const operationFn = that.getFunctionByArgument(operation.type);
 			let operationArgs = operation.args;
 			if (operationFn) {
 				if (operation.type === 'Histogram') {
@@ -126,21 +126,27 @@ function cascadeOperations(pixels, data) {
 		// run image operations (process all pixel at once)
 		Object.keys(imageOperations).forEach(key => {
 			const operation = imageOperations[key];
-			const operationFn  = that.getFunctionByArgument(operation.type);
-			outputImageData = operationFn(outputImageData, operation.args)
-		})
+			const operationFn = that.getFunctionByArgument(operation.type);
+			outputImageData = operationFn(outputImageData, operation.args);
+		});
 	}
 	return outputImageData;
 }
 
 function getFunctionByArgument(arg) {
 	switch (arg) {
-		case 'Histogram': 		return this['performHistogram'];
-		case 'Gamma': 			return this['performGamma'];
-		case 'Contrast': 		return this['performContrast'];
-		case 'Saturation': 		return this['performSaturation'];
-		case 'Brightness': 		return this['performBrightness'];
-		case 'Sharpness': 		return this['performSharpness'];
+		case 'Histogram':
+			return this['performHistogram'];
+		case 'Gamma':
+			return this['performGamma'];
+		case 'Contrast':
+			return this['performContrast'];
+		case 'Saturation':
+			return this['performSaturation'];
+		case 'Brightness':
+			return this['performBrightness'];
+		case 'Sharpness':
+			return this['performSharpness'];
 	}
 	return null;
 }
@@ -223,6 +229,7 @@ function performHistogram(pixel, histogramLut) {
 	resultPixel.a = pixel.a;
 	return resultPixel;
 }
+
 // ------ Histogram Equalization End ------ //
 
 // ------ Sharpness Start ------ //
@@ -230,13 +237,14 @@ function performHistogram(pixel, histogramLut) {
 // https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
 function performSharpness(imageData, args) {
 	const AUTO_SHARPNESS = 50;
+
 	function getWeights(sharpness: number) {
 		// matrix sum should be equal to 1 to maintain the brightness
 		const s = sharpness / 10;
-		const t =  - ((s - 1) / 4);
+		const t = -((s - 1) / 4);
 		return [0, t, 0,
-				t, s, t,
-				0, t, 0];
+			t, s, t,
+			0, t, 0];
 	}
 
 	let weights = (args.auto) ? getWeights(AUTO_SHARPNESS) : getWeights(args);
@@ -315,6 +323,7 @@ function performBrightness(pixel, brightness) {
 		a: pixel.a
 	};
 }
+
 // ------ Brightness End ------ //
 
 // ------ Gamma start ------ //
@@ -331,6 +340,7 @@ function performGamma(pixel, gamma) {
 		a: pixel.a
 	};
 }
+
 // ------ Gamma  End ------ //
 
 // ------ Saturation start ------ //
@@ -347,6 +357,7 @@ function performSaturation(pixel, saturation) {
 		a: pixel.a
 	};
 }
+
 // ------ Saturation  End ------ //
 // process a list of operation on each pixel
 function forEachRGBPixel(imageData, conversionFn: Array<any>) {

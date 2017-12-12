@@ -5,8 +5,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import * as intersect from '@turf/intersect';
 import * as area from '@turf/area';
 import * as difference from '@turf/difference';
-import { OverlayFilter } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
 interface FiltersList {
 	name: string,
@@ -69,7 +68,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 						filter.dates.forEach(date => {
 							const dateObj = {
 								start: date.start ? new Date(date.start) : null,
-								end: date.end ? new Date(date.end) : null,
+								end: date.end ? new Date(date.end) : null
 							};
 							whiteFilters.push({
 								sensor,
@@ -91,7 +90,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 							filter.dates.forEach(date => {
 								const dateObj = {
 									start: date.start ? new Date(date.start) : null,
-									end: date.end ? new Date(date.end) : null,
+									end: date.end ? new Date(date.end) : null
 								};
 								blackFilters.push({
 									sensor,
@@ -146,7 +145,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				}
 				return {
 					startDate: d1.startDate < d2.startDate ? d1.startDate : d2.startDate,
-					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate,
+					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate
 				};
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
@@ -165,7 +164,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				}
 				return {
 					startDate: d1.startDate < d2.startDate ? d1.startDate : d2.startDate,
-					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate,
+					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate
 				};
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));

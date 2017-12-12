@@ -21,7 +21,10 @@ describe('ContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
 			declarations: [ContextMenuComponent],
-			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {provide: mapFacadeConfig, useValue: {sensorTypeShortcuts: {}}}]
+			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {
+				provide: mapFacadeConfig,
+				useValue: { sensorTypeShortcuts: {} }
+			}]
 		}).compileComponents();
 	}));
 

@@ -77,7 +77,12 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { CoreActionTypes, SetToastMessageAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import {
+	CoreActionTypes,
+	SetToastMessageAction,
+	ToggleFavoriteAction,
+	ToggleMapLayersAction
+} from '@ansyn/core/actions/core.actions';
 
 
 @Injectable()
@@ -639,6 +644,27 @@ export class MapAppEffects {
 		.map(({ payload }: SelectCaseAction) => cloneDeep(payload.state.maps))
 		.map(({ activeMapId, data }) => {
 			return new SetMapsDataActionStore({ mapsList: data, activeMapId: activeMapId });
+		});
+
+	/**
+	 * @type Effect
+	 * @name toggleLayersGroupLayer$
+	 * @ofType ToggleMapLayersAction
+	 */
+	@Effect({ dispatch: false })
+	toggleLayersGroupLayer$: Observable<any> = this.actions$
+		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
+		.do(({ payload }) => {
+			const mapId = payload.mapId;
+
+			let communicator;
+			if (!mapId) {
+				communicator = this.imageryCommunicatorService.communicatorsAsArray()[0];
+			} else {
+				communicator = this.imageryCommunicatorService.provide(mapId);
+			}
+
+			communicator.ActiveMap.toggleGroup('layers');
 		});
 
 

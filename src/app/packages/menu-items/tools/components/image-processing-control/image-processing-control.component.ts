@@ -34,7 +34,7 @@ export class ImageProcessingControlComponent {
 	constructor(public store$: Store<IToolsState>) {
 		this.resetAllParams();
 		// limit to once every 200 ms
-		this.throttledManualImageProcess = throttle(this.manualImageProcess, 200)
+		this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
 	}
 
 	resetAllParams() {

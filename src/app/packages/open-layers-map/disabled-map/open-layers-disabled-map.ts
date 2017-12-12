@@ -74,6 +74,9 @@ export class OpenLayersDisabledMap implements IMap {
 
 	}
 
+	toggleGroup(groupName: string) {
+	}
+
 	resetView(layer: any, extent?: GeoJSON.Point[]): void {
 		const view = this.mapObject.getView();
 		this.setMainLayer(layer, view);

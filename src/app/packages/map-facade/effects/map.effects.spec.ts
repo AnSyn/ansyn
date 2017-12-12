@@ -106,7 +106,7 @@ describe('MapEffects', () => {
 			});
 			mapState.mapsList = <any> [
 				{ id: 'imagery1' },
-				{ id: 'imagery2' },
+				{ id: 'imagery2' }
 			];
 
 			mapState.activeMapId = 'imagery1';

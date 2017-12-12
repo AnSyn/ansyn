@@ -177,6 +177,7 @@ export class SaveCaseAsAction implements Action {
 	constructor(public payload: Case) {
 	}
 }
+
 export class SaveCaseAsSuccessAction implements Action {
 	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 

@@ -8,7 +8,6 @@ import OLMap from 'ol/map';
 import View from 'ol/view';
 import Extent from 'ol/extent';
 import proj from 'ol/proj';
-import Rotate from 'ol/control/rotate';
 import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
 
@@ -121,9 +120,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
-			controls: [
-				new ScaleLine()
-			],
+			controls: [new ScaleLine()],
 			view: new View({
 				center: proj.fromLonLat([center[0], center[1]]),
 				zoom: zoom,

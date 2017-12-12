@@ -1,6 +1,3 @@
-import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ILayerTreeNodeLeaf } from '@ansyn/menu-items/layers-manager/models/layer-tree-node-leaf';
-
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesReducer, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
@@ -67,6 +64,8 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
+import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -163,14 +162,16 @@ describe('MapAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
 					[statusBarFeatureKey]: StatusBarReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[mapFeatureKey]: MapReducer
-				})],
+				})
+			],
 			providers: [
+				ImageryProviderService,
+				{ provide: VisualizersConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
@@ -311,37 +312,6 @@ describe('MapAppEffects', () => {
 
 		const expectedResults = cold('--(abc)--', { a, b, c });
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
-	});
-
-	it('addVectorLayer$ should add the selected Layer to the map', () => {
-		const staticLeaf = <ILayerTreeNodeLeaf> {};
-		const imagery1 = {
-			addVectorLayer: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => imagery1);
-		spyOn(imagery1, 'addVectorLayer');
-
-		actions = hot('--a--', { a: new SelectLayerAction(staticLeaf) });
-		const expectedResults = cold('--b--', { b: new SelectLayerAction(staticLeaf) });
-		expect(mapAppEffects.addVectorLayer$).toBeObservable(expectedResults);
-		expect(imagery1.addVectorLayer).toHaveBeenCalledWith(staticLeaf, 'layers');
-	});
-
-	it('removeVectorLayer$ should remove the unselected Layer to the map', () => {
-		let staticLeaf = <ILayerTreeNodeLeaf> {};
-
-		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
-		let imagery1 = {
-			removeVectorLayer: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => imagery1);
-		spyOn(imagery1, 'removeVectorLayer');
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(mapAppEffects.removeVectorLayer$).toBeObservable(expectedResults);
-		expect(imagery1.removeVectorLayer).toHaveBeenCalledWith(staticLeaf, 'layers');
 	});
 
 	describe('onCommunicatorChange$', () => {

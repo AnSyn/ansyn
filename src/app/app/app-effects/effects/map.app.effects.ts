@@ -347,7 +347,7 @@ export class MapAppEffects {
 			const providers = this.imageryProviderService.getProviders();
 			Object.keys(providers).forEach(pName => {
 				const provider = providers[pName];
-				provider.mapComponent.mapClass.removeVectorLayer(action.payload, 'layers');
+				provider.mapComponent.mapClass.removeGroupLayer(action.payload, 'layers');
 			});
 
 			return action;

@@ -34,7 +34,9 @@ export class  AnsynLogger {
 		AnsynLogger.output(severity, str);
 	}
 
-	protected static output(severity: Severity, msg: string) {
+	// To override the output function:
+	// AnsynLogger.output = function (severity: Severity, msg: string) {
+	static output(severity: Severity, msg: string) {
 		// switch (severity) {
 		// 	case 'CRITICAL':
 		// 	case 'ERROR':

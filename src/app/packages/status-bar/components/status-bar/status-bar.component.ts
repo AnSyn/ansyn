@@ -56,6 +56,8 @@ export class StatusBarComponent implements OnInit {
 	orientation: string;
 	geoFilters: string[] = [];
 	geoFilter: string;
+	timeLines: string[] = ["Start - End"];
+	timeLine = "Start - End";
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: { from: Date, to: Date };
 	hideOverlay: boolean;
@@ -224,8 +226,7 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new ExpandAction());
 	}
 
-	clickFavorite(): void {
-		this.store.dispatch(new ToggleFavoriteAction(this.overlay.id));
+	clickTime(): void {
 	}
 
 	clickBackToWorldView(): void {

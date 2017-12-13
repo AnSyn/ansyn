@@ -1,121 +1,115 @@
-<div class="status-bar-container">
-	<div class="status-bar">
-		<div class="left-side" *ngIf="!hideOverlay">
-			<ansyn-imagery-status
-				[overlay]="overlay"
-				[notInCase]="overlayNotInCase"
-				[active]="true"
-				[disableGeoOptions]="showGeoRegistrationError()"
-				(backToWorldView)="clickBackToWorldView()">
-			</ansyn-imagery-status>
+<ansyn-imagery-status
+	*ngIf="!hideOverlay"
+	[overlay]="overlay"
+	[notInCase]="overlayNotInCase"
+	[active]="true"
+	[disableGeoOptions]="showGeoRegistrationError()"
+	[isFavoriteOverlayDisplayed]="isFavoriteOverlayDisplayed"
+	(backToWorldView)="clickBackToWorldView()">
+</ansyn-imagery-status>
+
+<div class="status-bar" [class.show-separator]="!hideOverlay">
+	<!-- Selected Case -->
+	<div class="block pop-hover">
+		<i class="icon-status-bar-case"></i>
+		<span>{{selectedCaseName}}</span>
+
+		<div class="pop-content">
+			<button class="share-link" (click)="copyLink()">
+				<i class="icon-status-bar-share-link"></i>
+				<span>Share link</span>
+			</button>
 		</div>
-
-		<div class="right-side" [class.show-separator]="!hideOverlay">
-
-			<div class="selected-case layout-item pop-on-hover">
-				<i class="icon-status-bar-case"></i>
-				<span class="name">{{selectedCaseName}}</span>
-				<div class="pop-hover default-case">
-					<div class="pop-hover-content">
-						<button class="share-link" (click)="copyLink()">
-							<span class="icon-status-bar-share-link"></span>
-							<span>Share link</span>
-						</button>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="selection-combobox layout-item type-selection">
-
-				<div class="status-bar-orientation-icon">
-					<i class="icon-status-bar-orientation status-bar-image-left"></i>
-				</div>
-
-				<select name="orientation" [(ngModel)]="orientation" (ngModelChange)="orientationChange(orientation)">
-					<option [value]="o" *ngFor="let o of orientations">{{o | titlecase}}</option>
-				</select>
-
-			</div>
-
-
-			<div class="selection-combobox layout-item geo-selection">
-				<div class="status-bar-world-icon">
-					<i class="icon-status-bar-geo"></i>
-				</div>
-
-
-				<select name="geoFilter" [(ngModel)]="geoFilter"
-						(ngModelChange)="geoFilterChange(geoFilter)">
-					<option *ngFor="let geo of geoFilters" [value]="geo">{{geo | titlecase}}</option>
-				</select>
-
-				<div class="status-bar-edit-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-					<i (click)="toggleMapPointSearch()" class="icon-edit"></i>
-				</div>
-				<div class="status-bar-eye-icon" (click)="togglePinPointIndicatorView()"
-					 [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-					<i class="icon-status-bar-show-pin-point status-bar-image-right"></i>
-				</div>
-			</div>
-
-			<div class="selection-combobox layout-item time-selection">
-				<div class="status-bar-calender-icon">
-					<i class="icon-status-bar-time"></i>
-				</div>
-				<select name="query-timeline">
-					<option>Start - End</option>
-				</select>
-				<div class="status-bar-edit-icon" [class.active]="timeSelectionEditIcon">
-					<i (click)="toggleTimelineStartEndSearch()" class="icon-edit"></i>
-				</div>
-				<div class="pop-hover" [class.visible]="timeSelectionEditIcon">
-					<div class="pop-hover-content">
-						<ansyn-timeline-timepicker
-							[startDatePickerValue]="(time)?.from"
-							[endDatePickerValue]="(time)?.to"
-							(closeComponent)="toggleTimelineStartEndSearch()"
-							(applyDate)="applyTimelinePickerResult($event)">
-
-						</ansyn-timeline-timepicker>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="layout-combobox layout-item">
-				<i class="icon-no-of-screens status-bar-image-left" hidden></i>
-				<ansyn-combo-box
-					[options]="layouts"
-					[(selectedIndex)]="selectedLayoutIndex"
-					(selectedIndexChange)="layoutSelectChange(selectedLayoutIndex)">
-				</ansyn-combo-box>
-			</div>
-
-			<div class="overlays-count layout-item">
-				<i class="icon-status-bar-imagery-count status-bar-image-left"></i>
-				{{overlaysCount}}
-			</div>
-
-		</div>
-
 	</div>
 
-	<div class="navigation-area">
-		<button (click)="clickGoPrev()" #goPrev>
-			<i class="icon-status-bar-prev"></i>
-		</button>
-
-		<button (click)="clickFavorite()" [disabled]="!overlay">
-			<i class="icon-favorites favorite-icon" [class.active]="isFavoriteOverlayDisplayed()"></i>
-		</button>
-
-		<button (click)="clickGoNext()" #goNext>
-			<i class="icon-status-bar-next"></i>
-		</button>
-
-		<button class="expand" (click)="clickExpand()">
-			<i class="icon-status-bar-expand"></i>
-		</button>
+	<!-- Orientation -->
+	<div class="action block">
+		<i class="icon-status-bar-orientation"></i>
+		<ansyn-combo-box
+			[options]="orientations"
+			[(selectedIndex)]="orientation"
+			(selectedIndexChange)="orientationChange(orientation)">
+		</ansyn-combo-box>
 	</div>
+
+	<!-- Geo point -->
+	<div class="action">
+		<div class="block">
+			<i class="icon-status-bar-geo"></i>
+			<ansyn-combo-box
+				[options]="geoFilters"
+				[(selectedIndex)]="geoFilter"
+				(selectedIndexChange)="geoFilterChange(geoFilter)">
+			</ansyn-combo-box>
+		</div>
+		<div class="buttons">
+			<button (click)="togglePinPointIndicatorView()"
+					[class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+				<i class="icon-status-bar-show-pin-point"></i>
+			</button>
+			<button (click)="toggleMapPointSearch()"
+					[class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
+				<i class="icon-edit"></i>
+			</button>
+		</div>
+	</div>
+
+	<!-- Time -->
+	<div class="action">
+		<div class="block">
+			<i class="icon-status-bar-time"></i>
+			<ansyn-combo-box
+				[options]="timeLines"
+				[(selectedIndex)]="timeLine">
+			</ansyn-combo-box>
+		</div>
+		<div class="buttons">
+			<button (click)="toggleTimelineStartEndSearch()"
+					[class.active]="timeSelectionEditIcon">
+				<i class="icon-edit"></i>
+			</button>
+		</div>
+		<div class="pop-content" [class.visible]="timeSelectionEditIcon">
+			<ansyn-timeline-timepicker
+				[startDatePickerValue]="(time)?.from"
+				[endDatePickerValue]="(time)?.to"
+				(closeComponent)="toggleTimelineStartEndSearch()"
+				(applyDate)="applyTimelinePickerResult($event)">
+			</ansyn-timeline-timepicker>
+		</div>
+	</div>
+
+	<!-- Layout -->
+	<div class="action block">
+		<i class="icon-no-of-screens"></i>
+		<ansyn-combo-box
+			[options]="layouts"
+			[(selectedIndex)]="selectedLayoutIndex"
+			(selectedIndexChange)="layoutSelectChange(selectedLayoutIndex)">
+		</ansyn-combo-box>
+	</div>
+
+	<!-- Overlays -->
+	<div class="block">
+		<i class="icon-status-bar-imagery-count"></i>
+		<span>{{overlaysCount}}</span>
+	</div>
+</div>
+
+<div class="navigation">
+	<button (click)="clickGoPrev()" #goPrev>
+		<i class="icon-status-bar-prev"></i>
+	</button>
+
+	<button (click)="clickTime()">
+		<i class="icon-annotation-square"></i>
+	</button>
+
+	<button (click)="clickGoNext()" #goNext>
+		<i class="icon-status-bar-next"></i>
+	</button>
+
+	<button class="expand" (click)="clickExpand()">
+		<i class="icon-status-bar-expand"></i>
+	</button>
 </div>

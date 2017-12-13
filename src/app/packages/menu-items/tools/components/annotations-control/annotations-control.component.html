@@ -1,27 +1,27 @@
 <ul class="annotations-options">
 	<li [class.mode-on]="mode === 'Point'" (click)="createInteraction('Point')">
-		<span class="tooltip-value bottom icon-annotation-point" value="Point"></span></li>
+		<span class="icon-annotation-point" tooltip-value="Point" tooltip-class="bottom"></span></li>
 	<li [class.mode-on]="mode === 'LineString'" (click)="createInteraction('LineString')">
-		<span class="tooltip-value bottom icon-annotation-line" value="Line"></span>
+		<span class="icon-annotation-line" tooltip-value="Line" tooltip-class="bottom"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Polygon'" (click)="createInteraction('Polygon')">
-		<span class="tooltip-value bottom icon-annotation-polygon" value="Polygon"></span>
+		<span class="icon-annotation-polygon" tooltip-value="Polygon" tooltip-class="bottom"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Circle'" (click)="createInteraction('Circle')">
-		<span class="tooltip-value bottom icon-annotation-circle" value="Circle"></span>
+		<span class="icon-annotation-circle" tooltip-value="Circle" tooltip-class="bottom"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Rectangle'" (click)="createInteraction('Rectangle')">
-		<span class="tooltip-value bottom icon-annotation-square" value="Rectangle"></span>
+		<span class="icon-annotation-square" tooltip-value="Rectangle" tooltip-class="bottom"></span>
 	</li>
 	<li [class.mode-on]="mode === 'Arrow'" (click)="createInteraction('Arrow')">
-		<span class="tooltip-value bottom icon-annotation-arrow" value="Arrow"></span>
+		<span class="icon-annotation-arrow" tooltip-value="Arrow" tooltip-class="bottom"></span>
 	</li>
 	<li class="spliter">
 		<div></div>
 	</li>
 	<li class="expanded-selection">
 		<div (mouseup)="openLineWidthSelection()" (mousedown)="closeLineWidthSelection()">
-			<span class="tooltip-value bottom icon-annotation-weight" value="Width"></span>
+			<span class="icon-annotation-weight" tooltip-value="Width" tooltip-class="bottom"></span>
 		</div>
 		<ul (mousedown)="selectLineWidth($event)" #lineWidthSelection tabindex="30" class="line-width-expand">
 			<li tabindex="31" data-index="1">1</li>
@@ -36,7 +36,7 @@
 	</li>
 	<li class="expanded-selection color-selection">
 		<div (click)="toggleColorSelection($event)">
-			<span class="tooltip-value bottom icon-annotation-color" value="Color"></span>
+			<span class="icon-annotation-color" tooltip-value="Color" tooltip-class="bottom"></span>
 		</div>
 		<ul #colorSelection tabindex="40" class="color-selection-expand">
 			<li (click)="openColorInput($event)">

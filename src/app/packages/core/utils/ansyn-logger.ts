@@ -35,18 +35,18 @@ export class  AnsynLogger {
 	}
 
 	protected static output(severity: Severity, msg: string) {
-		switch (severity) {
-			case 'CRITICAL':
-			case 'ERROR':
-				console.error(msg);
-				break;
-			case 'WARNING':
-				console.warn(msg);
-				break;
-			case 'INFO':
-			case 'DEBUG':
-				console.log(msg);
-				break;
-		}
+		// switch (severity) {
+		// 	case 'CRITICAL':
+		// 	case 'ERROR':
+		// 		console.error(msg);
+		// 		break;
+		// 	case 'WARNING':
+		// 		console.warn(msg);
+		// 		break;
+		// 	case 'INFO':
+		// 	case 'DEBUG':
+		// 		console.log(msg);
+		// 		break;
+		// }
 	}
 }

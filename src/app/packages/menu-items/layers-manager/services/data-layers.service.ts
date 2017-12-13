@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
+import { AnsynLogger } from '../../../core/utils/ansyn-logger';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -156,7 +157,7 @@ export class DataLayersService {
 		} else {
 			errMsg = error.message ? error.message : error.toString();
 		}
-		console.error(errMsg);
+		AnsynLogger.error(errMsg);
 		return Observable.throw(errMsg);
 	}
 }

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
 import { CenterMarkerPlugin } from './plugin/center-marker-plugin';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @NgModule({
 	imports: [CommonModule, ImageryModule],
@@ -9,7 +10,8 @@ import { CenterMarkerPlugin } from './plugin/center-marker-plugin';
 })
 
 export class OpenLayerCenterMarkerPluginModule {
-	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerPlugin('openLayersMap', CenterMarkerPlugin);
+	constructor(protected imageryProviderService: ImageryProviderService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		imageryProviderService.registerPlugin('openLayersMap', CenterMarkerPlugin, imageryCommunicatorService);
 	}
 }

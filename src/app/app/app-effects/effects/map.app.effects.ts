@@ -443,13 +443,13 @@ export class MapAppEffects {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 			const centerMarkerPlugin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
 			if (centerMarkerPlugin) {
-				centerMarkerPlugin.init(communicatorHandler);
+				centerMarkerPlugin.init(action.payload.currentCommunicatorId);
 			}
 
 			// ImageNorthPlugin
 			const imageNorthPlugin = communicatorHandler.getPlugin(ImageNorthPlugin.sPluginType);
 			if (imageNorthPlugin) {
-				imageNorthPlugin.init(communicatorHandler);
+				imageNorthPlugin.init(action.payload.currentCommunicatorId);
 			}
 		});
 

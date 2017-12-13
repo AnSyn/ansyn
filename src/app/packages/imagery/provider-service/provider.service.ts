@@ -18,7 +18,7 @@ export interface InjectedMapVisualizer {
 export class ImageryProviderService {
 
 	private _mapProviders: { [id: string]: IProvidedMap };
-	private _mapPluginProviders: { [mapType: string]: [{ pluginClass: any }] };
+	private _mapPluginProviders: { [mapType: string]: [{ pluginClass: any, args: any }] };
 	private _mapVisualizersProviders: Map<string, [{ visualizerClass: any, args: any }]>;
 
 	constructor(@Optional() @Inject(MapVisualizer) protected mapVisualizers: InjectedMapVisualizer[],
@@ -45,12 +45,12 @@ export class ImageryProviderService {
 		return this._mapProviders;
 	}
 
-	public registerPlugin(mapType: string, pluginClass: any) {
+	public registerPlugin(mapType: string, pluginClass: any, constructorArgs?: any) {
 
 		if (!this._mapPluginProviders[mapType]) {
-			this._mapPluginProviders[mapType] = [{ 'pluginClass': pluginClass }];
+			this._mapPluginProviders[mapType] = [{ 'pluginClass': pluginClass, args: constructorArgs }];
 		} else {
-			this._mapPluginProviders[mapType].push({ 'pluginClass': pluginClass });
+			this._mapPluginProviders[mapType].push({ 'pluginClass': pluginClass, args: constructorArgs });
 		}
 	}
 
@@ -70,7 +70,7 @@ export class ImageryProviderService {
 
 		const plugins: IMapPlugin[] = [];
 		mapPluginProviders.forEach(provider => {
-			const providedPlugin: IMapPlugin = new provider.pluginClass();
+			const providedPlugin: IMapPlugin = new provider.pluginClass(provider.args);
 			plugins.push(providedPlugin);
 		});
 

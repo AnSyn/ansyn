@@ -13,7 +13,7 @@ import {
 	RemoveMapInstanceAction
 } from '../actions';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { CaseMapState, defaultMapType, Overlay, CaseMapPosition } from '@ansyn/core';
+import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { cloneDeep, range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';

@@ -1,7 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export abstract class IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;

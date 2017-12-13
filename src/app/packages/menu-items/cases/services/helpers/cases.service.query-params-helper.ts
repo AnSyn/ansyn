@@ -10,6 +10,8 @@ import { Point } from 'geojson';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
 import { CaseState } from '@ansyn/core/models/case.model';
+import { calcGeoJSONExtent } from '@ansyn/core/utils/calc-extent';
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 export class QueryParamsHelper {
 
@@ -46,11 +48,6 @@ export class QueryParamsHelper {
 				this.casesService.contextValues[key] = selectedContext[key];
 			}
 		});
-
-		if (selectedContext.zoom) {
-			// updatedCaseModel.state.maps.data.forEach(map => map.data.position.zoom = selectedContext.zoom);
-		}
-
 		if (selectedContext.requirements && !isEmpty(qParams)) {
 			selectedContext.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
@@ -58,9 +55,8 @@ export class QueryParamsHelper {
 						const geopointStr = qParams.geopoint;
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(Number).reverse();
-							const geoPoint: Point = { type: 'Point', coordinates };
-							// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
-							updatedCaseModel.state.region = getPolygonByPointAndRadius(coordinates).geometry;
+							const region = getPolygonByPointAndRadius(coordinates).geometry;
+							updatedCaseModel.state.region = region;
 						}
 						break;
 					case 'geometry':
@@ -72,7 +68,6 @@ export class QueryParamsHelper {
 								const geoPoint: Point = <Point>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
-								// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = geoPoint);
 								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
 
 								updatedCaseModel.state.contextEntities = [];
@@ -98,8 +93,10 @@ export class QueryParamsHelper {
 									'properties': {}
 								};
 								const centroidOfGeometry = centroid(feature);
+								const extent: CaseMapExtent = calcGeoJSONExtent(geoPolygon);
 
-								// updatedCaseModel.state.maps.data.forEach(map => map.data.position.center = centroidOfGeometry.geometry);
+								updatedCaseModel.state.maps.data.forEach(map => map.data.position.extent = extent);
+
 								updatedCaseModel.state.region = geoPolygon;
 
 								updatedCaseModel.state.contextEntities = [];

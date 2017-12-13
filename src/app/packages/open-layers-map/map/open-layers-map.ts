@@ -1,41 +1,34 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
-import { MapPosition } from '@ansyn/imagery/model/map-position';
-import { Utils } from './utils';
+import { CaseMapPosition } from '@ansyn/core';
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
-
+import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import OLMap from 'ol/map';
 import View from 'ol/view';
-import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
-
 import GeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
-
 import Vector from 'ol/source/vector';
 import Raster from 'ol/source/raster';
 import OSM from 'ol/source/osm';
-
 import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
-	static groupLayers = new Map<string, Group>();
 
-	private showGroups = new Map<string, boolean>();
+static groupLayers = new Map<string, Group>();
 
-	public mapType: string = OpenLayersMap.mapType;
+	private showGroups = new Map<string, boolean>();	public mapType: string= OpenLayersMap.mapType;
 	private _mapObject: OLMap;
 	private _mapLayers = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	public positionChanged: EventEmitter<MapPosition> = new EventEmitter<MapPosition>();
+	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<MapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -84,7 +77,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
+	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -106,7 +99,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return { type: 'Point', coordinates };
 	}
 
-	private initMap(element: HTMLElement, layers: any, position?: MapPosition) {
+	 initMap(element: HTMLElement, layers: any, position?: MapPosition) {
 		let center = [0, 0];
 		let zoom = 1;
 		let rotation = 0;
@@ -219,29 +212,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.setGroupLayers();
 	}
 
-	addInteraction(interaction) {
-		this._mapObject.addInteraction(interaction);
-	}
-
-	removeInteraction(interaction) {
-		this._mapObject.removeInteraction(interaction);
-	}
-
-
-	internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
-		const pinPointIndicatorLayer: Layer = <Layer>this.getLayerById(this._pinPointIndicatorLayerId);
-		let lonLatCords;
-		if (pinPointIndicatorLayer) {
-			let pinPointGeometry = (<any>pinPointIndicatorLayer).getSource().getFeatures()[0].getGeometry();
-			const oldView = this._mapObject.getView();
-			const oldViewProjection = oldView.getProjection();
-			const layerCords = pinPointGeometry.getCoordinates();
-			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
-		}
-		return { pinPointLonLatGeo: lonLatCords };
-	}
-
-	fitToExtent(extent: Extent, resolution?: number) {
+	fitToExtent(extent: CaseMapExtent, resolution?: number) {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
@@ -303,15 +274,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (this._imageProcessing) {
 			this._imageProcessing.processImage(null);
 		}
-
-	}
-
-	public removeLayerById(layerId) {
-		const layer = this.getLayerById(layerId);
-		if (layer) {
-			// layer.set('visible',false);
-			this.removeLayer(layer);
-		}
 	}
 
 	public get mapObject() {
@@ -344,12 +306,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 		};
 	}
 
-	public setPosition(position: MapPosition): void {
+	public setPosition(position: CaseMapPosition): void {
 		this.fitToExtent(position.extent, position.resolution);
 		this.setRotation(position.rotation);
 	}
 
-	public getPosition(): MapPosition {
+	public getPosition(): CaseMapPosition {
 		const view = this._mapObject.getView();
 		const projection = view.getProjection();
 		const rotation: number = view.getRotation();
@@ -364,15 +326,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		view.setRotation(rotation);
 	}
 
-	private getMapExtentInGeo() {
-		const view = this._mapObject.getView();
-		const viewProjection = view.getProjection();
-		const viewExtent = view.calculateExtent(this._mapObject.getSize());
-		const viewExtentGeo = proj.transformExtent(viewExtent, viewProjection, 'EPSG:4326');
-		return Utils.OLExtentToBoundingBox(viewExtentGeo);
-	}
-
-	private flyTo(location) {
+	flyTo(location) {
 		const view = this._mapObject.getView();
 		view.animate({
 			center: location,
@@ -454,14 +408,38 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return this.pointerMove;
 	}
 
-	// *****-- shadow mouse functionality end --********
-
-	// *****-- tools ----*****
-
-
-	// *****-- end tools ---****
 	// IMap End
 	public dispose() {
 
+	}
+
+	/* ******** unused functions ? ******** */
+	addInteraction(interaction) {
+		this._mapObject.addInteraction(interaction);
+	}
+
+	removeInteraction(interaction) {
+		this._mapObject.removeInteraction(interaction);
+	}
+
+	internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
+		const pinPointIndicatorLayer: Layer = <Layer>this.getLayerById(this._pinPointIndicatorLayerId);
+		let lonLatCords;
+		if (pinPointIndicatorLayer) {
+			let pinPointGeometry = (<any>pinPointIndicatorLayer).getSource().getFeatures()[0].getGeometry();
+			const oldView = this._mapObject.getView();
+			const oldViewProjection = oldView.getProjection();
+			const layerCords = pinPointGeometry.getCoordinates();
+			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
+		}
+		return { pinPointLonLatGeo: lonLatCords };
+	}
+
+	public removeLayerById(layerId) {
+		const layer = this.getLayerById(layerId);
+		if (layer) {
+			// layer.set('visible',false);
+			this.removeLayer(layer);
+		}
 	}
 }

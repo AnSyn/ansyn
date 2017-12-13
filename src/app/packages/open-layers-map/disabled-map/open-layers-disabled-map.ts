@@ -12,8 +12,7 @@ import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
@@ -25,10 +24,9 @@ export class OpenLayersDisabledMap extends IMap {
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	mapType: string = OpenLayersDisabledMap.mapType;
 	mapObject: any;
-
 	mainLayer: Layer;
 
-	_imageProcessing: OpenLayersImageProcessing;
+	 _imageProcessing: OpenLayersImageProcessing;
 
 	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
 		super();
@@ -36,13 +34,13 @@ export class OpenLayersDisabledMap extends IMap {
 		this.initMap(element, layers, position);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
+	initMap(element: HTMLElement, layers: any) {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
 			controls: [new ScaleLine()]
 		});
-		this.setMainLayer(layers[0], null, position);
+		this.setMainLayer(layers[0]);
 		const containerElem = <HTMLElement> this.mapObject.getViewport();
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
@@ -71,21 +69,20 @@ export class OpenLayersDisabledMap extends IMap {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any, extent?: CaseMapExtent): void {
-		const view = this.mapObject.getView();
-		this.setMainLayer(layer, view);
+	resetView(layer: any): void {
+		this.setMainLayer(layer);
 	}
 
-	setMainLayer(layer: Layer, currentView: View, position?: CaseMapPosition) {
+	setMainLayer(layer: Layer) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
 		}
 
 		this.mainLayer = layer;
-		const newView = this.generateNewView(layer, currentView, position);
-		this.mapObject.setView(newView);
-		this.mapObject.addLayer(this.mainLayer);
+		const view = this.generateNewView(layer);
+		this.mapObject.setView(view);
+		this.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
@@ -98,32 +95,9 @@ export class OpenLayersDisabledMap extends IMap {
 		}
 	}
 
-	generateNewView(layer: Layer, oldview: View, position: CaseMapPosition): any {
-		let newCenter = [0, 0];
-		let newZoom = 12;
-		let newRotation = 0;
+	generateNewView(layer: Layer): View {
 		const newProjection = layer.getSource().getProjection();
-
-		if (!oldview) {
-			// newCenter = position ? position.center.coordinates : newCenter;
-			// newZoom = position ? position.zoom : newZoom;
-			newRotation = position ? position.rotation : newRotation;
-		} else {
-			// newZoom = position ? position.zoom : oldview.getZoom();
-			newRotation = position ? position.rotation : oldview.getRotation();
-
-			const oldCenter = oldview.getCenter();
-			const oldProjection = oldview.getProjection();
-			const center = proj.transform(oldCenter, oldProjection, 'EPSG:4326');
-			if (center) {
-				newCenter = center;
-			}
-		}
-		newCenter = proj.transform(newCenter, 'EPSG:4326', newProjection);
 		return new View({
-			center: newCenter,
-			zoom: newZoom,
-			rotation: newRotation,
 			projection: newProjection
 		});
 	}
@@ -136,7 +110,8 @@ export class OpenLayersDisabledMap extends IMap {
 		});
 	}
 
-	addLayer(layer: any): void {
+	addLayer(layer: Layer): void {
+		this.mapObject.addLayer(layer);
 	}
 
 	removeLayer(layer: any): void {

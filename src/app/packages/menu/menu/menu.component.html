@@ -21,7 +21,8 @@
 	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
-		<button class="pin tooltip-value right" (click)="toggleIsPinned()" [value]="pinText">
+		<button class="pin" (click)="toggleIsPinned()"
+				[attr.tooltip-value]="pinText" tooltip-class="right">
 			<i class="icon-tools-pin"></i>
 		</button>
 

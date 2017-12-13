@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { CaseMapState, MapsLayout, CaseMapPosition } from '@ansyn/core';
+import { CaseMapPosition, CaseMapState, MapsLayout } from '@ansyn/core';
 import { Options, Overlay } from '@ansyn/core/models';
 
 

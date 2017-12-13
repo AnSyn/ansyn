@@ -194,7 +194,7 @@ static groupLayers = new Map<string, Group>();
 		const view: any = new View({
 			rotation,
 			projection,
-			minZoom: 2.5,
+			minZoom: 2.5
 		});
 
 		view.fit(extent, this.mapObject.getSize());
@@ -216,7 +216,7 @@ static groupLayers = new Map<string, Group>();
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
-		view.fit(transformExtent, {size: this.mapObject.getSize(), constrainResolution: false});
+		view.fit(transformExtent, { size: this.mapObject.getSize(), constrainResolution: false });
 		if (resolution) {
 			view.setResolution(resolution);
 		}

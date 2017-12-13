@@ -64,7 +64,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapState, CaseMapPosition } from '@ansyn/core/models';
+import { CaseMapPosition, CaseMapState } from '@ansyn/core/models';
 import {
 	ChangeLayoutAction,
 	SetMapGeoEnabledModeStatusBarActionStore

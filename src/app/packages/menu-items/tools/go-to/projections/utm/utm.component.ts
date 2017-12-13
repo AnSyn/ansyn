@@ -1,6 +1,10 @@
 import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import {
-	AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors,
+	AbstractControl,
+	ControlValueAccessor,
+	NG_VALIDATORS,
+	NG_VALUE_ACCESSOR,
+	ValidationErrors,
 	Validator
 } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';

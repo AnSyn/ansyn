@@ -413,34 +413,4 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public dispose() {
 
 	}
-
-	/* ******** unused functions ? ******** */
-	addInteraction(interaction) {
-		this._mapObject.addInteraction(interaction);
-	}
-
-	removeInteraction(interaction) {
-		this._mapObject.removeInteraction(interaction);
-	}
-
-	internalBeforeSetMainLayer(): { pinPointLonLatGeo } {
-		const pinPointIndicatorLayer: Layer = <Layer>this.getLayerById(this._pinPointIndicatorLayerId);
-		let lonLatCords;
-		if (pinPointIndicatorLayer) {
-			let pinPointGeometry = (<any>pinPointIndicatorLayer).getSource().getFeatures()[0].getGeometry();
-			const oldView = this._mapObject.getView();
-			const oldViewProjection = oldView.getProjection();
-			const layerCords = pinPointGeometry.getCoordinates();
-			lonLatCords = proj.transform(layerCords, oldViewProjection, 'EPSG:4326');
-		}
-		return { pinPointLonLatGeo: lonLatCords };
-	}
-
-	public removeLayerById(layerId) {
-		const layer = this.getLayerById(layerId);
-		if (layer) {
-			// layer.set('visible',false);
-			this.removeLayer(layer);
-		}
-	}
 }

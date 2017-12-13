@@ -48,7 +48,7 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	calcGeoJSONExtent,
+	extentFromGeojson,
 	endTimingLog,
 	getFootprintIntersectionRatioInExtent,
 	getPointByPolygon,
@@ -215,7 +215,7 @@ export class MapAppEffects {
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
-							communicator.resetView(layer, calcGeoJSONExtent(overlay.footprint));
+							communicator.resetView(layer, extentFromGeojson(overlay.footprint));
 						} else {
 							communicator.resetView(layer);
 						}

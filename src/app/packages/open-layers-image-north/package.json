@@ -1,0 +1,17 @@
+{
+	"name": "@ansyn/open-layers-image-north",
+	"version": "0.2.2",
+	"description": "This is open layers-map plugin package that will show calc map center",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "asafMasa",
+	"license": "MIT",
+	"peerDependencies": {
+		"ol": "^4.5.0",
+		"@angular/common": "^5.0.0",
+		"@angular/core": "^5.0.0",
+		"@ansyn/imagery": "0.2.2"
+	}
+}

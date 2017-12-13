@@ -1,41 +1,41 @@
 <div class="tools-menu-item-container">
 	<div>
-		<button class="tooltip-value right"
+		<button tooltip-class="right"
+				tooltip-value="Shadow mouse cursor"
 				(click)="toggleShadowMouse()"
 				[class.mode-on]="flags.get('shadowMouse')"
-				[disabled]="flags.get('shadowMouseDisabled') || isGeoOptionsDisabled"
-				value="Shadow mouse cursor">
+				[disabled]="flags.get('shadowMouseDisabled') || isGeoOptionsDisabled">
 			<i class="icon-shadow-mouse"></i>
 		</button>
 	</div>
 
 	<div>
-		<button class="tooltip-value right"
+		<button tooltip-class="right"
+				tooltip-value="Go To"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
 				[class.active]="expandedSubMenu === subMenuEnum.goTo"
-				[disabled]="isGeoOptionsDisabled"
-				value="Go To">
+				[disabled]="isGeoOptionsDisabled">
 			<i class="icon-tools-go-to"></i>
 		</button>
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
 	<div class="image-auto-processing">
-		<button class="tooltip-value right"
+		<button tooltip-class="right"
+				tooltip-value="Automatic Image Enhancement"
 				(click)="toggleAutoImageProcessing()"
 				[class.mode-on]="flags.get('autoImageProcessing')"
-				[disabled]="flags.get('imageProcessingDisabled')"
-				value="Automatic Image Enhancement">
+				[disabled]="flags.get('imageProcessingDisabled')">
 			<i class="icon-automatic-image-processing"></i>
 		</button>
 	</div>
 
 	<div class="image-manual-processing">
-		<button class="tooltip-value right"
+		<button tooltip-class="right"
+				tooltip-value="Manual Image Enhancement"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
 				[class.mode-on]="manualProcessingControls.imgProcessActive"
-				[disabled]="flags.get('imageProcessingDisabled')"
-				value="Manual Image Enhancement">
+				[disabled]="flags.get('imageProcessingDisabled')">
 			<i class="icon-tools-image-processing"></i>
 		</button>
 		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing"
@@ -43,10 +43,10 @@
 	</div>
 
 	<div class="display-overlay-visualizer">
-		<button class="tooltip-value right"
+		<button tooltip-class="right"
+				tooltip-value="Display Overlays"
 				(click)="toggleSubMenu(subMenuEnum.overlays)"
 				[disabled]="isGeoOptionsDisabled"
-				value="Display Overlays"
 				[class.mode-on]="displayModeOn"
 				[class.active]="expandedSubMenu === subMenuEnum.overlays">
 			<i class="icon-tools-polygons"></i>
@@ -60,9 +60,9 @@
 	</div>
 
 	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
-		<button class="tooltip-value right"
-				(click)="toggleSubMenu(subMenuEnum.annotations)"
-				value="Annotations">
+		<button tooltip-class="right"
+				tooltip-value="Annotations"
+				(click)="toggleSubMenu(subMenuEnum.annotations)">
 			<span class="icon-edit"></span>
 		</button>
 		<span class="tooltiptext">User Annotations</span>

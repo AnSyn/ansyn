@@ -96,6 +96,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	selectedMenuItemName: string;
 	menuItems: Map<string, MenuItem>;
 	isPinned: boolean;
+	pinText = 'Pin';
 	clickOutside: boolean;
 	expand: boolean;
 	onAnimation: boolean;
@@ -148,8 +149,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
 		}
 		if (this.isPinned) {
 			this.renderer.addClass(this.container.nativeElement, 'pinned');
+			this.pinText = 'Unpin';
 		} else {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
+			this.pinText = 'Pin';
 		}
 
 		this.forceRedraw()

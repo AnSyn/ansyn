@@ -1,7 +1,25 @@
 @import "./z-index-globals";
 
-.tooltip-value:not(.active):not(:disabled) {
-	&.bottom {
+/*
+	make sure to include @import '~@ansyn/core/less/tooltip'; on your component less file!
+
+	for static tooltips - use tooltip-value and tooltip-class attributes:
+	<button tooltip-value="click me" tooltip-class="right">Hello</button>
+
+	for dynamic tooltips -  use tooltip-value class and value property
+	<button [value]="myString" class="tooltip-value right">Hello</button>
+*/
+
+[tooltip-value]:not(.active):not(:disabled):after {
+	content: attr(tooltip-value);
+}
+.tooltip-value:not(.active):not(:disabled):after {
+	content: attr(value);
+}
+
+.tooltip-value:not(.active):not(:disabled),
+[tooltip-value]:not(.active):not(:disabled) {
+	&[tooltip-class*="bottom"], &.bottom {
 		&:after {
 			left: auto;
 			top: auto;
@@ -13,7 +31,7 @@
 		}
 	}
 
-	&.right {
+	&[tooltip-class*="right"], &.right {
 		&:after {
 			left: auto;
 			right: 0;
@@ -24,7 +42,7 @@
 		}
 	}
 
-	&.left {
+	&[tooltip-class*="left"], &.left {
 		&:after {
 			transform: translate(-100%, 0);
 		}
@@ -38,7 +56,6 @@
 		font-size: small;
 		opacity: 0;
 		position: absolute;
-		content: attr(value);
 		padding: 0 10px;
 		left: 0;
 		top: 0;

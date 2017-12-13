@@ -114,7 +114,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = idahoElement.properties.satAzimuth * (Math.PI / 180);
 		overlay.sourceType = this.sourceType;
 		overlay.isFullOverlay = true;
-		overlay.isGeoRegistered = true;
+		overlay.isGeoRegistered = false;
 
 		return overlay;
 	}

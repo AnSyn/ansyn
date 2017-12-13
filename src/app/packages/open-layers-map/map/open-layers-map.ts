@@ -101,23 +101,17 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
-		let center = [0, 0];
-		let zoom = 1;
 		let rotation = 0;
-
 		if (position) {
 			rotation = position.rotation;
 		}
-
 		this._mapObject = new OLMap({
 			target: element,
 			layers: layers,
 			renderer: 'canvas',
 			controls: [new ScaleLine()],
 			view: new View({
-				center: proj.fromLonLat(center),
-				zoom: zoom,
-				rotation: rotation,
+				rotation,
 				minZoom: 2.5
 			})
 		});
@@ -125,7 +119,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapLayers = layers;
 
 		if (position && position.extent) {
-			this.fitToExtent(position.extent);
+			this.fitToExtent(position.extent, position.resolution);
 		}
 
 		this._mapObject.on('moveend', () => {
@@ -192,7 +186,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const extent = proj.transformExtent(viewExtent, oldProjection, projection);
 		const resolution = oldview.getResolution();
 
-		const view: any = new View({
+		const view: View = new View({
 			rotation,
 			projection,
 			minZoom: 2.5

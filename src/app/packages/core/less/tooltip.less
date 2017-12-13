@@ -6,7 +6,11 @@
 	for static tooltips - use tooltip-value and tooltip-class attributes:
 	<button tooltip-value="click me" tooltip-class="right">Hello</button>
 
-	for dynamic tooltips -  use tooltip-value class and value property
+	for dynamic tooltips use [attr.tooltip-value]
+	<button [attr.tooltip-value]="myString" tooltip-class="right">Hello</button>
+
+	backward-compatibility:
+	old pattern (using tooltip-value class and value attribute) is still supported
 	<button [value]="myString" class="tooltip-value right">Hello</button>
 */
 

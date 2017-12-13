@@ -15,10 +15,9 @@
 			<span>{{data.name | titlecase}}</span>
 			<div class="sub-buttons-list">
 				<button
-					class="tooltip-value"
 					*ngFor="let filter of this[data.subList]"
 					(mousedown)="isClick($event) && data.action($event, filter)"
-					[value]="filter">
+					[attr.tooltip-value]="filter">
 					<span>{{getSensorType(filter)}}</span>
 				</button>
 			</div>

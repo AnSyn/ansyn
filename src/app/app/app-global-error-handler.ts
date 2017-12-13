@@ -7,9 +7,9 @@ export class GlobalErrorHandler implements ErrorHandler {
 
 	handleError(error) {
 		if (error.stack) {
-			AnsynLogger.activeLogger.error(error.stack);
+			AnsynLogger.error(error.stack);
 		} else {
-			AnsynLogger.activeLogger.error(error.toString());
+			AnsynLogger.error(error.toString());
 		}
 		// IMPORTANT: Rethrow the error otherwise it gets swallowed
 		throw error;

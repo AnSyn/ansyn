@@ -2,6 +2,7 @@ import { CommunicatorEntity, IMapPlugin } from '@ansyn/imagery';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import proj from 'ol/proj';
 import { EventEmitter } from '@angular/core';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export interface INorthData {
 	imagePhotoAngle: number;
@@ -18,13 +19,13 @@ export class ImageNorthPlugin implements IMapPlugin {
 	isEnabled = true;
 	public imageNorthChanged: EventEmitter<number>;
 
-	constructor() {
+	constructor(protected imageryCommunicatorService: ImageryCommunicatorService) {
 		this.pluginType = ImageNorthPlugin.sPluginType;
 		this._subscriptions = [];
 	}
 
-	public init(imageryCommunicator: CommunicatorEntity): void {
-		this._imageryCommunicator = imageryCommunicator;
+	public init(mapId: string): void {
+		this._imageryCommunicator = this.imageryCommunicatorService.provide(mapId);
 		this.register();
 	}
 

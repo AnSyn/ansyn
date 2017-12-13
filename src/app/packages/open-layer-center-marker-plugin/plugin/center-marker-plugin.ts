@@ -6,6 +6,7 @@ import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export class CenterMarkerPlugin implements IMapPlugin {
 	static sPluginType = 'openLayerCenterMarker';
@@ -35,7 +36,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		return this._isEnabled;
 	}
 
-	constructor() {
+	constructor(protected imageryCommunicatorService: ImageryCommunicatorService) {
 		this.pluginType = CenterMarkerPlugin.sPluginType;
 
 		this._isEnabled = false;
@@ -52,8 +53,8 @@ export class CenterMarkerPlugin implements IMapPlugin {
 		this._subscriptions = [];
 	}
 
-	public init(imageryCommunicator: CommunicatorEntity): void {
-		this._imageryCommunicator = imageryCommunicator;
+	public init(mapId: string): void {
+		this._imageryCommunicator = this.imageryCommunicatorService.provide(mapId);
 		this.register();
 	}
 

@@ -65,6 +65,23 @@ export class RouterAppEffects {
 		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== CasesService.defaultCase.id && selectedCase.id !== routerCaseId)
 		.map(([selectedCase]: [Case]) => new NavigateCaseTriggerAction(selectedCase.id));
 
+	/**
+	 * @type Effect
+	 * @name selectCaseUpdateRouter$
+	 * @ofType SelectCaseAction
+	 * @dependencies router
+	 * @filter Selected case ID is not the router's or default's case ID
+	 * @action NavigateCaseTriggerAction
+	 */
+	@Effect()
+	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: (SelectCaseAction | SaveCaseAsSuccessAction), router: IRouterState): any[] => {
+			return [payload, router.caseId];
+		})
+		.filter(([selectedCase, routerCaseId]) => selectedCase.id === CasesService.defaultCase.id)
+		.map(([selectedCase, routerCaseId]: [Case, string]) => new NavigateCaseTriggerAction());
+
 	constructor(protected actions$: Actions, protected store$: Store<any>) {
 	}
 }

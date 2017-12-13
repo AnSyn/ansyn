@@ -9,7 +9,7 @@ export class CesiumMap extends IMap {
 	static groupLayers = new Map<string, any>();
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<MapPosition>();
+	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();

@@ -22,13 +22,14 @@ import VectorLayer from 'ol/layer/vector';
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
 
-static groupLayers = new Map<string, Group>();
+	static groupLayers = new Map<string, Group>();
 
-	private showGroups = new Map<string, boolean>();	public mapType: string= OpenLayersMap.mapType;
+	private showGroups = new Map<string, boolean>();
+	public mapType: string = OpenLayersMap.mapType;
 	private _mapObject: OLMap;
 	private _mapLayers = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<MapPosition>();
+	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -99,7 +100,7 @@ static groupLayers = new Map<string, Group>();
 		return { type: 'Point', coordinates };
 	}
 
-	 initMap(element: HTMLElement, layers: any, position?: MapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		let center = [0, 0];
 		let zoom = 1;
 		let rotation = 0;

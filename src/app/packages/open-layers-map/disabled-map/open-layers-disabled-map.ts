@@ -1,9 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { IMap } from '@ansyn/imagery';
-
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import { Observable } from 'rxjs/Observable';
-
 import Map from 'ol/map';
 import View from 'ol/view';
 import Extent from 'ol/extent';
@@ -18,7 +16,7 @@ export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<MapPosition>();
+	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -26,12 +24,12 @@ export class OpenLayersDisabledMap extends IMap {
 	mapObject: any;
 	mainLayer: Layer;
 
-	 _imageProcessing: OpenLayersImageProcessing;
+	_imageProcessing: OpenLayersImageProcessing;
 
-	constructor(element: HTMLElement, layers: any, position?: MapPosition) {
+	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		super();
 
-		this.initMap(element, layers, position);
+		this.initMap(element, layers);
 	}
 
 	initMap(element: HTMLElement, layers: any) {

@@ -11,7 +11,7 @@ import { GlobalErrorHandler } from './app-global-error-handler';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
-		AnsynLogger.activeLogger.info('action: ' + JSON.stringify(action));
+		AnsynLogger.info('action: ' + JSON.stringify(action));
 		return reducer(state, action);
 	};
 }
@@ -41,7 +41,7 @@ export const metaReducers = [MetaReducer];
 export class AppAnsynModule {
 	constructor() {
 		window.onerror = function (e) {
-			AnsynLogger.activeLogger.error(e.toString());
+			AnsynLogger.error(e.toString());
 		}
 	}
 }

@@ -1,68 +1,52 @@
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
-interface MinimalLogger{
-	error(msg: string);
-	warn(msg: string);
-	info(msg: string);
-}
+export class  AnsynLogger {
+	protected static env = 'ENV'; // default (unknown environment)
+	protected static standardPrefix = `Ansyn[${AnsynLogger.env}]`
 
-export class AnsynLogger implements MinimalLogger {
-	protected static _activeLogger = new AnsynLogger('ENV');	// default logger (unknown environment)
-	// when extending AnsynLogger - override the following get/set functions
-	public static set activeLogger(logger: AnsynLogger) {
-		AnsynLogger._activeLogger = logger;
-	}
-	public  static get activeLogger(): AnsynLogger {
-		return AnsynLogger._activeLogger;
+	static init(env: string) {
+		AnsynLogger.env = env;
+		AnsynLogger.standardPrefix = `Ansyn[${AnsynLogger.env}]`
 	}
 
-	env: string;
-	standardPrefix: string;
-
-
-
-	constructor(env: string) {
-		this.standardPrefix = `Ansyn[${this.env}]`
+	static critical(msg: string) {
+		AnsynLogger.log('CRITICAL', msg, true);
+	}
+	static error(msg: string) {
+		AnsynLogger.log('ERROR', msg, true);
+	}
+	static warn(msg: string) {
+		AnsynLogger.log('WARNING', msg);
+	}
+	static info(msg: string) {
+		AnsynLogger.log('INFO', msg);
+	}
+	static debug(msg: string) {
+		AnsynLogger.log('DEBUG', msg);
 	}
 
-	critical(msg: string) {
-		this.log('CRITICAL', msg, true);
-	}
-	error(msg: string) {
-		this.log('ERROR', msg, true);
-	}
-	warn(msg: string) {
-		this.log('WARNING', msg);
-	}
-	info(msg: string) {
-		this.log('INFO', msg);
-	}
-	debug(msg: string) {
-		this.log('DEBUG', msg);
-	}
-
-	protected log(severity: Severity, msg: string, includeBrowserData?: boolean) {
+	protected static log(severity: Severity, msg: string, includeBrowserData?: boolean) {
 		let prefix = `${this.standardPrefix}[${Date()}]`;
 		if (includeBrowserData) {
 			prefix += `[window:${window.innerWidth}x${window.innerHeight}][userAgent: ${navigator.userAgent}]`
 		}
 		const str = `${prefix}[${severity}] ${msg}`;
-		this.output(severity, str);
+		AnsynLogger.output(severity, str);
 	}
 
-	protected output(severity: Severity, msg: string) {
+	protected static output(severity: Severity, msg: string) {
 		switch (severity) {
-			// case 'CRITICAL':
-			// case 'ERROR':
-			// 	console.error(msg);
-			// 	break;
-			// case 'WARNING':
-			// 	console.warn(msg);
-			// 	break;
-			// case 'INFO':
-			// case 'DEBUG':
-			// 	console.log(msg);
-			// 	break;
+			case 'CRITICAL':
+			case 'ERROR':
+				console.error(msg);
+				break;
+			case 'WARNING':
+				console.warn(msg);
+				break;
+			case 'INFO':
+			case 'DEBUG':
+				console.log(msg);
+				break;
 		}
 	}
 }

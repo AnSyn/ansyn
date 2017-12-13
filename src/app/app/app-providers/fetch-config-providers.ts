@@ -71,7 +71,7 @@ export const getProviders = (conf): any[] => {
 export const fetchConfigProviders = fetch('/assets/config/app.config.json')
 	.then(response => response.json())
 	.then(conf => {
-		AnsynLogger.activeLogger = new AnsynLogger(conf.loggerConfig.env);
+		AnsynLogger.init(conf.loggerConfig.env);
 		return conf
 	})
 	.then(conf => {

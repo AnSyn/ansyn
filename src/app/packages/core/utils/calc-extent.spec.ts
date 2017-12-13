@@ -18,7 +18,7 @@ describe('calc-extent', () => {
 		'coordinates': [extentToPolygon(extent2).geometry.coordinates]
 	};
 
-	describe('calcGeoJSONExtent', () => {
+	describe('extentFromGeojson', () => {
 		// TODO
 	});
 

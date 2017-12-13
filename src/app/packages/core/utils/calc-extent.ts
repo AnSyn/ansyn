@@ -7,7 +7,7 @@ import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 import { CaseMapExtent } from '../models/case-map-position.model';
 
-export function calcGeoJSONExtent(footprint: GeoJSON.MultiPolygon | GeoJSON.Polygon): CaseMapExtent {
+export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Polygon): CaseMapExtent {
 	const footprintFeature: GeoJSON.Feature<any> = {
 		'type': 'Feature',
 		'properties': {},

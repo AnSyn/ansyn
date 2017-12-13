@@ -10,7 +10,7 @@ import { Point } from 'geojson';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
 import { CaseState } from '@ansyn/core/models/case.model';
-import { calcGeoJSONExtent } from '@ansyn/core/utils/calc-extent';
+import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
 export class QueryParamsHelper {
@@ -93,7 +93,7 @@ export class QueryParamsHelper {
 									'properties': {}
 								};
 								const centroidOfGeometry = centroid(feature);
-								const extent: CaseMapExtent = calcGeoJSONExtent(geoPolygon);
+								const extent: CaseMapExtent = extentFromGeojson(geoPolygon);
 
 								updatedCaseModel.state.maps.data.forEach(map => map.data.position.extent = extent);
 

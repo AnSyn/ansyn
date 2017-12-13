@@ -459,14 +459,14 @@ describe('MapAppEffects', () => {
 			};
 
 
-			Object.defineProperty(utils, 'calcGeoJSONExtent', {
+			Object.defineProperty(utils, 'extentFromGeojson', {
 				writable: true,
 				configurable: true,
 				value: () => {
 				}
 			});
 
-			spyOn(utils, 'calcGeoJSONExtent').and.returnValue(fakeExtent);
+			spyOn(utils, 'extentFromGeojson').and.returnValue(fakeExtent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');

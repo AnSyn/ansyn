@@ -30,6 +30,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	}
 
 	public get showSpinner(): boolean {
+
 		return this._showSpinner;
 	}
 

@@ -17,6 +17,8 @@ export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 	static type = ContextEntityVisualizerType;
 
+	isHideable = true;
+
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Point> = new Map<string, Point>();
 

@@ -12,7 +12,8 @@
 
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()">
-		<i class="icon icon-layers-hide"></i>
+		<i [class.icon-main-data-layers]="layerFlag"
+		   [class.icon-layers-hide]="!layerFlag"></i>
 	</button>
 
 	<button *ngIf="overlay" class="small-icon-button set-favorite"

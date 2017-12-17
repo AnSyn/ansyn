@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { CoreActionTypes } from '../../core/actions/core.actions';
 
 export interface IMapState {
 	communicators: {};
@@ -36,9 +37,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 	switch (action.type) {
 		case MapActionTypes.SET_PROGRESS_BAR:
-			const map = state.mapsList.find(map => map.id === action.payload.mapId);
-			if (map) {
-				map.progress = action.payload.progress;
+			const progressedMap = state.mapsList.find(map => map.id === action.payload.mapId);
+			if (progressedMap) {
+				progressedMap.progress = action.payload.progress;
 			}
 			return state;
 
@@ -100,6 +101,14 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			pendingOverlaysClone.splice(pendingOverlaysClone.indexOf(action.payload), 1);
 
 			return { ...state, pendingOverlays: pendingOverlaysClone };
+
+		case CoreActionTypes.TOGGLE_MAP_LAYERS:
+			const toggledMap = state.mapsList.find(map => map.id === action.payload.mapId);
+			if (toggledMap) {
+				toggledMap.flags.layers = !toggledMap.flags.layers;
+			}
+			return { ...state };
+
 		default:
 			return state;
 	}

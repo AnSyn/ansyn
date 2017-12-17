@@ -21,11 +21,13 @@ export interface IMapVisualizer {
 
 	source: Vector;
 
+	isHideable: boolean;
+	isHidden: boolean;
+
 	onDisposedEvent: EventEmitter<any>;
 
 	onHoverFeature: EventEmitter<any>;
 	doubleClickFeature: EventEmitter<any>;
-
 
 	events: Map<string, Subject<any>>;
 
@@ -86,4 +88,6 @@ export interface IMapVisualizer {
 	 */
 
 	setHoverFeature(id: string);
+
+	toggleVisibility(): void;
 }

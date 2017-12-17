@@ -65,6 +65,9 @@ export interface CaseMapState {
 	};
 	progress: number;
 	mapType: string;
+	flags: {
+		layers?: boolean
+	};
 }
 
 export const defaultMapType = 'openLayersMap';

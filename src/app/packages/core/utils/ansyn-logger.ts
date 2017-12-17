@@ -1,6 +1,6 @@
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
-export class  AnsynLogger {
+export class AnsynLogger {
 	protected static env = 'ENV'; // default (unknown environment)
 	protected static standardPrefix = `Ansyn[${AnsynLogger.env}]`
 
@@ -12,15 +12,19 @@ export class  AnsynLogger {
 	static critical(msg: string) {
 		AnsynLogger.log('CRITICAL', msg, true);
 	}
+
 	static error(msg: string) {
 		AnsynLogger.log('ERROR', msg, true);
 	}
+
 	static warn(msg: string) {
 		AnsynLogger.log('WARNING', msg);
 	}
+
 	static info(msg: string) {
 		AnsynLogger.log('INFO', msg);
 	}
+
 	static debug(msg: string) {
 		AnsynLogger.log('DEBUG', msg);
 	}

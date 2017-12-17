@@ -482,14 +482,14 @@ describe('VisualizersAppEffects', () => {
 		expect(fakeCommunicator.getVisualizer().setMarkupFeatures).toHaveBeenCalledTimes(3);
 	});
 
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"', () => {
+	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		mapState.mapsList = [...selectedCase.state.maps.data];
 		mapState.activeMapId = selectedCase.state.maps.activeMapId;
 		const updatedMapsList = cloneDeep(mapState.mapsList);
-		updatedMapsList[0].data.overlayDisplayMode = 'Hitmap';
+		updatedMapsList[0].data.overlayDisplayMode = 'Heatmap';
 
 		actions = hot('--a--', {
-			a: new ShowOverlaysFootprintAction('Hitmap')
+			a: new ShowOverlaysFootprintAction('Heatmap')
 		});
 
 		const expectedResults = cold('--(ab)--', {

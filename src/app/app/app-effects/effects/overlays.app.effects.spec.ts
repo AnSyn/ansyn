@@ -85,7 +85,7 @@ describe('OverlaysAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{ id: 'imagery1', data: { overlayDisplayMode: 'Hitmap' } },
+					{ id: 'imagery1', data: { overlayDisplayMode: 'Heatmap' } },
 					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
 					{ id: 'imagery3', data: {} }
 				],

@@ -38,6 +38,9 @@ export const EntitiesVisualizerType = 'EntitiesVisualizer';
 export abstract class EntitiesVisualizer implements IMapVisualizer {
 	static type = EntitiesVisualizerType;
 
+	isHideable = false;
+	isHidden = false;
+
 	protected iMap: IMap<olMap>;
 	protected mapId: string;
 	public source: Vector;
@@ -115,7 +118,9 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			opacity: this.visualizerStyle.opacity
 		});
 
-		this.iMap.addLayer(this.footprintsVector);
+		if (!this.isHidden) {
+			this.iMap.addLayer(this.footprintsVector);
+		}
 	}
 
 	protected createHoverLayer() {
@@ -144,6 +149,19 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 				this.iMap.mapObject.removeInteraction(this.interactions.pointerMove);
 			}
 			this.addPointerMoveInteraction();
+		}
+	}
+
+	toggleVisibility() {
+		if (!this.isHideable) {
+			return;
+		}
+
+		this.isHidden = !this.isHidden;
+		if (this.isHidden) {
+			this.iMap.removeLayer(this.footprintsVector);
+		} else {
+			this.iMap.addLayer((this.footprintsVector));
 		}
 	}
 

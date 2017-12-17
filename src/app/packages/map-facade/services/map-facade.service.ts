@@ -51,7 +51,8 @@ export class MapFacadeService {
 					id: UUID.UUID(),
 					progress: 0,
 					data: { position: cloneDeep(activeMap.data.position) },
-					mapType: defaultMapType
+					mapType: defaultMapType,
+					flags: {}
 				};
 				mapsList.push(mapStateCopy);
 			}

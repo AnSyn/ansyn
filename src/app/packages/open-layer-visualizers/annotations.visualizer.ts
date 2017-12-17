@@ -31,6 +31,8 @@ export enum MouseClick {
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static type = AnnotationVisualizerType;
 
+	isHideable = true;
+
 	public source: VectorSource;
 	public layer: VectorLayer;
 
@@ -108,15 +110,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	addLayer(id = AnnotationsVisualizer.type) {
 		this.source = new VectorSource({ wrapX: false });
 
-		const layer = new VectorLayer({
+		this.footprintsVector = new VectorLayer({
 			source: this.source,
 			zIndex: 200000,
 			style: this.styleFunction.bind(this)
 		});
 
 		// if id is empty then set the current type name as id
-		layer.set('id', id);
-		this.layer = this.iMap.addLayerIfNotExist(layer);
+		this.footprintsVector.set('id', id);
+		if (!this.isHidden) {
+			this.layer = this.iMap.addLayerIfNotExist(this.footprintsVector);
+		}
 
 		this.selectInteraction = new Select({
 			// event.originalEvent.which === 3 &&

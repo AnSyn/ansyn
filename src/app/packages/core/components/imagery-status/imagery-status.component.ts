@@ -16,6 +16,7 @@ export class ImageryStatusComponent {
 	@Input() overlay: Overlay;
 	@Input() mapsAmount = 1;
 	@Input() isFavoriteOverlayDisplayed = false;
+	@Input() layerFlag = false;
 
 	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();

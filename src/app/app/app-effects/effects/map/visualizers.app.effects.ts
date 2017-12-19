@@ -150,12 +150,8 @@ export class VisualizersAppEffects {
 		.ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-			const mapsList = [...mapState.mapsList];
-			// @TODO this is reference --- not good - need to be changed
-			const activeMap = MapFacadeService.activeMap(mapState);
-			activeMap.data.overlayDisplayMode = action.payload;
 			return [
-				new SetMapsDataActionStore({ mapsList }),
+				new SetMapsDataActionStore({ mapsList: mapState.mapsList }),
 				new DrawOverlaysOnMapTriggerAction()
 			];
 		});
@@ -180,11 +176,11 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
-			return [overlaysState, casesState.selectedCase];
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, overlaysState: IOverlaysState, mapState: IMapState) => {
+			return [overlaysState, mapState];
 		})
-		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
-			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
+		.map(([overlaysState, mapState]: [IOverlaysState, IMapState]) => {
+			mapState.mapsList.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
 		});
@@ -473,7 +469,7 @@ export class VisualizersAppEffects {
 			}
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
-				case 'Hitmap': {
+				case 'Heatmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					hitMapVisualizer.setEntities(entitiesToDraw);
 					polylineVisualizer.clearEntities();

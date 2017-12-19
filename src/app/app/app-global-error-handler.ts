@@ -3,7 +3,8 @@ import { AnsynLogger } from '@ansyn/core/utils/ansyn-logger';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-	constructor() {}
+	constructor() {
+	}
 
 	handleError(error) {
 		if (error.stack) {

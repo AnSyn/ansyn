@@ -40,7 +40,7 @@ describe('overlaysDisplayModeComponent', () => {
 	});
 
 	it('check that ShowOverlaysFootprintAction is dispatched when visualizerType change', () => {
-		component.visualizerType = 'Hitmap';
-		expect(store.dispatch).toHaveBeenCalledWith(new ShowOverlaysFootprintAction('Hitmap'));
+		component.visualizerType = 'Heatmap';
+		expect(store.dispatch).toHaveBeenCalledWith(new ShowOverlaysFootprintAction('Heatmap'));
 	});
 });

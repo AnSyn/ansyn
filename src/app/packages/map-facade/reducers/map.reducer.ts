@@ -3,6 +3,8 @@ import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { ToolsActionsTypes } from "@ansyn/menu-items/tools/actions/tools.actions";
+import { MapFacadeService } from "../services/map-facade.service";
 
 export interface IMapState {
 	communicators: {};
@@ -100,7 +102,14 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			pendingOverlaysClone.splice(pendingOverlaysClone.indexOf(action.payload), 1);
 
 			return { ...state, pendingOverlays: pendingOverlaysClone };
+
+		case ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT:
+			const activeMap = MapFacadeService.activeMap(state);
+			activeMap.data.overlayDisplayMode = action.payload;
+			return { ...state };
+
 		default:
 			return state;
 	}
 }
+

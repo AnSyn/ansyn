@@ -9,7 +9,7 @@ import { CesiumMap } from './cesium-map';
 		<div #cesiumMap>Working!</div>
 	`,
 	styles: [
-			`div {
+		`div {
 			width: 100%;
 			height: 100%;
 		}`]

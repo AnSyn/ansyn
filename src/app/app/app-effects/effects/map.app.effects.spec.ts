@@ -150,7 +150,7 @@ describe('MapAppEffects', () => {
 						id: 'imagery1',
 						data: { position: { zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox } }
 					},
-					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Hitmap' } },
+					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Heatmap' } },
 					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
 				activeMapId: 'imagery1'

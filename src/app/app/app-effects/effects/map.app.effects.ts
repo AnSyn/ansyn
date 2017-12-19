@@ -48,8 +48,8 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	extentFromGeojson,
 	endTimingLog,
+	extentFromGeojson,
 	getFootprintIntersectionRatioInExtent,
 	getPointByPolygon,
 	startTimingLog

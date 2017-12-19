@@ -10,7 +10,7 @@ import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
-import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';

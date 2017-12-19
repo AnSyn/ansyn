@@ -3,6 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 import { Feature } from 'geojson';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
+import { sortByDateDesc } from '../../core/utils/sorting';
 
 export interface DateRange {
 	start: Date;
@@ -10,6 +13,7 @@ export interface DateRange {
 }
 
 export interface IFetchParams {
+	limit: number;
 	region: GeoJSON.DirectGeometryObject;
 	sensors?: string[];
 	timeRange: DateRange;
@@ -49,7 +53,7 @@ export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): 
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
-	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<Overlay[]> {
+	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<OverlaysFetchData> {
 		const regionFeature: GeoJSON.Feature<any> = {
 			type: 'Feature',
 			properties: {},
@@ -77,6 +81,7 @@ export abstract class BaseOverlaySourceProvider {
 
 				// Create new filters, by the common region and time
 				let newFetchParams: IFetchParams = {
+					limit: fetchParams.limit,
 					region: intersect(f.coverage, regionFeature).geometry,
 					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
 				};
@@ -89,14 +94,14 @@ export abstract class BaseOverlaySourceProvider {
 				return this.fetch(newFetchParams).toPromise();
 			});
 
-		const multipleFetches = Promise.all(fetchPromises) // Wait for every fetch to resolve
-			.then(overlaysArr => overlaysArr.reduce((a, b) => a.concat(b), [])) // merge the overlays
-			.then(overlays => overlays.sort((o1, o2) => o1.date > o2.date ? -1 : 1)); // sort the result
+		const multipleFetches: Promise<OverlaysFetchData> = Promise.all(fetchPromises) // Wait for every fetch to resolve
+			.then((data: Array<OverlaysFetchData>) =>
+				mergeLimitedArrays(data, fetchParams.limit, sortByDateDesc)); // merge overlays from multiple requests
 
 		return Observable.from(multipleFetches);
 	}
 
-	abstract fetch(fetchParams: IFetchParams): Observable<Overlay[]>;
+	abstract fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData>;
 
 	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate>;
 

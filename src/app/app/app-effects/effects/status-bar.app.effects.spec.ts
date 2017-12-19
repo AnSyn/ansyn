@@ -30,11 +30,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		return Observable.empty();
 	}
 

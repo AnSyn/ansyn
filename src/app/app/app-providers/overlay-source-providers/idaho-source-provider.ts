@@ -8,6 +8,9 @@ import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { limitArray } from '@ansyn/core/utils/limited-array';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 
@@ -44,15 +47,20 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			.catch(this.handleError);
 	};
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
 
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
-		return <Observable<Overlay[]>>this.http.post(url, fetchParams)
+
+		// add 1 to limit - so we'll know if provider have more then X overlays
+		const requestParams  = Object.assign({}, fetchParams, {limit: fetchParams.limit + 1});
+
+		return <Observable<OverlaysFetchData>>this.http.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
+			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, sortByDateDesc))
 			.catch(this.handleError);
 
 	}

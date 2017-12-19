@@ -66,6 +66,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -90,7 +91,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		return Observable.empty();
 	}
 

@@ -6,6 +6,9 @@ import * as intersect from '@turf/intersect';
 import * as area from '@turf/area';
 import * as difference from '@turf/difference';
 import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 interface FiltersList {
 	name: string,
@@ -125,11 +128,10 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		return this.overlaysSources.find(s => s.sourceType === sourceType).getById(id, sourceType);
 	}
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		const mergedSortedOverlays = Promise.all(this.sourceConfigs
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+		const mergedSortedOverlays: Promise<OverlaysFetchData> = Promise.all(this.sourceConfigs
 			.map(s => s.provider.fetchMultiple(fetchParams, s.filters).toPromise()))
-			.then(overlaysArr => overlaysArr.reduce((a, b) => a.concat(b), []))
-			.then(overlays => overlays.sort((o1, o2) => o1.date > o2.date ? -1 : 1));
+			.then(overlays => mergeLimitedArrays(overlays, fetchParams.limit, sortByDateDesc)); // merge the overlays
 
 		return Observable.from(mergedSortedOverlays);
 	}

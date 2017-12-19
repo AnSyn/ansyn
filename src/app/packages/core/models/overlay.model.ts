@@ -1,4 +1,11 @@
 import { GeometryObject } from 'geojson';
+import { LimitedArray } from '../utils/limited-array';
+
+export interface OverlaysFetchData extends LimitedArray{
+	data: Overlay[],
+	// number of overlays removed from total overlays (according to config)
+	limited: number
+}
 
 export class Overlay {
 	id: string;

@@ -100,7 +100,7 @@ describe('Overlays Effects ', () => {
 	it('it should load all the overlays', () => {
 		let tmp = <Overlay[]>[];
 		overlays.forEach(overlay => tmp.push({ ...overlay }));
-		overlaysService.search.and.returnValue(Observable.of(overlays));
+		overlaysService.search.and.returnValue(Observable.of({data: overlays, limited: 0}));
 		actions = hot('--a--', { a: new LoadOverlaysAction() });
 		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(tmp) });
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);

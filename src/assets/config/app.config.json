@@ -86,6 +86,9 @@
 	"layersManagerConfig": {
 		"layersByCaseIdUrl": "http://localhost:9001/api/v1/layers"
 	},
+	"overlaysConfig": {
+		"limit": 500
+	},
 	"imageryConfig": {
 		"geoMapsInitialMapSource": [
 			{

@@ -1,13 +1,17 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
 import { isNil } from 'lodash';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysConfig } from '../models/overlays.config';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+
+export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
@@ -81,10 +85,11 @@ export class OverlaysService {
 	constructor(protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
-	search(params: any = {}): Observable<Array<Overlay>> {
+	search(params: any = {}): Observable<OverlaysFetchData> {
 		let tBbox = bbox(params.polygon);
 		let tBboxFeature = bboxPolygon(tBbox);
 		return this._overlaySourceProvider.fetch({
+			limit: this.config.limit,
 			region: tBboxFeature.geometry,
 			timeRange: {
 				start: params.from,

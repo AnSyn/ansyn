@@ -26,6 +26,8 @@ import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.redu
 import { Overlay } from '../models/overlay.model';
 import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -78,7 +80,16 @@ export class OverlaysEffects {
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
-				.map(data => new LoadOverlaysSuccessAction(data))
+				.mergeMap( (overlays: OverlaysFetchData) => {
+					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlays.data)];
+					if (overlays.limited > 0) {
+						// TODO: replace when design is available
+						actions.push(new SetToastMessageAction({
+							toastText: `Only the latest ${overlays.data.length} results are presented, try to edit search time range.`
+						}));
+					}
+					return actions;
+				})
 				.catch(() => Observable.of(new LoadOverlaysSuccessAction([])));
 		});
 

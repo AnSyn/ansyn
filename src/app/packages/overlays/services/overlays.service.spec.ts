@@ -9,6 +9,7 @@ import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -25,8 +26,8 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
-		return Observable.create((observer: Observer<Overlay[]>) => {
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+		return Observable.create((observer: Observer<OverlaysFetchData>) => {
 			const overlays: Overlay[] = [
 				{
 					id: 'abc',
@@ -49,7 +50,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					isGeoRegistered: true
 				}
 			];
-			observer.next(overlays);
+			observer.next({data: overlays, limited: 3});
 			observer.complete();
 		});
 	}
@@ -196,7 +197,8 @@ describe('OverlaysService', () => {
 	it('check the method fetchData with mock data', () => {
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
-			expect(result.length).toBe(2);
+			expect(result.data.length).toBe(2);
+			expect(result.limited).toBe(3);
 		});
 
 	});

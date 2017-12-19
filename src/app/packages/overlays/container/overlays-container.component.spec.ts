@@ -22,11 +22,12 @@ import {
 import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<Overlay[]> {
+	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		return Observable.empty();
 	}
 

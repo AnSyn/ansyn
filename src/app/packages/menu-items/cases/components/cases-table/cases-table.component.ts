@@ -111,7 +111,7 @@ export class CasesTableComponent implements OnInit {
 	}
 
 	shareCase(caseId: string) {
-		this.store$.dispatch(new CopyCaseLinkAction(caseId));
+		this.store$.dispatch(new CopyCaseLinkAction({caseId: caseId}));
 	}
 
 	selectCase(caseId: string): void {

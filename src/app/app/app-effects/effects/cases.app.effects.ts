@@ -90,16 +90,18 @@ export class CasesAppEffects {
 	 * @type Effect
 	 * @name onCopyShareCaseLink$
 	 * @ofType CopyCaseLinkAction
+	 * @filter shareCaseAsQueryParams is true
 	 * @action SetToastMessageAction
 	 * @dependencies cases
 	 */
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$
 		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
+		.filter(action => Boolean(action.payload.shareCaseAsQueryParams))
 		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
-			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload);
+			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload.caseId);
 			if (isNil(sCase)) {
-				if (state.selectedCase.id === action.payload) {
+				if (state.selectedCase.id === action.payload.caseId) {
 					sCase = state.selectedCase;
 				}
 			}
@@ -111,6 +113,22 @@ export class CasesAppEffects {
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
+	/**
+	 * @type Effect
+	 * @name onCopyShareCaseIdLink$
+	 * @ofType CopyCaseLinkAction
+	 * @filter shareCaseAsQueryParams is false
+	 * @action SetToastMessageAction
+	 */
+	@Effect()
+	onCopyShareCaseIdLink$ = this.actions$
+		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
+		.filter(action => !Boolean(action.payload.shareCaseAsQueryParams))
+		.map((action) => {
+			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
+			copyFromContent(shareLink);
+			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
+		});
 	/**
 	 * @type Effect
 	 * @name onOpenShareLink$

@@ -77,8 +77,8 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(extent?: CaseMapExtent) {
-		this._manager.loadInitialMapSource(extent);
+	public loadInitialMapSource(position?: CaseMapPosition) {
+		this._manager.loadInitialMapSource(position);
 	}
 
 	public get ActiveMap(): IMap {
@@ -147,9 +147,9 @@ export class CommunicatorEntity {
 		return this._manager.visualizers;
 	}
 
-	public resetView(layer: any, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
 		if (this._manager) {
-			this._manager.resetView(layer, extent);
+			this._manager.resetView(layer, position, extent);
 		}
 	}
 

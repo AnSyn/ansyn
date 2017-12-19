@@ -5,7 +5,7 @@ import * as intersect from '@turf/intersect';
 import { Feature } from 'geojson';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
-import { sortByDateDesc } from '../../core/utils/sorting';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export interface DateRange {
 	start: Date;

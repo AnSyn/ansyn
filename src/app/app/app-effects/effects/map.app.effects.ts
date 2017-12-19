@@ -75,7 +75,6 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import {
 	CoreActionTypes,
@@ -215,15 +214,15 @@ export class MapAppEffects {
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
-							communicator.resetView(layer, extentFromGeojson(overlay.footprint));
+							communicator.resetView(layer, position, extentFromGeojson(overlay.footprint));
 						} else {
-							communicator.resetView(layer);
+							communicator.resetView(layer, position);
 						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
 							communicator.setActiveMap('disabledOpenLayersMap', position, layer);
 						} else {
-							communicator.resetView(layer);
+							communicator.resetView(layer, position);
 						}
 					}
 					return new DisplayOverlaySuccessAction({ id: overlay.id });

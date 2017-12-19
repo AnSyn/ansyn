@@ -27,7 +27,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenLayersMap.mapType;
 	private _mapObject: OLMap;
-	private _mapLayers = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
@@ -78,7 +77,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
+	constructor(element: HTMLElement, private _mapLayers = [], position?: CaseMapPosition) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -90,7 +89,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		this.showGroups.set('layers', true);
 
-		this.initMap(element, layers, position);
+		this.initMap(element, _mapLayers, position);
 	}
 
 	public positionToPoint(x, y): GeoJSON.Point {
@@ -101,27 +100,23 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
-		let rotation = 0;
-		if (position) {
-			rotation = position.rotation;
-		}
+		const [mainLayer] = layers;
+		const view = this.createView(mainLayer);
+
 		this._mapObject = new OLMap({
 			target: element,
-			layers: layers,
+			layers,
 			renderer: 'canvas',
 			controls: [new ScaleLine()],
-			view: new View({
-				rotation,
-				minZoom: 2.5
-			})
+			view
 		});
 
-		this._mapLayers = layers;
+		this.setPosition(position);
+		this.initListeners();
+		this.setGroupLayers();
+	}
 
-		if (position && position.extent) {
-			this.fitToExtent(position.extent, position.resolution);
-		}
-
+	initListeners() {
 		this._mapObject.on('moveend', () => {
 			const mapCenter = this.getCenter();
 			this.centerChanged.emit(mapCenter);
@@ -138,18 +133,24 @@ export class OpenLayersMap extends IMap<OLMap> {
 			const point = this.positionToPoint(e.offsetX, e.offsetY);
 			this.contextMenu.emit({ point, e });
 		});
-
-		this.setGroupLayers();
 	}
 
+	createView(layer): View {
+		return new View({
+			projection: layer.getSource().getProjection(),
+			minZoom: 2.5
+		});
+	}
 
-	// IMap Start
-
-	public resetView(layer: any, extent?: CaseMapExtent, resolution?: number) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+		const view = this.createView(layer);
 		this.setMainLayer(layer);
+		this._mapObject.setView(view);
 
 		if (extent) {
-			this.fitToExtent(extent, resolution);
+			this.fitToExtent(extent);
+		} else {
+			this.setPosition(position);
 		}
 	}
 
@@ -178,24 +179,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	setMainLayer(layer: Layer) {
 		this.removeAllLayers();
-		const oldview = this._mapObject.getView();
-		const rotation = oldview.getRotation();
-		const oldProjection = oldview.getProjection();
-		const projection = layer.getSource().getProjection();
-		const viewExtent = oldview.calculateExtent(this.mapObject.getSize());
-		const extent = proj.transformExtent(viewExtent, oldProjection, projection);
-		const resolution = oldview.getResolution();
-
-		const view: View = new View({
-			rotation,
-			projection,
-			minZoom: 2.5
-		});
-
-		view.fit(extent, this.mapObject.getSize());
-		view.setResolution(resolution);
-
-		this._mapObject.setView(view);
 		this.addLayer(layer);
 
 		if (layer.getSource() instanceof Raster) {
@@ -207,14 +190,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.setGroupLayers();
 	}
 
-	fitToExtent(extent: CaseMapExtent, resolution?: number) {
-		const view = this.mapObject.getView();
+	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
 		const projection = view.getProjection();
 		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
-		view.fit(transformExtent, { size: this.mapObject.getSize(), constrainResolution: false });
-		if (resolution) {
-			view.setResolution(resolution);
-		}
+		view.fit(transformExtent, { constrainResolution: false });
 	}
 
 	public addLayer(layer: any) {
@@ -301,23 +280,29 @@ export class OpenLayersMap extends IMap<OLMap> {
 		};
 	}
 
-	public setPosition(position: CaseMapPosition): void {
-		this.fitToExtent(position.extent, position.resolution);
-		this.setRotation(position.rotation);
+	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): void {
+		const isProjectedPosition = view.getProjection().getCode() === position.projectedState.projection.code;
+		const { extent, projectedState } = position;
+		const { center, rotation, zoom } = projectedState;
+		if (isProjectedPosition) {
+			view.setCenter(center);
+			view.setZoom(zoom);
+		} else {
+			this.fitToExtent(extent, view);
+		}
+		this.setRotation(rotation, view);
 	}
 
 	public getPosition(): CaseMapPosition {
-		const view = this._mapObject.getView();
+		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const rotation: number = view.getRotation();
-		const transformExtent = view.calculateExtent(this.mapObject.getSize());
+		const transformExtent = view.calculateExtent();
 		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
-		const resolution = view.getResolution();
-		return { extent, rotation, resolution };
+		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
+		return { extent, projectedState };
 	}
 
-	public setRotation(rotation: number) {
-		const view = this._mapObject.getView();
+	public setRotation(rotation: number, view: View = this.mapObject.getView()) {
 		view.setRotation(rotation);
 	}
 

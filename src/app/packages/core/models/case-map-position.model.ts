@@ -1,7 +1,16 @@
 export type CaseMapExtent = [number, number, number, number];
 
+export interface CaseMapProjectedState {
+	projection: {
+		code: string;
+	};
+	center?: [number, number];
+	resolution?: number;
+	rotation?: number
+	zoom?: number;
+}
+
 export interface CaseMapPosition {
-	rotation?: number;
 	extent: CaseMapExtent;
-	resolution: number;
+	projectedState: CaseMapProjectedState
 }

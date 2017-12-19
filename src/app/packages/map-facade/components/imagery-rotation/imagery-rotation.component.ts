@@ -27,7 +27,7 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (this.mapState.data.position.rotation === 0) {
+		if (this.mapState.data.position.projectedState.rotation === 0) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);

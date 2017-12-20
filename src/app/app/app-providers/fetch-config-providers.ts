@@ -11,7 +11,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multiple-source-provider';
-import { AnsynLogger } from '@ansyn/core/utils/ansyn-logger';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -64,16 +64,16 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: MultipleOverlaysSourceConfig,
 			useValue: conf.multipleOverlaysSource
+		},
+		{
+			provide: LoggerConfig,
+			useValue: conf.loggerConfig
 		}
 	];
 };
 
-export const fetchConfigProviders = fetch('/assets/config/app.config.json')
+export const fetchConfigProviders = () => fetch('/assets/config/app.config.json')
 	.then(response => response.json())
-	.then(conf => {
-		AnsynLogger.init(conf.loggerConfig.env);
-		return conf
-	})
 	.then(conf => {
 		if (conf.production) {
 			enableProdMode();

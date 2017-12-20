@@ -1,4 +1,5 @@
 const fs = require('fs');
+const packages = require('./packages-list.json');
 
 const mainPackage = JSON.parse(String(fs.readFileSync('package.json', 'utf8')));
 
@@ -30,23 +31,6 @@ function fix(fileName) {
 
 fix('src/app/app/package.json');
 fix('src/assets/package.json');
-
-const packages = [
-	'cesium-map',
-	'context',
-	'core',
-	'imagery',
-	'login',
-	'map-facade',
-	'menu',
-	'menu-items',
-	'open-layer-center-marker-plugin',
-	'open-layer-visualizers',
-	'open-layers-map',
-	'overlays',
-	'router',
-	'status-bar'
-];
 
 packages.forEach((pkg) => {
 	const fileName = 'src/app/packages/' + pkg + '/package.json';

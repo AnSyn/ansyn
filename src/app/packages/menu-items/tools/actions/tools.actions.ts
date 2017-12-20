@@ -37,7 +37,7 @@ export const ToolsActionsTypes = {
 export class StartMouseShadow implements Action {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
 
-	constructor(public payload?: any) {
+	constructor(public payload?: { updateTools: boolean }) {
 		// code...
 	}
 }
@@ -53,7 +53,7 @@ export class SetAnnotationMode implements Action {
 export class StopMouseShadow implements Action {
 	type = ToolsActionsTypes.STOP_MOUSE_SHADOW;
 
-	constructor(public payload?: any) {
+	constructor(public payload?: { updateTools: boolean }) {
 		// code...
 	}
 }

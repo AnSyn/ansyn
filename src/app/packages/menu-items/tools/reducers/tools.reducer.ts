@@ -38,13 +38,17 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.START_MOUSE_SHADOW:
-
+			if (action.payload && action.payload['updateTools'] === false) {
+				return state;	// skip when action.payload.updateTools is false
+			}
 			tmpMap = new Map(state.flags);
 			tmpMap.set('shadowMouse', true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
-
+			if (action.payload && action.payload['updateTools'] === false) {
+				return state;	// skip when action.payload.updateTools is false
+			}
 			tmpMap = new Map(state.flags);
 			tmpMap.set('shadowMouse', false);
 			return { ...state, flags: tmpMap };

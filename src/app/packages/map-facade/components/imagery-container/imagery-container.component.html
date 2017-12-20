@@ -1,4 +1,4 @@
-<div class="imagery" #imageryViewContainer>
+<div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()">
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"

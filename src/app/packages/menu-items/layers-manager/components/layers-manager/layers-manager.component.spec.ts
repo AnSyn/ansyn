@@ -7,6 +7,7 @@ import { DataLayersService } from '../../services/data-layers.service';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -20,7 +21,10 @@ describe('LayersManagerComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
-			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
+			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }, {
+				provide: LoggerService,
+				useValue: { error: (some) => null }
+			}]
 		})
 			.compileComponents();
 	}));

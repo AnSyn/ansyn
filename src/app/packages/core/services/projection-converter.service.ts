@@ -68,13 +68,18 @@ export class ProjectionConverterService {
 			const hemisphere = coords[1];
 			const zoneUtmProj = this.getZoneUtmProj(lng, hemisphere);
 			const conv = proj4('EPSG:4326', zoneUtmProj.utmProj, coords);
+			if (conv[1] < 0) {
+				conv[1] += 10000000;
+			}
+			console.log(conv);
 			return [...conv, zoneUtmProj.zone];
 		}
 
 		if (fromEd50Utm && toWgs84Geo) {
 			const zone = coords[2];
 			const utmProj = this.getUtmFromConf(zone);
-			const conv = proj4(utmProj, 'EPSG:4326', [coords[0], coords[1]]);
+			const y = coords[1] > 5000000 ? coords[1] - 10000000 : coords[1];
+			const conv = proj4(utmProj, 'EPSG:4326', [coords[0], y]);
 			return [...conv];
 		}
 	}

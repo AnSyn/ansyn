@@ -5,17 +5,11 @@ import { CesiumMap } from './cesium-map';
 
 @Component({
 	selector: 'ansyn-cesium-component',
-	template: `
-		<div #cesiumMap>Working!</div>
-	`,
-	styles: [
-			`div {
-			width: 100%;
-			height: 100%;
-		}`]
+	templateUrl: './cesium-map.component.html',
+	styleUrls: ['./cesium-map.component.less']
 })
 
-export class MapComponent implements OnInit, OnDestroy, IMapComponent {
+export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	static mapName = 'cesiumMap';
 	static mapClass = CesiumMap;

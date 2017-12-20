@@ -1,20 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MapComponent } from './map.component';
-import TileLayer from 'ol/layer/tile';
-import OSM from 'ol/source/osm';
+import { CesiumMapComponent } from './cesium-map.component';
 
-describe('openLayersMap Component spec', () => {
-	let component: MapComponent;
-	let fixture: ComponentFixture<MapComponent>;
+describe('CesiumMapComponent', () => {
+	let component: CesiumMapComponent;
+	let fixture: ComponentFixture<CesiumMapComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [MapComponent]
+			declarations: [CesiumMapComponent]
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(MapComponent);
+		fixture = TestBed.createComponent(CesiumMapComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -25,12 +23,8 @@ describe('openLayersMap Component spec', () => {
 
 	it('createMap should raise mapCreated event', () => {
 
-		const osmLayer = new TileLayer({
-			source: new OSM()
-		});
-
 		spyOn(component.mapCreated, 'emit');
-		component.createMap([osmLayer]);
+		component.createMap([]);
 		expect(component.mapCreated.emit).toHaveBeenCalled();
 	});
 });

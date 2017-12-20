@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;

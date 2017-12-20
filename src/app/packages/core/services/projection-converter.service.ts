@@ -75,10 +75,12 @@ export class ProjectionConverterService {
 		}
 
 		if (fromEd50Utm && toWgs84Geo) {
-			const zone = coords[2];
+			let [x, y, zone] = coords;
+			if (y > 5000000) {
+				y -= 10000000;
+			}
 			const utmProj = this.getUtmFromConf(zone);
-			const y = coords[1] > 5000000 ? coords[1] - 10000000 : coords[1];
-			const conv = proj4(utmProj, 'EPSG:4326', [coords[0], y]);
+			const conv = proj4(utmProj, 'EPSG:4326', [x, y]);
 			return [...conv];
 		}
 	}

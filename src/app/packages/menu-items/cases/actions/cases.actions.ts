@@ -188,6 +188,6 @@ export class SaveCaseAsSuccessAction implements Action {
 export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
-	constructor(public payload: {caseId: string, shareCaseAsQueryParams?: boolean}) {
+	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
 	}
 }

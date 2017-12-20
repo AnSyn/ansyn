@@ -110,7 +110,7 @@ export class StatusBarAppEffects {
 			return state.selectedCase.id;
 		})
 		.map((caseId: string) => {
-			return new CopyCaseLinkAction({caseId: caseId, shareCaseAsQueryParams: true});
+			return new CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });
 		});
 
 	/**

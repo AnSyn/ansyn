@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
 import { ImageryModule } from '@ansyn/imagery';
-import { OpenLayerMapModule } from '@ansyn/open-layers-map';
+import { OpenLayersMapModule } from '@ansyn/open-layers-map';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
@@ -45,7 +45,7 @@ const MenuItemsModules = [
 		...MenuItemsModules,
 		OverlaysModule,
 		OpenLayerCenterMarkerPluginModule,
-		OpenLayerMapModule,
+		OpenLayersMapModule,
 		BrowserModule,
 		FormsModule,
 		HttpClientModule,

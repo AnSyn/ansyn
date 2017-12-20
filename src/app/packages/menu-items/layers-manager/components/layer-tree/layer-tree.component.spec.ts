@@ -13,7 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
 import { CoreModule } from '@ansyn/core/core.module';
 import { Subject } from 'rxjs/Subject';
-import { LoggerService } from '../../../../core/services/logger.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;

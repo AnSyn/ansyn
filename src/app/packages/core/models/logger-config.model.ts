@@ -1,3 +1,4 @@
 export interface ILoggerConfig {
-	env: string
+	env: string;
+	active: boolean;
 }

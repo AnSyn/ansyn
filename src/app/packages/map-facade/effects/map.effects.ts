@@ -174,7 +174,7 @@ export class MapEffects {
 		.map(([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
-		});
+		}).share();
 
 	/**
 	 * @type Effect

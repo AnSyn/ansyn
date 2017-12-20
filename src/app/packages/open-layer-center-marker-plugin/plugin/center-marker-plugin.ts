@@ -7,9 +7,12 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { EventEmitter } from '@angular/core';
 
 export class CenterMarkerPlugin implements IMapPlugin {
 	static sPluginType = 'openLayerCenterMarker';
+
+	onDisposedEvent: EventEmitter<any>;
 	pluginType: string;
 	private _subscriptions;
 	private _imageryCommunicator: CommunicatorEntity;
@@ -39,6 +42,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService) {
 		this.pluginType = CenterMarkerPlugin.sPluginType;
 
+		this.onDisposedEvent = new EventEmitter();
 		this._isEnabled = false;
 
 		this._iconStyle = new Style({
@@ -76,6 +80,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	}
 
 	public dispose() {
+		this.onDisposedEvent.emit();
 		this.tryDeleteCenter();
 		this.unregister();
 	}

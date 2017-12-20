@@ -80,7 +80,7 @@ export class OverlaysEffects {
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
-				.mergeMap( (overlays: OverlaysFetchData) => {
+				.mergeMap((overlays: OverlaysFetchData) => {
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlays.data)];
 					if (overlays.limited > 0) {
 						// TODO: replace when design is available

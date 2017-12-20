@@ -82,8 +82,6 @@ import {
 	ToggleFavoriteAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
-import { ImageNorthPlugin } from '@ansyn/open-layers-image-north/plugin/image-north-plugin';
-
 
 @Injectable()
 export class MapAppEffects {
@@ -210,11 +208,6 @@ export class MapAppEffects {
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
-						const imageNorthPlugin = <ImageNorthPlugin>communicator.getPlugin(ImageNorthPlugin.sPluginType);
-						if (imageNorthPlugin) {
-							imageNorthPlugin.setOverlay(overlay);
-						}
-
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, position, extentFromGeojson(overlay.footprint));
 						} else {
@@ -444,12 +437,6 @@ export class MapAppEffects {
 			const centerMarkerPlugin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
 			if (centerMarkerPlugin) {
 				centerMarkerPlugin.init(action.payload.currentCommunicatorId);
-			}
-
-			// ImageNorthPlugin
-			const imageNorthPlugin = communicatorHandler.getPlugin(ImageNorthPlugin.sPluginType);
-			if (imageNorthPlugin) {
-				imageNorthPlugin.init(action.payload.currentCommunicatorId);
 			}
 		});
 

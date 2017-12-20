@@ -1,7 +1,10 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetMapRotationAction } from '../../actions/map.actions';
+import { PositionChangedAction, SetMapRotationAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { MapEffects } from '../../effects/map.effects';
+import { getCorrectedNorthOnce, INorthData, setCorrectedNorth } from '../../../core/utils/north';
 import { get } from 'lodash';
 
 @Component({
@@ -9,17 +12,35 @@ import { get } from 'lodash';
 	templateUrl: './imagery-rotation.component.html',
 	styleUrls: ['./imagery-rotation.component.less']
 })
-export class ImageryRotationComponent {
+export class ImageryRotationComponent implements AfterViewInit {
 	@Input() mapState: CaseMapState;
 
 	isRotating = false;
+	// false - means show image photo angle
+	showNorth = true;
 
-	get rotationAngle() {
-		return get(this.mapState, "data.position.projectedState.rotation", 0);
-	}
+	northDirection: number;
 
 	constructor(protected elementRef: ElementRef,
-				protected store: Store<any>) {
+				protected store: Store<any>,
+				protected mapEffects$: MapEffects,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		this.northDirection = 0;
+	}
+
+	ngAfterViewInit(): void {
+		this.mapEffects$.positionChanged$.subscribe(this.onPositionChanged.bind(this));
+	}
+
+	onPositionChanged(action: PositionChangedAction) {
+		if (!this.mapState.data.overlay) {
+			this.northDirection = this.mapState.data.position.rotation;
+		} else {
+			const communicatorEntity = this.imageryCommunicatorService.provide(this.mapState.id);
+			getCorrectedNorthOnce(communicatorEntity.ActiveMap.mapObject).then((data: INorthData) => {
+				this.northDirection = -data.northOffsetRad;
+			});
+		}
 	}
 
 	stopPropagation($event: Event) {
@@ -31,15 +52,42 @@ export class ImageryRotationComponent {
 		this.store.dispatch(new SetMapRotationAction({ mapId: this.mapState.id, radians }));
 	}
 
+	// toggle north / image azimuth - begin
 	toggleNorth() {
-		if (this.mapState.data.position.projectedState.rotation === 0) {
-			const overlay = this.mapState.data.overlay;
-			if (overlay) {
-				this.setRotation(overlay.azimuth);
-			}
+		if (!this.mapState.data.overlay) {
+			this.showNorth = true;
+			this.pointNorth();
 		} else {
-			this.setRotation(0);
+			this.showNorth = !this.showNorth;
+			this.pointImagePhotoAngle();
 		}
+	}
+
+	pointImagePhotoAngle() {
+		if (this.mapState.data.overlay) {
+			this.setRotation(this.mapState.data.overlay.azimuth);
+		}
+	}
+
+	pointNorth() {
+		if (!this.mapState.data.overlay) {
+			this.setRotation(0);
+		} else {
+			const communicatorEntity = this.imageryCommunicatorService.provide(this.mapState.id);
+			setCorrectedNorth(communicatorEntity.ActiveMap.mapObject);
+		}
+	}
+	// toggle north / image azimuth - end
+
+	getImageNorth(): Promise<number> {
+		if (!this.mapState.data.overlay) {
+			return Promise.resolve(this.mapState.data.position.rotation);
+		}
+
+		const communicatorEntity = this.imageryCommunicatorService.provide(this.mapState.id);
+		return getCorrectedNorthOnce(communicatorEntity.ActiveMap.mapObject).then((northData: INorthData) => {
+			return Promise.resolve(-northData.northOffsetRad);
+		});
 	}
 
 	startRotating($event) {

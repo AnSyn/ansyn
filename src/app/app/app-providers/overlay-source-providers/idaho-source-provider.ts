@@ -7,6 +7,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { toRadians } from '@ansyn/core/utils/math';
 
 export const IdahoOverlaySourceType = 'IDAHO';
 
@@ -111,7 +112,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.thumbnailUrl = 'https://geobigdata.io/thumbnails/v1/browse/' + idahoElement.properties.catalogID + '.large.png';
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
-		overlay.azimuth = idahoElement.properties.satAzimuth * (Math.PI / 180);
+		overlay.azimuth = toRadians(idahoElement.properties.satAzimuth);
 		overlay.sourceType = this.sourceType;
 		overlay.isFullOverlay = true;
 		overlay.isGeoRegistered = true;

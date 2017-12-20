@@ -6,12 +6,10 @@ import { AnsynModule } from './ansyn/ansyn.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
-import { AnsynLogger } from '@ansyn/core/utils/ansyn-logger';
-import { GlobalErrorHandler } from './app-global-error-handler';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
-		AnsynLogger.info('action: ' + JSON.stringify(action));
 		return reducer(state, action);
 	};
 }
@@ -25,12 +23,12 @@ export const metaReducers = [MetaReducer];
 		EffectsModule.forRoot([]),
 		LoginModule,
 		AnsynModule,
-		AppRoutingModule,
+		AppRoutingModule
 	],
 	providers: [
 		{
 			provide: ErrorHandler,
-			useClass: GlobalErrorHandler
+			useClass: LoggerService
 		}
 	],
 	declarations: [AppAnsynComponent],
@@ -39,9 +37,9 @@ export const metaReducers = [MetaReducer];
 })
 
 export class AppAnsynModule {
-	constructor() {
+	constructor(protected loggerService: LoggerService) {
 		window.onerror = function (e) {
-			AnsynLogger.error(e.toString());
+			loggerService.error(e.toString());
 		}
 	}
 }

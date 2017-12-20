@@ -8,6 +8,7 @@ import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
+import { LoggerService } from './services/logger.service';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -23,7 +24,8 @@ const coreComponents = [
 	],
 	providers: [
 		GenericTypeResolverService,
-		ProjectionConverterService
+		ProjectionConverterService,
+		LoggerService
 	],
 	exports: coreComponents,
 	declarations: coreComponents

@@ -1,9 +1,9 @@
 export * from './overlay.model';
 export * from './case-map-position.model';
-export * from './general.config';
 export * from './case.model';
 export * from './maps-layout';
 export * from './context.model';
 export * from './options.model';
 export * from './coordinate-system.model';
-
+export * from './logger.config';
+export * from './logger-config.model';

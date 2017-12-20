@@ -11,7 +11,6 @@ export * from './router';
 export * from './status-bar';
 export * from './menu-items';
 export * from './overlays';
-export * from './core/models/general.config';
 export * from './core/models/maps-layout';
 export * from './core/models/case-map-position.model';
 export * from './core/core.module';

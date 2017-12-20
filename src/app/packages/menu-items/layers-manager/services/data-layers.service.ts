@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
-import { AnsynLogger } from '@ansyn/core/utils/ansyn-logger';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -32,7 +32,7 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig) {
+	constructor(protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig, protected loggerService: LoggerService) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 
@@ -157,7 +157,7 @@ export class DataLayersService {
 		} else {
 			errMsg = error.message ? error.message : error.toString();
 		}
-		AnsynLogger.error(errMsg);
+		this.loggerService.error(errMsg);
 		return Observable.throw(errMsg);
 	}
 }

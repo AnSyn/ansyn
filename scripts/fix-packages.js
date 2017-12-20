@@ -1,4 +1,5 @@
 const replace = require('replace');
+const packages = require('./packages-list.json');
 
 replace({
 	regex: '(\'(.*?)\\/packages\\/|\'(.*?)\\/src/app\\/)', // any amount of (../) followed by `packages`
@@ -7,23 +8,6 @@ replace({
 	recursive: true,
 	silent: false
 });
-
-const packages = [
-	'cesium-map',
-	'context',
-	'core',
-	'imagery',
-	'login',
-	'map-facade',
-	'menu',
-	'menu-items',
-	'open-layer-center-marker-plugin',
-	'open-layer-visualizers',
-	'open-layers-map',
-	'overlays',
-	'router',
-	'status-bar'
-];
 
 packages.forEach((pkg) => {
 	replace({

@@ -56,9 +56,13 @@ export class ImageryRotationComponent implements AfterViewInit {
 	toggleNorth() {
 		if (!this.mapState.data.overlay) {
 			this.showNorth = true;
-			this.pointNorth();
 		} else {
 			this.showNorth = !this.showNorth;
+		}
+
+		if (this.showNorth) {
+			this.pointNorth();
+		} else {
 			this.pointImagePhotoAngle();
 		}
 	}

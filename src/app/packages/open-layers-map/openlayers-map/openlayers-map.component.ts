@@ -1,27 +1,16 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { OpenLayersMap } from './open-layers-map';
+import { OpenLayersMap } from './openlayers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 
 @Component({
 	selector: 'ansyn-ol-component',
-	template: `
-		<div #olMap></div>`,
-	styles: [
-		`div {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			left: 0;
-			top: 0;
-			display: block;
-			box-sizing: border-box;
-
-		}`]
+	templateUrl: './openlayers-map.component.html',
+	styleUrls: ['./openlayers-map.component.less']
 })
 
-export class MapComponent implements OnInit, OnDestroy, IMapComponent {
+export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	static mapName = 'openLayersMap';
 	static mapClass = OpenLayersMap;
@@ -29,11 +18,7 @@ export class MapComponent implements OnInit, OnDestroy, IMapComponent {
 	@ViewChild('olMap') mapElement: ElementRef;
 
 	private _map: OpenLayersMap;
-	public mapCreated: EventEmitter<IMap>;
-
-	constructor() {
-		this.mapCreated = new EventEmitter<IMap>();
-	}
+	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
 	ngOnInit(): void {
 	}

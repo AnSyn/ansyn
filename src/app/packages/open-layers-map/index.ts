@@ -1,3 +1,5 @@
-export { OpenLayerMapModule } from './open-layer-map.module';
-export { OpenLayersMap } from './map/open-layers-map';
-export { ProjectableRaster } from './model/projectable-raster';
+export * from './open-layer-map.module';
+export * from './openlayers-map';
+export * from './models';
+export * from './utils';
+export * from './image-processing';

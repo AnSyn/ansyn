@@ -1,1 +1,2 @@
-export { CesiumMapModule } from './cesium-map.module';
+export * from './cesium-map';
+export * from './cesium-map.module';

@@ -238,9 +238,7 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	onStartMapShadow$: any = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector) // ,
-		)
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [StartMouseShadow, IMapState]) => {
 			let shadowMouseProducer: Observable<any>;
 			const shadowMouseConsumers = new Array<CaseMapState>();
@@ -255,6 +253,34 @@ export class VisualizersAppEffects {
 			});
 			shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
 		});
+
+	/**
+	 * @type Effect
+	 * @name onActiveImageryMouseLeave$
+	 * @ofType ActiveImageryMouseLeave
+	 * @filter shadow Mouse is on
+	 * @action StopMouseShadow
+	 */
+	@Effect()
+	onActiveImageryMouseLeave$ = this.actions$
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.filter((shadowMouseOn: boolean) => shadowMouseOn)
+		.map(() => new StopMouseShadow({ updateTools: false }));
+
+	/**
+	 * @type Effect
+	 * @name onActiveImageryMouseEnter$
+	 * @ofType ActiveImageryMouseEnter
+	 * @filter shadow Mouse is on
+	 * @action StartMouseShadow
+	 */
+	@Effect()
+	onActiveImageryMouseEnter$ = this.actions$
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER)
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.filter((shadowMouseOn: boolean) => shadowMouseOn)
+		.map(() => new StartMouseShadow({ updateTools: false }));
 
 	/**
 	 * @type Effect

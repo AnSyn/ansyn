@@ -38,6 +38,8 @@ export const MapActionTypes = {
 		ANNOTATION_DATA: 'ANNOTATION_DATA'
 	},
 	TRIGGER: {
+		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
+		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		PIN_POINT: 'PIN_POINT',
@@ -325,4 +327,12 @@ export class SetMapRotationAction implements Action {
 
 	constructor(public payload: { mapId: string, radians: number }) {
 	}
+}
+
+export class ActiveImageryMouseEnter implements Action {
+	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER;
+}
+
+export class ActiveImageryMouseLeave implements Action {
+	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE;
 }

@@ -2,7 +2,10 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { BackToWorldAction, SynchronizeMapsAction } from '../../actions/map.actions';
+import {
+	ActiveImageryMouseEnter, ActiveImageryMouseLeave, BackToWorldAction,
+	SynchronizeMapsAction
+} from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -75,5 +78,17 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 			return this.mapState.progress * 100 + '%';
 		}
 		return 0;
+	}
+
+	mouseLeave() {
+		if (this.active) {
+			this.store.dispatch(new ActiveImageryMouseLeave());
+		}
+	}
+
+	mouseEnter() {
+		if (this.active) {
+			this.store.dispatch(new ActiveImageryMouseEnter());
+		}
 	}
 }

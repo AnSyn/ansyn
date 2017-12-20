@@ -12,6 +12,7 @@ import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
+const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
 
 export const IdahoOverlaysSourceConfig: InjectionToken<IIdahoOverlaySourceConfig> = new InjectionToken('idaho-overlays-source-config');
@@ -55,6 +56,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
 
+		// if limit not provided by config - set default value
+		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const requestParams  = Object.assign({}, fetchParams, {limit: fetchParams.limit + 1});
 

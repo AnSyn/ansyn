@@ -1,14 +1,21 @@
 import { Inject, Injectable } from '@angular/core';
 import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
+import { Debounce } from 'lodash-decorators';
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
+
+export interface LogObject {
+	severity: string;
+	msg: string;
+}
 
 @Injectable()
 export class LoggerService {
 	env = 'ENV'; // default (unknown environment)
+	stack: LogObject[] = [];
 
-	constructor(@Inject(LoggerConfig) loggerConfig: ILoggerConfig) {
+	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
 	}
 
@@ -37,30 +44,36 @@ export class LoggerService {
 	}
 
 	protected log(severity: Severity, msg: string, includeBrowserData?: boolean) {
+		if (!this.loggerConfig.active) {
+			return;
+		}
 		let prefix = `${this.standardPrefix}[${Date()}]`;
 		if (includeBrowserData) {
 			prefix += `[window:${window.innerWidth}x${window.innerHeight}][userAgent: ${navigator.userAgent}]`;
 		}
 		const str = `${prefix}[${severity}] ${msg}`;
-		this.output(severity, str);
+		this.stack.push({ severity, msg: str });
+		this.output();
 	}
 
-	// To override the output function:
-	// this.output = function (severity: Severity, msg: string) {
-	output(severity: Severity, msg: string) {
-		switch (severity) {
-			case 'CRITICAL':
-			case 'ERROR':
-				console.error(msg);
-				break;
-			case 'WARNING':
-				console.warn(msg);
-				break;
-			case 'INFO':
-			case 'DEBUG':
-				console.log(msg);
-				break;
-		}
+	@Debounce(1000)
+	output() {
+		this.stack.forEach(({ severity, msg }) => {
+			switch (severity) {
+				case 'CRITICAL':
+				case 'ERROR':
+					console.error(msg);
+					break;
+				case 'WARNING':
+					console.warn(msg);
+					break;
+				case 'INFO':
+				case 'DEBUG':
+					console.log(msg);
+					break;
+			}
+		});
+		this.stack = [];
 	}
 
 }

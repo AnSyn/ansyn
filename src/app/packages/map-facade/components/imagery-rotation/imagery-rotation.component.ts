@@ -4,7 +4,7 @@ import { PositionChangedAction, SetMapRotationAction } from '../../actions/map.a
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapEffects } from '../../effects/map.effects';
-import { getCorrectedNorthOnce, INorthData, setCorrectedNorth } from '../../../core/utils/north';
+import { getCorrectedNorthOnce, INorthData, setCorrectedNorth } from '@ansyn/core/utils/north';
 import { get } from 'lodash';
 
 @Component({

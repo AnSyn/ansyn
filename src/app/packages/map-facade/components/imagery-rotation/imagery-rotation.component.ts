@@ -34,7 +34,7 @@ export class ImageryRotationComponent implements AfterViewInit {
 
 	onPositionChanged(action: PositionChangedAction) {
 		if (!this.mapState.data.overlay) {
-			this.northDirection = this.mapState.data.position.rotation;
+			this.northDirection = this.mapState.data.position.projectedState.rotation;
 		} else {
 			const communicatorEntity = this.imageryCommunicatorService.provide(this.mapState.id);
 			getCorrectedNorthOnce(communicatorEntity.ActiveMap.mapObject).then((data: INorthData) => {
@@ -85,7 +85,7 @@ export class ImageryRotationComponent implements AfterViewInit {
 
 	getImageNorth(): Promise<number> {
 		if (!this.mapState.data.overlay) {
-			return Promise.resolve(this.mapState.data.position.rotation);
+			return Promise.resolve(this.mapState.data.position.projectedState.rotation);
 		}
 
 		const communicatorEntity = this.imageryCommunicatorService.provide(this.mapState.id);

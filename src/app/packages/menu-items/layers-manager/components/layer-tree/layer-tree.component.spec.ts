@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
 import { CoreModule } from '@ansyn/core/core.module';
 import { Subject } from 'rxjs/Subject';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;
@@ -37,7 +38,10 @@ describe('LayerTreeComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
-			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }]
+			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }, {
+				provide: LoggerService,
+				useValue: { error: (some) => null }
+			}]
 		})
 			.compileComponents();
 	}));

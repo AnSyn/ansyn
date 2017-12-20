@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { LoggerService } from '../../../core/services/logger.service';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;
@@ -18,7 +19,12 @@ describe('DataLayersService', () => {
 				useValue: {
 					'layersByCaseIdUrl': 'http://localhost:9001/api/v1/layers'
 				}
-			}]
+			},
+				{
+					provide: LoggerService,
+					useValue: { error: (some) => null }
+				}
+			]
 		});
 	});
 

@@ -1,9 +1,13 @@
 @import "~@ansyn/core/less/common";
 @import "~@ansyn/core/less/z-index-globals";
+@import "~@ansyn/core/less/tooltip";
+
+@size: 60px;
+@border-width: 3px;
 
 :host {
-	width: 50px;
-	height: 50px;
+	width: @size + @border-width * 2;
+	height: @size + @border-width * 2;
 
 	position: absolute;
 	z-index: @z-index-map-rotation;
@@ -12,9 +16,19 @@
 
 	text-align: center;
 
-	border: 3px solid @menu-color;
 	border-radius: 50%;
-	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+
+	.tooltip-container {
+		width: @size;
+		height: @size;
+
+		position: absolute;
+		z-index: @z-index-map-rotation;
+
+		border: @border-width solid @menu-color;
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+	}
 
 	.north {
 		position: absolute;
@@ -23,14 +37,18 @@
 		padding: 0 2px;
 		top: -6px;
 		left: 50%;
-		font-size: 7px;
+		font-size: @size/6;
 		color: red;
 		font-weight: bold;
+		z-index: @z-index-map-rotation;
 	}
 
-	img {
-		width: 46px;
+	.img-container {
 		border-radius: 50%;
-		margin-top: 2px
+
+		img {
+			width: @size - 5px;
+			margin: 5px;
+		}
 	}
 }

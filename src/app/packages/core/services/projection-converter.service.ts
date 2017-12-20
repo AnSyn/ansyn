@@ -71,7 +71,6 @@ export class ProjectionConverterService {
 			if (conv[1] < 0) {
 				conv[1] += 10000000;
 			}
-			console.log(conv);
 			return [...conv, zoneUtmProj.zone];
 		}
 

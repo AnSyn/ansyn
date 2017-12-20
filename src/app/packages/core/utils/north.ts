@@ -12,7 +12,7 @@ export function getCorrectedNorthOnce(mapObject): Promise<INorthData> {
 	const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 	const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
 
-	return this.projectPoints(mapObject, [olCenterView, olCenterViewWithOffset]).then((projectedPoints: any[]) => {
+	return projectPoints(mapObject, [olCenterView, olCenterViewWithOffset]).then((projectedPoints: any[]) => {
 		const projectedCenterView = projectedPoints[0];
 		const projectedCenterViewWithOffset = projectedPoints[1];
 
@@ -45,22 +45,22 @@ export function projectPoints(mapObject: any, points: any[]): Promise<any[]> {
 
 export function setCorrectedNorth(mapObject): Promise<INorthData> {
 	const view = mapObject.getView();
-	return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+	return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 		view.setRotation(northData.actualNorth);
 		mapObject.renderSync();
-		return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+		return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 			view.setRotation(northData.actualNorth);
 			mapObject.renderSync();
-			return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+			return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 				view.setRotation(northData.actualNorth);
 				mapObject.renderSync();
-				return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+				return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 					view.setRotation(northData.actualNorth);
 					mapObject.renderSync();
-					return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+					return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 						view.setRotation(northData.actualNorth);
 						mapObject.renderSync();
-						return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
+						return getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 							view.setRotation(northData.actualNorth);
 							return Promise.resolve(northData);
 						});

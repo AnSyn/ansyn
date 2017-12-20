@@ -12,7 +12,7 @@ import { OpenLayersDisabledMap } from './disabled-map/open-layers-disabled-map';
 	exports: [OpenlayersMapComponent, DisabledMapComponent],
 	entryComponents: [OpenlayersMapComponent, DisabledMapComponent]
 })
-export class OpenLayerMapModule {
+export class OpenLayersMapModule {
 	constructor(imageryProviderService: ImageryProviderService) {
 		imageryProviderService.registerMapProvider(OpenlayersMapComponent.mapName, OpenLayersMap.mapType, OpenlayersMapComponent);
 		imageryProviderService.registerMapProvider(DisabledMapComponent.mapName, OpenLayersDisabledMap.mapType, DisabledMapComponent);

@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/map-facade",
-	"version": "0.2.2",
+	"version": "0.2.4",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -12,7 +12,7 @@
 	"peerDependencies": {
 		"@angular/common": "5.1.0",
 		"@angular/core": "5.1.0",
-		"@ansyn/core": "0.2.2",
+		"@ansyn/core": "0.2.4",
 		"@ngrx/effects": "4.1.1",
 		"@ngrx/core": "1.2.0",
 		"@ngrx/store": "4.1.1"

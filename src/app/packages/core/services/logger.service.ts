@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { ErrorHandler, Inject, Injectable } from '@angular/core';
 import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
 import { Debounce } from 'lodash-decorators';
@@ -11,9 +11,19 @@ export interface LogObject {
 }
 
 @Injectable()
-export class LoggerService {
+export class LoggerService implements ErrorHandler{
 	env = 'ENV'; // default (unknown environment)
 	stack: LogObject[] = [];
+
+	handleError(error: any): void {
+		if (error.stack) {
+			this.error(error.stack);
+		} else {
+			this.error(error.toString());
+		}
+		// IMPORTANT: Rethrow the error otherwise it gets swallowed
+		throw error;
+	}
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;

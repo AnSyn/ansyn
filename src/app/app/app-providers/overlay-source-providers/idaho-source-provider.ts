@@ -24,8 +24,9 @@ interface IdahoResponseForGetById {
 
 export interface IIdahoOverlaySourceConfig {
 	baseUrl: string;
-	overlaysByTimeAndPolygon: string;
 	defaultApi: string;
+	overlaysByCaseId: string;
+	overlaysByTimeAndPolygon: string;
 }
 
 @Injectable()

@@ -15,7 +15,7 @@ import {
 	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import {
 	IStatusBarState,
@@ -178,17 +178,6 @@ describe('MapAppEffects', () => {
 				{
 					provide: mapFacadeConfig,
 					useValue: {}
-				},
-				{
-					provide: OverlaysConfig, useValue: {
-					'baseUrl': 'http://localhost:9001/api/v1/',
-					'overlaysByCaseId': 'case/:id/overlays',
-					'overlaysByTimeAndPolygon': 'overlays/find',
-					'defaultApi': 'overlays',
-					'searchByCase': false,
-					'overlaySource': 'IDAHO',
-					'polygonGenerationDistance': 0.1
-				}
 				},
 				{
 					provide: ConfigurationToken, useValue: {

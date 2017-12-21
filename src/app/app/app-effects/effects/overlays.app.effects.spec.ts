@@ -13,7 +13,7 @@ import {
 	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Case, CasesReducer, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -118,7 +118,6 @@ describe('OverlaysAppEffects', () => {
 				OverlaysAppEffects,
 				provideMockActions(() => actions),
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
-				{ provide: OverlaysConfig, useValue: {} },
 				{
 					provide: CasesService,
 					useValue: {

@@ -12,12 +12,11 @@ import {
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
-import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
+import { OverlaysService } from '../services/overlays.service';
 import { OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { IOverlaysConfig } from '../models/overlays.config';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -44,7 +43,6 @@ describe('Overlays Effects ', () => {
 	let actions: Observable<any>;
 	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService | any;
-	let overlaysConfig: IOverlaysConfig;
 
 	const overlays = <Overlay[]>[
 		{
@@ -75,7 +73,6 @@ describe('Overlays Effects ', () => {
 				useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
 			},
 			provideMockActions(() => actions),
-			{ provide: OverlaysConfig, useValue: {} },
 			{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 		]
 	}));
@@ -84,7 +81,6 @@ describe('Overlays Effects ', () => {
 		store = _store;
 		overlaysEffects = _overlaysEffects;
 		overlaysService = _overlaysService;
-		overlaysConfig = TestBed.get(OverlaysConfig);
 	}));
 
 	it('effect - onOverlaysMarkupChanged$', () => {

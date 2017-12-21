@@ -1,19 +1,13 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
-import { IOverlaysConfig } from '../models/overlays.config';
 import { isEqual, isNil } from 'lodash';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
-
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
-
-
-export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class OverlaysService {
@@ -84,7 +78,7 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}
 
-	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig, protected _overlaySourceProvider: BaseOverlaySourceProvider) {
+	constructor(protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
 	search(params: any = {}): Observable<Array<Overlay>> {

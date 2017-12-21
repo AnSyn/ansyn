@@ -18,7 +18,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	private _isExpended: boolean;
 	public lineWidthTrigger: boolean;
 	public colorSelectionTrigger = false;
-	public colorOptionsFill: any = '#FFFFFF';
+	public colorOptionsFill: any = '#a4ff82';
 	public colorOptionsStroke: any = '#3399CC';
 	public subscriber;
 	public mode: string;

@@ -2,8 +2,9 @@
 @import "~@ansyn/core/less/z-index-globals";
 @import "~@ansyn/core/less/tooltip";
 
-@size: 60px;
+@size: 78px;
 @border-width: 3px;
+@img-margin: 14px;
 
 :host {
 	width: @size + @border-width * 2;
@@ -47,8 +48,8 @@
 		border-radius: 50%;
 
 		img {
-			width: @size - 5px;
-			margin: 5px;
+			width: @size - @img-margin;
+			margin: 10px;
 		}
 	}
 }

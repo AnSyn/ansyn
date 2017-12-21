@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/router",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"description": "Ansyn router create connections between: router, store and cases",
 	"main": "index.ts",
 	"scripts": {

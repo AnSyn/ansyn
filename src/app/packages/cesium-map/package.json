@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/cesium-map",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,7 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@ansyn/imagery": "0.2.4",
+		"@ansyn/imagery": "0.2.5",
 		"@angular/common": "5.1.0",
 		"@angular/core": "5.1.0"
 	}

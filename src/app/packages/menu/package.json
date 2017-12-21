@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/menu",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -12,6 +12,6 @@
 	"peerDependencies": {
 		"@angular/common": "5.1.0",
 		"@angular/core": "5.1.0",
-		"@ansyn/core": "0.2.4"
+		"@ansyn/core": "0.2.5"
 	}
 }

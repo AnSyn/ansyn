@@ -111,14 +111,14 @@ export class DisplayOverlayAction implements Action {
 export class DisplayOverlaySuccessAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 
-	constructor(public payload: { id: string }) {
+	constructor(public payload: { id: string, mapId?: string }) {
 	}
 }
 
 export class DisplayOverlayFailedAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
-	constructor(public payload: { id: string }) {
+	constructor(public payload: { id: string, mapId?: string }) {
 	}
 }
 

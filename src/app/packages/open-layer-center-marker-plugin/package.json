@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/open-layer-center-marker-plugin",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"description": "This is open layers-map plugin package that will show marker at map center",
 	"main": "index.js",
 	"scripts": {
@@ -12,6 +12,6 @@
 		"ol": "4.6.3",
 		"@angular/common": "5.1.0",
 		"@angular/core": "5.1.0",
-		"@ansyn/imagery": "0.2.4"
+		"@ansyn/imagery": "0.2.5"
 	}
 }

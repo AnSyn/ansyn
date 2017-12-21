@@ -1,1 +1,1 @@
-export { Overlay, OverlaysCriteria, OverlaySpecialObject } from '@ansyn/core/models';
+export * from '@ansyn/core/models/overlay.model';

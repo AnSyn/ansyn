@@ -19,7 +19,7 @@ import { AddCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
 import { BackToWorldViewAction, ExpandAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
@@ -79,17 +79,6 @@ describe('StatusBarAppEffects', () => {
 				ImageryCommunicatorService,
 				OverlaysService,
 				ConnectionBackend,
-				{
-					provide: OverlaysConfig, useValue: {
-					'baseUrl': 'http://localhost:9001/api/v1/',
-					'overlaysByCaseId': 'case/:id/overlays',
-					'overlaysByTimeAndPolygon': 'overlays/find',
-					'defaultApi': 'overlays',
-					'searchByCase': false,
-					'overlaySource': 'IDAHO',
-					'polygonGenerationDistance': 0.1
-				}
-				},
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			]
 		}).compileComponents();

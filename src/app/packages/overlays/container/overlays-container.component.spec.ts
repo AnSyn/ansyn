@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { createStore, MockComponent, StoreFixture } from '@ansyn/core/test';
 import { OverlaysContainerComponent } from './overlays-container.component';
-import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
+import { OverlaysService } from '../services/overlays.service';
 import { TimelineEmitterService } from '../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Rx';
 import { By } from '@angular/platform-browser';
@@ -65,17 +65,6 @@ describe('OverlayContainerComponent', () => {
 				TimelineEmitterService,
 				OverlaysEffects,
 				Actions,
-				{
-					provide: OverlaysConfig, useValue: {
-					'baseUrl': 'http://localhost:9001/api/v1/',
-					'overlaysByCaseId': 'case/:id/overlays',
-					'overlaysByTimeAndPolygon': 'overlays/find',
-					'defaultApi': 'overlays',
-					'searchByCase': false,
-					'overlaySource': 'IDAHO',
-					'polygonGenerationDistance': 0.1
-				}
-				},
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			declarations: [

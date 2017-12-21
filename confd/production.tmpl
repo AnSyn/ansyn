@@ -78,15 +78,6 @@
     "layersManagerConfig": {
         "layersByCaseIdUrl": "{{ getv "/ansyn/layers/baseurl" "NO-VALUE" }}"
     },
-    "overlaysConfig": {
-        "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "NO-VALUE" }}",
-        "overlaysByCaseId": "case/:id/overlays",
-        "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "NO-VALUE" }}",
-        "defaultApi": "{{getv "/ansyn/overlay/api/default" "NO-VALUE" }}",
-        "searchByCase": false,
-        "overlaySource": "IDAHO",
-        "polygonGenerationDistance": 0.1
-    },
     "imageryConfig": {
         "geoMapsInitialMapSource": [
         {
@@ -253,5 +244,10 @@
 				}
 			]
 		}
+	},
+	"idahoOverlaysSourceConfig": {
+		"defaultApi": "{{getv "/ansyn/overlay/api/default" "NO-VALUE" }}",
+		"baseUrl": "{{ getv "/ansyn/overlay/baseurl" "NO-VALUE" }}",
+		"overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "NO-VALUE" }}"
 	}
 }

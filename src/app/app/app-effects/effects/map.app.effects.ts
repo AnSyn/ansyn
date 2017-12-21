@@ -195,12 +195,8 @@ export class MapAppEffects {
 		.filter(([overlay]: [Overlay, string, CaseMapPosition]) => !isEmpty(overlay) && overlay.isFullOverlay)
 		.mergeMap<[Overlay, string, CaseMapPosition], any>(([overlay, mapId, position]: [Overlay, string, CaseMapPosition]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.extent, overlay.footprint);
-
 			const communicator = this.imageryCommunicatorService.provide(mapId);
-
 			const mapType = communicator.ActiveMap.mapType;
-
-			// assuming that there is one provider
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
 
 			if (!sourceLoader) {
@@ -214,7 +210,8 @@ export class MapAppEffects {
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
-							communicator.resetView(layer, position, extentFromGeojson(overlay.footprint));
+							const geoJsonExtent = layer.getProperties().geoJsonExtent || overlay.footprint;
+							communicator.resetView(layer, position, extentFromGeojson(geoJsonExtent));
 						} else {
 							communicator.resetView(layer, position);
 						}
@@ -225,9 +222,9 @@ export class MapAppEffects {
 							communicator.resetView(layer, position);
 						}
 					}
-					return new DisplayOverlaySuccessAction({ id: overlay.id });
+					return new DisplayOverlaySuccessAction({ id: overlay.id, mapId });
 				})
-				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id })));
+				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
 		});
 
 	/**

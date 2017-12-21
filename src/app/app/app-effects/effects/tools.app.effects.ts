@@ -143,6 +143,9 @@ export class ToolsAppEffects {
 			(action: DisplayOverlaySuccessAction, cases: ICasesState, mapsState: IMapState) => {
 				return [action, cloneDeep(cases.selectedCase), mapsState];
 			})
+		.filter(([action, selectedCase, mapsState]: [DisplayOverlaySuccessAction, Case, IMapState]) => {
+			return !action.payload.mapId || action.payload.mapId === mapsState.activeMapId;
+		})
 		.mergeMap(([action, selectedCase, mapsState]: [DisplayOverlaySuccessAction, Case, IMapState]) => {
 			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
 
@@ -234,11 +237,14 @@ export class ToolsAppEffects {
 	@Effect()
 	resetManualImageProcessingArguments$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING, OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
-			(action: SetAutoImageProcessing, cases: ICasesState, mapsState: IMapState) => {
-				const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
-				return [activeMap, cloneDeep(cases.selectedCase)];
-			})
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
+		.filter(([action, cases, mapsState]: [DisplayOverlaySuccessAction, ICasesState, IMapState]) => {
+			return !action.payload.mapId || action.payload.mapId === mapsState.activeMapId;
+		})
+		.map(([action, cases, mapsState]: [DisplayOverlaySuccessAction, ICasesState, IMapState]) => {
+			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
+			return [activeMap, cloneDeep(cases.selectedCase)];
+		})
 		.filter(([activeMap]: [CaseMapState, Case]) => Boolean(activeMap.data.overlay))
 		.filter(([activeMap, selectedCase]: [CaseMapState, Case]) => {
 			const overlayId = activeMap.data.overlay.id;

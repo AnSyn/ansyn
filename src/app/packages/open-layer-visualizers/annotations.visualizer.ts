@@ -329,6 +329,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// this.collection = featureCollection(this.features);
 		this.removeInteraction();
 		this.addSelectInteraction();
+		this.currentInteraction = undefined;
 	}
 
 	addInteraction() {

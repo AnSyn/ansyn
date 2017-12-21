@@ -25,7 +25,6 @@ interface IdahoResponseForGetById {
 export interface IIdahoOverlaySourceConfig {
 	baseUrl: string;
 	defaultApi: string;
-	overlaysByCaseId: string;
 	overlaysByTimeAndPolygon: string;
 }
 

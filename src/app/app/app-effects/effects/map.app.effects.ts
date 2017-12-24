@@ -210,8 +210,7 @@ export class MapAppEffects {
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
-							const geoJsonExtent = layer.getProperties().geoJsonExtent || overlay.footprint;
-							communicator.resetView(layer, position, extentFromGeojson(geoJsonExtent));
+							communicator.resetView(layer, position, extentFromGeojson( overlay.footprint));
 						} else {
 							communicator.resetView(layer, position);
 						}

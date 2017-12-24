@@ -1,5 +1,6 @@
 const fs = require('fs');
 const packages = require('./packages-list.json');
+const gitAdd = require('./git-add');
 
 const mainPackage = JSON.parse(String(fs.readFileSync('package.json', 'utf8')));
 
@@ -27,6 +28,7 @@ function fix(fileName) {
 	let newContent = JSON.stringify(packageJson, null, '\t');
 	newContent = newContent.split('\n').join('\r\n');
 	fs.writeFileSync(fileName, newContent + '\r\n');
+	gitAdd(fileName);
 }
 
 fix('src/app/app/package.json');

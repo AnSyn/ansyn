@@ -12,6 +12,7 @@ import MultiPolygon from 'ol/geom/multipolygon';
 import Select from 'ol/interaction/select';
 import Stroke from 'ol/style/stroke';
 import Fill from 'ol/style/fill';
+import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import Vector from 'ol/layer/vector';
@@ -192,7 +193,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		});
 	}
 
-	private createStyle(feature: Feature, ...styles: Array<Partial<VisualizerStyle>>) {
+	private createStyle(feature: Feature, isStyle, ...styles: Array<Partial<VisualizerStyle>>) {
 		const styleSettings: any = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
@@ -216,14 +217,14 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		}
 
 		if (styleSettings.label) {
-			styleSettings.text = new Text(this.createStyle(feature, styleSettings.label));
+			styleSettings.text = new Text(this.createStyle(feature, false, styleSettings.label));
 		}
 
 		if (Object.keys(secondaryStyle).length !== 0) {
 			return [styleSettings, secondaryStyle].map(s => new Style(s));
 		}
 
-		return new Style(styleSettings);
+		return isStyle ? new Style(styleSettings) : styleSettings;
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
@@ -246,7 +247,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 				}
 			}
 
-			feature.styleCache = this.createStyle(feature, ...styles);
+			feature.styleCache = this.createStyle(feature, true, ...styles);
 		}
 
 		return feature.styleCache;

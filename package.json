@@ -21,7 +21,7 @@
 		"e2e": "ng e2e",
 		"fix-packages": "node scripts/fix-packages",
 		"fix-package-json": "node scripts/fix-package-json",
-		"fix-all": "npm run fix-packages && npm run fix-package-json && git add -A",
+		"fix-all": "npm run fix-packages && npm run fix-package-json",
 		"check-template": "node scripts/check-tmpl",
 		"docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3"
 	},
@@ -80,6 +80,7 @@
 		"@types/rison": "0.0.6",
 		"@types/wellknown": "0.5.0",
 		"codelyzer": "4.0.1",
+		"find-in-files": "0.4.0",
 		"jasmine": "latest",
 		"jasmine-core": "2.6.2",
 		"jasmine-marbles": "0.2.0",

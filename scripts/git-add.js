@@ -1,7 +1,8 @@
 const { execSync } = require('child_process');
+const { green }= require('chalk');
 
 function gitAdd(file) {
-	console.log('git add ' + file);
+	console.log(green(`git add ${file}`));
 	execSync('git add ' + file);
 }
 

@@ -141,14 +141,12 @@ export class ToolsAppEffects {
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
 			(action: DisplayOverlaySuccessAction, cases: ICasesState, mapsState: IMapState) => {
-				return [action, cloneDeep(cases.selectedCase), mapsState];
+				const mapId = (action.payload && action.payload.mapId) || mapsState.activeMapId;
+				const activeMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
+				return [action, activeMap, cloneDeep(cases.selectedCase)];
 			})
-		.filter(([action, selectedCase, mapsState]: [DisplayOverlaySuccessAction, Case, IMapState]) => {
-			return !action.payload.mapId || action.payload.mapId === mapsState.activeMapId;
-		})
-		.mergeMap(([action, selectedCase, mapsState]: [DisplayOverlaySuccessAction, Case, IMapState]) => {
-			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
-
+		.filter(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => Boolean(selectedMap))
+		.mergeMap(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => {
 			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];
 			let manualProcessArgs;
@@ -157,16 +155,16 @@ export class ToolsAppEffects {
 			if (selectedCase.state.overlaysManualProcessArgs) {
 				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.id];
 			}
-			if (activeMap.data.isAutoImageProcessingActive) {
+			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action
 				actions.push(new SetMapAutoImageProcessing({
-					mapId: activeMap.id,
-					toggleValue: activeMap.data.isAutoImageProcessingActive
+					mapId: selectedMap.id,
+					toggleValue: selectedMap.data.isAutoImageProcessingActive
 				}));
 			} else if (manualProcessArgs) {
 				// manual process action
 				actions.push(new SetMapManualImageProcessing({
-					mapId: activeMap.id,
+					mapId: selectedMap.id,
 					processingParams: manualProcessArgs
 				}));
 			}
@@ -174,7 +172,7 @@ export class ToolsAppEffects {
 			actions.push(new SetManualImageProcessingArguments({ processingParams: manualProcessArgs }));
 
 			// action 4: SetAutoImageProcessingSuccess (autoImageProcessing / manualImageProcessing / null)
-			actions.push(new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive));
+			actions.push(new SetAutoImageProcessingSuccess(selectedMap.data.isAutoImageProcessingActive));
 			return actions;
 		});
 
@@ -238,17 +236,15 @@ export class ToolsAppEffects {
 	resetManualImageProcessingArguments$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING, OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, cases, mapsState]: [DisplayOverlaySuccessAction, ICasesState, IMapState]) => {
-			return !action.payload.mapId || action.payload.mapId === mapsState.activeMapId;
-		})
 		.map(([action, cases, mapsState]: [DisplayOverlaySuccessAction, ICasesState, IMapState]) => {
-			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
-			return [activeMap, cloneDeep(cases.selectedCase)];
+			const mapId = (action.payload && action.payload.mapId) || mapsState.activeMapId;
+			const selectedMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
+			return [selectedMap, cloneDeep(cases.selectedCase)];
 		})
-		.filter(([activeMap]: [CaseMapState, Case]) => Boolean(activeMap.data.overlay))
-		.filter(([activeMap, selectedCase]: [CaseMapState, Case]) => {
-			const overlayId = activeMap.data.overlay.id;
-			const isAutoProcessOn = activeMap.data.isAutoImageProcessingActive;
+		.filter(([selectedMap]: [CaseMapState, Case]) => Boolean(selectedMap) && Boolean(selectedMap.data.overlay))
+		.filter(([selectedMap, selectedCase]: [CaseMapState, Case]) => {
+			const overlayId = selectedMap.data.overlay.id;
+			const isAutoProcessOn = selectedMap.data.isAutoImageProcessingActive;
 			const ManualProcessArgs = selectedCase.state.overlaysManualProcessArgs;
 			return Boolean(isAutoProcessOn && ManualProcessArgs && ManualProcessArgs[overlayId]);
 		})

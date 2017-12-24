@@ -36,20 +36,22 @@
 		transform: translate(-50%);
 		background: white;
 		padding: 0 2px;
-		top: -6px;
+		top: -11px;
 		left: 50%;
 		font-size: @size/6;
 		color: red;
 		font-weight: bold;
-		z-index: @z-index-map-rotation;
+		z-index: @z-index-map-rotation + 1;
 	}
 
 	.img-container {
-		border-radius: 50%;
+		position: absolute;
+		z-index: @z-index-map-rotation;
 
+		border-radius: 50%;
+		margin: 10px;
 		img {
 			width: @size - @img-margin;
-			margin: 10px;
 		}
 	}
 }

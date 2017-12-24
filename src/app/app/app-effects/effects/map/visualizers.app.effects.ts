@@ -55,7 +55,7 @@ import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { DisplayOverlaySuccessAction } from '../../../../packages/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 
 
 @Injectable()

@@ -2,6 +2,7 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetMapRotationAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-imagery-rotation',
@@ -12,6 +13,10 @@ export class ImageryRotationComponent {
 	@Input() mapState: CaseMapState;
 
 	isRotating = false;
+
+	get rotationAngle() {
+		return get(this.mapState, "data.position.projectedState.rotation", 0);
+	}
 
 	constructor(protected elementRef: ElementRef,
 				protected store: Store<any>) {

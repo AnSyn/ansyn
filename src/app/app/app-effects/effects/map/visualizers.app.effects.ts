@@ -14,11 +14,11 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
-	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
 	MouseOutDropAction,
 	MouseOverDropAction,
 	OverlaysActionTypes,
@@ -55,7 +55,6 @@ import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 
 
 @Injectable()

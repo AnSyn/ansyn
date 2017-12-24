@@ -56,8 +56,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const entityDate = (<IContextEntity>originalEntity).date;
 		const timeDiff = getTimeDiff(this.referenceDate, entityDate);
 
-		console.log(getTimeDiffFormat(timeDiff));
-
 		return getTimeDiffFormat(timeDiff);
 	}
 

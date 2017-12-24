@@ -3,9 +3,6 @@ import { EntitiesVisualizer } from '@ansyn/open-layer-visualizers/entities-visua
 import proj from 'ol/proj';
 import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
-import Text from 'ol/style/text';
-import Fill from 'ol/style/fill';
-import Stroke from 'ol/style/stroke';
 import { getPointByPolygon } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
@@ -35,18 +32,18 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 					src: '/assets/icons/map/entity-marker.svg'
 				},
 				geometry: this.getGeometry.bind(this),
-				text: new Text({
+				label: {
 					font: '12px Calibri,sans-serif',
-					fill: new Fill({
+					fill: {
 						color: '#fff'
-					}),
-					stroke: new Stroke({
+					},
+					stroke: {
 						color: '#000',
 						width: 3
-					}),
+					},
 					offsetY: 30,
 					text: this.getText.bind(this)
-				})
+				}
 			}
 		});
 	}
@@ -58,6 +55,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
 		const entityDate = (<IContextEntity>originalEntity).date;
 		const timeDiff = getTimeDiff(this.referenceDate, entityDate);
+
+		console.log(getTimeDiffFormat(timeDiff));
 
 		return getTimeDiffFormat(timeDiff);
 	}
@@ -91,7 +90,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		logicalEntities.forEach((entity) => {
-			if (this.idToCachedCenter.has(entity.id)) {
+			if (this.idToCachedCenter.
+				has(entity.id)) {
 				this.idToCachedCenter.delete(entity.id);
 			}
 		});

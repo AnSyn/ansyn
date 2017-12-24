@@ -1,8 +1,10 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { cloneDeep as _cloneDeep, isEmpty } from 'lodash';
 import {
 	AnnotationData,
+	BackToWorldAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
 	MapActionTypes,
@@ -12,9 +14,10 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
+	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	MouseOutDropAction,
 	MouseOverDropAction,
@@ -33,7 +36,6 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHeatmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
-import { cloneDeep as _cloneDeep } from 'lodash';
 import {
 	AnnotationVisualizerAgentAction,
 	GoToInputChangeAction,
@@ -51,6 +53,9 @@ import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualize
 import { MouseShadowVisualizerType } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ContextEntityVisualizer } from '../../../index';
+import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
+import { DisplayOverlaySuccessAction } from '../../../../packages/overlays/actions/overlays.actions';
 
 
 @Injectable()
@@ -322,6 +327,27 @@ export class VisualizersAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name displayEntityTimeFromOverlay$
+	 * @ofType DisplayOverlaySuccessAction, BackToWorldAction
+	 * @dependencies map, cases
+	 * @filter Only when context
+	 */
+	@Effect({ dispatch: false })
+	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
+		.ofType<DisplayOverlaySuccessAction | BackToWorldAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
+		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldAction, IMapState, ICasesState]) => !isEmpty(casesState.selectedCase.state.contextEntities))
+		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldAction, IMapState, ICasesState]) => {
+			const mapId = action.payload.mapId || mapState.activeMapId;
+			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+			const communicatorHandler = this.imageryCommunicatorService.provide(mapId);
+
+			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			console.log(selectedMap.data.overlay);
+			vis.setReferenceDate(action instanceof DisplayOverlaySuccessAction ? selectedMap.data.overlay.date : null);
+		});
+	/**
+	 * @type Effect
 	 * @name annotationData$
 	 * @ofType AnnotationData
 	 * @action UpdateCaseAction, AnnotationVisualizerAgentAction
@@ -485,8 +511,6 @@ export class VisualizersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
-
-
 	}
 
 	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState) {

@@ -141,9 +141,9 @@ export class ToolsAppEffects {
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
 			(action: DisplayOverlaySuccessAction, cases: ICasesState, mapsState: IMapState) => {
-				const mapId = (action.payload && action.payload.mapId) || mapsState.activeMapId;
-				const activeMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
-				return [action, activeMap, cloneDeep(cases.selectedCase)];
+				const mapId = action.payload.mapId || mapsState.activeMapId;
+				const selectedMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
+				return [action, selectedMap, cloneDeep(cases.selectedCase)];
 			})
 		.filter(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => Boolean(selectedMap))
 		.mergeMap(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => {

@@ -5,7 +5,8 @@ const gitAdd = require('./git-add');
 const mainPackage = JSON.parse(String(fs.readFileSync('package.json', 'utf8')));
 
 function fix(fileName) {
-	const packageJson = JSON.parse(String(fs.readFileSync(fileName, 'utf8')));
+	const packageJsonString = String(fs.readFileSync(fileName, 'utf8'));
+	const packageJson = JSON.parse(packageJsonString);
 	packageJson.version = mainPackage.version;
 	packageJson.license = mainPackage.license;
 
@@ -26,9 +27,12 @@ function fix(fileName) {
 	}
 
 	let newContent = JSON.stringify(packageJson, null, '\t');
-	newContent = newContent.split('\n').join('\r\n');
-	fs.writeFileSync(fileName, newContent + '\r\n');
-	gitAdd(fileName);
+	newContent = newContent.split('\n').join('\r\n') + '\r\n';
+
+	if (newContent !== packageJsonString) {
+		fs.writeFileSync(fileName, newContent);
+		gitAdd(fileName);
+	}
 }
 
 fix('src/app/app/package.json');

@@ -1,34 +1,47 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
+import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
+import 'rxjs/add/operator/pluck';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-imagery-status',
 	templateUrl: './imagery-status.component.html',
 	styleUrls: ['./imagery-status.component.less']
 })
-export class ImageryStatusComponent {
+export class ImageryStatusComponent implements OnInit {
 	@HostBinding('class.active') @Input() active: boolean;
 	@Input() disableGeoOptions: boolean;
 	@Input() notInCase: boolean;
 	@Input() mapId: string = null;
 	@Input() overlay: Overlay;
 	@Input() mapsAmount = 1;
-	@Input() isFavoriteOverlayDisplayed = false;
 	@Input() layerFlag = false;
-
 	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
-	constructor(protected store: Store<any>) {
+	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
+	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
+	favoriteOverlays: string[];
+
+	constructor(protected store$: Store<any>) {
+	}
+
+	isFavoriteOverlayDisplayed() {
+		return this.favoriteOverlays.includes(this.overlay && this.overlay.id);
+	}
+
+	ngOnInit(): void {
+		this.favoriteOverlays$.subscribe((favoriteOverlays) => this.favoriteOverlays = favoriteOverlays);
 	}
 
 	toggleFavorite() {
-		this.store.dispatch(new ToggleFavoriteAction(this.overlay.id));
+		this.store$.dispatch(new ToggleFavoriteAction(this.overlay.id));
 	}
 
 	toggleMapLayers() {
-		this.store.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
 	}
 }

@@ -105,12 +105,6 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
-	compareOverlays(data: IOverlaysState, data1: IOverlaysState) {
-		return isEqual(data.filteredOverlays, data1.filteredOverlays)
-			&& isEqual(data.filters, data1.filters)
-			&& isEqual(data.specialObjects, data1.specialObjects);
-	}
-
 	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: TimelineState): TimelineState {
 		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
 		const deltaTenth: number = (delta) * 0.1;

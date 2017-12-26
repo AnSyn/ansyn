@@ -30,32 +30,6 @@ export class CasesService {
 		time: undefined
 	};
 
-	static getOverlaysMarkup(caseValue: Case, hoverId?: string) {
-		const result = [];
-
-		const activeMapId = caseValue.state.maps.activeMapId;
-
-		caseValue.state.maps.data.forEach((map: CaseMapState) => {
-			if (!isEmpty(map.data.overlay)) {
-				if (map.id === activeMapId) {
-					result.push({ id: map.data.overlay.id, class: 'active' });
-				} else {
-					result.push({ id: map.data.overlay.id, class: 'displayed' });
-				}
-			}
-		});
-
-		if (caseValue.state.favoritesOverlays) {
-			caseValue.state.favoritesOverlays.forEach(item => result.push({ id: item, class: 'favorites' }));
-		}
-
-		if (hoverId) {
-			result.push({ id: hoverId, class: 'hover' });
-		}
-
-		return result;
-	}
-
 	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;

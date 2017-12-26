@@ -1,4 +1,7 @@
-import { CoreActions, CoreActionTypes, SetToastMessageAction } from '../actions/core.actions';
+import {
+	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
+	SetToastMessageAction
+} from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface IToastMessage {
@@ -8,10 +11,12 @@ export interface IToastMessage {
 
 export interface ICoreState {
 	toastMessage: IToastMessage;
+	favoriteOverlays: string[]
 }
 
 export const coreInitialState: ICoreState = {
-	toastMessage: null
+	toastMessage: null,
+	favoriteOverlays: []
 };
 
 export const coreFeatureKey = 'core';
@@ -21,6 +26,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions): ICor
 	switch (action.type) {
 		case CoreActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: (action as SetToastMessageAction).payload };
+
+		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
+			return { ...state, favoriteOverlays:  (action as SetFavoriteOverlaysAction).payload };
 
 		default:
 			return state;

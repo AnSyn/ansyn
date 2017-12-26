@@ -55,6 +55,7 @@ import GeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
+import { CoreService } from '@ansyn/core/services/core.service';
 
 
 @Injectable()
@@ -73,9 +74,9 @@ export class VisualizersAppEffects {
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'))
-		.map(([action, selectedCase]: [HoverFeatureTriggerAction, Case]) => {
-			const markups = CasesService.getOverlaysMarkup(selectedCase, action.payload.id);
+		.withLatestFrom(this.store$)
+		.map(([action, { map, core }]: [HoverFeatureTriggerAction, IAppState]) => {
+			const markups = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays, action.payload.id);
 			return new OverlaysMarkupAction(markups);
 		});
 
@@ -166,12 +167,12 @@ export class VisualizersAppEffects {
 	/**
 	 * @type Effect
 	 * @name shouldDrawOverlaysOnMap$
-	 * @ofType SetFiltersAction, MapInstanceChangedAction
+	 * @ofType SetFilteredOverlaysAction, MapInstanceChangedAction
 	 * @action DrawOverlaysOnMapTriggerAction
 	 */
 	@Effect()
 	shouldDrawOverlaysOnMap$: Observable<DrawOverlaysOnMapTriggerAction> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
 	/**

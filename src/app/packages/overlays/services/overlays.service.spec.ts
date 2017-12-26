@@ -237,26 +237,6 @@ describe('OverlaysService', () => {
 		expect(result2[0].data.length).toBe(2);
 	});
 
-	it('compare overlay ', () => {
-		const mockData = {
-			filters: {},
-			overlays: new Map(),
-			filteredOverlays: []
-		};
-		overlaysTmpData.forEach(item => {
-			mockData.overlays.set(item.id, item);
-			mockData.filteredOverlays.push(item.id);
-		});
-
-		const overlayState1: IOverlaysState = Object.assign({}, overlaysInitialState);
-		const overlayState2: IOverlaysState = Object.assign({}, overlaysInitialState);
-		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeTruthy();
-
-		overlayState1.filteredOverlays = mockData.filteredOverlays;
-		expect(overlaysService.compareOverlays(overlayState1, overlayState2)).toBeFalsy();
-
-	});
-
 	it('check the method fetchData with spyOn', () => {
 		let response = { key: 'value' };
 

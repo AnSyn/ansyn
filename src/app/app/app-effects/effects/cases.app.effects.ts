@@ -19,8 +19,6 @@ import {
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { Context } from '@ansyn/core';
-import { BaseContextSourceProvider } from '@ansyn/context';
-import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -48,19 +46,6 @@ export class CasesAppEffects {
 			}
 		});
 
-
-	/**
-	 * @type Effect
-	 * @name setShowFavoritesFlagOnFilters$
-	 * @ofType SelectCaseAction
-	 * @action EnableOnlyFavoritesSelectionAction
-	 */
-	@Effect()
-	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => {
-			return new EnableOnlyFavoritesSelectionAction(payload.state.favoritesOverlays && !!payload.state.favoritesOverlays.length);
-		});
 
 	/**
 	 * @type Effect
@@ -174,7 +159,6 @@ export class CasesAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected casesService: CasesService,
-				public contextSourceService: BaseContextSourceProvider) {
+				protected casesService: CasesService) {
 	}
 }

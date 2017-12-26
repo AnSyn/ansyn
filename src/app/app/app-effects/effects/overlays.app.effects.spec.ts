@@ -9,7 +9,7 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
-	SetFiltersAction,
+	SetFilteredOverlaysAction,
 	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Case, CasesReducer, CasesService, UpdateCaseAction } from '@ansyn/menu-items/cases';
@@ -245,7 +245,7 @@ describe('OverlaysAppEffects', () => {
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		casesService.contextValues.defaultOverlay = 'latest';
-		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayFromStoreAction({
 				id: 'last'
@@ -259,7 +259,7 @@ describe('OverlaysAppEffects', () => {
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
 
-		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['first', 'last'])
 		});
@@ -274,7 +274,7 @@ describe('OverlaysAppEffects', () => {
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
 
-		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['first'])
 		});
@@ -289,7 +289,7 @@ describe('OverlaysAppEffects', () => {
 		casesService.contextValues.defaultOverlay = 'nearest';
 		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
 
-		actions = hot('--a--', { a: new SetFiltersAction([]) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
 			b: new DisplayMultipleOverlaysFromStoreAction(['last'])
 		});

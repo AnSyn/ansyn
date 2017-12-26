@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
-import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
+import { isNil as _isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import * as packageJson from '../../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -45,17 +45,8 @@ export class AnsynComponent implements OnInit {
 		.map((data: any) => data.overlay)
 		.distinctUntilChanged();
 
-	isFavoriteOverlay$ = this.selectedCase$
-		.withLatestFrom(this.activeMap$)
-		.filter(([selectedCase]) => Boolean(selectedCase.state.favoritesOverlays))
-		.distinctUntilChanged(([oldCase], [newCase]): boolean => _isEqual(oldCase.state.favoritesOverlays, newCase.state.favoritesOverlays))
-		.map(([selectedCase, activeMap]: [Case, CaseMapState]) => {
-			return activeMap.data.overlay && (selectedCase.state.favoritesOverlays.includes(activeMap.data.overlay.id));
-		});
-
 	displayedOverlay: Overlay;
 	selectedCaseName: string;
-	isFavoriteOverlay: boolean;
 	version = (<any>packageJson).version;
 	isPinnedClass: string;
 
@@ -69,20 +60,8 @@ export class AnsynComponent implements OnInit {
 			this.selectedCaseName = _selectedCaseName;
 		});
 
-		this.displayedOverlay$
-			.withLatestFrom(this.selectedCase$)
-			.filter(([overlay, selectedCase]: [Overlay, Case]) => Boolean(selectedCase))
-			.subscribe(([overlay, selectedCase]: [Overlay, Case]) => {
-				this.displayedOverlay = overlay;
-				if (overlay) {
-					this.isFavoriteOverlay = selectedCase.state.favoritesOverlays.includes(overlay.id);
-				} else {
-					this.isFavoriteOverlay = false;
-				}
-			});
-
-		this.isFavoriteOverlay$.subscribe((isFavoriteOverlay: boolean) => {
-			this.isFavoriteOverlay = isFavoriteOverlay;
+		this.displayedOverlay$.subscribe((displayedOverlay: Overlay) => {
+			this.displayedOverlay = displayedOverlay;
 		});
 
 		this.isPinned$.subscribe((_isPinned: boolean) => {

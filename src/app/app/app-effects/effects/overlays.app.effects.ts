@@ -29,6 +29,7 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CaseMapState } from '@ansyn/core';
+import { CoreService } from '@ansyn/core/services/core.service';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -44,10 +45,9 @@ export class OverlaysAppEffects {
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, cases]: [Action, ICasesState]) => !isEmpty(cases.selectedCase))
-		.map(([action, cases]: [Action, ICasesState]) => {
-			const overlaysMarkup = CasesService.getOverlaysMarkup(cases.selectedCase);
+		.withLatestFrom(this.store$)
+		.map(([action, appState]: [Action, IAppState]) => {
+			const overlaysMarkup = CoreService.getOverlaysMarkup(appState.map.mapsList, appState.map.activeMapId, appState.core.favoriteOverlays);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
@@ -183,14 +183,14 @@ export class OverlaysAppEffects {
 	/**
 	 * @type Effect
 	 * @name displayLatestOverlay$
-	 * @ofType SetFiltersAction
+	 * @ofType SetFilteredOverlaysAction
 	 * @dependencies overlays
 	 * @filter defaultOverlay is latest and displayedOverlays is not empty
 	 * @action DisplayOverlayFromStoreAction
 	 */
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
 		.filter(action => this.casesService.contextValues.defaultOverlay === 'latest')
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return overlays.filteredOverlays;
@@ -232,14 +232,14 @@ export class OverlaysAppEffects {
 	/**
 	 * @type Effect
 	 * @name displayTwoNearestOverlay$
-	 * @ofType SetFiltersAction
+	 * @ofType SetFilteredOverlaysAction
 	 * @dependencies overlays
 	 * @filter defaultOverlay is nearst
 	 * @action DisplayMultipleOverlaysFromStoreAction
 	 */
 	@Effect()
 	displayTwoNearestOverlay$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
 		.filter(action => this.casesService.contextValues.defaultOverlay === 'nearest')
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return [overlays.filteredOverlays, overlays.overlays];

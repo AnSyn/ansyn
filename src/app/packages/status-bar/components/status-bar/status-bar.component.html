@@ -6,7 +6,6 @@
 				[notInCase]="overlayNotInCase"
 				[active]="true"
 				[disableGeoOptions]="showGeoRegistrationError()"
-				[isFavoriteOverlayDisplayed]="isFavoriteOverlayDisplayed"
 				(backToWorldView)="clickBackToWorldView()">
 			</ansyn-imagery-status>
 		</div>
@@ -108,7 +107,7 @@
 		</button>
 
 		<button (click)="clickFavorite()" [disabled]="!overlay">
-			<i class="icon-favorites favorite-icon" [class.active]="isFavoriteOverlayDisplayed"></i>
+			<i class="icon-favorites favorite-icon" [class.active]="isFavoriteOverlayDisplayed()"></i>
 		</button>
 
 		<button (click)="clickGoNext()" #goNext>

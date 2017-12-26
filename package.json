@@ -19,6 +19,7 @@
 		"lint": "ng lint --type-check",
 		"log": "git log master --pretty=format:\\\"%an\\\",\\\"%ai\\\",\\\"%s\\\",\\\"%H\\\" > log.csv && echo Commiter, Date, Message, Hash | cat - log.csv > log2.csv && mv log2.csv log.csv",
 		"e2e": "ng e2e",
+		"ng": "ng",
 		"fix-packages": "node scripts/fix-packages",
 		"fix-package-json": "node scripts/fix-package-json",
 		"fix-all": "node scripts/fix-packages -a && node scripts/fix-package-json -a",

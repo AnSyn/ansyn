@@ -23,7 +23,7 @@ import {
 	MouseOutDropAction,
 	MouseOverDropAction,
 	OverlaysMarkupAction,
-	SetFiltersAction
+	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
@@ -501,7 +501,7 @@ describe('VisualizersAppEffects', () => {
 	});
 
 	it('shouldDrawOverlaysOnMap$ should return DrawOverlaysOnMapTriggerAction ( SET_FILTERS action) ', () => {
-		actions = hot('--a--', { a: new SetFiltersAction({}) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction({}) });
 		const expectedResults = cold('--b--', { b: new DrawOverlaysOnMapTriggerAction() });
 		expect(visualizersAppEffects.shouldDrawOverlaysOnMap$).toBeObservable(expectedResults);
 	});

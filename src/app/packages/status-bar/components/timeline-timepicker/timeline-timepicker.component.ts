@@ -47,10 +47,6 @@ export class TimelineTimepickerComponent implements OnInit {
 		return this._endDatePickerValue;
 	}
 
-
-	constructor() {
-	}
-
 	ngOnInit(): void {
 		this.endDatePickerInstance = new (<any>flatpickr)(this.endDatePicker.nativeElement, {
 			id: 'end',

@@ -88,8 +88,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		logicalEntities.forEach((entity) => {
-			if (this.idToCachedCenter.
-				has(entity.id)) {
+			if (this.idToCachedCenter.has(entity.id)) {
 				this.idToCachedCenter.delete(entity.id);
 			}
 		});

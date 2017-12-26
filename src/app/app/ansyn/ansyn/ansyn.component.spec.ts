@@ -3,7 +3,6 @@ import { AnsynComponent } from './ansyn.component';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { cloneDeep as _cloneDeep } from 'lodash';
 import { Case } from '@ansyn/core/models/case.model';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -129,33 +128,4 @@ describe('AnsynComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	describe('isFavoriteOverlay', () => {
-
-		it('check isFavoriteOverlay overlay is not favorite', () => {
-			component.isFavoriteOverlay$.subscribe(isFavorite => {
-				expect(isFavorite).toBe(false);
-			});
-			const selectedCase = _cloneDeep(cases[0]);
-			selectedCase.state.favoritesOverlays.push('overlayId2');
-			handler.next({ selectedCase: selectedCase });
-
-		});
-
-		it('check isFavoriteOverlay truthy value', () => {
-			component.isFavoriteOverlay$.subscribe(isFavorite => {
-				expect(isFavorite).toBe(true);
-			});
-			const selectedCase = _cloneDeep(cases[0]);
-			selectedCase.state.favoritesOverlays.push('overlayId1');
-			handler.next({ selectedCase: selectedCase });
-
-		});
-
-		it('check isFavoriteOverlay falsy value', () => {
-			component.isFavoriteOverlay$.subscribe(isFavorite => {
-				expect(isFavorite).toBe(false);
-			});
-			handler.next({ selectedCase: _cloneDeep(cases[0]) });
-		});
-	});
 });

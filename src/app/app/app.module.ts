@@ -40,6 +40,6 @@ export class AppAnsynModule {
 	constructor(protected loggerService: LoggerService) {
 		window.onerror = function (e) {
 			loggerService.error(e.toString());
-		}
+		};
 	}
 }

@@ -51,42 +51,6 @@ describe('CasesService', () => {
 		expect(casesService).toBeDefined();
 	});
 
-	it('function getOveralysMarkup ', () => {
-		const testCase = {
-			state: {
-				maps: {
-					activeMapId: '333',
-					data: [
-						{
-							id: '333',
-							data: {
-								overlay: {
-									id: '333-a'
-								}
-							}
-						},
-						{
-							id: '444',
-							data: {
-								overlay: {
-									id: '444-a'
-								}
-							}
-						},
-						{
-							id: '5555',
-							data: {}
-						}
-					]
-				}
-			}
-		} as any;
-		const result = CasesService.getOverlaysMarkup(testCase);
-		expect(result.length).toBe(2);
-		expect(result[0].class).toBe('active');
-		expect(result[1].class).toBe('displayed');
-	});
-
 	it('createCase should send the case as body in ajax("post")', () => {
 		let selectedCase: Case = { id: 'fakerId', name: 'fakerName' };
 		let fakeResponse = { selectedCase };

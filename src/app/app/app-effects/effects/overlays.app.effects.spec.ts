@@ -41,6 +41,9 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
+import { CoreService } from '@ansyn/core/services/core.service';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -99,6 +102,8 @@ describe('OverlaysAppEffects', () => {
 		overlays: new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
 			['last', { 'photoTime': new Date() }]])
 	};
+	const coreState = { ...coreInitialState };
+	const casesState = { ...initialCasesState };
 
 	const mapState: any = { 'mapsList': [{ 'id': '1' }, { 'id': '2' }] };
 
@@ -162,16 +167,16 @@ describe('OverlaysAppEffects', () => {
 		store = _store;
 		toolsState = cloneDeep(toolsInitialState);
 		overlaysState.filteredOverlays = ['first', 'last'];
+		casesState.selectedCase = caseItem;
+		casesState.cases = [caseItem];
 
 		const fakeStore = new Map<any, any>([
-			[casesStateSelector, {
-				selectedCase: caseItem,
-				cases: [caseItem]
-			}],
+			[casesStateSelector, casesState],
 			[overlaysStateSelector, overlaysState],
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
-			[statusBarStateSelector, statusBarState]
+			[statusBarStateSelector, statusBarState],
+			[coreStateSelector, coreState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -190,7 +195,7 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	it('onOverlaysMarkupsChanged$', () => {
-		spyOn(CasesService, 'getOverlaysMarkup').and.returnValue({});
+		spyOn(CoreService, 'getOverlaysMarkup').and.returnValue({});
 		const action = new LoadOverlaysSuccessAction({} as any);
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: new OverlaysMarkupAction({}) });

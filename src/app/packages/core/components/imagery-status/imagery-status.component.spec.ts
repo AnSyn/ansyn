@@ -1,18 +1,18 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryStatusComponent } from './imagery-status.component';
-import { Store, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { CoreModule } from '@ansyn/core';
 import { Overlay } from '../../models/overlay.model';
+import { EffectsModule } from '@ngrx/effects';
 
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
-	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CoreModule, StoreModule.forRoot({})]
+			imports: [CoreModule, EffectsModule.forRoot([]), StoreModule.forRoot({})]
 		}).compileComponents();
 	}));
 

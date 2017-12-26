@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastComponent } from './toast.component';
 import { CoreModule } from '../../core.module';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ToastComponent', () => {
 	let component: ToastComponent;
@@ -12,6 +13,7 @@ describe('ToastComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({}),
+				EffectsModule.forRoot([]),
 				CoreModule
 			]
 		}).compileComponents();

@@ -11,7 +11,7 @@ export interface LogObject {
 }
 
 @Injectable()
-export class LoggerService implements ErrorHandler{
+export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
 	stack: LogObject[] = [];
 

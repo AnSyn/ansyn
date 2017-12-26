@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { ImageryRotationComponent } from './imagery-rotation.component';
 import { CoreModule } from '@ansyn/core/core.module';
+import { EffectsModule } from '@ngrx/effects';
 import { EventEmitter } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 
@@ -17,7 +18,8 @@ describe('ImageryRotationComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
-				StoreModule.forRoot({})
+				StoreModule.forRoot({}),
+				EffectsModule.forRoot([])
 			],
 			declarations: [
 				ImageryRotationComponent

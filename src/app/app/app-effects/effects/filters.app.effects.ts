@@ -24,6 +24,7 @@ import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -38,8 +39,8 @@ export class FiltersAppEffects {
 	@Effect()
 	updateOverlayFilters$: Observable<SetFilteredOverlaysAction> = this.actions$
 		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.withLatestFrom(this.store$)
-		.map(([action, { filters, core, overlays }]: [Action, IAppState]) => {
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
+		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
 			return new SetFilteredOverlaysAction(filteredOverlays);
 		});

@@ -16,7 +16,6 @@ import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 

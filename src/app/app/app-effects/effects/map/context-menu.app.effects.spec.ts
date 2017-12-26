@@ -16,11 +16,11 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;
@@ -40,7 +40,8 @@ describe('ContextMenuAppEffects', () => {
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
-					[mapFeatureKey]: MapReducer
+					[mapFeatureKey]: MapReducer,
+					[coreFeatureKey]: CoreReducer
 				})
 			],
 			providers: [
@@ -55,9 +56,7 @@ describe('ContextMenuAppEffects', () => {
 		store = _store;
 		contextMenuAppEffects = _contextMenuAppEffects;
 		store.dispatch(new LoadOverlaysSuccessAction(fakeOverlays));
-		spyOn(OverlaysService, 'filter').and.returnValue(['1', '2', '3', '4', '5']);
-
-		store.dispatch(new SetFilteredOverlaysAction({}));
+		store.dispatch(new SetFilteredOverlaysAction(fakeOverlays.map(({ id }) => id)));
 	}));
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {

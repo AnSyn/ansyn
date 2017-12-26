@@ -8,7 +8,6 @@ import {
 	ICasesState,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
 	AnnotationData,
@@ -55,13 +54,15 @@ import {
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
 import GeoJSON from 'ol/format/geojson';
+import { CoreService } from '@ansyn/core/services/core.service';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
 	let store: Store<any>;
 	let actions: Observable<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService = null;
-
+	let coreState = coreInitialState;
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
@@ -127,7 +128,8 @@ describe('VisualizersAppEffects', () => {
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, caseState],
 			[layersStateSelector, layersState],
-			[mapStateSelector, mapState]
+			[mapStateSelector, mapState],
+			[coreStateSelector, coreState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -395,7 +397,7 @@ describe('VisualizersAppEffects', () => {
 
 	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
 		const markup = [{ id: '1234', class: 'active' }];
-		spyOn(CasesService, 'getOverlaysMarkup').and.callFake(() => markup);
+		spyOn(CoreService, 'getOverlaysMarkup').and.callFake(() => markup);
 		actions = hot('--a--', {
 			a: new HoverFeatureTriggerAction({
 				id: 'fakeId',
@@ -501,7 +503,7 @@ describe('VisualizersAppEffects', () => {
 	});
 
 	it('shouldDrawOverlaysOnMap$ should return DrawOverlaysOnMapTriggerAction ( SET_FILTERS action) ', () => {
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction({}) });
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', { b: new DrawOverlaysOnMapTriggerAction() });
 		expect(visualizersAppEffects.shouldDrawOverlaysOnMap$).toBeObservable(expectedResults);
 	});

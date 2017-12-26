@@ -21,7 +21,6 @@ import { ContextEntityAppEffects } from './effects/context/context-entity.app.ef
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 import { RouterAppEffects } from './effects/router.app.effects';
-import { LoggerAppEffects } from './effects/logger.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { NorthAppEffects } from './effects/map/north.app.effects';
@@ -55,7 +54,6 @@ export interface IAppState {
 			ContextEntityAppEffects,
 			RouterAppEffects,
 			VisualizersAppEffects,
-			LoggerAppEffects,
 			CoreAppEffects,
 			NorthAppEffects
 		])

@@ -4,6 +4,7 @@ import { MockComponent } from '@ansyn/core/test';
 import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -16,6 +17,7 @@ describe('ImageryContainerComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
+			providers: [{ provide: LoggerConfig, useValue: {} }],
 			declarations: [
 				ImageryContainerComponent,
 				MockComponent({

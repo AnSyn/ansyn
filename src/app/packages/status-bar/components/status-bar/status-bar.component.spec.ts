@@ -12,6 +12,7 @@ import {
 import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -20,7 +21,8 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule]
+			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule],
+			providers: [{ provide: LoggerConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));

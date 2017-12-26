@@ -8,6 +8,7 @@ import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.action
 import { CoreModule } from '@ansyn/core';
 import { ProjectionConverterService } from '@ansyn/core/services';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -19,6 +20,7 @@ describe('GoToComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
 			providers: [
+				{ provide: LoggerConfig, useValue: {} },
 				{
 					provide: toolsConfig, useValue: {
 					GoTo: {

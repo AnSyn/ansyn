@@ -8,6 +8,7 @@ import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { Subject } from 'rxjs/Subject';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -37,7 +38,7 @@ describe('FiltersCollectionComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
 			],
-			providers: [{ provide: filtersConfig, useValue: { filters: null } }]
+			providers: [{ provide: filtersConfig, useValue: { filters: null } },  { provide: LoggerConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));

@@ -20,27 +20,25 @@ export class ImageryRotationComponent implements AfterViewInit {
 	@Input()
 	public set mapState(mapState: CaseMapState) {
 		this._mapState = mapState;
-		if (this._mapState && this._mapState.data.position) {
-			this.northDirection = this._mapState.data.position.projectedState.rotation;
-		}
+		this.rotationAngle = get(this._mapState, "data.position.projectedState.rotation", 0);
 	}
 
 	isRotating = false;
 	// false - means show image photo angle
 	showNorth = true;
 
-	northDirection: number;
+	rotationAngle: number;
 
 	constructor(protected elementRef: ElementRef,
 				protected store: Store<any>,
 				protected mapEffects$: MapEffects) {
-		this.northDirection = 0;
+		this.rotationAngle = 0;
 	}
 
 	ngAfterViewInit(): void {
 		this.mapEffects$.onNorthAngleChanged$.subscribe((updateNorthAngle: UpdateNorthAngleAction) => {
 			if (updateNorthAngle.payload.mapId === this.mapState.id) {
-				this.northDirection = updateNorthAngle.payload.angleRad;
+				this.rotationAngle = updateNorthAngle.payload.angleRad;
 			}
 		});
 	}

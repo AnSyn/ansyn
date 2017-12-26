@@ -20,7 +20,7 @@ export class ImageryRotationComponent implements AfterViewInit {
 	@Input()
 	public set mapState(mapState: CaseMapState) {
 		this._mapState = mapState;
-		this.rotationAngle = get(this._mapState, "data.position.projectedState.rotation", 0);
+		this.rotationAngle = get(this._mapState, 'data.position.projectedState.rotation', 0);
 	}
 
 	isRotating = false;
@@ -60,9 +60,17 @@ export class ImageryRotationComponent implements AfterViewInit {
 		}
 
 		if (this.showNorth) {
-			this.store.dispatch(new PointNorthAction({mapId: this.mapState.id, rotationType: 'North', overlay: this.mapState.data.overlay}));
+			this.store.dispatch(new PointNorthAction({
+				mapId: this.mapState.id,
+				rotationType: 'North',
+				overlay: this.mapState.data.overlay
+			}));
 		} else {
-			this.store.dispatch(new PointNorthAction({mapId: this.mapState.id, rotationType: 'ImageAngle', overlay: this.mapState.data.overlay}));
+			this.store.dispatch(new PointNorthAction({
+				mapId: this.mapState.id,
+				rotationType: 'ImageAngle',
+				overlay: this.mapState.data.overlay
+			}));
 		}
 	}
 

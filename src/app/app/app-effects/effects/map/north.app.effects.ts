@@ -1,16 +1,11 @@
 import { Actions, Effect } from '@ngrx/effects';
-import {
-	CalcNorthDirectionAction,
-	PointNorthAction,
-	UpdateNorthAngleAction,
-	MapActionTypes
-} from '@ansyn/map-facade';
+import { CalcNorthDirectionAction, MapActionTypes, PointNorthAction, UpdateNorthAngleAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { openLayersNorthCalculations, NorthCalculationsPlugin } from '@ansyn/open-layers-north-calculations';
+import { NorthCalculationsPlugin, openLayersNorthCalculations } from '@ansyn/open-layers-north-calculations';
 import { Overlay } from '@ansyn/core';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
@@ -61,10 +56,10 @@ export class NorthAppEffects {
 			const mapState: CaseMapState = action.payload.mapState;
 			const comEntity = this.imageryCommunicatorService.provide(mapState.id);
 			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
-			return {mapState, comEntity, northPlugin };
+			return { mapState, comEntity, northPlugin };
 		})
-		.filter(({mapState, comEntity, northPlugin}) => Boolean(northPlugin))
-		.mergeMap(({mapState, comEntity, northPlugin}) => {
+		.filter(({ mapState, comEntity, northPlugin }) => Boolean(northPlugin))
+		.mergeMap(({ mapState, comEntity, northPlugin }) => {
 			return Observable.fromPromise(northPlugin.getCorrectedNorthOnce(comEntity.ActiveMap.mapObject))
 				.map((data: any) => {
 					const northDirection = -data.northOffsetRad;
@@ -86,7 +81,7 @@ export class NorthAppEffects {
 		.map((action: CalcNorthDirectionAction) => {
 			const mapState: CaseMapState = action.payload.mapState;
 			const northDirection = mapState.data.position.projectedState.rotation;
-			return new UpdateNorthAngleAction({mapId: mapState.id, angleRad: northDirection});
+			return new UpdateNorthAngleAction({ mapId: mapState.id, angleRad: northDirection });
 		});
 
 	constructor(protected actions$: Actions,

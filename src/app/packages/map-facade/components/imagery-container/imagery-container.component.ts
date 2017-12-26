@@ -3,7 +3,9 @@ import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import {
-	ActiveImageryMouseEnter, ActiveImageryMouseLeave, BackToWorldAction,
+	ActiveImageryMouseEnter,
+	ActiveImageryMouseLeave,
+	BackToWorldAction,
 	SynchronizeMapsAction
 } from '../../actions/map.actions';
 

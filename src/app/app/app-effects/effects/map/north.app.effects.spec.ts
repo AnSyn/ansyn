@@ -6,9 +6,9 @@ import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { NorthAppEffects } from './north.app.effects';
-import { PointNorthAction, CalcNorthDirectionAction, UpdateNorthAngleAction } from '@ansyn/map-facade';
+import { CalcNorthDirectionAction, PointNorthAction, UpdateNorthAngleAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Overlay, CaseMapState } from '@ansyn/core';
+import { CaseMapState, Overlay } from '@ansyn/core';
 
 describe('NorthAppEffects', () => {
 	let northAppEffects: NorthAppEffects;
@@ -41,13 +41,17 @@ describe('NorthAppEffects', () => {
 
 	beforeEach(() => {
 		fakePlugin = {
-			setCorrectedNorth: () => {},
-			getCorrectedNorthOnce: () => {}
+			setCorrectedNorth: () => {
+			},
+			getCorrectedNorthOnce: () => {
+			}
 		};
 
 		fakeCommunicator = {
-			setRotation: () => {},
-			getPlugin:  () => {},
+			setRotation: () => {
+			},
+			getPlugin: () => {
+			},
 			ActiveMap: {
 				mapObject: {}
 			}
@@ -59,35 +63,47 @@ describe('NorthAppEffects', () => {
 		spyOn(fakePlugin, 'setCorrectedNorth');
 
 		// This doesn't work so we overrided the  Observable.fromPromise
-		spyOn(fakePlugin, 'getCorrectedNorthOnce').and.callFake(() => Promise.resolve({northOffsetRad: -1}));
-		spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of({northOffsetRad: -1}));
+		spyOn(fakePlugin, 'getCorrectedNorthOnce').and.callFake(() => Promise.resolve({ northOffsetRad: -1 }));
+		spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of({ northOffsetRad: -1 }));
 	});
 
 	it('pointNorth$ with "ImageAngle" should call commEntity.setRotation with overlay rotation', () => {
-		const overlay = <Overlay>{ azimuth: 100};
-		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'ImageAngle', overlay: overlay})});
+		const overlay = <Overlay>{ azimuth: 100 };
+		actions = hot('--a--', {
+			a: new PointNorthAction({
+				mapId: 'fakeId',
+				rotationType: 'ImageAngle',
+				overlay: overlay
+			})
+		});
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(northAppEffects.pointNorth$).toBeObservable(expectedResults);
 		expect(fakeCommunicator.setRotation).toHaveBeenCalledWith(100);
 	});
 
 	it('pointNorth$ with "ImageAngle" of null overlay should call commEntity.setRotation with rotation 0', () => {
-		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'ImageAngle' })});
+		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'ImageAngle' }) });
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(northAppEffects.pointNorth$).toBeObservable(expectedResults);
 		expect(fakeCommunicator.setRotation).toHaveBeenCalledWith(0);
 	});
 
 	it('pointNorth$ with "North" of null overlay should call commEntity.setRotation with rotation 0', () => {
-		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'North' })});
+		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'North' }) });
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(northAppEffects.pointNorth$).toBeObservable(expectedResults);
 		expect(fakeCommunicator.setRotation).toHaveBeenCalledWith(0);
 	});
 
 	it('pointNorth$ with "North" with overlay should call northPlugin.setCorrectedNorth method', () => {
-		const overlay = <Overlay>{ azimuth: 100};
-		actions = hot('--a--', { a: new PointNorthAction({ mapId: 'fakeId', rotationType: 'North', overlay: overlay})});
+		const overlay = <Overlay>{ azimuth: 100 };
+		actions = hot('--a--', {
+			a: new PointNorthAction({
+				mapId: 'fakeId',
+				rotationType: 'North',
+				overlay: overlay
+			})
+		});
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(northAppEffects.pointNorth$).toBeObservable(expectedResults);
 		expect(fakePlugin.setCorrectedNorth).toHaveBeenCalled();
@@ -105,13 +121,13 @@ describe('NorthAppEffects', () => {
 			}
 		};
 
-		actions = hot('--a--', { a: new CalcNorthDirectionAction({ mapId: 'fakeId', mapState: fakeMapState})});
-		const expectedResults = cold('--b--', { b: new UpdateNorthAngleAction({ mapId: 'fakeId', angleRad: 10})});
+		actions = hot('--a--', { a: new CalcNorthDirectionAction({ mapId: 'fakeId', mapState: fakeMapState }) });
+		const expectedResults = cold('--b--', { b: new UpdateNorthAngleAction({ mapId: 'fakeId', angleRad: 10 }) });
 		expect(northAppEffects.calcNorthAngleForWorldView$).toBeObservable(expectedResults);
 	});
 
 	it('calcNorthAngleForOverlay$ with overlay should call northPlugin.getCorrectedNorthOnce and raise UpdateNorthAngleAction method', () => {
-		const overlay = <Overlay>{ azimuth: 100};
+		const overlay = <Overlay>{ azimuth: 100 };
 		const fakeMapState = <CaseMapState>{
 			id: 'fakeId',
 			data: {
@@ -119,8 +135,8 @@ describe('NorthAppEffects', () => {
 			}
 		};
 
-		actions = hot('--a--', { a: new CalcNorthDirectionAction({ mapId: 'fakeId', mapState: fakeMapState})});
-		const expectedResults = cold('--b--', { b: new UpdateNorthAngleAction({ mapId: 'fakeId', angleRad: 1})});
+		actions = hot('--a--', { a: new CalcNorthDirectionAction({ mapId: 'fakeId', mapState: fakeMapState }) });
+		const expectedResults = cold('--b--', { b: new UpdateNorthAngleAction({ mapId: 'fakeId', angleRad: 1 }) });
 		expect(northAppEffects.calcNorthAngleForOverlay$).toBeObservable(expectedResults);
 	});
 });

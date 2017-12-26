@@ -219,24 +219,25 @@ export class ContextMenuDisplayAction implements Action {
 // },
 
 export type RotationType = 'North' | 'ImageAngle';
+
 export class PointNorthAction implements Action {
 	type = MapActionTypes.NORTH.ROTATE_NORTH;
 
-	constructor(public payload: {mapId: string,  rotationType: RotationType, overlay?: Overlay}) {
+	constructor(public payload: { mapId: string, rotationType: RotationType, overlay?: Overlay }) {
 	}
 }
 
 export class CalcNorthDirectionAction implements Action {
 	type = MapActionTypes.NORTH.CALC_NORTH_ANGLE;
 
-	constructor(public payload: {mapId: string, mapState: CaseMapState}) {
+	constructor(public payload: { mapId: string, mapState: CaseMapState }) {
 	}
 }
 
 export class UpdateNorthAngleAction implements Action {
 	type = MapActionTypes.NORTH.UPDATE_NORTH_ANGLE;
 
-	constructor(public payload: {mapId: string, angleRad: number}) {
+	constructor(public payload: { mapId: string, angleRad: number }) {
 	}
 }
 

@@ -7,6 +7,7 @@ import {
 	ActiveMapChangedAction,
 	AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
+	CalcNorthDirectionAction,
 	DecreasePendingMapsCountAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
@@ -19,8 +20,7 @@ import {
 	SetMapManualImageProcessing,
 	SetMapRotationAction,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction,
-	CalcNorthDirectionAction
+	SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';

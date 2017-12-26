@@ -22,11 +22,10 @@ describe('ImageryRotationComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
-			providers: [{ provide: LoggerConfig, useValue: {} }],
+			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: MapEffects, useValue: mockMapEffects }],
 			declarations: [
 				ImageryRotationComponent
 			],
-			providers: [{ provide: MapEffects, useValue: mockMapEffects }]
 		}).compileComponents();
 	}));
 

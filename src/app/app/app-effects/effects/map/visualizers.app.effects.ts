@@ -24,7 +24,6 @@ import {
 	OverlaysActionTypes,
 	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
@@ -56,6 +55,7 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 
 @Injectable()
@@ -74,8 +74,8 @@ export class VisualizersAppEffects {
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.withLatestFrom(this.store$)
-		.map(([action, { map, core }]: [HoverFeatureTriggerAction, IAppState]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
+		.map(([action, map, core]: [HoverFeatureTriggerAction, IMapState, ICoreState]) => {
 			const markups = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays, action.payload.id);
 			return new OverlaysMarkupAction(markups);
 		});

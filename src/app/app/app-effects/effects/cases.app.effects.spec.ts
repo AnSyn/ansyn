@@ -3,11 +3,9 @@ import { CasesAppEffects } from './cases.app.effects';
 import { AddCaseSuccessAction, casesConfig, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
-import { CoreModule } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
 import { ContextModule } from '@ansyn/context/context.module';
 import { ContextTestSourceService } from '@ansyn/context/providers/context-test-source.service';
@@ -60,7 +58,6 @@ describe('CasesAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[mapFeatureKey]: MapReducer
 				}),
-				CoreModule,
 				RouterTestingModule,
 				ContextModule.forRoot(MOCK_TEST_CONFIG)
 			],
@@ -68,13 +65,12 @@ describe('CasesAppEffects', () => {
 				CasesService,
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null } },
-				// Provide context provider
 				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService }
 			]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, casesConfig], (_store: Store<any>, casesConfig: any) => {
+	beforeEach(inject([Store, casesConfig], (_store: Store<any>) => {
 		store = _store;
 		store.dispatch(new AddCaseSuccessAction(selectedCase));
 		store.dispatch(new SelectCaseAction(selectedCase));
@@ -88,16 +84,8 @@ describe('CasesAppEffects', () => {
 
 	beforeEach(inject([CasesAppEffects, CasesService], (_casesAppEffects: CasesAppEffects, _casesService: CasesService) => {
 		casesAppEffects = _casesAppEffects;
-
 		casesService = _casesService;
 	}));
-
-	it('setShowFavoritesFlagOnFilters$', () => {
-		actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
-		const expectedResults = cold('--b--', { b: new EnableOnlyFavoritesSelectionAction(true) });
-		expect(casesAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
-	});
-
 
 	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];

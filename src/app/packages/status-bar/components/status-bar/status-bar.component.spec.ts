@@ -1,13 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import {
-	IStatusBarState,
-	statusBarFeatureKey,
-	statusBarFlagsItems,
-	StatusBarReducer
-} from '../../reducers/status-bar.reducer';
-import { StatusBarModule } from '../../status-bar.module';
+import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
 import {
 	ChangeLayoutAction,
 	ExpandAction,
@@ -16,6 +10,8 @@ import {
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import { StatusBarModule } from '../../status-bar.module';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -24,7 +20,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StatusBarModule, StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer })]
+			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule]
 		})
 			.compileComponents();
 	}));
@@ -123,10 +119,12 @@ describe('StatusBarComponent', () => {
 	});
 
 	it('check isFavoriteOverlayDisplayed changes', () => {
-		component.isFavoriteOverlayDisplayed = true;
+		let isFavoriteOverlayDisplayed = true;
+		spyOn(component, 'isFavoriteOverlayDisplayed').and.callFake(() => isFavoriteOverlayDisplayed);
+		isFavoriteOverlayDisplayed = true;
 		fixture.detectChanges();
 		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.contains('active')).toBeTruthy();
-		component.isFavoriteOverlayDisplayed = false;
+		isFavoriteOverlayDisplayed = false;
 		fixture.detectChanges();
 		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.contains('active')).toBeFalsy();
 	});

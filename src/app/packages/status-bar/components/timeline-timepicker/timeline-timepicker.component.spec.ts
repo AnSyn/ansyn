@@ -1,7 +1,5 @@
 import { TimelineTimepickerComponent } from './timeline-timepicker.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StatusBarModule } from '../../status-bar.module';
-import { StoreModule } from '@ngrx/store';
 
 
 describe('TimelineTimepickerComponent', () => {
@@ -10,7 +8,7 @@ describe('TimelineTimepickerComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot([]), StatusBarModule]
+			declarations: [TimelineTimepickerComponent]
 		}).compileComponents();
 	});
 

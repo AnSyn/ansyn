@@ -7,6 +7,7 @@ import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { CoreModule } from '@ansyn/core';
 import { ProjectionConverterService } from '@ansyn/core/services';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -16,7 +17,7 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule],
+			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
 			providers: [
 				{
 					provide: toolsConfig, useValue: {

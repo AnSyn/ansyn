@@ -14,6 +14,8 @@ import { Case } from '@ansyn/core/models/case.model';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class CoreAppEffects {
@@ -59,8 +61,8 @@ export class CoreAppEffects {
 	@Effect()
 	setFavoritesOverlaysUpdateCase$: Observable<any> = this.actions$
 		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.withLatestFrom(this.store$)
-		.mergeMap(([{ payload }, { cases, map }]: [SetFavoriteOverlaysAction, IAppState]) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
+		.mergeMap(([{ payload }, cases, map]: [SetFavoriteOverlaysAction, ICasesState, IMapState]) => {
 			const updatedCase: Case = {
 				...cases.selectedCase,
 				state: {

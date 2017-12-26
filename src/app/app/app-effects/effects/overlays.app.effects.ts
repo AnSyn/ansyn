@@ -13,13 +13,12 @@ import {
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { CasesService, ICasesState } from '@ansyn/menu-items/cases';
+import { CasesService } from '@ansyn/menu-items/cases';
 import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ChangeLayoutAction, IStatusBarState, SetTimeAction, statusBarStateSelector } from '@ansyn/status-bar';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	IMapState,
 	MapActionTypes,
@@ -30,6 +29,7 @@ import {
 } from '@ansyn/map-facade';
 import { CaseMapState } from '@ansyn/core';
 import { CoreService } from '@ansyn/core/services/core.service';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -45,9 +45,9 @@ export class OverlaysAppEffects {
 	@Effect()
 	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$)
-		.map(([action, appState]: [Action, IAppState]) => {
-			const overlaysMarkup = CoreService.getOverlaysMarkup(appState.map.mapsList, appState.map.activeMapId, appState.core.favoriteOverlays);
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
+		.map(([action, map, core]: [Action, IMapState, ICoreState]) => {
+			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays);
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 

@@ -9,7 +9,11 @@ export const CoreActionTypes = {
 	SET_FAVORITE_OVERLAYS: type('SET_FAVORITE_OVERLAYS')
 };
 
-export type CoreActions = ToggleMapLayersAction | ToggleFavoriteAction | SetToastMessageAction | SetFavoriteOverlaysAction;
+export type CoreActions =
+	ToggleMapLayersAction
+	| ToggleFavoriteAction
+	| SetToastMessageAction
+	| SetFavoriteOverlaysAction;
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;

@@ -37,6 +37,9 @@ import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { initialMenuState, menuFeatureKey, MenuReducer, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -94,7 +97,8 @@ describe('Filters app effects', () => {
 			[overlaysStateSelector, overlaysState],
 			[filtersStateSelector, filtersState],
 			[casesStateSelector, casesState],
-			[menuStateSelector, initialMenuState]
+			[menuStateSelector, { ...initialMenuState }],
+			[coreStateSelector, { ...coreInitialState }]
 		]);
 		filtersState.filters = new Map();
 		casesState.selectedCase = selectedCase;
@@ -106,15 +110,11 @@ describe('Filters app effects', () => {
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
+		const filteredOverlays = [];
 		filtersState.filters = new Map();
+		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--b--', {
-			b: new SetFilteredOverlaysAction({
-				parsedFilters: [],
-				favorites: selectedCase.state.favoritesOverlays,
-				showOnlyFavorites: false
-			})
-		});
+		const expectedResults = cold('--b--', { b: new SetFilteredOverlaysAction(filteredOverlays) });
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 
@@ -178,5 +178,11 @@ describe('Filters app effects', () => {
 				expect(filtersAppEffects.isMetadataEmpty(metadata)).toBeFalsy();
 			});
 		});
+	});
+
+	it('setShowFavoritesFlagOnFilters$', () => {
+		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(['1', '2']) });
+		const expectedResults = cold('--b--', { b: new EnableOnlyFavoritesSelectionAction(true) });
+		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
 	});
 });

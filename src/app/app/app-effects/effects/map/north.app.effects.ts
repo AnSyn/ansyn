@@ -48,7 +48,7 @@ export class NorthAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name calcNorthAngle$
+	 * @name calcNorthAngleForOverlay$
 	 * @ofType CalcNorthDirectionAction
 	 * @dependencies map
 	 * @action UpdateNorthAngleAction
@@ -71,31 +71,10 @@ export class NorthAppEffects {
 					return new UpdateNorthAngleAction({ mapId: mapState.id, angleRad: northDirection });
 				});
 		});
-	// @Effect()
-	// calcNorthAngle$: Observable<any> = this.actions$
-	// 	.ofType<CalcNorthDirectionAction>(MapActionTypes.NORTH.CALC_NORTH_ANGLE)
-	// 	.mergeMap((action: CalcNorthDirectionAction) => {
-	// 		const mapState: CaseMapState = action.payload.mapState;
-	// 		let northDirection;
-	// 		if (!mapState.data.overlay) {
-	// 			northDirection = mapState.data.position.projectedState.rotation;
-	// 			return Observable.of(new UpdateNorthAngleAction({mapId: mapState.id, angleRad: northDirection}));
-	// 		} else {
-	// 			const comEntity = this.imageryCommunicatorService.provide(mapState.id);
-	// 			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
-	// 			if (northPlugin) {
-	// 				return Observable.fromPromise(northPlugin.getCorrectedNorthOnce(comEntity.ActiveMap.mapObject))
-	// 					.map((data: any) => {
-	// 						northDirection = -data.northOffsetRad;
-	// 						return new UpdateNorthAngleAction({ mapId: mapState.id, angleRad: northDirection });
-	// 					});
-	// 			}
-	// 		}
-	// 	});
 
 	/**
 	 * @type Effect
-	 * @name calcNorthAngle$
+	 * @name calcNorthAngleForWorldView$
 	 * @ofType CalcNorthDirectionAction
 	 * @dependencies map
 	 * @action UpdateNorthAngleAction
@@ -104,10 +83,10 @@ export class NorthAppEffects {
 	calcNorthAngleForWorldView$: Observable<any> = this.actions$
 		.ofType<CalcNorthDirectionAction>(MapActionTypes.NORTH.CALC_NORTH_ANGLE)
 		.filter((action: CalcNorthDirectionAction) => !action.payload.mapState.data.overlay)
-		.mergeMap((action: CalcNorthDirectionAction) => {
+		.map((action: CalcNorthDirectionAction) => {
 			const mapState: CaseMapState = action.payload.mapState;
-			let northDirection = mapState.data.position.projectedState.rotation;
-			return Observable.of(new UpdateNorthAngleAction({mapId: mapState.id, angleRad: northDirection}));
+			const northDirection = mapState.data.position.projectedState.rotation;
+			return new UpdateNorthAngleAction({mapId: mapState.id, angleRad: northDirection});
 		});
 
 	constructor(protected actions$: Actions,

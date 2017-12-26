@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
@@ -56,8 +56,8 @@ export class StatusBarComponent implements OnInit {
 	orientation: string;
 	geoFilters: string[] = [];
 	geoFilter: string;
-	timeLines: string[] = ["Start - End"];
-	timeLine = "Start - End";
+	timeLines: string[] = ['Start - End'];
+	timeLine = 'Start - End';
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: { from: Date, to: Date };
 	hideOverlay: boolean;
@@ -67,8 +67,9 @@ export class StatusBarComponent implements OnInit {
 	overlayNotInCase: boolean;
 	@Input() selectedCaseName: string;
 	@Input() overlay: any;
-	@ViewChild('goPrev') goPrev: ElementRef;
-	@ViewChild('goNext') goNext: ElementRef;
+
+	goPrevActive = false;
+	goNextActive = false;
 
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {
@@ -77,10 +78,9 @@ export class StatusBarComponent implements OnInit {
 		}
 
 		if ($event.which === 39) { // ArrowRight
-			this.renderer.addClass(this.goNext.nativeElement, 'active');
-		}
-		else if ($event.which === 37) { // ArrowLeft
-			this.renderer.addClass(this.goPrev.nativeElement, 'active');
+			this.goNextActive = true;
+		} else if ($event.which === 37) { // ArrowLeft
+			this.goPrevActive = true;
 		}
 	}
 
@@ -92,11 +92,10 @@ export class StatusBarComponent implements OnInit {
 
 		if ($event.which === 39) { // ArrowRight
 			this.clickGoNext();
-			this.renderer.removeClass(this.goNext.nativeElement, 'active');
-		}
-		else if ($event.which === 37) { // ArrowLeft
+			this.goNextActive = false;
+		} else if ($event.which === 37) { // ArrowLeft
 			this.clickGoPrev();
-			this.renderer.removeClass(this.goPrev.nativeElement, 'active');
+			this.goPrevActive = false;
 		}
 	}
 

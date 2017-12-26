@@ -81,7 +81,6 @@
 
 	<!-- Layout -->
 	<div class="action block">
-		<i class="icon-no-of-screens"></i>
 		<ansyn-combo-box
 			[options]="layouts"
 			[(selectedIndex)]="selectedLayoutIndex"
@@ -97,19 +96,19 @@
 </div>
 
 <div class="navigation">
-	<button (click)="clickGoPrev()" #goPrev>
+	<button (click)="clickGoPrev()" [class.active]="goPrevActive">
 		<i class="icon-status-bar-prev"></i>
 	</button>
 
-	<button (click)="clickTime()">
-		<i class="icon-annotation-square"></i>
-	</button>
-
-	<button (click)="clickGoNext()" #goNext>
+	<button (click)="clickGoNext()" [class.active]="goNextActive">
 		<i class="icon-status-bar-next"></i>
 	</button>
 
-	<button class="expand" (click)="clickExpand()">
+	<button class="transparent" (click)="clickTime()">
+		<i class="icon-annotation-square"></i>
+	</button>
+
+	<button class="transparent" (click)="clickExpand()">
 		<i class="icon-status-bar-expand"></i>
 	</button>
 </div>

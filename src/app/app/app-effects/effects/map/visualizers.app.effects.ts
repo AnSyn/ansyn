@@ -155,7 +155,6 @@ export class VisualizersAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
 			const mapsList = [...mapState.mapsList];
-			// @TODO this is reference --- not good - need to be changed
 			const activeMap = MapFacadeService.activeMap(mapState);
 			activeMap.data.overlayDisplayMode = action.payload;
 			return [
@@ -184,11 +183,9 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	drawOverlaysOnMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(casesStateSelector), (action, overlaysState: IOverlaysState, casesState: ICasesState) => {
-			return [overlaysState, casesState.selectedCase];
-		})
-		.map(([overlaysState, selectedCase]: [IOverlaysState, Case]) => {
-			selectedCase.state.maps.data.forEach((mapData: CaseMapState) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
+		.map(([action, overlaysState, { mapsList }]: [DrawOverlaysOnMapTriggerAction, IOverlaysState, IMapState]) => {
+			mapsList.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
 		});

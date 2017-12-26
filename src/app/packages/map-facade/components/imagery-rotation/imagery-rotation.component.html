@@ -1,7 +1,7 @@
 <div tooltip-value="Drag to Change Orientation" tooltip-class="left">
 	<div class="tooltip-container"
 		[style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
-		[style.transform]="'rotate(' + northDirection + 'rad)'"
+		[style.transform]="'rotate(' + rotationAngle + 'rad)'"
 		(mousedown)="startRotating($event)">
 		<div class="north">N</div>
 	</div>
@@ -9,6 +9,6 @@
 
 <div tooltip-value="Click to Reset" tooltip-class="left" class="img-container">
 	<img src="/assets/icons/map/compass.svg" (click)="toggleNorth()" (mousedown)="stopPropagation($event)"
-		 [style.transform]="'rotate(' + northDirection + 'rad)'"
+		 [style.transform]="'rotate(' + rotationAngle + 'rad)'"
 		 [style.cursor]="isRotating ? '' : 'pointer'"/>
 </div>

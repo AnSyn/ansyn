@@ -16,7 +16,6 @@ export interface IOverlaysState {
 	selectedOverlays: string[];
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;
-	filters: any[];
 	filteredOverlays: string[];
 	queryParams: any;
 	timelineState: TimelineState;
@@ -29,8 +28,6 @@ export const overlaysInitialState: IOverlaysState = {
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),
 	demo: 1,
-	// @TODO change to Map
-	filters: [],
 	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
 	filteredOverlays: []
@@ -71,7 +68,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loading: true,
 				queryParams,
 				overlays: new Map(),
-				filters: [],
 				filteredOverlays: []
 			};
 
@@ -100,24 +96,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loading: false
 			});
 
-		case OverlaysActionTypes.SET_FILTERS:
-			let overlaysToFilter = state.overlays;
-
-			if (action.payload.showOnlyFavorites) {
-				overlaysToFilter = new Map<string, Overlay>();
-
-				action.payload.favorites.forEach(id => {
-					overlaysToFilter.set(id, state.overlays.get(id));
-				});
-			}
-
-			const res = OverlaysService.filter(overlaysToFilter, action.payload.parsedFilters);
-
-			return {
-				...state,
-				filters: action.payload.parsedFilters,
-				filteredOverlays: res
-			};
+		case OverlaysActionTypes.SET_FILTERED_OVERLAYS:
+			return { ...state, filteredOverlays: action.payload };
 
 		case OverlaysActionTypes.SET_SPECIAL_OBJECTS:
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;

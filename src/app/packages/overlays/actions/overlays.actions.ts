@@ -21,11 +21,10 @@ export const OverlaysActionTypes = {
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	OVERLAYS_MARKUPS: type('OVERLAYS_MARKUPS'),
 	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
-	SET_FILTERS: type('SET_FILTERS'),
+	SET_FILTERED_OVERLAYS: type('SET_FILTERED_OVERLAYS'),
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	GO_NEXT_DISPLAY: type('GO_NEXT_DISPLAY'),
 	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY'),
-	SYNC_FILTERED_OVERLAYS: type('SYNC_FILTERED_OVERLAYS'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP')
@@ -143,10 +142,10 @@ export class UpdateOverlaysCountAction implements Action {
 	}
 }
 
-export class SetFiltersAction implements Action {
-	type = OverlaysActionTypes.SET_FILTERS;
+export class SetFilteredOverlaysAction implements Action {
+	type = OverlaysActionTypes.SET_FILTERED_OVERLAYS;
 
-	constructor(public payload: any) {
+	constructor(public payload: string[]) {
 	}
 }
 
@@ -168,13 +167,6 @@ export class GoPrevDisplayAction implements Action {
 	type = OverlaysActionTypes.GO_PREV_DISPLAY;
 
 	constructor(public payload: string) {
-	}
-}
-
-export class SyncFilteredOverlays implements Action {
-	type = OverlaysActionTypes.SYNC_FILTERED_OVERLAYS;
-
-	constructor() {
 	}
 }
 
@@ -216,7 +208,7 @@ export type OverlaysActions
 	| DemoAction
 	| RedrawTimelineAction
 	| OverlaysMarkupAction
-	| SetFiltersAction
+	| SetFilteredOverlaysAction
 	| GoNextDisplayAction
 	| GoPrevDisplayAction
 	| MouseOverDropAction

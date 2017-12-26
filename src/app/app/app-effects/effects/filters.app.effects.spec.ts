@@ -16,7 +16,7 @@ import {
 	filtersStateSelector,
 	initialFiltersState
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { SetFiltersAction, SliderFilterMetadata } from '../../../index';
+import { SetFilteredOverlaysAction, SliderFilterMetadata } from '../../../index';
 import {
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
@@ -109,7 +109,7 @@ describe('Filters app effects', () => {
 		filtersState.filters = new Map();
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
 		const expectedResults = cold('--b--', {
-			b: new SetFiltersAction({
+			b: new SetFilteredOverlaysAction({
 				parsedFilters: [],
 				favorites: selectedCase.state.favoritesOverlays,
 				showOnlyFavorites: false

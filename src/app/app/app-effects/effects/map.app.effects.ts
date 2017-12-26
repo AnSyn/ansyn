@@ -8,8 +8,7 @@ import {
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
-	RequestOverlayByIDFromBackendAction,
-	SyncFilteredOverlays
+	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
@@ -19,7 +18,7 @@ import {
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { Case, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
@@ -69,19 +68,14 @@ import {
 	ChangeLayoutAction,
 	SetMapGeoEnabledModeStatusBarActionStore
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	CoreActionTypes,
-	SetToastMessageAction,
-	ToggleFavoriteAction,
-	ToggleMapLayersAction
-} from '@ansyn/core/actions/core.actions';
+import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
+import { CoreService } from '@ansyn/core/services/core.service';
 
 @Injectable()
 export class MapAppEffects {
@@ -532,13 +526,13 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name setOverlaysNotInCase$
-	 * @ofType SetFiltersAction, SetMapsDataActionStore
+	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
 	 * @dependencies overlays, map
 	 * @action SetOverlayNotInCaseAction
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERS, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, { filteredOverlays }, mapState: IMapState) => {
 			return [filteredOverlays, mapState.mapsList];
 		})
@@ -566,43 +560,9 @@ export class MapAppEffects {
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
-		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), (action, selectedCase) => selectedCase)
-		.map((selectedCase: Case) => CasesService.getOverlaysMarkup(selectedCase))
+		.withLatestFrom(this.store$, (action, state): IAppState => state)
+		.map(({ map, core }: IAppState) => CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays))
 		.map(markups => new OverlaysMarkupAction(markups));
-
-	/**
-	 * @type Effect
-	 * @name onFavorite$
-	 * @ofType ToggleFavoriteAction
-	 * @dependencies cases
-	 * @action UpdateCaseAction?, SyncFilteredOverlays, OverlaysMarkupAction, EnableOnlyFavoritesSelectionAction
-	 */
-	@Effect()
-	onFavorite$: Observable<Action> = this.actions$
-		.ofType<ToggleFavoriteAction>(CoreActionTypes.TOGGLE_OVERLAY_FAVORITE)
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: ToggleFavoriteAction, cases: ICasesState): [Action, Case] => [action, cloneDeep(cases.selectedCase)])
-		.mergeMap(([action, selectedCase]: [ToggleFavoriteAction, Case]) => {
-			const actions = [];
-
-			if (selectedCase.state.favoritesOverlays.includes(action.payload)) {
-				selectedCase.state.favoritesOverlays = selectedCase.state.favoritesOverlays.filter(overlay => overlay !== action.payload);
-			} else {
-				selectedCase.state.favoritesOverlays.push(action.payload);
-			}
-			// if showOnlyFavorites filter active - sync filter with favorites change
-			if (selectedCase.state.facets.showOnlyFavorites) {
-				actions.push(new SyncFilteredOverlays());
-			}
-
-			const overlaysMarkup = CasesService.getOverlaysMarkup(selectedCase);
-
-			// order does matter! update case must be the first action, since all other relies on it
-			actions.unshift(new UpdateCaseAction(selectedCase));
-			actions.push(new OverlaysMarkupAction(overlaysMarkup));
-			actions.push(new EnableOnlyFavoritesSelectionAction(Boolean(selectedCase.state.favoritesOverlays.length)));
-
-			return actions;
-		});
 
 	/**
 	 * @type Effect

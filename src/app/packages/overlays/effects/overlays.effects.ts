@@ -152,7 +152,7 @@ export class OverlaysEffects {
 	 * @type Effect
 	 * @name drops$
 	 * @description this method parse overlays for display ( drops )
-	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
+	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
 	 * @dependencies overlays
 	 */
 
@@ -160,7 +160,7 @@ export class OverlaysEffects {
 	drops$: Observable<any[]> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS,
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.SET_FILTERS,
+			OverlaysActionTypes.SET_FILTERED_OVERLAYS,
 			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => overlays)
 		.map(OverlaysService.parseOverlayDataForDispaly);
@@ -169,7 +169,7 @@ export class OverlaysEffects {
 	 * @type Effect
 	 * @name dropsCount$
 	 * @description this method should calculate drops count
-	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFiltersAction, SetSpecialObjectsActionStore
+	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
 	 * @action UpdateOverlaysCountAction
 	 */
 

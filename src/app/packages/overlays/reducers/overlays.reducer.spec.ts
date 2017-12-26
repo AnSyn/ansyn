@@ -3,7 +3,7 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	SelectOverlayAction,
-	SetFiltersAction,
+	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
 	UnSelectOverlayAction
@@ -111,7 +111,7 @@ describe('Overlay Reducer', () => {
 		const action = new LoadOverlaysSuccessAction([o1, o2, o3, o4] as any);
 		const result = OverlayReducer(overlaysInitialState, action);
 
-		const actionTestA = new SetFiltersAction({
+		const actionTestA = new SetFilteredOverlaysAction({
 			showOnlyFavorites: false,
 			favorites: ['15'],
 			parsedFilters: {}
@@ -120,7 +120,7 @@ describe('Overlay Reducer', () => {
 		const resultTestA = OverlayReducer(result, actionTestA);
 		expect(resultTestA.filteredOverlays.length).toBe(4);
 
-		const actionTestB = new SetFiltersAction({
+		const actionTestB = new SetFilteredOverlaysAction({
 			showOnlyFavorites: true,
 			favorites: ['15'],
 			parsedFilters: {}
@@ -129,7 +129,7 @@ describe('Overlay Reducer', () => {
 		const resultTestB = OverlayReducer(result, actionTestB);
 		expect(resultTestB.filteredOverlays.length).toBe(1);
 
-		const actionTestC = new SetFiltersAction({
+		const actionTestC = new SetFilteredOverlaysAction({
 			showOnlyFavorites: true,
 			favorites: [],
 			parsedFilters: {}

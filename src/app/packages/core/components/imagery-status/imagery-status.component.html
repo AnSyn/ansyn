@@ -17,7 +17,7 @@
 	</button>
 
 	<button *ngIf="overlay" class="small-icon-button set-favorite"
-			[class.active]="isFavoriteOverlayDisplayed"
+			[class.active]="isFavoriteOverlayDisplayed()"
 			(click)="toggleFavorite()">
 		<i class="icon icon-favorites"></i>
 	</button>

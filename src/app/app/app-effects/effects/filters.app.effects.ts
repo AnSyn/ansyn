@@ -1,5 +1,5 @@
 import { cloneDeep, isNil } from 'lodash';
-import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Case, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
@@ -11,10 +11,10 @@ import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/r
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	SetFiltersAction
+	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { InitializeFiltersSuccessAction, UpdateFilterAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
@@ -22,6 +22,8 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
+import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -30,30 +32,16 @@ export class FiltersAppEffects {
 	 * @type Effect
 	 * @name updateOverlayFilters$
 	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
-	 * @action SetFiltersAction
+	 * @action SetFilteredOverlaysAction
 	 * @dependencies filters, cases
 	 */
 	@Effect()
-	updateOverlayFilters$: Observable<SetFiltersAction> = this.actions$
-		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(casesStateSelector))
-		.map(([action, filtersState, casesState]: [InitializeFiltersSuccessAction | UpdateFilterAction | ResetFiltersAction, IFiltersState, ICasesState]) => {
-			const parsedFilters = Array.from(filtersState.filters)
-				.map(([key, value]) => ({
-					filteringParams: {
-						key: key.modelName,
-						metadata: value
-					},
-					filterFunc: value.filterFunc
-				}));
-
-			const favorites = casesState.selectedCase.state.favoritesOverlays;
-
-			return new SetFiltersAction({
-				parsedFilters,
-				showOnlyFavorites: filtersState.showOnlyFavorites,
-				favorites
-			});
+	updateOverlayFilters$: Observable<SetFilteredOverlaysAction> = this.actions$
+		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
+		.withLatestFrom(this.store$)
+		.map(([action, { filters, core, overlays }]: [Action, IAppState]) => {
+			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
+			return new SetFilteredOverlaysAction(filteredOverlays);
 		});
 
 	/**
@@ -65,7 +53,7 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
-		.ofType(...facetChangesActionType, OverlaysActionTypes.SYNC_FILTERED_OVERLAYS)
+		.ofType(...facetChangesActionType)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(casesStateSelector).pluck('selectedCase'))
 		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
 		.map(updatedCase => new UpdateCaseAction(updatedCase));
@@ -135,6 +123,19 @@ export class FiltersAppEffects {
 		})
 		.share();
 
+	/**
+	 * @type Effect
+	 * @name setShowFavoritesFlagOnFilters$
+	 * @ofType SetFavoriteOverlaysAction
+	 * @action EnableOnlyFavoritesSelectionAction
+	 */
+	@Effect()
+	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
+		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
+		.map(({ payload }: SetFavoriteOverlaysAction) => {
+			return new EnableOnlyFavoritesSelectionAction(payload && !!payload.length);
+		});
+
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 
@@ -165,5 +166,20 @@ export class FiltersAppEffects {
 
 	isMetadataEmpty(metadata: any): boolean {
 		return isNil(metadata);
+	}
+
+	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: string[]) {
+		const parsedFilters = Array.from(filters.filters)
+			.map(([key, value]) => ({
+				filteringParams: {
+					key: key.modelName,
+					metadata: value
+				},
+				filterFunc: value.filterFunc
+			}));
+		const favorites = favoriteOverlays;
+		const { showOnlyFavorites } = filters;
+		let overlaysToFilter = showOnlyFavorites ? new Map<string, Overlay>(<any>favorites.map((id) => [id, overlays.get(id)])) : overlays;
+		return OverlaysService.filter(overlaysToFilter, parsedFilters);
 	}
 }

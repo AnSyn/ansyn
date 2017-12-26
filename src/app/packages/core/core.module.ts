@@ -9,6 +9,9 @@ import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { LoggerService } from './services/logger.service';
+import { EffectsModule } from '@ngrx/effects';
+import { CoreEffects } from './effects/core.effects';
+import { CoreService } from './services/core.service';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -20,12 +23,14 @@ const coreComponents = [
 @NgModule({
 	imports: [
 		CommonModule,
-		StoreModule.forFeature(coreFeatureKey, CoreReducer)
+		StoreModule.forFeature(coreFeatureKey, CoreReducer),
+		EffectsModule.forFeature([CoreEffects])
 	],
 	providers: [
 		GenericTypeResolverService,
 		ProjectionConverterService,
-		LoggerService
+		LoggerService,
+		CoreService
 	],
 	exports: coreComponents,
 	declarations: coreComponents

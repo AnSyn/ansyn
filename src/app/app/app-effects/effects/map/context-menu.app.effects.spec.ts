@@ -12,7 +12,7 @@ import {
 import {
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysSuccessAction,
-	SetFiltersAction
+	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
@@ -57,7 +57,7 @@ describe('ContextMenuAppEffects', () => {
 		store.dispatch(new LoadOverlaysSuccessAction(fakeOverlays));
 		spyOn(OverlaysService, 'filter').and.returnValue(['1', '2', '3', '4', '5']);
 
-		store.dispatch(new SetFiltersAction({}));
+		store.dispatch(new SetFilteredOverlaysAction({}));
 	}));
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {

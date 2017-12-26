@@ -17,6 +17,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
 import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -27,7 +28,7 @@ import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 export class StatusBarComponent implements OnInit {
 
 	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
-
+	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
 	layouts$: Observable<MapsLayout[]> = this.statusBar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
 
 	selectedLayoutIndex$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('selectedLayoutIndex').distinctUntilChanged();
@@ -45,6 +46,9 @@ export class StatusBarComponent implements OnInit {
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
 
+	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
+	favoriteOverlays: string[];
+
 	layouts: MapsLayout[] = [];
 	selectedLayoutIndex: number;
 
@@ -59,11 +63,8 @@ export class StatusBarComponent implements OnInit {
 	timeSelectionEditIcon = false;
 	overlaysCount: number;
 	overlayNotInCase: boolean;
-
 	@Input() selectedCaseName: string;
 	@Input() overlay: any;
-	@Input() isFavoriteOverlayDisplayed = false;
-
 	@ViewChild('goPrev') goPrev: ElementRef;
 	@ViewChild('goNext') goNext: ElementRef;
 
@@ -158,6 +159,14 @@ export class StatusBarComponent implements OnInit {
 		this.overlayNotInCase$.subscribe(_overlayNotInCase => {
 			this.overlayNotInCase = _overlayNotInCase;
 		});
+
+		this.favoriteOverlays$.subscribe((favoriteOverlays) => {
+			this.favoriteOverlays = favoriteOverlays;
+		});
+	}
+
+	isFavoriteOverlayDisplayed() {
+		return this.favoriteOverlays.includes(this.overlay && this.overlay.id);
 	}
 
 	showGeoRegistrationError(): boolean {
@@ -204,12 +213,10 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickGoPrev(): void {
-		this.isFavoriteOverlayDisplayed = false;
 		this.store.dispatch(new GoPrevAction());
 	}
 
 	clickGoNext(): void {
-		this.isFavoriteOverlayDisplayed = false;
 		this.store.dispatch(new GoNextAction());
 	}
 

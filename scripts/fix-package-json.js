@@ -1,6 +1,7 @@
 const fs = require('fs');
 const packages = require('./packages-list.json');
 const gitAdd = require('./git-add');
+const addToGit = process.argv[2] === '--add' || process.argv[2] === '-a';
 
 const mainPackage = JSON.parse(String(fs.readFileSync('package.json', 'utf8')));
 
@@ -31,7 +32,9 @@ function fix(fileName) {
 
 	if (newContent !== packageJsonString) {
 		fs.writeFileSync(fileName, newContent);
-		gitAdd(fileName);
+		if(addToGit) {
+			gitAdd(fileName);
+		}
 	}
 }
 

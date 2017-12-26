@@ -5,6 +5,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { EventEmitter } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
@@ -21,6 +22,7 @@ describe('ImageryRotationComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
+			providers: [{ provide: LoggerConfig, useValue: {} }],
 			declarations: [
 				ImageryRotationComponent
 			],

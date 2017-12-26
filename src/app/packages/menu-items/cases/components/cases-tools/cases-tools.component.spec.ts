@@ -10,6 +10,7 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -25,7 +26,7 @@ describe('CasesToolsComponent', () => {
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } }]
+			providers: [{ provide: casesConfig, useValue: { baseUrl: null } },  { provide: LoggerConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));

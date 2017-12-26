@@ -37,6 +37,7 @@ before_deploy:
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
   - gzip --recursive --keep dist # GZIP each file recursively in dist
+  - rm dist/assets/config/app.config.json.gz # Important! If we GZIP the config, confd won't replace it
 
 deploy:
   - provider: script

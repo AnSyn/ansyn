@@ -1,10 +1,10 @@
 import proj from 'ol/proj';
 import { EventEmitter } from '@angular/core';
 
-import { ImageryCommunicatorService, CommunicatorEntity, IMapPlugin } from '@ansyn/imagery';
+import { IMapPlugin } from '@ansyn/imagery';
 import { toDegrees } from '@ansyn/core/utils/math';
 
-export const openLayersNorthCalculations = "openLayersNorthCalculations";
+export const openLayersNorthCalculations = 'openLayersNorthCalculations';
 
 export interface INorthData {
 	northOffsetDeg: number;

@@ -1,8 +1,8 @@
 <div tooltip-value="Drag to Change Orientation" tooltip-class="left">
 	<div class="tooltip-container"
-		[style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
-		[style.transform]="'rotate(' + rotationAngle + 'rad)'"
-		(mousedown)="startRotating($event)">
+		 [style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
+		 [style.transform]="'rotate(' + rotationAngle + 'rad)'"
+		 (mousedown)="startRotating($event)">
 		<div class="north">N</div>
 	</div>
 </div>

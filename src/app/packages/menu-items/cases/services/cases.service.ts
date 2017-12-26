@@ -99,6 +99,7 @@ export class CasesService {
 		return this.http.get(url);
 
 	}
+
 	generateLinkWithCaseId(caseId: string) {
 		const baseLocation = this.config.useHash ? `${location.origin}/#` : location.origin;
 		return `${baseLocation}/case/${caseId}`;

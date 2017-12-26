@@ -19,7 +19,8 @@ import {
 	SetMapManualImageProcessing,
 	SetMapRotationAction,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction
+	SetPendingMapsCountAction,
+	CalcNorthDirectionAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -165,16 +166,31 @@ export class MapEffects {
 	 * @action SetMapsDataActionStore
 	 */
 	@Effect()
-	positionChanged$: Observable<SetMapsDataActionStore> = this.actions$
+	positionChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
 			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
 		.filter(([selectedMap]) => !_isEmpty(selectedMap))
-		.map(([selectedMap, mapsList, position]) => {
+		.mergeMap(([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
-			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
-		}).share();
+			return [
+				new SetMapsDataActionStore({ mapsList: [...mapsList] }),
+				new CalcNorthDirectionAction({ mapId: selectedMap.mapId, mapState: selectedMap })
+			];
+		});
+
+	/**
+	 * @type Effect
+	 * @name onNorthAngleChanged$
+	 * @ofType UpdateNorthAngleAction
+	 * @dependencies map
+	 * @action UpdateNorthAngleAction
+	 */
+	@Effect({ dispatch: false })
+	onNorthAngleChanged$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.NORTH.UPDATE_NORTH_ANGLE)
+		.share();
 
 	/**
 	 * @type Effect

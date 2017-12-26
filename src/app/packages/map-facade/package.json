@@ -10,8 +10,8 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "5.1.0",
-		"@angular/core": "5.1.0",
+		"@angular/common": "5.1.2",
+		"@angular/core": "5.1.2",
 		"@ansyn/core": "0.2.5",
 		"@ngrx/effects": "4.1.1",
 		"@ngrx/core": "1.2.0",

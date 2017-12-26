@@ -36,6 +36,7 @@ before_deploy:
   - docker --version
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+  - gzip --recursive --keep dist # GZIP each file recursively in dist
 
 deploy:
   - provider: script

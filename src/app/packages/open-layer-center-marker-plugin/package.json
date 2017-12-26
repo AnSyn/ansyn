@@ -10,8 +10,8 @@
 	"license": "MIT",
 	"peerDependencies": {
 		"ol": "4.6.3",
-		"@angular/common": "5.1.0",
-		"@angular/core": "5.1.0",
+		"@angular/common": "5.1.2",
+		"@angular/core": "5.1.2",
 		"@ansyn/imagery": "0.2.5"
 	}
 }

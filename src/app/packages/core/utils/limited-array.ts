@@ -1,4 +1,4 @@
-import { cloneDeep, uniqBy , sortedUniqBy } from 'lodash';
+import { cloneDeep, uniqBy } from 'lodash';
 
 export interface LimitedArray {
 	data: Array<any>;
@@ -31,7 +31,7 @@ export function limitArray(arr: Array<any>, limit: number, options?: LimitedArra
 		data.sort(options.sortFn);	// sort before limit
 	}
 	if (options && options.uniqueBy) {
-		data = (options.sortFn) ? sortedUniqBy(data, options.uniqueBy) : uniqBy(data, options.uniqueBy);
+		data = uniqBy(data, options.uniqueBy);
 		limited = arr.length - data.length;	// update how many items removed
 	}
 
@@ -55,7 +55,7 @@ export function mergeLimitedArrays(arr: Array<LimitedArray>, limit: number, opti
 	}
 	if (options && options.uniqueBy) {
 		const originalMergedArrayLength = data.length;
-		data = (options.sortFn) ? sortedUniqBy(data, options.uniqueBy) : uniqBy(data, options.uniqueBy);
+		data = uniqBy(data, options.uniqueBy);
 		limited += (originalMergedArrayLength - data.length);	// update how many items removed
 	}
 

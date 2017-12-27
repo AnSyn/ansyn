@@ -82,6 +82,10 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}
 
+	get fetchLimit() {
+		return (this.config) ? this.config.limit : null;
+	}
+
 	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig,
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}

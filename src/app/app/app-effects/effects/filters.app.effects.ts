@@ -133,9 +133,7 @@ export class FiltersAppEffects {
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
 		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.map(({ payload }: SetFavoriteOverlaysAction) => {
-			return new EnableOnlyFavoritesSelectionAction(payload && !!payload.length);
-		});
+		.map(({ payload }: SetFavoriteOverlaysAction) => new EnableOnlyFavoritesSelectionAction(Boolean(payload.length)));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

@@ -24,7 +24,7 @@ export class CoreAppEffects {
 	 * @name onFavorite$
 	 * @ofType ToggleFavoriteAction
 	 * @dependencies cases
-	 * @action UpdateCaseAction?, SyncFilteredOverlays, OverlaysMarkupAction, EnableOnlyFavoritesSelectionAction
+	 * @action SetFavoriteOverlaysAction
 	 */
 	@Effect()
 	onFavorite$: Observable<Action> = this.actions$
@@ -55,8 +55,8 @@ export class CoreAppEffects {
 	/**
 	 * @type Effect
 	 * @name setFavoritesOverlays$
-	 * @ofType SelectCaseAction
-	 * @action SetFavoriteOverlaysAction
+	 * @ofType SetFavoriteOverlaysAction
+	 * @action OverlaysMarkupAction, UpdateCaseAction
 	 */
 	@Effect()
 	setFavoritesOverlaysUpdateCase$: Observable<any> = this.actions$
@@ -69,7 +69,7 @@ export class CoreAppEffects {
 					...cases.selectedCase.state,
 					favoritesOverlays: payload
 				}
-			}as Case;
+			};
 
 			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, payload);
 

@@ -18,10 +18,15 @@
 	}
 
 	.status-bar {
-		background: red;
 		min-width: 50%;
 		color: white;
 		display: flex;
+
+		> .block, > .action {
+			border: 1px solid white;
+			display: flex;
+			align-items: center;
+		}
 
 		.pop-content {
 			display: none;

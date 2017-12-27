@@ -131,7 +131,10 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		const mergedSortedOverlays: Promise<OverlaysFetchData> = Promise.all(this.sourceConfigs
 			.map(s => s.provider.fetchMultiple(fetchParams, s.filters).toPromise()))
-			.then(overlays => mergeLimitedArrays(overlays, fetchParams.limit, sortByDateDesc)); // merge the overlays
+			.then(overlays => mergeLimitedArrays(overlays, fetchParams.limit, {
+				sortFn: sortByDateDesc,
+				uniqueBy: o => o.id
+			})); // merge the overlays
 
 		return Observable.from(mergedSortedOverlays);
 	}

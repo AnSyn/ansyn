@@ -96,7 +96,10 @@ export abstract class BaseOverlaySourceProvider {
 
 		const multipleFetches: Promise<OverlaysFetchData> = Promise.all(fetchPromises) // Wait for every fetch to resolve
 			.then((data: Array<OverlaysFetchData>) =>
-				mergeLimitedArrays(data, fetchParams.limit, sortByDateDesc)); // merge overlays from multiple requests
+				mergeLimitedArrays(data, fetchParams.limit, {
+						sortFn: sortByDateDesc,
+						uniqueBy: o => o.id
+					})); // merge overlays from multiple requests
 
 		return Observable.from(multipleFetches);
 	}

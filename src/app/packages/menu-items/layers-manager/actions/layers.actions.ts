@@ -10,6 +10,7 @@ export const LayersActionTypes = {
 	UNSELECT_LAYER: 'UNSELECT_LAYER',
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
 	COMMANDS: {
+		SHOW_ANNOTATIONS_LAYER_ON_INIT: 'SHOW_ANNOTATIONS_LAYER_ON_INIT',
 		SHOW_ANNOTATIONS_LAYER: 'SHOW_ANNOTATIONS_LAYER',
 		HIDE_ANNOTATIONS_LAYER: 'HIDE_ANNOTATIONS_LAYER'
 	}
@@ -18,6 +19,12 @@ export const LayersActionTypes = {
 
 export type LayersActions = any;
 
+export class ShowAnnotationsLayerOnInit implements Action {
+	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER_ON_INIT;
+
+	constructor(public payload: { update: boolean }) {
+	}
+}
 export class ShowAnnotationsLayer implements Action {
 	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER;
 

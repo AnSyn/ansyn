@@ -16,6 +16,8 @@ import { Case } from '@ansyn/core/models/case.model';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
+import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 
 @Injectable()
@@ -38,6 +40,21 @@ export class LayersAppEffects {
 		.map(({ payload }: SelectCaseAction) => {
 			return new BeginLayerTreeLoadAction({ caseId: payload.id });
 		}).share();
+
+	/**
+	 * @type Effect
+	 * @name showAnnotationsLayerOnInit$
+	 * @ofType ShowAnnotationsLayerOnInit
+	 */
+	@Effect({ dispatch: false })
+	showAnnotationsLayerOnInit$: Observable<any> = this.actions$
+		.ofType<ShowAnnotationsLayerOnInit>(LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER_ON_INIT)
+		.map((action) => {
+			this.imageryCommunicatorService.onInit$.subscribe(() => {
+				// not initialized - dispatch after init
+				this.store$.dispatch(new ShowAnnotationsLayer(action.payload));
+			});
+		});
 
 	/**
 	 * @type Effect
@@ -99,6 +116,8 @@ export class LayersAppEffects {
 		.ofType<any>(LayersActionTypes.SELECT_LAYER, LayersActionTypes.UNSELECT_LAYER)
 		.map(action => new ContainerChangedTriggerAction());
 
-	constructor(public actions$: Actions, public store$: Store<IAppState>) {
+	constructor(protected actions$: Actions,
+				protected store$: Store<IAppState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

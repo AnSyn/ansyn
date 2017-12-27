@@ -19,8 +19,7 @@ export const initialLayersState: ILayerState = {
 };
 
 export const layersFeatureKey = 'layers';
-
-export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFeatureSelector<ILayerState>('layers');
+export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFeatureSelector<ILayerState>(layersFeatureKey);
 
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions) {
 	switch (action.type) {

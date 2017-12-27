@@ -21,12 +21,15 @@ import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
 	let actions: Observable<any>;
 	let casesService: CasesService;
 	let store: Store<any>;
+	let imageryCommunicatorService: ImageryCommunicatorService;
+
 	const selectedCase: Case = {
 		id: 'case1',
 		state: {
@@ -61,7 +64,9 @@ describe('CasesAppEffects', () => {
 				RouterTestingModule,
 				ContextModule.forRoot(MOCK_TEST_CONFIG)
 			],
-			providers: [CasesAppEffects,
+			providers: [
+				ImageryCommunicatorService,
+				CasesAppEffects,
 				CasesService,
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null } },
@@ -70,7 +75,9 @@ describe('CasesAppEffects', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, casesConfig], (_store: Store<any>) => {
+	beforeEach(inject([ImageryCommunicatorService, Store, casesConfig, ],
+		(_imageryCommunicatorService: ImageryCommunicatorService, _store: Store<any>) => {
+		imageryCommunicatorService = _imageryCommunicatorService;
 		store = _store;
 		store.dispatch(new AddCaseSuccessAction(selectedCase));
 		store.dispatch(new SelectCaseAction(selectedCase));

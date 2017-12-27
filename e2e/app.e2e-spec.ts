@@ -9,8 +9,8 @@ describe('Ansyn App', () => {
 		page.navigateTo();
 	});
 
-	it('should initialize app with login', async () => {
-		const isPresent = await element(by.css('ansyn-login')).isPresent();
+	it('should initialize app with login', () => {
+		const isPresent = element(by.css('ansyn-login')).isPresent();
 		expect(isPresent).toBe(true);
 	});
 });

@@ -1,5 +1,6 @@
 import { ContextConfig } from '@ansyn/context';
 import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
+import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
@@ -32,6 +33,9 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: toolsConfig,
 			useValue: conf.toolsConfig
+		}, {
+			provide: OverlaysConfig,
+			useValue: conf.overlaysConfig
 		},
 		{
 			provide: ConfigurationToken,

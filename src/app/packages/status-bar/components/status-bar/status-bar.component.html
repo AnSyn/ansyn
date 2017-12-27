@@ -11,7 +11,7 @@
 <div class="status-bar" [class.show-separator]="!hideOverlay">
 	<!-- Selected Case -->
 	<div class="block pop-hover">
-		<i class="icon-status-bar-case"></i>
+		<i class="block-icon icon-status-bar-case"></i>
 		<span>{{selectedCaseName}}</span>
 
 		<div class="pop-content">
@@ -24,52 +24,48 @@
 
 	<!-- Orientation -->
 	<div class="action block">
-		<i class="icon-status-bar-orientation"></i>
 		<ansyn-combo-box
+			[icon]="'icon-status-bar-orientation'"
 			[options]="orientations"
-			[(selectedIndex)]="orientation"
-			(selectedIndexChange)="orientationChange(orientation)">
+			[(selected)]="orientation"
+			(selectedChange)="orientationChange($event)">
 		</ansyn-combo-box>
 	</div>
 
 	<!-- Geo point -->
-	<div class="action">
-		<div class="block">
-			<i class="icon-status-bar-geo"></i>
-			<ansyn-combo-box
-				[options]="geoFilters"
-				[(selectedIndex)]="geoFilter"
-				(selectedIndexChange)="geoFilterChange(geoFilter)">
-			</ansyn-combo-box>
-		</div>
+	<div class="action block with-buttons">
+		<ansyn-combo-box
+			[icon]="'icon-status-bar-geo'"
+			[options]="geoFilters"
+			[(selected)]="geoFilter"
+			(selectedChange)="geoFilterChange($event)">
+		</ansyn-combo-box>
 		<div class="buttons">
 			<button (click)="togglePinPointIndicatorView()"
-					[class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+					class="toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 				<i class="icon-status-bar-show-pin-point"></i>
 			</button>
 			<button (click)="toggleMapPointSearch()"
-					[class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
+					class="toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
 				<i class="icon-edit"></i>
 			</button>
 		</div>
 	</div>
 
 	<!-- Time -->
-	<div class="action">
-		<div class="block">
-			<i class="icon-status-bar-time"></i>
-			<ansyn-combo-box
-				[options]="timeLines"
-				[(selectedIndex)]="timeLine">
-			</ansyn-combo-box>
-		</div>
+	<div class="action block with-buttons">
+		<ansyn-combo-box
+			[icon]="'icon-status-bar-time'"
+			[options]="timeLines"
+			[(selected)]="timeLine">
+		</ansyn-combo-box>
 		<div class="buttons">
 			<button (click)="toggleTimelineStartEndSearch()"
-					[class.active]="timeSelectionEditIcon">
+					class="toggle-icon" [class.active]="timeSelectionEditIcon">
 				<i class="icon-edit"></i>
 			</button>
 		</div>
-		<div class="pop-content" [class.visible]="timeSelectionEditIcon">
+		<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
 			<ansyn-timeline-timepicker
 				[startDatePickerValue]="(time)?.from"
 				[endDatePickerValue]="(time)?.to"
@@ -83,14 +79,15 @@
 	<div class="action block">
 		<ansyn-combo-box
 			[options]="layouts"
-			[(selectedIndex)]="selectedLayoutIndex"
-			(selectedIndexChange)="layoutSelectChange(selectedLayoutIndex)">
+			[renderFunction]="layoutRender"
+			[(selected)]="selectedLayoutIndex"
+			(selectedChange)="layoutSelectChange($event)">
 		</ansyn-combo-box>
 	</div>
 
 	<!-- Overlays -->
 	<div class="block">
-		<i class="icon-status-bar-imagery-count"></i>
+		<i class="block-icon icon-status-bar-imagery-count"></i>
 		<span>{{overlaysCount}}</span>
 	</div>
 </div>

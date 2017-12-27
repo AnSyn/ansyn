@@ -6,46 +6,44 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 	styleUrls: ['./combo-box.component.less']
 })
 export class ComboBoxComponent {
-	private _selectedIndex: number;
-	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
+	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 
+	@Input() icon: string;
 	@Input() options: any[];
+	@Input() selected: any;
+	@Input() renderFunction: Function;
 
-	@Input('selectedIndex')
-	set selectedIndex(value) {
-		this._selectedIndex = value;
-		this.selectedIndexChange.emit(value);
-	};
+	@Output() selectedChange = new EventEmitter();
 
-	@Output('selectedIndexChange') selectedIndexChange = new EventEmitter();
-
-	get selectedIndex() {
-		return this._selectedIndex;
-	}
+	optionsVisible = false;
 
 	toggleShow() {
-		if (this.optionsContainer.nativeElement.style.visibility !== 'visible') {
-			this.optionsContainer.nativeElement.style.visibility = 'visible';
-			this.optionsContainer.nativeElement.focus();
-		} else {
-			this.optionsContainer.nativeElement.style.visibility = 'hidden';
+		this.optionsVisible = !this.optionsVisible;
+		if (this.optionsVisible) {
+			setTimeout(() => this.optionsContainer.nativeElement.focus(), 0);
 		}
 	}
 
 	onBlurOptionsContainer($event: FocusEvent) {
+		console.log($event);
 		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
-			this.optionsContainer.nativeElement.style.visibility = 'hidden';
+			this.optionsVisible = false;
 		}
 	}
 
-	selectOption(index) {
-		this.selectedIndex = index;
-		this.optionsContainer.nativeElement.style.visibility = 'hidden';
+	selectOption(index, option) {
+		this.selected = option;
+		this.optionsVisible = false;
+
+		this.selectedChange.emit(option);
 	}
 
-	get selected() {
-		return this.options[this.selectedIndex];
-	}
+	render(value) {
+		if (this.renderFunction) {
+			return this.renderFunction(value);
+		}
 
+		return value;
+	}
 }

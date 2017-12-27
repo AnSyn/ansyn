@@ -49,7 +49,7 @@ export class StatusBarComponent implements OnInit {
 	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
 	favoriteOverlays: string[];
 
-	layouts: MapsLayout[] = [];
+	layouts: number[] = [];
 	selectedLayoutIndex: number;
 
 	orientations: string[] = [];
@@ -118,7 +118,7 @@ export class StatusBarComponent implements OnInit {
 		});
 
 		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
-			this.layouts = _layouts;
+			this.layouts = Object.keys(_layouts).map(Number);
 		});
 
 		this.orientations$.subscribe((_orientations) => {
@@ -185,16 +185,20 @@ export class StatusBarComponent implements OnInit {
 		this.toggleTimelineStartEndSearch();
 	}
 
+	layoutRender(layoutIndex) {
+		return `<i class="icon-screen-${layoutIndex + 1}"></i>`
+	}
+
 	layoutSelectChange(selectedLayoutIndex: number): void {
 		this.store.dispatch(new ChangeLayoutAction(selectedLayoutIndex));
 	}
 
-	orientationChange(_orientation) {
-		this.store.dispatch(new SetOrientationAction(_orientation));
+	orientationChange(orientation) {
+		this.store.dispatch(new SetOrientationAction(orientation));
 	}
 
-	geoFilterChange(_geoFilter) {
-		this.store.dispatch(new SetGeoFilterAction(_geoFilter));
+	geoFilterChange(geoFilter) {
+		this.store.dispatch(new SetGeoFilterAction(geoFilter));
 	}
 
 	copyLink(): void {

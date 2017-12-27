@@ -9,11 +9,13 @@ exports.config = {
 		'./e2e/**/*.e2e-spec.ts'
 	],
 	capabilities: {
-		'browserName': 'chrome'
+		'browserName': 'chrome',
+		'shardTestFiles': true,
+		'maxInstances': 5
 	},
 	directConnect: true,
 	baseUrl: 'http://localhost:4200/',
-	framework: 'jasmine',
+	framework: 'jasmine2',
 	jasmineNodeOpts: {
 		showColors: true,
 		defaultTimeoutInterval: 30000,
@@ -25,7 +27,22 @@ exports.config = {
 			project: 'e2e/tsconfig.e2e.json'
 		});
 	},
+	plugins: [{
+		package: 'protractor-screenshoter-plugin',
+		screenshotPath: './e2e/REPORTS',
+		screenshotOnExpect: 'failure+success',
+		screenshotOnSpec: 'none',
+		withLogs: 'true',
+		writeReportFreq: 'asap',
+		imageToAscii: 'none',
+		clearFoldersBeforeTest: true
+	}],
 	onPrepare() {
 		jasmine.getEnv().addReporter(new SpecReporter({spec: {displayStacktrace: true}}));
+		// returning the promise makes protractor wait for the reporter config before executing tests
+		return global.browser.getProcessedConfig().then(function(config) {
+			//it is ok to be empty
+		});
+
 	}
 };

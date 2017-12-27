@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
-import { Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
@@ -82,7 +82,8 @@ export class OverlaysService {
 		return [{ name: undefined, data: overlaysData }];
 	}
 
-	constructor(protected _overlaySourceProvider: BaseOverlaySourceProvider) {
+	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig,
+				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
 	search(params: any = {}): Observable<OverlaysFetchData> {

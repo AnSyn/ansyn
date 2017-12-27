@@ -9,7 +9,12 @@ export class ImageryCommunicatorService {
 	private _communicators: { [id: string]: CommunicatorEntity };
 	public instanceCreated = new EventEmitter();
 	public instanceRemoved = new EventEmitter();
+	public onInit$ = new EventEmitter();
 
+	protected _initialized = false;
+	public get initialized() {
+		return this._initialized;
+	}
 
 	public initializedCommunicators: Array<string> = [];
 
@@ -44,6 +49,10 @@ export class ImageryCommunicatorService {
 			communicatorIds: this.initializedCommunicators,
 			currentCommunicatorId: componentManager.id
 		});
+		if (!this._initialized ) {
+			this._initialized = true;
+			this.onInit$.emit();
+		}
 	}
 
 	public replaceCommunicatorId(oldId, newId) {

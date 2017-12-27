@@ -25,6 +25,8 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 @Injectable()
 export class CasesAppEffects {
@@ -40,7 +42,11 @@ export class CasesAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.map(({ payload }: SelectCaseAction) => {
 			if (payload.state.layers && payload.state.layers.displayAnnotationsLayer) {
-				return new ShowAnnotationsLayer({ update: false });
+				if (!this.imageryCommunicatorService.initialized) {
+					return new ShowAnnotationsLayerOnInit({ update: false });
+				} else {
+					return new ShowAnnotationsLayer({ update: false });
+				}
 			} else {
 				return new HideAnnotationsLayer({ update: false });
 			}
@@ -159,6 +165,7 @@ export class CasesAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected casesService: CasesService) {
+				protected casesService: CasesService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

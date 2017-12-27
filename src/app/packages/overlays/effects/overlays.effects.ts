@@ -82,7 +82,8 @@ export class OverlaysEffects {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlays.data)];
-					if (overlays.limited > 0) {
+					// if data.length != fetchLimit that means only duplicate overlays removed
+					if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
 						actions.push(new SetToastMessageAction({
 							toastText: `Only the latest ${overlays.data.length} results are presented, try to edit search time range.`

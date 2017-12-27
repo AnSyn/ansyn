@@ -63,7 +63,10 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 		return <Observable<OverlaysFetchData>>this.http.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, sortByDateDesc))
+			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+				sortFn: sortByDateDesc,
+				uniqueBy: o => o.id
+			}))
 			.catch(this.handleError);
 
 	}

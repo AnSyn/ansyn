@@ -1,55 +1,60 @@
-.combo-container {
-	position: relative;
+:host {
+	height: 100%;
 
-	button.trigger {
-		outline: none;
-		background: black;
-		color: white;
-		border: 1px solid;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0 6px;
-		cursor: default;
-		i {
-			font-size: 16px;
-		}
-		span.arrow {
-			margin-left: 5px;
-			font-size: 7px;
-		}
-	}
-	.options-container {
-		width: 100%;
-		background: black;
+	.combo-container {
+		height: 100%;
+		position: relative;
 
-		&.show {
-			visibility: visible;
-		}
-		&:focus {
-			visibility: visible;
+		button.trigger {
 			outline: none;
-		}
-		visibility: hidden;
-		position: absolute;
-		top: 0;
-		transform: translate(0, -100%);
-		.option {
-			display: flex;
-			justify-content: center;
-			padding: 1px 6px;
+			background: black;
 			color: white;
-			cursor: pointer;
-			border-bottom: 1px solid black;
-			box-sizing: border-box;
-			i {
-				opacity: .8;
-				font-size: 16px;
+			border: 1px solid;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 6px;
+			cursor: default;
+			height: 100%;
+			white-space: nowrap;
+
+			span.arrow {
+				margin-left: 5px;
+				font-size: 7px;
 			}
-			&:hover {
-				border-color: white;
-				img {
-					opacity: 1;
+		}
+		.options-container {
+			width: 100%;
+			background: black;
+
+			&.show {
+				visibility: visible;
+			}
+			&:focus {
+				visibility: visible;
+				outline: none;
+			}
+			visibility: hidden;
+			position: absolute;
+			top: 0;
+			transform: translate(0, -100%);
+			.option {
+				display: flex;
+				justify-content: center;
+				padding: 1px 6px;
+				color: white;
+				cursor: pointer;
+				border-bottom: 1px solid black;
+				box-sizing: border-box;
+				i {
+					opacity: .8;
+					font-size: 16px;
+				}
+				&:hover {
+					border-color: white;
+					img {
+						opacity: 1;
+					}
 				}
 			}
 		}

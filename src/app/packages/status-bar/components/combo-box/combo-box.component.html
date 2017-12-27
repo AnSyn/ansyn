@@ -1,20 +1,15 @@
 <div class="combo-container">
-
 	<button class="trigger" #optionsTrigger (click)="toggleShow()">
-		<i class="icon-screen-{{selectedIndex + 1}}"></i>
-		<span class="arrow" *ngIf="optionsContainer.style.visibility !== 'visible'; else close">
-				▼
-			</span>
-		<ng-template #close>
-				<span class="arrow">
-				▲
-				</span>
-		</ng-template>
+		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
+		<div [innerHTML]="render(selected)"></div>
+		<span class="arrow">
+			{{ !optionsVisible ? '▼' : '▲'}}
+		</span>
 	</button>
 
-	<div class="options-container" #optionsContainer tabindex="0" (blur)="onBlurOptionsContainer($event)">
-		<div class="option" *ngFor="let option of options; index as index" (click)="selectOption(index);">
-			<i class="icon-screen-{{index + 1}}"></i>
-		</div>
+	<div class="options-container" #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
+		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
+		<div class="option" *ngFor="let option of options; index as index" (click)="selectOption(index, option);"
+			[innerHTML]="render(option)"></div>
 	</div>
 </div>

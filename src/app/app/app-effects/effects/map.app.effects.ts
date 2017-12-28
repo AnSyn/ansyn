@@ -28,6 +28,7 @@ import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import {
 	IStatusBarState,
+	Orientation,
 	statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -179,14 +180,16 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: DisplayOverlayAction, mapState: IMapState): [Overlay, string, CaseMapPosition] => {
-			const overlay = action.payload.overlay;
-			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
-			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-			return [overlay, mapId, map.data.position];
-		})
-		.filter(([overlay]: [Overlay, string, CaseMapPosition]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<[Overlay, string, CaseMapPosition], any>(([overlay, mapId, position]: [Overlay, string, CaseMapPosition]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(statusBarStateSelector),
+			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapPosition, Orientation] => {
+				const overlay = action.payload.overlay;
+				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
+				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
+				const oreintation: Orientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
+				return [overlay, mapId, map.data.position, oreintation];
+			})
+		.filter(([overlay]: [Overlay, string, CaseMapPosition, Orientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<[Overlay, string, CaseMapPosition, Orientation], any>(([overlay, mapId, position, oreintation]: [Overlay, string, CaseMapPosition, Orientation]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(position.extent, overlay.footprint);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.ActiveMap.mapType;
@@ -197,6 +200,17 @@ export class MapAppEffects {
 					toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
 					showWarningIcon: true
 				}));
+			}
+
+			let rotationAngle = 0;
+			switch (oreintation) {
+				case 'Align North':
+					break;
+				case 'Imagery Perspective':
+					rotationAngle = overlay.azimuth;
+					break;
+				case 'User Perspective':
+					rotationAngle = communicator.getPosition().projectedState.rotation;
 			}
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
@@ -214,6 +228,9 @@ export class MapAppEffects {
 							communicator.resetView(layer, position);
 						}
 					}
+
+					communicator.setRotation(rotationAngle);
+
 					return new DisplayOverlaySuccessAction({ id: overlay.id, mapId });
 				})
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
@@ -239,7 +256,12 @@ export class MapAppEffects {
 		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
 		.map((caseMapState: CaseMapState) => {
 			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
-			return new DisplayOverlayAction({ overlay: caseMapState.data.overlay, mapId: caseMapState.id });
+			console.log(caseMapState);
+			return new DisplayOverlayAction({
+				overlay: caseMapState.data.overlay,
+				mapId: caseMapState.id,
+				ignoreRotation: true
+			});
 		});
 
 	/**

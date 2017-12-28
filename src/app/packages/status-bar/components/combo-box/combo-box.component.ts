@@ -26,17 +26,18 @@ export class ComboBoxComponent {
 	}
 
 	onBlurOptionsContainer($event: FocusEvent) {
-		console.log($event);
 		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
 			this.optionsVisible = false;
 		}
 	}
 
 	selectOption(index, option) {
-		this.selected = option;
 		this.optionsVisible = false;
 
-		this.selectedChange.emit(option);
+		if (option !== this.selected) {
+			this.selected = option;
+			this.selectedChange.emit(option);
+		}
 	}
 
 	render(value) {

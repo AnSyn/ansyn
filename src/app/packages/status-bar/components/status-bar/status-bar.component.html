@@ -41,11 +41,11 @@
 		</ansyn-combo-box>
 		<div class="buttons">
 			<button (click)="togglePinPointIndicatorView()"
-					class="toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+					class="eye-button toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 				<i class="icon-status-bar-show-pin-point"></i>
 			</button>
 			<button (click)="toggleMapPointSearch()"
-					class="toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
+					class="edit-pinpoint toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
 				<i class="icon-edit"></i>
 			</button>
 		</div>

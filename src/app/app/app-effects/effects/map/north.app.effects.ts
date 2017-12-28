@@ -1,16 +1,19 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { CalcNorthDirectionAction, MapActionTypes, PointNorthAction, UpdateNorthAngleAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { NorthCalculationsPlugin, openLayersNorthCalculations } from '@ansyn/open-layers-north-calculations';
-import { Overlay } from '@ansyn/core';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	NorthCalculationsPlugin,
+	openLayersNorthCalculations
+} from '@ansyn/open-layers-north-calculations/plugin/north-calculations-plugin';
 
 @Injectable()
 export class NorthAppEffects {
@@ -18,70 +21,23 @@ export class NorthAppEffects {
 	/**
 	 * @type Effect
 	 * @name pointNorth$
-	 * @ofType ContextMenuShowAction
-	 * @dependencies overlays
-	 * @action ContextMenuGetFilteredOverlaysAction
+	 * @ofType DisplayOverlaySuccessAction
+	 * @description When an overlay is displayed, we calculate the overlay's real north, and update it.
+	 * Then rotate the overlay to the desired display position
 	 */
 	@Effect({ dispatch: false })
 	pointNorth$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.NORTH.ROTATE_NORTH)
-		.map((action: PointNorthAction) => {
-			switch (action.payload.rotationType) {
-				case 'ImageAngle': {
-					this.pointPhotoAngle(action.payload.mapId, action.payload.overlay);
-					break;
-				}
-				case 'North': {
-					this.pointNorth(action.payload.mapId, action.payload.overlay);
-					break;
-				}
-				default: {
-					console.warn(`'${action.payload.rotationType}' is not a supported rotationType`);
-				}
-			}
-		});
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([{ payload }, mapsState]) => {
+			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
 
-	/**
-	 * @type Effect
-	 * @name calcNorthAngleForOverlay$
-	 * @ofType CalcNorthDirectionAction
-	 * @dependencies map
-	 * @action UpdateNorthAngleAction
-	 */
-	@Effect()
-	calcNorthAngleForOverlay$: Observable<any> = this.actions$
-		.ofType<CalcNorthDirectionAction>(MapActionTypes.NORTH.CALC_NORTH_ANGLE)
-		.filter((action: CalcNorthDirectionAction) => Boolean(action.payload.mapState.data.overlay))
-		.map((action: CalcNorthDirectionAction) => {
-			const mapState: CaseMapState = action.payload.mapState;
-			const comEntity = this.imageryCommunicatorService.provide(mapState.id);
-			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
-			return { mapState, comEntity, northPlugin };
-		})
-		.filter(({ mapState, comEntity, northPlugin }) => Boolean(northPlugin))
-		.mergeMap(({ mapState, comEntity, northPlugin }) => {
-			return Observable.fromPromise(northPlugin.getCorrectedNorthOnce(comEntity.ActiveMap.mapObject))
-				.map((data: any) => {
-					const northDirection = -data.northOffsetRad;
-					return new UpdateNorthAngleAction({ mapId: mapState.id, angleRad: northDirection });
-				});
-		});
+			this.pointNorth(payload.mapId).then(north => {
+				communicator.setRotation(north + payload.rotation);
 
-	/**
-	 * @type Effect
-	 * @name calcNorthAngleForWorldView$
-	 * @ofType CalcNorthDirectionAction
-	 * @dependencies map
-	 * @action UpdateNorthAngleAction
-	 */
-	@Effect()
-	calcNorthAngleForWorldView$: Observable<any> = this.actions$
-		.ofType<CalcNorthDirectionAction>(MapActionTypes.NORTH.CALC_NORTH_ANGLE)
-		.filter((action: CalcNorthDirectionAction) => !action.payload.mapState.data.overlay)
-		.map((action: CalcNorthDirectionAction) => {
-			const mapState: CaseMapState = action.payload.mapState;
-			const northDirection = mapState.data.position.projectedState.rotation;
-			return new UpdateNorthAngleAction({ mapId: mapState.id, angleRad: northDirection });
+				const mapState = MapFacadeService.mapById(mapsState.mapsList, payload.mapId);
+				mapState.data.overlay.northAngle = north;
+			});
 		});
 
 	constructor(protected actions$: Actions,
@@ -89,27 +45,19 @@ export class NorthAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	pointNorth(mapId: string, overlay?: Overlay) {
-		const comEntity = this.imageryCommunicatorService.provide(mapId);
-		if (!overlay) {
-			comEntity.setRotation(0);
-			return;
-		}
+	pointNorth(mapId: string): Promise<number> {
+		// return Promise.resolve(Math.PI / 2);
+		return new Promise(resolve => {
+			const comEntity = this.imageryCommunicatorService.provide(mapId);
+			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
 
-		const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
-		if (northPlugin) {
-			northPlugin.setCorrectedNorth(comEntity.ActiveMap.mapObject);
-		} else {
-			comEntity.setRotation(0);
-		}
-	}
-
-	pointPhotoAngle(mapId: string, overlay?: Overlay) {
-		const comEntity = this.imageryCommunicatorService.provide(mapId);
-		if (overlay) {
-			comEntity.setRotation(overlay.azimuth);
-		} else {
-			comEntity.setRotation(0);
-		}
+			if (!northPlugin) {
+				comEntity.setRotation(0);
+				resolve(0);
+			} else {
+				northPlugin.setCorrectedNorth(comEntity.ActiveMap.mapObject)
+					.then(north => resolve(north));
+			}
+		});
 	}
 }

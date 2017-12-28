@@ -55,14 +55,16 @@ export interface CaseMapsState {
 
 export type OverlayDisplayMode = 'Hitmap' | 'Polygon' | 'None';
 
+export interface CaseMapData {
+	position: CaseMapPosition,
+	overlay?: Overlay,
+	isAutoImageProcessingActive?: boolean,
+	overlayDisplayMode?: OverlayDisplayMode
+}
+
 export interface CaseMapState {
 	id: string;
-	data: {
-		position: CaseMapPosition,
-		overlay?: Overlay,
-		isAutoImageProcessingActive?: boolean,
-		overlayDisplayMode?: OverlayDisplayMode
-	};
+	data: CaseMapData;
 	progress: number;
 	mapType: string;
 	flags: {

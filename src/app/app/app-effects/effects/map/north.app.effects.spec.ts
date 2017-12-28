@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { NorthAppEffects } from './north.app.effects';
-import { CalcNorthDirectionAction, PointNorthAction, UpdateNorthAngleAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CaseMapState, Overlay } from '@ansyn/core';
 

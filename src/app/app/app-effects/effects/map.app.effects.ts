@@ -64,7 +64,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapPosition, CaseMapState } from '@ansyn/core/models';
+import { CaseMapPosition, CaseMapState, CaseMapData } from '@ansyn/core/models';
 import {
 	ChangeLayoutAction,
 	SetMapGeoEnabledModeStatusBarActionStore
@@ -181,16 +181,17 @@ export class MapAppEffects {
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(statusBarStateSelector),
-			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapPosition, Orientation] => {
+			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapData, Orientation] => {
 				const overlay = action.payload.overlay;
 				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				const oreintation: Orientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
-				return [overlay, mapId, map.data.position, oreintation];
+				console.log(map.data.overlay);
+				const orientation: Orientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
+				return [overlay, mapId, map.data, orientation];
 			})
-		.filter(([overlay]: [Overlay, string, CaseMapPosition, Orientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<[Overlay, string, CaseMapPosition, Orientation], any>(([overlay, mapId, position, oreintation]: [Overlay, string, CaseMapPosition, Orientation]) => {
-			const intersection = getFootprintIntersectionRatioInExtent(position.extent, overlay.footprint);
+		.filter(([overlay]: [Overlay, string, CaseMapData, Orientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<[Overlay, string, CaseMapData, Orientation], any>(([overlay, mapId, mapData, orientation]: [Overlay, string, CaseMapData, Orientation]) => {
+			const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extent, overlay.footprint);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
@@ -203,7 +204,7 @@ export class MapAppEffects {
 			}
 
 			let rotationAngle = 0;
-			switch (oreintation) {
+			switch (orientation) {
 				case 'Align North':
 					break;
 				case 'Imagery Perspective':
@@ -211,27 +212,28 @@ export class MapAppEffects {
 					break;
 				case 'User Perspective':
 					rotationAngle = communicator.getPosition().projectedState.rotation;
+					if (mapData.overlay) { // If there was an overlay before
+						rotationAngle -= mapData.overlay.northAngle;
+					}
 			}
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (intersection < this.config.overlayCoverage) {
-							communicator.resetView(layer, position, extentFromGeojson(overlay.footprint));
+							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
 						} else {
-							communicator.resetView(layer, position);
+							communicator.resetView(layer, mapData.position);
 						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
-							communicator.setActiveMap('disabledOpenLayersMap', position, layer);
+							communicator.setActiveMap('disabledOpenLayersMap', mapData.position, layer);
 						} else {
-							communicator.resetView(layer, position);
+							communicator.resetView(layer, mapData.position);
 						}
 					}
 
-					communicator.setRotation(rotationAngle);
-
-					return new DisplayOverlaySuccessAction({ id: overlay.id, mapId });
+					return new DisplayOverlaySuccessAction({ id: overlay.id, mapId, rotation: rotationAngle });
 				})
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
 		});

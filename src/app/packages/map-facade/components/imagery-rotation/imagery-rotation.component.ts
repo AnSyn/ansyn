@@ -1,46 +1,29 @@
-import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CaseMapState } from '@ansyn/core';
-import { PointNorthAction, SetMapRotationAction, UpdateNorthAngleAction } from '../../actions/map.actions';
-import { MapEffects } from '../../effects/map.effects';
+import { SetMapRotationAction } from '../../actions/map.actions';
 import { get } from 'lodash';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-imagery-rotation',
 	templateUrl: './imagery-rotation.component.html',
 	styleUrls: ['./imagery-rotation.component.less']
 })
-export class ImageryRotationComponent implements AfterViewInit {
-	_mapState: CaseMapState;
-
-	public get mapState(): CaseMapState {
-		return this._mapState;
-	}
-
-	@Input()
-	public set mapState(mapState: CaseMapState) {
-		this._mapState = mapState;
-		this.rotationAngle = get(this._mapState, 'data.position.projectedState.rotation', 0);
-	}
+export class ImageryRotationComponent {
+	@Input() mapState: CaseMapState;
 
 	isRotating = false;
-	// false - means show image photo angle
-	showNorth = true;
 
-	rotationAngle: number;
-
-	constructor(protected elementRef: ElementRef,
-				protected store: Store<any>,
-				protected mapEffects$: MapEffects) {
-		this.rotationAngle = 0;
+	get northAngle() {
+		return get(this.mapState, 'data.overlay.northAngle', 0);
 	}
 
-	ngAfterViewInit(): void {
-		this.mapEffects$.onNorthAngleChanged$.subscribe((updateNorthAngle: UpdateNorthAngleAction) => {
-			if (updateNorthAngle.payload.mapId === this.mapState.id) {
-				this.rotationAngle = updateNorthAngle.payload.angleRad;
-			}
-		});
+	get rotationAngle() {
+		return get(this.mapState, 'data.position.projectedState.rotation', 0) - this.northAngle;
+	}
+
+	constructor(protected elementRef: ElementRef,
+				protected store: Store<any>) {
 	}
 
 	stopPropagation($event: Event) {
@@ -53,24 +36,14 @@ export class ImageryRotationComponent implements AfterViewInit {
 	}
 
 	toggleNorth() {
-		if (!this.mapState.data.overlay) {
-			this.showNorth = true;
+		console.log(this.rotationAngle, this.northAngle);
+		if (this.rotationAngle === 0) {
+			const overlay = this.mapState.data.overlay;
+			if (overlay) {
+				this.setRotation(overlay.azimuth);
+			}
 		} else {
-			this.showNorth = !this.showNorth;
-		}
-
-		if (this.showNorth) {
-			this.store.dispatch(new PointNorthAction({
-				mapId: this.mapState.id,
-				rotationType: 'North',
-				overlay: this.mapState.data.overlay
-			}));
-		} else {
-			this.store.dispatch(new PointNorthAction({
-				mapId: this.mapState.id,
-				rotationType: 'ImageAngle',
-				overlay: this.mapState.data.overlay
-			}));
+			this.setRotation(this.northAngle);
 		}
 	}
 
@@ -95,7 +68,7 @@ export class ImageryRotationComponent implements AfterViewInit {
 			};
 
 			let radians = Math.atan2(mouse.y - center.y, mouse.x - center.x) + Math.PI / 2;
-			this.setRotation(radians);
+			this.setRotation(radians + this.northAngle);
 		};
 
 		document.addEventListener<'mousemove'>('mousemove', mouseMoveListener);

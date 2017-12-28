@@ -86,9 +86,9 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 			// console.log(`setCorrectedNorth: (northOffsetDeg:'${northData.northOffsetDeg}')`);
 			if (Math.abs(northData.northOffsetDeg) < this.thresholdDegrees) {
 				// console.log(`setCorrectedNorth: (northOffsetDeg) break)`);
-				return;
+				return northData.actualNorth;
 			}
-			this.setCorrectedNorth(mapObject, retryNumber + 1);
+			return this.setCorrectedNorth(mapObject, retryNumber + 1);
 		});
 	}
 }

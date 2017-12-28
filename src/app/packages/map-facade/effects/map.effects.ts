@@ -7,7 +7,6 @@ import {
 	ActiveMapChangedAction,
 	AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
-	CalcNorthDirectionAction,
 	DecreasePendingMapsCountAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
@@ -172,25 +171,10 @@ export class MapEffects {
 			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
 		.filter(([selectedMap]) => !_isEmpty(selectedMap))
-		.mergeMap(([selectedMap, mapsList, position]) => {
+		.map(([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
-			return [
-				new SetMapsDataActionStore({ mapsList: [...mapsList] }),
-				new CalcNorthDirectionAction({ mapId: selectedMap.mapId, mapState: selectedMap })
-			];
+			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
-
-	/**
-	 * @type Effect
-	 * @name onNorthAngleChanged$
-	 * @ofType UpdateNorthAngleAction
-	 * @dependencies map
-	 * @action UpdateNorthAngleAction
-	 */
-	@Effect({ dispatch: false })
-	onNorthAngleChanged$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.NORTH.UPDATE_NORTH_ANGLE)
-		.share();
 
 	/**
 	 * @type Effect

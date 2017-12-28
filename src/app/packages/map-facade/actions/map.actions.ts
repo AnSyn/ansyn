@@ -25,11 +25,6 @@ export const MapActionTypes = {
 		HOVER_FEATURE: 'HOVER_FEATURE',
 		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
 	},
-	NORTH: {
-		ROTATE_NORTH: 'ROTATE_NORTH',
-		CALC_NORTH_ANGLE: 'CALC_NORTH_ANGLE',
-		UPDATE_NORTH_ANGLE: 'UPDATE_NORTH_ANGLE'
-	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
 	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
@@ -210,34 +205,6 @@ export class ContextMenuDisplayAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 
 	constructor(public payload: string) {
-	}
-}
-
-// NORTH: {
-// 	POINT_NORTH_ANGLE: 'POINT_NORTH_ANGLE',
-// 		POINT_IMAGE_ANGLE: 'POINT_IMAGE_ANGLE'
-// },
-
-export type RotationType = 'North' | 'ImageAngle';
-
-export class PointNorthAction implements Action {
-	type = MapActionTypes.NORTH.ROTATE_NORTH;
-
-	constructor(public payload: { mapId: string, rotationType: RotationType, overlay?: Overlay }) {
-	}
-}
-
-export class CalcNorthDirectionAction implements Action {
-	type = MapActionTypes.NORTH.CALC_NORTH_ANGLE;
-
-	constructor(public payload: { mapId: string, mapState: CaseMapState }) {
-	}
-}
-
-export class UpdateNorthAngleAction implements Action {
-	type = MapActionTypes.NORTH.UPDATE_NORTH_ANGLE;
-
-	constructor(public payload: { mapId: string, angleRad: number }) {
 	}
 }
 

@@ -11,10 +11,6 @@ describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
 	let fixture: ComponentFixture<ImageryRotationComponent>;
 
-	const mockMapEffects = {
-		onNorthAngleChanged$: new EventEmitter<void>()
-	};
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -22,7 +18,7 @@ describe('ImageryRotationComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
-			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: MapEffects, useValue: mockMapEffects }],
+			providers: [{ provide: LoggerConfig, useValue: {} }],
 			declarations: [
 				ImageryRotationComponent
 			],

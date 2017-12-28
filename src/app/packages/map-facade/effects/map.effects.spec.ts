@@ -31,7 +31,8 @@ describe('MapEffects', () => {
 
 	const mapFacadeService: any = {
 		activeMap: (mapState: IMapState) => MapFacadeService.activeMap(mapState),
-		isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay)
+		isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay),
+		setMapsDataChanges: () => {}
 	};
 
 	beforeEach(async(() => {
@@ -85,8 +86,8 @@ describe('MapEffects', () => {
 				{ id: 'imagery2', data: { overlay: testOverlay } }
 			];
 			mapState.activeMapId = 'imagery1';
-			const fakeCommuincator = { id: 'test' };
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommuincator);
+			const fakeCommunicator = { id: 'test' };
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const expectedResults = cold('--b--', {
 				b: new EnableMapGeoOptionsActionStore({
@@ -99,11 +100,12 @@ describe('MapEffects', () => {
 	});
 
 	describe('onLayoutsChange$', () => {
-		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
-			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({
-				'mapsList': <any>'Mock',
+		fit('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
+			spyOn(mapFacadeService, 'setMapsDataChanges').and.returnValue({
+				'mapsList': [],
 				'activeMapId': 'imagery1'
 			});
+
 			mapState.mapsList = <any> [
 				{ id: 'imagery1' },
 				{ id: 'imagery2' }
@@ -121,7 +123,7 @@ describe('MapEffects', () => {
 
 			const expectedResults = cold('--(bc)--', {
 				b: new SetPendingMapsCountAction(1),
-				c: new SetMapsDataActionStore({ 'mapsList': <any>'Mock', 'activeMapId': 'imagery1' })
+				c: new SetMapsDataActionStore({ 'mapsList': [], 'activeMapId': 'imagery1' })
 			});
 			expect(mapEffects.onLayoutsChange$).toBeObservable(expectedResults);
 		});

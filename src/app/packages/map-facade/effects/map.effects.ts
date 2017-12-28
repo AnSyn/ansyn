@@ -124,7 +124,7 @@ export class MapEffects {
 		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
 		.mergeMap(([{ payload }, mapsList, activeMapId]) => [
 			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)),
-			new SetMapsDataActionStore(MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))]);
+			new SetMapsDataActionStore(this.mapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))]);
 
 	/**
 	 * @type Effect

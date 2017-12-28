@@ -185,7 +185,6 @@ export class MapAppEffects {
 				const overlay = action.payload.overlay;
 				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				console.log(map.data.overlay);
 				const orientation: Orientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
 				return [overlay, mapId, map.data, orientation];
 			})

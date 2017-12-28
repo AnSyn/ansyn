@@ -2,13 +2,13 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager } from '../imagery-component/manager/imagery.component.manager';
 
 import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-
 
 export class CommunicatorEntity {
 	private _managerSubscriptions;
@@ -19,6 +19,8 @@ export class CommunicatorEntity {
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
+
+	virtualNorth = 0;
 
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
@@ -118,6 +120,8 @@ export class CommunicatorEntity {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
+		position = cloneDeep(position);
+		position.projectedState.rotation += this.virtualNorth;
 		this.ActiveMap.setPosition(position);
 	}
 
@@ -125,7 +129,9 @@ export class CommunicatorEntity {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
-		return this.ActiveMap.getPosition();
+		let position = cloneDeep(this.ActiveMap.getPosition());
+		position.projectedState.rotation -= this.virtualNorth;
+		return position;
 	}
 
 	public setRotation(rotation: number) {
@@ -148,6 +154,7 @@ export class CommunicatorEntity {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+		this.virtualNorth = 0;
 		if (this._manager) {
 			this._manager.resetView(layer, position, extent);
 		}

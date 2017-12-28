@@ -563,7 +563,7 @@ describe('MapAppEffects', () => {
 					communicatorIds: communicators
 				})
 			});
-			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, mapId: 'imagery1' }) });
+			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, mapId: 'imagery1', ignoreRotation: true }) });
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
 		});
 

@@ -256,7 +256,6 @@ export class MapAppEffects {
 		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
 		.map((caseMapState: CaseMapState) => {
 			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
-			console.log(caseMapState);
 			return new DisplayOverlayAction({
 				overlay: caseMapState.data.overlay,
 				mapId: caseMapState.id,

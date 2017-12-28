@@ -21,7 +21,7 @@ export class Overlay {
 	photoTime: string;
 	date: Date;
 	azimuth: number; // radians
-	northAngle = 0; // radians
+	northAngle? = 0; // radians
 	approximateTransform?: any;
 	csmState?: string;
 	sourceType?: string;

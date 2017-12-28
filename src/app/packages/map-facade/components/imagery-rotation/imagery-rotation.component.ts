@@ -36,11 +36,10 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		console.log(this.rotationAngle, this.northAngle);
 		if (this.rotationAngle === 0) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
-				this.setRotation(overlay.azimuth);
+				this.setRotation(overlay.azimuth + this.northAngle);
 			}
 		} else {
 			this.setRotation(this.northAngle);

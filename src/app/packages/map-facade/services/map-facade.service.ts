@@ -14,7 +14,7 @@ import {
 } from '../actions';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
-import { cloneDeep, range } from 'lodash';
+import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
 
@@ -35,37 +35,6 @@ export class MapFacadeService {
 
 	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
 		return mapsList.find(({ id }) => id === mapId);
-	}
-
-	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
-		let mapsListChange = {};
-		const mapsList: CaseMapState[] = [];
-
-		/* mapsList*/
-		const activeMap = oldMapsList.find(({ id }) => id === oldActiveMapId);
-		range(layout.mapsCount).forEach((index) => {
-			if (oldMapsList[index]) {
-				mapsList.push(oldMapsList[index]);
-			} else {
-				const mapStateCopy: CaseMapState = {
-					id: UUID.UUID(),
-					progress: 0,
-					data: { position: cloneDeep(activeMap.data.position) },
-					mapType: defaultMapType,
-					flags: {}
-				};
-				mapsList.push(mapStateCopy);
-			}
-		});
-		mapsListChange = { mapsList };
-
-		/* activeMapId */
-		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
-		if (notExist) {
-			mapsList[mapsList.length - 1] = activeMap;
-		}
-
-		return { ...mapsListChange };
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
@@ -106,6 +75,38 @@ export class MapFacadeService {
 			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
 		});
 
+	}
+
+	setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
+		const mapsList: CaseMapState[] = [];
+
+		/* mapsList*/
+		const activeMap = oldMapsList.find(({ id }) => id === oldActiveMapId);
+		const position = this.imageryCommunicatorService.provide(oldActiveMapId).getPosition();
+		range(layout.mapsCount).forEach((index) => {
+			if (oldMapsList[index]) {
+				mapsList.push(oldMapsList[index]);
+			} else {
+				const mapStateCopy: CaseMapState = {
+					id: UUID.UUID(),
+					progress: 0,
+					data: { position },
+					mapType: defaultMapType,
+					flags: {}
+				};
+				mapsList.push(mapStateCopy);
+			}
+		});
+
+		const mapsListChange = { mapsList };
+
+		/* activeMapId */
+		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
+		if (notExist) {
+			mapsList[mapsList.length - 1] = activeMap;
+		}
+
+		return { ...mapsListChange };
 	}
 
 	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins

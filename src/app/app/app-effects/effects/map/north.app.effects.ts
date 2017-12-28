@@ -33,6 +33,7 @@ export class NorthAppEffects {
 			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
 
 			this.pointNorth(payload.mapId).then(north => {
+				communicator.virtualNorth = north;
 				communicator.setRotation(north + payload.rotation);
 
 				const mapState = MapFacadeService.mapById(mapsState.mapsList, payload.mapId);
@@ -46,7 +47,7 @@ export class NorthAppEffects {
 	}
 
 	pointNorth(mapId: string): Promise<number> {
-		// return Promise.resolve(Math.PI / 2);
+		// return new Promise(resolve => setTimeout(() => resolve(Math.PI / 2), 500));
 		return new Promise(resolve => {
 			const comEntity = this.imageryCommunicatorService.provide(mapId);
 			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);

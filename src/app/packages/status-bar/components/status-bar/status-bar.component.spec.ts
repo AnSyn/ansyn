@@ -46,20 +46,20 @@ describe('StatusBarComponent', () => {
 
 
 	it('eye indicator should be active', () => {
-		let result = fixture.nativeElement.querySelector('.status-bar-eye-icon').classList.contains('active');
+		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active');
 		expect(result).toBe(true);
 		component.flags.set(statusBarFlagsItems.pinPointIndicator, false);
 		fixture.detectChanges();
-		result = fixture.nativeElement.querySelector('.status-bar-eye-icon').classList.contains('active');
+		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active');
 		expect(result).toBe(false);
 	});
 
 	it('check click on pinPoint flags', () => {
 		spyOn(store, 'dispatch');
-		fixture.nativeElement.querySelector('.status-bar-edit-icon i').click();
+		fixture.nativeElement.querySelector('.edit-pinpoint').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 
-		fixture.nativeElement.querySelector('.status-bar-eye-icon i').click();
+		fixture.nativeElement.querySelector('.eye-button').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	});
 
@@ -79,55 +79,22 @@ describe('StatusBarComponent', () => {
 			component.clickExpand();
 			expect(component.store.dispatch).toHaveBeenCalledWith(new ExpandAction());
 		});
+	});
 
-		it('clickFavorite should dispatch action ToggleFavoriteAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.overlay = { id: 'overlayIdBS' };
-			component.clickFavorite();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new ToggleFavoriteAction(component.overlay.id));
+	[{k: 39, n: "goNextActive", f: "clickGoNext"}, {k: 37, n: "goPrevActive", f: "clickGoPrev"}].forEach(key => {
+		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
+			spyOn(component, <"clickGoNext"|"clickGoPrev">key.f);
+			expect(component[key.n]).toEqual(false);
+			const $event = {
+				which: key.k,
+				currentTarget: { document: { activeElement: {} } }
+			};
+			component.onkeydown(<any>$event);
+			expect(component[key.n]).toEqual(true);
+
+			component.onkeyup(<any>$event);
+			expect(component[key.n]).toEqual(false);
+			expect(component[key.f]).toHaveBeenCalled();
 		});
-	});
-	it('onkeyup should call goNext when keycode = "39" and clickGoPrev when keycode = "37", and remove "active" class from next,prev buttons', () => {
-		spyOn(component.goPrev.nativeElement.classList, 'remove');
-		spyOn(component.goNext.nativeElement.classList, 'remove');
-
-		spyOn(component, 'clickGoPrev');
-		spyOn(component, 'clickGoNext');
-		const $event = {
-			which: 39,
-			currentTarget: { document: { activeElement: {} } }
-		};
-		component.onkeyup(<any>$event);
-		expect(component.goNext.nativeElement.classList.remove).toHaveBeenCalledWith('active');
-		expect(component.clickGoNext).toHaveBeenCalled();
-		$event.which = 37;
-		component.onkeyup(<any>$event);
-		expect(component.goPrev.nativeElement.classList.remove).toHaveBeenCalledWith('active');
-		expect(component.clickGoPrev).toHaveBeenCalled();
-	});
-
-	it('onkeydown should add "active" class to goNext or goPrev according to keyCode', () => {
-		spyOn(component.goPrev.nativeElement.classList, 'add');
-		spyOn(component.goNext.nativeElement.classList, 'add');
-		const $event = {
-			which: 39,
-			currentTarget: { document: { activeElement: {} } }
-		};
-		component.onkeydown(<any>$event);
-		expect(component.goNext.nativeElement.classList.add).toHaveBeenCalledWith('active');
-		$event.which = 37;
-		component.onkeydown(<any>$event);
-		expect(component.goPrev.nativeElement.classList.add).toHaveBeenCalledWith('active');
-	});
-
-	it('check isFavoriteOverlayDisplayed changes', () => {
-		let isFavoriteOverlayDisplayed = true;
-		spyOn(component, 'isFavoriteOverlayDisplayed').and.callFake(() => isFavoriteOverlayDisplayed);
-		isFavoriteOverlayDisplayed = true;
-		fixture.detectChanges();
-		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.contains('active')).toBeTruthy();
-		isFavoriteOverlayDisplayed = false;
-		fixture.detectChanges();
-		expect(fixture.nativeElement.querySelector('.favorite-icon').classList.contains('active')).toBeFalsy();
 	});
 });

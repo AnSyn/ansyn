@@ -2,13 +2,15 @@ import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.acti
 import { MapsLayout } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
+export type Orientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
+
 export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selectedLayoutIndex: number;
 	flags: Map<string, boolean>;
-	orientations: string[],
+	orientations: Orientation[],
 	geoFilters: string[],
-	orientation: string;
+	orientation: Orientation;
 	geoFilter: string;
 	time: { from: Date, to: Date },
 	overlaysCount: number,
@@ -41,9 +43,9 @@ export const StatusBarInitialState: IStatusBarState = {
 	layouts,
 	selectedLayoutIndex,
 	flags: new Map<string, boolean>(),
-	orientations: ['original'],
+	orientations: ['Align North', 'User Perspective', 'Imagery Perspective'],
 	geoFilters: ['pin-point'],
-	orientation: 'original',
+	orientation: 'Align North',
 	geoFilter: 'pin-point',
 	time: { from: new Date(0), to: new Date() },
 	overlaysCount: 0,

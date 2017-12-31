@@ -1,8 +1,8 @@
 # AnSyn
-A satellite imagery management application, for viewing and managing imagery from any source, with many tools to inhance the experience
+A satellite imagery management application, for viewing and managing imagery from any source, with many tools to enhance the experience
 
 # Usage
-You can not run the app without a backend, and the backend is not currently publicly exposed.
+You can't run the app without a backend, and the backend is not currently publicly exposed.
 
 ## Deploy
 - Client: (from the client's folder)

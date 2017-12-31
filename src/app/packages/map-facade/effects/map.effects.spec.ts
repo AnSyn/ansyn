@@ -27,13 +27,13 @@ describe('MapEffects', () => {
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
+	let mapFacadeService: MapFacadeService;
 	let mapState: IMapState = cloneDeep(initialMapState);
-
-	const mapFacadeService: any = {
-		activeMap: (mapState: IMapState) => MapFacadeService.activeMap(mapState),
-		isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay),
-		setMapsDataChanges: () => {}
-	};
+	// const mapFacadeService: any = {
+	// 	activeMap: (mapState: IMapState) => MapFacadeService.activeMap(mapState),
+	// 	isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay),
+	// 	setMapsDataChanges: () => {}
+	// };
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -49,8 +49,9 @@ describe('MapEffects', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store, MapFacadeService], (_store: Store<any>, _mapFacadeService: MapFacadeService) => {
 		store = _store;
+		mapFacadeService = _mapFacadeService;
 		const fakeStore = new Map<any, any>([
 			[mapStateSelector, mapState]
 		]);
@@ -100,7 +101,7 @@ describe('MapEffects', () => {
 	});
 
 	describe('onLayoutsChange$', () => {
-		fit('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
+		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
 			spyOn(mapFacadeService, 'setMapsDataChanges').and.returnValue({
 				'mapsList': [],
 				'activeMapId': 'imagery1'

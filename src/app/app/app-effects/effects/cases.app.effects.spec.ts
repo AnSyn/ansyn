@@ -22,6 +22,8 @@ import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryComponentManager } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
+import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -111,8 +113,25 @@ describe('CasesAppEffects', () => {
 		expect(casesAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 	});
 
+	it('updateAnnotationLayersFlags$ - call ShowAnnotationsLayerOnInit', () => {
+		actions = hot('--a--', {
+			a: new SelectCaseAction(<Case>{
+				state: {
+					layers: {
+						displayAnnotationsLayer: true
+					}
+				}
+			})
+		});
 
-	it('updateAnnotationLayersFlags$', () => {
+		let expectedResult = cold('--b--', { b: new ShowAnnotationsLayerOnInit({ update: false }) });
+		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
+	});
+
+	it('updateAnnotationLayersFlags$ - call ShowAnnotationsLayer', () => {
+		imageryCommunicatorService.createCommunicator(new ImageryComponentManager(null, null, null, null, null, null, 'id'));
+		// spyOn(imageryCommunicatorService, 'initialized').and.callFake(() => true)
+		// imageryCommunicatorService.initialized.callFake = true;
 		actions = hot('--a--', {
 			a: new SelectCaseAction(<Case>{
 				state: {
@@ -127,7 +146,7 @@ describe('CasesAppEffects', () => {
 		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
 	});
 
-	it('updateAnnotationLayersFlags$', () => {
+	it('updateAnnotationLayersFlags$ - call HideAnnotationsLayer', () => {
 		actions = hot('--a--', {
 			a: new SelectCaseAction(<Case>{
 				state: {

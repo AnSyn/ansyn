@@ -22,6 +22,7 @@ import {
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -39,7 +40,8 @@ describe('LayersAppEffects', () => {
 			})],
 			providers: [
 				provideMockActions(() => actions),
-				LayersAppEffects
+				LayersAppEffects,
+				ImageryCommunicatorService
 			]
 
 		}).compileComponents();

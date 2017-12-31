@@ -26,9 +26,9 @@ export class ComboBoxComponent {
 	}
 
 	onBlurOptionsContainer($event: FocusEvent) {
-		// if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
+		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
 			this.optionsVisible = false;
-		// }
+		}
 	}
 
 	selectOption(index, option) {

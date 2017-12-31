@@ -130,8 +130,6 @@ describe('CasesAppEffects', () => {
 
 	it('updateAnnotationLayersFlags$ - call ShowAnnotationsLayer', () => {
 		imageryCommunicatorService.createCommunicator(new ImageryComponentManager(null, null, null, null, null, null, 'id'));
-		// spyOn(imageryCommunicatorService, 'initialized').and.callFake(() => true)
-		// imageryCommunicatorService.initialized.callFake = true;
 		actions = hot('--a--', {
 			a: new SelectCaseAction(<Case>{
 				state: {

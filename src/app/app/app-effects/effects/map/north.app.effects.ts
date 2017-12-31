@@ -33,7 +33,7 @@ export class NorthAppEffects {
 			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
 
 			this.pointNorth(payload.mapId).then(north => {
-				communicator.virtualNorth = north;
+				communicator.setVirtualNorth(north);
 				communicator.setRotation(north + payload.rotation);
 
 				const mapState = MapFacadeService.mapById(mapsState.mapsList, payload.mapId);

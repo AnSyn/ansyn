@@ -72,7 +72,7 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 		return Promise.resolve(result);
 	}
 
-	setCorrectedNorth(mapObject, retryNumber = 0) {
+	setCorrectedNorth(mapObject, retryNumber = 0): Promise<number> {
 		// console.log(`setCorrectedNorth: (retryNumber:'${retryNumber}')`);
 		if (retryNumber === this.maxNumberOfRetries) {
 			// console.log(`setCorrectedNorth: (maxNumberOfRetries) break)`);

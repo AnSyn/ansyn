@@ -42,7 +42,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 
 	writeValue(newValue: number[]): void {
 		if (newValue && !_isEqual(newValue, this.coordinates)) {
-			this.coordinates = newValue.map((num) => Math.floor(num));
+			this.coordinates = newValue.map((num) => Number(num.toFixed(3)));
 		}
 	}
 

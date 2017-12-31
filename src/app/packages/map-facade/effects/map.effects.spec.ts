@@ -29,11 +29,6 @@ describe('MapEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let mapFacadeService: MapFacadeService;
 	let mapState: IMapState = cloneDeep(initialMapState);
-	// const mapFacadeService: any = {
-	// 	activeMap: (mapState: IMapState) => MapFacadeService.activeMap(mapState),
-	// 	isOverlayGeoRegistered: (overlay: Overlay) => MapFacadeService.isOverlayGeoRegistered(overlay),
-	// 	setMapsDataChanges: () => {}
-	// };
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

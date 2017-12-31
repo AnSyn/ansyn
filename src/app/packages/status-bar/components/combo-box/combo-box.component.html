@@ -1,5 +1,6 @@
 <div class="combo-container">
-	<button class="trigger" #optionsTrigger (click)="toggleShow()">
+	<button
+		class="trigger" #optionsTrigger (click)="toggleShow()">
 		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
 		<div [innerHTML]="render(selected)"></div>
 		<span class="arrow">
@@ -7,10 +8,13 @@
 		</span>
 	</button>
 
-	<div class="options-container" #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
+	<div class="options-container"
+		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<div class="option" *ngFor="let option of options; index as index"
+			 [attr.tooltip-value]="option" tooltip-class="top"
 			 (click)="selectOption(index, option)"
-			[innerHTML]="render(option)"></div>
+			[innerHTML]="render(option)">
+		</div>
 	</div>
 </div>

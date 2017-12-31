@@ -1,6 +1,10 @@
-:host {
-	height: 100%;
+@import '~@ansyn/core/less/tooltip';
 
+:host {
+	&.combo-center .combo-container .options-container .option {
+		text-align: center;
+	}
+	height: 100%;
 	.combo-container {
 		height: 100%;
 		position: relative;
@@ -24,6 +28,8 @@
 			}
 		}
 		.options-container {
+			border: 1px solid;
+			border-bottom: none;
 			width: 100%;
 			background: black;
 
@@ -38,21 +44,34 @@
 			position: absolute;
 			top: 0;
 			transform: translate(0, -100%);
+			box-sizing: border-box;
 			.option {
-				display: flex;
-				justify-content: center;
-				padding: 1px 6px;
+				line-height: 29px;
+				align-self: center;
+				background: transparent;
+				display: block;
+				padding: 0 6px;
 				color: white;
 				cursor: pointer;
-				border-bottom: 1px solid black;
 				box-sizing: border-box;
+				width: 100%;
+				white-space: nowrap;
+				text-overflow-ellipsis: active;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				border: none;
+				text-align: left;
+				height: 29px;
 				i {
+					align-text: center;
 					opacity: .8;
 					font-size: 16px;
 				}
 				&:hover {
+					background-color: white;
+					color: black;
 					border-color: white;
-					img {
+					i {
 						opacity: 1;
 					}
 				}

@@ -109,6 +109,10 @@ export class CommunicatorEntity {
 		}
 	}
 
+	setVirtualNorth(north: number) {
+		this.virtualNorth = north;
+	}
+
 	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
 		if (this.ActiveMap) {
 			const animate = (_.isNil(animation)) ? true : animation;
@@ -129,7 +133,7 @@ export class CommunicatorEntity {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
-		let position = cloneDeep(this.ActiveMap.getPosition());
+		let position = this.ActiveMap.getPosition();
 		position.projectedState.rotation -= this.virtualNorth;
 		return position;
 	}

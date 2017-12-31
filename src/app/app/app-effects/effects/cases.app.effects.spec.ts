@@ -21,8 +21,7 @@ import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ImageryComponentManager } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
+import { ImageryCommunicatorService, ImageryComponentManager } from '@ansyn/imagery';
 import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 describe('CasesAppEffects', () => {
@@ -77,7 +76,7 @@ describe('CasesAppEffects', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([ImageryCommunicatorService, Store, casesConfig, ],
+	beforeEach(inject([ImageryCommunicatorService, Store, casesConfig],
 		(_imageryCommunicatorService: ImageryCommunicatorService, _store: Store<any>) => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		store = _store;

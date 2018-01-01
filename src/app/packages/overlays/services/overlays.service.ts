@@ -72,7 +72,7 @@ export class OverlaysService {
 	}
 
 
-	static parseOverlayDataForDispaly({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
+	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
 
 		specialObjects.forEach((value) => {

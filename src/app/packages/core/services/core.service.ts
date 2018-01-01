@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CaseMapState } from '../models/case.model';
 import { isEmpty } from 'lodash';
+import { Overlay } from '../index';
 
 @Injectable()
 export class CoreService {
-	static getOverlaysMarkup(mapsList: CaseMapState[], activeMapId: string, favoriteOverlays: string[], hoverId?: string) {
+	static getOverlaysMarkup(mapsList: CaseMapState[], activeMapId: string, favoriteOverlays: Overlay[], hoverId?: string) {
 		const result = [];
 
 		mapsList.forEach((map: CaseMapState) => {
@@ -18,7 +19,7 @@ export class CoreService {
 		});
 
 		if (favoriteOverlays) {
-			favoriteOverlays.forEach(item => result.push({ id: item, class: 'favorites' }));
+			favoriteOverlays.forEach((item: Overlay) => result.push({ id: item.id, class: 'favorites' }));
 		}
 
 		if (hoverId) {

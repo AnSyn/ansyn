@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { IToastMessage } from '../reducers/core.reducer';
+import { Overlay } from '../models/overlay.model';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('TOGGLE_MAP_LAYERS'),
@@ -25,7 +26,7 @@ export class ToggleMapLayersAction implements Action {
 export class ToggleFavoriteAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload?: string) { // overlayId
+	constructor(public payload: Overlay) {
 	}
 }
 
@@ -39,6 +40,6 @@ export class SetToastMessageAction implements Action {
 export class SetFavoriteOverlaysAction implements Action {
 	type = CoreActionTypes.SET_FAVORITE_OVERLAYS;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: Overlay[]) {
 	}
 }

@@ -26,7 +26,7 @@ export interface CaseState {
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
 	geoFilter: string,
-	favoritesOverlays?: string[],
+	favoritesOverlays?: Overlay[],
 	overlaysManualProcessArgs: Object,
 	layers?: CaseLayersState
 }

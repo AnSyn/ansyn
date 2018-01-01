@@ -5,7 +5,7 @@ import {
 	AnnotationVisualizerAgentAction,
 	GoToExpandAction,
 	SetAutoCloseMenu,
-	SetAutoImageProcessing,
+	SetAutoImageProcessing, SetMeasureDistanceToolState,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
@@ -84,6 +84,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		} else {
 			this.store.dispatch(new StartMouseShadow());
 		}
+	}
+
+	toggleMeasureDistanceTool() {
+		const value = this.flags.get('isMeasureToolActive');
+		this.store.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 
 	toggleAutoImageProcessing() {

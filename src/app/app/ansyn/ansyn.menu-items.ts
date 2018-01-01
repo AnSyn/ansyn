@@ -21,7 +21,7 @@ export const ansynMenuItems: MenuItem[] = [
 		production: true
 	},
 	{
-		name: 'Layers Manager',
+		name: 'Data Layers',
 		component: LayersManagerComponent,
 		iconClass: 'icon-main-data-layers',
 		production: true

@@ -68,4 +68,13 @@
 		<span class="tooltiptext">User Annotations</span>
 		<ansyn-annotations-control [expand]="expandedSubMenu === subMenuEnum.annotations"></ansyn-annotations-control>
 	</div>
+
+	<div class="distance-measure-tool" [class.active]="flags.get('isMeasureToolActive')">
+		<button tooltip-class="right"
+				tooltip-value="Measure Distance"
+				(click)="toggleMeasureDistanceTool()"
+				[class.mode-on]="flags.get('isMeasureToolActive')">
+			<i class="icon-tools-ruler"></i>
+		</button>
+	</div>
 </div>

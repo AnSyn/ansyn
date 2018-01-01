@@ -53,3 +53,4 @@ yarn.lock
 yarn-error.log
 
 /e2e/REPORTS
+/e2e/*.js

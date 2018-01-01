@@ -18,6 +18,7 @@ export const ToolsActionsTypes = {
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
+	SET_MEASURE_TOOL_STATE: type('[tools]SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
@@ -151,6 +152,13 @@ export class SetAutoImageProcessingSuccess implements Action {
 	}
 }
 
+export class SetMeasureDistanceToolState implements Action {
+	type = ToolsActionsTypes.SET_MEASURE_TOOL_STATE;
+
+	constructor(public payload: boolean) {
+	}
+}
+
 export class DisableImageProcessing implements Action {
 	type = ToolsActionsTypes.DISABLE_IMAGE_PROCESSING;
 
@@ -226,4 +234,5 @@ export type ToolsActions =
 	| DisableImageProcessing
 	| EnableImageProcessing
 	| SetAutoImageProcessingSuccess
-	| SetMapGeoEnabledModeToolsActionStore;
+	| SetMapGeoEnabledModeToolsActionStore
+	| SetMeasureDistanceToolState;

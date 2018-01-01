@@ -9,6 +9,7 @@ import {
 	HoverFeatureTriggerAction,
 	MapActionTypes,
 	PinPointTriggerAction,
+	ActiveMapChangedAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
@@ -42,6 +43,7 @@ import {
 	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
+	SetMeasureDistanceToolState,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -56,7 +58,7 @@ import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-
+import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers/measure-distance.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -189,6 +191,62 @@ export class VisualizersAppEffects {
 			mapsList.forEach((mapData: CaseMapState) => {
 				this.drawOverlaysOnMap(mapData, overlaysState);
 			});
+		});
+
+	/**
+	 * @type Effect
+	 * @name drawDistamceMeasureOnMap$
+	 * @ofType DrawOverlaysOnMapTriggerAction
+	 * @dependencies overlays, cases
+	 */
+	@Effect({ dispatch: false })
+	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
+		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => [action, mapState])
+		.map(([action, mapState]: [SetMeasureDistanceToolState, IMapState]) => {
+			return [action, MapFacadeService.activeMap(mapState)];
+		})
+		.filter(([action, activeMap]: [SetMeasureDistanceToolState, CaseMapState]) => Boolean(activeMap))
+		.map(([action, activeMap]: [SetMeasureDistanceToolState, CaseMapState]) => {
+			const communicator = this.imageryCommunicatorService.provide(activeMap.id);
+			const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+			if (distanceVisualizerTool) {
+				if (action.payload) {
+					distanceVisualizerTool.createInteraction();
+				} else {
+					distanceVisualizerTool.removeInteraction();
+					distanceVisualizerTool.clearEntities();
+				}
+			}
+		});
+
+	/**
+	 * @type Effect
+	 * @name onActiveMapChangesDeleteOldMeasureLayer$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies map
+	 */
+	@Effect({ dispatch: false })
+	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
+		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
+			return [action, toolState.flags.get('isMeasureToolActive')];
+		})
+		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
+		.map(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => {
+			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
+				const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+				if (distanceVisualizerTool) {
+					distanceVisualizerTool.clearEntities();
+					distanceVisualizerTool.removeInteraction();
+				}
+			});
+
+			const communicator = this.imageryCommunicatorService.provide(action.payload);
+			const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+			if (distanceVisualizerTool) {
+				distanceVisualizerTool.createInteraction();
+			}
 		});
 
 	/**

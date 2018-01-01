@@ -85,6 +85,12 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set('autoImageProcessing', action.payload);
 			return { ...state, flags: tmpMap };
 
+		case ToolsActionsTypes.SET_MEASURE_TOOL_STATE:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set('isMeasureToolActive', action.payload);
+			return { ...state, flags: tmpMap };
+
 		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);

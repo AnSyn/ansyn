@@ -16,8 +16,8 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout } from '@ansyn/core';
-import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -46,8 +46,8 @@ export class StatusBarComponent implements OnInit {
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
 
-	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
-	favoriteOverlays: string[];
+	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
+	favoriteOverlays: Overlay[];
 
 	layouts: MapsLayout[] = [];
 	selectedLayoutIndex: number;
@@ -179,7 +179,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.includes(this.overlay && this.overlay.id);
+		return this.favoriteOverlays.includes(this.overlay);
 	}
 
 	showGeoRegistrationError(): boolean {

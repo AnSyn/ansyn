@@ -5,6 +5,7 @@ import {
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { Overlay } from '../models/overlay.model';
 
 export interface IToastMessage {
 	toastText: string;
@@ -13,7 +14,7 @@ export interface IToastMessage {
 
 export interface ICoreState {
 	toastMessage: IToastMessage;
-	favoriteOverlays: string[]
+	favoriteOverlays: Overlay[]
 }
 
 export const coreInitialState: ICoreState = {

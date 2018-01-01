@@ -23,14 +23,14 @@ export class ImageryStatusComponent implements OnInit {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
-	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
-	favoriteOverlays: string[];
+	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
+	favoriteOverlays: Overlay[];
 
 	constructor(protected store$: Store<any>) {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.includes(this.overlay && this.overlay.id);
+		return this.favoriteOverlays.includes(this.overlay);
 	}
 
 	ngOnInit(): void {
@@ -38,7 +38,7 @@ export class ImageryStatusComponent implements OnInit {
 	}
 
 	toggleFavorite() {
-		this.store$.dispatch(new ToggleFavoriteAction(this.overlay.id));
+		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
 	}
 
 	toggleMapLayers() {

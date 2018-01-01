@@ -18,6 +18,7 @@ import {
 	RedrawTimelineAction,
 	RequestOverlayByIDFromBackendAction,
 	SetTimelineStateAction,
+	SyncOverlaysWithFavoritesAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
@@ -28,6 +29,7 @@ import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class OverlaysEffects {
@@ -81,7 +83,7 @@ export class OverlaysEffects {
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlays.data)];
+					const actions: Array<any> = [new SyncOverlaysWithFavoritesAction(overlays.data)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
@@ -93,7 +95,28 @@ export class OverlaysEffects {
 				})
 				.catch(() => Observable.of(new LoadOverlaysSuccessAction([])));
 		});
-
+	/**
+	 * @type Effect
+	 * @name syncOverlays$
+	 * @ofType SyncOverlaysWithFavoritesAction
+	 * @dependencies coreState
+	 * @action LoadOverlaysSuccessAction
+	 */
+	@Effect()
+	syncOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
+		.ofType<LoadOverlaysAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES)
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([action, state]: [LoadOverlaysAction, ICoreState]) => {
+			// sync overlays from server (by pinpoint) with favorite (from case). favorites always presented.
+			const overlays = action.payload;
+			state.favoriteOverlays.forEach(fav => {
+				const overlay = overlays.find(overlay => overlay.id === fav.id);
+				if (!overlay) {
+					overlays.push(fav);
+				}
+			});
+			return new LoadOverlaysSuccessAction(overlays);
+		});
 	/**
 	 * @type Effect
 	 * @name onRequestOverlayByID$
@@ -175,7 +198,7 @@ export class OverlaysEffects {
 			OverlaysActionTypes.SET_FILTERED_OVERLAYS,
 			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => overlays)
-		.map(OverlaysService.parseOverlayDataForDispaly);
+		.map(OverlaysService.parseOverlayDataForDisplay);
 
 	/**
 	 * @type Effect

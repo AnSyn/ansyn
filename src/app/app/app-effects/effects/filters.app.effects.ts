@@ -1,4 +1,4 @@
-import { cloneDeep, isNil } from 'lodash';
+import { cloneDeep, isNil, union } from 'lodash';
 import { Case, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -167,7 +167,7 @@ export class FiltersAppEffects {
 		return isNil(metadata);
 	}
 
-	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: string[]) {
+	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {
 		const parsedFilters = Array.from(filters.filters)
 			.map(([key, value]) => ({
 				filteringParams: {
@@ -176,9 +176,13 @@ export class FiltersAppEffects {
 				},
 				filterFunc: value.filterFunc
 			}));
-		const favorites = favoriteOverlays;
-		const { showOnlyFavorites } = filters;
-		let overlaysToFilter = showOnlyFavorites ? new Map<string, Overlay>(<any>favorites.map((id) => [id, overlays.get(id)])) : overlays;
-		return OverlaysService.filter(overlaysToFilter, parsedFilters);
+		const favorites = favoriteOverlays.map(overlay => overlay.id);
+		if (filters.showOnlyFavorites) {
+			// display favorites (always displayed)
+			return favorites;
+		} else {
+			// display favorites + filtered overlays
+			return union(favorites, OverlaysService.filter(overlays, parsedFilters));
+		}
 	}
 }

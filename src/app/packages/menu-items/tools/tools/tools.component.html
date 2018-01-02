@@ -69,10 +69,11 @@
 		<ansyn-annotations-control [expand]="expandedSubMenu === subMenuEnum.annotations"></ansyn-annotations-control>
 	</div>
 
-	<div class="distance-measure-tool" [class.active]="flags.get('isMeasureToolActive')">
+	<div class="distance-measure-tool">
 		<button tooltip-class="right"
 				tooltip-value="Measure Distance"
 				(click)="toggleMeasureDistanceTool()"
+				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="flags.get('isMeasureToolActive')">
 			<i class="icon-tools-ruler"></i>
 		</button>

@@ -21,7 +21,7 @@ import { ContextEntityVisualizer } from './app-visualizers/context-entity.visual
 import { FootprintHeatmapVisualizer } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import { FootprintPolylineVisualizer } from '@ansyn/open-layer-visualizers/overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from '@ansyn/open-layer-visualizers/annotations.visualizer';
-import { MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers/measure-distance.visualizer';
+import { MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers';
 import { GoToVisualizer } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
 import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';

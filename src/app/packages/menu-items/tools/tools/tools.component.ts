@@ -5,7 +5,8 @@ import {
 	AnnotationVisualizerAgentAction,
 	GoToExpandAction,
 	SetAutoCloseMenu,
-	SetAutoImageProcessing, SetMeasureDistanceToolState,
+	SetAutoImageProcessing,
+	SetMeasureDistanceToolState,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';

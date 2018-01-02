@@ -14,6 +14,7 @@ import {
 	NorthCalculationsPlugin,
 	openLayersNorthCalculations
 } from '@ansyn/open-layers-north-calculations/plugin/north-calculations-plugin';
+import { LoggerService } from '@ansyn/core';
 
 @Injectable()
 export class NorthAppEffects {
@@ -43,7 +44,8 @@ export class NorthAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected loggerService: LoggerService) {
 	}
 
 	pointNorth(mapId: string): Promise<number> {
@@ -58,7 +60,7 @@ export class NorthAppEffects {
 			} else {
 				northPlugin.setCorrectedNorth(comEntity.ActiveMap.mapObject)
 					.then(north => resolve(north), (reason) => {
-						console.warn(`'setCorrectedNorth failed: ${reason}'`);
+						this.loggerService.warn(`setCorrectedNorth failed: ${reason}`);
 					});
 			}
 		});

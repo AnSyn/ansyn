@@ -41,6 +41,11 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 		const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 		const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
 
+
+		if (!olCenterView) {
+			return Promise.reject("no coordinate for pixel");
+		}
+
 		return this.projectPoints(mapObject, [olCenterView, olCenterViewWithOffset]).then((projectedPoints: any[]) => {
 			const projectedCenterView = projectedPoints[0];
 			const projectedCenterViewWithOffset = projectedPoints[1];
@@ -89,6 +94,8 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 				return northData.actualNorth;
 			}
 			return this.setCorrectedNorth(mapObject, retryNumber + 1);
+		}, (result) => {
+			return Promise.reject(result);
 		});
 	}
 }

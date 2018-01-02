@@ -126,7 +126,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.thumbnailUrl = 'https://geobigdata.io/thumbnails/v1/browse/' + idahoElement.properties.catalogID + '.large.png';
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
-		overlay.azimuth = toRadians(idahoElement.properties.satAzimuth);
+		overlay.azimuth = toRadians(180 - idahoElement.properties.satAzimuth);
 		overlay.sourceType = this.sourceType;
 		overlay.isFullOverlay = true;
 		overlay.isGeoRegistered = true;

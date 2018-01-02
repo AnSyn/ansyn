@@ -98,7 +98,7 @@ export class MapAppEffects {
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
 
 			// draw the point on the map
-			const selectedCase = {
+			const selectedCase = <Case> {
 				...caseState.selectedCase,
 				state: { ...caseState.selectedCase.state, region }
 			};

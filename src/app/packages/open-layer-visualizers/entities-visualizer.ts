@@ -21,7 +21,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { OpenLayersMap } from '@ansyn/open-layers-map/openlayers-map/openlayers-map';
-import { Subject } from 'rxjs/Subject';
+import { VisualizerEvents, VisualizerEventTypes } from '@ansyn/imagery/model/imap-visualizer';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -73,14 +73,21 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	private enabledInteractions = { doubleClick: false, pointMove: false };
 
 	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
-	onHoverFeature: EventEmitter<any> = new EventEmitter<any>();
-	doubleClickFeature: EventEmitter<any> = new EventEmitter<any>();
 	subscribers: Subscriber<any>[] = [];
+	events: Map<VisualizerEventTypes, EventEmitter<any>> = new Map<VisualizerEventTypes, EventEmitter<any>>();
 
-	events: Map<string, Subject<any>> = new Map<string, Subject<any>>();
+	get onHoverFeature() {
+		return this.events.get(VisualizerEvents.onHoverFeature);
+	}
+
+	get doubleClickFeature() {
+		return this.events.get(VisualizerEvents.doubleClickFeature);
+	}
 
 	constructor(public type: string, visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
+		this.events.set(VisualizerEvents.onHoverFeature, new EventEmitter<any>());
+		this.events.set(VisualizerEvents.doubleClickFeature, new EventEmitter<any>());
 	}
 
 	protected enableInteraction(interaction: string) {
@@ -95,7 +102,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	onInit(mapId: string, map: IMap<OpenLayersMap>) {
 		this.iMap = map;
 		this.mapId = mapId;
-		this.events = new Map<string, Subject<any>>();
 		this.initLayers();
 	}
 

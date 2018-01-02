@@ -18,6 +18,7 @@ import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
+import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 
 @Injectable()
 export class MapFacadeService {
@@ -61,15 +62,20 @@ export class MapFacadeService {
 			this._subscribers.push(communicator.contextMenu.subscribe(this.contextMenu.bind(this)));
 
 			communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
-				this._subscribers.push(visualizer.onHoverFeature.subscribe(this.hoverFeature.bind(this)));
-				this._subscribers.push(visualizer.doubleClickFeature.subscribe(this.dbclickFeature.bind(this)));
-
-				if (visualizer.events.has('drawEndPublisher')) {
-					this._subscribers.push(visualizer.events.get('drawEndPublisher').subscribe(this.drawEndSubscriber.bind(this)));
+				if (visualizer.events.has(VisualizerEvents.onHoverFeature)) {
+					this._subscribers.push(visualizer.events.get(VisualizerEvents.onHoverFeature).subscribe(this.hoverFeature.bind(this)));
 				}
 
-				if (visualizer.events.has('annotationContextMenuHandler')) {
-					this._subscribers.push(visualizer.events.get('annotationContextMenuHandler').subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
+				if (visualizer.events.has(VisualizerEvents.doubleClickFeature)) {
+					this._subscribers.push(visualizer.events.get(VisualizerEvents.doubleClickFeature).subscribe(this.dbclickFeature.bind(this)));
+				}
+
+				if (visualizer.events.has(VisualizerEvents.drawEndPublisher)) {
+					this._subscribers.push(visualizer.events.get(VisualizerEvents.drawEndPublisher).subscribe(this.drawEndSubscriber.bind(this)));
+				}
+
+				if (visualizer.events.has(VisualizerEvents.annotationContextMenuHandler)) {
+					this._subscribers.push(visualizer.events.get(VisualizerEvents.annotationContextMenuHandler).subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
 				}
 			});
 

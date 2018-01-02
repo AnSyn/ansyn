@@ -18,6 +18,7 @@ import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerStyle } from './models/visualizer-style';
 import { EventEmitter } from '@angular/core';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
@@ -45,9 +46,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public collection: FeatureCollection<any>;
 	public namePrefix = 'Annotate-';
 	public data;
-	public drawEndPublisher = new EventEmitter();
-	public annotationContextMenuHandler = new EventEmitter<AnnotationsContextMenuEvent>();
 
+	get drawEndPublisher() {
+		return this.events.get(VisualizerEvents.drawEndPublisher);
+	}
+
+	get annotationContextMenuHandler() {
+		return this.events.get(VisualizerEvents.annotationContextMenuHandler);
+	}
 
 	constructor(style?: Partial<VisualizerStateStyle>) {
 		super(AnnotationVisualizerType, style, {
@@ -70,10 +76,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.geoJsonFormat = new OLGeoJSON();
 		this.features = [];
-
-		['drawEndPublisher', 'annotationContextMenuHandler'].forEach((emitter) => {
-			this.events.set(emitter, this[emitter]);
-		});
+		this.events.set(VisualizerEvents.drawEndPublisher, new EventEmitter<any>());
+		this.events.set(VisualizerEvents.annotationContextMenuHandler, new EventEmitter<any>());
 	}
 
 	onInit(mapId: string, map: IMap) {

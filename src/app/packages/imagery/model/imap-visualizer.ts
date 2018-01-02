@@ -3,7 +3,6 @@ import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
 import Vector from 'ol/layer/vector';
-import { Subject } from 'rxjs/Subject';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -16,21 +15,26 @@ export interface IVisualizerEntity {
 
 export type IMarkupEvent = { id: string, class: boolean }[];
 
+export type VisualizerEventTypes =
+	'onHoverFeature'
+	| 'doubleClickFeature'
+	| 'drawEndPublisher'
+	| 'annotationContextMenuHandler';
+
+export const VisualizerEvents: { [key: string]: VisualizerEventTypes } = {
+	onHoverFeature: 'onHoverFeature',
+	doubleClickFeature: 'doubleClickFeature',
+	drawEndPublisher: 'drawEndPublisher',
+	annotationContextMenuHandler: 'annotationContextMenuHandler'
+};
+
 export interface IMapVisualizer {
 	type: string;
-
 	source: Vector;
-
 	isHideable: boolean;
 	isHidden: boolean;
-
 	onDisposedEvent: EventEmitter<any>;
-
-	onHoverFeature: EventEmitter<any>;
-	doubleClickFeature: EventEmitter<any>;
-
-	events: Map<string, Subject<any>>;
-
+	events: Map<VisualizerEventTypes, EventEmitter<any>>;
 	subscribers: Subscriber<any>[]
 
 	/**

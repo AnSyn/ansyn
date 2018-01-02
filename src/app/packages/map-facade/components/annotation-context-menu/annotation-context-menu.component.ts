@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { AnnotationData } from '../../actions/map.actions';
+import { AnnotationContextMenuTriggerAction, AnnotationData } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -10,9 +10,7 @@ import { AnnotationData } from '../../actions/map.actions';
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent {
-	public feature;
-	public action;
-	public pixels;
+	action: AnnotationContextMenuTriggerAction;
 
 	@HostBinding('attr.tabindex')
 
@@ -22,34 +20,35 @@ export class AnnotationContextMenuComponent {
 
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
 
-		this.mapEffect.annotationContextMenuTrigger$.subscribe(({ payload }) => {
-			this.feature = payload.feature;
-			this.pixels = payload.pixels;
-			switch (this.feature.geometryName_.replace('Annotate-', '')) {
+		this.mapEffect.annotationContextMenuTrigger$.subscribe((action: AnnotationContextMenuTriggerAction) => {
+			this.action = action;
+			const { pixels, geometryName } = this.action.payload;
+			switch (geometryName.replace('Annotate-', '')) {
 				case 'Box':
-					this.pixels.top -= 2;
-					this.pixels.height += 1;
-					this.pixels.left -= 2;
-					this.pixels.width += 2;
+					pixels.top -= 2;
+					pixels.height += 1;
+					pixels.left -= 2;
+					pixels.width += 2;
 					break;
 				case 'Point':
-					this.pixels.top -= 12;
-					this.pixels.height += 22;
-					this.pixels.left -= 12;
-					this.pixels.width += 22;
+					pixels.top -= 12;
+					pixels.height += 22;
+					pixels.left -= 12;
+					pixels.width += 22;
 					break;
 
 			}
 
-			let styleString = `top:${this.pixels.top}px;left:${this.pixels.left}px;width:${this.pixels.width}px;height:${this.pixels.height}px;`;
+			let styleString = `top:${pixels.top}px;left:${pixels.left}px;width:${pixels.width}px;height:${pixels.height}px;`;
 			this.host.nativeElement.setAttribute('style', styleString);
 			this.host.nativeElement.focus();
 		});
 	}
 
 	removeFeature() {
+		const { featureId } = this.action.payload;
 		this.store.dispatch(new AnnotationData({
-			feature: this.feature,
+			featureId,
 			action: 'remove'
 		}));
 		this.host.nativeElement.setAttribute('style', '');

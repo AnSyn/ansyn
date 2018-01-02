@@ -17,6 +17,7 @@ import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/c
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
+import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 
 @Injectable()
 export class MapFacadeService {
@@ -34,7 +35,7 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
-		return mapsList.find(({ id }) => id === mapId);
+		return mapsList.find(({ id }: CaseMapState) => id === mapId);
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
@@ -145,7 +146,7 @@ export class MapFacadeService {
 		this.store.dispatch(new DbclickFeatureTriggerAction(event));
 	}
 
-	drawEndSubscriber(event) {
+	drawEndSubscriber() {
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: 'saveDrawing',
@@ -158,7 +159,7 @@ export class MapFacadeService {
 		}));
 	}
 
-	annotationContextMenuHandlerSubscriber(payload) {
+	annotationContextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {
 		this.store.dispatch(new AnnotationContextMenuTriggerAction(payload));
 	}
 

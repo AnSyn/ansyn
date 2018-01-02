@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState, MapsLayout } from '@ansyn/core';
-import { Options, Overlay } from '@ansyn/core/models';
+import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
 
 
 export const MapActionTypes = {
@@ -281,7 +281,7 @@ export class PinPointModeTriggerAction implements Action {
 export class AnnotationContextMenuTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
 
-	constructor(public payload: { action: string, feature: Object, pixels: { top, height, left, width } }) {
+	constructor(public payload: AnnotationsContextMenuEvent) {
 
 	}
 }
@@ -289,7 +289,7 @@ export class AnnotationContextMenuTriggerAction implements Action {
 export class AnnotationData implements Action {
 	type = MapActionTypes.STORE.ANNOTATION_DATA;
 
-	constructor(public payload: Options) {
+	constructor(public payload: { action: string, featureId: string }) {
 
 	};
 }

@@ -57,7 +57,9 @@ export class NorthAppEffects {
 				resolve(0);
 			} else {
 				northPlugin.setCorrectedNorth(comEntity.ActiveMap.mapObject)
-					.then(north => resolve(north));
+					.then(north => resolve(north), (reason) => {
+						console.warn(`'setCorrectedNorth failed: ${reason}'`);
+					});
 			}
 		});
 	}

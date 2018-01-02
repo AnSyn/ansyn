@@ -58,7 +58,7 @@ import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers/measure-distance.visualizer';
+import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -204,18 +204,14 @@ export class VisualizersAppEffects {
 		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => [action, mapState])
 		.map(([action, mapState]: [SetMeasureDistanceToolState, IMapState]) => {
-			return [action, MapFacadeService.activeMap(mapState)];
-		})
-		.filter(([action, activeMap]: [SetMeasureDistanceToolState, CaseMapState]) => Boolean(activeMap))
-		.map(([action, activeMap]: [SetMeasureDistanceToolState, CaseMapState]) => {
-			const communicator = this.imageryCommunicatorService.provide(activeMap.id);
+			const activeMapState = MapFacadeService.activeMap(mapState);
+			const communicator = this.imageryCommunicatorService.provide(activeMapState.id);
 			const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
 			if (distanceVisualizerTool) {
 				if (action.payload) {
 					distanceVisualizerTool.createInteraction();
 				} else {
-					distanceVisualizerTool.removeInteraction();
-					distanceVisualizerTool.clearEntities();
+					distanceVisualizerTool.clearInteractionAndEntities();
 				}
 			}
 		});
@@ -237,8 +233,7 @@ export class VisualizersAppEffects {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
 				const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
 				if (distanceVisualizerTool) {
-					distanceVisualizerTool.clearEntities();
-					distanceVisualizerTool.removeInteraction();
+					distanceVisualizerTool.clearInteractionAndEntities();
 				}
 			});
 

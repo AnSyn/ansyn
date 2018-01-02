@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from './entities-visualizer';
+import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
 
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
@@ -20,13 +20,57 @@ import GeoJSON from 'ol/format/geojson';
 
 import { UUID } from 'angular2-uuid';
 
-import { VisualizerStateStyle } from './models/visualizer-state';
+import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
 
 export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
 
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	static type = MeasureDistanceVisualizerType;
+
+	protected allLengthTextStyle = new Text({
+		font: "16px Calibri,sans-serif",
+		fill: new Fill({
+			color: '#fff'
+		}),
+		stroke: new Stroke({
+			color: '#000',
+			width: 3
+		}),
+		offsetY: 30
+	});
+
+	protected singlePointLengthTextStyle = new Text({
+		font: "14px Calibri,sans-serif",
+		fill: new Fill({
+			color: '#FFFFFF'
+		}),
+		stroke: new Stroke({
+			color: '#3399CC',
+			width: 3
+		}),
+		offsetY: 30
+	});
+
+	protected editDistanceStyle = new Style({
+		fill: new Fill({
+			color: 'rgba(255, 255, 255, 0.2)'
+		}),
+		stroke: new Stroke({
+			color: 'rgba(0, 0, 0, 0.5)',
+			lineDash: [10, 10],
+			width: 2
+		}),
+		image: new Circle({
+			radius: 5,
+			stroke: new Stroke({
+				color: 'rgba(0, 0, 0, 0.7)'
+			}),
+			fill: new Fill({
+				color: 'rgba(255, 255, 255, 0.2)'
+			})
+		})
+	});
 
 	interactionHandler: Draw;
 	geoJsonFormat: GeoJSON;
@@ -59,6 +103,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		if (this.interactionHandler) {
 			this.createInteraction();
 		}
+	}
+
+	clearInteractionAndEntities() {
+		this.removeInteraction();
+		this.clearEntities();
 	}
 
 	createInteraction(type = 'LineString') {
@@ -115,26 +164,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// draw style (temp until DBClick)
 	drawFeatureStyle(feature: Feature) {
-		const drawStyle = new Style({
-			fill: new Fill({
-				color: 'rgba(255, 255, 255, 0.2)'
-			}),
-			stroke: new Stroke({
-				color: 'rgba(0, 0, 0, 0.5)',
-				lineDash: [10, 10],
-				width: 2
-			}),
-			image: new Circle({
-				radius: 5,
-				stroke: new Stroke({
-					color: 'rgba(0, 0, 0, 0.7)'
-				}),
-				fill: new Fill({
-					color: 'rgba(255, 255, 255, 0.2)'
-				})
-			})
-		});
-		const styles = [drawStyle];
+		const styles = [this.editDistanceStyle];
 		const measureStyles = this.getMeasureTextStyle(feature);
 		measureStyles.forEach((style) => {
 			styles.push(style);
@@ -173,22 +203,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		// all line string
 		const allLengthText = this.formatLength(geometry);
-		const allLengthTextStyle = new Text({
-			font: "16px Calibri,sans-serif",
-			fill: new Fill({
-				color: '#fff'
-			}),
-			stroke: new Stroke({
-				color: '#000',
-				width: 3
-			}),
-			offsetY: 30
-		});
-		allLengthTextStyle.setText(allLengthText);
+		this.allLengthTextStyle.setText(allLengthText);
 		const allLinePoint = new Point(geometry.getCoordinates()[0]);
 		styles.push(new Style({
 			geometry: allLinePoint,
-			text: allLengthTextStyle
+			text: this.allLengthTextStyle
 		}));
 
 		// text points
@@ -197,27 +216,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			geometry.forEachSegment((start, end) => {
 				const lineString = new LineString([start, end]);
 				const segmentLengthText = this.formatLength(lineString);
-
-				let dx = end[0] - start[0];
-				let dy = end[1] - start[1];
-				let rotation = Math.atan2(dy, dx);
-
-				const textStyle = new Text({
-					font: "14px Calibri,sans-serif",
-					fill: new Fill({
-						color: '#FFFFFF'
-					}),
-					stroke: new Stroke({
-						color: '#3399CC',
-						width: 3
-					}),
-					offsetY: 30
-				});
-
-				textStyle.setText(segmentLengthText);
+				this.singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
 					geometry: new Point(end),
-					text: textStyle
+					text: this.singlePointLengthTextStyle
 				}));
 			});
 		}

@@ -1,7 +1,7 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { cloneDeep as _cloneDeep, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
 	AnnotationData,
 	BackToWorldAction,
@@ -18,12 +18,8 @@ import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
-	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
-	MouseOutDropAction,
-	MouseOverDropAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction
+	DisplayOverlayFromStoreAction, DisplayOverlaySuccessAction, MouseOutDropAction, MouseOverDropAction,
+	OverlaysActionTypes, OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -52,7 +48,7 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { MouseShadowVisualizerType } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import GeoJSON from 'ol/format/geojson';
+import OLGeoJSON from 'ol/format/geojson';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
@@ -63,8 +59,7 @@ import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn
 @Injectable()
 export class VisualizersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase')
-		.map(_cloneDeep);
+		.pluck<ICasesState, Case>('selectedCase');
 
 	/**
 	 * @type Effect
@@ -406,14 +401,13 @@ export class VisualizersAppEffects {
 	annotationData$: Observable<any> = this.actions$
 		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
 		.withLatestFrom(this.selectedCase$)
-		.mergeMap(([action, selectedCase]) => {
-			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
-			const geoJsonFormat = new GeoJSON();
+		.mergeMap(([action, selectedCase]: [AnnotationData, Case]) => {
 
-			// @TODO move the remove to a function
+			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
+			const geoJsonFormat = new OLGeoJSON();
 			const featureIndex = annotationsLayer.features.findIndex(featureString => {
 				const feature = geoJsonFormat.readFeature(featureString);
-				return feature.values_.id === action.payload.feature.values_.id;
+				return feature.values_.id === action.payload.featureId;
 			});
 
 			switch (action.payload.action) {
@@ -428,7 +422,6 @@ export class VisualizersAppEffects {
 					};
 					break;
 			}
-
 			return [
 				new UpdateCaseAction(selectedCase),
 				new AnnotationVisualizerAgentAction({

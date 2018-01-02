@@ -11,12 +11,13 @@ import color from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
-import GeoJSON from 'ol/format/geojson';
+import OLGeoJSON from 'ol/format/geojson';
 import { featureCollection } from '@turf/helpers';
 import { FeatureCollection } from 'geojson';
-import { Subject } from 'rxjs/Subject';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerStyle } from './models/visualizer-style';
+import { EventEmitter } from '@angular/core';
+import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
@@ -39,11 +40,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public interactionHandler: Draw;
 	public selectInteraction: Select;
 	public currentInteraction;
-	public geoJsonFormat: GeoJSON;
+	public geoJsonFormat: OLGeoJSON;
 	public features: Array<any>;
 	public collection: FeatureCollection<any>;
 	public namePrefix = 'Annotate-';
 	public data;
+	public drawEndPublisher = new EventEmitter();
+	public annotationContextMenuHandler = new EventEmitter<AnnotationsContextMenuEvent>();
+
 
 	constructor(style?: Partial<VisualizerStateStyle>) {
 		super(AnnotationVisualizerType, style, {
@@ -64,11 +68,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 		});
 
-		this.geoJsonFormat = new GeoJSON();
+		this.geoJsonFormat = new OLGeoJSON();
 		this.features = [];
 
-		this.events.set('drawEndPublisher', new Subject());
-		this.events.set('annotationContextMenuHandler', new Subject());
+		['drawEndPublisher', 'annotationContextMenuHandler'].forEach((emitter) => {
+			this.events.set(emitter, this[emitter]);
+		});
 	}
 
 	onInit(mapId: string, map: IMap) {
@@ -129,7 +134,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 
 		this.selectInteraction.on('select', data => {
-				console.log(data.mapBrowserEvent.originalEvent.which);
 				const target = data.mapBrowserEvent.originalEvent.target;
 				const selectedFeature = data.selected.shift();
 				const boundingRect = target.getBoundingClientRect();
@@ -153,11 +157,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					event.stopPropagation();
 					event.preventDefault();
 					data.target.getFeatures().clear();
-					this.events.get('annotationContextMenuHandler').next({
+					const contextMenuEvent: AnnotationsContextMenuEvent = {
 						action: 'openMenu',
-						feature: selectedFeature,
+						featureId: selectedFeature.getId(),
+						geometryName: selectedFeature.geometryName_,
 						pixels
-					});
+					};
+					this.annotationContextMenuHandler.emit(contextMenuEvent);
 					target.removeEventListener('contextmenu', callback);
 				};
 
@@ -325,7 +331,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// @TODO add conversion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
-		this.events.get('drawEndPublisher').next(this.features);
+		this.drawEndPublisher.emit(this.features);
 		// this.collection = featureCollection(this.features);
 		this.removeInteraction();
 		this.addSelectInteraction();

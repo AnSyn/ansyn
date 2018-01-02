@@ -41,6 +41,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -182,7 +183,8 @@ describe('Filters app effects', () => {
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(['1', '2']) });
+		const overlays = [new Overlay(), new Overlay()];
+		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays) });
 		const expectedResults = cold('--b--', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
 	});

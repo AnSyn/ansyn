@@ -231,12 +231,12 @@ describe('OverlaysService', () => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = OverlaysService.parseOverlayDataForDispaly(mockData);
+		const result = OverlaysService.parseOverlayDataForDisplay(mockData);
 		expect(result[0].data.length).toBe(1);
 
 		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
-		const result2 = OverlaysService.parseOverlayDataForDispaly(mockData);
+		const result2 = OverlaysService.parseOverlayDataForDisplay(mockData);
 		expect(result2[0].data.length).toBe(2);
 	});
 

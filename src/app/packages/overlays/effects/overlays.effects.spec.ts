@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -8,15 +9,20 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
 	RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction
+	RequestOverlayByIDFromBackendAction,
+	SyncOverlaysWithFavoritesAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
-import { OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
+import {
+	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector
+} from '../reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -40,6 +46,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 
 describe('Overlays Effects ', () => {
+	let store: Store<any>;
 	let actions: Observable<any>;
 	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService | any;
@@ -60,9 +67,22 @@ describe('Overlays Effects ', () => {
 			footprint: {}
 		}
 	];
-
-	let store: Store<any>;
-
+	const favoriteOverlays = <Overlay[]>[
+		{
+			id: '13',
+			name: 'tmp13',
+			photoTime: new Date(Date.now()).toISOString(),
+			azimuth: 10,
+			footprint: {}
+		},
+		{
+			id: '14',
+			name: 'tmp14',
+			photoTime: new Date(Date.now()).toISOString(),
+			azimuth: 14,
+			footprint: {}
+		}
+	];
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
 			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
@@ -75,6 +95,20 @@ describe('Overlays Effects ', () => {
 			provideMockActions(() => actions),
 			{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 		]
+	}));
+
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		store = _store;
+		const coreState = { ...coreInitialState };
+		const overlayState = cloneDeep(overlaysInitialState);
+		overlays.forEach(o => overlayState.overlays.set(o.id, o));
+		coreState.favoriteOverlays = favoriteOverlays;
+
+		const fakeStore = new Map<any, any>([
+			[coreStateSelector, coreState],
+			[overlaysStateSelector, overlayState]
+		]);
+		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([Store, OverlaysEffects, OverlaysService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService) => {
@@ -100,10 +134,18 @@ describe('Overlays Effects ', () => {
 	it('it should load all the overlays', () => {
 		let tmp = <Overlay[]>[];
 		overlays.forEach(overlay => tmp.push({ ...overlay }));
-		overlaysService.search.and.returnValue(Observable.of({data: overlays, limited: 0}));
+		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0 }));
 		actions = hot('--a--', { a: new LoadOverlaysAction() });
-		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(tmp) });
+		const expectedResults = cold('--b--', { b: new SyncOverlaysWithFavoritesAction(tmp) });
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
+	});
+
+	it('it should sync the overlays with favorites', () => {
+		actions = hot('--a--', { a: new SyncOverlaysWithFavoritesAction(overlays) });
+		const expectedOverlays = overlays.slice();
+		expectedOverlays.push(favoriteOverlays[1]);
+		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(expectedOverlays) });
+		expect(overlaysEffects.syncOverlays$).toBeObservable(expectedResults);
 	});
 
 	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {
@@ -127,15 +169,15 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
-		const loadedOverlays = [
-			{ id: 'tmp', image: 'tmpImg' },
-			{ id: 'tmp2', image: 'tmpImg2' }
-		];
-		store.dispatch(new LoadOverlaysSuccessAction(loadedOverlays as any));
-		actions = hot('--a--', { a: new DisplayOverlayFromStoreAction({ id: 'tmp', mapId: '4444' }) });
+		actions = hot('--a--', {
+			a: new DisplayOverlayFromStoreAction({
+				id: overlays[0].id,
+				mapId: '4444'
+			})
+		});
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayAction({
-				overlay: <any>loadedOverlays[0],
+				overlay: overlays[0],
 				mapId: '4444'
 			})
 		});

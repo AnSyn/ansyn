@@ -78,44 +78,32 @@ export class ToolsAppEffects {
 	 * @type Effect
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
 	 * @ofType ActiveMapChangedAction
-	 * @dependencies map, layers, tools
-	 * @action SetActiveOverlaysFootprintModeAction, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentAction?
+	 * @dependencies map
+	 * @action SetActiveOverlaysFootprintModeAction
 	 */
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			this.store$.select(layersStateSelector),
-			this.store$.select(toolsStateSelector),
-			(action, mapState: IMapState, layerState: ILayerState, toolsState: IToolsState) =>
-				[action, mapState, layerState, toolsState])
-		.map(([action, mapState, layerState, toolsState]: [ActiveMapChangedAction, IMapState, ILayerState, IToolsState]): [CaseMapState, ILayerState, IToolsState] =>
-			[MapFacadeService.activeMap(mapState), layerState, toolsState])
-		.mergeMap(([activeMap, layerState, toolsState]: [CaseMapState, ILayerState, IToolsState]) => {
-				const result: any[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
-				if (layerState.displayAnnotationsLayer) {
-					result.push(new AnnotationVisualizerAgentAction({
-						action: 'show',
-						maps: 'all'
-					}));
-				}
-				// if the annotation menu is open and we switched active map
-				// and the layer is disabled we need to switch the annotation view to
-				// new active map
-				else if (toolsState.flags.get('annotations')) {
-					result.push(new AnnotationVisualizerAgentAction({
-						action: 'show',
-						maps: 'active'
-					}));
-					result.push(new AnnotationVisualizerAgentAction({
-						action: 'removeLayer',
-						maps: 'others'
-					}));
-				}
-				return result;
-			}
-		);
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState))
+		.map((activeMap: CaseMapState) => new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
+
+
+	/**
+	 * @type Effect
+	 * @name onActiveMapChangesDrawAnnotation$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies tools
+	 * @action AnnotationVisualizerAgentAction
+	 */
+	@Effect()
+	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(toolsStateSelector))
+		.filter(([action, toolsState]) => toolsState.flags.get('annotations'))
+		.mergeMap(() =>  [
+			new AnnotationVisualizerAgentAction({ action: 'show', maps: 'active' }),
+			new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'others' })
+		]);
 
 	/**
 	 * @type Effect

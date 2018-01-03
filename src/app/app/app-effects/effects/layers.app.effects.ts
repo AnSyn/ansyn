@@ -24,7 +24,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 export class LayersAppEffects {
 	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
 		.pluck<ICasesState, Case>('selectedCase')
-		.map(_cloneDeep);
+		.map((selectedCase) => _cloneDeep<Case>(selectedCase));
 
 	/**
 	 * @type Effect

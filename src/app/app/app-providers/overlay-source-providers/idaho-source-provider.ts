@@ -106,7 +106,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	private parseData(idahoElement: any, token: string): Overlay {
+	protected parseData(idahoElement: any, token: string): Overlay {
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;

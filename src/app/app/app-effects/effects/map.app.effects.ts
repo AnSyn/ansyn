@@ -203,22 +203,24 @@ export class MapAppEffects {
 			}
 
 			let rotationAngle = 0;
-			switch (orientation) {
-				case 'Align North':
-					break;
-				case 'Imagery Perspective':
-					rotationAngle = overlay.azimuth;
-					break;
-				case 'User Perspective':
-					rotationAngle = communicator.getPosition().projectedState.rotation;
-					if (mapData.overlay) { // If there was an overlay before
-						rotationAngle -= mapData.overlay.northAngle;
-					}
-			}
-
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
+						if (communicator.activeMapName === 'disabledOpenLayersMap') {
+							communicator.setActiveMap('openLayersMap', mapData.position, layer);
+						}
+						switch (orientation) {
+							case 'Align North':
+								break;
+							case 'Imagery Perspective':
+								rotationAngle = overlay.azimuth;
+								break;
+							case 'User Perspective':
+								rotationAngle = communicator.getPosition().projectedState.rotation;
+								if (mapData.overlay) { // If there was an overlay before
+									rotationAngle -= mapData.overlay.northAngle;
+								}
+						}
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
 						} else {

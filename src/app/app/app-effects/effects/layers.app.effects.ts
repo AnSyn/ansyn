@@ -67,7 +67,7 @@ export class LayersAppEffects {
 		.ofType<ShowAnnotationsLayer>(LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER)
 		.withLatestFrom<ShowAnnotationsLayer, Case>(this.selectedCase$)
 		.mergeMap(([action, selectedCase]: [ShowAnnotationsLayer, Case]) => {
-			const actions = [new AnnotationVisualizerAgentAction({
+			const actions: any[] = [new AnnotationVisualizerAgentAction({
 				action: 'show',
 				maps: 'all'
 			})];
@@ -92,7 +92,7 @@ export class LayersAppEffects {
 		.withLatestFrom<HideAnnotationsLayer, Case>(this.selectedCase$)
 		.mergeMap(([action, selectedCase]: [HideAnnotationsLayer, Case]) => {
 
-			const actions = [new AnnotationVisualizerAgentAction({
+			const actions: any[] = [new AnnotationVisualizerAgentAction({
 				action: 'removeLayer',
 				maps: 'all'
 			})];

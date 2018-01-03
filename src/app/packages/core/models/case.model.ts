@@ -45,7 +45,7 @@ export interface CaseFacetsState {
 }
 
 export interface CaseLayersState {
-	annotationsLayer?: FeatureCollection<any> | string,
+	annotationsLayer?: string,
 	displayAnnotationsLayer?: boolean
 }
 

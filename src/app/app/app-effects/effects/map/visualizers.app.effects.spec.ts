@@ -160,11 +160,7 @@ describe('VisualizersAppEffects', () => {
 
 			const action = new AnnotationData({
 				action: 'remove',
-				feature: {
-					values_: {
-						id: featureId
-					}
-				}
+				featureId
 			});
 			actions = hot('--a--', { a: action });
 
@@ -371,7 +367,7 @@ describe('VisualizersAppEffects', () => {
 
 			const expectedResult = cold('--(ab)--', {
 				a: new UpdateCaseAction(newCase),
-				b: new SetAnnotationMode(undefined)
+				b: new SetAnnotationMode()
 			});
 
 			expect(visualizersAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);

@@ -61,11 +61,6 @@ describe('AnnotationsControlComponent', () => {
 
 	});
 
-	it('Function setModeStyle', () => {
-		component.setModeStyle('value');
-		expect(component.mode).toBe('value');
-	});
-
 	it('close line width selection', () => {
 		spyOn(component.lineWidthSelection.nativeElement, 'blur');
 

@@ -42,14 +42,10 @@ import {
 	SetMeasureDistanceToolState,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IconVisualizerType } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { MouseShadowVisualizerType } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import OLGeoJSON from 'ol/format/geojson';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
@@ -58,9 +54,6 @@ import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn
 
 @Injectable()
 export class VisualizersAppEffects {
-	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase');
-
 	/**
 	 * @type Effect
 	 * @name onHoverFeatureSetMarkup$
@@ -390,164 +383,6 @@ export class VisualizersAppEffects {
 			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
 			console.log(selectedMap.data.overlay);
 			vis.setReferenceDate(action instanceof DisplayOverlaySuccessAction ? selectedMap.data.overlay.date : null);
-		});
-	/**
-	 * @type Effect
-	 * @name annotationData$
-	 * @ofType AnnotationData
-	 * @action UpdateCaseAction, AnnotationVisualizerAgentAction
-	 */
-	@Effect()
-	annotationData$: Observable<any> = this.actions$
-		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
-		.withLatestFrom(this.selectedCase$)
-		.mergeMap(([action, selectedCase]: [AnnotationData, Case]) => {
-
-			const annotationsLayer = JSON.parse((<string>selectedCase.state.layers.annotationsLayer));
-			const geoJsonFormat = new OLGeoJSON();
-			const featureIndex = annotationsLayer.features.findIndex(featureString => {
-				const feature = geoJsonFormat.readFeature(featureString);
-				return feature.values_.id === action.payload.featureId;
-			});
-
-			switch (action.payload.action) {
-				case 'remove':
-					annotationsLayer.features.splice(featureIndex, 1);
-
-					selectedCase.state = {
-						...selectedCase.state,
-						layers: {
-							...selectedCase.state.layers, annotationsLayer: JSON.stringify(annotationsLayer)
-						}
-					};
-					break;
-			}
-			return [
-				new UpdateCaseAction(selectedCase),
-				new AnnotationVisualizerAgentAction({
-					maps: 'all',
-					action: 'show'
-				})
-			];
-
-
-		});
-
-	/**
-	 * @type Effect
-	 * @name annotationVisualizerAgent$
-	 * @ofType AnnotationVisualizerAgentAction
-	 * @dependencies cases, layers
-	 * @action UpdateCaseAction?, SetAnnotationMode?
-	 */
-	@Effect()
-	annotationVisualizerAgent$: Observable<any> = this.actions$
-		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom<AnnotationVisualizerAgentAction, Case, ILayerState>(this.selectedCase$, this.store$.select(layersStateSelector))
-		.map(([action, selectedCase, layerState]: [AnnotationVisualizerAgentAction, Case, ILayerState]) => {
-
-			let update = false;
-			let relevantMapsIds = [];
-
-			// we also need to add specific ids for maps that the layers are disabled or
-			// I can check that in the maps == all in the state of the map instance
-			switch (action.payload.maps) {
-				case 'all':
-					relevantMapsIds = selectedCase.state.maps.data.map(m => m.id);
-					break;
-				case 'active':
-					relevantMapsIds.push(selectedCase.state.maps.activeMapId);
-					break;
-				case 'others':
-					relevantMapsIds = selectedCase.state.maps.data.filter(m => m.id !== selectedCase.state.maps.activeMapId)
-						.map(m => m.id);
-					break;
-				default:
-					return;
-			}
-
-			const visualizers: Array<AnnotationsVisualizer> = relevantMapsIds
-				.map(id => {
-					const communicator = this.imageryCommunicatorService.provide(id);
-					if (!communicator) {
-						return;
-					}
-					return communicator.getVisualizer(AnnotationVisualizerType) as AnnotationsVisualizer;
-				})
-				.filter(visualizer => !!visualizer);
-
-			visualizers.forEach(visualizer => {
-				switch (action.payload.action) {
-					case 'addLayer':
-						visualizer.removeLayer();
-						visualizer.addLayer();
-						break;
-					case 'show':
-						visualizer.removeLayer();
-						visualizer.addLayer();
-						visualizer.removeInteraction();
-						visualizer.addSelectInteraction();
-						visualizer.drawFeatures(selectedCase.state.layers.annotationsLayer);
-						break;
-					case 'createInteraction':
-						if (action.payload.type === 'Rectangle') {
-							visualizer.rectangleInteraction();
-						}
-						else if (action.payload.type === 'Arrow') {
-							visualizer.arrowInteraction();
-						}
-						else {
-							visualizer.createInteraction(action.payload.type);
-						}
-						break;
-					case 'removeInteraction':
-						visualizer.removeInteraction();
-						visualizer.addSelectInteraction();
-						break;
-					case 'changeLine':
-						visualizer.changeLine(action.payload.value);
-						break;
-					case 'changeStrokeColor':
-						visualizer.changeStroke(action.payload.value);
-						break;
-					case 'changeFillColor':
-						visualizer.changeFill(action.payload.value);
-						break;
-					case 'refreshDrawing':
-						visualizer.drawFeatures(selectedCase.state.layers.annotationsLayer);
-						break;
-					case 'saveDrawing':
-						selectedCase.state.layers.annotationsLayer = visualizer.getGeoJson();
-						update = true;
-						break;
-					case 'endDrawing':
-						/*selectedCase.state.annotationsLayer = visualizer.getGeoJson();
-						update = true;*/
-						visualizer.removeInteraction();
-						if (layerState.displayAnnotationsLayer) {
-							visualizer.addSelectInteraction();
-						} else {
-							visualizer.removeLayer();
-						}
-
-						break;
-					case 'removeLayer':
-						if (!layerState.displayAnnotationsLayer) {
-							visualizer.removeInteraction();
-							visualizer.removeLayer();
-						}
-						break;
-				}
-			});
-
-			return { selectedCase, update };
-		})
-		.filter(({ update }) => update)
-		.mergeMap(result => {
-			return [
-				new UpdateCaseAction(result.selectedCase),
-				new SetAnnotationMode(undefined)
-			];
 		});
 
 

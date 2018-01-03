@@ -1,8 +1,8 @@
-import { Component, ElementRef, HostBinding } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { AnnotationContextMenuTriggerAction, AnnotationData } from '../../actions/map.actions';
+import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -13,9 +13,12 @@ export class AnnotationContextMenuComponent {
 	action: AnnotationContextMenuTriggerAction;
 
 	@HostBinding('attr.tabindex')
-
 	get tabindex() {
 		return 0;
+	}
+
+	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
+		$event.preventDefault();
 	}
 
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
@@ -47,10 +50,7 @@ export class AnnotationContextMenuComponent {
 
 	removeFeature() {
 		const { featureId } = this.action.payload;
-		this.store.dispatch(new AnnotationData({
-			featureId,
-			action: 'remove'
-		}));
+		this.store.dispatch(new AnnotationRemoveFeature(featureId));
 		this.host.nativeElement.setAttribute('style', '');
 	}
 }

@@ -93,7 +93,7 @@ export class ToolsAppEffects {
 		.map(([action, mapState, layerState, toolsState]: [ActiveMapChangedAction, IMapState, ILayerState, IToolsState]): [CaseMapState, ILayerState, IToolsState] =>
 			[MapFacadeService.activeMap(mapState), layerState, toolsState])
 		.mergeMap(([activeMap, layerState, toolsState]: [CaseMapState, ILayerState, IToolsState]) => {
-				const result = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
+				const result: any[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 				if (layerState.displayAnnotationsLayer) {
 					result.push(new AnnotationVisualizerAgentAction({
 						action: 'show',

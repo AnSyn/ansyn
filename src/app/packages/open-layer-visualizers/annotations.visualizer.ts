@@ -163,7 +163,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					data.target.getFeatures().clear();
 					const contextMenuEvent: AnnotationsContextMenuEvent = {
 						action: 'openMenu',
-						featureId: selectedFeature.getId(),
+						featureId: selectedFeature.getProperties().id,
 						geometryName: selectedFeature.geometryName_,
 						pixels
 					};
@@ -335,8 +335,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// @TODO add conversion from the map project to the 4326 project and save it in the properties.data.coordinates
 
 		this.features.push(geoJsonSingleFeature);
-		this.drawEndPublisher.emit(this.features);
-		// this.collection = featureCollection(this.features);
+		this.drawEndPublisher.emit(featureCollection(this.features));
 		this.removeInteraction();
 		this.addSelectInteraction();
 		this.currentInteraction = undefined;

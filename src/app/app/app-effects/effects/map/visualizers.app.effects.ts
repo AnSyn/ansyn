@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { Case, CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
 	DisplayOverlayFromStoreAction, DisplayOverlaySuccessAction, MouseOutDropAction, MouseOverDropAction,
 	OverlaysActionTypes, OverlaysMarkupAction

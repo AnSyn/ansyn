@@ -128,7 +128,7 @@ export class VisualizersAnnotationsAppEffects {
 	 */
 	@Effect()
 	cancelAnnotationEditMode$: Observable<any> = this.actions$
-		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.STORE.ANNOTATION_DATA, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
+		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.STORE.ANNOTATION_DATA, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.map(() => new SetAnnotationMode());
 
 	/**
@@ -140,13 +140,14 @@ export class VisualizersAnnotationsAppEffects {
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
 		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.mergeMap(([action, casesState]: [AnnotationData, ICasesState]) => {
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(layersStateSelector))
+		.mergeMap(([action, casesState, layersState]: [AnnotationData, ICasesState, ILayerState]) => {
 			const updatedCase: Case = { ...casesState.selectedCase };
 			updatedCase.state.layers.annotationsLayer = JSON.stringify(action.payload);
+			const maps: AnnotationAgentRelevantMap = layersState.displayAnnotationsLayer ? 'all' : 'active';
 			return [
 				new UpdateCaseAction(updatedCase),
-				new AnnotationVisualizerAgentAction({maps: 'all', action: 'show'})
+				new AnnotationVisualizerAgentAction({ action: 'show', maps })
 			];
 		});
 

@@ -3,13 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapStateSelector, IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import {
 	NorthCalculationsPlugin,
 	openLayersNorthCalculations
@@ -30,14 +30,17 @@ export class NorthAppEffects {
 	pointNorth$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([{ payload }, mapsState]) => {
-			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-
-			this.pointNorth(payload.mapId).then(north => {
+		.map(([action, mapsState]) => {
+			const communicator = this.imageryCommunicatorService.provide(action.payload.mapId);
+			return [action, mapsState, communicator];
+		})
+		.filter(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
+		.map(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => {
+			this.pointNorth(action.payload.mapId).then(north => {
 				communicator.setVirtualNorth(north);
-				communicator.setRotation(north + payload.rotation);
+				communicator.setRotation(north + action.payload.rotation);
 
-				const mapState = MapFacadeService.mapById(mapsState.mapsList, payload.mapId);
+				const mapState = MapFacadeService.mapById(mapsState.mapsList, action.payload.mapId);
 				mapState.data.overlay.northAngle = north;
 			});
 		});

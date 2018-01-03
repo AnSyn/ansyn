@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IdahoOverlaysSourceConfig, IdahoSourceProvider, IIdahoOverlaySourceConfig } from './idaho-source-provider';
+import { Overlay } from '@ansyn/core';
 
 export const IdahoOverlaySourceType2 = 'IDAHO2';
 
@@ -10,5 +11,11 @@ export class IdahoSourceProvider2 extends IdahoSourceProvider {
 
 	constructor(http: HttpClient, @Inject(IdahoOverlaysSourceConfig) _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super(http, _overlaySourceConfig);
+	}
+
+	protected parseData(idahoElement: any, token: string): Overlay {
+		const result = super.parseData(idahoElement, token);
+		result.isGeoRegistered = false;
+		return result;
 	}
 }

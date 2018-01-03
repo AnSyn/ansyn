@@ -38,8 +38,8 @@ describe('MapFacadeService', () => {
 
 
 		it('when annotations contextmenu call the trigger is dispached', () => {
-			const payload = { hello: 'world' };
-			const action = new AnnotationContextMenuTriggerAction(<any>payload);
+			const payload: any = { hello: 'world' };
+			const action = new AnnotationContextMenuTriggerAction(payload);
 			service.annotationContextMenuHandlerSubscriber(payload);
 			expect(store.dispatch).toHaveBeenCalledTimes(1);
 			expect(store.dispatch).toHaveBeenCalledWith(action);
@@ -56,7 +56,7 @@ describe('MapFacadeService', () => {
 				maps: 'others'
 			});
 
-			service.drawEndSubscriber({});
+			service.drawEndSubscriber();
 			expect(store.dispatch).toHaveBeenCalledTimes(2);
 			const allArgs = store.dispatch['calls']['allArgs']();
 			expect(allArgs).toEqual([[firstAction], [secondAction]]);

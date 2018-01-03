@@ -16,7 +16,7 @@ import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions
 import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
+import { AnnotationContextMenuTriggerAction, AnnotationData } from '../actions/map.actions';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 
@@ -152,12 +152,9 @@ export class MapFacadeService {
 		this.store.dispatch(new DbclickFeatureTriggerAction(event));
 	}
 
-	drawEndSubscriber() {
+	drawEndSubscriber(featureCollection: GeoJSON.GeoJsonObject) {
 
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'saveDrawing',
-			maps: 'active'
-		}));
+		this.store.dispatch(new AnnotationData(featureCollection));
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: 'refreshDrawing',

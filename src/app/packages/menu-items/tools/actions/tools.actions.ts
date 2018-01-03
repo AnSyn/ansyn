@@ -1,6 +1,21 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { AnnotationMode } from '../reducers/tools.reducer';
+
+export type AnnotationAgentOperation = 'addLayer' | 'show' | 'createInteraction' | 'removeInteraction' |
+	'changeLine' | 'changeStrokeColor' | 'changeFillColor' |
+	'refreshDrawing' | 'endDrawing' | 'removeLayer';
+
+export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
+
+export interface AnnotationVisualizerAgentPayload {
+	action: AnnotationAgentOperation;
+	maps: AnnotationAgentRelevantMap;
+	value?: any;
+	type?: AnnotationMode;
+}
+
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -46,7 +61,7 @@ export class StartMouseShadow implements Action {
 export class SetAnnotationMode implements Action {
 	type = ToolsActionsTypes.STORE.SET_ANNOTATION_MODE;
 
-	constructor(public payload: string) {
+	constructor(public payload?: AnnotationMode) {
 
 	}
 }
@@ -190,7 +205,7 @@ export class SetManualImageProcessingArguments implements Action {
 export class AnnotationVisualizerAgentAction implements Action {
 	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
 
-	constructor(public payload) {
+	constructor(public payload: AnnotationVisualizerAgentPayload) {
 	}
 }
 
@@ -223,16 +238,21 @@ export type ToolsActions =
 	| DisableMouseShadow
 	| EnableMouseShadow
 	| PullActiveCenter
-	|
-	SetActiveCenter
+	| SetActiveCenter
 	| SetPinLocationModeAction
 	| GoToAction
 	| ShowOverlaysFootprintAction
 	| SetActiveOverlaysFootprintModeAction
-	|
-	SetAutoImageProcessing
+	| SetAutoImageProcessing
 	| DisableImageProcessing
 	| EnableImageProcessing
 	| SetAutoImageProcessingSuccess
+	| SetMapGeoEnabledModeToolsActionStore
+	| SetManualImageProcessingArguments
+	| AnnotationVisualizerAgentAction
+	| AnnotationOpen
+	| AnnotationClose
+	| SetAutoCloseMenu
+	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState;

@@ -1,13 +1,14 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
 
 export interface IToolsState {
 	flags: Map<string, boolean>;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
-	annotationMode: string;
+	annotationMode: AnnotationMode;
 	manualImageProcessingParams: Object;
 }
 
@@ -29,7 +30,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	let tmpMap: Map<string, boolean>;
 	switch (action.type) {
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			return { ...state, annotationMode: action.payload };
+			return { ...state, annotationMode: <AnnotationMode> action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 

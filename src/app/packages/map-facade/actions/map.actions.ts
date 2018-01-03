@@ -35,7 +35,8 @@ export const MapActionTypes = {
 	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
-		ANNOTATION_DATA: 'ANNOTATION_DATA'
+		ANNOTATION_DATA: 'ANNOTATION_DATA',
+		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE'
 	},
 	TRIGGER: {
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
@@ -94,7 +95,7 @@ export class PositionChangedAction implements Action {
 export class UpdateMapSizeAction implements Action {
 	type = MapActionTypes.UPDATE_MAP_SIZE;
 
-	constructor(public payload?: any) {
+	constructor() {
 	}
 }
 
@@ -286,10 +287,18 @@ export class AnnotationContextMenuTriggerAction implements Action {
 	}
 }
 
+export class AnnotationRemoveFeature implements Action {
+	type = MapActionTypes.STORE.ANNOTATION_REMOVE_FEATURE;
+
+	constructor(public payload: string) {
+
+	};
+}
+
 export class AnnotationData implements Action {
 	type = MapActionTypes.STORE.ANNOTATION_DATA;
 
-	constructor(public payload: { action: string, featureId: string }) {
+	constructor(public payload: GeoJSON.GeoJsonObject) {
 
 	};
 }

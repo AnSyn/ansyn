@@ -6,8 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { AnnotationMode, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 
+export interface ModeList {
+	mode: AnnotationMode;
+	icon: string;
+}
 
 @Component({
 	selector: 'ansyn-annotations-control',
@@ -21,13 +25,21 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	public colorOptionsFill: any = '#a4ff82';
 	public colorOptionsStroke: any = '#3399CC';
 	public subscriber;
-	public mode: string;
+	public mode: AnnotationMode;
+
+	public modesList: ModeList[] = [
+		{mode: 'Point', icon: 'point'},
+		{mode: 'LineString', icon: 'line'},
+		{mode: 'Polygon', icon: 'polygon'},
+		{mode: 'Circle', icon: 'circle'},
+		{mode: 'Rectangle', icon: 'square' },
+		{mode: 'Arrow', icon: 'arrow'},
+	];
 
 	@ViewChild('lineWidthSelection') lineWidthSelection: ElementRef;
 	@ViewChild('colorSelection') colorSelection: ElementRef;
 
 	@HostBinding('class.expand')
-
 	@Input()
 	set expand(value) {
 		this._isExpended = value;
@@ -43,10 +55,10 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 
 	ngOnInit() {
 		this.store.select<IToolsState>(toolsStateSelector)
-			.pluck<IToolsState, string>('annotationMode')
+			.pluck<IToolsState, AnnotationMode>('annotationMode')
 			.distinctUntilChanged()
 			.subscribe(value => {
-				this.setModeStyle(value);
+				this.mode = value;
 			});
 	}
 
@@ -65,10 +77,6 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 		if (this.document.activeElement !== this.lineWidthSelection.nativeElement) {
 			this.lineWidthSelection.nativeElement.focus();
 		}
-	}
-
-	setModeStyle(value) {
-		this.mode = value;
 	}
 
 	closeLineWidthSelection() {
@@ -109,15 +117,15 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 			});
 	}
 
-	createInteraction(type) {
+	createInteraction(mode: AnnotationMode) {
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			action: 'createInteraction',
-			type,
+			type: mode,
 			maps: 'active'
 		}));
 
-		this.store.dispatch(new SetAnnotationMode(this.mode === type ? undefined : type));
+		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
 	}
 
 	openColorInput($event) {

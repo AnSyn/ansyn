@@ -24,6 +24,7 @@ import { RouterAppEffects } from './effects/router.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { NorthAppEffects } from './effects/map/north.app.effects';
+import { VisualizersAnnotationsAppEffects } from './effects/map/visualizers.annotations.app.effects';
 
 
 export interface IAppState {
@@ -55,7 +56,8 @@ export interface IAppState {
 			RouterAppEffects,
 			VisualizersAppEffects,
 			CoreAppEffects,
-			NorthAppEffects
+			NorthAppEffects,
+			VisualizersAnnotationsAppEffects
 		])
 	]
 })

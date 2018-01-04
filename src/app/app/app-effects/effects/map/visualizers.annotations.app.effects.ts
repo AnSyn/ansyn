@@ -5,10 +5,8 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { CaseMapState } from '@ansyn/core/models/case.model';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
 import { Observable } from 'rxjs/Observable';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../app.effects.module';
 import { Action, Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -30,7 +28,7 @@ export interface AgentOperations {
 export class VisualizersAnnotationsAppEffects {
 
 	agentOperations: AgentOperations = {
-		addLayerd: (visualizer) => {
+		addLayer: (visualizer) => {
 			visualizer.removeLayer();
 			visualizer.addLayer();
 		},
@@ -65,7 +63,7 @@ export class VisualizersAnnotationsAppEffects {
 		changeFillColor: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
 			visualizer.changeFill(value);
 		},
-		refreshDrawing: (visualizer, {}, annotationsLayer) => {
+		refreshDrawing: (visualizer, {}, { annotationsLayer }) => {
 			visualizer.drawFeatures(annotationsLayer);
 		},
 		endDrawing: (visualizer, {}, { displayAnnotationsLayer }) => {
@@ -123,7 +121,7 @@ export class VisualizersAnnotationsAppEffects {
 	 * @action SetAnnotationsLayer
 	 */
 	@Effect()
-	removeFeature$: Observable<SetAnnotationsLayer> = this.actions$
+	removeAnnotationFeature$: Observable<SetAnnotationsLayer> = this.actions$
 		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
 		.withLatestFrom(this.store$.select(layersStateSelector))
 		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {

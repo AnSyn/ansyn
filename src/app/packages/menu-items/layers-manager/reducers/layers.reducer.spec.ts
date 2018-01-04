@@ -1,8 +1,6 @@
 import {
-	HideAnnotationsLayer,
 	LayerTreeLoadedAction,
-	SelectLayerAction,
-	ShowAnnotationsLayer,
+	SelectLayerAction, SetAnnotationsLayer, ToggleDisplayAnnotationsLayer,
 	UnselectLayerAction
 } from '../actions/layers.actions';
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
@@ -96,7 +94,7 @@ describe('LayersReducer', () => {
 
 		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
+		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([staticLeaf]);
@@ -140,7 +138,7 @@ describe('LayersReducer', () => {
 
 		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
+		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([staticLeaf]);
@@ -184,7 +182,7 @@ describe('LayersReducer', () => {
 
 		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [staticLeaf] }, action);
+		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([]);
@@ -228,21 +226,29 @@ describe('LayersReducer', () => {
 
 		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
 
-		let result: ILayerState = LayersReducer({ layers: layers, selectedLayers: [] }, action);
+		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [] }, action);
 
 		expect(result.layers).toEqual(layers);
 		expect(result.selectedLayers).toEqual([]);
 	});
 
-	it('SHOW_ANNOTATION_LAYER', () => {
-		const action = new ShowAnnotationsLayer({ update: true });
-		const result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.displayAnnotationsLayer).toBe(true);
-	});
+	describe('ANNOTATIONS', () => {
 
-	it('HIDE_ANNOTATION_LAYER', () => {
-		const action = new HideAnnotationsLayer({ update: true });
-		const result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.displayAnnotationsLayer).toBe(false);
-	});
+		it('TOGGLE_DISPLAY_LAYER', () => {
+			let action = new ToggleDisplayAnnotationsLayer( true );
+			let result: ILayerState = LayersReducer(initialLayersState, action);
+			expect(result.displayAnnotationsLayer).toBeTruthy();
+
+			action = new ToggleDisplayAnnotationsLayer( false);
+			result = LayersReducer(initialLayersState, action);
+			expect(result.displayAnnotationsLayer).toBeFalsy()
+		});
+
+		it('SET_LAYER', () => {
+			const action = new SetAnnotationsLayer('some geoJSON string');
+			const result: ILayerState = LayersReducer(initialLayersState, action);
+			expect(result.annotationsLayer).toEqual('some geoJSON string');
+		});
+	})
+
 });

@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 export class LayerTreeComponent implements OnInit, AfterViewInit {
 
 	public options;
-	public annotationLayerChecked = true;
+	public annotationLayerChecked;
 
 	@ViewChild(TreeComponent) treeComponent: TreeComponent;
 
@@ -50,8 +50,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 	}
 
 	annotationLayerClick() {
-		this.annotationLayerChecked = !this.annotationLayerChecked;
-		this.store.dispatch(new ToggleDisplayAnnotationsLayer(this.annotationLayerChecked))
+		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked))
 	}
 
 	public onDivClicked(event, node: TreeNode): void {

@@ -286,64 +286,26 @@ describe('ToolsAppEffects', () => {
 	});
 
 	describe('@Effect onActiveMapChangesSetOverlaysFootprintMode$', () => {
-		it(' layerState.displayAnnotationsLayer is true', () => {
-			layerState.displayAnnotationsLayer = true;
-			toolsState.flags.set('annotations', true);
+		it('should trigger SetActiveOverlaysFootprintModeAction', () => {
 			imapState.activeMap = imapState.mapsList[0];
 			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+			const expectedResults = cold('--b--', { b: new SetActiveOverlaysFootprintModeAction(<any>'whatever') });
+			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
+		});
+	});
 
+	describe('onActiveMapChangesDrawAnnotation$', () => {
+		it('shuold "show" active and "remove" others, while displayAnnotationsLayer is false and annotations flag is true', () => {
+			layerState.displayAnnotationsLayer = false;
+			toolsState.flags.set('annotations', true);
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const expectedResults = cold('--(ab)--', {
-				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever'),
-				b: new AnnotationVisualizerAgentAction({
-					action: 'show',
-					maps: 'all'
-				})
+				a: new AnnotationVisualizerAgentAction({ action: 'show', maps: 'active' }),
+				b: new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'others' })
 			});
-
-			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
-		});
-
-		it(' layerState.displayAnnotationsLayer is false, annotations is open', () => {
-			layerState.displayAnnotationsLayer = false;
-			toolsState.flags.set('annotations', true);
-			imapState.activeMap = imapState.mapsList[0];
-			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-
-
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-
-			const expectedResults = cold('--(abc)--', {
-				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever'),
-				b: new AnnotationVisualizerAgentAction({
-					action: 'show',
-					maps: 'active'
-				}),
-				c: new AnnotationVisualizerAgentAction({
-					action: 'removeLayer',
-					maps: 'others'
-				})
-			});
-
-			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
-		});
-
-		it(' layerState.displayAnnotationsLayer is false and the menu item is close', () => {
-			layerState.displayAnnotationsLayer = false;
-			toolsState.flags.set('annotations', false);
-			imapState.activeMap = imapState.mapsList[0];
-			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-
-
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-
-			const expectedResults = cold('--(a)--', {
-				a: new SetActiveOverlaysFootprintModeAction(<any>'whatever')
-			});
-
-			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
-		});
+			expect(toolsAppEffects.onActiveMapChangesDrawAnnotation$).toBeObservable(expectedResults);
+		})
 	});
 
 	describe('backToWorldView', () => {

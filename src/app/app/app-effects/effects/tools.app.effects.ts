@@ -97,9 +97,9 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(toolsStateSelector))
-		.filter(([action, toolsState]) => toolsState.flags.get('annotations'))
+		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
+		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
 		.mergeMap(() =>  [
 			new AnnotationVisualizerAgentAction({ action: 'show', maps: 'active' }),
 			new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'others' })

@@ -29,28 +29,6 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 @Injectable()
 export class CasesAppEffects {
 
-	// /**
-	//  * @type Effect
-	//  * @name updateAnnotationLayersFlags$
-	//  * @ofType SelectCaseAction
-	//  * @action ShowAnnotationsLayer?, HideAnnotationsLayer?
-	//  */
-	// @Effect()
-	// updateAnnotationLayersFlags$: Observable<any> = this.actions$
-	// 	.ofType(CasesActionTypes.SELECT_CASE)
-	// 	.map(({ payload }: SelectCaseAction) => {
-	// 		if (payload.state.layers && payload.state.layers.displayAnnotationsLayer) {
-	// 			if (!this.imageryCommunicatorService.initialized) {
-	// 				return new ShowAnnotationsLayerOnInit();
-	// 			} else {
-	// 				return new ShowAnnotationsLayer();
-	// 			}
-	// 		} else {
-	// 			return new HideAnnotationsLayer();
-	// 		}
-	// 	});
-
-
 	/**
 	 * @type Effect
 	 * @name onDisplayOverlay$

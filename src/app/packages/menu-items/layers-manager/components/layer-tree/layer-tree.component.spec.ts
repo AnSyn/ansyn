@@ -10,10 +10,16 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ILayerState, layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
 import { CoreModule } from '@ansyn/core/core.module';
 import { Subject } from 'rxjs/Subject';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ToggleDisplayAnnotationsLayer } from '../../actions/layers.actions';
+
+export function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
+	flattenedArray.push(rootNode);
+	rootNode.children.forEach((child: ILayerTreeNode) => flattenNodeTree(child, flattenedArray));
+	return flattenedArray;
+}
 
 describe('LayerTreeComponent', () => {
 	let component: LayerTreeComponent;
@@ -21,13 +27,7 @@ describe('LayerTreeComponent', () => {
 	let store: Store<ILayerState>;
 	let handler: Subject<any>;
 
-	function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
-		flattenedArray.push(rootNode);
 
-		rootNode.children.forEach((child: ILayerTreeNode) => flattenNodeTree(child, flattenedArray));
-
-		return flattenedArray;
-	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -84,14 +84,14 @@ describe('LayerTreeComponent', () => {
 		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = false;
 		component.annotationLayerClick();
-		expect(store.dispatch).toHaveBeenCalledWith(new ShowAnnotationsLayer({ update: true }));
+		expect(store.dispatch).toHaveBeenCalledWith(new ToggleDisplayAnnotationsLayer(true));
 	});
 
 	it('annotation layer checkbox click - state: annotation layer enabled', () => {
 		spyOn(store, 'dispatch');
 		component.annotationLayerChecked = true;
 		component.annotationLayerClick();
-		expect(store.dispatch).toHaveBeenCalledWith(new HideAnnotationsLayer({ update: true }));
+		expect(store.dispatch).toHaveBeenCalledWith(new ToggleDisplayAnnotationsLayer(false));
 	});
 
 	it('should create', () => {

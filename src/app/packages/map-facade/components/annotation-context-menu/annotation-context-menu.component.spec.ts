@@ -7,11 +7,11 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
+import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
-	let de: DebugElement;
 	let store: Store<IMapState>;
 
 	beforeEach(() => {
@@ -60,11 +60,10 @@ describe('AnnotationContextMenuComponent', () => {
 		tests.forEach(item => {
 			it(`check ${item.type} annotation shape`, () => {
 				const actionPayload = {
-					type: 'someType',
+					type: 'openMenu',
+					featureId: 'featureId',
 					payload: {
-						feature: {
-							geometryName_: `Annotate-${item.type}`
-						},
+						geometryName: `Annotate-${item.type}`,
 						pixels: {
 							top: 100,
 							height: 100,
@@ -84,14 +83,10 @@ describe('AnnotationContextMenuComponent', () => {
 	});
 
 	it('click on remove feature button', () => {
-		spyOn(store, 'dispatch');
-		spyOn(component.host.nativeElement, 'setAttribute');
+		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
-		// const el: HTMLElement = de.nativeElement;
 		de.triggerEventHandler('mousedown', {});
-		expect(store.dispatch).toHaveBeenCalledTimes(1);
-		expect(component.host.nativeElement.setAttribute).toHaveBeenCalledWith('style', '');
-
+		expect(component.removeFeature).toHaveBeenCalled();
 	});
 
 

@@ -20,9 +20,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ImageryCommunicatorService, ImageryComponentManager } from '@ansyn/imagery';
-import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -111,52 +109,5 @@ describe('CasesAppEffects', () => {
 		const expectedResults = cold('--b--', { b: new SetMapsDataActionStore({ mapsList: updatedMapsList }) });
 		expect(casesAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 	});
-
-	it('updateAnnotationLayersFlags$ - call ShowAnnotationsLayerOnInit', () => {
-		actions = hot('--a--', {
-			a: new SelectCaseAction(<Case>{
-				state: {
-					layers: {
-						displayAnnotationsLayer: true
-					}
-				}
-			})
-		});
-
-		let expectedResult = cold('--b--', { b: new ShowAnnotationsLayerOnInit({ update: false }) });
-		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
-	});
-
-	it('updateAnnotationLayersFlags$ - call ShowAnnotationsLayer', () => {
-		imageryCommunicatorService.createCommunicator(new ImageryComponentManager(null, null, null, null, null, null, 'id'));
-		actions = hot('--a--', {
-			a: new SelectCaseAction(<Case>{
-				state: {
-					layers: {
-						displayAnnotationsLayer: true
-					}
-				}
-			})
-		});
-
-		let expectedResult = cold('--b--', { b: new ShowAnnotationsLayer({ update: false }) });
-		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
-	});
-
-	it('updateAnnotationLayersFlags$ - call HideAnnotationsLayer', () => {
-		actions = hot('--a--', {
-			a: new SelectCaseAction(<Case>{
-				state: {
-					layers: {
-						displayAnnotationsLayer: false
-					}
-				}
-			})
-		});
-
-		let expectedResult = cold('--b--', { b: new HideAnnotationsLayer({ update: false }) });
-		expect(casesAppEffects.updateAnnotationLayersFlags$).toBeObservable(expectedResult);
-	});
-
 
 });

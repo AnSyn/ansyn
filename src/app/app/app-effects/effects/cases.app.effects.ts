@@ -23,34 +23,32 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { HideAnnotationsLayer, ShowAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 @Injectable()
 export class CasesAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name updateAnnotationLayersFlags$
-	 * @ofType SelectCaseAction
-	 * @action ShowAnnotationsLayer?, HideAnnotationsLayer?
-	 */
-	@Effect()
-	updateAnnotationLayersFlags$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => {
-			if (payload.state.layers && payload.state.layers.displayAnnotationsLayer) {
-				if (!this.imageryCommunicatorService.initialized) {
-					return new ShowAnnotationsLayerOnInit({ update: false });
-				} else {
-					return new ShowAnnotationsLayer({ update: false });
-				}
-			} else {
-				return new HideAnnotationsLayer({ update: false });
-			}
-		});
+	// /**
+	//  * @type Effect
+	//  * @name updateAnnotationLayersFlags$
+	//  * @ofType SelectCaseAction
+	//  * @action ShowAnnotationsLayer?, HideAnnotationsLayer?
+	//  */
+	// @Effect()
+	// updateAnnotationLayersFlags$: Observable<any> = this.actions$
+	// 	.ofType(CasesActionTypes.SELECT_CASE)
+	// 	.map(({ payload }: SelectCaseAction) => {
+	// 		if (payload.state.layers && payload.state.layers.displayAnnotationsLayer) {
+	// 			if (!this.imageryCommunicatorService.initialized) {
+	// 				return new ShowAnnotationsLayerOnInit();
+	// 			} else {
+	// 				return new ShowAnnotationsLayer();
+	// 			}
+	// 		} else {
+	// 			return new HideAnnotationsLayer();
+	// 		}
+	// 	});
 
 
 	/**

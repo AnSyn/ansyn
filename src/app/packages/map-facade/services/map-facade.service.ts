@@ -12,11 +12,10 @@ import {
 	PositionChangedAction,
 	RemoveMapInstanceAction
 } from '../actions';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { AnnotationContextMenuTriggerAction, AnnotationData } from '../actions/map.actions';
+import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../actions/map.actions';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 
@@ -153,13 +152,7 @@ export class MapFacadeService {
 	}
 
 	drawEndSubscriber(featureCollection: GeoJSON.GeoJsonObject) {
-
-		this.store.dispatch(new AnnotationData(featureCollection));
-
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'refreshDrawing',
-			maps: 'others'
-		}));
+		this.store.dispatch(new AnnotationDrawEndAction(featureCollection));
 	}
 
 	annotationContextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {

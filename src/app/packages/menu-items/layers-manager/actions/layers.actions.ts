@@ -5,39 +5,37 @@ import { Action } from '@ngrx/store';
 export const LayersActionTypes = {
 	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
 	LAYER_TREE_LOADED: 'LAYER_TREE_LOADED',
-
 	SELECT_LAYER: 'SELECT_LAYER',
 	UNSELECT_LAYER: 'UNSELECT_LAYER',
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
-	COMMANDS: {
-		SHOW_ANNOTATIONS_LAYER_ON_INIT: 'SHOW_ANNOTATIONS_LAYER_ON_INIT',
-		SHOW_ANNOTATIONS_LAYER: 'SHOW_ANNOTATIONS_LAYER',
-		HIDE_ANNOTATIONS_LAYER: 'HIDE_ANNOTATIONS_LAYER'
+	ANNOTATIONS: {
+		SET_LAYER: 'SET_LAYER',
+		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER',
 	}
-
 };
 
-export type LayersActions = any;
+export type LayersActions =
+	| ToggleDisplayAnnotationsLayer
+	| BeginLayerTreeLoadAction
+	| LayerTreeLoadedAction
+	| SelectLayerAction
+	| UnselectLayerAction
+	| ErrorLoadingLayersAction;
 
-export class ShowAnnotationsLayerOnInit implements Action {
-	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER_ON_INIT;
+export class ToggleDisplayAnnotationsLayer implements Action {
+	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
 
-	constructor(public payload: { update: boolean }) {
+	constructor(public payload: boolean) {
 	}
 }
-export class ShowAnnotationsLayer implements Action {
-	type = LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER;
 
-	constructor(public payload: { update: boolean }) {
+export class SetAnnotationsLayer implements Action {
+	type = LayersActionTypes.ANNOTATIONS.SET_LAYER;
+
+	constructor(public payload: string) {
 	}
 }
 
-export class HideAnnotationsLayer implements Action {
-	type = LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER;
-
-	constructor(public payload: { update: boolean }) {
-	}
-}
 
 
 export class BeginLayerTreeLoadAction implements Action {

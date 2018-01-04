@@ -1,120 +1,91 @@
 import {
-	BeginLayerTreeLoadAction,
-	HideAnnotationsLayer,
-	LayersActionTypes,
-	ShowAnnotationsLayer
+	BeginLayerTreeLoadAction, LayersActionTypes, SetAnnotationsLayer,
+	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep as _cloneDeep, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
-import { ShowAnnotationsLayerOnInit } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 
 @Injectable()
 export class LayersAppEffects {
-	public selectedCase$ = this.store$.select<ICasesState>(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase')
-		.map((selectedCase) => _cloneDeep<Case>(selectedCase));
-
 	/**
 	 * @type Effect
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
 	 * @filter The selected case is not empty
-	 * @action BeginLayerTreeLoadAction
+	 * @action ToggleDisplayAnnotationsLayer | BeginLayerTreeLoadAction | SetAnnotationsLayer
 	 */
 	@Effect()
-	selectCase$: Observable<BeginLayerTreeLoadAction> = this.actions$
+	selectCase$: Observable<ToggleDisplayAnnotationsLayer | BeginLayerTreeLoadAction | SetAnnotationsLayer> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
-		.map(({ payload }: SelectCaseAction) => {
-			return new BeginLayerTreeLoadAction({ caseId: payload.id });
-		}).share();
-
-	/**
-	 * @type Effect
-	 * @name showAnnotationsLayerOnInit$
-	 * @ofType ShowAnnotationsLayerOnInit
-	 */
-	@Effect({ dispatch: false })
-	showAnnotationsLayerOnInit$: Observable<any> = this.actions$
-		.ofType<ShowAnnotationsLayerOnInit>(LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER_ON_INIT)
-		.map((action) => {
-			this.imageryCommunicatorService.onInit$.subscribe(() => {
-				// not initialized - dispatch after init
-				this.store$.dispatch(new ShowAnnotationsLayer(action.payload));
-			});
-		});
+		.mergeMap((action: SelectCaseAction) => [
+			new SetAnnotationsLayer(action.payload.state.layers.annotationsLayer),
+			new ToggleDisplayAnnotationsLayer(action.payload.state.layers.displayAnnotationsLayer),
+			new BeginLayerTreeLoadAction({ caseId: action.payload.id }),
+		]).share();
 
 	/**
 	 * @type Effect
 	 * @name showAnnotationsLayer$,
 	 * @ofType ShowAnnotationsLayer
-	 * @action AnnotationVisualizerAgentAction,UpdateCaseAction?
+	 * @action AnnotationVisualizerAgentAction
 	 */
 	@Effect()
-	showAnnotationsLayer$: Observable<any> = this.actions$
-		.ofType<ShowAnnotationsLayer>(LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER)
-		.withLatestFrom<ShowAnnotationsLayer, Case>(this.selectedCase$)
-		.mergeMap(([action, selectedCase]: [ShowAnnotationsLayer, Case]) => {
-			const actions: any[] = [new AnnotationVisualizerAgentAction({
-				action: 'show',
-				maps: 'all'
-			})];
+	toggleAnnotationsLayer$: Observable<any> = this.actions$
+		.ofType<ToggleDisplayAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER)
+		.map(({ payload }: ToggleDisplayAnnotationsLayer) => new AnnotationVisualizerAgentAction({
+			action: payload ? 'show' : 'removeLayer', maps: 'all'
+		}));
 
-			if (Boolean(action.payload.update)) {
-				selectedCase.state.layers.displayAnnotationsLayer = true;
-				actions.push(new UpdateCaseAction(selectedCase));
-			}
-
-			return actions;
-		});
-
-	/**
-	 * @type Effect
-	 * @name hideAnnotationsLayer$,
-	 * @ofType HideAnnotationsLayer
-	 * @action AnnotationVisualizerAgentAction,UpdateCaseAction?
-	 */
-	@Effect()
-	hideAnnotationsLayer$: Observable<any> = this.actions$
-		.ofType<HideAnnotationsLayer>(LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER)
-		.withLatestFrom<HideAnnotationsLayer, Case>(this.selectedCase$)
-		.mergeMap(([action, selectedCase]: [HideAnnotationsLayer, Case]) => {
-
-			const actions: any[] = [new AnnotationVisualizerAgentAction({
-				action: 'removeLayer',
-				maps: 'all'
-			})];
-
-			if (Boolean(action.payload.update)) {
-				selectedCase.state.layers.displayAnnotationsLayer = false;
-				actions.push(new UpdateCaseAction(selectedCase));
-			}
-
-			return actions;
-		});
 
 	/**
 	 * @type Effect
 	 * @name renderMaps$,
 	 * @ofType SelectLayerAction, UnselectLayerAction
-	 * @action
+	 * @action ContainerChangedTriggerAction
 	 */
 	@Effect()
 	redrawMaps$: Observable<any> = this.actions$
 		.ofType<any>(LayersActionTypes.SELECT_LAYER, LayersActionTypes.UNSELECT_LAYER)
-		.map(action => new ContainerChangedTriggerAction());
+		.map(() => new ContainerChangedTriggerAction());
+
+	/**
+	 * @type Effect
+	 * @name annotationUpdateCase$,
+	 * @ofType ShowAnnotationsLayerOnInit, ShowAnnotationsLayer, HideAnnotationsLayer, SetAnnotationsLayer
+	 * @action UpdateCaseAction
+	 */
+	@Effect()
+	annotationUpdateCase$: Observable<any> = this.actions$
+		.ofType<any>(...Object.values(LayersActionTypes.ANNOTATIONS))
+		.withLatestFrom(this.store$.select(layersStateSelector), this.store$.select(casesStateSelector))
+		.map(([action, layersState, casesState]: [Action, ILayerState, ICasesState]) => {
+			const updatedCase = {
+				...casesState.selectedCase,
+				state: {
+					...casesState.selectedCase.state,
+					layers: {
+						...casesState.selectedCase.state.layers,
+						displayAnnotationsLayer: layersState.displayAnnotationsLayer,
+						annotationsLayer: layersState.annotationsLayer
+					}
+				}
+			} as Case;
+			return new UpdateCaseAction(updatedCase);
+		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

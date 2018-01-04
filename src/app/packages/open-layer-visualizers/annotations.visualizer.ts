@@ -248,7 +248,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	drawFeatures(data) {
-		if (data === undefined || this.source === undefined) {
+		if ( !data || !this.source) {
 			return;
 		}
 

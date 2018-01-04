@@ -29,16 +29,17 @@ export class OpenLayersDisabledMap extends IMap {
 	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		super();
 
-		this.initMap(element, layers);
+		this.initMap(element, layers, position);
 	}
 
-	initMap(element: HTMLElement, layers: any) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
 			controls: [new ScaleLine()]
 		});
-		this.setMainLayer(layers[0]);
+		this.setMainLayer(layers[0], position);
+
 		const containerElem = <HTMLElement> this.mapObject.getViewport();
 		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
 			e.preventDefault();
@@ -67,18 +68,18 @@ export class OpenLayersDisabledMap extends IMap {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any): void {
-		this.setMainLayer(layer);
+	resetView(layer: any, position?: CaseMapPosition): void {
+		this.setMainLayer(layer, position);
 	}
 
-	setMainLayer(layer: Layer) {
+	setMainLayer(layer: Layer, position?: CaseMapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
 		}
 
 		this.mainLayer = layer;
-		const view = this.generateNewView(layer);
+		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
 		this.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
@@ -93,8 +94,18 @@ export class OpenLayersDisabledMap extends IMap {
 		}
 	}
 
-	generateNewView(layer: Layer): View {
+	generateNewView(layer: Layer, position?: CaseMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
+
+		// for outside only
+		if (position && position.projectedState.projection.code === newProjection.getCode()) {
+			return new View({
+				projection: newProjection,
+				center: position.projectedState.center,
+				zoom: position.projectedState.zoom,
+				rotation: position.projectedState.rotation
+			});
+		}
 		return new View({
 			projection: newProjection
 		});

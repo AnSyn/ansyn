@@ -1,8 +1,10 @@
-import { layersFeatureKey, LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import {
-	BeginLayerTreeLoadAction,
-	HideAnnotationsLayer,
-	ShowAnnotationsLayer
+	ILayerState, initialLayersState, layersFeatureKey, LayersReducer,
+	layersStateSelector
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	BeginLayerTreeLoadAction, SetAnnotationsLayer,
+	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -15,29 +17,28 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector,
-	ICasesState,
+	casesFeatureKey, CasesReducer, casesStateSelector, ICasesState,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { IAppState } from '../app.effects.module';
+import 'rxjs/add/observable/of';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
 	let actions: Observable<any>;
-	let store: Store<any>;
-	let caseState: ICasesState = cloneDeep(initialCasesState);
-
-	caseState.selectedCase = <Case>{};
+	let store: Store<IAppState>;
+	const casesState: ICasesState = cloneDeep(initialCasesState);
+	const layerState: ILayerState = cloneDeep(initialLayersState);
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({
 				[layersFeatureKey]: LayersReducer,
 				[casesFeatureKey]: CasesReducer
-			})],
+			})
+			],
 			providers: [
 				provideMockActions(() => actions),
 				LayersAppEffects,
@@ -46,127 +47,94 @@ describe('LayersAppEffects', () => {
 
 		}).compileComponents();
 	}));
+	beforeEach(inject([Store], (_store: Store<IAppState>) => {
+		store = _store;
+		const fakeStore = new Map<any, any>([
+			[casesStateSelector, casesState],
+			[layersStateSelector, layerState]
+		]);
+		casesState.selectedCase = <Case> { state: { layers: { displayAnnotationsLayer: false, annotationsLayer: '' } } };
+		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
+	}));
 
+	beforeEach(inject([LayersAppEffects], (_layersAppEffects: LayersAppEffects) => {
+		layersAppEffects = _layersAppEffects;
+	}));
 
-	describe('select case', () => {
-
-		beforeEach(inject([LayersAppEffects], (_layersAppEffects: LayersAppEffects) => {
-			layersAppEffects = _layersAppEffects;
-		}));
+	describe('selectCase$', () => {
 
 		it('selectCase$', () => {
-			let selectedCase = { id: 'asdfasdf' } as Case;
+			let selectedCase = {
+				id: 'id',
+				state: { layers: { displayAnnotationsLayer: true, annotationsLayer: 'geoJSON' } }
+			} as Case;
 			actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
-			const expectedResults = cold('--b--', { b: new BeginLayerTreeLoadAction({ caseId: selectedCase.id }) });
+			const expectedResults = cold('--(abc)--', {
+				a: new SetAnnotationsLayer('geoJSON'),
+				b: new ToggleDisplayAnnotationsLayer(true),
+				c: new BeginLayerTreeLoadAction({ caseId: 'id' })
+			});
 			expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
 		});
 	});
 
-	describe('check hide show annotaion layers', () => {
-
-		beforeEach(inject([Store], (_store: Store<any>) => {
-			store = _store;
-			const fakeStore = new Map<any, any>([
-				[casesStateSelector, caseState]
-			]);
-			spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
-		}));
-
-		beforeEach(inject([LayersAppEffects], (_layersAppEffects: LayersAppEffects) => {
-			layersAppEffects = _layersAppEffects;
-		}));
-
-		it('showAnnotationLayer$ - false', () => {
-
-			layersAppEffects.selectedCase$ = Observable.of({});
-
-			actions = hot('--a--', { a: new ShowAnnotationsLayer({ update: false }) });
-
+	describe('toggleAnnotationsLayer$ should check hide show annotaion layers', () => {
+		it('displayAnnotationLayer - true', () => {
+			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(true) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({
-					action: 'show',
-					maps: 'all'
-				})
+				b: new AnnotationVisualizerAgentAction({ action: 'show', maps: 'all' })
 			});
-			expect(layersAppEffects.showAnnotationsLayer$).toBeObservable(expectedResults);
+			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});
 
-		it('showAnnotationLayer$ - true', () => {
-			// this is referecne to init the selected case with the data I want the effect to come
-			// back as a result from this.store.select<T>(<R>);
-			caseState.selectedCase = <Case>{
-				state: {
-					layers: {}
-				}
-			};
+		it('displayAnnotationLayer - false', () => {
+			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(false) });
+			const expectedResults = cold('--(b)--', {
+				b: new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'all' })
+			});
+			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
+		});
+	});
 
-			actions = hot('--a--', { a: new ShowAnnotationsLayer({ update: true }) });
-			const newCaseState: Case = <Case>{
-				state: {
+	describe('annotationUpdateCase$ should update case via layers state (annotationsLayer, displayAnnotationsLayer)', () => {
+
+		it('displayAnnotationsLayer', () => {
+			layerState.annotationsLayer = 'some geoJSON';
+			layerState.displayAnnotationsLayer = true;
+
+			const updatedCase = {
+				...casesState.selectedCase, state: {
+					...casesState.selectedCase.state,
 					layers: {
-						displayAnnotationsLayer: true
+						...casesState.selectedCase.state.layers,
+						annotationsLayer: layerState.annotationsLayer ,
+						displayAnnotationsLayer: layerState.displayAnnotationsLayer
 					}
 				}
 			};
-
-			const expectedResults = cold('--(ab)--', {
-				a: new AnnotationVisualizerAgentAction({
-					action: 'show',
-					maps: 'all'
-				}),
-				b: new UpdateCaseAction(newCaseState)
-			});
-			expect(layersAppEffects.showAnnotationsLayer$).toBeObservable(expectedResults);
+			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(layerState.displayAnnotationsLayer) });
+			const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
+			expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
 		});
 
-		it('hideAnnotationLayer$ - false', () => {
+		it('annotationsLayer', () => {
+			layerState.annotationsLayer = 'some geoJSON';
+			layerState.displayAnnotationsLayer = false;
 
-			layersAppEffects.selectedCase$ = Observable.of({});
-
-			actions = hot('--a--', { a: new HideAnnotationsLayer({ update: false }) });
-
-			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({
-					action: 'removeLayer',
-					maps: 'all'
-				})
-			});
-			expect(layersAppEffects.hideAnnotationsLayer$).toBeObservable(expectedResults);
-		});
-
-		it('hideAnnotationLayer$ - true', () => {
-			// this is referecne to init the selected case with the data I want the effect to come
-			// back as a result from this.store.select<T>(<R>);
-			caseState.selectedCase = <Case>{
-				state: {
-					layers: {}
-				}
-			};
-
-			actions = hot('--a--', { a: new HideAnnotationsLayer({ update: true }) });
-			const newCaseState: Case = <Case>{
-				state: {
+			const updatedCase = {
+				...casesState.selectedCase, state: {
+					...casesState.selectedCase.state,
 					layers: {
-						displayAnnotationsLayer: false
+						...casesState.selectedCase.state.layers,
+						annotationsLayer: layerState.annotationsLayer ,
+						displayAnnotationsLayer: layerState.displayAnnotationsLayer
 					}
 				}
 			};
-
-			const expectedResults = cold('--(ab)--', {
-				a: new AnnotationVisualizerAgentAction({
-					action: 'removeLayer',
-					maps: 'all'
-				}),
-				b: new UpdateCaseAction(newCaseState)
-			});
-			expect(layersAppEffects.hideAnnotationsLayer$).toBeObservable(expectedResults);
-		});
-
-		afterEach(() => {
-			caseState.selectedCase = <Case> {};
+			actions = hot('--a--', { a: new SetAnnotationsLayer(layerState.annotationsLayer) });
+			const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
+			expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
 		});
 
 	});
-
-
 });

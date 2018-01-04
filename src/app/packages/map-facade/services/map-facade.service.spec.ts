@@ -4,7 +4,7 @@ import { MapFacadeService } from './map-facade.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService, ImageryModule } from '@ansyn/imagery';
 import { IMapState, mapFeatureKey, MapReducer } from '../reducers/map.reducer';
-import { AnnotationContextMenuTriggerAction } from '../actions/map.actions';
+import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../actions/map.actions';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('MapFacadeService', () => {
@@ -46,20 +46,8 @@ describe('MapFacadeService', () => {
 		});
 
 		it('drawEndSubscriber event', () => {
-			const firstAction = new AnnotationVisualizerAgentAction({
-				action: 'saveDrawing',
-				maps: 'active'
-			});
-
-			const secondAction = new AnnotationVisualizerAgentAction({
-				action: 'refreshDrawing',
-				maps: 'others'
-			});
-
-			service.drawEndSubscriber();
-			expect(store.dispatch).toHaveBeenCalledTimes(2);
-			const allArgs = store.dispatch['calls']['allArgs']();
-			expect(allArgs).toEqual([[firstAction], [secondAction]]);
+			service.drawEndSubscriber(<any>'some GeoJsonObject');
+			expect(store.dispatch).toHaveBeenCalledWith(new AnnotationDrawEndAction(<any>'some GeoJsonObject'));
 
 		});
 	});

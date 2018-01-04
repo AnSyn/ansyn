@@ -65,7 +65,7 @@ export class LayersAppEffects {
 	/**
 	 * @type Effect
 	 * @name annotationUpdateCase$,
-	 * @ofType ShowAnnotationsLayerOnInit, ShowAnnotationsLayer, HideAnnotationsLayer, SetAnnotationsLayer
+	 * @ofType ShowAnnotationsLayer, ToggleDisplayAnnotationsLayer
 	 * @action UpdateCaseAction
 	 */
 	@Effect()

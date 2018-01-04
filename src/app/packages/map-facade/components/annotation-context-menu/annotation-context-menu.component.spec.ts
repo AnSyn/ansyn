@@ -60,7 +60,6 @@ describe('AnnotationContextMenuComponent', () => {
 		tests.forEach(item => {
 			it(`check ${item.type} annotation shape`, () => {
 				const actionPayload = {
-					type: 'openMenu',
 					featureId: 'featureId',
 					payload: {
 						geometryName: `Annotate-${item.type}`,

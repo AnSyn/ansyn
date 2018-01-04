@@ -102,7 +102,7 @@ describe('LayersAppEffects', () => {
 			layerState.annotationsLayer = 'some geoJSON';
 			layerState.displayAnnotationsLayer = true;
 
-			const updatedCase = {
+			const updatedCase = <Case> {
 				...casesState.selectedCase, state: {
 					...casesState.selectedCase.state,
 					layers: {
@@ -121,7 +121,7 @@ describe('LayersAppEffects', () => {
 			layerState.annotationsLayer = 'some geoJSON';
 			layerState.displayAnnotationsLayer = false;
 
-			const updatedCase = {
+			const updatedCase = <Case> {
 				...casesState.selectedCase, state: {
 					...casesState.selectedCase.state,
 					layers: {

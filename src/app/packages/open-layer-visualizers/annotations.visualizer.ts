@@ -162,7 +162,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					event.preventDefault();
 					data.target.getFeatures().clear();
 					const contextMenuEvent: AnnotationsContextMenuEvent = {
-						action: 'openMenu',
 						featureId: selectedFeature.getProperties().id,
 						geometryName: selectedFeature.geometryName_,
 						pixels

@@ -33,7 +33,7 @@ export const mapFeatureKey = 'map';
 
 export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureSelector<IMapState>(mapFeatureKey);
 
-export function MapReducer(state: IMapState = initialMapState, action: MapActions) {
+export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
 		case MapActionTypes.SET_PROGRESS_BAR:
@@ -54,9 +54,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
 			return { ...state, communicators: action.payload.communicatorIds };
-
-		case MapActionTypes.SET_LOADING_OVERLAYS:
-			return { ...state, loadingOverlays: action.payload };
 
 		case MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS:
 			const overlayIdToAdd = action.payload.overlayId;

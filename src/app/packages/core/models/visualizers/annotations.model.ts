@@ -1,5 +1,4 @@
 export interface AnnotationsContextMenuEvent {
-	action: 'openMenu';
 	featureId: string;
 	geometryName: string;
 	pixels: {

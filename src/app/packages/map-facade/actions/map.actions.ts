@@ -10,7 +10,6 @@ export const MapActionTypes = {
 	REMOVE_MAP_INSTACNE: 'REMOVE_MAP_INSTACNE',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
-	SET_LOADING_OVERLAYS: 'SET_LOADING_OVERLAYS',
 	ADD_OVERLAY_TO_LOADING_OVERLAYS: 'ADD_OVERLAY_TO_LOADING_OVERLAYS',
 	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
@@ -150,13 +149,6 @@ export class DrawPinPointAction implements Action {
 	type = MapActionTypes.DRAW_PIN_POINT_ON_MAP;
 
 	constructor(public payload: GeoJSON.Position) {
-	}
-}
-
-export class SetLoadingOverlaysAction implements Action {
-	type = MapActionTypes.SET_LOADING_OVERLAYS;
-
-	constructor(public payload: string[]) {
 	}
 }
 

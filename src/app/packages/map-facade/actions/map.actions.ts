@@ -35,8 +35,6 @@ export const MapActionTypes = {
 	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
-		ANNOTATION_DATA: 'ANNOTATION_DATA',
-		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE'
 	},
 	TRIGGER: {
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
@@ -46,7 +44,9 @@ export const MapActionTypes = {
 		PIN_POINT: 'PIN_POINT',
 		PIN_POINT_MODE: 'PIN_POINT_MODE',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU'
+		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
+		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
+		ANNOTATION_DRAW_END: 'ANNOTATION_DRAW_END'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
@@ -288,17 +288,9 @@ export class AnnotationContextMenuTriggerAction implements Action {
 }
 
 export class AnnotationRemoveFeature implements Action {
-	type = MapActionTypes.STORE.ANNOTATION_REMOVE_FEATURE;
+	type = MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE;
 
 	constructor(public payload: string) {
-
-	};
-}
-
-export class AnnotationData implements Action {
-	type = MapActionTypes.STORE.ANNOTATION_DATA;
-
-	constructor(public payload: GeoJSON.GeoJsonObject) {
 
 	};
 }
@@ -344,4 +336,11 @@ export class ActiveImageryMouseEnter implements Action {
 
 export class ActiveImageryMouseLeave implements Action {
 	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE;
+}
+
+export class AnnotationDrawEndAction implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_DRAW_END;
+	constructor(public payload: GeoJSON.GeoJsonObject) {
+
+	}
 }

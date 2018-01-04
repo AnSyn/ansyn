@@ -1,27 +1,28 @@
 import { ILayerState } from './layers.reducer';
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
-import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
+import { LayersActions, LayersActionTypes, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface ILayerState {
 	layers: ILayerTreeNodeRoot[];
 	selectedLayers: ILayerTreeNodeLeaf[];
-	displayAnnotationsLayer?: boolean;
-
+	displayAnnotationsLayer: boolean;
+	annotationsLayer: string;
 }
 
 export const initialLayersState: ILayerState = {
 	layers: [],
 	selectedLayers: [],
-	displayAnnotationsLayer: false
+	displayAnnotationsLayer: false,
+	annotationsLayer: null
 
 };
 
 export const layersFeatureKey = 'layers';
 export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFeatureSelector<ILayerState>(layersFeatureKey);
 
-export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions) {
+export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions | any) {
 	switch (action.type) {
 
 		case LayersActionTypes.BEGIN_LAYER_TREE_LOAD:
@@ -52,11 +53,11 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
 			return Object.assign({}, state, { selectedLayers: newSelectedArray });
 
-		case LayersActionTypes.COMMANDS.SHOW_ANNOTATIONS_LAYER:
-			return { ...state, displayAnnotationsLayer: true };
+		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
+			return { ...state, displayAnnotationsLayer: action.payload };
 
-		case LayersActionTypes.COMMANDS.HIDE_ANNOTATIONS_LAYER:
-			return { ...state, displayAnnotationsLayer: false };
+		case LayersActionTypes.ANNOTATIONS.SET_LAYER:
+			return { ...state, annotationsLayer: action.payload };
 
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:

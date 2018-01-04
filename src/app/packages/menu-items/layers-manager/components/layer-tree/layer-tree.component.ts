@@ -4,7 +4,7 @@ import { TreeActionMappingService } from '../../services/tree-action-mapping.ser
 import { TreeComponent, TreeNode } from 'angular-tree-component';
 import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
-import { HideAnnotationsLayer, ShowAnnotationsLayer } from '../../actions/layers.actions';
+import { ToggleDisplayAnnotationsLayer } from '../../actions/layers.actions';
 import { ILayerState, layersStateSelector } from '../../reducers/layers.reducer';
 import { Store } from '@ngrx/store';
 
@@ -51,11 +51,7 @@ export class LayerTreeComponent implements OnInit, AfterViewInit {
 
 	annotationLayerClick() {
 		this.annotationLayerChecked = !this.annotationLayerChecked;
-		if (this.annotationLayerChecked) {
-			this.store.dispatch(new ShowAnnotationsLayer({ update: true }));
-		} else {
-			this.store.dispatch(new HideAnnotationsLayer({ update: true }));
-		}
+		this.store.dispatch(new ToggleDisplayAnnotationsLayer(this.annotationLayerChecked))
 	}
 
 	public onDivClicked(event, node: TreeNode): void {

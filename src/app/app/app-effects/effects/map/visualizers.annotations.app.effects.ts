@@ -1,34 +1,40 @@
 import { Actions, Effect } from '@ngrx/effects';
 import {
-	AnnotationAgentRelevantMap, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentPayload, SetAnnotationMode,
-	ToolsActionsTypes
+	AnnotationAgentRelevantMap, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentPayload,
+	SetAnnotationMode, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/open-layer-visualizers/annotations.visualizer';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../../app.effects.module';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Injectable } from '@angular/core';
 import {
-	AnnotationContextMenuTriggerAction,
-	AnnotationData, AnnotationRemoveFeature,
+	AnnotationDrawEndAction, AnnotationRemoveFeature,
 	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
+import {
+	LayersActionTypes,
+	SetAnnotationsLayer
+} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+
+export interface AgentOperations {
+	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
+}
 
 @Injectable()
 export class VisualizersAnnotationsAppEffects {
 
-	agentOperations = {
+	agentOperations: AgentOperations = {
 		addLayerd: (visualizer) => {
 			visualizer.removeLayer();
 			visualizer.addLayer();
 		},
-		show: (visualizer, {}, annotationsLayer) => {
+		show: (visualizer, {}, { annotationsLayer }) => {
 			visualizer.removeLayer();
 			visualizer.addLayer();
 			visualizer.removeInteraction();
@@ -62,16 +68,16 @@ export class VisualizersAnnotationsAppEffects {
 		refreshDrawing: (visualizer, {}, annotationsLayer) => {
 			visualizer.drawFeatures(annotationsLayer);
 		},
-		endDrawing: (visualizer, {}, {}, layerState) => {
+		endDrawing: (visualizer, {}, { displayAnnotationsLayer }) => {
 			visualizer.removeInteraction();
-			if (layerState.displayAnnotationsLayer) {
+			if (displayAnnotationsLayer) {
 				visualizer.addSelectInteraction();
 			} else {
 				visualizer.removeLayer();
 			}
 		},
-		removeLayer: (visualizer, {}, {}, layerState) => {
-			if (!layerState.displayAnnotationsLayer) {
+		removeLayer: (visualizer, {}, { displayAnnotationsLayer }) => {
+			if (!displayAnnotationsLayer) {
 				visualizer.removeInteraction();
 				visualizer.removeLayer();
 			}
@@ -82,73 +88,78 @@ export class VisualizersAnnotationsAppEffects {
 	 * @type Effect
 	 * @name annotationVisualizerAgent$
 	 * @ofType AnnotationVisualizerAgentAction
-	 * @dependencies cases, layers
-	 * @action UpdateCaseAction?, SetAnnotationMode?
+	 * @dependencies layers, maps
+	 * @dispatch: false
 	 */
 	@Effect({ dispatch: false })
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(layersStateSelector), this.store$.select(mapStateSelector))
-		.do(([{ payload }, casesState, layerState, mapsState]: [AnnotationVisualizerAgentAction, ICasesState, ILayerState, IMapState]) => {
-			const { action, maps } = payload;
-			const { activeMapId, mapsList } = mapsState;
-			const relevantMapsIds: string[] = this.relevantMapIds(maps, mapsList, activeMapId);
+		.withLatestFrom(this.store$.select(layersStateSelector), this.store$.select(mapStateSelector))
+		.do(([{ payload }, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayerState, IMapState]) => {
+			const { action, maps }: AnnotationVisualizerAgentPayload = payload;
+			const relevantMapsIds: string[] = this.relevantMapIds(maps, mapsState);
 			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
-			const { annotationsLayer } = casesState.selectedCase.state.layers;
 			annotationsVisualizers.forEach(visualizer => {
-				this.agentOperations[action](visualizer, payload, annotationsLayer, layerState);
+				this.agentOperations[action](visualizer, payload, layerState);
 			});
 		});
+
+	/**
+	 * @type Effect
+	 * @name drawAnnotationEnd$
+	 * @ofType AnnotationDrawEndAction
+	 * @action SetAnnotationsLayer
+	 */
+	@Effect()
+	drawAnnotationEnd$ = this.actions$
+		.ofType<AnnotationDrawEndAction>(MapActionTypes.TRIGGER.ANNOTATION_DRAW_END)
+		.map((action: AnnotationDrawEndAction) => new SetAnnotationsLayer(JSON.stringify(action.payload)));
 
 	/**
 	 * @type Effect
 	 * @name removeFeature$
 	 * @ofType AnnotationRemoveFeature
-	 * @action AnnotationData
+	 * @dependencies layers
+	 * @action SetAnnotationsLayer
 	 */
 	@Effect()
-	removeFeature$: Observable<AnnotationData> = this.actions$
-		.ofType<AnnotationRemoveFeature>(MapActionTypes.STORE.ANNOTATION_REMOVE_FEATURE)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.map(([action, casesState]: [AnnotationRemoveFeature, ICasesState]) => {
-			const annotationsLayer = JSON.parse(casesState.selectedCase.state.layers.annotationsLayer);
+	removeFeature$: Observable<SetAnnotationsLayer> = this.actions$
+		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
+		.withLatestFrom(this.store$.select(layersStateSelector))
+		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {
+			const annotationsLayer = JSON.parse(layerState.annotationsLayer);
 			const featureIndex = annotationsLayer.features.findIndex(featureString => {
 				const feature = JSON.parse(featureString);
 				return feature.properties.id === action.payload;
 			});
 			annotationsLayer.features.splice(featureIndex, 1);
-			return new AnnotationData(annotationsLayer)
+			return new SetAnnotationsLayer(JSON.stringify(annotationsLayer));
 		});
 
 	/**
 	 * @type Effect
-	 * @name annotationData$
-	 * @ofType AnnotationData
-	 * @action UpdateCaseAction, AnnotationVisualizerAgentAction
+	 * @name cancelAnnotationEditMode$
+	 * @ofType SetAnnotationLayer, AnnotationContextMenuTriggerAction, ActiveMapChangedAction
+	 * @action SetAnnotationMode
 	 */
 	@Effect()
 	cancelAnnotationEditMode$: Observable<any> = this.actions$
-		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.STORE.ANNOTATION_DATA, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.ofType<Action>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.map(() => new SetAnnotationMode());
 
 	/**
 	 * @type Effect
 	 * @name annotationData$
-	 * @ofType AnnotationData
-	 * @action UpdateCaseAction, AnnotationVisualizerAgentAction
+	 * @ofType SetAnnotationsLayer
+	 * @action AnnotationVisualizerAgentAction
 	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType<AnnotationData>(MapActionTypes.STORE.ANNOTATION_DATA)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(layersStateSelector))
-		.mergeMap(([action, casesState, layersState]: [AnnotationData, ICasesState, ILayerState]) => {
-			const updatedCase: Case = { ...casesState.selectedCase };
-			updatedCase.state.layers.annotationsLayer = JSON.stringify(action.payload);
-			const maps: AnnotationAgentRelevantMap = layersState.displayAnnotationsLayer ? 'all' : 'active';
-			return [
-				new UpdateCaseAction(updatedCase),
-				new AnnotationVisualizerAgentAction({ action: 'show', maps })
-			];
+		.ofType<SetAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.SET_LAYER)
+		.withLatestFrom(this.store$.select(layersStateSelector).pluck<ILayerState, boolean>('displayAnnotationsLayer'))
+		.map(([action, displayAnnotationsLayer]: [SetAnnotationsLayer, boolean]) => {
+			const maps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
+			return new AnnotationVisualizerAgentAction({ action: 'show', maps });
 		});
 
 	constructor(protected actions$: Actions,
@@ -156,7 +167,7 @@ export class VisualizersAnnotationsAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	relevantMapIds(relevantMaps: AnnotationAgentRelevantMap, mapsList: CaseMapState[], activeMapId: string) {
+	relevantMapIds(relevantMaps: AnnotationAgentRelevantMap, { mapsList, activeMapId }: IMapState) {
 		switch (relevantMaps) {
 			case 'all':
 				return mapsList.map(({ id }) => id);

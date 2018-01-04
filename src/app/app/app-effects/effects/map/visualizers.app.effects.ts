@@ -3,7 +3,6 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { isEmpty } from 'lodash';
 import {
-	AnnotationData,
 	BackToWorldAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,

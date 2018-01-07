@@ -3,6 +3,7 @@ import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
 
+import proj from 'ol/proj';
 import Text from 'ol/style/text';
 import Fill from 'ol/style/fill';
 import Style from 'ol/style/style';
@@ -22,6 +23,7 @@ import { UUID } from 'angular2-uuid';
 
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
+import { getPointByGeometry } from '@ansyn/core/utils';
 
 export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
 
@@ -35,18 +37,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		}),
 		stroke: new Stroke({
 			color: '#000',
-			width: 3
-		}),
-		offsetY: 30
-	});
-
-	protected singlePointLengthTextStyle = new Text({
-		font: "14px Calibri,sans-serif",
-		fill: new Fill({
-			color: '#FFFFFF'
-		}),
-		stroke: new Stroke({
-			color: '#3399CC',
 			width: 3
 		}),
 		offsetY: 30
@@ -69,12 +59,27 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			fill: new Fill({
 				color: 'rgba(255, 255, 255, 0.2)'
 			})
-		})
+		}),
+		zIndex: 3
 	});
 
 	interactionHandler: Draw;
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
+
+	getSinglePointLengthTextStyle(): Text {
+		return new Text({
+			font: "14px Calibri,sans-serif",
+			fill: new Fill({
+				color: '#FFFFFF'
+			}),
+			stroke: new Stroke({
+				color: '#3399CC',
+				width: 3
+			}),
+			offsetY: 30
+		});
+	}
 
 	constructor(style: Partial<VisualizerStateStyle>) {
 		super(MeasureDistanceVisualizerType, style, {
@@ -91,7 +96,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				},
 				line: {
 					width: 2
-				}
+				},
+				zIndex: 5
 			}
 		});
 
@@ -155,7 +161,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	// override base entities visualizer style
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
 		const styles = this.mainStyle(feature);
-		const measureStyles = this.getMeasureTextStyle(feature);
+		const measureStyles = this.getMeasureTextStyle(feature, true);
 		measureStyles.forEach((style) => {
 			styles.push(style);
 		});
@@ -193,7 +199,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	// points string styles
-	getMeasureTextStyle(feature: Feature) {
+	getMeasureTextStyle(feature: Feature, calculateCenterOfMass = false) {
 		const styles = [];
 		const geometry = feature.getGeometry();
 
@@ -204,11 +210,18 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		// all line string
 		const allLengthText = this.formatLength(geometry);
 		this.allLengthTextStyle.setText(allLengthText);
-		const allLinePoint = new Point(geometry.getCoordinates()[0]);
-		styles.push(new Style({
-			geometry: allLinePoint,
-			text: this.allLengthTextStyle
-		}));
+		let allLinePoint = new Point(geometry.getCoordinates()[0]);
+		if (calculateCenterOfMass) {
+			const featureId = feature.getId();
+			const entityMap = this.idToEntity.get(featureId);
+			if (entityMap) {
+				const view = (<any>this.iMap.mapObject).getView();
+				const projection = view.getProjection();
+				const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);
+				const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
+				allLinePoint = new Point(lonLatCords);
+			}
+		}
 
 		// text points
 		const length = geometry.getCoordinates().length;
@@ -216,13 +229,19 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			geometry.forEachSegment((start, end) => {
 				const lineString = new LineString([start, end]);
 				const segmentLengthText = this.formatLength(lineString);
-				this.singlePointLengthTextStyle.setText(segmentLengthText);
+				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
+				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
 					geometry: new Point(end),
-					text: this.singlePointLengthTextStyle
+					text: singlePointLengthTextStyle
 				}));
 			});
 		}
+
+		styles.push(new Style({
+			geometry: allLinePoint,
+			text: this.allLengthTextStyle
+		}));
 		return styles;
 	}
 

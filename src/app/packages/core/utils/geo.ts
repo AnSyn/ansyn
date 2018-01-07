@@ -14,7 +14,7 @@ export function getPolygonByPointAndRadius(lonLat: number[], radius = 0.001): Ge
 	return bboxPolygon(bbox(circle(tPoint, radius)));
 }
 
-export function getPointByPolygon(geometry: GeometryObject | FeatureCollection<any>): Point {
+export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {
 	if (geometry.type === 'FeatureCollection') {
 		return <Point>centerOfMass(<FeatureCollection<any>>geometry).geometry;
 	}

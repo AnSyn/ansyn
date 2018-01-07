@@ -31,7 +31,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	static type = MeasureDistanceVisualizerType;
 
 	protected allLengthTextStyle = new Text({
-		font: "16px Calibri,sans-serif",
+		font: '16px Calibri,sans-serif',
 		fill: new Fill({
 			color: '#fff'
 		}),
@@ -69,7 +69,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	getSinglePointLengthTextStyle(): Text {
 		return new Text({
-			font: "14px Calibri,sans-serif",
+			font: '14px Calibri,sans-serif',
 			fill: new Fill({
 				color: '#FFFFFF'
 			}),
@@ -155,7 +155,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			featureJson: JSON.parse(geoJsonSingleFeature)
 		};
-		this.addOrUpdateEntities([newEntity])
+		this.addOrUpdateEntities([newEntity]);
 	}
 
 	// override base entities visualizer style
@@ -188,7 +188,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				stroke: new Stroke(this.visualizerStyle.initial.stroke),
 				fill: new Fill(this.visualizerStyle.initial.fill)
 			}),
-			geometry: function(feature) {
+			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon
 				const coordinates = feature.getGeometry().getCoordinates();
 				return new MultiPoint(coordinates);
@@ -203,20 +203,21 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		const styles = [];
 		const geometry = feature.getGeometry();
 
-		if (geometry.getType() === "Point") {
+		if (geometry.getType() === 'Point') {
 			return styles;
 		}
+		const view = (<any>this.iMap.mapObject).getView();
+		const projection = view.getProjection();
 
 		// all line string
-		const allLengthText = this.formatLength(geometry);
+		const allLengthText = this.formatLength(geometry, projection);
 		this.allLengthTextStyle.setText(allLengthText);
 		let allLinePoint = new Point(geometry.getCoordinates()[0]);
+
 		if (calculateCenterOfMass) {
 			const featureId = feature.getId();
 			const entityMap = this.idToEntity.get(featureId);
 			if (entityMap) {
-				const view = (<any>this.iMap.mapObject).getView();
-				const projection = view.getProjection();
 				const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);
 				const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
 				allLinePoint = new Point(lonLatCords);
@@ -228,7 +229,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		if (length > 2) {
 			geometry.forEachSegment((start, end) => {
 				const lineString = new LineString([start, end]);
-				const segmentLengthText = this.formatLength(lineString);
+				const segmentLengthText = this.formatLength(lineString, projection);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
@@ -250,10 +251,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	 * @param {ol.geom.LineString} line The line.
 	 * @return {string} The formatted length.
 	 */
-	formatLength(line) {
-		const length = Sphere.getLength(line);
+	formatLength(line, projection) {
+		const length = Sphere.getLength(line, { projection: projection });
 		let output;
-		if (length > 100) {
+		if (length >= 1000) {
 			output = (Math.round(length / 1000 * 100) / 100) +
 				' ' + 'km';
 		} else {

@@ -82,7 +82,7 @@ describe('LayersAppEffects', () => {
 		it('displayAnnotationLayer - true', () => {
 			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(true) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ action: 'show', maps: 'all' })
+				b: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'all' })
 			});
 			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});
@@ -90,7 +90,7 @@ describe('LayersAppEffects', () => {
 		it('displayAnnotationLayer - false', () => {
 			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(false) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'all' })
+				b: new AnnotationVisualizerAgentAction({ operation: 'removeLayer', relevantMaps: 'all' })
 			});
 			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});

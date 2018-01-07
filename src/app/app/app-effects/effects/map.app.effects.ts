@@ -354,12 +354,7 @@ export class MapAppEffects {
 			return layerState.displayAnnotationsLayer &&
 				communicatorIds.length > 1 && communicatorIds.length === mapState.mapsList.length;
 		})
-		.map(() => {
-			return new AnnotationVisualizerAgentAction({
-				maps: 'all',
-				action: 'show'
-			});
-		});
+		.map(() => new AnnotationVisualizerAgentAction({ relevantMaps: 'all', operation: 'show' }));
 
 	/**
 	 * @type Effect

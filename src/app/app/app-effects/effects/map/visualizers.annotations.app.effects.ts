@@ -43,15 +43,15 @@ export class VisualizersAnnotationsAppEffects {
 			visualizer.removeInteraction();
 			visualizer.addSelectInteraction();
 		},
-		createInteraction: (visualizer, { type }: AnnotationVisualizerAgentPayload) => {
-			if (type === 'Rectangle') {
+		createInteraction: (visualizer, { mode }: AnnotationVisualizerAgentPayload) => {
+			if (mode === 'Rectangle') {
 				visualizer.rectangleInteraction();
 			}
-			else if (type === 'Arrow') {
+			else if (mode === 'Arrow') {
 				visualizer.arrowInteraction();
 			}
 			else {
-				visualizer.createInteraction(type);
+				visualizer.createInteraction(mode);
 			}
 		},
 		changeLine: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
@@ -94,11 +94,11 @@ export class VisualizersAnnotationsAppEffects {
 		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom(this.store$.select(layersStateSelector), this.store$.select(mapStateSelector))
 		.do(([{ payload }, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayerState, IMapState]) => {
-			const { action, maps }: AnnotationVisualizerAgentPayload = payload;
-			const relevantMapsIds: string[] = this.relevantMapIds(maps, mapsState);
+			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = payload;
+			const relevantMapsIds: string[] = this.relevantMapIds(relevantMaps, mapsState);
 			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
 			annotationsVisualizers.forEach(visualizer => {
-				this.agentOperations[action](visualizer, payload, layerState);
+				this.agentOperations[operation](visualizer, payload, layerState);
 			});
 		});
 
@@ -156,8 +156,8 @@ export class VisualizersAnnotationsAppEffects {
 		.ofType<SetAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.SET_LAYER)
 		.withLatestFrom(this.store$.select(layersStateSelector).pluck<ILayerState, boolean>('displayAnnotationsLayer'))
 		.map(([action, displayAnnotationsLayer]: [SetAnnotationsLayer, boolean]) => {
-			const maps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
-			return new AnnotationVisualizerAgentAction({ action: 'show', maps });
+			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
+			return new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps });
 		});
 
 	constructor(protected actions$: Actions,

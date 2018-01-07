@@ -72,8 +72,8 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.store.dispatch(new AnnotationClose(false));
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'removeInteraction',
-			maps: 'active'
+			operation: 'removeInteraction',
+			relevantMaps: 'active'
 		}));
 	}
 
@@ -122,16 +122,16 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.store.dispatch(new AnnotationOpen(true));
 			this.store.dispatch(new SetAutoCloseMenu(false));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: 'show',
-				maps: 'active'
+				operation: 'show',
+				relevantMaps: 'active'
 			}));
 
 		} else {
 			this.store.dispatch(new AnnotationClose(false));
 			this.store.dispatch(new SetAutoCloseMenu(true));
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: 'endDrawing',
-				maps: 'active'
+				operation: 'endDrawing',
+				relevantMaps: 'active'
 			}));
 		}
 	}

@@ -10,10 +10,10 @@ export type AnnotationAgentOperation = 'addLayer' | 'show' | 'createInteraction'
 export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
 
 export interface AnnotationVisualizerAgentPayload {
-	action: AnnotationAgentOperation;
-	maps: AnnotationAgentRelevantMap;
+	operation: AnnotationAgentOperation;
+	relevantMaps: AnnotationAgentRelevantMap;
 	value?: any;
-	type?: AnnotationMode;
+	mode?: AnnotationMode;
 }
 
 

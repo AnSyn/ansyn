@@ -189,9 +189,9 @@ describe('AnnotationsControlComponent', () => {
 
 	it('check ngOnDestrory', () => {
 		const action = new AnnotationVisualizerAgentAction({
-			action: 'removeLayer',
+			operation: 'removeLayer',
 			value: component.colorOptionsStroke,
-			maps: 'all'
+			relevantMaps: 'all'
 		});
 		component.ngOnDestroy();
 		expect(store.dispatch).toHaveBeenCalledWith(action);

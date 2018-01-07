@@ -120,9 +120,9 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	createInteraction(mode: AnnotationMode) {
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'createInteraction',
-			type: mode,
-			maps: 'active'
+			operation: 'createInteraction',
+			mode,
+			relevantMaps: 'active'
 		}));
 
 		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
@@ -141,26 +141,26 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 
 		const lineWidth = $event.target.dataset.index;
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'changeLine',
+			operation: 'changeLine',
 			value: lineWidth,
-			maps: 'active'
+			relevantMaps: 'active'
 		}));
 
 	}
 
 	changeStrokeColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'changeStrokeColor',
+			operation: 'changeStrokeColor',
 			value: this.colorOptionsStroke,
-			maps: 'active'
+			relevantMaps: 'active'
 		}));
 	}
 
 	changeFillColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'changeFillColor',
+			operation: 'changeFillColor',
 			value: this.colorOptionsFill,
-			maps: 'active'
+			relevantMaps: 'active'
 		}));
 	}
 
@@ -169,9 +169,9 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 			this.subscriber.unsubscribe();
 		}
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			action: 'removeLayer',
+			operation: 'removeLayer',
 			value: this.colorOptionsStroke,
-			maps: 'all'
+			relevantMaps: 'all'
 		}));
 	}
 

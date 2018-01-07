@@ -7,13 +7,13 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	casesFeatureKey,
 	CasesReducer,
-	casesStateSelector,
+	casesStateSelector, ICasesState,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	filtersFeatureKey,
 	FiltersReducer,
-	filtersStateSelector,
+	filtersStateSelector, IFiltersState,
 	initialFiltersState
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { SetFilteredOverlaysAction, SliderFilterMetadata } from '../../../index';
@@ -24,6 +24,7 @@ import {
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import {
+	IOverlaysState,
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
@@ -56,9 +57,9 @@ describe('Filters app effects', () => {
 	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: 'Slider' };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const filtersState = { ...initialFiltersState };
-	const casesState = { ...initialCasesState };
-	const overlaysState = { ...overlaysInitialState };
+	const filtersState: IFiltersState = { ...initialFiltersState };
+	const casesState: ICasesState = { ...initialCasesState };
+	const overlaysState: IOverlaysState = { ...overlaysInitialState };
 
 	const selectedCase: Case = {
 		id: 'case1',

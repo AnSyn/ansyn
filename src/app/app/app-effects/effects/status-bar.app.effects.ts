@@ -38,7 +38,7 @@ import {
 	UpdateOverlaysCountAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { getPointByPolygon } from '@ansyn/core/utils/geo';
+import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
 import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
@@ -91,7 +91,7 @@ export class StatusBarAppEffects {
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
 			let coordinates = null;
 			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
-				coordinates = getPointByPolygon(casesState.selectedCase.state.region).coordinates;
+				coordinates = getPointByGeometry(casesState.selectedCase.state.region).coordinates;
 			}
 			return new DrawPinPointAction(coordinates);
 		});

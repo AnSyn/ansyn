@@ -3,7 +3,7 @@ import { EntitiesVisualizer } from '@ansyn/open-layer-visualizers/entities-visua
 import proj from 'ol/proj';
 import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
-import { getPointByPolygon } from '@ansyn/core/utils/geo';
+import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
@@ -70,7 +70,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const projection = view.getProjection();
 
 		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
-			const lonLat = getPointByPolygon(entityMap.originalEntity.featureJson.geometry);
+			const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);
 			const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
 			const point = new Point(lonLatCords);
 

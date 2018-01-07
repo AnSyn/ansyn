@@ -51,7 +51,7 @@ import {
 	endTimingLog,
 	extentFromGeojson,
 	getFootprintIntersectionRatioInExtent,
-	getPointByPolygon,
+	getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
@@ -421,7 +421,7 @@ export class MapAppEffects {
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action, casesState]: [any, ICasesState]) => {
-			const point = getPointByPolygon(casesState.selectedCase.state.region);
+			const point = getPointByGeometry(casesState.selectedCase.state.region);
 			return new DrawPinPointAction(point.coordinates);
 		});
 
@@ -472,7 +472,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
 		.map(([action, caseState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
-			const point = getPointByPolygon(caseState.selectedCase.state.region);
+			const point = getPointByGeometry(caseState.selectedCase.state.region);
 			return new DrawPinPointAction(point.coordinates);
 		});
 

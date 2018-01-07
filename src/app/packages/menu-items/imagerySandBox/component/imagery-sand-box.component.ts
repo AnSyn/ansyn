@@ -45,13 +45,13 @@ export class ImagerySandBoxComponent implements OnInit {
 	public showAnnotationsChange($event) {
 		if (this.showAnnotations.nativeElement.checked) {
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: 'show',
-				maps: 'all'
+				operation: 'show',
+				relevantMaps: 'all'
 			}));
 		} else {
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				action: 'removeLayer',
-				maps: 'all'
+				operation: 'removeLayer',
+				relevantMaps: 'all'
 			}));
 		}
 	}
@@ -98,7 +98,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			type: 'absolute'
 		};
 		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
-		this.overlaysCriteria = {
+		this.overlaysCriteria = <OverlaysCriteria> {
 			to: this.selectedCase.state.time.to,
 			from: this.selectedCase.state.time.from,
 			polygon: this.selectedCase.state.region

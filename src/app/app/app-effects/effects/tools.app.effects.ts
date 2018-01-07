@@ -101,8 +101,8 @@ export class ToolsAppEffects {
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
 		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
 		.mergeMap(() =>  [
-			new AnnotationVisualizerAgentAction({ action: 'show', maps: 'active' }),
-			new AnnotationVisualizerAgentAction({ action: 'removeLayer', maps: 'others' })
+			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
+			new AnnotationVisualizerAgentAction({ operation: 'removeLayer', relevantMaps: 'others' })
 		]);
 
 	/**

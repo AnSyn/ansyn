@@ -315,7 +315,7 @@ describe('MapAppEffects', () => {
 					communicatorIds: communicators
 				})
 			});
-			const b = new AnnotationVisualizerAgentAction({ maps: 'all', action: 'show' });
+			const b = new AnnotationVisualizerAgentAction({ relevantMaps: 'all', operation: 'show' });
 			const expectedResults = cold('--b--', { b });
 			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
 		});

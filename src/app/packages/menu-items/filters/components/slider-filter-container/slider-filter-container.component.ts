@@ -37,6 +37,22 @@ export class SliderFilterContainerComponent {
 	constructor(protected elem: ElementRef) {
 	}
 
+	getMinRangeValue(number: number): string {
+		if (number === -Infinity) {
+			return "Min";
+		} else {
+			return number.toString();
+		}
+	}
+
+	getMaxRangeValue(number: number): string {
+		if (number === Infinity) {
+			return "Max";
+		} else {
+			return number.toString();
+		}
+	}
+
 	handleChange(event) {
 		const updateValue = {
 			start: this.realRange[0] / this.factor,

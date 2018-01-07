@@ -18,7 +18,6 @@ import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 
-
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
 
@@ -33,7 +32,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
-	private _pinPointIndicatorLayerId = 'pinPointIndicator';
 	private _flags = {
 		singleClickHandler: null
 	};

@@ -134,8 +134,8 @@ describe('AnnotationsControlComponent', () => {
 
 		expect(store.dispatch).toHaveBeenCalledTimes(2);
 
-		expect(args[0][0].payload.type).toBe('Point');
-		expect(args[0][0].payload.maps).toBe('active');
+		expect(args[0][0].payload.mode).toBe('Point');
+		expect(args[0][0].payload.relevantMaps).toBe('active');
 
 		expect(args[1][0].payload).toEqual('Point');
 	});

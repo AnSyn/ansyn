@@ -90,7 +90,7 @@ describe('ToolsComponent', () => {
 		component.toggleAnnotationMenu(true);
 		const args = store.dispatch['calls'].mostRecent();
 		expect(store.dispatch).toHaveBeenCalledTimes(3);
-		expect(args.args[0].payload.action).toBe('show');
+		expect(args.args[0].payload.operation).toBe('show');
 	});
 
 	it('toogle annotation menu close', () => {
@@ -98,6 +98,6 @@ describe('ToolsComponent', () => {
 		component.toggleAnnotationMenu(false);
 		const args = store.dispatch['calls'].mostRecent();
 		expect(store.dispatch).toHaveBeenCalledTimes(3);
-		expect(args.args[0].payload.action).toBe('endDrawing');
+		expect(args.args[0].payload.operation).toBe('endDrawing');
 	});
 });

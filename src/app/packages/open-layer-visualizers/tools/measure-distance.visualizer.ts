@@ -47,7 +47,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			color: 'rgba(255, 255, 255, 0.2)'
 		}),
 		stroke: new Stroke({
-			color: 'rgba(0, 0, 0, 0.5)',
+			color: 'yellow',
 			lineDash: [10, 10],
 			width: 2
 		}),

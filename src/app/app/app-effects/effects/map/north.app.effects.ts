@@ -38,7 +38,21 @@ export class NorthAppEffects {
 		.map(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => {
 			this.pointNorth(action.payload.mapId).then(north => {
 				communicator.setVirtualNorth(north);
-				communicator.setRotation(north + action.payload.rotation);
+				let rotation = 0;
+				switch (action.payload.rotationData.rotationType) {
+					case 'Align North':
+						rotation = 0;
+						break;
+					case 'Imagery Perspective':
+						// back to imagery direction instead of imagery north direction
+						// overlay.azimuth - virtualNorth
+						rotation = -north + action.payload.rotationData.rotation;
+						break;
+					case 'User Perspective':
+						rotation = action.payload.rotationData.rotation;
+						break;
+				}
+				communicator.setRotation(north + rotation);
 
 				const mapState = MapFacadeService.mapById(mapsState.mapsList, action.payload.mapId);
 				mapState.data.overlay.northAngle = north;

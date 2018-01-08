@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { OverlaySpecialObject } from '@ansyn/core/models';
+import { Orientation, OverlaySpecialObject } from '@ansyn/core';
 import { TimelineState } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
@@ -61,7 +61,7 @@ export class LoadOverlaysAction implements Action {
 export class RequestOverlayByIDFromBackendAction implements Action {
 	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
 
-	constructor(public payload: { overlayId: string, sourceType: string, mapId?: string }) {
+	constructor(public payload: {overlayId: string, sourceType: string, mapId?: string}) {
 	}
 }
 
@@ -89,7 +89,7 @@ export class ClearFilterAction implements Action {
 export class DisplayOverlayFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
 
-	constructor(public payload: { id: string, mapId?: string }) {
+	constructor(public payload: {id: string, mapId?: string}) {
 	}
 }
 
@@ -103,21 +103,21 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: Overlay, mapId?: string, ignoreRotation?: boolean }) {
+	constructor(public payload: {overlay: Overlay, mapId?: string, ignoreRotation?: boolean}) {
 	}
 }
 
 export class DisplayOverlaySuccessAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 
-	constructor(public payload: { id: string, mapId?: string, rotation: number }) {
+	constructor(public payload: {id: string, mapId?: string, rotationData: {rotationType: Orientation; rotation?: number}}) {
 	}
 }
 
 export class DisplayOverlayFailedAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
-	constructor(public payload: { id: string, mapId?: string }) {
+	constructor(public payload: {id: string, mapId?: string}) {
 	}
 }
 
@@ -152,7 +152,7 @@ export class SetFilteredOverlaysAction implements Action {
 export class SetTimelineStateAction implements Action {
 	type = OverlaysActionTypes.SET_TIMELINE_STATE;
 
-	constructor(public payload: { state: TimelineState, noRedraw?: boolean }) {
+	constructor(public payload: {state: TimelineState, noRedraw?: boolean}) {
 	}
 }
 

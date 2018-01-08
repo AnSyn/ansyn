@@ -3,20 +3,12 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
-	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction,
-	LoadOverlaysAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
+	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, LoadOverlaysAction, OverlaysActionTypes, OverlaysMarkupAction,
 	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
-import {
-	LayersActionTypes,
-	SelectLayerAction,
-	UnselectLayerAction
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
@@ -26,49 +18,27 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction } from '@ansyn/overlays';
-import {
-	IStatusBarState,
-	Orientation,
-	statusBarStateSelector,
-	statusBarToastMessages
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { IStatusBarState, statusBarStateSelector, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	AddMapInstanceAction,
-	AddOverlayToLoadingOverlaysAction,
-	DrawPinPointAction,
-	EnableMapGeoOptionsActionStore,
-	MapSingleClickAction,
-	PinPointTriggerAction,
-	RemoveOverlayFromLoadingOverlaysAction,
-	SetLayoutAction,
-	SetMapsDataActionStore,
-	SetOverlaysNotInCaseAction,
+	AddMapInstanceAction, AddOverlayToLoadingOverlaysAction, DrawPinPointAction, EnableMapGeoOptionsActionStore, MapSingleClickAction,
+	PinPointTriggerAction, RemoveOverlayFromLoadingOverlaysAction, SetLayoutAction, SetMapsDataActionStore, SetOverlaysNotInCaseAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	endTimingLog,
-	extentFromGeojson,
-	getFootprintIntersectionRatioInExtent,
-	getPointByGeometry,
+	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent, getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import {
-	AnnotationVisualizerAgentAction,
-	SetActiveCenter,
-	SetMapGeoEnabledModeToolsActionStore,
-	SetPinLocationModeAction,
+	AnnotationVisualizerAgentAction, SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapPosition, CaseMapState, CaseMapData } from '@ansyn/core/models';
-import {
-	ChangeLayoutAction,
-	SetMapGeoEnabledModeStatusBarActionStore
-} from '@ansyn/status-bar/actions/status-bar.actions';
+import { CaseMapData, CaseMapState, Orientation } from '@ansyn/core/models';
+import { ChangeLayoutAction, SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
@@ -217,9 +187,7 @@ export class MapAppEffects {
 								break;
 							case 'User Perspective':
 								rotationAngle = communicator.getPosition().projectedState.rotation;
-								if (mapData.overlay) { // If there was an overlay before
-									rotationAngle -= mapData.overlay.northAngle;
-								}
+								break;
 						}
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
@@ -234,7 +202,11 @@ export class MapAppEffects {
 						}
 					}
 
-					return new DisplayOverlaySuccessAction({ id: overlay.id, mapId, rotation: rotationAngle });
+					return new DisplayOverlaySuccessAction({
+						id: overlay.id,
+						mapId,
+						rotationData: { rotationType: orientation, rotation: rotationAngle }
+					});
 				})
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
 		});

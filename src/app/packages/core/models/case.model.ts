@@ -15,7 +15,7 @@ export interface IContextEntity extends IVisualizerEntity {
 	date: Date;
 }
 
-export type Orientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
+export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
 
 export interface CaseState {
 	selectedContextId?: string;
@@ -24,7 +24,7 @@ export interface CaseState {
 	facets?: CaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
-	orientation: Orientation,
+	orientation: CaseOrientation,
 	geoFilter: string,
 	favoritesOverlays?: string[],
 	overlaysManualProcessArgs: Object,

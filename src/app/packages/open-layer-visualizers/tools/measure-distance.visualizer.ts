@@ -141,6 +141,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	removeInteraction() {
 		if (this.interactionHandler) {
 			this.iMap.mapObject.removeInteraction(this.interactionHandler);
+			this.interactionHandler = null;
 		}
 	}
 

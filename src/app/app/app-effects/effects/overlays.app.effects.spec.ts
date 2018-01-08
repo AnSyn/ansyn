@@ -337,7 +337,7 @@ describe('OverlaysAppEffects', () => {
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
 		mapState['pendingOverlays'] = ['first', 'last'];
-		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'first', rotationData: {rotation: 0, rotationType: 'Align North'}}) });
+		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'first', rotationData: {rotationAngle: 0, rotationType: 'Align North'}}) });
 		const expectedResults = cold('--b--', {
 			b: new RemovePendingOverlayAction('first')
 		});

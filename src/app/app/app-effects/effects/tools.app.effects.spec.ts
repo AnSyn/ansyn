@@ -243,7 +243,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as true should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = true;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id', rotationData: {rotation: 0, rotationType: 'Align North'} }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
 				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: true }),
@@ -257,7 +257,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = false;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id', rotationData: {rotation: 0, rotationType: 'Align North'} }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
 			const expectedResults = cold('--(abc)--', {
 				a: new EnableImageProcessing(),
 				b: new SetManualImageProcessingArguments({ processingParams: undefined }),
@@ -273,7 +273,7 @@ describe('ToolsAppEffects', () => {
 			activeMap.data.isAutoImageProcessingActive = false;
 			const processingParams = { Contrast: 50, Brightness: 20 };
 
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'overlay_123', rotationData: {rotation: 0, rotationType: 'Align North'} }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'overlay_123', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
 
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),

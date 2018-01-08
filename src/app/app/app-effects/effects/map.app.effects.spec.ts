@@ -537,7 +537,7 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'testOverlayId', rotationData: {rotation: 0, rotationType: 'Align North'}}) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'testOverlayId', rotationData: {rotationAngle: 0, rotationType: 'Align North'}}) });
 			const expectedResults = cold('--b--', { b: new RemoveOverlayFromLoadingOverlaysAction('testOverlayId') });
 			expect(mapAppEffects.overlayLoadingSuccess$).toBeObservable(expectedResults);
 		});

@@ -205,7 +205,7 @@ export class MapAppEffects {
 					return new DisplayOverlaySuccessAction({
 						id: overlay.id,
 						mapId,
-						rotationData: { rotationType: orientation, rotation: rotationAngle }
+						rotationData: { rotationType: orientation, rotationAngle: rotationAngle }
 					});
 				})
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));

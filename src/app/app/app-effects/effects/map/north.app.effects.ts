@@ -46,10 +46,10 @@ export class NorthAppEffects {
 					case 'Imagery Perspective':
 						// back to imagery direction instead of imagery north direction
 						// overlay.azimuth - virtualNorth
-						rotation = action.payload.rotationData.rotation - north;
+						rotation = action.payload.rotationData.rotationAngle - north;
 						break;
 					case 'User Perspective':
-						rotation = action.payload.rotationData.rotation;
+						rotation = action.payload.rotationData.rotationAngle;
 						break;
 				}
 				communicator.setRotation(north + rotation);

@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { Orientation, OverlaySpecialObject } from '@ansyn/core';
+import { CaseOrientation, OverlaySpecialObject } from '@ansyn/core';
 import { TimelineState } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
@@ -110,7 +110,7 @@ export class DisplayOverlayAction implements Action {
 export class DisplayOverlaySuccessAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 
-	constructor(public payload: {id: string, mapId?: string, rotationData: {rotationType: Orientation; rotation?: number}}) {
+	constructor(public payload: {id: string, mapId?: string, rotationData: {rotationType: CaseOrientation; rotation?: number}}) {
 	}
 }
 

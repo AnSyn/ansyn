@@ -37,7 +37,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapData, CaseMapState, Orientation } from '@ansyn/core/models';
+import { CaseMapData, CaseMapState, CaseOrientation } from '@ansyn/core/models';
 import { ChangeLayoutAction, SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -151,15 +151,15 @@ export class MapAppEffects {
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(statusBarStateSelector),
-			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapData, Orientation] => {
+			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapData, CaseOrientation] => {
 				const overlay = action.payload.overlay;
 				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				const orientation: Orientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
+				const orientation: CaseOrientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
 				return [overlay, mapId, map.data, orientation];
 			})
-		.filter(([overlay]: [Overlay, string, CaseMapData, Orientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<[Overlay, string, CaseMapData, Orientation], any>(([overlay, mapId, mapData, orientation]: [Overlay, string, CaseMapData, Orientation]) => {
+		.filter(([overlay]: [Overlay, string, CaseMapData, CaseOrientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
+		.mergeMap<[Overlay, string, CaseMapData, CaseOrientation], any>(([overlay, mapId, mapData, orientation]: [Overlay, string, CaseMapData, CaseOrientation]) => {
 			const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extent, overlay.footprint);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.ActiveMap.mapType;

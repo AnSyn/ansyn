@@ -1,14 +1,14 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
-import { MapsLayout, Orientation } from '@ansyn/core';
+import { MapsLayout, CaseOrientation } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];
 	selectedLayoutIndex: number;
 	flags: Map<string, boolean>;
-	orientations: Orientation[],
+	orientations: CaseOrientation[],
 	geoFilters: string[],
-	orientation: Orientation;
+	orientation: CaseOrientation;
 	geoFilter: string;
 	time: { from: Date, to: Date },
 	overlaysCount: number,

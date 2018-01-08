@@ -34,12 +34,14 @@ export class FiltersAppEffects {
 	 * @name updateOverlayFilters$
 	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
 	 * @action SetFilteredOverlaysAction
+	 * @filter overlays are loaded
 	 * @dependencies filters, cases
 	 */
 	@Effect()
 	updateOverlayFilters$: Observable<SetFilteredOverlaysAction> = this.actions$
 		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
+		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
 		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
 			return new SetFilteredOverlaysAction(filteredOverlays);

@@ -39,7 +39,7 @@ export class ImageryRotationComponent {
 		if (this.rotationAngle === 0) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
-				this.setRotation(overlay.azimuth + this.northAngle);
+				this.setRotation(overlay.azimuth);
 			}
 		} else {
 			this.setRotation(this.northAngle);

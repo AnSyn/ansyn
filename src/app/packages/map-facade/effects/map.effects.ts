@@ -4,22 +4,10 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	BackToWorldAction,
-	DecreasePendingMapsCountAction,
-	EnableMapGeoOptionsActionStore,
-	MapActionTypes,
-	MapsListChangedAction,
-	PinLocationModeTriggerAction,
-	PinPointModeTriggerAction,
-	PositionChangedAction,
-	SetLayoutAction,
-	SetLayoutSuccessAction,
-	SetMapManualImageProcessing,
-	SetMapRotationAction,
-	SetMapsDataActionStore,
-	SetPendingMapsCountAction
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, DecreasePendingMapsCountAction,
+	EnableMapGeoOptionsActionStore, MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
+	PositionChangedAction, SetLayoutAction, SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapRotationAction,
+	SetMapsDataActionStore, SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -194,7 +182,8 @@ export class MapEffects {
 
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
-			comm.loadInitialMapSource(selectedMap.data.position);
+			const position = comm.getPosition();
+			comm.loadInitialMapSource(position);
 
 			const updatedMapsList = [...mapsList];
 			updatedMapsList.forEach(
@@ -282,7 +271,7 @@ export class MapEffects {
 			const mapComm = this.communicatorsService.provide(mapId);
 			return [mapComm, map.data.position];
 		})
-		.filter(([mapComm]) => Boolean(mapComm))
+		.filter(([mapComm]) => Boolean(mapComm) && mapComm.activeMapName !== 'openLayersMap')
 		.do(([mapComm, position]: any[]) => {
 			mapComm.setActiveMap('openLayersMap', position);
 		});

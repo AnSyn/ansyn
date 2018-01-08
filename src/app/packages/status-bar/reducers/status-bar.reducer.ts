@@ -1,8 +1,6 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
-import { MapsLayout } from '@ansyn/core';
+import { MapsLayout, Orientation } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
-
-export type Orientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
 
 export interface IStatusBarState {
 	layouts: MapsLayout[];

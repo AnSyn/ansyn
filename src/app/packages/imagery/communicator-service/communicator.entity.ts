@@ -80,6 +80,7 @@ export class CommunicatorEntity {
 	}
 
 	public loadInitialMapSource(position?: CaseMapPosition) {
+		this.setVirtualNorth(0);
 		this._manager.loadInitialMapSource(position);
 	}
 

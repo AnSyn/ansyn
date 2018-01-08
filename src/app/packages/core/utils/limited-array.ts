@@ -1,4 +1,4 @@
-import { cloneDeep, uniqBy } from 'lodash';
+import { cloneDeep, ListIteratee, uniqBy } from 'lodash';
 
 export interface LimitedArray {
 	data: Array<any>;
@@ -7,7 +7,7 @@ export interface LimitedArray {
 
 export interface LimitedArrayOptions {
 	sortFn?: (a: any, b: any) => number;	// sorting function
-	uniqueBy?: Function;					// compare by function
+	uniqueBy?: ListIteratee<any>;			// compare by function
 }
 
 // internal function, return LimitedArray after slice

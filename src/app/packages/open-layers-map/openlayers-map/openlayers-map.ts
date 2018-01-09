@@ -54,7 +54,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			throw new Error('Tried to add a layer to a non-existent group');
 		}
 
-		const layersArray = group.getLayers().getArray();
+		const layersArray: any[] = group.getLayers().getArray();
 		let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
 		group.getLayers().getArray().splice(removeLayer, 1);
 	}

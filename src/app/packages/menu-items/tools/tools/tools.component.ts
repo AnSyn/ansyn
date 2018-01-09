@@ -3,7 +3,7 @@ import {
 	AnnotationClose,
 	AnnotationOpen,
 	AnnotationVisualizerAgentAction,
-	GoToExpandAction,
+	GoToExpandAction, SetAnnotationMode,
 	SetAutoCloseMenu,
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
@@ -129,6 +129,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		} else {
 			this.store.dispatch(new AnnotationClose(false));
 			this.store.dispatch(new SetAutoCloseMenu(true));
+			this.store.dispatch(new SetAnnotationMode());
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
 				operation: 'endDrawing',
 				relevantMaps: 'active'

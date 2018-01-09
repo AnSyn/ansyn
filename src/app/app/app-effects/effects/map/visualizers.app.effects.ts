@@ -96,7 +96,7 @@ export class VisualizersAppEffects {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
 				const visualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 				if (visualizer) {
-					visualizer.setHoverFeature(action.payload.id);
+					(<FootprintPolylineVisualizer>visualizer).setHoverFeature(action.payload.id);
 				}
 			});
 		});

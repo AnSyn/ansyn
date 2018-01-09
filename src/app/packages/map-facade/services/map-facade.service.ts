@@ -73,8 +73,8 @@ export class MapFacadeService {
 					this._subscribers.push(visualizer.events.get(VisualizerEvents.drawEndPublisher).subscribe(this.drawEndSubscriber.bind(this)));
 				}
 
-				if (visualizer.events.has(VisualizerEvents.annotationContextMenuHandler)) {
-					this._subscribers.push(visualizer.events.get(VisualizerEvents.annotationContextMenuHandler).subscribe(this.annotationContextMenuHandlerSubscriber.bind(this)));
+				if (visualizer.events.has(VisualizerEvents.contextMenuHandler)) {
+					this._subscribers.push(visualizer.events.get(VisualizerEvents.contextMenuHandler).subscribe(this.contextMenuHandlerSubscriber.bind(this)));
 				}
 			});
 
@@ -155,7 +155,7 @@ export class MapFacadeService {
 		this.store.dispatch(new AnnotationDrawEndAction(featureCollection));
 	}
 
-	annotationContextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {
+	contextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {
 		this.store.dispatch(new AnnotationContextMenuTriggerAction(payload));
 	}
 

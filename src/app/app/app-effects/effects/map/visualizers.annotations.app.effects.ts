@@ -15,10 +15,7 @@ import {
 	AnnotationDrawEndAction, AnnotationRemoveFeature,
 	MapActionTypes
 } from '@ansyn/map-facade/actions/map.actions';
-import {
-	LayersActionTypes,
-	SetAnnotationsLayer
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -29,30 +26,18 @@ export class VisualizersAnnotationsAppEffects {
 
 	agentOperations: AgentOperations = {
 		addLayer: (visualizer) => {
-			visualizer.removeLayer();
-			visualizer.addLayer();
+			visualizer.clearEntities();
 		},
 		show: (visualizer, {}, { annotationsLayer }) => {
-			visualizer.removeLayer();
-			visualizer.addLayer();
-			visualizer.removeInteraction();
-			visualizer.addSelectInteraction();
-			visualizer.drawFeatures(annotationsLayer);
+			visualizer.clearEntities();
+			const entities = visualizer.annotationsLayerToEntities(annotationsLayer);
+			visualizer.setEntities(entities);
 		},
 		removeInteraction: (visualizer) => {
-			visualizer.removeInteraction();
-			visualizer.addSelectInteraction();
+			// visualizer.removeInteraction();
 		},
 		createInteraction: (visualizer, { mode }: AnnotationVisualizerAgentPayload) => {
-			if (mode === 'Rectangle') {
-				visualizer.rectangleInteraction();
-			}
-			else if (mode === 'Arrow') {
-				visualizer.arrowInteraction();
-			}
-			else {
-				visualizer.createInteraction(mode);
-			}
+			visualizer.toggleDrawInteraction(mode);
 		},
 		changeLine: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
 			visualizer.changeLine(value);
@@ -64,20 +49,18 @@ export class VisualizersAnnotationsAppEffects {
 			visualizer.changeFill(value);
 		},
 		refreshDrawing: (visualizer, {}, { annotationsLayer }) => {
-			visualizer.drawFeatures(annotationsLayer);
+			const entities = visualizer.annotationsLayerToEntities(annotationsLayer);
+			visualizer.setEntities(entities);
 		},
 		endDrawing: (visualizer, {}, { displayAnnotationsLayer }) => {
-			visualizer.removeInteraction();
-			if (displayAnnotationsLayer) {
-				visualizer.addSelectInteraction();
-			} else {
-				visualizer.removeLayer();
+			visualizer.removeDrawInteraction();
+			if (!displayAnnotationsLayer) {
+				visualizer.clearEntities();
 			}
 		},
 		removeLayer: (visualizer, {}, { displayAnnotationsLayer }) => {
 			if (!displayAnnotationsLayer) {
-				visualizer.removeInteraction();
-				visualizer.removeLayer();
+				visualizer.clearEntities();
 			}
 		}
 	};

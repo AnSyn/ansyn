@@ -1,7 +1,5 @@
-import { EntitiesVisualizer } from './entities-visualizer';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { EntitiesVisualizer, VisualizerStates } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
-import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
@@ -11,39 +9,27 @@ import color from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
+import GeomPolygon from 'ol/geom/polygon';
+import Feature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
+import condition from 'ol/events/condition';
 import { featureCollection } from '@turf/helpers';
-import { FeatureCollection } from 'geojson';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { VisualizerStyle } from './models/visualizer-style';
 import { EventEmitter } from '@angular/core';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
-
+import { IVisualizerEntity } from '@ansyn/imagery/index';
+import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
-
-export enum MouseClick {
-	Left = 1,
-	Scroll = 2,
-	Right = 3
-}
-
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static type = AnnotationVisualizerType;
-
 	isHideable = true;
-
-	public source: VectorSource;
-	public layer: VectorLayer;
-
-	public interactionHandler: Draw;
-	public selectInteraction: Select;
-	public currentInteraction;
+	public drawInteractionHandler: Draw;
 	public geoJsonFormat: OLGeoJSON;
 	public features: Array<any>;
-	public collection: FeatureCollection<any>;
 	public namePrefix = 'Annotate-';
 	public data;
 
@@ -51,8 +37,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.events.get(VisualizerEvents.drawEndPublisher);
 	}
 
-	get annotationContextMenuHandler() {
-		return this.events.get(VisualizerEvents.annotationContextMenuHandler);
+	get contextMenuHandler() {
+		return this.events.get(VisualizerEvents.contextMenuHandler);
 	}
 
 	constructor(style?: Partial<VisualizerStateStyle>) {
@@ -77,17 +63,54 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new OLGeoJSON();
 		this.features = [];
 		this.events.set(VisualizerEvents.drawEndPublisher, new EventEmitter<any>());
-		this.events.set(VisualizerEvents.annotationContextMenuHandler, new EventEmitter<any>());
+		this.events.set(VisualizerEvents.contextMenuHandler, new EventEmitter<any>());
 	}
 
-	onInit(mapId: string, map: IMap) {
-		this.iMap = map;
-		this.mapId = mapId;
+	protected resetInteractions(): void {
+		const contextMenu = new Select({
+			condition: event => event.originalEvent.which === 3 && event.type === 'pointerdown',
+			layers: [this.vector]
+		});
+		contextMenu.on('select', this.onSelectFeatur.bind(this));
+		this.addInteraction(VisualizerInteractions.contextMenu, contextMenu);
 	}
 
-	onResetView() {
-		this.addLayer();
-		this.redrawFromGeoJson();
+	onSelectFeatur(data) {
+
+		const target = data.mapBrowserEvent.originalEvent.target;
+		data.target.getFeatures().clear();
+		const selectedFeature = data.selected.shift();
+		const boundingRect = target.getBoundingClientRect();
+		let pixels;
+
+		if (selectedFeature.geometryName_ === 'Annotate-Arrow') {
+			pixels = this.arrowLinesToPixels(selectedFeature);
+			pixels.top += boundingRect.top;
+			pixels.left += boundingRect.left;
+		} else {
+			pixels = this.getFeaturePositionInPixels(selectedFeature);
+			pixels = {
+				left: pixels[0][0] + boundingRect.left,
+				top: pixels[1][1] + boundingRect.top,
+				width: pixels[1][0] - pixels[0][0],
+				height: pixels[0][1] - pixels[1][1]
+			};
+		}
+		const { id, geometryName } = selectedFeature.getProperties();
+
+		const contextMenuEvent: AnnotationsContextMenuEvent = {
+			featureId: id,
+			geometryName,
+			pixels
+		};
+
+		this.contextMenuHandler.emit(contextMenuEvent);
+		const callback = event => {
+			event.stopPropagation();
+			event.preventDefault();
+			target.removeEventListener('contextmenu', callback);
+		};
+		target.addEventListener('contextmenu', callback);
 	}
 
 	getGeoJson() {
@@ -108,71 +131,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	changeLine(width) {
 		this.updateStyle({ initial: { stroke: { width } } });
-	}
-
-	removeLayer() {
-		this.iMap.removeLayer(this.layer);
-		this.features = [];
-		this.layer = undefined;
-	}
-
-	addLayer(id = AnnotationsVisualizer.type) {
-		this.source = new VectorSource({ wrapX: false });
-
-		this.footprintsVector = new VectorLayer({
-			source: this.source,
-			zIndex: 200000,
-			style: this.styleFunction.bind(this)
-		});
-
-		// if id is empty then set the current type name as id
-		this.footprintsVector.set('id', id);
-		if (!this.isHidden) {
-			this.layer = this.iMap.addLayerIfNotExist(this.footprintsVector);
-		}
-
-		this.selectInteraction = new Select({
-			// event.originalEvent.which === 3 &&
-			condition: event => event.originalEvent.which === MouseClick.Right && event.type === 'pointerdown',
-			layers: [this.layer]
-		});
-
-		this.selectInteraction.on('select', data => {
-				const target = data.mapBrowserEvent.originalEvent.target;
-				const selectedFeature = data.selected.shift();
-				const boundingRect = target.getBoundingClientRect();
-				let pixels;
-
-				if (selectedFeature.geometryName_ === 'Annotate-Arrow') {
-					pixels = this.arrowLinesToPixels(selectedFeature);
-					pixels.top += boundingRect.top;
-					pixels.left += boundingRect.left;
-				} else {
-					pixels = this.getFeaturePositionInPixels(selectedFeature);
-					pixels = {
-						left: pixels[0][0] + boundingRect.left,
-						top: pixels[1][1] + boundingRect.top,
-						width: pixels[1][0] - pixels[0][0],
-						height: pixels[0][1] - pixels[1][1]
-					};
-				}
-
-				const callback = event => {
-					event.stopPropagation();
-					event.preventDefault();
-					data.target.getFeatures().clear();
-					const contextMenuEvent: AnnotationsContextMenuEvent = {
-						featureId: selectedFeature.getProperties().id,
-						geometryName: selectedFeature.geometryName_,
-						pixels
-					};
-					this.annotationContextMenuHandler.emit(contextMenuEvent);
-					target.removeEventListener('contextmenu', callback);
-				};
-
-				target.addEventListener('contextmenu', callback);
-			}
-		);
 	}
 
 	arrowLinesToPixels(selectedFeature) {
@@ -221,208 +179,86 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	getExtentAsPixels(extent) {
 		return [this.iMap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
-			this.iMap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])];
+			this.iMap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])
+		];
 	}
 
-	addSelectInteraction() {
-		if (!this.layer) {
-			return;
+	annotationsLayerToEntities(annotationsLayer: string): IVisualizerEntity[] {
+		let parsedAnnotationLayer: any;
+		if (!annotationsLayer) {
+			return [];
+		}
+		if (typeof annotationsLayer === 'string') {
+			parsedAnnotationLayer = JSON.parse(annotationsLayer);
+		}
+		return parsedAnnotationLayer.features.map((featureStr: string) => ({
+			id: JSON.parse(featureStr).properties.id,
+			featureJson: JSON.parse(featureStr)
+		}));
+	}
+
+	onDrawEndEvent({ feature }) {
+
+		this.removeDrawInteraction();
+		const geometry = feature.getGeometry();
+		const geometryName = feature.getGeometryName();
+		const featureProjection = this.iMap.mapObject.getView().getProjection();
+		let cloneGeometry = <any> geometry.clone(); // .transform(featureProjection, 'EPSG:4326');
+
+		if (cloneGeometry instanceof GeomCircle) {
+			cloneGeometry = <any> GeomPolygon.fromCircle(<any>cloneGeometry);
 		}
 
-		this.removeSelectInteraction();
-		this.iMap.mapObject.addInteraction(this.selectInteraction);
+		feature.setGeometry(cloneGeometry);
 
-	}
-
-	removeSelectInteraction() {
-		this.iMap.mapObject.removeInteraction(this.selectInteraction);
-	}
-
-	redrawFromGeoJson() {
-		// const geoFeatures = this.collection;
-		this.source.clear();
-		this.collection = undefined;
-		const features = this.createFeturesFromGeoJson(this.features);
-		this.source.addFeatures(features);
-	}
-
-	drawFeatures(data) {
-		if ( !data || !this.source) {
-			return;
-		}
-
-		if (typeof data === 'string') {
-			data = JSON.parse(data);
-		}
-
-
-		// readFeatures throw an exceptions so I am using this method
-		this.features = data.features;
-		const features = this.createFeturesFromGeoJson(data.features);
-		let oldFeatures = this.source.getFeatures();
-		if (oldFeatures.length > 0) {
-			for (let i = oldFeatures.length - 1; i >= 0; i--) {
-				if (oldFeatures[i].getProperties().id === features[i].getProperties().id) {
-					// remove old from features
-					features.splice(i, 1);
-				}
-			}
-		}
-		this.source.addFeatures(features);
-		this.iMap.mapObject.render();
-	}
-
-	createFeturesFromGeoJson(geoJsonFeatures) {
-		const features = geoJsonFeatures.map((d) => this.geoJsonFormat.readFeature(d));
-		(<Array<any>>features).forEach(feature => {
-			const properties = feature.getProperties();
-			let geometry;
-
-			// @TODO convert the coordinates from the properties.data.coordinates that are saved in espg:4326 to the current projection
-			// and create new geometry
-
-			// save the feature to this.feature;
-
-			geometry = feature.getGeometry();
-			if (properties.geometryName === `${this.namePrefix}Circle`) {
-				geometry = new GeomCircle(geometry.getCoordinates(), properties.radius);
-			}
-			feature.setGeometryName(properties.geometryName);
-			feature.setGeometry(geometry);
-			feature.setStyle(this.styleFunction(feature, undefined, properties.style));
-		});
-
-		return features;
-	}
-
-	removeInteraction() {
-		if (this.interactionHandler) {
-			this.iMap.mapObject.removeInteraction(this.interactionHandler);
-		}
-	}
-
-	onDrawEndEvent(data) {
-		const geometryName = data.feature.getGeometryName();
-
-		data.feature.setStyle(this.styleFunction(data.feature, undefined));
-
-		data.feature.setProperties({
+		feature.setProperties({
 			id: Date.now(),
 			style: this.visualizerStyle.initial,
 			geometryName,
 			data: {}
 		});
 
-		let geoJsonSingleFeature = this.geoJsonFormat.writeFeature(data.feature);
-
-		if (geometryName === `${this.namePrefix}Circle`) {
-
-			const circleGeo = JSON.parse(geoJsonSingleFeature);
-
-			circleGeo.geometry = {
-				type: 'Point',
-				coordinates: data.feature.getGeometry().getCenter()
-			};
-
-			circleGeo.properties = {
-				...circleGeo.properties, ...circleGeo.properties.data,
-				radius: data.feature.getGeometry().getRadius()
-			};
-			geoJsonSingleFeature = JSON.stringify(circleGeo);
-		}
-
-		// @TODO add conversion from the map project to the 4326 project and save it in the properties.data.coordinates
+		const geoJsonSingleFeature = this.geoJsonFormat.writeFeature(feature, {
+			featureProjection,
+			dataProjection: 'EPSG:4326'
+		});
 
 		this.features.push(geoJsonSingleFeature);
 		this.drawEndPublisher.emit(featureCollection(this.features));
-		this.removeInteraction();
-		this.addSelectInteraction();
-		this.currentInteraction = undefined;
 	}
 
-	addInteraction() {
-		if (this.interactionHandler) {
-			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
-			this.removeSelectInteraction();
-			this.iMap.mapObject.addInteraction(this.interactionHandler);
+	removeDrawInteraction() {
+		if (this.drawInteractionHandler) {
+			this.iMap.mapObject.removeInteraction(this.drawInteractionHandler);
+			this.drawInteractionHandler = undefined;
 		}
 	}
 
-	createInteraction(type) {
-		this.removeInteraction();
+	toggleDrawInteraction(type: AnnotationMode) {
+		const currentGeometryName = this.drawInteractionHandler && (<any> this.drawInteractionHandler).geometryName_;
+		const geometryName = `${this.namePrefix}${type}`;
+		this.removeDrawInteraction();
 
-		if (this.currentInteraction === type) {
-			this.currentInteraction = undefined;
-			this.addSelectInteraction();
+		if (currentGeometryName === geometryName) {
 			return;
 		}
 
-		this.currentInteraction = type;
-
-		this.interactionHandler = new Draw({
-			source: this.source,
-			type: type,
-			geometryName: `${this.namePrefix}${type}`
-
-
+		this.drawInteractionHandler = new Draw({
+			type: type === 'Rectangle' ? 'Circle' : type === 'Arrow' ? 'LineString' : type,
+			geometryFunction: type === 'Rectangle' ? (<any>Draw).createBox(4) : undefined,
+			geometryName
 		});
 
-		this.addInteraction();
+		this.drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+		(<any>this.iMap.mapObject).addInteraction(this.drawInteractionHandler);
 	}
 
-	arrowInteraction() {
-		this.removeInteraction();
-		if (this.currentInteraction === 'Arrow') {
-			this.currentInteraction = undefined;
-			this.addSelectInteraction();
-			return;
-		}
-		this.currentInteraction = 'Arrow';
-		this.interactionHandler = new Draw({
-			source: this.source,
-			type: 'LineString',
-			geometryName: `${this.namePrefix}Arrow`
-		});
-		this.addInteraction();
-	}
-
-	rectangleInteraction() {
-		this.removeInteraction();
-		if (this.currentInteraction === 'Rectangle') {
-			this.currentInteraction = undefined;
-			this.addSelectInteraction();
-			return;
-		}
-		this.currentInteraction = 'Rectangle';
-
-		const type = 'Circle';
-		const geometryFunction = Draw.createBox(4);
-		this.interactionHandler = new Draw({
-			source: this.source,
-			type: type,
-			geometryFunction,
-			geometryName: `${this.namePrefix}Box`
-		});
-		this.addInteraction();
-	}
-
-	protected initLayers() {
-		this.source = new VectorLayer({
-			source: this.source,
-			style: this.styleFunction.bind(this)
-		});
-	}
-
-	arrowStyle(feature, resolution) {
+	arrowStyle(feature) {
 		const geometry = feature.getGeometry();
-
 		const styles = [new Style({ stroke: new Stroke(this.visualizerStyle.initial.stroke) })];
-
 		const cordinates = geometry.getCoordinates();
-		// draw the arrows on the last segment
 		const start = cordinates[cordinates.length - 2];
 		const end = cordinates[cordinates.length - 1];
-
 		const dx = end[0] - start[0];
 		const dy = end[1] - start[1];
 		const rotation = Math.atan2(dy, dx);
@@ -448,17 +284,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	styleFunction(feature, resolution, style: VisualizerStyle = this.visualizerStyle.initial) {
+	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
+		const { style, geometryName } = feature.getProperties();
 		const fillColor = style.fill.color;
 		const newFill = color.asArray(fillColor).slice();
 		newFill[3] = 0.4;
 		const fill = new Fill({ color: newFill });
 
-		if (feature.getGeometryName() === `${this.namePrefix}Arrow`) {
-			return this.arrowStyle(feature, resolution);
+		if (geometryName === `${this.namePrefix}Arrow`) {
+			return this.arrowStyle(feature);
 		}
 
-		if (feature.getGeometryName() === `${this.namePrefix}Point`) {
+		if (geometryName === `${this.namePrefix}Point`) {
 			return new Style({
 				image: new Circle({
 					radius: style.point.radius,
@@ -478,8 +315,4 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	dispose() {
-		super.dispose();
-		this.removeLayer();
-	}
 }

@@ -2,13 +2,11 @@ import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
-import Vector from 'ol/layer/vector';
 
 export interface IVisualizerEntity {
 	id: string;
 	featureJson: GeoJSON.Feature<any>;
 	state?: 'static' | 'activeDisplad';
-
 	type?: string,
 	style?: Partial<VisualizerStateStyle>
 }
@@ -19,22 +17,35 @@ export type VisualizerEventTypes =
 	'onHoverFeature'
 	| 'doubleClickFeature'
 	| 'drawEndPublisher'
-	| 'annotationContextMenuHandler';
+	| 'contextMenuHandler';
 
 export const VisualizerEvents: { [key: string]: VisualizerEventTypes } = {
 	onHoverFeature: 'onHoverFeature',
 	doubleClickFeature: 'doubleClickFeature',
 	drawEndPublisher: 'drawEndPublisher',
-	annotationContextMenuHandler: 'annotationContextMenuHandler'
+	contextMenuHandler: 'contextMenuHandler'
 };
+
+export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu';
+
+export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
+	pointerMove: 'pointerMove',
+	doubleClick: 'doubleClick',
+	contextMenu: 'contextMenu'
+};
+
+
+
 
 export interface IMapVisualizer {
 	type: string;
-	source: Vector;
+	source: any;
+	vector: any;
 	isHideable: boolean;
 	isHidden: boolean;
 	onDisposedEvent: EventEmitter<any>;
 	events: Map<VisualizerEventTypes, EventEmitter<any>>;
+	interactions: Map<VisualizerInteractionTypes, any>;
 	subscribers: Subscriber<any>[]
 
 	/**
@@ -91,7 +102,20 @@ export interface IMapVisualizer {
 	 *  @param {string} id
 	 */
 
-	setHoverFeature(id: string);
-
 	toggleVisibility(): void;
+
+	/**
+	 * @description This function is called for adding interactions ( mapObject and interactions )
+	 * @param {VisualizerInteractionTypes} type
+	 * @param {any} interactionInstance
+	 */
+
+	addInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
+
+	/**
+	 * @description This function is called for removing interactions ( mapObject and interactions )
+	 * @param {VisualizerInteractionTypes} type
+	 */
+
+	removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 }

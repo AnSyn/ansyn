@@ -9,6 +9,7 @@ import { OpenLayerIDAHOSourceProvider } from './map-source-providers/open-layers
 import { OpenLayerOSMSourceProvider } from './map-source-providers/open-layers-OSM-source-provider';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
+import { OpenLayerESRI4326SourceProvider } from './map-source-providers/open-layers-ESRI-4326-source-provider';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
@@ -57,6 +58,7 @@ import { OpenLayerIDAHO2SourceProvider } from './map-source-providers/open-layer
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
 
 		// Map visualizers
 		{

@@ -17,6 +17,7 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
+import { IVisualizerEntity } from '@ansyn/imagery/index';
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -28,7 +29,7 @@ export class VisualizersAnnotationsAppEffects {
 	agentOperations: AgentOperations = {
 		show: (visualizer, {}, { annotationsLayer }) => {
 			visualizer.clearEntities();
-			const entities = visualizer.annotationsLayerToEntities(annotationsLayer);
+			const entities = this.annotationsLayerToEntities(annotationsLayer);
 			visualizer.setEntities(entities);
 		},
 		hide: (visualizer) => {
@@ -144,6 +145,13 @@ export class VisualizersAnnotationsAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
+	}
+
+	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
+		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
+			id: feature.properties.id,
+			featureJson: feature
+		}));
 	}
 
 	relevantMapIds(relevantMaps: AnnotationAgentRelevantMap, { mapsList, activeMapId }: IMapState) {

@@ -245,9 +245,9 @@ describe('LayersReducer', () => {
 		});
 
 		it('SET_LAYER', () => {
-			const action = new SetAnnotationsLayer('some geoJSON string');
+			const action = new SetAnnotationsLayer(<any>'some geoJSON Object');
 			const result: ILayerState = LayersReducer(initialLayersState, action);
-			expect(result.annotationsLayer).toEqual('some geoJSON string');
+			expect(result.annotationsLayer).toEqual(<any>'some geoJSON Object');
 		});
 	})
 

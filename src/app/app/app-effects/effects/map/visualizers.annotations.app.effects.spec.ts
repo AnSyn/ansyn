@@ -19,17 +19,14 @@ import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { VisualizersAnnotationsAppEffects } from './visualizers.annotations.app.effects';
 import {
-	AnnotationVisualizerAgentAction,
+	AnnotationAgentOperation, AnnotationAgentRelevantMap, AnnotationVisualizerAgentAction,
 	SetAnnotationMode
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ActiveMapChangedAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
-import {
-	AnnotationAgentOperation,
-	AnnotationAgentRelevantMap
-} from '@ansyn/menu-items/tools/actions/tools.actions';
 import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 
 describe('VisualizersAnnotationsAppEffects', () => {
 	let visualizersAnnotationsAppEffects: VisualizersAnnotationsAppEffects;
@@ -40,7 +37,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
-	const geoJsonDataAsString = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-8864905.04168913,4968343.241604401],[-7561221.649244596,4968343.241604401],[-7561221.649244596,5520348.311595516],[-8864905.04168913,5520348.311595516],[-8864905.04168913,4968343.241604401]]]},"properties":{"id":1509537610583,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-10928571.403085884,4456440.158943544],[-10523551.35427145,4456440.158943544],[-10523551.35427145,5345021.014580127],[-10928571.403085884,5345021.014580127],[-10928571.403085884,4456440.158943544]]]},"properties":{"id":1509537616256,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Box","data":{}}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-11363070.980878033,6262825.420860147]},"properties":{"id":1509537618448,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Circle","data":{},"radius":940276.8116146456}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-10040630.493284997,5896798.762447442],[-8994697.493933458,6116608.3346863]]},"properties":{"id":1509537621288,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-LineString","data":{}}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[-7214037.4120918205,6124373.010826077],[-6661961.022834513,5167945.174800512]]},"properties":{"id":1509537624378,"style":{"stroke":{"color":"#3399CC","width":2},"fill":{"color":"rgba(255,255,255,0.4)"},"point":{"radius":4},"line":{"width":2}},"geometryName":"Annotate-Arrow","data":{}}}]}';
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -91,19 +87,20 @@ describe('VisualizersAnnotationsAppEffects', () => {
 				'hide',
 				'addSelectInteraction',
 				'drawFeatures',
-				'toggleDrawInteraction',
 				'changeLine',
 				'changeStroke',
 				'changeFill',
 				'drawFeatures',
-				'getGeoJson'
+				'getGeoJson',
+
+				'removeDrawInteraction',
+				'toggleDrawInteraction',
+				'clearEntities',
+				'setEntities'
 			]);
-
-
-			fakeComm .getVisualizer.and.returnValue(fakeVisualizer);
+			fakeComm.getVisualizer.and.returnValue(fakeVisualizer);
 			fakeVisualizer.getGeoJson.and.returnValue(getGeoJsonValue);
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => fakeComm)
-			// spyOn(visualizersAnnotationsAppEffects, 'annotationVisualizers').and.callFake(() => [fakeVisualizer]);
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => fakeComm);
 		});
 
 		const testActionOnMaps: { relevantMaps: AnnotationAgentRelevantMap, calledTimes: number }[] = [
@@ -127,7 +124,14 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		});
 
 		it('check show action', () => {
-			layersState.annotationsLayer = geoJsonDataAsString;
+			const entities: IVisualizerEntity[] = [
+				{
+					id: 'id',
+					featureJson: <any> 'featureJsonObject'
+				}
+			];
+			layersState.annotationsLayer = <any> 'geoJsonObject';
+			spyOn(visualizersAnnotationsAppEffects, 'annotationsLayerToEntities').and.returnValue(entities)
 			const action = new AnnotationVisualizerAgentAction({
 				relevantMaps: 'all',
 				operation: 'show',
@@ -136,47 +140,33 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.removeLayer).toHaveBeenCalled();
-			expect(fakeVisualizer.addLayer).toHaveBeenCalled();
-			expect(fakeVisualizer.removeInteraction).toHaveBeenCalled();
-			expect(fakeVisualizer.addSelectInteraction).toHaveBeenCalled();
-			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith(geoJsonDataAsString);
+			expect(fakeVisualizer.clearEntities).toHaveBeenCalled();
+			expect(fakeVisualizer.setEntities).toHaveBeenCalledWith(entities);
 		});
 
-		const testCreateInteraction: { mode: AnnotationMode, func: any, useValue: boolean}[] = [
+		const testCreateInteraction: { mode: AnnotationMode }[] = [
 			{
 				mode: 'Rectangle',
-				func: 'rectangleInteraction',
-				useValue: false
 			},
 			{
 				mode: 'Arrow',
-				func: 'arrowInteraction',
-				useValue: false
 			},
 			{
 				mode: 'Circle',
-				func: 'toggleDrawInteraction',
-				useValue: true
 			}
 		];
 
-		testCreateInteraction.forEach(item => {
-			it(`check ${item.mode} - create interaction`, () => {
+		testCreateInteraction.forEach(({ mode }) => {
+			it(`check ${mode} - toggle interaction`, () => {
 				const action = new AnnotationVisualizerAgentAction({
 					relevantMaps: 'all',
 					operation: 'toggleDrawInteraction',
-					mode: item.mode
+					mode: mode
 				});
 				actions = hot('--a--', { a: action });
 				const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 				expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-
-				if (item.useValue) {
-					expect(fakeVisualizer[item.func]).toHaveBeenCalledWith(item.mode);
-				} else {
-					expect(fakeVisualizer[item.func]).toHaveBeenCalled();
-				}
+				expect(fakeVisualizer.toggleDrawInteraction).toHaveBeenCalledWith(mode);
 			});
 		});
 
@@ -210,7 +200,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.addSelectInteraction).toHaveBeenCalled();
+			expect(fakeVisualizer.removeDrawInteraction).toHaveBeenCalled();
 		});
 
 		it('check endDrawing action with annotation layer disabled', () => {
@@ -222,7 +212,8 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.removeLayer).toHaveBeenCalled();
+			expect(fakeVisualizer.removeDrawInteraction).toHaveBeenCalled();
+			expect(fakeVisualizer.clearEntities).toHaveBeenCalled();
 		});
 
 		it('check remove layer', () => {
@@ -233,22 +224,31 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.removeInteraction).toHaveBeenCalled();
-			expect(fakeVisualizer.removeLayer).toHaveBeenCalled();
+			expect(fakeVisualizer.clearEntities).toHaveBeenCalled();
 		});
 	});
 
 	it('drawAnnotationEnd$ should stringify the GeoJSON object and dispatch SetAnnotationsLayer', () => {
-		spyOn(JSON, 'stringify').and.callFake(() => 'geojson string');
 		const geoJson = <any> { 'geo': 'json' };
+		layersState.annotationsLayer = {
+			type: 'FeatureCollection',
+			features: []
+		};
+		const expectedAnnotationLayer = {
+			type: 'FeatureCollection',
+			features: [geoJson ]
+		}
 		actions = hot('--a--', { a: new AnnotationDrawEndAction(geoJson) });
-		const expectedResult = cold('--b--', { b: new SetAnnotationsLayer(<any> 'geojson string') });
+		const expectedResult = cold('--b--', { b: new SetAnnotationsLayer(<any>expectedAnnotationLayer) });
 		expect(visualizersAnnotationsAppEffects.drawAnnotationEnd$).toBeObservable(expectedResult);
 	});
 
 	it('cancelAnnotationEditMode$ should cancel annotation edit mode ', () => {
 		actions = hot('--a--', { a: new ActiveMapChangedAction('mapId') });
-		const expectedResult = cold('--b--', { b: new SetAnnotationMode() });
+		const expectedResult = cold('--(ab)--', {
+			a: new AnnotationVisualizerAgentAction({ relevantMaps: 'others', operation: 'endDrawing' }),
+			b: new SetAnnotationMode()
+		});
 		expect(visualizersAnnotationsAppEffects.cancelAnnotationEditMode$).toBeObservable(expectedResult);
 	});
 
@@ -256,7 +256,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 
 		it('true displayAnnotationsLayer should dispatch with "all"', () => {
 			layersState.displayAnnotationsLayer = true;
-			actions = hot('--a--', { a: new SetAnnotationsLayer('annotationLayer') });
+			actions = hot('--a--', { a: new SetAnnotationsLayer(<any> 'geoJsonObject') });
 			const expectedResult = cold('--b--', {
 				b: new AnnotationVisualizerAgentAction({
 					operation: 'show',
@@ -268,7 +268,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 
 		it('false displayAnnotationsLayer should dispatch with "active"', () => {
 			layersState.displayAnnotationsLayer = false;
-			actions = hot('--a--', { a: new SetAnnotationsLayer('annotationLayer') });
+			actions = hot('--a--', { a: new SetAnnotationsLayer(<any> 'geoJsonObject') });
 			const expectedResult = cold('--b--', {
 				b: new AnnotationVisualizerAgentAction({
 					operation: 'show',

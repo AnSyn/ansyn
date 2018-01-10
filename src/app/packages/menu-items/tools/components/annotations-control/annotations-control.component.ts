@@ -12,6 +12,10 @@ export interface ModeList {
 	mode: AnnotationMode;
 	icon: string;
 }
+export interface LineWidthList {
+	width: number;
+}
+
 
 @Component({
 	selector: 'ansyn-annotations-control',
@@ -19,102 +23,77 @@ export interface ModeList {
 	styleUrls: ['./annotations-control.component.less']
 })
 export class AnnotationsControlComponent implements OnDestroy, OnInit {
-	private _isExpended: boolean;
+	private _expand: boolean;
 	public lineWidthTrigger: boolean;
-	public colorSelectionTrigger = false;
-	public colorOptionsFill: any = '#a4ff82';
-	public colorOptionsStroke: any = '#3399CC';
+
+	public lineWidthSelectionExpand: boolean;
+	public colorSelectionExpand: boolean;
+
+
 	public subscriber;
+	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
+		.pluck<IToolsState, AnnotationMode>('annotationMode')
+		.distinctUntilChanged();
+
 	public mode: AnnotationMode;
 
+	public selectedStrokeWidthIndex = 0;
+
+	public selectedStrokeColor = '#27b2cfe6';
+	public selectedFillColor = 'white';
+
 	public modesList: ModeList[] = [
-		{mode: 'Point', icon: 'point'},
-		{mode: 'LineString', icon: 'line'},
-		{mode: 'Polygon', icon: 'polygon'},
-		{mode: 'Circle', icon: 'circle'},
-		{mode: 'Rectangle', icon: 'square' },
-		{mode: 'Arrow', icon: 'arrow'},
+		{ mode: 'Point', icon: 'point' },
+		{ mode: 'LineString', icon: 'line' },
+		{ mode: 'Polygon', icon: 'polygon' },
+		{ mode: 'Circle', icon: 'circle' },
+		{ mode: 'Rectangle', icon: 'square' },
+		{ mode: 'Arrow', icon: 'arrow' }
 	];
 
-	@ViewChild('lineWidthSelection') lineWidthSelection: ElementRef;
-	@ViewChild('colorSelection') colorSelection: ElementRef;
+	public lineWidthList: LineWidthList[] = [
+		{ width: 1 },
+		{ width: 2 },
+		{ width: 3 },
+		{ width: 4 },
+		{ width: 5 },
+		{ width: 6 },
+		{ width: 7 }
+	];
 
 	@HostBinding('class.expand')
 	@Input()
 	set expand(value) {
-		this._isExpended = value;
+		if (!value) {
+			this.lineWidthSelectionExpand = false;
+			this.colorSelectionExpand = false;
+		}
+		this._expand = value;
 	}
 
 	get expand() {
-		return this._isExpended;
+		return this._expand;
 	}
 
-	constructor(public store: Store<any>,
-				@Inject(DOCUMENT) public document: any) {
+	get selectedStrokeWidth() {
+		return this.lineWidthList[this.selectedStrokeWidthIndex];
+	}
+
+	constructor(public store: Store<any>, @Inject(DOCUMENT) public document: any) {
 	}
 
 	ngOnInit() {
-		this.store.select<IToolsState>(toolsStateSelector)
-			.pluck<IToolsState, AnnotationMode>('annotationMode')
-			.distinctUntilChanged()
-			.subscribe(value => {
-				this.mode = value;
-			});
+		this.mode$.subscribe(value => this.mode = value);
 	}
 
-	openLineWidthSelection() {
-		if (this.mode !== undefined) {
-			this.createInteraction(this.mode);
-		}
-		if (this.lineWidthTrigger) {
-			this.lineWidthTrigger = false;
-			return;
-		}
-		if (this.colorSelectionTrigger) {
-			// close color selection if open
-			this.toggleColorSelection(null);
-		}
-		if (this.document.activeElement !== this.lineWidthSelection.nativeElement) {
-			this.lineWidthSelection.nativeElement.focus();
-		}
+	toggleLineWidthSelection() {
+		this.colorSelectionExpand = false;
+		this.lineWidthSelectionExpand = !this.lineWidthSelectionExpand;
 	}
 
-	closeLineWidthSelection() {
-		if (this.document.activeElement === this.lineWidthSelection.nativeElement) {
-			this.lineWidthTrigger = true;
-			this.lineWidthSelection.nativeElement.blur();
-		}
-	}
-
-	toggleColorSelection($event) {
-		if ($event) {
-			$event.stopPropagation();
-		}
-
-		if (this.mode) {
-			this.createInteraction(this.mode);
-		}
-
-		this.colorSelectionTrigger = !this.colorSelectionTrigger;
-		this.colorSelection.nativeElement.classList.toggle('open');
-
-		if (this.colorSelectionTrigger) {
-			this.clickOutside();
-		} else if (this.subscriber) {
-			this.subscriber.unsubscribe();
-		}
-	}
-
-	clickOutside() {
-		this.subscriber = Observable.fromEvent(this.document, 'click')
-			.subscribe((event: any) => {
-				if (!event.target.closest('.expanded-selection.color-selection')) {
-					this.colorSelectionTrigger = false;
-					this.colorSelection.nativeElement.classList.remove('open');
-					this.subscriber.unsubscribe();
-					this.mode = undefined;
-				}
-			});
+	toggleColorSelection() {
+		this.lineWidthSelectionExpand = false;
+		this.colorSelectionExpand = !this.colorSelectionExpand;
 	}
 
 	createInteraction(mode: AnnotationMode) {
@@ -137,12 +116,12 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 		element.getElementsByTagName('input')[0].click();
 	}
 
-	selectLineWidth($event) {
+	selectLineWidth(index) {
+		this.selectedStrokeWidthIndex = index;
 
-		const lineWidth = $event.target.dataset.index;
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			operation: 'changeLine',
-			value: lineWidth,
+			value: this.selectedStrokeWidth.width,
 			relevantMaps: 'active'
 		}));
 
@@ -151,7 +130,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	changeStrokeColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			operation: 'changeStrokeColor',
-			value: this.colorOptionsStroke,
+			value: this.selectedStrokeColor,
 			relevantMaps: 'active'
 		}));
 	}
@@ -159,7 +138,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	changeFillColor() {
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			operation: 'changeFillColor',
-			value: this.colorOptionsFill,
+			value: this.selectedFillColor,
 			relevantMaps: 'active'
 		}));
 	}

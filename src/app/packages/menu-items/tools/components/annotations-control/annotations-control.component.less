@@ -13,29 +13,38 @@
 	right: 0;
 	transform: translateX(100%);
 	background: @application-main-color;
-	transition-property: width;
+	transition-property: width, visibility;
 	transition-duration: 0.1s;
-	transition-delay: 0s;
 	z-index: @z-index-annotations-control;
 
 	&.expand {
 		width: @tools-box-width;
 		height: @tools-box-height;
 		transition-delay: 0.1s;
-		.annotations-options {
+		ul.annotations-options {
 			visibility: visible;
-			transition-delay: 0.1s;
+			li {
+				visibility: visible;
+				opacity: 1;
+			}
 		}
-
 	}
+
 	ul.annotations-options {
-		transition-delay: 0.05s;
+		transition: 0.1s;
 		visibility: hidden;
 		display: flex;
 		align-items: center;
 		padding: 0;
 		margin: 0;
 		height: @tools-box-height;
+
+		li {
+			transition: visibility 0s linear .2s;
+			visibility: hidden;
+			opacity: 0;
+		}
+
 		& > li {
 			list-style-type: none;
 
@@ -70,16 +79,20 @@
 				outline: 0 none;
 			}
 		}
+
 		li.expanded-selection {
 			position: relative;
+
+			button.expand {
+				background-color: #297f9b;
+			}
 
 			ul {
 				display: flex;
 				flex-direction: column;
 				position: absolute;
-				top: 41px;
-				left: -4px;
-				height: 0;
+				top: 35px;
+				left: 0px;
 				overflow: hidden;
 				padding: 0;
 				margin: 0;
@@ -89,19 +102,25 @@
 				background: @application-main-color;
 				& > li {
 					list-style-type: none;
-					border: 1px solid white;
+					border-bottom: 1px solid white;
+					&:first-child {
+						border-top: 1px solid white;
+					}
 					cursor: pointer;
 					font-size: 14px;
 					color: white;
 					padding: 4px;
 
 				}
+				li.selected, li:hover {
+					background-color: #297f9b;
+				}
+
 				&.line-width-expand {
-					width: 41px;
+					width: 100%;
+					outline: none;
 				}
-				&.line-width-expand:focus {
-					height: 203px;
-				}
+
 				&.color-selection-expand {
 					width: 80px;
 					left: -39px;
@@ -113,6 +132,7 @@
 							display: inline-block;
 							width: 10px;
 							height: 10px;
+							box-shadow: 0 0 1px 1px #297f9b;
 						}
 						span.text {
 							font-size: 14px;
@@ -121,7 +141,7 @@
 					}
 				}
 				&.color-selection-expand.open {
-					height: 59px;
+					visibility: visible;
 				}
 			}
 		}

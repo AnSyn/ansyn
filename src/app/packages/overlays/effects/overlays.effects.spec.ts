@@ -10,7 +10,7 @@ import {
 	OverlaysMarkupAction,
 	RedrawTimelineAction,
 	RequestOverlayByIDFromBackendAction,
-	SyncOverlaysWithFavoritesAction
+	SyncOverlaysWithFavoritesOnLoadingAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
@@ -136,16 +136,16 @@ describe('Overlays Effects ', () => {
 		overlays.forEach(overlay => tmp.push({ ...overlay }));
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0 }));
 		actions = hot('--a--', { a: new LoadOverlaysAction() });
-		const expectedResults = cold('--b--', { b: new SyncOverlaysWithFavoritesAction(tmp) });
+		const expectedResults = cold('--b--', { b: new SyncOverlaysWithFavoritesOnLoadingAction(tmp) });
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
 
 	it('it should sync the overlays with favorites', () => {
-		actions = hot('--a--', { a: new SyncOverlaysWithFavoritesAction(overlays) });
+		actions = hot('--a--', { a: new SyncOverlaysWithFavoritesOnLoadingAction(overlays) });
 		const expectedOverlays = overlays.slice();
 		expectedOverlays.push(favoriteOverlays[1]);
 		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(expectedOverlays) });
-		expect(overlaysEffects.syncOverlays$).toBeObservable(expectedResults);
+		expect(overlaysEffects.syncOverlaysOnLoading$).toBeObservable(expectedResults);
 	});
 
 	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {

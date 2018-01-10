@@ -112,6 +112,7 @@ describe('Filters app effects', () => {
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
+		overlaysState.loaded  = true;
 		const filteredOverlays = [];
 		filtersState.filters = new Map();
 		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);

@@ -16,6 +16,7 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { ICaseMapPosition } from '../../core';
 
 
 @Injectable()
@@ -182,7 +183,12 @@ export class MapEffects {
 
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
-			const position = comm.getPosition();
+			let position: ICaseMapPosition;
+			if (comm.activeMapName === 'openLayersMap') {
+				position = comm.getPosition();
+			} else { // comm.activeMapName === 'disabledOpenLayersMap'
+				position = selectedMap.data.position;
+			}
 			comm.loadInitialMapSource(position);
 
 			const updatedMapsList = [...mapsList];

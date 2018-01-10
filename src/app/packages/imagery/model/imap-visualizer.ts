@@ -2,10 +2,11 @@ import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
+import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {
 	id: string;
-	featureJson: GeoJSON.Feature<any>;
+	featureJson: Feature<any>;
 	state?: 'static' | 'activeDisplad';
 	type?: string,
 	style?: Partial<VisualizerStateStyle>
@@ -26,12 +27,13 @@ export const VisualizerEvents: { [key: string]: VisualizerEventTypes } = {
 	contextMenuHandler: 'contextMenuHandler'
 };
 
-export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu';
+export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	pointerMove: 'pointerMove',
 	doubleClick: 'doubleClick',
-	contextMenu: 'contextMenu'
+	contextMenu: 'contextMenu',
+	drawInteractionHandler: 'drawInteractionHandler'
 };
 
 
@@ -118,4 +120,9 @@ export interface IMapVisualizer {
 	 */
 
 	removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
+
+
+	addEvent(type: VisualizerEventTypes): void;
+
+	removeEvent(type: VisualizerEventTypes): void;
 }

@@ -71,10 +71,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.store.dispatch(new AnnotationClose(false));
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'removeInteraction',
-			relevantMaps: 'active'
-		}));
 	}
 
 	toggleShadowMouse() {

@@ -11,6 +11,7 @@ import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../
 })
 export class AnnotationContextMenuComponent {
 	action: AnnotationContextMenuTriggerAction;
+	contextMenuWrapperStyle;
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -25,32 +26,21 @@ export class AnnotationContextMenuComponent {
 
 		this.mapEffect.annotationContextMenuTrigger$.subscribe((action: AnnotationContextMenuTriggerAction) => {
 			this.action = action;
-			const { pixels, geometryName } = this.action.payload;
-			switch (geometryName.replace('Annotate-', '')) {
-				case 'Box':
-					pixels.top -= 2;
-					pixels.height += 1;
-					pixels.left -= 2;
-					pixels.width += 2;
-					break;
-				case 'Point':
-					pixels.top -= 12;
-					pixels.height += 22;
-					pixels.left -= 12;
-					pixels.width += 22;
-					break;
+			const { pixels } = this.action.payload;
+			this.contextMenuWrapperStyle = {
+				top: `${pixels.top}px`,
+				left: `${pixels.left}px`,
+				width: `${pixels.width}px`,
+				height: `${pixels.height}px`
+			};
 
-			}
-
-			let styleString = `top:${pixels.top}px;left:${pixels.left}px;width:${pixels.width}px;height:${pixels.height}px;`;
-			this.host.nativeElement.setAttribute('style', styleString);
 			this.host.nativeElement.focus();
 		});
 	}
 
-	removeFeature() {
+	removeFeature($event) {
+		$event.stopPropagation();
 		const { featureId } = this.action.payload;
 		this.store.dispatch(new AnnotationRemoveFeature(featureId));
-		this.host.nativeElement.setAttribute('style', '');
 	}
 }

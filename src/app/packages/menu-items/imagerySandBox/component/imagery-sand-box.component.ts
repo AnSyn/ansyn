@@ -48,11 +48,6 @@ export class ImagerySandBoxComponent implements OnInit {
 				operation: 'show',
 				relevantMaps: 'all'
 			}));
-		} else {
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'removeLayer',
-				relevantMaps: 'all'
-			}));
 		}
 	}
 

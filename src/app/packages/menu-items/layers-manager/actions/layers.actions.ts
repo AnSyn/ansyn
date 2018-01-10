@@ -1,6 +1,7 @@
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { Action } from '@ngrx/store';
+import { FeatureCollection } from 'geojson';
 
 export const LayersActionTypes = {
 	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
@@ -32,7 +33,7 @@ export class ToggleDisplayAnnotationsLayer implements Action {
 export class SetAnnotationsLayer implements Action {
 	type = LayersActionTypes.ANNOTATIONS.SET_LAYER;
 
-	constructor(public payload: string) {
+	constructor(public payload: FeatureCollection<any>) {
 	}
 }
 

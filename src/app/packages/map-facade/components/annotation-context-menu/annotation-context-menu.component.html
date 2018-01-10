@@ -1,5 +1,8 @@
-<div>
+<div class="context-menu-wrapper"
+	[ngStyle]="contextMenuWrapperStyle">
+
 	<div class="remove-feature-wrapper">
-		<button class='removeFeature' (mousedown)="removeFeature()">x</button>
+		<button class='removeFeature' (mousedown)="removeFeature($event)">x</button>
 	</div>
+
 </div>

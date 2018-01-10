@@ -88,14 +88,10 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			]);
 
 			fakeVisualizer = jasmine.createSpyObj([
-				'removeLayer',
-				'addLayer',
-				'removeInteraction',
+				'hide',
 				'addSelectInteraction',
 				'drawFeatures',
-				'rectangleInteraction',
-				'arrowInteraction',
-				'createInteraction',
+				'toggleDrawInteraction',
 				'changeLine',
 				'changeStroke',
 				'changeFill',
@@ -130,19 +126,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			});
 		});
 
-		it('check addLayer action', () => {
-			const action = new AnnotationVisualizerAgentAction({
-				relevantMaps: 'all',
-				operation: 'addLayer',
-				value: 'temp'
-			});
-			actions = hot('--a--', { a: action });
-			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
-			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.removeLayer).toHaveBeenCalled();
-			expect(fakeVisualizer.addLayer).toHaveBeenCalled();
-		});
-
 		it('check show action', () => {
 			layersState.annotationsLayer = geoJsonDataAsString;
 			const action = new AnnotationVisualizerAgentAction({
@@ -173,7 +156,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			},
 			{
 				mode: 'Circle',
-				func: 'createInteraction',
+				func: 'toggleDrawInteraction',
 				useValue: true
 			}
 		];
@@ -182,7 +165,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			it(`check ${item.mode} - create interaction`, () => {
 				const action = new AnnotationVisualizerAgentAction({
 					relevantMaps: 'all',
-					operation: 'createInteraction',
+					operation: 'toggleDrawInteraction',
 					mode: item.mode
 				});
 				actions = hot('--a--', { a: action });
@@ -195,17 +178,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 					expect(fakeVisualizer[item.func]).toHaveBeenCalled();
 				}
 			});
-		});
-
-		it('check remove interaction', () => {
-			const action = new AnnotationVisualizerAgentAction({
-				relevantMaps: 'all',
-				operation: 'removeInteraction'
-			});
-			actions = hot('--a--', { a: action });
-			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
-			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.removeInteraction).toHaveBeenCalled();
 		});
 
 		const testChangesActions: { operation: AnnotationAgentOperation, func: string }[] = [
@@ -227,18 +199,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 				expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
 				expect(fakeVisualizer[item.func]).toHaveBeenCalledWith(value);
 			});
-		});
-
-		it('check refreshDrawing layer', () => {
-			layersState.annotationsLayer = geoJsonDataAsString;
-			const action = new AnnotationVisualizerAgentAction({
-				relevantMaps: 'all',
-				operation: 'refreshDrawing'
-			});
-			actions = hot('--a--', { a: action });
-			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
-			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.drawFeatures).toHaveBeenCalledWith(geoJsonDataAsString);
 		});
 
 		it('check endDrawing action with annotation layer enabled', () => {
@@ -268,7 +228,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		it('check remove layer', () => {
 			const action = new AnnotationVisualizerAgentAction({
 				relevantMaps: 'all',
-				operation: 'removeLayer'
+				operation: 'hide'
 			});
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });

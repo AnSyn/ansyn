@@ -1,14 +1,15 @@
 import { ILayerState } from './layers.reducer';
 import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
-import { LayersActions, LayersActionTypes, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
+import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { FeatureCollection } from 'geojson';
 
 export interface ILayerState {
 	layers: ILayerTreeNodeRoot[];
 	selectedLayers: ILayerTreeNodeLeaf[];
 	displayAnnotationsLayer: boolean;
-	annotationsLayer: string;
+	annotationsLayer: FeatureCollection<any>;
 }
 
 export const initialLayersState: ILayerState = {
@@ -50,7 +51,8 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 			let newSelectedArray: ILayerTreeNodeLeaf[] = [
 				...state.selectedLayers.slice(0, unselectedLayerIndex),
-				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)];
+				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)
+			];
 			return Object.assign({}, state, { selectedLayers: newSelectedArray });
 
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:

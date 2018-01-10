@@ -1,6 +1,6 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
-import { CaseMapPosition } from '@ansyn/core';
+import { ICaseMapPosition, ICaseResolutionData } from '@ansyn/core';
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import OLMap from 'ol/map';
@@ -26,8 +26,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenLayersMap.mapType;
 	private _mapObject: OLMap;
+	protected resolutionDelta = 25;
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
+	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -75,7 +76,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, private _mapLayers = [], position?: CaseMapPosition) {
+	constructor(element: HTMLElement, private _mapLayers = [], position?: ICaseMapPosition) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -97,7 +98,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return { type: 'Point', coordinates };
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition) {
 		const [mainLayer] = layers;
 		const view = this.createView(mainLayer);
 
@@ -140,7 +141,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent) {
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
 		this._mapObject.setView(view);
@@ -278,26 +279,89 @@ export class OpenLayersMap extends IMap<OLMap> {
 		};
 	}
 
-	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): void {
-		const isProjectedPosition = view.getProjection().getCode() === position.projectedState.projection.code;
+	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): void {
+		const viewProjection = view.getProjection();
+		const isProjectedPosition = viewProjection.getCode() === position.projectedState.projection.code;
 		const { extent, projectedState } = position;
 		const { center, rotation, zoom } = projectedState;
 		if (isProjectedPosition) {
 			view.setCenter(center);
 			view.setZoom(zoom);
-		} else {
+		} else if (position.resolutionData) {
+			const projectedCenter = proj.transform(position.resolutionData.center, 'EPSG:4326', viewProjection);
+			view.setCenter(projectedCenter);
+			this.setResolution(position.resolutionData);
+		}
+		else {
 			this.fitToExtent(extent, view);
 		}
 		this.setRotation(rotation, view);
 	}
 
-	public getPosition(): CaseMapPosition {
+	setResolution(resolutionData: ICaseResolutionData): void {
+		if (!resolutionData) {
+			return;
+		}
+
+		const view = this.mapObject.getView();
+		const projection = view.getProjection();
+		const projectedPoints = this.projectPoints('EPSG:4326', projection.getCode(), [resolutionData.center, resolutionData.refPoint1, resolutionData.refPoint2]);
+		const center = projectedPoints[0];
+		const refPoint1 = projectedPoints[1];
+		const refPoint2 = projectedPoints[2];
+
+		const newDistance1 = this.distance(center, refPoint1);
+		const newDistance2 = this.distance(center, refPoint2);
+
+		const factor1 = this.resolutionDelta / newDistance1;
+		const factor2 = this.resolutionDelta / newDistance2;
+		const df1 = Math.abs(1 - factor1);
+		const df2 = Math.abs(1 - factor2);
+		const factor = df1 <= df2 ? factor1 : factor2;
+		const newResolution = resolutionData.mapResolution / factor;
+		view.setResolution(newResolution);
+	}
+
+	distance(point1, point2) {
+		const result = Math.sqrt(Math.pow(point2[0] - point1[0], 2) + Math.pow(point2[1] - point1[1], 2));
+		return result;
+	}
+
+	public getPosition(): ICaseMapPosition {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = view.calculateExtent();
 		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
 		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
-		return { extent, projectedState };
+		const resolutionData = this.getResolutionData();
+		return { extent, projectedState, resolutionData };
+	}
+
+	public getResolutionData(): ICaseResolutionData {
+		const view = this.mapObject.getView();
+		const projection = view.getProjection();
+		const mapCenter = view.getCenter();
+		const mapResolution = view.getResolution();
+		const center: [number, number] = [mapCenter[0] || 0, mapCenter[1] || 0];
+		const refPoint1: [number, number] = [center[0] + this.resolutionDelta, center[1]];
+		const refPoint2: [number, number] = [center[0] - this.resolutionDelta, center[1]];
+		const projectedPoints = this.projectPoints(projection.getCode(), 'EPSG:4326', [center, refPoint1, refPoint2]);
+		const resultData: ICaseResolutionData = {
+			center: projectedPoints[0],
+			refPoint1: projectedPoints[1],
+			refPoint2: projectedPoints[2],
+			mapResolution: mapResolution
+		};
+		return resultData;
+	}
+
+	projectPoints(formProjection: string, toProjection: string, points: [[number, number]]): Array<[number, number]> {
+		const result = new Array<[number, number]>();
+		points.forEach((point: [number, number]) => {
+			const projectedPoint = proj.transform(point, formProjection, toProjection);
+			result.push(projectedPoint);
+		});
+		return result;
 	}
 
 	public setRotation(rotation: number, view: View = this.mapObject.getView()) {

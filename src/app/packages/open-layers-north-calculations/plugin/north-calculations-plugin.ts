@@ -43,10 +43,12 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 
 
 		if (!olCenterView) {
-			return Promise.reject("no coordinate for pixel");
+			return Promise.reject('no coordinate for pixel');
 		}
 
-		return this.projectPoints(mapObject, [olCenterView, olCenterViewWithOffset]).then((projectedPoints: any[]) => {
+		const view = mapObject.getView();
+		const projection = view.getProjection();
+		return this.projectPoints(projection.getCode(), 'EPSG:4326', [olCenterView, olCenterViewWithOffset]).then((projectedPoints: any[]) => {
 			const projectedCenterView = projectedPoints[0];
 			const projectedCenterViewWithOffset = projectedPoints[1];
 
@@ -66,12 +68,10 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 	}
 
 // override this method
-	projectPoints(mapObject: any, points: any[]): Promise<any[]> {
-		const view = mapObject.getView();
-		const projection = view.getProjection();
+	projectPoints(formProjection: string, toProjection: string, points: any[]): Promise<any[]> {
 		const result = [];
 		points.forEach((point) => {
-			const projectedPoint = proj.transform(point, projection, 'EPSG:4326');
+			const projectedPoint = proj.transform(point, formProjection, toProjection);
 			result.push(projectedPoint);
 		});
 		return Promise.resolve(result);

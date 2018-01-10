@@ -1,4 +1,4 @@
-import { CaseMapPosition } from './case-map-position.model';
+import { ICaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
@@ -58,7 +58,7 @@ export interface CaseMapsState {
 export type OverlayDisplayMode = 'Hitmap' | 'Polygon' | 'None';
 
 export interface CaseMapData {
-	position: CaseMapPosition,
+	position: ICaseMapPosition,
 	overlay?: Overlay,
 	isAutoImageProcessingActive?: boolean,
 	overlayDisplayMode?: OverlayDisplayMode

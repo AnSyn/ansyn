@@ -10,7 +10,15 @@ export interface CaseMapProjectedState {
 	zoom?: number;
 }
 
-export interface CaseMapPosition {
+export interface ICaseResolutionData {
+	center: [number, number];
+	refPoint1: [number, number];
+	refPoint2: [number, number];
+	mapResolution: number;
+}
+
+export interface ICaseMapPosition {
 	extent: CaseMapExtent;
-	projectedState: CaseMapProjectedState
+	resolutionData?: ICaseResolutionData;
+	projectedState: CaseMapProjectedState;
 }

@@ -1,10 +1,10 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export abstract class IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
-	positionChanged: EventEmitter<ICaseMapPosition>;
+	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any>;
 	contextMenu: EventEmitter<any>;
@@ -31,17 +31,17 @@ export abstract class IMap<T = any> {
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): void;
+	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): void;
 
 	abstract addLayer(layer: any): void;
 
 	abstract removeLayer(layer: any): void;
 
-	abstract setPosition(position: ICaseMapPosition): void;
+	abstract setPosition(position: CaseMapPosition): void;
 
 	abstract setRotation(rotation: number): void;
 
-	abstract getPosition(): ICaseMapPosition;
+	abstract getPosition(): CaseMapPosition;
 
 	abstract updateSize(): void;
 

@@ -10,13 +10,13 @@ import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 export class OpenLayersDisabledMap extends IMap {
 	static mapType = 'openLayersMap';
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
+	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -26,13 +26,13 @@ export class OpenLayersDisabledMap extends IMap {
 
 	_imageProcessing: OpenLayersImageProcessing;
 
-	constructor(element: HTMLElement, layers: any, position?: ICaseMapPosition) {
+	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		super();
 
 		this.initMap(element, layers, position);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -68,11 +68,11 @@ export class OpenLayersDisabledMap extends IMap {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any, position?: ICaseMapPosition): void {
+	resetView(layer: any, position?: CaseMapPosition): void {
 		this.setMainLayer(layer, position);
 	}
 
-	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
+	setMainLayer(layer: Layer, position?: CaseMapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
@@ -94,7 +94,7 @@ export class OpenLayersDisabledMap extends IMap {
 		}
 	}
 
-	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
+	generateNewView(layer: Layer, position?: CaseMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -126,10 +126,10 @@ export class OpenLayersDisabledMap extends IMap {
 	removeLayer(layer: any): void {
 	}
 
-	setPosition(position: ICaseMapPosition): void {
+	setPosition(position: CaseMapPosition): void {
 	}
 
-	getPosition(): ICaseMapPosition {
+	getPosition(): CaseMapPosition {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = view.calculateExtent();

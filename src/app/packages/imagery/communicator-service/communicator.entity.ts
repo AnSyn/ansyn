@@ -4,7 +4,7 @@ import { ImageryComponentManager } from '../imagery-component/manager/imagery.co
 import * as _ from 'lodash';
 import { cloneDeep } from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
-import { ICaseMapPosition } from '@ansyn/core';
+import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ export class CommunicatorEntity {
 	private _managerSubscriptions;
 
 
-	public positionChanged: EventEmitter<{ id: string, position: ICaseMapPosition }>;
+	public positionChanged: EventEmitter<{ id: string, position: CaseMapPosition }>;
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
@@ -24,7 +24,7 @@ export class CommunicatorEntity {
 
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<{ id: string, position: ICaseMapPosition }>();
+		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
@@ -38,7 +38,7 @@ export class CommunicatorEntity {
 			this.centerChanged.emit(center);
 		}));
 
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: ICaseMapPosition) => {
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
 		}));
 
@@ -68,7 +68,7 @@ export class CommunicatorEntity {
 
 	// CommunicatorEntity methods begin
 
-	public setActiveMap(mapName: string, position?: ICaseMapPosition, layer?: any) {
+	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any) {
 		this._manager.setActiveMap(mapName, position, layer);
 	}
 
@@ -79,7 +79,7 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(position?: ICaseMapPosition) {
+	public loadInitialMapSource(position?: CaseMapPosition) {
 		this.setVirtualNorth(0);
 		this._manager.loadInitialMapSource(position);
 	}
@@ -121,7 +121,7 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public setPosition(position: ICaseMapPosition) {
+	public setPosition(position: CaseMapPosition) {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
@@ -130,7 +130,7 @@ export class CommunicatorEntity {
 		this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): ICaseMapPosition {
+	public getPosition(): CaseMapPosition {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
@@ -158,7 +158,7 @@ export class CommunicatorEntity {
 		return this._manager.visualizers;
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
 		this.virtualNorth = 0;
 		if (this._manager) {
 			this._manager.resetView(layer, position, extent);

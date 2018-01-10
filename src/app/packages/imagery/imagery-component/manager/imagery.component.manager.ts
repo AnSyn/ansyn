@@ -5,7 +5,7 @@ import { IMapPlugin } from '../../model/imap-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/provider.service';
-import { ICaseMapPosition } from '@ansyn/core';
+import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
@@ -15,7 +15,7 @@ export class ImageryComponentManager {
 	private _activeMap: IMap;
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
-	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
+	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -35,7 +35,7 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(position?: ICaseMapPosition) {
+	public loadInitialMapSource(position?: CaseMapPosition) {
 		if (this._activeMap) {
 			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 				this.resetView(layers[0], position);
@@ -48,7 +48,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
 		if (this._activeMap) {
 			this._activeMap.resetView(layer, position, extent);
 			this.resetVisualizers();
@@ -75,7 +75,7 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata, this.id);
 	}
 
-	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: ICaseMapPosition, layer?: any): void {
+	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): void {
 		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
@@ -112,7 +112,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public setActiveMap(activeMapName: string, position?: ICaseMapPosition, layer?: any) {
+	public setActiveMap(activeMapName: string, position?: CaseMapPosition, layer?: any) {
 		if (this.activeMapName !== activeMapName) {
 			const oldMapName = this.activeMapName;
 			// console.log(`Set active map to : ${activeMapName}`);
@@ -202,7 +202,7 @@ export class ImageryComponentManager {
 			this.centerChanged.emit(center);
 		}));
 
-		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: ICaseMapPosition) => {
+		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit(position);
 		}));
 

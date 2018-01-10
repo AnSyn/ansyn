@@ -5,7 +5,7 @@ import Point from 'ol/geom/point';
 import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { EventEmitter } from '@angular/core';
 
@@ -63,7 +63,7 @@ export class CenterMarkerPlugin implements IMapPlugin {
 	}
 
 	private register() {
-		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: ICaseMapPosition) => {
+		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: CaseMapPosition) => {
 			if (this.isEnabled) {
 				this.tryDrawCenter();
 			} else {

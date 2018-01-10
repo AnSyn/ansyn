@@ -17,7 +17,7 @@ export interface ICaseResolutionData {
 	mapResolution: number;
 }
 
-export interface ICaseMapPosition {
+export interface CaseMapPosition {
 	extent: CaseMapExtent;
 	resolutionData?: ICaseResolutionData;
 	projectedState: CaseMapProjectedState;

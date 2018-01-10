@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersDisabledMap } from './open-layers-disabled-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 	ngOnInit(): void {
 	}
 
-	createMap(layers: any, position?: ICaseMapPosition): void {
+	createMap(layers: any, position?: CaseMapPosition): void {
 		this._map = new OpenLayersDisabledMap(this.mapElement.nativeElement, layers, position);
 		this.mapCreated.emit(this._map);
 	}

@@ -120,7 +120,7 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	createInteraction(mode: AnnotationMode) {
 
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'createInteraction',
+			operation: 'toggleDrawInteraction',
 			mode,
 			relevantMaps: 'active'
 		}));
@@ -168,11 +168,6 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 		if (this.subscriber) {
 			this.subscriber.unsubscribe();
 		}
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'removeLayer',
-			value: this.colorOptionsStroke,
-			relevantMaps: 'all'
-		}));
 	}
 
 }

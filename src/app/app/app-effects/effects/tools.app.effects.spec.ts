@@ -302,7 +302,7 @@ describe('ToolsAppEffects', () => {
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const expectedResults = cold('--(ab)--', {
 				a: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
-				b: new AnnotationVisualizerAgentAction({ operation: 'removeLayer', relevantMaps: 'others' })
+				b: new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })
 			});
 			expect(toolsAppEffects.onActiveMapChangesDrawAnnotation$).toBeObservable(expectedResults);
 		})

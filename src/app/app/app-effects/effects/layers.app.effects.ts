@@ -47,7 +47,7 @@ export class LayersAppEffects {
 	toggleAnnotationsLayer$: Observable<any> = this.actions$
 		.ofType<ToggleDisplayAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER)
 		.map(({ payload }: ToggleDisplayAnnotationsLayer) => new AnnotationVisualizerAgentAction({
-			operation: payload ? 'show' : 'removeLayer', relevantMaps: 'all'
+			operation: payload ? 'show' : 'hide', relevantMaps: 'all'
 		}));
 
 

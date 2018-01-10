@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState, MapsLayout } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
+import { Feature } from 'geojson';
 
 
 export const MapActionTypes = {
@@ -332,7 +333,7 @@ export class ActiveImageryMouseLeave implements Action {
 
 export class AnnotationDrawEndAction implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_DRAW_END;
-	constructor(public payload: GeoJSON.GeoJsonObject) {
+	constructor(public payload: Feature<any>) {
 
 	}
 }

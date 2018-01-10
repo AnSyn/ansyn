@@ -2,23 +2,24 @@
 @import '~@ansyn/core/less/common';
 
 :host {
-	z-index: @z-index-annotation-cotext-menu;
-	position: fixed;
-	.wrapper {
-		position: absolute;
+	.context-menu-wrapper {
+		z-index: @z-index-annotation-cotext-menu;
+		position: fixed;
+		outline: 2px dashed #27B2CF;
+		outline-offset: 10px;
 		visibility: hidden;
-		width: 20px;
-		height: 20px;
-		background-color: @application-main-color;
-		color: white;
-		align-items: center;
-		right: -23px;
-		top: 1px;
-	}
-	&:focus {
-		border: 1px dashed @application-main-color;
-		.wrapper {
-			visibility: visible;
+		.remove-feature-wrapper {
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			background-color: @application-main-color;
+			color: white;
+			align-items: center;
+			right: 0;
+			top: 0;
+
+			transform: translate(calc(~'100% + 15px'), calc(~'-100% + 7.5px'));
+
 			button {
 				background: @application-main-color;
 				color: white;
@@ -26,11 +27,15 @@
 				font-size: 19px;
 				font-weight: bold;
 				outline: none;
-
 			}
-
 		}
 
+	}
+
+	&:focus {
+		.context-menu-wrapper {
+			visibility: visible;
+		}
 	}
 
 }

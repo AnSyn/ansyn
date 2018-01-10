@@ -18,6 +18,7 @@ import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../actions/map.actions';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
+import { Feature } from 'geojson';
 
 @Injectable()
 export class MapFacadeService {
@@ -151,8 +152,8 @@ export class MapFacadeService {
 		this.store.dispatch(new DbclickFeatureTriggerAction(event));
 	}
 
-	drawEndSubscriber(featureCollection: GeoJSON.GeoJsonObject) {
-		this.store.dispatch(new AnnotationDrawEndAction(featureCollection));
+	drawEndSubscriber(feature: Feature<any>) {
+		this.store.dispatch(new AnnotationDrawEndAction(feature));
 	}
 
 	contextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {

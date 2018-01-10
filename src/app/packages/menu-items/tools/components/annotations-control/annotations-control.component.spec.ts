@@ -41,7 +41,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('open line width selection', () => {
 		spyOn(component.lineWidthSelection.nativeElement, 'focus');
-		spyOn(component, 'createInteraction');
+		spyOn(component, 'toggleDrawInteraction');
 
 		component.mode = 'Point';
 		component.openLineWidthSelection();
@@ -114,7 +114,7 @@ describe('AnnotationsControlComponent', () => {
 		});
 
 		it('check if mode is undefined /defined', () => {
-			spyOn(component, 'createInteraction');
+			spyOn(component, 'toggleDrawInteraction');
 			component.mode = 'Point';
 			component.toggleColorSelection($event);
 			expect(component.createInteraction).toHaveBeenCalled();
@@ -126,7 +126,7 @@ describe('AnnotationsControlComponent', () => {
 		});
 	});
 
-	it('createInteraction', () => {
+	it('toggleDrawInteraction', () => {
 		component.mode = undefined;
 		component.createInteraction('Point');
 
@@ -189,7 +189,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('check ngOnDestrory', () => {
 		const action = new AnnotationVisualizerAgentAction({
-			operation: 'removeLayer',
+			operation: 'hide',
 			value: component.colorOptionsStroke,
 			relevantMaps: 'all'
 		});

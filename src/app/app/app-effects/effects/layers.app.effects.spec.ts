@@ -90,7 +90,7 @@ describe('LayersAppEffects', () => {
 		it('displayAnnotationLayer - false', () => {
 			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(false) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ operation: 'removeLayer', relevantMaps: 'all' })
+				b: new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'all' })
 			});
 			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});

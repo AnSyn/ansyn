@@ -320,4 +320,12 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		this.iMap.mapObject.removeInteraction(interactionInstance);
 		this.interactions.delete(type);
 	}
+
+	addEvent(type: VisualizerEventTypes): void {
+		this.events.set(type, new EventEmitter<any>());
+	}
+
+	removeEvent(type: VisualizerEventTypes) {
+		this.events.delete(type);
+	}
 }

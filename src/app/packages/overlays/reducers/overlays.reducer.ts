@@ -66,6 +66,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return {
 				...state,
 				loading: true,
+				loaded: false,
 				queryParams,
 				overlays: new Map(),
 				filteredOverlays: []
@@ -93,7 +94,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({}, state, {
-				loading: false
+				loading: false,
+				loaded: false,
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS:

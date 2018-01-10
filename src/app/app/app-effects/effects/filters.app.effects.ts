@@ -25,6 +25,7 @@ import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -33,18 +34,21 @@ export class FiltersAppEffects {
 	 * @type Effect
 	 * @name updateOverlayFilters$
 	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
-	 * @action SetFilteredOverlaysAction
+	 * @action SyncOverlaysWithFavoritesAfterLoadedAction, SetFilteredOverlaysAction
 	 * @filter overlays are loaded
-	 * @dependencies filters, cases
+	 * @dependencies filters, core, overlays
 	 */
 	@Effect()
-	updateOverlayFilters$: Observable<SetFilteredOverlaysAction> = this.actions$
+	updateOverlayFilters$: Observable<any> = this.actions$
 		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
-		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
+		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
-			return new SetFilteredOverlaysAction(filteredOverlays);
+			return [
+				new SyncOverlaysWithFavoritesAfterLoadedAction(core.favoriteOverlays),
+				new SetFilteredOverlaysAction(filteredOverlays)
+			]
 		});
 
 	/**

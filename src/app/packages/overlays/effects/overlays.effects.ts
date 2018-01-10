@@ -18,14 +18,14 @@ import {
 	RedrawTimelineAction,
 	RequestOverlayByIDFromBackendAction,
 	SetTimelineStateAction,
-	SyncOverlaysWithFavoritesAction,
+	SyncOverlaysWithFavoritesOnLoadingAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
-import { isNil as _isNil } from 'lodash';
+import { isNil, unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
@@ -83,7 +83,7 @@ export class OverlaysEffects {
 		.switchMap((action) => {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
-					const actions: Array<any> = [new SyncOverlaysWithFavoritesAction(overlays.data)];
+					const actions: Array<any> = [new SyncOverlaysWithFavoritesOnLoadingAction(overlays.data)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
@@ -97,24 +97,18 @@ export class OverlaysEffects {
 		});
 	/**
 	 * @type Effect
-	 * @name syncOverlays$
-	 * @ofType SyncOverlaysWithFavoritesAction
+	 * @name syncOverlaysOnLoading$
+	 * @ofType SyncOverlaysWithFavoritesOnLoadingAction
 	 * @dependencies coreState
 	 * @action LoadOverlaysSuccessAction
 	 */
 	@Effect()
-	syncOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
-		.ofType<LoadOverlaysAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES)
+	syncOverlaysOnLoading$: Observable<LoadOverlaysSuccessAction> = this.actions$
+		.ofType<LoadOverlaysAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING)
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([action, state]: [LoadOverlaysAction, ICoreState]) => {
 			// sync overlays from server (by pinpoint) with favorite (from case). favorites always presented.
-			const overlays = action.payload;
-			state.favoriteOverlays.forEach(fav => {
-				const overlay = overlays.find(overlay => overlay.id === fav.id);
-				if (!overlay) {
-					overlays.push(fav);
-				}
-			});
+			const overlays = unionBy(action.payload, state.favoriteOverlays, o => o.id);
 			return new LoadOverlaysSuccessAction(overlays);
 		});
 	/**
@@ -162,7 +156,7 @@ export class OverlaysEffects {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index - 1];
 		})
-		.filter(prevOverlayId => !_isNil(prevOverlayId))
+		.filter(prevOverlayId => !isNil(prevOverlayId))
 		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
 
 	/**
@@ -180,7 +174,7 @@ export class OverlaysEffects {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index + 1];
 		})
-		.filter(nextOverlayId => !_isNil(nextOverlayId))
+		.filter(nextOverlayId => !isNil(nextOverlayId))
 		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
 
 	/**

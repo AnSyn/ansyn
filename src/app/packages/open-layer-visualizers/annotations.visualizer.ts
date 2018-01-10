@@ -43,8 +43,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super(AnnotationVisualizerType, style, {
 			initial: {
 				stroke: {
-					color: '#3399CC',
-					width: 2
+					color: '#27b2cfe6',
+					width: 1
 				},
 				fill: {
 					color: '#FFFFFF'
@@ -53,7 +53,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					radius: 4
 				},
 				line: {
-					width: 2
+					width: 1
 				}
 			}
 		});
@@ -64,7 +64,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	protected resetInteractions(): void {
 		const contextMenu = new Select({
 			condition: event => event.originalEvent.which === 3 && event.type === 'pointerdown',
-			layers: [this.vector]
+			layers: [this.vector],
+			hitTolerance: 10
 		});
 		contextMenu.on('select', this.onSelectFeature.bind(this));
 		this.addInteraction(VisualizerInteractions.contextMenu, contextMenu);

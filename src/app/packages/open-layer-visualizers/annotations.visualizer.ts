@@ -168,13 +168,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		];
 	}
 
-	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
-		return annotationsLayer.features.map((feature: OLFeature<any>): IVisualizerEntity => ({
-			id: feature.properties.id,
-			featureJson: feature
-		}));
-	}
-
 	onDrawEndEvent({ feature }) {
 
 		this.removeDrawInteraction();

@@ -97,7 +97,7 @@ describe('ToolsComponent', () => {
 		component.userAnnotationsToolOpen = true;
 		component.toggleAnnotationMenu(false);
 		const args = store.dispatch['calls'].mostRecent();
-		expect(store.dispatch).toHaveBeenCalledTimes(3);
+		expect(store.dispatch).toHaveBeenCalledTimes(4);
 		expect(args.args[0].payload.operation).toBe('endDrawing');
 	});
 });

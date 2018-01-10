@@ -40,7 +40,7 @@ describe('MapFacadeService', () => {
 		it('when annotations contextmenu call the trigger is dispached', () => {
 			const payload: any = { hello: 'world' };
 			const action = new AnnotationContextMenuTriggerAction(payload);
-			service.annotationContextMenuHandlerSubscriber(payload);
+			service.contextMenuHandlerSubscriber(payload);
 			expect(store.dispatch).toHaveBeenCalledTimes(1);
 			expect(store.dispatch).toHaveBeenCalledWith(action);
 		});

@@ -22,23 +22,17 @@ export interface LineWidthList {
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnDestroy, OnInit {
+export class AnnotationsControlComponent implements OnInit {
 	private _expand: boolean;
-	public lineWidthTrigger: boolean;
-
 	public lineWidthSelectionExpand: boolean;
 	public colorSelectionExpand: boolean;
 
-
-	public subscriber;
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
 		.distinctUntilChanged();
 
 	public mode: AnnotationMode;
-
 	public selectedStrokeWidthIndex = 0;
-
 	public selectedStrokeColor = '#27b2cfe6';
 	public selectedFillColor = 'white';
 
@@ -97,18 +91,15 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 	}
 
 	createInteraction(mode: AnnotationMode) {
-
 		this.store.dispatch(new AnnotationVisualizerAgentAction({
 			operation: 'toggleDrawInteraction',
 			mode,
 			relevantMaps: 'active'
 		}));
-
 		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
 	}
 
 	openColorInput($event) {
-
 		let element = $event.target.closest('li');
 		if (!element) {
 			element = $event.target;
@@ -141,12 +132,6 @@ export class AnnotationsControlComponent implements OnDestroy, OnInit {
 			value: this.selectedFillColor,
 			relevantMaps: 'active'
 		}));
-	}
-
-	ngOnDestroy() {
-		if (this.subscriber) {
-			this.subscriber.unsubscribe();
-		}
 	}
 
 }

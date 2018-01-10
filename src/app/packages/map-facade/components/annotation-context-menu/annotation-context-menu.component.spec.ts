@@ -7,7 +7,6 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -18,12 +17,7 @@ describe('AnnotationContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				Actions,
-				{
-					provide: MapEffects, useValue: {
-					annotationContextMenuTrigger$: new Subject()
-				}
-				}
-
+				{ provide: MapEffects, useValue: { annotationContextMenuTrigger$: new Subject() } }
 			],
 			declarations: [
 				AnnotationContextMenuComponent
@@ -47,37 +41,33 @@ describe('AnnotationContextMenuComponent', () => {
 
 	describe('check annotation context menu trigger the focus and styling', () => {
 		beforeEach(() => {
-			spyOn(component.host.nativeElement, 'setAttribute');
 			spyOn(component.host.nativeElement, 'focus');
 		});
 
-		const tests = [
-			{ type: 'Circle', result: 'top:100px;left:100px;width:100px;height:100px;' },
-			{ type: 'Box', result: 'top:98px;left:98px;width:102px;height:101px;' },
-			{ type: 'Point', result: 'top:88px;left:88px;width:122px;height:122px;' }
-		];
-
-		tests.forEach(item => {
-			it(`check ${item.type} annotation shape`, () => {
-				const actionPayload = {
-					featureId: 'featureId',
-					payload: {
-						geometryName: `Annotate-${item.type}`,
-						pixels: {
-							top: 100,
-							height: 100,
-							left: 100,
-							width: 100
-						}
+		it(`check Circle annotation shape`, () => {
+			const actionPayload = {
+				featureId: 'featureId',
+				payload: {
+					geometryName: `Annotate-Circle`,
+					pixels: {
+						top: 100,
+						height: 100,
+						left: 100,
+						width: 100
 					}
-				};
-				(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
+				}
+			};
 
-				expect(component.host.nativeElement.setAttribute).toHaveBeenCalledWith(
-					'style', item.result);
+			(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
 
-				expect(component.host.nativeElement.focus).toHaveBeenCalled();
+			expect(component.contextMenuWrapperStyle).toEqual({
+				top: '100px',
+				height: '100px',
+				left: '100px',
+				width: '100px'
 			});
+
+			expect(component.host.nativeElement.focus).toHaveBeenCalled();
 		});
 	});
 

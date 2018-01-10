@@ -53,7 +53,7 @@ describe('LayersAppEffects', () => {
 			[casesStateSelector, casesState],
 			[layersStateSelector, layerState]
 		]);
-		casesState.selectedCase = <Case> { state: { layers: { displayAnnotationsLayer: false, annotationsLayer: '' } } };
+		casesState.selectedCase = <any> { state: { layers: { displayAnnotationsLayer: false, annotationsLayer: <any>'' } } };
 		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
 	}));
 
@@ -70,7 +70,7 @@ describe('LayersAppEffects', () => {
 			} as Case;
 			actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
 			const expectedResults = cold('--(abc)--', {
-				a: new SetAnnotationsLayer('geoJSON'),
+				a: new SetAnnotationsLayer(<any>'geoJSON'),
 				b: new ToggleDisplayAnnotationsLayer(true),
 				c: new BeginLayerTreeLoadAction({ caseId: 'id' })
 			});
@@ -99,7 +99,7 @@ describe('LayersAppEffects', () => {
 	describe('annotationUpdateCase$ should update case via layers state (annotationsLayer, displayAnnotationsLayer)', () => {
 
 		it('displayAnnotationsLayer', () => {
-			layerState.annotationsLayer = 'some geoJSON';
+			layerState.annotationsLayer = <any>'some geoJSON';
 			layerState.displayAnnotationsLayer = true;
 
 			const updatedCase = <Case> {
@@ -118,7 +118,7 @@ describe('LayersAppEffects', () => {
 		});
 
 		it('annotationsLayer', () => {
-			layerState.annotationsLayer = 'some geoJSON';
+			layerState.annotationsLayer = <any>'some geoJSON';
 			layerState.displayAnnotationsLayer = false;
 
 			const updatedCase = <Case> {

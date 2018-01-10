@@ -5,21 +5,15 @@ import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
 
-// @TODO add click-outside test
-
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
 	let fixture: ComponentFixture<AnnotationsControlComponent>;
 	let store: Store<any>;
 
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent],
 			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
-			/*	providers: [{
-						provide: 'DOCUMENT',  useClass: MockDocument
-					}]*/
 		})
 			.compileComponents();
 	}));
@@ -39,91 +33,19 @@ describe('AnnotationsControlComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('open line width selection', () => {
-		spyOn(component.lineWidthSelection.nativeElement, 'focus');
-		spyOn(component, 'toggleDrawInteraction');
 
-		component.mode = 'Point';
-		component.openLineWidthSelection();
-		expect(component.createInteraction).toHaveBeenCalled();
-
-		component.createInteraction['calls'].reset();
-		component.mode = undefined;
-		component.openLineWidthSelection();
-		expect(component.createInteraction).not.toHaveBeenCalled();
-
-		component.lineWidthTrigger = true;
-		component.openLineWidthSelection();
-		expect(component.lineWidthTrigger).toBe(false);
-
-		component.openLineWidthSelection();
-		expect(component.lineWidthSelection.nativeElement.focus).toHaveBeenCalled();
-
-	});
-
-	it('close line width selection', () => {
-		spyOn(component.lineWidthSelection.nativeElement, 'blur');
-
-		component.closeLineWidthSelection();
-
-		expect(component.lineWidthTrigger).toBeFalsy();
-		expect(component.lineWidthSelection.nativeElement.blur).not.toHaveBeenCalled();
-
-
-		// component.document.activeElement = ;
-		spyOnProperty(component.document, 'activeElement', 'get').and.returnValue(component.lineWidthSelection.nativeElement);
-
-		expect(component.document.activeElement).toEqual(component.lineWidthSelection.nativeElement);
-
-
-		component.closeLineWidthSelection();
-		expect(component.lineWidthTrigger).toBe(true);
-		expect(component.lineWidthSelection.nativeElement.blur).toHaveBeenCalled();
-
-	});
-
-	describe('Function toggleColorSelection', () => {
-		const $event = jasmine.createSpyObj('$event', ['stopPropagation']);
-		it('Check click outside functionality', () => {
-			component.subscriber = {
-				unsubscribe: function () {
-				}
-			};
-
-			spyOn(component, 'clickOutside');
-
-			component.subscriber = jasmine.createSpyObj('subscriber', ['unsubscribe']);
-
-			this.colorSelectionTrigger = false;
-			component.toggleColorSelection($event);
-			fixture.detectChanges();
-			let result = component.colorSelection.nativeElement.classList.contains('open');
-			expect(result).toBe(true);
-			expect(component.clickOutside).toHaveBeenCalled();
-			expect(component.subscriber.unsubscribe).not.toHaveBeenCalled();
-
-			component.clickOutside['calls'].reset();
-
-			component.toggleColorSelection($event);
-			fixture.detectChanges();
-			result = component.colorSelection.nativeElement.classList.contains('open');
-			expect(result).toBe(false);
-			expect(component.clickOutside).toHaveBeenCalledTimes(0);
-			expect(component.subscriber.unsubscribe).toHaveBeenCalled();
-
+	describe('toggleColorSelection', () => {
+		it('should toggle colorSelectionExpand value', () => {
+			component.colorSelectionExpand = false;
+			component.toggleColorSelection();
+			expect(component.colorSelectionExpand).toBeTruthy();
 		});
 
-		it('check if mode is undefined /defined', () => {
-			spyOn(component, 'toggleDrawInteraction');
-			component.mode = 'Point';
-			component.toggleColorSelection($event);
-			expect(component.createInteraction).toHaveBeenCalled();
-
-			component.createInteraction['calls'].reset();
-			component.mode = undefined;
-			component.toggleColorSelection($event);
-			expect(component.createInteraction).not.toHaveBeenCalled();
+		it('should change lineWidthSelectionExpand to false', () => {
+			component.toggleColorSelection();
+			expect(component.lineWidthSelectionExpand).toBeFalsy();
 		});
+
 	});
 
 	it('toggleDrawInteraction', () => {
@@ -153,7 +75,8 @@ describe('AnnotationsControlComponent', () => {
 		element.getElementsByTagName.and.returnValue([{
 			click: () => {
 			}
-		}]);
+		}
+		]);
 		const $event = {
 			target: {
 				closest
@@ -166,14 +89,17 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('select line width', () => {
-		component.selectLineWidth({ target: { dataset: { index: 5 } } });
-		const args = store.dispatch['calls'].mostRecent().args;
-		expect(args[0].payload.value).toBe(5);
-
+		component.selectLineWidth(5);
+		expect(component.selectedStrokeWidthIndex).toEqual(5);
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationVisualizerAgentAction({
+			operation: 'changeLine',
+			value: component.lineWidthList[5].width,
+			relevantMaps: 'active'
+		}))
 	});
 
 	it('change stroke color', () => {
-		component.colorOptionsStroke = 'tmp';
+		component.selectedStrokeColor = 'tmp';
 		component.changeStrokeColor();
 		const args = store.dispatch['calls'].mostRecent().args;
 		expect(args[0].payload.value).toBe('tmp');
@@ -181,20 +107,10 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('change fill color', () => {
-		component.colorOptionsFill = 'tmp';
+		component.selectedFillColor = 'tmp';
 		component.changeFillColor();
 		const args = store.dispatch['calls'].mostRecent().args;
 		expect(args[0].payload.value).toBe('tmp');
-	});
-
-	it('check ngOnDestrory', () => {
-		const action = new AnnotationVisualizerAgentAction({
-			operation: 'hide',
-			value: component.colorOptionsStroke,
-			relevantMaps: 'all'
-		});
-		component.ngOnDestroy();
-		expect(store.dispatch).toHaveBeenCalledWith(action);
 	});
 
 });

@@ -2,7 +2,7 @@
 
 	<li *ngFor="let modeList of modesList"
 		[class.mode-on]="mode === modeList.mode"
-		(click)="createInteraction(modeList.mode)">
+		(click)="setAnnotationMode(modeList.mode)">
 		<span
 			class="icon-annotation-{{modeList.icon}}" [attr.tooltip-value]="modeList.mode"
 			tooltip-class="bottom">

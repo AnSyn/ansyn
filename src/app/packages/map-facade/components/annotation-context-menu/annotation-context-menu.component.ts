@@ -22,6 +22,10 @@ export class AnnotationContextMenuComponent {
 		$event.preventDefault();
 	}
 
+	@HostListener('window:mousewheel') onMousewheel() {
+		this.host.nativeElement.blur();
+	}
+
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
 
 		this.mapEffect.annotationContextMenuTrigger$.subscribe((action: AnnotationContextMenuTriggerAction) => {

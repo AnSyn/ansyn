@@ -1,7 +1,6 @@
-import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
-
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
@@ -22,7 +21,7 @@ export interface LineWidthList {
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnInit {
+export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	private _expand: boolean;
 	public lineWidthSelectionExpand: boolean;
 	public colorSelectionExpand: boolean;
@@ -90,12 +89,7 @@ export class AnnotationsControlComponent implements OnInit {
 		this.colorSelectionExpand = !this.colorSelectionExpand;
 	}
 
-	createInteraction(mode: AnnotationMode) {
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'toggleDrawInteraction',
-			mode,
-			relevantMaps: 'active'
-		}));
+	setAnnotationMode(mode?: AnnotationMode) {
 		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
 	}
 
@@ -134,4 +128,11 @@ export class AnnotationsControlComponent implements OnInit {
 		}));
 	}
 
+	ngOnDestroy(): void {
+		this.setAnnotationMode();
+		this.store.dispatch(new AnnotationVisualizerAgentAction({
+			operation: 'hide',
+			relevantMaps: 'all'
+		}));
+	}
 }

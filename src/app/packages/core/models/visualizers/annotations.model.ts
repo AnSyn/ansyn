@@ -1,6 +1,5 @@
 export interface AnnotationsContextMenuEvent {
 	featureId: string;
-	geometryName: string;
 	pixels: {
 		top: number,
 		left: number,

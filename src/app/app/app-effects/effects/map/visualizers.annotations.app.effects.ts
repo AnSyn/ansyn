@@ -32,8 +32,10 @@ export class VisualizersAnnotationsAppEffects {
 			const entities = this.annotationsLayerToEntities(annotationsLayer);
 			visualizer.setEntities(entities);
 		},
-		hide: (visualizer) => {
-			visualizer.clearEntities();
+		hide: (visualizer, {}, { displayAnnotationsLayer }) => {
+			if (!displayAnnotationsLayer) {
+				visualizer.clearEntities();
+			}
 		},
 		toggleDrawInteraction: (visualizer, { mode }: AnnotationVisualizerAgentPayload) => {
 			visualizer.toggleDrawInteraction(mode);
@@ -47,12 +49,6 @@ export class VisualizersAnnotationsAppEffects {
 		changeFillColor: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
 			visualizer.changeFill(value);
 		},
-		endDrawing: (visualizer, {}, { displayAnnotationsLayer }) => {
-			visualizer.removeDrawInteraction();
-			if (!displayAnnotationsLayer) {
-				visualizer.clearEntities();
-			}
-		}
 	};
 
 	layersState$ = this.store$.select(layersStateSelector);
@@ -122,10 +118,18 @@ export class VisualizersAnnotationsAppEffects {
 	@Effect()
 	cancelAnnotationEditMode$: Observable<any> = this.actions$
 		.ofType<Action>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.mergeMap(() => [
-			new AnnotationVisualizerAgentAction({ relevantMaps: 'others', operation: 'endDrawing' }),
-			new SetAnnotationMode()
-		]);
+		.map(() => new SetAnnotationMode());
+
+	/**
+	 * @type Effect
+	 * @name changeMode$
+	 * @ofType SetAnnotationMode
+	 * @action AnnotationVisualizerAgentAction
+	 */
+	@Effect()
+	changeMode$: Observable<any> = this.actions$
+		.ofType<Action>(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE)
+		.map(({ payload }: SetAnnotationMode) => new AnnotationVisualizerAgentAction({ relevantMaps: 'all', operation: 'toggleDrawInteraction', mode: payload }));
 
 	/**
 	 * @type Effect

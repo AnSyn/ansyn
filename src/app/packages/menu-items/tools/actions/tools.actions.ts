@@ -3,8 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import { AnnotationMode } from '../reducers/tools.reducer';
 
-export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction' |
-	'changeLine' | 'changeStrokeColor' | 'changeFillColor' | 'endDrawing';
+export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction' | 'changeLine' | 'changeStrokeColor' | 'changeFillColor';
 
 export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
 

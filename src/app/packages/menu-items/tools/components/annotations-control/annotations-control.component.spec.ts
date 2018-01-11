@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
-import { AnnotationVisualizerAgentAction } from '../../actions/tools.actions';
+import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -48,25 +48,16 @@ describe('AnnotationsControlComponent', () => {
 
 	});
 
-	it('toggleDrawInteraction', () => {
+	it('setAnnotationMode', () => {
 		component.mode = undefined;
-		component.createInteraction('Point');
-
-		const args = store.dispatch['calls'].allArgs();
-
-		expect(store.dispatch).toHaveBeenCalledTimes(2);
-
-		expect(args[0][0].payload.mode).toBe('Point');
-		expect(args[0][0].payload.relevantMaps).toBe('active');
-
-		expect(args[1][0].payload).toEqual('Point');
+		component.setAnnotationMode('Point');
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode('Point'));
 	});
 
-	it('createInteraction with mode set', () => {
+	it('setAnnotationMode with mode set', () => {
 		component.mode = 'Point';
-		component.createInteraction('Point');
-		const args = store.dispatch['calls'].allArgs();
-		expect(args[1][0].payload).toEqual(undefined);
+		component.setAnnotationMode('Point');
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode());
 	});
 
 	it('open color input', () => {

@@ -11,12 +11,12 @@ import LineString from 'ol/geom/linestring';
 import GeomPolygon from 'ol/geom/polygon';
 import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
+import condition from 'ol/events/condition';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
-import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Feature, FeatureCollection } from 'geojson';
+import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
@@ -87,10 +87,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
 		let pixels = this.getFeaturePositionInPixels({ selectedFeature, originalEventTarget });
-		const { id, geometryName } = selectedFeature.getProperties();
+		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: AnnotationsContextMenuEvent = {
 			featureId: id,
-			geometryName,
 			pixels
 		};
 		const callback = event => {
@@ -216,7 +215,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const geometryName = `${this.namePrefix}${type}`;
 		this.removeDrawInteraction();
 
-		if (currentGeometryName === geometryName) {
+		if (!type || currentGeometryName === geometryName) {
 			return;
 		}
 
@@ -224,6 +223,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			type: type === 'Rectangle' ? 'Circle' : type === 'Arrow' ? 'LineString' : type,
 			geometryFunction: type === 'Rectangle' ? (<any>Draw).createBox(4) : undefined,
 			geometryName,
+			condition: (event) => event.originalEvent.which === 1,
 			style: (feature) => this.getStyleObj(feature, this.visualizerStyle.initial, geometryName)
 		});
 

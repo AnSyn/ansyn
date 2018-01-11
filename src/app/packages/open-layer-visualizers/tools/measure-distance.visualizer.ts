@@ -121,6 +121,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		const drawInteractionHandler = new Draw({
 			source: this.interactionSource,
 			type: type,
+			condition: (event) => event.originalEvent.which === 1,
 			geometryName: `Measure_' + ${type}`,
 			style: this.drawFeatureStyle.bind(this)
 		});

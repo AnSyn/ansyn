@@ -64,10 +64,10 @@ describe('LayersAppEffects', () => {
 	describe('selectCase$', () => {
 
 		it('selectCase$', () => {
-			let selectedCase = {
+			let selectedCase = <any> {
 				id: 'id',
 				state: { layers: { displayAnnotationsLayer: true, annotationsLayer: 'geoJSON' } }
-			} as Case;
+			};
 			actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
 			const expectedResults = cold('--(abc)--', {
 				a: new SetAnnotationsLayer(<any>'geoJSON'),

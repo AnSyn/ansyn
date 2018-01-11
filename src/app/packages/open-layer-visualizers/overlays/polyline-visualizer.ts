@@ -33,7 +33,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	constructor(style: Partial<VisualizerStateStyle>) {
 		super(FootprintPolylineVisualizerType, style);
 
-		// No access to `this` in super constructor
 		this.updateStyle({
 			opacity: 0.5,
 			initial: {
@@ -54,8 +53,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
-		this.events.set(VisualizerEvents.onHoverFeature, new EventEmitter<any>());
-		this.events.set(VisualizerEvents.doubleClickFeature, new EventEmitter<any>());
 	}
 
 	private getMarkupClasses(featureId: string): string[] {
@@ -143,26 +140,27 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	protected resetInteractions(): void {
-		if (this.interactions.get(VisualizerInteractions.doubleClick)) {
-			this.iMap.mapObject.removeInteraction(this.interactions.get(VisualizerInteractions.doubleClick));
-		}
-		if (this.interactions.get(VisualizerInteractions.pointerMove)) {
-			this.iMap.mapObject.removeInteraction(this.interactions.get(VisualizerInteractions.pointerMove));
-		}
-		this.addDoubleClickInteraction();
-		this.addPointerMoveInteraction();
+		this.removeInteraction(VisualizerInteractions.doubleClick);
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		this.addInteraction(VisualizerInteractions.pointerMove, this.createPointerMoveInteraction());
+		this.addInteraction(VisualizerInteractions.doubleClick, this.createDoubleClickInteraction());
 	}
 
+	protected resetEvents(): void {
+		this.removeEvent(VisualizerEvents.onHoverFeature);
+		this.removeEvent(VisualizerEvents.doubleClickFeature);
+		this.addEvent(VisualizerEvents.onHoverFeature);
+		this.addEvent(VisualizerEvents.doubleClickFeature);
+	}
 
-	addPointerMoveInteraction() {
+	createPointerMoveInteraction() {
 		const pointerMove = new Select({
 			condition: condition.pointerMove,
 			style: () => new Style(),
 			layers: [this.vector]
 		});
 		pointerMove.on('select', this.onSelectFeature.bind(this));
-		this.iMap.mapObject.addInteraction(pointerMove);
-		this.interactions.set(VisualizerInteractions.pointerMove, pointerMove);
+		return pointerMove;
 	}
 
 	onDoubleClickFeature($event) {
@@ -177,15 +175,14 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	addDoubleClickInteraction() {
-		const doubleClickInteraction = new Select({
+	createDoubleClickInteraction() {
+		const doubleClick = new Select({
 			condition: condition.doubleClick,
 			style: () => new Style({}),
 			layers: [this.vector]
 		});
-		doubleClickInteraction.on('select', this.onDoubleClickFeature.bind(this));
-		this.iMap.mapObject.addInteraction(doubleClickInteraction);
-		this.interactions.set(VisualizerInteractions.doubleClick, doubleClickInteraction);
+		doubleClick.on('select', this.onDoubleClickFeature.bind(this));
+		return doubleClick;
 	}
 
 	private createHoverFeature(selectedFeature: Feature): void {

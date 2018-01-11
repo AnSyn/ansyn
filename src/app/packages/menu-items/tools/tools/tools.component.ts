@@ -121,13 +121,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 				operation: 'show',
 				relevantMaps: 'active'
 			}));
-
 		} else {
 			this.store.dispatch(new AnnotationClose(false));
 			this.store.dispatch(new SetAutoCloseMenu(true));
 			this.store.dispatch(new SetAnnotationMode());
 			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'endDrawing',
+				operation: 'hide',
 				relevantMaps: 'active'
 			}));
 		}

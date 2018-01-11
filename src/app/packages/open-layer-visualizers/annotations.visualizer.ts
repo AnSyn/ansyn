@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from './entities-visualizer';
+import { EntitiesVisualizer } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
@@ -11,7 +11,6 @@ import LineString from 'ol/geom/linestring';
 import GeomPolygon from 'ol/geom/polygon';
 import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
-import condition from 'ol/events/condition';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
@@ -114,13 +113,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	arrowLinesToPixels(selectedFeature) {
+		const { style, geometryName } = selectedFeature.getProperties();
 		const mainExtent = selectedFeature.getGeometry().getExtent();
 		const mainLine = this.getExtentAsPixels(mainExtent).map(pair => pair.map(Math.round));
+		const arrowStyles = this.arrowStyle(selectedFeature, style);
 
-		const line1Extent = selectedFeature.getStyle()[1].getGeometry().getExtent();
+		const line1Extent = arrowStyles[1].getGeometry().getExtent();
 		const line1 = this.getExtentAsPixels(line1Extent).map(pair => pair.map(Math.round));
 
-		const line2Extent = selectedFeature.getStyle()[2].getGeometry().getExtent();
+		const line2Extent = arrowStyles[2].getGeometry().getExtent();
 		const line2 = this.getExtentAsPixels(line2Extent).map(pair => pair.map(Math.round));
 
 		const points = mainLine.concat(line1).concat(line2);
@@ -153,9 +154,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	getFeaturePositionInPixels({ selectedFeature, originalEventTarget }) {
 		const boundingRect = originalEventTarget.getBoundingClientRect();
+		const { geometryName } = selectedFeature.getProperties();
 		let pixels;
 
-		if (selectedFeature.geometryName_ === 'Annotate-Arrow') {
+		if (geometryName === 'Annotate-Arrow') {
 			pixels = this.arrowLinesToPixels(selectedFeature);
 			pixels.top += boundingRect.top;
 			pixels.left += boundingRect.left;
@@ -231,7 +233,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
-	arrowStyle(feature, style, geometryName) {
+	arrowStyle(feature, style) {
 		const geometry = feature.getGeometry();
 		const stroke = new Stroke(style.stroke);
 		const styles = [new Style({ stroke })];
@@ -271,7 +273,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const fill = new Fill({ color: newFill });
 
 		if (feature.getGeometry() instanceof LineString && geometryName === `${this.namePrefix}Arrow`) {
-			return this.arrowStyle(feature, style, geometryName);
+			return this.arrowStyle(feature, style);
 		}
 
 		return new Style({

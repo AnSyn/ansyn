@@ -87,6 +87,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	protected initLayers() {
 		this.createStaticLayers();
 		this.resetInteractions();
+		this.resetEvents();
 	}
 
 	protected createStaticLayers() {
@@ -105,6 +106,10 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	protected resetInteractions(): void {
+
+	}
+
+	protected resetEvents(): void {
 
 	}
 
@@ -316,9 +321,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	removeInteraction(type: VisualizerInteractionTypes) {
-		const interactionInstance: any = this.interactions.get(type);
-		this.iMap.mapObject.removeInteraction(interactionInstance);
-		this.interactions.delete(type);
+		if (this.interactions.has(type)) {
+			const interactionInstance: any = this.interactions.get(type);
+			this.iMap.mapObject.removeInteraction(interactionInstance);
+			this.interactions.delete(type);
+		}
 	}
 
 	addEvent(type: VisualizerEventTypes): void {

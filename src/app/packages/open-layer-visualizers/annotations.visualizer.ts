@@ -57,18 +57,29 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+	}
+
+	protected resetInteractions(): void {
+		this.removeInteraction(VisualizerInteractions.contextMenu);
+		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
+	}
+
+	protected resetEvents(): void {
+		this.removeEvent(VisualizerEvents.drawEndPublisher);
+		this.removeEvent(VisualizerEvents.contextMenuHandler);
 		this.addEvent(VisualizerEvents.drawEndPublisher);
 		this.addEvent(VisualizerEvents.contextMenuHandler);
 	}
 
-	protected resetInteractions(): void {
-		const contextMenu = new Select({
-			condition: event => event.originalEvent.which === 3 && event.type === 'pointerdown',
+	createContextMenuInteraction() {
+		const condition = (event) => event.originalEvent.which === 3 && event.type === 'pointerdown';
+		const contextMenuInteraction = new Select({
+			condition,
 			layers: [this.vector],
 			hitTolerance: 10
 		});
-		contextMenu.on('select', this.onSelectFeature.bind(this));
-		this.addInteraction(VisualizerInteractions.contextMenu, contextMenu);
+		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
+		return contextMenuInteraction;
 	}
 
 	onSelectFeature(data) {

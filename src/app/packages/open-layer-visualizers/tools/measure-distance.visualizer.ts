@@ -1,29 +1,23 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
-
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
-
 import proj from 'ol/proj';
 import Text from 'ol/style/text';
 import Fill from 'ol/style/fill';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
-
 import Point from 'ol/geom/point';
 import MultiPoint from 'ol/geom/multipoint';
 import LineString from 'ol/geom/linestring';
-
 import VectorSource from 'ol/source/vector';
-
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
-
 import { UUID } from 'angular2-uuid';
-
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
 import { getPointByGeometry } from '@ansyn/core/utils';
+import { VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 
 export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
 
@@ -63,9 +57,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		zIndex: 3
 	});
 
-	interactionHandler: Draw;
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
+
+	get drawInteractionHandler() {
+		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
+	}
 
 	getSinglePointLengthTextStyle(): Text {
 		return new Text({
@@ -106,55 +103,46 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onResetView() {
 		super.onResetView();
-		if (this.interactionHandler) {
+		if (this.drawInteractionHandler) {
 			this.createInteraction();
 		}
 	}
 
 	clearInteractionAndEntities() {
-		this.removeInteraction();
+		this.removeDrawInteraction();
 		this.clearEntities();
 	}
 
 	createInteraction(type = 'LineString') {
-		this.removeInteraction();
+		this.removeDrawInteraction();
 
 		this.interactionSource = new VectorSource({ wrapX: false });
 
-		this.interactionHandler = new Draw({
+		const drawInteractionHandler = new Draw({
 			source: this.interactionSource,
 			type: type,
 			geometryName: `Measure_' + ${type}`,
 			style: this.drawFeatureStyle.bind(this)
 		});
 
-		this.addInteraction();
+		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
-	addInteraction() {
-		if (this.interactionHandler) {
-			this.interactionHandler.on('drawend', this.onDrawEndEvent.bind(this));
-			this.iMap.mapObject.addInteraction(this.interactionHandler);
-		}
-	}
-
-	removeInteraction() {
-		if (this.interactionHandler) {
-			this.iMap.mapObject.removeInteraction(this.interactionHandler);
-			this.interactionHandler = null;
-		}
+	removeDrawInteraction() {
+		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
 	}
 
 	onDrawEndEvent(data) {
 		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
-		let geoJsonSingleFeature = this.geoJsonFormat.writeFeature(data.feature, {
-			featureProjection: projection.getCode(),
+		const featureProjection = view.getProjection();
+		let featureJson = this.geoJsonFormat.writeFeatureObject(data.feature, {
+			featureProjection,
 			dataProjection: 'EPSG:4326',
 		});
 		const newEntity: IVisualizerEntity = {
 			id: UUID.UUID(),
-			featureJson: JSON.parse(geoJsonSingleFeature)
+			featureJson
 		};
 		this.addOrUpdateEntities([newEntity]);
 	}

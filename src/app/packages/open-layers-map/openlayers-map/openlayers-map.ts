@@ -192,7 +192,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
 		const projection = view.getProjection();
 		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
-		view.fit(transformExtent, { constrainResolution: false });
+		view.fit(transformExtent, { nearest: true});
 	}
 
 	public addLayer(layer: any) {
@@ -287,11 +287,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (isProjectedPosition) {
 			view.setCenter(center);
 			view.setZoom(zoom);
-		} else if (position.resolutionData) {
-			const projectedCenter = proj.transform(position.resolutionData.center, 'EPSG:4326', viewProjection);
-			view.setCenter(projectedCenter);
-			this.setResolution(position.resolutionData);
 		}
+		// else if (position.resolutionData) {
+		// 	const projectedCenter = proj.transform(position.resolutionData.center, 'EPSG:4326', viewProjection);
+		// 	view.setCenter(projectedCenter);
+		// 	this.setResolution(position.resolutionData);
+		// }
 		else {
 			this.fitToExtent(extent, view);
 		}

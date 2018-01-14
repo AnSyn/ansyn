@@ -179,7 +179,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.includes(this.overlay);
+		return this.favoriteOverlays.some(o => o.id === this.overlay.id);
 	}
 
 	showGeoRegistrationError(): boolean {

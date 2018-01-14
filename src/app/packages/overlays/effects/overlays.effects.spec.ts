@@ -23,6 +23,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core/actions/core.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -144,7 +145,13 @@ describe('Overlays Effects ', () => {
 		actions = hot('--a--', { a: new SyncOverlaysWithFavoritesOnLoadingAction(overlays) });
 		const expectedOverlays = overlays.slice();
 		expectedOverlays.push(favoriteOverlays[1]);
-		const expectedResults = cold('--b--', { b: new LoadOverlaysSuccessAction(expectedOverlays) });
+
+		const expectedFavorites = favoriteOverlays.slice();
+
+		const expectedResults = cold('--(ab)--', {
+			a: new UpdateFavoriteOverlaysMetadataAction(expectedFavorites),
+			b: new LoadOverlaysSuccessAction(expectedOverlays)
+		});
 		expect(overlaysEffects.syncOverlaysOnLoading$).toBeObservable(expectedResults);
 	});
 

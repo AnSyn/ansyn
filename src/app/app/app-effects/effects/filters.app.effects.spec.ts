@@ -42,6 +42,7 @@ import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/ac
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -58,6 +59,9 @@ describe('Filters app effects', () => {
 	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: 'Slider' };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
+	const favoriteOver = new Overlay();
+	favoriteOver.id = '2';
+
 	const filtersState: IFiltersState = { ...initialFiltersState };
 	const casesState: ICasesState = { ...initialCasesState };
 	const overlaysState: IOverlaysState = { ...overlaysInitialState };
@@ -72,7 +76,7 @@ describe('Filters app effects', () => {
 			facets: {
 				filters: null
 			},
-			favoritesOverlays: ['2']
+			favoritesOverlays: [favoriteOver]
 		}
 	} as any;
 
@@ -100,7 +104,7 @@ describe('Filters app effects', () => {
 			[filtersStateSelector, filtersState],
 			[casesStateSelector, casesState],
 			[menuStateSelector, { ...initialMenuState }],
-			[coreStateSelector, { ...coreInitialState }]
+			[coreStateSelector, { ...coreInitialState, favoriteOverlays: [favoriteOver] }]
 		]);
 		filtersState.filters = new Map();
 		casesState.selectedCase = selectedCase;
@@ -117,7 +121,10 @@ describe('Filters app effects', () => {
 		filtersState.filters = new Map();
 		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--b--', { b: new SetFilteredOverlaysAction(filteredOverlays) });
+		const expectedResults = cold('--(ab)--', {
+			a: new SyncOverlaysWithFavoritesAfterLoadedAction([favoriteOver]),
+			b: new SetFilteredOverlaysAction(filteredOverlays)
+		});
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 

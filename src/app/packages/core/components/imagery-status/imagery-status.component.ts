@@ -30,7 +30,7 @@ export class ImageryStatusComponent implements OnInit {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.includes(this.overlay);
+		return this.favoriteOverlays.some(o => o.id === this.overlay.id);
 	}
 
 	ngOnInit(): void {

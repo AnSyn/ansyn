@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComboBoxComponent } from './combo-box.component';
 
-describe('ComboBoxComponent', () => {
+fdescribe('ComboBoxComponent', () => {
 	let component: ComboBoxComponent;
 	let fixture: ComponentFixture<ComboBoxComponent>;
 
@@ -56,8 +56,8 @@ describe('ComboBoxComponent', () => {
 	});
 
 	it('selectOption should get index, set the index on selected and change "visibility" of optionsContainer to "hidden".', () => {
-		component.selectOption(1, 20);
-		expect(component.selected).toEqual(20);
+		component.selectOption(20);
+		expect(component.selectedIndex).toEqual(20);
 		expect(component.optionsContainer.nativeElement.style.visibility).toEqual('hidden');
 	});
 });

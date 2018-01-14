@@ -49,15 +49,27 @@ export class StatusBarComponent implements OnInit {
 	favoriteOverlays$: Observable<string[]> = this.core$.pluck<ICoreState, string[]>('favoriteOverlays');
 	favoriteOverlays: string[];
 
-	layouts: number[] = [];
+	layouts: MapsLayout[] = [];
 	selectedLayoutIndex: number;
 
 	orientations: string[] = [];
 	orientation: string;
+	get selectedOrientationIndex(): number {
+		return this.orientations.indexOf(this.orientation);
+	}
+
 	geoFilters: string[] = [];
 	geoFilter: string;
+	get selectedGeoFilterIndex(): number {
+		return this.geoFilters.indexOf(this.geoFilter);
+	}
 	timeLines: string[] = ['Start - End'];
 	timeLine = 'Start - End';
+
+	get selectedTimeLineIndex(): number {
+		return this.timeLines.indexOf(this.timeLine);
+	}
+
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: { from: Date, to: Date };
 	hideOverlay: boolean;
@@ -118,7 +130,7 @@ export class StatusBarComponent implements OnInit {
 		});
 
 		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
-			this.layouts = Object.keys(_layouts).map(Number);
+			this.layouts = _layouts;
 		});
 
 		this.orientations$.subscribe((_orientations) => {
@@ -186,7 +198,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	layoutRender(layoutIndex) {
-		return `<i class="icon-screen-${layoutIndex + 1}"></i>`
+		return `<i class="icon-screen-${layoutIndex + 1}" ></i>`
 	}
 
 	layoutSelectChange(selectedLayoutIndex: number): void {

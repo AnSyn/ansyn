@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -11,13 +12,16 @@ export class ComboBoxComponent {
 
 	@Input() icon: string;
 	@Input() options: any[];
-	@Input() selected: any;
+	@Input() selectedIndex: any;
 	@Input() renderFunction: Function;
+	@Input() toolTipField: string;
 
-	@Output() selectedChange = new EventEmitter();
+	@Output() selectedIndexChange = new EventEmitter();
 
 	optionsVisible = false;
+	constructor( protected sanitizer: DomSanitizer) {
 
+	}
 	toggleShow() {
 		this.optionsVisible = !this.optionsVisible;
 		if (this.optionsVisible) {
@@ -31,20 +35,20 @@ export class ComboBoxComponent {
 		}
 	}
 
-	selectOption(index, option) {
+	selectOption(index) {
 		this.optionsVisible = false;
 
-		if (option !== this.selected) {
-			this.selected = option;
-			this.selectedChange.emit(option);
+		if (index !== this.selectedIndex) {
+			this.selectedIndex = index;
+			this.selectedIndexChange.emit(index);
 		}
 	}
 
-	render(value) {
+	render(index) {
 		if (this.renderFunction) {
-			return this.renderFunction(value);
+			return this.renderFunction(index);
 		}
 
-		return value;
+		return this.options[index];
 	}
 }

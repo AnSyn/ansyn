@@ -32,7 +32,8 @@ export class CoreAppEffects {
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([action, { favoriteOverlays }]: [ToggleFavoriteAction, ICoreState]) => {
 			const updatedFavoriteOverlays = [...favoriteOverlays];
-			const indexOfPayload = updatedFavoriteOverlays.indexOf(action.payload);
+			const toggledFavorite = updatedFavoriteOverlays.find(o => o.id === action.payload.id);
+			const indexOfPayload = updatedFavoriteOverlays.indexOf(toggledFavorite);
 			if (indexOfPayload === -1) {
 				updatedFavoriteOverlays.push(action.payload);
 			} else {

@@ -30,6 +30,7 @@ import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -103,13 +104,18 @@ export class OverlaysEffects {
 	 * @action LoadOverlaysSuccessAction
 	 */
 	@Effect()
-	syncOverlaysOnLoading$: Observable<LoadOverlaysSuccessAction> = this.actions$
+	syncOverlaysOnLoading$: Observable<any> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING)
 		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, state]: [LoadOverlaysAction, ICoreState]) => {
-			// sync overlays from server (by pinpoint) with favorite (from case). favorites always presented.
+		.mergeMap(([action, state]: [LoadOverlaysAction, ICoreState]) => {
+			// sync overlays: if overlay exist in favorites but not in data fetched from server - take favorite data.
 			const overlays = unionBy(action.payload, state.favoriteOverlays, o => o.id);
-			return new LoadOverlaysSuccessAction(overlays);
+			// sync favorites: for each favorite - update object using data fetched from server.
+			const favorites = state.favoriteOverlays.map(fav => overlays.find(o => o.id === fav.id));
+			return [
+				new UpdateFavoriteOverlaysMetadataAction(favorites),
+				new LoadOverlaysSuccessAction(overlays)
+			];
 		});
 	/**
 	 * @type Effect

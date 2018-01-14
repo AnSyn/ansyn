@@ -2,7 +2,8 @@ import {
 	CoreActions,
 	CoreActionTypes,
 	SetFavoriteOverlaysAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	UpdateFavoriteOverlaysMetadataAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay } from '../models/overlay.model';
@@ -32,6 +33,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions): ICor
 
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
+
+		case CoreActionTypes.UPDATE_FAVORITE_OVERLAYS_METADATA:
+			return { ...state, favoriteOverlays: (action as UpdateFavoriteOverlaysMetadataAction).payload };
 
 		default:
 			return state;

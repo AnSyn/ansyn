@@ -134,14 +134,14 @@ export class VisualizersAnnotationsAppEffects {
 	/**
 	 * @type Effect
 	 * @name annotationData$
-	 * @ofType SetAnnotationsLayer
+	 * @ofType SetAnnotationsLayer,MapInstanceChangedAction
 	 * @action AnnotationVisualizerAgentAction
 	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType<SetAnnotationsLayer, MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'))
-		.map(([action, displayAnnotationsLayer]: [SetAnnotationsLayer, boolean]) => {
+		.map(([action, displayAnnotationsLayer]: [Action, boolean]) => {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
 			return new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps });
 		});

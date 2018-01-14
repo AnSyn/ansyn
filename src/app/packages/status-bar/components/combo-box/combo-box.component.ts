@@ -1,5 +1,4 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -19,7 +18,7 @@ export class ComboBoxComponent {
 	@Output() selectedIndexChange = new EventEmitter();
 
 	optionsVisible = false;
-	constructor( protected sanitizer: DomSanitizer) {
+	constructor() {
 
 	}
 	toggleShow() {

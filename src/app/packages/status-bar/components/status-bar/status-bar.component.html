@@ -26,8 +26,8 @@
 		<ansyn-combo-box
 			[icon]="'icon-status-bar-orientation'"
 			[options]="orientations"
-			[(selected)]="orientation"
-			(selectedChange)="orientationChange($event)">
+			[(selectedIndex)]="selectedOrientationIndex"
+			(selectedIndexChange)="orientationChange($event)">
 		</ansyn-combo-box>
 	</div>
 
@@ -36,8 +36,8 @@
 		<ansyn-combo-box
 			[icon]="'icon-status-bar-geo'"
 			[options]="geoFilters"
-			[(selected)]="geoFilter"
-			(selectedChange)="geoFilterChange($event)">
+			[(selectedIndex)]="selectedGeoFilterIndex"
+			(selectedIndexChange)="geoFilterChange($event)">
 		</ansyn-combo-box>
 		<div class="buttons">
 			<button (click)="togglePinPointIndicatorView()"
@@ -56,7 +56,7 @@
 		<ansyn-combo-box
 			[icon]="'icon-status-bar-time'"
 			[options]="timeLines"
-			[(selected)]="timeLine">
+			[(selectedIndex)]="selectedTimeLineIndex">
 		</ansyn-combo-box>
 		<div class="buttons">
 			<button (click)="toggleTimelineStartEndSearch()"
@@ -80,8 +80,9 @@
 			class="combo-center"
 			[options]="layouts"
 			[renderFunction]="layoutRender"
-			[(selected)]="selectedLayoutIndex"
-			(selectedChange)="layoutSelectChange($event)">
+			[(selectedIndex)]="selectedLayoutIndex"
+			[toolTipField]="'mapsCount'"
+			(selectedIndexChange)="layoutSelectChange($event)">
 		</ansyn-combo-box>
 	</div>
 

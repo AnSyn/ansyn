@@ -22,6 +22,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { isEmpty, isNil } from 'lodash';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
+import { MenuConfig } from '@ansyn/menu/models/menuConfig';
+import { IMenuConfig } from '@ansyn/menu/models/menu-config.model';
 
 const animations: any[] = [
 	trigger(
@@ -101,12 +103,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
-
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document) {
+				@Inject(DOCUMENT) protected document: Document,
+				@Inject(MenuConfig) public menuConfig: IMenuConfig
+	) {
 
 		this.menuItems$.subscribe((_menuItems) => {
 			this.menuItems = _menuItems;

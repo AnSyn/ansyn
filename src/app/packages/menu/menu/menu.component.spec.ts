@@ -6,8 +6,9 @@ import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reduce
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction } from '../actions/menu.actions';
+import { MenuConfig } from '../models/menuConfig';
 
-describe('MenuComponent', () => {
+fdescribe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
 	let fixture: ComponentFixture<MenuComponent>;
 	let element: any;
@@ -16,7 +17,8 @@ describe('MenuComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer })],
-			declarations: [MenuComponent]
+			declarations: [MenuComponent],
+			providers: [ {provide: MenuConfig, useValue: {}} ]
 		}).compileComponents();
 	}));
 

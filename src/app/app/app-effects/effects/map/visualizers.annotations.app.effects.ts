@@ -154,7 +154,8 @@ export class VisualizersAnnotationsAppEffects {
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
-			featureJson: feature
+			featureJson: feature,
+			style: feature.properties.style
 		}));
 	}
 

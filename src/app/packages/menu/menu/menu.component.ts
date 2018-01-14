@@ -13,7 +13,7 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
-import { MenuItem } from '../models';
+import { IMenuConfig, MenuConfig, MenuItem } from '../models';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
@@ -22,8 +22,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { isEmpty, isNil } from 'lodash';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
-import { MenuConfig } from '@ansyn/menu/models/menuConfig';
-import { IMenuConfig } from '@ansyn/menu/models/menu-config.model';
 
 const animations: any[] = [
 	trigger(

@@ -13,7 +13,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Injectable } from '@angular/core';
 import {
 	AnnotationDrawEndAction, AnnotationRemoveFeature,
-	MapActionTypes
+	MapActionTypes, MapInstanceChangedAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
@@ -139,7 +139,7 @@ export class VisualizersAnnotationsAppEffects {
 	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType<SetAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.SET_LAYER)
+		.ofType<SetAnnotationsLayer, MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'))
 		.map(([action, displayAnnotationsLayer]: [SetAnnotationsLayer, boolean]) => {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';

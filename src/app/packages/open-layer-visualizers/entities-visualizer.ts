@@ -6,6 +6,7 @@ import Feature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
+import Circle from 'ol/style/circle';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
@@ -16,7 +17,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { OpenLayersMap } from '@ansyn/open-layers-map/openlayers-map/openlayers-map';
-import { VisualizerEvents, VisualizerEventTypes } from '@ansyn/imagery/model/imap-visualizer';
+import { VisualizerEventTypes } from '@ansyn/imagery/model/imap-visualizer';
 import { VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 
 export interface FeatureIdentifier {
@@ -82,12 +83,12 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		this.iMap = map;
 		this.mapId = mapId;
 		this.initLayers();
+		this.resetEvents();
 	}
 
 	protected initLayers() {
 		this.createStaticLayers();
 		this.resetInteractions();
-		this.resetEvents();
 	}
 
 	protected createStaticLayers() {
@@ -175,6 +176,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		if (styleSettings.label) {
 			styleSettings.text = new Text(this.createStyle(feature, false, styleSettings.label));
+		}
+
+		if (styleSettings.point) {
+			const { fill, stroke } = styleSettings;
+			styleSettings.image = new Circle({ fill, stroke, ...styleSettings.point } );
 		}
 
 		if (Object.keys(secondaryStyle).length !== 0) {

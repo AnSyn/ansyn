@@ -1,9 +1,8 @@
-import { EntitiesVisualizer } from './entities-visualizer';
+import { EntitiesVisualizer, VisualizerStates } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Select from 'ol/interaction/select';
-import Fill from 'ol/style/fill';
 import color from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
@@ -11,20 +10,22 @@ import LineString from 'ol/geom/linestring';
 import GeomPolygon from 'ol/geom/polygon';
 import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
-import { VisualizerStateStyle } from './models/visualizer-state';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
+import { VisualizerStateStyle } from './models/visualizer-state';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static type = AnnotationVisualizerType;
 	isHideable = true;
+	disableCache = true;
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public namePrefix = 'Annotate-';
+	public fillAlpha = 0.4;
 
 	get drawEndPublisher() {
 		return this.events.get(VisualizerEvents.drawEndPublisher);
@@ -46,7 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					width: 1
 				},
 				fill: {
-					color: '#FFFFFF'
+					color: 'rgba(255, 255, 255, 0.4)'
 				},
 				point: {
 					radius: 4
@@ -104,8 +105,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.updateStyle({ initial: { stroke: { color } } });
 	}
 
-	changeFill(color) {
-		this.updateStyle({ initial: { fill: { color } } });
+	changeFill(fillColor) {
+		const [r, g, b] = [...(<any>color).asArray(fillColor)];
+		const rgbaColor = (<any>color).asString([r, g, b, this.fillAlpha]);
+		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
 	}
 
 	changeLine(width) {
@@ -113,7 +116,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	arrowLinesToPixels(selectedFeature) {
-		const { style, geometryName } = selectedFeature.getProperties();
+		const { style } = selectedFeature.getProperties();
 		const mainExtent = selectedFeature.getGeometry().getExtent();
 		const mainLine = this.getExtentAsPixels(mainExtent).map(pair => pair.map(Math.round));
 		const arrowStyles = this.arrowStyle(selectedFeature, style);
@@ -196,7 +199,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		feature.setProperties({
 			id: Date.now(),
-			style: cloneDeep (this.visualizerStyle.initial),
+			style: cloneDeep(this.visualizerStyle),
 			geometryName
 		});
 
@@ -226,16 +229,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: type === 'Rectangle' ? (<any>Draw).createBox(4) : undefined,
 			geometryName,
 			condition: (event) => event.originalEvent.which === 1,
-			style: (feature) => this.getStyleObj(feature, this.visualizerStyle.initial, geometryName)
+			style: (feature) => this.featureStyle(feature)
 		});
 
 		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
-	arrowStyle(feature, style) {
+	arrowStyle(feature, stroke) {
 		const geometry = feature.getGeometry();
-		const stroke = new Stroke(style.stroke);
+		stroke = new Stroke(stroke);
 		const styles = [new Style({ stroke })];
 		const cordinates = geometry.getCoordinates();
 		const start = cordinates[cordinates.length - 2];
@@ -266,33 +269,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	getStyleObj(feature, style, geometryName) {
-		const fillColor = style.fill.color;
-		const newFill = color.asArray(fillColor).slice();
-		newFill[3] = 0.4;
-		const fill = new Fill({ color: newFill });
-
-		if (feature.getGeometry() instanceof LineString && geometryName === `${this.namePrefix}Arrow`) {
-			return this.arrowStyle(feature, style);
-		}
-
-		return new Style({
-			stroke: new Stroke(style.stroke),
-			fill,
-			image: new Circle({
-				radius: style.point.radius,
-				fill,
-				stroke: new Stroke({
-					color: style.stroke.color,
-					width: style.point.radius / 2
-				})
-			})
-		});
-	}
-
 	featureStyle(feature: OLFeature) {
-		const { style, geometryName } = feature.getProperties();
-		return this.getStyleObj(feature, style, geometryName);
+		const geometry = feature.getGeometry();
+		let { geometryName, style } = feature.getProperties();
+		if (!geometryName) {
+			geometryName = this.drawInteractionHandler.geometryName_;
+		}
+		if (!style) {
+			style = this.visualizerStyle;
+		}
+		const { stroke } = style[VisualizerStates.INITIAL];
+		if (geometry instanceof LineString && geometryName === `${this.namePrefix}Arrow`) {
+			return this.arrowStyle(feature, stroke);
+		} else {
+			return super.featureStyle(feature);
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { Filter } from '../models/filter';
 import { Action } from '@ngrx/store';
+import { CaseFacetsState } from '@ansyn/core/models/case.model';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -19,14 +20,14 @@ export type FiltersActions = any;
 export class InitializeFiltersAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS;
 
-	constructor(public payload?: { overlays: any[], facets: { filters: { fieldName: string, metadata: any }[] } }) {
+	constructor(public payload?: { overlays: any[], facets: CaseFacetsState }) {
 	}
 }
 
 export class InitializeFiltersSuccessAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
 
-	constructor(public payload?: Map<Filter, FilterMetadata>) {
+	constructor(public payload: { filters?: Map<Filter, FilterMetadata>, showOnlyFavorites?: boolean } ) {
 	}
 }
 

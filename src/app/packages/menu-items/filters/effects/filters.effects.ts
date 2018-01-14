@@ -34,11 +34,11 @@ export class FiltersEffects {
 		.ofType<InitializeFiltersAction>(FiltersActionTypes.INITIALIZE_FILTERS)
 		.withLatestFrom(this.store$.select(filtersStateSelector))
 		.map(([action, filtersState]: [InitializeFiltersAction, IFiltersState]) => {
-			const filters: Filter[] = this.filtersService.getFilters();
-			const filterMetadata: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
+			const filtersConfig: Filter[] = this.filtersService.getFilters();
+			const filters: Map<Filter, FilterMetadata> = new Map<Filter, FilterMetadata>();
 			const oldFiltersArray = filtersState.oldFilters ? Array.from(filtersState.oldFilters) : [];
 
-			filters.forEach((filter: Filter) => {
+			filtersConfig.forEach((filter: Filter) => {
 				const metadata: FilterMetadata = this.initializeMetadata(filter, action.payload.facets);
 
 				action.payload.overlays.forEach((overlay: any) => {
@@ -54,10 +54,10 @@ export class FiltersEffects {
 					metadata.showAll();
 				}
 
-				filterMetadata.set(filter, metadata);
+				filters.set(filter, metadata);
 			});
 
-			return new InitializeFiltersSuccessAction(filterMetadata);
+			return new InitializeFiltersSuccessAction({ filters, showOnlyFavorites: action.payload.facets.showOnlyFavorites });
 		}).share();
 
 	constructor(protected actions$: Actions,

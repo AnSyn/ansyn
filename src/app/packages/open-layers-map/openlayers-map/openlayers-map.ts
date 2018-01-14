@@ -295,6 +295,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		// }
 		else {
 			this.fitToExtent(extent, view);
+			if (position.resolutionData) {
+				const projectedCenter = proj.transform(position.resolutionData.center, 'EPSG:4326', viewProjection);
+				view.setCenter(projectedCenter);
+			}
 		}
 		this.setRotation(rotation, view);
 	}

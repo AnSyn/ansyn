@@ -205,12 +205,12 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new ChangeLayoutAction(selectedLayoutIndex));
 	}
 
-	orientationChange(orientation) {
-		this.store.dispatch(new SetOrientationAction(orientation));
+	orientationChange(orientationIndex) {
+		this.store.dispatch(new SetOrientationAction(this.orientations[orientationIndex]));
 	}
 
-	geoFilterChange(geoFilter) {
-		this.store.dispatch(new SetGeoFilterAction(geoFilter));
+	geoFilterChange(geoFilterIndex) {
+		this.store.dispatch(new SetGeoFilterAction(this.geoFilters[geoFilterIndex]));
 	}
 
 	copyLink(): void {

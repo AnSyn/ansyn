@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -18,9 +19,7 @@ export class ComboBoxComponent {
 	@Output() selectedIndexChange = new EventEmitter();
 
 	optionsVisible = false;
-	constructor() {
 
-	}
 	toggleShow() {
 		this.optionsVisible = !this.optionsVisible;
 		if (this.optionsVisible) {
@@ -47,7 +46,6 @@ export class ComboBoxComponent {
 		if (this.renderFunction) {
 			return this.renderFunction(index);
 		}
-
-		return this.options[index];
+		return get(this.options, index);
 	}
 }

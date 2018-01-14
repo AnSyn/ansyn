@@ -29,8 +29,7 @@ import { isNil, unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core/actions/core.actions';
+import { coreStateSelector, ICoreState, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core'
 
 @Injectable()
 export class OverlaysEffects {

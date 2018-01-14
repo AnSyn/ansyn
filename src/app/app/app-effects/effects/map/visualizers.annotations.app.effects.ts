@@ -175,11 +175,9 @@ export class VisualizersAnnotationsAppEffects {
 	annotationVisualizers(ids: string[]): AnnotationsVisualizer[] {
 		return ids.reduce((visualizers, id) => {
 			const communicator = this.imageryCommunicatorService.provide(id);
-			if (!communicator) {
-				return visualizers;
-			} else {
-				return [...visualizers, communicator.getVisualizer(AnnotationVisualizerType)];
-			}
+			const annotationVisualizerType = communicator && communicator.getVisualizer(AnnotationVisualizerType);
+			const existVisualizer = (communicator && annotationVisualizerType);
+			return existVisualizer ? [ ...visualizers, annotationVisualizerType ] : visualizers;
 		}, []);
 	}
 }

@@ -17,7 +17,7 @@ export const MockCasesConfig = {
 			}
 		},
 		baseUrl: 'fake-cases-url',
-		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region', 'overlaysManualProcessArgs']
+		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region', 'overlaysManualProcessArgs', 'orientation']
 
 	}
 } as any;

@@ -47,7 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					width: 1
 				},
 				fill: {
-					color: 'rgba(255, 255, 255, 0.4)'
+					color: `rgba(255, 255, 255, ${this.fillAlpha})`
 				},
 				point: {
 					radius: 4

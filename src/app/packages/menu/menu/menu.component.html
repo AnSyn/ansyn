@@ -12,8 +12,9 @@
 			{{menuItem.name}}
 		</div>
 
-		<div class="logo">
-			<img src="/assets/logo.svg" [alt]="version" [title]="version">
+		<div *ngIf="menuConfig" class="logo">
+			<div class="mode" [style.background]="menuConfig.color">{{menuConfig.mode}}</div>
+			<img [src]="menuConfig.path" [alt]="version" [title]="version">
 		</div>
 	</div>
 

@@ -6,9 +6,9 @@ import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reduce
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction } from '../actions/menu.actions';
-import { MenuConfig } from '../models/menuConfig';
+import { MenuConfig } from '../models';
 
-fdescribe('MenuComponent', () => {
+describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
 	let fixture: ComponentFixture<MenuComponent>;
 	let element: any;

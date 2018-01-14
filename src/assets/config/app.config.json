@@ -190,7 +190,8 @@
 	},
 	"menuConfig": {
 		"path": "/assets/logo.svg",
-		"color": "red",
+		"background": "red",
+		"color": "white",
 		"mode": "debug"
 	},
 	"loginConfig": {

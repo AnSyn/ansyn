@@ -179,16 +179,8 @@ export class QueryParamsHelper {
 
 	decodeCaseObjects(key, value) {
 		switch (key) {
-			case 'facets':
-				return rison.decode(value);
-			case 'time':
-				return rison.decode(value);
-			case 'maps':
-				return rison.decode(value);
 			case 'region':
 				return wellknown.parse(value);
-			case 'orientation':
-				return rison.decode(value);
 			default:
 				return rison.decode(value);
 		}

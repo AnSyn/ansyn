@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComboBoxComponent } from './combo-box.component';
 
-fdescribe('ComboBoxComponent', () => {
+describe('ComboBoxComponent', () => {
 	let component: ComboBoxComponent;
 	let fixture: ComponentFixture<ComboBoxComponent>;
 

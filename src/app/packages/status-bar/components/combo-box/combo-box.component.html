@@ -12,7 +12,7 @@
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<div class="option" *ngFor="let option of options; index as index"
-			 [attr.tooltip-value]="toolTipField? option[toolTipField] : option" [attr.tooltip-class]="top"
+			 [attr.tooltip-value]="toolTipField ? option[toolTipField] : option" tooltip-class="top"
 			 (click)="selectOption(index)"
 			[innerHTML]="render(index)">
 		</div>

@@ -27,7 +27,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
-			return Object.assign({}, state, { filters: action.payload, isLoading: false });
+			return { ...state, ...action.payload, isLoading: false };
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
 			return Object.assign({}, state, { isLoading: true });

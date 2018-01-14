@@ -15,9 +15,7 @@ import {
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
-import { MapsLayout } from '@ansyn/core';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { MapsLayout, coreStateSelector, ICoreState, Overlay } from '@ansyn/core'
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -179,7 +177,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.some(o => o.id === this.overlay.id);
+		return this.overlay && this.favoriteOverlays.some(o => o.id === this.overlay.id);
 	}
 
 	showGeoRegistrationError(): boolean {

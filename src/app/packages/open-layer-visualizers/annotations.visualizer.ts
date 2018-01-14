@@ -21,11 +21,11 @@ export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static type = AnnotationVisualizerType;
+	static fillAlpha = 0.4;
 	isHideable = true;
 	disableCache = true;
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public namePrefix = 'Annotate-';
-	public fillAlpha = 0.4;
 
 	get drawEndPublisher() {
 		return this.events.get(VisualizerEvents.drawEndPublisher);
@@ -47,7 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					width: 1
 				},
 				fill: {
-					color: `rgba(255, 255, 255, ${this.fillAlpha})`
+					color: `rgba(255, 255, 255, ${AnnotationsVisualizer.fillAlpha})`
 				},
 				point: {
 					radius: 4
@@ -107,7 +107,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	changeFill(fillColor) {
 		const [r, g, b] = [...(<any>color).asArray(fillColor)];
-		const rgbaColor = (<any>color).asString([r, g, b, this.fillAlpha]);
+		const rgbaColor = (<any>color).asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
 		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
 	}
 

@@ -84,7 +84,8 @@
 			"time",
 			"maps",
 			"region",
-			"overlaysManualProcessArgs"
+			"overlaysManualProcessArgs",
+			"orientation"
 		],
 		"updateCaseDebounceTime": 700,
 		"useHash": true

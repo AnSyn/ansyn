@@ -156,6 +156,8 @@ export class QueryParamsHelper {
 				return rison.encode(clonedvalue);
 			case 'region':
 				return wellknown.stringify(value);
+			case 'orientation':
+				return rison.encode(value);
 			case 'overlaysManualProcessArgs':
 				// collect process arguments only for overlays currently loaded by map
 				const activeMapsManualProcessArgs = {};
@@ -185,6 +187,8 @@ export class QueryParamsHelper {
 				return rison.decode(value);
 			case 'region':
 				return wellknown.parse(value);
+			case 'orientation':
+				return rison.decode(value);
 			default:
 				return rison.decode(value);
 		}

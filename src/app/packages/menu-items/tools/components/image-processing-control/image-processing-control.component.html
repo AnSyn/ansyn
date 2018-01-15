@@ -1,37 +1,40 @@
-<ul class="image-processing-options">
-	<li>
-		<label for="image-processing-sharpness">Sharpness</label><br>
-		<input id="image-processing-sharpness"
-			   type="range" min="0" max="100" [(ngModel)]="imgProcessParams.Sharpness"
-			   (change)="throttledManualImageProcess()">
-		<button class="button-reset" (click)="backToDefault('Sharpness')">reset</button>
-	</li>
-	<li>
-		<label for="image-processing-contrast">Contrast</label><br>
-		<input id="image-processing-contrast"
-			   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Contrast"
-			   (change)="throttledManualImageProcess()">
-		<button class="button-reset" (click)="backToDefault('Contrast')">reset</button>
-	</li>
-	<li>
-		<label for="image-processing-brightness">Brightness</label><br>
-		<input id="image-processing-brightness"
-			   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Brightness"
-			   (change)="throttledManualImageProcess()">
-		<button class="button-reset" (click)="backToDefault('Brightness')">reset</button>
-	</li>
-	<li>
-		<label for="image-processing-gamma">Gamma</label><br>
-		<input id="image-processing-gamma"
-			   type="range" min="1" max="200" [(ngModel)]="imgProcessParams.Gamma"
-			   (change)="throttledManualImageProcess()">
-		<button class="button-reset" (click)="backToDefault('Gamma')">reset</button>
-	</li>
-	<li>
-		<label for="image-processing-saturation">Saturation</label><br>
-		<input id="image-processing-saturation"
-			   type="range" min="1" max="100" [(ngModel)]="imgProcessParams.Saturation"
-			   (change)="throttledManualImageProcess()">
-		<button class="button-reset" (click)="backToDefault('Saturation')">reset</button>
-	</li>
-</ul>
+<div class="image-processing-container">
+	<div class="resetAll" (click)="resetAll()">Reset all</div>
+	<ul class="image-processing-options">
+		<li>
+			<label for="image-processing-sharpness">Sharpness</label><br>
+			<input id="image-processing-sharpness"
+				   type="range" min="0" max="100" [(ngModel)]="imgProcessParams.Sharpness"
+				   (change)="throttledManualImageProcess()">
+			<button class="button-reset" (click)="backToDefault('Sharpness')">reset</button>
+		</li>
+		<li>
+			<label for="image-processing-contrast">Contrast</label><br>
+			<input id="image-processing-contrast"
+				   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Contrast"
+				   (change)="throttledManualImageProcess()">
+			<button class="button-reset" (click)="backToDefault('Contrast')">reset</button>
+		</li>
+		<li>
+			<label for="image-processing-brightness">Brightness</label><br>
+			<input id="image-processing-brightness"
+				   type="range" min="-100" max="100" [(ngModel)]="imgProcessParams.Brightness"
+				   (change)="throttledManualImageProcess()">
+			<button class="button-reset" (click)="backToDefault('Brightness')">reset</button>
+		</li>
+		<li>
+			<label for="image-processing-gamma">Gamma</label><br>
+			<input id="image-processing-gamma"
+				   type="range" min="1" max="200" [(ngModel)]="imgProcessParams.Gamma"
+				   (change)="throttledManualImageProcess()">
+			<button class="button-reset" (click)="backToDefault('Gamma')">reset</button>
+		</li>
+		<li>
+			<label for="image-processing-saturation">Saturation</label><br>
+			<input id="image-processing-saturation"
+				   type="range" min="1" max="100" [(ngModel)]="imgProcessParams.Saturation"
+				   (change)="throttledManualImageProcess()">
+			<button class="button-reset" (click)="backToDefault('Saturation')">reset</button>
+		</li>
+	</ul>
+</div>

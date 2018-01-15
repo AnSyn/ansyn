@@ -1,21 +1,13 @@
-import { Component, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnInit, Renderer2 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarFlagsItems, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
-	BackToWorldViewAction,
-	ChangeLayoutAction,
-	CopySelectedCaseLinkAction,
-	ExpandAction,
-	GoNextAction,
-	GoPrevAction,
-	OpenShareLink,
-	SetGeoFilterAction,
-	SetOrientationAction,
-	SetTimeAction,
-	UpdateStatusFlagsAction
+	BackToWorldViewAction, ChangeLayoutAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
+	GoPrevAction, OpenShareLink, SetGeoFilterAction, SetOrientationAction, SetTimeAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout, coreStateSelector, ICoreState, Overlay } from '@ansyn/core'
+import { StatusBarConfig, IToolTipsConfig } from '../../models';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -52,6 +44,7 @@ export class StatusBarComponent implements OnInit {
 
 	orientations: string[] = [];
 	orientation: string;
+
 	get selectedOrientationIndex(): number {
 		return this.orientations.indexOf(this.orientation);
 	}
@@ -63,9 +56,11 @@ export class StatusBarComponent implements OnInit {
 
 	geoFilters: string[] = [];
 	geoFilter: string;
+
 	get selectedGeoFilterIndex(): number {
 		return this.geoFilters.indexOf(this.geoFilter);
 	}
+
 	_selectedGeoFilterIndex
 	set selectedGeoFilterIndex(value) {
 		this._selectedGeoFilterIndex = value
@@ -98,6 +93,10 @@ export class StatusBarComponent implements OnInit {
 	goPrevActive = false;
 	goNextActive = false;
 
+	get toolTips(): IToolTipsConfig {
+		return this.statusBarConfig.toolTip;
+	}
+
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {
 		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
@@ -126,7 +125,8 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	constructor(public store: Store<IStatusBarState>, public renderer: Renderer2) {
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig, public store: Store<IStatusBarState>, public renderer: Renderer2) {
+
 	}
 
 	ngOnInit(): void {
@@ -213,7 +213,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	layoutRender(layoutIndex) {
-		return `<i class="icon-screen-${layoutIndex + 1}" ></i>`
+		return `<i class="icon-screen-${layoutIndex + 1}" ></i>`;
 	}
 
 	layoutSelectChange(selectedLayoutIndex: number): void {

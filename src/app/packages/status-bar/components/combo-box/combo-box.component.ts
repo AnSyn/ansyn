@@ -15,6 +15,7 @@ export class ComboBoxComponent {
 	@Input() selectedIndex: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
+	@Input() comboBoxToolTipDescription: string;
 
 	@Output() selectedIndexChange = new EventEmitter();
 

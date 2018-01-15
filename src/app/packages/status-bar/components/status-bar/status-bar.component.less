@@ -1,5 +1,6 @@
 @import "~@ansyn/core/less/common";
 @import "~@ansyn/core/less/z-index-globals";
+@import '~@ansyn/core/less/tooltip';
 
 @share-link-padding-bottom: 20px;
 @navigation-bar-width: 133px;
@@ -59,6 +60,7 @@
 			padding: 3px;
 			vertical-align: middle;
 			align-items: center;
+			position: relative;
 
 			span {
 				padding: 0 8px 0 0;
@@ -109,6 +111,7 @@
 					font-size: 10px;
 
 					&.toggle-icon {
+						position: relative;
 						opacity: 0.5;
 
 						&.active {
@@ -177,6 +180,7 @@
 		}
 
 		button {
+			position: relative;
 			outline: none;
 			width: 24px;
 			height: 24px;

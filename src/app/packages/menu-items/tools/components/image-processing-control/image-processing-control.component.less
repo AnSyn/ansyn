@@ -2,7 +2,7 @@
 @import "~@ansyn/core/less/z-index-globals";
 
 @tools-box-width: 220px;
-@tools-box-height: 248px;
+@tools-box-height: 275px;
 
 // input range styles (see https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 @track-color: white;
@@ -39,108 +39,118 @@
 		width: @tools-box-width;
 		height: @tools-box-height;
 		transition-delay: 0.1s;
-		.image-processing-options {
+		div.image-processing-container {
 			padding: 0 20px;
 			visibility: visible;
 			transition-delay: 0.1s;
+			display: flex;
+			flex-direction: column;
 		}
-
 	}
-	ul.image-processing-options {
+	div.image-processing-container {
 		transition-delay: 0.05s;
 		visibility: hidden;
-		& > li {
-			list-style-type: none;
-			> button {
-				vertical-align: top;
-				width: @reset-btn-width;
-			}
-
-			.track() {
-				width: @track-width;
-				height: @track-height;
-				cursor: pointer;
-				animate: 0.2s;
-			}
-
-			.thumb() {
-				border: @thumb-border-width solid @thumb-border-color;
-				height: @thumb-size;
-				width: @thumb-size;
-				border-radius: @thumb-radius;
-				background: @thumb-color;
-				cursor: pointer;
-			}
-			button {
-				background: transparent;
-				padding: 0;
-				border: none;
-				outline: 0 none;
-				color: white;
-			}
-			// slider styles
-			input[type=range] {
-				-webkit-appearance: none;
-				margin: @thumb-size/2 0;
-				width: @track-width;
-
-				&:focus {
-					outline: none;
+		div.resetAll {
+			align-self: flex-end;
+			margin-top: 10px;
+			font-size: 12px;
+			cursor: pointer;
+		}
+		ul.image-processing-options {
+			padding: 0;
+			& > li {
+				list-style-type: none;
+				> button {
+					vertical-align: top;
+					width: @reset-btn-width;
 				}
 
-				&::-webkit-slider-runnable-track {
-					.track();
-					background: @track-color;
-					border-radius: @track-radius;
-					border: @track-border-width solid @track-border-color;
+				.track() {
+					width: @track-width;
+					height: @track-height;
+					cursor: pointer;
+					animate: 0.2s;
 				}
 
-				&::-webkit-slider-thumb {
-					.thumb();
-					-webkit-appearance: none;
-					margin-top: ((-@track-border-width * 2 + @track-height) / 2) - (@thumb-size / 2);
+				.thumb() {
+					border: @thumb-border-width solid @thumb-border-color;
+					height: @thumb-size;
+					width: @thumb-size;
+					border-radius: @thumb-radius;
+					background: @thumb-color;
+					cursor: pointer;
 				}
-
-				&:focus::-webkit-slider-runnable-track {
-					background: lighten(@track-color, @contrast);
-				}
-
-				&::-moz-range-track {
-					.track();
-					background: @track-color;
-					border-radius: @track-radius;
-					border: @track-border-width solid @track-border-color;
-				}
-				&::-moz-range-thumb {
-					.thumb();
-				}
-
-				&::-ms-track {
-					.track();
+				button {
 					background: transparent;
-					border-color: transparent;
-					border-width: @thumb-size 0;
-					color: transparent;
+					padding: 0;
+					border: none;
+					outline: 0 none;
+					color: white;
 				}
+				// slider styles
+				input[type=range] {
+					-webkit-appearance: none;
+					margin: @thumb-size/2 0;
+					width: @track-width;
 
-				&::-ms-fill-lower {
-					background: darken(@track-color, @contrast);
-					border: @track-border-width solid @track-border-color;
-					border-radius: @track-radius*2;
-				}
-				&::-ms-fill-upper {
-					background: @track-color;
-					border: @track-border-width solid @track-border-color;
-					border-radius: @track-radius*2;
-				}
-				&::-ms-thumb {
-					.thumb();
-				}
-				&:focus::-ms-fill-lower {
-					background: @track-color;
-				}
-				&:focus::-ms-fill-upper {
-					background: lighten(@track-color, @contrast);
+					&:focus {
+						outline: none;
+					}
+
+					&::-webkit-slider-runnable-track {
+						.track();
+						background: @track-color;
+						border-radius: @track-radius;
+						border: @track-border-width solid @track-border-color;
+					}
+
+					&::-webkit-slider-thumb {
+						.thumb();
+						-webkit-appearance: none;
+						margin-top: ((-@track-border-width * 2 + @track-height) / 2) - (@thumb-size / 2);
+					}
+
+					&:focus::-webkit-slider-runnable-track {
+						background: lighten(@track-color, @contrast);
+					}
+
+					&::-moz-range-track {
+						.track();
+						background: @track-color;
+						border-radius: @track-radius;
+						border: @track-border-width solid @track-border-color;
+					}
+					&::-moz-range-thumb {
+						.thumb();
+					}
+
+					&::-ms-track {
+						.track();
+						background: transparent;
+						border-color: transparent;
+						border-width: @thumb-size 0;
+						color: transparent;
+					}
+
+					&::-ms-fill-lower {
+						background: darken(@track-color, @contrast);
+						border: @track-border-width solid @track-border-color;
+						border-radius: @track-radius*2;
+					}
+					&::-ms-fill-upper {
+						background: @track-color;
+						border: @track-border-width solid @track-border-color;
+						border-radius: @track-radius*2;
+					}
+					&::-ms-thumb {
+						.thumb();
+					}
+					&:focus::-ms-fill-lower {
+						background: @track-color;
+					}
+					&:focus::-ms-fill-upper {
+						background: lighten(@track-color, @contrast);
+					}
 				}
 			}
 		}

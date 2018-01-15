@@ -53,6 +53,14 @@ export class ImageProcessingControlComponent {
 		this.throttledManualImageProcess();
 	}
 
+	resetAll() {
+		Object.keys(this.imgProcessParams).forEach(key => {
+			this.imgProcessParams[key] = this._imgProcessParamDefaults[key];
+		});
+		this.throttledManualImageProcess();
+
+	}
+
 	close() {
 		this.expand = false;
 	}

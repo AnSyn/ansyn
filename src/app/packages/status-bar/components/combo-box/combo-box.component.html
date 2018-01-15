@@ -1,6 +1,8 @@
 <div class="combo-container">
 	<button
-		class="trigger" #optionsTrigger (click)="toggleShow()">
+		class="trigger" #optionsTrigger (click)="toggleShow()"
+		[attr.tooltip-value]="comboBoxToolTipDescription || null" tooltip-class="top"
+	>
 		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
 		<div [innerHTML]="render(selectedIndex)"></div>
 		<span class="arrow">

@@ -12,6 +12,7 @@ import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-sour
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multiple-source-provider';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 
 export const getProviders = (conf): any[] => {
@@ -69,7 +70,12 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: MenuConfig,
 			useValue: conf.menuConfig
+		},
+		{
+			provide: StatusBarConfig,
+			useValue: conf.statusBarConfig
 		}
+
 	];
 };
 

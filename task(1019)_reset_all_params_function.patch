@@ -1,0 +1,15 @@
+Index: src/app/packages/overlays/effects/overlays.effects.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/app/packages/overlays/effects/overlays.effects.ts	(revision 972d8fe60545f6a16adfca1e7d33fe7cef9deee5)
++++ src/app/packages/overlays/effects/overlays.effects.ts	(date 1516094998726)
+@@ -46,7 +46,6 @@
+ 			return { overlay: state.overlays.get(action.payload.id), mapId: action.payload.mapId };
+ 		})
+ 		.map(({ overlay, mapId }: any) => {
+-			console.log(overlay)
+ 			return new DisplayOverlayAction({ overlay, mapId });
+ 		}).share();
+ 

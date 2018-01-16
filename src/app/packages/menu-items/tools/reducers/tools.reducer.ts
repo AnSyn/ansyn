@@ -5,9 +5,9 @@ import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
 
 export interface AnnotationProperties {
-	strokeWidth: number;
-	strokeColor: string;
-	fillColor: string;
+	strokeWidth?: number;
+	strokeColor?: string;
+	fillColor?: string;
 }
 
 export interface IToolsState {
@@ -143,7 +143,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, manualImageProcessingParams: action.payload.processingParams };
 
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
-			return { ...state, annotationProperties: action.payload };
+			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		default:
 			return state;

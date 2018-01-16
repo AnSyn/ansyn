@@ -6,8 +6,8 @@
 		<div class="north">N</div>
 	</div>
 </div>
-
-<div tooltip-value="Click to Reset" tooltip-class="left" class="img-container">
+<!--tooltip-value="Click to Reset" tooltip-class="left"-->
+<div  class="img-container">
 	<img src="/assets/icons/map/compass.svg" (click)="toggleNorth()" (mousedown)="stopPropagation($event)"
 		 [style.transform]="'rotate(' + rotationAngle + 'rad)'"
 		 [style.cursor]="isRotating ? '' : 'pointer'"/>

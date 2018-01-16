@@ -1,8 +1,9 @@
-<div class="buttons">
-	<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
-		<i class="icon-context-menu-prev"></i>
-		Back to base map
-	</button>
+<div class="container">
+	<div class="buttons">
+		<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
+			<i class="icon-context-menu-prev"></i>
+			Back to base map
+		</button>
 
 	<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
 			class="small-icon-button link-maps"
@@ -35,21 +36,22 @@
 	</button>
 </div>
 
-<div class="description">
-	<div *ngIf="overlay">
-		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
-	</div>
-	<div *ngIf="!overlay">
-		Base Map
+	<div class="description">
+		<div *ngIf="overlay">
+			{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
+		</div>
+		<div *ngIf="!overlay">
+			Base Map
+		</div>
 	</div>
 </div>
-
 <div class="notification">
-	<div class="geo-registered" *ngIf="disableGeoOptions">
+	<div class="geo-registered" *ngIf="disableGeoOptions" [attr.tooltip-value]="'This Image Has No Geo-Registration'" tooltip-class="bottom"
+	>
 		This Image Has No Geo-Registration
 	</div>
 
-	<div class="not-from-case" *ngIf="notInCase">
+	<div class="not-from-case" *ngIf="notInCase" [attr.tooltip-value]="'This Overlay Is Not a Part of the Case'" tooltip-class="bottom">
 		This Overlay Is Not a Part of the Case
 	</div>
 </div>

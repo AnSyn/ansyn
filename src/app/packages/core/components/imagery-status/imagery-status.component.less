@@ -1,6 +1,5 @@
 @import "../../less/z-index-globals";
 @import "../../less/common";
-@import '../../less/tooltip';
 
 :host {
 	position: absolute;
@@ -20,7 +19,9 @@
 			background: rgba(0, 0, 0, 0.8);
 		}
 	}
-
+	.container {
+		display: flex;
+		min-width: 473px;
 	.buttons {
 		flex-shrink: 0;
 
@@ -76,7 +77,13 @@
 		}
 	}
 
+	}
 	.notification {
+
+		display: flex;
+		overflow: hidden;
+		width: 100%;
+
 		div {
 			padding: 0 5px;
 			font-size: 12px;

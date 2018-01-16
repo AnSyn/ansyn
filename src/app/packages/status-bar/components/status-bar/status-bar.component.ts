@@ -55,18 +55,35 @@ export class StatusBarComponent implements OnInit {
 	get selectedOrientationIndex(): number {
 		return this.orientations.indexOf(this.orientation);
 	}
+	_selectedOrientationIndex
+	set selectedOrientationIndex(value) {
+		this._selectedOrientationIndex = value
+
+	}
 
 	geoFilters: string[] = [];
 	geoFilter: string;
 	get selectedGeoFilterIndex(): number {
 		return this.geoFilters.indexOf(this.geoFilter);
 	}
+	_selectedGeoFilterIndex
+	set selectedGeoFilterIndex(value) {
+		this._selectedGeoFilterIndex = value
+
+	}
+
 	timeLines: string[] = ['Start - End'];
 	timeLine = 'Start - End';
 
 	get selectedTimeLineIndex(): number {
 		return this.timeLines.indexOf(this.timeLine);
 	}
+	_selectedTimeLineIndex
+	set selectedTimeLineIndex(value) {
+		this._selectedTimeLineIndex = value
+
+	}
+
 
 	flags: Map<string, boolean> = new Map<string, boolean>();
 	time: { from: Date, to: Date };

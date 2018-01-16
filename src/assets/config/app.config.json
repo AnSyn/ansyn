@@ -65,7 +65,8 @@
 				},
 				"time": null,
 				"facets": {
-					"filters": null
+					"filters": null,
+					"showOnlyFavorites": false
 				},
 				"geoFilter": "pin-point",
 				"orientation": "Align North",

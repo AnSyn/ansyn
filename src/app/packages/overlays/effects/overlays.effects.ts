@@ -48,7 +48,6 @@ export class OverlaysEffects {
 			return { overlay: state.overlays.get(action.payload.id), mapId: action.payload.mapId };
 		})
 		.map(({ overlay, mapId }: any) => {
-			console.log(overlay)
 			return new DisplayOverlayAction({ overlay, mapId });
 		}).share();
 

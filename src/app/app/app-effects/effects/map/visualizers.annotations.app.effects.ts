@@ -1,6 +1,7 @@
 import { Actions, Effect } from '@ngrx/effects';
 import {
-	AnnotationAgentRelevantMap, AnnotationVisualizerAgentAction, AnnotationVisualizerAgentPayload,
+	AnnotationAgentRelevantMap, AnnotationSetProperties, AnnotationVisualizerAgentAction,
+	AnnotationVisualizerAgentPayload,
 	SetAnnotationMode, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -18,6 +19,7 @@ import {
 import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
+import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -39,16 +41,7 @@ export class VisualizersAnnotationsAppEffects {
 		},
 		toggleDrawInteraction: (visualizer, { mode }: AnnotationVisualizerAgentPayload) => {
 			visualizer.toggleDrawInteraction(mode);
-		},
-		changeLine: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
-			visualizer.changeLine(value);
-		},
-		changeStrokeColor: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
-			visualizer.changeStroke(value);
-		},
-		changeFillColor: (visualizer, { value }: AnnotationVisualizerAgentPayload) => {
-			visualizer.changeFill(value);
-		},
+		}
 	};
 
 	layersState$ = this.store$.select(layersStateSelector);
@@ -71,6 +64,25 @@ export class VisualizersAnnotationsAppEffects {
 			annotationsVisualizers.forEach(visualizer => {
 				this.agentOperations[operation](visualizer, payload, layerState);
 			});
+		});
+
+	/**
+	 * @type Effect
+	 * @name annotationVisualizerAgent$
+	 * @ofType AnnotationVisualizerAgentAction
+	 * @dependencies layers, maps
+	 * @dispatch: false
+	 */
+	@Effect({ dispatch: false })
+	annotationSetProperties$: Observable<any> = this.actions$
+		.ofType<AnnotationSetProperties>(ToolsActionsTypes.ANNOTATION_SET_PROPERTIES)
+		.map(({ payload }) => payload)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.do(([{ fillColor, strokeWidth, strokeColor }, mapsState]: [AnnotationProperties, IMapState]) => {
+			const [activeVisualizers]: AnnotationsVisualizer[] = this.annotationVisualizers([mapsState.activeMapId]);
+			activeVisualizers.changeFill(fillColor);
+			activeVisualizers.changeLine(strokeWidth);
+			activeVisualizers.changeStroke(strokeColor);
 		});
 
 	/**

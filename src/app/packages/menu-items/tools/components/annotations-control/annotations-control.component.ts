@@ -3,18 +3,19 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { AnnotationVisualizerAgentAction, SetAnnotationMode } from '../../actions/tools.actions';
+import {
+	AnnotationSetProperties, AnnotationVisualizerAgentAction,
+	SetAnnotationMode
+} from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { AnnotationMode, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { AnnotationMode, AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 
 export interface ModeList {
 	mode: AnnotationMode;
 	icon: string;
 }
-export interface LineWidthList {
-	width: number;
-}
 
+export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
 
 @Component({
 	selector: 'ansyn-annotations-control',
@@ -23,17 +24,19 @@ export interface LineWidthList {
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	private _expand: boolean;
-	public lineWidthSelectionExpand: boolean;
-	public colorSelectionExpand: boolean;
+	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' }
+	public selectedBox: SelectionBoxTypes;
 
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
 		.distinctUntilChanged();
 
+	public annotationProperties$: Observable<AnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
+		.pluck<IToolsState, AnnotationProperties>('annotationProperties')
+		.distinctUntilChanged();
+
 	public mode: AnnotationMode;
-	public selectedStrokeWidthIndex = 0;
-	public selectedStrokeColor = '#27b2cfe6';
-	public selectedFillColor = 'white';
+	public annotationProperties: AnnotationProperties;
 
 	public modesList: ModeList[] = [
 		{ mode: 'Point', icon: 'point' },
@@ -44,22 +47,13 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		{ mode: 'Arrow', icon: 'arrow' }
 	];
 
-	public lineWidthList: LineWidthList[] = [
-		{ width: 1 },
-		{ width: 2 },
-		{ width: 3 },
-		{ width: 4 },
-		{ width: 5 },
-		{ width: 6 },
-		{ width: 7 }
-	];
+	public lineWidthList = [1, 2, 3, 4, 5, 6, 7];
 
 	@HostBinding('class.expand')
 	@Input()
 	set expand(value) {
 		if (!value) {
-			this.lineWidthSelectionExpand = false;
-			this.colorSelectionExpand = false;
+			this.selectedBox = undefined;
 		}
 		this._expand = value;
 	}
@@ -68,25 +62,16 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		return this._expand;
 	}
 
-	get selectedStrokeWidth() {
-		return this.lineWidthList[this.selectedStrokeWidthIndex];
-	}
-
 	constructor(public store: Store<any>, @Inject(DOCUMENT) public document: any) {
 	}
 
 	ngOnInit() {
 		this.mode$.subscribe(value => this.mode = value);
+		this.annotationProperties$.subscribe(value => this.annotationProperties = value);
 	}
 
-	toggleLineWidthSelection() {
-		this.colorSelectionExpand = false;
-		this.lineWidthSelectionExpand = !this.lineWidthSelectionExpand;
-	}
-
-	toggleColorSelection() {
-		this.lineWidthSelectionExpand = false;
-		this.colorSelectionExpand = !this.colorSelectionExpand;
+	toggleSelection(selected: SelectionBoxTypes) {
+		this.selectedBox = this.selectedBox === selected ? undefined : selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {
@@ -101,31 +86,16 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		element.getElementsByTagName('input')[0].click();
 	}
 
-	selectLineWidth(index) {
-		this.selectedStrokeWidthIndex = index;
-
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'changeLine',
-			value: this.selectedStrokeWidth.width,
-			relevantMaps: 'active'
-		}));
-
+	selectLineWidth(strokeWidth: number) {
+		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, strokeWidth }));
 	}
 
-	changeStrokeColor() {
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'changeStrokeColor',
-			value: this.selectedStrokeColor,
-			relevantMaps: 'active'
-		}));
+	changeStrokeColor(strokeColor: string) {
+		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, strokeColor }));
 	}
 
-	changeFillColor() {
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'changeFillColor',
-			value: this.selectedFillColor,
-			relevantMaps: 'active'
-		}));
+	changeFillColor(fillColor: string) {
+		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, fillColor }));
 	}
 
 	ngOnDestroy(): void {

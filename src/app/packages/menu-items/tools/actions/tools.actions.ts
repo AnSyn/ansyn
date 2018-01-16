@@ -1,16 +1,15 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import { AnnotationMode } from '../reducers/tools.reducer';
+import { AnnotationMode, AnnotationProperties } from '../reducers/tools.reducer';
 
-export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction' | 'changeLine' | 'changeStrokeColor' | 'changeFillColor';
+export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction';
 
 export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
 
 export interface AnnotationVisualizerAgentPayload {
 	operation: AnnotationAgentOperation;
 	relevantMaps: AnnotationAgentRelevantMap;
-	value?: any;
 	mode?: AnnotationMode;
 }
 
@@ -37,6 +36,7 @@ export const ToolsActionsTypes = {
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
+	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
 	FLAGS: {
 		ANNOTATION_OPEN: type('ANNOTATION_OPEN'),
@@ -226,6 +226,14 @@ export class AnnotationClose implements Action {
 	type = ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE;
 
 	constructor(public payload: boolean) {
+
+	}
+}
+
+export class AnnotationSetProperties implements Action {
+	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
+
+	constructor(public payload: AnnotationProperties) {
 
 	}
 }

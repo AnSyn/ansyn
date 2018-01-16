@@ -1,7 +1,14 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
+
+export interface AnnotationProperties {
+	strokeWidth: number;
+	strokeColor: string;
+	fillColor: string;
+}
 
 export interface IToolsState {
 	flags: Map<string, boolean>;
@@ -9,6 +16,7 @@ export interface IToolsState {
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
 	annotationMode: AnnotationMode;
+	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: Object;
 }
 
@@ -20,6 +28,11 @@ export const toolsInitialState: IToolsState = {
 	activeCenter: [0, 0],
 	gotoExpand: false,
 	annotationMode: undefined,
+	annotationProperties: {
+		strokeWidth: 1,
+		strokeColor: '#27b2cfe6',
+		fillColor: 'white'
+	},
 	manualImageProcessingParams: undefined
 };
 
@@ -128,6 +141,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS:
 			return { ...state, manualImageProcessingParams: action.payload.processingParams };
+
+		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
+			return { ...state, annotationProperties: action.payload };
 
 		default:
 			return state;

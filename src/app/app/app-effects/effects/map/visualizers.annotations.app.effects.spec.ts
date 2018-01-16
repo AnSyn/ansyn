@@ -19,13 +19,13 @@ import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { VisualizersAnnotationsAppEffects } from './visualizers.annotations.app.effects';
 import {
-	AnnotationAgentOperation, AnnotationAgentRelevantMap, AnnotationVisualizerAgentAction,
+	AnnotationSetProperties, AnnotationVisualizerAgentAction,
 	SetAnnotationMode
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ActiveMapChangedAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { AnnotationMode, AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 
 describe('VisualizersAnnotationsAppEffects', () => {
@@ -37,6 +37,17 @@ describe('VisualizersAnnotationsAppEffects', () => {
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
+
+	const fakeVisualizer = jasmine.createSpyObj([
+		'hide',
+		'changeStrokeWidth',
+		'changeStrokeColor',
+		'changeFillColor',
+		'removeDrawInteraction',
+		'toggleDrawInteraction',
+		'clearEntities',
+		'setEntities'
+	]);
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -74,46 +85,12 @@ describe('VisualizersAnnotationsAppEffects', () => {
 	}));
 
 	describe('@Effect annotationVisualizerAgent$ ', () => {
-		let fakeVisualizer;
 		let fakeComm;
 
 		beforeEach(() => {
-			fakeComm = jasmine.createSpyObj([
-				'getVisualizer'
-			]);
-
-			fakeVisualizer = jasmine.createSpyObj([
-				'hide',
-				'changeLine',
-				'changeStroke',
-				'changeFill',
-				'removeDrawInteraction',
-				'toggleDrawInteraction',
-				'clearEntities',
-				'setEntities'
-			]);
+			fakeComm = jasmine.createSpyObj([ 'getVisualizer' ]);
 			fakeComm.getVisualizer.and.returnValue(fakeVisualizer);
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => fakeComm);
-		});
-
-		const testActionOnMaps: { relevantMaps: AnnotationAgentRelevantMap, calledTimes: number }[] = [
-			{ relevantMaps: 'all', calledTimes: 3 },
-			{ relevantMaps: 'others', calledTimes: 2 },
-			{ relevantMaps: 'active', calledTimes: 1 }
-		];
-
-		testActionOnMaps.forEach(item => {
-			it(`check ${item.relevantMaps} maps are called`, () => {
-				const action = new AnnotationVisualizerAgentAction({
-					relevantMaps: item.relevantMaps,
-					operation: 'changeLine',
-					value: 'temp'
-				});
-				actions = hot('--a--', { a: action });
-				const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
-				expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-				expect(fakeVisualizer.changeLine).toHaveBeenCalledTimes(item.calledTimes);
-			});
 		});
 
 		it('check show action', () => {
@@ -124,11 +101,10 @@ describe('VisualizersAnnotationsAppEffects', () => {
 				}
 			];
 			layersState.annotationsLayer = <any> 'geoJsonObject';
-			spyOn(visualizersAnnotationsAppEffects, 'annotationsLayerToEntities').and.returnValue(entities)
+			spyOn(visualizersAnnotationsAppEffects, 'annotationsLayerToEntities').and.returnValue(entities);
 			const action = new AnnotationVisualizerAgentAction({
 				relevantMaps: 'all',
-				operation: 'show',
-				value: 'temp'
+				operation: 'show'
 			});
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
@@ -139,13 +115,13 @@ describe('VisualizersAnnotationsAppEffects', () => {
 
 		const testCreateInteraction: { mode: AnnotationMode }[] = [
 			{
-				mode: 'Rectangle',
+				mode: 'Rectangle'
 			},
 			{
-				mode: 'Arrow',
+				mode: 'Arrow'
 			},
 			{
-				mode: 'Circle',
+				mode: 'Circle'
 			}
 		];
 
@@ -163,27 +139,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			});
 		});
 
-		const testChangesActions: { operation: AnnotationAgentOperation, func: string }[] = [
-			{ operation: 'changeLine', func: 'changeLine' },
-			{ operation: 'changeStrokeColor', func: 'changeStroke' },
-			{ operation: 'changeFillColor', func: 'changeFill' }
-		];
-
-		testChangesActions.forEach(item => {
-			const value = 'temp';
-			it(`check ${item.operation} action`, () => {
-				const action = new AnnotationVisualizerAgentAction({
-					relevantMaps: 'all',
-					operation: item.operation,
-					value
-				});
-				actions = hot('--a--', { a: action });
-				const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
-				expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-				expect(fakeVisualizer[item.func]).toHaveBeenCalledWith(value);
-			});
-		});
-		
 		it('check remove layer', () => {
 			const action = new AnnotationVisualizerAgentAction({
 				relevantMaps: 'all',
@@ -196,6 +151,21 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		});
 	});
 
+	it('annotationSetProperties$ should update visualizer via fillColor, strokeColor and strokeWidth', () => {
+		spyOn(visualizersAnnotationsAppEffects, 'annotationVisualizers').and.callFake(() => [fakeVisualizer]);
+		// without fill color shouldn't change fill color
+		const payload: AnnotationProperties = {
+			strokeColor: 'red',
+			strokeWidth: 6,
+		};
+		actions = hot('--a--', { a: new AnnotationSetProperties(payload) });
+		const expectedResult = cold('--b--', { b: [payload, mapState] });
+		expect(visualizersAnnotationsAppEffects.annotationSetProperties$ ).toBeObservable(expectedResult);
+		expect(fakeVisualizer.changeStrokeWidth).toHaveBeenCalledWith(6);
+		expect(fakeVisualizer.changeStrokeColor).toHaveBeenCalledWith('red');
+		expect(fakeVisualizer.changeFillColor).not.toHaveBeenCalled();
+	});
+
 	it('drawAnnotationEnd$ should stringify the GeoJSON object and dispatch SetAnnotationsLayer', () => {
 		const geoJson = <any> { 'geo': 'json' };
 		layersState.annotationsLayer = {
@@ -204,8 +174,8 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		};
 		const expectedAnnotationLayer = {
 			type: 'FeatureCollection',
-			features: [geoJson ]
-		}
+			features: [geoJson]
+		};
 		actions = hot('--a--', { a: new AnnotationDrawEndAction(geoJson) });
 		const expectedResult = cold('--b--', { b: new SetAnnotationsLayer(<any>expectedAnnotationLayer) });
 		expect(visualizersAnnotationsAppEffects.drawAnnotationEnd$).toBeObservable(expectedResult);
@@ -246,7 +216,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		});
 	});
 
-	describe('class functions', () => {
+	describe('functions', () => {
 
 		describe('relevantMapIds should filter maps via "releventMaps" value("all, "others", "active")', () => {
 			const mapState = <IMapState> {

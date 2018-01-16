@@ -101,17 +101,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		originalEventTarget.addEventListener('contextmenu', callback);
 	}
 
-	changeStroke(color) {
+	changeStrokeColor(color) {
 		this.updateStyle({ initial: { stroke: { color } } });
 	}
 
-	changeFill(fillColor) {
+	changeFillColor(fillColor) {
 		const [r, g, b] = [...(<any>color).asArray(fillColor)];
 		const rgbaColor = (<any>color).asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
 		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
 	}
 
-	changeLine(width) {
+	changeStrokeWidth(width) {
 		this.updateStyle({ initial: { stroke: { width } } });
 	}
 

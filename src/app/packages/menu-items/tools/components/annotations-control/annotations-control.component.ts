@@ -87,15 +87,15 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	selectLineWidth(strokeWidth: number) {
-		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, strokeWidth }));
+		this.store.dispatch(new AnnotationSetProperties({ strokeWidth }));
 	}
 
 	changeStrokeColor(strokeColor: string) {
-		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, strokeColor }));
+		this.store.dispatch(new AnnotationSetProperties({ strokeColor }));
 	}
 
 	changeFillColor(fillColor: string) {
-		this.store.dispatch(new AnnotationSetProperties({ ...this.annotationProperties, fillColor }));
+		this.store.dispatch(new AnnotationSetProperties({ fillColor }));
 	}
 
 	ngOnDestroy(): void {

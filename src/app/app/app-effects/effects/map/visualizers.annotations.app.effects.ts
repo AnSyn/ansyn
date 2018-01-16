@@ -80,9 +80,16 @@ export class VisualizersAnnotationsAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.do(([{ fillColor, strokeWidth, strokeColor }, mapsState]: [AnnotationProperties, IMapState]) => {
 			const [activeVisualizers]: AnnotationsVisualizer[] = this.annotationVisualizers([mapsState.activeMapId]);
-			activeVisualizers.changeFill(fillColor);
-			activeVisualizers.changeLine(strokeWidth);
-			activeVisualizers.changeStroke(strokeColor);
+			if (fillColor) {
+				activeVisualizers.changeFillColor(fillColor);
+			}
+			if (strokeWidth) {
+				activeVisualizers.changeStrokeWidth(strokeWidth);
+			}
+			if (strokeColor) {
+				activeVisualizers.changeStrokeColor(strokeColor);
+			}
+
 		});
 
 	/**

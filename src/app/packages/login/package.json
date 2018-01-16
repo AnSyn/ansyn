@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/login",
-	"version": "0.2.5",
+	"version": "0.2.7",
 	"description": "overlays component to show data with graphic touch",
 	"main": "index.ts",
 	"scripts": {

@@ -54,9 +54,7 @@ export class ImageProcessingControlComponent {
 	}
 
 	resetAll() {
-		Object.keys(this.imgProcessParams).forEach(key => {
-			this.imgProcessParams[key] = this._imgProcessParamDefaults[key];
-		});
+		this.resetAllParams()
 		this.throttledManualImageProcess();
 
 	}

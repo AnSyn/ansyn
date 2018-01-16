@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/open-layers-map",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -12,6 +12,6 @@
 		"ol": "4.6.3",
 		"@angular/common": "5.1.2",
 		"@angular/core": "5.1.2",
-		"@ansyn/imagery": "0.2.7"
+		"@ansyn/imagery": "0.2.8"
 	}
 }

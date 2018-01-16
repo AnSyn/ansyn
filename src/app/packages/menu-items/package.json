@@ -1,10 +1,10 @@
 {
 	"name": "@ansyn/menu-items",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"peerDependencies": {
 		"@angular/common": "5.1.2",
 		"@angular/core": "5.1.2",
-		"@ansyn/core": "0.2.7"
+		"@ansyn/core": "0.2.8"
 	},
 	"license": "MIT"
 }

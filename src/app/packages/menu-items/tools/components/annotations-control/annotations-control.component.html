@@ -13,19 +13,18 @@
 
 	<li class="expanded-selection line-width-selection">
 
-		<button (click)="toggleLineWidthSelection()" [class.expand]="lineWidthSelectionExpand">
+		<button (click)="toggleSelection(SelectionBoxes.lineWidth)"
+				[class.expand]="selectedBox === SelectionBoxes.lineWidth">
 			<span class="icon-annotation-weight" tooltip-value="Width" tooltip-class="bottom"></span>
 		</button>
 
-		<ul *ngIf="lineWidthSelectionExpand"
-			#lineWidthSelection
-			class="line-width-expand">
+		<ul *ngIf="selectedBox === SelectionBoxes.lineWidth" class="line-width-expand">
 			<li
-				[class.selected]="index === selectedStrokeWidthIndex"
-				*ngFor="let line of lineWidthList; index as index"
-				(click)="selectLineWidth(index)">
+				*ngFor="let width of lineWidthList"
+				[class.selected]="width === annotationProperties.strokeWidth"
+				(click)="selectLineWidth(width)">
 				<svg height="20" width="20">
-					<line [style.stroke-width]="line.width" style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
+					<line [style.stroke-width]="width" style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
 				</svg>
 			</li>
 		</ul>
@@ -33,27 +32,29 @@
 	</li>
 
 	<li class="expanded-selection color-selection">
-		<button (click)="toggleColorSelection()"  [class.expand]="colorSelectionExpand">
+		<button (click)="toggleSelection(SelectionBoxes.colorPicker)"
+				[class.expand]="selectedBox === SelectionBoxes.colorPicker">
 			<span class="icon-annotation-color" tooltip-value="Color" tooltip-class="bottom"></span>
 		</button>
 
-		<ul *ngIf="colorSelectionExpand"
+		<ul *ngIf="selectedBox === SelectionBoxes.colorPicker"
 			class="color-selection-expand"
 			#colorSelection >
 
 			<li (click)="openColorInput($event)">
-				<span class="text">fill</span>
-				<span class="color" [style.background]="selectedFillColor"></span>
+				<span class="text">Fill</span>
+				<span class="color"  [style.background]="annotationProperties.fillColor">
+				</span>
 				<input type="color"
-					   [(ngModel)]="selectedFillColor"
-					   [ngModelOptions]="{standalone: true}"
-					   (ngModelChange)="changeFillColor()" title="fill"/>
+					   [value]="annotationProperties.fillColor"
+					   (change)="changeFillColor($event.target.value)" title="fill"/>
 			</li>
 			<li (click)="openColorInput($event)">
-				<span class="text">stroke</span>
-				<span class="color" [style.background]="selectedStrokeColor"></span>
-				<input type="color" [(ngModel)]="selectedStrokeColor" [ngModelOptions]="{standalone: true}"
-					   (ngModelChange)="changeStrokeColor()" title="stroke"/>
+				<span class="text">Stroke</span>
+				<span class="color" [style.background]="annotationProperties.strokeColor"></span>
+				<input type="color"
+					   [value]="annotationProperties.strokeColor"
+					   (change)="changeStrokeColor($event.target.value)" title="stroke"/>
 			</li>
 		</ul>
 	</li>

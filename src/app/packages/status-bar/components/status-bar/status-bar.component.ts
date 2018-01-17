@@ -94,7 +94,7 @@ export class StatusBarComponent implements OnInit {
 	goNextActive = false;
 
 	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTip;
+		return this.statusBarConfig.toolTips || {};
 	}
 
 	@HostListener('window:keydown', ['$event'])

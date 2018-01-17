@@ -7,7 +7,7 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { MapsLayout, coreStateSelector, ICoreState, Overlay } from '@ansyn/core'
-import { StatusBarConfig, IToolTipsConfig } from '../../models';
+import { StatusBarConfig, IToolTipsConfig, IStatusBarConfig } from '../../models';
 
 @Component({
 	selector: 'ansyn-status-bar',

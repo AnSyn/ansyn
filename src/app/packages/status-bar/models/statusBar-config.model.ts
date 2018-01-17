@@ -14,5 +14,5 @@ export interface IToolTipsConfig {
 }
 
 export interface IStatusBarConfig {
-	toolTip: IToolTipsConfig
+	toolTips: IToolTipsConfig
 }

@@ -116,10 +116,7 @@ describe('SliderFilterMetadata', () => {
 			const overlay: any = { value: 6.5 };
 
 			sliderFilterMetadata.initializeFilter({ start: 6, end: 7 });
-			const result: boolean = sliderFilterMetadata.filterFunc(overlay, {
-				key: 'value',
-				metadata: sliderFilterMetadata
-			});
+			const result: boolean = sliderFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeTruthy();
 		});
@@ -132,10 +129,7 @@ describe('SliderFilterMetadata', () => {
 			const overlay: any = { value: 7.5 };
 
 			sliderFilterMetadata.initializeFilter({ start: 6, end: 7 });
-			const result: boolean = sliderFilterMetadata.filterFunc(overlay, {
-				key: 'value',
-				metadata: sliderFilterMetadata
-			});
+			const result: boolean = sliderFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeFalsy();
 		});

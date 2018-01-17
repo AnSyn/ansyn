@@ -142,10 +142,7 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.updateMetadata('firstFeild');
 			const overlay: any = { value: 'firstFeild' };
 
-			const result: boolean = enumFilterMetadata.filterFunc(overlay, {
-				key: 'value',
-				metadata: enumFilterMetadata
-			});
+			const result: boolean = enumFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeTruthy();
 		});
@@ -161,10 +158,7 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.updateMetadata('firstFeild');
 			const overlay: any = { value: 'secondFeild' };
 
-			const result: boolean = enumFilterMetadata.filterFunc(overlay, {
-				key: 'value',
-				metadata: enumFilterMetadata
-			});
+			const result: boolean = enumFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeFalsy();
 		});
@@ -180,10 +174,7 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.updateMetadata('firstFeild');
 			const overlay: any = { value: 'fourthFeild' };
 
-			const result: boolean = enumFilterMetadata.filterFunc(overlay, {
-				key: 'value',
-				metadata: enumFilterMetadata
-			});
+			const result: boolean = enumFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeFalsy();
 		});

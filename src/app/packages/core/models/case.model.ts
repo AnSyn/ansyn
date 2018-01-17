@@ -2,6 +2,7 @@ import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 export interface Case {
 	readonly id?: string;
@@ -39,8 +40,20 @@ export interface CaseTimeState {
 	to: string
 }
 
+export interface CaseBooleanFilterMetadata {
+	displayTrue: boolean;
+	displayFalse: boolean;
+}
+
+export type CaseFilterMetadata = CaseBooleanFilterMetadata | any;
+
+export interface CaseFilter {
+	fieldName: string;
+	metadata: CaseFilterMetadata;
+}
+
 export interface CaseFacetsState {
-	filters: { fieldName: string, metadata: any }[];
+	filters: CaseFilter[];
 	showOnlyFavorites?: boolean;
 }
 

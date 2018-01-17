@@ -176,19 +176,15 @@ export class FiltersAppEffects {
 	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {
 		const parsedFilters = Array.from(filters.filters)
 			.map(([key, value]) => ({
-				filteringParams: {
-					key: key.modelName,
-					metadata: value
-				},
-				filterFunc: value.filterFunc
+				key: key.modelName,
+				filterFunc: value.filterFunc.bind(value)
 			}));
 		const favorites = favoriteOverlays.map(overlay => overlay.id);
 		if (filters.showOnlyFavorites) {
-			// display favorites (always displayed)
 			return favorites;
 		} else {
-			// display favorites + filtered overlays
-			return union(favorites, OverlaysService.filter(overlays, parsedFilters));
+			const filteredOvelrays = OverlaysService.filter(overlays, parsedFilters);
+			return union(favorites, filteredOvelrays);
 		}
 	}
 }

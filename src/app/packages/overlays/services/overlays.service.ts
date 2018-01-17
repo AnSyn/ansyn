@@ -16,7 +16,7 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string, Overlay>, filters: { filteringParams: any, filterFunc: (ovrelay: any, filteringParams: any) => boolean }[]): string[] {
+	static filter(overlays: Map<string, Overlay>, filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[]): string[] {
 		if (isNil(overlays)) {
 			return [];
 		}
@@ -28,7 +28,7 @@ export class OverlaysService {
 
 		}
 		overlays.forEach(overlay => {
-			if (filters.every(filter => filter.filterFunc(overlay, filter.filteringParams))) {
+			if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
 				overlaysData.push(overlay.id);
 			}
 		});

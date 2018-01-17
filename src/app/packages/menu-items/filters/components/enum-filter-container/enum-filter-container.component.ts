@@ -1,5 +1,5 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-enum-filter-container',
@@ -10,9 +10,6 @@ export class EnumFilterContainerComponent {
 
 	@Input() metadata: EnumFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
-
-	constructor(protected myElement: ElementRef) {
-	}
 
 	onInputClicked(key: string) {
 		const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);

@@ -2,6 +2,7 @@
 	<button
 		class="trigger" #optionsTrigger (click)="toggleShow()"
 		[attr.tooltip-value]="comboBoxToolTipDescription || null" tooltip-class="top"
+		[class.active]="optionsVisible"
 	>
 		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
 		<div [innerHTML]="render(selectedIndex)"></div>

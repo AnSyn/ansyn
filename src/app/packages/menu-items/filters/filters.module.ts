@@ -16,6 +16,7 @@ import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
 import { SliderModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { SliderFilterContainerComponent } from './components/slider-filter-container/slider-filter-container.component';
+import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
 
 @NgModule({
 	imports: [
@@ -33,7 +34,8 @@ import { SliderFilterContainerComponent } from './components/slider-filter-conta
 		MapIteratorPipe,
 		EnumFilterContainerComponent,
 		SliderFilterContainerComponent,
-		SortPipe],
+		SortPipe,
+		BooleanFilterContainerComponent],
 	entryComponents: [FiltersCollectionComponent],
 	providers: [FiltersService]
 })

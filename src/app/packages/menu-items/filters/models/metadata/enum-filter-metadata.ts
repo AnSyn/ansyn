@@ -1,13 +1,18 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { Filter } from '../filter';
 
+export interface EnumFiled {
+	count: number;
+	isChecked: boolean;
+}
+
 export class EnumFilterMetadata implements FilterMetadata {
 
-	enumsFields: Map<string, { count: number, isChecked: boolean }>;
+	enumsFields: Map<string, EnumFiled>;
 	type: string;
 
 	constructor() {
-		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
+		this.enumsFields = new Map<string, EnumFiled>();
 		this.type = 'Enum';
 	}
 
@@ -18,7 +23,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	selectOnly(selectedKey: string): void {
-		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+		this.enumsFields.forEach((value: EnumFiled, key: string) => {
 			value.isChecked = (key === selectedKey);
 		});
 	}
@@ -32,7 +37,6 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	initializeFilter(selectedValues: string[]): void {
-
 		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
 		if (selectedValues) {
 			for (let key of selectedValues) {
@@ -72,18 +76,18 @@ export class EnumFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	filterFunc(overlay: any, filteringParams: { key: string, metadata: EnumFilterMetadata }): boolean {
+	filterFunc(overlay: any, key: string): boolean {
 		if (!overlay) {
 			return false;
 		}
 		const selectedFields: string[] = [];
-		filteringParams.metadata.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
 			if (value.isChecked) {
 				selectedFields.push(key);
 			}
 		});
 
-		return selectedFields.some((filterParams) => overlay[filteringParams.key] === filterParams);
+		return selectedFields.some((filterParams) => overlay[key] === filterParams);
 	}
 
 	getMetadataForOuterState(): string[] {
@@ -99,11 +103,11 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: { count: number, isChecked: boolean }) => !value.isChecked);
+		return Array.from(this.enumsFields.values()).some((value: EnumFiled) => !value.isChecked);
 	}
 
 	showAll(): void {
-		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+		this.enumsFields.forEach((value: EnumFiled) => {
 			value.isChecked = true;
 		});
 	}

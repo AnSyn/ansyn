@@ -1,5 +1,6 @@
 export interface Filter {
 	modelName: string;
 	displayName: string;
-	type: 'Enum' | 'Slider';
+	type: 'Enum' | 'Slider' | 'Boolean';
+	customData: any;
 }

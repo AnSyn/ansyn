@@ -380,7 +380,6 @@ export class VisualizersAppEffects {
 			const communicatorHandler = this.imageryCommunicatorService.provide(mapId);
 
 			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
-			console.log(selectedMap.data.overlay);
 			vis.setReferenceDate(action instanceof DisplayOverlaySuccessAction ? selectedMap.data.overlay.date : null);
 		});
 

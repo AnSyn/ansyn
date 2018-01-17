@@ -35,6 +35,7 @@ import {
 } from './overlay-source-providers/multiple-source-provider';
 import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-provider2';
 import { OpenLayerIDAHO2SourceProvider } from './map-source-providers/open-layers-IDAHO2-source-provider';
+import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 @NgModule({
 	imports: [
@@ -127,8 +128,8 @@ import { OpenLayerIDAHO2SourceProvider } from './map-source-providers/open-layer
 		},
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true }
-
+		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
+		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true }
 	]
 })
 export class AppProvidersModule {

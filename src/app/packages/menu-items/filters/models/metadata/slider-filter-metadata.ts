@@ -46,9 +46,9 @@ export class SliderFilterMetadata implements FilterMetadata {
 	postInitializeFilter(value: any): void {
 	}
 
-	filterFunc(overlay: any, filteringParams: { key: string, metadata: SliderFilterMetadata }): boolean {
-		return overlay[filteringParams.key] >= filteringParams.metadata.start &&
-			overlay[filteringParams.key] <= filteringParams.metadata.end;
+	filterFunc(overlay: any, key: string): boolean {
+		return overlay[key] >= this.start &&
+			overlay[key] <= this.end;
 	}
 
 	getMetadataForOuterState(): { start: number, end: number } {

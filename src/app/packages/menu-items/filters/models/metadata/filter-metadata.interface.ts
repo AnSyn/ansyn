@@ -1,7 +1,9 @@
+import { Filter } from '../filter';
+
 export abstract class FilterMetadata {
 	type: string;
 
-	abstract initializeFilter(value: any): void;
+	abstract initializeFilter(value: any, filter?: Filter): void;
 
 	abstract accumulateData(value: any): void;
 

@@ -27,6 +27,13 @@
 				[metadata]="metadataFromState"
 				(onMetadataChange)="onMetadataChange($event)">
 			</ansyn-slider-filter-container>
+
+			<ansyn-boolean-filter-container
+				*ngSwitchCase="'Boolean'"
+				[metadata]="metadataFromState"
+				[customData]="filter.customData"
+				(onMetadataChange)="onMetadataChange($event)">
+			</ansyn-boolean-filter-container>
 		</div>
 	</div>
 

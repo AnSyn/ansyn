@@ -25,8 +25,9 @@ import {
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ActiveMapChangedAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationMode, AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 describe('VisualizersAnnotationsAppEffects', () => {
 	let visualizersAnnotationsAppEffects: VisualizersAnnotationsAppEffects;

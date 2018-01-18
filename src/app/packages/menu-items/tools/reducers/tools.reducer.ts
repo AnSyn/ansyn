@@ -1,8 +1,7 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
-
-export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
+import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 export interface AnnotationProperties {
 	strokeWidth?: number;

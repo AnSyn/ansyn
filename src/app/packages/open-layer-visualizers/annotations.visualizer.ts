@@ -7,18 +7,18 @@ import color from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
+import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
+import olPolygon from 'ol/geom/polygon';
 import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
 import VectorLayer from 'ol/layer/vector';
 import SourceVector from 'ol/source/vector';
-import olPolygon from 'ol/geom/polygon';
-import olFeature from 'ol/feature';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
-import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from './models/visualizer-state';
+import { AnnotationMode, AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
@@ -28,12 +28,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	isHideable = true;
 	disableCache = true;
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
-	public namePrefix = 'Annotate-';
+	public mode: AnnotationMode;
 
-	contextMenuSource = new SourceVector({features: []});
+	contextMenuFeature = new OLFeature(new olPolygon([[0, 0]]));
 
 	contextMenuLayer = new VectorLayer({
-		source: this.contextMenuSource,
+		source: new SourceVector({features: [this.contextMenuFeature]}),
 	});
 
 	get drawEndPublisher() {
@@ -102,20 +102,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [selectedFeature] = data.selected;
 		let pixels = this.getFeaturePositionInPixels({ selectedFeature, originalEventTarget });
 		const { id } = selectedFeature.getProperties();
-		const a = selectedFeature.getGeometry().getExtent();
-
-
-		const extentFeature = new olFeature(new olPolygon([a]));
-		this.contextMenuSource.addFeature(extentFeature)
-		// const contextMenuEvent: AnnotationsContextMenuEvent = {
-		// 	featureId: id,
-		// 	pixels
-		// };
+		const contextMenuEvent: AnnotationsContextMenuEvent = {
+			featureId: id,
+			pixels
+		};
 		const callback = event => {
 			event.stopPropagation();
 			event.preventDefault();
 			originalEventTarget.removeEventListener('contextmenu', callback);
-			// this.contextMenuHandler.emit(contextMenuEvent);
+			this.contextMenuHandler.emit(contextMenuEvent);
 		};
 		originalEventTarget.addEventListener('contextmenu', callback);
 	}
@@ -134,65 +129,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.updateStyle({ initial: { stroke: { width } } });
 	}
 
-	arrowLinesToPixels(selectedFeature) {
-		const { style } = selectedFeature.getProperties();
-		const mainExtent = selectedFeature.getGeometry().getExtent();
-		const mainLine = this.getExtentAsPixels(mainExtent).map(pair => pair.map(Math.round));
-		const arrowStyles = this.arrowStyle(selectedFeature, style);
-
-		const line1Extent = arrowStyles[1].getGeometry().getExtent();
-		const line1 = this.getExtentAsPixels(line1Extent).map(pair => pair.map(Math.round));
-
-		const line2Extent = arrowStyles[2].getGeometry().getExtent();
-		const line2 = this.getExtentAsPixels(line2Extent).map(pair => pair.map(Math.round));
-
-		const points = mainLine.concat(line1).concat(line2);
-		let width = 0, height = 0, top = Infinity, left = Infinity;
-
-		points.forEach(point1 => {
-			if (point1[0] < left) {
-				left = point1[0];
-			}
-
-			if (point1[1] < top) {
-				top = point1[1];
-			}
-
-			points.forEach(point2 => {
-				const horizontal = Math.abs(point1[0] - point2[0]);
-				if (horizontal > width) {
-					width = horizontal;
-				}
-
-				const vertical = Math.abs(point1[1] - point2[1]);
-				if (vertical > height) {
-					height = vertical;
-				}
-			});
-		});
-
-		return { top, left, width, height };
-	}
-
 	getFeaturePositionInPixels({ selectedFeature, originalEventTarget }) {
 		const boundingRect = originalEventTarget.getBoundingClientRect();
-		const { geometryName } = selectedFeature.getProperties();
 		let pixels;
-
-		if (geometryName === 'Annotate-Arrow') {
-			pixels = this.arrowLinesToPixels(selectedFeature);
-			pixels.top += boundingRect.top;
-			pixels.left += boundingRect.left;
-		} else {
-			const extent = selectedFeature.getGeometry().getExtent();
-			pixels = this.getExtentAsPixels(extent);
-			pixels = {
-				left: pixels[0][0] + boundingRect.left,
-				top: pixels[1][1] + boundingRect.top,
-				width: pixels[1][0] - pixels[0][0],
-				height: pixels[0][1] - pixels[1][1]
-			};
-		}
+		const extent = selectedFeature.getGeometry().getExtent();
+		pixels = this.getExtentAsPixels(extent);
+		pixels = {
+			left: pixels[0][0] + boundingRect.left,
+			top: pixels[1][1] + boundingRect.top,
+			width: pixels[1][0] - pixels[0][0],
+			height: pixels[0][1] - pixels[1][1]
+		};
 		return pixels;
 	}
 
@@ -206,7 +153,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.removeDrawInteraction();
 		const geometry = feature.getGeometry();
-		const geometryName = feature.getGeometryName();
 		const featureProjection = this.iMap.mapObject.getView().getProjection();
 		let cloneGeometry = <any> geometry.clone();
 
@@ -218,8 +164,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		feature.setProperties({
 			id: Date.now(),
-			style: cloneDeep(this.visualizerStyle),
-			geometryName
+			style: cloneDeep(this.visualizerStyle)
 		});
 
 		const geoJsonFeature = <Feature<any>> this.geoJsonFormat.writeFeatureObject(feature, {
@@ -234,19 +179,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
 	}
 
-	toggleDrawInteraction(type: AnnotationMode) {
-		const currentGeometryName = this.drawInteractionHandler && (<any> this.drawInteractionHandler).geometryName_;
-		const geometryName = `${this.namePrefix}${type}`;
+	toggleDrawInteraction(mode: AnnotationMode) {
+		this.mode = mode === this.mode ? undefined : mode;
 		this.removeDrawInteraction();
 
-		if (!type || currentGeometryName === geometryName) {
+		if (!this.mode) {
 			return;
 		}
 
 		const drawInteractionHandler = new Draw({
-			type: type === 'Rectangle' ? 'Circle' : type === 'Arrow' ? 'LineString' : type,
-			geometryFunction: type === 'Rectangle' ? (<any>Draw).createBox(4) : undefined,
-			geometryName,
+			type: mode === 'Rectangle' ? 'Circle' : mode === 'Arrow' ? 'LineString' : mode,
+			geometryFunction: mode === 'Rectangle' ? (<any>Draw).createBox(4) : mode === 'Arrow' ? this.arrowGeometryFunction : undefined,
 			condition: (event) => event.originalEvent.which === 1,
 			style: (feature) => this.featureStyle(feature)
 		});
@@ -255,54 +198,26 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
-	arrowStyle(feature, stroke) {
-		const geometry = feature.getGeometry();
-		stroke = new Stroke(stroke);
-		const styles = [new Style({ stroke })];
-		const cordinates = geometry.getCoordinates();
-		const start = cordinates[cordinates.length - 2];
-		const end = cordinates[cordinates.length - 1];
-		const dx = end[0] - start[0];
-		const dy = end[1] - start[1];
-		const rotation = Math.atan2(dy, dx);
-		const lineLength = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		const factor = lineLength * 0.1;
-
-		if (!isNaN(rotation) && !isNaN(factor) && !isNaN(lineLength)) {
+	arrowGeometryFunction(coordinates, opt_geometry) {
+		let geometry = opt_geometry;
+		if (opt_geometry) {
+			const start = coordinates[coordinates.length - 2];
+			const end = coordinates[coordinates.length - 1];
+			const dx = end[0] - start[0];
+			const dy = end[1] - start[1];
+			const rotation = Math.atan2(dy, dx);
+			const lineLength = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+			const factor = lineLength * 0.1;
 			const lineStr1 = new LineString([end, [end[0] - factor, end[1] + factor]]);
-			lineStr1.rotate(rotation, end);
-			styles.push(new Style({
-				geometry: lineStr1,
-				stroke
-			}));
 			const lineStr2 = new LineString([end, [end[0] - factor, end[1] - factor]]);
+			lineStr1.rotate(rotation, end);
 			lineStr2.rotate(rotation, end);
-			styles.push(new Style({
-				geometry: lineStr2,
-				stroke
-			}));
+			geometry.setCoordinates([coordinates, lineStr1.getCoordinates(), lineStr2.getCoordinates()]);
 		} else {
-			return feature.getStyle();
+			geometry = new MultiLineString([coordinates]);
 		}
-
-		return styles;
+		return geometry
 	}
 
-	featureStyle(feature: OLFeature) {
-		const geometry = feature.getGeometry();
-		let { geometryName, style } = feature.getProperties();
-		if (!geometryName) {
-			geometryName = this.drawInteractionHandler.geometryName_;
-		}
-		if (!style) {
-			style = this.visualizerStyle;
-		}
-		const { stroke } = style[VisualizerStates.INITIAL];
-		if (geometry instanceof LineString && geometryName === `${this.namePrefix}Arrow`) {
-			return this.arrowStyle(feature, stroke);
-		} else {
-			return super.featureStyle(feature);
-		}
-	}
 
 }

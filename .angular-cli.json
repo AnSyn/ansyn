@@ -23,6 +23,11 @@
 			"styles": [
 				"./styles/styles.less"
 			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/packages"
+				]
+			},
 			"scripts": [
 			],
 			"environmentSource": "configuration/configuration.ts",
@@ -51,6 +56,11 @@
 			"styles": [
 				"./styles/styles.less"
 			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/packages"
+				]
+			},
 			"scripts": [
 			],
 			"environmentSource": "configuration/configuration.ts",

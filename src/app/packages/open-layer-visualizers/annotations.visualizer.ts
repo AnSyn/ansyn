@@ -10,7 +10,10 @@ import LineString from 'ol/geom/linestring';
 import GeomPolygon from 'ol/geom/polygon';
 import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import VectorLayer from 'ol/layer/vector';
+import SourceVector from 'ol/source/vector';
+import olPolygon from 'ol/geom/polygon';
+import olFeature from 'ol/feature';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { AnnotationMode } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Feature } from 'geojson';
@@ -26,6 +29,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public namePrefix = 'Annotate-';
+
+	contextMenuSource = new SourceVector({features: []});
+
+	contextMenuLayer = new VectorLayer({
+		source: this.contextMenuSource,
+	});
 
 	get drawEndPublisher() {
 		return this.events.get(VisualizerEvents.drawEndPublisher);
@@ -82,21 +91,31 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return contextMenuInteraction;
 	}
 
+	initLayers() {
+		super.initLayers();
+		this.iMap.mapObject.addLayer(this.contextMenuLayer);
+	}
+
 	onSelectFeature(data) {
 		const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
 		let pixels = this.getFeaturePositionInPixels({ selectedFeature, originalEventTarget });
 		const { id } = selectedFeature.getProperties();
-		const contextMenuEvent: AnnotationsContextMenuEvent = {
-			featureId: id,
-			pixels
-		};
+		const a = selectedFeature.getGeometry().getExtent();
+
+
+		const extentFeature = new olFeature(new olPolygon([a]));
+		this.contextMenuSource.addFeature(extentFeature)
+		// const contextMenuEvent: AnnotationsContextMenuEvent = {
+		// 	featureId: id,
+		// 	pixels
+		// };
 		const callback = event => {
 			event.stopPropagation();
 			event.preventDefault();
 			originalEventTarget.removeEventListener('contextmenu', callback);
-			this.contextMenuHandler.emit(contextMenuEvent);
+			// this.contextMenuHandler.emit(contextMenuEvent);
 		};
 		originalEventTarget.addEventListener('contextmenu', callback);
 	}

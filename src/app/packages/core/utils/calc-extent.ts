@@ -14,7 +14,7 @@ export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Poly
 		'geometry': footprint
 	};
 
-	return bbox(footprintFeature);
+	return <any>bbox(<any>footprintFeature);
 }
 
 export function extentToPolygon(extent: CaseMapExtent) {
@@ -40,7 +40,7 @@ export function isExtentContainedInPolygon(extent: CaseMapExtent, footprint: Geo
 	};
 
 	const centerPoint = center(extentPoly);
-	return inside(centerPoint, footprintFeature);
+	return inside(centerPoint, <any>footprintFeature);
 }
 
 export function getFootprintIntersectionRatioInExtent(extent: CaseMapExtent, footprint: GeoJSON.MultiPolygon): number {

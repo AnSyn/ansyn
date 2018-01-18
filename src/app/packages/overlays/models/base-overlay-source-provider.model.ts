@@ -2,7 +2,6 @@ import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
-import { Feature } from 'geojson';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
@@ -14,7 +13,7 @@ export interface DateRange {
 
 export interface IFetchParams {
 	limit: number;
-	region: GeoJSON.DirectGeometryObject;
+	region: GeoJSON.GeoJsonObject;
 	sensors?: string[];
 	timeRange: DateRange;
 }

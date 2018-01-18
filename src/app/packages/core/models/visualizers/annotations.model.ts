@@ -7,3 +7,5 @@ export interface AnnotationsContextMenuEvent {
 		height: number
 	};
 }
+
+export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;

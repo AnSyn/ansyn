@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import { AnnotationMode, AnnotationProperties } from '../reducers/tools.reducer';
+import { AnnotationProperties } from '../reducers/tools.reducer';
+import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction';
 

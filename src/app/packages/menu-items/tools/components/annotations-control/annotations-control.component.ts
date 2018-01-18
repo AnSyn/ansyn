@@ -8,7 +8,8 @@ import {
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { AnnotationMode, AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 export interface ModeList {
 	mode: AnnotationMode;

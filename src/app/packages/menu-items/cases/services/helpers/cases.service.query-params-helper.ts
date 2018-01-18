@@ -6,7 +6,6 @@ import * as wellknown from 'wellknown';
 import * as rison from 'rison';
 import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
-import { Point } from 'geojson';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
 import { CaseState } from '@ansyn/core/models/case.model';
@@ -65,7 +64,7 @@ export class QueryParamsHelper {
 							const geoJsonGeomtry: GeoJSON.GeoJsonObject = <GeoJSON.GeoJsonObject>wellknown.parse(geometryString);
 
 							if (geoJsonGeomtry.type === 'Point') {
-								const geoPoint: Point = <Point>geoJsonGeomtry;
+								const geoPoint: GeoJSON.Point = <any>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
 								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;

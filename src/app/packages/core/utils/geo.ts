@@ -1,4 +1,3 @@
-import { FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
 import { feature, point } from '@turf/helpers';
 import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
@@ -14,16 +13,16 @@ export function getPolygonByPointAndRadius(lonLat: number[], radius = 0.001): Ge
 	return bboxPolygon(bbox(circle(tPoint, radius)));
 }
 
-export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {
+export function getPointByGeometry(geometry: GeoJSON.GeometryObject | GeoJSON.FeatureCollection<any>): GeoJSON.Point {
 	if (geometry.type === 'FeatureCollection') {
-		return <Point>centerOfMass(<FeatureCollection<any>>geometry).geometry;
+		return <GeoJSON.Point>centerOfMass(<any>geometry).geometry;
 	}
 	else {
-		return <Point>centerOfMass(feature(<GeometryObject>geometry)).geometry;
+		return <GeoJSON.Point>centerOfMass(feature(<GeoJSON.GeometryObject>geometry)).geometry;
 	}
 }
 
-export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
+export function geojsonMultiPolygonToPolygon(multiPolygon: GeoJSON.MultiPolygon): GeoJSON.Polygon {
 	if (!multiPolygon) {
 		return null;
 	}
@@ -34,7 +33,7 @@ export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygo
 	};
 }
 
-export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
+export function geojsonPolygonToMultiPolygon(polygon: GeoJSON.Polygon): GeoJSON.MultiPolygon {
 	if (!polygon) {
 		return null;
 	}

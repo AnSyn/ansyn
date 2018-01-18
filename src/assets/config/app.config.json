@@ -200,7 +200,7 @@
 		"active": false
 	},
 	"statusBarConfig": {
-		"toolTip": {
+		"toolTips": {
 			"orientation": "Overlay orientation",
 			"geoFilter": "Geo filter",
 			"geoFilterEdit": "Edit Geo filter",

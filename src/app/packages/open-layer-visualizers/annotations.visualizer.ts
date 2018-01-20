@@ -1,9 +1,8 @@
-import { EntitiesVisualizer, VisualizerStates } from './entities-visualizer';
+import { EntitiesVisualizer } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
-import Style from 'ol/style/style';
-import Stroke from 'ol/style/stroke';
 import Select from 'ol/interaction/select';
 import color from 'ol/color';
+import olExtent from 'ol/extent';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
@@ -14,11 +13,15 @@ import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
 import VectorLayer from 'ol/layer/vector';
 import SourceVector from 'ol/source/vector';
+import condition from 'ol/events/condition';
+import Style from 'ol/style/style';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { AnnotationMode, AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationsContextMenuEvent } from '@ansyn/core';
+import { toDegrees } from '@ansyn/core/utils/math';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
@@ -30,11 +33,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public mode: AnnotationMode;
 
-	contextMenuFeature = new OLFeature(new olPolygon([[0, 0]]));
+	contextMenuSource = new SourceVector();
 
 	contextMenuLayer = new VectorLayer({
-		source: new SourceVector({features: [this.contextMenuFeature]}),
+		source: this.contextMenuSource
 	});
+
+	get mapRotation(): number {
+		return this.iMap.mapObject.getView().getRotation();
+	}
 
 	get drawEndPublisher() {
 		return this.events.get(VisualizerEvents.drawEndPublisher);
@@ -85,9 +92,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const contextMenuInteraction = new Select({
 			condition,
 			layers: [this.vector],
+			// style:  this.featureStyle.bind(this),
 			hitTolerance: 10
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
+
 		return contextMenuInteraction;
 	}
 
@@ -100,11 +109,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
-		let pixels = this.getFeaturePositionInPixels({ selectedFeature, originalEventTarget });
+		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: AnnotationsContextMenuEvent = {
 			featureId: id,
-			pixels
+			boundingRect
 		};
 		const callback = event => {
 			event.stopPropagation();
@@ -129,24 +138,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.updateStyle({ initial: { stroke: { width } } });
 	}
 
-	getFeaturePositionInPixels({ selectedFeature, originalEventTarget }) {
-		const boundingRect = originalEventTarget.getBoundingClientRect();
-		let pixels;
+	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
+		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
-		pixels = this.getExtentAsPixels(extent);
-		pixels = {
-			left: pixels[0][0] + boundingRect.left,
-			top: pixels[1][1] + boundingRect.top,
-			width: pixels[1][0] - pixels[0][0],
-			height: pixels[0][1] - pixels[1][1]
-		};
-		return pixels;
+		const  [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
+		const width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
+		const height = Math.sqrt(Math.pow(y2 - y3, 2) + Math.pow(x2 - x3, 2));
+		return { left: x4 , top: y4 , width, height, rotation };
 	}
 
-	getExtentAsPixels(extent) {
-		return [this.iMap.mapObject.getPixelFromCoordinate([extent[0], extent[1]]),
-			this.iMap.mapObject.getPixelFromCoordinate([extent[2], extent[3]])
-		];
+	getExtentAsPixels([x1, y1, x2, y2]) {
+		const bottomLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y1]);
+		const bottomRight = this.iMap.mapObject.getPixelFromCoordinate([x2, y1]);
+		const topRight = this.iMap.mapObject.getPixelFromCoordinate([x2, y2]);
+		const topLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y2]);
+		return [bottomLeft, bottomRight, topRight, topLeft];
 	}
 
 	onDrawEndEvent({ feature }) {
@@ -216,7 +222,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		} else {
 			geometry = new MultiLineString([coordinates]);
 		}
-		return geometry
+		return geometry;
 	}
 
 

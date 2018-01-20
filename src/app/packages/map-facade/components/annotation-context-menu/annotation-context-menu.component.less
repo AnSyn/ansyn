@@ -4,10 +4,11 @@
 :host {
 	.context-menu-wrapper {
 		z-index: @z-index-annotation-cotext-menu;
-		position: fixed;
+		position: absolute;
 		outline: 2px dashed #27B2CF;
 		outline-offset: 10px;
 		visibility: hidden;
+		transform-origin: left top;
 		.remove-feature-wrapper {
 			position: absolute;
 			width: 20px;

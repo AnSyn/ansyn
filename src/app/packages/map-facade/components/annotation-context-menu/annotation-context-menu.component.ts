@@ -30,12 +30,13 @@ export class AnnotationContextMenuComponent {
 
 		this.mapEffect.annotationContextMenuTrigger$.subscribe((action: AnnotationContextMenuTriggerAction) => {
 			this.action = action;
-			const { pixels } = this.action.payload;
+			const { boundingRect } = <any> this.action.payload;
 			this.contextMenuWrapperStyle = {
-				top: `${pixels.top}px`,
-				left: `${pixels.left}px`,
-				width: `${pixels.width}px`,
-				height: `${pixels.height}px`
+				top: `${boundingRect.top}px`,
+				left: `${boundingRect.left}px`,
+				width: `${boundingRect.width}px`,
+				height: `${boundingRect.height}px`,
+				transform: `rotate(${boundingRect.rotation}deg)`
 			};
 
 			this.host.nativeElement.focus();

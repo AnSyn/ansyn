@@ -338,20 +338,15 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = view.calculateExtent();
-		let isExtentValid = true;
-		if (transformExtent) {
-			transformExtent.forEach((extentValue) => {
-				if (isNaN(extentValue)) {
-					isExtentValid = false;
-				}
-			});
-		} else {
-			isExtentValid = false;
-		}
 
+		if (!transformExtent) {
+			return null;
+		}
+		const isExtentValid = !transformExtent.some((extentValue) => isNaN(extentValue));
 		if (!isExtentValid) {
 			return null;
 		}
+
 		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
 		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
 		const resolutionData = this.getResolutionData();

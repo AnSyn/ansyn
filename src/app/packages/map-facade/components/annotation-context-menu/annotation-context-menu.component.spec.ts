@@ -46,14 +46,14 @@ describe('AnnotationContextMenuComponent', () => {
 
 		it(`check Circle annotation shape`, () => {
 			const actionPayload = {
-				featureId: 'featureId',
 				payload: {
-					geometryName: `Annotate-Circle`,
-					pixels: {
+					featureId: 'featureId',
+					boundingRect: {
 						top: 100,
 						height: 100,
 						left: 100,
-						width: 100
+						width: 100,
+						rotation: 30
 					}
 				}
 			};
@@ -64,7 +64,8 @@ describe('AnnotationContextMenuComponent', () => {
 				top: '100px',
 				height: '100px',
 				left: '100px',
-				width: '100px'
+				width: '100px',
+				transform: `rotate(${30}deg)`
 			});
 
 			expect(component.host.nativeElement.focus).toHaveBeenCalled();

@@ -9,8 +9,6 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import OLGeoJSON from 'ol/format/geojson';
-import VectorLayer from 'ol/layer/vector';
-import SourceVector from 'ol/source/vector';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
@@ -36,12 +34,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		'Arrow': this.arrowGeometryFunction.bind(this),
 		'Rectangle': this.rectangleGeometryFunction.bind(this)
 	};
-
-	contextMenuSource = new SourceVector();
-
-	contextMenuLayer = new VectorLayer({
-		source: this.contextMenuSource
-	});
 
 	get mapRotation(): number {
 		return this.iMap.mapObject.getView().getRotation();
@@ -96,7 +88,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const contextMenuInteraction = new Select({
 			condition,
 			layers: [this.vector],
-			// style:  this.featureStyle.bind(this),
 			hitTolerance: 10
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
@@ -106,7 +97,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	initLayers() {
 		super.initLayers();
-		this.iMap.mapObject.addLayer(this.contextMenuLayer);
 	}
 
 	onSelectFeature(data) {

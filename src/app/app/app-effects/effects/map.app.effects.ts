@@ -47,6 +47,7 @@ import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
+import { CaseMapPosition } from '@ansyn/core';
 
 @Injectable()
 export class MapAppEffects {
@@ -461,20 +462,17 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
 			const mapId = action.payload.mapId;
-			const communicatorMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
-			let currentMapPosition;
+			let communicatorMapPosition: CaseMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
 			// TODO: check "inside" if we can always use mapState
-			if (communicatorMapPosition) {
-				currentMapPosition = communicatorMapPosition;
-			} else {
+			if (!communicatorMapPosition) {
 				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-				currentMapPosition = map.data.position.projectedState.rotation;
+				communicatorMapPosition = map.data.position;
 			}
 
 			mapState.mapsList.forEach((mapItem: CaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.imageryCommunicatorService.provide(mapItem.id);
-					comm.setPosition(currentMapPosition);
+					comm.setPosition(communicatorMapPosition);
 				}
 			});
 			return action;

@@ -27,12 +27,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public mode: AnnotationMode;
 	modeDictionary = {
-		Arrow: 'LineString',
-		Rectangle: 'Circle'
-	};
-	geometryFunctionDictionary = {
-		'Arrow': this.arrowGeometryFunction.bind(this),
-		'Rectangle': this.rectangleGeometryFunction.bind(this)
+		Arrow: {
+			type: 'LineString',
+			geometryFunction: this.arrowGeometryFunction.bind(this)
+		},
+		Rectangle: {
+			type: 'Circle',
+			geometryFunction: this.rectangleGeometryFunction.bind(this)
+		}
 	};
 
 	get mapRotation(): number {
@@ -95,10 +97,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return contextMenuInteraction;
 	}
 
-	initLayers() {
-		super.initLayers();
-	}
-
 	onSelectFeature(data) {
 		const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
@@ -135,6 +133,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
+		// [bottomLeft, bottomRight, topRight, topLeft]
 		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
 		const width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
 		const height = Math.sqrt(Math.pow(y2 - y3, 2) + Math.pow(x2 - x3, 2));
@@ -188,8 +187,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 
 		const drawInteractionHandler = new Draw({
-			type: this.modeDictionary[mode] || mode,
-			geometryFunction: this.geometryFunctionDictionary[mode],
+			type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
+			geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
 			condition: (event) => event.originalEvent.which === 1,
 			style: this.featureStyle.bind(this)
 		});
@@ -212,6 +211,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	arrowGeometryFunction(coordinates, opt_geometry) {
 		let geometry = opt_geometry;
 		if (opt_geometry) {
+			// two lines to draw arrow
 			const start = coordinates[coordinates.length - 2];
 			const end = coordinates[coordinates.length - 1];
 			const dx = end[0] - start[0];

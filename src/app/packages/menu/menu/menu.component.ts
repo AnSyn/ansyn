@@ -1,16 +1,6 @@
 import {
-	AfterViewInit,
-	Component,
-	ComponentFactoryResolver,
-	ComponentRef,
-	ElementRef,
-	HostListener,
-	Inject,
-	Input,
-	OnInit,
-	Renderer2,
-	ViewChild,
-	ViewContainerRef
+	Component, ComponentFactoryResolver, ComponentRef, ElementRef, HostListener, Inject, Input, OnInit, Renderer2,
+	ViewChild, ViewContainerRef
 } from '@angular/core';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { IMenuConfig, MenuConfig, MenuItem } from '../models';
@@ -51,7 +41,7 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit, AfterViewInit {
+export class MenuComponent implements OnInit {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 
@@ -101,28 +91,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
+
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig
-	) {
-
-		this.menuItems$.subscribe((_menuItems) => {
-			this.menuItems = _menuItems;
-		});
-
-		this.selectedMenuItem$.subscribe(this.setSelectedMenuItem.bind(this));
-
-		this.isPinned$.subscribe((_isPinned: boolean) => {
-			this.isPinned = _isPinned;
-			this.onIsPinnedChange();
-		});
-
-		this.clickOutside$.subscribe((clickOutside: boolean) => {
-			this.clickOutside = clickOutside;
-		});
+				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}
 
 	get selectedMenuItem(): MenuItem {
@@ -237,6 +212,22 @@ export class MenuComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
+
+		this.menuItems$.subscribe((_menuItems) => {
+			this.menuItems = _menuItems;
+		});
+
+		this.selectedMenuItem$.subscribe(this.setSelectedMenuItem.bind(this));
+
+		this.isPinned$.subscribe((_isPinned: boolean) => {
+			this.isPinned = _isPinned;
+			this.onIsPinnedChange();
+		});
+
+		this.clickOutside$.subscribe((clickOutside: boolean) => {
+			this.clickOutside = clickOutside;
+		});
+
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
 			if (conPosition !== 'absolute') {
@@ -249,9 +240,4 @@ export class MenuComponent implements OnInit, AfterViewInit {
 			.filter(() => !this.isPinned && this.clickOutside && this.anyMenuItemSelected() && !this.onAnimation)
 			.subscribe(this.closeMenu.bind(this));
 	}
-
-	ngAfterViewInit(): void {
-		this.onIsPinnedChange();
-	}
-
 }

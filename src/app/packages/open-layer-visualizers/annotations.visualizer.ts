@@ -2,19 +2,15 @@ import { EntitiesVisualizer } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
 import color from 'ol/color';
-import olExtent from 'ol/extent';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
 import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
-import OLFeature from 'ol/feature';
 import OLGeoJSON from 'ol/format/geojson';
 import VectorLayer from 'ol/layer/vector';
 import SourceVector from 'ol/source/vector';
-import condition from 'ol/events/condition';
-import Style from 'ol/style/style';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
@@ -32,6 +28,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public mode: AnnotationMode;
+	modeDictionary = {
+		Arrow: 'LineString',
+		Rectangle: 'Circle'
+	};
+	geometryFunctionDictionary = {
+		'Arrow': this.arrowGeometryFunction.bind(this),
+		'Rectangle': this.rectangleGeometryFunction.bind(this)
+	};
 
 	contextMenuSource = new SourceVector();
 
@@ -141,10 +145,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
-		const  [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
+		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
 		const width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
 		const height = Math.sqrt(Math.pow(y2 - y3, 2) + Math.pow(x2 - x3, 2));
-		return { left: x4 , top: y4 , width, height, rotation };
+		return { left: x4, top: y4, width, height, rotation };
 	}
 
 	getExtentAsPixels([x1, y1, x2, y2]) {
@@ -194,14 +198,25 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 
 		const drawInteractionHandler = new Draw({
-			type: mode === 'Rectangle' ? 'Circle' : mode === 'Arrow' ? 'LineString' : mode,
-			geometryFunction: mode === 'Rectangle' ? (<any>Draw).createBox(4) : mode === 'Arrow' ? this.arrowGeometryFunction : undefined,
+			type: this.modeDictionary[mode] || mode,
+			geometryFunction: this.geometryFunctionDictionary[mode],
 			condition: (event) => event.originalEvent.which === 1,
-			style: (feature) => this.featureStyle(feature)
+			style: this.featureStyle.bind(this)
 		});
 
 		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
+	}
+
+	rectangleGeometryFunction([topLeft, bottomRight], opt_geometry) {
+		const [x1, y1] = this.iMap.mapObject.getPixelFromCoordinate(topLeft);
+		const [x2, y2] = this.iMap.mapObject.getPixelFromCoordinate(bottomRight);
+		const topRight = this.iMap.mapObject.getCoordinateFromPixel([x2, y1]);
+		const bottomLeft = this.iMap.mapObject.getCoordinateFromPixel([x1, y2]);
+		const geometry = opt_geometry || new olPolygon(null);
+		const boundingBox = [topLeft, topRight, bottomRight, bottomLeft, topLeft];
+		geometry.setCoordinates([boundingBox]);
+		return geometry;
 	}
 
 	arrowGeometryFunction(coordinates, opt_geometry) {

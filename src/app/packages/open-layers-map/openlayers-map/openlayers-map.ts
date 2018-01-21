@@ -119,7 +119,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapObject.on('moveend', () => {
 			const mapCenter = this.getCenter();
 			this.centerChanged.emit(mapCenter);
-			this.positionChanged.emit(this.getPosition());
+			const position = this.getPosition();
+			if (position) {
+				this.positionChanged.emit(position);
+			}
 		});
 
 		const containerElem = <HTMLElement> this._mapObject.getViewport();
@@ -335,6 +338,20 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = view.calculateExtent();
+		let isExtentValid = true;
+		if (transformExtent) {
+			transformExtent.forEach((extentValue) => {
+				if (isNaN(extentValue)) {
+					isExtentValid = false;
+				}
+			});
+		} else {
+			isExtentValid = false;
+		}
+
+		if (!isExtentValid) {
+			return null;
+		}
 		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
 		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
 		const resolutionData = this.getResolutionData();

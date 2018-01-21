@@ -135,6 +135,9 @@ export class CommunicatorEntity {
 			throw new Error('missing active map');
 		}
 		let position = this.ActiveMap.getPosition();
+		if (!position) {
+			return null;
+		}
 		position.projectedState.rotation -= this.virtualNorth;
 		return position;
 	}

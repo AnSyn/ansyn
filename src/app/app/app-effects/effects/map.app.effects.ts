@@ -186,7 +186,13 @@ export class MapAppEffects {
 								rotationAngle = overlay.azimuth;
 								break;
 							case 'User Perspective':
-								rotationAngle = communicator.getPosition().projectedState.rotation;
+								// TODO: check "inside" if we can always use mapState "rotation"
+								const position = communicator.getPosition();
+								if (position) {
+									rotationAngle = position.projectedState.rotation;
+								} else {
+									rotationAngle = mapData.position.projectedState.rotation;
+								}
 								break;
 						}
 						if (intersection < this.config.overlayCoverage) {
@@ -452,11 +458,20 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<SynchronizeMapsAction> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: SynchronizeMapsAction, casesState: ICasesState) => [action, casesState])
-		.map(([action, casesState]: [SynchronizeMapsAction, ICasesState]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
 			const mapId = action.payload.mapId;
-			const currentMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
-			casesState.selectedCase.state.maps.data.forEach((mapItem: CaseMapState) => {
+			const communicatorMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
+			let currentMapPosition;
+			// TODO: check "inside" if we can always use mapState
+			if (communicatorMapPosition) {
+				currentMapPosition = communicatorMapPosition;
+			} else {
+				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+				currentMapPosition = map.data.position.projectedState.rotation;
+			}
+
+			mapState.mapsList.forEach((mapItem: CaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.imageryCommunicatorService.provide(mapItem.id);
 					comm.setPosition(currentMapPosition);

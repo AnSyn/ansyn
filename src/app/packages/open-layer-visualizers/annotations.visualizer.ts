@@ -190,7 +190,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const drawInteractionHandler = new Draw({
 			type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
 			geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
-			condition: (event) => event.originalEvent.which === 1,
+			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
 		});
 

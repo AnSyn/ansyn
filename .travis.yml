@@ -16,12 +16,11 @@ services:
   - docker
 
 before_install:
-  - npm install -g yarn --cache-min 999999999
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 
 # Use yarn for faster installs
 install:
-  - yarn
+  - npm install
 
 # Init GUI
 before_script:

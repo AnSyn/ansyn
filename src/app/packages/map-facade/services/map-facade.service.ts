@@ -88,8 +88,12 @@ export class MapFacadeService {
 		const mapsList: CaseMapState[] = [];
 
 		/* mapsList*/
-		const activeMap = oldMapsList.find(({ id }) => id === oldActiveMapId);
-		const position = this.imageryCommunicatorService.provide(oldActiveMapId).getPosition();
+		const activeMap = MapFacadeService.mapById(oldMapsList, oldActiveMapId);
+		let position = this.imageryCommunicatorService.provide(oldActiveMapId).getPosition();
+		// TODO: check "inside" if we can always use mapState
+		if (!position) {
+			position = activeMap.data.position;
+		}
 		range(layout.mapsCount).forEach((index) => {
 			if (oldMapsList[index]) {
 				mapsList.push(oldMapsList[index]);

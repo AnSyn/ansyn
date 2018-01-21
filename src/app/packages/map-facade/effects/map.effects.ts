@@ -186,6 +186,10 @@ export class MapEffects {
 			let position: CaseMapPosition;
 			if (comm.activeMapName === 'openLayersMap') {
 				position = comm.getPosition();
+				// TODO: check "inside" if we can always use mapState
+				if (!position) {
+					position = selectedMap.data.position;
+				}
 			} else { // comm.activeMapName === 'disabledOpenLayersMap'
 				position = selectedMap.data.position;
 			}

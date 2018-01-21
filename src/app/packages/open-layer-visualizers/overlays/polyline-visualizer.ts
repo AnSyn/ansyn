@@ -113,7 +113,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		const { isActive, isDisplayed, isFavorites } = this.propsByFeature(feature);
 
 		if (isFavorites) {
-			return 3;
+			return 4;
 		}
 
 		if (isActive || isDisplayed) {

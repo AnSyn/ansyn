@@ -17,7 +17,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	isHideable = true;
 
 	referenceDate: Date;
-	idToCachedCenter: Map<string, Point> = new Map<string, Point>();
+	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 
 	constructor(style: VisualizerStateStyle) {
 		super(ContextEntityVisualizerType, style);
@@ -77,7 +77,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
-			const polygon = entityMap.originalEntity.featureJson.geometry as Polygon;
+			const polygon = entityMap.originalEntity.featureJson.geometry as GeoJSON.Polygon;
 			const lonLatCords = proj.fromLonLat(polygon.coordinates, projection);
 			const projectedPolygon = new Polygon(lonLatCords);
 

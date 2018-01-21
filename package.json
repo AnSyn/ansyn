@@ -76,6 +76,7 @@
 		"@types/jasminewd2": "2.0.2",
 		"@types/lodash": "4.14.88",
 		"@types/node": "6.0.60",
+		"@types/ol": "^4.6.1",
 		"@types/rison": "0.0.6",
 		"@types/wellknown": "0.5.0",
 		"codelyzer": "4.0.1",

@@ -1,15 +1,15 @@
-import Extent from 'ol/extent';
-import Coordinate from 'ol/coordinate';
+import * as ol from 'openlayers';
+import olExtent from 'ol/extent';
 
 export class Utils {
-	static BoundingBoxToOLExtent(bbox: GeoJSON.Point[]): Extent | any {
-		const coordinates: Coordinate[] = bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
-		return Extent.boundingExtent(coordinates);
+	static BoundingBoxToOLExtent(bbox: GeoJSON.Point[]): ol.Extent | any {
+		const coordinates = <ol.Coordinate[]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
+		return olExtent.boundingExtent(coordinates);
 	}
 
-	static OLExtentToBoundingBox(extent: Extent): GeoJSON.Point[] {
-		const topLeft = Extent.getTopLeft(extent);
-		const bottomRight = Extent.getBottomRight(extent);
+	static OLExtentToBoundingBox(extent: ol.Extent): GeoJSON.Point[] {
+		const topLeft = olExtent.getTopLeft(extent);
+		const bottomRight = olExtent.getBottomRight(extent);
 
 		let boundingBox: GeoJSON.Point[] = [];
 		[topLeft, bottomRight].forEach((p) => {

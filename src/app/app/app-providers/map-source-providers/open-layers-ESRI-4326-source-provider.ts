@@ -30,8 +30,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 
 		const esriLayer = new TileLayer({
 			source: source,
-			visible: true,
-			preload: Infinity
+			visible: true
 		});
 
 		return [esriLayer];

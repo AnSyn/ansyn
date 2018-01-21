@@ -118,11 +118,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		this.interactionSource = new VectorSource({ wrapX: false });
 
-		const drawInteractionHandler = new Draw({
+		const drawInteractionHandler = new Draw(<any>{
 			source: this.interactionSource,
 			type: type,
 			condition: (event) => event.originalEvent.which === 1,
-			geometryName: `Measure_' + ${type}`,
 			style: this.drawFeatureStyle.bind(this)
 		});
 
@@ -137,7 +136,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent(data) {
 		const view = (<any>this.iMap.mapObject).getView();
 		const featureProjection = view.getProjection();
-		let featureJson = this.geoJsonFormat.writeFeatureObject(data.feature, {
+		let featureJson = <any> this.geoJsonFormat.writeFeatureObject(data.feature, {
 			featureProjection,
 			dataProjection: 'EPSG:4326',
 		});
@@ -180,7 +179,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon
-				const coordinates = feature.getGeometry().getCoordinates();
+				const coordinates = (<LineString>feature.getGeometry()).getCoordinates();
 				return new MultiPoint(coordinates);
 			}
 		});
@@ -191,7 +190,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	// points string styles
 	getMeasureTextStyle(feature: Feature, calculateCenterOfMass = false) {
 		const styles = [];
-		const geometry = feature.getGeometry();
+		const geometry = <LineString> feature.getGeometry();
 
 		if (geometry.getType() === 'Point') {
 			return styles;
@@ -205,7 +204,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		let allLinePoint = new Point(geometry.getCoordinates()[0]);
 
 		if (calculateCenterOfMass) {
-			const featureId = feature.getId();
+			const featureId = <string> feature.getId();
 			const entityMap = this.idToEntity.get(featureId);
 			if (entityMap) {
 				const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);

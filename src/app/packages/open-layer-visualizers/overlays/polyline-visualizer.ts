@@ -3,7 +3,8 @@ import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visua
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
-import MultiPolygon from 'ol/geom/multipolygon';
+import olMultiPolygon from 'ol/geom/multipolygon';
+import olMultiLineString from 'ol/geom/multilinestring';
 import Feature from 'ol/feature';
 import Style from 'ol/style/style';
 import condition from 'ol/events/condition';
@@ -67,7 +68,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private propsByFeature(feature: Feature) {
-		const classes = this.getMarkupClasses(feature.getId());
+		const classes = this.getMarkupClasses(<string>feature.getId());
 
 		const isFavorites = classes.includes('favorites');
 		const isActive = classes.includes('active');
@@ -186,8 +187,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private createHoverFeature(selectedFeature: Feature): void {
-		const selectedFeatureCoordinates = [[...selectedFeature.getGeometry().getCoordinates()]];
-		const hoverFeature = new Feature(new MultiPolygon(selectedFeatureCoordinates));
+		const selectedFeatureCoordinates = [[...(<olMultiLineString>selectedFeature.getGeometry()).getCoordinates()]];
+		const hoverFeature = new Feature(new olMultiPolygon(selectedFeatureCoordinates));
 		hoverFeature.setId(selectedFeature.getId());
 		this.hoverLayer.getSource().addFeature(hoverFeature);
 	}
@@ -210,7 +211,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 		this.hoverLayer = new VectorLayer({
 			source: new SourceVector(),
-			style: (feature) => this.featureStyle(feature, VisualizerStates.HOVER)
+			style: (feature: Feature) => this.featureStyle(feature, VisualizerStates.HOVER)
 		});
 
 		this.iMap.mapObject.addLayer(this.hoverLayer);
@@ -238,7 +239,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 	protected purgeCache(feature?: Feature) {
 		if (feature) {
-			delete feature.styleCache;
+			delete (<any>feature).styleCache;
 		} else if (this.source) {
 			let features = this.source.getFeatures();
 			if (this.hoverLayer && this.hoverLayer.getSource()) {

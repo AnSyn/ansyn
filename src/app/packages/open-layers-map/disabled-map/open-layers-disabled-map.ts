@@ -2,9 +2,9 @@ import { EventEmitter } from '@angular/core';
 import { IMap } from '@ansyn/imagery';
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import { Observable } from 'rxjs/Observable';
+import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
-import Extent from 'ol/extent';
 import proj from 'ol/proj';
 import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
@@ -88,7 +88,7 @@ export class OpenLayersDisabledMap extends IMap {
 		}
 
 		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
+			this._imageProcessing = new OpenLayersImageProcessing(<Raster> layer.getSource());
 		} else {
 			this._imageProcessing = null;
 		}
@@ -111,7 +111,7 @@ export class OpenLayersDisabledMap extends IMap {
 		});
 	}
 
-	fitToMainLayerExtent(extent: Extent) {
+	fitToMainLayerExtent(extent: ol.Extent) {
 		const view = this.mapObject.getView();
 		view.fit(extent, {
 			size: this.mapObject.getSize(),

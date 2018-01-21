@@ -71,7 +71,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				crossOrigin: null
 			})
 		});
-		vectorLayer.id = layer.id;
+		(<any>vectorLayer).id = layer.id;
 
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
@@ -80,7 +80,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
-			OpenLayersMap.groupLayers.set('layers', new Group({
+			OpenLayersMap.groupLayers.set('layers', new Group(<any>{
 				layers: [],
 				name: 'layers'
 			}));
@@ -156,8 +156,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 	}
 
-	public getLayerById(id: string) {
-		return this.mapObject.getLayers().getArray().filter(item => item.get('id') === id)[0];
+	public getLayerById(id: string): Layer {
+		return <Layer> this.mapObject.getLayers().getArray().find(item => item.get('id') === id);
 	}
 
 	setGroupLayers() {
@@ -184,7 +184,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.addLayer(layer);
 
 		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing = new OpenLayersImageProcessing(layer.getSource());
+			this._imageProcessing = new OpenLayersImageProcessing((<any>layer).getSource());
 		} else {
 			this._imageProcessing = null;
 		}
@@ -212,7 +212,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (!layerId) {
 			return;
 		}
-		const existingLayer = this.getLayerById(layerId);
+		const existingLayer: Layer = this.getLayerById(layerId);
 		if (!existingLayer) {
 			// layer.set('visible',false);
 			this.addLayer(layer);
@@ -337,14 +337,13 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public getPosition(): CaseMapPosition {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const transformExtent = view.calculateExtent();
+		const transformExtent = (<any>view).calculateExtent();
 		const isExtentInvalid = transformExtent.some((extentValue) => isNaN(extentValue));
 		if (isExtentInvalid) {
 			return null;
 		}
-
 		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
-		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
+		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
 		const resolutionData = this.getResolutionData();
 		return { extent, projectedState, resolutionData };
 	}

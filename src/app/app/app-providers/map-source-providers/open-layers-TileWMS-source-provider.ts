@@ -16,7 +16,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		const layers = metaData.layers.join(',');
 
 
-		const source = new TileWMS({
+		const source = new TileWMS(<any>{
 			preload: Infinity,
 			url: metaData.url,
 			params: {

@@ -39,9 +39,9 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	isHideable = false;
 	isHidden = false;
 
-	protected iMap: IMap<olMap>;
+	protected iMap: OpenLayersMap;
 	protected mapId: string;
-	public source: Vector;
+	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: VectorLayer;
 	protected default4326GeoJSONFormat: OLGeoJSON = new OLGeoJSON({
@@ -75,11 +75,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	private getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(feature.getId());
+		const entity = this.idToEntity.get(`${feature.getId()}`);
 		return entity && entity.originalEntity;
 	}
 
-	onInit(mapId: string, map: IMap<OpenLayersMap>) {
+	onInit(mapId: string, map: OpenLayersMap) {
 		this.iMap = map;
 		this.mapId = mapId;
 		this.initLayers();
@@ -95,7 +95,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection });
 
-		this.vector = new VectorLayer({
+		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity
@@ -129,7 +129,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	protected purgeCache(feature?: Feature) {
 		if (feature) {
-			delete feature.styleCache;
+			delete (<any>feature).styleCache;
 		} else if (this.source) {
 			let features = this.source.getFeatures();
 			features.forEach(f => this.purgeCache(f));
@@ -191,7 +191,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
-		if (this.disableCache || !feature.styleCache) {
+		if (this.disableCache || !(<any>feature).styleCache) {
 			const styles = [
 				this.visualizerStyle[VisualizerStates.INITIAL], // Weakest
 				this.visualizerStyle[state]
@@ -210,10 +210,10 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 				}
 			}
 
-			feature.styleCache = this.createStyle(feature, true, ...styles);
+			(<any>feature).styleCache = this.createStyle(feature, true, ...styles);
 		}
 
-		return feature.styleCache;
+		return (<any>feature).styleCache;
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
@@ -313,7 +313,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	updateFeatureStyle(featureId: string, style: Partial<VisualizerStateStyle>) {
 		const feature = this.source.getFeatureById(featureId);
 
-		const entity = this.getEntity(feature.getId());
+		const entity = this.getEntity(feature);
 		if (entity) {
 			entity.style = entity.style ? merge({}, entity.style, style) : style;
 		}

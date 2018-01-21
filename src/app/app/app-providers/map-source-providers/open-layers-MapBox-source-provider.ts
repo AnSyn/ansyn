@@ -21,7 +21,7 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 
 		this.monitorSource(source, mapId);
 
-		const mapBoxLayer = new TileLayer({
+		const mapBoxLayer = new TileLayer(<any>{
 			source: source,
 			visible: true,
 			preload: Infinity

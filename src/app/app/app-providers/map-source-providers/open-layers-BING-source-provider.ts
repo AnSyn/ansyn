@@ -21,7 +21,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 
 			this.monitorSource(source, mapId);
 
-			return new TileLayer({
+			return new TileLayer(<any>{
 				visible: true,
 				preload: Infinity,
 				source

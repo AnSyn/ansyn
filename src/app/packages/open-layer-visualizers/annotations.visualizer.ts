@@ -13,6 +13,7 @@ import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/i
 import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from './models/visualizer-state';
+import * as ol from 'openlayers';
 import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
 import { AnnotationsContextMenuEvent } from '@ansyn/core';
 import { toDegrees } from '@ansyn/core/utils/math';
@@ -87,7 +88,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	createContextMenuInteraction() {
 		const condition = (event) => event.originalEvent.which === 3 && event.type === 'pointerdown';
-		const contextMenuInteraction = new Select({
+		const contextMenuInteraction = new Select(<any>{
 			condition,
 			layers: [this.vector],
 			hitTolerance: 10
@@ -166,7 +167,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle)
 		});
 
-		const geoJsonFeature = <Feature<any>> this.geoJsonFormat.writeFeatureObject(feature, {
+		const geoJsonFeature: JSON = this.geoJsonFormat.writeFeatureObject(feature, {
 			featureProjection,
 			dataProjection: 'EPSG:4326'
 		});

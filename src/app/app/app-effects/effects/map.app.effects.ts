@@ -462,17 +462,17 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
 			const mapId = action.payload.mapId;
-			let communicatorMapPosition: CaseMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
+			let mapPosition: CaseMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
 			// TODO: check "inside" if we can always use mapState
-			if (!communicatorMapPosition) {
+			if (!mapPosition) {
 				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-				communicatorMapPosition = map.data.position;
+				mapPosition = map.data.position;
 			}
 
 			mapState.mapsList.forEach((mapItem: CaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.imageryCommunicatorService.provide(mapItem.id);
-					comm.setPosition(communicatorMapPosition);
+					comm.setPosition(mapPosition);
 				}
 			});
 			return action;

@@ -338,12 +338,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const transformExtent = view.calculateExtent();
-
-		if (!transformExtent) {
-			return null;
-		}
-		const isExtentValid = !transformExtent.some((extentValue) => isNaN(extentValue));
-		if (!isExtentValid) {
+		const isExtentInvalid = transformExtent.some((extentValue) => isNaN(extentValue));
+		if (isExtentInvalid) {
 			return null;
 		}
 

@@ -101,12 +101,8 @@
 		"geoMapsInitialMapSource": [
 			{
 				"mapType": "openLayersMap",
-				"mapSource": "BING",
+				"mapSource": "ESRI_4326",
 				"mapSourceMetadata": {
-					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-					"styles": [
-						"AerialWithLabels"
-					]
 				}
 			},
 			{
@@ -116,12 +112,8 @@
 			},
 			{
 				"mapType": "disabledOpenLayersMap",
-				"mapSource": "BING",
+				"mapSource": "ESRI_4326",
 				"mapSourceMetadata": {
-					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-					"styles": [
-						"AerialWithLabels"
-					]
 				}
 			}
 		]

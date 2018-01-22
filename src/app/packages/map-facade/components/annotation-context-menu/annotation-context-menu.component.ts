@@ -3,6 +3,7 @@ import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
+import { MapFacadeService } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -41,6 +42,10 @@ export class AnnotationContextMenuComponent {
 
 			this.host.nativeElement.focus();
 		});
+
+		this.mapEffect.positionChanged$.subscribe( () => {
+			this.host.nativeElement.blur();
+		})
 	}
 
 	removeFeature($event) {

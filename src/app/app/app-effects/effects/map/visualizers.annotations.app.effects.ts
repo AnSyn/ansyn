@@ -21,7 +21,6 @@ import { Feature, FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
-import get = Reflect.get;
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -81,17 +80,19 @@ export class VisualizersAnnotationsAppEffects {
 		.map(({ payload }) => payload)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.do(([{ fillColor, strokeWidth, strokeColor }, mapsState]: [AnnotationProperties, IMapState]) => {
-			const [activeVisualizers]: AnnotationsVisualizer[] = this.annotationVisualizers([mapsState.activeMapId]);
-			if (fillColor) {
-				activeVisualizers.changeFillColor(fillColor);
-			}
-			if (strokeWidth) {
-				activeVisualizers.changeStrokeWidth(strokeWidth);
-			}
-			if (strokeColor) {
-				activeVisualizers.changeStrokeColor(strokeColor);
-			}
-
+			const relevantMapsIds: string[] = this.relevantMapIds('all', mapsState);
+			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
+			annotationsVisualizers.forEach((activeVisualizers) => {
+				if (fillColor) {
+					activeVisualizers.changeFillColor(fillColor);
+				}
+				if (strokeWidth) {
+					activeVisualizers.changeStrokeWidth(strokeWidth);
+				}
+				if (strokeColor) {
+					activeVisualizers.changeStrokeColor(strokeColor);
+				}
+			});
 		});
 
 	/**
@@ -167,6 +168,18 @@ export class VisualizersAnnotationsAppEffects {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
 			return new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps });
 		});
+
+	/**
+	 * @type Effect
+	 * @name updateInitialStyleForNewVisualizer$
+	 * @ofType MapInstanceChangedAction
+	 * @action AnnotationSetProperties
+	 */
+	@Effect()
+	updateInitialStyleForNewVisualizer$: Observable<any> = this.actions$
+		.ofType<MapInstanceChangedAction>(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.withLatestFrom(this.toolsState$, (action, { annotationProperties }) => annotationProperties )
+		.map((annotationProperties: AnnotationProperties) => new AnnotationSetProperties({ ...annotationProperties }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

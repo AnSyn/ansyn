@@ -75,7 +75,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	}
 
 	private getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(`${feature.getId()}`);
+		const entity = this.idToEntity.get(<string>feature.getId());
 		return entity && entity.originalEntity;
 	}
 

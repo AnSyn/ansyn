@@ -196,9 +196,9 @@
 	},
 	"menuConfig": {
 		"path": "/assets/logo.svg",
-		"color": "transparent",
-		"background": "transparent",
-		"mode": ""
+		"color": "{{ getv "/ansyn/menu/color" "white" }}",
+		"background": "{{ getv "/ansyn/menu/background" "red" }}",
+		"mode": "{{ getv "/ansyn/menu/mode" "debug" }}"
 	},
 	"visualizersConfig": {
 		"exampleFootprintHeatmapVisualizer": {

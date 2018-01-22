@@ -10,7 +10,6 @@ import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import OLGeoJSON from 'ol/format/geojson';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
-import { Feature } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import * as ol from 'openlayers';
@@ -164,7 +163,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		feature.setGeometry(cloneGeometry);
 
 		feature.setProperties({
-			id: Date.now(),
+			id: `${Date.now()}`,
 			style: cloneDeep(this.visualizerStyle)
 		});
 

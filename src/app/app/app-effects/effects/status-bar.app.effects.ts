@@ -2,21 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	ChangeLayoutAction,
-	CopySelectedCaseLinkAction,
-	IStatusBarState,
-	StatusBarActionsTypes,
-	statusBarFlagsItems,
+	ChangeLayoutAction, CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItems,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
-	Case,
-	CaseMapState,
-	CasesActionTypes,
-	CopyCaseLinkAction,
-	ICasesState,
+	Case, CaseMapState, CasesActionTypes, CopyCaseLinkAction, ICasesState,
 	UpdateCaseAction
 } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
@@ -26,18 +18,17 @@ import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	BackToWorldAction,
-	DrawPinPointAction,
-	PinPointModeTriggerAction,
+	BackToWorldAction, DrawPinPointAction, PinPointModeTriggerAction,
 	SetOverlaysNotInCaseAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	LoadOverlaysAction,
+	GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction,
 	UpdateOverlaysCountAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { SetGeoFilterAction, SetOrientationAction, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import {
+	SetComboBoxesProperties,
+	SetTimeAction
+} from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
@@ -48,6 +39,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CaseState } from '@ansyn/core';
 
 
 @Injectable()
@@ -126,17 +118,16 @@ export class StatusBarAppEffects {
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
 		.mergeMap(({ payload }: SelectCaseAction) => {
 			const layoutsIndex = payload.state.maps.layoutsIndex;
+			const { orientation, geoFilter, timeFilter } = <CaseState> { ...payload.state };
 			return [
 				new ChangeLayoutAction(+layoutsIndex),
-				new SetOrientationAction(payload.state.orientation),
-				new SetGeoFilterAction(payload.state.geoFilter),
+				new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				new SetTimeAction({
 					from: new Date(payload.state.time.from),
 					to: new Date(payload.state.time.to)
 				})
 			];
 		});
-
 	/**
 	 * @type Effect
 	 * @name statusBarChanges$
@@ -146,38 +137,49 @@ export class StatusBarAppEffects {
 	 * @action UpdateCaseAction, LoadOverlaysAction?
 	 */
 	@Effect()
-	statusBarChanges$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.SET_ORIENTATION, StatusBarActionsTypes.SET_GEO_FILTER, StatusBarActionsTypes.SET_TIME)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState): any[] => [action, state.selectedCase])
-		.filter(([action, selectedCase]) => !isEmpty(selectedCase))
-		.mergeMap(([action, selectedCase]: [SetOrientationAction | SetGeoFilterAction | SetTimeAction | any, Case]) => {
+	setTime$: Observable<any> = this.actions$
+		.ofType(StatusBarActionsTypes.SET_TIME)
+		.withLatestFrom(this.store.select(casesStateSelector).pluck('selectedCase'))
+		.mergeMap(([action, selectedCase]: [SetTimeAction, Case]) => {
 			const updatedCase = cloneDeep(selectedCase);
 			const actions: Action[] = [new UpdateCaseAction(updatedCase)];
-
-			switch (action.constructor) {
-				case SetOrientationAction:
-					updatedCase.state.orientation = action.payload;
-					break;
-				case SetGeoFilterAction:
-					updatedCase.state.geoFilter = action.payload;
-					break;
-				case SetTimeAction:
-					const fromChange = updatedCase.state.time.from !== action.payload.from.toISOString();
-					const toChange = updatedCase.state.time.to !== action.payload.to.toISOString();
-					const someTimeChanges = fromChange || toChange;
-					if (someTimeChanges) {
-						updatedCase.state.time.from = action.payload.from.toISOString();
-						updatedCase.state.time.to = action.payload.to.toISOString();
-						actions.push(new LoadOverlaysAction({
-							to: updatedCase.state.time.to,
-							from: updatedCase.state.time.from,
-							polygon: updatedCase.state.region,
-							caseId: updatedCase.id
-						}));
-					}
-					break;
+			const fromChange = updatedCase.state.time.from !== action.payload.from.toISOString();
+			const toChange = updatedCase.state.time.to !== action.payload.to.toISOString();
+			const someTimeChanges = fromChange || toChange;
+			if (someTimeChanges) {
+				updatedCase.state.time.from = action.payload.from.toISOString();
+				updatedCase.state.time.to = action.payload.to.toISOString();
+				actions.push(new LoadOverlaysAction({
+					to: updatedCase.state.time.to,
+					from: updatedCase.state.time.from,
+					polygon: updatedCase.state.region,
+					caseId: updatedCase.id
+				}));
 			}
 			return actions;
+		});
+
+	/**
+	 * @type Effect
+	 * @name comboBoxesProperties
+	 * @ofType SetOrientationAction, SetGeoFilterAction, SetTimeAction
+	 * @dependencies cases
+	 * @filter There is a selected case
+	 * @action UpdateCaseAction, LoadOverlaysAction?
+	 */
+	@Effect()
+	comboBoxesProperties$: Observable<any> = this.actions$
+		.ofType<SetComboBoxesProperties>(StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES)
+		.withLatestFrom(this.store.select(casesStateSelector).pluck<ICasesState, Case>('selectedCase'))
+		.map(([action, selectedCase]: [SetComboBoxesProperties, Case]) => {
+			const updatedCase = {
+				...selectedCase,
+				state: {
+					...selectedCase.state,
+					...action.payload
+				}
+			};
+			return new UpdateCaseAction(updatedCase);
 		});
 
 	/**

@@ -19,7 +19,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import { IStatusBarState, statusBarStateSelector, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { layoutOptions, StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	AddMapInstanceAction, AddOverlayToLoadingOverlaysAction, DrawPinPointAction, EnableMapGeoOptionsActionStore, MapSingleClickAction,
 	PinPointTriggerAction, RemoveOverlayFromLoadingOverlaysAction, SetLayoutAction, SetMapsDataActionStore, SetOverlaysNotInCaseAction,
@@ -156,7 +156,7 @@ export class MapAppEffects {
 				const overlay = action.payload.overlay;
 				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				const orientation: CaseOrientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.orientation;
+				const orientation: CaseOrientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.comboBoxesProperties.orientation;
 				return [overlay, mapId, map.data, orientation];
 			})
 		.filter(([overlay]: [Overlay, string, CaseMapData, CaseOrientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
@@ -506,7 +506,7 @@ export class MapAppEffects {
 	onLayoutChange$: Observable<any> = this.actions$
 		.ofType<ChangeLayoutAction>(StatusBarActionsTypes.CHANGE_LAYOUT)
 		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(statusBarStateSelector), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
-			return [selectedCase, statusbar.layouts[payload], payload];
+			return [selectedCase, layoutOptions[payload], payload];
 		})
 		.mergeMap(([selectedCase, layout, layoutIndex]: any[]) => {
 			const actions = [];

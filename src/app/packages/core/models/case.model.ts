@@ -17,6 +17,8 @@ export interface IContextEntity extends IVisualizerEntity {
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
+export type CaseTimeFilter = 'Start - End';
+export type CaseGeoFilter = 'Pin-Point';
 
 export interface CaseState {
 	selectedContextId?: string;
@@ -26,7 +28,8 @@ export interface CaseState {
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
-	geoFilter: string,
+	timeFilter: CaseTimeFilter,
+	geoFilter: CaseGeoFilter,
 	favoritesOverlays?: Overlay[],
 	overlaysManualProcessArgs: Object,
 	layers?: CaseLayersState

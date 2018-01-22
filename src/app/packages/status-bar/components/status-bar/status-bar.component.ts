@@ -1,13 +1,19 @@
 import { Component, HostListener, Inject, Input, OnInit, Renderer2 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems, statusBarStateSelector } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction, ChangeLayoutAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
-	GoPrevAction, OpenShareLink, SetGeoFilterAction, SetOrientationAction, SetTimeAction, UpdateStatusFlagsAction
+	GoPrevAction, SetTimeAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
-import { MapsLayout, coreStateSelector, ICoreState, Overlay } from '@ansyn/core'
-import { StatusBarConfig, IToolTipsConfig, IStatusBarConfig } from '../../models';
+import { CaseGeoFilter, CaseOrientation, CaseTimeFilter, coreStateSelector, ICoreState, Overlay } from '@ansyn/core';
+import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
+import { SetComboBoxesProperties } from '../../actions';
+import {
+	comboBoxesOptions, ComboBoxesProperties, StatusBarFlag,
+	statusBarFlagsItems
+} from '@ansyn/status-bar/models';
+import { layoutOptions } from '../../models/layout-options.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -16,85 +22,53 @@ import { StatusBarConfig, IToolTipsConfig, IStatusBarConfig } from '../../models
 })
 
 export class StatusBarComponent implements OnInit {
-
+	layouts = layoutOptions;
 	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	layouts$: Observable<MapsLayout[]> = this.statusBar$.pluck<IStatusBarState, MapsLayout[]>('layouts').distinctUntilChanged();
-
 	selectedLayoutIndex$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('selectedLayoutIndex').distinctUntilChanged();
-
-	orientations$: Observable<string[]> = this.statusBar$.pluck<IStatusBarState, string[]>('orientations').distinctUntilChanged();
-	orientation$: Observable<string> = this.statusBar$.pluck<IStatusBarState, string>('orientation').distinctUntilChanged();
-	geoFilters$: Observable<string[]> = this.statusBar$.pluck<IStatusBarState, string[]>('geoFilters').distinctUntilChanged();
-	geoFilter$: Observable<string> = this.statusBar$.pluck<IStatusBarState, string>('geoFilter').distinctUntilChanged();
-
+	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties').distinctUntilChanged();
+	comboBoxesProperties: ComboBoxesProperties = {};
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
-	hideOverlay$: Observable<boolean> = this.statusBar$
-		.map((state: IStatusBarState) => state.layouts[state.selectedLayoutIndex] && state.layouts[state.selectedLayoutIndex].mapsCount > 1)
-		.distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
-
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 	favoriteOverlays: Overlay[];
-
-	layouts: MapsLayout[] = [];
 	selectedLayoutIndex: number;
-
-	orientations: string[] = [];
-	orientation: string;
-
-	get selectedOrientationIndex(): number {
-		return this.orientations.indexOf(this.orientation);
-	}
-	_selectedOrientationIndex
-	set selectedOrientationIndex(value) {
-		this._selectedOrientationIndex = value
-
-	}
-
-	geoFilters: string[] = [];
-	geoFilter: string;
-
-	get selectedGeoFilterIndex(): number {
-		return this.geoFilters.indexOf(this.geoFilter);
-	}
-
-	_selectedGeoFilterIndex
-	set selectedGeoFilterIndex(value) {
-		this._selectedGeoFilterIndex = value
-
-	}
-
-	timeLines: string[] = ['Start - End'];
-	timeLine = 'Start - End';
-
-	get selectedTimeLineIndex(): number {
-		return this.timeLines.indexOf(this.timeLine);
-	}
-	_selectedTimeLineIndex
-	set selectedTimeLineIndex(value) {
-		this._selectedTimeLineIndex = value
-
-	}
-
-
-	flags: Map<string, boolean> = new Map<string, boolean>();
+	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
 	time: { from: Date, to: Date };
 	hideOverlay: boolean;
-	statusBarFlagsItems: any = statusBarFlagsItems;
 	timeSelectionEditIcon = false;
 	overlaysCount: number;
 	overlayNotInCase: boolean;
 	@Input() selectedCaseName: string;
 	@Input() overlay: any;
-
 	goPrevActive = false;
 	goNextActive = false;
 
+	get statusBarFlagsItems() {
+		return statusBarFlagsItems;
+	}
+	get selectedOrientationIndex(): number {
+		return comboBoxesOptions.orientations.indexOf(this.comboBoxesProperties.orientation);
+	}
+	get selectedGeoFilterIndex(): number {
+		return comboBoxesOptions.geoFilters.indexOf(this.comboBoxesProperties.geoFilter);
+	}
+	get selectedTimeFilterIndex(): number {
+		return comboBoxesOptions.timeFilters.indexOf(this.comboBoxesProperties.timeFilter);
+	}
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
+	}
+	get geoFilters(): CaseGeoFilter[] {
+		return comboBoxesOptions.geoFilters;
+	}
+	get timeFilters(): CaseTimeFilter[] {
+		return comboBoxesOptions.timeFilters;
+	}
+	get orientations(): CaseOrientation[] {
+		return comboBoxesOptions.orientations;
 	}
 
 	@HostListener('window:keydown', ['$event'])
@@ -142,42 +116,17 @@ export class StatusBarComponent implements OnInit {
 	setSubscribers() {
 		this.selectedLayoutIndex$.subscribe((_selectedLayoutIndex: number) => {
 			this.selectedLayoutIndex = _selectedLayoutIndex;
+			this.hideOverlay = this.layouts[this.selectedLayoutIndex].mapsCount > 1;
 		});
 
-		this.layouts$.subscribe((_layouts: MapsLayout[]) => {
-			this.layouts = _layouts;
-		});
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
 
-		this.orientations$.subscribe((_orientations) => {
-			this.orientations = _orientations;
-		});
-
-		this.geoFilters$.subscribe((_geoFilters) => {
-			this.geoFilters = _geoFilters;
-		});
-
-		this.orientations$.subscribe((_orientations) => {
-			this.orientations = _orientations;
-		});
-
-		this.orientation$.subscribe((_orientation) => {
-			this.orientation = _orientation;
-		});
-
-		this.geoFilter$.subscribe((_geoFilter) => {
-			this.geoFilter = _geoFilter;
-		});
-
-		this.flags$.subscribe((flags: Map<string, boolean>) => {
-			this.flags = new Map(flags) as Map<string, boolean>;
+		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
+			this.flags = new Map(flags);
 		});
 
 		this.time$.subscribe(_time => {
 			this.time = _time;
-		});
-
-		this.hideOverlay$.subscribe((_hideOverlay: boolean) => {
-			this.hideOverlay = _hideOverlay;
 		});
 
 		this.overlaysCount$.subscribe(overlaysCount => {
@@ -207,7 +156,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	applyTimelinePickerResult(result) {
-		// apply here your dispathces
 		this.store.dispatch(new SetTimeAction({ from: result.start, to: result.end }));
 		this.toggleTimelineStartEndSearch();
 	}
@@ -220,20 +168,12 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new ChangeLayoutAction(selectedLayoutIndex));
 	}
 
-	orientationChange(orientationIndex) {
-		this.store.dispatch(new SetOrientationAction(this.orientations[orientationIndex]));
-	}
-
-	geoFilterChange(geoFilterIndex) {
-		this.store.dispatch(new SetGeoFilterAction(this.geoFilters[geoFilterIndex]));
+	comboBoxesChange(payload: ComboBoxesProperties) {
+		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
 	copyLink(): void {
 		this.store.dispatch(new CopySelectedCaseLinkAction());
-	}
-
-	openLink(): void {
-		this.store.dispatch(new OpenShareLink());
 	}
 
 	toggleMapPointSearch() {

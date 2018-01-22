@@ -18,7 +18,10 @@ import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ChangeLayoutAction, IStatusBarState, SetTimeAction, statusBarStateSelector } from '@ansyn/status-bar';
+import {
+	ChangeLayoutAction, IStatusBarState, layoutOptions, SetTimeAction,
+	statusBarStateSelector
+} from '@ansyn/status-bar';
 import {
 	IMapState,
 	MapActionTypes,
@@ -27,7 +30,7 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
-import { CaseMapState } from '@ansyn/core';
+import { CaseMapState, MapsLayout } from '@ansyn/core';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
@@ -259,7 +262,7 @@ export class OverlaysAppEffects {
 	 * @type Effect
 	 * @name displayMultipleOverlays$
 	 * @ofType DisplayMultipleOverlaysFromStoreAction
-	 * @dependencies status-bar, map
+	 * @dependencies map
 	 * @filter there is at least one none empty overlay to display
 	 * @action DisplayOverlayFromStoreAction, SetPendingOverlaysAction, ChangeLayoutAction
 	 */
@@ -267,8 +270,8 @@ export class OverlaysAppEffects {
 	displayMultipleOverlays$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE)
 		.filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0)
-		.withLatestFrom(this.store$.select(statusBarStateSelector), this.store$.select(mapStateSelector).pluck<any, any>('mapsList'))
-		.mergeMap(([action, statusBarState, mapsList]: [DisplayMultipleOverlaysFromStoreAction, IStatusBarState, CaseMapState[]]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.mergeMap(([action, { mapsList }]: [DisplayMultipleOverlaysFromStoreAction, IMapState]) => {
 			const validOverlays = action.payload.filter((overlay) => overlay);
 
 			if (validOverlays.length <= mapsList.length) {
@@ -286,9 +289,7 @@ export class OverlaysAppEffects {
 				return actionsArray;
 			}
 			else {
-				const layoutIndex = statusBarState.layouts.indexOf(statusBarState.layouts.find((layout) =>
-					layout.mapsCount === validOverlays.length));
-
+				const layoutIndex = layoutOptions.findIndex(({ mapsCount }: MapsLayout) => mapsCount === validOverlays.length);
 				return [new SetPendingOverlaysAction(validOverlays), new ChangeLayoutAction(layoutIndex)];
 			}
 		});

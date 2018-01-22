@@ -3,14 +3,11 @@ import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import {
 	ChangeLayoutAction,
-	SetGeoFilterAction,
-	SetOrientationAction,
 	SetTimeAction,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import {
 	statusBarFeatureKey,
-	statusBarFlagsItems,
 	StatusBarReducer
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -21,7 +18,10 @@ import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
-import { BackToWorldViewAction, ExpandAction, GoNextAction, GoPrevAction } from '@ansyn/status-bar';
+import {
+	BackToWorldViewAction, ExpandAction, GoNextAction, GoPrevAction, SetComboBoxesProperties,
+	statusBarFlagsItems
+} from '@ansyn/status-bar';
 import { BackToWorldAction } from '@ansyn/map-facade';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -31,6 +31,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -184,15 +185,19 @@ describe('StatusBarAppEffects', () => {
 				},
 				orientation: 'orientation',
 				geoFilter: 'geoFilter',
+				timeFilter: 'timeFilter',
 				time: { from: 0, to: 100 }
 			}
 		};
 		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
 		const a = new ChangeLayoutAction(layoutsIndex);
-		const b = new SetOrientationAction('orientation');
-		const c = new SetGeoFilterAction('geoFilter');
-		const d = new SetTimeAction({ from: new Date(0), to: new Date(100) });
-		const expectedResults = cold('--(abcd)--', { a, b, c, d });
+		const b = new SetComboBoxesProperties({
+			orientation: <CaseOrientation> 'orientation',
+			timeFilter: <CaseTimeFilter> 'timeFilter',
+			geoFilter: <CaseGeoFilter> 'geoFilter',
+		});
+		const c = new SetTimeAction({ from: new Date(0), to: new Date(100) });
+		const expectedResults = cold('--(abc)--', { a, b, c });
 		expect(statusBarAppEffects.selectCase$).toBeObservable(expectedResults);
 	});
 

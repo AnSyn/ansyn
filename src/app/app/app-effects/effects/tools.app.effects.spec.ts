@@ -7,7 +7,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { async, inject, TestBed } from '@angular/core/testing';
 import {
 	IToolsState,
-	toolsFeatureKey,
+	toolsFeatureKey, toolsFlags,
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
@@ -298,7 +298,7 @@ describe('ToolsAppEffects', () => {
 	describe('onActiveMapChangesDrawAnnotation$', () => {
 		it('shuold "show" active and "remove" others, while displayAnnotationsLayer is false and annotations flag is true', () => {
 			layerState.displayAnnotationsLayer = false;
-			toolsState.flags.set('annotations', true);
+			toolsState.flags.set(toolsFlags.annotations, true);
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const expectedResults = cold('--(ab)--', {
 				a: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),

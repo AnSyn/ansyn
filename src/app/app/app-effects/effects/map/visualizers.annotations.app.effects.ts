@@ -20,6 +20,8 @@ import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers
 import { Feature, FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import get = Reflect.get;
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -27,6 +29,8 @@ export interface AgentOperations {
 
 @Injectable()
 export class VisualizersAnnotationsAppEffects {
+	layersState$ = this.store$.select(layersStateSelector);
+	toolsState$ = this.store$.select(toolsStateSelector);
 
 	agentOperations: AgentOperations = {
 		show: (visualizer, {}, { annotationsLayer }) => {
@@ -43,8 +47,6 @@ export class VisualizersAnnotationsAppEffects {
 			visualizer.toggleDrawInteraction(mode);
 		}
 	};
-
-	layersState$ = this.store$.select(layersStateSelector);
 
 	/**
 	 * @type Effect
@@ -159,8 +161,9 @@ export class VisualizersAnnotationsAppEffects {
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
 		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'))
-		.map(([action, displayAnnotationsLayer]: [Action, boolean]) => {
+		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'), this.toolsState$)
+		.filter(([action, displayAnnotationsLayer, { flags }]: [Action, boolean, IToolsState]) => displayAnnotationsLayer || flags.get(toolsFlags.annotations))
+		.map(([action, displayAnnotationsLayer]: [Action, boolean, IToolsState]) => {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
 			return new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps });
 		});

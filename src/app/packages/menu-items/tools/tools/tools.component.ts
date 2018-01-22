@@ -113,6 +113,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleAnnotationMenu(subMenuOpen) {
+
 		// send event to the store that saying the annotation option is enabled
 		if (subMenuOpen) {
 			this.store.dispatch(new AnnotationOpen(true));

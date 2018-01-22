@@ -3,6 +3,26 @@ import { OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
+export type ToolsFlag = 'annotations' |
+	'geoRegisteredOptionsEnabled' |
+	'shadowMouse' |
+	'shadowMouseDisabled' |
+	'pinLocation' |
+	'autoImageProcessing' |
+	'imageProcessingDisabled' |
+	'isMeasureToolActive';
+
+export const toolsFlags: {[key: string]: ToolsFlag} = {
+	annotations: 'annotations',
+	geoRegisteredOptionsEnabled: 'geoRegisteredOptionsEnabled',
+	shadowMouse: 'shadowMouse',
+	shadowMouseDisabled: 'shadowMouseDisabled',
+	pinLocation: 'pinLocation',
+	autoImageProcessing: 'autoImageProcessing',
+	imageProcessingDisabled: 'imageProcessingDisabled',
+	isMeasureToolActive: 'isMeasureToolActive'
+};
+
 export interface AnnotationProperties {
 	strokeWidth?: number;
 	strokeColor?: string;
@@ -10,7 +30,7 @@ export interface AnnotationProperties {
 }
 
 export interface IToolsState {
-	flags: Map<string, boolean>;
+	flags: Map<ToolsFlag, boolean>;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
@@ -20,7 +40,7 @@ export interface IToolsState {
 }
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<string, boolean>([
+	flags: new Map<ToolsFlag, boolean>([
 		['geoRegisteredOptionsEnabled', true],
 		['annotations', true]
 	]),
@@ -39,15 +59,14 @@ export const toolsFeatureKey = 'tools';
 export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
-	let tmpMap: Map<string, boolean>;
+	let tmpMap: Map<ToolsFlag, boolean>;
 	switch (action.type) {
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
-
 			tmpMap = new Map(state.flags);
-			tmpMap.set('geoRegisteredOptionsEnabled', action.payload);
+			tmpMap.set(toolsFlags.geoRegisteredOptionsEnabled, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.START_MOUSE_SHADOW:
@@ -55,7 +74,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 				return state;	// skip when action.payload.updateTools is false
 			}
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadowMouse', true);
+			tmpMap.set(toolsFlags.shadowMouse, true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
@@ -63,19 +82,19 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 				return state;	// skip when action.payload.updateTools is false
 			}
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadowMouse', false);
+			tmpMap.set(toolsFlags.shadowMouse, false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadowMouseDisabled', true);
+			tmpMap.set(toolsFlags.shadowMouseDisabled, true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('shadowMouseDisabled', false);
+			tmpMap.set(toolsFlags.shadowMouseDisabled, false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
@@ -83,7 +102,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
-			tmpMap.set('pinLocation', action.payload);
+			tmpMap.set(toolsFlags.pinLocation, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.GO_TO:
@@ -95,44 +114,44 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('autoImageProcessing', action.payload);
+			tmpMap.set(toolsFlags.autoImageProcessing, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MEASURE_TOOL_STATE:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('isMeasureToolActive', action.payload);
+			tmpMap.set(toolsFlags.isMeasureToolActive, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('imageProcessingDisabled', false);
-			tmpMap.set('autoImageProcessing', false);
+			tmpMap.set(toolsFlags.imageProcessingDisabled, false);
+			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.DISABLE_IMAGE_PROCESSING:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('imageProcessingDisabled', true);
-			tmpMap.set('autoImageProcessing', false);
+			tmpMap.set(toolsFlags.imageProcessingDisabled, true);
+			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('annotations', false);
+			tmpMap.set(toolsFlags.annotations, false);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.FLAGS.ANNOTATION_OPEN:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set('annotations', true);
+			tmpMap.set(toolsFlags.annotations, true);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
 			tmpMap = new Map(state.flags);
-			tmpMap.set('autoImageProcessing', false);
+			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:

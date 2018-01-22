@@ -1,50 +1,26 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
-import { MapsLayout, CaseOrientation } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
-
-export interface IStatusBarState {
-	layouts: MapsLayout[];
-	selectedLayoutIndex: number;
-	flags: Map<string, boolean>;
-	orientations: CaseOrientation[],
-	geoFilters: string[],
-	orientation: CaseOrientation;
-	geoFilter: string;
-	time: { from: Date, to: Date },
-	overlaysCount: number,
-	overlayNotInCase: boolean
-}
-
-export const statusBarFlagsItems = {
-	pinPointIndicator: 'PIN_POINT_INDICATOR',
-	pinPointSearch: 'PIN_POINT_SEARCH',
-	geoRegisteredOptionsEnabled: 'geoRegisteredOptionsEnabled'
-};
+import { ComboBoxesProperties } from '@ansyn/status-bar';
+import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
 	showOverlayErrorToast: 'Failed to load overlay'
 };
 
-const layouts: MapsLayout[] = [
-	{ id: 'layout1', description: 'full screen', mapsCount: 1 },
-	{ id: 'layout2', description: '2 maps full', mapsCount: 2 },
-	{ id: 'layout3', description: 'full', mapsCount: 2 },
-	{ id: 'layout4', description: 'full', mapsCount: 3 },
-	{ id: 'layout5', description: 'full', mapsCount: 3 },
-	{ id: 'layout6', description: 'full', mapsCount: 4 }
-];
-
-const selectedLayoutIndex = 0;
+export interface IStatusBarState {
+	selectedLayoutIndex: number;
+	flags: Map<StatusBarFlag, boolean>;
+	comboBoxesProperties: ComboBoxesProperties,
+	time: { from: Date, to: Date },
+	overlaysCount: number,
+	overlayNotInCase: boolean
+}
 
 export const StatusBarInitialState: IStatusBarState = {
-	layouts,
-	selectedLayoutIndex,
-	flags: new Map<string, boolean>(),
-	orientations: ['Align North', 'User Perspective', 'Imagery Perspective'],
-	geoFilters: ['pin-point'],
-	orientation: 'Align North',
-	geoFilter: 'pin-point',
+	selectedLayoutIndex: 0,
+	flags: new Map<StatusBarFlag, boolean>(),
+	comboBoxesProperties: {},
 	time: { from: new Date(0), to: new Date() },
 	overlaysCount: 0,
 	overlayNotInCase: false
@@ -80,11 +56,8 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 			return { ...state, flags: newMap };
 
-		case StatusBarActionsTypes.SET_ORIENTATION:
-			return { ...state, orientation: action.payload };
-
-		case StatusBarActionsTypes.SET_GEO_FILTER:
-			return { ...state, geoFilter: action.payload };
+		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
+			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
 		case StatusBarActionsTypes.SET_TIME:
 			return { ...state, time: action.payload };

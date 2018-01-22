@@ -20,7 +20,6 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
-	statusBarFlagsItems,
 	StatusBarInitialState,
 	StatusBarReducer,
 	statusBarStateSelector
@@ -67,6 +66,7 @@ import {
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { statusBarFlagsItems } from '@ansyn/status-bar';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';

@@ -98,24 +98,6 @@ export class CasesAppEffects {
 		});
 	/**
 	 * @type Effect
-	 * @name onOpenShareLink$
-	 * @ofType OpenShareLink
-	 * @dependencies cases
-	 * @dispatch: false
-	 */
-	@Effect({ dispatch: false })
-	onOpenShareLink$ = this.actions$
-		.ofType(StatusBarActionsTypes.OPEN_SHARE_LINK)
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
-			return state.selectedCase;
-		})
-		.map((sCase: Case) => {
-			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			window.open(shareLink);
-		});
-
-	/**
-	 * @type Effect
 	 * @name onLoadContexts$
 	 * @ofType LoadContextsAction
 	 * @action LoadContextsSuccessAction

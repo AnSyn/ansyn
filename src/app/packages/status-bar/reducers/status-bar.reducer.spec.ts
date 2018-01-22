@@ -1,5 +1,6 @@
-import { statusBarFlagsItems, StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
+import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
+import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;
@@ -21,7 +22,7 @@ describe('Status Bar Reducer', () => {
 
 	it('update status flags - \'bad\' value', () => {
 		const action = new UpdateStatusFlagsAction({
-			key: 'TMP',
+			key: <StatusBarFlag> 'TMP',
 			value: true
 		});
 

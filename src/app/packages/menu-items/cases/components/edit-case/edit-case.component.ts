@@ -91,6 +91,7 @@ export class EditCaseComponent implements OnInit {
 			owner: '',
 			lastModified: new Date(),
 			state: {
+				...selectedCase.state,
 				maps: {
 					layoutsIndex: 0,
 					activeMapId: activeMap.id,
@@ -101,11 +102,8 @@ export class EditCaseComponent implements OnInit {
 					from: new Date(0).toISOString(),
 					to: new Date().toISOString()
 				},
-				region: selectedCase.state.region,
-				orientation: selectedCase.state.orientation,
-				geoFilter: selectedCase.state.geoFilter,
 				favoritesOverlays: [],
-				overlaysManualProcessArgs: new Object()
+				overlaysManualProcessArgs: {}
 			}
 		};
 	}

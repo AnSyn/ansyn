@@ -68,7 +68,8 @@
 					"filters": null,
 					"showOnlyFavorites": false
 				},
-				"geoFilter": "pin-point",
+				"geoFilter": "Pin-Point",
+				"timeFilter": "Start - End",
 				"orientation": "Align North",
 				"favoritesOverlays": [],
 				"layers": {

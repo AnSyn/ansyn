@@ -112,7 +112,6 @@ describe('MapEffects', () => {
 			actions = hot('--a--', {
 				a: new SetLayoutAction({
 					'id': 'dfgdfg',
-					'description': 'string',
 					'mapsCount': 3
 				})
 			});

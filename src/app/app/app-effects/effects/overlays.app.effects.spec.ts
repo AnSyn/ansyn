@@ -317,7 +317,7 @@ describe('OverlaysAppEffects', () => {
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['one', 'two', 'three']) });
 		const expectedResults = cold('--(bc)--', {
 			b: new SetPendingOverlaysAction(['one', 'two', 'three']),
-			c: new ChangeLayoutAction(0)
+			c: new ChangeLayoutAction(3)
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
 	});

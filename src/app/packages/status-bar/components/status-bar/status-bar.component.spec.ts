@@ -1,19 +1,16 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, statusBarFlagsItems } from '../../reducers/status-bar.reducer';
+import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import {
-	ChangeLayoutAction,
-	ExpandAction,
-	GoNextAction,
-	GoPrevAction,
+	ChangeLayoutAction, ExpandAction, GoNextAction, GoPrevAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
-import { ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '../../models/index';
+import { statusBarFlagsItems } from '@ansyn/status-bar';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -23,7 +20,11 @@ describe('StatusBarComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule],
-			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: StatusBarConfig, useValue: {toolTips: {}} }]
+			providers: [{ provide: LoggerConfig, useValue: {} }, {
+				provide: StatusBarConfig,
+				useValue: { toolTips: {} }
+			}
+			]
 		})
 			.compileComponents();
 	}));
@@ -82,9 +83,9 @@ describe('StatusBarComponent', () => {
 		});
 	});
 
-	[{k: 39, n: "goNextActive", f: "clickGoNext"}, {k: 37, n: "goPrevActive", f: "clickGoPrev"}].forEach(key => {
+	[{ k: 39, n: 'goNextActive', f: 'clickGoNext' }, { k: 37, n: 'goPrevActive', f: 'clickGoPrev' }].forEach(key => {
 		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
-			spyOn(component, <"clickGoNext"|"clickGoPrev">key.f);
+			spyOn(component, <'clickGoNext' | 'clickGoPrev'>key.f);
 			expect(component[key.n]).toEqual(false);
 			const $event = {
 				which: key.k,

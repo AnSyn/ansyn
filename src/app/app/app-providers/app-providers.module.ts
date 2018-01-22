@@ -1,15 +1,21 @@
 import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import {
+	IdahoSourceProvider2,
+	MultipleOverlaysSource,
+	MultipleOverlaysSourceProvider,
 	IdahoOverlaysSourceConfig,
 	IdahoSourceProvider,
 	IIdahoOverlaySourceConfig
-} from './overlay-source-providers/idaho-source-provider';
-import { OpenLayerBingSourceProvider } from './map-source-providers/open-layers-BING-source-provider';
-import { OpenLayerIDAHOSourceProvider } from './map-source-providers/open-layers-IDAHO-source-provider';
-import { OpenLayerOSMSourceProvider } from './map-source-providers/open-layers-OSM-source-provider';
-import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
-import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
-import { OpenLayerESRI4326SourceProvider } from './map-source-providers/open-layers-ESRI-4326-source-provider';
+} from './overlay-source-providers';
+import {
+	OpenLayerBingSourceProvider,
+	OpenLayerIDAHOSourceProvider,
+	OpenLayerIDAHO2SourceProvider,
+	OpenLayerOSMSourceProvider,
+	OpenLayerTileWMSSourceProvider,
+	OpenLayerMapBoxSourceProvider,
+	OpenLayerESRI4326SourceProvider
+} from './map-source-providers';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
@@ -29,12 +35,6 @@ import { IconVisualizer } from '@ansyn/open-layer-visualizers/icon.visualizer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
-import {
-	MultipleOverlaysSource,
-	MultipleOverlaysSourceProvider
-} from './overlay-source-providers/multiple-source-provider';
-import { IdahoSourceProvider2 } from './overlay-source-providers/idaho-source-provider2';
-import { OpenLayerIDAHO2SourceProvider } from './map-source-providers/open-layers-IDAHO2-source-provider';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 @NgModule({

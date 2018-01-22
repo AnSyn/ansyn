@@ -28,6 +28,7 @@ import { ActiveMapChangedAction, AnnotationDrawEndAction } from '@ansyn/map-faca
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { IToolsState, toolsFlags, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items';
 
 describe('VisualizersAnnotationsAppEffects', () => {
 	let visualizersAnnotationsAppEffects: VisualizersAnnotationsAppEffects;
@@ -38,7 +39,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 	let caseState: ICasesState = cloneDeep(initialCasesState);
 	let layersState: ILayerState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
-
+	let toolsState: IToolsState = { ...toolsInitialState };
 	const fakeVisualizer = jasmine.createSpyObj([
 		'hide',
 		'changeStrokeWidth',
@@ -73,8 +74,10 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			[casesStateSelector, caseState],
 			[layersStateSelector, layersState],
 			[mapStateSelector, mapState],
-			[coreStateSelector, coreState]
+			[coreStateSelector, coreState],
+			[toolsStateSelector, toolsState]
 		]);
+		toolsState.flags.set(toolsFlags.annotations, true);
 		mapState.activeMapId = 'activeMapId';
 		mapState.mapsList = <any> [{ id: 'activeMapId' }, { id: 'map1' }, { id: 'map2' }];
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));

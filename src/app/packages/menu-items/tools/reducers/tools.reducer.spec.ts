@@ -5,7 +5,6 @@ import { cloneDeep } from 'lodash';
 describe('ToolsReducer', () => {
 
 	it('check initial state ', () => {
-		expect(toolsInitialState.flags.get('annotations')).toBe(true);
 		expect(toolsInitialState.flags.get('geoRegisteredOptionsEnabled')).toBe(true);
 	});
 

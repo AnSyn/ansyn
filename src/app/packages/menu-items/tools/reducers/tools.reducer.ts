@@ -42,7 +42,6 @@ export interface IToolsState {
 export const toolsInitialState: IToolsState = {
 	flags: new Map<ToolsFlag, boolean>([
 		['geoRegisteredOptionsEnabled', true],
-		['annotations', true]
 	]),
 	activeCenter: [0, 0],
 	gotoExpand: false,

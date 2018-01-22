@@ -12,7 +12,7 @@
 			{{menuItem.name}}
 		</div>
 
-		<div *ngIf="menuConfig" class="logo">
+		<div *ngIf="menuConfig?.mode" class="logo">
 			<div class="mode"
 				[style.color]="menuConfig.color"
 			    [style.background]="menuConfig.background"

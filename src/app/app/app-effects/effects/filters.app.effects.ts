@@ -26,6 +26,7 @@ import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
+import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -120,6 +121,10 @@ export class FiltersAppEffects {
 						case SliderFilterMetadata:
 							const someNotInfinity = (<SliderFilterMetadata>filterMetadata).start !== -Infinity || (<SliderFilterMetadata>filterMetadata).end !== Infinity;
 							return someNotInfinity ? badgeNum + 1 : badgeNum;
+						case BooleanFilterMetadata: {
+							const someUnchecked  = !(<BooleanFilterMetadata>filterMetadata).trueProperties.value || !(<BooleanFilterMetadata>filterMetadata).falseProperties.value ;
+							return someUnchecked ? badgeNum + 1 : badgeNum;
+						}
 						default:
 							return badgeNum;
 					}

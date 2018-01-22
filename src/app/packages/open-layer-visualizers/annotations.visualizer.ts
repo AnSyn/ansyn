@@ -102,7 +102,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
-		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
+		const boundingRect = this.getFeatureBoundingRect(selectedFeature, data.mapBrowserEvent.originalEvent.target);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: AnnotationsContextMenuEvent = {
 			featureId: id,
@@ -131,14 +131,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.updateStyle({ initial: { stroke: { width } } });
 	}
 
-	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
+	getFeatureBoundingRect(selectedFeature, originalEventTarget): AnnotationsContextMenuBoundingRect {
+		const { left, top } = originalEventTarget.getBoundingClientRect();
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
 		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
 		const width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
 		const height = Math.sqrt(Math.pow(y2 - y3, 2) + Math.pow(x2 - x3, 2));
-		return { left: x4, top: y4, width, height, rotation };
+		return { left: x4 + left, top: y4 + top, width, height, rotation };
 	}
 
 	getExtentAsPixels([x1, y1, x2, y2]) {

@@ -84,20 +84,4 @@ describe('EditCaseComponent', () => {
 		});
 	});
 
-	describe('template', () => {
-		let template: any;
-
-		beforeEach(() => {
-			template = fixture.nativeElement;
-		});
-
-		xit('input name text should current caseModel name', async(() => {
-			let input = template.querySelector('input[name=\'name\']');
-			fixture.detectChanges();
-			fixture.whenStable().then(() => {
-				expect(input.value).toEqual(fakeICasesState.cases[0].name);
-			});
-		}));
-	});
-
 });

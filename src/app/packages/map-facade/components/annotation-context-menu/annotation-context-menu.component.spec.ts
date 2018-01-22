@@ -17,7 +17,12 @@ describe('AnnotationContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				Actions,
-				{ provide: MapEffects, useValue: { annotationContextMenuTrigger$: new Subject() } }
+				{
+					provide: MapEffects, useValue: {
+						positionChanged$: new Subject(),
+						annotationContextMenuTrigger$: new Subject()
+					}
+				}
 			],
 			declarations: [
 				AnnotationContextMenuComponent
@@ -70,6 +75,12 @@ describe('AnnotationContextMenuComponent', () => {
 
 			expect(component.host.nativeElement.focus).toHaveBeenCalled();
 		});
+	});
+
+	it('positionChanged$ should close context menu (by blur)', () => {
+		spyOn(component.host.nativeElement, 'blur');
+		(<Subject<any>>component.mapEffect.positionChanged$).next();
+		expect(component.host.nativeElement.blur).toHaveBeenCalled();
 	});
 
 	it('click on remove feature button', () => {

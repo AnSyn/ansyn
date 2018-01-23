@@ -6,12 +6,13 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
 import { IServerDataLayerContainer } from '../models/server-data-layer-container';
 import { IServerDataLayer } from '../models/server-data-layer';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { Store } from '@ngrx/store';
+import { ErrorHandlerService } from '@ansyn/core';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -32,7 +33,7 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig, protected loggerService: LoggerService) {
+	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig, protected loggerService: LoggerService, protected store: Store<any>) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 
@@ -40,7 +41,9 @@ export class DataLayersService {
 		const urlString: string = this.baseUrl + (caseId ? `?caseId=${caseId}` : '');
 		return this.http.get(urlString)
 			.map(this.extractData.bind(this))
-			.catch(this.handleError);
+			.catch(err => {
+				return this.errorHandlerService.httpErrorHandle(err);
+			});
 	}
 
 	public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayerRootsBundle {
@@ -150,14 +153,4 @@ export class DataLayersService {
 		return { layers: allLayers, selectedLayers: selectedLayers };
 	}
 
-	private handleError(error: Response | any) {
-		let errMsg: string;
-		if (error instanceof Response) {
-			errMsg = `${error.status} - ${error.statusText || ''}`;
-		} else {
-			errMsg = error.message ? error.message : error.toString();
-		}
-		this.loggerService.error(errMsg);
-		return Observable.throw(errMsg);
-	}
 }

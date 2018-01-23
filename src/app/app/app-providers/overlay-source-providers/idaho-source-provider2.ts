@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IdahoOverlaysSourceConfig, IdahoSourceProvider, IIdahoOverlaySourceConfig } from './idaho-source-provider';
-import { Overlay } from '@ansyn/core';
+import { ErrorHandlerService, Overlay } from '@ansyn/core';
 
 export const IdahoOverlaySourceType2 = 'IDAHO2';
 
@@ -9,8 +9,8 @@ export const IdahoOverlaySourceType2 = 'IDAHO2';
 export class IdahoSourceProvider2 extends IdahoSourceProvider {
 	sourceType = IdahoOverlaySourceType2;
 
-	constructor(http: HttpClient, @Inject(IdahoOverlaysSourceConfig) _overlaySourceConfig: IIdahoOverlaySourceConfig) {
-		super(http, _overlaySourceConfig);
+	constructor(public errorHandlerService: ErrorHandlerService, http: HttpClient, @Inject(IdahoOverlaysSourceConfig) _overlaySourceConfig: IIdahoOverlaySourceConfig) {
+		super(errorHandlerService, http, _overlaySourceConfig);
 	}
 
 	protected parseData(idahoElement: any, token: string): Overlay {

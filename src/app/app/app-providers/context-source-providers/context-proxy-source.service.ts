@@ -1,9 +1,9 @@
 import { BaseContextSourceProvider, Context, ContextConfig, ContextCriteria, IContextConfig } from '@ansyn/context';
-import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/catch';
+import { ErrorHandlerService } from '@ansyn/core';
 
 export interface IProxySource {
 	uri: string;
@@ -17,7 +17,7 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 
 	uri: string;
 
-	constructor(@Inject(ContextConfig)config: IContextConfig, protected http: HttpClient) {
+	constructor(@Inject(ContextConfig)config: IContextConfig, protected http: HttpClient, @Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService) {
 		super();
 		this.config = <IProxySource>config.proxy;
 
@@ -27,7 +27,9 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	find(criteria: ContextCriteria) {
 		return this.http.get(this.uri.concat('/', String(criteria.start), '/', String(criteria.limit)))
 			.map(res => this.parseFromSource(res))
-			.catch(this.handleError);
+			.catch(err => {
+				return this.errorHandlerService.httpErrorHandle(err);
+			});
 	}
 
 	remove(id): any {
@@ -37,12 +39,16 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 	create(payload: Context) {
 		return this.http.post(this.uri, this.parseToSource(payload))
 		// .map(res =>  this.parseFromSource(res.json() || {}))
-			.catch(this.handleError);
+			.catch(err => {
+				return this.errorHandlerService.httpErrorHandle(err);
+			});
 	}
 
 	update(id, payload: Context) {
 		return this.http.put(this.uri + '/' + id, this.parseToSource(payload))
-			.catch(this.handleError);
+			.catch(err => {
+				return this.errorHandlerService.httpErrorHandle(err);
+			});
 	}
 
 	parseToSource(data): any {
@@ -60,17 +66,4 @@ export class ContextProxySourceService extends BaseContextSourceProvider {
 		});
 	}
 
-	private handleError(error: Response | any) {
-		// In a real world app, you might use a remote logging infrastructure
-		let errMsg: string;
-		if (error instanceof Response) {
-			const body = error.json() || '';
-			const err = (<any>body).error || JSON.stringify(body);
-			errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-		} else {
-			errMsg = error.message ? error.message : error.toString();
-		}
-		console.error(errMsg);
-		return Observable.throw(errMsg);
-	}
 }

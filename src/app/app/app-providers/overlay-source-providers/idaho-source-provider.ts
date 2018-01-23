@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { Overlay } from '@ansyn/core';
+import { ErrorHandlerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import * as wellknown from 'wellknown';
@@ -37,15 +37,18 @@ export interface IIdahoOverlaySourceConfig {
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = IdahoOverlaySourceType;
 
-	constructor(protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
+	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super();
+
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
 		return <Observable<Overlay>>this.http.get(url)
 			.map(this.extractData.bind(this))
-			.catch(this.handleError);
+			.catch((error: Response | any) => {
+				return this.errorHandlerService.httpErrorHandle(error);
+			});
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
@@ -59,28 +62,33 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
-		const requestParams  = Object.assign({}, fetchParams, {limit: fetchParams.limit + 1});
-
+		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
 		return <Observable<OverlaysFetchData>>this.http.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
-			.catch(this.handleError);
+			.catch((error: Response | any) => {
+				return this.errorHandlerService.httpErrorHandle(error);
+			});
 
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
 		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
-			.catch(this.handleError);
+			.catch((error: Response | any) => {
+				return this.errorHandlerService.httpErrorHandle(error);
+			});
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
 		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
-			.catch(this.handleError);
+			.catch((error: Response | any) => {
+				return this.errorHandlerService.httpErrorHandle(error);
+			});
 	}
 
 	private extractArrayData(data: IdahoResponse): Array<Overlay> {
@@ -91,19 +99,6 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	private extractData(data: IdahoResponseForGetById): Overlay {
 		return this.parseData(data.idahoResult, data.token);
-	}
-
-	private handleError(error: Response | any): any {
-		let errorMessage: string;
-		if (error instanceof Response) {
-			const body = error.json() || '';
-			const bodyError = body.error || JSON.stringify(body);
-			errorMessage = `${bodyError.status} - ${bodyError.statusText || ''} ${bodyError}`;
-		} else {
-			errorMessage = error.message ? error.message : error.toString();
-		}
-		console.warn(errorMessage);
-		return Observable.empty();
 	}
 
 	protected parseData(idahoElement: any, token: string): Overlay {

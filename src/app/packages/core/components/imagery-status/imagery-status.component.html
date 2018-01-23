@@ -6,8 +6,8 @@
 
 	<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
 			class="small-icon-button link-maps"
-			tooltip-value="link"
-			tooltip-class="top right"
+			tooltip-value="Momentarily link screens"
+			tooltip-class="bottom right"
 
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
@@ -15,8 +15,8 @@
 
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
-			tooltip-value="toggle"
-			tooltip-class="top right"
+			tooltip-value="Show/ Hide layers"
+			tooltip-class="bottom right"
 
 	>
 		<i [class.icon-main-data-layers]="layerFlag"
@@ -26,8 +26,8 @@
 	<button *ngIf="overlay" class="small-icon-button set-favorite"
 			[class.active]="isFavoriteOverlayDisplayed()"
 			(click)="toggleFavorite()"
-			tooltip-value="fav"
-			tooltip-class="top right"
+			tooltip-value="Add to favorites"
+			tooltip-class="bottom right"
 
 
 	>

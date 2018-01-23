@@ -6,24 +6,30 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ErrorHandlerService } from '@ansyn/core';
 
-describe('DataLayersService', () => {
+fdescribe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;
 	let http: HttpClient;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
-			providers: [DataLayersService, {
-				provide: layersConfig,
-				useValue: {
-					'layersByCaseIdUrl': 'http://localhost:9001/api/v1/layers'
-				}
-			},
+			providers: [
+				DataLayersService,
+				{
+					provide: layersConfig,
+					useValue: { 'layersByCaseIdUrl': 'http://localhost:9001/api/v1/layers'}
+				},
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }
+				},
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: (some) => null }
 				}
+
 			]
 		});
 	});

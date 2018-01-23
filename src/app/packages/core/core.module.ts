@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
-import { ProjectionConverterService } from './services/projection-converter.service';
-import { LoggerService } from './services/logger.service';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
 import { CoreService } from './services/core.service';
+import {
+	ErrorHandlerService, GenericTypeResolverService, LoggerService,
+	ProjectionConverterService
+} from './services/index';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -30,7 +31,8 @@ const coreComponents = [
 		GenericTypeResolverService,
 		ProjectionConverterService,
 		LoggerService,
-		CoreService
+		CoreService,
+		ErrorHandlerService
 	],
 	exports: coreComponents,
 	declarations: coreComponents

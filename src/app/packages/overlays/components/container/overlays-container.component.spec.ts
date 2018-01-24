@@ -1,24 +1,19 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { createStore, MockComponent, StoreFixture } from '@ansyn/core/test';
 import { OverlaysContainerComponent } from './overlays-container.component';
-import { OverlaysConfig, OverlaysService } from '../services/overlays.service';
-import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
+import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Rx';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { Overlay } from '../models/overlay.model';
-import { OverlaysEffects } from '../effects/overlays.effects';
+import { Overlay } from '../../models/overlay.model';
+import { OverlaysEffects } from '../../effects/overlays.effects';
 
 import { State, Store, StoreModule } from '@ngrx/store';
 
-import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
-import {
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	SelectOverlayAction,
-	UnSelectOverlayAction
-} from '../actions/overlays.actions';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction, UnSelectOverlayAction } from '../../actions/overlays.actions';
 import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';

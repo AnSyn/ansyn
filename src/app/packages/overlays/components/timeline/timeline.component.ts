@@ -1,18 +1,9 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	EventEmitter,
-	HostListener,
-	Input,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { select, selectAll, selection } from 'd3';
 import { eventDrops } from 'ansyn-event-drops';
 
 
-import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { isEqual } from 'lodash';
 
 export const BASE_DROP_COLOR = '#d393e1';
@@ -119,7 +110,7 @@ export class TimelineComponent implements OnInit {
 		return (data, index, nodes, event: MouseEvent) => {
 			if (!down) {
 				down = [event.clientX, event.clientY];
-				wait = window.setTimeout(( () => {
+				wait = window.setTimeout((() => {
 					wait = null;
 					down = null;
 					// this.toggleDrop(nodes[index]);

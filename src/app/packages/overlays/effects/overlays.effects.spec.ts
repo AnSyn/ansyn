@@ -15,14 +15,11 @@ import {
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
-import {
-	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
-	overlaysStateSelector
-} from '../reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, overlaysInitialState, overlaysStateSelector } from '../reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core'
+import { coreInitialState, coreStateSelector, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

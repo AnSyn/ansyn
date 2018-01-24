@@ -2,7 +2,8 @@ import { IOverlaysState, OverlayReducer, overlaysInitialState } from './overlays
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	SelectOverlayAction, SetFilteredOverlaysAction,
+	SelectOverlayAction,
+	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
 	UnSelectOverlayAction

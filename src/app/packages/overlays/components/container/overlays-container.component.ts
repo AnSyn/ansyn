@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { TimelineEmitterService } from '../services/timeline-emitter.service';
-import * as overlaysAction from '../actions/overlays.actions';
+import { TimelineEmitterService } from '../../services/timeline-emitter.service';
+import * as overlaysAction from '../../actions/overlays.actions';
 import {
 	MouseOutDropAction,
 	MouseOverDropAction,
@@ -8,16 +8,16 @@ import {
 	SelectOverlayAction,
 	SetTimelineStateAction,
 	UnSelectOverlayAction
-} from '../actions/overlays.actions';
+} from '../../actions/overlays.actions';
 import { first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/store-element';
-import { OverlaysEffects } from '../effects/overlays.effects';
+import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector, TimelineState } from '../reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector, TimelineState } from '../../reducers/overlays.reducer';
 import { schemeCategory10 } from 'd3';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';

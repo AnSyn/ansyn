@@ -24,6 +24,8 @@
 		display: flex;
 		margin-left: auto;
 		justify-content: space-between;
+		border-left: 2px solid transparent;
+
 		&.separated-state {
 			width: 100%;
 			border-color: white;
@@ -77,7 +79,6 @@
 		}
 
 		.selectedCase {
-			border-left: 2px solid transparent;
 			transform: translateX(calc(~'-50vw + (@{menu-width} / 2)'));
 			min-width: 0;
 			align-self: center;

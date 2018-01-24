@@ -1,14 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	AnnotationClose,
-	AnnotationOpen,
-	AnnotationVisualizerAgentAction,
-	GoToExpandAction, SetAnnotationMode,
-	SetAutoCloseMenu,
-	SetAutoImageProcessing,
-	SetMeasureDistanceToolState,
-	StartMouseShadow,
-	StopMouseShadow
+	AnnotationClose, AnnotationOpen, AnnotationVisualizerAgentAction, GoToExpandAction, SetAnnotationMode,
+	SetAutoCloseMenu, SetAutoImageProcessing, SetMeasureDistanceToolState, StartMouseShadow, StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -23,12 +16,12 @@ enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit, OnDestroy {
-	@ViewChild('imageManualProcessing') manualProcessingControls;
 
 	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
 		.pluck<IToolsState, boolean>('gotoExpand')
 		.distinctUntilChanged();
-
+	imageProcessInitParams = null;
+	isImageControlActive = false;
 	public subMenuEnum = SubMenuEnum;
 	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
@@ -58,14 +51,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			}
 		});
 		this.manualImageProcessingParams$.subscribe((processParams) => {
-			if (!isEqual(processParams, this.manualProcessingControls.imgProcessParams)) {
-				if (!processParams) {
-					this.manualProcessingControls.resetAllParams();
-				} else {
-					this.manualProcessingControls.imgProcessParams = processParams;
-					this.manualProcessingControls.imgProcessActive = true;
-				}
-			}
+			this.imageProcessInitParams = processParams;
 		});
 	}
 
@@ -90,7 +76,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing());
-		this.manualProcessingControls.resetAllParams();
+		this.imageProcessInitParams = null;
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {

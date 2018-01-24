@@ -1,11 +1,14 @@
 <div class="image-processing-container">
-	<div class="resetAll" (click)="resetAll()">Reset all</div>
+	<div class="resetAll" (click)="resetAllParamsNEmit()">Reset all</div>
 	<ul class="image-processing-options">
 		<li *ngFor="let param of params">
 			<label [for]="'image-processing-' + param">{{param.name}}</label><br>
 			<input [id]="'image-processing-' + param"
-				   type="range" [min]="param.min" max="param.max" [(ngModel)]="param.value"
-				   (change)="throttledManualImageProcess()">
+				   type="range"
+				   [min]="param.min"
+				   [max]="param.max"
+				   [(ngModel)]="param.value"
+				   (ngModelChange)="manualImageProcess()">
 			<button class="button-reset" (click)="resetOne(param)">reset</button>
 		</li>
 	</ul>

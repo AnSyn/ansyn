@@ -2,14 +2,20 @@
 
 :host {
 	&.combo-center .combo-container .options-container .option {
-		text-align: center;
+		justify-content: center;
 	}
+	position: relative;
+	display: block;
 	height: 100%;
+	width: 100%;
 	.combo-container {
 		height: 100%;
+		width: 100%;
 		position: relative;
 
 		button.trigger {
+			overflow: hidden;
+			width: 100%;
 			outline: none;
 			background: black;
 			color: white;
@@ -26,6 +32,13 @@
 				margin-left: 5px;
 				font-size: 7px;
 			}
+
+			div.rander {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
 		}
 		.options-container {
 			border: 1px solid;
@@ -62,12 +75,19 @@
 				text-align: left;
 				height: 29px;
 				display: flex;
-				justify-content: center;
 				align-items: center;
 				i {
 					align-text: center;
 					opacity: .8;
 					font-size: 16px;
+				}
+				&.selected {
+					background-color: white;
+					color: black;
+					border-color: white;
+					i {
+						opacity: 1;
+					}
 				}
 				&:hover {
 					background-color: white;

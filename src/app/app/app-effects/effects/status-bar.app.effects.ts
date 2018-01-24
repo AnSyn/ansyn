@@ -110,7 +110,7 @@ export class StatusBarAppEffects {
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
 	 * @filter Case is truthy
-	 * @action ChangeLayoutAction, SetOrientationAction, SetGeoFilterAction, SetTimeAction
+	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetTimeAction
 	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
@@ -130,8 +130,8 @@ export class StatusBarAppEffects {
 		});
 	/**
 	 * @type Effect
-	 * @name statusBarChanges$
-	 * @ofType SetOrientationAction, SetGeoFilterAction, SetTimeAction
+	 * @name setTime$
+	 * @ofType SetTimeAction
 	 * @dependencies cases
 	 * @filter There is a selected case
 	 * @action UpdateCaseAction, LoadOverlaysAction?
@@ -162,10 +162,9 @@ export class StatusBarAppEffects {
 	/**
 	 * @type Effect
 	 * @name comboBoxesProperties
-	 * @ofType SetOrientationAction, SetGeoFilterAction, SetTimeAction
+	 * @ofType SetComboBoxesProperties
 	 * @dependencies cases
-	 * @filter There is a selected case
-	 * @action UpdateCaseAction, LoadOverlaysAction?
+	 * @action UpdateCaseAction
 	 */
 	@Effect()
 	comboBoxesProperties$: Observable<any> = this.actions$

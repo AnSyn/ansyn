@@ -19,6 +19,7 @@
 
 	.status-bar {
 		width: 50%;
+		height: 100%;
 		color: white;
 		display: flex;
 		margin-left: auto;
@@ -39,6 +40,7 @@
 			align-items: center;
 			position: relative;
 			display: flex;
+			height: 100%;
 			span {
 				margin-left: 5px;
 				line-height: 23px;
@@ -76,7 +78,7 @@
 
 		.selectedCase {
 			border-left: 2px solid transparent;
-			transform: translateX(calc(~'-50vw + 45px'));
+			transform: translateX(calc(~'-50vw + (@{menu-width} / 2)'));
 			min-width: 0;
 			align-self: center;
 			box-sizing: border-box;
@@ -114,6 +116,8 @@
 			padding: 0 10px;
 			justify-content: space-between;
 			flex: 1;
+			height: 100%;
+			position: relative;
 
 			.combo-box-container {
 				.combo-box-width {
@@ -141,6 +145,7 @@
 					display: block;
 					width: 10px;
 					height: 10px;
+					top: 12px;
 					background: black;
 					transform: translateX(-6px) rotate(45deg);
 					position: absolute;

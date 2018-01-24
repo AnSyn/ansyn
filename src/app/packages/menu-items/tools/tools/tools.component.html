@@ -38,7 +38,8 @@
 				[disabled]="flags.get('imageProcessingDisabled')">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing" (isActive)="isImageControlActive==$event"
+		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing"
+										(isActive)="isImageControlActive==$event"
 										[initParams]="imageProcessInitParams"></ansyn-image-processing-control>
 	</div>
 

@@ -24,7 +24,8 @@ describe('ToolsComponent', () => {
 	});
 	const mockImageManualProcessing = MockComponent({
 		selector: 'ansyn-image-processing-control',
-		inputs: ['expand', 'resetAllParams']
+		inputs: ['expand', 'initParams'],
+		outputs: ['isActive']
 	});
 
 	beforeEach(async(() => {
@@ -38,9 +39,8 @@ describe('ToolsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ToolsComponent);
 		// Add manualProcessingControls function: resetAllParams (accessible from ToolsComponent)
-		fixture.componentInstance.manualProcessingControls['resetAllParams'] = () => {
-		};
 		component = fixture.componentInstance;
+		component.imageProcessInitParams = null;
 		fixture.detectChanges();
 	});
 
@@ -66,13 +66,11 @@ describe('ToolsComponent', () => {
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
 	});
-	it('on toggleAutoImageProcessing should call update resetAllParams', () => {
+	it('on toggleAutoImageProcessing should nullify imageProcessInitParams', () => {
 		component.flags.set('autoImageProcessing', false);
-		spyOn(component.manualProcessingControls, 'resetAllParams');
 		const button = fixture.debugElement.nativeElement.querySelector('div.image-auto-processing button');
 		button.click();
-
-		expect(component.manualProcessingControls.resetAllParams).toHaveBeenCalled();
+		expect(component.imageProcessInitParams).toBeNull();
 	});
 
 	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {

@@ -19,7 +19,6 @@ export interface IImageProcParamComp extends IImageProcParam {
 })
 export class ImageProcessingControlComponent {
 	private _isExpended: boolean;
-	public imgProcessActive: boolean;	// instead of Object, for Travis testing
 	public throttledManualImageProcess: Function;	// throttled function
 
 	@HostBinding('class.expand') @Input()
@@ -31,14 +30,11 @@ export class ImageProcessingControlComponent {
 		return this._isExpended;
 	}
 
-	params: Array<IImageProcParamComp> = [];
+	params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
+		return { ...param, value: param.defaultValue };
+	});
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
-		this.resetAllParams();
-		this.params = config.ImageProcParams.map(param => {
-			return { ...param,  value: 0 };
-		});
-		// limit to once every 200 ms
 		this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
 	}
 
@@ -47,20 +43,12 @@ export class ImageProcessingControlComponent {
 		this.params.forEach(param => {
 			param.value = param.defaultValue;
 		});
-		this.imgProcessActive = false;
 	}
 
 	manualImageProcess() {
-		this.imgProcessActive = !isEqual(
-			this.params.map(param => {
-				return param.value;
-			}),
-			this.params.map(param => {
-				return param.defaultValue;
-			})
-		);
+		const isChangeFromDefualt = this.params.every(({ value, defaultValue }) => value === defaultValue);
 		let dispatchValue = {};
-		if (this.imgProcessActive) {
+		if (isChangeFromDefualt) {
 			this.params.forEach(param => {
 				dispatchValue[param.name] = param.value;
 			});
@@ -73,13 +61,10 @@ export class ImageProcessingControlComponent {
 
 	resetOne(param) {
 		param.value = param.defaultValue;
-		this.throttledManualImageProcess();
 	}
 
 	resetAll() {
 		this.resetAllParams();
-		this.throttledManualImageProcess();
-
 	}
 
 	close() {

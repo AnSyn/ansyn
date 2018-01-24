@@ -63,7 +63,7 @@ export class ImageProcessingControlComponent {
 			this.params.forEach(param => {
 				dispatchValue[param.name] = param.value;
 			});
-			this.isActive.emit(true)
+			this.isActive.emit(true);
 		}
 		else {
 			dispatchValue = undefined;
@@ -79,7 +79,7 @@ export class ImageProcessingControlComponent {
 	resetAllParamsNEmit() {
 		this.resetParams();
 		this.manualImageProcess();
-		this.isActive.emit(false)
+		this.isActive.emit(false);
 	}
 
 	resetParams() {

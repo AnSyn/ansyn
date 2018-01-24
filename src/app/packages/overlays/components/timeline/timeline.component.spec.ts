@@ -1,5 +1,5 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
-import { TimelineEmitterService } from '../services/timeline-emitter.service';
+import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs/Rx';

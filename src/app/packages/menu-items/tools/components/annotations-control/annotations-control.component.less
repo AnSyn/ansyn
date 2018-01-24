@@ -43,6 +43,7 @@
 			transition: visibility 0s linear .2s;
 			visibility: hidden;
 			opacity: 0;
+			position: relative;
 		}
 
 		& > li {
@@ -87,7 +88,7 @@
 				background-color: #297f9b;
 			}
 
-			ul {
+			div.list {
 				display: flex;
 				flex-direction: column;
 				position: absolute;
@@ -96,25 +97,14 @@
 				overflow: hidden;
 				padding: 0;
 				margin: 0;
-
 				text-align: center;
 				transition: height 0.3s;
 				background: @application-main-color;
-				& > li {
-					list-style-type: none;
-					//border-bottom: 1px solid white;
-					//&:first-child {
-					//	border-top: 1px solid white;
-					//}
-					border: none;
+				.item {
 					cursor: pointer;
-					font-size: 14px;
-					color: white;
-					padding: 4px;
-
-				}
-				li.selected, li:hover {
-					background-color: #297f9b;
+					&:hover, &.selected {
+						background-color: #297f9b;
+					}
 				}
 
 				&.line-width-expand {
@@ -125,10 +115,18 @@
 				&.color-selection-expand {
 					width: 80px;
 					left: -39px;
-					input {
-						display: none;
-					}
-					li {
+
+					.color-picker-item {
+						font-size: 14px;
+						color: white;
+						label {
+							width: 100%;
+							height: 100%;
+							display: block;
+							cursor: pointer;
+							font-size: 14px;
+							padding: 4px;
+						}
 						span.color {
 							display: inline-block;
 							width: 10px;
@@ -137,6 +135,15 @@
 						}
 						span.text {
 							font-size: 14px;
+						}
+						input {
+							display: block;
+							visibility: hidden;
+							width: 0;
+							height: 0;
+							padding: 0;
+							margin: 0;
+							border: none;
 						}
 
 					}

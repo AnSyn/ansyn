@@ -48,8 +48,8 @@ export const toolsInitialState: IToolsState = {
 	annotationMode: undefined,
 	annotationProperties: {
 		strokeWidth: 1,
-		strokeColor: '#27b2cfe6',
-		fillColor: 'white'
+		strokeColor: '#27b2cf',
+		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined
 };

@@ -10,7 +10,7 @@ export interface IToolsConfig {
 		ed50: string;
 		ed50Customized: string;
 	},
-	ImageProcParams : Array<IImageProcParam>
+	ImageProcParams: Array<IImageProcParam>
 }
 
 export interface IImageProcParam {

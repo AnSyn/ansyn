@@ -71,7 +71,8 @@ describe('OverlayContainerComponent', () => {
 			],
 			declarations: [
 				OverlaysContainerComponent,
-				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] })
+				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] }),
+				MockComponent({ selector: 'ansyn-overlay-status', inputs: []})
 			],
 			imports: [
 				HttpClientModule,
@@ -191,12 +192,4 @@ describe('OverlayContainerComponent', () => {
 	//     component.ngOnInit();
 	//     expect(overlaysService.getByCase).toHaveBeenCalled();
 	// })
-
-
-	it('check that the container div is in he\'s place', () => {
-		de = fixture.debugElement.query(By.css('.overlays-container'));
-		expect(de.nativeElement.childElementCount).toBe(1);
-
-	});
-
 });

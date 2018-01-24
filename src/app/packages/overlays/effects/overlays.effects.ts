@@ -30,6 +30,7 @@ import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { coreStateSelector, ICoreState, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core';
+import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -85,15 +86,18 @@ export class OverlaysEffects {
 				.mergeMap((overlays: OverlaysFetchData) => {
 					const actions: Array<any> = [new SyncOverlaysWithFavoritesOnLoadingAction(overlays.data)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
-					if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
+					if (!overlays.data || overlays.data.length === 0) {
+						actions.push(new SetOverlaysStatusMessage('No overlays available, please try another search'));
+					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetToastMessageAction({
-							toastText: `Only the latest ${overlays.data.length} results are presented, try to edit search time range.`
-						}));
+						actions.push(new SetOverlaysStatusMessage(`Only the latest ${overlays.data.length} results are presented, try to edit search time range.`));
+					} else {
+						actions.push(new SetOverlaysStatusMessage(null));
 					}
+
 					return actions;
 				})
-				.catch(() => Observable.of(new LoadOverlaysSuccessAction([])));
+				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 	/**
 	 * @type Effect

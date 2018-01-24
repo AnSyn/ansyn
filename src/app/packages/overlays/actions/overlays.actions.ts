@@ -29,7 +29,8 @@ export const OverlaysActionTypes = {
 	GO_PREV_DISPLAY: type('GO_PREV_DISPLAY'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
-	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP')
+	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
+	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE')
 };
 
 export class SelectOverlayAction implements Action {
@@ -207,6 +208,13 @@ export class MouseOutDropAction implements Action {
 	}
 }
 
+export class SetOverlaysStatusMessage implements Action {
+	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
+
+	constructor(public payload: string) {
+	}
+}
+
 
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
@@ -228,4 +236,5 @@ export type OverlaysActions
 	| GoNextDisplayAction
 	| GoPrevDisplayAction
 	| MouseOverDropAction
-	| MouseOutDropAction;
+	| MouseOutDropAction
+	| SetOverlaysStatusMessage;

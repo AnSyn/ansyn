@@ -1,13 +1,8 @@
-<!-- <button (click)="demo()" >click</button> -->
 <div class="overlays-container">
 
-	<div class="overlays-status" *ngIf="!(loading || !noDrops) " [@timeline-status]>
-		<div class="text-container">
-			No overlays available, please try another search
-		</div>
-	</div>
+	<ansyn-overlay-status></ansyn-overlay-status>
 
-	<div class="overlays-status" *ngIf="loading" [@timeline-status]>
+	<div class="overlays-dots" *ngIf="loading" [@timeline-status]>
 		<div class="loading-container">
 			<div></div>
 			<div></div>

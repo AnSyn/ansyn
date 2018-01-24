@@ -12,12 +12,14 @@
 			{{menuItem.name}}
 		</div>
 
-		<div *ngIf="menuConfig?.mode" class="logo">
+		<div class="logo">
 			<div class="mode"
-				[style.color]="menuConfig.color"
-			    [style.background]="menuConfig.background"
-			    [style.border]="'1px sollid' + menuConfig.color"
-			>{{menuConfig.mode}}</div>
+				 *ngIf="menuConfig?.mode"
+				 [style.color]="menuConfig.color"
+				 [style.background]="menuConfig.background"
+				 [style.border]="'1px sollid' + menuConfig.color"
+			>{{menuConfig.mode}}
+			</div>
 			<img [src]="menuConfig.path" [alt]="version" [title]="version">
 		</div>
 	</div>

@@ -16,7 +16,7 @@ export class BooleanFilterMetadata implements FilterMetadata{
 	};
 
 	falseProperties: BooleanProperties = {
-		value: false,
+		value: true,
 		count: 0
 	};
 
@@ -41,6 +41,11 @@ export class BooleanFilterMetadata implements FilterMetadata{
 	}
 
 	initializeFilter(selectedValues: CaseBooleanFilterMetadata, filter: Filter): void {
+		this.trueProperties.count = 0;
+		this.trueProperties.value = true;
+		this.falseProperties.value = true;
+		this.falseProperties.count = 0;
+
 		this.baseFilter = filter;
 		if (selectedValues) {
 			this.falseProperties.value = selectedValues.displayFalse;

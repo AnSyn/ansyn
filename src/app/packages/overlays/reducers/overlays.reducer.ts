@@ -19,6 +19,7 @@ export interface IOverlaysState {
 	filteredOverlays: string[];
 	queryParams: any;
 	timelineState: TimelineState;
+	statusMessage: string;
 }
 
 export const overlaysInitialState: IOverlaysState = {
@@ -30,7 +31,8 @@ export const overlaysInitialState: IOverlaysState = {
 	demo: 1,
 	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
-	filteredOverlays: []
+	filteredOverlays: [],
+	statusMessage: null
 };
 export const overlaysFeatureKey = 'overlays';
 export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
@@ -137,6 +139,12 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return {
 				...state,
 				overlays: updatedOverlaysMap
+			};
+
+		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
+			return {
+				...state,
+				statusMessage: action.payload
 			};
 
 		default:

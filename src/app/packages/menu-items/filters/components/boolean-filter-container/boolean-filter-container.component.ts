@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, HostBinding } from '@angular/core';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
 
@@ -18,7 +18,11 @@ export class BooleanFilterContainerComponent extends EnumFilterMetadata {
 	@Input() metadata: BooleanFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>();
 	@Input() customData: BooleanFilterCustomData = { displayFalseName: 'false', displayTrueName: 'true' };
-
+	@HostBinding('hidden')
+	get hidden() {
+		const countAll = this.metadata.trueProperties.count + this.metadata.falseProperties.count;
+		return  countAll < 1;
+	}
 	booleanOptions: { [key: string]: BooleanOption } = { trueKey: 'trueProperties', falseKey: 'falseProperties' };
 
 	onInputClicked(key: string, value: boolean) {

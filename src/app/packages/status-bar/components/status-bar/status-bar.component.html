@@ -7,9 +7,9 @@
 	(backToWorldView)="clickBackToWorldView()">
 </ansyn-imagery-status>
 
-<div class="status-bar" [class.show-separator]="!hideOverlay">
+<div class="status-bar" [class.separated-state]="!hideOverlay">
 	<!-- Selected Case -->
-	<div class="block pop-hover">
+	<div class="selectedCase block pop-hover">
 		<i class="block-icon icon-status-bar-case"></i>
 		<span>{{selectedCaseName}}</span>
 
@@ -20,123 +20,133 @@
 			</button>
 		</div>
 	</div>
-
+	<div class="combo-boxes">
 	<!-- Orientation -->
-	<div class="action block">
-		<ansyn-combo-box
-			[icon]="'icon-status-bar-orientation'"
-			[options]="orientations"
-			[selectedIndex]="selectedOrientationIndex"
-			[comboBoxToolTipDescription]="toolTips.orientation"
-			(selectedIndexChange)="comboBoxesChange({orientation: orientations[$event]})">
-		</ansyn-combo-box>
-	</div>
-
-	<!-- Geo point -->
-	<div class="action block with-buttons">
-		<ansyn-combo-box
-			[comboBoxToolTipDescription]="toolTips.geoFilter"
-			[icon]="'icon-status-bar-geo'"
-			[options]="geoFilters"
-			[selectedIndex]="selectedGeoFilterIndex"
-			(selectedIndexChange)="comboBoxesChange({geoFilter: geoFilters[$event]})">
-		</ansyn-combo-box>
-		<div class="buttons">
-			<button (click)="togglePinPointIndicatorView()"
-					[attr.tooltip-value]="toolTips.geoFilterShow"
-					tooltip-class="top right"
-					class="eye-button toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
-				<i class="icon-status-bar-show-pin-point"></i>
-			</button>
-			<button (click)="toggleMapPointSearch()"
-					[attr.tooltip-value]="toolTips.geoFilterEdit"
-					tooltip-class="top right"
-					class="edit-pinpoint toggle-icon" [class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
-				<i class="icon-edit"></i>
-			</button>
+		<div class="combo-box-container block">
+			<ansyn-combo-box
+				class="combo-box-width"
+				[icon]="'icon-status-bar-orientation'"
+				[options]="orientations"
+				[selectedIndex]="selectedOrientationIndex"
+				[comboBoxToolTipDescription]="toolTips.orientation"
+				(selectedIndexChange)="comboBoxesChange({orientation: orientations[$event]})">
+			</ansyn-combo-box>
 		</div>
-	</div>
 
-	<!-- Time -->
-	<div class="action block with-buttons">
-		<ansyn-combo-box
-			[icon]="'icon-status-bar-time'"
-			[comboBoxToolTipDescription]="toolTips.timeFilter"
-			[options]="timeFilters"
-			[selectedIndex]="selectedTimeFilterIndex"
-			(selectedIndexChange)="comboBoxesChange({timeFilter: timeLines[$event]})">
-		</ansyn-combo-box>
-		<div class="buttons">
-			<button (click)="toggleTimelineStartEndSearch()"
-					[attr.tooltip-value]="toolTips.timeFilterEdit"
-					tooltip-class="top right"
-					class="toggle-icon" [class.active]="timeSelectionEditIcon">
-				<i class="icon-edit"></i>
-			</button>
+		<!-- Geo point -->
+		<div class="combo-box-container block with-buttons">
+
+			<ansyn-combo-box
+				class="combo-box-width"
+				[comboBoxToolTipDescription]="toolTips.geoFilter"
+				[icon]="'icon-status-bar-geo'"
+				[options]="geoFilters"
+				[selectedIndex]="selectedGeoFilterIndex"
+				(selectedIndexChange)="comboBoxesChange({geoFilter: geoFilters[$event]})">
+			</ansyn-combo-box>
+
+			<div class="buttons">
+				<button (click)="togglePinPointIndicatorView()"
+						[attr.tooltip-value]="toolTips.geoFilterShow"
+						tooltip-class="top right"
+						class="eye-button toggle-icon"
+						[class.active]="flags.get(statusBarFlagsItems.pinPointIndicator)">
+					<i class="icon-status-bar-show-pin-point"></i>
+				</button>
+				<button (click)="toggleMapPointSearch()"
+						[attr.tooltip-value]="toolTips.geoFilterEdit"
+						tooltip-class="top right"
+						class="edit-pinpoint toggle-icon"
+						[class.active]="flags.get(statusBarFlagsItems.pinPointSearch)">
+					<i class="icon-edit"></i>
+				</button>
+			</div>
 		</div>
-		<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
-			<ansyn-timeline-timepicker
-				[startDatePickerValue]="(time)?.from"
-				[endDatePickerValue]="(time)?.to"
-				(closeComponent)="toggleTimelineStartEndSearch()"
-				(applyDate)="applyTimelinePickerResult($event)">
-			</ansyn-timeline-timepicker>
+
+		<!-- Time -->
+		<div class="combo-box-container block with-buttons">
+			<ansyn-combo-box
+				class="combo-box-width"
+				[icon]="'icon-status-bar-time'"
+				[comboBoxToolTipDescription]="toolTips.timeFilter"
+				[options]="timeFilters"
+				[selectedIndex]="selectedTimeFilterIndex"
+				(selectedIndexChange)="comboBoxesChange({timeFilter: timeLines[$event]})">
+			</ansyn-combo-box>
+			<div class="buttons">
+				<button (click)="toggleTimelineStartEndSearch()"
+						[attr.tooltip-value]="toolTips.timeFilterEdit"
+						tooltip-class="top right"
+						class="toggle-icon" [class.active]="timeSelectionEditIcon">
+					<i class="icon-edit"></i>
+				</button>
+			</div>
+			<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
+				<ansyn-timeline-timepicker
+					[startDatePickerValue]="(time)?.from"
+					[endDatePickerValue]="(time)?.to"
+					(closeComponent)="toggleTimelineStartEndSearch()"
+					(applyDate)="applyTimelinePickerResult($event)">
+				</ansyn-timeline-timepicker>
+			</div>
 		</div>
+
+		<!-- Layout -->
+		<div class="combo-box-container block">
+			<ansyn-combo-box
+				class="combo-center"
+				[comboBoxToolTipDescription]="toolTips.screenNumber"
+				[options]="layouts"
+				[renderFunction]="layoutRender"
+				[selectedIndex]="selectedLayoutIndex"
+				toolTipField="mapsCount"
+				(selectedIndexChange)="layoutSelectChange($event)">
+			</ansyn-combo-box>
+		</div>
+
+		<!-- Overlays -->
+		<div class="block"
+			 [attr.tooltip-value]="toolTips.imageCount"
+			 tooltip-class="top right">
+			<i class="block-icon icon-status-bar-imagery-count"></i>
+			<span>{{overlaysCount}}</span>
+		</div>
+
 	</div>
 
-	<!-- Layout -->
-	<div class="action block">
-		<ansyn-combo-box
-			class="combo-center"
-			[comboBoxToolTipDescription]="toolTips.screenNumber"
-			[options]="layouts"
-			[renderFunction]="layoutRender"
-			[selectedIndex]="selectedLayoutIndex"
-			toolTipField="mapsCount"
-			(selectedIndexChange)="layoutSelectChange($event)">
-		</ansyn-combo-box>
+	<div class="navigation">
+		<button (click)="clickGoPrev()"
+				[class.active]="goPrevActive"
+				[attr.tooltip-value]="toolTips.backwards"
+				tooltip-class="top right"
+		>
+			<i class="icon-status-bar-prev"></i>
+		</button>
+
+		<button (click)="clickGoNext()"
+				[class.active]="goNextActive"
+				[attr.tooltip-value]="toolTips.forward"
+				tooltip-class="top left"
+		>
+			<i class="icon-status-bar-next"></i>
+		</button>
+
+		<button class="transparent"
+				(click)="clickTime()"
+				[attr.tooltip-value]="toolTips.reset"
+				tooltip-class="top left"
+		>
+			<i class="icon-annotation-square"></i>
+		</button>
+
+		<button class="transparent"
+				(click)="clickExpand()"
+				[attr.tooltip-value]="toolTips.enlarge"
+				tooltip-class="top left"
+		>
+			<i class="icon-status-bar-expand"></i>
+		</button>
 	</div>
 
-	<!-- Overlays -->
-	<div class="block"
-		 [attr.tooltip-value]="toolTips.imageCount"
-		 tooltip-class="top right"
-	>
-		<i class="block-icon icon-status-bar-imagery-count"></i>
-		<span>{{overlaysCount}}</span>
-	</div>
-</div>
 
-<div class="navigation">
-	<button (click)="clickGoPrev()"
-			[class.active]="goPrevActive"
-			[attr.tooltip-value]="toolTips.backwards"
-			tooltip-class="top right"
-	>
-		<i class="icon-status-bar-prev"></i>
-	</button>
-
-	<button (click)="clickGoNext()"
-			[class.active]="goNextActive"
-			[attr.tooltip-value]="toolTips.forward"
-			tooltip-class="top left"
-	>
-		<i class="icon-status-bar-next"></i>
-	</button>
-
-	<button class="transparent"
-			(click)="clickTime()"
-			[attr.tooltip-value]="toolTips.reset"
-			tooltip-class="top left"
-	>
-		<i class="icon-annotation-square"></i>
-	</button>
-
-	<button class="transparent"
-			(click)="clickExpand()"
-			[attr.tooltip-value]="toolTips.enlarge"
-			tooltip-class="top left"
-	>
-		<i class="icon-status-bar-expand"></i>
-	</button>
 </div>

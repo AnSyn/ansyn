@@ -1,11 +1,12 @@
 <div class="combo-container">
 	<button
 		class="trigger" #optionsTrigger (click)="toggleShow()"
+		[style.width.px]="width"
 		[attr.tooltip-value]="comboBoxToolTipDescription || null" tooltip-class="top"
 		[class.active]="optionsVisible"
 	>
 		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
-		<div [innerHTML]="render(selectedIndex)"></div>
+		<div class="rander" [innerHTML]="render(selectedIndex)"></div>
 		<span class="arrow">
 			{{ !optionsVisible ? '▼' : '▲'}}
 		</span>
@@ -16,6 +17,7 @@
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<div class="option" *ngFor="let option of options; index as index"
 			 [attr.tooltip-value]="toolTipField ? option[toolTipField] : option" tooltip-class="top"
+			 [class.selected]="selectedIndex === index"
 			 (click)="selectOption(index)"
 			[innerHTML]="render(index)">
 		</div>

@@ -1,8 +1,8 @@
 @import "core/less/common";
 @import "core/less/z-index-globals";
-@import 'core/less/tooltip';
+@import "core/less/tooltip";
 
-@share-link-padding-bottom: 20px;
+@popup-padding-bottom: 15px;
 @navigation-bar-width: 133px;
 
 :host {
@@ -14,25 +14,42 @@
 
 	ansyn-imagery-status {
 		position: relative;
-		flex-grow: 1;
-		margin-top: 4px;
+		align-items: center;
 	}
 
 	.status-bar {
-		min-width: 50%;
+		width: 50%;
 		color: white;
 		display: flex;
 		margin-left: auto;
-		justify-content: space-around;
-		> .block {
-			display: flex;
-			align-items: center;
-			margin: 3px 5px;
-			position: relative;
+		justify-content: space-between;
+		&.separated-state {
+			width: 100%;
+			border-color: white;
+			justify-content: space-around;
+			.selectedCase {
+				transform: translateX(0);
+			}
 		}
 
-		&.show-separator {
-			border-left: 2px solid white
+		.block {
+			padding: 3px;
+			box-sizing: border-box;
+			vertical-align: middle;
+			align-items: center;
+			position: relative;
+			display: flex;
+			span {
+				margin-left: 5px;
+				line-height: 23px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.icon-status-bar-imagery-count {
+				font-size: 16px;
+			}
 		}
 
 		.pop-content {
@@ -42,47 +59,74 @@
 			background: transparent;
 			position: absolute;
 			transform: translate(0, 0);
-			top: 3px;
-			left:0px;
-			padding-bottom: @share-link-padding-bottom;
-			margin: 0 -5px;
+			top: 0;
+			left: 0;
 			display: flex;
 		}
 
 		.pop-hover:hover .pop-content, .pop-content.visible {
 			visibility: visible;
 			opacity: 1;
+			padding-bottom: @popup-padding-bottom;
 			transform: translate(0, -100%);
-		}
-
-		.block {
-			background-color: black;
-			padding: 3px;
-			vertical-align: middle;
-			align-items: center;
-			position: relative;
-
-			span {
-				padding: 0 8px 0 0;
-				height: 23px;
-				line-height: 23px;
-			}
-
-			.icon-status-bar-imagery-count {
-				font-size: 16px;
+			&.time-selection {
+				transform: translateY(calc(~'-100% - @{popup-padding-bottom}'));
 			}
 		}
 
-		.action {
-			padding: 0;
+		.selectedCase {
+			border-left: 2px solid transparent;
+			transform: translateX(calc(~'-50vw + 45px'));
+			min-width: 0;
+			align-self: center;
+			box-sizing: border-box;
+			padding: 10px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			height: 100%;
 
-			&.with-buttons {
-				/deep/ .trigger {
-					padding-right: 14px;
+			button.share-link {
+				padding: 5px;
+				background: black;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				border: solid black 1px;
+				cursor: pointer;
+				transition: .3s;
+				display: flex;
+				align-items: center;
+
+				span.icon-status-bar-share-link {
+					margin-right: 3px;
+					font-size: 18px;
+				}
+
+				&:hover {
+					border-top-color: white;
+					border-bottom-color: white;
 				}
 			}
+		}
+
+		.combo-boxes {
+			display: flex;
+			padding: 0 10px;
+			justify-content: space-between;
+			flex: 1;
+
+			.combo-box-container {
+				.combo-box-width {
+					width: 140px;
+				}
+				&.with-buttons {
+					/deep/ .trigger {
+						padding-right: 14px;
+					}
+				}
 
 			.buttons {
+				background-color: black;
 				height: 100%;
 				align-items: center;
 				display: flex;
@@ -105,99 +149,99 @@
 					border-top: none;
 				}
 
-				button {
-					background: transparent;
-					outline: none;
-					color: white;
-					border: none;
-					font-size: 10px;
+					button {
+						background: transparent;
+						outline: none;
+						color: white;
+						border: none;
+						font-size: 10px;
 
-					&.toggle-icon {
-						position: relative;
-						color: rgba(255,255,255,0.5);
+						&.toggle-icon {
+							position: relative;
+							color: rgba(255, 255, 255, 0.5);
 
-						&.active {
-							color: rgba(255,255,255,1);
+							&.active {
+								color: rgba(255, 255, 255, 1);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		/deep/ i.block-icon {
-			font-size: 20px;
-			margin-right: 8px;
-		}
-
-		button.share-link {
-			padding: 5px;
-			background: black;
-			color: #fff;
-			text-align: center;
-			border-radius: 6px;
-			border: solid black 1px;
-			cursor: pointer;
-			transition: .3s;
-			display: flex;
-			align-items: center;
-
-			span.icon-status-bar-share-link {
-				margin-right: 3px;
-				font-size: 18px;
+			/deep/ i.block-icon {
+				font-size: 20px;
+				margin-right: 8px;
 			}
 
-			&:hover {
-				border-top-color: white;
-				border-bottom-color: white;
+			.time-selection {
+				background: white;
+				width: 230px;
+				height: 97px;
+				padding: 8px 12px 13px;
+				flex-direction: column;
+				border: 1px solid dimgray;
 			}
 		}
 
-		.time-selection {
+		.navigation {
 			background: white;
-			width: 230px;
-			height: 97px;
-			padding: 8px 12px 13px;
-			flex-direction: column;
-			border: 1px solid dimgray;
+			display: flex;
+			flex-shrink: 0;
+			align-self: flex-end;
+			align-items: center;
+			height: 100%;
 
-		}
-	}
+			width: @navigation-bar-width;
 
-	.navigation {
-		background: white;
-		display: flex;
-		flex-shrink: 0;
-		align-self: flex-end;
-		align-items: center;
-		height: 100%;
+			padding: 0 10px;
+			box-sizing: border-box;
+			z-index: @z-index-status-bar-navigation-area;
 
-		width: @navigation-bar-width;
-
-		padding: 0 10px;
-		box-sizing: border-box;
-		z-index: @z-index-status-bar-navigation-area;
-
-		i {
-			font-size: 25px;
-		}
-
-		button {
-			position: relative;
-			outline: none;
-			width: 24px;
-			height: 24px;
-			border: none;
-			padding: 0;
-			margin: 2px;
-			background: #D8D8D8;
-
-			&.transparent {
-				background: transparent;
+			i {
+				font-size: 25px;
 			}
 
-			&.active {
-				box-shadow: 0 0 2px 2px #666;
+			button {
+				position: relative;
+				outline: none;
+				width: 24px;
+				height: 24px;
+				border: none;
+				padding: 0;
+				margin: 2px;
+				background: #D8D8D8;
+
+				&.transparent {
+					background: transparent;
+				}
+
+				&.active {
+					box-shadow: 0 0 2px 2px #666;
+				}
 			}
 		}
+
 	}
 }
+@screens-list: 1800px, 1700px, 1600px, 1500px;
+@screen-list-width: 120px, 100px, 80px, 60px;
+
+.screens(@list, @i: 1) when (@i <= length(@list)) {
+	@screen-size: extract(@list, @i);
+
+	@media screen and (max-width: @screen-size) {
+		:host {
+			.status-bar {
+				.selectedCase {
+					font-size: 12px;
+				}
+				.combo-boxes .combo-box-container .combo-box-width {
+					width: extract(@screen-list-width, @i);
+				}
+			}
+		}
+	}
+	.screens(@list, @i + 1);
+}
+
+.screens(@screens-list);

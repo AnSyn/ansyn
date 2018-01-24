@@ -63,25 +63,6 @@ describe('AnnotationsControlComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode());
 	});
 
-	it('open color input', () => {
-		const element = jasmine.createSpyObj(['getElementsByTagName']);
-		const closest = jasmine.createSpy('closest').and.returnValue(element);
-		element.getElementsByTagName.and.returnValue([{
-			click: () => {
-			}
-		}
-		]);
-		const $event = {
-			target: {
-				closest
-			}
-		};
-
-		component.openColorInput($event);
-		expect(element.getElementsByTagName).toHaveBeenCalledWith('input');
-
-	});
-
 	it('select line width', () => {
 		const strokeWidth = 5;
 		component.selectLineWidth(strokeWidth);

@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, Inject } from '@angular/core';
+import { Component, HostBinding, Inject, Input } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
@@ -7,9 +7,8 @@ import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
 
 
-interface IImageProcParamComp extends  IImageProcParam {
-	show: boolean,
-	value: number,
+export interface IImageProcParamComp extends IImageProcParam {
+	value: number;
 }
 
 
@@ -32,13 +31,13 @@ export class ImageProcessingControlComponent {
 		return this._isExpended;
 	}
 
-	params : Array<IImageProcParamComp> = [];
+	params: Array<IImageProcParamComp> = [];
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
 		this.resetAllParams();
 		this.params = config.ImageProcParams.map(param => {
-			return Object.assign({}, param, {show : false}, {value: 0})
-		})
+			return { ...param,  value: 0 };
+		});
 		// limit to once every 200 ms
 		this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
 	}
@@ -63,8 +62,8 @@ export class ImageProcessingControlComponent {
 		let dispatchValue = {};
 		if (this.imgProcessActive) {
 			this.params.forEach(param => {
-				dispatchValue[param.name] = param.value
-			})
+				dispatchValue[param.name] = param.value;
+			});
 		}
 		else {
 			dispatchValue = undefined;

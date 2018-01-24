@@ -58,13 +58,27 @@
 		}
 		ul.image-processing-options {
 			padding: 0;
-			& > li {
+			li {
+				&:hover {
+					button {
+						opacity: 1;
+					}
+				}
 				list-style-type: none;
-				> button {
+				button {
+					transition: opacity .3s;
+					opacity: 0;
 					vertical-align: top;
 					width: @reset-btn-width;
+					background: transparent;
+					padding: 0;
+					border: none;
+					outline: 0 none;
+					color: white;
+					&:hover {
+						text-decoration: underline;
+					}
 				}
-
 				.track() {
 					width: @track-width;
 					height: @track-height;
@@ -80,13 +94,7 @@
 					background: @thumb-color;
 					cursor: pointer;
 				}
-				button {
-					background: transparent;
-					padding: 0;
-					border: none;
-					outline: 0 none;
-					color: white;
-				}
+
 				// slider styles
 				input[type=range] {
 					-webkit-appearance: none;

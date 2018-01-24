@@ -87,10 +87,10 @@ export class OverlaysEffects {
 					const actions: Array<any> = [new SyncOverlaysWithFavoritesOnLoadingAction(overlays.data)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage('No overlays match your query, please try another search'));
+						actions.push(new SetOverlaysStatusMessage('No overlays match your query, please try another search.'));
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(`Only the latest ${overlays.data.length} results are presented, try to edit search time range.`));
+						actions.push(new SetOverlaysStatusMessage(`Note: only ${overlays.data.length} overlays are presented.`));
 					} else {
 						actions.push(new SetOverlaysStatusMessage(null));
 					}

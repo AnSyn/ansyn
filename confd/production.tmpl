@@ -168,7 +168,39 @@
 		"Proj4": {
 			"ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
 			"ed50Customized": ""
-		}
+		},
+		"ImageProcParams": [
+        			{
+        				"name": "Sharpness",
+        				"defaultValue": 0,
+        				"min": 0,
+        				"max": 100
+        			},
+        			{
+        				"name": "Contrast",
+        				"defaultValue": 0,
+        				"min": -100,
+        				"max": 100
+        			},
+        			{
+        				"name": "Brightness",
+        				"defaultValue": 0,
+        				"min": -100,
+        				"max": 100
+        			},
+        			{
+        				"name": "Gamma",
+        				"defaultValue": 100,
+        				"min": 1,
+        				"max": 200
+        			},
+        			{
+        				"name": "Saturation",
+        				"defaultValue": 100,
+        				"min": 1,
+        				"max": 100
+        			}
+        		]
     },
 	"loggerConfig": {
 		"env": "PROD",

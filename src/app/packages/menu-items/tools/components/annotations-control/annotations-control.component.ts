@@ -79,14 +79,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
 	}
 
-	openColorInput($event) {
-		let element = $event.target.closest('li');
-		if (!element) {
-			element = $event.target;
-		}
-		element.getElementsByTagName('input')[0].click();
-	}
-
 	selectLineWidth(strokeWidth: number) {
 		this.store.dispatch(new AnnotationSetProperties({ strokeWidth }));
 	}

@@ -9,7 +9,9 @@
 		</span>
 	</li>
 
-	<li class="spliter"> <div></div> </li>
+	<li class="spliter">
+		<div></div>
+	</li>
 
 	<li class="expanded-selection line-width-selection">
 
@@ -18,45 +20,52 @@
 			<span class="icon-annotation-weight" tooltip-value="Width" tooltip-class="bottom"></span>
 		</button>
 
-		<ul *ngIf="selectedBox === SelectionBoxes.lineWidth" class="line-width-expand">
-			<li
+		<div class="list line-width-expand" *ngIf="selectedBox === SelectionBoxes.lineWidth">
+			<div
+				class="item"
 				*ngFor="let width of lineWidthList"
 				[class.selected]="width === annotationProperties.strokeWidth"
 				(click)="selectLineWidth(width)">
 				<svg height="20" width="20">
 					<line [style.stroke-width]="width" style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
 				</svg>
-			</li>
-		</ul>
-
+			</div>
+		</div>
 	</li>
 
 	<li class="expanded-selection color-selection">
+
 		<button (click)="toggleSelection(SelectionBoxes.colorPicker)"
 				[class.expand]="selectedBox === SelectionBoxes.colorPicker">
 			<span class="icon-annotation-color" tooltip-value="Color" tooltip-class="bottom"></span>
 		</button>
 
-		<ul *ngIf="selectedBox === SelectionBoxes.colorPicker"
-			class="color-selection-expand"
-			#colorSelection >
+		<div class="list color-selection-expand" *ngIf="selectedBox === SelectionBoxes.colorPicker">
 
-			<li (click)="openColorInput($event)">
-				<span class="text">Fill</span>
-				<span class="color"  [style.background]="annotationProperties.fillColor">
-				</span>
-				<input type="color"
-					   [value]="annotationProperties.fillColor"
-					   (change)="changeFillColor($event.target.value)" title="fill"/>
-			</li>
-			<li (click)="openColorInput($event)">
-				<span class="text">Stroke</span>
-				<span class="color" [style.background]="annotationProperties.strokeColor"></span>
-				<input type="color"
+			<div class="item color-picker-item">
+				<label for="color-fill-picker">
+					<span class="text">Fill</span>
+					<span class="color" [style.background]="annotationProperties.fillColor"></span>
+				</label>
+				<input
+					id="color-fill-picker"
+					type="color"
+					[value]="annotationProperties.fillColor"
+					(change)="changeFillColor($event.target.value)" title="fill"/>
+			</div>
+
+			<div class="color-picker-item">
+				<label for="color-stroke-picker">
+					<span class="text">Stroke</span>
+					<span class="color" [style.background]="annotationProperties.strokeColor"></span>
+				</label>
+				<input id="color-stroke-picker"
+					   type="color"
 					   [value]="annotationProperties.strokeColor"
-					   (change)="changeStrokeColor($event.target.value)" title="stroke"/>
-			</li>
-		</ul>
+					   (change)="changeStrokeColor($event.target.value)"
+					   title="stroke"/>
+			</div>
+		</div>
 	</li>
 
 </ul>

@@ -52,6 +52,7 @@ export class TimelineTimepickerComponent implements OnInit {
 			id: 'end',
 			time_24hr: true,
 			enableTime: true,
+			dateFormat: 'H:i d/m/Y',
 			onChange: this.selectedDateChanged.bind(this),
 			plugins: [this.confirmDatePlugin({})]
 		});
@@ -62,6 +63,7 @@ export class TimelineTimepickerComponent implements OnInit {
 			id: 'start',
 			time_24hr: true,
 			enableTime: true,
+			dateFormat: 'H:i d/m/Y',
 			onChange: this.selectedDateChanged.bind(this),
 			plugins: [this.confirmDatePlugin({})]
 		});

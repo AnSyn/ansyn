@@ -33,7 +33,7 @@ export class DataLayersService {
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig, protected loggerService: LoggerService, protected store: Store<any>) {
+	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig) {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 

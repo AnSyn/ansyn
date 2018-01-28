@@ -5,6 +5,8 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ErrorHandlerService } from '@ansyn/core';
+import 'rxjs/add/observable/of';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
@@ -38,7 +40,10 @@ describe('CasesService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
-			providers: [CasesService, UrlSerializer, MockCasesConfig]
+			providers: [CasesService, UrlSerializer, MockCasesConfig, {
+				provide: ErrorHandlerService,
+				useValue: { httpErrorHandle: () => Observable.throw(null) }
+			}]
 		});
 	});
 
@@ -54,7 +59,7 @@ describe('CasesService', () => {
 	it('createCase should send the case as body in ajax("post")', () => {
 		let selectedCase: Case = { id: 'fakerId', name: 'fakerName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'post').and.callFake(() => ({ map: (callBack) => callBack(fakeResponse) }));
+		spyOn(http, 'post').and.callFake(() => Observable.of(fakeResponse) );
 		casesService.createCase(selectedCase);
 		expect(http.post).toHaveBeenCalledWith(`${casesService.baseUrl}`, selectedCase);
 	});
@@ -62,7 +67,7 @@ describe('CasesService', () => {
 	it('updateCase should send the case as body in ajax("put")', () => {
 		let selectedCase: Case = { id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'put').and.callFake(() => ({ map: (callBack) => callBack(fakeResponse) }));
+		spyOn(http, 'put').and.callFake(() => Observable.of(fakeResponse) );
 		casesService.updateCase(selectedCase);
 		expect(http.put).toHaveBeenCalledWith(`${casesService.baseUrl}`, selectedCase);
 	});
@@ -71,7 +76,7 @@ describe('CasesService', () => {
 		let selectedCase: Case = { id: 'fakerId', name: 'fakerOtherName' };
 		let caseIdToRemove = selectedCase.id;
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'delete').and.callFake(() => ({ map: (callBack) => callBack(fakeResponse) }));
+		spyOn(http, 'delete').and.callFake(() => Observable.of(fakeResponse));
 		casesService.removeCase('fakerId');
 		expect(http.delete).toHaveBeenCalledWith(`${casesService.baseUrl}/${caseIdToRemove}`);
 	});

@@ -9,7 +9,7 @@ import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService, LoggerService } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -29,7 +29,7 @@ export class CasesService {
 		time: undefined
 	};
 
-	constructor(protected http: HttpClient, @Inject(LoggerService) public loggerService: LoggerService, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
+	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
 				@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;

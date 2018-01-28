@@ -8,7 +8,7 @@ import { LoggerService } from './logger.service';
 @Injectable()
 export class ErrorHandlerService {
 
-	constructor(protected store: Store<any>, @Inject(LoggerService) public loggerService: LoggerService) {
+	constructor(protected store: Store<any>, public loggerService: LoggerService) {
 
 	}
 

@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ErrorHandlerService } from '@ansyn/core';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -30,6 +31,10 @@ describe('LayersEffects', () => {
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }
+				},
+				{
+					provide: ErrorHandlerService,
+					useValue: {httpErrorHandle : (some) => null}
 				},
 				provideMockActions(() => actions),
 				LayersEffects,

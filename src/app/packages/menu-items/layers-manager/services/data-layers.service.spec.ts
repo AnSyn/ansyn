@@ -8,7 +8,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ErrorHandlerService } from '@ansyn/core';
 
-fdescribe('DataLayersService', () => {
+describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;
 	let http: HttpClient;
 

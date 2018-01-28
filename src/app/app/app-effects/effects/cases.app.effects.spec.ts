@@ -21,6 +21,7 @@ import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ErrorHandlerService } from '@ansyn/core';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -67,6 +68,10 @@ describe('CasesAppEffects', () => {
 				ImageryCommunicatorService,
 				CasesAppEffects,
 				CasesService,
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => Observable.throw(null) }
+				},
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null } },
 				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService }

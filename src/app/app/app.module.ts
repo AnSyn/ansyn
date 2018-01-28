@@ -6,7 +6,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from '@ansyn/login';
 
 export function MetaReducer(reducer) {
@@ -24,11 +23,7 @@ export const metaReducers = [MetaReducer];
 		EffectsModule.forRoot([]),
 		LoginModule,
 		AnsynModule,
-		AppRoutingModule,
-		// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
-		StoreDevtoolsModule.instrument({
-			maxAge: 25 //  Retains last 25 states.
-		})
+		AppRoutingModule
 	],
 	providers: [
 		{

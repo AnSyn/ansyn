@@ -9,10 +9,6 @@ export const IdahoOverlaySourceType2 = 'IDAHO2';
 export class IdahoSourceProvider2 extends IdahoSourceProvider {
 	sourceType = IdahoOverlaySourceType2;
 
-	constructor(public errorHandlerService: ErrorHandlerService, http: HttpClient, @Inject(IdahoOverlaysSourceConfig) _overlaySourceConfig: IIdahoOverlaySourceConfig) {
-		super(errorHandlerService, http, _overlaySourceConfig);
-	}
-
 	protected parseData(idahoElement: any, token: string): Overlay {
 		const result = super.parseData(idahoElement, token);
 		result.isGeoRegistered = false;

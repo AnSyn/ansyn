@@ -42,6 +42,7 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ImageManualProcessArgs } from '@ansyn/core';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -271,7 +272,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image manual processing params should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = false;
-			const processingParams = { Contrast: 50, Brightness: 20 };
+			const processingParams = <ImageManualProcessArgs> { Contrast: 50, Brightness: 20 };
 
 			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'overlay_123', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
 

@@ -2,7 +2,6 @@ import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 export interface Case {
 	readonly id?: string;
@@ -20,6 +19,14 @@ export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Pers
 export type CaseTimeFilter = 'Start - End';
 export type CaseGeoFilter = 'Pin-Point';
 
+export interface ImageManualProcessArgs {
+	Brightness: number
+	Contrast: number
+	Gamma: number
+	Saturation: number
+	Sharpness: number
+}
+
 export interface CaseState {
 	selectedContextId?: string;
 	maps?: CaseMapsState,
@@ -31,7 +38,7 @@ export interface CaseState {
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
 	favoritesOverlays?: Overlay[],
-	overlaysManualProcessArgs: Object,
+	overlaysManualProcessArgs: { [key: string]: ImageManualProcessArgs } | {},
 	layers?: CaseLayersState
 }
 

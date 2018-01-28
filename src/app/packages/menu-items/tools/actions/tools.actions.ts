@@ -3,6 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import { AnnotationProperties } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { ImageManualProcessArgs } from '@ansyn/core';
 
 export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction';
 
@@ -190,14 +191,14 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { processingParams: Object }) {
+	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
 	};
 }
 
 export class SetManualImageProcessingArguments implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
 
-	constructor(public payload: { processingParams: Object }) {
+	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
 	};
 }
 

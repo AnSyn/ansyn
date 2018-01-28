@@ -44,6 +44,7 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ImageManualProcessArgs } from '@ansyn/core';
 
 
 @Injectable()
@@ -376,9 +377,9 @@ export class ToolsAppEffects {
 }
 
 // update per-overlay manual processing param (saved in case)
-function updateOverlaysManualProcessArgs(selectedCase: Case, overlayId: string, processingParams?: Object) {
+function updateOverlaysManualProcessArgs(selectedCase: Case, overlayId: string, processingParams?: ImageManualProcessArgs) {
 	if (!selectedCase.state.overlaysManualProcessArgs) {
-		selectedCase.state.overlaysManualProcessArgs = new Object();
+		selectedCase.state.overlaysManualProcessArgs = {};
 	}
 	selectedCase.state.overlaysManualProcessArgs[overlayId] = processingParams;
 	return selectedCase;

@@ -61,32 +61,7 @@ export class LayersAppEffects {
 	redrawMaps$: Observable<any> = this.actions$
 		.ofType<any>(LayersActionTypes.SELECT_LAYER, LayersActionTypes.UNSELECT_LAYER)
 		.map(() => new ContainerChangedTriggerAction());
-
-	/**
-	 * @type Effect
-	 * @name annotationUpdateCase$,
-	 * @ofType ShowAnnotationsLayer, ToggleDisplayAnnotationsLayer
-	 * @action UpdateCaseAction
-	 */
-	@Effect()
-	annotationUpdateCase$: Observable<any> = this.actions$
-		.ofType<any>(...Object.values(LayersActionTypes.ANNOTATIONS))
-		.withLatestFrom(this.store$.select(layersStateSelector), this.store$.select(casesStateSelector))
-		.map(([action, layersState, casesState]: [Action, ILayerState, ICasesState]) => {
-			const updatedCase = {
-				...casesState.selectedCase,
-				state: {
-					...casesState.selectedCase.state,
-					layers: {
-						...casesState.selectedCase.state.layers,
-						displayAnnotationsLayer: layersState.displayAnnotationsLayer,
-						annotationsLayer: layersState.annotationsLayer
-					}
-				}
-			} as Case;
-			return new UpdateCaseAction(updatedCase);
-		});
-
+	
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {

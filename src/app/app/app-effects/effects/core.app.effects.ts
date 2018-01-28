@@ -44,40 +44,28 @@ export class CoreAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name setFavoritesOverlays$
+	 * @name setFavoriteOverlays$
 	 * @ofType SelectCaseAction
 	 * @action SetFavoriteOverlaysAction
 	 */
 	@Effect()
-	setFavoritesOverlays$: Observable<any> = this.actions$
+	setFavoriteOverlays$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => new SetFavoriteOverlaysAction(payload.state.favoritesOverlays));
+		.map(({ payload }: SelectCaseAction) => new SetFavoriteOverlaysAction(payload.state.favoriteOverlays));
 
 	/**
 	 * @type Effect
-	 * @name setFavoritesOverlays$
+	 * @name setFavoriteOverlaysUpdateCase$
 	 * @ofType SetFavoriteOverlaysAction
-	 * @action OverlaysMarkupAction, UpdateCaseAction
+	 * @action OverlaysMarkupAction
 	 */
 	@Effect()
-	setFavoritesOverlaysUpdateCase$: Observable<any> = this.actions$
+	setFavoriteOverlaysUpdateCase$: Observable<any> = this.actions$
 		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.mergeMap(([{ payload }, cases, map]: [SetFavoriteOverlaysAction, ICasesState, IMapState]) => {
-			const updatedCase: Case = {
-				...cases.selectedCase,
-				state: {
-					...cases.selectedCase.state,
-					favoritesOverlays: payload
-				}
-			};
-
+		.map(([{ payload }, cases, map]: [SetFavoriteOverlaysAction, ICasesState, IMapState]) => {
 			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, payload);
-
-			return [
-				new OverlaysMarkupAction(overlaysMarkup),
-				new UpdateCaseAction(updatedCase)
-			];
+			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
 	constructor(protected actions$: Actions,

@@ -125,7 +125,7 @@ describe('StatusBarAppEffects', () => {
 						}
 					]
 				},
-				favoritesOverlays: []
+				favoriteOverlays: []
 			}
 		} as any;
 

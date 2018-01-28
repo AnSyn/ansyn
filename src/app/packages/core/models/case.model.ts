@@ -37,12 +37,12 @@ export interface CaseState {
 	orientation: CaseOrientation,
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
-	favoritesOverlays?: Overlay[],
+	favoriteOverlays?: Overlay[],
 	overlaysManualProcessArgs: { [key: string]: ImageManualProcessArgs } | {},
 	layers?: CaseLayersState
 }
 
-export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon;
+export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon | GeoJSON.Position;
 
 export interface CaseTimeState {
 	type: string,

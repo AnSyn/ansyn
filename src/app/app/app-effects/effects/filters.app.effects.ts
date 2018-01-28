@@ -27,6 +27,8 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { CaseFacetsState } from '@ansyn/core';
+import { FiltersService } from '@ansyn/menu-items';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -51,20 +53,6 @@ export class FiltersAppEffects {
 				new SetFilteredOverlaysAction(filteredOverlays)
 			]
 		});
-
-	/**
-	 * @type Effect
-	 * @name updateCaseFacets$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
-	 * @action UpdateCaseAction
-	 * @dependencies filters, cases
-	 */
-	@Effect()
-	updateCaseFacets$: Observable<UpdateCaseAction> = this.actions$
-		.ofType(...facetChangesActionType)
-		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(casesStateSelector).pluck('selectedCase'))
-		.map(([action, filtersState, selectedCase]: [Action, IFiltersState, Case]) => this.updateCaseFacets(selectedCase, filtersState))
-		.map(updatedCase => new UpdateCaseAction(updatedCase));
 
 	/**
 	 * @type Effect
@@ -149,30 +137,6 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 
-	updateCaseFacets(selectedCase: Case, filtersState: IFiltersState): Case {
-		const cloneSelectedCase: Case = cloneDeep(selectedCase);
-		const { facets } = cloneSelectedCase.state;
-		facets.showOnlyFavorites = filtersState.showOnlyFavorites;
-		facets.filters = [];
-		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
-			const currentFilter: any = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-
-			if (!currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
-				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
-				facets.filters.push({ fieldName, metadata });
-			}
-			else if (currentFilter && !this.isMetadataEmpty(outerStateMetadata)) {
-				currentFilter.metadata = outerStateMetadata;
-			}
-			else if (currentFilter && this.isMetadataEmpty(outerStateMetadata)) {
-				const index = facets.filters.indexOf(currentFilter);
-				facets.filters.splice(index, 1);
-			}
-		});
-
-		return cloneSelectedCase;
-	}
 
 	isMetadataEmpty(metadata: any): boolean {
 		return isNil(metadata);

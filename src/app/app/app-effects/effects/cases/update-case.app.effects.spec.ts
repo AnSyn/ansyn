@@ -1,67 +1,35 @@
-// import { FiltersService } from '@ansyn/menu-items';
-// import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-// import { InitializeFiltersSuccessAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-//
-// it('updateCaseFacets$ effect', () => {
-// 	actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-// 	const facets = FiltersService.buildCaseFacets(filtersState);
-// 	const update = <any> {
-// 		...selectedCase,
-// 		state: {
-// 			...selectedCase.state,
-// 			facets
-// 		}
-// 	};
-// 	const expectedResults = cold('--b--', { b: new UpdateCaseAction(update) });
-// 	expect(filtersAppEffects.updateCaseFacets$).toBeObservable(expectedResults);
-// });
+import { async, inject, TestBed } from '@angular/core/testing';
+import { Store, StoreModule } from '@ngrx/store';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Observable } from 'rxjs/Observable';
+import { UpdateCaseAppEffects } from './update-case.app.effects';
 
+describe('UpdateCaseAppEffects', () => {
+	let updateCaseAppEffects: UpdateCaseAppEffects;
+	let actions: Observable<any>;
+	let store: Store<any>;
 
-// import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-// import { Case } from '@ansyn/core/models/case.model';
-// import {
-// 	SetAnnotationsLayer,
-// 	ToggleDisplayAnnotationsLayer
-// } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-//
-// describe('annotationUpdateCase$ should update case via layers state (annotationsLayer, displayAnnotationsLayer)', () => {
-//
-// 	it('displayAnnotationsLayer', () => {
-// 		layerState.annotationsLayer = <any>'some geoJSON';
-// 		layerState.displayAnnotationsLayer = true;
-//
-// 		const updatedCase = <Case> {
-// 			...casesState.selectedCase, state: {
-// 				...casesState.selectedCase.state,
-// 				layers: {
-// 					...casesState.selectedCase.state.layers,
-// 					annotationsLayer: layerState.annotationsLayer ,
-// 					displayAnnotationsLayer: layerState.displayAnnotationsLayer
-// 				}
-// 			}
-// 		};
-// 		actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(layerState.displayAnnotationsLayer) });
-// 		const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
-// 		expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
-// 	});
-//
-// 	it('annotationsLayer', () => {
-// 		layerState.annotationsLayer = <any>'some geoJSON';
-// 		layerState.displayAnnotationsLayer = false;
-//
-// 		const updatedCase = <Case> {
-// 			...casesState.selectedCase, state: {
-// 				...casesState.selectedCase.state,
-// 				layers: {
-// 					...casesState.selectedCase.state.layers,
-// 					annotationsLayer: layerState.annotationsLayer ,
-// 					displayAnnotationsLayer: layerState.displayAnnotationsLayer
-// 				}
-// 			}
-// 		};
-// 		actions = hot('--a--', { a: new SetAnnotationsLayer(layerState.annotationsLayer) });
-// 		const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
-// 		expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
-// 	});
-//
-// });
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [
+				StoreModule.forRoot({})
+			],
+			providers: [
+				UpdateCaseAppEffects,
+				provideMockActions(() => actions)
+			]
+		}).compileComponents();
+	}));
+
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		store = _store;
+	}));
+
+	beforeEach(inject([UpdateCaseAppEffects], (_updateCaseAppEffects: UpdateCaseAppEffects) => {
+		updateCaseAppEffects = _updateCaseAppEffects;
+	}));
+
+	it('should be defined', () => {
+		expect(updateCaseAppEffects).toBeDefined();
+	});
+});

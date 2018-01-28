@@ -11,7 +11,7 @@ import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderServi
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
-import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
+import { MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -97,21 +97,17 @@ export class MapAppEffects {
 		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
 			// create the region
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
-
-			// draw the point on the map
-			const selectedCase = <Case> {
-				...caseState.selectedCase,
-				state: { ...caseState.selectedCase.state, region }
-			};
+			const { from, to } = caseState.selectedCase.state.time;
+			const { id } = caseState.selectedCase;
 
 			return [
 				new DrawPinPointAction(action.payload),
-				new UpdateCaseAction(selectedCase),
+				new SetRegion(region),
 				new LoadOverlaysAction({
-					to: selectedCase.state.time.to,
-					from: selectedCase.state.time.from,
-					polygon: selectedCase.state.region,
-					caseId: selectedCase.id
+					to,
+					from,
+					polygon: region,
+					caseId: id
 				})
 			];
 		});
@@ -256,6 +252,7 @@ export class MapAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.map((action: DisplayOverlayAction) =>
 			new AddOverlayToLoadingOverlaysAction(action.payload.overlay.id));
+
 
 	/**
 	 * @type Effect
@@ -434,24 +431,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onSelectCaseByIdAddPinPointIndicator$
-	 * @ofType SelectCaseAction
-	 * @dependencies cases, statusBar
-	 * @filter There is a pinPointIndicator or pinPointSearch
-	 * @actions DrawPinPointAction
-	 */
-	@Effect()
-	onSelectCaseByIdAddPinPointIndicator$: Observable<DrawPinPointAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
-		.filter(([action, caseState, statusBarState]: [SelectCaseAction, ICasesState, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
-		.map(([action, caseState]: [SelectCaseAction, ICasesState, IStatusBarState]) => {
-			const point = getPointByGeometry(caseState.selectedCase.state.region);
-			return new DrawPinPointAction(point.coordinates);
-		});
-
-	/**
-	 * @type Effect
 	 * @name onSynchronizeAppMaps$
 	 * @ofType SynchronizeMapsAction
 	 * @dependencies cases
@@ -508,24 +487,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(statusBarStateSelector), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
 			return [selectedCase, layoutOptions[payload], payload];
 		})
-		.mergeMap(([selectedCase, layout, layoutIndex]: any[]) => {
-			const actions = [];
-			if (selectedCase) {
-				const updatedCase: Case = {
-					...selectedCase,
-					state: {
-						...selectedCase.state,
-						maps: {
-							...selectedCase.state.maps,
-							layoutsIndex: layoutIndex
-						}
-					}
-				} as any;
-				actions.push(new UpdateCaseAction(updatedCase));
-			}
-			actions.push(new SetLayoutAction(layout));
-			return actions;
-		});
+		.map(([selectedCase, layout]: any[]) => new SetLayoutAction(layout));
 
 	/**
 	 * @type Effect
@@ -570,33 +532,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onMapsDataChange$
-	 * @ofType SetMapsDataActionStore
-	 * @dependencies cases, map
-	 * @action UpdateCaseAction
-	 */
-	@Effect()
-	onMapsDataChange$: Observable<UpdateCaseAction> = this.actions$
-		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
-		.map(toPayload)
-		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(mapStateSelector))
-		.map(([action, selectedCase, mapState]: [any, Case, IMapState]) => {
-			const updatedCase = {
-				...selectedCase,
-				state: {
-					...selectedCase.state,
-					maps: {
-						...selectedCase.state.maps,
-						data: [...mapState.mapsList],
-						activeMapId: mapState.activeMapId
-					}
-				}
-			} as Case;
-			return new UpdateCaseAction(updatedCase);
-		});
-
-	/**
-	 * @type Effect
 	 * @name selectCaseByIdUpdateMapsData$
 	 * @ofType SelectCaseAction
 	 * @action SetMapsDataActionStore
@@ -604,10 +539,11 @@ export class MapAppEffects {
 	@Effect()
 	selectCaseByIdUpdateMapsData$: Observable<SetMapsDataActionStore> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => cloneDeep(payload.state.maps))
-		.map(({ activeMapId, data }) => {
-			return new SetMapsDataActionStore({ mapsList: data, activeMapId: activeMapId });
-		});
+		.map(({ payload }: SelectCaseAction) => cloneDeep(payload.state))
+		.mergeMap(({ region, maps }) => [
+			new SetRegion(region),
+			new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId })
+		]);
 
 	/**
 	 * @type Effect
@@ -631,7 +567,6 @@ export class MapAppEffects {
 
 			communicator.getAllVisualizers().forEach(v => v.toggleVisibility());
 		});
-
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

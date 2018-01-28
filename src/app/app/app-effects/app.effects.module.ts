@@ -25,6 +25,7 @@ import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { NorthAppEffects } from './effects/map/north.app.effects';
 import { VisualizersAnnotationsAppEffects } from './effects/map/visualizers.annotations.app.effects';
+import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 
 
 export interface IAppState {
@@ -57,7 +58,8 @@ export interface IAppState {
 			VisualizersAppEffects,
 			CoreAppEffects,
 			NorthAppEffects,
-			VisualizersAnnotationsAppEffects
+			VisualizersAnnotationsAppEffects,
+			UpdateCaseAppEffects
 		])
 	]
 })

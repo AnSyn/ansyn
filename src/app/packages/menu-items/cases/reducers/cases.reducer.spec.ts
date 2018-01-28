@@ -50,7 +50,7 @@ describe('CasesReducer', () => {
 		let action: SelectCaseAction = new SelectCaseAction(cloneDeep(fakeCase));
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selectedCase.id).toEqual(fakeCase.id);
-		expect(result.selectedCase.state.favoritesOverlays).toBeDefined();
+		expect(result.selectedCase.state.favoriteOverlays).toBeDefined();
 
 	});
 

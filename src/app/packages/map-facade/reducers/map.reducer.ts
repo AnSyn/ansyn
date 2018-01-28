@@ -4,6 +4,7 @@ import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { CaseRegionState } from '@ansyn/core';
 
 export interface IMapState {
 	communicators: {};
@@ -13,6 +14,7 @@ export interface IMapState {
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
+	region: any;
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -25,6 +27,7 @@ export const initialMapState: IMapState = {
 	layout: null,
 	activeMapId: null,
 	mapsList: [],
+	region: null,
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };
@@ -105,6 +108,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				toggledMap.flags.layers = !toggledMap.flags.layers;
 			}
 			return { ...state };
+
+		case  MapActionTypes.SET_REGION:
+			return { ...state, region: action.payload };
 
 		default:
 			return state;

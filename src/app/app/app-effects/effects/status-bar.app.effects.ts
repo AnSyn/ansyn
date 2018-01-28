@@ -29,7 +29,7 @@ import {
 	SetComboBoxesProperties,
 	SetTimeAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
-import { getPointByGeometry } from '@ansyn/core/utils/geo';
+import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
 import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
@@ -40,6 +40,7 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CaseState } from '@ansyn/core';
+import { PinPointTriggerAction } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -134,52 +135,18 @@ export class StatusBarAppEffects {
 	 * @ofType SetTimeAction
 	 * @dependencies cases
 	 * @filter There is a selected case
-	 * @action UpdateCaseAction, LoadOverlaysAction?
+	 * @action LoadOverlaysAction
 	 */
 	@Effect()
 	setTime$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.SET_TIME)
-		.withLatestFrom(this.store.select(casesStateSelector).pluck('selectedCase'))
-		.mergeMap(([action, selectedCase]: [SetTimeAction, Case]) => {
-			const updatedCase = cloneDeep(selectedCase);
-			const actions: Action[] = [new UpdateCaseAction(updatedCase)];
-			const fromChange = updatedCase.state.time.from !== action.payload.from.toISOString();
-			const toChange = updatedCase.state.time.to !== action.payload.to.toISOString();
-			const someTimeChanges = fromChange || toChange;
-			if (someTimeChanges) {
-				updatedCase.state.time.from = action.payload.from.toISOString();
-				updatedCase.state.time.to = action.payload.to.toISOString();
-				actions.push(new LoadOverlaysAction({
-					to: updatedCase.state.time.to,
-					from: updatedCase.state.time.from,
-					polygon: updatedCase.state.region,
-					caseId: updatedCase.id
-				}));
-			}
-			return actions;
-		});
-
-	/**
-	 * @type Effect
-	 * @name comboBoxesProperties
-	 * @ofType SetComboBoxesProperties
-	 * @dependencies cases
-	 * @action UpdateCaseAction
-	 */
-	@Effect()
-	comboBoxesProperties$: Observable<any> = this.actions$
-		.ofType<SetComboBoxesProperties>(StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES)
-		.withLatestFrom(this.store.select(casesStateSelector).pluck<ICasesState, Case>('selectedCase'))
-		.map(([action, selectedCase]: [SetComboBoxesProperties, Case]) => {
-			const updatedCase = {
-				...selectedCase,
-				state: {
-					...selectedCase.state,
-					...action.payload
-				}
-			};
-			return new UpdateCaseAction(updatedCase);
-		});
+		.withLatestFrom(this.store.select(mapStateSelector))
+		.map(([action, { region }]: [SetTimeAction, IMapState]) =>  new LoadOverlaysAction({
+				to: action.payload.to.toISOString(),
+				from: action.payload.from.toISOString(),
+				polygon: region,
+				caseId: ''
+		}));
 
 	/**
 	 * @type Effect

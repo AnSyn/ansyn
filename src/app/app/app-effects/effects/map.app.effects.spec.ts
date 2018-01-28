@@ -67,6 +67,7 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/provider
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
+import { SetRegion } from '@ansyn/map-facade';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -287,10 +288,7 @@ describe('MapAppEffects', () => {
 		const region = getPolygonByPointAndRadius(lonLat).geometry;
 
 		const a = new DrawPinPointAction(lonLat);
-		const b = new UpdateCaseAction({
-			...icaseState.selectedCase,
-			state: { ...icaseState.selectedCase.state, region }
-		});
+		const b = new SetRegion(region);
 
 		const c = new LoadOverlaysAction({
 			to: icaseState.selectedCase.state.time.to,

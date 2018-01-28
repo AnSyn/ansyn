@@ -79,18 +79,17 @@ describe('CoreAppEffects', () => {
 		});
 	});
 
-	it('setFavoritesOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <Case> { state: { favoritesOverlays: overlays1to3 } };
+	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
+		casesState.selectedCase = <Case> { state: { favoriteOverlays: overlays1to3 } };
 		const markupsResult = {};
 		spyOn(CoreService, 'getOverlaysMarkup').and.callFake(() => markupsResult);
 		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays1to4) });
 
-		const expectedResult = cold('--(ab)--', {
+		const expectedResult = cold('--a--', {
 			a: new OverlaysMarkupAction(markupsResult),
-			b: new UpdateCaseAction(<Case> { ...casesState.selectedCase, state: { ...casesState.selectedCase.state, favoritesOverlays: overlays1to4 } })
 		});
 
-		expect(coreAppEffects.setFavoritesOverlaysUpdateCase$).toBeObservable(expectedResult);
+		expect(coreAppEffects.setFavoriteOverlaysUpdateCase$).toBeObservable(expectedResult);
 		expect(CoreService.getOverlaysMarkup).toHaveBeenCalled();
 	});
 });

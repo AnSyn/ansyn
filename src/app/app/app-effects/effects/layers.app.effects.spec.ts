@@ -96,45 +96,4 @@ describe('LayersAppEffects', () => {
 		});
 	});
 
-	describe('annotationUpdateCase$ should update case via layers state (annotationsLayer, displayAnnotationsLayer)', () => {
-
-		it('displayAnnotationsLayer', () => {
-			layerState.annotationsLayer = <any>'some geoJSON';
-			layerState.displayAnnotationsLayer = true;
-
-			const updatedCase = <Case> {
-				...casesState.selectedCase, state: {
-					...casesState.selectedCase.state,
-					layers: {
-						...casesState.selectedCase.state.layers,
-						annotationsLayer: layerState.annotationsLayer ,
-						displayAnnotationsLayer: layerState.displayAnnotationsLayer
-					}
-				}
-			};
-			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(layerState.displayAnnotationsLayer) });
-			const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
-			expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
-		});
-
-		it('annotationsLayer', () => {
-			layerState.annotationsLayer = <any>'some geoJSON';
-			layerState.displayAnnotationsLayer = false;
-
-			const updatedCase = <Case> {
-				...casesState.selectedCase, state: {
-					...casesState.selectedCase.state,
-					layers: {
-						...casesState.selectedCase.state.layers,
-						annotationsLayer: layerState.annotationsLayer ,
-						displayAnnotationsLayer: layerState.displayAnnotationsLayer
-					}
-				}
-			};
-			actions = hot('--a--', { a: new SetAnnotationsLayer(layerState.annotationsLayer) });
-			const expectedResults = cold('--b--', { b: new UpdateCaseAction(updatedCase) });
-			expect(layersAppEffects.annotationUpdateCase$).toBeObservable(expectedResults);
-		});
-
-	});
 });

@@ -43,6 +43,7 @@ import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
+import { FiltersService } from '@ansyn/menu-items';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -76,7 +77,7 @@ describe('Filters app effects', () => {
 			facets: {
 				filters: null
 			},
-			favoritesOverlays: [favoriteOver]
+			favoriteOverlays: [favoriteOver]
 		}
 	} as any;
 
@@ -128,13 +129,6 @@ describe('Filters app effects', () => {
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 
-	it('updateCaseFacets$ effect', () => {
-		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
-		const expectedResults = cold('--b--', { b: new UpdateCaseAction(update) });
-		expect(filtersAppEffects.updateCaseFacets$).toBeObservable(expectedResults);
-	});
-
 	it('initializeFilters$ effect', () => {
 		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
 		const overlays = Array.from(overlaysState.overlays.values());
@@ -168,11 +162,11 @@ describe('Filters app effects', () => {
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
 
-	it('updateCaseFacets function', () => {
-		(<any>selectedCase).state.facets = { filters: [], showOnlyFavorites: false };
-		const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
-		expect(update).toEqual(selectedCase);
-	});
+	// it('updateCaseFacets function', () => {
+	// 	(<any>selectedCase).state.facets = { filters: [], showOnlyFavorites: false };
+	// 	const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
+	// 	expect(update).toEqual(selectedCase);
+	// });
 
 	describe('isMetadataEmpty', () => {
 		const empty = [undefined, null];

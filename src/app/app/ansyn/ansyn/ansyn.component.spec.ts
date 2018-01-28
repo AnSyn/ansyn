@@ -30,7 +30,7 @@ describe('AnsynComponent', () => {
 	const cases: Case[] = [{
 		id: 'tmp',
 		state: {
-			favoritesOverlays: [],
+			favoriteOverlays: [],
 			time: { type: '', from: new Date(), to: new Date() },
 			region: {
 				type: 'Polygon',

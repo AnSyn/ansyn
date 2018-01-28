@@ -52,7 +52,8 @@ export const MapActionTypes = {
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
-	SET_MAP_ROTATION: 'SET_MAP_ROTATION'
+	SET_MAP_ROTATION: 'SET_MAP_ROTATION',
+	SET_REGION: 'SET_REGION'
 };
 
 export type MapActions = any;
@@ -337,3 +338,9 @@ export class AnnotationDrawEndAction implements Action {
 
 	}
 }
+export class SetRegion implements Action {
+	type = MapActionTypes.SET_REGION;
+	constructor(public payload: any) {
+	}
+}
+

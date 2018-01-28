@@ -47,7 +47,7 @@ describe('CasesAppEffects', () => {
 					}
 				]
 			},
-			favoritesOverlays: ['2']
+			favoriteOverlays: ['2']
 		}
 	} as any;
 

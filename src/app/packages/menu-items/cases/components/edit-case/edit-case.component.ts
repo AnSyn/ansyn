@@ -98,11 +98,11 @@ export class EditCaseComponent implements OnInit {
 					data: [activeMap]
 				},
 				time: {
-					type: 'absulote',
+					type: 'absolute',
 					from: new Date(0).toISOString(),
 					to: new Date().toISOString()
 				},
-				favoritesOverlays: [],
+				favoriteOverlays: [],
 				overlaysManualProcessArgs: {}
 			}
 		};

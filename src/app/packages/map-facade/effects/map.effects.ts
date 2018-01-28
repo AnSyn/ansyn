@@ -4,10 +4,22 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, DecreasePendingMapsCountAction,
-	EnableMapGeoOptionsActionStore, MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
-	PositionChangedAction, SetLayoutAction, SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapRotationAction,
-	SetMapsDataActionStore, SetPendingMapsCountAction
+	ActiveMapChangedAction,
+	AnnotationContextMenuTriggerAction,
+	BackToWorldAction,
+	DecreasePendingMapsCountAction,
+	EnableMapGeoOptionsActionStore,
+	MapActionTypes,
+	MapsListChangedAction,
+	PinLocationModeTriggerAction,
+	PinPointModeTriggerAction,
+	PositionChangedAction,
+	SetLayoutAction,
+	SetLayoutSuccessAction,
+	SetMapManualImageProcessing,
+	SetMapRotationAction,
+	SetMapsDataActionStore,
+	SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -17,6 +29,8 @@ import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { CaseMapPosition } from '../../core';
+import { SetRegion } from '../actions/map.actions';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 
 @Injectable()
@@ -113,7 +127,8 @@ export class MapEffects {
 		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
 		.mergeMap(([{ payload }, mapsList, activeMapId]) => [
 			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)),
-			new SetMapsDataActionStore(this.mapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))]);
+			new SetMapsDataActionStore(this.mapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
+		]);
 
 	/**
 	 * @type Effect
@@ -316,7 +331,6 @@ export class MapEffects {
 	 * @type Effect
 	 * @name onSynchronizeAppMaps$
 	 * @ofType SynchronizeMapsAction
-	 * @dependencies cases
 	 */
 	@Effect({ dispatch: false })
 	onSetMapRotationAction$: Observable<SetMapRotationAction> = this.actions$

@@ -1,5 +1,5 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
-import { OverlayDisplayMode } from '@ansyn/core';
+import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
@@ -36,7 +36,7 @@ export interface IToolsState {
 	gotoExpand: boolean;
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
-	manualImageProcessingParams: Object;
+	manualImageProcessingParams: ImageManualProcessArgs;
 }
 
 export const toolsInitialState: IToolsState = {

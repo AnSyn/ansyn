@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
+import { ImageManualProcessArgs } from '@ansyn/core';
 
 
 export interface IImageProcParamComp extends IImageProcParam {
@@ -58,7 +59,7 @@ export class ImageProcessingControlComponent {
 	manualImageProcess() {
 
 		const isChangeFromDefualt = this.params.some(({ value, defaultValue }) => value !== defaultValue);
-		let dispatchValue = {};
+		let dispatchValue = <ImageManualProcessArgs> {};
 		if (isChangeFromDefualt) {
 			this.params.forEach(param => {
 				dispatchValue[param.name] = param.value;

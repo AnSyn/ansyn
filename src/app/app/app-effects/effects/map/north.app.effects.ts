@@ -34,6 +34,7 @@ export class NorthAppEffects {
 			const communicator = this.imageryCommunicatorService.provide(action.payload.mapId);
 			return [action, mapsState, communicator];
 		})
+		.filter(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => action.payload.rotationData.rotationType !== null)
 		.filter(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
 		.map(([action, mapsState, communicator]: [DisplayOverlaySuccessAction, IMapState, CommunicatorEntity]) => {
 			this.pointNorth(action.payload.mapId).then(north => {

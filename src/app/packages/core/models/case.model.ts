@@ -15,7 +15,7 @@ export interface IContextEntity extends IVisualizerEntity {
 	date: Date;
 }
 
-export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective'
+export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
 export type CaseGeoFilter = 'Pin-Point';
 

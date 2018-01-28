@@ -152,7 +152,7 @@ export class MapAppEffects {
 				const overlay = action.payload.overlay;
 				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				const orientation: CaseOrientation = action.payload.ignoreRotation ? 'User Perspective' : statusBar.comboBoxesProperties.orientation;
+				const orientation: CaseOrientation = action.payload.ignoreRotation ? null : statusBar.comboBoxesProperties.orientation;
 				return [overlay, mapId, map.data, orientation];
 			})
 		.filter(([overlay]: [Overlay, string, CaseMapData, CaseOrientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
@@ -176,21 +176,23 @@ export class MapAppEffects {
 						if (communicator.activeMapName === 'disabledOpenLayersMap') {
 							communicator.setActiveMap('openLayersMap', mapData.position, layer);
 						}
-						switch (orientation) {
-							case 'Align North':
-								break;
-							case 'Imagery Perspective':
-								rotationAngle = overlay.azimuth;
-								break;
-							case 'User Perspective':
-								// TODO: check "inside" if we can always use mapState "rotation"
-								const position = communicator.getPosition();
-								if (position) {
-									rotationAngle = position.projectedState.rotation;
-								} else {
-									rotationAngle = mapData.position.projectedState.rotation;
-								}
-								break;
+						if (orientation) {
+							switch (orientation) {
+								case 'Align North':
+									break;
+								case 'Imagery Perspective':
+									rotationAngle = overlay.azimuth;
+									break;
+								case 'User Perspective':
+									// TODO: check "inside" if we can always use mapState "rotation"
+									const position = communicator.getPosition();
+									if (position) {
+										rotationAngle = position.projectedState.rotation;
+									} else {
+										rotationAngle = mapData.position.projectedState.rotation;
+									}
+									break;
+							}
 						}
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));

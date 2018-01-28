@@ -13,24 +13,36 @@
 	button {
 		display: none;
 	}
-	button.time-row-button {
+	label.time-row-button {
+		position: relative;
 		width: 155px;
 		height: 22px;
-		padding: 0;
+		padding: 0 10px;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
 		background: white;
 		border: 1px solid dimgrey;
 		font-size: 12px;
+		color: black;
 	}
 	input {
-		width: 0;
-		opacity: 0;
+		width: 100%;
+		border: none;
+		padding: 0 10px;
+		box-sizing: border-box;
+		margin: 0;
+		position: absolute;
+		display: inline-block;
+		height: 100%;
+	}
+	i {
+		position: absolute;
+		right: 10px;
 	}
 }
 
-.control-buttons {
+div.control-buttons {
 	margin-top: 10px;
 	display: flex;
 	justify-content: space-between;

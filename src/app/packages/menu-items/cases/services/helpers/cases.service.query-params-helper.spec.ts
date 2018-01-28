@@ -7,6 +7,8 @@ import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorHandlerService } from '@ansyn/core';
+import { Observable } from 'rxjs/Observable';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
@@ -14,13 +16,23 @@ describe('CasesService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
-			providers: [CasesService, {
-				provide: UrlSerializer, useValue: {
-					parse: () => {
+			providers: [
+				CasesService,
+				{
+					provide: UrlSerializer,
+					useValue: {
+						parse: () => {
+						}
 					}
-				}
-			}, MockCasesConfig]
-		});
+				},
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => Observable.throw(null) }
+				},
+				MockCasesConfig
+			]
+		})
+		;
 	});
 
 	beforeEach(inject([CasesService, UrlSerializer], (_casesService: CasesService, _urlSerializer: UrlSerializer) => {
@@ -104,4 +116,5 @@ describe('CasesService', () => {
 	});
 
 
-});
+})
+;

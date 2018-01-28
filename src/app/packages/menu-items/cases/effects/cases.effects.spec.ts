@@ -31,6 +31,7 @@ import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { ErrorHandlerService } from '@ansyn/core';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -47,6 +48,10 @@ describe('CasesEffects', () => {
 			],
 			providers: [CasesEffects,
 				CasesService,
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => Observable.throw(null) }
+				},
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]
 		}).compileComponents();

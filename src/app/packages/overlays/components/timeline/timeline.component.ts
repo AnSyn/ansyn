@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit,
+	ViewChild
+} from '@angular/core';
 import { select, selectAll, selection } from 'd3';
-import { eventDrops } from 'ansyn-event-drops';
-
-
+import * as edrops from '../../../ansyn-event-drops/index';
 import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { isEqual } from 'lodash';
 
@@ -25,6 +26,7 @@ selection.prototype.moveToFront = function () {
 export class TimelineComponent implements OnInit {
 	@ViewChild('context') context: ElementRef;
 
+	eventDrops: any;
 
 	private _drops: any[];
 	private _markup: any[];
@@ -63,10 +65,12 @@ export class TimelineComponent implements OnInit {
 
 	drawMarkup() {
 
+
 		selectAll('.drop.displayed').classed('displayed ', false);
-		selectAll('.drop.active').classed('active', false);
 		selectAll('.drop.favorites').classed('favorites', false).style('filter', 'none');
 		selectAll('.drop.hover').classed('hover', false);
+		const actives = <any>selectAll('.drop.active');
+		actives.classed('active', false);
 
 		const nodes = [];
 		this._markup.forEach(markupItem => {
@@ -79,6 +83,7 @@ export class TimelineComponent implements OnInit {
 		if (nodes.length > 0) {
 			const selection = (<any>selectAll(nodes));
 			selection.moveToFront();
+			actives.moveToFront();
 		}
 
 		selectAll('.drop.favorites').style('filter', 'url(#highlight)');
@@ -88,8 +93,8 @@ export class TimelineComponent implements OnInit {
 		return this._markup;
 	}
 
-
 	constructor(protected emitter: TimelineEmitterService) {
+		this.eventDrops = edrops.eventDrops;
 	}
 
 	ngOnInit() {
@@ -99,6 +104,7 @@ export class TimelineComponent implements OnInit {
 				this.drawMarkup();
 			}
 		});
+
 	}
 
 	clickEvent() {
@@ -142,7 +148,7 @@ export class TimelineComponent implements OnInit {
 	eventDropsHandler(): void {
 		// console.log(eventDrops);
 		// return;
-		const chart = eventDrops(this.configuration)
+		const chart = this.eventDrops(this.configuration)
 			.mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
 			.mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
 			.zoomend((result) => this.emitter.provide('timeline:zoomend').next(result))

@@ -14,7 +14,7 @@ export interface IMapState {
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
-	region: any;
+	region: CaseRegionState;
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }

@@ -71,7 +71,7 @@
 				[comboBoxToolTipDescription]="toolTips.timeFilter"
 				[options]="timeFilters"
 				[selectedIndex]="selectedTimeFilterIndex"
-				(selectedIndexChange)="comboBoxesChange({timeFilter: timeLines[$event]})">
+				(selectedIndexChange)="comboBoxesChange({timeFilter: timeFilters[$event]})">
 			</ansyn-combo-box>
 			<div class="buttons">
 				<button (click)="toggleTimelineStartEndSearch()"
@@ -131,7 +131,7 @@
 			<i class="icon-status-bar-next"></i>
 		</button>
 
-		<button class="transparent"
+		<button style="display: none" class="transparent"
 				(click)="clickTime()"
 				[attr.tooltip-value]="toolTips.reset"
 				tooltip-class="top left"
@@ -139,7 +139,7 @@
 			<i class="icon-annotation-square"></i>
 		</button>
 
-		<button class="transparent"
+		<button style="display: none" class="transparent"
 				(click)="clickExpand()"
 				[attr.tooltip-value]="toolTips.enlarge"
 				tooltip-class="top left"

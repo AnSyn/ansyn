@@ -29,8 +29,6 @@ import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { CaseMapPosition } from '../../core';
-import { SetRegion } from '../actions/map.actions';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 
 @Injectable()

@@ -1,7 +1,4 @@
-import {
-	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit,
-	ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { select, selectAll, selection } from 'd3';
 import { eventDrops } from 'ansyn-event-drops';
 

@@ -1,7 +1,6 @@
 <div class="combo-container">
 	<button
 		class="trigger" #optionsTrigger (click)="toggleShow()"
-		[style.width.px]="width"
 		[attr.tooltip-value]="comboBoxToolTipDescription || null" tooltip-class="top"
 		[class.active]="optionsVisible"
 	>

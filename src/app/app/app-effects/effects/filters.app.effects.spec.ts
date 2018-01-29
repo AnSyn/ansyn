@@ -162,12 +162,6 @@ describe('Filters app effects', () => {
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
 
-	// it('updateCaseFacets function', () => {
-	// 	(<any>selectedCase).state.facets = { filters: [], showOnlyFavorites: false };
-	// 	const update = filtersAppEffects.updateCaseFacets(selectedCase, filtersState);
-	// 	expect(update).toEqual(selectedCase);
-	// });
-
 	describe('isMetadataEmpty', () => {
 		const empty = [undefined, null];
 		empty.forEach(metadata => {

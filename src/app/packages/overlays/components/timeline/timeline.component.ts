@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit,
+	ViewChild
+} from '@angular/core';
 import { select, selectAll, selection } from 'd3';
 import { eventDrops } from 'ansyn-event-drops';
 
@@ -66,7 +69,8 @@ export class TimelineComponent implements OnInit {
 		selectAll('.drop.displayed').classed('displayed ', false);
 		selectAll('.drop.active').classed('active', false);
 		selectAll('.drop.favorites').classed('favorites', false).style('filter', 'none');
-		selectAll('.drop.hover').classed('hover', false);
+		const actives = <any>selectAll('.drop.hover');
+		actives.classed('hover', false);
 
 		const nodes = [];
 		this._markup.forEach(markupItem => {
@@ -79,6 +83,7 @@ export class TimelineComponent implements OnInit {
 		if (nodes.length > 0) {
 			const selection = (<any>selectAll(nodes));
 			selection.moveToFront();
+			actives.moveToFront();
 		}
 
 		selectAll('.drop.favorites').style('filter', 'url(#highlight)');

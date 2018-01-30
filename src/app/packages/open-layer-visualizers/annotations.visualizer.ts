@@ -9,6 +9,7 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import OLGeoJSON from 'ol/format/geojson';
+import condition from 'ol/events/condition';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from './models/visualizer-state';
@@ -86,9 +87,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	createContextMenuInteraction() {
-		const condition = (event) => event.originalEvent.which === 3 && event.type === 'pointerdown';
+		// const condition = (event) => event.originalEvent.which === 3 && event.type === 'pointerdown';
 		const contextMenuInteraction = new Select(<any>{
-			condition,
+			condition: condition.click,
 			layers: [this.vector],
 			hitTolerance: 10
 		});
@@ -98,7 +99,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	onSelectFeature(data) {
-		const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
+		// const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature, data.mapBrowserEvent.originalEvent.target);
@@ -107,13 +108,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			featureId: id,
 			boundingRect
 		};
-		const callback = event => {
-			event.stopPropagation();
-			event.preventDefault();
-			originalEventTarget.removeEventListener('contextmenu', callback);
-			this.contextMenuHandler.emit(contextMenuEvent);
-		};
-		originalEventTarget.addEventListener('contextmenu', callback);
+		this.contextMenuHandler.emit(contextMenuEvent);
+		// const callback = event => {
+		// 	event.stopPropagation();
+		// 	event.preventDefault();
+		// 	originalEventTarget.removeEventListener('contextmenu', callback);
+		// };
+		// originalEventTarget.addEventListener('contextmenu', callback);
 	}
 
 	changeStrokeColor(color) {

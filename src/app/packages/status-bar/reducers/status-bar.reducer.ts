@@ -50,7 +50,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 			const newMap = new Map(state.flags);
 
-			const value = action.payload.value || !newMap.get(action.payload.key);
+			const value = typeof action.payload.value !== 'undefined' ? action.payload.value : !newMap.get(action.payload.key);
 
 			newMap.set(action.payload.key, value);
 

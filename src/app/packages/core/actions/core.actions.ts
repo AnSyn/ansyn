@@ -8,14 +8,16 @@ export const CoreActionTypes = {
 	TOGGLE_OVERLAY_FAVORITE: type('[Core] TOGGLE_FAVORITE'),
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
-	UPDATE_FAVORITE_OVERLAYS_METADATA: type('[Core] UPDATE_FAVORITE_OVERLAYS_METADATA')
+	UPDATE_FAVORITE_OVERLAYS_METADATA: type('[Core] UPDATE_FAVORITE_OVERLAYS_METADATA'),
+	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS')
 };
 
 export type CoreActions =
 	ToggleMapLayersAction
 	| ToggleFavoriteAction
 	| SetToastMessageAction
-	| SetFavoriteOverlaysAction;
+	| SetFavoriteOverlaysAction
+	| ClearActiveInteractionsAction;
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -49,5 +51,13 @@ export class UpdateFavoriteOverlaysMetadataAction implements Action {
 	type = CoreActionTypes.UPDATE_FAVORITE_OVERLAYS_METADATA;
 
 	constructor(public payload: Overlay[]) {
+	}
+}
+
+export class ClearActiveInteractionsAction implements Action {
+	type = CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS;
+
+	constructor(public payload?: {skipClearFor: Array<any>}) {
+
 	}
 }

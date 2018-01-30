@@ -15,6 +15,7 @@ import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 import { CoordinatesSystem } from '@ansyn/core/models';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -108,6 +109,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	togglePinLocation() {
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetPinLocationModeAction] }));
 		this.store$.dispatch(new SetPinLocationModeAction(!this.pinLocationMode));
 	}
 

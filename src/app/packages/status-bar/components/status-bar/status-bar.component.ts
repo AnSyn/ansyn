@@ -6,7 +6,10 @@ import {
 	GoPrevAction, SetTimeAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
-import { CaseGeoFilter, CaseOrientation, CaseTimeFilter, coreStateSelector, ICoreState, Overlay } from '@ansyn/core';
+import {
+	CaseGeoFilter, CaseOrientation, CaseTimeFilter, ClearActiveInteractionsAction, coreStateSelector, ICoreState,
+	Overlay
+} from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
 import {
@@ -177,6 +180,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapPointSearch() {
+		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 	}
 

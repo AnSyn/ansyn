@@ -1,7 +1,7 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { isEmpty } from 'lodash';
+import { isEmpty, differenceWith } from 'lodash';
 import {
 	BackToWorldAction,
 	DrawOverlaysOnMapTriggerAction,
@@ -32,7 +32,6 @@ import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHeatmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import {
-	AnnotationVisualizerAgentAction,
 	GoToInputChangeAction,
 	SetAnnotationMode,
 	ShowOverlaysFootprintAction,
@@ -50,6 +49,10 @@ import { ContextEntityVisualizerType } from '../../../app-providers/app-visualiz
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers';
+import { SetPinLocationModeAction } from '@ansyn/menu-items';
+import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItems } from '@ansyn/status-bar';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -383,6 +386,30 @@ export class VisualizersAppEffects {
 			vis.setReferenceDate(action instanceof DisplayOverlaySuccessAction ? selectedMap.data.overlay.date : null);
 		});
 
+	/**
+	 * @type Effect
+	 * @name clearActiveInteractions$
+	 * @ofType ClearActiveInteractionsAction
+	 * @action SetMeasureDistanceToolState?, SetAnnotationMode?, UpdateStatusFlagsAction?, SetPinLocationModeAction?
+	 */
+	@Effect()
+	clearActiveInteractions$ = this.actions$
+		.ofType<ClearActiveInteractionsAction>(CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS)
+		.mergeMap(action => {
+			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
+			let clearActions = [
+				new SetMeasureDistanceToolState(false),
+				new SetAnnotationMode(),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
+				new SetPinLocationModeAction(false)
+			];
+			// return defaultClearActions without skipClearFor
+			if (action.payload && action.payload.skipClearFor) {
+				clearActions = differenceWith(clearActions, action.payload.skipClearFor,
+					(act, actType) => act instanceof actType);
+			}
+			return clearActions;
+		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

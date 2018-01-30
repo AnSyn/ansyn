@@ -130,16 +130,31 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.updateStyle({ initial: { stroke: { width } } });
 	}
 
+
 	getFeatureBoundingRect(selectedFeature, originalEventTarget): AnnotationsContextMenuBoundingRect {
-		const { left, top } = originalEventTarget.getBoundingClientRect();
+		const { left, top, width, height } = originalEventTarget.getBoundingClientRect();
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
-		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
-		const width = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
-		const height = Math.sqrt(Math.pow(y2 - y3, 2) + Math.pow(x2 - x3, 2));
-		return { left: x4 + left, top: y4 + top, width, height, rotation };
+		const margin = 13;
+		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.makeSureNotOutOfBounds(this.getExtentAsPixels(extent), margin);
+		let shapeWidth = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
+		const widthOverFlow = shapeWidth + x4 - width + margin;
+		shapeWidth = widthOverFlow > 0 ? shapeWidth - widthOverFlow : shapeWidth;
+		let shapeHeight = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
+		const HeightOverFlow = shapeHeight + y4 - height + margin;
+		shapeHeight = HeightOverFlow > 0 ? shapeHeight - HeightOverFlow : shapeHeight;
+		return { left: x4 + left, top: y4 + top, width: shapeWidth, height: shapeHeight, rotation };
 	}
+
+	makeSureNotOutOfBounds(pointsArray, margin) {
+		return pointsArray.map(point => {
+			return point.map(coord => {
+				return coord < 0 ? margin : coord;
+			});
+		});
+	}
+
 
 	getExtentAsPixels([x1, y1, x2, y2]) {
 		const bottomLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y1]);

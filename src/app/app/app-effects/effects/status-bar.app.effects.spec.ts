@@ -164,7 +164,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('updatePinPointIndicatorAction$ - remove', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator });
 		store.dispatch(action);
 		// mock communicatorsAsArray
 		const imagery1 = {};

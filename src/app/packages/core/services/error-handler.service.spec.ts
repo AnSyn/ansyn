@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { ErrorHandlerService, LoggerService } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 
-fdescribe('ErrorHandlerService', () => {
+describe('ErrorHandlerService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [

@@ -50,6 +50,9 @@ import {
 import { cloneDeep } from 'lodash';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { SetAnnotationMode, SetMeasureDistanceToolState, SetPinLocationModeAction } from '@ansyn/menu-items';
+import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -265,5 +268,35 @@ describe('VisualizersAppEffects', () => {
 
 		expect(visualizersAppEffects.drawPinPoint$).toBeObservable(expectedResults);
 		expect(visualizersAppEffects.drawPinPointIconOnMap).toHaveBeenCalledTimes(3);
+	});
+
+
+	it('clearActiveInteractions$ should clear active interactions', () => {
+		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
+
+		const expectedResult = cold('--(abcd)--', {
+			a: new SetMeasureDistanceToolState(false),
+			b: new SetAnnotationMode(),
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
+			d: new SetPinLocationModeAction(false)
+		});
+
+		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
+	});
+
+	it('clearActiveInteractions$ should clear active interactions without SetMeasureDistanceToolState', () => {
+		actions = hot('--a--', {
+			a: new ClearActiveInteractionsAction({
+				skipClearFor: [SetMeasureDistanceToolState]
+			})
+		});
+
+		const expectedResult = cold('--(bcd)--', {
+			b: new SetAnnotationMode(),
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
+			d: new SetPinLocationModeAction(false)
+		});
+
+		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
 	});
 });

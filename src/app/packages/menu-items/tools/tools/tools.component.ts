@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
 
 enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
@@ -71,6 +72,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleMeasureDistanceTool() {
 		const value = this.flags.get('isMeasureToolActive');
+		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetMeasureDistanceToolState] }));
 		this.store.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 

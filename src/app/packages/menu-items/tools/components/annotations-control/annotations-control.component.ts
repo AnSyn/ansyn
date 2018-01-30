@@ -10,6 +10,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
 
 export interface ModeList {
 	mode: AnnotationMode;
@@ -25,7 +26,7 @@ export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	private _expand: boolean;
-	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' }
+	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' };
 	public selectedBox: SelectionBoxTypes;
 
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
@@ -76,7 +77,11 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {
-		this.store.dispatch(new SetAnnotationMode(this.mode === mode ? undefined : mode));
+		const dispatchValue = this.mode === mode ? undefined : mode;
+		if (dispatchValue) {
+			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode]}));
+		}
+		this.store.dispatch(new SetAnnotationMode(dispatchValue));
 	}
 
 	selectLineWidth(strokeWidth: number) {

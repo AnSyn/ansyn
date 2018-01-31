@@ -1,9 +1,8 @@
-import { Component, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
-import { MapFacadeService } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -13,6 +12,8 @@ import { MapFacadeService } from '@ansyn/map-facade';
 export class AnnotationContextMenuComponent {
 	action: AnnotationContextMenuTriggerAction;
 	contextMenuWrapperStyle;
+
+	@Input('mapId') mapId;
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -29,23 +30,25 @@ export class AnnotationContextMenuComponent {
 
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
 
-		this.mapEffect.annotationContextMenuTrigger$.subscribe((action: AnnotationContextMenuTriggerAction) => {
-			this.action = action;
-			const { boundingRect } = <any> this.action.payload;
-			this.contextMenuWrapperStyle = {
-				top: `${boundingRect.top}px`,
-				left: `${boundingRect.left}px`,
-				width: `${boundingRect.width}px`,
-				height: `${boundingRect.height}px`,
-				transform: `rotate(${boundingRect.rotation}deg)`
-			};
+		this.mapEffect.annotationContextMenuTrigger$
+			.filter(({ payload }) => payload.mapId === this.mapId)
+			.subscribe((action: AnnotationContextMenuTriggerAction) => {
+				this.action = action;
+				const { boundingRect } = <any> this.action.payload;
+				this.contextMenuWrapperStyle = {
+					top: `${boundingRect.top}px`,
+					left: `${boundingRect.left}px`,
+					width: `${boundingRect.width}px`,
+					height: `${boundingRect.height}px`,
+					transform: `rotate(${boundingRect.rotation}deg)`
+				};
 
-			this.host.nativeElement.focus();
-		});
+				this.host.nativeElement.focus();
+			});
 
-		this.mapEffect.positionChanged$.subscribe( () => {
+		this.mapEffect.positionChanged$.subscribe(() => {
 			this.host.nativeElement.blur();
-		})
+		});
 	}
 
 	removeFeature($event) {

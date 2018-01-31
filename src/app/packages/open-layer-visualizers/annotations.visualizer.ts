@@ -102,19 +102,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		// const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
-		const boundingRect = this.getFeatureBoundingRect(selectedFeature, data.mapBrowserEvent.originalEvent.target);
+		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: AnnotationsContextMenuEvent = {
+			mapId: this.mapId,
 			featureId: id,
 			boundingRect
 		};
 		this.contextMenuHandler.emit(contextMenuEvent);
-		// const callback = event => {
-		// 	event.stopPropagation();
-		// 	event.preventDefault();
-		// 	originalEventTarget.removeEventListener('contextmenu', callback);
-		// };
-		// originalEventTarget.addEventListener('contextmenu', callback);
 	}
 
 	changeStrokeColor(color) {
@@ -132,30 +127,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 
-	getFeatureBoundingRect(selectedFeature, originalEventTarget): AnnotationsContextMenuBoundingRect {
-		const { left, top, width, height } = originalEventTarget.getBoundingClientRect();
+	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
-		const margin = 13;
-		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.makeSureNotOutOfBounds(this.getExtentAsPixels(extent), margin);
+		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
 		let shapeWidth = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
-		const widthOverFlow = shapeWidth + x4 - width + margin;
-		shapeWidth = widthOverFlow > 0 ? shapeWidth - widthOverFlow : shapeWidth;
 		let shapeHeight = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
-		const HeightOverFlow = shapeHeight + y4 - height + margin;
-		shapeHeight = HeightOverFlow > 0 ? shapeHeight - HeightOverFlow : shapeHeight;
-		return { left: x4 + left, top: y4 + top, width: shapeWidth, height: shapeHeight, rotation };
+		return { left: x4 , top: y4 , width: shapeWidth, height: shapeHeight, rotation };
 	}
-
-	makeSureNotOutOfBounds(pointsArray, margin) {
-		return pointsArray.map(point => {
-			return point.map(coord => {
-				return coord < 0 ? margin : coord;
-			});
-		});
-	}
-
 
 	getExtentAsPixels([x1, y1, x2, y2]) {
 		const bottomLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y1]);

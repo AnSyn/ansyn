@@ -27,6 +27,9 @@ describe('ImageryContainerComponent', () => {
 				MockComponent({
 					selector: 'ansyn-imagery-rotation',
 					inputs: ['mapState']
+				}),
+				MockComponent({
+					selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
 				})
 			]
 		}).compileComponents();

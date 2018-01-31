@@ -132,9 +132,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
 		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
-		let shapeWidth = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
-		let shapeHeight = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
-		return { left: x4 , top: y4 , width: shapeWidth, height: shapeHeight, rotation };
+		const width = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
+		const height = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
+		return { left: x4 , top: y4 , width, height, rotation };
 	}
 
 	getExtentAsPixels([x1, y1, x2, y2]) {

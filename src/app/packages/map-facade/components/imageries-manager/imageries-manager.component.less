@@ -15,6 +15,11 @@
 		flex-wrap: wrap;
 		background: black;
 		overflow: hidden;
+
+		div.map-container-wrapper {
+			overflow: hidden;
+		}
+
 		&.pin-location {
 			cursor: url('/assets/cursors/pin-location.cur') 12 12, pointer;
 		}
@@ -46,7 +51,6 @@
 				border: solid 3px @application-main-color;
 			}
 		}
-
 		&.layout1 {
 			div.map-container-wrapper {
 				position: relative;

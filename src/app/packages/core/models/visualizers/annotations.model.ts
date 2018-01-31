@@ -7,6 +7,7 @@ export interface AnnotationsContextMenuBoundingRect {
 }
 
 export interface AnnotationsContextMenuEvent {
+	mapId: string;
 	featureId: string;
 	boundingRect: AnnotationsContextMenuBoundingRect;
 }

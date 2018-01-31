@@ -21,7 +21,7 @@ const mockAnsynImageryContainer = MockComponent({
 	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'disableGeoOptions', 'notInCase', 'mapsAmount', 'isFavoriteOverlayDisplayed']
 });
 const mockAnnotationContextMenu = MockComponent({
-	selector: 'ansyn-annotations-context-menu'
+	selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
 });
 
 describe('ImageriesManagerComponent', () => {

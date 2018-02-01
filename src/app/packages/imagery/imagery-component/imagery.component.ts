@@ -28,39 +28,8 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export class ImageryComponent implements OnInit, OnDestroy {
 
-	private _mapComponentSettings: CaseMapState;
-
 	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
-
-	@Input()
-	set mapComponentSettings(value) {
-		// ngOnInit first
-		if (isNil(this._mapComponentSettings)) {
-			this._mapComponentSettings = value;
-			return;
-		}
-
-		// id has been change
-		if (!isEqual(this._mapComponentSettings.id, value.id)) {
-			if (this._manager) {
-				this.imageryCommunicatorService.replaceCommunicatorId(this._mapComponentSettings.id, value.id);
-			}
-		}
-
-		// position has been change
-		if (!isEqual(this._mapComponentSettings.data.position, value.data.position)) {
-			if (this._manager) {
-				this._manager.ActiveMap.setPosition(value.data.position);
-			}
-		}
-
-		this._mapComponentSettings = value;
-	}
-
-	get mapComponentSettings() {
-		return this._mapComponentSettings;
-	}
-
+	@Input() public mapComponentSettings: CaseMapState;
 
 	private _mapComponentRef: ComponentRef<any>;
 	private _manager: ImageryComponentManager;
@@ -78,7 +47,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this._mapComponentRef,
 			this.baseSourceProviders,
 			this.config,
-			this._mapComponentSettings.id
+			this.mapComponentSettings.id
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).take(1).subscribe(res => {

@@ -128,6 +128,9 @@
 			"Panchromatic": "P",
 			"8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
 			"4-band (Blue, Green, Red, NIR) Multispectral": "4B"
+		},
+		"contextMenu": {
+			"filterField": "sensorType"
 		}
 	},
 	"filtersConfig": {

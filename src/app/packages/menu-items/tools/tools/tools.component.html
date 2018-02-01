@@ -24,8 +24,8 @@
 		<button tooltip-class="right"
 				tooltip-value="Automatic Image Enhancement"
 				(click)="toggleAutoImageProcessing()"
-				[class.mode-on]="flags.get('autoImageProcessing')"
-				[disabled]="flags.get('imageProcessingDisabled')">
+				[class.mode-on]="flags.get(toolsFlags.autoImageProcessing)"
+				[disabled]="flags.get(toolsFlags.imageProcessingDisabled)">
 			<i class="icon-automatic-image-processing"></i>
 		</button>
 	</div>
@@ -36,7 +36,7 @@
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
 				[class.mode-on]="isImageControlActive"
 				[class.active]="expandedSubMenu === subMenuEnum.manualImageProcessing"
-				[disabled]="flags.get('imageProcessingDisabled')">
+				[disabled]="flags.get(toolsFlags.imageProcessingDisabled)">
 			<i class="icon-tools-image-processing"></i>
 		</button>
 		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing"
@@ -65,7 +65,8 @@
 		<button tooltip-class="right"
 				tooltip-value="Annotations"
 				[class.active]="expandedSubMenu === subMenuEnum.annotations"
-				(click)="toggleSubMenu(subMenuEnum.annotations)">
+				(click)="toggleSubMenu(subMenuEnum.annotations)"
+				[disabled]="isGeoOptionsDisabled">
 			<span class="icon-annotation"></span>
 		</button>
 		<ansyn-annotations-control [expand]="expandedSubMenu === subMenuEnum.annotations"></ansyn-annotations-control>
@@ -76,7 +77,7 @@
 				tooltip-value="Measure Distance"
 				(click)="toggleMeasureDistanceTool()"
 				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="flags.get('isMeasureToolActive')">
+				[class.mode-on]="flags.get(toolsFlags.isMeasureToolActive)">
 			<i class="icon-tools-ruler"></i>
 		</button>
 	</div>

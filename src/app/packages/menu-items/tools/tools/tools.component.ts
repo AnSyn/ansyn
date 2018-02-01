@@ -5,7 +5,7 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector, toolsFlags } from '../reducers/tools.reducer';
 import { isEqual } from 'lodash';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
 
@@ -35,7 +35,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged();
-
+	get toolsFlags() {
+		return toolsFlags;
+	}
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(protected store: Store<any>) {
 

@@ -26,10 +26,9 @@ export interface OverlayButton {
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
-	static filterField = 'sensorType';
 
 	get filterField() {
-		return ContextMenuComponent.filterField;
+		return this.config.contextMenu.filterField
 	}
 
 	mapState$ = this.store.select(mapStateSelector);

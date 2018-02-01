@@ -2,13 +2,14 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetMapRotationAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
+import { get } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
 	color: '#6e6e7f' | 'red';
-	tooltip: 'Drag to Change Orientation' | 'Press Ctrl+Shift+Alt and drag to rotate';
+	tooltipNorth: 'Drag to Change Orientation' | 'Press Ctrl+Shift+Alt and drag to rotate';
+	tooltip: 'Click once to face north, twice for image perspective' | null;
 	compass: '/assets/icons/map/compass.svg' | '/assets/icons/map/compass_disabled.svg';
 	rotatePointer: 'rotationAngle' | 'notGeoRegitredNorthAngle';
 }
@@ -24,7 +25,8 @@ export class ImageryRotationComponent {
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',
 		color: 'red',
-		tooltip: 'Drag to Change Orientation',
+		tooltipNorth: 'Drag to Change Orientation',
+		tooltip: 'Click once to face north, twice for image perspective',
 		compass: '/assets/icons/map/compass.svg',
 		rotatePointer: 'rotationAngle'
 	};
@@ -32,12 +34,18 @@ export class ImageryRotationComponent {
 	notGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: '?',
 		color: '#6e6e7f',
-		tooltip: 'Press Ctrl+Shift+Alt and drag to rotate',
+		tooltipNorth: 'Press Ctrl+Shift+Alt and drag to rotate',
+		tooltip: null,
 		compass: '/assets/icons/map/compass_disabled.svg',
 		rotatePointer: 'notGeoRegitredNorthAngle'
 	};
 
 	isRotating = false;
+
+	get geoRegiteredProperties(): IsGeoRegisteredProperties {
+		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
+	}
+
 	get communicator(): CommunicatorEntity {
 		return this.imageryCommunicatorService.provide(this.mapState.id)
 	}
@@ -51,7 +59,7 @@ export class ImageryRotationComponent {
 	}
 
 	get rotationAngle() {
-		return this.mapState.data.position.projectedState.rotation;
+		return get(this.mapState, 'data.position.projectedState.rotation', 0) - this.virtualNorth;
 	}
 
 	constructor(protected elementRef: ElementRef,
@@ -61,26 +69,6 @@ export class ImageryRotationComponent {
 
 	isGeoRegistered() {
 		return !this.mapState.data.overlay || this.mapState.data.overlay.isGeoRegistered;
-	}
-
-	srcCompass() {
-		return this.isGeoRegistered() ? '/assets/icons/map/compass.svg' : '/assets/icons/map/compass_disabled.svg';
-	}
-
-	textTooltip() {
-		return this.isGeoRegistered() ? 'Drag to Change Orientation' : 'Press Ctrl+Shift+Alt and drag to rotate';
-	}
-
-	geoRegiteredProperties(): IsGeoRegisteredProperties {
-		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
-	}
-
-	rotateStyle() {
-		return `rotate(${this.isGeoRegistered() ? this.rotationAngle : 0}rad)`;
-	}
-
-	colorIsGeoRegistered() {
-		return this.isGeoRegistered() ? 'red' : '#6e6e7f';
 	}
 
 	stopPropagation($event: Event) {

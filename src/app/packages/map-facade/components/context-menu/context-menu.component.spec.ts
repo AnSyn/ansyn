@@ -6,7 +6,8 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MapEffects } from '../../effects/map.effects';
 import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
-import { mapFacadeConfig } from '../../models/map-facade.config';
+import { mapFacadeConfig,  } from '../../models/map-facade.config';
+import { IMapFacadeConfig } from '../../models/map-config.model';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -23,7 +24,7 @@ describe('ContextMenuComponent', () => {
 			declarations: [ContextMenuComponent],
 			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {
 				provide: mapFacadeConfig,
-				useValue: { sensorTypeShortcuts: {} }
+				useValue: <IMapFacadeConfig> { sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField'} }
 			}]
 		}).compileComponents();
 	}));

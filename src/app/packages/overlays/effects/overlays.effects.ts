@@ -7,18 +7,9 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
-	RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction,
-	SetTimelineStateAction,
-	SyncOverlaysWithFavoritesOnLoadingAction,
+	DisplayOverlayAction, DisplayOverlayFromStoreAction, GoNextDisplayAction, GoPrevDisplayAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes, OverlaysMarkupAction, RedrawTimelineAction,
+	RequestOverlayByIDFromBackendAction, SetTimelineStateAction, SyncOverlaysWithFavoritesOnLoadingAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
@@ -28,9 +19,9 @@ import { Overlay } from '../models/overlay.model';
 import { isNil, unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { coreStateSelector, ICoreState, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
+import { overlaysStatusMessages } from '../reducers/index';
 
 @Injectable()
 export class OverlaysEffects {
@@ -87,12 +78,12 @@ export class OverlaysEffects {
 					const actions: Array<any> = [new SyncOverlaysWithFavoritesOnLoadingAction(overlays.data)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage('No overlays match your query, please try another search'));
+						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchQuery));
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(`Note: only ${overlays.data.length} overlays are presented`));
+						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
 					} else {
-						actions.push(new SetOverlaysStatusMessage(null));
+						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.nullify));
 					}
 
 					return actions;
@@ -214,6 +205,42 @@ export class OverlaysEffects {
 	@Effect()
 	dropsCount$: Observable<UpdateOverlaysCountAction> = this.drops$
 		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
+
+
+	/**
+	 * @type Effect
+	 * @name dropCountWatcher
+	 * @description this method should fire notification when no overlays are available due to filters.
+	 * @ofType UpdateOverlaysCountAction
+	 * @action SetOverlaysStatusMessage
+	 */
+
+	@Effect()
+	dropCountWatcher$: Observable<SetOverlaysStatusMessage> = this.actions$
+		.ofType<UpdateOverlaysCountAction>(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
+		.withLatestFrom(this.store$.select(overlaysStateSelector))
+		.map(([{ payload }, { overlays, statusMessage }]: [UpdateOverlaysCountAction, IOverlaysState]) => {
+			const isMessageActive = statusMessage === overlaysStatusMessages.noOverLayMatchFilters;
+			const isConditionMet = overlays.size > 0 && payload === 0;
+			const turnOn = !statusMessage && isConditionMet;
+			const turnOff = !isConditionMet && isMessageActive;
+			return { turnOn, turnOff }
+		})
+		.filter(({ turnOn, turnOff }) => turnOn || turnOff )
+		.map(({ turnOn }) => {
+			const payload = turnOn ? overlaysStatusMessages.noOverLayMatchFilters : overlaysStatusMessages.nullify;
+			return new SetOverlaysStatusMessage(payload);
+		});
+		// .map(([{ payload }, { overlays, statusMessage }]: [UpdateOverlaysCountAction, IOverlaysState]) => {
+		// 	if (turnOn) {
+		// 		return new SetOverlaysStatusMessage('No overlays match your query, please try another search');
+		// 	}
+		// 	if (turnOff) {
+		// 		return new SetOverlaysStatusMessage(overlaysStatusMessages.nullify);
+		// 	}
+		// 	return null
+		//
+		// });
 
 
 	/**

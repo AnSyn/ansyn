@@ -13,6 +13,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { LoggerService } from '@ansyn/core';
 
 function mockOverlay(id: string): Overlay {
 	const overlay = new Overlay();
@@ -36,7 +37,11 @@ describe('CoreAppEffects', () => {
 			],
 			providers: [
 				CoreAppEffects,
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{
+					provide : LoggerService,
+					useValue: () => null
+				}
 			]
 		}).compileComponents();
 	}));

@@ -10,7 +10,7 @@
 </div>
 <!--tooltip-value="Click to Reset" tooltip-class="left"-->
 <div  class="img-container"
-	  [attr.tooltip-value]="isGeoRegistered() ? 'Click once to face north, twice for image perspective' : ''"
+	  [attr.tooltip-value]="isGeoRegistered() ? 'Click once to face north, twice for image perspective' : null"
 	  tooltip-class="bottom left">
 	<img [src]="geoRegiteredProperties().compass"
 		 (click)="toggleNorth()"

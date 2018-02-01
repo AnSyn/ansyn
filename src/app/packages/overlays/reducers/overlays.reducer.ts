@@ -36,7 +36,12 @@ export const overlaysInitialState: IOverlaysState = {
 };
 export const overlaysFeatureKey = 'overlays';
 export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
-
+export const overlaysStatusMessages =  {
+	noOverLayMatchQuery: "No overlays match your query, please try another search",
+	overLoad : "Note: only $overLoad overlays are presented",
+	noOverLayMatchFilters: "No overlays match your query, please try another search",
+	nullify: null
+}
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 

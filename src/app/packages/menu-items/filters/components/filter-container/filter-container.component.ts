@@ -24,7 +24,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 		]),
 		trigger('fieldsTrigger', [
 			state('true', style({
-				maxHeight: '500px',
+				maxHeight: '5000px',
 				opacity: 1
 			})),
 			state('false', style({

@@ -51,7 +51,7 @@ export class ImageryRotationComponent {
 	}
 
 	get virtualNorth() {
-		return this.communicator.getVirtualNorth();
+		return this.communicator ? this.communicator.getVirtualNorth() : 0;
 	}
 
 	get notGeoRegitredNorthAngle() {

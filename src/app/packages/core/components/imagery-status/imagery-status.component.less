@@ -53,7 +53,7 @@
 				}
 			}
 
-			&.set-favorite.active i {
+			&.set-favorite.active2 i {
 				text-shadow: 0 0 9px yellow;
 				-webkit-text-stroke: 0.2px yellow;
 			}
@@ -66,6 +66,7 @@
 	}
 
 	.description {
+		max-width: 29%;
 		padding: 0 10px;
 		text-align: center;
 
@@ -99,3 +100,27 @@
 		}
 	}
 }
+
+
+@screens-list: 1800px, 1700px, 1600px, 1500px;
+@screen-list-width: 120px, 100px, 80px, 60px;
+
+.screens(@list, @i: 1) when (@i <= length(@list)) {
+	@screen-size: extract(@list, @i);
+
+	@media screen and (max-width: @screen-size) {
+		:host {
+			.status-bar {
+				.selectedCase {
+					font-size: 12px;
+				}
+				.combo-boxes .combo-box-container .combo-box-width {
+					width: extract(@screen-list-width, @i);
+				}
+			}
+		}
+	}
+	.screens(@list, @i + 1);
+}
+
+.screens(@screens-list);

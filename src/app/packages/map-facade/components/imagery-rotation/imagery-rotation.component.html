@@ -7,7 +7,10 @@
 	</div>
 </div>
 <!--tooltip-value="Click to Reset" tooltip-class="left"-->
-<div  class="img-container">
+<div  class="img-container"
+	  tooltip-value="Click once to face north, twice for image perspective"
+	  tooltip-class="bottom left"
+>
 	<img src="/assets/icons/map/compass.svg" (click)="toggleNorth()" (mousedown)="stopPropagation($event)"
 		 [style.transform]="'rotate(' + rotationAngle + 'rad)'"
 		 [style.cursor]="isRotating ? '' : 'pointer'"/>

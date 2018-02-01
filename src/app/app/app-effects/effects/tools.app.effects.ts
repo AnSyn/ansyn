@@ -142,7 +142,7 @@ export class ToolsAppEffects {
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
 			if (selectedCase.state.overlaysManualProcessArgs) {
-				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.id];
+				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id];
 			}
 			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action

@@ -10,15 +10,9 @@ export interface CaseMapProjectedState {
 	zoom?: number;
 }
 
-export interface ICaseResolutionData {
-	center: [number, number];
-	refPoint1: [number, number];
-	refPoint2: [number, number];
-	mapResolution: number;
-}
+export type CaseMapExtentPolygon = GeoJSON.Polygon;
 
 export interface CaseMapPosition {
-	extent: CaseMapExtent;
-	resolutionData?: ICaseResolutionData;
 	projectedState: CaseMapProjectedState;
+	extentPolygon: CaseMapExtentPolygon;
 }

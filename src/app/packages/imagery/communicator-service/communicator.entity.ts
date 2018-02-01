@@ -19,8 +19,7 @@ export class CommunicatorEntity {
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
-
-	virtualNorth = 0;
+	private _virtualNorth = 0;
 
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
@@ -79,9 +78,8 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition) {
-		this.setVirtualNorth(0);
-		this._manager.loadInitialMapSource(position);
+	public loadInitialMapSource(position?: CaseMapPosition): Promise<any> {
+		return this._manager.loadInitialMapSource(position);
 	}
 
 	public get ActiveMap(): IMap {
@@ -111,8 +109,13 @@ export class CommunicatorEntity {
 	}
 
 	setVirtualNorth(north: number) {
-		this.virtualNorth = north;
+		this._virtualNorth = north;
 	}
+
+	getVirtualNorth() {
+		return this._virtualNorth;
+	}
+
 
 	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
 		if (this.ActiveMap) {
@@ -125,8 +128,6 @@ export class CommunicatorEntity {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
-		position = cloneDeep(position);
-		position.projectedState.rotation += this.virtualNorth;
 		this.ActiveMap.setPosition(position);
 	}
 
@@ -134,12 +135,7 @@ export class CommunicatorEntity {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}
-		let position = this.ActiveMap.getPosition();
-		if (!position) {
-			return null;
-		}
-		position.projectedState.rotation -= this.virtualNorth;
-		return position;
+		return this.ActiveMap.getPosition();
 	}
 
 	public setRotation(rotation: number) {
@@ -162,7 +158,7 @@ export class CommunicatorEntity {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
-		this.virtualNorth = 0;
+		this.setVirtualNorth(0);
 		if (this._manager) {
 			this._manager.resetView(layer, position, extent);
 		}

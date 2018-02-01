@@ -35,15 +35,16 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition) {
+	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
 		if (this._activeMap) {
-			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+			return this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 				this.resetView(layers[0], position);
 				if (layers.length > 0) {
 					for (let i = 1; i < layers.length; i++) {
 						this._activeMap.addLayer(layers[i]);
 					}
 				}
+				return layers;
 			});
 		}
 	}

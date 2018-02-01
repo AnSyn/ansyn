@@ -11,6 +11,7 @@ export const MapActionTypes = {
 	REMOVE_MAP_INSTACNE: 'REMOVE_MAP_INSTACNE',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
+	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	ADD_OVERLAY_TO_LOADING_OVERLAYS: 'ADD_OVERLAY_TO_LOADING_OVERLAYS',
 	REMOVE_OVERLAY_FROM_LOADING_OVERLAYS: 'REMOVE_OVERLAY_FROM_LOADING_OVERLAYS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
@@ -78,6 +79,10 @@ export class BackToWorldAction implements Action {
 	constructor(public payload: { mapId: string } = { mapId: undefined }) {
 	}
 }
+export class BackToWorldSuccessAction extends BackToWorldAction {
+	type = MapActionTypes.BACK_TO_WORLD_SUCCESS;
+}
+
 
 export class ActiveMapChangedAction implements Action {
 	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;

@@ -7,6 +7,7 @@ import {
 	ActiveMapChangedAction,
 	AnnotationContextMenuTriggerAction,
 	BackToWorldAction,
+	BackToWorldSuccessAction,
 	DecreasePendingMapsCountAction,
 	EnableMapGeoOptionsActionStore,
 	MapActionTypes,
@@ -28,7 +29,6 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { CaseMapPosition } from '../../core';
 
 
 @Injectable()
@@ -192,33 +192,25 @@ export class MapEffects {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			return [action, mapId, mapState.mapsList];
 		})
-		.map(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
-
+		.switchMap(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const comm = this.communicatorsService.provide(mapId);
-			let position: CaseMapPosition;
-			if (comm.activeMapName === 'openLayersMap') {
-				position = comm.getPosition();
-				// TODO: check "inside" if we can always use mapState
-				if (!position) {
-					position = selectedMap.data.position;
-				}
-			} else { // comm.activeMapName === 'disabledOpenLayersMap'
-				position = selectedMap.data.position;
-			}
-			comm.loadInitialMapSource(position);
-
-			const updatedMapsList = [...mapsList];
-			updatedMapsList.forEach(
-				(map) => {
-					if (map.id === mapId) {
-						map.data.overlay = null;
-						map.data.isAutoImageProcessingActive = false;
-					}
+			return Observable.fromPromise(comm.loadInitialMapSource(selectedMap.data.position))
+				.mergeMap(() => {
+					const updatedMapsList = [...mapsList];
+					updatedMapsList.forEach(
+						(map) => {
+							if (map.id === mapId) {
+								map.data.overlay = null;
+								map.data.isAutoImageProcessingActive = false;
+							}
+						});
+					return [
+						new BackToWorldSuccessAction(action.payload),
+						new SetMapsDataActionStore({ mapsList: updatedMapsList })
+					];
 				});
-			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		});
-
 	/**
 	 * @type Effect
 	 * @name onMapsDataActiveMapIdChanged$

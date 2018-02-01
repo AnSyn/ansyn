@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
 	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, LoadOverlaysAction, OverlaysActionTypes, OverlaysMarkupAction,
@@ -10,7 +10,7 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { Case, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { Case, ICasesState } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
@@ -48,6 +48,7 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { CaseMapPosition } from '@ansyn/core';
+import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 
 @Injectable()
 export class MapAppEffects {
@@ -147,17 +148,13 @@ export class MapAppEffects {
 	@Effect()
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(statusBarStateSelector),
-			(action: DisplayOverlayAction, mapState: IMapState, statusBar): [Overlay, string, CaseMapData, CaseOrientation] => {
-				const overlay = action.payload.overlay;
-				const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
-				const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-				const orientation: CaseOrientation = action.payload.ignoreRotation ? null : statusBar.comboBoxesProperties.orientation;
-				return [overlay, mapId, map.data, orientation];
-			})
-		.filter(([overlay]: [Overlay, string, CaseMapData, CaseOrientation]) => !isEmpty(overlay) && overlay.isFullOverlay)
-		.mergeMap<[Overlay, string, CaseMapData, CaseOrientation], any>(([overlay, mapId, mapData, orientation]: [Overlay, string, CaseMapData, CaseOrientation]) => {
-			const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extent, overlay.footprint);
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => !isEmpty(payload.overlay) && payload.overlay.isFullOverlay)
+		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
+			const { overlay } = payload;
+			const mapId = payload.mapId || mapState.activeMapId;
+			const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+			const intersection = getFootprintIntersectionRatioInExtent(ExtentCalculator.polygonToExtent(mapData.position.extentPolygon), overlay.footprint);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
@@ -169,30 +166,11 @@ export class MapAppEffects {
 				}));
 			}
 
-			let rotationAngle = 0;
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
 				.map(layer => {
 					if (overlay.isGeoRegistered) {
 						if (communicator.activeMapName === 'disabledOpenLayersMap') {
 							communicator.setActiveMap('openLayersMap', mapData.position, layer);
-						}
-						if (orientation) {
-							switch (orientation) {
-								case 'Align North':
-									break;
-								case 'Imagery Perspective':
-									rotationAngle = overlay.azimuth;
-									break;
-								case 'User Perspective':
-									// TODO: check "inside" if we can always use mapState "rotation"
-									const position = communicator.getPosition();
-									if (position) {
-										rotationAngle = position.projectedState.rotation;
-									} else {
-										rotationAngle = mapData.position.projectedState.rotation;
-									}
-									break;
-							}
 						}
 						if (intersection < this.config.overlayCoverage) {
 							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
@@ -206,12 +184,7 @@ export class MapAppEffects {
 							communicator.resetView(layer, mapData.position);
 						}
 					}
-
-					return new DisplayOverlaySuccessAction({
-						id: overlay.id,
-						mapId,
-						rotationData: { rotationType: orientation, rotationAngle: rotationAngle }
-					});
+					return new DisplayOverlaySuccessAction(payload);
 				})
 				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
 		});
@@ -283,9 +256,9 @@ export class MapAppEffects {
 	@Effect()
 	overlayLoadingSuccess$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.do((action) => endTimingLog(`LOAD_OVERLAY_${action.payload.id}`))
+		.do((action) => endTimingLog(`LOAD_OVERLAY_${action.payload.overlay.id}`))
 		.map((action) => {
-			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.id);
+			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.overlay.id);
 		});
 
 	/**

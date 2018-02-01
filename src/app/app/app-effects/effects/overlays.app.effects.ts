@@ -326,9 +326,9 @@ export class OverlaysAppEffects {
 	removePendingOverlayOnDisplay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.includes(action.payload.id))
+		.filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.includes(action.payload.overlay.id))
 		.map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
-			return new RemovePendingOverlayAction(action.payload.id);
+			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		});
 
 	constructor(public actions$: Actions,

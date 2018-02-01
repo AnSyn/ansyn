@@ -244,7 +244,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as true should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = true;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'id', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> 'id', rotationData: {rotationAngle: 0, rotationType: 'Align North'} }) });
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
 				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: true }),

@@ -130,12 +130,7 @@ export class OpenLayersDisabledMap extends IMap {
 	}
 
 	getPosition(): CaseMapPosition {
-		const view = this.mapObject.getView();
-		const projection = view.getProjection();
-		const transformExtent = view.calculateExtent();
-		const extent = proj.transformExtent(transformExtent, projection, 'EPSG:4326');
-		const projectedState = { ...view.getState(), projection: { code: projection.getCode() } };
-		return { extent, projectedState };
+		return undefined;
 	}
 
 	setRotation(rotation: number): void {

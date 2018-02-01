@@ -1,20 +1,20 @@
 <div
-	[attr.tooltip-value]="geoRegiteredProperties().tooltip"
+	[attr.tooltip-value]="geoRegiteredProperties.tooltipNorth"
 	tooltip-class="left">
 	<div class="tooltip-container"
 		 [style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
-		 [style.transform]="'rotate(' + this[geoRegiteredProperties().rotatePointer] + 'rad)'"
+		 [style.transform]="'rotate(' + this[geoRegiteredProperties.rotatePointer] + 'rad)'"
 		 (mousedown)="startRotating($event)">
-		<div class="north" [style.color]="geoRegiteredProperties().color"> {{ geoRegiteredProperties().letter }}</div>
+		<div class="north" [style.color]="geoRegiteredProperties.color"> {{ geoRegiteredProperties.letter }}</div>
 	</div>
 </div>
-<!--tooltip-value="Click to Reset" tooltip-class="left"-->
+
 <div  class="img-container"
-	  [attr.tooltip-value]="isGeoRegistered() ? 'Click once to face north, twice for image perspective' : null"
+	  [attr.tooltip-value]="geoRegiteredProperties.tooltip"
 	  tooltip-class="bottom left">
-	<img [src]="geoRegiteredProperties().compass"
+	<img [src]="geoRegiteredProperties.compass"
 		 (click)="toggleNorth()"
 		 (mousedown)="stopPropagation($event)"
-		 [style.transform]="'rotate(' + this[geoRegiteredProperties().rotatePointer] + 'rad)'"
+		 [style.transform]="'rotate(' + this[geoRegiteredProperties.rotatePointer] + 'rad)'"
 		 [style.cursor]="isRotating ? '' : 'pointer'"/>
 </div>

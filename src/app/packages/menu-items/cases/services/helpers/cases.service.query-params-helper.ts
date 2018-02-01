@@ -92,9 +92,20 @@ export class QueryParamsHelper {
 									'properties': {}
 								};
 								const centroidOfGeometry = centroid(feature);
-								const extent: CaseMapExtent = extentFromGeojson(geoPolygon);
+								const [x1, y1, x2, y2]: CaseMapExtent = extentFromGeojson(geoPolygon);
 
-								updatedCaseModel.state.maps.data.forEach(map => map.data.position.extent = extent);
+								updatedCaseModel.state.maps.data.forEach(map => {
+									map.data.position.extentPolygon = {
+										type: 'Polygon',
+										coordinates: [[
+											[x1, y1],
+											[x2, y1],
+											[x2, y2],
+											[x1, y2],
+											[x1, y1],
+										]]
+									}
+								});
 
 								updatedCaseModel.state.region = geoPolygon;
 

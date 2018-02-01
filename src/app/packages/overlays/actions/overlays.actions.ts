@@ -124,11 +124,8 @@ export class DisplayOverlayAction implements Action {
 	}
 }
 
-export class DisplayOverlaySuccessAction implements Action {
+export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
-
-	constructor(public payload: { id: string, mapId?: string, rotationData: { rotationType: CaseOrientation; rotationAngle?: number } }) {
-	}
 }
 
 export class DisplayOverlayFailedAction implements Action {

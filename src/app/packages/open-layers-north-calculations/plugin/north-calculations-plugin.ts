@@ -1,6 +1,5 @@
 import proj from 'ol/proj';
 import { EventEmitter } from '@angular/core';
-
 import { IMapPlugin } from '@ansyn/imagery';
 import { toDegrees } from '@ansyn/core/utils/math';
 
@@ -78,19 +77,14 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 	}
 
 	setCorrectedNorth(mapObject, retryNumber = 0): Promise<number> {
-		// console.log(`setCorrectedNorth: (retryNumber:'${retryNumber}')`);
 		if (retryNumber === this.maxNumberOfRetries) {
-			// console.log(`setCorrectedNorth: (maxNumberOfRetries) break)`);
 			return;
 		}
-
 		const view = mapObject.getView();
 		return this.getCorrectedNorthOnce(mapObject).then((northData: INorthData) => {
 			view.setRotation(northData.actualNorth);
 			mapObject.renderSync();
-			// console.log(`setCorrectedNorth: (northOffsetDeg:'${northData.northOffsetDeg}')`);
 			if (Math.abs(northData.northOffsetDeg) < this.thresholdDegrees) {
-				// console.log(`setCorrectedNorth: (northOffsetDeg) break)`);
 				return northData.actualNorth;
 			}
 			return this.setCorrectedNorth(mapObject, retryNumber + 1);

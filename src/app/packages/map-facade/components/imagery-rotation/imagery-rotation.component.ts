@@ -1,8 +1,9 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetMapRotationAction } from '../../actions/map.actions';
-import { get } from 'lodash';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-imagery-rotation',
@@ -13,16 +14,20 @@ export class ImageryRotationComponent {
 	@Input() mapState: CaseMapState;
 
 	isRotating = false;
+	get communicator(): CommunicatorEntity {
+		return this.imageryCommunicatorService.provide(this.mapState.id)
+	}
 
-	get northAngle() {
-		return get(this.mapState, 'data.overlay.northAngle', 0);
+	get virtualNorth() {
+		return this.communicator.getVirtualNorth();
 	}
 
 	get rotationAngle() {
-		return get(this.mapState, 'data.position.projectedState.rotation', 0) - this.northAngle;
+		return this.mapState.data.position.projectedState.rotation;
 	}
 
 	constructor(protected elementRef: ElementRef,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected store: Store<any>) {
 	}
 
@@ -42,7 +47,7 @@ export class ImageryRotationComponent {
 				this.setRotation(overlay.azimuth);
 			}
 		} else {
-			this.setRotation(this.northAngle);
+			this.setRotation(this.virtualNorth);
 		}
 	}
 
@@ -67,7 +72,7 @@ export class ImageryRotationComponent {
 			};
 
 			let radians = Math.atan2(mouse.y - center.y, mouse.x - center.x) + Math.PI / 2;
-			this.setRotation(radians + this.northAngle);
+			this.setRotation(radians + this.virtualNorth);
 		};
 
 		document.addEventListener<'mousemove'>('mousemove', mouseMoveListener);

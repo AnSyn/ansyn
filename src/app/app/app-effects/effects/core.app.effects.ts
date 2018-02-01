@@ -16,6 +16,7 @@ import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { LoggerService } from '@ansyn/core';
 
 @Injectable()
 export class CoreAppEffects {
@@ -68,8 +69,30 @@ export class CoreAppEffects {
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
+	@Effect({ dispatch: false })
+	actionsLogger$ = this.actions$
+		.ofType(CasesActionTypes.ADD_CASE,
+			CasesActionTypes.ADD_CASE_SUCCESS,
+			CasesActionTypes.DELETE_CASE,
+			CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS,
+			CasesActionTypes.LOAD_CASE,
+			CasesActionTypes.LOAD_CASES,
+			CasesActionTypes.LOAD_CASES_SUCCESS,
+			CasesActionTypes.SAVE_CASE_AS,
+			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
+			CasesActionTypes.UPDATE_CASE,
+			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
+			CasesActionTypes.SELECT_CASE,
+			CasesActionTypes.SELECT_CASE_BY_ID,
+			)
+		.do((action) => {
+			this.loggerService.info(JSON.stringify(action));
+		})
+
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<IAppState>,
+				protected loggerService: LoggerService
+				) {
 	}
 }
 

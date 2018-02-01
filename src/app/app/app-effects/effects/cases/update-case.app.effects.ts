@@ -38,10 +38,10 @@ export class UpdateCaseAppEffects {
 	@Effect()
 	caseCollection$: Observable<any> = this.actions$
 		.ofType<Action>(...UpdateCaseActionTypes)
-		.withLatestFrom(this.store$, (action, store) => store)
-		.map(({ cases, core, tools, statusBar, map, layers, filters }: IAppState) => {
+		.withLatestFrom(this.store$)
+		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
 			// properties that should have been saved on another store ( not cases )
-			const { contextEntities, selectedContextId, overlaysManualProcessArgs } = cases.selectedCase.state;
+			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner } = cases.selectedCase;
 			const { selectedLayoutIndex } = statusBar;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
@@ -53,7 +53,10 @@ export class UpdateCaseAppEffects {
 				from: statusBar.time.from.toISOString(),
 				to: statusBar.time.to.toISOString()
 			};
-			const facets = FiltersService.buildCaseFacets(filters);
+
+			if (facetChangesActionType.includes(action.type)) {
+				facets = FiltersService.buildCaseFacets(filters);
+			}
 
 			const updatedCase: Case = {
 				id,

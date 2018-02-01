@@ -24,7 +24,7 @@
 	</button>
 
 	<button *ngIf="overlay" class="small-icon-button set-favorite"
-			[class.active]="isFavoriteOverlayDisplayed()"
+			[class.active2]="isFavoriteOverlayDisplayed()"
 			(click)="toggleFavorite()"
 			tooltip-value="Add to favorites"
 			tooltip-class="bottom right"
@@ -35,9 +35,14 @@
 	</button>
 </div>
 
-<div class="description">
-	<div *ngIf="overlay">
-		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
+<div class="description"
+
+>
+	<div *ngIf="overlay"
+		 [attr.tooltip-value]="overlay.photoTime | date: 'H:mm:ss dd/MM/yy' + overlay.sensorName"
+		 tooltip-class="bottom right"
+	>
+		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}zas
 	</div>
 	<div *ngIf="!overlay">
 		Base Map

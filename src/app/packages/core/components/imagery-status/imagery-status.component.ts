@@ -26,6 +26,10 @@ export class ImageryStatusComponent implements OnInit {
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 	favoriteOverlays: Overlay[];
 
+	get description() {
+		return (this.overlay && this.overlay) ? this.overlay.photoTime  : this.overlay.sensorName
+	}
+
 	constructor(protected store$: Store<any>) {
 	}
 
@@ -42,6 +46,7 @@ export class ImageryStatusComponent implements OnInit {
 	}
 
 	toggleMapLayers() {
+		this.layerFlag = !this.layerFlag;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
 	}
 }

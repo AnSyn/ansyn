@@ -122,7 +122,7 @@ export class OverlaysEffects {
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType) // this.overlaysService.fetchData("",action.payload)
-				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, mapId: action.payload.mapId }));
+				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, mapId: action.payload.mapId, ignoreRotation: true }));
 		});
 
 	/**

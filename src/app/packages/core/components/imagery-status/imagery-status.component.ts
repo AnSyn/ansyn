@@ -26,8 +26,11 @@ export class ImageryStatusComponent implements OnInit {
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 	favoriteOverlays: Overlay[];
 
+
+
+
 	get description() {
-		return (this.overlay && this.overlay) ? this.overlay.photoTime  : this.overlay.sensorName
+		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + " - " + this.overlay.sensorName : null
 	}
 
 	constructor(protected store$: Store<any>) {

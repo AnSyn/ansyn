@@ -39,10 +39,10 @@
 
 >
 	<div *ngIf="overlay"
-		 [attr.tooltip-value]="overlay.photoTime | date: 'H:mm:ss dd/MM/yy' + overlay.sensorName"
+		 [attr.tooltip-value]="description"
 		 tooltip-class="bottom right"
 	>
-		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}zas
+		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
 	</div>
 	<div *ngIf="!overlay">
 		Base Map

@@ -166,9 +166,10 @@ describe('Overlays Effects ', () => {
 			})
 		});
 		const expectedResults = cold('--b--', {
-			b: new DisplayOverlayAction(<any>{
-				overlay: fakeOverlay,
-				mapId: 'testMapId'
+			b: new DisplayOverlayAction({
+				overlay: <any> fakeOverlay,
+				mapId: 'testMapId',
+				ignoreRotation: true
 			})
 		});
 		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);

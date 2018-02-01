@@ -1,5 +1,5 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { CasesReducer, CasesService, ICasesState, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { CasesReducer, CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -158,7 +158,8 @@ describe('MapAppEffects', () => {
 				activeMapId: 'imagery1'
 			}
 		} as any
-	}];
+	}
+	];
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -183,19 +184,20 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: ConfigurationToken, useValue: {
-					'geoMapsInitialMapSource': [{
-						'mapType': 'openLayersMap',
-						'mapSource': 'BING',
-						'mapSourceMetadata': {
-							'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
-							'styles': ['Aerial']
+						'geoMapsInitialMapSource': [{
+							'mapType': 'openLayersMap',
+							'mapSource': 'BING',
+							'mapSourceMetadata': {
+								'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
+								'styles': ['Aerial']
+							}
+						}, {
+							'mapType': 'cesiumMap',
+							'mapSource': 'OSM',
+							'mapSourceMetadata': null
 						}
-					}, {
-						'mapType': 'cesiumMap',
-						'mapSource': 'OSM',
-						'mapSourceMetadata': null
-					}]
-				}
+						]
+					}
 				},
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
@@ -535,7 +537,11 @@ describe('MapAppEffects', () => {
 				isFullOverlay: true,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ id: 'testOverlayId', rotationData: {rotationAngle: 0, rotationType: 'Align North'}}) });
+			actions = hot('--a--', {
+				a: new DisplayOverlaySuccessAction({
+					overlay: <any> { id: 'testOverlayId' }
+				})
+			});
 			const expectedResults = cold('--b--', { b: new RemoveOverlayFromLoadingOverlaysAction('testOverlayId') });
 			expect(mapAppEffects.overlayLoadingSuccess$).toBeObservable(expectedResults);
 		});
@@ -561,7 +567,13 @@ describe('MapAppEffects', () => {
 					communicatorIds: communicators
 				})
 			});
-			const expectedResults = cold('--b--', { b: new DisplayOverlayAction({ overlay, mapId: 'imagery1', ignoreRotation: true }) });
+			const expectedResults = cold('--b--', {
+				b: new DisplayOverlayAction({
+					overlay,
+					mapId: 'imagery1',
+					ignoreRotation: true
+				})
+			});
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
 		});
 

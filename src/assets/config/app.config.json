@@ -247,7 +247,7 @@
 		"path": "/assets/logo.svg",
 		"background": "red",
 		"color": "white",
-		"mode": ""
+		"mode": "debug"
 	},
 	"loginConfig": {
 		"baseUrl": "http://localhost:9001/api/v1/login",

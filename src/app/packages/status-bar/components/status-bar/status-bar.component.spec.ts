@@ -48,11 +48,11 @@ describe('StatusBarComponent', () => {
 
 
 	it('eye indicator should be active', () => {
-		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active');
+		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(true);
 		component.flags.set(statusBarFlagsItems.pinPointIndicator, false);
 		fixture.detectChanges();
-		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active');
+		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(false);
 	});
 

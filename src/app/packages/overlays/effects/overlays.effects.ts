@@ -231,17 +231,6 @@ export class OverlaysEffects {
 			const payload = turnOn ? overlaysStatusMessages.noOverLayMatchFilters : overlaysStatusMessages.nullify;
 			return new SetOverlaysStatusMessage(payload);
 		});
-		// .map(([{ payload }, { overlays, statusMessage }]: [UpdateOverlaysCountAction, IOverlaysState]) => {
-		// 	if (turnOn) {
-		// 		return new SetOverlaysStatusMessage('No overlays match your query, please try another search');
-		// 	}
-		// 	if (turnOff) {
-		// 		return new SetOverlaysStatusMessage(overlaysStatusMessages.nullify);
-		// 	}
-		// 	return null
-		//
-		// });
-
 
 	/**
 	 * @type Effect

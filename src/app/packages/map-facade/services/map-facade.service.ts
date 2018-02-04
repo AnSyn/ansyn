@@ -86,14 +86,8 @@ export class MapFacadeService {
 
 	setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
 		const mapsList: CaseMapState[] = [];
-
-		/* mapsList*/
 		const activeMap = MapFacadeService.mapById(oldMapsList, oldActiveMapId);
-		let position = this.imageryCommunicatorService.provide(oldActiveMapId).getPosition();
-		// TODO: check "inside" if we can always use mapState
-		if (!position) {
-			position = activeMap.data.position;
-		}
+
 		range(layout.mapsCount).forEach((index) => {
 			if (oldMapsList[index]) {
 				mapsList.push(oldMapsList[index]);
@@ -101,7 +95,7 @@ export class MapFacadeService {
 				const mapStateCopy: CaseMapState = {
 					id: UUID.UUID(),
 					progress: 0,
-					data: { position },
+					data: { position: null },
 					mapType: defaultMapType,
 					flags: {}
 				};

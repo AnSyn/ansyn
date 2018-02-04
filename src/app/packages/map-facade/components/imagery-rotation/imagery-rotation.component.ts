@@ -1,8 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetMapRotationAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { get } from 'lodash';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface IsGeoRegisteredProperties {
@@ -59,7 +57,7 @@ export class ImageryRotationComponent {
 	}
 
 	get rotationAngle() {
-		return get(this.mapState, 'data.position.projectedState.rotation', 0) - this.virtualNorth;
+		return ((this.communicator && this.communicator.getRotation()) || 0) - this.virtualNorth;
 	}
 
 	constructor(protected elementRef: ElementRef,
@@ -77,7 +75,7 @@ export class ImageryRotationComponent {
 	}
 
 	protected setRotation(radians: number) {
-		this.store.dispatch(new SetMapRotationAction({ mapId: this.mapState.id, radians }));
+		this.communicator.setRotation(radians);
 	}
 
 	toggleNorth() {

@@ -41,6 +41,8 @@ export abstract class IMap<T = any> {
 
 	abstract setRotation(rotation: number): void;
 
+	abstract getRotation(): number;
+
 	abstract getPosition(): CaseMapPosition;
 
 	abstract updateSize(): void;

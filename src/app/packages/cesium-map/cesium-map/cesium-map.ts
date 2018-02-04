@@ -89,7 +89,9 @@ export class CesiumMap extends IMap {
 	addLayerIfNotExist() {
 
 	}
-
+	getRotation(): number {
+		return NaN;
+	}
 
 	dispose() {
 	}

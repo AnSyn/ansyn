@@ -52,6 +52,8 @@ export class TimelineComponent implements OnInit {
 		this.eventDropsHandler();
 		if (this._drops.length > 0 && this._markup) {
 			this.drawMarkup();
+			this.fixMetaballs()
+
 		}
 		// this.stream.next();
 
@@ -59,6 +61,16 @@ export class TimelineComponent implements OnInit {
 
 	get drops() {
 		return this._drops;
+	}
+
+	fixMetaballs() {
+		selectAll('.drop-line')
+			.append('rect')
+			.attr('x', 0)
+			.attr('y', 20)
+			.attr('height', 40)
+			.attr('width', 1)
+			.attr('fill', 'transparent')
 	}
 
 	drawMarkup() {

@@ -69,7 +69,8 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 				fill: 'green',
 				offsetY: 20
 			}
-		}
+		},
+		metaballs: true
 	};
 
 	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);

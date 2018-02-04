@@ -18,7 +18,6 @@ import {
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetMapManualImageProcessing,
-	SetMapRotationAction,
 	SetMapsDataActionStore,
 	SetPendingMapsCountAction
 } from '../actions/map.actions';
@@ -29,6 +28,7 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { MapInstanceChangedAction } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -319,16 +319,22 @@ export class MapEffects {
 
 	/**
 	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
+	 * @name newInstanceInitPosition$
+	 * @ofType MapInstanceChangedAction
+	 * @dispatch: false
 	 */
 	@Effect({ dispatch: false })
-	onSetMapRotationAction$: Observable<SetMapRotationAction> = this.actions$
-		.ofType<SetMapRotationAction>(MapActionTypes.SET_MAP_ROTATION)
-		.do(action => {
-			const comm = this.communicatorsService.provide(action.payload.mapId);
-			comm.setRotation(action.payload.radians);
+	newInstanceInitPosition$: Observable<any> = this.actions$
+		.ofType<MapInstanceChangedAction>(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([{ payload }, { mapsList }]: [MapInstanceChangedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.currentCommunicatorId).data.position))
+		.do(([{ payload }, { activeMapId }]: [MapInstanceChangedAction, IMapState]) => {
+			const activeMapComm = this.communicatorsService.provide(activeMapId);
+			const position = activeMapComm.getPosition();
+			const communicator = this.communicatorsService.provide(payload.currentCommunicatorId);
+			communicator.setPosition(position);
 		});
+
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,

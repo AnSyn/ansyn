@@ -113,8 +113,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 			controls: [new ScaleLine()],
 			view
 		});
-
-		this.setPosition(position);
+		if (position) {
+			this.setPosition(position);
+		}
 		this.initListeners();
 		this.setGroupLayers();
 	}
@@ -275,6 +276,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public updateSize(): void {
 		this._mapObject.updateSize();
+		this._mapObject.renderSync();
 	}
 
 	public getCenter(): GeoJSON.Point {
@@ -343,6 +345,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public setRotation(rotation: number, view: View = this.mapObject.getView()) {
 		view.setRotation(rotation);
 	}
+
+	public getRotation(view: View = this.mapObject.getView()): number {
+		return view.getRotation();
+	}
+
 
 	flyTo(location) {
 		const view = this._mapObject.getView();

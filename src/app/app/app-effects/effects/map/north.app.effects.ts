@@ -31,25 +31,27 @@ export class NorthAppEffects {
 	@Effect({ dispatch: false })
 	pointNorth$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.filter(({ payload }: DisplayOverlaySuccessAction) => !Boolean(payload.ignoreRotation))
 		.withLatestFrom(this.store$, ({ payload }: DisplayOverlaySuccessAction, { statusBar, map }: IAppState) => {
 			const mapId = payload.mapId || map.activeMapId;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const { orientation } = statusBar.comboBoxesProperties;
-			return [communicator, orientation, payload.overlay];
+			return [payload.ignoreRotation, communicator, orientation, payload.overlay];
 		})
-		.filter(([communicator]: [CommunicatorEntity, CaseOrientation, Overlay]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
-		.map(([communicator, orientation, overlay]: [CommunicatorEntity, CaseOrientation, Overlay]) => {
-			this.pointNorth(communicator._manager.id).then(virtualNorth => {
-				communicator.setVirtualNorth(virtualNorth);
-				switch (orientation) {
-					case 'Align North':
-						communicator.setRotation(virtualNorth);
-						break;
-					case 'Imagery Perspective':
-						communicator.setRotation(overlay.azimuth);
-						break;
-				}
+		.filter(([ignoreRotation, communicator]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
+		.switchMap(([ignoreRotation, communicator, orientation, overlay]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => {
+			return Observable.fromPromise(this.pointNorth(communicator))
+				.do(virtualNorth => {
+					communicator.setVirtualNorth(virtualNorth);
+					if (!ignoreRotation) {
+						switch (orientation) {
+							case 'Align North':
+								communicator.setRotation(virtualNorth);
+								break;
+							case 'Imagery Perspective':
+								communicator.setRotation(overlay.azimuth);
+								break;
+						}
+					}
 			});
 		});
 
@@ -80,10 +82,9 @@ export class NorthAppEffects {
 				protected loggerService: LoggerService) {
 	}
 
-	pointNorth(mapId: string): Promise<number> {
-		// return new Promise(resolve => setTimeout(() => resolve(Math.PI / 2), 500));
+	pointNorth(comEntity: CommunicatorEntity): Promise<number> {
+		comEntity.updateSize();
 		return new Promise(resolve => {
-			const comEntity = this.imageryCommunicatorService.provide(mapId);
 			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
 			if (!northPlugin) {
 				resolve(0);

@@ -178,6 +178,10 @@ export class OpenLayersDisabledMap extends IMap {
 		this._imageProcessing.processImage(processingParams);
 	}
 
+	getRotation(): number {
+		return NaN;
+	}
+
 	dispose() {
 
 	}

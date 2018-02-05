@@ -42,6 +42,7 @@ export class ImageProcessingControlComponent {
 		}
 		else {
 			this.resetParams();
+			this.isActive.emit(false);
 		}
 	}
 
@@ -64,11 +65,11 @@ export class ImageProcessingControlComponent {
 			this.params.forEach(param => {
 				dispatchValue[param.name] = param.value;
 			});
-			this.isActive.emit(true);
 		}
 		else {
 			dispatchValue = undefined;
 		}
+		this.isActive.emit(isChangeFromDefualt);
 		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
 	}
 
@@ -77,7 +78,7 @@ export class ImageProcessingControlComponent {
 		this.manualImageProcess();
 	}
 
-	resetAllParamsNEmit() {
+	resetAllParamsAndEmit() {
 		this.resetParams();
 		this.manualImageProcess();
 		this.isActive.emit(false);

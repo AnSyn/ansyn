@@ -236,6 +236,27 @@ export class VisualizersAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name onActiveMapChangesRedrawPinLocation$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies mapState, toolState
+	 */
+	@Effect({ dispatch: false })
+	onActiveMapChangesRedrawPinLocation$ = this.actions$
+		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(
+			this.store$.select(mapStateSelector),
+			this.store$.select(toolsStateSelector),
+			(action, mapState, toolState) => [action, mapState, toolState]
+		)
+		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
+		.map(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
+			mapState.mapsList.forEach( (map: CaseMapState) => {
+				this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
+			});
+		});
+
+	/**
+	 * @type Effect
 	 * @name gotoIconVisibilityOnGoToWindowChanged$
 	 * @ofType GoToExpandAction
 	 * @dependencies tools, map

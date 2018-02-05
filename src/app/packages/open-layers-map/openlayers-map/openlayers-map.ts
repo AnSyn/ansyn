@@ -251,7 +251,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
-			this._mapObject.render();
+			this._mapObject.renderSync();
 		}
 
 		if (this._imageProcessing) {

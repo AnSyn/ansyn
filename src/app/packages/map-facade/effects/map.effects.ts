@@ -29,6 +29,7 @@ import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { MapInstanceChangedAction } from '@ansyn/map-facade';
+import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
 
 
 @Injectable()
@@ -183,7 +184,7 @@ export class MapEffects {
 	 * @name backToWorldView$
 	 * @ofType BackToWorldAction
 	 * @dependencies map
-	 * @action SetMapsDataActionStore
+	 * @action SetMapsDataActionStore, BackToWorldSuccessAction
 	 */
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
@@ -194,23 +195,30 @@ export class MapEffects {
 		})
 		.switchMap(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
-			const comm = this.communicatorsService.provide(mapId);
-			return Observable.fromPromise(comm.loadInitialMapSource(selectedMap.data.position))
-				.mergeMap(() => {
-					const updatedMapsList = [...mapsList];
-					updatedMapsList.forEach(
-						(map) => {
-							if (map.id === mapId) {
-								map.data.overlay = null;
-								map.data.isAutoImageProcessingActive = false;
-							}
-						});
-					return [
-						new BackToWorldSuccessAction(action.payload),
-						new SetMapsDataActionStore({ mapsList: updatedMapsList })
-					];
-				});
+			const communicator = this.communicatorsService.provide(mapId);
+			const { position } = selectedMap.data;
+			let obserable: Observable<any>;
+			if (communicator._manager.ActiveMap instanceof OpenLayersDisabledMap) {
+				obserable = communicator.setActiveMap('openLayersMap', position);
+			} else {
+				obserable = communicator.loadInitialMapSource(position);
+			}
+			return obserable.mergeMap(() => {
+				const updatedMapsList = [...mapsList];
+				updatedMapsList.forEach(
+					(map) => {
+						if (map.id === mapId) {
+							map.data.overlay = null;
+							map.data.isAutoImageProcessingActive = false;
+						}
+					});
+				return [
+					new BackToWorldSuccessAction(action.payload),
+					new SetMapsDataActionStore({ mapsList: updatedMapsList })
+				];
+			});
 		});
+
 	/**
 	 * @type Effect
 	 * @name onMapsDataActiveMapIdChanged$
@@ -268,28 +276,6 @@ export class MapEffects {
 	getFilteredOverlays$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
 		.share();
-
-	/**
-	 * @type Effect
-	 * @name backToWorldGeoRegistration$
-	 * @ofType BackToWorldAction
-	 * @dependencies map
-	 * @filter Exists a communicator for the mapId
-	 */
-	@Effect({ dispatch: false })
-	backToWorldGeoRegistration$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [any, any]): any[] => {
-			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
-			const map = MapFacadeService.mapById(mapState.mapsList, mapId);
-			const mapComm = this.communicatorsService.provide(mapId);
-			return [mapComm, map.data.position];
-		})
-		.filter(([mapComm]) => Boolean(mapComm) && mapComm.activeMapName !== 'openLayersMap')
-		.do(([mapComm, position]: any[]) => {
-			mapComm.setActiveMap('openLayersMap', position);
-		});
 
 	/**
 	 * @type Effect

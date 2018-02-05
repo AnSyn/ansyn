@@ -69,6 +69,7 @@ export class NorthAppEffects {
 			const { orientation } = statusBar.comboBoxesProperties;
 			const mapId = action.payload.mapId || map.activeMapId;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
+			communicator.setVirtualNorth(0);
 			switch (orientation) {
 				case 'Align North':
 				case 'Imagery Perspective':

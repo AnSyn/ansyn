@@ -8,6 +8,9 @@ import { ImageryProviderService, IProvidedMap } from '../../provider-service/pro
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/empty';
+import 'rxjs/add/observable/fromPromise';
 
 
 export class ImageryComponentManager {
@@ -35,18 +38,19 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
-		if (this._activeMap) {
-			return this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
-				this.resetView(layers[0], position);
-				if (layers.length > 0) {
-					for (let i = 1; i < layers.length; i++) {
-						this._activeMap.addLayer(layers[i]);
-					}
-				}
-				return layers;
-			});
+	public loadInitialMapSource(position?: CaseMapPosition): Observable <any> {
+		if (!this._activeMap) {
+			return Observable.empty();
 		}
+		return Observable.fromPromise(this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+			this.resetView(layers[0], position);
+			if (layers.length > 0) {
+				for (let i = 1; i < layers.length; i++) {
+					this._activeMap.addLayer(layers[i]);
+				}
+			}
+			return layers;
+		}));
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {

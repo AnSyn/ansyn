@@ -67,7 +67,7 @@ export class CommunicatorEntity {
 
 	// CommunicatorEntity methods begin
 
-	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any) {
+	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
 		return this._manager.setActiveMap(mapName, position, layer);
 	}
 

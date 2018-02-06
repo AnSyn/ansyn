@@ -197,26 +197,18 @@ export class MapEffects {
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const communicator = this.communicatorsService.provide(mapId);
 			const { position } = selectedMap.data;
-			let obserable: Observable<any>;
-			if (communicator._manager.ActiveMap instanceof OpenLayersDisabledMap) {
-				obserable = communicator.setActiveMap('openLayersMap', position);
-			} else {
-				obserable = communicator.loadInitialMapSource(position);
-			}
-			return obserable.mergeMap(() => {
-				const updatedMapsList = [...mapsList];
-				updatedMapsList.forEach(
-					(map) => {
-						if (map.id === mapId) {
-							map.data.overlay = null;
-							map.data.isAutoImageProcessingActive = false;
-						}
-					});
-				return [
-					new BackToWorldSuccessAction(action.payload),
-					new SetMapsDataActionStore({ mapsList: updatedMapsList })
-				];
-			});
+			const disabledMap = communicator._manager.ActiveMap instanceof OpenLayersDisabledMap;
+			const updatedMapsList = [...mapsList];
+			updatedMapsList.forEach(
+				(map) => {
+					if (map.id === mapId) {
+						map.data.overlay = null;
+						map.data.isAutoImageProcessingActive = false;
+					}
+				});
+			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
+			return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+				.map(() => new BackToWorldSuccessAction(action.payload));
 		});
 
 	/**
@@ -311,7 +303,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	newInstanceInitPosition$: Observable<any> = this.actions$
-		.ofType<MapInstanceChangedAction>(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<MapInstanceChangedAction>(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [MapInstanceChangedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.currentCommunicatorId).data.position))
 		.do(([{ payload }, { activeMapId }]: [MapInstanceChangedAction, IMapState]) => {

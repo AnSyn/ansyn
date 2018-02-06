@@ -11,7 +11,7 @@ import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderServi
 import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
-import { MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
+import { BackToWorldAction, MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -167,26 +167,30 @@ export class MapAppEffects {
 			}
 
 			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
-				.map(layer => {
+				.switchMap(layer => {
+					let observable;
 					if (overlay.isGeoRegistered) {
 						if (communicator.activeMapName === 'disabledOpenLayersMap') {
-							communicator.setActiveMap('openLayersMap', mapData.position, layer);
+							observable = Observable.fromPromise(communicator.setActiveMap('openLayersMap', mapData.position, layer));
 						}
 						if (intersection < this.config.overlayCoverage) {
-							communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
+							observable = Observable.of(communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint)));
 						} else {
-							communicator.resetView(layer, mapData.position);
+							observable = Observable.of(communicator.resetView(layer, mapData.position));
 						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
-							communicator.setActiveMap('disabledOpenLayersMap', mapData.position, layer);
+							observable = Observable.fromPromise(communicator.setActiveMap('disabledOpenLayersMap', mapData.position, layer));
 						} else {
-							communicator.resetView(layer, mapData.position);
+							observable = Observable.of(communicator.resetView(layer, mapData.position));
 						}
 					}
-					return new DisplayOverlaySuccessAction(payload);
+					return observable.map(() => new DisplayOverlaySuccessAction(payload));
 				})
-				.catch(() => Observable.of(new DisplayOverlayFailedAction({ id: overlay.id, mapId })));
+				.catch(() => Observable.from([
+					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+					new BackToWorldAction({ mapId })
+				]));
 		});
 
 	/**
@@ -199,7 +203,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapsState]: [AddMapInstanceAction, IMapState]) => !isEmpty(mapsState.mapsList))
 		.map(([action, mapsState]: [AddMapInstanceAction, IMapState]) => {
@@ -344,7 +348,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.do(([action]: [any]) => {
@@ -362,7 +366,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
@@ -381,7 +385,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(toolsStateSelector))
 		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
 		.map(() => new StartMouseShadow());
@@ -394,7 +398,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.do((action: AddMapInstanceAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);

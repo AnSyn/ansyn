@@ -38,11 +38,11 @@ export class ImageryComponentManager {
 		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Observable <any> {
+	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
 		if (!this._activeMap) {
-			return Observable.empty();
+			return Promise.resolve();
 		}
-		return Observable.fromPromise(this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+		return this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
 			this.resetView(layers[0], position);
 			if (layers.length > 0) {
 				for (let i = 1; i < layers.length; i++) {
@@ -50,7 +50,7 @@ export class ImageryComponentManager {
 				}
 			}
 			return layers;
-		}));
+		});
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
@@ -80,32 +80,35 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata, this.id);
 	}
 
-	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): void {
-		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-		const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
+	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
+		return new Promise((resolve, reject) => {
+			const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
+			const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
 
-		this._mapComponentRef = this.mapComponentElem.createComponent(factory);
+			this._mapComponentRef = this.mapComponentElem.createComponent(factory);
 
-		const mapComponent: IMapComponent = this._mapComponentRef.instance;
-		const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
-			this.internalSetActiveMap(map);
-			this.buildActiveMapPlugins(activeMapName);
-			this.buildActiveMapVisualizers(activeMapName, map);
-			this.mapComponentInitilaized.emit(this.id);
-			this.mapInstanceChanged.emit({
-				id: this.id,
-				newMapInstanceName: activeMapName,
-				oldMapInstanceName: oldMapName
+			const mapComponent: IMapComponent = this._mapComponentRef.instance;
+			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
+				this.internalSetActiveMap(map);
+				this.buildActiveMapPlugins(activeMapName);
+				this.buildActiveMapVisualizers(activeMapName, map);
+				this.mapComponentInitilaized.emit(this.id);
+				this.mapInstanceChanged.emit({
+					id: this.id,
+					newMapInstanceName: activeMapName,
+					oldMapInstanceName: oldMapName
+				});
+				mapCreatedSubscribe.unsubscribe();
+				resolve();
 			});
-			mapCreatedSubscribe.unsubscribe();
+			if (layer) {
+				mapComponent.createMap([layer], position);
+			} else {
+				return this.createMapSourceForMapType(providedMap.mapType).then((layers) => {
+					mapComponent.createMap(layers, position);
+				});
+			}
 		});
-		if (layer) {
-			mapComponent.createMap([layer], position);
-		} else {
-			this.createMapSourceForMapType(providedMap.mapType).then((layers) => {
-				mapComponent.createMap(layers, position);
-			});
-		}
 	}
 
 	private destroyCurrentComponent(): void {
@@ -117,7 +120,8 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public setActiveMap(activeMapName: string, position?: CaseMapPosition, layer?: any) {
+	public setActiveMap(activeMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
+
 		if (this.activeMapName !== activeMapName) {
 			const oldMapName = this.activeMapName;
 			// console.log(`Set active map to : ${activeMapName}`);
@@ -125,9 +129,9 @@ export class ImageryComponentManager {
 			if (this._mapComponentRef) {
 				this.destroyCurrentComponent();
 			}
-			this.buildCurrentComponent(activeMapName, oldMapName, position, layer);
+			return this.buildCurrentComponent(activeMapName, oldMapName, position, layer);
 		}
-		return this.mapComponentInitilaized;
+		return Promise.resolve();
 	}
 
 	private buildActiveMapPlugins(activeMapType: string) {

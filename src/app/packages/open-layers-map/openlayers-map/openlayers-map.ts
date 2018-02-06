@@ -301,6 +301,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
 		const type: 'Polygon' = 'Polygon';
 		const extentPolygon = { type , coordinates };
+		const someIsNaN = coordinates[0].some(([x, y]) => isNaN(x) || isNaN(y));
+		if (someIsNaN) {
+			return null;
+		}
 		return ExtentCalculator.transform(proj.transform.bind(proj), extentPolygon, projection, 'EPSG:4326');
 	}
 
@@ -339,6 +343,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
 		const extentPolygon = this.calculateRotateExtent(this.mapObject);
+		if (!extentPolygon) {
+			return null;
+		}
 		return { extentPolygon, projectedState };
 	}
 

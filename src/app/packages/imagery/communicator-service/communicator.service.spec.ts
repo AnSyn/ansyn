@@ -80,18 +80,6 @@ describe('ImageryCommunicatorService', () => {
 		expect(communicatorsArray.length).toEqual(2);
 	});
 
-	it('replaceCommunicatorId should replace the communicator Id', () => {
-
-		imageryCommunicatorService.createCommunicator(componentManager1);
-		imageryCommunicatorService.createCommunicator(componentManager2);
-
-		imageryCommunicatorService.replaceCommunicatorId(componentManager2.id, '3');
-
-		expect(imageryCommunicatorService.provide('2')).toEqual(null);
-		expect((<any>(imageryCommunicatorService.provide('3')))._manager).toEqual(componentManager2);
-		expect(componentManager2.id).toEqual('3');
-	});
-
 	it('remove should remove the communicator from service', () => {
 
 		imageryCommunicatorService.createCommunicator(componentManager1);

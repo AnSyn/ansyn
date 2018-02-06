@@ -55,23 +55,6 @@ export class ImageryCommunicatorService {
 		}
 	}
 
-	public replaceCommunicatorId(oldId, newId) {
-		this.communicators[newId] = this.communicators[oldId];
-		this.communicators[newId]._manager.id = newId;
-		delete this.communicators[oldId];
-		this.instanceRemoved.emit({
-			communicatorIds: this.initializedCommunicators,
-			currentCommunicatorId: oldId
-		});
-
-		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(oldId), 1);
-		this.initializedCommunicators.push(newId);
-		this.instanceCreated.emit({
-			communicatorIds: this.initializedCommunicators,
-			currentCommunicatorId: newId
-		});
-	}
-
 	public remove(id: string) {
 		if (!this._communicators[id]) {
 			return;

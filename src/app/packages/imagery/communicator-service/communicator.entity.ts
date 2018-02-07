@@ -78,7 +78,7 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Observable<any> {
+	public loadInitialMapSource(position?: CaseMapPosition): Promise<any> {
 		return this._manager.loadInitialMapSource(position);
 	}
 

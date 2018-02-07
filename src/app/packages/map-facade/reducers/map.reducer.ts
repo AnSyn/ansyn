@@ -52,8 +52,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
 			return { ...state, overlaysNotInCase: action.payload };
 
-		case MapActionTypes.ADD_MAP_INSTANCE:
-		case MapActionTypes.REMOVE_MAP_INSTACNE:
+		case MapActionTypes.IMAGERY_CREATED:
+		case MapActionTypes.IMAGERY_REMOVED:
 			return { ...state, communicators: action.payload.communicatorIds };
 
 		case MapActionTypes.SET_LAYOUT:

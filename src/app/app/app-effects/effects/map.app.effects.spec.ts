@@ -518,27 +518,6 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('overlayLoadingSuccess$', () => {
-		it('should dispatch RemoveOverlayFromLoadingOverlaysAction and OverlaysMarkupAction', () => {
-			icaseState.selectedCase.state.maps.data[0].data.overlay = {
-				id: 'testOverlayId',
-				name: 'testOverlay1',
-				photoTime: new Date().toDateString(),
-				date: null,
-				azimuth: 0,
-				isFullOverlay: true,
-				isGeoRegistered: true
-			};
-			actions = hot('--a--', {
-				a: new DisplayOverlaySuccessAction({
-					overlay: <any> { id: 'testOverlayId' }
-				})
-			});
-			const expectedResults = cold('--b--', { b: new RemoveOverlayFromLoadingOverlaysAction('testOverlayId') });
-			expect(mapAppEffects.overlayLoadingSuccess$).toBeObservable(expectedResults);
-		});
-	});
-
 	describe('displayOverlayOnNewMapInstance$', () => {
 		it('displayOverlayOnNewMapInstance$ should dispatch DisplayOverlayAction when communicator added that contains overlay', () => {
 			const overlay = {

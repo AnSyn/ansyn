@@ -1,10 +1,12 @@
 <ansyn-imagery-status
 	*ngIf="!hideOverlay"
-	[overlay]="overlay"
+	[overlay]="activeMap?.data?.overlay"
 	[notInCase]="overlayNotInCase"
 	[active]="true"
 	[disableGeoOptions]="showGeoRegistrationError()"
-	(backToWorldView)="clickBackToWorldView()">
+	(backToWorldView)="clickBackToWorldView()"
+	[mapId]="activeMap?.id"
+>
 </ansyn-imagery-status>
 
 <div class="status-bar" [class.separated-state]="!hideOverlay">

@@ -39,13 +39,6 @@ export class AnsynComponent implements OnInit {
 		.filter(activeMap => !_isNil(activeMap));
 
 	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
-
-	displayedOverlay$: any = this.activeMap$
-		.pluck('data')
-		.map((data: any) => data.overlay)
-		.distinctUntilChanged();
-
-	displayedOverlay: Overlay;
 	selectedCaseName: string;
 	version = (<any>packageJson).version;
 	isPinnedClass: string;
@@ -58,10 +51,6 @@ export class AnsynComponent implements OnInit {
 
 		this.selectedCaseName$.subscribe(_selectedCaseName => {
 			this.selectedCaseName = _selectedCaseName;
-		});
-
-		this.displayedOverlay$.subscribe((displayedOverlay: Overlay) => {
-			this.displayedOverlay = displayedOverlay;
 		});
 
 		this.isPinned$.subscribe((_isPinned: boolean) => {

@@ -4,25 +4,11 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
-	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	BackToWorldAction,
-	BackToWorldSuccessAction,
-	DecreasePendingMapsCountAction,
-	EnableMapGeoOptionsActionStore,
-	MapActionTypes,
-	MapsListChangedAction,
-	PinLocationModeTriggerAction,
-	PinPointModeTriggerAction,
-	PositionChangedAction,
-	SetLayoutAction,
-	SetLayoutSuccessAction,
-	SetMapManualImageProcessing,
-	SetMapsDataActionStore,
-	SetPendingMapsCountAction,
-	ImageryCreatedAction,
-	ImageryRemovedAction,
-	SynchronizeMapsAction
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
+	DecreasePendingMapsCountAction, EnableMapGeoOptionsActionStore, ImageryCreatedAction, ImageryRemovedAction,
+	MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
+	PositionChangedAction, SetLayoutAction, SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore,
+	SetPendingMapsCountAction, SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -32,7 +18,9 @@ import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
-import { CaseMapPosition } from '@ansyn/core';
+import * as intersect from '@turf/intersect';
+import { polygon } from '@turf/helpers';
+import { CaseMapPosition, coreStateSelector, ICoreState, UpdateOutOfBoundList } from '@ansyn/core';
 
 
 @Injectable()
@@ -72,7 +60,7 @@ export class MapEffects {
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
 		.do((action: ImageryCreatedAction | ImageryRemovedAction) => {
-			if (action instanceof ImageryCreatedAction ) {
+			if (action instanceof ImageryCreatedAction) {
 				this.mapFacadeService.initEmitters(action.payload.id);
 			} else {
 				this.mapFacadeService.removeEmitters(action.payload.id);
@@ -187,6 +175,57 @@ export class MapEffects {
 			selectedMap.data.position = position;
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBounds$
+	 * @ofType PositionChangedAction
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action UpdateOutOfBoundList
+	 */
+	@Effect()
+	checkImageOutOfBounds$: Observable<UpdateOutOfBoundList> = this.actions$
+		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
+		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
+		.filter(map => Boolean(map))
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([map, { overlaysOutOfBounds }]: [CaseMapState, ICoreState]) => {
+			const updatedOverlaysOutOfBounds = new Set(overlaysOutOfBounds);
+			const isWorldView = !map.data.overlay;
+			let isInBound;
+			if (!isWorldView) {
+				const { extentPolygon } = map.data.position;
+				const { footprint } = map.data.overlay;
+				isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
+			}
+			if (isWorldView || isInBound) {
+				updatedOverlaysOutOfBounds.delete(map.id);
+			}
+			else {
+				updatedOverlaysOutOfBounds.add(map.id);
+			}
+			return new UpdateOutOfBoundList(updatedOverlaysOutOfBounds);
+		});
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBounds$
+	 * @ofType PositionChangedAction
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action UpdateOutOfBoundList
+	 */
+	@Effect()
+	updateOutOfBoundList: Observable<UpdateOutOfBoundList> = this.actions$
+		.ofType(MapActionTypes.IMAGERY_REMOVED)
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([action, { overlaysOutOfBounds }]: [ImageryRemovedAction, ICoreState]) => {
+			const updatedOverlaysOutOfBounds = new Set(overlaysOutOfBounds);
+			updatedOverlaysOutOfBounds.delete(action.payload.currentCommunicatorId);
+			return new UpdateOutOfBoundList(updatedOverlaysOutOfBounds);
+		});
+
 
 	/**
 	 * @type Effect

@@ -1,10 +1,11 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
+import { IStatusBarConfig, StatusBarConfig } from '@ansyn/status-bar/models';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -24,16 +25,22 @@ export class ImageryStatusComponent implements OnInit {
 
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
+
+	overlaysOutOfBounds$: Observable<boolean> = this.core$
+		.pluck<ICoreState, Set<string>>('overlaysOutOfBounds')
+		.distinctUntilChanged()
+		.map((overlaysOutOfBounds: Set<string>) => {
+			return overlaysOutOfBounds.has(this.mapId);
+		});
+
 	favoriteOverlays: Overlay[];
 
 
-
-
 	get description() {
-		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + " - " + this.overlay.sensorName : null
+		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
 	}
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	isFavoriteOverlayDisplayed() {

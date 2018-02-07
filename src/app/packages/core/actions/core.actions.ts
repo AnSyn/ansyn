@@ -9,7 +9,8 @@ export const CoreActionTypes = {
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
 	UPDATE_FAVORITE_OVERLAYS_METADATA: type('[Core] UPDATE_FAVORITE_OVERLAYS_METADATA'),
-	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS')
+	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
+	UPDATE_OUT_OF_BOUNDS_LIST : 'UPDATE_OUT_OF_BOUNDS_LIST'
 };
 
 export type CoreActions =
@@ -17,7 +18,8 @@ export type CoreActions =
 	| ToggleFavoriteAction
 	| SetToastMessageAction
 	| SetFavoriteOverlaysAction
-	| ClearActiveInteractionsAction;
+	| ClearActiveInteractionsAction
+	| UpdateOutOfBoundList;
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -59,5 +61,11 @@ export class ClearActiveInteractionsAction implements Action {
 
 	constructor(public payload?: {skipClearFor: Array<any>}) {
 
+	}
+}
+
+export class UpdateOutOfBoundList implements Action {
+	type = CoreActionTypes.UPDATE_OUT_OF_BOUNDS_LIST;
+	constructor(public payload: Set<string>) {
 	}
 }

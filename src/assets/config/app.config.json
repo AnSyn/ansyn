@@ -265,6 +265,11 @@
 			"forward": "Next overlay",
 			"reset": "Reset timeline (according to the time filter)",
 			"enlarge": "Expand timeline"
+		},
+		"errors" : {
+			"noGeoRegistration" : "This Image Has No Geo-Registration",
+			"overlayIsNotPartOfCase" : "This Overlay Is Not a Part of the Case",
+			"imageIsOutOfBounds": "Image is out of bounds"
 		}
 	},
 	"menuConfig": {

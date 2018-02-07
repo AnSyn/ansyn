@@ -93,11 +93,13 @@ export class ImageryComponentManager {
 				this.buildActiveMapPlugins(activeMapName);
 				this.buildActiveMapVisualizers(activeMapName, map);
 				this.mapComponentInitilaized.emit(this.id);
-				this.mapInstanceChanged.emit({
-					id: this.id,
-					newMapInstanceName: activeMapName,
-					oldMapInstanceName: oldMapName
-				});
+				if (activeMapName !== oldMapName && Boolean(oldMapName)) {
+					this.mapInstanceChanged.emit({
+						id: this.id,
+						newMapInstanceName: activeMapName,
+						oldMapInstanceName: oldMapName
+					});
+				}
 				mapCreatedSubscribe.unsubscribe();
 				resolve();
 			});

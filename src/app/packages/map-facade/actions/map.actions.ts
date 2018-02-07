@@ -7,8 +7,8 @@ import { Feature } from 'geojson';
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
-	ADD_MAP_INSTANCE: 'ADD_MAP_INSTANCE',
-	REMOVE_MAP_INSTACNE: 'REMOVE_MAP_INSTACNE',
+	IMAGERY_CREATED: 'IMAGERY_CREATED',
+	IMAGERY_REMOVED: 'IMAGERY_REMOVED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
 	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
@@ -102,15 +102,15 @@ export class UpdateMapSizeAction implements Action {
 	}
 }
 
-export class AddMapInstanceAction implements Action {
-	type = MapActionTypes.ADD_MAP_INSTANCE;
+export class ImageryCreatedAction implements Action {
+	type = MapActionTypes.IMAGERY_CREATED;
 
 	constructor(public payload: { currentCommunicatorId: string, communicatorIds: string[] }) {
 	}
 }
 
 // TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
-export class MapInstanceChangedAction extends AddMapInstanceAction {
+export class MapInstanceChangedAction extends ImageryCreatedAction {
 	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 
 	constructor(public mapInstanceChangedPayload: { currentCommunicatorId: string, communicatorIds: string[], oldMapInstanceName?: string, newMapInstanceName?: string }) {
@@ -121,8 +121,8 @@ export class MapInstanceChangedAction extends AddMapInstanceAction {
 	}
 }
 
-export class RemoveMapInstanceAction implements Action {
-	type = MapActionTypes.REMOVE_MAP_INSTACNE;
+export class ImageryRemovedAction implements Action {
+	type = MapActionTypes.IMAGERY_REMOVED;
 
 	constructor(public payload: any) {
 	}

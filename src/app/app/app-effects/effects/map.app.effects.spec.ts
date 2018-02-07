@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
-	AddMapInstanceAction,
+	ImageryCreatedAction,
 	DrawPinPointAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction,
@@ -308,7 +308,7 @@ describe('MapAppEffects', () => {
 			layerState.displayAnnotationsLayer = true;
 			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new ImageryCreatedAction({
 					currentCommunicatorId: 'imagery2',
 					communicatorIds: communicators
 				})
@@ -323,7 +323,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new ImageryCreatedAction({
 					currentCommunicatorId: 'imagery2',
 					communicatorIds: communicators
 				})
@@ -343,7 +343,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 		spyOn(communicator, 'createMapSingleClickEvent');
 
-		const action = new AddMapInstanceAction({
+		const action = new ImageryCreatedAction({
 			communicatorIds: ['tmpId1'],
 			currentCommunicatorId: 'tmpId1'
 		});
@@ -554,7 +554,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new ImageryCreatedAction({
 					currentCommunicatorId: 'imagery1',
 					communicatorIds: communicators
 				})
@@ -573,7 +573,7 @@ describe('MapAppEffects', () => {
 			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
 			const communicators: Array<string> = ['imagery2'];
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new ImageryCreatedAction({
 					currentCommunicatorId: 'imagery2',
 					communicatorIds: communicators
 				})

@@ -32,7 +32,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { layoutOptions, StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	AddMapInstanceAction,
+	ImageryCreatedAction,
 	DrawPinPointAction,
 	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
@@ -229,10 +229,10 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapsState]: [AddMapInstanceAction, IMapState]) => !isEmpty(mapsState.mapsList))
-		.map(([action, mapsState]: [AddMapInstanceAction, IMapState]) => {
+		.filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => !isEmpty(mapsState.mapsList))
+		.map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
 			return mapsState.mapsList
 				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
 		})
@@ -319,14 +319,14 @@ export class MapAppEffects {
 	/**
 	 * @type Effect
 	 * @name onCommunicatorChange$
-	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction, MapInstanceChangedAction
+	 * @ofType ImageryCreatedAction, ImageryRemovedAction, MapInstanceChangedAction
 	 * @dependencies cases, map, layers
 	 * @filter There is at least one communicator, and exact length of maps
 	 * @action AnnotationVisualizerAgentAction?
 	 */
 	@Effect()
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType<any>(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<any>(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom<any, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select(layersStateSelector))
 		.filter(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
 			const communicatorIds = action.payload.communicatorIds;
@@ -344,7 +344,7 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.do(([action]: [any]) => {
@@ -362,7 +362,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
@@ -381,7 +381,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(toolsStateSelector))
 		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
 		.map(() => new StartMouseShadow());
@@ -394,8 +394,8 @@ export class MapAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.do((action: AddMapInstanceAction) => {
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.do((action: ImageryCreatedAction) => {
 			// Init CenterMarkerPlugin
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
 			const centerMarkerPlugin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);

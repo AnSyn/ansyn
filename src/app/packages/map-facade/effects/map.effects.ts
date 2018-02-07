@@ -63,11 +63,11 @@ export class MapEffects {
 	/**
 	 * @type Effect
 	 * @name onCommunicatorChange$
-	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction, MapInstanceChangedAction
+	 * @ofType ImageryCreatedAction, ImageryRemovedAction, MapInstanceChangedAction
 	 */
 	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map(() => this.mapFacadeService.initEmitters());
 
 	/**
@@ -132,14 +132,14 @@ export class MapEffects {
 	/**
 	 * @type Effect
 	 * @name onMapCreatedDecreasePendingCount$
-	 * @ofType AddMapInstanceAction, RemoveMapInstanceAction
+	 * @ofType ImageryCreatedAction, ImageryRemovedAction
 	 * @dependencies pendingMapsCount
 	 * @filter pendingMapsCount is greater than 0
 	 * @action DecreasePendingMapsCountAction
 	 */
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.REMOVE_MAP_INSTACNE)
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]) => mapState.pendingMapsCount > 0)
 		.map(() => new DecreasePendingMapsCountAction());
@@ -303,7 +303,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	newInstanceInitPosition$: Observable<any> = this.actions$
-		.ofType<MapInstanceChangedAction>(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType<MapInstanceChangedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [MapInstanceChangedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.currentCommunicatorId).data.position))
 		.do(([{ payload }, { activeMapId }]: [MapInstanceChangedAction, IMapState]) => {

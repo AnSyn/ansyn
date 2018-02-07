@@ -10,7 +10,7 @@ import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/r
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { AddMapInstanceAction } from '@ansyn/map-facade';
+import { ImageryCreatedAction } from '@ansyn/map-facade';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -148,7 +148,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		const communicators: Array<string> = ['imagery2'];
 		actions = hot('--a--', {
-			a: new AddMapInstanceAction({
+			a: new ImageryCreatedAction({
 				currentCommunicatorId: 'imagery2',
 				communicatorIds: communicators
 			})
@@ -162,7 +162,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = null;
 		const communicators: Array<string> = ['imagery2'];
 		actions = hot('--a--', {
-			a: new AddMapInstanceAction({
+			a: new ImageryCreatedAction({
 				currentCommunicatorId: 'imagery2',
 				communicatorIds: communicators
 			})

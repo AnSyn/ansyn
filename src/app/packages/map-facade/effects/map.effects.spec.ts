@@ -11,11 +11,11 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
 import {
 	ActiveMapChangedAction,
-	AddMapInstanceAction,
+	ImageryCreatedAction,
 	AnnotationContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
 	EnableMapGeoOptionsActionStore,
-	RemoveMapInstanceAction,
+	ImageryRemovedAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
@@ -129,7 +129,7 @@ describe('MapEffects', () => {
 			mapState.pendingMapsCount = 1;
 
 			actions = hot('--a--', {
-				a: new AddMapInstanceAction({
+				a: new ImageryCreatedAction({
 					'currentCommunicatorId': '',
 					'communicatorIds': ['']
 				})
@@ -141,10 +141,10 @@ describe('MapEffects', () => {
 			expect(mapEffects.onMapCreatedDecreasePendingCount$).toBeObservable(expectedResults);
 		});
 
-		it('RemoveMapInstanceAction should call DecreasePendingMapsCountAction', () => {
+		it('ImageryRemovedAction should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;
 
-			actions = hot('--a--', { a: new RemoveMapInstanceAction({}) });
+			actions = hot('--a--', { a: new ImageryRemovedAction({}) });
 
 			const expectedResults = cold('--b--', {
 				b: new DecreasePendingMapsCountAction()

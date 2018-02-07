@@ -21,7 +21,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
-import { AddMapInstanceAction } from '@ansyn/map-facade';
+import { ImageryCreatedAction } from '@ansyn/map-facade';
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -157,12 +157,12 @@ export class VisualizersAnnotationsAppEffects {
 	/**
 	 * @type Effect
 	 * @name annotationData$
-	 * @ofType SetAnnotationsLayer,AddMapInstanceAction,MapInstanceChangedAction
+	 * @ofType SetAnnotationsLayer,ImageryCreatedAction,MapInstanceChangedAction
 	 * @action AnnotationVisualizerAgentAction
 	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'), this.toolsState$)
 		.filter(([action, displayAnnotationsLayer, { flags }]: [Action, boolean, IToolsState]) => displayAnnotationsLayer || flags.get(toolsFlags.annotations))
 		.map(([action, displayAnnotationsLayer]: [Action, boolean, IToolsState]) => {
@@ -173,12 +173,12 @@ export class VisualizersAnnotationsAppEffects {
 	/**
 	 * @type Effect
 	 * @name updateInitialStyleForNewVisualizer$
-	 * @ofType MapInstanceChangedAction,AddMapInstanceAction
+	 * @ofType MapInstanceChangedAction,ImageryCreatedAction
 	 * @action AnnotationSetProperties
 	 */
 	@Effect()
 	updateInitialStyleForNewVisualizer$: Observable<any> = this.actions$
-		.ofType<AddMapInstanceAction | MapInstanceChangedAction>(MapActionTypes.ADD_MAP_INSTANCE, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<ImageryCreatedAction | MapInstanceChangedAction>(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.toolsState$, (action, { annotationProperties }) => annotationProperties )
 		.map((annotationProperties: AnnotationProperties) => new AnnotationSetProperties({ ...annotationProperties }));
 

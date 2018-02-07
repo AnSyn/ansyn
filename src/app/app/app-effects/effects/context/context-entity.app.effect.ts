@@ -1,5 +1,5 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { AddMapInstanceAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { ImageryCreatedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
@@ -61,10 +61,10 @@ export class ContextEntityAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	displayEntityFromNewMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ADD_MAP_INSTANCE)
+		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
-		.map(([action, caseState, mapStore]: [AddMapInstanceAction, ICasesState, IMapState]) => {
+		.filter(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
+		.map(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.currentCommunicatorId);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);

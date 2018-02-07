@@ -3,14 +3,14 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
-	AddMapInstanceAction,
+	ImageryCreatedAction,
 	ContextMenuShowAction,
 	DbclickFeatureTriggerAction,
 	HoverFeatureTriggerAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction,
 	PositionChangedAction,
-	RemoveMapInstanceAction
+	ImageryRemovedAction
 } from '../actions';
 import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { range } from 'lodash';
@@ -43,11 +43,11 @@ export class MapFacadeService {
 		this.initEmitters();
 
 		imageryCommunicatorService.instanceCreated.subscribe((communicatorIds) => {
-			this.store.dispatch(new AddMapInstanceAction(communicatorIds));
+			this.store.dispatch(new ImageryCreatedAction(communicatorIds));
 		});
 
 		imageryCommunicatorService.instanceRemoved.subscribe((communicatorIds) => {
-			this.store.dispatch(new RemoveMapInstanceAction(communicatorIds));
+			this.store.dispatch(new ImageryRemovedAction(communicatorIds));
 		});
 
 	}

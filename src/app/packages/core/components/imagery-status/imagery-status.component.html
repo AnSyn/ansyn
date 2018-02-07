@@ -50,14 +50,21 @@
 </div>
 
 <div class="notification">
-	<div class="geo-registered" *ngIf="disableGeoOptions" [attr.tooltip-value]="'This Image Has No Geo-Registration'"
+	<div class="geo-registered" *ngIf="disableGeoOptions" [attr.tooltip-value]="statusBarConfig?.errors?.noGeoRegistration"
 		 tooltip-class="bottom left"
 	>
-		This Image Has No Geo-Registration
+		{{statusBarConfig?.errors?.noGeoRegistration}}
 	</div>
 
-	<div class="not-from-case" *ngIf="notInCase" [attr.tooltip-value]="'This Overlay Is Not a Part of the Case'"
+	<div class="not-from-case" *ngIf="notInCase" [attr.tooltip-value]="statusBarConfig?.errors?.overlayIsNotPartOfCase"
 		 tooltip-class="bottom left">
-		This Overlay Is Not a Part of the Case
+		{{statusBarConfig?.errors?.overlayIsNotPartOfCase}}
 	</div>
+
+
+	<div class="not-from-case" *ngIf="overlaysOutOfBounds$ | async" [attr.tooltip-value]="statusBarConfig?.errors?.imageIsOutOfBounds"
+		 tooltip-class="bottom left">
+		{{statusBarConfig?.errors?.imageIsOutOfBounds}}
+	</div>
+
 </div>

@@ -1,8 +1,5 @@
 import {
-	CoreActions,
-	CoreActionTypes,
-	SetFavoriteOverlaysAction,
-	SetToastMessageAction,
+	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction, SetToastMessageAction,
 	UpdateFavoriteOverlaysMetadataAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
@@ -16,11 +13,13 @@ export interface IToastMessage {
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: Overlay[]
+	overlaysOutOfBounds: Set<string>;
 }
 
 export const coreInitialState: ICoreState = {
 	toastMessage: null,
-	favoriteOverlays: []
+	favoriteOverlays: [],
+	overlaysOutOfBounds: new Set()
 };
 
 export const coreFeatureKey = 'core';
@@ -36,6 +35,10 @@ export function CoreReducer(state = coreInitialState, action: CoreActions): ICor
 
 		case CoreActionTypes.UPDATE_FAVORITE_OVERLAYS_METADATA:
 			return { ...state, favoriteOverlays: (action as UpdateFavoriteOverlaysMetadataAction).payload };
+
+		case  CoreActionTypes.UPDATE_OUT_OF_BOUNDS_LIST:
+			return { ...state, overlaysOutOfBounds: <Set<string>>action.payload };
+
 
 		default:
 			return state;

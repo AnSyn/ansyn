@@ -7,7 +7,8 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
-	CaseGeoFilter, CaseOrientation, CaseTimeFilter, ClearActiveInteractionsAction, coreStateSelector, ICoreState,
+	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, ClearActiveInteractionsAction, coreStateSelector,
+	ICoreState,
 	Overlay
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
@@ -45,7 +46,7 @@ export class StatusBarComponent implements OnInit {
 	overlaysCount: number;
 	overlayNotInCase: boolean;
 	@Input() selectedCaseName: string;
-	@Input() overlay: any;
+	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
 
@@ -146,7 +147,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	isFavoriteOverlayDisplayed() {
-		return this.overlay && this.favoriteOverlays.some(o => o.id === this.overlay.id);
+		return this.activeMap.data.overlay && this.favoriteOverlays.some(o => o.id === this.activeMap.data.overlay.id);
 	}
 
 	showGeoRegistrationError(): boolean {

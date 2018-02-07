@@ -12,7 +12,8 @@
 			<div class="status">
 				<ansyn-status-bar
 					[selectedCaseName]="selectedCaseName"
-					[overlay]="displayedOverlay">
+					[activeMap]="(activeMap$ | async)"
+				>
 				</ansyn-status-bar>
 			</div>
 

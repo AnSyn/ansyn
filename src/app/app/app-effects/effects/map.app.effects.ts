@@ -3,12 +3,19 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
-	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, LoadOverlaysAction, OverlaysActionTypes, OverlaysMarkupAction,
+	DisplayOverlayFailedAction,
+	DisplayOverlaySuccessAction,
+	LoadOverlaysAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction,
 	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
-import { LayersActionTypes, SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import {
+	LayersActionTypes,
+	SelectLayerAction,
+	UnselectLayerAction
+} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
 import { BackToWorldAction, MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
@@ -18,27 +25,46 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction } from '@ansyn/overlays';
-import { IStatusBarState, statusBarStateSelector, statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	statusBarStateSelector,
+	statusBarToastMessages
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { layoutOptions, StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	AddMapInstanceAction, AddOverlayToLoadingOverlaysAction, DrawPinPointAction, EnableMapGeoOptionsActionStore, MapSingleClickAction,
-	PinPointTriggerAction, RemoveOverlayFromLoadingOverlaysAction, SetLayoutAction, SetMapsDataActionStore, SetOverlaysNotInCaseAction,
+	AddMapInstanceAction,
+	DrawPinPointAction,
+	EnableMapGeoOptionsActionStore,
+	MapSingleClickAction,
+	PinPointTriggerAction,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	SetOverlaysNotInCaseAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent, getPointByGeometry,
+	endTimingLog,
+	extentFromGeojson,
+	getFootprintIntersectionRatioInExtent,
+	getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
 import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import {
-	AnnotationVisualizerAgentAction, SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
+	AnnotationVisualizerAgentAction,
+	SetActiveCenter,
+	SetMapGeoEnabledModeToolsActionStore,
+	SetPinLocationModeAction,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapData, CaseMapState, CaseOrientation } from '@ansyn/core/models';
-import { ChangeLayoutAction, SetMapGeoEnabledModeStatusBarActionStore } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CaseMapState } from '@ansyn/core/models';
+import {
+	ChangeLayoutAction,
+	SetMapGeoEnabledModeStatusBarActionStore
+} from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
@@ -222,19 +248,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name displayOverlayFromCase$
-	 * @ofType DisplayOverlayAction
-	 * @action AddOverlayToLoadingOverlaysAction
-	 */
-	@Effect()
-	setOverlayAsLoading$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.map((action: DisplayOverlayAction) =>
-			new AddOverlayToLoadingOverlaysAction(action.payload.overlay.id));
-
-
-	/**
-	 * @type Effect
 	 * @name onOverlayFromURL$
 	 * @ofType DisplayOverlayAction
 	 * @filter There is no full overlay
@@ -253,20 +266,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name overlayLoadingSuccess$
-	 * @ofType DisplayOverlaySuccessAction
-	 * @action RemoveOverlayFromLoadingOverlaysAction
-	 */
-	@Effect()
-	overlayLoadingSuccess$: Observable<any> = this.actions$
-		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.do((action) => endTimingLog(`LOAD_OVERLAY_${action.payload.overlay.id}`))
-		.map((action) => {
-			return new RemoveOverlayFromLoadingOverlaysAction(action.payload.overlay.id);
-		});
-
-	/**
-	 * @type Effect
 	 * @name overlayLoadingFailed$
 	 * @ofType DisplayOverlayFailedAction
 	 * @action SetToastMessageAction, RemoveOverlayFromLoadingOverlaysAction
@@ -275,13 +274,10 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.do((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
-		.mergeMap((action) => [
-			new SetToastMessageAction({
-				toastText: statusBarToastMessages.showOverlayErrorToast,
-				showWarningIcon: true
-			}),
-			new RemoveOverlayFromLoadingOverlaysAction(action.payload.id)
-		]);
+		.map((action) => new SetToastMessageAction({
+			toastText: statusBarToastMessages.showOverlayErrorToast,
+			showWarningIcon: true
+		}));
 
 	/**
 	 * @type Effect

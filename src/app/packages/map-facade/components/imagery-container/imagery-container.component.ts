@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { OnInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Spinner } from '@ansyn/core/utils';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
@@ -14,7 +14,7 @@ import {
 	templateUrl: './imagery-container.component.html',
 	styleUrls: ['./imagery-container.component.less']
 })
-export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
+export class ImageryContainerComponent implements OnInit, OnDestroy {
 	@Input() disableGeoOptions: boolean;
 	@Input() notInCase;
 	@Input() mapState: CaseMapState;
@@ -45,7 +45,6 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 	private _spinner: Spinner;
 
 	constructor(protected store: Store<any>) {
-		this.showSpinner = true;
 	}
 
 	toggleSpinner() {
@@ -58,7 +57,7 @@ export class ImageryContainerComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	ngAfterViewInit() {
+	ngOnInit() {
 		this._spinner = new Spinner(this.imageryViewContainer.nativeElement);
 		this.toggleSpinner();
 	}

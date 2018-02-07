@@ -8,7 +8,6 @@ import { CaseRegionState } from '@ansyn/core';
 
 export interface IMapState {
 	communicators: {};
-	loadingOverlays: string[];
 	mapIdToGeoOptions: Map<string, boolean>;
 	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
@@ -21,7 +20,6 @@ export interface IMapState {
 
 export const initialMapState: IMapState = {
 	communicators: {},
-	loadingOverlays: [],
 	mapIdToGeoOptions: new Map<string, boolean>(),
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
@@ -57,26 +55,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.ADD_MAP_INSTANCE:
 		case MapActionTypes.REMOVE_MAP_INSTACNE:
 			return { ...state, communicators: action.payload.communicatorIds };
-
-		case MapActionTypes.ADD_OVERLAY_TO_LOADING_OVERLAYS:
-			const overlayIdToAdd = action.payload.overlayId;
-			const isOverlayIdToAddExists = state.loadingOverlays.find((overlay) => overlayIdToAdd === overlay);
-			if (!isOverlayIdToAddExists) {
-				const loadingOverlays = cloneDeep(state.loadingOverlays);
-				loadingOverlays.push(overlayIdToAdd);
-				return { ...state, loadingOverlays: loadingOverlays };
-			}
-			return state;
-
-		case MapActionTypes.REMOVE_OVERLAY_FROM_LOADING_OVERLAYS:
-			const overlayIdToRemove = action.payload.overlayId;
-			const overlayIndex = state.loadingOverlays.findIndex((overlay) => overlayIdToRemove === overlay);
-			if (overlayIndex !== -1) {
-				const loadingOverlays = cloneDeep(state.loadingOverlays);
-				loadingOverlays.splice(overlayIndex, 1);
-				return { ...state, loadingOverlays: loadingOverlays };
-			}
-			return state;
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

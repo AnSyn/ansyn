@@ -18,7 +18,11 @@ import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.a
 
 export class ImageriesManagerComponent implements OnInit {
 
-	mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+
+	public mapIdToGeoOptions$: Observable<Map<string, boolean>> = this.mapState$
+		.pluck<IMapState, Map<string, boolean>>('mapIdToGeoOptions')
+		.distinctUntilChanged();
 
 	public selectedLayout$: Observable<MapsLayout> = this.mapState$
 		.pluck<IMapState, MapsLayout>('layout')
@@ -42,7 +46,6 @@ export class ImageriesManagerComponent implements OnInit {
 	preventDbClick: boolean;
 	overlaysNotInCase: Map<string, boolean>;
 
-	public loadingOverlaysIds: Array<string> = [];
 	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
@@ -61,23 +64,11 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	initSubscribers() {
-		this.mapState$.subscribe((_mapState) => {
-			this.loadingOverlaysIds = _mapState.loadingOverlays;
-			this.mapIdToGeoOptions = _mapState.mapIdToGeoOptions;
-		});
-
+		this.mapIdToGeoOptions$.subscribe((_mapIdToGeoOptions) => this.mapIdToGeoOptions = _mapIdToGeoOptions);
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
-
-		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => {
-			this.overlaysNotInCase = _overlaysNotInCase;
-		});
-
-		this.activeMapId$.subscribe(this.setActiveMapId.bind(this));
-
-		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => {
-			this.mapsList = _mapsList;
-		});
-
+		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => this.overlaysNotInCase = _overlaysNotInCase);
+		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
+		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => this.mapsList = _mapsList);
 	}
 
 	isGeoOptionsDisabled(mapId: string): boolean {
@@ -87,11 +78,6 @@ export class ImageriesManagerComponent implements OnInit {
 	overlayNotInCase(overlay: Overlay) {
 		const overlayId = <string> _get(overlay, 'id');
 		return this.overlaysNotInCase.has(overlayId) ? this.overlaysNotInCase.get(overlayId) : false;
-	}
-
-	isOverlayLoading(overlayId) {
-		const existIndex = this.loadingOverlaysIds.findIndex((_overlayId) => overlayId === _overlayId);
-		return existIndex !== -1;
 	}
 
 	setClassImageriesContainer(newClass, oldClass?) {
@@ -105,10 +91,6 @@ export class ImageriesManagerComponent implements OnInit {
 	setSelectedLayout(_selectedLayout: MapsLayout) {
 		this.setClassImageriesContainer(_selectedLayout.id, this.selectedLayout && this.selectedLayout.id);
 		this.selectedLayout = _selectedLayout;
-	}
-
-	setActiveMapId(_activeMapId) {
-		this.activeMapId = _activeMapId;
 	}
 
 	initListeners() {

@@ -8,11 +8,9 @@ import { cloneDeep } from 'lodash';
 import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	AddMapInstanceAction,
-	AddOverlayToLoadingOverlaysAction,
 	DrawPinPointAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction,
-	RemoveOverlayFromLoadingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -460,12 +458,6 @@ describe('MapAppEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');
-		});
-
-		it('setOverlayAsLoading$ is called', () => {
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: fakeOverlay, mapId: 'imagery1' }) });
-			const expectedResults = cold('--b--', { b: new AddOverlayToLoadingOverlaysAction(fakeOverlay.id) });
-			expect(mapAppEffects.setOverlayAsLoading$).toBeObservable(expectedResults);
 		});
 
 		it('should NOT dispatch/do anything if "overlay.isFullOverlay = false"', () => {

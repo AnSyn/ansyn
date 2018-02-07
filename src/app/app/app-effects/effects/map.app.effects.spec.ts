@@ -562,7 +562,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new MapInstanceChangedAction({
+				a: new AddMapInstanceAction({
 					currentCommunicatorId: 'imagery1',
 					communicatorIds: communicators
 				})

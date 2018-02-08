@@ -3,12 +3,6 @@ import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
-	DecreasePendingMapsCountAction, MapActionTypes, MapsListChangedAction,
-	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction, SetLayoutAction,
-	SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore, SetPendingMapsCountAction
-} from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
@@ -16,15 +10,18 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import {
-	ImageryCreatedAction,
-	ImageryRemovedAction,
-	SynchronizeMapsAction
-} from '@ansyn/map-facade';
 import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
 import { AlertMsgTypes, CaseMapPosition, coreStateSelector, ICoreState, UpdateAlertMsg } from '@ansyn/core';
+import {
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
+	DecreasePendingMapsCountAction, MapActionTypes, MapsListChangedAction,
+	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction, SetLayoutAction,
+	SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore, SetPendingMapsCountAction,
+	SynchronizeMapsAction, ImageryCreatedAction, ImageryRemovedAction
+
+} from '../actions/map.actions';
 
 
 @Injectable()
@@ -227,7 +224,7 @@ export class MapEffects {
 		.map(([action, { alertMsg }]: [ImageryRemovedAction, ICoreState]) => {
 			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
 			updatedOverlaysOutOfBounds.delete(action.payload.id);
-			return new UpdateAlertMsg({value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds});
+			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
 		});
 
 

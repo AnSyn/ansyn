@@ -85,11 +85,10 @@ describe('ImageriesManagerComponent', () => {
 		});
 
 		// spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
-		const list = {
+		communicatorProvider.communicators = {
 			'imagery1': communicator,
 			'imagery2': communicator
 		};
-		spyOnProperty(communicatorProvider, 'communicators', 'get').and.returnValue(list);
 	});
 
 	it('should be created', () => {

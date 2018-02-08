@@ -22,6 +22,7 @@ import {
 	SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
+import { CaseMapState } from '@ansyn/core';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -173,12 +174,13 @@ describe('MapEffects', () => {
 					return {};
 				}
 			};
-
+			const fakeMap: CaseMapState = <any> {id: 'imagery2'};
+			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'setPosition');
 			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
 			actions = hot('--a--', { a: action });
-			const expectedResults = cold('--b--', { b: action });
+			const expectedResults = cold('--b--', { b: [action, mapState] });
 			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
 			expect(communicator.setPosition).toHaveBeenCalled();
 		});

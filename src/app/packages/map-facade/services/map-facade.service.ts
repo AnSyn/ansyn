@@ -96,13 +96,11 @@ export class MapFacadeService {
 		});
 		communicatorSubscribers.push(communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)));
 		this.subscribers[id] = communicatorSubscribers;
-		console.log(this.subscribers);
 	}
 
 	removeEmitters(id: string) {
 		this.subscribers[id].forEach((subscriber) => subscriber.unsubscribe());
 		delete this.subscribers[id];
-		console.log(this.subscribers);
 	}
 
 	mapInstanceChanged($event: MapInstanceChanged) {

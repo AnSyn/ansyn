@@ -1,9 +1,7 @@
 <ansyn-imagery-status
 	*ngIf="!hideOverlay"
 	[overlay]="activeMap?.data?.overlay"
-	[notInCase]="overlayNotInCase"
 	[active]="true"
-	[disableGeoOptions]="showGeoRegistrationError()"
 	(backToWorldView)="clickBackToWorldView()"
 	[mapId]="activeMap?.id"
 >

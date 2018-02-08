@@ -15,8 +15,6 @@ import {
 	styleUrls: ['./imagery-container.component.less']
 })
 export class ImageryContainerComponent implements OnInit, OnDestroy {
-	@Input() disableGeoOptions: boolean;
-	@Input() notInCase;
 	@Input() mapState: CaseMapState;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;

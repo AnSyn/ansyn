@@ -5,42 +5,33 @@ import {
 	ChangeLayoutAction, CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItems,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import {
-	Case, CaseMapState, CasesActionTypes, CopyCaseLinkAction, ICasesState,
-	UpdateCaseAction
-} from '@ansyn/menu-items/cases';
+import { CasesActionTypes, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { cloneDeep, get, isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	BackToWorldAction, DrawPinPointAction, PinPointModeTriggerAction,
-	SetOverlaysNotInCaseAction
+	BackToWorldAction, DrawPinPointAction,
+	PinPointModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction,
 	UpdateOverlaysCountAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	SetComboBoxesProperties,
-	SetTimeAction
-} from '@ansyn/status-bar/actions/status-bar.actions';
-import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import { SetComboBoxesProperties, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
-import { SetOverlayNotInCaseAction, SetOverlaysCountAction } from '@ansyn/status-bar/actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { SetOverlaysCountAction } from '@ansyn/status-bar/actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CaseState } from '@ansyn/core';
-import { PinPointTriggerAction } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -141,11 +132,11 @@ export class StatusBarAppEffects {
 	setTime$: Observable<any> = this.actions$
 		.ofType(StatusBarActionsTypes.SET_TIME)
 		.withLatestFrom(this.store.select(mapStateSelector))
-		.map(([action, { region }]: [SetTimeAction, IMapState]) =>  new LoadOverlaysAction({
-				to: action.payload.to.toISOString(),
-				from: action.payload.from.toISOString(),
-				polygon: region,
-				caseId: ''
+		.map(([action, { region }]: [SetTimeAction, IMapState]) => new LoadOverlaysAction({
+			to: action.payload.to.toISOString(),
+			from: action.payload.from.toISOString(),
+			polygon: region,
+			caseId: ''
 		}));
 
 	/**
@@ -209,27 +200,6 @@ export class StatusBarAppEffects {
 	setOverlayCount$ = this.actions$
 		.ofType<UpdateOverlaysCountAction>(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
 		.map(({ payload }) => new SetOverlaysCountAction(payload));
-
-	/**
-	 * @type Effect
-	 * @name setOverlaysNotFromCase$
-	 * @ofType SetOverlaysNotInCaseAction
-	 * @dependencies map
-	 * @action SetOverlayNotInCaseAction
-	 */
-	@Effect()
-	setOverlaysNotFromCase$: Observable<any> = this.actions$
-		.ofType<SetOverlaysNotInCaseAction>(MapActionTypes.SET_OVERLAYS_NOT_IN_CASE)
-		.withLatestFrom(this.store.select(mapStateSelector), ({ payload }, mapState: IMapState) => [payload, MapFacadeService.activeMap(mapState)])
-		.map(([overlaysNotInCase, activeMap]: [Map<string, boolean>, CaseMapState]) => {
-			if (activeMap.data.overlay) {
-				const { id } = activeMap.data.overlay;
-				return overlaysNotInCase.has(id) ? overlaysNotInCase.get(id) : false;
-			} else {
-				return false;
-			}
-		})
-		.map((notInCaseResult: boolean) => new SetOverlayNotInCaseAction(notInCaseResult));
 
 	/**
 	 * @type Effect

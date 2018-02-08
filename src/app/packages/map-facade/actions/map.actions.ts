@@ -27,11 +27,9 @@ export const MapActionTypes = {
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
-	ENABLE_MAP_GEO_OPTIONS: 'ENABLE_MAP_GEO_OPTIONS',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
-	SET_OVERLAYS_NOT_IN_CASE: 'SET_OVERLAYS_NOT_IN_CASE',
 	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
@@ -61,13 +59,6 @@ export class SetProgressBarAction implements Action {
 	type = MapActionTypes.SET_PROGRESS_BAR;
 
 	constructor(public payload: { mapId: string, progress: number }) {
-	}
-}
-
-export class EnableMapGeoOptionsActionStore implements Action {
-	type = MapActionTypes.ENABLE_MAP_GEO_OPTIONS;
-
-	constructor(public payload: { mapId: string, isEnabled: boolean }) {
 	}
 }
 
@@ -218,13 +209,6 @@ export class SetLayoutSuccessAction implements Action {
 	type = MapActionTypes.SET_LAYOUT_SUCCESS;
 
 	constructor() {
-	}
-}
-
-export class SetOverlaysNotInCaseAction implements Action {
-	type = MapActionTypes.SET_OVERLAYS_NOT_IN_CASE;
-
-	constructor(public payload: Map<string, boolean>) {
 	}
 }
 

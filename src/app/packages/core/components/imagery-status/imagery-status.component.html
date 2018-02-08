@@ -4,7 +4,7 @@
 		Back to base map
 	</button>
 
-	<button *ngIf="mapsAmount > 1" [disabled]="disableGeoOptions"
+	<button *ngIf="mapsAmount > 1" [disabled]="isNotGeoRegistered"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
 			tooltip-class="bottom right"
@@ -50,21 +50,21 @@
 </div>
 
 <div class="notification">
-	<div class="geo-registered" *ngIf="disableGeoOptions" [attr.tooltip-value]="statusBarConfig?.errors?.noGeoRegistration"
+	<div class="geo-registered" *ngIf="isNotGeoRegistered" [attr.tooltip-value]="coreConfig?.errors?.noGeoRegistration"
 		 tooltip-class="bottom left"
 	>
-		{{statusBarConfig?.errors?.noGeoRegistration}}
+		{{coreConfig?.errors?.noGeoRegistration}}
 	</div>
 
-	<div class="not-from-case" *ngIf="notInCase" [attr.tooltip-value]="statusBarConfig?.errors?.overlayIsNotPartOfCase"
+	<div class="not-from-case" *ngIf="overlayIsNotPartOfCase$ | async" [attr.tooltip-value]="coreConfig?.errors?.overlayIsNotPartOfCase"
 		 tooltip-class="bottom left">
-		{{statusBarConfig?.errors?.overlayIsNotPartOfCase}}
+		{{coreConfig?.errors?.overlayIsNotPartOfCase}}
 	</div>
 
 
-	<div class="not-from-case" *ngIf="overlaysOutOfBounds$ | async" [attr.tooltip-value]="statusBarConfig?.errors?.imageIsOutOfBounds"
+	<div class="not-from-case" *ngIf="overlaysOutOfBounds$ | async" [attr.tooltip-value]="coreConfig?.errors?.imageIsOutOfBounds"
 		 tooltip-class="bottom left">
-		{{statusBarConfig?.errors?.imageIsOutOfBounds}}
+		{{coreConfig?.errors?.imageIsOutOfBounds}}
 	</div>
 
 </div>

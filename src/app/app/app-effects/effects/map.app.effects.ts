@@ -19,7 +19,7 @@ import {
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
 import {
-	BackToWorldAction, MapActionTypes, MapFacadeService, MapInstanceChangedAction,
+	BackToWorldAction, MapActionTypes, MapFacadeService,
 	SetRegion
 } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
@@ -27,7 +27,7 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
-import { DisplayOverlayAction } from '@ansyn/overlays';
+import { DisplayOverlayAction, IOverlaysState } from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarStateSelector,
@@ -37,13 +37,10 @@ import { layoutOptions, StatusBarActionsTypes, statusBarFlagsItems, UpdateStatus
 import {
 	ImageryCreatedAction,
 	DrawPinPointAction,
-	EnableMapGeoOptionsActionStore,
 	MapSingleClickAction,
 	PinPointTriggerAction,
 	SetLayoutAction,
-	SetMapsDataActionStore,
-	SetOverlaysNotInCaseAction,
-	SynchronizeMapsAction
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
@@ -53,9 +50,7 @@ import {
 	getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
-import { CenterMarkerPlugin } from '@ansyn/open-layer-center-marker-plugin';
 import {
-	AnnotationVisualizerAgentAction,
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetPinLocationModeAction,
@@ -65,18 +60,16 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
 import {
-	ChangeLayoutAction,
-	SetMapGeoEnabledModeStatusBarActionStore
+	ChangeLayoutAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
-import { CaseMapPosition } from '@ansyn/core';
+import { AlertMsgTypes, coreStateSelector, ICoreState, UpdateAlertMsg } from '@ansyn/core';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 
 @Injectable()
@@ -372,23 +365,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name changeMapGeoOptionsMode$
-	 * @ofType EnableMapGeoOptionsActionStore
-	 * @action SetMapGeoEnabledModeToolsActionStore, SetMapGeoEnabledModeStatusBarActionStore
-	 */
-	@Effect()
-	changeMapGeoOptionsMode$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.ENABLE_MAP_GEO_OPTIONS)
-		.mergeMap((action: EnableMapGeoOptionsActionStore) => {
-			const isGeoRegistered = action.payload.isEnabled;
-			return [
-				new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered),
-				new SetMapGeoEnabledModeStatusBarActionStore(isGeoRegistered)
-			];
-		});
-
-	/**
-	 * @type Effect
 	 * @name onLayoutChange$
 	 * @ofType ChangeLayoutAction
 	 * @dependencies cases, statusBar
@@ -412,21 +388,19 @@ export class MapAppEffects {
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action, { filteredOverlays }, mapState: IMapState) => {
-			return [filteredOverlays, mapState.mapsList];
-		})
-		.map(([filteredOverlays, mapsList]: [string[], CaseMapState[]]) => {
-			const overlaysNoInCase = new Map<string, boolean>();
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
+		.map(([action, { filteredOverlays }, { mapsList }, { alertMsg }]: [Action, IOverlaysState, IMapState, ICoreState]) => {
+			const overlayIsNotPartOfCase = new Set(alertMsg.get(AlertMsgTypes.OverlayIsNotPartOfCase));
 
-			mapsList.forEach(({ data }) => {
+			mapsList.forEach(({ data, id }) => {
 				const { overlay } = data;
 				if (overlay) {
-					const notExistOnFilteredOverlay = !filteredOverlays.some(id => overlay.id === id);
-					overlaysNoInCase.set(overlay.id, notExistOnFilteredOverlay);
+					filteredOverlays.includes(overlay.id) ? overlayIsNotPartOfCase.delete(id) : overlayIsNotPartOfCase.add(id);
+				} else {
+					overlayIsNotPartOfCase.delete(id);
 				}
 			});
-
-			return new SetOverlaysNotInCaseAction(overlaysNoInCase);
+			return new UpdateAlertMsg({ value: overlayIsNotPartOfCase, key: AlertMsgTypes.OverlayIsNotPartOfCase });
 		});
 
 	/**
@@ -479,6 +453,25 @@ export class MapAppEffects {
 			communicator.ActiveMap.toggleGroup('layers');
 
 			communicator.getAllVisualizers().forEach(v => v.toggleVisibility());
+		});
+
+
+	/**
+	 * @type Effect
+	 * @name activeMapGeoRegistrationChanged$
+	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter mapsList.length > 0
+	 * @action SetMapGeoEnabledModeToolsActionStore
+	 */
+	@Effect()
+	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [Action, IMapState]) => {
+			const activeMapState = MapFacadeService.activeMap(mapState);
+			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
+			return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
 		});
 
 	constructor(protected actions$: Actions,

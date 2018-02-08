@@ -14,7 +14,6 @@ import {
 	ImageryCreatedAction,
 	AnnotationContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
-	EnableMapGeoOptionsActionStore,
 	ImageryRemovedAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
@@ -73,28 +72,6 @@ describe('MapEffects', () => {
 		const expectedResult = cold('--b--', { b: action });
 		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
 
-	});
-
-	describe('activeMapGeoRegistrationChanged$', () => {
-		it('After active map is changed should dispatch "EnableMapGeoOptionsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
-
-			mapState.mapsList = <any> [
-				{ id: 'imagery1', data: { overlay: testOverlay } },
-				{ id: 'imagery2', data: { overlay: testOverlay } }
-			];
-			mapState.activeMapId = 'imagery1';
-			const fakeCommunicator = { id: 'test' };
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-			const expectedResults = cold('--b--', {
-				b: new EnableMapGeoOptionsActionStore({
-					mapId: 'imagery1',
-					isEnabled: false
-				})
-			});
-			expect(mapEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
-		});
 	});
 
 	describe('onLayoutsChange$', () => {

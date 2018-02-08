@@ -8,10 +8,10 @@ import { cloneDeep } from 'lodash';
 import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	ImageryCreatedAction,
+	ActiveMapChangedAction,
 	DrawPinPointAction,
 	MapInstanceChangedAction,
-	MapSingleClickAction,
-	SynchronizeMapsAction
+	MapSingleClickAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
@@ -40,7 +40,10 @@ import {
 	MapReducer,
 	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import {
+	AnnotationVisualizerAgentAction,
+	SetMapGeoEnabledModeToolsActionStore
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -469,5 +472,22 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
 		});
 	});
+
+	describe('activeMapGeoRegistrationChanged$', () => {
+		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
+			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
+			mapState.mapsList = <any> [
+				{ id: 'imagery1', data: { overlay: testOverlay } },
+				{ id: 'imagery2', data: { overlay: testOverlay } }
+			];
+			mapState.activeMapId = 'imagery1';
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+			const b = new SetMapGeoEnabledModeToolsActionStore(testOverlay.isGeoRegistered);
+			const expectedResults = cold('--b--', { b });
+			expect(mapAppEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
+		});
+	});
+
+
 
 });

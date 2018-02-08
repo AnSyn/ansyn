@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { IToastMessage } from '../reducers/core.reducer';
 import { Overlay } from '../models/overlay.model';
+import { AlertMsgTypes } from '@ansyn/core';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -10,7 +11,7 @@ export const CoreActionTypes = {
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
 	UPDATE_FAVORITE_OVERLAYS_METADATA: type('[Core] UPDATE_FAVORITE_OVERLAYS_METADATA'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
-	UPDATE_OUT_OF_BOUNDS_LIST : 'UPDATE_OUT_OF_BOUNDS_LIST'
+	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG'
 };
 
 export type CoreActions =
@@ -19,7 +20,7 @@ export type CoreActions =
 	| SetToastMessageAction
 	| SetFavoriteOverlaysAction
 	| ClearActiveInteractionsAction
-	| UpdateOutOfBoundList;
+	| UpdateAlertMsg
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -64,8 +65,10 @@ export class ClearActiveInteractionsAction implements Action {
 	}
 }
 
-export class UpdateOutOfBoundList implements Action {
-	type = CoreActionTypes.UPDATE_OUT_OF_BOUNDS_LIST;
-	constructor(public payload: Set<string>) {
+export class UpdateAlertMsg implements Action {
+	type = CoreActionTypes.UPDATE_ALERT_MSG;
+	constructor(public payload: {value: Set<string>, key: AlertMsgTypes}) {
 	}
 }
+
+

@@ -8,15 +8,11 @@ import {
 import { Observable } from 'rxjs/Observable';
 import {
 	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, ClearActiveInteractionsAction, coreStateSelector,
-	ICoreState,
-	Overlay
+	ICoreState, Overlay
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
-import {
-	comboBoxesOptions, ComboBoxesProperties, StatusBarFlag,
-	statusBarFlagsItems
-} from '@ansyn/status-bar/models';
+import { comboBoxesOptions, ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
 import { layoutOptions } from '../../models/layout-options.model';
 
 @Component({
@@ -35,7 +31,6 @@ export class StatusBarComponent implements OnInit {
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
-	overlayNotInCase$: Observable<boolean> = this.statusBar$.pluck<IStatusBarState, boolean>('overlayNotInCase').distinctUntilChanged();
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 	favoriteOverlays: Overlay[];
 	selectedLayoutIndex: number;
@@ -44,7 +39,6 @@ export class StatusBarComponent implements OnInit {
 	hideOverlay: boolean;
 	timeSelectionEditIcon = false;
 	overlaysCount: number;
-	overlayNotInCase: boolean;
 	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
@@ -103,7 +97,7 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig, public store: Store<IStatusBarState>, public renderer: Renderer2) {
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig, public store: Store<IStatusBarState>) {
 
 	}
 
@@ -137,10 +131,6 @@ export class StatusBarComponent implements OnInit {
 			this.overlaysCount = overlaysCount;
 		});
 
-		this.overlayNotInCase$.subscribe(_overlayNotInCase => {
-			this.overlayNotInCase = _overlayNotInCase;
-		});
-
 		this.favoriteOverlays$.subscribe((favoriteOverlays) => {
 			this.favoriteOverlays = favoriteOverlays;
 		});
@@ -148,11 +138,6 @@ export class StatusBarComponent implements OnInit {
 
 	isFavoriteOverlayDisplayed() {
 		return this.activeMap.data.overlay && this.favoriteOverlays.some(o => o.id === this.activeMap.data.overlay.id);
-	}
-
-	showGeoRegistrationError(): boolean {
-		const key = statusBarFlagsItems.geoRegisteredOptionsEnabled;
-		return this.flags.has(key) && !this.flags.get(key);
 	}
 
 	toggleTimelineStartEndSearch() {

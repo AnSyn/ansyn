@@ -30,12 +30,6 @@ export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = cr
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState {
 	switch (action.type) {
-
-		case StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
-			const tmpMap = new Map(state.flags);
-			tmpMap.set(statusBarFlagsItems.geoRegisteredOptionsEnabled, action.payload);
-			return { ...state, flags: tmpMap };
-
 		case StatusBarActionsTypes.CHANGE_LAYOUT:
 			return Object.assign({}, state, { selectedLayoutIndex: action.payload });
 

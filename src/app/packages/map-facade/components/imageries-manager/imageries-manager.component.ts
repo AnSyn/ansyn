@@ -29,9 +29,6 @@ export class ImageriesManagerComponent implements OnInit {
 		.filter(layout => !_isNil(layout))
 		.distinctUntilChanged();
 
-	public overlaysNotInCase$: Observable<Map<string, boolean>> = this.mapState$
-		.pluck<IMapState, Map<string, boolean>>('overlaysNotInCase');
-
 	public activeMapId$: Observable<string> = this.mapState$
 		.pluck<IMapState, string>('activeMapId')
 		.distinctUntilChanged();
@@ -44,9 +41,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	clickTimeout: number;
 	preventDbClick: boolean;
-	overlaysNotInCase: Map<string, boolean>;
 
-	public mapIdToGeoOptions: Map<string, boolean>;
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
@@ -66,19 +61,10 @@ export class ImageriesManagerComponent implements OnInit {
 	initSubscribers() {
 		this.mapIdToGeoOptions$.subscribe((_mapIdToGeoOptions) => this.mapIdToGeoOptions = _mapIdToGeoOptions);
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
-		this.overlaysNotInCase$.subscribe(_overlaysNotInCase => this.overlaysNotInCase = _overlaysNotInCase);
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
 		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => this.mapsList = _mapsList);
 	}
 
-	isGeoOptionsDisabled(mapId: string): boolean {
-		return this.mapIdToGeoOptions && this.mapIdToGeoOptions.has(mapId) && !this.mapIdToGeoOptions.get(mapId);
-	}
-
-	overlayNotInCase(overlay: Overlay) {
-		const overlayId = <string> _get(overlay, 'id');
-		return this.overlaysNotInCase.has(overlayId) ? this.overlaysNotInCase.get(overlayId) : false;
-	}
 
 	setClassImageriesContainer(newClass, oldClass?) {
 		if (oldClass) {

@@ -7,8 +7,6 @@ import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { CaseRegionState } from '@ansyn/core';
 
 export interface IMapState {
-	mapIdToGeoOptions: Map<string, boolean>;
-	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
@@ -18,8 +16,6 @@ export interface IMapState {
 }
 
 export const initialMapState: IMapState = {
-	mapIdToGeoOptions: new Map<string, boolean>(),
-	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
 	activeMapId: null,
 	mapsList: [],
@@ -41,14 +37,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				progressedMap.progress = action.payload.progress;
 			}
 			return state;
-
-		case MapActionTypes.ENABLE_MAP_GEO_OPTIONS:
-			const mapIdToGeoOptionsClone = new Map(state.mapIdToGeoOptions);
-			mapIdToGeoOptionsClone.set(action.payload.mapId, action.payload.isEnabled);
-			return { ...state, mapIdToGeoOptions: mapIdToGeoOptionsClone };
-
-		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
-			return { ...state, overlaysNotInCase: action.payload };
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

@@ -7,3 +7,5 @@ export * from './coordinate-system.model';
 export * from './logger.config';
 export * from './logger-config.model';
 export * from './visualizers/annotations.model';
+export * from './core.config.model'
+export * from './core.config'

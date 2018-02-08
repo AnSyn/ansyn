@@ -14,6 +14,7 @@ import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multipl
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
+import { CoreConfig } from '@ansyn/core';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -74,6 +75,10 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: StatusBarConfig,
 			useValue: conf.statusBarConfig
+		},
+		{
+			provide: CoreConfig,
+			useValue: conf.coreConfig
 		}
 
 	];
@@ -87,4 +92,4 @@ export const fetchConfigProviders = () => fetch('/assets/config/app.config.json'
 		}
 		return conf;
 	})
-	.then(getProviders);
+	.then(getProviders)

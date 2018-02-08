@@ -14,10 +14,5 @@ export interface IToolTipsConfig {
 }
 
 export interface IStatusBarConfig {
-	toolTips: IToolTipsConfig,
-	errors: {
-		noGeoRegistration: string,
-		overlayIsNotPartOfCase: string,
-		imageIsOutOfBounds: string
-	}
+	toolTips: IToolTipsConfig
 }

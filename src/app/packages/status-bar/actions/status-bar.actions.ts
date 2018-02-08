@@ -14,7 +14,6 @@ export const StatusBarActionsTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	EXPAND: 'EXPAND',
 	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
-	MAP_GEO_ENABLED_MODE_CHANGED: 'MAP_GEO_ENABLED_MODE_CHANGED',
 	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT',
 	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY',
 	SET_TIME: 'SET_TIME',
@@ -79,12 +78,7 @@ export class SetTimeAction implements Action {
 	}
 }
 
-export class SetMapGeoEnabledModeStatusBarActionStore implements Action {
-	type = StatusBarActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
 
-	constructor(public payload: boolean) {
-	}
-}
 
 export class SetOverlaysCountAction implements Action {
 	type = StatusBarActionsTypes.SET_OVERLAYS_COUNT;

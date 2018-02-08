@@ -10,13 +10,15 @@ import {
 	MapSingleClickAction,
 	PositionChangedAction,
 } from '../actions';
-import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../actions/map.actions';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 import { Feature } from 'geojson';
+import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
 
 @Injectable()

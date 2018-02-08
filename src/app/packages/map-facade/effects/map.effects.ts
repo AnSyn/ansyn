@@ -5,10 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import {
 	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
-	DecreasePendingMapsCountAction, EnableMapGeoOptionsActionStore, ImageryCreatedAction, ImageryRemovedAction,
-	MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PinPointModeTriggerAction,
-	PositionChangedAction, SetLayoutAction, SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore,
-	SetPendingMapsCountAction, SynchronizeMapsAction
+	DecreasePendingMapsCountAction, MapActionTypes, MapsListChangedAction,
+	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction, SetLayoutAction,
+	SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore, SetPendingMapsCountAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -17,10 +16,15 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import {
+	ImageryCreatedAction,
+	ImageryRemovedAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade';
 import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
-import { CaseMapPosition, coreStateSelector, ICoreState, UpdateOutOfBoundList } from '@ansyn/core';
+import { AlertMsgTypes, CaseMapPosition, coreStateSelector, ICoreState, UpdateAlertMsg } from '@ansyn/core';
 
 
 @Injectable()
@@ -182,16 +186,16 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateOutOfBoundList
+	 * @action UpdateAlertMsg
 	 */
 	@Effect()
-	checkImageOutOfBounds$: Observable<UpdateOutOfBoundList> = this.actions$
+	checkImageOutOfBounds$: Observable<UpdateAlertMsg> = this.actions$
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
 		.filter(map => Boolean(map))
 		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([map, { overlaysOutOfBounds }]: [CaseMapState, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(overlaysOutOfBounds);
+		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
+			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
 			const isWorldView = !map.data.overlay;
 			let isInBound;
 			if (!isWorldView) {
@@ -205,7 +209,7 @@ export class MapEffects {
 			else {
 				updatedOverlaysOutOfBounds.add(map.id);
 			}
-			return new UpdateOutOfBoundList(updatedOverlaysOutOfBounds);
+			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
 		});
 
 	/**
@@ -214,16 +218,16 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateOutOfBoundList
+	 * @action UpdateAlertMsg
 	 */
 	@Effect()
-	updateOutOfBoundList: Observable<UpdateOutOfBoundList> = this.actions$
+	updateOutOfBoundList: Observable<UpdateAlertMsg> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
 		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, { overlaysOutOfBounds }]: [ImageryRemovedAction, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(overlaysOutOfBounds);
-			updatedOverlaysOutOfBounds.delete(action.payload.currentCommunicatorId);
-			return new UpdateOutOfBoundList(updatedOverlaysOutOfBounds);
+		.map(([action, { alertMsg }]: [ImageryRemovedAction, ICoreState]) => {
+			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
+			updatedOverlaysOutOfBounds.delete(action.payload.id);
+			return new UpdateAlertMsg({value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds});
 		});
 
 
@@ -316,32 +320,6 @@ export class MapEffects {
 	getFilteredOverlays$: Observable<Action> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
 		.share();
-
-	/**
-	 * @type Effect
-	 * @name activeMapGeoRegistrationChanged$
-	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
-	 * @dependencies map
-	 * @filter mapsList.length > 0
-	 * @action EnableMapGeoOptionsActionStore
-	 */
-	@Effect()
-	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]: [Action, IMapState]) => mapState.mapsList.length > 0)
-		.map(([action, mapState]: [Action, IMapState]) => {
-			const activeMapState = MapFacadeService.activeMap(mapState);
-			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-			return [action, isGeoRegistered, activeMapState, mapState];
-		})
-		.filter(([action, isGeoRegistered, activeMapState, mapState]: [Action, boolean, CaseMapState, IMapState]): any => {
-			const isEnabled = mapState.mapIdToGeoOptions.get(activeMapState.id);
-			return isEnabled !== isGeoRegistered;
-		})
-		.map(([action, isGeoRegistered, activeMapState]: [Action, boolean, CaseMapState, IMapState]): any => {
-			return new EnableMapGeoOptionsActionStore({ mapId: activeMapState.id, isEnabled: isGeoRegistered });
-		});
 
 	/**
 	 * @type Effect

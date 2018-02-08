@@ -20,10 +20,6 @@ export class ImageriesManagerComponent implements OnInit {
 
 	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
-	public mapIdToGeoOptions$: Observable<Map<string, boolean>> = this.mapState$
-		.pluck<IMapState, Map<string, boolean>>('mapIdToGeoOptions')
-		.distinctUntilChanged();
-
 	public selectedLayout$: Observable<MapsLayout> = this.mapState$
 		.pluck<IMapState, MapsLayout>('layout')
 		.filter(layout => !_isNil(layout))
@@ -59,7 +55,6 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	initSubscribers() {
-		this.mapIdToGeoOptions$.subscribe((_mapIdToGeoOptions) => this.mapIdToGeoOptions = _mapIdToGeoOptions);
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
 		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => this.mapsList = _mapsList);

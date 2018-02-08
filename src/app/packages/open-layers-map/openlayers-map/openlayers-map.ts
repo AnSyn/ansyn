@@ -16,11 +16,10 @@ import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
-import extent from 'ol/extent';
+import MousePosition from 'ol/control/mouseposition'
+
 import * as GeoJSON from 'geojson';
-import * as turfCenter from '@turf/center';
-import { toRadians } from '@ansyn/core/utils/math';
-import { cloneDeep } from 'lodash';
+
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 
 export class OpenLayersMap extends IMap<OLMap> {
@@ -105,12 +104,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		const [mainLayer] = layers;
 		const view = this.createView(mainLayer);
-
+		const coordinateFormat: ol.CoordinateFormatType = (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString();
 		this._mapObject = new OLMap({
 			target: element,
 			layers,
 			renderer: 'canvas',
-			controls: [new ScaleLine()],
+			controls: [new ScaleLine(), new MousePosition({ projection: 'EPSG:4326', coordinateFormat  })],
 			view
 		});
 		if (position) {
@@ -202,7 +201,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
 		const projection = view.getProjection();
 		const transformExtent = proj.transformExtent(extent, 'EPSG:4326', projection);
-		view.fit(transformExtent, { nearest: true});
+		view.fit(transformExtent, { nearest: true });
 	}
 
 	public addLayer(layer: any) {
@@ -300,7 +299,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const bottomLeft = map.getCoordinateFromPixel([0, height]);
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
 		const type: 'Polygon' = 'Polygon';
-		const extentPolygon = { type , coordinates };
+		const extentPolygon = { type, coordinates };
 		const someIsNaN = coordinates[0].some(([x, y]) => isNaN(x) || isNaN(y));
 		if (someIsNaN) {
 			return null;
@@ -334,7 +333,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			view.setZoom(zoom);
 			view.setRotation(rotation);
 		} else {
-			this.fitRotateExtent(this.mapObject, extentPolygon)
+			this.fitRotateExtent(this.mapObject, extentPolygon);
 		}
 	}
 

@@ -302,37 +302,6 @@ describe('MapAppEffects', () => {
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
 	});
 
-	describe('onCommunicatorChange$', () => {
-		it('display annotation layer', () => {
-			// here I am setting the data that will be returend after this.store select clue: reference
-			layerState.displayAnnotationsLayer = true;
-			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
-			actions = hot('--a--', {
-				a: new ImageryCreatedAction({
-					currentCommunicatorId: 'imagery2',
-					communicatorIds: communicators
-				})
-			});
-			const b = new AnnotationVisualizerAgentAction({ relevantMaps: 'all', operation: 'show' });
-			const expectedResults = cold('--b--', { b });
-			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
-		});
-		it('dont display annotation layer', () => {
-			// here I am setting the data that will be returend after this.store select clue: reference
-			layerState.displayAnnotationsLayer = false;
-
-			const communicators: Array<string> = ['imagery1', 'imagery2', 'imagery3'];
-			actions = hot('--a--', {
-				a: new ImageryCreatedAction({
-					currentCommunicatorId: 'imagery2',
-					communicatorIds: communicators
-				})
-			});
-			const expectedResults = cold('-');
-			expect(mapAppEffects.onCommunicatorChange$).toBeObservable(expectedResults);
-		});
-
-	});
 	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
 		const communicator = {
@@ -343,10 +312,7 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 		spyOn(communicator, 'createMapSingleClickEvent');
 
-		const action = new ImageryCreatedAction({
-			communicatorIds: ['tmpId1'],
-			currentCommunicatorId: 'tmpId1'
-		});
+		const action = new ImageryCreatedAction({ id: 'tmpId1' });
 		actions = hot('--a--', { a: action });
 
 		// no need to check observable itself
@@ -357,10 +323,7 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const action = new MapInstanceChangedAction({
-			communicatorIds: ['tmpId1', 'tmpId2'],
-			currentCommunicatorId: 'tmpId2'
-		});
+		const action = new MapInstanceChangedAction(<any> { id: 'tmpId2' });
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat) });
@@ -370,60 +333,11 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set('shadowMouse', true);
-		const action = new MapInstanceChangedAction({
-			communicatorIds: ['tmpId1', 'tmpId2'],
-			currentCommunicatorId: 'tmpId2'
-		});
+		const action = new MapInstanceChangedAction(<any> { id: 'tmpId2' });
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--a--', { a: new StartMouseShadow() });
 
 		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
-	});
-
-	describe('onAddCommunicatorInitPlugin$', () => {
-		it('on add communicator set pluggin with data', () => {
-			const plugin = {
-				init: () => {
-				}
-			};
-
-			const communicator = {
-				getPlugin: () => {
-				}
-			};
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'getPlugin').and.callFake(() => plugin);
-			spyOn(plugin, 'init');
-			const action = new MapInstanceChangedAction({
-				communicatorIds: ['tmpId1'],
-				currentCommunicatorId: 'tmpId1'
-			});
-			actions = hot('--a--', { a: action });
-			const expectedResults = cold('--b--', { b: action });
-			expect(mapAppEffects.onAddCommunicatorInitPlugin$).toBeObservable(expectedResults);
-			expect(communicator.getPlugin).toHaveBeenCalled();
-			expect(plugin.init).toHaveBeenCalled();
-		});
-	});
-
-	describe('onSynchronizeAppMaps$', () => {
-		it('listen to SynchronizeMapsAction', () => {
-			const communicator = {
-				setPosition: () => {
-				},
-				getPosition: () => {
-					return {};
-				}
-			};
-
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'setPosition');
-			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
-			actions = hot('--a--', { a: action });
-			const expectedResults = cold('--b--', { b: action });
-			expect(mapAppEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
-			expect(communicator.setPosition).toHaveBeenCalled();
-		});
 	});
 
 	describe('onDisplayOverlay$ communicator should set Layer on map, by getFootprintIntersectionRatioInExtent', () => {
@@ -533,10 +447,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({
-					currentCommunicatorId: 'imagery1',
-					communicatorIds: communicators
-				})
+				a: new ImageryCreatedAction({ id: 'imagery1' })
 			});
 			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({
@@ -552,10 +463,7 @@ describe('MapAppEffects', () => {
 			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
 			const communicators: Array<string> = ['imagery2'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({
-					currentCommunicatorId: 'imagery2',
-					communicatorIds: communicators
-				})
+				a: new ImageryCreatedAction({ id: 'imagery2' })
 			});
 			const expectedResults = cold('-');
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);

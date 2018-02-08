@@ -21,6 +21,7 @@ import {
 	SetMapsDataActionStore,
 	SetPendingMapsCountAction
 } from '../actions/map.actions';
+import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -97,7 +98,7 @@ describe('MapEffects', () => {
 
 	describe('onLayoutsChange$', () => {
 		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
-			spyOn(mapFacadeService, 'setMapsDataChanges').and.returnValue({
+			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({
 				'mapsList': [],
 				'activeMapId': 'imagery1'
 			});
@@ -129,10 +130,7 @@ describe('MapEffects', () => {
 			mapState.pendingMapsCount = 1;
 
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({
-					'currentCommunicatorId': '',
-					'communicatorIds': ['']
-				})
+				a: new ImageryCreatedAction({ id: 'id' })
 			});
 
 			const expectedResults = cold('--b--', {
@@ -144,7 +142,7 @@ describe('MapEffects', () => {
 		it('ImageryRemovedAction should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;
 
-			actions = hot('--a--', { a: new ImageryRemovedAction({}) });
+			actions = hot('--a--', { a: new ImageryRemovedAction({ id: 'id' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new DecreasePendingMapsCountAction()
@@ -163,6 +161,26 @@ describe('MapEffects', () => {
 				b: new SetLayoutSuccessAction()
 			});
 			expect(mapEffects.onMapPendingCountReachedZero$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onSynchronizeAppMaps$', () => {
+		it('listen to SynchronizeMapsAction', () => {
+			const communicator = {
+				setPosition: () => {
+				},
+				getPosition: () => {
+					return {};
+				}
+			};
+
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(communicator, 'setPosition');
+			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
+			actions = hot('--a--', { a: action });
+			const expectedResults = cold('--b--', { b: action });
+			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
+			expect(communicator.setPosition).toHaveBeenCalled();
 		});
 	});
 });

@@ -18,7 +18,10 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
-import { BackToWorldAction, MapActionTypes, MapFacadeService, SetRegion } from '@ansyn/map-facade';
+import {
+	BackToWorldAction, MapActionTypes, MapFacadeService, MapInstanceChangedAction,
+	SetRegion
+} from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -234,7 +237,7 @@ export class MapAppEffects {
 		.filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => !isEmpty(mapsState.mapsList))
 		.map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
 			return mapsState.mapsList
-				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.currentCommunicatorId);
+				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
 		})
 		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
 		.map((caseMapState: CaseMapState) => {
@@ -318,25 +321,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onCommunicatorChange$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction, MapInstanceChangedAction
-	 * @dependencies cases, map, layers
-	 * @filter There is at least one communicator, and exact length of maps
-	 * @action AnnotationVisualizerAgentAction?
-	 */
-	@Effect()
-	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType<any>(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom<any, IMapState, ILayerState>(this.store$.select(mapStateSelector), this.store$.select(layersStateSelector))
-		.filter(([action, mapState, layerState]: [any, IMapState, ILayerState]) => {
-			const communicatorIds = action.payload.communicatorIds;
-			return layerState.displayAnnotationsLayer &&
-				communicatorIds.length > 1 && communicatorIds.length === mapState.mapsList.length;
-		})
-		.map(() => new AnnotationVisualizerAgentAction({ relevantMaps: 'all', operation: 'show' }));
-
-	/**
-	 * @type Effect
 	 * @name onAddCommunicatorDoPinpointSearch
 	 * @ofType MapInstanceChangedAction
 	 * @dependencies cases, statusBar
@@ -348,7 +332,7 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
 		.do(([action]: [any]) => {
-			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
+			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.id);
 			communicatorHandler.createMapSingleClickEvent();
 		});
 
@@ -385,52 +369,6 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(toolsStateSelector))
 		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
 		.map(() => new StartMouseShadow());
-
-
-	/**
-	 * @type Effect
-	 * @name onAddCommunicatorInitPlugin$
-	 * @ofType MapInstanceChangedAction
-	 */
-	@Effect({ dispatch: false })
-	onAddCommunicatorInitPlugin$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.do((action: ImageryCreatedAction) => {
-			// Init CenterMarkerPlugin
-			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.currentCommunicatorId);
-			const centerMarkerPlugin = communicatorHandler.getPlugin(CenterMarkerPlugin.sPluginType);
-			if (centerMarkerPlugin) {
-				centerMarkerPlugin.init(action.payload.currentCommunicatorId);
-			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
-	 * @dependencies cases
-	 */
-	@Effect({ dispatch: false })
-	onSynchronizeAppMaps$: Observable<SynchronizeMapsAction> = this.actions$
-		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
-			const mapId = action.payload.mapId;
-			let mapPosition: CaseMapPosition = this.imageryCommunicatorService.provide(mapId).getPosition();
-			// TODO: check "inside" if we can always use mapState
-			if (!mapPosition) {
-				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-				mapPosition = map.data.position;
-			}
-
-			mapState.mapsList.forEach((mapItem: CaseMapState) => {
-				if (mapId !== mapItem.id) {
-					const comm = this.imageryCommunicatorService.provide(mapItem.id);
-					comm.setPosition(mapPosition);
-				}
-			});
-			return action;
-		});
 
 	/**
 	 * @type Effect

@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { ImageryComponentManager } from '../imagery-component/manager/imagery.component.manager';
+import { ImageryComponentManager, MapInstanceChanged } from '../imagery-component/manager/imagery.component.manager';
 
 import * as _ from 'lodash';
 import { cloneDeep } from 'lodash';
@@ -18,7 +18,7 @@ export class CommunicatorEntity {
 	public centerChanged: EventEmitter<GeoJSON.Point>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
-	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
+	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
 	private _virtualNorth = 0;
 
 	constructor(public _manager: ImageryComponentManager) {
@@ -26,7 +26,7 @@ export class CommunicatorEntity {
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
-		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
+		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
@@ -52,6 +52,10 @@ export class CommunicatorEntity {
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {
 			this.mapInstanceChanged.emit(event);
 		}));
+	}
+
+	get id () {
+		return this._manager.id;
 	}
 
 	private unregisterToManagerEvents() {

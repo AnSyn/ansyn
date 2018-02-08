@@ -1,72 +1,46 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
-import { values } from 'lodash';
 import { ImageryComponentManager } from '../imagery-component/manager/imagery.component.manager';
+
+export interface ImageryChanged {
+	id: string;
+}
 
 @Injectable()
 export class ImageryCommunicatorService {
 
-	private _communicators: { [id: string]: CommunicatorEntity };
-	public instanceCreated = new EventEmitter();
-	public instanceRemoved = new EventEmitter();
-	public onInit$ = new EventEmitter();
-
-	protected _initialized = false;
-	public get initialized() {
-		return this._initialized;
-	}
-
-	public initializedCommunicators: Array<string> = [];
-
-	constructor() {
-		this._communicators = {};
-	}
+	public communicators: { [id: string]: CommunicatorEntity } = {};
+	public instanceCreated = new EventEmitter<ImageryChanged>();
+	public instanceRemoved = new EventEmitter<ImageryChanged>();
 
 	public provide(id: string): CommunicatorEntity {
 
-		if (!this._communicators[id]) {
+		if (!this.communicators[id]) {
 			return null;
 		}
-		return this._communicators[id];
-	}
-
-	get communicators(): { [id: string]: CommunicatorEntity } {
-		return this._communicators;
+		return this.communicators[id];
 	}
 
 	communicatorsAsArray(): CommunicatorEntity[] {
-		return values(this._communicators) as CommunicatorEntity[];
+		return Object.values(this.communicators) as CommunicatorEntity[];
 	}
 
 	public createCommunicator(componentManager: ImageryComponentManager): void {
-		if (this._communicators[componentManager.id]) {
+		if (this.communicators[componentManager.id]) {
 			throw new Error(`'Can't create communicator ${componentManager.id}, already exists!'`);
 		}
 
-		this._communicators[componentManager.id] = new CommunicatorEntity(componentManager);
-		this.initializedCommunicators.push(componentManager.id);
-		this.instanceCreated.emit({
-			communicatorIds: this.initializedCommunicators,
-			currentCommunicatorId: componentManager.id
-		});
-		if (!this._initialized ) {
-			this._initialized = true;
-			this.onInit$.emit();
-		}
+		this.communicators[componentManager.id] = new CommunicatorEntity(componentManager);
+		this.instanceCreated.emit({ id: componentManager.id });
 	}
 
 	public remove(id: string) {
-		if (!this._communicators[id]) {
+		if (!this.communicators[id]) {
 			return;
 		}
-
-		this._communicators[id].dispose();
-		this._communicators[id] = null;
-		delete (this._communicators[id]);
-		this.initializedCommunicators.splice(this.initializedCommunicators.indexOf(id), 1);
-		this.instanceRemoved.emit({
-			communicatorIds: this.initializedCommunicators,
-			currentCommunicatorId: id
-		});
+		this.communicators[id].dispose();
+		this.communicators[id] = null;
+		delete (this.communicators[id]);
+		this.instanceRemoved.emit({ id });
 	}
 }

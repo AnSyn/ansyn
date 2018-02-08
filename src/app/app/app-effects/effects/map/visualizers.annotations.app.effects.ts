@@ -173,12 +173,12 @@ export class VisualizersAnnotationsAppEffects {
 	/**
 	 * @type Effect
 	 * @name updateInitialStyleForNewVisualizer$
-	 * @ofType MapInstanceChangedAction,ImageryCreatedAction
+	 * @ofType ImageryCreatedAction
 	 * @action AnnotationSetProperties
 	 */
 	@Effect()
 	updateInitialStyleForNewVisualizer$: Observable<any> = this.actions$
-		.ofType<ImageryCreatedAction | MapInstanceChangedAction>(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.toolsState$, (action, { annotationProperties }) => annotationProperties )
 		.map((annotationProperties: AnnotationProperties) => new AnnotationSetProperties({ ...annotationProperties }));
 

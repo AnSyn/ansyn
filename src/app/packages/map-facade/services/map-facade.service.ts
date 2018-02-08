@@ -3,14 +3,12 @@ import { Store } from '@ngrx/store';
 import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
-	ImageryCreatedAction,
 	ContextMenuShowAction,
 	DbclickFeatureTriggerAction,
 	HoverFeatureTriggerAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction,
 	PositionChangedAction,
-	ImageryRemovedAction
 } from '../actions';
 import { CaseMapPosition, CaseMapState, defaultMapType, Overlay } from '@ansyn/core';
 import { range } from 'lodash';
@@ -19,10 +17,11 @@ import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../
 import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
 import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
 import { Feature } from 'geojson';
+import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
 
 @Injectable()
 export class MapFacadeService {
-	private _subscribers = [];
+	subscribers: {[key: string]: any[]} = {};
 
 	static isOverlayGeoRegistered(overlay: Overlay): boolean {
 		if (!overlay) {
@@ -31,60 +30,7 @@ export class MapFacadeService {
 		return overlay.isGeoRegistered;
 	}
 
-	static activeMap(mapState: IMapState): CaseMapState {
-		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
-	}
-
-	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
-		return mapsList.find(({ id }: CaseMapState) => id === mapId);
-	}
-
-	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
-		this.initEmitters();
-
-		imageryCommunicatorService.instanceCreated.subscribe((communicatorIds) => {
-			this.store.dispatch(new ImageryCreatedAction(communicatorIds));
-		});
-
-		imageryCommunicatorService.instanceRemoved.subscribe((communicatorIds) => {
-			this.store.dispatch(new ImageryRemovedAction(communicatorIds));
-		});
-
-	}
-
-	initEmitters() {
-		this.unsubscribeAll();
-
-		this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator): void => {
-
-			this._subscribers.push(communicator.positionChanged.subscribe(this.positionChanged.bind(this)));
-			this._subscribers.push(communicator.singleClick.subscribe(this.singleClick.bind(this)));
-			this._subscribers.push(communicator.contextMenu.subscribe(this.contextMenu.bind(this)));
-
-			communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
-				if (visualizer.events.has(VisualizerEvents.onHoverFeature)) {
-					this._subscribers.push(visualizer.events.get(VisualizerEvents.onHoverFeature).subscribe(this.hoverFeature.bind(this)));
-				}
-
-				if (visualizer.events.has(VisualizerEvents.doubleClickFeature)) {
-					this._subscribers.push(visualizer.events.get(VisualizerEvents.doubleClickFeature).subscribe(this.dbclickFeature.bind(this)));
-				}
-
-				if (visualizer.events.has(VisualizerEvents.drawEndPublisher)) {
-					this._subscribers.push(visualizer.events.get(VisualizerEvents.drawEndPublisher).subscribe(this.drawEndSubscriber.bind(this)));
-				}
-
-				if (visualizer.events.has(VisualizerEvents.contextMenuHandler)) {
-					this._subscribers.push(visualizer.events.get(VisualizerEvents.contextMenuHandler).subscribe(this.contextMenuHandlerSubscriber.bind(this)));
-				}
-			});
-
-			this._subscribers.push(communicator.mapInstanceChanged.subscribe(this.onActiveMapChanged.bind(this)));
-		});
-
-	}
-
-	setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
+	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
 		const mapsList: CaseMapState[] = [];
 		const activeMap = MapFacadeService.mapById(oldMapsList, oldActiveMapId);
 
@@ -114,20 +60,53 @@ export class MapFacadeService {
 		return { ...mapsListChange };
 	}
 
-	// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
-	onActiveMapChanged($event: { id: string, oldMapInstanceName: string, newMapInstanceName: string }) {
-		const args = {
-			oldMapInstanceName: $event.oldMapInstanceName,
-			newMapInstanceName: $event.newMapInstanceName,
-			currentCommunicatorId: $event.id,
-			communicatorIds: this.imageryCommunicatorService.initializedCommunicators
-		};
-		this.store.dispatch(new MapInstanceChangedAction(args));
+	static activeMap(mapState: IMapState): CaseMapState {
+		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
 	}
 
-	unsubscribeAll() {
-		this._subscribers.forEach((subscriber) => subscriber.unsubscribe());
-		this._subscribers = [];
+	static mapById(mapsList: CaseMapState[], mapId: string): CaseMapState {
+		return mapsList.find(({ id }: CaseMapState) => id === mapId);
+	}
+
+	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+	}
+
+	initEmitters(id: string) {
+		const communicator = this.imageryCommunicatorService.provide(id);
+		const communicatorSubscribers = [];
+		communicatorSubscribers.push(communicator.positionChanged.subscribe(this.positionChanged.bind(this)));
+		communicatorSubscribers.push(communicator.singleClick.subscribe(this.singleClick.bind(this)));
+		communicatorSubscribers.push(communicator.contextMenu.subscribe(this.contextMenu.bind(this)));
+		communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
+			if (visualizer.events.has(VisualizerEvents.onHoverFeature)) {
+				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.onHoverFeature).subscribe(this.hoverFeature.bind(this)));
+			}
+
+			if (visualizer.events.has(VisualizerEvents.doubleClickFeature)) {
+				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.doubleClickFeature).subscribe(this.dbclickFeature.bind(this)));
+			}
+
+			if (visualizer.events.has(VisualizerEvents.drawEndPublisher)) {
+				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.drawEndPublisher).subscribe(this.drawEndSubscriber.bind(this)));
+			}
+
+			if (visualizer.events.has(VisualizerEvents.contextMenuHandler)) {
+				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.contextMenuHandler).subscribe(this.contextMenuHandlerSubscriber.bind(this)));
+			}
+		});
+		communicatorSubscribers.push(communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)));
+		this.subscribers[id] = communicatorSubscribers;
+		console.log(this.subscribers);
+	}
+
+	removeEmitters(id: string) {
+		this.subscribers[id].forEach((subscriber) => subscriber.unsubscribe());
+		delete this.subscribers[id];
+		console.log(this.subscribers);
+	}
+
+	mapInstanceChanged($event: MapInstanceChanged) {
+		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
 	positionChanged($event: { id: string, position: CaseMapPosition }) {

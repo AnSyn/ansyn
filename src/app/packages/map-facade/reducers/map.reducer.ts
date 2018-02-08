@@ -7,7 +7,6 @@ import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { CaseRegionState } from '@ansyn/core';
 
 export interface IMapState {
-	communicators: {};
 	mapIdToGeoOptions: Map<string, boolean>;
 	overlaysNotInCase: Map<string, boolean>;
 	layout: MapsLayout;
@@ -19,7 +18,6 @@ export interface IMapState {
 }
 
 export const initialMapState: IMapState = {
-	communicators: {},
 	mapIdToGeoOptions: new Map<string, boolean>(),
 	overlaysNotInCase: new Map<string, boolean>(),
 	layout: null,
@@ -51,10 +49,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.SET_OVERLAYS_NOT_IN_CASE:
 			return { ...state, overlaysNotInCase: action.payload };
-
-		case MapActionTypes.IMAGERY_CREATED:
-		case MapActionTypes.IMAGERY_REMOVED:
-			return { ...state, communicators: action.payload.communicatorIds };
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

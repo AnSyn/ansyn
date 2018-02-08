@@ -19,7 +19,10 @@ import {
 	SetLayoutSuccessAction,
 	SetMapManualImageProcessing,
 	SetMapsDataActionStore,
-	SetPendingMapsCountAction
+	SetPendingMapsCountAction,
+	ImageryCreatedAction,
+	ImageryRemovedAction,
+	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
@@ -28,8 +31,8 @@ import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { MapInstanceChangedAction } from '@ansyn/map-facade';
 import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
+import { CaseMapPosition } from '@ansyn/core';
 
 
 @Injectable()
@@ -63,12 +66,18 @@ export class MapEffects {
 	/**
 	 * @type Effect
 	 * @name onCommunicatorChange$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction, MapInstanceChangedAction
+	 * @ofType ImageryCreatedAction, ImageryRemovedAction
 	 */
 	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.map(() => this.mapFacadeService.initEmitters());
+		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
+		.do((action: ImageryCreatedAction | ImageryRemovedAction) => {
+			if (action instanceof ImageryCreatedAction ) {
+				this.mapFacadeService.initEmitters(action.payload.id);
+			} else {
+				this.mapFacadeService.removeEmitters(action.payload.id);
+			}
+		});
 
 	/**
 	 * @type Effect
@@ -126,7 +135,7 @@ export class MapEffects {
 		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
 		.mergeMap(([{ payload }, mapsList, activeMapId]) => [
 			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)),
-			new SetMapsDataActionStore(this.mapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
+			new SetMapsDataActionStore(MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
 		]);
 
 	/**
@@ -298,21 +307,55 @@ export class MapEffects {
 	/**
 	 * @type Effect
 	 * @name newInstanceInitPosition$
-	 * @ofType MapInstanceChangedAction
+	 * @ofType ImageryCreatedAction
 	 * @dispatch: false
 	 */
 	@Effect({ dispatch: false })
 	newInstanceInitPosition$: Observable<any> = this.actions$
-		.ofType<MapInstanceChangedAction>(MapActionTypes.IMAGERY_CREATED)
+		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }, { mapsList }]: [MapInstanceChangedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.currentCommunicatorId).data.position))
-		.do(([{ payload }, { activeMapId }]: [MapInstanceChangedAction, IMapState]) => {
-			const activeMapComm = this.communicatorsService.provide(activeMapId);
-			const position = activeMapComm.getPosition();
-			const communicator = this.communicatorsService.provide(payload.currentCommunicatorId);
-			communicator.setPosition(position);
+		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.id).data.position))
+		.do(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+			const activeMap = MapFacadeService.activeMap(mapState);
+			const communicator = this.communicatorsService.provide(payload.id);
+			communicator.setPosition(activeMap.data.position);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onSynchronizeAppMaps$
+	 * @ofType SynchronizeMapsAction
+	 * @dependencies maps
+	 */
+	@Effect({ dispatch: false })
+	onSynchronizeAppMaps$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.do(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
+			const mapId = action.payload.mapId;
+			let mapPosition: CaseMapPosition = this.communicatorsService.provide(mapId).getPosition();
+			if (!mapPosition) {
+				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+				mapPosition = map.data.position;
+			}
+
+			mapState.mapsList.forEach((mapItem: CaseMapState) => {
+				if (mapId !== mapItem.id) {
+					const comm = this.communicatorsService.provide(mapItem.id);
+					comm.setPosition(mapPosition);
+				}
+			});
+		});
+
+	@Effect()
+	imageryCreated$ = this.communicatorsService
+		.instanceCreated
+		.map((payload) => new ImageryCreatedAction(payload));
+
+	@Effect()
+	imageryRemoved$ = this.communicatorsService
+		.instanceRemoved
+		.map((payload) => new ImageryRemovedAction(payload));
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,

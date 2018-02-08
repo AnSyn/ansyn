@@ -12,6 +12,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/fromPromise';
 
+export interface MapInstanceChanged {
+	id: string;
+	newMapInstanceName: string;
+	oldMapInstanceName: string;
+}
 
 export class ImageryComponentManager {
 
@@ -22,7 +27,7 @@ export class ImageryComponentManager {
 	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	public mapInstanceChanged: EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>;
+	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
 
 	public activeMapName: string;
 	private _plugins: IMapPlugin[] = [];
@@ -35,7 +40,7 @@ export class ImageryComponentManager {
 				protected _baseSourceProviders: BaseMapSourceProvider[],
 				protected config: IImageryConfig,
 				protected _id: string) {
-		this.mapInstanceChanged = new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>();
+		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	}
 
 	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {

@@ -148,10 +148,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = fakeContextEntities;
 		const communicators: Array<string> = ['imagery2'];
 		actions = hot('--a--', {
-			a: new ImageryCreatedAction({
-				currentCommunicatorId: 'imagery2',
-				communicatorIds: communicators
-			})
+			a: new ImageryCreatedAction({ id: 'imagery2' })
 		});
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(contextEntityAppEffects.displayEntityFromNewMap$).toBeObservable(expectedResults);
@@ -162,10 +159,7 @@ describe('ContextEntityAppEffects', () => {
 		cases[0].state.contextEntities = null;
 		const communicators: Array<string> = ['imagery2'];
 		actions = hot('--a--', {
-			a: new ImageryCreatedAction({
-				currentCommunicatorId: 'imagery2',
-				communicatorIds: communicators
-			})
+			a: new ImageryCreatedAction({ id: 'imagery2' })
 		});
 		const expectedResults = cold('-');
 		expect(contextEntityAppEffects.displayEntityFromNewMap$).toBeObservable(expectedResults);

@@ -2,7 +2,8 @@ import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState, MapsLayout } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
 import { Feature } from 'geojson';
-
+import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
+import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -105,26 +106,20 @@ export class UpdateMapSizeAction implements Action {
 export class ImageryCreatedAction implements Action {
 	type = MapActionTypes.IMAGERY_CREATED;
 
-	constructor(public payload: { currentCommunicatorId: string, communicatorIds: string[] }) {
-	}
-}
-
-// TODO: this is a patch that will be removed when "pinpoint" and "pinLocation" will become plugins
-export class MapInstanceChangedAction extends ImageryCreatedAction {
-	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
-
-	constructor(public mapInstanceChangedPayload: { currentCommunicatorId: string, communicatorIds: string[], oldMapInstanceName?: string, newMapInstanceName?: string }) {
-		super({
-			currentCommunicatorId: mapInstanceChangedPayload.currentCommunicatorId,
-			communicatorIds: mapInstanceChangedPayload.communicatorIds
-		});
+	constructor(public payload: ImageryChanged) {
 	}
 }
 
 export class ImageryRemovedAction implements Action {
 	type = MapActionTypes.IMAGERY_REMOVED;
 
-	constructor(public payload: any) {
+	constructor(public payload: ImageryChanged) {
+	}
+}
+
+export class MapInstanceChangedAction implements Action {
+	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
+	constructor(public payload: MapInstanceChanged) {
 	}
 }
 
@@ -324,4 +319,3 @@ export class SetRegion implements Action {
 	constructor(public payload: any) {
 	}
 }
-

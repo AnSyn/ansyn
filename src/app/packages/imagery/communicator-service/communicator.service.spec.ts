@@ -13,7 +13,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		mapInstanceChanged: new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>()
+		mapInstanceChanged: new EventEmitter<MapInstanceChanged>()
 	};
 
 	const componentManager2: ImageryComponentManager = <any>{
@@ -23,7 +23,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
-		mapInstanceChanged: new EventEmitter<{ id: string, oldMapInstanceName: string, newMapInstanceName: string }>()
+		mapInstanceChanged: new EventEmitter<MapInstanceChanged>()
 	};
 
 	beforeEach(async(() => {
@@ -47,7 +47,7 @@ describe('ImageryCommunicatorService', () => {
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({
 				communicatorIds: ['1'],
-				currentCommunicatorId: '1'
+				id: '1'
 			}
 		);
 	});
@@ -90,7 +90,7 @@ describe('ImageryCommunicatorService', () => {
 		imageryCommunicatorService.remove(id);
 		expect(imageryCommunicatorService.instanceRemoved.emit).toHaveBeenCalledWith({
 				communicatorIds: [componentManager1.id],
-				currentCommunicatorId: id
+				id: id
 			}
 		);
 	});

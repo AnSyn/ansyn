@@ -3,6 +3,9 @@ import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import { ProjectableRaster } from '@ansyn/open-layers-map';
 import { Injectable } from '@angular/core';
+import { Overlay } from '@ansyn/core';
+import { extentFromGeojson } from '@ansyn/core/utils';
+import proj from 'ol/proj';
 
 export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
@@ -13,7 +16,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any {
+	create(metaData: Overlay, mapId: string): any {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -21,13 +24,17 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		});
 
 		this.monitorSource(source, mapId);
+		let [x, y, x1, y1] = extentFromGeojson(metaData.footprint);
+		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
+		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
 
 		return new ImageLayer({
 			source: new ProjectableRaster({
 				sources: [source],
 				operation: (pixels) => pixels[0],
 				operationType: 'image'
-			})
+			}),
+			extent: [x, y, x1, y1]
 		});
 	}
 

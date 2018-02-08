@@ -12,7 +12,7 @@ import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
-export class OpenLayersDisabledMap extends IMap {
+export class OpenLayersDisabledMap extends IMap<Map> {
 	static mapType = 'openLayersMap';
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
@@ -21,7 +21,7 @@ export class OpenLayersDisabledMap extends IMap {
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	mapType: string = OpenLayersDisabledMap.mapType;
-	mapObject: any;
+	mapObject: Map;
 	mainLayer: Layer;
 
 	_imageProcessing: OpenLayersImageProcessing;
@@ -39,11 +39,6 @@ export class OpenLayersDisabledMap extends IMap {
 			controls: [new ScaleLine()]
 		});
 		this.setMainLayer(layers[0], position);
-
-		const containerElem = <HTMLElement> this.mapObject.getViewport();
-		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
-			e.preventDefault();
-		});
 	}
 
 	getCenter(): GeoJSON.Point {

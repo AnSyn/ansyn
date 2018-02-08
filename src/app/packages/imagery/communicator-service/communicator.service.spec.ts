@@ -1,6 +1,6 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
-import { ImageryComponentManager } from '../imagery-component/manager/imagery.component.manager';
+import { ImageryComponentManager, MapInstanceChanged } from '../imagery-component/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 
@@ -45,11 +45,7 @@ describe('ImageryCommunicatorService', () => {
 
 		spyOn(imageryCommunicatorService.instanceCreated, 'emit');
 		imageryCommunicatorService.createCommunicator(componentManager1);
-		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({
-				communicatorIds: ['1'],
-				id: '1'
-			}
-		);
+		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({ id: '1' });
 	});
 
 	it('provide Communicator should return expected communicator', () => {
@@ -88,10 +84,6 @@ describe('ImageryCommunicatorService', () => {
 		spyOn(imageryCommunicatorService.instanceRemoved, 'emit');
 		const id = componentManager2.id;
 		imageryCommunicatorService.remove(id);
-		expect(imageryCommunicatorService.instanceRemoved.emit).toHaveBeenCalledWith({
-				communicatorIds: [componentManager1.id],
-				id: id
-			}
-		);
+		expect(imageryCommunicatorService.instanceRemoved.emit).toHaveBeenCalledWith({ id });
 	});
 });

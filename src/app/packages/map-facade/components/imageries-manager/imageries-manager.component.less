@@ -51,6 +51,18 @@
 				border: solid 3px @application-main-color;
 			}
 		}
+		/deep/ .ol-scale-line {
+			bottom: @status-bar-height;
+		}
+		/deep/ .ol-mouse-position {
+			bottom: @status-bar-height;
+			top: auto;
+			right: auto;
+			left: 160px;
+			background: rgba(0,0,0,0.3);
+			padding: 3px;
+		}
+
 		&.layout1 {
 			div.map-container-wrapper {
 				position: relative;
@@ -58,10 +70,6 @@
 				height: 100%;
 				div.active-border {
 					display: none;
-				}
-
-				/deep/ .ol-scale-line {
-					bottom: @status-bar-height;
 				}
 			}
 		}
@@ -73,10 +81,6 @@
 				height: 100%;
 				div.active-border {
 					height: @height-minus-status;
-				}
-
-				/deep/ .ol-scale-line {
-					bottom: @status-bar-height;
 				}
 			}
 
@@ -90,10 +94,6 @@
 				&:last-child {
 					div.active-border {
 						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
 					}
 				}
 			}
@@ -110,10 +110,6 @@
 				&:first-child, &:last-child {
 					div.active-border {
 						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
 					}
 				}
 			}
@@ -132,10 +128,6 @@
 					div.active-border {
 						height: @height-minus-status;
 					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
-					}
 				}
 			}
 		}
@@ -147,10 +139,6 @@
 				&:nth-child(3), &:nth-child(4) {
 					div.active-border {
 						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
 					}
 				}
 			}

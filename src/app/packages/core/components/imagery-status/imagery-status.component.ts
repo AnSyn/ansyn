@@ -15,11 +15,20 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent implements OnInit {
+	_overlay: Overlay;
+
 	@HostBinding('class.active') @Input() active: boolean;
 	@Input() mapId: string = null;
-	@Input() overlay: Overlay;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
+	@Input() set overlay(overlay: Overlay) {
+		this._overlay = overlay;
+		this.updateFavoriteStatus();
+	};
+	get overlay() {
+		return this._overlay;
+	}
+
 	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
@@ -38,29 +47,37 @@ export class ImageryStatusComponent implements OnInit {
 
 
 	favoriteOverlays: Overlay[];
-
+	isFavorite: boolean;
+	favoritesButtonText: string;
 
 	get description() {
-		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
+		return (this._overlay && this._overlay) ? new Date(this._overlay.photoTime).toUTCString() + ' - ' + this._overlay.sensorName : null;
 	}
 
 	get isNotGeoRegistered() {
-		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
+		return !MapFacadeService.isOverlayGeoRegistered(this._overlay);
 	}
 
 	constructor(protected store$: Store<any>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
-	isFavoriteOverlayDisplayed() {
-		return this.favoriteOverlays.some(o => o.id === this.overlay.id);
-	}
-
 	ngOnInit(): void {
-		this.favoriteOverlays$.subscribe((favoriteOverlays) => this.favoriteOverlays = favoriteOverlays);
+		this.favoriteOverlays$.subscribe((favoriteOverlays) => {
+			this.favoriteOverlays = favoriteOverlays;
+			this.updateFavoriteStatus();
+		});
 	}
 
 	toggleFavorite() {
-		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
+		this.store$.dispatch(new ToggleFavoriteAction(this._overlay));
+	}
+
+	updateFavoriteStatus() {
+		this.isFavorite = false;
+		if (this._overlay && this.favoriteOverlays && this.favoriteOverlays.length > 0) {
+			this.isFavorite = this.favoriteOverlays.some(o => o.id === this._overlay.id);
+		}
+		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
 	}
 
 	toggleMapLayers() {

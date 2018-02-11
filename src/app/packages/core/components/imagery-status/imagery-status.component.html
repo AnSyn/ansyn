@@ -23,9 +23,9 @@
 	</button>
 
 	<button *ngIf="overlay" class="small-icon-button set-favorite"
-			[class.active2]="isFavoriteOverlayDisplayed()"
+			[class.active2]="isFavorite"
 			(click)="toggleFavorite()"
-			tooltip-value="Add to favorites"
+			[attr.tooltip-value]="favoritesButtonText"
 			tooltip-class="bottom right"
 
 

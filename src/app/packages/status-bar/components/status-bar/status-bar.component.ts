@@ -31,7 +31,6 @@ export class StatusBarComponent implements OnInit {
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
 	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
-	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 	favoriteOverlays: Overlay[];
 	selectedLayoutIndex: number;
 	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
@@ -130,14 +129,6 @@ export class StatusBarComponent implements OnInit {
 		this.overlaysCount$.subscribe(overlaysCount => {
 			this.overlaysCount = overlaysCount;
 		});
-
-		this.favoriteOverlays$.subscribe((favoriteOverlays) => {
-			this.favoriteOverlays = favoriteOverlays;
-		});
-	}
-
-	isFavoriteOverlayDisplayed() {
-		return this.activeMap.data.overlay && this.favoriteOverlays.some(o => o.id === this.activeMap.data.overlay.id);
 	}
 
 	toggleTimelineStartEndSearch() {

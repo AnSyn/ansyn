@@ -1,5 +1,6 @@
 import { GeometryObject } from 'geojson';
 import { LimitedArray } from '../utils/limited-array';
+import { CaseRegionState, CaseTimeState } from '@ansyn/core';
 
 export interface OverlaysFetchData extends LimitedArray{
 	data: Overlay[],
@@ -29,10 +30,8 @@ export class Overlay {
 }
 
 export interface OverlaysCriteria {
-	to: string;
-	from: string;
-	polygon: GeometryObject;
-	caseId?: string;
+	time: CaseTimeState
+	region: CaseRegionState;
 }
 
 export interface OverlaySpecialObject {

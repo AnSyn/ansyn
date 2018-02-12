@@ -175,32 +175,6 @@ describe('StatusBarAppEffects', () => {
 		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
 	});
 
-	it('selectCase$ should get layersIndex, orientation, geoFilter and time from selectedCase and return all update status-bar actions', () => {
-		const layoutsIndex = 2;
-		const caseItem: Case = <any> {
-			id: '31b33526-6447-495f-8b52-83be3f6b55bd',
-			state: {
-				maps: {
-					layoutsIndex
-				},
-				orientation: 'orientation',
-				geoFilter: 'geoFilter',
-				timeFilter: 'timeFilter',
-				time: { from: 0, to: 100 }
-			}
-		};
-		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
-		const a = new ChangeLayoutAction(layoutsIndex);
-		const b = new SetComboBoxesProperties({
-			orientation: <CaseOrientation> 'orientation',
-			timeFilter: <CaseTimeFilter> 'timeFilter',
-			geoFilter: <CaseGeoFilter> 'geoFilter',
-		});
-		const c = new SetTimeAction({ from: new Date(0), to: new Date(100) });
-		const expectedResults = cold('--(abc)--', { a, b, c });
-		expect(statusBarAppEffects.selectCase$).toBeObservable(expectedResults);
-	});
-
 	it('onBackToWorldView$$ should return BackToWorldAction with no args', () => {
 		actions = hot('--a--', { a: new BackToWorldViewAction() });
 		const expectedResults = cold('--b--', { b: new BackToWorldAction() });

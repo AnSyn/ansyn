@@ -298,7 +298,7 @@ export class AnnotationDrawEndAction implements Action {
 
 	}
 }
-export class SetRegion implements Action {
+export class SetRegionAction implements Action {
 	type = MapActionTypes.SET_REGION;
 	constructor(public payload: any) {
 	}

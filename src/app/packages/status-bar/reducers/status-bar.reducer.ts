@@ -2,6 +2,7 @@ import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.acti
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { ComboBoxesProperties } from '@ansyn/status-bar';
 import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { CaseTimeState } from '@ansyn/core';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
@@ -12,7 +13,7 @@ export interface IStatusBarState {
 	selectedLayoutIndex: number;
 	flags: Map<StatusBarFlag, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
-	time: { from: Date, to: Date },
+	time: CaseTimeState,
 	overlaysCount: number,
 	overlayNotInCase: boolean
 }
@@ -21,7 +22,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	selectedLayoutIndex: 0,
 	flags: new Map<StatusBarFlag, boolean>(),
 	comboBoxesProperties: {},
-	time: { from: new Date(0), to: new Date() },
+	time: null,
 	overlaysCount: 0,
 	overlayNotInCase: false
 };

@@ -54,110 +54,88 @@ export class OverlaysAppEffects {
 			return new OverlaysMarkupAction(overlaysMarkup);
 		});
 
-	/**
-	 * @type Effect
-	 * @name selectCase$
-	 * @ofType SelectCaseAction
-	 * @filter There isn't an imagery count and the case is not empty
-	 * @action LoadOverlaysAction
-	 */
-	@Effect()
-	selectCase$: Observable<LoadOverlaysAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter((action: SelectCaseAction) => this.casesService.contextValues.imageryCountBefore === -1 &&
-			this.casesService.contextValues.imageryCountAfter === -1)
-		.filter((action: SelectCaseAction) => !isEmpty(action.payload))
-		.map(({ payload }: SelectCaseAction) => {
-			const overlayFilter: any = {
-				to: payload.state.time.to,
-				from: payload.state.time.from,
-				polygon: payload.state.region,
-				caseId: payload.id
-			};
-			return new LoadOverlaysAction(overlayFilter);
-		});
 
-	/**
-	 * @type Effect
-	 * @name selectCaseWithImageryCountBefore$
-	 * @ofType SelectCaseAction
-	 * @filter There is an imagery count before and the case is not empty
-	 * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
-	 */
-	@Effect()
-	selectCaseWithImageryCountBefore$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter === -1)
-		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
-		.switchMap(({ payload }: SelectCaseAction) => {
-			return this.overlaysService.getStartDateViaLimitFacets({
-				region: payload.state.region,
-				limit: this.casesService.contextValues.imageryCountBefore,
-				facets: payload.state.facets
-			})
-				.mergeMap((data: { startDate, endDate }) => {
-					const from = new Date(data.startDate);
-					const to = new Date(data.endDate);
-					payload.state.time.from = from.toISOString();
-					payload.state.time.to = to.toISOString();
+	// /**
+	//  * @type Effect
+	//  * @name selectCaseWithImageryCountBefore$
+	//  * @ofType SelectCaseAction
+	//  * @filter There is an imagery count before and the case is not empty
+	//  * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
+	//  */
+	// @Effect()
+	// selectCaseWithImageryCountBefore$: Observable<any> = this.actions$
+	// 	.ofType(CasesActionTypes.SELECT_CASE)
+	// 	.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter === -1)
+	// 	.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
+	// 	.switchMap(({ payload }: SelectCaseAction) => {
+	// 		return this.overlaysService.getStartDateViaLimitFacets({
+	// 			region: payload.state.region,
+	// 			limit: this.casesService.contextValues.imageryCountBefore,
+	// 			facets: payload.state.facets
+	// 		})
+	// 			.mergeMap((data: { startDate, endDate }) => {
+	// 				const from = new Date(data.startDate);
+	// 				const to = new Date(data.endDate);
+	// 				payload.state.time.from = from.toISOString();
+	// 				payload.state.time.to = to.toISOString();
 
-					const overlayFilter: any = {
-						to: payload.state.time.to,
-						from: payload.state.time.from,
-						polygon: payload.state.region,
-						caseId: payload.id
-					};
+	// 				const overlayFilter: any = {
+	// 					to: payload.state.time.to,
+	// 					from: payload.state.time.from,
+	// 					polygon: payload.state.region,
+	// 					caseId: payload.id
+	// 				};
 
-					return [
-						new UpdateCaseAction(payload),
-						new SetTimeAction({ from, to }),
-						new LoadOverlaysAction(overlayFilter)
-					];
-				});
-		});
+	// 				return [
+	// 					new UpdateCaseAction(payload),
+	// 					new SetTimeAction({ from, to }),
+	// 					new LoadOverlaysAction(overlayFilter)
+	// 				];
+	// 			});
+	// 	});
+	//
+	// /**
+	//  * @type Effect
+	//  * @name selectCaseWithImageryCountBeforeAndAfter$
+	//  * @ofType SelectCaseAction
+	//  * @filter There is an imagery count before and after and the case is not empty
+	//  * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
+	//  */
+	// @Effect()
+	// selectCaseWithImageryCountBeforeAndAfter$: Observable<any> = this.actions$
+	// 	.ofType(CasesActionTypes.SELECT_CASE)
+	// 	.filter(() => {
+	// 		return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter !== -1;
+	// 	})
+	// 	.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
+	// 	.switchMap(({ payload }: SelectCaseAction) => {
+	// 		return this.overlaysService.getStartAndEndDateViaRangeFacets({
+	// 			region: payload.state.region,
+	// 			limitBefore: this.casesService.contextValues.imageryCountBefore,
+	// 			limitAfter: this.casesService.contextValues.imageryCountAfter,
+	// 			facets: payload.state.facets,
+	// 			date: this.casesService.contextValues.time
+	// 		})
+	// 			.mergeMap((data: { startDate, endDate }) => {
+	// 				const from = new Date(data.startDate);
+	// 				const to = new Date(data.endDate);
+	// 				payload.state.time.from = from.toISOString();
+	// 				payload.state.time.to = to.toISOString();
 
-	/**
-	 * @type Effect
-	 * @name selectCaseWithImageryCountBeforeAndAfter$
-	 * @ofType SelectCaseAction
-	 * @filter There is an imagery count before and after and the case is not empty
-	 * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
-	 */
-	@Effect()
-	selectCaseWithImageryCountBeforeAndAfter$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(() => {
-			return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter !== -1;
-		})
-		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
-		.switchMap(({ payload }: SelectCaseAction) => {
-			return this.overlaysService.getStartAndEndDateViaRangeFacets({
-				region: payload.state.region,
-				limitBefore: this.casesService.contextValues.imageryCountBefore,
-				limitAfter: this.casesService.contextValues.imageryCountAfter,
-				facets: payload.state.facets,
-				date: this.casesService.contextValues.time
-			})
-				.mergeMap((data: { startDate, endDate }) => {
-					const from = new Date(data.startDate);
-					const to = new Date(data.endDate);
-					payload.state.time.from = from.toISOString();
-					payload.state.time.to = to.toISOString();
+	// 				const overlayFilter: any = {
+	// 					to: payload.state.time.to,
+	// 					from: payload.state.time.from,
+	// 					polygon: payload.state.region,
+	// 					caseId: payload.id
+	// 				};
 
-					const overlayFilter: any = {
-						to: payload.state.time.to,
-						from: payload.state.time.from,
-						polygon: payload.state.region,
-						caseId: payload.id
-					};
-
-					return [
-						new UpdateCaseAction(payload),
-						new SetTimeAction({ from, to }),
-						new LoadOverlaysAction(overlayFilter)
-					];
-				});
-		});
+	// 				return [
+	// 					new UpdateCaseAction(payload),
+	// 					new SetTimeAction({ from, to }),
+	// 					new LoadOverlaysAction(overlayFilter)
+	// 				];
+	// 			});
+	// 	});
 
 	/**
 	 * @type Effect

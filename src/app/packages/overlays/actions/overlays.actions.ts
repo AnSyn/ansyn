@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { CaseOrientation, OverlaySpecialObject } from '@ansyn/core';
+import { CaseOrientation, CaseRegionState, CaseTimeState, OverlaySpecialObject } from '@ansyn/core';
 import { TimelineState } from '../reducers/overlays.reducer';
+import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -57,7 +58,8 @@ export class UnSelectOverlayAction implements Action {
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
-	constructor(public payload?: any) {
+	constructor(public payload: OverlaysCriteria) {
+		console.log(OverlaysActionTypes.LOAD_OVERLAYS);
 	}
 }
 

@@ -46,7 +46,7 @@ export interface CaseState {
 export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon | GeoJSON.Position;
 
 export interface CaseTimeState {
-	type: string,
+	type: 'absolute',
 	from: string,
 	to: string
 }

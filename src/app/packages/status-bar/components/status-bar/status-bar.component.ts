@@ -7,7 +7,8 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
-	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, ClearActiveInteractionsAction, coreStateSelector,
+	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState, ClearActiveInteractionsAction,
+	coreStateSelector,
 	ICoreState, Overlay
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
@@ -29,12 +30,12 @@ export class StatusBarComponent implements OnInit {
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties').distinctUntilChanged();
 	comboBoxesProperties: ComboBoxesProperties = {};
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
-	time$: Observable<{ from: Date, to: Date }> = this.statusBar$.pluck<IStatusBarState, { from: Date, to: Date }>('time').distinctUntilChanged();
+	time$: Observable<CaseTimeState> = this.statusBar$.pluck<IStatusBarState, CaseTimeState>('time').distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	favoriteOverlays: Overlay[];
 	selectedLayoutIndex: number;
 	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
-	time: { from: Date, to: Date };
+	time: CaseTimeState;
 	hideOverlay: boolean;
 	timeSelectionEditIcon = false;
 	overlaysCount: number;
@@ -136,7 +137,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	applyTimelinePickerResult(result) {
-		this.store.dispatch(new SetTimeAction({ from: result.start, to: result.end }));
+		this.store.dispatch(new SetTimeAction({ type: 'absolute', from: result.start, to: result.end }));
 		this.toggleTimelineStartEndSearch();
 	}
 

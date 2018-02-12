@@ -99,9 +99,9 @@ export class OverlaysEffects {
 	 */
 	@Effect()
 	syncOverlaysOnLoading$: Observable<any> = this.actions$
-		.ofType<LoadOverlaysAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING)
+		.ofType<SyncOverlaysWithFavoritesOnLoadingAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING)
 		.withLatestFrom(this.store$.select(coreStateSelector))
-		.mergeMap(([action, state]: [LoadOverlaysAction, ICoreState]) => {
+		.mergeMap(([action, state]: [SyncOverlaysWithFavoritesOnLoadingAction, ICoreState]) => {
 			// sync overlays: if overlay exist in favorites but not in data fetched from server - take favorite data.
 			const overlays = unionBy(action.payload, state.favoriteOverlays, o => o.id);
 			// sync favorites: for each favorite - update object using data fetched from server.
@@ -135,8 +135,8 @@ export class OverlaysEffects {
 	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map((action: LoadOverlaysAction) => {
-			const from = new Date(action.payload.from);
-			const to = new Date(action.payload.to);
+			const from = new Date(action.payload.time.from);
+			const to = new Date(action.payload.time.to);
 			const state = { from, to };
 			return new SetTimelineStateAction({ state });
 		});

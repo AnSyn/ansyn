@@ -1,5 +1,4 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { cloneDeep } from 'lodash';
 import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';

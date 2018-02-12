@@ -10,18 +10,14 @@ import {
 	OverlaysMarkupAction,
 	SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService } from '@ansyn/menu-items/cases';
-import { LoadOverlaysAction, Overlay } from '@ansyn/overlays';
+import { Overlay } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	ChangeLayoutAction, IStatusBarState, layoutOptions, SetTimeAction,
-	statusBarStateSelector
-} from '@ansyn/status-bar';
+import { ChangeLayoutAction, layoutOptions } from '@ansyn/status-bar';
 import {
 	IMapState,
 	MapActionTypes,
@@ -30,7 +26,7 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
-import { CaseMapState, MapsLayout } from '@ansyn/core';
+import { MapsLayout } from '@ansyn/core';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 

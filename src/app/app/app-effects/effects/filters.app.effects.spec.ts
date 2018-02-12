@@ -37,13 +37,11 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { initialMenuState, menuFeatureKey, MenuReducer, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
-import { FiltersService } from '@ansyn/menu-items';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -138,7 +136,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('resetFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysAction() });
+		actions = hot('--a--', { a: new LoadOverlaysAction(<any>null) });
 		const expectedResults = cold('--b--', { b: new ResetFiltersAction() });
 		expect(filtersAppEffects.resetFilters$).toBeObservable(expectedResults);
 	});

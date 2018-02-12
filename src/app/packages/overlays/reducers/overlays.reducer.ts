@@ -130,21 +130,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				timelineState: action.payload.state
 			};
-		case OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_AFTER_LOADED:
-			const updatedOverlaysMap = new Map(state.overlays);
-			const favorites: Overlay[] = action.payload;
-
-			// verify all favorites included in  stateOverlays
-			favorites.forEach((favorite: Overlay) => {
-				if (!updatedOverlaysMap.has(favorite.id)) {
-					updatedOverlaysMap.set(favorite.id, favorite);
-				}
-			});
-
-			return {
-				...state,
-				overlays: updatedOverlaysMap
-			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
 			return {

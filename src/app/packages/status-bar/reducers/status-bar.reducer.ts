@@ -13,7 +13,6 @@ export interface IStatusBarState {
 	selectedLayoutIndex: number;
 	flags: Map<StatusBarFlag, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
-	time: CaseTimeState,
 	overlaysCount: number,
 	overlayNotInCase: boolean
 }
@@ -22,7 +21,6 @@ export const StatusBarInitialState: IStatusBarState = {
 	selectedLayoutIndex: 0,
 	flags: new Map<StatusBarFlag, boolean>(),
 	comboBoxesProperties: {},
-	time: null,
 	overlaysCount: 0,
 	overlayNotInCase: false
 };
@@ -53,9 +51,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
-
-		case StatusBarActionsTypes.SET_TIME:
-			return { ...state, time: action.payload };
 
 		case StatusBarActionsTypes.SET_OVERLAYS_COUNT:
 			return { ...state, overlaysCount: action.payload };

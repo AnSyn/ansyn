@@ -8,15 +8,14 @@ import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import '@ansyn/core/utils/clone-deep';
-import { SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CoreActionTypes, SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
-import { Case } from '@ansyn/core/models/case.model';
-import { CoreService } from '@ansyn/core/services/core.service';
+	import { CoreService } from '@ansyn/core/services/core.service';
 import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { LoggerService } from '@ansyn/core';
+import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
+import { LoadOverlaysAction } from '@ansyn/overlays';
 
 @Injectable()
 export class CoreAppEffects {
@@ -76,7 +75,13 @@ export class CoreAppEffects {
 			)
 		.do((action) => {
 			this.loggerService.info(JSON.stringify(action));
-		})
+		});
+
+	@Effect()
+	loadOverlays$ = this.actions$
+		.ofType<SetOverlaysCriteriaAction>(CoreActionTypes.SET_OVERLAYS_CRITERIA)
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

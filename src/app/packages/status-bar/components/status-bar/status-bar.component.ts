@@ -3,13 +3,13 @@ import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
 	BackToWorldViewAction, ChangeLayoutAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
-	GoPrevAction, SetTimeAction, UpdateStatusFlagsAction
+	GoPrevAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
 	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState, ClearActiveInteractionsAction,
 	coreStateSelector,
-	ICoreState, Overlay
+	ICoreState, Overlay, OverlaysCriteria, SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
@@ -26,11 +26,16 @@ export class StatusBarComponent implements OnInit {
 	layouts = layoutOptions;
 	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
+	overlaysCriteria$: Observable<OverlaysCriteria> = this.core$
+		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
+		.distinctUntilChanged();
 	selectedLayoutIndex$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('selectedLayoutIndex').distinctUntilChanged();
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties').distinctUntilChanged();
 	comboBoxesProperties: ComboBoxesProperties = {};
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
-	time$: Observable<CaseTimeState> = this.statusBar$.pluck<IStatusBarState, CaseTimeState>('time').distinctUntilChanged();
+	time$: Observable<CaseTimeState> = this.overlaysCriteria$
+		.pluck<OverlaysCriteria, CaseTimeState>('time')
+		.distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
 	favoriteOverlays: Overlay[];
 	selectedLayoutIndex: number;
@@ -136,8 +141,8 @@ export class StatusBarComponent implements OnInit {
 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
 	}
 
-	applyTimelinePickerResult(result) {
-		this.store.dispatch(new SetTimeAction({ type: 'absolute', from: result.start, to: result.end }));
+	applyTimelinePickerResult(time: CaseTimeState) {
+		this.store.dispatch(new SetOverlaysCriteriaAction({ time }));
 		this.toggleTimelineStartEndSearch();
 	}
 

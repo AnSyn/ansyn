@@ -15,8 +15,7 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
 	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT',
-	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY',
-	SET_TIME: 'SET_TIME',
+	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY'
 };
 // some actions does not have payload
 export type StatusActions = any;
@@ -70,15 +69,6 @@ export class BackToWorldViewAction implements Action {
 	constructor() {
 	}
 }
-
-export class SetTimeAction implements Action {
-	type: string = StatusBarActionsTypes.SET_TIME;
-
-	constructor(public payload: CaseTimeState) {
-	}
-}
-
-
 
 export class SetOverlaysCountAction implements Action {
 	type = StatusBarActionsTypes.SET_OVERLAYS_COUNT;

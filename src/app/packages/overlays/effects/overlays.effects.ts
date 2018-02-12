@@ -7,9 +7,17 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction, DisplayOverlayFromStoreAction, GoNextDisplayAction, GoPrevDisplayAction,
-	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes, OverlaysMarkupAction, RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction, SetTimelineStateAction, SyncOverlaysWithFavoritesOnLoadingAction,
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction,
+	RedrawTimelineAction,
+	RequestOverlayByIDFromBackendAction,
+	SetTimelineStateAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
@@ -19,7 +27,7 @@ import { Overlay } from '../models/overlay.model';
 import { isNil, unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core';
+import { coreStateSelector, ICoreState } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
 
@@ -72,10 +80,12 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
-		.switchMap((action) => {
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.switchMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
-					const actions: Array<any> = [new SyncOverlaysWithFavoritesOnLoadingAction(overlays.data)];
+					const overlaysResult = unionBy(overlays.data, favoriteOverlays, o => o.id);
+					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchQuery));
@@ -90,27 +100,7 @@ export class OverlaysEffects {
 				})
 				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
-	/**
-	 * @type Effect
-	 * @name syncOverlaysOnLoading$
-	 * @ofType SyncOverlaysWithFavoritesOnLoadingAction
-	 * @dependencies coreState
-	 * @action LoadOverlaysSuccessAction
-	 */
-	@Effect()
-	syncOverlaysOnLoading$: Observable<any> = this.actions$
-		.ofType<SyncOverlaysWithFavoritesOnLoadingAction>(OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING)
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.mergeMap(([action, state]: [SyncOverlaysWithFavoritesOnLoadingAction, ICoreState]) => {
-			// sync overlays: if overlay exist in favorites but not in data fetched from server - take favorite data.
-			const overlays = unionBy(action.payload, state.favoriteOverlays, o => o.id);
-			// sync favorites: for each favorite - update object using data fetched from server.
-			const favorites = state.favoriteOverlays.map(fav => overlays.find(o => o.id === fav.id));
-			return [
-				new UpdateFavoriteOverlaysMetadataAction(favorites),
-				new LoadOverlaysSuccessAction(overlays)
-			];
-		});
+
 	/**
 	 * @type Effect
 	 * @name onRequestOverlayByID$
@@ -122,7 +112,11 @@ export class OverlaysEffects {
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType) // this.overlaysService.fetchData("",action.payload)
-				.map((overlay: Overlay) => new DisplayOverlayAction({ overlay, mapId: action.payload.mapId, ignoreRotation: true }));
+				.map((overlay: Overlay) => new DisplayOverlayAction({
+					overlay,
+					mapId: action.payload.mapId,
+					ignoreRotation: true
+				}));
 		});
 
 	/**
@@ -224,9 +218,9 @@ export class OverlaysEffects {
 			const isConditionMet = overlays.size > 0 && payload === 0;
 			const turnOn = !statusMessage && isConditionMet;
 			const turnOff = !isConditionMet && isMessageActive;
-			return { turnOn, turnOff }
+			return { turnOn, turnOff };
 		})
-		.filter(({ turnOn, turnOff }) => turnOn || turnOff )
+		.filter(({ turnOn, turnOff }) => turnOn || turnOff)
 		.map(({ turnOn }) => {
 			const payload = turnOn ? overlaysStatusMessages.noOverLayMatchFilters : overlaysStatusMessages.nullify;
 			return new SetOverlaysStatusMessage(payload);

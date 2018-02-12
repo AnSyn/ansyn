@@ -47,8 +47,8 @@ export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.P
 
 export interface CaseTimeState {
 	type: 'absolute',
-	from: string,
-	to: string
+	from: Date,
+	to: Date
 }
 
 export interface CaseBooleanFilterMetadata {

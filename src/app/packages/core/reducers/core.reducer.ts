@@ -1,9 +1,8 @@
 import {
-	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction, SetToastMessageAction,
-	UpdateFavoriteOverlaysMetadataAction
+	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction, SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
-import { Overlay } from '../models/overlay.model';
+import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 
 export enum AlertMsgTypes {
 	'OverlaysOutOfBounds', 'OverlayIsNotPartOfCase'
@@ -20,6 +19,7 @@ export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: Overlay[];
 	alertMsg: AlertMsg;
+	overlaysCriteria: OverlaysCriteria
 }
 
 export const coreInitialState: ICoreState = {
@@ -28,7 +28,8 @@ export const coreInitialState: ICoreState = {
 	alertMsg: new Map([
 		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
-	])
+	]),
+	overlaysCriteria: {}
 };
 
 export const coreFeatureKey = 'core';
@@ -42,13 +43,14 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
 
-		case CoreActionTypes.UPDATE_FAVORITE_OVERLAYS_METADATA:
-			return { ...state, favoriteOverlays: (action as UpdateFavoriteOverlaysMetadataAction).payload };
-
 		case  CoreActionTypes.UPDATE_ALERT_MSG:
 			const updatedMap = new Map(state.alertMsg);
 			updatedMap.set(<AlertMsgTypes>action.payload.key, <Set<string>>action.payload.value);
 			return { ...state, alertMsg: updatedMap };
+
+		case  CoreActionTypes.SET_OVERLAYS_CRITERIA:
+			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
+			return { ...state, overlaysCriteria };
 
 		default:
 			return state;

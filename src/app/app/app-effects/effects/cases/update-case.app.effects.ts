@@ -15,13 +15,12 @@ import { MapActionTypes } from '@ansyn/map-facade';
 
 export const UpdateCaseActionTypes = [
 	...facetChangesActionType, // -> facets
-	MapActionTypes.SET_REGION, // -> region
 	CoreActionTypes.SET_FAVORITE_OVERLAYS, // -> favoriteOverlays
 	StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES, // -> geoFilter, timeFilter, orientation
 	...Object.values(LayersActionTypes.ANNOTATIONS), // -> annotationsLayer, displayAnnotationsLayer
 	MapActionTypes.STORE.SET_MAPS_DATA, // -> maps: activeMapId, data
 	StatusBarActionsTypes.CHANGE_LAYOUT, // -> maps: layoutIndex
-	StatusBarActionsTypes.SET_TIME // -> time
+	CoreActionTypes.SET_OVERLAYS_CRITERIA // -> time, region
 ];
 
 
@@ -43,13 +42,12 @@ export class UpdateCaseAppEffects {
 			// properties that should have been saved on another store ( not cases )
 			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner } = cases.selectedCase;
-			const { selectedLayoutIndex, time } = statusBar;
+			const { selectedLayoutIndex } = statusBar;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
-			const { region, activeMapId, mapsList } = map;
+			const { activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
-			const { favoriteOverlays } = core;
-
-
+			const { favoriteOverlays, overlaysCriteria } = core;
+			const { time, region } = overlaysCriteria;
 			if (facetChangesActionType.includes(action.type)) {
 				facets = FiltersService.buildCaseFacets(filters);
 			}
@@ -73,7 +71,6 @@ export class UpdateCaseAppEffects {
 						displayAnnotationsLayer
 					},
 					favoriteOverlays,
-
 					region,
 					time,
 					facets,

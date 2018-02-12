@@ -51,11 +51,11 @@ export class ImageryStatusComponent implements OnInit {
 	favoritesButtonText: string;
 
 	get description() {
-		return (this._overlay && this._overlay) ? new Date(this._overlay.photoTime).toUTCString() + ' - ' + this._overlay.sensorName : null;
+		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
 	}
 
 	get isNotGeoRegistered() {
-		return !MapFacadeService.isOverlayGeoRegistered(this._overlay);
+		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
 	}
 
 	constructor(protected store$: Store<any>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
@@ -69,13 +69,13 @@ export class ImageryStatusComponent implements OnInit {
 	}
 
 	toggleFavorite() {
-		this.store$.dispatch(new ToggleFavoriteAction(this._overlay));
+		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
 	}
 
 	updateFavoriteStatus() {
 		this.isFavorite = false;
-		if (this._overlay && this.favoriteOverlays && this.favoriteOverlays.length > 0) {
-			this.isFavorite = this.favoriteOverlays.some(o => o.id === this._overlay.id);
+		if (this.overlay && this.favoriteOverlays && this.favoriteOverlays.length > 0) {
+			this.isFavorite = this.favoriteOverlays.some(o => o.id === this.overlay.id);
 		}
 		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
 	}

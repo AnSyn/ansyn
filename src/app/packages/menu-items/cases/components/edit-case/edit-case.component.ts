@@ -99,8 +99,8 @@ export class EditCaseComponent implements OnInit {
 				},
 				time: {
 					type: 'absolute',
-					from: new Date(0).toISOString(),
-					to: new Date().toISOString()
+					from: new Date(0),
+					to: new Date()
 				},
 				favoriteOverlays: [],
 				overlaysManualProcessArgs: {}

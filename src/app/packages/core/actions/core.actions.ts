@@ -2,16 +2,16 @@ import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { IToastMessage } from '../reducers/core.reducer';
 import { Overlay } from '../models/overlay.model';
-import { AlertMsgTypes } from '@ansyn/core';
+import { AlertMsgTypes, OverlaysCriteria } from '@ansyn/core';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
 	TOGGLE_OVERLAY_FAVORITE: type('[Core] TOGGLE_FAVORITE'),
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
-	UPDATE_FAVORITE_OVERLAYS_METADATA: type('[Core] UPDATE_FAVORITE_OVERLAYS_METADATA'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
-	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG'
+	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
+	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA'
 };
 
 export type CoreActions =
@@ -50,25 +50,25 @@ export class SetFavoriteOverlaysAction implements Action {
 	}
 }
 
-export class UpdateFavoriteOverlaysMetadataAction implements Action {
-	type = CoreActionTypes.UPDATE_FAVORITE_OVERLAYS_METADATA;
-
-	constructor(public payload: Overlay[]) {
-	}
-}
-
 export class ClearActiveInteractionsAction implements Action {
 	type = CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS;
 
-	constructor(public payload?: {skipClearFor: Array<any>}) {
+	constructor(public payload?: { skipClearFor: Array<any> }) {
 
 	}
 }
 
 export class UpdateAlertMsg implements Action {
 	type = CoreActionTypes.UPDATE_ALERT_MSG;
-	constructor(public payload: {value: Set<string>, key: AlertMsgTypes}) {
+
+	constructor(public payload: { value: Set<string>, key: AlertMsgTypes }) {
 	}
 }
 
+export class SetOverlaysCriteriaAction implements Action {
+	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
+
+	constructor(public payload: OverlaysCriteria) {
+	}
+}
 

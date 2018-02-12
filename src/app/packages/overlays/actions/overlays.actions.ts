@@ -10,8 +10,6 @@ export const OverlaysActionTypes = {
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	REQUEST_OVERLAY_FROM_BACKEND: type('[Overlay] Load Overlay By Id'),
-	SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING: type('[Overlay] Sync Overlays with Favorites On loading'),
-	SYNC_OVERLAYS_WITH_FAVORITES_AFTER_LOADED: type('[Overlay] Sync Overlays with Favorites After loaded'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
 	CLEAR_FILTER: type('[Overlay] Clear Filter'),
@@ -59,7 +57,6 @@ export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
 	constructor(public payload: OverlaysCriteria) {
-		console.log(OverlaysActionTypes.LOAD_OVERLAYS);
 	}
 }
 
@@ -67,20 +64,6 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
 
 	constructor(public payload: { overlayId: string, sourceType: string, mapId?: string }) {
-	}
-}
-
-export class SyncOverlaysWithFavoritesOnLoadingAction implements Action {
-	type = OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_ON_LOADING;
-
-	constructor(public payload: Overlay[]) {
-	}
-}
-
-export class SyncOverlaysWithFavoritesAfterLoadedAction implements Action {
-	type = OverlaysActionTypes.SYNC_OVERLAYS_WITH_FAVORITES_AFTER_LOADED;
-
-	constructor(public payload: Overlay[]) {
 	}
 }
 

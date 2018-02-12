@@ -18,11 +18,8 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
-import {
-	BackToWorldAction, MapActionTypes, MapFacadeService,
-	SetRegionAction
-} from '@ansyn/map-facade';
-import { cloneDeep, isEmpty, isNil } from 'lodash';
+import { BackToWorldAction, MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
+import { isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -40,9 +37,7 @@ import {
 	MapSingleClickAction,
 	PinPointTriggerAction,
 	SetLayoutAction,
-	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
 	endTimingLog,
 	extentFromGeojson,
@@ -59,9 +54,7 @@ import {
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
-import {
-	ChangeLayoutAction, SetTimeAction
-} from '@ansyn/status-bar/actions/status-bar.actions';
+import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
@@ -69,7 +62,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
-import { AlertMsgTypes, coreStateSelector, ICoreState, UpdateAlertMsg } from '@ansyn/core';
+import { AlertMsgTypes, coreStateSelector, ICoreState, SetOverlaysCriteriaAction, UpdateAlertMsg } from '@ansyn/core';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 
 @Injectable()
@@ -119,7 +112,7 @@ export class MapAppEffects {
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
 			return [
 				new DrawPinPointAction(action.payload),
-				new SetRegionAction(region)
+				new SetOverlaysCriteriaAction({ region })
 			];
 		});
 
@@ -404,22 +397,6 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$, (action, state): IAppState => state)
 		.map(({ map, core }: IAppState) => CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays))
 		.map(markups => new OverlaysMarkupAction(markups));
-
-	/**
-	 * @type Effect
-	 * @name setRegion$
-	 * @ofType SetRegionAction
-	 * @action LoadOverlaysAction
-	 */
-	@Effect()
-	setRegion$: Observable<any> = this.actions$
-		.ofType<SetRegionAction>(MapActionTypes.SET_REGION)
-		.withLatestFrom(this.store$.select(statusBarStateSelector))
-		.filter(([{ payload }, { time }]) => Boolean(time && payload))
-		.map(([{ payload }, { time }]: [SetTimeAction, IStatusBarState]) => new LoadOverlaysAction({
-			time,
-			region: payload,
-		}));
 
 	/**
 	 * @type Effect

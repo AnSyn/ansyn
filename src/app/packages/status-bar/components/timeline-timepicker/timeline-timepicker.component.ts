@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import * as flatpickr from 'flatpickr';
+import { CaseTimeState } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-timeline-timepicker',
@@ -20,7 +21,7 @@ export class TimelineTimepickerComponent implements OnInit {
 	@ViewChild('startDatePicker') startDatePicker: ElementRef;
 	@ViewChild('endDatePicker') endDatePicker: ElementRef;
 
-	@Output('applyDate') applyDate = new EventEmitter();
+	@Output() applyDate = new EventEmitter<CaseTimeState>();
 	@Output('closeComponent') closeComponent = new EventEmitter();
 
 	@Input()
@@ -136,8 +137,9 @@ export class TimelineTimepickerComponent implements OnInit {
 			return;
 		}
 		this.applyDate.emit({
-			start: this.startDatePickerValue,
-			end: this.endDatePickerValue
+			type: 'absolute',
+			from: this.startDatePickerValue,
+			to: this.endDatePickerValue
 		});
 	}
 }

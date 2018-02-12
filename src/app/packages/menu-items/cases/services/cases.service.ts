@@ -40,9 +40,9 @@ export class CasesService {
 
 	loadCases(casesOffset: number = 0): Observable<any> {
 		const url = `${this.baseUrl}/cases/?from=${casesOffset}&limit=${this.paginationLimit}`;
-		return this.http.get(url).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
+		return this.http.get(url)
+			.map((cases: Case[]) => cases.map(this.parseCase))
+			.catch(err => this.errorHandlerService.httpErrorHandle(err));
 	}
 
 	createCase(selectedCase: Case): Observable<Case> {
@@ -87,10 +87,23 @@ export class CasesService {
 
 	loadCase(selectedCaseId: string): Observable<any> {
 		const url = `${this.baseUrl}/cases/${selectedCaseId}`;
-		return this.http.get(url).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
+		return this.http.get(url)
+			.map(this.parseCase)
+			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+	}
 
+	parseCase(caseValue: Case) {
+		return {
+			...caseValue,
+			state: {
+				...caseValue.state,
+				time: {
+					...caseValue.state.time,
+					from: new Date(caseValue.state.time.from),
+					to: new Date(caseValue.state.time.to),
+				}
+			}
+		};
 	}
 
 	generateLinkWithCaseId(caseId: string) {

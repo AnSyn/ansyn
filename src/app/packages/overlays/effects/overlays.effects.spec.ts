@@ -9,8 +9,7 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysMarkupAction,
 	RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction,
-	SyncOverlaysWithFavoritesOnLoadingAction
+	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
@@ -19,7 +18,7 @@ import { OverlayReducer, overlaysFeatureKey, overlaysInitialState, overlaysState
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, UpdateFavoriteOverlaysMetadataAction } from '@ansyn/core';
+import { coreInitialState, coreStateSelector } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

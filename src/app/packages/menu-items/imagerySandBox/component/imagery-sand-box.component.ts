@@ -37,8 +37,8 @@ export class ImagerySandBoxComponent implements OnInit {
 			.distinctUntilChanged(isEqual)
 			.subscribe((cases: ICasesState) => {
 				this.selectedCase = cloneDeep(cases.selectedCase);
-				this.overlaysFrom = this.selectedCase.state.time.from.split('T')[0];
-				this.overlaysTo = this.selectedCase.state.time.to.split('T')[0];
+				this.overlaysFrom = this.selectedCase.state.time.from.toISOString().split('T')[0];
+				this.overlaysTo = this.selectedCase.state.time.to.toISOString().split('T')[0];
 			});
 	}
 
@@ -88,8 +88,8 @@ export class ImagerySandBoxComponent implements OnInit {
 		const from = new Date(this.overlaysFrom);
 		const to = new Date(this.overlaysTo);
 		this.selectedCase.state.time = {
-			to: to.toISOString(),
-			from: from.toISOString(),
+			to: to,
+			from: from,
 			type: 'absolute'
 		};
 		this.store.dispatch(new UpdateCaseAction(this.selectedCase));

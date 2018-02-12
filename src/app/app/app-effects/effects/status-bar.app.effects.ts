@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	ChangeLayoutAction, CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItems,
+	CopySelectedCaseLinkAction,
+	IStatusBarState,
+	StatusBarActionsTypes,
+	statusBarFlagsItems,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { CasesActionTypes, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items/cases';
+import { CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { get, isEmpty } from 'lodash';
@@ -15,23 +18,21 @@ import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	BackToWorldAction, DrawPinPointAction,
+	BackToWorldAction,
+	DrawPinPointAction,
 	PinPointModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	GoNextDisplayAction, GoPrevDisplayAction, LoadOverlaysAction,
+	GoNextDisplayAction,
+	GoPrevDisplayAction,
 	UpdateOverlaysCountAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { SetComboBoxesProperties, SetTimeAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysActionTypes } from '@ansyn/overlays/actions';
 import { SetOverlaysCountAction } from '@ansyn/status-bar/actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CaseState } from '@ansyn/core';
 
 
 @Injectable()
@@ -96,24 +97,6 @@ export class StatusBarAppEffects {
 		.map((caseId: string) => {
 			return new CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });
 		});
-
-	/**
-	 * @type Effect
-	 * @name setTime$
-	 * @ofType SetTimeAction
-	 * @dependencies cases
-	 * @filter There is a selected case
-	 * @action LoadOverlaysAction
-	 */
-	@Effect()
-	setTime$: Observable<any> = this.actions$
-		.ofType<SetTimeAction>(StatusBarActionsTypes.SET_TIME)
-		.withLatestFrom(this.store.select(mapStateSelector))
-		.filter(([{ payload }, { region }]) => Boolean(region && payload))
-		.map(([{ payload }, { region }]: [SetTimeAction, IMapState]) => new LoadOverlaysAction({
-			time: payload,
-			region,
-		}));
 
 	/**
 	 * @type Effect

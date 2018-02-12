@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { CaseOrientation, CaseTimeFilter } from '@ansyn/core';
+import { CaseOrientation, CaseTimeFilter, CaseTimeState } from '@ansyn/core';
 import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { ComboBoxesProperties } from '@ansyn/status-bar/models';
 import { StatusBarFlag } from '@ansyn/status-bar';
@@ -74,7 +74,7 @@ export class BackToWorldViewAction implements Action {
 export class SetTimeAction implements Action {
 	type: string = StatusBarActionsTypes.SET_TIME;
 
-	constructor(public payload: { from: Date, to: Date }) {
+	constructor(public payload: CaseTimeState) {
 	}
 }
 

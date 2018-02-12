@@ -20,7 +20,7 @@ import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
 import {
 	BackToWorldAction, MapActionTypes, MapFacadeService,
-	SetRegion
+	SetRegionAction
 } from '@ansyn/map-facade';
 import { cloneDeep, isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
@@ -60,7 +60,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
 import {
-	ChangeLayoutAction
+	ChangeLayoutAction, SetTimeAction
 } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -107,7 +107,6 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name onPinPointTrigger$
 	 * @ofType PinPointTriggerAction
-	 * @dependencies cases, statusBar
 	 * @action UpdateCaseAction, LoadOverlaysAction, DrawPinPointAction
 	 * @description
 	 * draw pin point, update case and load overlays.
@@ -116,22 +115,11 @@ export class MapAppEffects {
 	@Effect()
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: PinPointTriggerAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
-		.mergeMap(([action, caseState, statusBarState]: [PinPointTriggerAction, ICasesState, IStatusBarState]) => {
-			// create the region
+		.mergeMap((action: PinPointTriggerAction) => {
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
-			const { from, to } = caseState.selectedCase.state.time;
-			const { id } = caseState.selectedCase;
-
 			return [
 				new DrawPinPointAction(action.payload),
-				new SetRegion(region),
-				new LoadOverlaysAction({
-					to,
-					from,
-					polygon: region,
-					caseId: id
-				})
+				new SetRegionAction(region)
 			];
 		});
 
@@ -419,18 +407,19 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name selectCaseByIdUpdateMapsData$
-	 * @ofType SelectCaseAction
-	 * @action SetMapsDataActionStore
+	 * @name setRegion$
+	 * @ofType SetRegionAction
+	 * @action LoadOverlaysAction
 	 */
 	@Effect()
-	selectCaseByIdUpdateMapsData$: Observable<SetMapsDataActionStore> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => cloneDeep(payload.state))
-		.mergeMap(({ region, maps }) => [
-			new SetRegion(region),
-			new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId })
-		]);
+	setRegion$: Observable<any> = this.actions$
+		.ofType<SetRegionAction>(MapActionTypes.SET_REGION)
+		.withLatestFrom(this.store$.select(statusBarStateSelector))
+		.filter(([{ payload }, { time }]) => Boolean(time && payload))
+		.map(([{ payload }, { time }]: [SetTimeAction, IStatusBarState]) => new LoadOverlaysAction({
+			time,
+			region: payload,
+		}));
 
 	/**
 	 * @type Effect

@@ -94,9 +94,12 @@ export class ImagerySandBoxComponent implements OnInit {
 		};
 		this.store.dispatch(new UpdateCaseAction(this.selectedCase));
 		this.overlaysCriteria = <OverlaysCriteria> {
-			to: this.selectedCase.state.time.to,
-			from: this.selectedCase.state.time.from,
-			polygon: this.selectedCase.state.region
+			time: {
+				type: 'absolute',
+				to: this.selectedCase.state.time.to,
+				from: this.selectedCase.state.time.from,
+			},
+			region: this.selectedCase.state.region
 		};
 		this.store.dispatch(new LoadOverlaysAction(this.overlaysCriteria));
 	}

@@ -10,6 +10,7 @@ import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { OverlaysCriteria } from '@ansyn/core';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
@@ -90,15 +91,15 @@ export class OverlaysService {
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
-	search(params: any = {}): Observable<OverlaysFetchData> {
-		let tBbox = bbox(params.polygon);
+	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
+		let tBbox = bbox(params.region);
 		let tBboxFeature = bboxPolygon(tBbox);
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
 			region: tBboxFeature.geometry,
-			timeRange: {
-				start: params.from,
-				end: params.to
+			timeRange: <any> {
+				start: params.time.from,
+				end: params.time.to
 			}
 		});
 	}

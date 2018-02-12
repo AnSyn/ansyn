@@ -43,16 +43,12 @@ export class UpdateCaseAppEffects {
 			// properties that should have been saved on another store ( not cases )
 			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner } = cases.selectedCase;
-			const { selectedLayoutIndex } = statusBar;
+			const { selectedLayoutIndex, time } = statusBar;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { region, activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
 			const { favoriteOverlays } = core;
-			const time: CaseTimeState = {
-				type: 'absolute',
-				from: statusBar.time.from.toISOString(),
-				to: statusBar.time.to.toISOString()
-			};
+
 
 			if (facetChangesActionType.includes(action.type)) {
 				facets = FiltersService.buildCaseFacets(filters);

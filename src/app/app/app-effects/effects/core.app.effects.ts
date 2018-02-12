@@ -45,17 +45,6 @@ export class CoreAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name setFavoriteOverlays$
-	 * @ofType SelectCaseAction
-	 * @action SetFavoriteOverlaysAction
-	 */
-	@Effect()
-	setFavoriteOverlays$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.map(({ payload }: SelectCaseAction) => new SetFavoriteOverlaysAction(payload.state.favoriteOverlays));
-
-	/**
-	 * @type Effect
 	 * @name setFavoriteOverlaysUpdateCase$
 	 * @ofType SetFavoriteOverlaysAction
 	 * @action OverlaysMarkupAction

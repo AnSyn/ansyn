@@ -99,29 +99,6 @@ export class StatusBarAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name selectCase$
-	 * @ofType SelectCaseAction
-	 * @filter Case is truthy
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetTimeAction
-	 */
-	@Effect()
-	selectCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
-		.mergeMap(({ payload }: SelectCaseAction) => {
-			const layoutsIndex = payload.state.maps.layoutsIndex;
-			const { orientation, geoFilter, timeFilter } = <CaseState> { ...payload.state };
-			return [
-				new ChangeLayoutAction(+layoutsIndex),
-				new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
-				new SetTimeAction({
-					from: new Date(payload.state.time.from),
-					to: new Date(payload.state.time.to)
-				})
-			];
-		});
-	/**
-	 * @type Effect
 	 * @name setTime$
 	 * @ofType SetTimeAction
 	 * @dependencies cases
@@ -130,13 +107,12 @@ export class StatusBarAppEffects {
 	 */
 	@Effect()
 	setTime$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.SET_TIME)
+		.ofType<SetTimeAction>(StatusBarActionsTypes.SET_TIME)
 		.withLatestFrom(this.store.select(mapStateSelector))
-		.map(([action, { region }]: [SetTimeAction, IMapState]) => new LoadOverlaysAction({
-			to: action.payload.to.toISOString(),
-			from: action.payload.from.toISOString(),
-			polygon: region,
-			caseId: ''
+		.filter(([{ payload }, { region }]) => Boolean(region && payload))
+		.map(([{ payload }, { region }]: [SetTimeAction, IMapState]) => new LoadOverlaysAction({
+			time: payload,
+			region,
 		}));
 
 	/**

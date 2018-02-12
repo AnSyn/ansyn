@@ -9,7 +9,7 @@ import {
 	MapActionTypes,
 	PinPointTriggerAction,
 	ActiveMapChangedAction,
-	SetMapsDataActionStore
+	SetMapsDataActionStore, DrawPinPointAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -277,9 +277,8 @@ export class VisualizersAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name OnGoToInputChanged$
-	 * @ofType GoToInputChangeAction
-	 * @dependencies map
+	 * @name drawPinPoint$
+	 * @ofType DrawPinPointAction
 	 */
 	@Effect({ dispatch: false })
 	drawPinPoint$ = this.actions$

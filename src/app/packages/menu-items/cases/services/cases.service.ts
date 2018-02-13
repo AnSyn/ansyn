@@ -10,6 +10,9 @@ import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core';
+import { casesStateSelector, ICasesState } from "../reducers/cases.reducer";
+import { Store } from "@ngrx/store";
+import { UUID } from "angular2-uuid";
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -29,24 +32,34 @@ export class CasesService {
 		time: undefined
 	};
 
+	casesOffset$: Observable<number> = this.store.select(casesStateSelector)
+		.map(({ cases }: ICasesState) => cases.length );
+
+	casesOffset: number;
+
 	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
+				public store: Store<ICasesState>,
 				@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 		CasesService.defaultCase = config.defaultCase;
+		this.casesOffset$.subscribe(casesOffset => this.casesOffset = casesOffset);
 	}
 
 	loadCases(lastId: string = '-1'): Observable<any> {
-		const url = `${this.baseUrl}/pagination/${lastId}?limit=${this.paginationLimit}`;
+		const url = `${this.baseUrl}/cases/?from=${this.casesOffset}&limit=${this.paginationLimit}`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}
 
 	createCase(selectedCase: Case): Observable<Case> {
-		const url = `${this.baseUrl}`;
-		return this.http.post<Case>(url, selectedCase).catch(err => {
+		const uuid = UUID.UUID();
+		const url = `${this.baseUrl}/cases/${uuid}`;
+		selectedCase.id = uuid;
+		selectedCase.creationTime = new Date();
+		return this.http.post<Case>(url, selectedCase).map(_ => selectedCase).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}
@@ -61,28 +74,28 @@ export class CasesService {
 	}
 
 	updateCase(selectedCase: Case): Observable<Case> {
-		const url = `${this.baseUrl}`;
+		const url = `${this.baseUrl}/cases/${selectedCase.id}`;
 		return this.http.put<Case>(url, selectedCase).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {
-		const url = `${this.baseUrl}/${selectedCaseId}`;
+		const url = `${this.baseUrl}/cases/${selectedCaseId}`;
 		return this.http.delete(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}
 
 	loadContexts(): Observable<any> {
-		const url = `${this.baseUrl}/contexts`;
+		const url = `${this.baseUrl}/contexts?from=0&limit=100`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		const url = `${this.baseUrl}/${selectedCaseId}`;
+		const url = `${this.baseUrl}/contexts/${selectedCaseId}`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});

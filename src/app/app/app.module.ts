@@ -1,4 +1,4 @@
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, isDevMode, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from './ansyn/ansyn.module';
@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { LoginModule } from '@ansyn/login';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
@@ -16,15 +17,23 @@ export function MetaReducer(reducer) {
 
 export const metaReducers = [MetaReducer];
 
+const imports = [
+	BrowserModule,
+	StoreModule.forRoot({}, { metaReducers }),
+	EffectsModule.forRoot([]),
+	LoginModule,
+	AnsynModule,
+	AppRoutingModule,
+];
+if (isDevMode()) {
+	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
+	imports.push(StoreDevtoolsModule.instrument({
+		maxAge: 25 //  Retains last 25 states.
+	}));
+}
+
 @NgModule({
-	imports: [
-		BrowserModule,
-		StoreModule.forRoot({}, { metaReducers }),
-		EffectsModule.forRoot([]),
-		LoginModule,
-		AnsynModule,
-		AppRoutingModule
-	],
+	imports: imports,
 	providers: [
 		{
 			provide: ErrorHandler,

@@ -4,11 +4,12 @@ import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 
 export interface Case {
-	readonly id?: string;
+	id?: string;
 	name?: string;
 	owner?: string;
 	lastModified?: Date;
 	state?: CaseState;
+	creationTime?: Date;
 }
 
 export interface IContextEntity extends IVisualizerEntity {

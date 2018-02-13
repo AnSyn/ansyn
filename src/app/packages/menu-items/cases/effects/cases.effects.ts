@@ -101,7 +101,7 @@ export class CasesEffects {
 		.map(toPayload)
 		.switchMap((deletedCaseId) => {
 			return this.casesService.removeCase(deletedCaseId)
-				.map((deletedCase: Case) => new DeleteCaseBackendSuccessAction(deletedCase));
+				.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
 		}).share();
 
 	/**

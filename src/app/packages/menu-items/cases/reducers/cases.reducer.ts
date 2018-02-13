@@ -89,7 +89,13 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 			return { ...state, cases: casesLoaded };
 
 		case CasesActionTypes.DELETE_CASE:
-			const caseToRemoveIndex: number = state.cases.findIndex((caseValue: Case) => caseValue.id === state.modalCaseId);
+			return state;
+
+		case CasesActionTypes.DELETE_CASE_BACKEND:
+			return Object.assign({}, state, { updatingBackend: true });
+
+		case CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS:
+			const caseToRemoveIndex: number = state.cases.findIndex((caseValue: Case) => caseValue.id === action.payload);
 			if (caseToRemoveIndex === -1) {
 				return state;
 			}
@@ -97,13 +103,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: Cas
 				...state.cases.slice(0, caseToRemoveIndex),
 				...state.cases.slice(caseToRemoveIndex + 1, state.cases.length)
 			];
-			return Object.assign({}, state, { cases });
 
-		case CasesActionTypes.DELETE_CASE_BACKEND:
-			return Object.assign({}, state, { updatingBackend: true });
-
-		case CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS:
-			return Object.assign({}, state, { updatingBackend: false });
+			return Object.assign({}, state, { updatingBackend: false, cases });
 
 		case CasesActionTypes.SELECT_CASE:
 			const selectedCase = deepMerge(CasesService.defaultCase, action.payload);

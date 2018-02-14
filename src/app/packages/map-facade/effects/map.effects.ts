@@ -57,10 +57,11 @@ export class MapEffects {
 	 * @name onCommunicatorChange$
 	 * @ofType ImageryCreatedAction, ImageryRemovedAction
 	 */
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
-		.do((action: ImageryCreatedAction | ImageryRemovedAction) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.do(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
 			if (action instanceof ImageryCreatedAction) {
 				this.mapFacadeService.initEmitters(action.payload.id);
 			} else {
@@ -137,7 +138,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
+		.ofType(MapActionTypes.IMAGERY_REMOVED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]) => mapState.pendingMapsCount > 0)
 		.map(() => new DecreasePendingMapsCountAction());
@@ -324,15 +325,23 @@ export class MapEffects {
 	 * @ofType ImageryCreatedAction
 	 * @dispatch: false
 	 */
-	@Effect({ dispatch: false })
+	@Effect()
 	newInstanceInitPosition$: Observable<any> = this.actions$
 		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.id).data.position))
-		.do(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+			const actions = [];
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
 			communicator.setPosition(activeMap.data.position);
+			const updatedMapsList = [...mapState.mapsList];
+			updatedMapsList.forEach((map: CaseMapState) => map.data.position = activeMap.data.position);
+			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
+			if (mapState.pendingMapsCount > 0) {
+				actions.push(new DecreasePendingMapsCountAction())
+			}
+			return actions;
 		});
 
 	/**

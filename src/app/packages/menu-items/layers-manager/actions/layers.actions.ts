@@ -41,9 +41,6 @@ export class SetAnnotationsLayer implements Action {
 
 export class BeginLayerTreeLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;
-
-	constructor(public payload: { caseId: string }) {
-	}
 }
 
 export class LayerTreeLoadedAction implements Action {

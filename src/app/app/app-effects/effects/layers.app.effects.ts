@@ -34,7 +34,7 @@ export class LayersAppEffects {
 		.mergeMap((action: SelectCaseAction) => [
 			new SetAnnotationsLayer(action.payload.state.layers.annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(action.payload.state.layers.displayAnnotationsLayer),
-			new BeginLayerTreeLoadAction({ caseId: action.payload.id }),
+			new BeginLayerTreeLoadAction()
 		]).share();
 
 	/**

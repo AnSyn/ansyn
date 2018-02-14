@@ -30,7 +30,7 @@ export class Overlay {
 }
 
 export interface OverlaysCriteria {
-	time?: CaseTimeState
+	time?: CaseTimeState;
 	region?: CaseRegionState;
 }
 

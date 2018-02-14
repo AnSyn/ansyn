@@ -1,12 +1,12 @@
-import { cloneDeep, isNil, union } from 'lodash';
-import { Case, UpdateCaseAction } from '@ansyn/menu-items/cases';
+import { isNil, union } from 'lodash';
+import { Case } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
-import { Filter, FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
+import { FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
 	LoadOverlaysAction,
@@ -40,7 +40,7 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateOverlayFilters$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType)
+		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
 		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {

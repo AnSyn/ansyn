@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, unionBy } from 'lodash';
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -129,29 +129,14 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('it should load all the overlays', () => {
-		let tmp = <Overlay[]>[];
-		overlays.forEach(overlay => tmp.push({ ...overlay }));
+		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0 }));
-		actions = hot('--a--', { a: new LoadOverlaysAction() });
+		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
 		const expectedResults = cold('--(ab)--', {
-			a: new SyncOverlaysWithFavoritesOnLoadingAction(tmp),
+			a: new LoadOverlaysSuccessAction(tmp),
 			b: new SetOverlaysStatusMessage(null)
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
-	});
-
-	it('it should sync the overlays with favorites', () => {
-		actions = hot('--a--', { a: new SyncOverlaysWithFavoritesOnLoadingAction(overlays) });
-		const expectedOverlays = overlays.slice();
-		expectedOverlays.push(favoriteOverlays[1]);
-
-		const expectedFavorites = favoriteOverlays.slice();
-
-		const expectedResults = cold('--(ab)--', {
-			a: new UpdateFavoriteOverlaysMetadataAction(expectedFavorites),
-			b: new LoadOverlaysSuccessAction(expectedOverlays)
-		});
-		expect(overlaysEffects.syncOverlaysOnLoading$).toBeObservable(expectedResults);
 	});
 
 	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {

@@ -41,7 +41,6 @@ import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/ac
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { SyncOverlaysWithFavoritesAfterLoadedAction } from '@ansyn/overlays/actions/overlays.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -120,8 +119,7 @@ describe('Filters app effects', () => {
 		filtersState.filters = new Map();
 		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--(ab)--', {
-			a: new SyncOverlaysWithFavoritesAfterLoadedAction([favoriteOver]),
+		const expectedResults = cold('--b--', {
 			b: new SetFilteredOverlaysAction(filteredOverlays)
 		});
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);

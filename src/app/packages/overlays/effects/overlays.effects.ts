@@ -21,7 +21,7 @@ import {
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
 import { isNil, unionBy } from 'lodash';
@@ -185,8 +185,10 @@ export class OverlaysEffects {
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
 			OverlaysActionTypes.SET_FILTERED_OVERLAYS,
 			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => overlays)
-		.map(OverlaysService.parseOverlayDataForDisplay);
+		.withLatestFrom(this.store$.select(overlaysStateSelector))
+		.map(([action, overlays]: [Action, IOverlaysState]) => {
+			return OverlaysService.parseOverlayDataForDisplay(overlays)
+		});
 
 	/**
 	 * @type Effect

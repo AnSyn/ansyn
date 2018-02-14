@@ -9,6 +9,7 @@ import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { OverlaysCriteria } from '@ansyn/core';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -56,7 +57,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	getOverlayById(id: string): Observable<Overlay> {
 		return Observable.create((observer: Observer<Overlay>) => {
-			const overlay = {
+			const overlay: any = {
 				id: 'abc',
 				sourceType: 'mock1',
 				azimuth: 0,
@@ -82,8 +83,8 @@ describe('OverlaysService', () => {
 			{ key: 'b', value: 2 }
 		]
 	};
-	let searchParams = {
-		polygon: {
+	let searchParams: OverlaysCriteria = {
+		region: {
 			'type': 'Polygon',
 			'coordinates': [
 				[
@@ -110,8 +111,11 @@ describe('OverlaysService', () => {
 				]
 			]
 		},
-		from: new Date(2020),
-		to: Date.now()
+		time: {
+			type: 'absolute',
+			from:  new Date(2020),
+			to: new Date()
+		}
 	};
 
 	beforeEach(() => {
@@ -266,8 +270,8 @@ describe('OverlaysService', () => {
 		}).calls;
 
 
-		let params = {
-			polygon: {
+		let params: OverlaysCriteria = {
+			region: {
 				'type': 'Polygon',
 				'coordinates': [
 					[
@@ -294,8 +298,11 @@ describe('OverlaysService', () => {
 					]
 				]
 			},
-			from: new Date(2020),
-			to: Date.now()
+			time: {
+				type: 'absolute',
+				from: new Date(2020),
+				to: new Date()
+			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {
 			expect(result.key).toBe('value');
@@ -308,21 +315,6 @@ describe('OverlaysService', () => {
 			expect(result).toBeTruthy();
 		});
 	});
-
-	// it('check the function extract data', () => {
-	// 	let response = new Response(new ResponseOptions({
-	// 		body: JSON.stringify({ key: 'value' })
-	// 	}));
-
-	// 	spyOn(http, 'get').and.callFake(function() {
-	// 		return Observable.create((observer: Observer < any > ) => {
-	// 			observer.next(response);
-	// 		});
-	// 	});
-
-	// 	spyOn(overlaysService, "extractData");
-
-	// });
 
 	describe('getTimeStateByOverlay should calc delta and return new timelineState via overlay.date', () => {
 

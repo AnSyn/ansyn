@@ -10,8 +10,7 @@ import {
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -61,21 +60,14 @@ describe('LayersAppEffects', () => {
 		layersAppEffects = _layersAppEffects;
 	}));
 
-	describe('selectCase$', () => {
 
-		it('selectCase$', () => {
-			let selectedCase = <any> {
-				id: 'id',
-				state: { layers: { displayAnnotationsLayer: true, annotationsLayer: 'geoJSON' } }
-			};
-			actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
-			const expectedResults = cold('--(abc)--', {
-				a: new SetAnnotationsLayer(<any>'geoJSON'),
-				b: new ToggleDisplayAnnotationsLayer(true),
-				c: new BeginLayerTreeLoadAction()
-			});
-			expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
+	it('selectCase$', () => {
+		let selectedCase = <any> { id: 'id' };
+		actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
+		const expectedResults = cold('--b--', {
+			b: new BeginLayerTreeLoadAction()
 		});
+		expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
 	});
 
 	describe('toggleAnnotationsLayer$ should check hide show annotaion layers', () => {

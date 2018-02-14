@@ -10,6 +10,7 @@ import {
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { OverlaysCriteria } from '@ansyn/core';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -48,18 +49,14 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('should activate loadOverlay reducer', () => {
-
-		const queryParams = { search: '9399ejf' };
-		const action = new LoadOverlaysAction(queryParams);
+		const action = new LoadOverlaysAction({});
 		const mockOverlayInitialState = cloneDeep(overlaysInitialState);
 
 		mockOverlayInitialState.overlays.set('tmp', <any> 'value');
 		expect(mockOverlayInitialState.overlays.size).toBe(1);
 		const result = OverlayReducer(mockOverlayInitialState, action);
-
 		expect(result.loading).toBe(true);
 		expect(result.overlays.size).toBe(0);
-		expect(result.queryParams).toEqual(queryParams);
 	});
 
 

@@ -1,7 +1,7 @@
 {
 	"production": false,
 	"casesConfig": {
-		"baseUrl": "http://localhost:9001/api/v1/cases",
+		"baseUrl": "http://localhost:8080/api/store",
 		"paginationLimit": 16,
 		"defaultCase": {
 			"id": "1234-5678",
@@ -100,7 +100,7 @@
 		"useHash": true
 	},
 	"layersManagerConfig": {
-		"layersByCaseIdUrl": "http://localhost:9001/api/v1/layers"
+		"layersByCaseIdUrl": "http://localhost:8080/api/store"
 	},
 	"overlaysConfig": {
 		"limit": 500

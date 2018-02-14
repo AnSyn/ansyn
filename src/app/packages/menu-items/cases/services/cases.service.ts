@@ -10,8 +10,6 @@ import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core';
-import { casesStateSelector, ICasesState } from "../reducers/cases.reducer";
-import { Store } from "@ngrx/store";
 import { UUID } from "angular2-uuid";
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
@@ -32,23 +30,16 @@ export class CasesService {
 		time: undefined
 	};
 
-	casesOffset$: Observable<number> = this.store.select(casesStateSelector)
-		.map(({ cases }: ICasesState) => cases.length );
-
-	casesOffset: number;
-
 	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
-				public store: Store<ICasesState>,
 				@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 		CasesService.defaultCase = config.defaultCase;
-		this.casesOffset$.subscribe(casesOffset => this.casesOffset = casesOffset);
 	}
 
-	loadCases(): Observable<any> {
-		const url = `${this.baseUrl}/cases/?from=${this.casesOffset}&limit=${this.paginationLimit}`;
+	loadCases(casesOffset: number = 0): Observable<any> {
+		const url = `${this.baseUrl}/cases/?from=${casesOffset}&limit=${this.paginationLimit}`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});

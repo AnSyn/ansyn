@@ -7,11 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core';
 import 'rxjs/add/observable/of';
-import { Store, StoreModule } from '@ngrx/store';
-import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
-	ICasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UUID } from 'angular2-uuid';
 
 export const MockCasesConfig = {
@@ -36,7 +31,7 @@ describe('CasesService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule, StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })],
+			imports: [HttpClientModule],
 			providers: [CasesService, UrlSerializer, MockCasesConfig, {
 				provide: ErrorHandlerService,
 				useValue: { httpErrorHandle: () => Observable.throw(null) }

@@ -43,8 +43,9 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-		.switchMap(() => {
-			return this.casesService.loadCases()
+		.withLatestFrom(this.store.select(casesStateSelector))
+		.switchMap(([action, casesState]: [LoadCasesAction, ICasesState]) => {
+			return this.casesService.loadCases(casesState.cases.length)
 				.map(newCases => {
 					return new LoadCasesSuccessAction(newCases);
 				});

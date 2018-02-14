@@ -14,6 +14,7 @@ import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { CasesService } from '../services/cases.service';
 import { cloneDeep } from 'lodash';
 import * as config from '../../../../../assets/config/app.config.json';
+import { DeleteCaseBackendSuccessAction } from '@ansyn/menu-items';
 
 
 describe('CasesReducer', () => {
@@ -106,15 +107,15 @@ describe('CasesReducer', () => {
 		expect(result.cases.length).toEqual(6);
 	});
 
-	it('DELETE_CASE action should delete case from state.cases by modalCaseId', () => {
+	it('DELETE_CASE_BACKEND_SUCCESS action should delete case from state.cases', () => {
 		let state: ICasesState = initialCasesState;
 		state.cases = [
 			{ id: 'id1', name: 'name1' },
 			{ id: 'id2', name: 'name2' },
 			{ id: 'id3', name: 'name3' }
 		];
-		state.modalCaseId = 'id1';
-		let action: DeleteCaseAction = new DeleteCaseAction();
+
+		let action: DeleteCaseAction = new DeleteCaseBackendSuccessAction('id1');
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.cases.length).toEqual(2);
 	});

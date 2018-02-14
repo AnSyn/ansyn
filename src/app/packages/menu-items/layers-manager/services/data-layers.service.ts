@@ -37,7 +37,7 @@ export class DataLayersService {
 		this.baseUrl = this.config.layersByCaseIdUrl;
 	}
 
-	public getAllLayersInATree(caseId?: string): Observable<LayerRootsBundle> {
+	public getAllLayersInATree(): Observable<LayerRootsBundle> {
 		const urlString = `${this.baseUrl}/layers?from=0&limit=100`;
 		return this.http.get(urlString)
 			.map(this.extractData.bind(this))

@@ -43,7 +43,7 @@ describe('DataLayersService', () => {
 		expect(service).toBeTruthy();
 	}));
 
-	it('getAllLayersInATree should send the case id in a get request', () => {
+	it('getAllLayersInATree get request', () => {
 		let serverResponse = {
 			json: () => [
 				{
@@ -76,7 +76,7 @@ describe('DataLayersService', () => {
 		};
 
 		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
-		dataLayersService.getAllLayersInATree('caseId');
-		expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}?caseId=caseId`);
+		dataLayersService.getAllLayersInATree();
+		expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}/layers?from=0&limit=100`);
 	});
 });

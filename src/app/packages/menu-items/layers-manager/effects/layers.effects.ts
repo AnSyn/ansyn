@@ -34,8 +34,8 @@ export class LayersEffects {
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.ofType(LayersActionTypes.BEGIN_LAYER_TREE_LOAD)
-		.switchMap((action: BeginLayerTreeLoadAction) => {
-			return this.dataLayersService.getAllLayersInATree(action.payload.caseId);
+		.switchMap(() => {
+			return this.dataLayersService.getAllLayersInATree();
 		})
 		.withLatestFrom(this.store.select(layersStateSelector))
 		.mergeMap(([layersBundle, store]: [LayerRootsBundle, ILayerState]) => {

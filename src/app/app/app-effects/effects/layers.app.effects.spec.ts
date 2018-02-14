@@ -72,7 +72,7 @@ describe('LayersAppEffects', () => {
 			const expectedResults = cold('--(abc)--', {
 				a: new SetAnnotationsLayer(<any>'geoJSON'),
 				b: new ToggleDisplayAnnotationsLayer(true),
-				c: new BeginLayerTreeLoadAction({ caseId: 'id' })
+				c: new BeginLayerTreeLoadAction()
 			});
 			expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
 		});

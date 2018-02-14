@@ -9,13 +9,15 @@ import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { StoreModule } from '@ngrx/store';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
 	let urlSerializer: UrlSerializer;
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
+			imports: [HttpClientModule, StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })],
 			providers: [
 				CasesService,
 				{

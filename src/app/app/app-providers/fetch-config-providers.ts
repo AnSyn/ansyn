@@ -6,7 +6,6 @@ import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-lay
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoginConfig } from '@ansyn/login';
-import { enableProdMode } from '@angular/core';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
@@ -86,10 +85,4 @@ export const getProviders = (conf): any[] => {
 
 export const fetchConfigProviders = () => fetch('/assets/config/app.config.json')
 	.then(response => response.json())
-	.then(conf => {
-		if (conf.production) {
-			enableProdMode();
-		}
-		return conf;
-	})
 	.then(getProviders)

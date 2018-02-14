@@ -94,7 +94,7 @@ describe('LayersEffects', () => {
 
 		let loadedTreeBundle = { layers: layers, selectedLayers: selectedLayers };
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
-		actions = hot('--a--', { a: new BeginLayerTreeLoadAction({ caseId: 'blabla' }) });
+		actions = hot('--a--', { a: new BeginLayerTreeLoadAction() });
 		const expectedResults = cold('--(ab)--', {
 			a: new LayerTreeLoadedAction(<any>loadedTreeBundle),
 			b: new SelectLayerAction(<any>staticLeaf)

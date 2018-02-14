@@ -33,7 +33,7 @@ if (configuration.production) {
 	imports.push(StoreDevtoolsModule.instrument({
 		maxAge: 25 //  Retains last 25 states.
 	}));
-	console.log('NGRX Store Devtools Module enabled');
+	console.log('NGRX Store Dev-tools Module enabled');
 }
 
 @NgModule({

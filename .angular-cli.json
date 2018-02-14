@@ -33,8 +33,7 @@
 			"environmentSource": "configuration/configuration.ts",
 			"environments": {
 				"dev": "configuration/configuration.dev.ts",
-				"prod": "configuration/configuration.prod.ts",
-				"int": "configuration/configuration.int.ts"
+				"prod": "configuration/configuration.prod.ts"
 			}
 		},
 		{

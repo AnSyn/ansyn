@@ -1,4 +1,4 @@
-import { ErrorHandler, NgModule } from '@angular/core';
+import { enableProdMode, ErrorHandler, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from './ansyn/ansyn.module';
@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { LoginModule } from '@ansyn/login';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { configuration } from '../../configuration/configuration';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
@@ -25,7 +26,8 @@ const imports = [
 	AnsynModule,
 	AppRoutingModule,
 ];
-if (window && window.location && window.location.hostname === 'localhost') {
+if (configuration.production) {
+	enableProdMode();
 	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
 	imports.push(StoreDevtoolsModule.instrument({
 		maxAge: 25 //  Retains last 25 states.

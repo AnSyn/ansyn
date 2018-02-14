@@ -1,4 +1,4 @@
-import { ErrorHandler, isDevMode, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from './ansyn/ansyn.module';
@@ -25,11 +25,12 @@ const imports = [
 	AnsynModule,
 	AppRoutingModule,
 ];
-if (isDevMode()) {
+if (window && window.location && window.location.hostname === 'localhost') {
 	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
 	imports.push(StoreDevtoolsModule.instrument({
 		maxAge: 25 //  Retains last 25 states.
 	}));
+	console.log('NGRX Store Devtools Module enabled');
 }
 
 @NgModule({

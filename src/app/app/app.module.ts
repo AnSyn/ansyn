@@ -33,7 +33,7 @@ if (isDevMode()) {
 }
 
 @NgModule({
-	imports: imports,
+	imports,
 	providers: [
 		{
 			provide: ErrorHandler,

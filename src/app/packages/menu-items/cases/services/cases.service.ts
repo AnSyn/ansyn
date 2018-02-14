@@ -47,7 +47,7 @@ export class CasesService {
 		this.casesOffset$.subscribe(casesOffset => this.casesOffset = casesOffset);
 	}
 
-	loadCases(lastId: string = '-1'): Observable<any> {
+	loadCases(): Observable<any> {
 		const url = `${this.baseUrl}/cases/?from=${this.casesOffset}&limit=${this.paginationLimit}`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);

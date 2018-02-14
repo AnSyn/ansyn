@@ -43,11 +43,8 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.switchMap(([action, state]: [LoadCasesAction, ICasesState]) => {
-			let lastCase: Case = state.cases[state.cases.length - 1];
-			let lastId = lastCase ? lastCase.id : '-1';
-			return this.casesService.loadCases(lastId)
+		.switchMap(() => {
+			return this.casesService.loadCases()
 				.map(newCases => {
 					return new LoadCasesSuccessAction(newCases);
 				});

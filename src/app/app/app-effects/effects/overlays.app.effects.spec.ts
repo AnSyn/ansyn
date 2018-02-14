@@ -31,9 +31,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { ChangeLayoutAction, SetTimeAction, statusBarStateSelector } from '@ansyn/status-bar';
+import { ChangeLayoutAction, statusBarStateSelector } from '@ansyn/status-bar';
 import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
@@ -202,51 +201,36 @@ describe('OverlaysAppEffects', () => {
 		expect(overlaysAppEffects.onOverlaysMarkupsChanged$).toBeObservable(expectedResults);
 	});
 
-	it('On selectCase$ without imagery count call to loadOverlaysAction with case params ', () => {
-		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
-		const expectedResults = cold('--b--', {
-			b: new LoadOverlaysAction({
-				to: caseItem.state.time.to,
-				from: caseItem.state.time.from,
-				polygon: caseItem.state.region,
-				caseId: caseItem.id
-			})
-		});
-		expect(overlaysAppEffects.selectCase$).toBeObservable(expectedResults);
-	});
-
-	it('On selectCaseWithImageryCountBeforeAndAfter$ with imageryCountBefore != -1 and imageryCountAfter != -1 call to loadOverlaysAction with case params ', () => {
-		casesService.contextValues = {
-			'imageryCountBefore': 1,
-			'imageryCountAfter': 1,
-			'defaultOverlay': 'nearest',
-			'time': new Date()
-		};
-
-		const expectedCase = cloneDeep(caseItem);
-		const expectedFromDate = new Date('2014-06-27T08:43:03.624Z');
-		const expectedToDate = new Date('2015-06-27T08:43:03.624Z');
-
-		expectedCase.state.time.from = expectedFromDate.toISOString();
-		expectedCase.state.time.to = expectedToDate.toISOString();
-
-		actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
-
-		const a = new UpdateCaseAction(expectedCase);
-
-		const b = new SetTimeAction({ 'from': expectedFromDate, 'to': expectedToDate });
-
-		const c = new LoadOverlaysAction({
-			to: expectedCase.state.time.to,
-			from: expectedCase.state.time.from,
-			polygon: caseItem.state.region,
-			caseId: caseItem.id
-		});
-
-		const expectedResults = cold('--(abc)--', { a, b, c });
-
-		expect(overlaysAppEffects.selectCaseWithImageryCountBeforeAndAfter$).toBeObservable(expectedResults);
-	});
+	// it('On selectCaseWithImageryCountBeforeAndAfter$ with imageryCountBefore != -1 and imageryCountAfter != -1 call to loadOverlaysAction with case params ', () => {
+	// 	casesService.contextValues = {
+	// 		'imageryCountBefore': 1,
+	// 		'imageryCountAfter': 1,
+	// 		'defaultOverlay': 'nearest',
+	// 		'time': new Date()
+	// 	};
+	//
+	// 	const expectedCase = cloneDeep(caseItem);
+	// 	const expectedFromDate = new Date('2014-06-27T08:43:03.624Z');
+	// 	const expectedToDate = new Date('2015-06-27T08:43:03.624Z');
+	//
+	// 	expectedCase.state.time.from = expectedFromDate.toISOString();
+	// 	expectedCase.state.time.to = expectedToDate.toISOString();
+	//
+	// 	actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
+	//
+	// 	const a = new UpdateCaseAction(expectedCase);
+	//
+	// 	const b = new SetTimeAction({ 'from': expectedFromDate, 'to': expectedToDate });
+	//
+	// 	const c = new LoadOverlaysAction({
+	// 		time: expectedCase.state.time,
+	// 		region: caseItem.state.region
+	// 	});
+	//
+	// 	const expectedResults = cold('--(abc)--', { a, b, c });
+	//
+	// 	expect(overlaysAppEffects.selectCaseWithImageryCountBeforeAndAfter$).toBeObservable(expectedResults);
+	// });
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		casesService.contextValues.defaultOverlay = 'latest';

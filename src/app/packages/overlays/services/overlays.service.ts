@@ -60,15 +60,17 @@ export class OverlaysService {
 	 * @param {string[]} properties
 	 */
 	static pluck<T>(items: Map<string, T>, ids: string[], properties: string[]) {
-		return ids.map(id => {
-			const item = items.get(id);
-			if (!properties.length) {
-				return item;
-			}
-			return properties.reduce((obj, property) => {
-				obj[property] = item[property];
-				return obj;
-			}, {});
+		return ids
+			.map<T>((id) => items.get(id))
+			.filter((item: T) => Boolean(item))
+			.map((item: T) => {
+				if (!properties.length) {
+					return item;
+				}
+				return properties.reduce((obj, property) => {
+					obj[property] = item[property];
+					return obj;
+				}, {});
 		});
 	}
 

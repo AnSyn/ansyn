@@ -172,12 +172,12 @@ describe('OverlayContainerComponent', () => {
 			azimuth: 10
 		}];
 
-		store.dispatch(new LoadOverlaysAction());
-		expect(state.value.overlays.loading).toBe(true);
+		store.dispatch(new LoadOverlaysAction({}));
+		expect(state.value.overlays.loading).toBeTruthy();
 
 		store.dispatch(new LoadOverlaysSuccessAction(overlays));
 		expect(state.value.overlays.overlays.size).toEqual(2);
-		expect(state.value.overlays.loading).toBe(false);
+		expect(state.value.overlays.loading).toBeFalsy();
 
 	});
 	/*

@@ -17,7 +17,6 @@ export interface IOverlaysState {
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;
 	filteredOverlays: string[];
-	queryParams: any;
 	timelineState: TimelineState;
 	statusMessage: string;
 }
@@ -29,7 +28,6 @@ export const overlaysInitialState: IOverlaysState = {
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),
 	demo: 1,
-	queryParams: {},
 	timelineState: { from: new Date(), to: new Date() },
 	filteredOverlays: [],
 	statusMessage: null
@@ -69,12 +67,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS:
-			const queryParams = action.payload || {};
 			return {
 				...state,
 				loading: true,
 				loaded: false,
-				queryParams,
 				overlays: new Map(),
 				filteredOverlays: []
 			};

@@ -22,7 +22,7 @@ export class SelectCaseAppEffects {
 	 * @type Effect
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetTimeAction, SetRegionAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, SetAnnotationsLayer, ToggleDisplayAnnotation
+	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, SetAnnotationsLayer, ToggleDisplayAnnotation
 	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
@@ -36,8 +36,12 @@ export class SelectCaseAppEffects {
 			const { data, activeMapId } = state.maps;
 			// core
 			const { favoriteOverlays, time, region } = state;
-			time.from = new Date(time.from);
-			time.to = new Date(time.to);
+			if (typeof time.from === 'string') {
+				time.from = new Date(time.from);
+			}
+			if (typeof time.to === 'string') {
+				time.to = new Date(time.to);
+			}
 
 			// layers
 			const { annotationsLayer, displayAnnotationsLayer } = state.layers;

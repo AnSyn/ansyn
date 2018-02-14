@@ -24,10 +24,11 @@ const imports = [
 	EffectsModule.forRoot([]),
 	LoginModule,
 	AnsynModule,
-	AppRoutingModule,
+	AppRoutingModule
 ];
 if (configuration.production) {
 	enableProdMode();
+} else {
 	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
 	imports.push(StoreDevtoolsModule.instrument({
 		maxAge: 25 //  Retains last 25 states.

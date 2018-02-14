@@ -201,37 +201,6 @@ describe('OverlaysAppEffects', () => {
 		expect(overlaysAppEffects.onOverlaysMarkupsChanged$).toBeObservable(expectedResults);
 	});
 
-	// it('On selectCaseWithImageryCountBeforeAndAfter$ with imageryCountBefore != -1 and imageryCountAfter != -1 call to loadOverlaysAction with case params ', () => {
-	// 	casesService.contextValues = {
-	// 		'imageryCountBefore': 1,
-	// 		'imageryCountAfter': 1,
-	// 		'defaultOverlay': 'nearest',
-	// 		'time': new Date()
-	// 	};
-	//
-	// 	const expectedCase = cloneDeep(caseItem);
-	// 	const expectedFromDate = new Date('2014-06-27T08:43:03.624Z');
-	// 	const expectedToDate = new Date('2015-06-27T08:43:03.624Z');
-	//
-	// 	expectedCase.state.time.from = expectedFromDate.toISOString();
-	// 	expectedCase.state.time.to = expectedToDate.toISOString();
-	//
-	// 	actions = hot('--a--', { a: new SelectCaseAction(caseItem) });
-	//
-	// 	const a = new UpdateCaseAction(expectedCase);
-	//
-	// 	const b = new SetTimeAction({ 'from': expectedFromDate, 'to': expectedToDate });
-	//
-	// 	const c = new LoadOverlaysAction({
-	// 		time: expectedCase.state.time,
-	// 		region: caseItem.state.region
-	// 	});
-	//
-	// 	const expectedResults = cold('--(abc)--', { a, b, c });
-	//
-	// 	expect(overlaysAppEffects.selectCaseWithImageryCountBeforeAndAfter$).toBeObservable(expectedResults);
-	// });
-
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
 		casesService.contextValues.defaultOverlay = 'latest';
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });

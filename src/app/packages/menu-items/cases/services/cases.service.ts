@@ -95,7 +95,7 @@ export class CasesService {
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		const url = `${this.baseUrl}/contexts/${selectedCaseId}`;
+		const url = `${this.baseUrl}/cases/${selectedCaseId}`;
 		return this.http.get(url).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});

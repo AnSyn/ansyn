@@ -9,7 +9,6 @@ import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
-import { StoreModule } from '@ngrx/store';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

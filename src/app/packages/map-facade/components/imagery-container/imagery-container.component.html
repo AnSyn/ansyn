@@ -19,4 +19,6 @@
 	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
 
 	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
+
+	<ansyn-imagery-loader [show]="mapState.isLoading" *ngIf="true"></ansyn-imagery-loader>
 </div>

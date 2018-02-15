@@ -13,6 +13,7 @@ import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { StoreModule } from '@ngrx/store';
 import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
 import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
+import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 
 @NgModule({
 	imports: [
@@ -29,7 +30,8 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 		ImageryRotationComponent,
 		ImageryContainerComponent,
 		ContextMenuComponent,
-		AnnotationContextMenuComponent
+		AnnotationContextMenuComponent,
+		ImageryLoaderComponent
 	],
 	exports: [ImageriesManagerComponent]
 })

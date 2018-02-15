@@ -19,7 +19,7 @@ export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: Overlay[];
 	alertMsg: AlertMsg;
-	overlaysCriteria: OverlaysCriteria
+	overlaysCriteria: OverlaysCriteria;
 }
 
 export const coreInitialState: ICoreState = {

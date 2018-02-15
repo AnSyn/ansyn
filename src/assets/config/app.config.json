@@ -1,5 +1,4 @@
 {
-	"production": false,
 	"casesConfig": {
 		"baseUrl": "http://localhost:8080/api/store",
 		"paginationLimit": 16,

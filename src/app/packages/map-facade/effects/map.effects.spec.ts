@@ -104,18 +104,6 @@ describe('MapEffects', () => {
 	});
 
 	describe('onMapCreatedDecreasePendingCount$', () => {
-		it('AddMapInstance should call DecreasePendingMapsCountAction', () => {
-			mapState.pendingMapsCount = 1;
-
-			actions = hot('--a--', {
-				a: new ImageryCreatedAction({ id: 'id' })
-			});
-
-			const expectedResults = cold('--b--', {
-				b: new DecreasePendingMapsCountAction()
-			});
-			expect(mapEffects.onMapCreatedDecreasePendingCount$).toBeObservable(expectedResults);
-		});
 
 		it('ImageryRemovedAction should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;

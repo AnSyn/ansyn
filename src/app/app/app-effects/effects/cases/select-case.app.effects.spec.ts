@@ -7,29 +7,47 @@ import {
 	Case, CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
 	CaseTimeState, SetOverlaysCriteriaAction
 } from '@ansyn/core';
-import { SelectCaseAction } from '@ansyn/menu-items';
+import { CasesService, SelectCaseAction } from '@ansyn/menu-items';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { SetAnnotationsLayer, ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ChangeLayoutAction, SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { HttpClientModule } from '@angular/common/http';
+import { OverlaysService } from '@ansyn/overlays';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
+	let mockCasesService = {
+		contextValues: {
+			imageryCountBefore: -1,
+			imageryCountAfter: -1
+		}
+	};
+	let mockOverlaysService = {
+		getStartDateViaLimitFacets: () => Observable.of({startDate: new Date(), endDate: new Date()}),
+		getStartAndEndDateViaRangeFacets: () => Observable.of({startDate: new Date(), endDate: new Date()})
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({})
+				StoreModule.forRoot({}),
+				HttpClientModule
 			],
 			providers: [
 				SelectCaseAppEffects,
+				{
+					provide: CasesService,
+					useValue: mockCasesService
+				},
+				{
+					provide: OverlaysService,
+					useValue: mockOverlaysService
+				},
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();

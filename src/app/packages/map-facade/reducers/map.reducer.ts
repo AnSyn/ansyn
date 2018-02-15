@@ -3,7 +3,6 @@ import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { CaseRegionState } from '@ansyn/core';
 
 export interface IMapState {
 	layout: MapsLayout;

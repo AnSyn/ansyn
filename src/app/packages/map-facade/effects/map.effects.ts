@@ -336,7 +336,11 @@ export class MapEffects {
 			const communicator = this.communicatorsService.provide(payload.id);
 			communicator.setPosition(activeMap.data.position);
 			const updatedMapsList = [...mapState.mapsList];
-			updatedMapsList.forEach((map: CaseMapState) => map.data.position = activeMap.data.position);
+			updatedMapsList.forEach((map: CaseMapState) => {
+				if (map.id === payload.id) {
+					map.data.position = activeMap.data.position
+				}
+			});
 			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
 			if (mapState.pendingMapsCount > 0) {
 				actions.push(new DecreasePendingMapsCountAction())

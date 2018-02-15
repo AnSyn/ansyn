@@ -31,7 +31,7 @@ export class CasesService {
 	};
 
 	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
-				@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService) {
+				public errorHandlerService: ErrorHandlerService) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;

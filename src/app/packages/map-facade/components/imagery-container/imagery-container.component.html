@@ -10,9 +10,7 @@
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
 
-	<div class="map-loader-wrapper" [class.lowered]="showStatus && active">
-		<div class="map-loader" [style.width]="getProgress()"></div>
-	</div>
+	<ansyn-imagery-tile-progress [mapId]="mapState.id" [lowered]="showStatus && active"></ansyn-imagery-tile-progress>
 
 	<ansyn-imagery-rotation [mapState]="mapState"></ansyn-imagery-rotation>
 

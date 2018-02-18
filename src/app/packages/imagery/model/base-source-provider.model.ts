@@ -49,7 +49,7 @@ export abstract class BaseMapSourceProvider {
 
 			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error) / tilesCounter.total : 1;
 
-			this.store.dispatch(new SetProgressBarAction({ progress, mapId }));
+			this.store.dispatch(new SetProgressBarAction({ progress: progress * 100, mapId }));
 		};
 
 		source.once('tileloadstart', () => startTimingLog(this.mapType));

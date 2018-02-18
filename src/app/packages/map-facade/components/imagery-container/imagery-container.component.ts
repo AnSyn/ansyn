@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import {
@@ -13,8 +13,9 @@ import {
 	templateUrl: './imagery-container.component.html',
 	styleUrls: ['./imagery-container.component.less']
 })
-export class ImageryContainerComponent {
+export class ImageryContainerComponent implements OnInit{
 	@Input() mapState: CaseMapState;
+	@Input() mapProperties: CaseMapState;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
@@ -32,14 +33,6 @@ export class ImageryContainerComponent {
 
 	toggleMapSynchronization() {
 		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));
-	}
-
-
-	getProgress() {
-		if (this.mapState.progress && this.mapState.progress !== 1) {
-			return this.mapState.progress * 100 + '%';
-		}
-		return 0;
 	}
 
 	mouseLeave() {

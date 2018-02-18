@@ -4,10 +4,16 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 
+export interface MapsProgress {
+	[key: string]: number
+}
+
 export interface IMapState {
 	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
+	mapsProgress: MapsProgress;
+	mapsLoading: Set,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -16,6 +22,8 @@ export const initialMapState: IMapState = {
 	layout: null,
 	activeMapId: null,
 	mapsList: [],
+	mapsProgress: {},
+	mapsLoading: new Set(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };
@@ -28,11 +36,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 	switch (action.type) {
 		case MapActionTypes.SET_PROGRESS_BAR:
-			const progressedMap = state.mapsList.find(map => map.id === action.payload.mapId);
-			if (progressedMap) {
-				progressedMap.progress = action.payload.progress;
-			}
-			return state;
+			const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
+			return { ...state, mapsProgress };
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

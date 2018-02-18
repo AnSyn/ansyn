@@ -91,7 +91,6 @@ export interface CaseMapData {
 export interface CaseMapState {
 	id: string;
 	data: CaseMapData;
-	progress: number;
 	mapType: string;
 	flags: {
 		layers?: boolean

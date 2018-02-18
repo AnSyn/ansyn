@@ -3,7 +3,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction,
@@ -28,6 +28,7 @@ import { Case } from '@ansyn/core';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
+import { SaveCaseAsAction } from '@ansyn/menu-items';
 
 
 @Injectable()
@@ -95,8 +96,8 @@ export class CasesEffects {
 	 */
 	@Effect()
 	onDeleteCaseBackend$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.DELETE_CASE_BACKEND)
-		.map(toPayload)
+		.ofType<DeleteCaseBackendAction>(CasesActionTypes.DELETE_CASE_BACKEND)
+		.map(({ payload }) => payload)
 		.switchMap((deletedCaseId) => {
 			return this.casesService.removeCase(deletedCaseId)
 				.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
@@ -287,8 +288,8 @@ export class CasesEffects {
 	 */
 	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
-		.ofType(CasesActionTypes.SAVE_CASE_AS)
-		.map(toPayload)
+		.ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS)
+		.map(({ payload }) => payload)
 		.switchMap((savedCase: Case) => {
 			return this.casesService.createCase(savedCase)
 				.map((addedCase: Case) => new SaveCaseAsSuccessAction(addedCase));

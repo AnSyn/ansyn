@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -24,6 +24,7 @@ import {
 	PinPointModeTriggerAction, PositionChangedAction, SetMapManualImageProcessing, SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
+import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -79,10 +80,10 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	onToggleImageProcessing$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.map(toPayload)
-		.map(({ mapId, toggleValue }) => [this.communicatorsService.provide(mapId), toggleValue])
-		.filter(([comm]) => !_isNil(comm))
+		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
+		.map(({ payload }) => payload)
+		.map(({ mapId, toggleValue }): [CommunicatorEntity, boolean] => [this.communicatorsService.provide(mapId), toggleValue])
+		.filter(([comm, toggleValue]) => !_isNil(comm))
 		.do(([comm, toggleValue]) => {
 			comm.setAutoImageProcessing(toggleValue);
 		});
@@ -252,8 +253,8 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
-		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
-		.map(toPayload)
+		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.map(({ payload }) => payload)
 		.filter(({ activeMapId }) => !_isNil(activeMapId))
 		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
 
@@ -266,8 +267,8 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
-		.ofType(MapActionTypes.STORE.SET_MAPS_DATA)
-		.map(toPayload)
+		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.map(({ payload }) => payload)
 		.filter(({ mapsList }) => !_isNil(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
@@ -297,8 +298,8 @@ export class MapEffects {
 	 * @ofType ContextMenuGetFilteredOverlaysAction
 	 */
 	@Effect({ dispatch: false })
-	getFilteredOverlays$: Observable<Action> = this.actions$
-		.ofType(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
+	getFilteredOverlays$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
+		.ofType<ContextMenuGetFilteredOverlaysAction>(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
 		.share();
 
 	/**

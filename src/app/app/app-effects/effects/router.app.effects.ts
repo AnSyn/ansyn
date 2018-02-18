@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
 import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
-import { NavigateCaseTriggerAction, RouterActionTypes } from '@ansyn/router';
+import { NavigateCaseTriggerAction, RouterActionTypes, SetStateAction } from '@ansyn/router';
 import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
 import { SaveCaseAsSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
+import { ISetStatePayload } from '@ansyn/router/actions/router.actions';
 
 @Injectable()
 export class RouterAppEffects {
@@ -24,12 +25,11 @@ export class RouterAppEffects {
 	 */
 	@Effect()
 	onUpdateLocationDefaultCase$: Observable<LoadDefaultCaseAction> = this.actions$
-		.ofType(RouterActionTypes.SET_STATE)
-		.map(toPayload)
-		.filter(({ caseId }) => _isNil(caseId))
-		.withLatestFrom(this.store$.select(casesStateSelector), (payload, cases) => [payload, cases])
-		.filter(([payload, cases]: [string, ICasesState]) => (_isEmpty(cases.selectedCase) || !_isEqual(cases.selectedCase.id, CasesService.defaultCase.id)))
-		.map(([{ queryParams }]) => new LoadDefaultCaseAction(queryParams));
+		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
+		.filter((action) => !(action.payload.caseId))
+		.withLatestFrom(this.store$.select(casesStateSelector))
+		.filter(([action, cases]: [SetStateAction, ICasesState]) => (_isEmpty(cases.selectedCase) || !_isEqual(cases.selectedCase.id, CasesService.defaultCase.id)))
+		.map(([action, cases]) => new LoadDefaultCaseAction(action.payload.queryParams));
 
 	/**
 	 * @type Effect
@@ -41,10 +41,10 @@ export class RouterAppEffects {
 	 */
 	@Effect()
 	onUpdateLocationCase$: Observable<LoadCaseAction> = this.actions$
-		.ofType(RouterActionTypes.SET_STATE)
-		.map(toPayload)
+		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
+		.map(({ payload }): ISetStatePayload => payload)
 		.filter(({ caseId }) => !_isNil(caseId))
-		.withLatestFrom(this.store$.select(casesStateSelector), (payload, cases) => [payload, cases])
+		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id)
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 

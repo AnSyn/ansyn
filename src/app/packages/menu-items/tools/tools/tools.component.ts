@@ -6,7 +6,6 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector, toolsFlags } from '../reducers/tools.reducer';
-import { isEqual } from 'lodash';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
 
 enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
@@ -31,7 +30,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public isGeoOptionsDisabled = false;
 	public flags$: Observable<Map<string, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged();
 	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged();

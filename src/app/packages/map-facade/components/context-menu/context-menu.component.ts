@@ -10,7 +10,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn\/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { toPayload } from '@ngrx/effects';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 
@@ -42,7 +41,7 @@ export class ContextMenuComponent implements OnInit {
 
 	filteredOverlays$: Observable<Overlay[]> = this.mapEffects$
 		.getFilteredOverlays$
-		.map <Action, Overlay[]>(toPayload)
+		.map(({ payload }) => payload)
 		.withLatestFrom(this.displayedOverlay$, (filteredOverlays: Overlay[], displayedOverlay: Overlay) => {
 			const displayedOverlayId = (displayedOverlay && displayedOverlay.id);
 			return [

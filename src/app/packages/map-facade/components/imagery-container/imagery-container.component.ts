@@ -15,7 +15,6 @@ import {
 })
 export class ImageryContainerComponent {
 	@Input() mapState: CaseMapState;
-	@Input() mapProperties: CaseMapState;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;

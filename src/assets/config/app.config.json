@@ -1,6 +1,6 @@
 {
 	"casesConfig": {
-		"baseUrl": "http://localhost:8080/api/store",
+		"baseUrl": "http://ansyn.io:8081/api/store",
 		"paginationLimit": 16,
 		"defaultCase": {
 			"id": "1234-5678",
@@ -116,7 +116,7 @@
 		"useHash": true
 	},
 	"layersManagerConfig": {
-		"layersByCaseIdUrl": "http://localhost:8080/api/store"
+		"layersByCaseIdUrl": "http://ansyn.io:8081/api/store"
 	},
 	"overlaysConfig": {
 		"limit": 500

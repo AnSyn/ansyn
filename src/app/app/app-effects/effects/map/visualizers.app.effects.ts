@@ -1,10 +1,10 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { differenceWith, isEmpty } from 'lodash';
+import { isEmpty, differenceWith } from 'lodash';
 import {
 	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
-	PinPointTriggerAction, SetMapsDataActionStore
+	PinPointTriggerAction, SetMapsDataActionStore, DbclickFeatureTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -104,8 +104,8 @@ export class VisualizersAppEffects {
 	 */
 	@Effect()
 	onDbclickFeaturePolylineDisplayAction$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
-		.map(toPayload)
+		.ofType<DbclickFeatureTriggerAction>(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
+		.map(({ payload }) => payload)
 		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizerType)
 		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
 
@@ -387,7 +387,7 @@ export class VisualizersAppEffects {
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction | BackToWorldView>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
-		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => !isEmpty(casesState.selectedCase.state.contextEntities))
+		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => Boolean(casesState.selectedCase.state.contextEntities))
 		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);

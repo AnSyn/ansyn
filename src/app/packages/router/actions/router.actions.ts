@@ -8,10 +8,15 @@ export const RouterActionTypes = {
 	NAVIGATE_CASE: 'NAVIGATE_CASE'
 };
 
+export interface ISetStatePayload {
+	caseId?: string;
+	queryParams: Params;
+}
+
 export class SetStateAction implements Action {
 	type = RouterActionTypes.SET_STATE;
 
-	constructor(public payload: { caseId?: string, queryParams: Params }) {
+	constructor(public payload: ISetStatePayload) {
 	}
 }
 

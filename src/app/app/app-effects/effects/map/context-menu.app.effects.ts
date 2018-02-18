@@ -1,4 +1,4 @@
-import { Actions, Effect, toPayload } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import {
 	ContextMenuGetFilteredOverlaysAction,
 	ContextMenuShowAction,
@@ -12,6 +12,7 @@ import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { ContextMenuDisplayAction } from '@ansyn/map-facade';
 
 @Injectable()
 export class ContextMenuAppEffects {
@@ -42,8 +43,8 @@ export class ContextMenuAppEffects {
 	 */
 	@Effect()
 	onContextMenuDisplayAction$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.CONTEXT_MENU.DISPLAY)
-		.map(toPayload)
+		.ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY)
+		.map(({ payload }) => payload)
 		.map(id => new DisplayOverlayFromStoreAction({ id }));
 
 	constructor(protected actions$: Actions,

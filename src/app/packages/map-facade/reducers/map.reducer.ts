@@ -35,6 +35,29 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
+		case MapActionTypes.VIEW.SET_PROGRESS_BAR: {
+			if (state.mapsProgress.hasOwnProperty(action.payload.mapId)) {
+				const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
+				console.log(mapsProgress);
+				return { ...state, mapsProgress };
+			}
+			return state;
+		}
+
+		case MapActionTypes.IMAGERY_CREATED: {
+			const mapsProgress = { ...state.mapsProgress };
+			mapsProgress[action.payload.id] = 0;
+			return { ...state, mapsProgress };
+		}
+
+		case MapActionTypes.IMAGERY_REMOVED: {
+			const mapsProgress = { ...state.mapsProgress };
+			delete mapsProgress[action.payload.id];
+			const mapsIsLoading = new Set(state.mapsIsLoading);
+			mapsIsLoading.delete(action.payload.id);
+			return { ...state, mapsProgress, mapsIsLoading };
+		}
+
 		case MapActionTypes.VIEW.SET_PROGRESS_BAR:
 			const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
 			return { ...state, mapsProgress };

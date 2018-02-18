@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import {
@@ -13,7 +13,7 @@ import {
 	templateUrl: './imagery-container.component.html',
 	styleUrls: ['./imagery-container.component.less']
 })
-export class ImageryContainerComponent implements OnInit{
+export class ImageryContainerComponent {
 	@Input() mapState: CaseMapState;
 	@Input() mapProperties: CaseMapState;
 	@Input() active: boolean;

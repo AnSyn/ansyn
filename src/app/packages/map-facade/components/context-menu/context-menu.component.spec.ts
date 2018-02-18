@@ -155,7 +155,7 @@ describe('ContextMenuComponent', () => {
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[1]);
 	});
 
-	it('displayOverlayEvent should get event and overlay, call stopPropagation and store dispatch', () => {
+	it('displayOverlayEvent should get event and overlay, call stopPropagation and store$$ dispatch', () => {
 		spyOn(store, 'dispatch');
 		const $event = <MouseEvent> jasmine.createSpyObj({
 			stopPropagation: () => {

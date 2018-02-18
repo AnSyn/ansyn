@@ -70,12 +70,12 @@ describe('DeleteCaseComponent', () => {
 		expect(pTag.innerText).toEqual(`Are you sure you want to delete ${fakeICasesState.cases[0].name}?`);
 	});
 
-	it('close should call store.dispatch with CloseModalAction', () => {
+	it('close should call store$$.dispatch with CloseModalAction', () => {
 		component.close();
 		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});
 
-	it('onSubmitRemove should call store.dispatch with CloseModalAction', () => {
+	it('onSubmitRemove should call store$$.dispatch with CloseModalAction', () => {
 		component.onSubmitRemove();
 		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction());
 	});

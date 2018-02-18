@@ -46,7 +46,7 @@ describe('StatusBarComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('layoutSelectChange call store.dispatch with ChangeLayoutAction', () => {
+	it('layoutSelectChange call store$$.dispatch with ChangeLayoutAction', () => {
 		spyOn(store, 'dispatch');
 		component.layoutSelectChange(5);
 		expect(store.dispatch).toHaveBeenCalledWith(new ChangeLayoutAction(5));

@@ -74,13 +74,13 @@ describe('MenuComponent', () => {
 		menuComponent.selectedMenuItemName = '';
 	});
 
-	it('closeMenu should call store.dispatch with UnSelectMenuItemAction', () => {
+	it('closeMenu should call store$$.dispatch with UnSelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
 		menuComponent.closeMenu();
 		expect(store.dispatch).toHaveBeenCalledWith(new UnSelectMenuItemAction());
 	});
 
-	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
+	it('openMenu should call store$$.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
 		menuComponent.openMenu('one');
 		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction('one'));

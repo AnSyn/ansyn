@@ -18,7 +18,7 @@ export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): St
 
 	};
 	// const replaceReducer = reducer => {
-	// 	store.replaceReducer(reducer);
+	// 	store$.replaceReducer(reducer);
 	// };
 	return { store, state, cleanup, getState };
 }

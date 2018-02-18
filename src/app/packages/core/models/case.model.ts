@@ -95,7 +95,6 @@ export interface CaseMapState {
 	flags: {
 		layers?: boolean
 	};
-	isLoading?: boolean;
 }
 
 export const defaultMapType = 'openLayersMap';

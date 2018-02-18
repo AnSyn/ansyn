@@ -219,7 +219,7 @@ describe('MapAppEffects', () => {
 		}).compileComponents();
 	}));
 
-	/* store data mock */
+	/* store$ data mock */
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const selectedCase = cases[0];

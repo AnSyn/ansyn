@@ -25,4 +25,18 @@ describe('ImageryLoaderComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+	describe('isLoading should show/hide host element', () => {
+		it('show', () => {
+			component.isLoading = true;
+			fixture.detectChanges();
+			expect(fixture.debugElement.classes.show).toBeTruthy();
+		});
+		it('hide', () => {
+			component.isLoading = false;
+			fixture.detectChanges();
+			expect(fixture.debugElement.classes.show).toBeFalsy();
+		});
+	});
+
 });

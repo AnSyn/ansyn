@@ -30,9 +30,12 @@ export const MapActionTypes = {
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
-	SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA',
+	},
+	VIEW: {
+		SET_IS_LOADING: 'SET_IS_LOADING',
+		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR'
 	},
 	TRIGGER: {
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
@@ -55,7 +58,7 @@ export const MapActionTypes = {
 export type MapActions = any;
 
 export class SetProgressBarAction implements Action {
-	type = MapActionTypes.SET_PROGRESS_BAR;
+	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: { mapId: string, progress: number }) {
 	}
@@ -294,6 +297,13 @@ export class ActiveImageryMouseLeave implements Action {
 export class AnnotationDrawEndAction implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_DRAW_END;
 	constructor(public payload: Feature<any>) {
+
+	}
+}
+
+export class SetIsLoadingAcion implements Action {
+	type = MapActionTypes.VIEW.SET_IS_LOADING;
+	constructor(public payload: Set<string>) {
 
 	}
 }

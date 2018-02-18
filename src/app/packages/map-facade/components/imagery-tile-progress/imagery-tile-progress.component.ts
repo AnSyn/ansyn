@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IMapState, MapsProgress, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Store } from '@ngrx/store';
 
@@ -11,14 +11,14 @@ export class ImageryTileProgressComponent implements OnInit {
 	@Input() mapId;
 	@Input() lowered;
 
-	progress$ = this.store.select(mapStateSelector)
+	progress$ = this.store$.select(mapStateSelector)
 		.pluck<IMapState, MapsProgress>('mapsProgress')
 		.distinctUntilChanged()
-		.map<number>((mapsProgress: MapsProgress) => mapsProgress[this.mapId]);
+		.map((mapsProgress: MapsProgress): number => mapsProgress[this.mapId]);
 
 	progress;
 
-	constructor(public store: Store<IMapState>) {
+	constructor(public store$: Store<IMapState>) {
 	}
 
 	ngOnInit() {

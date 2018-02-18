@@ -13,7 +13,7 @@ export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
 	mapsProgress: MapsProgress;
-	mapsLoading: Set,
+	mapsIsLoading: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -23,7 +23,7 @@ export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
 	mapsProgress: {},
-	mapsLoading: new Set(),
+	mapsIsLoading: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };
@@ -35,9 +35,12 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
-		case MapActionTypes.SET_PROGRESS_BAR:
+		case MapActionTypes.VIEW.SET_PROGRESS_BAR:
 			const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
 			return { ...state, mapsProgress };
+
+		case MapActionTypes.VIEW.SET_IS_LOADING:
+			return { ...state, mapsIsLoading: new Set(action.payload) };
 
 		case MapActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };

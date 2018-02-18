@@ -160,7 +160,7 @@ describe('Overlays Effects ', () => {
 
 	});
 
-	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
+	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store$$', () => {
 		actions = hot('--a--', {
 			a: new DisplayOverlayFromStoreAction({
 				id: overlays[0].id,

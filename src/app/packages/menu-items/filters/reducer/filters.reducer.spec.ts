@@ -14,7 +14,7 @@ describe('FiltersReducer', () => {
 	//     expect(result.isLoading).toEqual(false);
 	// });
 
-	it('UPDATE_FILTER_METADATA should update the metadata of the filter in the store', () => {
+	it('UPDATE_FILTER_METADATA should update the metadata of the filter in the store$', () => {
 		const filter1: Filter = { modelName: 'filter1', displayName: 'filter1', type: 'Enum' };
 		const metadata1: FilterMetadata = new EnumFilterMetadata();
 		metadata1.initializeFilter(['metadata1']);

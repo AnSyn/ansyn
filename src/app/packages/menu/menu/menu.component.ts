@@ -36,9 +36,9 @@ const animations: any[] = [
 
 /*
 	Scenarios
-	menu is close -> toggle menu item -> dispatch store -> subscribe store -> change expand and build component
-	menu is open -> toggle other menu item -> dispatch store -> subscribe store -> build component // without animations (expand not changed)
-	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
+	menu is close -> toggle menu item -> dispatch store$ -> subscribe store$ -> change expand and build component
+	menu is open -> toggle other menu item -> dispatch store$ -> subscribe store$ -> build component // without animations (expand not changed)
+	menu is open -> toggle same menu item ->  dispatch store$ -> subscribe store$ -> change expand -> destroy component
 */
 
 export class MenuComponent implements OnInit {

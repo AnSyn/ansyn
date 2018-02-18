@@ -14,6 +14,7 @@ import { StoreModule } from '@ngrx/store';
 import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
 import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
+import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
 
 @NgModule({
 	imports: [
@@ -31,7 +32,8 @@ import { ImageryLoaderComponent } from './components/imagery-loader/imagery-load
 		ImageryContainerComponent,
 		ContextMenuComponent,
 		AnnotationContextMenuComponent,
-		ImageryLoaderComponent
+		ImageryLoaderComponent,
+		ImageryTileProgressComponent
 	],
 	exports: [ImageriesManagerComponent]
 })

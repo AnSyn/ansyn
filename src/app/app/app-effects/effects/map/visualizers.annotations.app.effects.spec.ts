@@ -193,7 +193,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		expect(visualizersAnnotationsAppEffects.cancelAnnotationEditMode$).toBeObservable(expectedResult);
 	});
 
-	describe('annotationData$ should get data from layers store$$ and dispatch AnnotationVisualizerAgentAction with relevant maps', () => {
+	describe('annotationData$ should get data from layers store and dispatch AnnotationVisualizerAgentAction with relevant maps', () => {
 
 		it('true displayAnnotationsLayer should dispatch with "all"', () => {
 			layersState.displayAnnotationsLayer = true;

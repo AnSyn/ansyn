@@ -58,7 +58,7 @@ describe('EditCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('close should call store$$.dispatch with CloseModalAction', () => {
+	it('close should call store.dispatch with CloseModalAction', () => {
 		component.close();
 		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});

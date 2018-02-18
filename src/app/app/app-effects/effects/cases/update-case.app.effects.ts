@@ -39,7 +39,7 @@ export class UpdateCaseAppEffects {
 		.ofType<Action>(...UpdateCaseActionTypes)
 		.withLatestFrom(this.store$)
 		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
-			// properties that should have been saved on another store$ ( not cases )
+			// properties that should have been saved on another store ( not cases )
 			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner } = cases.selectedCase;
 			const { selectedLayoutIndex } = statusBar;

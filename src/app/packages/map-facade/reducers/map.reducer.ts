@@ -38,7 +38,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.VIEW.SET_PROGRESS_BAR: {
 			if (state.mapsProgress.hasOwnProperty(action.payload.mapId)) {
 				const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
-				console.log(mapsProgress);
 				return { ...state, mapsProgress };
 			}
 			return state;

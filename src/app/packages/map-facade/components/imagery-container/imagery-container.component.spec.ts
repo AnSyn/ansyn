@@ -32,7 +32,10 @@ describe('ImageryContainerComponent', () => {
 					selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
 				}),
 				MockComponent({
-					selector: 'ansyn-imagery-loader', inputs: ['show']
+					selector: 'ansyn-imagery-loader', inputs: ['mapId']
+				}),
+				MockComponent({
+					selector: 'ansyn-imagery-tile-progress', inputs: ['mapId', 'lowered']
 				})
 			]
 		}).compileComponents();

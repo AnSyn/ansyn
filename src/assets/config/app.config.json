@@ -7,7 +7,7 @@
 			"name": "Default case",
 			"state": {
 				"maps": {
-					"layoutsIndex": 0,
+					"layout": "layout1",
 					"activeMapId": "defaultImagery1",
 					"data": [
 						{
@@ -280,7 +280,7 @@
 		"mode": "debug"
 	},
 	"loginConfig": {
-		"baseUrl": "http://localhost:9001/api/v1/login",
+		"baseUrl": "http://ansyn.io:9001/api/v1/login",
 		"active": true,
 		"authorizedPath": "/"
 	},
@@ -467,7 +467,7 @@
 	},
 	"idahoOverlaysSourceConfig": {
 		"defaultApi": "overlays",
-		"baseUrl": "http://localhost:9001/api/v1/",
+		"baseUrl": "http://ansyn.io:9001/api/v1/",
 		"overlaysByTimeAndPolygon": "overlays/find"
 	}
 }

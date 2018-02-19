@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CaseMapState, Overlay } from '@ansyn/core/models';
-import { get as _get, isNil as _isNil } from 'lodash';
+import { CaseMapState } from '@ansyn/core/models';
+import { isNil as _isNil } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import { MapsLayout } from '@ansyn/core';
+import { coreStateSelector, ICoreState, LayoutKey, layoutOptions, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.actions';
@@ -17,13 +17,13 @@ import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.a
 })
 
 export class ImageriesManagerComponent implements OnInit {
-
+	public core$: Observable<ICoreState> = this.store.select(coreStateSelector);
 	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
-	public selectedLayout$: Observable<MapsLayout> = this.mapState$
-		.pluck<IMapState, MapsLayout>('layout')
-		.filter(layout => !_isNil(layout))
-		.distinctUntilChanged();
+	public selectedLayout$: Observable<MapsLayout> = this.core$
+		.pluck<ICoreState, LayoutKey>('layout')
+		.distinctUntilChanged()
+		.map((layout: LayoutKey) => <MapsLayout> layoutOptions.get(layout));
 
 	public activeMapId$: Observable<string> = this.mapState$
 		.pluck<IMapState, string>('activeMapId')

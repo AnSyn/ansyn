@@ -7,21 +7,14 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	ActiveMapChangedAction,
-	ImageryCreatedAction,
 	AnnotationContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
-	ImageryRemovedAction,
-	SetLayoutAction,
-	SetLayoutSuccessAction,
-	SetMapsDataActionStore,
-	SetPendingMapsCountAction
+	ImageryRemovedAction
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
-import { CaseMapState } from '@ansyn/core';
+import { CaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -72,35 +65,6 @@ describe('MapEffects', () => {
 		const expectedResult = cold('--b--', { b: action });
 		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
 
-	});
-
-	describe('onLayoutsChange$', () => {
-		it('onLayoutsChange$ should call SetPendingMapsCountAction and SetMapsDataActionStore when more maps need to be created', () => {
-			spyOn(MapFacadeService, 'setMapsDataChanges').and.returnValue({
-				'mapsList': [],
-				'activeMapId': 'imagery1'
-			});
-
-			mapState.mapsList = <any> [
-				{ id: 'imagery1' },
-				{ id: 'imagery2' }
-			];
-
-			mapState.activeMapId = 'imagery1';
-
-			actions = hot('--a--', {
-				a: new SetLayoutAction({
-					'id': 'dfgdfg',
-					'mapsCount': 3
-				})
-			});
-
-			const expectedResults = cold('--(bc)--', {
-				b: new SetPendingMapsCountAction(1),
-				c: new SetMapsDataActionStore({ 'mapsList': [], 'activeMapId': 'imagery1' })
-			});
-			expect(mapEffects.onLayoutsChange$).toBeObservable(expectedResults);
-		});
 	});
 
 	describe('onMapCreatedDecreasePendingCount$', () => {

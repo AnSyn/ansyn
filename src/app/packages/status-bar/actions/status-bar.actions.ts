@@ -5,7 +5,6 @@ import { ComboBoxesProperties } from '@ansyn/status-bar/models';
 import { StatusBarFlag } from '@ansyn/status-bar';
 
 export const StatusBarActionsTypes = {
-	CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
 	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
@@ -14,18 +13,10 @@ export const StatusBarActionsTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	EXPAND: 'EXPAND',
 	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
-	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT',
-	SET_NOT_FROM_CASE_OVERLAY: 'SET_NOT_FROM_CASE_OVERLAY'
+	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT'
 };
 // some actions does not have payload
 export type StatusActions = any;
-
-export class ChangeLayoutAction implements Action {
-	type: string = StatusBarActionsTypes.CHANGE_LAYOUT;
-
-	constructor(public payload: number) {
-	}
-}
 
 export class CopySelectedCaseLinkAction implements Action {
 	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;
@@ -74,13 +65,6 @@ export class SetOverlaysCountAction implements Action {
 	type = StatusBarActionsTypes.SET_OVERLAYS_COUNT;
 
 	constructor(public payload: number) {
-	}
-}
-
-export class SetOverlayNotInCaseAction implements Action {
-	type = StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY;
-
-	constructor(public payload: boolean) {
 	}
 }
 

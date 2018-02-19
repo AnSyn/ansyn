@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { IToastMessage } from '../reducers/core.reducer';
+import { IToastMessage, AlertMsgTypes  } from '../reducers/core.reducer';
 import { Overlay } from '../models/overlay.model';
-import { AlertMsgTypes, OverlaysCriteria } from '@ansyn/core';
+import { LayoutKey } from '../models/layout-options.model';
+import { OverlaysCriteria } from '../models/overlay.model';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -11,7 +12,9 @@ export const CoreActionTypes = {
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
 	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
-	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA'
+	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
+	SET_LAYOUT: 'SET_LAYOUT',
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS'
 };
 
 export type CoreActions =
@@ -72,3 +75,16 @@ export class SetOverlaysCriteriaAction implements Action {
 	}
 }
 
+export class SetLayoutAction implements Action {
+	type = CoreActionTypes.SET_LAYOUT;
+
+	constructor(public payload: LayoutKey) {
+	}
+}
+
+export class SetLayoutSuccessAction implements Action {
+	type = CoreActionTypes.SET_LAYOUT_SUCCESS;
+
+	constructor() {
+	}
+}

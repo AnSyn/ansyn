@@ -1,20 +1,19 @@
-import { Component, HostListener, Inject, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
-	BackToWorldViewAction, ChangeLayoutAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
+	BackToWorldViewAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
 	GoPrevAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
 	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState, ClearActiveInteractionsAction,
 	coreStateSelector,
-	ICoreState, Overlay, OverlaysCriteria, SetOverlaysCriteriaAction
+	ICoreState, LayoutKey, layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
 import { comboBoxesOptions, ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
-import { layoutOptions } from '../../models/layout-options.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -23,13 +22,17 @@ import { layoutOptions } from '../../models/layout-options.model';
 })
 
 export class StatusBarComponent implements OnInit {
-	layouts = layoutOptions;
+	layouts = Array.from(layoutOptions.values());
 	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.core$
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
-	selectedLayoutIndex$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('selectedLayoutIndex').distinctUntilChanged();
+	selectedLayoutIndex$: Observable<number> = this.core$
+		.pluck<ICoreState, LayoutKey>('layout')
+		.distinctUntilChanged()
+		.map((layout) => Array.from(layoutOptions.keys()).indexOf(layout));
+
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties').distinctUntilChanged();
 	comboBoxesProperties: ComboBoxesProperties = {};
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
@@ -117,8 +120,8 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	setSubscribers() {
-		this.selectedLayoutIndex$.subscribe((_selectedLayoutIndex: number) => {
-			this.selectedLayoutIndex = _selectedLayoutIndex;
+		this.selectedLayoutIndex$.subscribe((selectedLayoutIndex: number) => {
+			this.selectedLayoutIndex = selectedLayoutIndex;
 			this.hideOverlay = this.layouts[this.selectedLayoutIndex].mapsCount > 1;
 		});
 
@@ -151,7 +154,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	layoutSelectChange(selectedLayoutIndex: number): void {
-		this.store.dispatch(new ChangeLayoutAction(selectedLayoutIndex));
+		this.store.dispatch(new SetLayoutAction(this.layouts[selectedLayoutIndex].id));
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {

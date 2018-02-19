@@ -5,7 +5,6 @@ import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
-	LoadOverlaysAction,
 	OverlaysActionTypes,
 	OverlaysMarkupAction,
 	RequestOverlayByIDFromBackendAction
@@ -30,13 +29,12 @@ import {
 	statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { layoutOptions, StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	ImageryCreatedAction,
 	DrawPinPointAction,
 	MapSingleClickAction,
-	PinPointTriggerAction,
-	SetLayoutAction,
+	PinPointTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	endTimingLog,
@@ -54,7 +52,6 @@ import {
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
-import { ChangeLayoutAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
@@ -346,25 +343,10 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onLayoutChange$
-	 * @ofType ChangeLayoutAction
-	 * @dependencies cases, statusBar
-	 * @action UpdateCaseAction?, SetLayoutAction
-	 */
-	@Effect()
-	onLayoutChange$: Observable<any> = this.actions$
-		.ofType<ChangeLayoutAction>(StatusBarActionsTypes.CHANGE_LAYOUT)
-		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(statusBarStateSelector), ({ payload }, selectedCase: Case, statusbar: IStatusBarState) => {
-			return [selectedCase, layoutOptions[payload], payload];
-		})
-		.map(([selectedCase, layout]: any[]) => new SetLayoutAction(layout));
-
-	/**
-	 * @type Effect
 	 * @name setOverlaysNotInCase$
 	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
 	 * @dependencies overlays, map
-	 * @action SetOverlayNotInCaseAction
+	 * @action UpdateAlertMsg
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$

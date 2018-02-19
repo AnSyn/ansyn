@@ -2,6 +2,7 @@ import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import { LayoutKey } from '@ansyn/core';
 
 export interface Case {
 	id?: string;
@@ -74,7 +75,7 @@ export interface CaseLayersState {
 }
 
 export interface CaseMapsState {
-	layoutsIndex: number,
+	layout: LayoutKey,
 	activeMapId: string,
 	data: CaseMapState[]
 }

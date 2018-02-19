@@ -34,7 +34,6 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
 	PinLocationModeTriggerAction,
-	SetLayoutAction,
 	SetMapManualImageProcessing,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
@@ -44,7 +43,10 @@ import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manag
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ImageManualProcessArgs } from '@ansyn/core';
+import {
+	CoreActionTypes, coreStateSelector, ICoreState, ImageManualProcessArgs, layoutOptions,
+	SetLayoutAction
+} from '@ansyn/core';
 
 
 @Injectable()
@@ -361,9 +363,10 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
-		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
+		.ofType<SetLayoutAction>(CoreActionTypes.SET_LAYOUT)
 		.mergeMap(({ payload }) => {
-			if (payload.mapsCount === 1) {
+			const { mapsCount } = layoutOptions.get(payload);
+			if (mapsCount === 1) {
 				return [
 					new DisableMouseShadow(),
 					new StopMouseShadow()

@@ -27,9 +27,9 @@
 				class="combo-box-width"
 				[icon]="'icon-status-bar-orientation'"
 				[options]="orientations"
-				[selectedIndex]="selectedOrientationIndex"
+				[selected]="comboBoxesProperties.orientation"
 				[comboBoxToolTipDescription]="toolTips.orientation"
-				(selectedIndexChange)="comboBoxesChange({orientation: orientations[$event]})">
+				(selectedChange)="comboBoxesChange({ orientation: $event })">
 			</ansyn-combo-box>
 		</div>
 
@@ -41,8 +41,8 @@
 				[comboBoxToolTipDescription]="toolTips.geoFilter"
 				[icon]="'icon-status-bar-geo'"
 				[options]="geoFilters"
-				[selectedIndex]="selectedGeoFilterIndex"
-				(selectedIndexChange)="comboBoxesChange({geoFilter: geoFilters[$event]})">
+				[selected]="comboBoxesProperties.geoFilter"
+				(selectedChange)="comboBoxesChange({ geoFilter: $event })">
 			</ansyn-combo-box>
 
 			<div class="buttons">
@@ -70,8 +70,8 @@
 				[icon]="'icon-status-bar-time'"
 				[comboBoxToolTipDescription]="toolTips.timeFilter"
 				[options]="timeFilters"
-				[selectedIndex]="selectedTimeFilterIndex"
-				(selectedIndexChange)="comboBoxesChange({timeFilter: timeFilters[$event]})">
+				[selected]="comboBoxesProperties.timeFilter"
+				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
 			<div class="buttons">
 				<button (click)="toggleTimelineStartEndSearch()"
@@ -97,10 +97,10 @@
 				class="combo-center"
 				[comboBoxToolTipDescription]="toolTips.screenNumber"
 				[options]="layouts"
-				[renderFunction]="layoutRender"
-				[selectedIndex]="selectedLayoutIndex"
+				[renderFunction]="layoutRender.bind(this)"
+				[selected]="layout"
 				toolTipField="mapsCount"
-				(selectedIndexChange)="layoutSelectChange($event)">
+				(selectedChange)="layoutSelectChange($event)">
 			</ansyn-combo-box>
 		</div>
 

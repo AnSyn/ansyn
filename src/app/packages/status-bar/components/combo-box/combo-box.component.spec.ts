@@ -56,8 +56,10 @@ describe('ComboBoxComponent', () => {
 	});
 
 	it('selectOption should get index, set the index on selected and change "visibility" of optionsContainer to "hidden".', () => {
-		component.selectOption(20);
-		expect(component.selectedIndex).toEqual(20);
+		spyOn(component.selectedChange, 'emit');
+		component.selectOption('20');
+		expect(component.selected).toEqual('20');
 		expect(component.optionsContainer.nativeElement.style.visibility).toEqual('hidden');
+		expect(component.selectedChange.emit).toHaveBeenCalledWith('20');
 	});
 });

@@ -8,8 +8,9 @@ import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import { SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
+import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
+import { coreFeatureKey, CoreReducer, SetLayoutAction } from '@ansyn/core';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -41,7 +42,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
-				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer })
 			],
 			declarations: [
 				ImageriesManagerComponent,
@@ -69,13 +70,8 @@ describe('ImageriesManagerComponent', () => {
 			{ id: 'imagery2', data: { overlay: {} } }
 		];
 		const activeMapId = 'imagery1';
-		const selectedLayout: any = {
-			id: '1',
-			description: '',
-			mapsCount: 2
-		};
+		store.dispatch(new SetLayoutAction('layout2'));
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
-		store.dispatch(new SetLayoutAction(selectedLayout));
 		fixture.detectChanges();
 	});
 

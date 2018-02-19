@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CaseMapState } from '@ansyn/core/models';
-import { isNil as _isNil } from 'lodash';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';

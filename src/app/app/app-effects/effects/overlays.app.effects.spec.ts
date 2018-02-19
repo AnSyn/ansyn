@@ -32,17 +32,17 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { ChangeLayoutAction, statusBarStateSelector } from '@ansyn/status-bar';
+import { statusBarStateSelector } from '@ansyn/status-bar';
 import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
-	SetLayoutSuccessAction,
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -270,7 +270,7 @@ describe('OverlaysAppEffects', () => {
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['one', 'two', 'three']) });
 		const expectedResults = cold('--(bc)--', {
 			b: new SetPendingOverlaysAction(['one', 'two', 'three']),
-			c: new ChangeLayoutAction(3)
+			c: new SetLayoutAction('layout4')
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
 	});

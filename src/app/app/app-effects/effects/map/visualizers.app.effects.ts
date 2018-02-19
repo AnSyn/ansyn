@@ -43,6 +43,7 @@ import { SetPinLocationModeAction } from '@ansyn/menu-items';
 import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
+import { IMapVisualizer } from '@ansyn/imagery';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -440,15 +441,14 @@ export class VisualizersAppEffects {
 		})
 		.filter((overlay) => Boolean(overlay))
 		.do(({ overlay, mapId }: any) => {
-			const communicator = this.imageryCommunicatorService.provide(mapId);
-			const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+			const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapId, FrameVisualizerType);
 			const entityToDraw = this.mapOverlayToDraw(overlay);
 			if (frameVisualizer) {
 				frameVisualizer.setMarkupFeatures([{ id: overlay.id, class: true }]);
 				frameVisualizer.setEntities([entityToDraw]);
 			}
 			else {
-				console.log(communicator);
+				console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
 			}
 		});
 
@@ -459,8 +459,7 @@ export class VisualizersAppEffects {
 		.map(([action, mapState]: [ActiveMapChangedAction, IMapState]) => {
 			mapState.mapsList.forEach((mapData: CaseMapState) => {
 				if (Boolean(mapData.data.overlay)) {
-					const communicator = this.imageryCommunicatorService.provide(mapData.id);
-					const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+					const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapData.id, FrameVisualizerType);
 					if (frameVisualizer) {
 						frameVisualizer.setMarkupFeatures([{
 							id: mapData.data.overlay.id,
@@ -469,7 +468,7 @@ export class VisualizersAppEffects {
 						]);
 					}
 					else {
-						console.log(communicator);
+						console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
 					}
 				}
 			});
@@ -482,13 +481,12 @@ export class VisualizersAppEffects {
 			return mapState.mapsList.find(map => map.id === action.payload.mapId)
 		})
 		.map((currentMap: CaseMapState) => {
-					const communicator = this.imageryCommunicatorService.provide(currentMap.id);
-					const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+					const frameVisualizer = <FrameVisualizer>this.getVisualizer(currentMap.id, FrameVisualizerType);
 					if (frameVisualizer) {
 						frameVisualizer.clearOneEntity(currentMap.data.overlay.id);
 					}
 					else {
-						console.log(communicator);
+						console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
 					}
 				})
 
@@ -528,6 +526,11 @@ export class VisualizersAppEffects {
 				}
 			}
 		}
+	}
+
+	getVisualizer(mapId, visualizerType) {
+		const communicator = this.imageryCommunicatorService.provide(mapId);
+		return <IMapVisualizer>communicator.getVisualizer(visualizerType);
 	}
 
 	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true) {

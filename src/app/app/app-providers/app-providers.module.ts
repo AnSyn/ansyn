@@ -36,6 +36,7 @@ import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter
 import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
 
 @NgModule({
 	imports: [
@@ -76,14 +77,24 @@ import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata
 				type: OpenLayersVisualizerMapType,
 				visualizer: FootprintPolygonVisualizer
 			}
-		}, {
+		},
+		{
 			provide: MapVisualizer,
 			multi: true,
 			useValue: {
 				type: OpenLayersVisualizerMapType,
 				visualizer: FootprintHeatmapVisualizer
 			}
-		}, {
+		},
+		{
+			provide: MapVisualizer,
+			multi: true,
+			useValue: {
+				type: OpenLayersVisualizerMapType,
+				visualizer: FrameVisualizer
+			}
+		},
+		{
 			provide: MapVisualizer,
 			multi: true,
 			useValue: {

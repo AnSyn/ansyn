@@ -1,15 +1,10 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { isEmpty, differenceWith } from 'lodash';
+import { differenceWith, isEmpty } from 'lodash';
 import {
-	BackToWorldAction,
-	DrawOverlaysOnMapTriggerAction,
-	HoverFeatureTriggerAction,
-	MapActionTypes,
-	PinPointTriggerAction,
-	ActiveMapChangedAction,
-	SetMapsDataActionStore, DrawPinPointAction
+	ActiveMapChangedAction, BackToWorldAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction,
+	MapActionTypes, PinPointTriggerAction, SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -32,13 +27,8 @@ import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHeatmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import {
-	GoToInputChangeAction,
-	SetAnnotationMode,
-	ShowOverlaysFootprintAction,
-	StartMouseShadow,
-	StopMouseShadow,
-	SetMeasureDistanceToolState,
-	ToolsActionsTypes
+	GoToInputChangeAction, SetAnnotationMode, SetMeasureDistanceToolState, ShowOverlaysFootprintAction,
+	StartMouseShadow, StopMouseShadow, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -48,11 +38,11 @@ import { ContextEntityVisualizer } from '../../../index';
 import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { MeasureDistanceVisualizerType, MeasureDistanceVisualizer } from '@ansyn/open-layer-visualizers';
+import { MeasureDistanceVisualizer, MeasureDistanceVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
 import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { statusBarFlagsItems } from '@ansyn/status-bar';
+import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -250,7 +240,7 @@ export class VisualizersAppEffects {
 		)
 		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
 		.map(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
-			mapState.mapsList.forEach( (map: CaseMapState) => {
+			mapState.mapsList.forEach((map: CaseMapState) => {
 				this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
 			});
 		});
@@ -420,7 +410,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor
@@ -430,6 +420,79 @@ export class VisualizersAppEffects {
 			}
 			return clearActions;
 		});
+
+
+	/**
+	 * @type Effect
+	 * @name drawFrameToOverLay$
+	 * @ofType DISPLAY_OVERLAY_FROM_STORE
+	 * @dependencies overlays
+	 * @action void
+	 */
+	@Effect({ dispatch: false })
+	drawFrameToOverLay$: Observable<void> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlaySuccessAction, overLayState: IOverlaysState, mapState: IMapState): any => {
+			return {
+				overlay: overLayState.overlays.get(action.payload.overlay.id),
+				mapId: action.payload.mapId || mapState.activeMapId
+			};
+		})
+		.filter((overlay) => Boolean(overlay))
+		.do(({ overlay, mapId }: any) => {
+			const communicator = this.imageryCommunicatorService.provide(mapId);
+			const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+			const entityToDraw = this.mapOverlayToDraw(overlay);
+			if (frameVisualizer) {
+				frameVisualizer.setMarkupFeatures([{ id: overlay.id, class: true }]);
+				frameVisualizer.setEntities([entityToDraw]);
+			}
+			else {
+				console.log(communicator);
+			}
+		});
+
+	@Effect({ dispatch: false })
+	activeFrameColorToOverLay$: Observable<void> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [ActiveMapChangedAction, IMapState]) => {
+			mapState.mapsList.forEach((mapData: CaseMapState) => {
+				if (Boolean(mapData.data.overlay)) {
+					const communicator = this.imageryCommunicatorService.provide(mapData.id);
+					const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+					if (frameVisualizer) {
+						frameVisualizer.setMarkupFeatures([{
+							id: mapData.data.overlay.id,
+							class: action.payload === mapData.id
+						}
+						]);
+					}
+					else {
+						console.log(communicator);
+					}
+				}
+			});
+		});
+
+	@Effect({ dispatch: false })
+	removeOverlayFram$: Observable<void> = this.actions$
+		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldAction, mapState: IMapState) => {
+			return mapState.mapsList.find(map => map.id === action.payload.mapId)
+		})
+		.map((currentMap: CaseMapState) => {
+					const communicator = this.imageryCommunicatorService.provide(currentMap.id);
+					const frameVisualizer = <FrameVisualizer>communicator.getVisualizer(FrameVisualizerType);
+					if (frameVisualizer) {
+						frameVisualizer.clearOneEntity(currentMap.data.overlay.id);
+					}
+					else {
+						console.log(communicator);
+					}
+				})
+
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
@@ -588,18 +651,22 @@ export class VisualizersAppEffects {
 
 	getEntitiesToDraw(overlayState: IOverlaysState): IVisualizerEntity[] {
 		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		return overlaysToDraw.map(({ id, footprint }) => {
-			const featureJson: GeoJSON.Feature<any> = {
-				type: 'Feature',
-				// calculate projection?
-				geometry: footprint,
-				properties: {}
-			};
-			return {
-				id,
-				featureJson
-			};
-		});
+		return overlaysToDraw.map(this.mapOverlayToDraw);
+	}
+
+	mapOverlayToDraw(overLayData) {
+		const id = overLayData.id;
+		const footPrint = overLayData.footprint;
+		const featureJson: GeoJSON.Feature<any> = {
+			type: 'Feature',
+			// calculate projection?
+			geometry: footPrint,
+			properties: {}
+		};
+		return {
+			id,
+			featureJson
+		};
 	}
 
 }

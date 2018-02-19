@@ -48,7 +48,7 @@ export interface IMapVisualizer {
 	onDisposedEvent: EventEmitter<any>;
 	events: Map<VisualizerEventTypes, EventEmitter<any>>;
 	interactions: Map<VisualizerInteractionTypes, any>;
-	subscribers: Subscriber<any>[]
+	subscribers: Subscriber<any>[];
 
 	/**
 	 * @description This function is called after constructor and gives those args to the visualizer

@@ -4,5 +4,9 @@ export interface ICoreConfig {
 		noGeoRegistration: string,
 		overlayIsNotPartOfCase: string,
 		imageIsOutOfBounds: string
+	},
+	colors: {
+		active: string,
+		inactive: string
 	}
 }

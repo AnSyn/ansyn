@@ -3,6 +3,7 @@ import {
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
+import { LayoutKey } from '../models/layout-options.model';
 
 export enum AlertMsgTypes {
 	'OverlaysOutOfBounds', 'OverlayIsNotPartOfCase'
@@ -20,6 +21,7 @@ export interface ICoreState {
 	favoriteOverlays: Overlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
+	layout: LayoutKey;
 }
 
 export const coreInitialState: ICoreState = {
@@ -29,7 +31,8 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
-	overlaysCriteria: {}
+	overlaysCriteria: {},
+	layout: 'layout1'
 };
 
 export const coreFeatureKey = 'core';
@@ -51,6 +54,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case  CoreActionTypes.SET_OVERLAYS_CRITERIA:
 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
 			return { ...state, overlaysCriteria };
+
+		case CoreActionTypes.SET_LAYOUT:
+			return {...state, layout: action.payload };
 
 		default:
 			return state;

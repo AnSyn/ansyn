@@ -6,16 +6,15 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
 import { CasesActionTypes, CasesService, SelectCaseAction } from '@ansyn/menu-items';
-import { ChangeLayoutAction, SetComboBoxesProperties } from '@ansyn/status-bar';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import {
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Case, SetOverlaysCriteriaAction } from '@ansyn/core';
-import { isEmpty } from 'lodash';
-import { LoadOverlaysAction, OverlaysService } from '@ansyn/overlays';
+import { Case, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
+import { OverlaysService } from '@ansyn/overlays';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -98,12 +97,13 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: Case): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { layoutsIndex } = state.maps;
 		const { orientation, geoFilter, timeFilter } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// core
 		const { favoriteOverlays, time, region } = state;
+		const { layout } = state.maps;
+
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);
 		}
@@ -113,7 +113,7 @@ export class SelectCaseAppEffects {
 		// layers
 		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
 		return [
-			new ChangeLayoutAction(+layoutsIndex),
+			new SetLayoutAction(layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region }),
 			new SetMapsDataActionStore({ mapsList: data, activeMapId }),

@@ -3,13 +3,14 @@ import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { layoutOptions } from '@ansyn/core';
 
 export interface MapsProgress {
 	[key: string]: number
 }
 
 export interface IMapState {
-	layout: MapsLayout;
 	activeMapId: string;
 	mapsList: CaseMapState[];
 	mapsProgress: MapsProgress;
@@ -19,7 +20,6 @@ export interface IMapState {
 }
 
 export const initialMapState: IMapState = {
-	layout: null,
 	activeMapId: null,
 	mapsList: [],
 	mapsProgress: {},
@@ -64,14 +64,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.VIEW.SET_IS_LOADING:
 			return { ...state, mapsIsLoading: new Set(action.payload) };
 
-		case MapActionTypes.SET_LAYOUT:
-			return { ...state, layout: action.payload };
-
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
-
-		case MapActionTypes.SET_PENDING_MAPS_COUNT:
-			return { ...state, pendingMapsCount: action.payload };
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
 			const currentCount = state.pendingMapsCount;
@@ -94,6 +88,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				toggledMap.flags.layers = !toggledMap.flags.layers;
 			}
 			return { ...state };
+
+		case CoreActionTypes.SET_LAYOUT:
+			const layout = layoutOptions.get(action.payload);
+			if ( layout.mapsCount !== state.mapsList.length && state.mapsList.length) {
+				const pendingMapsCount = Math.abs(layout.mapsCount - state.mapsList.length);
+				const mapsDataChanges = MapFacadeService.setMapsDataChanges(state.mapsList, state.activeMapId, layout);
+				return { ...state, pendingMapsCount, ...mapsDataChanges };
+			}
+			return state;
 
 		default:
 			return state;

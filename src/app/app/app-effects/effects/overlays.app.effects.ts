@@ -17,7 +17,6 @@ import { Overlay } from '@ansyn/overlays';
 import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ChangeLayoutAction, layoutOptions } from '@ansyn/status-bar';
 import {
 	IMapState,
 	MapActionTypes,
@@ -26,7 +25,7 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
-import { MapsLayout } from '@ansyn/core';
+import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
@@ -180,8 +179,11 @@ export class OverlaysAppEffects {
 				return actionsArray;
 			}
 			else {
-				const layoutIndex = layoutOptions.findIndex(({ mapsCount }: MapsLayout) => mapsCount === validOverlays.length);
-				return [new SetPendingOverlaysAction(validOverlays), new ChangeLayoutAction(layoutIndex)];
+				const layout = Array.from(layoutOptions.keys()).find((key: LayoutKey) => {
+					const layout = layoutOptions.get(key);
+					return layout.mapsCount === validOverlays.length
+				});
+				return [new SetPendingOverlaysAction(validOverlays), new SetLayoutAction(layout)];
 			}
 		});
 
@@ -195,7 +197,7 @@ export class OverlaysAppEffects {
 	 */
 	@Effect()
 	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SET_LAYOUT_SUCCESS)
+		.ofType(CoreActionTypes.SET_LAYOUT_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]) => mapState.pendingOverlays.length > 0)
 		.mergeMap(([action, mapState]) => {

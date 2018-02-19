@@ -19,7 +19,7 @@ export const UpdateCaseActionTypes = [
 	StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES, // -> geoFilter, timeFilter, orientation
 	...Object.values(LayersActionTypes.ANNOTATIONS), // -> annotationsLayer, displayAnnotationsLayer
 	MapActionTypes.STORE.SET_MAPS_DATA, // -> maps: activeMapId, data
-	StatusBarActionsTypes.CHANGE_LAYOUT, // -> maps: layoutIndex
+	CoreActionTypes.SET_LAYOUT, // -> maps: layoutIndex
 	CoreActionTypes.SET_OVERLAYS_CRITERIA // -> time, region
 ];
 
@@ -42,11 +42,10 @@ export class UpdateCaseAppEffects {
 			// properties that should have been saved on another store ( not cases )
 			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner } = cases.selectedCase;
-			const { selectedLayoutIndex } = statusBar;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
-			const { favoriteOverlays, overlaysCriteria } = core;
+			const { favoriteOverlays, overlaysCriteria, layout } = core;
 			const { time, region } = overlaysCriteria;
 			if (facetChangesActionType.includes(action.type)) {
 				facets = FiltersService.buildCaseFacets(filters);
@@ -62,7 +61,7 @@ export class UpdateCaseAppEffects {
 					timeFilter,
 					orientation,
 					maps: {
-						layoutsIndex: selectedLayoutIndex,
+						layout,
 						data: mapsList,
 						activeMapId
 					},

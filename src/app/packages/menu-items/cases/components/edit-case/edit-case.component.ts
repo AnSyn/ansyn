@@ -93,7 +93,7 @@ export class EditCaseComponent implements OnInit {
 			state: {
 				...selectedCase.state,
 				maps: {
-					layoutsIndex: 0,
+					layout: 'layout1',
 					activeMapId: activeMap.id,
 					data: [activeMap]
 				},

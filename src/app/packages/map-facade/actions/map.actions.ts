@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { CaseMapPosition, CaseMapState, MapsLayout } from '@ansyn/core';
+import { CaseMapPosition, CaseMapState } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
 import { Feature } from 'geojson';
 import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
@@ -200,20 +200,6 @@ export class DrawOverlaysOnMapTriggerAction implements Action {
 	}
 }
 
-export class SetLayoutAction implements Action {
-	type = MapActionTypes.SET_LAYOUT;
-
-	constructor(public payload: MapsLayout) {
-	}
-}
-
-export class SetLayoutSuccessAction implements Action {
-	type = MapActionTypes.SET_LAYOUT_SUCCESS;
-
-	constructor() {
-	}
-}
-
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.STORE.SET_MAPS_DATA;
 
@@ -256,13 +242,6 @@ export class AnnotationRemoveFeature implements Action {
 	constructor(public payload: string) {
 
 	};
-}
-
-export class SetPendingMapsCountAction implements Action {
-	type: string = MapActionTypes.SET_PENDING_MAPS_COUNT;
-
-	constructor(public payload: number) {
-	}
 }
 
 export class DecreasePendingMapsCountAction implements Action {

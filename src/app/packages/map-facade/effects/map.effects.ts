@@ -13,12 +13,16 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-layers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
-import { AlertMsgTypes, CaseMapPosition, coreStateSelector, ICoreState, UpdateAlertMsg } from '@ansyn/core';
+import {
+	AlertMsgTypes, CaseMapPosition, CoreActionTypes, coreStateSelector, ICoreState, layoutOptions, SetLayoutAction,
+	SetLayoutSuccessAction,
+	UpdateAlertMsg
+} from '@ansyn/core';
 import {
 	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
 	DecreasePendingMapsCountAction, MapActionTypes, MapsListChangedAction,
-	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction, SetLayoutAction,
-	SetLayoutSuccessAction, SetMapManualImageProcessing, SetMapsDataActionStore, SetPendingMapsCountAction,
+	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction,
+	SetMapManualImageProcessing, SetMapsDataActionStore,
 	SynchronizeMapsAction, ImageryCreatedAction, ImageryRemovedAction
 
 } from '../actions/map.actions';
@@ -109,24 +113,6 @@ export class MapEffects {
 	onContextMenuShow$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.share();
-
-	/**
-	 * @type Effect
-	 * @name onLayoutsChange$
-	 * @ofType SetLayoutAction
-	 * @dependencies map
-	 * @filter mapsList is greater than zero and not equal to mapsCount
-	 * @action SetMapsDataActionStore, SetPendingMapsCountAction
-	 */
-	@Effect()
-	onLayoutsChange$: Observable<any> = this.actions$
-		.ofType<SetLayoutAction>(MapActionTypes.SET_LAYOUT)
-		.withLatestFrom(this.store$.select(mapStateSelector).pluck<any, any>('mapsList'), this.store$.select(mapStateSelector).pluck('activeMapId'))
-		.filter(([{ payload }, mapsList]) => payload.mapsCount !== mapsList.length && mapsList.length > 0)
-		.mergeMap(([{ payload }, mapsList, activeMapId]) => [
-			new SetPendingMapsCountAction(Math.abs(payload.mapsCount - mapsList.length)),
-			new SetMapsDataActionStore(MapFacadeService.setMapsDataChanges(mapsList, activeMapId, payload))
-		]);
 
 	/**
 	 * @type Effect

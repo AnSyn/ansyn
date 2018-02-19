@@ -10,28 +10,22 @@ export const statusBarToastMessages = {
 };
 
 export interface IStatusBarState {
-	selectedLayoutIndex: number;
 	flags: Map<StatusBarFlag, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
-	overlaysCount: number,
-	overlayNotInCase: boolean
+	overlaysCount: number
 }
 
 export const StatusBarInitialState: IStatusBarState = {
-	selectedLayoutIndex: 0,
 	flags: new Map<StatusBarFlag, boolean>(),
 	comboBoxesProperties: {},
-	overlaysCount: 0,
-	overlayNotInCase: false
+	overlaysCount: 0
 };
+
 export const statusBarFeatureKey = 'statusBar';
 export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = createFeatureSelector<IStatusBarState>(statusBarFeatureKey);
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusActions): IStatusBarState {
 	switch (action.type) {
-		case StatusBarActionsTypes.CHANGE_LAYOUT:
-			return Object.assign({}, state, { selectedLayoutIndex: action.payload });
-
 		case StatusBarActionsTypes.COPY_SELECTED_CASE_LINK:
 			return Object.assign({}, state);
 
@@ -54,9 +48,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 
 		case StatusBarActionsTypes.SET_OVERLAYS_COUNT:
 			return { ...state, overlaysCount: action.payload };
-
-		case StatusBarActionsTypes.SET_NOT_FROM_CASE_OVERLAY:
-			return { ...state, overlayNotInCase: action.payload };
 
 		default:
 			return state;

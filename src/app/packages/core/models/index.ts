@@ -9,3 +9,4 @@ export * from './logger-config.model';
 export * from './visualizers/annotations.model';
 export * from './core.config.model'
 export * from './core.config'
+export * from './layout-options.model';

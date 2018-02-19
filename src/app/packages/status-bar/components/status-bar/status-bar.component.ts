@@ -9,7 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import {
 	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState, ClearActiveInteractionsAction,
 	coreStateSelector,
-	ICoreState, LayoutKey, layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction
+	ICoreState, LayoutKey, layoutOptions, MapsLayout, Overlay, OverlaysCriteria, SetLayoutAction,
+	SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
@@ -22,29 +23,31 @@ import { comboBoxesOptions, ComboBoxesProperties, StatusBarFlag, statusBarFlagsI
 })
 
 export class StatusBarComponent implements OnInit {
-	layouts = Array.from(layoutOptions.values());
 	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
 	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.core$
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
-	selectedLayoutIndex$: Observable<number> = this.core$
-		.pluck<ICoreState, LayoutKey>('layout')
-		.distinctUntilChanged()
-		.map((layout) => Array.from(layoutOptions.keys()).indexOf(layout));
 
-	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties').distinctUntilChanged();
+	layout$: Observable<LayoutKey> = this.core$
+		.pluck<ICoreState, LayoutKey>('layout')
+		.distinctUntilChanged();
+
+	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$
+		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
+		.distinctUntilChanged();
+
 	comboBoxesProperties: ComboBoxesProperties = {};
 	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
 	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
+
 	favoriteOverlays: Overlay[];
-	selectedLayoutIndex: number;
+	layout: LayoutKey;
 	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
 	time: CaseTimeState;
-	hideOverlay: boolean;
 	timeSelectionEditIcon = false;
 	overlaysCount: number;
 	@Input() selectedCaseName: string;
@@ -55,17 +58,12 @@ export class StatusBarComponent implements OnInit {
 	get statusBarFlagsItems() {
 		return statusBarFlagsItems;
 	}
-	get selectedOrientationIndex(): number {
-		return comboBoxesOptions.orientations.indexOf(this.comboBoxesProperties.orientation);
-	}
-	get selectedGeoFilterIndex(): number {
-		return comboBoxesOptions.geoFilters.indexOf(this.comboBoxesProperties.geoFilter);
-	}
-	get selectedTimeFilterIndex(): number {
-		return comboBoxesOptions.timeFilters.indexOf(this.comboBoxesProperties.timeFilter);
-	}
+
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
+	}
+	get layouts(): LayoutKey[] {
+		return Array.from(layoutOptions.keys());
 	}
 	get geoFilters(): CaseGeoFilter[] {
 		return comboBoxesOptions.geoFilters;
@@ -75,6 +73,9 @@ export class StatusBarComponent implements OnInit {
 	}
 	get orientations(): CaseOrientation[] {
 		return comboBoxesOptions.orientations;
+	}
+	get hideOverlay(): boolean {
+		return layoutOptions.get(this.layout).mapsCount > 1;
 	}
 
 	@HostListener('window:keydown', ['$event'])
@@ -120,10 +121,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	setSubscribers() {
-		this.selectedLayoutIndex$.subscribe((selectedLayoutIndex: number) => {
-			this.selectedLayoutIndex = selectedLayoutIndex;
-			this.hideOverlay = this.layouts[this.selectedLayoutIndex].mapsCount > 1;
-		});
+		this.layout$.subscribe((layout: LayoutKey) =>  this.layout = layout);
 
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
 
@@ -149,12 +147,12 @@ export class StatusBarComponent implements OnInit {
 		this.toggleTimelineStartEndSearch();
 	}
 
-	layoutRender(layoutIndex) {
-		return `<i class="icon-screen-${layoutIndex + 1}" ></i>`;
+	layoutRender(layout: LayoutKey) {
+		return `<i class="icon-screen-${this.layouts.indexOf(layout) + 1}" ></i>`;
 	}
 
-	layoutSelectChange(selectedLayoutIndex: number): void {
-		this.store.dispatch(new SetLayoutAction(this.layouts[selectedLayoutIndex].id));
+	layoutSelectChange(layout: LayoutKey): void {
+		this.store.dispatch(new SetLayoutAction(layout));
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {

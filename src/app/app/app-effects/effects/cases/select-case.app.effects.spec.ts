@@ -5,12 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import { SelectCaseAppEffects } from '@ansyn/app/app-effects/effects/cases/select-case.app.effects';
 import {
 	Case, CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
-	CaseTimeState, SetOverlaysCriteriaAction
+	CaseTimeState, SetLayoutAction, SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { CasesService, SelectCaseAction } from '@ansyn/menu-items';
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer, ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ChangeLayoutAction, SetComboBoxesProperties } from '@ansyn/status-bar';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -74,7 +74,7 @@ describe('SelectCaseAppEffects', () => {
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
 				favoriteOverlays: Overlay[] = [],
-				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layoutsIndex: 6 },
+				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} };
 
 			const state: CaseState = <any> { orientation, geoFilter, timeFilter, time, region, favoriteOverlays, maps, layers };
@@ -89,7 +89,7 @@ describe('SelectCaseAppEffects', () => {
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
 			const expectedResult = cold('--(abcdefg)--', {
-				a: new ChangeLayoutAction(+maps.layoutsIndex),
+				a: new SetLayoutAction(maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),

@@ -5,7 +5,7 @@
 		[class.active]="optionsVisible"
 	>
 		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
-		<div class="rander" [innerHTML]="render(selectedIndex)"></div>
+		<div class="rander" [innerHTML]="render(selected)"></div>
 		<span class="arrow">
 			{{ !optionsVisible ? '▼' : '▲'}}
 		</span>
@@ -14,11 +14,11 @@
 	<div class="options-container"
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
-		<div class="option" *ngFor="let option of options; index as index"
+		<div class="option" *ngFor="let option of options"
 			 [attr.tooltip-value]="toolTipField ? option[toolTipField] : option" tooltip-class="top"
-			 [class.selected]="selectedIndex === index"
-			 (click)="selectOption(index)"
-			[innerHTML]="render(index)">
+			 [class.selected]="selected === option "
+			 (click)="selectOption(option)"
+			[innerHTML]="render(option)">
 		</div>
 	</div>
 </div>

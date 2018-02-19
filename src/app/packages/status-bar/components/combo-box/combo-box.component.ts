@@ -1,5 +1,4 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -12,12 +11,12 @@ export class ComboBoxComponent {
 
 	@Input() icon: string;
 	@Input() options: any[];
-	@Input() selectedIndex: any;
+	@Input() selected: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
 
-	@Output() selectedIndexChange = new EventEmitter();
+	@Output() selectedChange = new EventEmitter();
 
 	optionsVisible = false;
 
@@ -34,19 +33,19 @@ export class ComboBoxComponent {
 		}
 	}
 
-	selectOption(index) {
+	selectOption(selected) {
 		this.optionsVisible = false;
 
-		if (index !== this.selectedIndex) {
-			this.selectedIndex = index;
-			this.selectedIndexChange.emit(index);
+		if (selected !== this.selected) {
+			this.selected = selected;
+			this.selectedChange.emit(selected);
 		}
 	}
 
-	render(index) {
+	render(selected) {
 		if (this.renderFunction) {
-			return this.renderFunction(index);
+			return this.renderFunction(selected);
 		}
-		return get(this.options, index);
+		return selected;
 	}
 }

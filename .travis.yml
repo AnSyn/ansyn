@@ -61,7 +61,8 @@ deploy:
       tags: true
 
 after_deploy:
-  - node scripts/kill-tasks.js
+  - node scripts/kill-tasks.js ansyn-client
+  - node scripts/kill-tasks.js ansyn-client-chrome-v44
 
 notifications:
   email: false

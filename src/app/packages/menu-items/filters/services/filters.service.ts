@@ -23,7 +23,7 @@ export class FiltersService {
 				filters.push({ fieldName, metadata, type: filter.type });
 			} else if (currentFilter && Boolean(outerStateMetadata)) {
 				currentFilter.metadata = outerStateMetadata;
-			} else if (currentFilter && Boolean(outerStateMetadata)) {
+			} else if (currentFilter && !Boolean(outerStateMetadata)) {
 				const index = filters.indexOf(currentFilter);
 				filters.splice(index, 1);
 			}

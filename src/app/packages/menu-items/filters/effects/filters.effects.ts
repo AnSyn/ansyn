@@ -79,7 +79,7 @@ export class FiltersEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = <CaseFilter> facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+		const currentFilterInit = <CaseFilter> (facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName));
 
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
 		return metaData;

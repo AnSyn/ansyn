@@ -1,6 +1,7 @@
 import { Filter } from '../filter';
 import { CaseBooleanFilterMetadata } from '@ansyn/menu-items/cases/models/case.model';
 import { FilterMetadata } from './filter-metadata.interface';
+import { FilterType } from '@ansyn/core';
 
 export interface BooleanProperties {
 	value: boolean;
@@ -8,7 +9,7 @@ export interface BooleanProperties {
 }
 
 export class BooleanFilterMetadata implements FilterMetadata{
-	type = 'Boolean';
+	type: FilterType = 'Boolean';
 
 	trueProperties: BooleanProperties = {
 		value: true,

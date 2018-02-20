@@ -1,7 +1,8 @@
 import { Filter } from '../filter';
+import { FilterType } from '@ansyn/core';
 
 export abstract class FilterMetadata {
-	type: string;
+	type: FilterType;
 
 	abstract initializeFilter(value: any, filter?: Filter): void;
 

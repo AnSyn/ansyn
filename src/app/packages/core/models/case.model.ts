@@ -61,16 +61,15 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = CaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
+export type FilterType = 'Enum' | 'Slider' | 'Boolean';
+
 export interface CaseFilter {
+	type: FilterType;
 	fieldName: string;
 	metadata: CaseFilterMetadata;
 }
 
-export interface CaseFilters {
-	Boolean: CaseFilter[],
-	Enum: CaseFilter[],
-	Slider: CaseFilter[];
-}
+export type CaseFilters = CaseFilter[];
 
 export interface CaseFacetsState {
 	filters?: CaseFilters;

@@ -48,8 +48,8 @@ export class FiltersEffects {
 
 				metadata.postInitializeFilter({ oldFiltersArray: oldFiltersArray, modelName: filter.modelName });
 
-				const currentFilterInit = action.payload.facets.filters[filter.type] &&
-					action.payload.facets.filters[filter.type].find(({ fieldName }) => fieldName === filter.modelName);
+				const currentFilterInit = action.payload.facets.filters &&
+					action.payload.facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 
 				if (!currentFilterInit) {
 					metadata.showAll();
@@ -79,8 +79,7 @@ export class FiltersEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = <any> facets.filters[filterType] && facets.filters[filterType]
-			.find(({ fieldName }) => fieldName === filter.modelName);
+		const currentFilterInit = <any> facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
 		return metaData;

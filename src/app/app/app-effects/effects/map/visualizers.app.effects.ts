@@ -444,11 +444,11 @@ export class VisualizersAppEffects {
 			const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapId, FrameVisualizerType);
 			const entityToDraw = this.mapOverlayToDraw(overlay);
 			if (frameVisualizer) {
-				frameVisualizer.setMarkupFeatures([{ id: overlay.id, class: true }]);
+				frameVisualizer.isActive = true;
 				frameVisualizer.setEntities([entityToDraw]);
 			}
 			else {
-				console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
+				console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
 			}
 		});
 
@@ -461,14 +461,11 @@ export class VisualizersAppEffects {
 				if (Boolean(mapData.data.overlay)) {
 					const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapData.id, FrameVisualizerType);
 					if (frameVisualizer) {
-						frameVisualizer.setMarkupFeatures([{
-							id: mapData.data.overlay.id,
-							class: action.payload === mapData.id
-						}
-						]);
+						frameVisualizer.isActive = action.payload === mapData.id;
+						frameVisualizer.purgeCache()
 					}
 					else {
-						console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
+						console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
 					}
 				}
 			});
@@ -477,19 +474,15 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	removeOverlayFram$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldAction, mapState: IMapState) => {
-			return mapState.mapsList.find(map => map.id === action.payload.mapId)
-		})
-		.map((currentMap: CaseMapState) => {
-					const frameVisualizer = <FrameVisualizer>this.getVisualizer(currentMap.id, FrameVisualizerType);
-					if (frameVisualizer) {
-						frameVisualizer.clearOneEntity(currentMap.data.overlay.id);
-					}
-					else {
-						console.log("overlay isn't geo-registered, thus no registered visualizers.. need to be fixed");
-					}
-				})
-
+		.map((action: BackToWorldAction) => {
+			const frameVisualizer = <FrameVisualizer>this.getVisualizer(action.payload.mapId, FrameVisualizerType);
+			if (frameVisualizer) {
+				frameVisualizer.clearEntities();
+			}
+			else {
+				console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
+			}
+		});
 
 
 	constructor(protected actions$: Actions,

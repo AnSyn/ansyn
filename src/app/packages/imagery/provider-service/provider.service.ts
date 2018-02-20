@@ -79,10 +79,10 @@ export class ImageryProviderService {
 
 	public registerVisualizer(mapType: string, visualizerClass: any, constructorArgs?: any) {
 		if (!this._mapVisualizersProviders.has(mapType)) {
-			this._mapVisualizersProviders.set(mapType, [{ visualizerClass: visualizerClass, args: constructorArgs }]);
+			this._mapVisualizersProviders.set(mapType, [{ visualizerClass, args: constructorArgs }]);
 		} else {
 			const existingVisualizers = this._mapVisualizersProviders.get(mapType);
-			existingVisualizers.push({ visualizerClass: visualizerClass, args: constructorArgs });
+			existingVisualizers.push({ visualizerClass, args: constructorArgs });
 			this._mapVisualizersProviders.set(mapType, existingVisualizers);
 		}
 	}

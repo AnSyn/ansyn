@@ -61,7 +61,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 				color: 'blue',
 				width: 3
 			}
-		}
+		},
 	};
 
 	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
@@ -127,7 +127,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		}
 	}
 
-	protected purgeCache(feature?: Feature) {
+	public purgeCache(feature?: Feature) {
 		if (feature) {
 			delete (<any>feature).styleCache;
 		} else if (this.source) {

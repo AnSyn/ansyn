@@ -4,7 +4,7 @@ import { IMapComponent } from '../../model/imap-component';
 import { IMapPlugin } from '../../model/imap-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService, IProvidedMap } from '../../provider-service/provider.service';
+import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../../model/imap-visualizer';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';

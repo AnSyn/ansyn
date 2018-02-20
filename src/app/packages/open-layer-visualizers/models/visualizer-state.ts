@@ -6,7 +6,7 @@ export interface VisualizerStateStyle {
 		active: string,
 		inactive: string,
 		display: string,
-		default: string
+		favorite: string
 	},
 	initial?: VisualizerStyle;
 	hover?: Partial<VisualizerStyle>;

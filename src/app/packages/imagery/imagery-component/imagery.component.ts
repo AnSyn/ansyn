@@ -10,7 +10,7 @@ import {
 	ViewChild,
 	ViewContainerRef
 } from '@angular/core';
-import { ImageryProviderService } from '../provider-service/provider.service';
+import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { IImageryConfig } from '../model/iimagery-config';

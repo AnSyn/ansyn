@@ -105,7 +105,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 		return {
 			width: 5,
-			color: this.visualizerStyle.colors.default
+			color: this.visualizerStyle.colors.favorite
 		};
 	}
 

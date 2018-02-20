@@ -1,5 +1,11 @@
 const exec = require('child_process').exec;
-exec('aws --region us-west-2 ecs list-tasks --cluster ansyn-app-cluster', (error, stdout, stderr) => {
+
+if (process.argv.length <= 2) {
+    console.log("Usage: " + __filename + " service_name");
+    process.exit(-1);
+}
+
+exec(`aws --region us-west-2 ecs list-tasks --cluster ansyn-app-cluster --service-name ${process.argv[2]}`, (error, stdout, stderr) => {
 	const tasks = JSON.parse(stdout);
 	const arns = tasks.taskArns;
 	arns.forEach(arn => {

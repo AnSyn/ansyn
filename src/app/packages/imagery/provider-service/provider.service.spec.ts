@@ -1,5 +1,5 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ImageryProviderService } from './provider.service';
+import { ImageryProviderService } from './imagery-provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 describe('ImageryProviderService', () => {

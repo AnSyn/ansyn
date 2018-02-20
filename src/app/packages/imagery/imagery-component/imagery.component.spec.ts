@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ImageryProviderService } from '../provider-service/provider.service';
+import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';

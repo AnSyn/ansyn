@@ -10,7 +10,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	public markups: any[] = [];
 	public isActive = false;
 
-	constructor(style: Partial<VisualizerStateStyle>, @Inject(CoreConfig) public coreConfig: ICoreConfig, visualConfig) {
+	constructor(style: Partial<VisualizerStateStyle>) {
 		super(FrameVisualizerType, style);
 		this.updateStyle({
 			opacity: 0.5,

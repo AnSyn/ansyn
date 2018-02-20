@@ -16,7 +16,7 @@ import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { CaseFacetsState } from '@ansyn/core/models/case.model';
+import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
@@ -48,8 +48,8 @@ export class FiltersEffects {
 
 				metadata.postInitializeFilter({ oldFiltersArray: oldFiltersArray, modelName: filter.modelName });
 
-				const currentFilterInit = action.payload.facets.filters &&
-					action.payload.facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+				const currentFilterInit = action.payload.facets.filters[filter.type] &&
+					action.payload.facets.filters[filter.type].find(({ fieldName }) => fieldName === filter.modelName);
 
 				if (!currentFilterInit) {
 					metadata.showAll();
@@ -68,9 +68,9 @@ export class FiltersEffects {
 	}
 
 	initializeMetadata(filter: Filter, facets: CaseFacetsState): FilterMetadata {
-		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
-			const filterType = filter.type;
+		const filterType = filter.type;
 
+		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
 				return filterMetadata.find((item) => item.type === filterType);
 			};
@@ -79,7 +79,9 @@ export class FiltersEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+		const currentFilterInit = <any> facets.filters[filterType] && facets.filters[filterType]
+			.find(({ fieldName }) => fieldName === filter.modelName);
+
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
 		return metaData;
 	}

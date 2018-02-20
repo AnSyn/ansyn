@@ -26,6 +26,7 @@ import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { CaseFacetsState } from '@ansyn/core';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -58,11 +59,12 @@ export class FiltersAppEffects {
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select(casesStateSelector).pluck('selectedCase'), this.store$.select(overlaysStateSelector), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
+		.withLatestFrom(this.store$.select(casesStateSelector)
+			.pluck('selectedCase'), this.store$.select(overlaysStateSelector), (action: any, selectedCase: Case, overlaysState: IOverlaysState): any => {
 			const overlaysArray: Overlay[] = Array.from(overlaysState.overlays.values());
 			return [overlaysArray, selectedCase.state.facets];
 		})
-		.map(([overlays, facets]: [Overlay[], any]) => new InitializeFiltersAction({ overlays, facets }));
+		.map(([overlays, facets]: [Overlay[], CaseFacetsState]) => new InitializeFiltersAction({ overlays, facets }));
 
 	/**
 	 * @type Effect

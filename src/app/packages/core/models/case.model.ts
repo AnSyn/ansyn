@@ -57,15 +57,23 @@ export interface CaseBooleanFilterMetadata {
 	displayFalse: boolean;
 }
 
-export type CaseFilterMetadata = CaseBooleanFilterMetadata | any;
+export type CaseEnumFilterMetadata = string[];
+
+export type CaseFilterMetadata = CaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
 export interface CaseFilter {
 	fieldName: string;
 	metadata: CaseFilterMetadata;
 }
 
+export interface CaseFilters {
+	Boolean: CaseFilter[],
+	Enum: CaseFilter[],
+	Slider: CaseFilter[];
+}
+
 export interface CaseFacetsState {
-	filters: CaseFilter[];
+	filters?: CaseFilters;
 	showOnlyFavorites?: boolean;
 }
 

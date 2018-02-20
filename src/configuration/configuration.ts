@@ -1,3 +1,3 @@
 export const configuration = {
-	production: true
+	production: false
 };

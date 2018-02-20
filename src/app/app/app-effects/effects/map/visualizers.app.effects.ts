@@ -447,9 +447,6 @@ export class VisualizersAppEffects {
 				frameVisualizer.isActive = true;
 				frameVisualizer.setEntities([entityToDraw]);
 			}
-			else {
-				console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
-			}
 		});
 
 	@Effect({ dispatch: false })
@@ -464,9 +461,6 @@ export class VisualizersAppEffects {
 						frameVisualizer.isActive = action.payload === mapData.id;
 						frameVisualizer.purgeCache()
 					}
-					else {
-						console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
-					}
 				}
 			});
 		});
@@ -478,9 +472,6 @@ export class VisualizersAppEffects {
 			const frameVisualizer = <FrameVisualizer>this.getVisualizer(action.payload.mapId, FrameVisualizerType);
 			if (frameVisualizer) {
 				frameVisualizer.clearEntities();
-			}
-			else {
-				console.log('overlay isn\'t geo-registered, thus no registered visualizers.. need to be fixed');
 			}
 		});
 

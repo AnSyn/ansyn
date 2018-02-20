@@ -51,19 +51,21 @@
 				border: solid 3px @application-main-color;
 			}
 		}
-		/deep/ .ol-scale-line {
-			bottom: @status-bar-height;
-		}
 		/deep/ .ol-mouse-position {
-			bottom: @status-bar-height;
+			bottom: 0;
 			top: auto;
 			right: auto;
 			left: 160px;
 			background: rgba(0,0,0,0.3);
 			padding: 3px;
 		}
-
+		/deep/ .ol-scale-line {
+			bottom: 0;
+		}
 		&.layout1 {
+			/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+				bottom: @status-bar-height;
+			}
 			div.map-container-wrapper {
 				position: relative;
 				width: 100%;
@@ -75,6 +77,9 @@
 		}
 
 		&.layout2 {
+			/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+				bottom: @status-bar-height;
+			}
 			div.map-container-wrapper {
 				position: relative;
 				width: 50%;
@@ -95,6 +100,9 @@
 					div.active-border {
 						height: @height-minus-status;
 					}
+					/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+						bottom: @status-bar-height;
+					}
 				}
 			}
 		}
@@ -110,6 +118,9 @@
 				&:first-child, &:last-child {
 					div.active-border {
 						height: @height-minus-status;
+					}
+					/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+						bottom: @status-bar-height;
 					}
 				}
 			}
@@ -128,6 +139,9 @@
 					div.active-border {
 						height: @height-minus-status;
 					}
+					/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+						bottom: @status-bar-height;
+					}
 				}
 			}
 		}
@@ -139,6 +153,9 @@
 				&:nth-child(3), &:nth-child(4) {
 					div.active-border {
 						height: @height-minus-status;
+					}
+					/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
+						bottom: @status-bar-height;
 					}
 				}
 			}

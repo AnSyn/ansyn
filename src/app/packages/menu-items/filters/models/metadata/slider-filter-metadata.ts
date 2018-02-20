@@ -1,4 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
+import { FilterType } from '@ansyn/core';
 
 export class SliderFilterMetadata implements FilterMetadata {
 
@@ -8,7 +9,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 	start: number;
 	end: number;
 
-	type: string;
+	type: FilterType;
 
 	constructor() {
 		this.type = 'Slider';

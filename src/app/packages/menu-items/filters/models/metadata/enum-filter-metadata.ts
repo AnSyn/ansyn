@@ -1,5 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { Filter } from '../filter';
+import { FilterType } from '@ansyn/core';
 
 export interface EnumFiled {
 	count: number;
@@ -9,7 +10,7 @@ export interface EnumFiled {
 export class EnumFilterMetadata implements FilterMetadata {
 
 	enumsFields: Map<string, EnumFiled>;
-	type: string;
+	type: FilterType;
 
 	constructor() {
 		this.enumsFields = new Map<string, EnumFiled>();
@@ -59,7 +60,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 			if (oldFilterArray) {
 				const [oldFilterKey, oldFilter] = oldFilterArray;
-				const oldFilterFields = oldFilter.enumsFields;
+				const oldFilterFields = (<EnumFilterMetadata>oldFilter).enumsFields;
 				const filterFields = this.enumsFields;
 
 				filterFields.forEach((value, key) => {

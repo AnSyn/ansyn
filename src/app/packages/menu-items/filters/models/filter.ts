@@ -1,6 +1,8 @@
+import { FilterType } from '@ansyn/core/models/case.model';
+
 export interface Filter {
 	modelName: string;
 	displayName: string;
-	type: 'Enum' | 'Slider' | 'Boolean';
+	type: FilterType;
 	customData?: any;
 }

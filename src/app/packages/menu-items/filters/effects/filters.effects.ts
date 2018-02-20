@@ -16,7 +16,7 @@ import { GenericTypeResolverService, InjectionResolverFilter } from '@ansyn/core
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
+import { CaseFacetsState, CaseFilter, CaseFilters } from '@ansyn/core/models/case.model';
 
 export const facetChangesActionType = [FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS, FiltersActionTypes.UPDATE_FILTER_METADATA, FiltersActionTypes.TOGGLE_ONLY_FAVORITES];
 
@@ -79,7 +79,7 @@ export class FiltersEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = <any> facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+		const currentFilterInit = <CaseFilter> facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 
 		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
 		return metaData;

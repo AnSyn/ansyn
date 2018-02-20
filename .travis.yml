@@ -50,19 +50,15 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh -x scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT
+    script: sh -x scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT ansyn-client-chrome-v44
     skip_cleanup: true
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG
+    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG ansyn-client
     skip_cleanup: true
     on:
       tags: true
-
-after_deploy:
-  - node scripts/kill-tasks.js ansyn-client
-  - node scripts/kill-tasks.js ansyn-client-chrome-v44
 
 notifications:
   email: false

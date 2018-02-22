@@ -282,7 +282,7 @@
 			"imageIsOutOfBounds": "Image is out of bounds"
 		},
 		"windowLayout" : {
-			"menu": false,
+			"menu": true,
 			"statusBar": true,
 			"timeLine": true,
 			"contextSun": true

@@ -5,9 +5,9 @@ export interface ICoreConfig {
 		imageIsOutOfBounds: string
 	},
 	'windowLayout': {
-		'menu': true,
-		'statusBar': true,
-		'timeLine': true,
-		'contextSun': true
+		'menu': boolean,
+		'statusBar': boolean,
+		'timeLine': boolean,
+		'contextSun': boolean
 	}
 }

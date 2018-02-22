@@ -1,12 +1,13 @@
-
 export interface ICoreConfig {
 	errors: {
 		noGeoRegistration: string,
 		overlayIsNotPartOfCase: string,
 		imageIsOutOfBounds: string
 	},
-	colors: {
-		active: string,
-		inactive: string
+	'windowLayout': {
+		'menu': true,
+		'statusBar': true,
+		'timeLine': true,
+		'contextSun': true
 	}
 }

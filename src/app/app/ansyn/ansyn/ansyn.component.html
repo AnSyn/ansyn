@@ -1,6 +1,6 @@
 <div class="app animations" [ngClass]="isPinnedClass">
 	<div class="menu">
-		<ansyn-menu [version]="version"></ansyn-menu>
+		<ansyn-menu [version]="version" *ngIf="(windowLayout$ | async).menu"></ansyn-menu>
 	</div>
 
 	<div class="layer">
@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="status-timeline-container">
-			<div class="status">
+			<div class="status" *ngIf="(windowLayout$ | async).statusBar">
 				<ansyn-status-bar
 					[selectedCaseName]="selectedCaseName"
 					[activeMap]="(activeMap$ | async)"
@@ -17,7 +17,7 @@
 				</ansyn-status-bar>
 			</div>
 
-			<div class="app-timeline-container">
+			<div class="app-timeline-container" *ngIf="(windowLayout$ | async).timeLine">
 				<ansyn-overlays-container></ansyn-overlays-container>
 			</div>
 		</div>

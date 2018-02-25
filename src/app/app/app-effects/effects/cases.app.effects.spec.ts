@@ -103,7 +103,7 @@ describe('CasesAppEffects', () => {
 		const activeMapId = 'map1';
 		const overlay = <Overlay> { id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
-		const action = new DisplayOverlayAction({ overlay });
+		const action = new DisplayOverlayAction({ overlay, mapId: "map1"});
 		actions = hot('--a--', { a: action });
 		const updatedMapsList = [...mapsList];
 		updatedMapsList.forEach((map) => {

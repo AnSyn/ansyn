@@ -11,7 +11,6 @@ export const MapActionTypes = {
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
 	IMAGERY_REMOVED: 'IMAGERY_REMOVED',
 	MAP_SINGLE_CLICK: 'MAP_SINGLE_CLICK',
-	BACK_TO_WORLD: 'BACK_TO_WORLD',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
 	SET_MAP_AUTO_IMAGE_PROCESSING: 'SET_MAP_AUTO_IMAGE_PROCESSING',
@@ -62,16 +61,6 @@ export class SetProgressBarAction implements Action {
 
 	constructor(public payload: { mapId: string, progress: number }) {
 	}
-}
-
-export class BackToWorldAction implements Action {
-	type = MapActionTypes.BACK_TO_WORLD;
-
-	constructor(public payload: { mapId: string } = { mapId: undefined }) {
-	}
-}
-export class BackToWorldSuccessAction extends BackToWorldAction {
-	type = MapActionTypes.BACK_TO_WORLD_SUCCESS;
 }
 
 

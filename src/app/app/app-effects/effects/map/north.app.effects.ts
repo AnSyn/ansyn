@@ -12,11 +12,9 @@ import {
 	NorthCalculationsPlugin,
 	openLayersNorthCalculations
 } from '@ansyn/open-layers-north-calculations/plugin/north-calculations-plugin';
-import { CaseOrientation, LoggerService, Overlay } from '@ansyn/core';
+import { BackToWorldSuccess, BackToWorldView, CaseOrientation, LoggerService, Overlay } from '@ansyn/core';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
-import { BackToWorldAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { MapEffects } from '@ansyn/map-facade/effects/map.effects';
-import { BackToWorldSuccessAction } from '@ansyn/map-facade';
 
 @Injectable()
 export class NorthAppEffects {
@@ -31,11 +29,9 @@ export class NorthAppEffects {
 	@Effect({ dispatch: false })
 	pointNorth$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$, ({ payload }: DisplayOverlaySuccessAction, { statusBar, map }: IAppState) => {
-			const mapId = payload.mapId || map.activeMapId;
-			const communicator = this.imageryCommunicatorService.provide(mapId);
-			const { orientation } = statusBar.comboBoxesProperties;
-			return [payload.ignoreRotation, communicator, orientation, payload.overlay];
+		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
+			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
+			return [payload.ignoreRotation, communicator, comboBoxesProperties.orientation, payload.overlay];
 		})
 		.filter(([ignoreRotation, communicator]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
 		.switchMap(([ignoreRotation, communicator, orientation, overlay]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => {
@@ -52,7 +48,7 @@ export class NorthAppEffects {
 								break;
 						}
 					}
-			});
+				});
 		});
 
 	/**
@@ -62,20 +58,18 @@ export class NorthAppEffects {
 	 * @description When map back to base layer, we rotate the map via orientation
 	 */
 	@Effect({ dispatch: false })
-	backToWorldSuccessSetNorth$  = this.actions$
-		.ofType<BackToWorldSuccessAction>(MapActionTypes.BACK_TO_WORLD_SUCCESS)
-		.withLatestFrom(this.store$)
-		.do(([action, { statusBar, map }]: [BackToWorldAction, IAppState]) => {
-			const { orientation } = statusBar.comboBoxesProperties;
-			const mapId = action.payload.mapId || map.activeMapId;
-			const communicator = this.imageryCommunicatorService.provide(mapId);
+	backToWorldSuccessSetNorth$ = this.actions$
+		.ofType<BackToWorldSuccess>(MapActionTypes.BACK_TO_WORLD_SUCCESS)
+		.withLatestFrom(this.store$.select(statusBarStateSelector))
+		.do(([{ payload }, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+			const communicator = this.imageryCommunicatorService.provide(payload.mapId);
 			communicator.setVirtualNorth(0);
-			switch (orientation) {
+			switch (comboBoxesProperties.orientation) {
 				case 'Align North':
 				case 'Imagery Perspective':
-				communicator.setRotation(0);
-		}
-	});
+					communicator.setRotation(0);
+			}
+		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

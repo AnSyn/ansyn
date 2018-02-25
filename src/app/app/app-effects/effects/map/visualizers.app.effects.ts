@@ -3,7 +3,7 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { differenceWith, isEmpty } from 'lodash';
 import {
-	ActiveMapChangedAction, BackToWorldAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction,
+	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction,
 	MapActionTypes, PinPointTriggerAction, SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
@@ -40,7 +40,7 @@ import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MeasureDistanceVisualizer, MeasureDistanceVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
-import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
+import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
 import { IMapVisualizer } from '@ansyn/imagery';
@@ -385,10 +385,10 @@ export class VisualizersAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlaySuccessAction | BackToWorldAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, MapActionTypes.BACK_TO_WORLD)
+		.ofType<DisplayOverlaySuccessAction | BackToWorldView >(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
-		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldAction, IMapState, ICasesState]) => !isEmpty(casesState.selectedCase.state.contextEntities))
-		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldAction, IMapState, ICasesState]) => {
+		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => !isEmpty(casesState.selectedCase.state.contextEntities))
+		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
 			const communicatorHandler = this.imageryCommunicatorService.provide(mapId);
@@ -467,9 +467,9 @@ export class VisualizersAppEffects {
 
 	@Effect({ dispatch: false })
 	removeOverlayFram$: Observable<void> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.map((action: BackToWorldAction) => {
-			const frameVisualizer = <FrameVisualizer>this.getVisualizer(action.payload.mapId, FrameVisualizerType);
+		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
+		.map(({payload}: BackToWorldView) => {
+			const frameVisualizer = <FrameVisualizer>this.getVisualizer(payload.mapId, FrameVisualizerType);
 			if (frameVisualizer) {
 				frameVisualizer.clearEntities();
 			}

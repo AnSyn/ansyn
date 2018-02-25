@@ -18,7 +18,6 @@ import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	BackToWorldAction,
 	DrawPinPointAction,
 	PinPointModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -98,16 +97,6 @@ export class StatusBarAppEffects {
 			return new CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });
 		});
 
-	/**
-	 * @type Effect
-	 * @name onBackToWorldView$
-	 * @ofType BackToWorldViewAction
-	 * @action BackToWorldAction
-	 */
-	@Effect()
-	onBackToWorldView$: Observable<BackToWorldAction> = this.actions$
-		.ofType(StatusBarActionsTypes.BACK_TO_WORLD_VIEW)
-		.map(() => new BackToWorldAction());
 
 	/**
 	 * @type Effect

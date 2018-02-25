@@ -2,15 +2,14 @@ import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
-	BackToWorldViewAction, CopySelectedCaseLinkAction, ExpandAction, GoNextAction,
-	GoPrevAction, UpdateStatusFlagsAction
+	CopySelectedCaseLinkAction, ExpandAction, GoNextAction, GoPrevAction,
+	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
-	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState, ClearActiveInteractionsAction,
-	coreStateSelector,
-	ICoreState, LayoutKey, layoutOptions, MapsLayout, Overlay, OverlaysCriteria, SetLayoutAction,
-	SetOverlaysCriteriaAction
+	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
+	ClearActiveInteractionsAction, coreStateSelector, ICoreState, LayoutKey, layoutOptions, Overlay, OverlaysCriteria,
+	SetLayoutAction, SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
@@ -62,18 +61,23 @@ export class StatusBarComponent implements OnInit {
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
+
 	get layouts(): LayoutKey[] {
 		return Array.from(layoutOptions.keys());
 	}
+
 	get geoFilters(): CaseGeoFilter[] {
 		return comboBoxesOptions.geoFilters;
 	}
+
 	get timeFilters(): CaseTimeFilter[] {
 		return comboBoxesOptions.timeFilters;
 	}
+
 	get orientations(): CaseOrientation[] {
 		return comboBoxesOptions.orientations;
 	}
+
 	get hideOverlay(): boolean {
 		return layoutOptions.get(this.layout).mapsCount > 1;
 	}
@@ -121,7 +125,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	setSubscribers() {
-		this.layout$.subscribe((layout: LayoutKey) =>  this.layout = layout);
+		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
 
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
 
@@ -188,6 +192,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickBackToWorldView(): void {
-		this.store.dispatch(new BackToWorldViewAction());
+		this.store.dispatch(new BackToWorldView({ mapId: this.activeMap.id }));
 	}
 }

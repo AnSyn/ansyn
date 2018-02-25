@@ -1,9 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { IToastMessage, AlertMsgTypes  } from '../reducers/core.reducer';
-import { Overlay } from '../models/overlay.model';
+import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
+import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
-import { OverlaysCriteria } from '../models/overlay.model';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -14,7 +13,9 @@ export const CoreActionTypes = {
 	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
 	SET_LAYOUT: 'SET_LAYOUT',
-	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS'
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
+	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
+	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS'
 };
 
 export type CoreActions =
@@ -24,6 +25,8 @@ export type CoreActions =
 	| SetFavoriteOverlaysAction
 	| ClearActiveInteractionsAction
 	| UpdateAlertMsg
+	| BackToWorldView
+	| BackToWorldSuccess
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -88,3 +91,17 @@ export class SetLayoutSuccessAction implements Action {
 	constructor() {
 	}
 }
+
+export class BackToWorldView implements Action {
+	type = CoreActionTypes.BACK_TO_WORLD_VIEW;
+
+	constructor(public payload: { mapId: string }) {
+
+	}
+}
+
+export class BackToWorldSuccess extends BackToWorldView {
+	type = CoreActionTypes.BACK_TO_WORLD_SUCCESS;
+}
+
+

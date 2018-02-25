@@ -14,8 +14,7 @@ import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
-import { BackToWorldViewAction, ExpandAction, GoNextAction, GoPrevAction, statusBarFlagsItems } from '@ansyn/status-bar';
-import { BackToWorldAction } from '@ansyn/map-facade';
+import { ExpandAction, GoNextAction, GoPrevAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
@@ -24,6 +23,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { BackToWorldView } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -167,11 +167,6 @@ describe('StatusBarAppEffects', () => {
 		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
 	});
 
-	it('onBackToWorldView$$ should return BackToWorldAction with no args', () => {
-		actions = hot('--a--', { a: new BackToWorldViewAction() });
-		const expectedResults = cold('--b--', { b: new BackToWorldAction() });
-		expect(statusBarAppEffects.onBackToWorldView$).toBeObservable(expectedResults);
-	});
 
 	describe('onGoPrevNext$', () => {
 		it('should return onGoNextDisplayAction (type of action is GoNextAction) with current overlayId ', () => {

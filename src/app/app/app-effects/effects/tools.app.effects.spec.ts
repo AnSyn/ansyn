@@ -22,7 +22,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
-import { ActiveMapChangedAction, BackToWorldAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { ActiveMapChangedAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import {
 	AnnotationVisualizerAgentAction,
 	DisableImageProcessing,
@@ -42,7 +42,7 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ImageManualProcessArgs } from '@ansyn/core';
+import { BackToWorldView, ImageManualProcessArgs } from '@ansyn/core';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -244,7 +244,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as true should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = true;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' } } ) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' }, mapId : activeMap.id } ) });
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
 				b: new SetMapAutoImageProcessing({ mapId: 'imagery1', toggleValue: true }),
@@ -258,7 +258,7 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = false;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' } }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' }, mapId : activeMap.id }) });
 			const expectedResults = cold('--(abc)--', {
 				a: new EnableImageProcessing(),
 				b: new SetManualImageProcessingArguments({ processingParams: undefined }),
@@ -274,7 +274,7 @@ describe('ToolsAppEffects', () => {
 			activeMap.data.isAutoImageProcessingActive = false;
 			const processingParams = <ImageManualProcessArgs> { Contrast: 50, Brightness: 20 };
 
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({  overlay: <any> { id: 'overlay_123' } }) });
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({  overlay: <any> { id: 'overlay_123' }, mapId : activeMap.id }) });
 
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
@@ -311,7 +311,7 @@ describe('ToolsAppEffects', () => {
 
 	describe('backToWorldView', () => {
 		it('backToWorldView should raise DisableImageProcessing', () => {
-			actions = hot('--a--', { a: new BackToWorldAction() });
+			actions = hot('--a--', { a: new BackToWorldView({mapId: "mapId"}) });
 			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
 			expect(toolsAppEffects.backToWorldView$).toBeObservable(expectedResults);
 		});

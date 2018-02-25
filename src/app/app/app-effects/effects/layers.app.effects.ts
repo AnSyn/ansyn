@@ -8,7 +8,6 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
-import { isEmpty } from 'lodash';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
@@ -27,7 +26,7 @@ export class LayersAppEffects {
 	@Effect()
 	selectCase$: Observable<ToggleDisplayAnnotationsLayer | BeginLayerTreeLoadAction | SetAnnotationsLayer> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({ payload }: SelectCaseAction) => !isEmpty(payload))
+		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
 		.map(() => new BeginLayerTreeLoadAction());
 
 	/**

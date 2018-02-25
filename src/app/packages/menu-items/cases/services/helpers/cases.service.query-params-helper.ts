@@ -1,6 +1,6 @@
 import { Case } from '../../models/case.model';
 import { Params } from '@angular/router';
-import { cloneDeep, forEach, isEmpty } from 'lodash';
+import { cloneDeep, forEach } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
@@ -47,7 +47,7 @@ export class QueryParamsHelper {
 				this.casesService.contextValues[key] = selectedContext[key];
 			}
 		});
-		if (selectedContext.requirements && !isEmpty(qParams)) {
+		if (selectedContext.requirements && Boolean(qParams)) {
 			selectedContext.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
 					case 'geopoint':

@@ -13,7 +13,6 @@ import { IAppState } from '../app.effects.module';
 import { CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { get, isEmpty } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -123,11 +122,11 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
 		.withLatestFrom(this.store.select(casesStateSelector), (action, casesState: ICasesState) => {
 			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.activeMapId === map.id);
-			const overlayId = get(activeMap.data.overlay, 'id');
+			const overlayId = activeMap.data.overlay ? null : activeMap.data.overlay.id;
 			return [action.type, overlayId];
 		})
 		.filter(([actionType, overlayId]) => {
-			return !isEmpty(overlayId);
+			return Boolean(overlayId);
 		})
 		.map(([actionType, currentOverlayId]: [string, string]) => {
 			switch (actionType) {

@@ -1,4 +1,4 @@
-import { isNil, union } from 'lodash';
+import { union } from 'lodash';
 import { Case } from '@ansyn/menu-items/cases';
 import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
@@ -132,9 +132,8 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}
 
-
 	isMetadataEmpty(metadata: any): boolean {
-		return isNil(metadata);
+		return !metadata;
 	}
 
 	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {

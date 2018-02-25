@@ -6,7 +6,7 @@ import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlay
 import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -34,7 +34,7 @@ export class ImagerySandBoxComponent implements OnInit {
 
 	public ngOnInit() {
 		this.store.select(casesStateSelector)
-			.distinctUntilChanged(isEqual)
+			.distinctUntilChanged()
 			.subscribe((cases: ICasesState) => {
 				this.selectedCase = cloneDeep(cases.selectedCase);
 				this.overlaysFrom = this.selectedCase.state.time.from.toISOString().split('T')[0];

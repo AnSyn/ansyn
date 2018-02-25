@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { isNil as _isNil } from 'lodash';
 import 'rxjs/add/observable/fromPromise';
 
 @Component({
@@ -20,7 +19,7 @@ export class LoginComponent implements OnInit {
 	returnUrl$: Observable<string> = this.activatedRoute
 		.queryParamMap
 		.map((map: ParamMap) => map.get('returnUrl'))
-		.filter(_returnUrl => !_isNil(_returnUrl));
+		.filter(_returnUrl => Boolean(_returnUrl));
 
 	tryAgainMsg: boolean;
 

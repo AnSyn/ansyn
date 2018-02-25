@@ -18,7 +18,6 @@ import {
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
-import { isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -152,7 +151,7 @@ export class MapAppEffects {
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => !isEmpty(payload.overlay) && payload.overlay.isFullOverlay)
+		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => Boolean(payload.overlay) && payload.overlay.isFullOverlay)
 		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
 			const { overlay } = payload;
 			const mapId = payload.mapId || mapState.activeMapId;
@@ -208,12 +207,12 @@ export class MapAppEffects {
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => !isEmpty(mapsState.mapsList))
+		.filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.mapsList) && mapsState.mapsList.length > 0)
 		.map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
 			return mapsState.mapsList
 				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
 		})
-		.filter((caseMapState: CaseMapState) => !isNil(caseMapState))
+		.filter((caseMapState: CaseMapState) => Boolean(caseMapState))
 		.map((caseMapState: CaseMapState) => {
 			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 			return new DisplayOverlayAction({

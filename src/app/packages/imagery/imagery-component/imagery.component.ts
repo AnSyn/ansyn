@@ -15,7 +15,6 @@ import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
-import { isEqual, isNil } from 'lodash';
 import 'rxjs/add/operator/take';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
@@ -35,7 +34,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	private _manager: ImageryComponentManager;
 
 	ngOnInit() {
-		if (isNil(this.mapComponentSettings)) {
+		if (!this.mapComponentSettings) {
 			console.error('mapComponentSettings is Needed!');
 			return;
 		}

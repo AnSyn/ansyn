@@ -7,7 +7,7 @@ import {
 	ValidationErrors,
 	Validator
 } from '@angular/forms';
-import { isEqual as _isEqual, isNil as _isNil } from 'lodash';
+import { isEqual as _isEqual } from 'lodash';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 
 
@@ -70,7 +70,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 		}
 		const lng = c.value[0];
 		const lat = c.value[1];
-		if (_isNil(lng) || _isNil(lat)) {
+		if (!lng || !lat) {
 			this.validationErr = { empty: true };
 		} else if (!ProjectionConverterService.isValidWGS84(c.value)) {
 			this.validationErr = { invalid: true };

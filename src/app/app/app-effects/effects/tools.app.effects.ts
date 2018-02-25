@@ -14,7 +14,7 @@ import {
 import { CasesActionTypes } from '@ansyn/menu-items/cases';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
-import { cloneDeep, isNil as _isNil } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	AnnotationVisualizerAgentAction,
@@ -295,7 +295,7 @@ export class ToolsAppEffects {
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
-		.filter(communicator => !_isNil(communicator))
+		.filter(communicator => Boolean(communicator))
 		.map((communicator: CommunicatorEntity) => {
 			const activeMapCenter = communicator.getCenter();
 			return new SetActiveCenter(activeMapCenter.coordinates);
@@ -334,7 +334,7 @@ export class ToolsAppEffects {
 			action,
 			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
 		}))
-		.filter(({ action, communicator }) => !_isNil(communicator))
+		.filter(({ action, communicator }) => Boolean(communicator))
 		.map(({ action, communicator }) => {
 			const center: GeoJSON.Point = {
 				type: 'Point',

@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { isNil as _isNil } from 'lodash';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import {
 	ContextEntityVisualizer,
@@ -31,7 +30,7 @@ export class ContextEntityAppEffects {
 	@Effect()
 	displayEntityFromSelectedCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({ payload }: SelectCaseAction) => !_isNil(payload.state.contextEntities))
+		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
 		.mergeMap(({ payload }: SelectCaseAction) => {
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
@@ -63,7 +62,7 @@ export class ContextEntityAppEffects {
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => !_isNil(caseState.selectedCase.state.contextEntities))
+		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => Boolean(caseState.selectedCase.state.contextEntities))
 		.map(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.id);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;

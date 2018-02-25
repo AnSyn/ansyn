@@ -4,7 +4,6 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { isEmpty as _isEmpty, isNil as _isNil } from 'lodash';
 import 'rxjs/add/operator/share';
 import { Action, Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
@@ -83,7 +82,7 @@ export class MapEffects {
 		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
 		.map(({ payload }) => payload)
 		.map(({ mapId, toggleValue }): [CommunicatorEntity, boolean] => [this.communicatorsService.provide(mapId), toggleValue])
-		.filter(([comm, toggleValue]) => !_isNil(comm))
+		.filter(([comm, toggleValue]) => Boolean(comm))
 		.do(([comm, toggleValue]) => {
 			comm.setAutoImageProcessing(toggleValue);
 		});
@@ -157,7 +156,7 @@ export class MapEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
 			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
 		})
-		.filter(([selectedMap]) => !_isEmpty(selectedMap))
+		.filter(([selectedMap]) => Boolean(selectedMap))
 		.map(([selectedMap, mapsList, position]) => {
 			selectedMap.data.position = position;
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
@@ -255,7 +254,7 @@ export class MapEffects {
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
 		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
-		.filter(({ activeMapId }) => !_isNil(activeMapId))
+		.filter(({ activeMapId }) => Boolean(activeMapId))
 		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
 
 	/**
@@ -269,7 +268,7 @@ export class MapEffects {
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
 		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
-		.filter(({ mapsList }) => !_isNil(mapsList))
+		.filter(({ mapsList }) => Boolean(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
 	/**
@@ -312,7 +311,7 @@ export class MapEffects {
 	newInstanceInitPosition$: Observable<any> = this.actions$
 		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => _isNil(MapFacadeService.mapById(mapsList, payload.id).data.position))
+		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position)
 		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const actions = [];
 			const activeMap = MapFacadeService.activeMap(mapState);

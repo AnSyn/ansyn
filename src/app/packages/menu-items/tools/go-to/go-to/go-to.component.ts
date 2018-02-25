@@ -10,7 +10,6 @@ import {
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
 import { IToolsConfig, toolsConfig } from '../../models';
-import { isEqual } from 'lodash';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
@@ -42,7 +41,7 @@ export class GoToComponent implements OnInit {
 
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
 		.map((state: IToolsState) => state.flags.get('pinLocation'))
-		.distinctUntilChanged(isEqual);
+		.distinctUntilChanged();
 
 	pinLocationMode: boolean;
 

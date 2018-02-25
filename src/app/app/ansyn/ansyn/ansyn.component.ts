@@ -1,6 +1,6 @@
 import { IAppState } from '../../app-effects';
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
 import { isNil as _isNil } from 'lodash';
@@ -14,6 +14,8 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { coreStateSelector, ICoreState, SetWindowLayout, WindowLayout } from '@ansyn/core';
+import { CoreConfig, ICoreConfig } from '@ansyn/core/models';
 
 @Component({
 	selector: 'ansyn-app',
@@ -38,12 +40,17 @@ export class AnsynComponent implements OnInit {
 		.map(MapFacadeService.activeMap)
 		.filter(activeMap => !_isNil(activeMap));
 
+
+	windowLayout$: Observable<WindowLayout> = this.store$.select(coreStateSelector)
+		.pluck<ICoreState, WindowLayout>('windowLayout')
+		.distinctUntilChanged()
+
 	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
 	selectedCaseName: string;
 	version = (<any>packageJson).version;
 	isPinnedClass: string;
 
-	constructor(protected store$: Store<IAppState>) {
+	constructor(protected store$: Store<IAppState>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnInit(): void {
@@ -56,5 +63,7 @@ export class AnsynComponent implements OnInit {
 		this.isPinned$.subscribe((_isPinned: boolean) => {
 			this.isPinnedClass = _isPinned ? 'isPinned' : 'isNotPinned';
 		});
+
+		this.store$.dispatch(new SetWindowLayout({windowLayout: this.coreConfig.windowLayout}))
 	}
 }

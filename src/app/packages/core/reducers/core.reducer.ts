@@ -16,12 +16,20 @@ export interface IToastMessage {
 	showWarningIcon?: boolean;
 }
 
+export interface WindowLayout {
+	menu: boolean,
+	statusBar: boolean,
+	timeLine: boolean,
+	contextSun: boolean
+}
+
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: Overlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
+	windowLayout: WindowLayout;
 }
 
 export const coreInitialState: ICoreState = {
@@ -32,7 +40,13 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
 	overlaysCriteria: {},
-	layout: 'layout1'
+	layout: 'layout1',
+	windowLayout : {
+		menu: true,
+		statusBar: true,
+		timeLine: true,
+		contextSun: true
+	}
 };
 
 export const coreFeatureKey = 'core';
@@ -57,6 +71,11 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 
 		case CoreActionTypes.SET_LAYOUT:
 			return {...state, layout: action.payload };
+
+		case CoreActionTypes.SET_WINDOW_LAYOUT: {
+			return { ...state, windowLayout: action.payload.windowLayout };
+		}
+
 
 		default:
 			return state;

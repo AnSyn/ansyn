@@ -4,6 +4,7 @@ import { IToastMessage, AlertMsgTypes  } from '../reducers/core.reducer';
 import { Overlay } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { OverlaysCriteria } from '../models/overlay.model';
+import { WindowLayout } from '@ansyn/core';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -14,7 +15,8 @@ export const CoreActionTypes = {
 	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
 	SET_LAYOUT: 'SET_LAYOUT',
-	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS'
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
+	SET_WINDOW_LAYOUT: 'SET_WINDOW_LAYOUT'
 };
 
 export type CoreActions =
@@ -88,3 +90,14 @@ export class SetLayoutSuccessAction implements Action {
 	constructor() {
 	}
 }
+
+
+export class SetWindowLayout implements Action {
+	type = CoreActionTypes.SET_WINDOW_LAYOUT;
+
+	constructor(public payload: { windowLayout: WindowLayout }) {
+	}
+}
+
+
+

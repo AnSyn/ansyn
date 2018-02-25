@@ -514,7 +514,7 @@ export class VisualizersAppEffects {
 
 	getVisualizer(mapId, visualizerType) {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-		return <IMapVisualizer>communicator.getVisualizer(visualizerType);
+		return communicator ? <IMapVisualizer>communicator.getVisualizer(visualizerType) : null;
 	}
 
 	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true) {

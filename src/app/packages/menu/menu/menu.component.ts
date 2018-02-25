@@ -9,7 +9,6 @@ import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { isEmpty, isNil } from 'lodash';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
 
@@ -137,7 +136,7 @@ export class MenuComponent implements OnInit {
 
 	setSelectedMenuItem(_selectedMenuItemName) {
 		this.selectedMenuItemName = _selectedMenuItemName;
-		this.expand = !isEmpty(this.selectedMenuItemName);
+		this.expand = Boolean(this.selectedMenuItemName);
 
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
@@ -182,7 +181,7 @@ export class MenuComponent implements OnInit {
 	}
 
 	anyMenuItemSelected(): boolean {
-		return !isNil(this.selectedMenuItem);
+		return Boolean(this.selectedMenuItem);
 	}
 
 	openMenu(key: string) {

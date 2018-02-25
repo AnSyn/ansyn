@@ -24,7 +24,7 @@ import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
-import { isNil, unionBy } from 'lodash';
+import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core';
@@ -150,7 +150,7 @@ export class OverlaysEffects {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index - 1];
 		})
-		.filter(prevOverlayId => !isNil(prevOverlayId))
+		.filter(prevOverlayId => Boolean(prevOverlayId))
 		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
 
 	/**
@@ -168,7 +168,7 @@ export class OverlaysEffects {
 			const index = filteredOverlays.indexOf(action.payload);
 			return filteredOverlays[index + 1];
 		})
-		.filter(nextOverlayId => !isNil(nextOverlayId))
+		.filter(nextOverlayId => Boolean(nextOverlayId))
 		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
 
 	/**

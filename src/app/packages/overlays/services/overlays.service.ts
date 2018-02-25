@@ -3,7 +3,6 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
-import { isNil } from 'lodash';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
 import * as bbox from '@turf/bbox';
@@ -18,7 +17,7 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 export class OverlaysService {
 
 	static filter(overlays: Map<string, Overlay>, filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[]): string[] {
-		if (isNil(overlays)) {
+		if (!overlays) {
 			return [];
 		}
 
@@ -38,7 +37,7 @@ export class OverlaysService {
 	}
 
 	static sort(overlays: any[]): Overlay[] {
-		if (isNil(overlays)) {
+		if (!overlays) {
 			return [] as Overlay[];
 		}
 		return overlays

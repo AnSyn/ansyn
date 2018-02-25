@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
-import { isNil as _isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import * as packageJson from '../../../../../package.json';
 import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -24,7 +23,7 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 export class AnsynComponent implements OnInit {
 	selectedCase$: Observable<Case> = this.store$.select(casesStateSelector)
 		.pluck('selectedCase')
-		.filter(selectedCase => !_isNil(selectedCase))
+		.filter(selectedCase => Boolean(selectedCase))
 		.distinctUntilChanged();
 
 	isPinned$ = this.store$.select(menuStateSelector)
@@ -36,7 +35,7 @@ export class AnsynComponent implements OnInit {
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
 		.map(MapFacadeService.activeMap)
-		.filter(activeMap => !_isNil(activeMap));
+		.filter(activeMap => Boolean(activeMap));
 
 	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
 	selectedCaseName: string;

@@ -3,7 +3,6 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
-import { isEmpty as _isEmpty, isEqual as _isEqual, isNil as _isNil } from 'lodash';
 import { NavigateCaseTriggerAction, RouterActionTypes, SetStateAction } from '@ansyn/router';
 import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
 import { SaveCaseAsSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -28,7 +27,7 @@ export class RouterAppEffects {
 		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
 		.filter((action) => !(action.payload.caseId))
 		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, cases]: [SetStateAction, ICasesState]) => (_isEmpty(cases.selectedCase) || !_isEqual(cases.selectedCase.id, CasesService.defaultCase.id)))
+		.filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== CasesService.defaultCase.id))
 		.map(([action, cases]) => new LoadDefaultCaseAction(action.payload.queryParams));
 
 	/**
@@ -43,7 +42,7 @@ export class RouterAppEffects {
 	onUpdateLocationCase$: Observable<LoadCaseAction> = this.actions$
 		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
 		.map(({ payload }): ISetStatePayload => payload)
-		.filter(({ caseId }) => !_isNil(caseId))
+		.filter(({ caseId }) => Boolean(caseId))
 		.withLatestFrom(this.store$.select(casesStateSelector))
 		.filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id)
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));

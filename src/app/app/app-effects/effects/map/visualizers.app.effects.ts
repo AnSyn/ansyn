@@ -1,7 +1,7 @@
 import { GoToVisualizerType } from '@ansyn/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Actions, Effect, toPayload } from '@ngrx/effects';
-import { isEmpty, differenceWith } from 'lodash';
+import { Actions, Effect } from '@ngrx/effects';
+import { differenceWith } from 'lodash';
 import {
 	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
 	PinPointTriggerAction, SetMapsDataActionStore, DbclickFeatureTriggerAction

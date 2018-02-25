@@ -8,7 +8,6 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
-import { isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
@@ -67,7 +66,7 @@ export class CasesAppEffects {
 		.filter(action => Boolean(action.payload.shareCaseAsQueryParams))
 		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
 			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload.caseId);
-			if (isNil(sCase)) {
+			if (!sCase) {
 				if (state.selectedCase.id === action.payload.caseId) {
 					sCase = state.selectedCase;
 				}

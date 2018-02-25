@@ -1,8 +1,5 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery-component/manager/imagery.component.manager';
-
-import * as _ from 'lodash';
-import { cloneDeep } from 'lodash';
 import { IMapPlugin } from '../model/imap-plugin';
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../model/imap-visualizer';
@@ -121,10 +118,9 @@ export class CommunicatorEntity {
 	}
 
 
-	public setCenter(center: GeoJSON.Point, animation ?: boolean) {
+	public setCenter(center: GeoJSON.Point, animation: boolean = true) {
 		if (this.ActiveMap) {
-			const animate = (_.isNil(animation)) ? true : animation;
-			this.ActiveMap.setCenter(center, animate);
+			this.ActiveMap.setCenter(center, animation);
 		}
 	}
 

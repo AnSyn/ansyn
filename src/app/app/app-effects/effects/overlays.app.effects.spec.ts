@@ -290,7 +290,7 @@ describe('OverlaysAppEffects', () => {
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
 		mapState['pendingOverlays'] = ['first', 'last'];
-		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'first' } }) });
+		actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'first' }, mapId: mapState.activeMapId }) });
 		const expectedResults = cold('--b--', {
 			b: new RemovePendingOverlayAction('first')
 		});
@@ -302,7 +302,7 @@ describe('OverlaysAppEffects', () => {
 			const getTimeStateByOverlayResult = { from: new Date(1500), to: new Date(6500) };
 			spyOn(overlaysService, 'getTimeStateByOverlay').and.callFake(() => getTimeStateByOverlayResult);
 			overlaysState.timelineState = { from: new Date(0), to: new Date(5000) };
-			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) } });
+			const action = new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(6000) }, mapId:  mapState.activeMapId });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
 			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
@@ -316,9 +316,12 @@ describe('OverlaysAppEffects', () => {
 				to: new Date(10000)
 			};
 
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(4000) } }) });
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: <Overlay> { date: new Date(4000) }, mapId: mapState.activeMapId }) });
 			const expectedResults = cold('--b--', { b: new SetTimelineStateAction({ state: getTimeStateByOverlayResult }) });
 			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
 		});
 	});
 });
+
+
+

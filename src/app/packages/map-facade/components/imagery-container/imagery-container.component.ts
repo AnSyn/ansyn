@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { CaseMapState, Overlay } from '@ansyn/core';
+import { BackToWorldView, CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
-	BackToWorldAction,
 	SynchronizeMapsAction
 } from '../../actions/map.actions';
 
@@ -27,7 +26,7 @@ export class ImageryContainerComponent {
 	}
 
 	backToWorldView() {
-		this.store.dispatch(new BackToWorldAction({ mapId: this.mapState.id }));
+		this.store.dispatch(new BackToWorldView({ mapId: this.mapState.id }));
 	}
 
 	toggleMapSynchronization() {

@@ -2,13 +2,8 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
-	SetTimelineStateAction
+	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction, OverlaysActionTypes, OverlaysMarkupAction, SetTimelineStateAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
@@ -18,11 +13,7 @@ import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	IMapState,
-	MapActionTypes,
-	mapStateSelector,
-	RemovePendingOverlayAction,
-	SetPendingOverlaysAction,
+	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
@@ -111,7 +102,7 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
 			const displayedOverlay = action.payload.overlay;
 			const timelineState = overlays.timelineState;
-			const isActiveMap = !action.payload.mapId || map.activeMapId === action.payload.mapId;
+			const isActiveMap = map.activeMapId === action.payload.mapId;
 			return [isActiveMap, displayedOverlay, timelineState];
 		})
 		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
@@ -181,7 +172,7 @@ export class OverlaysAppEffects {
 			else {
 				const layout = Array.from(layoutOptions.keys()).find((key: LayoutKey) => {
 					const layout = layoutOptions.get(key);
-					return layout.mapsCount === validOverlays.length
+					return layout.mapsCount === validOverlays.length;
 				});
 				return [new SetPendingOverlaysAction(validOverlays), new SetLayoutAction(layout)];
 			}

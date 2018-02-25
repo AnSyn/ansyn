@@ -17,7 +17,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { Case, ICasesState } from '@ansyn/menu-items/cases';
-import { BackToWorldAction, MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
+import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import { isEmpty, isNil } from 'lodash';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -59,7 +59,10 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
-import { AlertMsgTypes, coreStateSelector, ICoreState, SetOverlaysCriteriaAction, UpdateAlertMsg } from '@ansyn/core';
+import {
+	AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, SetOverlaysCriteriaAction,
+	UpdateAlertMsg
+} from '@ansyn/core';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 
 @Injectable()
@@ -189,7 +192,7 @@ export class MapAppEffects {
 				})
 				.catch(() => Observable.from([
 					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-					new BackToWorldAction({ mapId })
+					new BackToWorldView({ mapId })
 				]));
 		});
 

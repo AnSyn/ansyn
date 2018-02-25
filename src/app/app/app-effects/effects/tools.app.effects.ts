@@ -175,7 +175,7 @@ export class ToolsAppEffects {
 	 */
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
+		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.map(() => new DisableImageProcessing());
 
 	/**

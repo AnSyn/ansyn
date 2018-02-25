@@ -1,6 +1,4 @@
 import { Action } from '@ngrx/store';
-import { CaseOrientation, CaseTimeFilter, CaseTimeState } from '@ansyn/core';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { ComboBoxesProperties } from '@ansyn/status-bar/models';
 import { StatusBarFlag } from '@ansyn/status-bar';
 
@@ -49,13 +47,6 @@ export class GoNextAction implements Action {
 
 export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
-
-	constructor() {
-	}
-}
-
-export class BackToWorldViewAction implements Action {
-	type: string = StatusBarActionsTypes.BACK_TO_WORLD_VIEW;
 
 	constructor() {
 	}

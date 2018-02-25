@@ -14,17 +14,15 @@ import { OpenLayersDisabledMap } from '@ansyn/open-layers-map/disabled-map/open-
 import * as intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
 import {
-	AlertMsgTypes, CaseMapPosition, CoreActionTypes, coreStateSelector, ICoreState, layoutOptions, SetLayoutAction,
+	AlertMsgTypes, BackToWorldSuccess, BackToWorldView, CaseMapPosition, CoreActionTypes, coreStateSelector, ICoreState,
 	SetLayoutSuccessAction,
 	UpdateAlertMsg
 } from '@ansyn/core';
 import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, BackToWorldAction, BackToWorldSuccessAction,
-	DecreasePendingMapsCountAction, MapActionTypes, MapsListChangedAction,
-	PinLocationModeTriggerAction, PinPointModeTriggerAction, PositionChangedAction,
-	SetMapManualImageProcessing, SetMapsDataActionStore,
-	SynchronizeMapsAction, ImageryCreatedAction, ImageryRemovedAction
-
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, DecreasePendingMapsCountAction,
+	ImageryCreatedAction, ImageryRemovedAction, MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction,
+	PinPointModeTriggerAction, PositionChangedAction, SetMapManualImageProcessing, SetMapsDataActionStore,
+	SynchronizeMapsAction
 } from '../actions/map.actions';
 
 
@@ -61,7 +59,7 @@ export class MapEffects {
 	 * @name onCommunicatorChange$
 	 * @ofType ImageryCreatedAction, ImageryRemovedAction
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
@@ -224,12 +222,12 @@ export class MapEffects {
 	 */
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.BACK_TO_WORLD)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldAction, mapState: IMapState) => {
+		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldView, mapState: IMapState) => {
 			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
 			return [action, mapId, mapState.mapsList];
 		})
-		.switchMap(([action, mapId, mapsList]: [BackToWorldAction, string, CaseMapState[]]) => {
+		.switchMap(([action, mapId, mapsList]: [BackToWorldView, string, CaseMapState[]]) => {
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const communicator = this.communicatorsService.provide(mapId);
 			const { position } = selectedMap.data;
@@ -244,7 +242,7 @@ export class MapEffects {
 				});
 			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
 			return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-				.map(() => new BackToWorldSuccessAction(action.payload));
+				.map(() => new BackToWorldSuccess(action.payload));
 		});
 
 	/**
@@ -324,12 +322,12 @@ export class MapEffects {
 			const updatedMapsList = [...mapState.mapsList];
 			updatedMapsList.forEach((map: CaseMapState) => {
 				if (map.id === payload.id) {
-					map.data.position = activeMap.data.position
+					map.data.position = activeMap.data.position;
 				}
 			});
 			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
 			if (mapState.pendingMapsCount > 0) {
-				actions.push(new DecreasePendingMapsCountAction())
+				actions.push(new DecreasePendingMapsCountAction());
 			}
 			return actions;
 		});

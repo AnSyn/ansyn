@@ -3,8 +3,8 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import { differenceWith, isEmpty } from 'lodash';
 import {
-	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction,
-	MapActionTypes, PinPointTriggerAction, SetMapsDataActionStore
+	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
+	PinPointTriggerAction, SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -385,7 +385,7 @@ export class VisualizersAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlaySuccessAction | BackToWorldView >(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
+		.ofType<DisplayOverlaySuccessAction | BackToWorldView>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
 		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => !isEmpty(casesState.selectedCase.state.contextEntities))
 		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => {
@@ -459,7 +459,7 @@ export class VisualizersAppEffects {
 					const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapData.id, FrameVisualizerType);
 					if (frameVisualizer) {
 						frameVisualizer.isActive = action.payload === mapData.id;
-						frameVisualizer.purgeCache()
+						frameVisualizer.purgeCache();
 					}
 				}
 			});
@@ -468,7 +468,7 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	removeOverlayFram$: Observable<void> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
-		.map(({payload}: BackToWorldView) => {
+		.map(({ payload }: BackToWorldView) => {
 			const frameVisualizer = <FrameVisualizer>this.getVisualizer(payload.mapId, FrameVisualizerType);
 			if (frameVisualizer) {
 				frameVisualizer.clearEntities();

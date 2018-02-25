@@ -1,7 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { VisualizerStateStyle } from '../models/visualizer-state';
-import { CoreConfig, ICoreConfig } from '@ansyn/core/models';
-import { Inject } from '@angular/core';
 
 export const FrameVisualizerType = 'FrameVisualizer';
 
@@ -31,8 +29,11 @@ export class FrameVisualizer extends EntitiesVisualizer {
 
 	public purgeCache() {
 		if (this.source) {
-			delete (<any>this.source.getFeatures()[0]).styleCache;
-			this.source.refresh();
+			const features = this.source.getFeatures();
+			if (features && features[0]) {
+				delete (<any>this.source.getFeatures()[0]).styleCache;
+				this.source.refresh();
+			}
 		}
 		return;
 	}

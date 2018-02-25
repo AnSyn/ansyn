@@ -223,11 +223,9 @@ export class MapEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: BackToWorldView, mapState: IMapState) => {
-			const mapId = action.payload.mapId ? action.payload.mapId : mapState.activeMapId;
-			return [action, mapId, mapState.mapsList];
-		})
-		.switchMap(([action, mapId, mapsList]: [BackToWorldView, string, CaseMapState[]]) => {
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.switchMap(([{payload}, {mapsList}]: [BackToWorldView, IMapState]) => {
+			const mapId = payload.mapId;
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const communicator = this.communicatorsService.provide(mapId);
 			const { position } = selectedMap.data;
@@ -242,7 +240,7 @@ export class MapEffects {
 				});
 			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
 			return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-				.map(() => new BackToWorldSuccess(action.payload));
+				.map(() => new BackToWorldSuccess(payload));
 		});
 
 	/**

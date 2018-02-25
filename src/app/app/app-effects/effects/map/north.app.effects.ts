@@ -12,7 +12,10 @@ import {
 	NorthCalculationsPlugin,
 	openLayersNorthCalculations
 } from '@ansyn/open-layers-north-calculations/plugin/north-calculations-plugin';
-import { BackToWorldSuccess, BackToWorldView, CaseOrientation, LoggerService, Overlay } from '@ansyn/core';
+import {
+	BackToWorldSuccess, BackToWorldView, CaseOrientation, CoreActionTypes, LoggerService,
+	Overlay
+} from '@ansyn/core';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 
@@ -59,7 +62,7 @@ export class NorthAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	backToWorldSuccessSetNorth$ = this.actions$
-		.ofType<BackToWorldSuccess>(MapActionTypes.BACK_TO_WORLD_SUCCESS)
+		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.do(([{ payload }, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
 			const communicator = this.imageryCommunicatorService.provide(payload.mapId);

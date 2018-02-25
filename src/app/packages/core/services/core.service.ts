@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CaseMapState } from '../models/case.model';
-import { isEmpty } from 'lodash';
 import { Overlay } from '../index';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class CoreService {
 		const result = [];
 
 		mapsList.forEach((map: CaseMapState) => {
-			if (!isEmpty(map.data.overlay)) {
+			if (Boolean(map.data.overlay)) {
 				if (map.id === activeMapId) {
 					result.push({ id: map.data.overlay.id, class: 'active' });
 				} else {

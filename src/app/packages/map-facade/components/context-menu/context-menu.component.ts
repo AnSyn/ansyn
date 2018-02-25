@@ -4,7 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
-import { isEmpty as _isEmpty, uniq as _uniq } from 'lodash';
+import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn\/core/models/overlay.model';
@@ -139,10 +139,6 @@ export class ContextMenuComponent implements OnInit {
 	@HostListener('contextmenu', ['$event'])
 	onContextMenu($event) {
 		$event.preventDefault();
-	}
-
-	get _isEmpty() {
-		return _isEmpty;
 	}
 
 	constructor(protected store: Store<IMapState>,

@@ -9,7 +9,6 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { Overlay } from '@ansyn/overlays';
-import { isEmpty, last } from 'lodash';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
@@ -79,9 +78,9 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return overlays.filteredOverlays;
 		})
-		.filter((displayedOverlays) => !isEmpty(displayedOverlays))
+		.filter((displayedOverlays) => Boolean(displayedOverlays) && displayedOverlays.length > 0)
 		.map((displayedOverlays: any[]) => {
-			const lastOverlayId = last(displayedOverlays);
+			const lastOverlayId = displayedOverlays[displayedOverlays.length - 1];
 			this.casesService.contextValues.defaultOverlay = '';
 			return new DisplayOverlayFromStoreAction({ id: lastOverlayId });
 		})
@@ -128,7 +127,7 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return [overlays.filteredOverlays, overlays.overlays];
 		})
-		.filter(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => !isEmpty(filteredOverlays))
+		.filter(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => Boolean(filteredOverlays))
 		.map(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => {
 
 			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < this.casesService.contextValues.time);

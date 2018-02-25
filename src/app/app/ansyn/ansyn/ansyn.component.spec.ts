@@ -10,6 +10,7 @@ import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.r
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { CoreConfig, coreStateSelector } from '@ansyn/core';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -79,7 +80,10 @@ describe('AnsynComponent', () => {
 			],
 			imports: [
 				RouterTestingModule,
-				StoreModule.forRoot({})]
+				StoreModule.forRoot({})],
+			providers: [
+				{provide: CoreConfig, useValue: {}}
+			]
 		}).compileComponents();
 	});
 
@@ -87,7 +91,9 @@ describe('AnsynComponent', () => {
 		store = _store;
 		handler = new Subject();
 		const mockStore = new Map<any, any>([
-
+			[coreStateSelector, Observable.of({
+				windowLayout: {}
+			})],
 			[casesStateSelector, handler],
 			[toolsStateSelector, Observable.of({
 				flags: new Map<string, any>()

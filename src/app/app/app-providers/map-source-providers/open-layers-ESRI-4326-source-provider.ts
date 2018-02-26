@@ -13,7 +13,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		const layer = this.cacheService.getLayerFromCache(id);
 		if (layer) {
 			return layer;
 		}
@@ -39,7 +39,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			visible: true
 		});
 
-		BaseMapSourceProvider.addLayerToCache(id, [esriLayer]);
+		this.cacheService.addLayerToCache(id, [esriLayer]);
 		return [esriLayer];
 	}
 

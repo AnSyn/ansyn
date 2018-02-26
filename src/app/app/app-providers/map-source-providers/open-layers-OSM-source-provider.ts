@@ -14,7 +14,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		const layer = this.cacheService.getLayerFromCache(id);
 		if (layer) {
 			return layer;
 		}
@@ -35,7 +35,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 		this.monitorSource(source, mapId);
 
 		const openSeaMapLayer = new TileLayer({ source });
-		BaseMapSourceProvider.addLayerToCache(id, [osmLayer, openSeaMapLayer]);
+		this.cacheService.addLayerToCache(id, [osmLayer, openSeaMapLayer]);
 		return [osmLayer, openSeaMapLayer];
 	}
 

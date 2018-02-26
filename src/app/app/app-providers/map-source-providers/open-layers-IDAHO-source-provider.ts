@@ -18,7 +18,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: Overlay, mapId: string): any {
 		const id = `${metaData.id}_${this.sourceType}`;
-		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		const layer = this.cacheService.getLayerFromCache(id);
 		if (layer) {
 			return layer;
 		}
@@ -42,7 +42,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			}),
 			extent: [x, y, x1, y1]
 		});
-		BaseMapSourceProvider.addLayerToCache(id, result);
+		this.cacheService.addLayerToCache(id, result);
 		return result;
 	}
 

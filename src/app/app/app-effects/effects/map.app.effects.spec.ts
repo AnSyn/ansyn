@@ -69,6 +69,7 @@ import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -178,6 +179,7 @@ describe('MapAppEffects', () => {
 				{ provide: VisualizersConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
+				CacheService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
 					provide: mapFacadeConfig,
@@ -197,7 +199,8 @@ describe('MapAppEffects', () => {
 							'mapSource': 'OSM',
 							'mapSourceMetadata': null
 						}
-						]
+						],
+						"maxCachedLayers": 100
 					}
 				},
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },

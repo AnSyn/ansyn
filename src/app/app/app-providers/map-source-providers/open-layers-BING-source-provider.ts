@@ -13,7 +13,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		const layer = this.cacheService.getLayerFromCache(id);
 		if (layer) {
 			return layer;
 		}
@@ -33,7 +33,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 				source
 			});
 		});
-		BaseMapSourceProvider.addLayerToCache(id, result);
+		this.cacheService.addLayerToCache(id, result);
 		return result;
 	}
 

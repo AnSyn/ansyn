@@ -3,17 +3,26 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import {
-	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
-	PinPointTriggerAction, SetMapsDataActionStore, DbclickFeatureTriggerAction
+	ActiveMapChangedAction,
+	DbclickFeatureTriggerAction,
+	DrawOverlaysOnMapTriggerAction,
+	HoverFeatureTriggerAction,
+	MapActionTypes,
+	PinPointTriggerAction,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
-import {Action, Store} from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
-	DisplayOverlayFromStoreAction, DisplayOverlaySuccessAction, MouseOutDropAction, MouseOverDropAction,
-	OverlaysActionTypes, OverlaysMarkupAction
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	MouseOutDropAction,
+	MouseOverDropAction,
+	OverlaysActionTypes,
+	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -27,8 +36,13 @@ import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FootprintHeatmapVisualizerType } from '@ansyn/open-layer-visualizers/overlays/heatmap-visualizer';
 import {
-	GoToInputChangeAction, SetAnnotationMode, SetMeasureDistanceToolState, ShowOverlaysFootprintAction,
-	StartMouseShadow, StopMouseShadow, ToolsActionsTypes
+	GoToInputChangeAction,
+	SetAnnotationMode,
+	SetMeasureDistanceToolState,
+	ShowOverlaysFootprintAction,
+	StartMouseShadow,
+	StopMouseShadow,
+	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -40,7 +54,7 @@ import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MeasureDistanceVisualizer, MeasureDistanceVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
-import {BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay} from '@ansyn/core';
+import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
 import { IMapVisualizer } from '@ansyn/imagery';

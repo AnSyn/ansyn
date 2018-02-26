@@ -52,6 +52,10 @@ export class OverlaysService {
 			});
 	}
 
+	static isFullOverlay(overlay: Overlay): boolean {
+		return Boolean(overlay && overlay.date);
+	}
+
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param {Map<string, T>} items

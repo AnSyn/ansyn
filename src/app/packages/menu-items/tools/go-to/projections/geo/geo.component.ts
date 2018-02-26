@@ -70,7 +70,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 		}
 		const lng = c.value[0];
 		const lat = c.value[1];
-		if (!lng || !lat) {
+		if ((lng === null || lng === undefined) || (lat === null || lat === undefined)) {
 			this.validationErr = { empty: true };
 		} else if (!ProjectionConverterService.isValidWGS84(c.value)) {
 			this.validationErr = { invalid: true };

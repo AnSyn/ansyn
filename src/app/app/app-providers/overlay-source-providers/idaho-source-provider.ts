@@ -1,7 +1,6 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { ErrorHandlerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
-import { Response } from '@angular/http';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -37,16 +36,16 @@ export interface IIdahoOverlaySourceConfig {
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = IdahoOverlaySourceType;
 
-	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
+	constructor(public errorHandlerService: ErrorHandlerService, protected httpClient: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
 		super();
 
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
-		return <Observable<Overlay>>this.http.get(url)
+		return <Observable<Overlay>>this.httpClient.get(url)
 			.map(this.extractData.bind(this))
-			.catch((error: Response | any) => {
+			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	};
@@ -63,13 +62,13 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
-		return <Observable<OverlaysFetchData>>this.http.post(url, requestParams)
+		return <Observable<OverlaysFetchData>>this.httpClient.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
-			.catch((error: Response | any) => {
+			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 
@@ -77,16 +76,16 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
-		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
-			.catch((error: Response | any) => {
+		return <Observable<StartAndEndDate>>this.httpClient.post<StartAndEndDate>(url, params)
+			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<StartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
-		return <Observable<StartAndEndDate>>this.http.post<StartAndEndDate>(url, params)
-			.catch((error: Response | any) => {
+		return <Observable<StartAndEndDate>>this.httpClient.post<StartAndEndDate>(url, params)
+			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	}
@@ -123,7 +122,6 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
 		overlay.azimuth = toRadians(180 - idahoElement.properties.satAzimuth);
 		overlay.sourceType = this.sourceType;
-		overlay.isFullOverlay = true;
 		overlay.isGeoRegistered = true;
 
 		return overlay;

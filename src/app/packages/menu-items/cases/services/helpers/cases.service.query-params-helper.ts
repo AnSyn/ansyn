@@ -1,6 +1,6 @@
 import { Case } from '../../models/case.model';
 import { Params } from '@angular/router';
-import { cloneDeep, forEach } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
@@ -8,7 +8,7 @@ import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
-import { CaseState } from '@ansyn/core/models/case.model';
+import { CaseState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 
@@ -172,7 +172,9 @@ export class QueryParamsHelper {
 				// collect process arguments only for overlays currently loaded by map
 				const activeMapsManualProcessArgs = {};
 				if (caseState) {
-					forEach(caseState.overlaysManualProcessArgs, (processArgs, overlayId) => {
+					const keys = Object.keys(caseState.overlaysManualProcessArgs);
+					keys.forEach((overlayId) => {
+						const processArgs: ImageManualProcessArgs = caseState.overlaysManualProcessArgs[overlayId];
 						const loadedOverlay = caseState.maps.data.find((caseMapState: CaseMapState) => {
 							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
 						});

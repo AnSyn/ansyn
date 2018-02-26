@@ -22,7 +22,7 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
-import { DisplayOverlayAction, IOverlaysState } from '@ansyn/overlays';
+import { DisplayOverlayAction, IOverlaysState, OverlaysService } from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarStateSelector,
@@ -151,7 +151,7 @@ export class MapAppEffects {
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => Boolean(payload.overlay) && payload.overlay.isFullOverlay)
+		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => OverlaysService.isFullOverlay(payload.overlay))
 		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
 			const { overlay } = payload;
 			const mapId = payload.mapId || mapState.activeMapId;
@@ -232,7 +232,7 @@ export class MapAppEffects {
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.filter((action: DisplayOverlayAction) => !action.payload.overlay.isFullOverlay)
+		.filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay))
 		.map((action: DisplayOverlayAction) =>
 			new RequestOverlayByIDFromBackendAction({
 				overlayId: action.payload.overlay.id,

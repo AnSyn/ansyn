@@ -239,4 +239,8 @@ export class ContextMenuComponent implements OnInit {
 
 		return sensorType;
 	}
+
+	isDisabled(subList: string) {
+		return !this[subList] || this[subList].length === 0;
+	}
 }

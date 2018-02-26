@@ -25,7 +25,6 @@ export class Overlay {
 	approximateTransform?: any;
 	csmState?: string;
 	sourceType?: string;
-	isFullOverlay: boolean;
 	isGeoRegistered: boolean;
 }
 

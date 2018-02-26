@@ -646,12 +646,10 @@ export class VisualizersAppEffects {
 		return overlaysToDraw.map(this.mapOverlayToDraw);
 	}
 
-	mapOverlayToDraw(overlay: Overlay) {
-		const id = overlay.id;
-		const footPrint = overlay.footprint;
+	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
 		const featureJson: GeoJSON.Feature<any> = {
 			type: 'Feature',
-			geometry: footPrint,
+			geometry: footprint,
 			properties: {}
 		};
 		return {

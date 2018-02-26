@@ -6,6 +6,7 @@ import { BaseMapSourceProvider } from '../model/base-source-provider.model';
 import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -39,6 +40,7 @@ describe('ImageryComponent', () => {
 			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
+				CacheService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },
@@ -55,7 +57,8 @@ describe('ImageryComponent', () => {
 						'mapType': 'cesiumMap',
 						'mapSource': 'OSM',
 						'mapSourceMetadata': null
-					}]
+					}],
+					"maxCachedLayers": 100
 				}
 				},
 				ImageryCommunicatorService, ImageryProviderService]

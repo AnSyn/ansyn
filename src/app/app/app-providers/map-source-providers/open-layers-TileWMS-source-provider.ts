@@ -14,7 +14,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		const layer = this.cacheService.getLayerFromCache(id);
 		if (layer) {
 			return layer;
 		}
@@ -35,7 +35,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		this.monitorSource(source, mapId);
 
 		const tiled = new TileLayer({ visible: true, source });
-		BaseMapSourceProvider.addLayerToCache(id, [tiled]);
+		this.cacheService.addLayerToCache(id, [tiled]);
 		return [tiled];
 	}
 

@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
-import { Store } from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
 	DisplayOverlayFromStoreAction, DisplayOverlaySuccessAction, MouseOutDropAction, MouseOverDropAction,
@@ -40,7 +40,7 @@ import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MeasureDistanceVisualizer, MeasureDistanceVisualizerType } from '@ansyn/open-layer-visualizers';
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
-import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
+import {BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay} from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
 import { IMapVisualizer } from '@ansyn/imagery';
@@ -426,24 +426,15 @@ export class VisualizersAppEffects {
 	/**
 	 * @type Effect
 	 * @name drawFrameToOverLay$
-	 * @ofType DISPLAY_OVERLAY_FROM_STORE
-	 * @dependencies overlays
-	 * @action void
+	 * @ofType DisplayOverlaySuccessAction
 	 */
 	@Effect({ dispatch: false })
-	drawFrameToOverLay$: Observable<void> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlaySuccessAction, overLayState: IOverlaysState, mapState: IMapState): any => {
-			return {
-				overlay: overLayState.overlays.get(action.payload.overlay.id),
-				mapId: action.payload.mapId || mapState.activeMapId
-			};
-		})
-		.filter((overlay) => Boolean(overlay))
-		.do(({ overlay, mapId }: any) => {
-			const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapId, FrameVisualizerType);
-			const entityToDraw = this.mapOverlayToDraw(overlay);
+	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.do(({ payload }: DisplayOverlaySuccessAction) => {
+			const frameVisualizer = <FrameVisualizer>this.getVisualizer(payload.mapId, FrameVisualizerType);
 			if (frameVisualizer) {
+				const entityToDraw = this.mapOverlayToDraw(payload.overlay);
 				frameVisualizer.isActive = true;
 				frameVisualizer.setEntities([entityToDraw]);
 			}
@@ -641,12 +632,11 @@ export class VisualizersAppEffects {
 		return overlaysToDraw.map(this.mapOverlayToDraw);
 	}
 
-	mapOverlayToDraw(overLayData) {
-		const id = overLayData.id;
-		const footPrint = overLayData.footprint;
+	mapOverlayToDraw(overlay: Overlay) {
+		const id = overlay.id;
+		const footPrint = overlay.footprint;
 		const featureJson: GeoJSON.Feature<any> = {
 			type: 'Feature',
-			// calculate projection?
 			geometry: footPrint,
 			properties: {}
 		};

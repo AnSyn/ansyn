@@ -5,11 +5,12 @@ import { ImageryCommunicatorService } from './communicator-service/communicator.
 import { ImageryProviderService } from './provider-service/imagery-provider.service';
 import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './configuration.token';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 @NgModule({
 	imports: [CommonModule],
 	declarations: [ImageryComponent],
-	providers: [ImageryCommunicatorService, ImageryProviderService],
+	providers: [ImageryCommunicatorService, ImageryProviderService, CacheService],
 	exports: [ImageryComponent]
 })
 export class ImageryModule {

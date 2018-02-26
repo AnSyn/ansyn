@@ -9,7 +9,7 @@
 			*ngFor="let data of overlayButtons"
 			class="menu-item"
 			[ngClass]="data.name"
-			[disabled]="!this[data.subList] || this[data.subList].length === 0"
+			[disabled]="isDisabled(data.subList)"
 			(mousedown)="isClick($event) && data.action($event)">
 			<i class="icon-context-menu-{{data.name}}"></i>
 			<span>{{data.name | titlecase}}</span>

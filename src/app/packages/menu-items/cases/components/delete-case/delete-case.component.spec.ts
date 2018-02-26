@@ -3,9 +3,9 @@ import { DeleteCaseComponent } from './delete-case.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
+import { cloneDeep } from 'lodash';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
 import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
@@ -56,7 +56,7 @@ describe('DeleteCaseComponent', () => {
 	});
 
 	it('getActiveCaseName should return caseName by modalCaseId', () => {
-		let cloneState = _.cloneDeep(fakeICasesState);
+		let cloneState = cloneDeep(fakeICasesState);
 		cloneState.modalCaseId = cloneState.cases[0].id;
 		let result: string = component.getActiveCaseName(cloneState);
 		expect(result).toEqual(cloneState.cases[0].name);

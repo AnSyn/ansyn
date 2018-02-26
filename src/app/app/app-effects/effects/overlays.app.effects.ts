@@ -127,7 +127,7 @@ export class OverlaysAppEffects {
 		.withLatestFrom(this.store$.select(overlaysStateSelector), (action, overlays: IOverlaysState) => {
 			return [overlays.filteredOverlays, overlays.overlays];
 		})
-		.filter(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => Boolean(filteredOverlays))
+		.filter(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => Boolean(filteredOverlays) && filteredOverlays.length > 0)
 		.map(([filteredOverlays, overlays]: [string[], Map<string, Overlay>]) => {
 
 			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < this.casesService.contextValues.time);

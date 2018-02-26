@@ -387,7 +387,7 @@ export class VisualizersAppEffects {
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction | BackToWorldView>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
-		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => Boolean(casesState.selectedCase.state.contextEntities))
+		.filter(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => Boolean(casesState.selectedCase.state.contextEntities) && casesState.selectedCase.state.contextEntities.length > 0)
 		.do(([action, mapState, casesState]: [DisplayOverlaySuccessAction | BackToWorldView, IMapState, ICasesState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);

@@ -36,7 +36,6 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1999),
 					photoTime: 'dsds',
 					name: 'first',
-					isFullOverlay: true,
 					isGeoRegistered: true
 				},
 				{
@@ -46,7 +45,6 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1987),
 					photoTime: 'beww',
 					name: 'second',
-					isFullOverlay: true,
 					isGeoRegistered: true
 				}
 			];
@@ -64,7 +62,6 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 				date: new Date(1999),
 				photoTime: 'dsds',
 				name: 'first',
-				isFullOverlay: true,
 				isGeoRegistered: true
 			};
 			observer.next(overlay);

@@ -122,12 +122,10 @@ export class StatusBarAppEffects {
 		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
 		.withLatestFrom(this.store.select(casesStateSelector), (action, casesState: ICasesState) => {
 			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.activeMapId === map.id);
-			const overlayId = activeMap.data.overlay ? null : activeMap.data.overlay.id;
+			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
 			return [action.type, overlayId];
 		})
-		.filter(([actionType, overlayId]) => {
-			return Boolean(overlayId);
-		})
+		.filter(([actionType, overlayId]) => Boolean(overlayId))
 		.map(([actionType, currentOverlayId]: [string, string]) => {
 			switch (actionType) {
 				case StatusBarActionsTypes.GO_NEXT:

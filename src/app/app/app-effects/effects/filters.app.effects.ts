@@ -133,7 +133,7 @@ export class FiltersAppEffects {
 	}
 
 	isMetadataEmpty(metadata: any): boolean {
-		return !metadata;
+		return metadata === undefined || metadata === null;
 	}
 
 	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {

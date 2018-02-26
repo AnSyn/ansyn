@@ -231,7 +231,7 @@ describe('MapAppEffects', () => {
 		layerState = cloneDeep(initialLayersState);
 
 		toolsState = cloneDeep(toolsInitialState);
-		fakeOverlay = <any>{ id: 'overlayId', isFullOverlay: true, isGeoRegistered: true };
+		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
@@ -369,14 +369,12 @@ describe('MapAppEffects', () => {
 			spyOn(fakeCommunicator, 'resetView');
 		});
 
-		it('should NOT dispatch/do anything if "overlay.isFullOverlay = false"', () => {
+		it('should NOT dispatch/do anything if "overlay date = undefined"', () => {
 			const testOverlay: Overlay = {
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
-				date: null,
 				azimuth: 0,
-				isFullOverlay: false,
 				isGeoRegistered: true
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
@@ -386,14 +384,12 @@ describe('MapAppEffects', () => {
 	});
 
 	describe('onOverlayFromURL$', () => {
-		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay.isFullOverlay = false"', () => {
-			const testOverlay: Overlay = {
+		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
+			const testOverlay: Overlay = <Overlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
-				date: null,
 				azimuth: 0,
-				isFullOverlay: false,
 				isGeoRegistered: true,
 				sourceType: 'IDAHO'
 			};
@@ -410,14 +406,13 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
 
-		it('should NOT dispatch anything if "overlay.isFullOverlay = true"', () => {
+		it('should NOT dispatch anything if "overlay date exists"', () => {
 			const testOverlay: Overlay = {
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
-				date: null,
+				date: new Date(),
 				azimuth: 0,
-				isFullOverlay: true,
 				isGeoRegistered: true
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
@@ -433,9 +428,8 @@ describe('MapAppEffects', () => {
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
-				date: null,
+				date: new Date(),
 				azimuth: 0,
-				isFullOverlay: true,
 				isGeoRegistered: true
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = overlay;

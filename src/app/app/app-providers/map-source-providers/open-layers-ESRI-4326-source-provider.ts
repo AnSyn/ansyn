@@ -12,6 +12,12 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
 	create(metaData: any, mapId: string): any {
+		const id = this.sourceType;
+		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		if (layer) {
+			return layer;
+		}
+
 		const source = new XYZ({
 			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',
 			maxZoom: 16,
@@ -33,6 +39,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			visible: true
 		});
 
+		BaseMapSourceProvider.addLayerToCache(id, [esriLayer]);
 		return [esriLayer];
 	}
 

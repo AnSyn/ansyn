@@ -6,4 +6,5 @@ export interface IMapConfig {
 
 export interface IImageryConfig {
 	geoMapsInitialMapSource: IMapConfig[];
+	maxCachedLayers: number;
 }

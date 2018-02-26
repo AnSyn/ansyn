@@ -1,11 +1,17 @@
 import { Store } from '@ngrx/store';
 import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { ToolsFlag } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
+import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
+
+	static sChacheSize = 1;
+	static slayersCacheArray: Map<string, any> = new Map<string, any>();
 
 	messages = {
 		all: 'Failed to load overlay',
@@ -17,7 +23,20 @@ export abstract class BaseMapSourceProvider {
 
 	abstract sourceType: string;
 
-	constructor(protected store: Store<any>) {
+	static getLayerFromCache(id: string) {
+		return BaseMapSourceProvider.slayersCacheArray.get(id);
+	}
+
+	static addLayerToCache(id: string, layer: any) {
+		if (BaseMapSourceProvider.slayersCacheArray.size >= BaseMapSourceProvider.sChacheSize) {
+			const key = BaseMapSourceProvider.slayersCacheArray.keys().next();
+			BaseMapSourceProvider.slayersCacheArray.delete(key.value);
+		}
+		BaseMapSourceProvider.slayersCacheArray.set(id, layer);
+	}
+
+	constructor(protected store: Store<any>, @Inject(ConfigurationToken) protected config: IImageryConfig) {
+		BaseMapSourceProvider.sChacheSize = config.maxCachedLayers;
 	}
 
 	abstract create(metaData: any, mapId: string): any;

@@ -13,6 +13,12 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
 	create(metaData: any, mapId: string): any {
+		const id = this.sourceType;
+		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		if (layer) {
+			return layer;
+		}
+
 		const layers = metaData.layers.join(',');
 
 
@@ -29,6 +35,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		this.monitorSource(source, mapId);
 
 		const tiled = new TileLayer({ visible: true, source });
+		BaseMapSourceProvider.addLayerToCache(id, [tiled]);
 		return [tiled];
 	}
 

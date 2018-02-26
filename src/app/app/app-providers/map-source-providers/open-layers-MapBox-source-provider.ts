@@ -13,6 +13,12 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
 
 	create(metaData: any, mapId: string): any {
+		const id = this.sourceType;
+		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		if (layer) {
+			return layer;
+		}
+
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -27,6 +33,7 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 			preload: Infinity
 		});
 
+		BaseMapSourceProvider.addLayerToCache(id, [mapBoxLayer]);
 		return [mapBoxLayer];
 	}
 

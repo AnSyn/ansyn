@@ -13,8 +13,8 @@
 		"@angular/common": "5.1.2",
 		"@angular/core": "5.1.2",
 		"@ansyn/core": "0.2.8",
-		"@ngrx/effects": "4.1.1",
-		"@ngrx/core": "1.2.0",
-		"@ngrx/store": "4.1.1"
+		"@ngrx/effects": "^5.1.0",
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^5.1.0"
 	}
 }

@@ -18,23 +18,21 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 			return layer;
 		}
 
-		const result = metaData.styles.map(style => {
-			const source = new BingMaps({
-				key: metaData.key,
-				imagerySet: style,
-				maxZoom: 19
-			});
-
-			this.monitorSource(source, mapId);
-
-			return new TileLayer(<any>{
-				visible: true,
-				preload: Infinity,
-				source
-			});
+		const source = new BingMaps({
+			key: metaData.key,
+			imagerySet: metaData.styles[0],
+			maxZoom: 19
 		});
-		this.cacheService.addLayerToCache(id, result);
-		return result;
+
+		this.monitorSource(source, mapId);
+
+		const result = new TileLayer(<any>{
+			visible: true,
+			preload: Infinity,
+			source
+		});
+		this.cacheService.addLayerToCache(id, [result]);
+		return [result];
 	}
 
 	createAsync(metaData: any, mapId: string): Promise<any> {

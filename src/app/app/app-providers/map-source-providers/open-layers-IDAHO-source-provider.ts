@@ -17,6 +17,12 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
 	create(metaData: Overlay, mapId: string): any {
+		const id = `${metaData.id}_${this.sourceType}`;
+		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		if (layer) {
+			return layer;
+		}
+
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -28,7 +34,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
 		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
 
-		return new ImageLayer({
+		const result = new ImageLayer({
 			source: new ProjectableRaster({
 				sources: [source],
 				operation: (pixels) => pixels[0],
@@ -36,6 +42,8 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			}),
 			extent: [x, y, x1, y1]
 		});
+		BaseMapSourceProvider.addLayerToCache(id, result);
+		return result;
 	}
 
 	createAsync(metaData: any, mapId: string): Promise<any> {

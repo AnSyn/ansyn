@@ -12,7 +12,13 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
 	create(metaData: any, mapId: string): any {
-		return metaData.styles.map(style => {
+		const id = this.sourceType;
+		const layer = BaseMapSourceProvider.getLayerFromCache(id);
+		if (layer) {
+			return layer;
+		}
+
+		const result = metaData.styles.map(style => {
 			const source = new BingMaps({
 				key: metaData.key,
 				imagerySet: style,
@@ -27,6 +33,8 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 				source
 			});
 		});
+		BaseMapSourceProvider.addLayerToCache(id, result);
+		return result;
 	}
 
 	createAsync(metaData: any, mapId: string): Promise<any> {

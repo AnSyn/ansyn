@@ -162,3 +162,20 @@
 		}
 	}
 }
+
+@media screen and (max-width: 1400px) {
+	:host {
+		div.imageries-container {
+			&.layout2, &.layout4, &.layout6, &.layout5 div.map-container-wrapper:not(:first-child) {
+				/deep/ ansyn-imagery-status {
+					.buttons button.back-to-world-view {
+						font-size: 0;
+						i {
+							font-size: 13.33px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

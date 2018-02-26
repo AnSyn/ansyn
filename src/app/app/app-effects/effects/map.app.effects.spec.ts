@@ -370,7 +370,7 @@ describe('MapAppEffects', () => {
 		});
 
 		it('should NOT dispatch/do anything if "overlay date = undefined"', () => {
-			const testOverlay: Overlay = {
+			const testOverlay: Overlay = <Overlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),

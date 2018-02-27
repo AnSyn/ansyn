@@ -14,9 +14,9 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layers = this.cacheService.getLayerFromCache(id);
-		if (layers) {
-			return [...layers];
+		const cacheLayers = this.cacheService.getLayerFromCache(id);
+		if (cacheLayers) {
+			return [...cacheLayers];
 		}
 
 		const osmLayer = new TileLayer({

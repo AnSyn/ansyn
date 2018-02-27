@@ -214,6 +214,23 @@ export class OverlaysAppEffects {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		});
 
+	/**
+	 * @type Effect
+	 * @name onDisplayOverlayFromStore$
+	 * @ofType DisplayOverlayFromStoreAction
+	 * @dependencies overlays, map
+	 * @action DisplayOverlayAction
+	 */
+	@Effect()
+	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
+		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
+			const mapId = payload.mapId || activeMapId;
+			const overlay = overlays.get(payload.id);
+			return new DisplayOverlayAction({ overlay, mapId })
+		});
+
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,

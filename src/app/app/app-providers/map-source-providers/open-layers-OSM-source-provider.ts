@@ -12,13 +12,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerOSMSourceProviderMapType;
 	public sourceType = OpenLayerOSMSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any {
-		const id = this.sourceType;
-		const cacheLayers = this.cacheService.getLayerFromCache(id);
-		if (cacheLayers) {
-			return [...cacheLayers];
-		}
-
+	create(metaData: any, mapId: string): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});
@@ -35,12 +29,6 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 		this.monitorSource(source, mapId);
 
 		const openSeaMapLayer = new TileLayer({ source });
-		this.cacheService.addLayerToCache(id, [osmLayer, openSeaMapLayer]);
 		return [osmLayer, openSeaMapLayer];
-	}
-
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
 	}
 }

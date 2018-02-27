@@ -21,10 +21,24 @@ export abstract class BaseMapSourceProvider {
 	constructor(protected store: Store<any>, protected cacheService: CacheService) {
 	}
 
-	abstract create(metaData: any, mapId: string): any;
+	createOrGetFromCashe(metaData: any, mapId: string) {
+		const id = `${this.sourceType}/${JSON.stringify(metaData)}`;
+
+		const cacheLayers = this.cacheService.getLayerFromCache(id);
+		if (cacheLayers.length) {
+			return cacheLayers;
+		}
+
+		const layers = this.create(metaData, mapId);
+		this.cacheService.addLayerToCache(id, layers);
+		return layers;
+	}
+
+	abstract create(metaData: any, mapId: string): any[];
 
 	createAsync(metaData: any, mapId: string): Promise<any> {
-		return Promise.resolve();
+		let layer = this.createOrGetFromCashe(metaData, mapId);
+		return Promise.resolve(layer);
 	}
 
 	monitorSource(source, mapId: string) {

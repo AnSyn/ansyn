@@ -16,13 +16,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	create(metaData: Overlay, mapId: string): any {
-		const id = `${metaData.id}_${this.sourceType}`;
-		const layer = this.cacheService.getLayerFromCache(id);
-		if (layer) {
-			return layer;
-		}
-
+	create(metaData: Overlay, mapId: string): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -42,12 +36,12 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			}),
 			extent: [x, y, x1, y1]
 		});
-		this.cacheService.addLayerToCache(id, result);
-		return result;
+		return [result];
 	}
 
 	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
+		let layer = this.createOrGetFromCashe(metaData, mapId);
+		return Promise.resolve(layer[0]);
 	}
+
 }

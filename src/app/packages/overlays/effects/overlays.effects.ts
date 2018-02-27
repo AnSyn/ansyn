@@ -30,7 +30,6 @@ import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
-import { IAppState } from '@ansyn/app/app-effects';
 
 @Injectable()
 export class OverlaysEffects {

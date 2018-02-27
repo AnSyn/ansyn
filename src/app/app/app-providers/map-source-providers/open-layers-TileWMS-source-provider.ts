@@ -12,15 +12,8 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerTileWMSSourceProviderMapType;
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any {
-		const id = this.sourceType;
-		const cacheLayers = this.cacheService.getLayerFromCache(id);
-		if (cacheLayers) {
-			return [...cacheLayers];
-		}
-
+	create(metaData: any, mapId: string): any[] {
 		const layers = metaData.layers.join(',');
-
 
 		const source = new TileWMS(<any>{
 			preload: Infinity,
@@ -35,12 +28,6 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		this.monitorSource(source, mapId);
 
 		const tiled = new TileLayer({ visible: true, source });
-		this.cacheService.addLayerToCache(id, [tiled]);
 		return [tiled];
-	}
-
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
 	}
 }

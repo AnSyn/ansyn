@@ -11,13 +11,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerBingSourceProviderMapType;
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any {
-		const id = this.sourceType;
-		const cacheLayers = this.cacheService.getLayerFromCache(id);
-		if (cacheLayers) {
-			return [...cacheLayers];
-		}
-
+	create(metaData: any, mapId: string): any[] {
 		const source = new BingMaps({
 			key: metaData.key,
 			imagerySet: metaData.styles[0],
@@ -31,12 +25,6 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 			preload: Infinity,
 			source
 		});
-		this.cacheService.addLayerToCache(id, [result]);
 		return [result];
-	}
-
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
 	}
 }

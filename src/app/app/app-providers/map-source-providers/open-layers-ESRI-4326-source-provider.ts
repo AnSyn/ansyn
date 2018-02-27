@@ -11,13 +11,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerESRI_4326SourceProviderMapType;
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any {
-		const id = this.sourceType;
-		const cacheLayers = this.cacheService.getLayerFromCache(id);
-		if (cacheLayers) {
-			return [...cacheLayers];
-		}
-
+	create(metaData: any, mapId: string): any[] {
 		const source = new XYZ({
 			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',
 			maxZoom: 16,
@@ -39,12 +33,6 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			visible: true
 		});
 
-		this.cacheService.addLayerToCache(id, [esriLayer]);
 		return [esriLayer];
-	}
-
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
 	}
 }

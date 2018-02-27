@@ -40,7 +40,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	}
 
 	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.createOrGetFromCashe(metaData, mapId);
+		let layer = this.createOrGetFromCache(metaData, mapId);
 		return Promise.resolve(layer[0]);
 	}
 

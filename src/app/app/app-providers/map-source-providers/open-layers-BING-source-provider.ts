@@ -13,9 +13,9 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 
 	create(metaData: any, mapId: string): any {
 		const id = this.sourceType;
-		const layer = this.cacheService.getLayerFromCache(id);
-		if (layer) {
-			return layer;
+		const layers = this.cacheService.getLayerFromCache(id);
+		if (layers) {
+			return [...layers];
 		}
 
 		const source = new BingMaps({

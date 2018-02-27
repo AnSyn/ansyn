@@ -34,7 +34,7 @@ export abstract class BaseMapSourceProvider {
 		return layers;
 	}
 
-	abstract create(metaData: any, mapId: string): any[];
+	protected abstract create(metaData: any, mapId: string): any[];
 
 	createAsync(metaData: any, mapId: string): Promise<any> {
 		let layer = this.createOrGetFromCashe(metaData, mapId);

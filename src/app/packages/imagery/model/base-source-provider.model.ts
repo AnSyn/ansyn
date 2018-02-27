@@ -21,7 +21,7 @@ export abstract class BaseMapSourceProvider {
 	constructor(protected store: Store<any>, protected cacheService: CacheService) {
 	}
 
-	createOrGetFromCashe(metaData: any, mapId: string) {
+	protected createOrGetFromCache(metaData: any, mapId: string) {
 		const id = `${this.sourceType}/${JSON.stringify(metaData)}`;
 
 		const cacheLayers = this.cacheService.getLayerFromCache(id);
@@ -37,7 +37,7 @@ export abstract class BaseMapSourceProvider {
 	protected abstract create(metaData: any, mapId: string): any[];
 
 	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.createOrGetFromCashe(metaData, mapId);
+		let layer = this.createOrGetFromCache(metaData, mapId);
 		return Promise.resolve(layer);
 	}
 

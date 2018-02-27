@@ -12,15 +12,16 @@ export class CacheService {
 		this.cacheSize = config.maxCachedLayers;
 	}
 
-	getLayerFromCache(id: string) {
-		return this.cachedLayesrMap.get(id);
+	getLayerFromCache(id: string): any[] {
+		const layers = this.cachedLayesrMap.get(id);
+		return layers ? [ ...layers ] : [];
 	}
 
-	addLayerToCache(id: string, layer: any) {
+	addLayerToCache(id: string, layers: any[]) {
 		if (this.cachedLayesrMap.size >= this.cacheSize) {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		this.cachedLayesrMap.set(id, layer);
+		this.cachedLayesrMap.set(id, [...layers]);
 	}
 }

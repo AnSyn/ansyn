@@ -1,5 +1,9 @@
 <div class="buttons">
-	<button (click)="backToWorldView.emit()" class="back-to-world-view" *ngIf="overlay">
+	<button (click)="backToWorldView.emit()"
+			class="back-to-world-view"
+			*ngIf="overlay"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom' : 'top'"
+			tooltip-value="Back to base map">
 		<i class="icon-context-menu-prev"></i>
 		Back to base map
 	</button>
@@ -26,10 +30,7 @@
 			[class.active2]="isFavorite"
 			(click)="toggleFavorite()"
 			[attr.tooltip-value]="favoritesButtonText"
-			tooltip-class="bottom right"
-
-
-	>
+			tooltip-class="bottom right">
 		<i class="icon icon-favorites"></i>
 	</button>
 </div>

@@ -34,6 +34,8 @@ import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { statusBarStateSelector } from '@ansyn/status-bar';
 import {
+	initialMapState,
+	mapFeatureKey, MapReducer,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	SetPendingOverlaysAction,
@@ -43,6 +45,7 @@ import { CoreService } from '@ansyn/core/services/core.service';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
+import { overlaysInitialState } from '@ansyn/overlays';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -51,7 +54,7 @@ describe('OverlaysAppEffects', () => {
 	let casesService: CasesService;
 	let overlaysService: OverlaysService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	let toolsState: IToolsState;
+
 	let imageryCommunicatorServiceMock = {
 		provide: () => {
 		}
@@ -95,16 +98,25 @@ describe('OverlaysAppEffects', () => {
 			}
 		}
 	} as any;
+	const exampleOverlays: any = [
+		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
+		['last', { id: 'last', 'photoTime': new Date() }]
+	];
 
-	const overlaysState: any = {
+	const toolsState: IToolsState = { ...toolsInitialState };
+	const overlaysState = { ...overlaysInitialState,
 		filteredOverlays: ['first', 'last'],
-		overlays: new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
-			['last', { 'photoTime': new Date() }]])
+		overlays: new Map<string, any>(exampleOverlays)
 	};
-	const coreState = { ...coreInitialState };
-	const casesState = { ...initialCasesState };
 
-	const mapState: any = { 'mapsList': [{ 'id': '1' }, { 'id': '2' }] };
+	const initOverlaysState = () => {
+		overlaysState.filteredOverlays = ['first', 'last'];
+		overlaysState.overlays = new Map<string, any>(exampleOverlays);
+	};
+
+	const coreState = { ...coreInitialState };
+	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
+	const mapState = { ...initialMapState, mapsList: [{ 'id': '1' }, { 'id': '2' }]  };
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
@@ -115,7 +127,8 @@ describe('OverlaysAppEffects', () => {
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
-					[toolsFeatureKey]: ToolsReducer
+					[toolsFeatureKey]: ToolsReducer,
+					[mapFeatureKey]: MapReducer
 				})
 			],
 			providers: [
@@ -164,10 +177,7 @@ describe('OverlaysAppEffects', () => {
 
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
-		toolsState = cloneDeep(toolsInitialState);
-		overlaysState.filteredOverlays = ['first', 'last'];
-		casesState.selectedCase = caseItem;
-		casesState.cases = [caseItem];
+		initOverlaysState();
 
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, casesState],
@@ -321,6 +331,47 @@ describe('OverlaysAppEffects', () => {
 			expect(overlaysAppEffects.displayOverlaySetTimeline$).toBeObservable(expectedResults);
 		});
 	});
+
+	describe('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
+		it('MapId on payload', () => {
+			const firstOverlayId: string = exampleOverlays[0][0];
+			const firstOverlay = exampleOverlays[0][1];
+			actions = hot('--a--', {
+				a: new DisplayOverlayFromStoreAction({
+					id: firstOverlayId,
+					mapId: '4444'
+				})
+			});
+			const expectedResults = cold('--b--', {
+				b: new DisplayOverlayAction({
+					overlay: <any> firstOverlay,
+					mapId: '4444'
+				})
+			});
+			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
+		});
+
+		it('No MapId on payload( should dispatch activeMapId as mapId )', () => {
+			const lastOverlayId: string = exampleOverlays[1][0];
+			const lastOverlay = exampleOverlays[1][1];
+			mapState.activeMapId = 'activeMapId';
+
+			actions = hot('--a--', {
+				a: new DisplayOverlayFromStoreAction({
+					id: lastOverlayId
+				})
+			});
+			const expectedResults = cold('--b--', {
+				b: new DisplayOverlayAction({
+					overlay: <any> lastOverlay,
+					mapId: 'activeMapId'
+				})
+			});
+			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
+		});
+
+	});
+
 });
 
 

@@ -30,26 +30,10 @@ import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
+import { IAppState } from '@ansyn/app/app-effects';
 
 @Injectable()
 export class OverlaysEffects {
-
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlayFromStore$
-	 * @ofType DisplayOverlayFromStoreAction
-	 * @dependencies overlays
-	 * @action DisplayOverlayAction
-	 */
-	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), (action: DisplayOverlayFromStoreAction, state: IOverlaysState): any => {
-			return { overlay: state.overlays.get(action.payload.id), mapId: action.payload.mapId };
-		})
-		.map(({ overlay, mapId }: any) => {
-			return new DisplayOverlayAction({ overlay, mapId });
-		}).share();
 
 	/**
 	 * @type Effect

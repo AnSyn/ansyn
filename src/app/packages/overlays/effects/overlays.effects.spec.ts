@@ -160,19 +160,4 @@ describe('Overlays Effects ', () => {
 
 	});
 
-	it('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
-		actions = hot('--a--', {
-			a: new DisplayOverlayFromStoreAction({
-				id: overlays[0].id,
-				mapId: '4444'
-			})
-		});
-		const expectedResults = cold('--b--', {
-			b: new DisplayOverlayAction({
-				overlay: overlays[0],
-				mapId: '4444'
-			})
-		});
-		expect(overlaysEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
-	});
 });

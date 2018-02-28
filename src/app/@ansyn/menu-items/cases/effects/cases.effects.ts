@@ -7,7 +7,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction,
-	AddCasesAction,
+	AddCasesAction
 	CasesActionTypes,
 	LoadCaseAction,
 	LoadCasesAction,
@@ -72,9 +72,24 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id])
+		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
 		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
 		.map(() => new LoadDefaultCaseAction());
+
+	// /**
+	//  * @type Effect
+	//  * @name onDeleteCaseBackend$
+	//  * @ofType DeleteCaseBackendAction
+	//  * @action DeleteCaseBackendSuccessAction
+	//  */
+	// @Effect()
+	// onDeleteCaseBackend$: Observable<any> = this.actions$
+	// 	.ofType<DeleteCaseBackendAction>(CasesActionTypes.DELETE_CASE_BACKEND)
+	// 	.map(({ payload }) => payload)
+	// 	.switchMap((deletedCaseId) => {
+	// 		return this.casesService.removeCase(deletedCaseId)
+	// 			.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
+	// 	}).share();
 
 	/**
 	 * @type Effect

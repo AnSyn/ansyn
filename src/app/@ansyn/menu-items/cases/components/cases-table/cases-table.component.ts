@@ -14,9 +14,7 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
-import { Dictionary } from '@ngrx/entity/src/models';
-import { CaseModal } from '../../reducers/cases.reducer';
+import { selectCasesArray } from '../../reducers/cases.reducer';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -36,8 +34,7 @@ export class CasesTableComponent implements OnInit {
 
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 
-	ids$: Observable<string[] | number[]> = this.store$.select(selectCasesIds);
-	entities$: Observable<Dictionary<Case>> = this.store$.select(selectCaseEntities);
+	cases$: Observable<Case[]> = this.store$.select(selectCasesArray);
 
 	modalCaseId$: Observable<string> = this.caseState$
 		.pluck<ICasesState, CaseModal>('modal')

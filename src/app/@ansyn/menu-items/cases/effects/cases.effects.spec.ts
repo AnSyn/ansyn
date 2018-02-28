@@ -108,9 +108,7 @@ describe('CasesEffects', () => {
 		const caseItem: Case = { id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any;
 		store.dispatch(new AddCaseAction(caseItem));
 		actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
-		const expectedResults = cold('--b--', {
-			b: new SelectCaseAction(caseItem)
-		});
+		const expectedResults = cold('--b--', { b: new SelectCaseAction(caseItem) });
 		expect(casesEffects.loadCase$).toBeObservable(expectedResults);
 	});
 

@@ -12,6 +12,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '../../models/index';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
 import { CoreConfig } from '@ansyn/core';
+import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -29,6 +30,18 @@ describe('StatusBarComponent', () => {
 				{
 					provide: CoreConfig,
 					useValue: { errors: {} }
+				},
+				{
+					provide: ORIENTATIONS,
+					useValue: comboBoxesOptions.orientations
+				},
+				{
+					provide: TIME_FILTERS,
+					useValue: comboBoxesOptions.timeFilters
+				},
+				{
+					provide: GEO_FILTERS,
+					useValue: comboBoxesOptions.geoFilters
 				}
 			]
 		})

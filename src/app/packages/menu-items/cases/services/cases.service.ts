@@ -9,14 +9,18 @@ import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CaseTimeState, ErrorHandlerService } from '@ansyn/core';
 import { UUID } from "angular2-uuid";
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
 @Injectable()
 export class CasesService {
-	static defaultCase: Case;
+	static defaultTime: CaseTimeState = {
+		type: 'absolute',
+		from: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
+		to: new Date()
+	};
 
 	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	baseUrl;
@@ -30,12 +34,15 @@ export class CasesService {
 		time: undefined
 	};
 
+	get defaultCase() {
+		return this.config.defaultCase;
+	}
+
 	constructor(protected http: HttpClient, @Inject(casesConfig) public config: ICasesConfig, public urlSerializer: UrlSerializer,
 				public errorHandlerService: ErrorHandlerService) {
 		this.baseUrl = this.config.baseUrl;
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
-		CasesService.defaultCase = config.defaultCase;
 	}
 
 	loadCases(casesOffset: number = 0): Observable<any> {
@@ -46,10 +53,12 @@ export class CasesService {
 	}
 
 	createCase(selectedCase: Case): Observable<Case> {
+		const currentTime = new Date();
 		const uuid = UUID.UUID();
 		const url = `${this.baseUrl}/cases/${uuid}`;
 		selectedCase.id = uuid;
-		selectedCase.creationTime = new Date();
+		selectedCase.creationTime = currentTime;
+		selectedCase.lastModified = currentTime;
 		return this.http.post<Case>(url, selectedCase).map(_ => selectedCase).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
@@ -78,13 +87,6 @@ export class CasesService {
 		});
 	}
 
-	loadContexts(): Observable<any> {
-		const url = `${this.baseUrl}/contexts?from=0&limit=100`;
-		return this.http.get(url).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
-	}
-
 	loadCase(selectedCaseId: string): Observable<any> {
 		const url = `${this.baseUrl}/cases/${selectedCaseId}`;
 		return this.http.get(url)
@@ -95,6 +97,7 @@ export class CasesService {
 	parseCase(caseValue: Case) {
 		return {
 			...caseValue,
+			creationTime: new Date(caseValue.creationTime),
 			state: {
 				...caseValue.state,
 				time: {

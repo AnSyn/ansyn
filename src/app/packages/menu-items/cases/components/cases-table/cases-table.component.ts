@@ -15,6 +15,7 @@ import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { range as _range } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { selectCasesArray } from '../../reducers/cases.reducer';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -35,9 +36,7 @@ export class CasesTableComponent implements OnInit {
 
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 
-	cases$: Observable<Case[]> = this.caseState$
-		.pluck <ICasesState, Case[]>('cases')
-		.distinctUntilChanged();
+	cases$: Observable<Case[]> = this.store$.select(selectCasesArray);
 
 	modalCaseId$: Observable<string> = this.caseState$
 		.map((state: ICasesState) => state.modalCaseId)
@@ -56,7 +55,7 @@ export class CasesTableComponent implements OnInit {
 	selectedCaseId: string;
 
 	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
-		this.casesEffects.addCaseSuccess$.subscribe(this.onCasesAdded.bind(this));
+		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 
 	ngOnInit(): void {

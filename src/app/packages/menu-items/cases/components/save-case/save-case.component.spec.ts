@@ -23,10 +23,7 @@ describe('SaveCaseComponent', () => {
 		],
 		modalCaseId: 'fakeId1',
 		modal: true,
-		contexts: [],
-		contextsLoaded: true,
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
-		defaultCase: { id: 'fakeId3', name: 'fakeName3', state: { selectedContextId: null } }
 	} as any;
 
 	beforeEach(async(() => {

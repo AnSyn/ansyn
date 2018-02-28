@@ -19,10 +19,6 @@ import { DeleteCaseBackendSuccessAction } from '@ansyn/menu-items';
 
 describe('CasesReducer', () => {
 
-	beforeEach(() => {
-		CasesService.defaultCase = (<any>config).casesConfig.defaultCase;
-	});
-
 	it('CASE_SUCCESS action should add new case to state', () => {
 		let newCase: Case = {
 			id: 'fakeId',
@@ -90,34 +86,23 @@ describe('CasesReducer', () => {
 		expect(result.updatingBackend).toBeFalsy();
 	});
 
-	it('LOAD_CASES_SUCCESS action should add cases from payload to state.cases', () => {
-		let state: ICasesState = initialCasesState;
-		state.cases = [
-			{ id: 'id1', name: 'name1' },
-			{ id: 'id2', name: 'name2' },
-			{ id: 'id3', name: 'name3' }
-		];
-		let casesLoaded: Case[] = [
-			{ id: 'id4', name: 'name4' },
-			{ id: 'id5', name: 'name5' },
-			{ id: 'id6', name: 'name6' }
-		];
-		let action: LoadCasesSuccessAction = new LoadCasesSuccessAction(casesLoaded);
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.cases.length).toEqual(6);
-	});
+	// it('LOAD_CASES_SUCCESS action should add cases from payload to state.cases', () => {
+	// 	let state: ICasesState = initialCasesState;
+	// 	state.cases = [
+	// 		{ id: 'id1', name: 'name1' },
+	// 		{ id: 'id2', name: 'name2' },
+	// 		{ id: 'id3', name: 'name3' }
+	// 	];
+	// 	let casesLoaded: Case[] = [
+	// 		{ id: 'id4', name: 'name4' },
+	// 		{ id: 'id5', name: 'name5' },
+	// 		{ id: 'id6', name: 'name6' }
+	// 	];
+	// 	let action: LoadCasesSuccessAction = new LoadCasesSuccessAction(casesLoaded);
+	// 	let result: ICasesState = CasesReducer(state, action);
+	// 	expect(result.cases.length).toEqual(6);
+	// });
 
-	it('DELETE_CASE_BACKEND_SUCCESS action should delete case from state.cases', () => {
-		let state: ICasesState = initialCasesState;
-		state.cases = [
-			{ id: 'id1', name: 'name1' },
-			{ id: 'id2', name: 'name2' },
-			{ id: 'id3', name: 'name3' }
-		];
 
-		let action: DeleteCaseAction = new DeleteCaseBackendSuccessAction('id1');
-		let result: ICasesState = CasesReducer(state, action);
-		expect(result.cases.length).toEqual(2);
-	});
 
 });

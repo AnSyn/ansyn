@@ -2,34 +2,34 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import { Inject, Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction,
-	AddCaseSuccessAction,
+	AddCasesAction
 	CasesActionTypes,
-	DeleteCaseBackendAction,
-	DeleteCaseBackendSuccessAction,
 	LoadCaseAction,
 	LoadCasesAction,
-	LoadCasesSuccessAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
 	SelectCaseByIdAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction
+	UpdateCaseBackendSuccessAction,
+	SaveCaseAsAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
-import { Case } from '@ansyn/core';
+import { Case, Context } from '@ansyn/core';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { SaveCaseAsAction } from '@ansyn/menu-items';
-
+import { selectCaseEntities, selectCaseTotal } from '../reducers/cases.reducer';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { ContextActionTypes } from '@ansyn/context/actions/context.actions';
+import { selectContextsArray } from '@ansyn/context/reducers';
 
 @Injectable()
 export class CasesEffects {
@@ -42,31 +42,25 @@ export class CasesEffects {
 	 * @action LoadCasesSuccessAction
 	 */
 	@Effect()
-	loadCases$: Observable<LoadCasesSuccessAction> = this.actions$
+	loadCases$: Observable<AddCasesAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.switchMap(([action, casesState]: [LoadCasesAction, ICasesState]) => {
-			return this.casesService.loadCases(casesState.cases.length)
-				.map(newCases => {
-					return new LoadCasesSuccessAction(newCases);
-				});
+		.withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total)
+		.switchMap((total: number) => {
+			return this.casesService.loadCases(total)
+				.map(cases => new AddCasesAction(cases));
 		}).share();
 
 	/**
 	 * @type Effect
 	 * @name onAddCase$
 	 * @ofType AddCaseAction
-	 * @action AddCaseSuccessAction
+	 * @action SelectCaseAction
 	 */
 	@Effect()
-	onAddCase$: Observable<AddCaseSuccessAction> = this.actions$
+	onAddCase$: Observable<SelectCaseAction> = this.actions$
 		.ofType<AddCaseAction>(CasesActionTypes.ADD_CASE)
-		.switchMap((action) => {
-			return this.casesService.createCase(action.payload)
-				.map((addedCase: Case) => {
-					return new AddCaseSuccessAction(addedCase);
-				});
-		}).share();
+		.map((action: AddCaseAction) => new SelectCaseAction(action.payload))
+		.share();
 
 	/**
 	 * @type Effect
@@ -79,47 +73,37 @@ export class CasesEffects {
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
 		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modalCaseId, state.selectedCase.id])
-		.mergeMap(([modalCaseId, selectedCaseId]) => {
-			const actions: Action[] = [];
-			if (modalCaseId === selectedCaseId) {
-				actions.push(new LoadDefaultCaseAction());
-			}
-			actions.push(new DeleteCaseBackendAction(modalCaseId));
-			return actions;
-		}).share();
+		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
+		.map(() => new LoadDefaultCaseAction());
+
+	// /**
+	//  * @type Effect
+	//  * @name onDeleteCaseBackend$
+	//  * @ofType DeleteCaseBackendAction
+	//  * @action DeleteCaseBackendSuccessAction
+	//  */
+	// @Effect()
+	// onDeleteCaseBackend$: Observable<any> = this.actions$
+	// 	.ofType<DeleteCaseBackendAction>(CasesActionTypes.DELETE_CASE_BACKEND)
+	// 	.map(({ payload }) => payload)
+	// 	.switchMap((deletedCaseId) => {
+	// 		return this.casesService.removeCase(deletedCaseId)
+	// 			.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
+	// 	}).share();
 
 	/**
 	 * @type Effect
-	 * @name onDeleteCaseBackend$
-	 * @ofType DeleteCaseBackendAction
-	 * @action DeleteCaseBackendSuccessAction
-	 */
-	@Effect()
-	onDeleteCaseBackend$: Observable<any> = this.actions$
-		.ofType<DeleteCaseBackendAction>(CasesActionTypes.DELETE_CASE_BACKEND)
-		.map(({ payload }) => payload)
-		.switchMap((deletedCaseId) => {
-			return this.casesService.removeCase(deletedCaseId)
-				.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
-		}).share();
-
-	/**
-	 * @type Effect
-	 * @name onDeleteCaseBackendSuccess$
+	 * @name onDeleteCaseLoadCases$
 	 * @ofType DeleteCaseBackendSuccessAction
 	 * @dependencies cases
 	 * @filter state cases length is not larger than the paginationLimit
 	 * @action LoadCasesAction
 	 */
 	@Effect()
-	onDeleteCaseBackendSuccess$: Observable<LoadCasesAction> = this.actions$
-		.ofType(CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.filter(([action, state]: [DeleteCaseBackendSuccessAction, ICasesState]) => {
-			const casesLength = state.cases.length;
-			const limit = this.casesService.paginationLimit;
-			return casesLength <= limit;
-		})
+	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$
+		.ofType(CasesActionTypes.DELETE_CASE)
+		.withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total)
+		.filter((total: number) => total <= this.casesService.paginationLimit)
 		.map(() => new LoadCasesAction())
 		.share();
 
@@ -134,7 +118,7 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, CasesService.defaultCase.id])
+		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, this.casesService.defaultCase.id])
 		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId)
 		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
 		.share();
@@ -153,16 +137,6 @@ export class CasesEffects {
 				return new UpdateCaseBackendSuccessAction(updatedCase);
 			});
 		}).share();
-
-	/**
-	 * @type Effect
-	 * @name onUpdateCaseBackendSuccess$
-	 * @ofType UpdateCaseBackendSuccessAction
-	 */
-	@Effect({ dispatch: false })
-	onUpdateCaseBackendSuccess$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS)
-		.share();
 
 	/**
 	 * @type Effect
@@ -186,18 +160,6 @@ export class CasesEffects {
 
 	/**
 	 * @type Effect
-	 * @name addCaseSuccess$
-	 * @ofType AddCaseSuccessAction
-	 * @action SelectCaseByIdAction
-	 */
-	@Effect()
-	addCaseSuccess$: Observable<SelectCaseAction> = this.actions$
-		.ofType(CasesActionTypes.ADD_CASE_SUCCESS)
-		.map((action: AddCaseSuccessAction) => new SelectCaseAction(action.payload))
-		.share();
-
-	/**
-	 * @type Effect
 	 * @name loadCase$
 	 * @ofType LoadCaseAction
 	 * @action SelectCaseByIdAction?, SelectCaseAction?, LoadDefaultCaseAction?
@@ -205,11 +167,11 @@ export class CasesEffects {
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.switchMap(([action, state]: [LoadCaseAction, ICasesState]) => {
-			const existingCase = state.cases.find(caseVal => caseVal.id === action.payload);
+		.withLatestFrom(this.store.select(selectCaseEntities))
+		.switchMap(([action, entities]: [LoadCaseAction, Dictionary<Case>]) => {
+			const existingCase = entities[action.payload];
 			if (existingCase) {
-				return Observable.of(new SelectCaseByIdAction(existingCase.id) as any);
+				return Observable.of(new SelectCaseAction(existingCase));
 			} else {
 				return this.casesService.loadCase(action.payload)
 					.map((caseValue: Case) => new SelectCaseAction(caseValue))
@@ -229,7 +191,7 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.filter((action: LoadDefaultCaseAction) => !action.payload.context)
 		.map((action: LoadDefaultCaseAction) => {
-			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, CasesService.defaultCase);
+			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return new SelectCaseAction(defaultCaseQueryParams);
 		}).share();
 
@@ -246,16 +208,16 @@ export class CasesEffects {
 		.filter((action: LoadDefaultCaseAction) => action.payload.context)
 		.switchMap((action: LoadDefaultCaseAction) => {
 			return this.actions$
-				.ofType(CasesActionTypes.LOAD_CONTEXTS_SUCCESS)
-				.withLatestFrom(this.store.select(casesStateSelector), (_, cases) => cases)
-				.map((state: ICasesState) => {
+				.ofType(ContextActionTypes.ADD_ALL_CONTEXT)
+				.withLatestFrom(this.store.select(selectContextsArray), (_, contexts: Context[]) => contexts)
+				.map((contexts: Context[]) => {
 					const contextName = action.payload.context;
 					let defaultCaseQueryParams: Case;
-					const context = state.contexts.find(c => c.name === contextName);
+					const context = contexts.find(c => c.name === contextName);
 					if (context) {
-						defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, CasesService.defaultCase, action.payload);
+						defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
 					} else {
-						defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, CasesService.defaultCase);
+						defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
 					}
 					return new SelectCaseAction(defaultCaseQueryParams);
 				});
@@ -274,11 +236,11 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
 		.withLatestFrom(this.store.select(casesStateSelector))
 		.map(([{ payload }, casesState]: [SelectCaseByIdAction, ICasesState]): [Case, string] => [
-			casesState.cases.find(({ id }) => id === payload),
+			casesState.entities[payload],
 			casesState.selectedCase.id
 		])
 		.filter(([selectedCase, oldSelectedCaseId]) => Boolean(selectedCase) && selectedCase.id !== oldSelectedCaseId)
-		.map(([selectedCase, oldSelectedCaseId]: [Case, string]) => new SelectCaseAction(selectedCase));
+		.map(([selectedCase]: [Case, string]) => new SelectCaseAction(selectedCase));
 
 	/**
 	 * @type Effect

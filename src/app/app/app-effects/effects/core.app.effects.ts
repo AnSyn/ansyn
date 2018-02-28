@@ -60,12 +60,10 @@ export class CoreAppEffects {
 	@Effect({ dispatch: false })
 	actionsLogger$ = this.actions$
 		.ofType(CasesActionTypes.ADD_CASE,
-			CasesActionTypes.ADD_CASE_SUCCESS,
 			CasesActionTypes.DELETE_CASE,
-			CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS,
 			CasesActionTypes.LOAD_CASE,
 			CasesActionTypes.LOAD_CASES,
-			CasesActionTypes.LOAD_CASES_SUCCESS,
+			CasesActionTypes.ADD_CASES,
 			CasesActionTypes.SAVE_CASE_AS,
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
 			CasesActionTypes.UPDATE_CASE,

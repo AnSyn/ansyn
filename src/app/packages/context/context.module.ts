@@ -1,26 +1,25 @@
-import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ContainerComponent } from './container/container.component';
-import { FormsModule } from '@angular/forms';
-import { IContextConfig } from './context.interface';
+import { NgModule } from '@angular/core';
+import { Store, StoreModule } from '@ngrx/store';
+import { ContextReducer, IContextState } from '@ansyn/context/reducers/context.reducer';
+import { contextFeatureKey } from '@ansyn/context/reducers';
+import { ContextService } from '@ansyn/context/services/context.service';
+import { AddAllContextsAction } from '@ansyn/context/actions/context.actions';
+import { Context } from '@ansyn/core';
+import { HttpClientModule } from '@angular/common/http';
 
-export const ContextConfig: InjectionToken<IContextConfig> = new InjectionToken('ContextConfig');
 
 @NgModule({
 	imports: [
-		CommonModule,
-		FormsModule
+		HttpClientModule,
+		StoreModule.forFeature(contextFeatureKey, ContextReducer)
 	],
-	exports: [ContainerComponent],
-	declarations: [ContainerComponent]
+	providers: [ContextService]
 })
 export class ContextModule {
-	static forRoot(config: IContextConfig): ModuleWithProviders {
-		return {
-			ngModule: ContextModule,
-			providers: [
-				{ provide: ContextConfig, useValue: config }
-			]
-		};
+
+	constructor(protected store: Store<IContextState>, protected contextService: ContextService) {
+		contextService.loadContexts().subscribe((contexts: Context[]) => {
+			this.store.dispatch(new AddAllContextsAction(contexts))
+		})
 	}
 }

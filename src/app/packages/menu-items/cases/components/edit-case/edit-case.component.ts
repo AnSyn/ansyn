@@ -9,6 +9,7 @@ import { Case } from '../../models/case.model';
 import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
+import { selectContextsArray } from '@ansyn/context/reducers';
 
 const animationsDuring = '0.2s';
 
@@ -45,9 +46,7 @@ export class EditCaseComponent implements OnInit {
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
-	contextsList$: Observable<Context[]> = this.casesState$
-		.pluck <ICasesState, Context[]>('contexts')
-		.distinctUntilChanged()
+	contextsList$: Observable<Context[]> = this.store.select(selectContextsArray)
 		.map(this.addDefaultContext);
 
 	contextsList: Context[];
@@ -72,7 +71,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getCloneActiveCase(caseState: ICasesState): Case {
-		let sCase: Case = caseState.cases.find(({ id }: Case) => id === caseState.modalCaseId);
+		let sCase: Case = caseState.entities[caseState.modalCaseId];
 		if (sCase) {
 			this.editMode = true;
 			sCase = cloneDeep(sCase);
@@ -130,7 +129,10 @@ export class EditCaseComponent implements OnInit {
 		} else {
 			const selectContext = this.contextsList[contextIndex];
 			this.caseModel = this.casesService.updateCaseViaContext(selectContext, this.caseModel);
-			this.store.dispatch(new AddCaseAction(this.caseModel));
+			this.casesService.createCase(this.caseModel)
+				.subscribe((addedCase: Case) => {
+					this.store.dispatch(new AddCaseAction(addedCase));
+				});
 		}
 		this.close();
 	}

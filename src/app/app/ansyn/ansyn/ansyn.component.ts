@@ -5,9 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
 import '@ansyn/core/utils/clone-deep';
 import * as packageJson from '../../../../../package.json';
-import { LoadContextsAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -46,8 +44,6 @@ export class AnsynComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.store$.dispatch(new LoadContextsAction());
-
 		this.selectedCaseName$.subscribe(_selectedCaseName => {
 			this.selectedCaseName = _selectedCaseName;
 		});

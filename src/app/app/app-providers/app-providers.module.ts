@@ -18,10 +18,8 @@ import {
 } from './map-source-providers';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
-import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { ContextProxySourceService } from './context-source-providers/context-proxy-source.service';
 import { OpenLayersVisualizerMapType } from '@ansyn/open-layer-visualizers/open-layer-visualizers.module';
 import { FootprintPolygonVisualizer } from '@ansyn/open-layer-visualizers/overlays/polygon-visualizer';
 import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
@@ -50,10 +48,7 @@ import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualiz
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
 
-		// Source provider for contexts
-		{ provide: BaseContextSourceProvider, useClass: ContextProxySourceService },
-
-		// Map tiling source providers
+		// Map tiling source services
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },

@@ -120,7 +120,7 @@ describe('CasesEffects', () => {
 		const caseItem: Case = { id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any;
 		store.dispatch(new AddCaseSuccessAction(caseItem));
 		actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
-		const expectedResults = cold('--b--', { b: new SelectCaseByIdAction(caseItem.id) });
+		const expectedResults = cold('--b--', { b: new SelectCaseAction(caseItem) });
 		expect(casesEffects.loadCase$).toBeObservable(expectedResults);
 	});
 
@@ -148,7 +148,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectCaseAction ', () => {
-		CasesService.defaultCase = { id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any;
+		spyOnProperty(casesService, 'defaultCase', 'get').and.returnValue({ id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any);
 		spyOn(casesService.queryParamsHelper, 'updateCaseViaQueryParmas')
 			.and
 			.returnValue('updateCaseViaQueryParmasResult');

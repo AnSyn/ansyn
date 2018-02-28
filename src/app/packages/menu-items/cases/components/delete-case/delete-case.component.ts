@@ -1,10 +1,10 @@
-import { Component, EventEmitter, HostBinding, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { CasesService } from '../../services/cases.service';
 
 const animationsDuring = '0.2s';
 
@@ -28,22 +28,22 @@ const animations: any[] = [
 	animations
 })
 
-export class DeleteCaseComponent {
+export class DeleteCaseComponent implements OnInit {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
-	selectedCaseName$: Observable<string> = this.store.select(casesStateSelector).map(this.getActiveCaseName);
+	activeCase$ = this.store
+		.select(casesStateSelector)
+		.map((cases) => cases.entities[cases.modalCaseId]);
+
+	activeCase: Case;
 
 	@Output() submitCase = new EventEmitter();
 
-	// TODO check if this works instead of hosting -Amit
-	// @HostBinding('@modalContent') modalContent = true;
-
-	constructor(protected store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}
 
-	getActiveCaseName(caseState: ICasesState): string {
-		let sCase: Case = caseState.cases.find((caseValue: Case) => caseValue.id === caseState.modalCaseId);
-		return sCase ? sCase.name : '';
+	ngOnInit() {
+		this.activeCase$.subscribe((activeCase) => this.activeCase = activeCase);
 	}
 
 	close(): void {
@@ -51,8 +51,10 @@ export class DeleteCaseComponent {
 	}
 
 	onSubmitRemove() {
-		this.store.dispatch(new DeleteCaseAction());
-		this.close();
+		this.casesService.removeCase(this.activeCase.id).subscribe(() => {
+			this.store.dispatch(new DeleteCaseAction(this.activeCase.id));
+			this.close();
+		});
 	}
 
 }

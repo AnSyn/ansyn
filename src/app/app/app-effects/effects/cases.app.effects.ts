@@ -65,7 +65,7 @@ export class CasesAppEffects {
 		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
 		.filter(action => Boolean(action.payload.shareCaseAsQueryParams))
 		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
-			let sCase = state.cases.find((caseValue: Case) => caseValue.id === action.payload.caseId);
+			let sCase = state.entities[action.payload.caseId];
 			if (!sCase) {
 				if (state.selectedCase.id === action.payload.caseId) {
 					sCase = state.selectedCase;
@@ -95,30 +95,6 @@ export class CasesAppEffects {
 			copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
-	/**
-	 * @type Effect
-	 * @name onLoadContexts$
-	 * @ofType LoadContextsAction
-	 * @action LoadContextsSuccessAction
-	 * @dependencies cases
-	 */
-	@Effect()
-	onLoadContexts$: Observable<LoadContextsSuccessAction> = this.actions$
-		.ofType(CasesActionTypes.LOAD_CONTEXTS)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.switchMap(([action, state]: any[]) => {
-			let observable: Observable<Context[]>;
-			if (state.contextsLoaded) {
-				observable = Observable.of(state.contexts);
-			} else {
-				// const criteria = new ContextCriteria({ start: 0, limit: 200 });
-				// observable = this.contextSourceService.find(criteria);
-				observable = this.casesService.loadContexts();
-			}
-			return observable.map((contexts: Context[]) => {
-				return new LoadContextsSuccessAction(contexts);
-			});
-		}).share();
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

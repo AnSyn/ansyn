@@ -162,17 +162,8 @@
         ]
     },
     "contextConfig": {
-		"elastic": {
-            "uri": "{{ getv "/ansyn/context/db/elastic/url" "NO-VALUE" }}",
-			"bucket": "context",
-			"auth": "elastic:changeme"
-		},
-		"proxy": {
-			"uri": "{{ getv "/ansyn/context/db/proxy/url" "NO-VALUE" }}",
-			"bucket": "contexts",
-			"apiObject" : "Http"
-		}
-    },
+    	"baseUrl": "{{ getv "/ansyn/layers/baseurl" "NO-VALUE" }}"
+	},
     "toolsConfig": {
         "GoTo": {
             "from": {

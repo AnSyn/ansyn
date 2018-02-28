@@ -13,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
 import { OpenLayersNorthCalculationsModule } from '@ansyn/open-layers-north-calculations';
-import { ContextModule } from '@ansyn/context';
 import { AppProvidersModule } from '../app-providers/app-providers.module';
 import { AppEffectsModule } from '../app-effects/app.effects.module';
 import {
@@ -51,7 +50,6 @@ const MenuItemsModules = [
 		BrowserModule,
 		FormsModule,
 		HttpClientModule,
-		ContextModule,
 		BrowserAnimationsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynMenuItems),

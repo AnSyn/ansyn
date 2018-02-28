@@ -5,14 +5,12 @@ import { Params } from '@angular/router';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
-	LOAD_CASES_SUCCESS: 'LOAD_CASES_SUCCESS',
+	LOAD_CASE: 'LOAD_CASE',
 
+	ADD_CASES: 'ADD_CASES',
 	ADD_CASE: 'ADD_CASE',
-	ADD_CASE_SUCCESS: 'ADD_CASE_SUCCESS',
 
 	DELETE_CASE: 'DELETE_CASE',
-	DELETE_CASE_BACKEND: 'DELETE_CASE_BACKEND',
-	DELETE_CASE_BACKEND_SUCCESS: 'DELETE_CASE_BACKEND_SUCCESS',
 
 	UPDATE_CASE: 'UPDATE_CASE',
 	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
@@ -23,11 +21,6 @@ export const CasesActionTypes = {
 
 	SELECT_CASE: 'SELECT_CASE',
 	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
-
-	LOAD_CONTEXTS: 'LOAD_CONTEXTS',
-	LOAD_CONTEXTS_SUCCESS: 'LOAD_CONTEXTS_SUCCESS',
-
-	LOAD_CASE: 'LOAD_CASE',
 
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
 
@@ -52,8 +45,8 @@ export class LoadCasesAction implements Action {
 	}
 }
 
-export class LoadCasesSuccessAction implements Action {
-	type = CasesActionTypes.LOAD_CASES_SUCCESS;
+export class AddCasesAction implements Action {
+	type = CasesActionTypes.ADD_CASES;
 
 	constructor(public payload: Case[]) {
 	}
@@ -61,13 +54,6 @@ export class LoadCasesSuccessAction implements Action {
 
 export class AddCaseAction implements Action {
 	type = CasesActionTypes.ADD_CASE;
-
-	constructor(public payload: Case) {
-	}
-}
-
-export class AddCaseSuccessAction implements Action {
-	type = CasesActionTypes.ADD_CASE_SUCCESS;
 
 	constructor(public payload: Case) {
 	}
@@ -97,21 +83,7 @@ export class UpdateCaseBackendSuccessAction implements Action {
 export class DeleteCaseAction implements Action {
 	type = CasesActionTypes.DELETE_CASE;
 
-	constructor(public payload?: string) {
-	}
-}
-
-export class DeleteCaseBackendAction implements Action {
-	type = CasesActionTypes.DELETE_CASE_BACKEND;
-
 	constructor(public payload: string) {
-	}
-}
-
-export class DeleteCaseBackendSuccessAction implements Action {
-	type = CasesActionTypes.DELETE_CASE_BACKEND_SUCCESS;
-
-	constructor(public payload?: any) {
 	}
 }
 
@@ -140,20 +112,6 @@ export class SelectCaseByIdAction implements Action {
 	type = CasesActionTypes.SELECT_CASE_BY_ID;
 
 	constructor(public payload: string) {
-	}
-}
-
-export class LoadContextsAction implements Action {
-	type = CasesActionTypes.LOAD_CONTEXTS;
-
-	constructor(public payload?: string) {
-	}
-}
-
-export class LoadContextsSuccessAction implements Action {
-	type = CasesActionTypes.LOAD_CONTEXTS_SUCCESS;
-
-	constructor(public payload: Context[]) {
 	}
 }
 

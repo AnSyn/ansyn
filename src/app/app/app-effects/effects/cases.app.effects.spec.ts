@@ -6,10 +6,10 @@ import { OverlayReducer } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { BaseContextSourceProvider } from '@ansyn/context/context.interface';
+import { BaseContextSourceProvider } from '@ansyn/context/models/context.model';
 import { ContextModule } from '@ansyn/context/context.module';
-import { ContextTestSourceService } from '@ansyn/context/providers/context-test-source.service';
-import { MOCK_TEST_CONFIG } from '@ansyn/context/providers/context-test-source.service.spec';
+import { ContextTestSourceService } from '@ansyn/context/services/context.service';
+import { MOCK_TEST_CONFIG } from '@ansyn/context/services/context.service.spec';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
@@ -62,7 +62,7 @@ describe('CasesAppEffects', () => {
 					[mapFeatureKey]: MapReducer
 				}),
 				RouterTestingModule,
-				ContextModule.forRoot(MOCK_TEST_CONFIG)
+				ContextModule
 			],
 			providers: [
 				ImageryCommunicatorService,
@@ -73,8 +73,7 @@ describe('CasesAppEffects', () => {
 					useValue: { httpErrorHandle: () => Observable.throw(null) }
 				},
 				provideMockActions(() => actions),
-				{ provide: casesConfig, useValue: { baseUrl: null } },
-				{ provide: BaseContextSourceProvider, useClass: ContextTestSourceService }
+				{ provide: casesConfig, useValue: { baseUrl: null } }
 			]
 		}).compileComponents();
 	}));

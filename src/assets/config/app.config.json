@@ -197,16 +197,7 @@
 		]
 	},
 	"contextConfig": {
-		"elastic": {
-			"uri": "localhost:9200",
-			"bucket": "context",
-			"auth": "elastic:changeme"
-		},
-		"proxy": {
-			"uri": "http://localhost:9001/api/v1/",
-			"bucket": "contexts",
-			"apiObject": "Http"
-		}
+		"baseUrl": "http://ansyn.io:8081/api/store"
 	},
 	"toolsConfig": {
 		"GoTo": {

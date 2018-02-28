@@ -10,7 +10,7 @@
 	<form class="edit-case-form" (submit)="onSubmitRemove()">
 
 		<p>
-			Are you sure you want to delete <span class="name">{{selectedCaseName$ | async}}</span>?
+			Are you sure you want to delete <span class="name">{{activeCase?.name}}</span>?
 		</p>
 
 		<div class="bottom-btns">

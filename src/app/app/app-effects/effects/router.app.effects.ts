@@ -27,7 +27,7 @@ export class RouterAppEffects {
 		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
 		.filter((action) => !(action.payload.caseId))
 		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== CasesService.defaultCase.id))
+		.filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== this.casesService.defaultCase.id))
 		.map(([action, cases]) => new LoadDefaultCaseAction(action.payload.queryParams));
 
 	/**
@@ -61,7 +61,7 @@ export class RouterAppEffects {
 		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: (SelectCaseAction | SaveCaseAsSuccessAction), router: IRouterState): any[] => {
 			return [payload, router.caseId];
 		})
-		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== CasesService.defaultCase.id && selectedCase.id !== routerCaseId)
+		.filter(([selectedCase, routerCaseId]) => selectedCase.id !== this.casesService.defaultCase.id && selectedCase.id !== routerCaseId)
 		.map(([selectedCase]: [Case]) => new NavigateCaseTriggerAction(selectedCase.id));
 
 	/**
@@ -78,9 +78,9 @@ export class RouterAppEffects {
 		.withLatestFrom(this.store$.select(routerStateSelector), ({ payload }: (SelectCaseAction | SaveCaseAsSuccessAction), router: IRouterState): any[] => {
 			return [payload, router.caseId];
 		})
-		.filter(([selectedCase, routerCaseId]) => selectedCase.id === CasesService.defaultCase.id)
+		.filter(([selectedCase, routerCaseId]) => selectedCase.id === this.casesService.defaultCase.id)
 		.map(([selectedCase, routerCaseId]: [Case, string]) => new NavigateCaseTriggerAction());
 
-	constructor(protected actions$: Actions, protected store$: Store<any>) {
+	constructor(protected actions$: Actions, protected store$: Store<any>, protected casesService: CasesService) {
 	}
 }

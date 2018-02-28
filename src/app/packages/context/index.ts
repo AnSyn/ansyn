@@ -1,2 +1,2 @@
-export * from './context.interface';
+export * from './models';
 export * from './context.module';

@@ -2,21 +2,30 @@ import { inject, TestBed } from '@angular/core/testing';
 import { ContextModule } from '../context.module';
 import { ContextConfig } from '@ansyn/context/models';
 import { ContextService } from '@ansyn/context/services/context.service';
+import { StoreModule } from '@ngrx/store';
+import { ErrorHandlerService } from '@ansyn/core';
+import { HttpClientModule } from '@angular/common/http';
 
-describe('ContextTestSource', () => {
+describe('ContextService', () => {
 	let contextService: ContextService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				ContextModule
+				HttpClientModule
 			],
 			providers: [
 				{
-					provide: ContextConfig
+					provide: ContextConfig,
 					useValue: {}
 				},
-				ContextService
+				ContextService,
+				{
+					provide: ErrorHandlerService,
+					useValue: {
+						httpErrorHandle: () => {}
+					}
+				}
 			]
 		});
 	});
@@ -25,7 +34,7 @@ describe('ContextTestSource', () => {
 		contextService = _contextService;
 	}));
 
-	it('check that the module is initialized ', () => {
-		expect(contextService).toBeTruthy();
+	it('should be defined', () => {
+		expect(contextService).toBeDefined();
 	});
 });

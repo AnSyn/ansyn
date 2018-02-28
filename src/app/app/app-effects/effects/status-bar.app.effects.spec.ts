@@ -8,7 +8,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { AddCaseSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -121,7 +121,7 @@ describe('StatusBarAppEffects', () => {
 			}
 		} as any;
 
-		store.dispatch(new AddCaseSuccessAction(fakeCase));
+		store.dispatch(new AddCaseAction(fakeCase));
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 

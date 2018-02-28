@@ -1,5 +1,5 @@
 import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
-import { AddCaseSuccessAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
+import { AddCaseAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
@@ -38,41 +38,6 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-
-		appState = {
-			cases: {
-				cases: [{
-					id: 'case1',
-					state: {
-						selectedOverlaysIds: []
-					}
-				},
-					{
-						id: 'case2',
-						state: {
-							selectedOverlaysIds: []
-						}
-					}]
-			},
-			menu: {
-				menuItems: [{
-					name: 'Cases',
-					component: null,
-					iconClass: null
-
-				},
-					{
-						name: 'Shmases',
-						component: null,
-						iconClass: null
-
-					}],
-				selectedMenuItemIndex: 1
-			}
-		} as any;
-
-		store.dispatch(new AddCaseSuccessAction(appState.cases.cases[0]));
-		store.dispatch(new SelectCaseByIdAction(appState.cases.cases[0].id));
 		store.dispatch(new AddMenuItemAction({
 			name: 'Cases',
 			component: null,

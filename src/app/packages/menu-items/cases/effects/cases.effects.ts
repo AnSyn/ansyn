@@ -7,7 +7,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
 	AddCaseAction,
-	AddCasesAction
+	AddCasesAction,
 	CasesActionTypes,
 	LoadCaseAction,
 	LoadCasesAction,

@@ -24,7 +24,6 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
-	AddCaseSuccessAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
@@ -51,7 +50,10 @@ import { cloneDeep } from 'lodash';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
-import { SetAnnotationMode, SetMeasureDistanceToolState, SetPinLocationModeAction } from '@ansyn/menu-items';
+import {
+	AddCaseAction, SetAnnotationMode, SetMeasureDistanceToolState,
+	SetPinLocationModeAction
+} from '@ansyn/menu-items';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 
 describe('VisualizersAppEffects', () => {
@@ -111,7 +113,7 @@ describe('VisualizersAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddCaseSuccessAction(selectedCase));
+		store.dispatch(new AddCaseAction(selectedCase));
 		store.dispatch(new SelectCaseAction(selectedCase));
 		store.dispatch(new SetMapsDataActionStore({
 			mapsList: selectedCase.state.maps.data,

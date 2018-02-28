@@ -70,9 +70,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			}
 			return { ...state, selectedCase };
 
-		// case CasesActionTypes.LOAD_CONTEXTS_SUCCESS:
-		// 	return Object.assign({}, state, { contexts: action.payload, contextsLoaded: true });
-
 		default:
 			return state;
 	}

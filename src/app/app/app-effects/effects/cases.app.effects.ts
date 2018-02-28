@@ -10,14 +10,8 @@ import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	CopyCaseLinkAction,
-	LoadContextsSuccessAction,
-	SelectCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
-import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { Context } from '@ansyn/core';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';

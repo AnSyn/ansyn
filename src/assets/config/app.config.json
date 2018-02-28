@@ -390,49 +390,6 @@
 			],
 			"blacklist": []
 		},
-		"IDAHO": {
-			"whitelist": [
-				{
-					"name": "Entire Earth",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-180,
-									-90
-								],
-								[
-									-180,
-									90
-								],
-								[
-									180,
-									90
-								],
-								[
-									180,
-									-90
-								],
-								[
-									-180,
-									-90
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": []
-		},
 		"IDAHO2": {
 			"whitelist": [
 				{

@@ -19,10 +19,11 @@ describe('EditCaseComponent', () => {
 	let casesService: CasesService;
 
 	let fakeICasesState: ICasesState = {
-		cases: [
-			{ id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
-			{ id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
-		],
+		entities: {
+			'fakeId1': { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+			'fakeId2': { id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
+		},
+		ids: ['fakeId1', 'fakeId2'],
 		modalCaseId: 'fakeId1',
 		modal: true,
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }

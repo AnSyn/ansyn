@@ -24,10 +24,7 @@ describe('DeleteCaseComponent', () => {
 		},
 		ids: ['fakeId1', 'fakeId2'],
 		modalCaseId: 'fakeId1',
-		modal: {
-			id: 'fakeId1',
-			show: true
-		}
+		modal: true
 	} as any;
 
 	let store: Store<ICasesState>;

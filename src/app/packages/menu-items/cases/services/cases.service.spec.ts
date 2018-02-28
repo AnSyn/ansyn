@@ -76,12 +76,6 @@ describe('CasesService', () => {
 		expect(http.delete).toHaveBeenCalledWith(`${casesService.baseUrl}/cases/${caseIdToRemove}`);
 	});
 
-	it('loadContexts should send the all contexts from ajax("get")', () => {
-		spyOn(http, 'get').and.returnValue(Observable.of([]));
-		casesService.loadContexts();
-		expect(http.get).toHaveBeenCalledWith(`${casesService.baseUrl}/contexts?from=0&limit=100`);
-	});
-
 	it('loadCase should get single case from ajax("get")', () => {
 		const caseId = '12345';
 		spyOn(http, 'get').and.returnValue(Observable.of([]));

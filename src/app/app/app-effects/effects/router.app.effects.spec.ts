@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { routerFeatureKey, RouterReducer } from '@ansyn/router/reducers/router.reducer';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CasesService } from '@ansyn/menu-items';
 
 describe('RouterAppEffects', () => {
 	let actions: Observable<any>;
@@ -22,7 +23,13 @@ describe('RouterAppEffects', () => {
 			],
 			providers: [
 				RouterAppEffects,
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{
+					provide: CasesService,
+					useValue: {
+						defaultCase: { id: 'defualtId' }
+					}
+				}
 			]
 		});
 	});

@@ -19,10 +19,11 @@ describe('EditCaseComponent', () => {
 	let casesService: CasesService;
 
 	let fakeICasesState: ICasesState = {
-		cases: [
-			{ id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
-			{ id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
-		],
+		entities: {
+			'fakeId1': { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+			'fakeId2': { id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
+		},
+		ids: ['fakeId1', 'fakeId2'],
 		modalCaseId: 'fakeId1',
 		modal: true,
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
@@ -75,6 +76,7 @@ describe('EditCaseComponent', () => {
 			spyOn(component, 'close');
 			spyOn(casesService.queryParamsHelper, 'updateCaseViaContext').and.returnValue(component.caseModel);
 			component.contextsList = ['fakeContext' as any];
+			spyOn(casesService, 'createCase').and.callFake((value) => Observable.of(value));
 			component.onSubmitCase(0);
 			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
 			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));

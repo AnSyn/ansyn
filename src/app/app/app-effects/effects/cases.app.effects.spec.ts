@@ -1,15 +1,12 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import { AddCaseSuccessAction, casesConfig, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
+import { casesConfig, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlayReducer } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { BaseContextSourceProvider } from '@ansyn/context/models/context.model';
 import { ContextModule } from '@ansyn/context/context.module';
-import { ContextTestSourceService } from '@ansyn/context/services/context.service';
-import { MOCK_TEST_CONFIG } from '@ansyn/context/services/context.service.spec';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,6 +19,11 @@ import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ErrorHandlerService } from '@ansyn/core';
+import { contextFeatureKey } from '@ansyn/context/reducers';
+import { ContextReducer } from '@ansyn/context/reducers/context.reducer';
+import { AddCaseAction } from '@ansyn/menu-items';
+import { ContextConfig } from '@ansyn/context';
+import { ContextService } from '@ansyn/context/services/context.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -59,18 +61,29 @@ describe('CasesAppEffects', () => {
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer,
 					[casesFeatureKey]: CasesReducer,
+					[contextFeatureKey]: ContextReducer,
 					[mapFeatureKey]: MapReducer
 				}),
 				RouterTestingModule,
 				ContextModule
 			],
 			providers: [
+				{
+					provide: ContextService,
+					useValue: {
+						loadContexts: () => Observable.of([])
+					}
+				},
 				ImageryCommunicatorService,
 				CasesAppEffects,
 				CasesService,
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => Observable.throw(null) }
+				},
+				{
+					provide: ContextConfig,
+					useValue: {}
 				},
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { baseUrl: null } }
@@ -82,7 +95,7 @@ describe('CasesAppEffects', () => {
 		(_imageryCommunicatorService: ImageryCommunicatorService, _store: Store<any>) => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		store = _store;
-		store.dispatch(new AddCaseSuccessAction(selectedCase));
+		store.dispatch(new AddCaseAction(selectedCase));
 		store.dispatch(new SelectCaseAction(selectedCase));
 		store.dispatch(new LoadOverlaysSuccessAction([{
 			id: 'tmp',

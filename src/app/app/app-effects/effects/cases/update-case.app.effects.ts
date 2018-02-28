@@ -6,7 +6,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
 import { FiltersService, UpdateCaseAction } from '@ansyn/menu-items';
-import { Case, CaseTimeState } from '@ansyn/core';
+import { Case } from '@ansyn/core';
 import { StatusBarActionsTypes } from '@ansyn/status-bar';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';

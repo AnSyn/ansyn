@@ -7,8 +7,6 @@ keys = [
     "/ansyn/overlay/baseurl",
     "/ansyn/overlay/api/find",
     "/ansyn/overlay/api/default",
-    "/ansyn/context/db/elastic/url",
-    "/ansyn/context/db/proxy/url",
     "/ansyn/login/baseurl",
     "/ansyn/menu/background",
     "/ansyn/menu/color",

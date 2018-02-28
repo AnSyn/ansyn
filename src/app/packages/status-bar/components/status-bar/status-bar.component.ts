@@ -13,7 +13,8 @@ import {
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
-import { comboBoxesOptions, ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
+import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
+import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -66,18 +67,6 @@ export class StatusBarComponent implements OnInit {
 		return Array.from(layoutOptions.keys());
 	}
 
-	get geoFilters(): CaseGeoFilter[] {
-		return comboBoxesOptions.geoFilters;
-	}
-
-	get timeFilters(): CaseTimeFilter[] {
-		return comboBoxesOptions.timeFilters;
-	}
-
-	get orientations(): CaseOrientation[] {
-		return comboBoxesOptions.orientations;
-	}
-
 	get hideOverlay(): boolean {
 		return layoutOptions.get(this.layout).mapsCount > 1;
 	}
@@ -110,7 +99,12 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig, public store: Store<IStatusBarState>) {
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+				public store: Store<IStatusBarState>,
+				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
+				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
+				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
+	) {
 
 	}
 

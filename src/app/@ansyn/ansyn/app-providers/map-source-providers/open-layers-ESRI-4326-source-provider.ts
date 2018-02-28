@@ -19,7 +19,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			tileSize: 512,
 			tileUrlFunction: function(tileCoord) {
 				return 'https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}'
-					.replace('{z}', (tileCoord[0] - 1).toString())
+					.replace('{z}', (tileCoord[0] - 1).toString()) // what is happening here?
 					.replace('{x}', tileCoord[1].toString())
 					.replace('{y}', (-tileCoord[2] - 1).toString());
 			},

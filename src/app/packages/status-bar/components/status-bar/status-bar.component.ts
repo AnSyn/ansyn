@@ -14,7 +14,7 @@ import {
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
 import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
-import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar';
+import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 
 @Component({
 	selector: 'ansyn-status-bar',

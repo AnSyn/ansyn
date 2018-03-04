@@ -76,21 +76,6 @@ export class CasesEffects {
 		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
 		.map(() => new LoadDefaultCaseAction());
 
-	// /**
-	//  * @type Effect
-	//  * @name onDeleteCaseBackend$
-	//  * @ofType DeleteCaseBackendAction
-	//  * @action DeleteCaseBackendSuccessAction
-	//  */
-	// @Effect()
-	// onDeleteCaseBackend$: Observable<any> = this.actions$
-	// 	.ofType<DeleteCaseBackendAction>(CasesActionTypes.DELETE_CASE_BACKEND)
-	// 	.map(({ payload }) => payload)
-	// 	.switchMap((deletedCaseId) => {
-	// 		return this.casesService.removeCase(deletedCaseId)
-	// 			.map(() => new DeleteCaseBackendSuccessAction(deletedCaseId));
-	// 	}).share();
-
 	/**
 	 * @type Effect
 	 * @name onDeleteCaseLoadCases$

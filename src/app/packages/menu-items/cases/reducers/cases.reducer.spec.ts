@@ -24,13 +24,13 @@ describe('CasesReducer', () => {
 	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
 		let action: OpenModalAction = new OpenModalAction({ component: 'fake', caseId: 'fakeCaseId' });
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.modal).toBeTruthy();
+		expect(result.modal.show).toBeTruthy();
 	});
 
 	it('CLOSE_MODAL action should change modalCaseId to null and change modal to true', () => {
 		let action: CloseModalAction = new CloseModalAction();
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.modal).toBeFalsy();
+		expect(result.modal.show).toBeFalsy();
 	});
 
 	it('SELECT_CASE action should set selectedCase from payload', () => {
@@ -49,7 +49,7 @@ describe('CasesReducer', () => {
 			{ id: 'id3', name: 'name3' }
 		], state);
 
-		state.modalCaseId = 'id2';
+		state.modal.id = 'id2';
 		state.selectedCase = {};
 
 		let newCase: Case = {

@@ -2,8 +2,7 @@
 src = "production.tmpl"
 dest = "/opt/ansyn/app/assets/config/app.config.json"
 keys = [
-    "/ansyn/cases/baseurl",
-    "/ansyn/layers/baseurl",
+	"/ansyn/storage/baseurl",
     "/ansyn/overlay/baseurl",
     "/ansyn/overlay/api/find",
     "/ansyn/overlay/api/default",

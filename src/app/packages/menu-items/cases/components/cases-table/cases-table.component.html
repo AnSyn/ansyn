@@ -1,4 +1,6 @@
-<div class="cases-table" *ngIf="cases && cases.length > 0; else noCases">
+<div class="cases-table" *ngIf="ids$ | async as ids; else noCases">
+
+
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">
 			<div class="cases-table-head-row-data">
@@ -16,13 +18,13 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body" (infiniteScroll)="loadCases()" #tbodyElement>
+	<div class="cases-table-body" (infiniteScroll)="loadCases()"  *ngIf="entities$ | async as entities" #tbodyElement>
 
 		<div class="cases-table-body-row"
-			 *ngFor="let caseIndex of _range(cases.length)"
-			 (click)="selectCase(cases[caseIndex].id)"
-			 [class.active]="modalCaseId === cases[caseIndex].id"
-			 [class.selected]="selectedCaseId === cases[caseIndex].id"
+			 *ngFor="let id of ids"
+			 (click)="selectCase(id)"
+			 [class.active]="(modalCaseId$ | async) === id"
+			 [class.selected]="(selectedCaseId$ | async) === id"
 			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
@@ -34,27 +36,27 @@
 				<hr>
 
 				<div class="cases-table-body-col">
-					{{cases[caseIndex].name}}
+					{{entities[id].name}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{cases[caseIndex].owner}}
+					{{entities[id].owner}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{ cases[caseIndex].lastModified | date:"MM/dd/yy HH:mm" }}
+					{{entities[id].lastModified | date:"MM/dd/yy HH:mm" }}
 				</div>
 
 				<!--menu-->
 				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
-						<button (click)="removeCase(cases[caseIndex].id)">
+						<button (click)="removeCase(id)">
 							<i class="icon-delete"></i>
 						</button>
-						<button (click)="shareCase(cases[caseIndex].id)">
+						<button (click)="shareCase(id)">
 							<i class="icon-share"></i>
 						</button>
-						<button (click)="editCase(cases[caseIndex].id)">
+						<button (click)="editCase(id)">
 							<i class="icon-edit"></i>
 						</button>
 					</div>

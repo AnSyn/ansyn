@@ -1,14 +1,10 @@
 import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
-import { Context } from '../models/context.model';
-import { get as _get } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
-import { deepMerge } from '@ansyn/core/utils';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
-import { AddCaseAction } from '@ansyn/menu-items';
 
-export interface ICasesState extends EntityState<Case>{
+export interface ICasesState extends EntityState<Case> {
 	selectedCase: Case;
 	modalCaseId: string;
 	modal: boolean;
@@ -16,20 +12,12 @@ export interface ICasesState extends EntityState<Case>{
 
 export const casesFeatureKey = 'cases';
 
-export function sortByCreationTime(ob1: Case, ob2: Case): number {
-	if (ob1.creationTime > ob2.creationTime) {
-		return -1;
-	} else {
-		return 1;
-	}
-}
-
-export const casesAdapter = createEntityAdapter<Case>({ sortComparer: sortByCreationTime });
+export const casesAdapter = createEntityAdapter<Case>({ sortComparer: (ob1: Case, ob2: Case): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,
 	modalCaseId: null,
-	modal: false,
+	modal: false
 });
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
@@ -75,8 +63,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 	}
 }
 
-const { selectEntities, selectAll, selectTotal } = casesAdapter.getSelectors();
+export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapter.getSelectors();
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
 export const selectCaseEntities = createSelector(casesStateSelector, selectEntities);
-export const selectCasesArray = createSelector(casesStateSelector, selectAll);
+export const selectCasesIds = createSelector(casesStateSelector, selectIds);
 

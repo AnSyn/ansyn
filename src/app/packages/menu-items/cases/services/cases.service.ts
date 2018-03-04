@@ -11,6 +11,7 @@ import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CaseTimeState, ErrorHandlerService } from '@ansyn/core';
 import { UUID } from "angular2-uuid";
+import * as moment from 'moment';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -18,7 +19,7 @@ export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cas
 export class CasesService {
 	static defaultTime: CaseTimeState = {
 		type: 'absolute',
-		from: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
+		from: moment().subtract(1, 'y').toDate(),
 		to: new Date()
 	};
 

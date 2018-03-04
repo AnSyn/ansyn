@@ -1,11 +1,10 @@
 import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
-import { AddCaseAction, CasesReducer, SelectCaseByIdAction } from '@ansyn/menu-items/cases';
+import { CasesReducer } from '@ansyn/menu-items/cases';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { IAppState } from '../';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ContainerChangedTriggerAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +15,6 @@ import { SetAutoCloseMenu } from '@ansyn/menu-items/tools/actions/tools.actions'
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
-	let appState: IAppState;
 	let store: Store<any>;
 	let actions: Observable<any>;
 

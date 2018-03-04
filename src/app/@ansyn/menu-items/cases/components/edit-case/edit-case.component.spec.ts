@@ -24,8 +24,10 @@ describe('EditCaseComponent', () => {
 			'fakeId2': { id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
 		},
 		ids: ['fakeId1', 'fakeId2'],
-		modalCaseId: 'fakeId1',
-		modal: true,
+		modal: {
+			show: true,
+			id: 'fakeId1'
+		},
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
 	} as any;
 

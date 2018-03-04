@@ -33,7 +33,7 @@ export class DeleteCaseComponent implements OnInit {
 
 	activeCase$ = this.store
 		.select(casesStateSelector)
-		.map((cases) => cases.entities[cases.modalCaseId]);
+		.map((cases) => cases.entities[cases.modal.id]);
 
 	activeCase: Case;
 

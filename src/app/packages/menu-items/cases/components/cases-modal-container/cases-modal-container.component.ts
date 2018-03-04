@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
 import 'rxjs/add/operator/distinctUntilChanged';
+import { CaseModal } from '@ansyn/menu-items';
 
 const animationsDuring = '0.2s';
 
@@ -25,11 +26,10 @@ const animations: any[] = [
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('modalContent', { read: ViewContainerRef }) modalContent: ViewContainerRef;
-	modal$: Observable<boolean> = this.store.select(casesStateSelector)
-		.pluck <ICasesState, boolean>('modal')
+	show$: Observable<boolean> = this.store.select(casesStateSelector)
+		.pluck <ICasesState, CaseModal>('modal')
+		.map((modal: CaseModal) => modal.show)
 		.distinctUntilChanged();
-
-	modal: boolean;
 
 	selectedComponentRef;
 
@@ -41,10 +41,6 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.modal$.subscribe((_modal: boolean) => {
-			this.modal = _modal;
-		});
-
 		this.casesEffects.openModal$.subscribe(this.buildTemplate.bind(this));
 		this.casesEffects.closeModal$.subscribe(this.destroyTemplate.bind(this));
 	}

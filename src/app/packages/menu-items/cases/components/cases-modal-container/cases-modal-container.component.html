@@ -1,5 +1,2 @@
-<ng-template [ngIf]="modal">
-	<div class="blackscreen" (click)="close()" [@blackScreen]></div>
-</ng-template>
-
+<div *ngIf="show$ | async" class="blackscreen" (click)="close()" [@blackScreen]></div>
 <ng-template #modalContent></ng-template>

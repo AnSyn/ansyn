@@ -4,10 +4,14 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 
+export interface CaseModal {
+	show: boolean,
+	id?: string
+}
+
 export interface ICasesState extends EntityState<Case> {
 	selectedCase: Case;
-	modalCaseId: string;
-	modal: boolean;
+	modal: CaseModal
 }
 
 export const casesFeatureKey = 'cases';
@@ -16,8 +20,7 @@ export const casesAdapter = createEntityAdapter<Case>({ sortComparer: (ob1: Case
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,
-	modalCaseId: null,
-	modal: false
+	modal: { show: false }
 });
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
@@ -46,10 +49,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addMany(action.payload, state);
 
 		case CasesActionTypes.OPEN_MODAL:
-			return { ...state, modalCaseId: action.payload.caseId, modal: true };
+			return { ...state, modal: { id: action.payload.caseId, show: true } };
 
 		case CasesActionTypes.CLOSE_MODAL:
-			return { ...state, modalCaseId: null, modal: false };
+			return { ...state, modal: { id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
 			const selectedCase: Case = action.payload;

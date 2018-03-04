@@ -71,7 +71,7 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getCloneActiveCase(caseState: ICasesState): Case {
-		let sCase: Case = caseState.entities[caseState.modalCaseId];
+		let sCase: Case = caseState.entities[caseState.modal.id];
 		if (sCase) {
 			this.editMode = true;
 			sCase = cloneDeep(sCase);

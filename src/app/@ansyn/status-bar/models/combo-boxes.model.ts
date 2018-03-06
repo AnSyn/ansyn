@@ -1,7 +1,7 @@
 import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '@ansyn/core';
 import { InjectionToken } from '@angular/core';
 
-export const timeFilters: CaseTimeFilter[] = ['Start - End'];
+export const timeFilters: CaseTimeFilter[] = ['Start - End', 'Intervals'];
 export const geoFilters: CaseGeoFilter[] = ['Pin-Point'];
 export const orientations: CaseOrientation[] = ['Align North', 'User Perspective', 'Imagery Perspective'];
 

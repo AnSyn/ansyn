@@ -179,12 +179,17 @@
 			}
 
 			.time-selection {
+				color: black;
+				min-width: 230px;
 				background: white;
-				width: 230px;
-				height: 97px;
+				border: 1px solid dimgray;
 				padding: 8px 12px 13px;
 				flex-direction: column;
-				border: 1px solid dimgray;
+				&.time-selection--start-end{
+				}
+				&.time-selection--intervals {
+					min-width: 270px;
+				}
 			}
 		}
 

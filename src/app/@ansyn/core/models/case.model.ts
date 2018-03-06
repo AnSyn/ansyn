@@ -19,7 +19,7 @@ export interface IContextEntity extends IVisualizerEntity {
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
-export type CaseTimeFilter = 'Start - End';
+export type CaseTimeFilter = 'Start - End' | 'Intervals';
 export type CaseGeoFilter = 'Pin-Point';
 
 export interface ImageManualProcessArgs {

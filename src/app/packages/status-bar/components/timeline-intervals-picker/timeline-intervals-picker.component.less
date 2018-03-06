@@ -1,0 +1,134 @@
+@import "core/less/common";
+
+@vertical-section-margin: 8px 0;
+@row-bottom-margin: 5px;
+
+:host {
+	span:first-child {
+		margin-left: 0;
+	}
+	label, input[type=radio], select {
+		cursor: pointer;
+		padding: 2px;
+	}
+	input[type=number] {
+		width: 35px;
+		padding: 2px;
+	}
+	ul {
+		padding: 0;
+		margin: 0;
+		li {
+			list-style-type: none;
+			margin-bottom: 5px;
+		}
+	}
+	.disabled, input:disabled, input:disabled + label, select:disabled {
+		color: @text-disabled-color;
+		cursor: auto;
+	}
+	.rows-container {
+		> div {
+			margin-bottom: @row-bottom-margin;
+			display: flex;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.advance-options-button {
+		display: block;
+		background: none;
+		border: 0;
+		outline: 0;
+		padding: 0;
+		margin: @vertical-section-margin;
+		.chevron {
+			margin-left: 8px;
+			display: inline-block;
+			float: right;
+			font-size: 22px;
+			line-height: 14px;
+			transition: transform .3s linear;
+
+		}
+		&.active .chevron {
+			transform: rotate(90deg);
+		}
+	}
+	.advance-options-container {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height .4s linear 0s;
+		&.active {
+				max-height: 500px;
+		}
+
+		.advance-options-time {
+			.advance-options-time-intervals {
+				display: flex;
+				margin: @vertical-section-margin;
+				label {
+					white-space: nowrap;
+				}
+				ul {
+					display: flex;
+					li {
+						display: flex;
+						flex-direction: column;
+						margin: 0 5px;
+						text-align: center;
+					}
+				}
+			}
+			.advance-options-time-frame {
+				margin: @vertical-section-margin;
+				li {
+					display: flex;
+				}
+				label {
+					min-width: 50px;
+				}
+			}
+		}
+		.advance-options-strategies {
+			> div {
+				margin: @vertical-section-margin;
+				display: flex;
+				&:first-child {
+					margin-bottom: 10px;
+				}
+			}
+
+			input[type=radio] {
+				margin-left: 0;
+			}
+
+			.filter-strategy-closest {
+			}
+		}
+	}
+
+	div.control-buttons {
+		display: flex;
+		justify-content: space-between;
+		color: @application-main-color;
+		a {
+			cursor: pointer;
+			&:hover {
+				font-weight: bold;
+			}
+			&:first-child {
+				margin-right: 9px;
+				width: 42px;
+			}
+			&:last-child {
+				width: 17px;
+			}
+		}
+		.error {
+			color: crimson;
+		}
+	}
+}

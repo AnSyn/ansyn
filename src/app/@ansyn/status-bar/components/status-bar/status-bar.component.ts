@@ -136,13 +136,13 @@ export class StatusBarComponent implements OnInit {
 		});
 	}
 
-	toggleTimelineStartEndSearch() {
+	toggleTimeFilterEdit() {
 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
 	}
 
 	applyTimelinePickerResult(time: CaseTimeState) {
 		this.store.dispatch(new SetOverlaysCriteriaAction({ time }));
-		this.toggleTimelineStartEndSearch();
+		this.toggleTimeFilterEdit();
 	}
 
 	layoutRender(layout: LayoutKey) {

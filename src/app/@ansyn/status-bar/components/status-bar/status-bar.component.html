@@ -74,20 +74,26 @@
 				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
 			<div class="buttons">
-				<button (click)="toggleTimelineStartEndSearch()"
+				<button (click)="toggleTimeFilterEdit()"
 						[attr.tooltip-value]="toolTips.timeFilterEdit"
 						tooltip-class="top right"
 						class="toggle-icon" [class.active]="timeSelectionEditIcon">
 					<i class="icon-edit"></i>
 				</button>
 			</div>
-			<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
+			<div class="pop-content time-selection time-selection--start-end"
+				 [class.visible]="timeSelectionEditIcon && comboBoxesProperties.timeFilter === 'Start - End'">
 				<ansyn-timeline-timepicker
 					[startDatePickerValue]="(time)?.from"
 					[endDatePickerValue]="(time)?.to"
-					(closeComponent)="toggleTimelineStartEndSearch()"
+					(closeComponent)="toggleTimeFilterEdit()"
 					(applyDate)="applyTimelinePickerResult($event)">
 				</ansyn-timeline-timepicker>
+			</div>
+			<div class="pop-content time-selection time-selection--intervals"
+				 [class.visible]="timeSelectionEditIcon && comboBoxesProperties.timeFilter === 'Intervals'">
+				<ansyn-timeline-intervals-picker (closeComponent)="toggleTimeFilterEdit()">
+				</ansyn-timeline-intervals-picker>
 			</div>
 		</div>
 

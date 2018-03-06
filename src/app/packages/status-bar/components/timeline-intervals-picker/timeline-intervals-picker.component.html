@@ -1,0 +1,144 @@
+<div class="basic-options-container" [class.disabled]="timeIntervalAdvancedOptions">
+	<span>Each:</span>
+	<select [disabled]="timeIntervalAdvancedOptions">
+		<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+			{{timeUnit.text}}
+		</option>
+	</select>
+	<span>For last:</span>
+	<select [disabled]="timeIntervalAdvancedOptions">
+		<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+			{{timeUnit.text}}
+		</option>
+	</select>
+</div>
+<button class="advance-options-button" (click)="toggleIntervalAdvancedOptions()"
+		[class.active]="timeIntervalAdvancedOptions">
+	<span>Advanced</span>
+	<span class="chevron">&#8250;</span>
+</button>
+
+<div class="advance-options-container" [class.active]="timeIntervalAdvancedOptions">
+	<div class="advance-options-time">
+		<div>
+			<b>Time Settings</b>
+		</div>
+		<div class="advance-options-time-intervals">
+			<label>Intervals: Each</label>
+			<ul>
+				<li>
+					<label>Year</label>
+					<input type="number" min="0" value="0">
+				</li>
+				<li>
+					<label>Month</label>
+					<input type="number" min="0" value="0">
+				</li>
+				<li>
+					<label>Day</label>
+					<input type="number" min="0" value="0">
+				</li>
+				<li>
+					<label>Hour</label>
+					<input type="number" min="0" value="0">
+				</li>
+			</ul>
+		</div>
+		<div>
+			Time Frame:
+		</div>
+		<ul class="advance-options-time-frame">
+			<li>
+				<input type="radio" name="advance-options-time-frame" checked="checked"
+					   id="advance-options-time-frame-last">
+				<label for="advance-options-time-frame-last" (click)="setTimeFrameType('last')">Last</label>
+				<input type="number" min="1" value="1" [disabled]="timeFrame !== 'last'">
+
+				<select [disabled]="timeFrame !== 'last'">
+					<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+						{{timeUnit.text}}
+					</option>
+				</select>
+			</li>
+			<li class="advance-options-time-frame-scope">
+				<input type="radio" name="advance-options-time-frame"
+					   id="advance-options-time-frame-scope" (click)="setTimeFrameType('scope')">
+				<div class="rows-container">
+					<div>
+						<label for="advance-options-time-frame-scope">Start</label>
+						<ansyn-date-picker [disabled]="timeFrame !== 'scope'"></ansyn-date-picker>
+					</div>
+					<div>
+						<label for="advance-options-time-frame-scope">end</label>
+						<ansyn-date-picker [disabled]="timeFrame !== 'scope'"></ansyn-date-picker>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div>
+		Criteria:
+	</div>
+	<div class="advance-options-strategies">
+		<div class="filter-strategy-best" [class.disabled]="timeIntervalFilterStrategy !== 'best'">
+			<input type="radio" name="filter-strategy" checked="checked"
+				   id="filter-strategy-best-radio" (click)="setIntervalsFilterStrategy('best')">
+			<div class="rows-container">
+				<label for="filter-strategy-best-radio">Best within</label><br>
+				<div>
+					<select [disabled]="timeIntervalFilterStrategy !== 'best'">
+						<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+							{{timeUnit.text}}
+						</option>
+					</select>
+					<span>Before</span>
+				</div>
+
+				<div>
+					<select [disabled]="timeIntervalFilterStrategy !== 'best'">
+						<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+							{{timeUnit.text}}
+						</option>
+					</select>
+					<span>After</span>
+				</div>
+
+			</div>
+		</div>
+		<div class="filter-strategy-closest">
+			<input type="radio" name="filter-strategy"
+				   id="filter-strategy-closest-radio" (click)="setIntervalsFilterStrategy('closest')">
+
+			<ul>
+				<li>
+					<label for="filter-strategy-closest-radio">Closest</label>
+				</li>
+				<li>
+					<input id="filter-strategy-closest-before" type="radio" name="filter-strategy-closest"
+						   value="before" checked="checked" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+					<label for="filter-strategy-closest-before">Before</label><br>
+				</li>
+				<li>
+					<input id="filter-strategy-closest-after" type="radio" name="filter-strategy-closest"
+						   value="after" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+					<label for="filter-strategy-closest-after">After</label><br>
+				</li>
+				<li>
+					<input id="filter-strategy-closest-both" type="radio" name="filter-strategy-closest"
+						   value="both" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+					<label for="filter-strategy-closest-both">Doesn't matter</label><br>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="control-buttons">
+	<div class="error">
+		{{error}}
+	</div>
+	<div>
+		<a (click)="closeComponent.emit()" class="timelinepicker-cancel">Cancel</a>
+		<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+	</div>
+</div>

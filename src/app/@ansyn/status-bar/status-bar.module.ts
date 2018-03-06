@@ -1,4 +1,4 @@
-import { InjectionToken, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,8 @@ import { TimelineTimepickerComponent } from './components/timeline-timepicker/ti
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models';
+import { TimelineIntervalsPickerComponent } from '@ansyn/status-bar/components/timeline-intervals-picker/timeline-intervals-picker.component';
+import { DatePickerComponent } from '@ansyn/core/components/ansyn-date-picker/ansyn-date-picker.component';
 
 
 @NgModule({
@@ -17,7 +19,13 @@ import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ans
 		CoreModule,
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent],
+	declarations: [
+		StatusBarComponent,
+		ComboBoxComponent,
+		DatePickerComponent,
+		TimelineTimepickerComponent,
+		TimelineIntervalsPickerComponent
+	],
 	providers: [
 		{
 			provide: ORIENTATIONS,

@@ -21,6 +21,9 @@ import MousePosition from 'ol/control/mouseposition'
 import * as GeoJSON from 'geojson';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
+import { Subscription } from 'rxjs/Subscription';
+import Coordinate = ol.Coordinate;
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
@@ -35,6 +38,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
+
+	private projectionSubscription: Subscription = null;
 
 	private _flags = {
 		singleClickHandler: null
@@ -79,7 +84,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, private _mapLayers = [], position?: CaseMapPosition) {
+	constructor(element: HTMLElement, public projectionService: ProjectionService, private _mapLayers = [], position?: CaseMapPosition) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -90,15 +95,16 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this.showGroups.set('layers', true);
-
 		this.initMap(element, _mapLayers, position);
 	}
 
-	public positionToPoint(x, y): GeoJSON.Point {
-		let coordinates = this._mapObject.getCoordinateFromPixel([x, y]);
-		const projection = this._mapObject.getView().getProjection();
-		coordinates = proj.toLonLat(coordinates, projection);
-		return { type: 'Point', coordinates };
+	public positionToPoint(coordinate: Coordinate, cb: (p: GeoJSON.Point) => void) {
+		if (this.projectionSubscription) {
+			this.projectionSubscription.unsubscribe();
+		}
+
+		this.projectionSubscription = this.projectionService
+			.projectAccurately(coordinate, this).subscribe(cb);
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
@@ -136,8 +142,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 			containerElem.click();
 
-			const point = this.positionToPoint(e.offsetX, e.offsetY);
-			this.contextMenu.emit({ point, e });
+			let coordinate = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
+			this.positionToPoint(coordinate, point => this.contextMenu.emit({ point, e }));
 		});
 	}
 
@@ -409,19 +415,13 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public singleClickListener(e) {
-		const view = this._mapObject.getView();
-		const projection = view.getProjection();
-		const lonLat = proj.toLonLat(e.coordinate, projection);
-		this.singleClick.emit({ lonLat: lonLat });
+		this.positionToPoint(e.coordinate, p => this.singleClick.emit({lonLat: p.coordinates}));
 	}
 
 	// *****-- pointer move --********
 
 	public onPointerMove(e) {
-		const view = this._mapObject.getView();
-		const projection = view.getProjection();
-		const lonLat = proj.toLonLat(e.coordinate, projection);
-		this.pointerMove.emit(lonLat);
+		this.positionToPoint(e.coordinate, p => this.pointerMove.emit({lonLat: p.coordinates}));
 	};
 
 	public setPointerMove(enable: boolean) {
@@ -440,6 +440,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	// IMap End
 	public dispose() {
-
+		if (this.projectionService) {
+			this.projectionSubscription.unsubscribe();
+		}
 	}
 }

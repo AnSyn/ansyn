@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } fro
 import { OpenLayersMap } from './openlayers-map';
 import { IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 
 @Component({
@@ -20,11 +21,15 @@ export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent 
 	private _map: OpenLayersMap;
 	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
+	constructor(private projectionService: ProjectionService) {
+
+	}
+
 	ngOnInit(): void {
 	}
 
 	createMap(layers: any, position?: CaseMapPosition): void {
-		this._map = new OpenLayersMap(this.mapElement.nativeElement, layers, position);
+		this._map = new OpenLayersMap(this.mapElement.nativeElement, this.projectionService, layers, position);
 		this.mapCreated.emit(this._map);
 	}
 

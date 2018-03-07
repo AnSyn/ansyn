@@ -9,7 +9,11 @@
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
-				"assets",
+				{
+					"glob": "**/*",
+					"input": "./app/packages/assets",
+					"output": "./assets/"
+				},
 				"favicon.ico"
 			],
 			"index": "index.html",
@@ -41,7 +45,11 @@
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
-				"assets",
+				{
+					"glob": "**/*",
+					"input": "./app/packages/assets",
+					"output": "./assets/"
+				},
 				"favicon.ico"
 			],
 			"index": "index.html",

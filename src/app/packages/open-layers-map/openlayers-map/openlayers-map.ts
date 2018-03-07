@@ -17,7 +17,7 @@ import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 import MousePosition from 'ol/control/mouseposition'
-import Coordinate from 'ol/Coordinate';
+import Coordinate from 'ol/coordinate';
 
 import * as GeoJSON from 'geojson';
 

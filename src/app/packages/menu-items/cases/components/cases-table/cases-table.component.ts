@@ -21,7 +21,6 @@ import { CaseModal } from '../../reducers/cases.reducer';
 const animations: any[] = [
 	trigger('leaveAnim', [
 		transition(':leave', [style({ height: '57px' }), animate('0.2s', style({ height: '0' }))])
-
 	])
 ];
 

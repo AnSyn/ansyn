@@ -1,7 +1,7 @@
 import { IMap } from './imap';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
-import { VisualizerStateStyle } from '@ansyn/open-layer-visualizers/models/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
 import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {

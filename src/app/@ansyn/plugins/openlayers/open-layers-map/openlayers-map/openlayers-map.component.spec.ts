@@ -4,7 +4,7 @@ import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
 import * as openLayersMap from './openlayers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '@ansyn/open-layers-map';
 
 describe('OpenlayersMapComponent', () => {
 	let component: OpenlayersMapComponent;

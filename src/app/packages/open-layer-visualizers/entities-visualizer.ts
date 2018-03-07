@@ -1,9 +1,8 @@
-import { IMap, IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
+import { IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
 import Feature from 'ol/feature';
-import OLGeoJSON from 'ol/format/geojson';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -11,14 +10,12 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import Vector from 'ol/layer/vector';
-import olMap from 'ol/map';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { OpenLayersMap } from '@ansyn/open-layers-map/openlayers-map/openlayers-map';
-import { VisualizerEventTypes } from '@ansyn/imagery/model/imap-visualizer';
-import { VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
+import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -44,12 +41,9 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: VectorLayer;
-	protected default4326GeoJSONFormat: OLGeoJSON = new OLGeoJSON({
-		defaultDataProjection: 'EPSG:4326',
-		featureProjection: 'EPSG:4326'
-	});
 	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
+	projectionService: ProjectionService;
 
 	protected visualizerStyle: VisualizerStateStyle = {
 		opacity: 1,
@@ -218,8 +212,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
 		const logicalEntitiesCopy = [...logicalEntities];
-		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
 
 		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
 			type: 'FeatureCollection',
@@ -229,12 +221,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
 			const existingEntity = this.idToEntity.get(entity.id);
 			if (existingEntity) {
-				const newGeometry = this.default4326GeoJSONFormat.readGeometry(entity.featureJson.geometry, {
-					dataProjection: 'EPSG:4326',
-					featureProjection: projection.getCode()
+				this.iMap.projectionService.projectAccuratelyToImage(entity.featureJson.geometry, this.iMap)
+					.subscribe(newGeometry => {
+					existingEntity.feature.setGeometry(newGeometry);
+					existingEntity.originalEntity = entity;
 				});
-				existingEntity.feature.setGeometry(newGeometry);
-				existingEntity.originalEntity = entity;
 			} else {
 				const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };
 				featuresCollectionToAdd.features.push(clonedFeatureJson);
@@ -242,18 +233,15 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			}
 		});
 
-		const featuresCollectionGeojson = JSON.stringify(featuresCollectionToAdd);
-		const features = this.default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
-			dataProjection: 'EPSG:4326',
-			featureProjection: projection.getCode()
+		this.iMap.projectionService.projectCollectionAccuratelyToImage(featuresCollectionToAdd, this.iMap)
+			.subscribe(features => {
+			features.forEach((feature: Feature) => {
+				const id: string = <string>feature.getId();
+				const existingEntity = this.idToEntity.get(id);
+				this.idToEntity.set(id, { ...existingEntity, feature: feature });
+			});
+			this.source.addFeatures(features);
 		});
-
-		features.forEach((feature: Feature) => {
-			const id: string = <string>feature.getId();
-			const existingEntity = this.idToEntity.get(id);
-			this.idToEntity.set(id, { ...existingEntity, feature: feature });
-		});
-		this.source.addFeatures(features);
 	}
 
 	setEntities(logicalEntities: IVisualizerEntity[]) {

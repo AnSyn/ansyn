@@ -27,7 +27,7 @@ export class QueryParamsHelper {
 		qParamsKeys.forEach((key) => {
 			sCase.state[key] = this.decodeCaseObjects(key, qParams[key]);
 		});
-		return sCase;
+		return this.casesService.parseCase(sCase);
 	}
 
 	updateCaseViaContext(selectedContext: Context, caseModel: Case, qParams: Params = {}) {
@@ -133,7 +133,7 @@ export class QueryParamsHelper {
 			});
 		}
 
-		return updatedCaseModel;
+		return this.casesService.parseCase(updatedCaseModel);
 	}
 
 	generateQueryParamsViaCase(sCase: Case): string {

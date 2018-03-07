@@ -9,6 +9,8 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
+		"@ansyn/core": "0.2.8",
 		"ansyn-event-drops": "0.4.12"
-	}
+	},
+	"typings": "index.d.ts"
 }

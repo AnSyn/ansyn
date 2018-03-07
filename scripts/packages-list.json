@@ -1,15 +1,12 @@
 [
-	"cesium-map",
 	"context",
 	"core",
 	"imagery",
 	"login",
 	"map-facade",
+	"plugins",
 	"menu",
 	"menu-items",
-	"open-layer-center-marker-plugin",
-	"open-layer-visualizers",
-	"open-layers-map",
 	"overlays",
 	"router",
 	"status-bar"

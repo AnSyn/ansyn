@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { GeometryObject, Point, Position } from 'geojson';
-import { IMap } from '@ansyn/imagery';
+import { IMap } from '@ansyn/imagery/index';
 
 export abstract class ProjectionService {
 	// Image to ground

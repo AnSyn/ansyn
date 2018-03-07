@@ -34,8 +34,8 @@ import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter
 import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/mouse-shadow.visualizer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
-import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map';
+import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
+import { OpenLayersProjectionService } from '@ansyn/open-layers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 @NgModule({

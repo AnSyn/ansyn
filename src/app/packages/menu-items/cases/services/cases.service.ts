@@ -101,11 +101,11 @@ export class CasesService {
 			creationTime: new Date(caseValue.creationTime),
 			state: {
 				...caseValue.state,
-				time: {
+				time: Boolean(caseValue.state.time) ? {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),
 					to: new Date(caseValue.state.time.to),
-				}
+				} : null
 			}
 		};
 	}

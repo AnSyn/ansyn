@@ -170,10 +170,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		} else {
 			this.setPosition(position);
 		}
-
-		if (this.projectionService) {
-			this.projectionSubscription.unsubscribe();
-		}
 	}
 
 	public getLayerById(id: string): Layer {

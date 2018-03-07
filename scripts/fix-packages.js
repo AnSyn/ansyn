@@ -15,7 +15,7 @@ function replaceAdd(options) {
 }
 
 replaceAdd({
-	regex: '(\'(.*?)\\/packages\\/|\'(.*?)\\/src/app\\/)', // any amount of (../) followed by `packages`
+	regex: '(\'(.*?)\\/@ansyn\\/|\'(.*?)\\/src/app\\/)', // any amount of (../) followed by `@ansyn`
 	replacement: '\'@ansyn/',
 	paths: ['src/'],
 	recursive: true,

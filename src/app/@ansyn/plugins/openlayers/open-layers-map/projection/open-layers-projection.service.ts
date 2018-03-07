@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProjectionService } from 'app/packages/imagery/projection-service/projection.service';
+import { ProjectionService } from 'app/@ansyn/imagery/projection-service/projection.service';
 import { IMap } from 'app/packages/imagery/index';
 import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Point, Position } from 'geojson';

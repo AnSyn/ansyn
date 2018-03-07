@@ -23,7 +23,6 @@ import * as GeoJSON from 'geojson';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
-import Coordinate = ol.Coordinate;
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export class OpenLayersMap extends IMap<OLMap> {
@@ -99,7 +98,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.initMap(element, _mapLayers, position);
 	}
 
-	public positionToPoint(coordinate: Coordinate, cb: (p: GeoJSON.Point) => void) {
+	public positionToPoint(coordinate: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}

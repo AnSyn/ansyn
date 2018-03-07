@@ -1,6 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export abstract class IMap<T = any> {
 	centerChanged: EventEmitter<GeoJSON.Point>;
@@ -10,6 +11,7 @@ export abstract class IMap<T = any> {
 	contextMenu: EventEmitter<any>;
 	mapType: string;
 	mapObject: T;
+	projectionService: ProjectionService;
 
 	static addGroupLayer(layer: any, groupName: string) {
 	}

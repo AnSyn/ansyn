@@ -10,6 +10,10 @@ import { ImageryModule } from '@ansyn/imagery';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
+import { OpenLayerCenterMarkerPluginModule } from '@ansyn/open-layer-center-marker-plugin';
+import { OpenLayersNorthCalculationsModule } from '@ansyn/open-layers-north-calculations';
+import { AppProvidersModule } from '../app-providers/app-providers.module';
+import { AppEffectsModule } from '../app-effects/app.effects.module';
 import {
 	AlgorithmsModule,
 	CasesModule,

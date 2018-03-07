@@ -1,9 +1,7 @@
 {
-	"name": "@ansyn/plugins",
+	"name": "@ansyn/map-plugins",
 	"version": "0.2.8",
-	"peerDependencies": {
-		"@ansyn/core": "0.2.8"
-	},
+	"peerDependencies": {},
 	"typings": "index.d.ts",
 	"license": "MIT"
 }

@@ -29,7 +29,7 @@ import {
 	overlaysInitialState,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';

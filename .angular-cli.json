@@ -11,7 +11,7 @@
 			"assets": [
 				{
 					"glob": "**/*",
-					"input": "./app/packages/assets",
+					"input": "./app/@ansyn/assets",
 					"output": "./assets/"
 				},
 				"favicon.ico"
@@ -47,7 +47,7 @@
 			"assets": [
 				{
 					"glob": "**/*",
-					"input": "./app/packages/assets",
+					"input": "./app/@ansyn/assets",
 					"output": "./assets/"
 				},
 				"favicon.ico"

@@ -1,0 +1,120 @@
+@import 'core/less/common';
+
+@keyframes pinned {
+	from {
+		transform: scale(1.1) translateX(-100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes unPinned {
+	from {
+		transform: scale(1) translateX(200px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+:host {
+	div.app {
+		display: flex;
+		height: 100vh;
+		overflow: hidden;
+
+		&.isPinned, &.isNotPinned {
+			background: black;
+			div.layer {
+				animation-duration: .4s;
+			}
+		}
+
+		&.isPinned div.layer {
+			animation-name: pinned;
+		}
+
+		&.isNotPinned div.layer {
+			animation-name: unPinned;
+		}
+
+		div.layer {
+			width: 100%;
+			height: 100%;
+			color: white;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			position: relative;
+
+			div.status-timeline-container {
+				position: relative;
+
+				.status {
+					position: relative;
+					height: 0;
+				}
+
+				.app-timeline-container {
+					height: 140px;
+					background-color: white;
+				}
+			}
+
+			.maps-container {
+				position: relative;
+				flex: 1;
+			}
+
+		}
+
+		&.animations {
+			@animation-duration: 0.3s;
+
+			@keyframes menu-init {
+				from {
+					transform: translateX(-100%);
+				}
+				to {
+					transform: translateX(0);
+				}
+			}
+
+			@keyframes map-init {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+
+			@keyframes timeline-init {
+				from {
+					top: 100%;
+				}
+				to {
+					top: 0;
+				}
+			}
+
+			div.menu {
+				animation: menu-init @animation-duration;
+				transform: transitionX(0);
+			}
+
+			div.layer div.maps-container {
+				animation: map-init 0.7s;
+				animation-delay: @animation-duration;
+				opacity: 0;
+				animation-fill-mode: forwards;
+			}
+
+			div.layer div.status-timeline-container {
+				animation: timeline-init @animation-duration;
+			}
+		}
+	}
+
+}

@@ -13,9 +13,9 @@ import VectorLayer from 'ol/layer/vector';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
+import { OpenLayersMap } from '@ansyn/open-layers-map/openlayers-map/openlayers-map';
 import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface FeatureIdentifier {
 	feature: Feature,

@@ -35,6 +35,8 @@ import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filt
 import { MouseShadowVisualizer } from '@ansyn/open-layer-visualizers/mouse-shadow.visualizer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualizers/overlays/frame-visualizer';
+import { OpenLayersProjectionService } from '@ansyn/open-layers-map';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 @NgModule({
 	imports: [
@@ -135,7 +137,9 @@ import { FrameVisualizer, FrameVisualizerType } from '@ansyn/open-layer-visualiz
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true }
+		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
+
+		{ provide: ProjectionService, useClass: OpenLayersProjectionService }
 	]
 })
 export class AppProvidersModule {

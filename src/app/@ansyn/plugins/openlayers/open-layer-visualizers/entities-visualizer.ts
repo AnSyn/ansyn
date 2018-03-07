@@ -16,8 +16,6 @@ import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { VisualizerEventTypes } from '@ansyn/imagery/model/imap-visualizer';
-import { VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 
 export interface FeatureIdentifier {
 	feature: Feature,

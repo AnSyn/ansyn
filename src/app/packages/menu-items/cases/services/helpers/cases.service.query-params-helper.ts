@@ -152,7 +152,7 @@ export class QueryParamsHelper {
 			case 'facets':
 				return rison.encode(value);
 			case 'time':
-				return rison.encode(value);
+				return rison.encode({...value, from: value.from.toISOString(), to: value.to.toISOString() });
 			case 'maps':
 				const clonedvalue: CaseMapsState = cloneDeep(value);
 				clonedvalue.data.forEach((caseMapState: CaseMapState) => {

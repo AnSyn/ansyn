@@ -86,9 +86,9 @@ describe('CasesService', () => {
 
 			queryParamsHelper.encodeCaseObjects('facets', 'facetsValue');
 			expect(rison.encode).toHaveBeenCalledWith('facetsValue');
-
-			queryParamsHelper.encodeCaseObjects('time', { from: 'from', to: 'to' });
-			expect(rison.encode).toHaveBeenCalledWith({ from: 'from', to: 'to' });
+			const date = new Date();
+			queryParamsHelper.encodeCaseObjects('time', { from: date, to: date });
+			expect(rison.encode).toHaveBeenCalledWith({ from: date.toISOString(), to: date.toISOString() });
 
 			queryParamsHelper.encodeCaseObjects('maps', { data: [] });
 			expect(rison.encode).toHaveBeenCalledWith({ data: [] });

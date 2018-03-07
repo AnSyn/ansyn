@@ -154,6 +154,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+		if (this.projectionService) {
+			this.projectionSubscription.unsubscribe();
+		}
+
 		const rotation = this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
@@ -164,10 +168,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 			this.mapObject.getView().setRotation(rotation);
 		} else {
 			this.setPosition(position);
-		}
-
-		if (this.projectionService) {
-			this.projectionSubscription.unsubscribe();
 		}
 	}
 

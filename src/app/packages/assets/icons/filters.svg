@@ -1,0 +1,31 @@
+<svg width="32" height="32" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:figma="http://www.figma.com/figma/ns">
+	<title>funnel</title>
+	<desc>Created using Figma</desc>
+	<g id="Canvas" transform="translate(-460 -248)" figma:type="canvas">
+		<g id="funnel" style="mix-blend-mode:normal;" figma:type="frame">
+			<g id="Layer_1" style="mix-blend-mode:normal;" figma:type="frame">
+				<g id="Shape" style="mix-blend-mode:normal;" figma:type="vector-operation">
+					<use xlink:href="#path0_fill" transform="translate(460.046 248)" fill="#FFFFFF"
+						 style="mix-blend-mode:normal;"/>
+				</g>
+				<g id="Shape" style="mix-blend-mode:normal;" figma:type="vector">
+					<use xlink:href="#path1_fill" transform="translate(470.959 259.467)" fill="#FFFFFF"
+						 style="mix-blend-mode:normal;"/>
+				</g>
+				<g id="Shape" style="mix-blend-mode:normal;" figma:type="vector">
+					<use xlink:href="#path2_fill" transform="translate(464.931 253.686)" fill="#FFFFFF"
+						 style="mix-blend-mode:normal;"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<defs>
+		<path id="path0_fill" fill-rule="evenodd"
+			  d="M 0.663361 0L 31.2449 0C 31.6112 0 31.9082 0.284821 31.9082 0.6362L 31.9082 4.34158C 31.9082 4.5163 31.8347 4.67462 31.7157 4.7897L 31.7141 4.79134L 31.7138 4.79164L 18.9967 17.0812L 18.9967 31.3014C 18.9967 31.546 18.8505 31.7689 18.6207 31.8749C 18.5293 31.917 18.4311 31.9377 18.3335 31.9377C 18.1855 31.9377 18.039 31.8904 17.9189 31.7983L 13.1604 28.1473C 13.0031 28.0265 12.9114 27.8438 12.9114 27.6504L 12.9114 17.0812L 0.194397 4.7917L 0.194092 4.7914L 0.192535 4.78976C 0.0735474 4.67462 0 4.51643 0 4.34164L 0 0.6362C 0 0.284821 0.297028 0 0.663361 0ZM 14.2382 27.3447L 17.6701 29.9777L 17.6701 17.4553L 14.2382 17.4553L 14.2382 27.3447ZM 18.0572 16.1829L 13.851 16.1829L 2.25626 4.97791L 29.652 4.97791L 18.0572 16.1829ZM 1.32669 3.70544L 30.5815 3.70544L 30.5815 1.27238L 1.32669 1.27238L 1.32669 3.70544Z"/>
+		<path id="path1_fill"
+			  d="M 1.41809 0.460242L 1.1325 0.186339C 0.873634 -0.0620507 0.453537 -0.0621754 0.19435 0.186339C -0.0647724 0.434791 -0.0647723 0.837567 0.194285 1.08608L 0.479943 1.35998C 0.609439 1.48424 0.77926 1.54631 0.949016 1.54631C 1.11877 1.54631 1.28853 1.48424 1.41802 1.35998C 1.67715 1.11147 1.67715 0.708694 1.41809 0.460242Z"/>
+		<path id="path2_fill"
+			  d="M 5.70077 4.56761L 1.13245 0.186292C 0.873325 -0.0620975 0.453423 -0.0620975 0.194236 0.186292C -0.0647561 0.434807 -0.0647561 0.837645 0.194301 1.0861L 4.76263 5.46742C 4.89219 5.59161 5.06194 5.65374 5.2317 5.65374C 5.40145 5.65374 5.57121 5.59161 5.70077 5.46742C 5.95976 5.21896 5.95976 4.81606 5.70077 4.56761Z"/>
+	</defs>
+</svg>

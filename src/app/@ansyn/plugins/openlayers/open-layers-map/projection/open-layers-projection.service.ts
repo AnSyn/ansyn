@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ProjectionService } from 'app/@ansyn/imagery/projection-service/projection.service';
-import { IMap } from 'app/packages/imagery/index';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { IMap } from '@ansyn/imagery/index';
 import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Point, Position } from 'geojson';
 import proj from 'ol/proj';

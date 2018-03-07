@@ -20,7 +20,7 @@ let tmpl = fs.readFileSync(path.join(__dirname, '../confd/production.tmpl'), 'ut
 tmpl = tmpl.replace(/{{.*?}}/g, 'variable');
 const parsedTmpl = JSON.parse(tmpl);
 
-let config = fs.readFileSync(path.join(__dirname, '../src/assets/config/app.config.json'), 'utf-8');
+let config = fs.readFileSync(path.join(__dirname, '../src/app/@ansyn/assets/config/app.config.json'), 'utf-8');
 const parsedConfig = JSON.parse(config);
 
 isSame(parsedConfig, parsedTmpl);

@@ -38,10 +38,7 @@ function fix(fileName) {
 	}
 }
 
-fix('src/app/app/package.json');
-fix('src/assets/package.json');
-
 packages.forEach((pkg) => {
-	const fileName = 'src/app/packages/' + pkg + '/package.json';
+	const fileName = 'src/app/@ansyn/' + pkg + '/package.json';
 	fix(fileName);
 });

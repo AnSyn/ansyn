@@ -11,7 +11,7 @@
 			"assets": [
 				{
 					"glob": "**/*",
-					"input": "./app/packages/assets",
+					"input": "./app/@ansyn/assets",
 					"output": "./assets/"
 				},
 				"favicon.ico"
@@ -29,7 +29,7 @@
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
-					"./app/packages"
+					"./app/@ansyn"
 				]
 			},
 			"scripts": [
@@ -47,7 +47,7 @@
 			"assets": [
 				{
 					"glob": "**/*",
-					"input": "./app/packages/assets",
+					"input": "./app/@ansyn/assets",
 					"output": "./assets/"
 				},
 				"favicon.ico"
@@ -65,7 +65,7 @@
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
-					"./app/packages"
+					"./app/@ansyn"
 				]
 			},
 			"scripts": [

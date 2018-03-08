@@ -3,6 +3,7 @@ import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
+import * as helpers from '@turf/helpers'
 
 export function getPolygonByPoint(lonLat: number[]): GeoJSON.Feature<GeoJSON.Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
@@ -20,6 +21,12 @@ export function getPointByGeometry(geometry: GeoJSON.GeometryObject | GeoJSON.Fe
 	else {
 		return <GeoJSON.Point>centerOfMass(feature(<GeoJSON.GeometryObject>geometry)).geometry;
 	}
+}
+
+export function bboxFromGeoJson(polygon: GeoJSON.Polygon): number[] {
+	let line = helpers.lineString(polygon.coordinates[0]);
+	let bboxFromPolygon = bbox(line);
+	return bboxFromPolygon;
 }
 
 export function geojsonMultiPolygonToPolygon(multiPolygon: GeoJSON.MultiPolygon): GeoJSON.Polygon {

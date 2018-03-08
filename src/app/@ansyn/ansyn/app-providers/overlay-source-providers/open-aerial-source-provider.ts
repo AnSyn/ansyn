@@ -1,8 +1,8 @@
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams } from 'app/@ansyn/overlays/index';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysOpenAerialFetchData } from '@ansyn/core/models/overlay.model';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService, Overlay } from '@ansyn/core';
+import { ErrorHandlerService, Overlay } from 'app/@ansyn/core/index';
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { sortByDateDesc } from "@ansyn/core/utils/sorting";
@@ -95,11 +95,10 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms ? openAerialElement.properties.tms : openAerialElement.properties.wmts; // not always just tms
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
-		overlay.date = new Date(openAerialElement.uploaded_at);
+		overlay.date = new Date(openAerialElement.acquisition_start);
 		overlay.photoTime = openAerialElement.acquisition_start;
 		overlay.azimuth = toRadians(180 - 91.2); // how? just a number i found in an idaho request
 		overlay.sourceType = this.sourceType;
-		overlay.isFullOverlay = true;
 		overlay.isGeoRegistered = true; // why?? not sure why hardcoded (followed the previous provider)
 
 		return overlay;

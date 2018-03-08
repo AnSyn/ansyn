@@ -14,7 +14,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core';
-import { OpenAerialOverlaysSourceConfig } from "@ansyn/app/app-providers/overlay-source-providers";
+import { OpenAerialOverlaysSourceConfig } from "@ansyn/ansyn/app-providers/overlay-source-providers";
 
 export const getProviders = (conf): any[] => {
 	return [

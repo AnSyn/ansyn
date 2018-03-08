@@ -381,6 +381,49 @@
 			],
 			"blacklist": []
 		},
+		"OPEN_AERIAL": {
+			"whitelist": [
+				{
+					"name": "Entire Earth",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [
+						null
+					],
+					"coverage": [
+						[
+							[
+								[
+									-180,
+									-90
+								],
+								[
+									-180,
+									90
+								],
+								[
+									180,
+									90
+								],
+								[
+									180,
+									-90
+								],
+								[
+									-180,
+									-90
+								]
+							]
+						]
+					]
+				}
+			],
+			"blacklist": []
+		},
 		"IDAHO2": {
 			"whitelist": [
 				{
@@ -441,5 +484,8 @@
 		"defaultApi": "overlays",
 		"baseUrl": "http://ansyn.io:9001/api/v1/",
 		"overlaysByTimeAndPolygon": "overlays/find"
+	},
+	"openAerialOverlaysSourceConfig": {
+		"baseUrl": "https://api.openaerialmap.org/meta"
 	}
 }

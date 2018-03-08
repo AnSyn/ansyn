@@ -5,12 +5,16 @@ import {
 	MultipleOverlaysSourceProvider,
 	IdahoOverlaysSourceConfig,
 	IdahoSourceProvider,
+	OpenAerialOverlaysSourceConfig,
+	OpenAerialSourceProvider,
+	IOpenAerialOverlaySourceConfig,
 	IIdahoOverlaySourceConfig
 } from './overlay-source-providers';
 import {
 	OpenLayerBingSourceProvider,
 	OpenLayerIDAHOSourceProvider,
 	OpenLayerIDAHO2SourceProvider,
+	OpenLayerOpenAerialSourceProvider,
 	OpenLayerOSMSourceProvider,
 	OpenLayerTileWMSSourceProvider,
 	OpenLayerMapBoxSourceProvider,
@@ -49,6 +53,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 
 		// Map tiling source services
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
@@ -56,6 +61,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerOpenAerialSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
 
@@ -143,11 +149,11 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 	]
 })
 export class AppProvidersModule {
-	static forRoot(idahoOverlaySourceConfig: IIdahoOverlaySourceConfig): ModuleWithProviders {
+	static forRoot(openAerialOverlaySourceConfig: IOpenAerialOverlaySourceConfig): ModuleWithProviders { // switched idaho to open aerial
 		return {
 			ngModule: AppProvidersModule,
 			providers: [
-				{ provide: IdahoOverlaysSourceConfig, useValue: idahoOverlaySourceConfig }
+				{ provide: OpenAerialOverlaysSourceConfig, useValue: openAerialOverlaySourceConfig }
 			]
 		};
 	}

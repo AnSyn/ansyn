@@ -11,7 +11,7 @@ export const OpenLayerOpenAerialSourceProviderMapType = 'openLayersMap';
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
 @Injectable()
-export class OpenLayersOpenAerialSourceProvider extends BaseMapSourceProvider {
+export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 
 	public mapType = OpenLayerOpenAerialSourceProviderMapType;
 	public sourceType = OpenLayerOpenAerialSourceProviderSourceType;

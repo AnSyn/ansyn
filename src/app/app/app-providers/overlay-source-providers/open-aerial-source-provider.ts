@@ -1,16 +1,16 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysFetchData, OverlaysOpenAerialFetchData } from '@ansyn/core/models/overlay.model';
+import { OverlaysOpenAerialFetchData } from '@ansyn/core/models/overlay.model';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService, Overlay} from '@ansyn/core';
+import { ErrorHandlerService, Overlay } from '@ansyn/core';
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { sortByDateDesc } from "@ansyn/core/utils/sorting";
 import { bboxFromGeoJson, geojsonMultiPolygonToPolygon } from "@ansyn/core/utils/geo";
 import { limitArray } from "@ansyn/core/utils/limited-array";
 import { Response } from "@angular/http";
-import * as wellknown from "wellknown";
 import { toRadians } from "@ansyn/core/utils/math";
+import * as wellknown from "wellknown";
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';

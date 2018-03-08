@@ -155,7 +155,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
-		if (this.projectionService) {
+		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}
 
@@ -444,7 +444,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	// IMap End
 	public dispose() {
-		if (this.projectionService) {
+		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}
 	}

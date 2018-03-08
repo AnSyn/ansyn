@@ -20,13 +20,13 @@ export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
+			projection: 'EPSG:3857' // Check correct EPSG?
 		});
 
 		this.monitorSource(source, mapId);
 		let [x, y, x1, y1] = extentFromGeojson(metaData.footprint);
-		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
-		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
+		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857'); // Check correct EPSG?do i even need a transformation?
+		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857'); // Check correct EPSG?do i even need a transformation?
 
 		return new ImageLayer({
 			source: new ProjectableRaster({

@@ -5,21 +5,20 @@ import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Point, Position } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
+import olFeature from 'ol/feature';
+import * as ol from 'openlayers';
 
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {
 
-	private default4326GeoJSONFormat: OLGeoJSON = new OLGeoJSON({
-		defaultDataProjection: 'EPSG:4326',
-		featureProjection: 'EPSG:4326'
-	});
+	private default4326GeoJSONFormat: OLGeoJSON = new OLGeoJSON();
 
-	projectCollectionAccuratelyToImage(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<any> {
+	projectCollectionAccuratelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<olFeature[]> {
 		const view = map.mapObject.getView();
 		const projection = view.getProjection();
 
 		const featuresCollectionGeojson = JSON.stringify(featureCollection);
-		const features = this.default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
+		const features: olFeature[] = <any> this.default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
 			dataProjection: 'EPSG:4326',
 			featureProjection: projection.getCode()
 		});
@@ -27,15 +26,15 @@ export class OpenLayersProjectionService extends ProjectionService {
 		return Observable.of(features);
 	}
 
-	projectCollectionApproximatelyToImage(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<GeometryObject> {
+	projectCollectionApproximatelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<olFeature[]> {
 		return this.projectCollectionAccuratelyToImage(featureCollection, map);
 	}
 
-	projectAccuratelyToImage(feature: GeometryObject, map: IMap): Observable<any> {
+	projectAccuratelyToImage<olGeometry>(feature: GeometryObject, map: IMap): Observable<olGeometry> {
 		const view = map.mapObject.getView();
 		const projection = view.getProjection();
 
-		const newGeometry = this.default4326GeoJSONFormat.readGeometry(feature, {
+		const newGeometry: olGeometry = <any> this.default4326GeoJSONFormat.readGeometry(feature, {
 			dataProjection: 'EPSG:4326',
 			featureProjection: projection.getCode()
 		});
@@ -43,7 +42,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		return Observable.of(newGeometry);
 	}
 
-	projectApproximatelyToImage(feature: GeometryObject, map: IMap): Observable<GeometryObject> {
+	projectApproximatelyToImage<olGeometry>(feature: GeometryObject, map: IMap): Observable<olGeometry> {
 		return this.projectAccuratelyToImage(feature, map);
 	}
 
@@ -56,6 +55,21 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximately(pixel: Position, map: IMap): Observable<Point> {
 		return this.projectAccurately(pixel, map);
+	}
+
+	projectCollectionAccurately<olFeature>(features: olFeature[] | any, map: IMap): Observable<FeatureCollection<GeometryObject>> {
+		const featureProjection = map.mapObject.getView().getProjection();
+
+		const geoJsonFeature: FeatureCollection<GeometryObject> = <any> this.default4326GeoJSONFormat.writeFeaturesObject(features, {
+			featureProjection,
+			dataProjection: 'EPSG:4326'
+		});
+
+		return Observable.of(geoJsonFeature);
+	}
+
+	projectCollectionApproximately<olFeature>(features: olFeature[], map: IMap): Observable<FeatureCollection<GeometryObject>> {
+		return this.projectCollectionAccurately(features, map);
 	}
 
 }

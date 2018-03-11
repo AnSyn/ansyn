@@ -18,6 +18,7 @@ import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
 import { getPointByGeometry } from '@ansyn/core/utils';
 import { VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
+import { FeatureCollection, GeometryObject } from 'geojson';
 
 export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
 
@@ -135,16 +136,16 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent(data) {
 		const view = (<any>this.iMap.mapObject).getView();
-		const featureProjection = view.getProjection();
-		let featureJson = <any> this.geoJsonFormat.writeFeatureObject(data.feature, {
-			featureProjection,
-			dataProjection: 'EPSG:4326',
-		});
-		const newEntity: IVisualizerEntity = {
-			id: UUID.UUID(),
-			featureJson
-		};
-		this.addOrUpdateEntities([newEntity]);
+		// const featureProjection = view.getProjection();
+		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
+			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+				const [featureJson] = featureCollection.features;
+				const newEntity: IVisualizerEntity = {
+					id: UUID.UUID(),
+					featureJson
+				};
+				this.addOrUpdateEntities([newEntity]);
+			});
 	}
 
 	// override base entities visualizer style

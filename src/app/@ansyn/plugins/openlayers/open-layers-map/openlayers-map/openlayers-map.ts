@@ -18,7 +18,7 @@ import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 import MousePosition from 'ol/control/mouseposition'
 import * as ol from 'openlayers';
-
+import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
@@ -98,13 +98,13 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.initMap(element, _mapLayers, position);
 	}
 
-	public positionToPoint(coordinate: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}
-
+		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
 		this.projectionSubscription = this.projectionService
-			.projectAccurately(coordinate, this).subscribe(cb);
+			.projectAccurately(point, this).subscribe(cb);
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {

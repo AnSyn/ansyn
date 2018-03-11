@@ -10,8 +10,8 @@ export abstract class ProjectionService {
 	abstract projectCollectionApproximately<T = any>(features: T[], map: IMap): Observable<FeatureCollection<GeometryObject>>;
 
 	// Ground to image  EPSG:4326 -> projection
-	abstract projectAccuratelyToImage<T = any>(feature: GeometryObject, map: IMap): Observable<T>;
-	abstract projectApproximatelyToImage<T = any>(feature: GeometryObject, map: IMap): Observable<T>;
+	abstract projectAccuratelyToImage<T = any>(geometry: GeometryObject, map: IMap): Observable<T>;
+	abstract projectApproximatelyToImage<T = any>(geometry: GeometryObject, map: IMap): Observable<T>;
 	abstract projectCollectionAccuratelyToImage<T = any>(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<T[]>;
 	abstract projectCollectionApproximatelyToImage<T = any>(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<T[]>;
 }

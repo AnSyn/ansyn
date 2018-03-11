@@ -34,8 +34,7 @@ export class VisualizersAnnotationsAppEffects {
 
 	agentOperations: AgentOperations = {
 		show: (visualizer, {}, { annotationsLayer }) => {
-			visualizer.clearEntities();
-			const entities = this.annotationsLayerToEntities(annotationsLayer);
+			const entities = AnnotationsVisualizer.annotationsLayerToEntities(annotationsLayer);
 			visualizer.setEntities(entities);
 		},
 		hide: (visualizer, {}, { displayAnnotationsLayer }) => {
@@ -185,14 +184,6 @@ export class VisualizersAnnotationsAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
-	}
-
-	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
-		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			id: feature.properties.id,
-			featureJson: feature,
-			style: feature.properties.style
-		}));
 	}
 
 	relevantMapIds(relevantMaps: AnnotationAgentRelevantMap, { mapsList, activeMapId }: IMapState) {

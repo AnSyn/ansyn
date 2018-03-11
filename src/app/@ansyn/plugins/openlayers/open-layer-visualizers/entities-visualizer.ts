@@ -15,6 +15,7 @@ import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { FeatureCollection, GeoJsonObject, GeometryObject } from 'geojson';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -219,10 +220,15 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
 			const existingEntity = this.idToEntity.get(entity.id);
 			if (existingEntity) {
-				this.iMap.projectionService.projectAccuratelyToImage(entity.featureJson.geometry, this.iMap)
-					.subscribe(newGeometry => {
-					existingEntity.feature.setGeometry(newGeometry);
-					existingEntity.originalEntity = entity;
+				const featureCollection: FeatureCollection<GeometryObject> = {
+					type: 'FeatureCollection',
+					features: [entity.featureJson]
+				};
+				this.iMap.projectionService.projectCollectionAccuratelyToImage(featureCollection, this.iMap)
+					.subscribe((features: Feature[]) => {
+						const [relevantFeature] = features;
+						existingEntity.feature.setGeometry(relevantFeature.getGeometry());
+						existingEntity.originalEntity = entity;
 				});
 			} else {
 				const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };

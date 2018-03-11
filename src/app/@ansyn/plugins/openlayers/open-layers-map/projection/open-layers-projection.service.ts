@@ -2,16 +2,14 @@ import { Injectable } from '@angular/core';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { IMap } from '@ansyn/imagery/index';
 import { Observable } from 'rxjs/Observable';
-import { FeatureCollection, GeometryObject, Point, Position } from 'geojson';
+import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
-import olFeature from 'ol/feature';
-import * as ol from 'openlayers';
-import * as turf from '@turf/turf'
+
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {
 
-	private default4326GeoJSONFormat: OLGeoJSON = new OLGeoJSON();
+	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	/* points */
 
@@ -39,26 +37,19 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectCollectionAccuratelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: IMap): Observable<olFeature[]> {
 		const view = map.mapObject.getView();
-		const projection = view.getProjection();
-
-		// const featuresCollectionGeojson = JSON.stringify(featureCollection);
-		const features: olFeature[] = <any> this.default4326GeoJSONFormat.readFeatures(featureCollection, {
-			featureProjection: projection.getCode(),
-			dataProjection: 'EPSG:4326'
-		});
-
+		const featureProjection = view.getProjection();
+		const dataProjection = 'EPSG:4326';
+		const options = { featureProjection, dataProjection };
+		const features: olFeature[] = <any> this.olGeoJSON.readFeatures(featureCollection, options);
 		return Observable.of(features);
 	}
 
 
 	projectCollectionAccurately<olFeature>(features: olFeature[] | any, map: IMap): Observable<FeatureCollection<GeometryObject>> {
 		const featureProjection = map.mapObject.getView().getProjection();
-
-		const geoJsonFeature: FeatureCollection<GeometryObject> = <any> this.default4326GeoJSONFormat.writeFeaturesObject(features, {
-			featureProjection,
-			dataProjection: 'EPSG:4326'
-		});
-
+		const dataProjection = 'EPSG:4326';
+		const options = { featureProjection, dataProjection };
+		const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features, options);
 		return Observable.of(geoJsonFeature);
 	}
 

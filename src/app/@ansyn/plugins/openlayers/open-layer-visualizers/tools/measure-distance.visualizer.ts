@@ -135,8 +135,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent(data) {
-		const view = (<any>this.iMap.mapObject).getView();
-		// const featureProjection = view.getProjection();
 		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [featureJson] = featureCollection.features;

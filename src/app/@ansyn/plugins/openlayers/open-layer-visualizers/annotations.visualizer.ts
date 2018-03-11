@@ -16,7 +16,8 @@ import * as ol from 'openlayers';
 import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
 import { AnnotationsContextMenuEvent } from '@ansyn/core';
 import { toDegrees } from '@ansyn/core/utils/math';
-import { FeatureCollection, GeometryObject } from 'geojson';
+import { Feature, FeatureCollection, GeometryObject } from 'geojson';
+import { IVisualizerEntity } from '@ansyn/imagery';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
@@ -51,6 +52,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
+	}
+
+	static annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
+		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
+			id: feature.properties.id,
+			featureJson: feature,
+			style: feature.properties.style
+		}));
 	}
 
 	constructor(style?: Partial<VisualizerStateStyle>) {

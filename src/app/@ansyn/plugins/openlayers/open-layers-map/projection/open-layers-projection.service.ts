@@ -43,8 +43,8 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 		const featuresCollectionGeojson = JSON.stringify(featureCollection);
 		const features: olFeature[] = <any> this.default4326GeoJSONFormat.readFeatures(featuresCollectionGeojson, {
-			dataProjection: 'EPSG:4326',
-			featureProjection: projection.getCode()
+			featureProjection: projection.getCode(),
+			dataProjection: 'EPSG:4326'
 		});
 
 		return Observable.of(features);
@@ -52,11 +52,11 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 
 	projectCollectionAccurately<olFeature>(features: olFeature[] | any, map: IMap): Observable<FeatureCollection<GeometryObject>> {
-		const featureProjection = map.mapObject.getView().getProjection();
+		const dataProjection = map.mapObject.getView().getProjection();
 
 		const geoJsonFeature: FeatureCollection<GeometryObject> = <any> this.default4326GeoJSONFormat.writeFeaturesObject(features, {
-			featureProjection,
-			dataProjection: 'EPSG:4326'
+			featureProjection: 'EPSG:4326',
+			dataProjection
 		});
 
 		return Observable.of(geoJsonFeature);

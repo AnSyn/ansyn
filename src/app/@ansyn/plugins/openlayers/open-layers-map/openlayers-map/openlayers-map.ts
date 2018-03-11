@@ -425,7 +425,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	// *****-- pointer move --********
 
 	public onPointerMove(e) {
-		this.positionToPoint(e.coordinate, p => this.pointerMove.emit({lonLat: p.coordinates}));
+		this.positionToPoint(e.coordinate, p => this.pointerMove.emit(p.coordinates));
 	};
 
 	public setPointerMove(enable: boolean) {

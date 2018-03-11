@@ -14,7 +14,6 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface FeatureIdentifier {
@@ -43,7 +42,6 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 	vector: VectorLayer;
 	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
-	projectionService: ProjectionService;
 
 	protected visualizerStyle: VisualizerStateStyle = {
 		opacity: 1,
@@ -233,8 +231,8 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			}
 		});
 
-		this.iMap.projectionService.projectCollectionAccuratelyToImage(featuresCollectionToAdd, this.iMap)
-			.subscribe(features => {
+		this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+			.subscribe((features: Feature[]) => {
 			features.forEach((feature: Feature) => {
 				const id: string = <string>feature.getId();
 				const existingEntity = this.idToEntity.get(id);

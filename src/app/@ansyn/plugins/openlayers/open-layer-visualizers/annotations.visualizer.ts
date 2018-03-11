@@ -8,7 +8,6 @@ import LineString from 'ol/geom/linestring';
 import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
-import OLGeoJSON from 'ol/format/geojson';
 import condition from 'ol/events/condition';
 import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { cloneDeep } from 'lodash';
@@ -17,6 +16,7 @@ import * as ol from 'openlayers';
 import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
 import { AnnotationsContextMenuEvent } from '@ansyn/core';
 import { toDegrees } from '@ansyn/core/utils/math';
+import { FeatureCollection, GeometryObject } from 'geojson';
 
 export const AnnotationVisualizerType = 'AnnotationVisualizer';
 
@@ -25,7 +25,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	isHideable = true;
 	disableCache = true;
-	public geoJsonFormat: OLGeoJSON = new OLGeoJSON();
 	public mode: AnnotationMode;
 	modeDictionary = {
 		Arrow: {
@@ -149,7 +148,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.removeDrawInteraction();
 		const geometry = feature.getGeometry();
-		const featureProjection = this.iMap.mapObject.getView().getProjection();
 		let cloneGeometry = <any> geometry.clone();
 
 		if (cloneGeometry instanceof GeomCircle) {
@@ -163,12 +161,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle)
 		});
 
-		const geoJsonFeature: JSON = this.geoJsonFormat.writeFeatureObject(feature, {
-			featureProjection,
-			dataProjection: 'EPSG:4326'
-		});
-
-		this.drawEndPublisher.emit(geoJsonFeature);
+		this.iMap.projectionService.projectCollectionAccurately([feature], this.iMap)
+			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+				const [geoJsonFeature] = featureCollection.features;
+				this.drawEndPublisher.emit(geoJsonFeature);
+			});
 	}
 
 	removeDrawInteraction() {

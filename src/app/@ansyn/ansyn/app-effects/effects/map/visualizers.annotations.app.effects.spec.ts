@@ -29,6 +29,7 @@ import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.red
 import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { IToolsState, toolsFlags, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items';
+import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers';
 
 describe('VisualizersAnnotationsAppEffects', () => {
 	let visualizersAnnotationsAppEffects: VisualizersAnnotationsAppEffects;
@@ -105,7 +106,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 				}
 			];
 			layersState.annotationsLayer = <any> 'geoJsonObject';
-			spyOn(visualizersAnnotationsAppEffects, 'annotationsLayerToEntities').and.returnValue(entities);
+			spyOn(AnnotationsVisualizer, 'annotationsLayerToEntities').and.returnValue(entities);
 			const action = new AnnotationVisualizerAgentAction({
 				relevantMaps: 'all',
 				operation: 'show'
@@ -113,7 +114,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			actions = hot('--a--', { a: action });
 			const expectedResult = cold('--b--', { b: [action, layersState, mapState] });
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
-			expect(fakeVisualizer.clearEntities).toHaveBeenCalled();
 			expect(fakeVisualizer.setEntities).toHaveBeenCalledWith(entities);
 		});
 

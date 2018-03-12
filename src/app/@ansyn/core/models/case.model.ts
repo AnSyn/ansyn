@@ -51,6 +51,18 @@ export interface CaseTimeState {
 	type: 'absolute',
 	from: Date,
 	to: Date
+	intervals?: {
+		interval: number	// in milliseconds
+		criteria: CaseIntervalCriteria
+	}
+}
+
+export type CaseIntervalCriteriaType = 'best' | 'closest-before' | 'closest-after' | 'closest-both';
+
+export interface CaseIntervalCriteria {
+	type: CaseIntervalCriteriaType,
+	before?: number,
+	after?: number,
 }
 
 export interface CaseBooleanFilterMetadata {

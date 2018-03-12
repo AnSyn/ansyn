@@ -1,14 +1,14 @@
 <div class="basic-options-container" [class.disabled]="timeIntervalAdvancedOptions">
 	<span>Each:</span>
-	<select [disabled]="timeIntervalAdvancedOptions">
-		<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
-			{{timeUnit.text}}
+	<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionInterval">
+		<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
+			{{timeUnit.textSingular}}
 		</option>
 	</select>
 	<span>For last:</span>
-	<select [disabled]="timeIntervalAdvancedOptions">
-		<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
-			{{timeUnit.text}}
+	<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionTimeFrame">
+		<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
+			{{timeUnit.textSingular}}
 		</option>
 	</select>
 </div>
@@ -28,19 +28,19 @@
 			<ul>
 				<li>
 					<label>Year</label>
-					<input type="number" min="0" value="0">
+					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.years">
 				</li>
 				<li>
 					<label>Month</label>
-					<input type="number" min="0" value="0">
+					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.months">
 				</li>
 				<li>
 					<label>Day</label>
-					<input type="number" min="0" value="0">
+					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.days">
 				</li>
 				<li>
 					<label>Hour</label>
-					<input type="number" min="0" value="0">
+					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.hours">
 				</li>
 			</ul>
 		</div>
@@ -52,10 +52,10 @@
 				<input type="radio" name="advance-options-time-frame" checked="checked"
 					   id="advance-options-time-frame-last">
 				<label for="advance-options-time-frame-last" (click)="setTimeFrameType('last')">Last</label>
-				<input type="number" min="1" value="1" [disabled]="timeFrame !== 'last'">
+				<input type="number" min="1" value="1" [disabled]="timeFrame !== 'last'" [(ngModel)]="advancedOptionTimeFrameLast">
 
-				<select [disabled]="timeFrame !== 'last'">
-					<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+				<select [disabled]="timeFrame !== 'last'" [(ngModel)]="advancedOptionTimeFrameUnits">
+					<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
 						{{timeUnit.text}}
 					</option>
 				</select>
@@ -66,11 +66,13 @@
 				<div class="rows-container">
 					<div>
 						<label for="advance-options-time-frame-scope">Start</label>
-						<ansyn-date-picker [disabled]="timeFrame !== 'scope'"></ansyn-date-picker>
+						<ansyn-date-picker [disabled]="timeFrame !== 'scope'" [(date)]="advancedOptionStartDate">
+						</ansyn-date-picker>
 					</div>
 					<div>
 						<label for="advance-options-time-frame-scope">end</label>
-						<ansyn-date-picker [disabled]="timeFrame !== 'scope'"></ansyn-date-picker>
+						<ansyn-date-picker [disabled]="timeFrame !== 'scope'" [(date)]="advancedOptionEndDate">
+						</ansyn-date-picker>
 					</div>
 				</div>
 			</li>
@@ -86,8 +88,9 @@
 			<div class="rows-container">
 				<label for="filter-strategy-best-radio">Best within</label><br>
 				<div>
-					<select [disabled]="timeIntervalFilterStrategy !== 'best'">
-						<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+					<select [disabled]="timeIntervalFilterStrategy !== 'best'"
+							[(ngModel)]="advancedOptionCriteriaBest.before">
+						<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
 							{{timeUnit.text}}
 						</option>
 					</select>
@@ -95,8 +98,9 @@
 				</div>
 
 				<div>
-					<select [disabled]="timeIntervalFilterStrategy !== 'best'">
-						<option *ngFor="let timeUnit of timeFilterUnits" [value]="timeUnit.value">
+					<select [disabled]="timeIntervalFilterStrategy !== 'best'"
+							[(ngModel)]="advancedOptionCriteriaBest.after">
+						<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
 							{{timeUnit.text}}
 						</option>
 					</select>
@@ -115,17 +119,20 @@
 				</li>
 				<li>
 					<input id="filter-strategy-closest-before" type="radio" name="filter-strategy-closest"
-						   value="before" checked="checked" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+						   value="closest-before" checked="checked" [disabled]="timeIntervalFilterStrategy !== 'closest'"
+						   [(ngModel)]="advancedOptionCriteriaClosest">
 					<label for="filter-strategy-closest-before">Before</label><br>
 				</li>
 				<li>
 					<input id="filter-strategy-closest-after" type="radio" name="filter-strategy-closest"
-						   value="after" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+						   value="closest-after" [disabled]="timeIntervalFilterStrategy !== 'closest'"
+						   [(ngModel)]="advancedOptionCriteriaClosest">
 					<label for="filter-strategy-closest-after">After</label><br>
 				</li>
 				<li>
 					<input id="filter-strategy-closest-both" type="radio" name="filter-strategy-closest"
-						   value="both" [disabled]="timeIntervalFilterStrategy !== 'closest'">
+						   value="closest-both" [disabled]="timeIntervalFilterStrategy !== 'closest'"
+						   [(ngModel)]="advancedOptionCriteriaClosest">
 					<label for="filter-strategy-closest-both">Doesn't matter</label><br>
 				</li>
 			</ul>
@@ -139,6 +146,6 @@
 	</div>
 	<div>
 		<a (click)="closeComponent.emit()" class="timelinepicker-cancel">Cancel</a>
-		<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+		<a (click)="applyIntervalPickerEvent()" class="timelinepicker-apply">Ok</a>
 	</div>
 </div>

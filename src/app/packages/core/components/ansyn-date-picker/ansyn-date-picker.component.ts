@@ -9,35 +9,32 @@ import * as flatpickr from 'flatpickr';
 
 export class DatePickerComponent implements OnInit {
 
-	private _datePickerValue = new Date();
+	private _datePickerValue: Date;
 	private _datePickerInstance: any;
 
 	@ViewChild('datePicker') datePicker: ElementRef;
-	@Output() dateChanged = new EventEmitter<any>();
+	@Output() dateChange = new EventEmitter<Date>();
 
 	@Input() public disabled = false;
 
 	@Input()
-	set datePickerValue(value: Date) {
-		this._datePickerValue = value;
-		if (this._datePickerInstance) {
-			this._datePickerInstance.setDate(this._datePickerValue, false);
-		}
+	set date(val) {
+		this._datePickerValue = val;
 	}
 
 	constructor() {}
 
 	ngOnInit() {
+		// see API: https://flatpickr.js.org/options/
 		this._datePickerInstance = new (<any>flatpickr)(this.datePicker.nativeElement, {
 			// id: 'end',
 			time_24hr: true,
 			enableTime: true,
 			dateFormat: 'H:i d/m/Y',
-			onChange: this.onDateChanged.bind(this),
+			defaultDate: this._datePickerValue ? this._datePickerValue : new Date(),
+			onChange: this.onDateChange.bind(this),
 			plugins: [this.confirmDatePlugin({})]
 		});
-
-		this._datePickerInstance.setDate(this._datePickerValue, false);
 	}
 
 	confirmDatePlugin(pluginConfig: any) {
@@ -89,10 +86,11 @@ export class DatePickerComponent implements OnInit {
 		};
 	}
 
-	onDateChanged(event) {
+	onDateChange(event) {
 		if (this.disabled) {
 			return false;
 		}
-		this.dateChanged.emit({ event: event, time: this._datePickerValue });
+		this._datePickerValue = event[0];
+		this.dateChange.emit(this._datePickerValue);
 	}
 }

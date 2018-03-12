@@ -24,6 +24,7 @@ import {
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { OverlaysService } from '@ansyn/overlays';
 
 
 @Injectable()
@@ -174,11 +175,11 @@ export class MapEffects {
 	checkImageOutOfBounds$: Observable<UpdateAlertMsg> = this.actions$
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(map => Boolean(map))
+		.filter(map => Boolean(map && map.data.overlay))
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
 			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
-			const isWorldView = !map.data.overlay;
+			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;

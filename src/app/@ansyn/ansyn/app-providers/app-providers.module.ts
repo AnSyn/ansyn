@@ -150,4 +150,3 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 })
 export class AppProvidersModule {
 }
-

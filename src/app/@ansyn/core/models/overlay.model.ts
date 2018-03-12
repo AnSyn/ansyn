@@ -40,9 +40,9 @@ export class Overlay {
 }
 
 export class OpenAerialOverlay {
-	id: string;
+	_id: string;
 	uuid: string;
-	v: number;
+	_v: number;
 	title: string;
 	projection: string;
 	footprint: string;

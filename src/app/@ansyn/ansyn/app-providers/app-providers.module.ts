@@ -149,13 +149,5 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 	]
 })
 export class AppProvidersModule {
-	static forRoot(openAerialOverlaySourceConfig: IOpenAerialOverlaySourceConfig): ModuleWithProviders { // switched idaho to open aerial
-		return {
-			ngModule: AppProvidersModule,
-			providers: [
-				{ provide: OpenAerialOverlaysSourceConfig, useValue: openAerialOverlaySourceConfig }
-			]
-		};
-	}
 }
 

@@ -175,7 +175,7 @@ export class MapEffects {
 	checkImageOutOfBounds$: Observable<UpdateAlertMsg> = this.actions$
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(map => Boolean(map && map.data.overlay))
+		.filter(map => Boolean(map))
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
 			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));

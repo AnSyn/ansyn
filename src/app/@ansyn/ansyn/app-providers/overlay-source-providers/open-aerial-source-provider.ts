@@ -80,10 +80,12 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	private extractData(overlays: Array<any>): Overlay {
-		return this.parseData(overlays[0]);
+		if (overlays.length > 0) {
+			return this.parseData(overlays[0]);
+		}
 	}
 
-	protected parseData(openAerialElement: OpenAerialOverlay ): Overlay {
+	protected parseData(openAerialElement: OpenAerialOverlay): Overlay {
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;

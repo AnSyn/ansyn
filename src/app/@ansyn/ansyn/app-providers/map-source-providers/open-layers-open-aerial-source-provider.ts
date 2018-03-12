@@ -20,7 +20,7 @@ export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857' // Check correct EPSG?
+			projection: 'EPSG:3857'
 		});
 
 		this.monitorSource(source, mapId);

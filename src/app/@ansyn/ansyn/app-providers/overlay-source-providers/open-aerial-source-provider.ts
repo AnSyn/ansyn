@@ -1,12 +1,12 @@
 import { BaseOverlaySourceProvider, IFetchParams } from 'app/@ansyn/overlays/index';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysOpenAerialFetchData } from '@ansyn/core/models/overlay.model';
+import { OpenAerialOverlay, OverlaysOpenAerialFetchData } from '@ansyn/core/models/overlay.model';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService, Overlay } from 'app/@ansyn/core/index';
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { sortByDateDesc } from "@ansyn/core/utils/sorting";
-import { bboxFromGeoJson, geojsonMultiPolygonToPolygon } from "@ansyn/core/utils/geo";
+import { bboxFromGeoJson, geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from "@ansyn/core/utils/geo";
 import { limitArray } from "@ansyn/core/utils/limited-array";
 import { Response } from "@angular/http";
 import { toRadians } from "@ansyn/core/utils/math";
@@ -25,7 +25,7 @@ export interface IOpenAerialOverlaySourceConfig {
 export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = OpenAerialOverlaySourceType;
 
-	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(OpenAerialOverlaysSourceConfig) protected _overlaySourceConfig: IOpenAerialOverlaySourceConfig) {
+	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(OpenAerialOverlaysSourceConfig) protected openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig) {
 		super();
 
 	}
@@ -37,7 +37,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		let bbox = bboxFromGeoJson(fetchParams.region as GeoJSON.Polygon);
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this._overlaySourceConfig.baseUrl;
+		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		let urlWithParams = `${baseUrl}?limit=${fetchParams.limit + 1}&bbox=${bbox[0]}%2C${bbox[1]}%2C${bbox[2]}%2C${bbox[3]}`;
 		return this.http.get<OverlaysOpenAerialFetchData>(urlWithParams)
@@ -54,7 +54,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<Overlay> {
-		let baseUrl = this._overlaySourceConfig.baseUrl;
+		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		let urlWithParams = `${baseUrl}?_id=${id}&properties.sensor=${sourceType}`;
 		return this.http.get<OverlaysOpenAerialFetchData>(urlWithParams)
 			.map(data => {
@@ -83,23 +83,22 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		return this.parseData(overlays[0]);
 	}
 
-	protected parseData(openAerialElement: any): Overlay {
+	protected parseData(openAerialElement: OpenAerialOverlay ): Overlay {
 		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
-		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
+		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
 		overlay.sensorType = openAerialElement.properties.sensor;
 		overlay.sensorName = openAerialElement.platform;
-		overlay.channel = openAerialElement._v; // not sure what is channel for
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms ? openAerialElement.properties.tms : openAerialElement.properties.wmts; // not always just tms
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
-		overlay.date = new Date(openAerialElement.acquisition_start);
-		overlay.photoTime = openAerialElement.acquisition_start;
-		overlay.azimuth = toRadians(180 - 91.2); // how? just a number i found in an idaho request
+		overlay.date = new Date(openAerialElement.acquisition_end);
+		overlay.photoTime = openAerialElement.acquisition_end;
+		overlay.azimuth = toRadians(180 + 45); // didn't find azimuth
 		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true; // why?? not sure why hardcoded (followed the previous provider)
+		overlay.isGeoRegistered = true;
 
 		return overlay;
 	}

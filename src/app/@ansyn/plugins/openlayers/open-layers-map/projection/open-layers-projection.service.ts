@@ -15,7 +15,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectAccurately(point: Point, map: IMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
-		point.coordinates = proj.fromLonLat(point.coordinates, projection);
+		point.coordinates = proj.toLonLat(point.coordinates, projection);
 		return Observable.of(point);
 	}
 

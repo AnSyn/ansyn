@@ -215,10 +215,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
-		const collection: GeoJSON.FeatureCollection<Polygon> = {
-			type: 'FeatureCollection',
-			features: [{ type: 'Feature', geometry: ExtentCalculator.extentToPolygon(extent), properties: {} }]
-		};
+		const collection = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
 		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
 			.subscribe((features: Feature[]) => {
@@ -327,10 +324,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 
 	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon) {
-		const collection: GeoJSON.FeatureCollection<Polygon> = {
-			type: 'FeatureCollection',
-			features: [{ type: 'Feature', geometry: extentFeature, properties: {} }]
-		};
+		const collection: GeoJSON.FeatureCollection<Polygon> = turf.featureCollection([turf.feature(extentFeature)]);
 
 		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
 			.subscribe((features: Feature[]) => {

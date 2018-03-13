@@ -26,7 +26,7 @@ import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { CaseFacetsState } from '@ansyn/core';
+import { CaseFacetsState, OverlaysCriteria } from '@ansyn/core';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -45,7 +45,7 @@ export class FiltersAppEffects {
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
 		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
-			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
+			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays, core.overlaysCriteria);
 			return new SetFilteredOverlaysAction(filteredOverlays);
 		});
 
@@ -136,7 +136,12 @@ export class FiltersAppEffects {
 		return metadata === undefined || metadata === null;
 	}
 
-	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {
+	buildFilteredOverlays(
+		overlays: Map<string, Overlay>,
+		filters: IFiltersState,
+		favoriteOverlays: Overlay[],
+		overlaysCriteria: OverlaysCriteria
+	): string[] {
 		const parsedFilters = Array.from(filters.filters)
 			.map(([key, value]) => ({
 				key: key.modelName,
@@ -146,8 +151,8 @@ export class FiltersAppEffects {
 		if (filters.showOnlyFavorites) {
 			return favorites;
 		} else {
-			const filteredOvelrays = OverlaysService.filter(overlays, parsedFilters);
-			return union(favorites, filteredOvelrays);
+			const filteredOverlays = OverlaysService.filter(overlays, parsedFilters, overlaysCriteria.time);
+			return union(favorites, filteredOverlays);
 		}
 	}
 }

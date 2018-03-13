@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
@@ -9,31 +9,149 @@ import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { OverlaysCriteria } from '@ansyn/core';
+import { times as doNTimes } from 'lodash';
+import { CaseIntervalCriteria, CaseTimeState, OverlaysCriteria } from '@ansyn/core';
+import { sortByDateAsc, sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string, Overlay>, filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[]): string[] {
+	static filter(
+		overlays: Map<string, Overlay>,
+		filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[],
+		timeState: CaseTimeState
+	): string[] {
 		if (!overlays) {
 			return [];
 		}
 
-		const overlaysData = [];
-
+		let overlaysArray;
 		if (!filters || !Array.isArray(filters)) {
-			return Array.from(overlays.keys());
-
+			// no - filters
+			overlaysArray = Array.from( overlays.values() );
+		} else {
+			// filters active
+			overlaysArray = [];
+			overlays.forEach(overlay => {
+				if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
+					overlaysArray.push(overlay);
+				}
+			});
 		}
-		overlays.forEach(overlay => {
-			if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
-				overlaysData.push(overlay.id);
+
+		if (timeState.intervals) {
+			// interval  mode - limit overlays to be 1 per interval scope
+			overlaysArray = OverlaysService.intervalFilter(overlaysArray, timeState);
+		}
+
+		return overlaysArray.length > 0 ? overlaysArray.map(o => o.id) : [];
+	}
+
+	// limit overlays to be 1 per interval scope
+	static intervalFilter(overlays: Overlay[], timeState: CaseTimeState): Overlay[] {
+		// set interval-size and time-frame
+		const intervalSize = timeState.intervals.interval;
+		const tf = {
+			startDate: timeState.from,
+			endDate: timeState.to,
+			span: timeState.to.getTime() - timeState.from.getTime(),
+		};
+
+		// calculate how many intervals
+		const howManyIntervals = Math.floor(tf.span / intervalSize);
+
+		// update time-frame (when time-frame % interval is not 0)
+		if (tf.span % intervalSize > 0) {
+			tf.startDate = new Date(tf.endDate.getTime() - (intervalSize * howManyIntervals));
+			tf.span = tf.endDate.getTime() - tf.startDate.getTime();
+		}
+
+		// initialize intervalsArrays
+		const startTime = tf.startDate.getTime();
+		const intervalsArrays = [];
+
+		doNTimes(howManyIntervals, intervalIndex => {
+			const intervalStartMs = startTime + intervalIndex * intervalSize;
+			intervalsArrays.push({
+				startTime: new Date(intervalStartMs),
+				endTime: new Date(intervalStartMs + intervalSize - 1),
+				pivot: new Date(intervalStartMs + intervalSize / 2 ),
+				overlays: []
+			})
+		});
+
+		// put each overlay in the right interval
+		overlays.forEach(o => {
+			const normalizedTime = o.date.getTime() - startTime;
+			if (normalizedTime < 0) {
+				console.warn(`overlay ${o.id} may be out of time-frame: ${tf.startDate} to ${tf.endDate}`, o);
+			} else {
+				const intervalIndex = Math.floor(normalizedTime / intervalSize);
+				intervalsArrays[intervalIndex].overlays.push(o);
+			}
+		});
+		// return best-matching overlay by criteria
+		let overlaysByCriteria = OverlaysService.overlaysByCriteria(intervalsArrays, timeState.intervals.criteria);
+
+		if (isDevMode()) {	// log for debug purpose
+			console.table(intervalsArrays.map((obj, ind) => {
+				const match = overlaysByCriteria[ind];
+				return {
+					startTime: obj.startTime.toISOString().replace('T', ' '),
+					endTime: obj.endTime.toISOString().replace('T', ' '),
+					pivot: obj.pivot.toISOString().replace('T', ' '),
+					overlays: obj.overlays.length,
+					match: match ? `id: ${match.id} time: ${match.date.toISOString().replace('T', ' ')}` : 'none',
+					by: timeState.intervals.criteria.type
+				};
+			}));
+		}
+
+		return overlaysByCriteria;
+	}
+
+	// select best-matching overlay by criteria
+	static overlaysByCriteria(intervals: Array<any>, criteria: CaseIntervalCriteria): Overlay[] {
+		const result: Overlay[] = [];
+
+		// find the matching overlay for each interval by criteria
+		intervals.forEach(interval => {
+			let overlays = interval.overlays;
+			// const pivot = interval.pivot
+			if (overlays.length > 0) {
+				switch (criteria.type) {
+					case 'best':
+						// remove overlay outside of interval best-scope (best-before/best-after)
+						overlays = overlays.filter(o => {
+							const overlayTime: number = o.date.getTime();
+							const intervalLow: number = interval.pivot - criteria.before;
+							const intervalHigh: number = interval.pivot + criteria.after;
+							return intervalLow <= overlayTime && overlayTime <= intervalHigh;
+						});
+						// To do: sort by best;
+						break;
+					case 'closest-before':
+						overlays = overlays.filter(o => o.date.getTime() >= interval.pivot)	// remove overlays after pivot
+							.sort(sortByDateDesc);	// sort - latest first
+						break;
+					case 'closest-after':
+						overlays = overlays.filter(o => o.date.getTime() <= interval.pivot)	// remove overlays before pivot
+							.sort(sortByDateAsc);	// sort - earliest first
+						break;
+					case 'closest-both':
+						overlays = overlays.sort((o1, o2) => // sort - closest
+							Math.abs(o1.date - interval.pivot) - Math.abs(o1.date - interval.pivot));
+						break;
+				}
+				if (overlays.length > 0) {
+					result.push(overlays[0]);
+				}
 			}
 		});
 
-		return overlaysData;
+		return result;
 	}
 
 	static sort(overlays: any[]): Overlay[] {

@@ -92,7 +92,9 @@
 			</div>
 			<div class="pop-content time-selection time-selection--intervals"
 				 [class.visible]="timeSelectionEditIcon && comboBoxesProperties.timeFilter === 'Intervals'">
-				<ansyn-timeline-intervals-picker (closeComponent)="toggleTimeFilterEdit()">
+				<ansyn-timeline-intervals-picker
+					(closeComponent)="toggleTimeFilterEdit()"
+					(applyDate)="applyTimelinePickerResult($event)">
 				</ansyn-timeline-intervals-picker>
 			</div>
 		</div>

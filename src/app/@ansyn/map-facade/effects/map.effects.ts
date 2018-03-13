@@ -11,8 +11,8 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
 import * as intersect from '@turf/intersect';
+import { OverlaysService } from '@ansyn/overlays';
 import { polygon } from '@turf/helpers';
-import { OverlaysService } from "@ansyn/overlays";
 import {
 	AlertMsgTypes,
 	BackToWorldSuccess,
@@ -40,7 +40,6 @@ import {
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
-import { OverlaysService } from '@ansyn/overlays';
 import 'rxjs/add/observable/forkJoin';
 import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
@@ -193,7 +192,6 @@ export class MapEffects {
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
 		.filter(map => Boolean(map))
-		.filter(map => OverlaysService.isFullOverlay(map.data.overlay))
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
 			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));

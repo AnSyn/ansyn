@@ -234,13 +234,18 @@ export class MapAppEffects {
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.do( x => console.log(x))
 		.filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay))
-		.map((action: DisplayOverlayAction) =>
-			new RequestOverlayByIDFromBackendAction({
+		.map((action: DisplayOverlayAction) => {
+			console.warn('PIkaboo', action.payload)
+			const a = new RequestOverlayByIDFromBackendAction({
 				overlayId: action.payload.overlay.id,
 				sourceType: action.payload.overlay.sourceType,
 				mapId: action.payload.mapId
-			}));
+			})
+			return a;
+		});
+
 
 	/**
 	 * @type Effect

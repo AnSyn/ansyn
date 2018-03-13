@@ -55,12 +55,12 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 
 	getById(id: string, sourceType: string): Observable<Overlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
-		let urlWithParams = `${baseUrl}?_id=${id}&properties.sensor=${sourceType}`;
+		let urlWithParams = `${baseUrl}?_id=${id}`;
 		return this.http.get<OverlaysOpenAerialFetchData>(urlWithParams)
 			.map(data => {
 				return this.extractData(data.results);
 			})
-			.catch((error: Response | any) => {
+			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	}

@@ -44,17 +44,23 @@ export class ImageryComponentManager {
 	}
 
 	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
-		if (!this._activeMap) {
-			return Promise.resolve();
-		}
-		return this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
-			this.resetView(layers[0], position);
-			if (layers.length > 0) {
-				for (let i = 1; i < layers.length; i++) {
-					this._activeMap.addLayer(layers[i]);
-				}
+		return new Promise(resolve => {
+			if (!this._activeMap) {
+				resolve();
 			}
-			return layers;
+
+
+			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+				this.resetView(layers[0], position).subscribe(() => {
+					if (layers.length > 0) {
+						for (let i = 1; i < layers.length; i++) {
+							this._activeMap.addLayer(layers[i]);
+						}
+					}
+
+					resolve(layers);
+				});
+			});
 		});
 	}
 

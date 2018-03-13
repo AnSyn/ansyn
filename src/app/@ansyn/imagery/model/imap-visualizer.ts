@@ -3,6 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
 import { Feature } from 'geojson';
+import { Observable } from 'rxjs/Observable';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -62,7 +63,7 @@ export interface IMapVisualizer {
 	 * 1. re-add the layer
 	 * 2. reproject your entities
 	 */
-	onResetView();
+	onResetView(): Observable<boolean>;
 
 	/**
 	 * @description Replace all existing entities (CRUD)
@@ -74,7 +75,7 @@ export interface IMapVisualizer {
 	 * @description ADD Or Update Entities (CRU)
 	 * @param {IVisualizerEntity[]} logicalEntities
 	 */
-	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]);
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean>
 
 	/**
 	 * @description Delete Single Entity (D)

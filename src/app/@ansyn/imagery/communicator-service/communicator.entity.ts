@@ -90,11 +90,11 @@ export class CommunicatorEntity {
 		return null;
 	}
 
-	public getCenter(): GeoJSON.Point {
+	public getCenter(): Observable<GeoJSON.Point> {
 		if (this.ActiveMap) {
 			return this.ActiveMap.getCenter();
 		}
-		return null;
+		return Observable.of(null);
 	}
 
 	public updateSize(): void {
@@ -131,9 +131,9 @@ export class CommunicatorEntity {
 		this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): CaseMapPosition {
+	public getPosition(): Observable<CaseMapPosition> {
 		if (!this.ActiveMap) {
-			throw new Error('missing active map');
+			return Observable.throw('missing active map');
 		}
 		return this.ActiveMap.getPosition();
 	}
@@ -164,11 +164,13 @@ export class CommunicatorEntity {
 		return this._manager.visualizers;
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this._manager) {
-			this._manager.resetView(layer, position, extent);
+			return this._manager.resetView(layer, position, extent);
 		}
+
+		return Observable.of(true);
 	}
 
 	public addLayer(layer: any) {

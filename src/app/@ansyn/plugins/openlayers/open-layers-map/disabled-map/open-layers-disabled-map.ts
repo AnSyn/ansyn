@@ -11,6 +11,8 @@ import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import * as turf from '@turf/turf';
+import * as GeoJSON from 'geojson';
 
 export class OpenLayersDisabledMap extends IMap<Map> {
 	static mapType = 'openLayersMap';
@@ -41,15 +43,12 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		this.setMainLayer(layers[0], position);
 	}
 
-	getCenter(): GeoJSON.Point {
+	public getCenter(): Observable<GeoJSON.Point> {
 		const view = this.mapObject.getView();
-		const projection = view.getProjection();
 		const center = view.getCenter();
-		const transformedCenter = proj.transform(center, projection, 'EPSG:4326');
-		return {
-			type: 'Point',
-			coordinates: transformedCenter
-		};
+		const point = <GeoJSON.Point> turf.geometry('Point', center);
+
+		return this.projectionService.projectAccurately(point, this);
 	}
 
 	setCenter(center: GeoJSON.Point, animation: boolean) {
@@ -124,8 +123,8 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	setPosition(position: CaseMapPosition): void {
 	}
 
-	getPosition(): CaseMapPosition {
-		return undefined;
+	getPosition(): Observable<CaseMapPosition> {
+		return Observable.of(undefined);
 	}
 
 	setRotation(rotation: number): void {

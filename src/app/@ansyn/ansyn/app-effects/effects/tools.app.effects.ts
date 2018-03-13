@@ -103,7 +103,7 @@ export class ToolsAppEffects {
 		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
 		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
-		.mergeMap(() =>  [
+		.mergeMap(() => [
 			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
 			new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })
 		]);
@@ -296,10 +296,8 @@ export class ToolsAppEffects {
 		.ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
 		.filter(communicator => Boolean(communicator))
-		.map((communicator: CommunicatorEntity) => {
-			const activeMapCenter = communicator.getCenter();
-			return new SetActiveCenter(activeMapCenter.coordinates);
-		});
+		.mergeMap((communicator: CommunicatorEntity) => communicator.getCenter())
+		.map((activeMapCenter: GeoJSON.Point) => new SetActiveCenter(activeMapCenter.coordinates));
 
 	/**
 	 * @type Effect

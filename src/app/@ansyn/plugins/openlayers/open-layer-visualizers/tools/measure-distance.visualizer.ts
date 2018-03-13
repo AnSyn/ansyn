@@ -19,6 +19,7 @@ import { IVisualizerEntity } from '@ansyn/imagery/model';
 import { getPointByGeometry } from '@ansyn/core/utils';
 import { VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
+import { Observable } from 'rxjs/Observable';
 
 export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
 
@@ -102,11 +103,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new GeoJSON();
 	}
 
-	onResetView() {
-		super.onResetView();
+	onResetView(): Observable<boolean> {
+		let obs = super.onResetView();
 		if (this.drawInteractionHandler) {
 			this.createInteraction();
 		}
+
+		return obs;
 	}
 
 	clearInteractionAndEntities() {
@@ -142,7 +145,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					id: UUID.UUID(),
 					featureJson
 				};
-				this.addOrUpdateEntities([newEntity]);
+				this.addOrUpdateEntities([newEntity]).subscribe();
 			});
 	}
 
@@ -206,9 +209,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const featureId = <string> feature.getId();
 			const entityMap = this.idToEntity.get(featureId);
 			if (entityMap) {
-				const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);
-				const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
-				allLinePoint = new Point(lonLatCords);
+				const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+				const centroid = getPointByGeometry(featureGeoJson.geometry);
+				allLinePoint = new Point(<[number, number]> centroid.coordinates);
 			}
 		}
 

@@ -343,17 +343,18 @@ export class MapEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.do(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
 			const mapId = action.payload.mapId;
-			let mapPosition: CaseMapPosition = this.communicatorsService.provide(mapId).getPosition();
-			if (!mapPosition) {
-				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-				mapPosition = map.data.position;
-			}
-
-			mapState.mapsList.forEach((mapItem: CaseMapState) => {
-				if (mapId !== mapItem.id) {
-					const comm = this.communicatorsService.provide(mapItem.id);
-					comm.setPosition(mapPosition);
+			this.communicatorsService.provide(mapId).getPosition().subscribe((mapPosition: CaseMapPosition) => {
+				if (!mapPosition) {
+					const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+					mapPosition = map.data.position;
 				}
+
+				mapState.mapsList.forEach((mapItem: CaseMapState) => {
+					if (mapId !== mapItem.id) {
+						const comm = this.communicatorsService.provide(mapItem.id);
+						comm.setPosition(mapPosition);
+					}
+				});
 			});
 		});
 

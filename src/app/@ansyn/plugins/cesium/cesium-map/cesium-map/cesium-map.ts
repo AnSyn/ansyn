@@ -23,8 +23,8 @@ export class CesiumMap extends IMap {
 		this.mapObject = {};
 	}
 
-	getCenter(): GeoJSON.Point {
-		throw new Error('Method not implemented.');
+	getCenter(): Observable<GeoJSON.Point> {
+		return Observable.throw('Method not implemented.');
 	}
 
 	setCenter(center: GeoJSON.Point, animation: boolean) {
@@ -51,8 +51,8 @@ export class CesiumMap extends IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	getPosition(): CaseMapPosition {
-		throw new Error('Method not implemented.');
+	getPosition(): Observable<CaseMapPosition> {
+		return Observable.throw('Method not implemented.');
 	}
 
 	setRotation(rotation: number): void {

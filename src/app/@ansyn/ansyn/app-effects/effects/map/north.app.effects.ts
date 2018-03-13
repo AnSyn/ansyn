@@ -88,7 +88,7 @@ export class NorthAppEffects {
 				resolve(0);
 			} else {
 				const currentRotation = comEntity.ActiveMap.mapObject.getView().getRotation();
-				northPlugin.setCorrectedNorth(comEntity.ActiveMap.mapObject)
+				northPlugin.setCorrectedNorth(comEntity.ActiveMap)
 					.then(north => {
 						comEntity.ActiveMap.mapObject.getView().setRotation(currentRotation);
 						resolve(north);

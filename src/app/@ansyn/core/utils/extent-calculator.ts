@@ -10,6 +10,17 @@ export class ExtentCalculator {
 		return <CaseMapExtent> [...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
 	}
 
+	static extentToPolygon(extent: CaseMapExtent): CaseMapExtentPolygon {
+		const minX = extent[0];
+		const minY = extent[1];
+		const maxX = extent[2];
+		const maxY = extent[3];
+
+		const coordinates = [[minX, minY], [minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]];
+
+		return { type: 'Polygon', coordinates: [coordinates] };
+	}
+
 	static transform(transFunc, extentPolygon: CaseMapExtentPolygon, source, destination): CaseMapExtentPolygon {
 		const transformExtent = cloneDeep(extentPolygon);
 		transformExtent.coordinates = [

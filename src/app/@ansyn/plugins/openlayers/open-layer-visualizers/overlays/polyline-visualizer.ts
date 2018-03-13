@@ -12,6 +12,7 @@ import Select from 'ol/interaction/select'
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
 
@@ -123,9 +124,9 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return defaultStroke;
 	}
 
-	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		const conversion = this.convertPolygonToPolyline(logicalEntities);
-		super.addOrUpdateEntities(conversion);
+		return super.addOrUpdateEntities(conversion);
 	}
 
 	private convertPolygonToPolyline(logicalEntities: IVisualizerEntity[]): IVisualizerEntity[] {

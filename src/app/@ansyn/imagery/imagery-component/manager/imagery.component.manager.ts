@@ -58,17 +58,23 @@ export class ImageryComponentManager {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
 			this._activeMap.resetView(layer, position, extent);
-			this.resetVisualizers();
+			return this.resetVisualizers();
 		}
+
+		return Observable.of(true);
 	}
 
-	private resetVisualizers() {
+	private resetVisualizers(): Observable<boolean> {
+		let resetObservables = [];
+
 		this.visualizers.forEach((visualizer) => {
-			visualizer.onResetView();
+			resetObservables.push(visualizer.onResetView());
 		});
+
+		return Observable.forkJoin(resetObservables).map(results => results.every(b => b === true));
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {

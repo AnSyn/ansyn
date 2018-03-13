@@ -4,10 +4,10 @@ import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/cor
 import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import OLMap from 'ol/map';
 import View from 'ol/view';
-import proj from 'ol/proj';
 import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
 import olGeoJSON from 'ol/format/geojson';
+import OLGeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
 import Vector from 'ol/source/vector';
 import Raster from 'ol/source/raster';
@@ -19,7 +19,6 @@ import VectorLayer from 'ol/layer/vector';
 import MousePosition from 'ol/control/mouseposition';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
-import OLGeoJSON from 'ol/format/geojson';
 import * as turf from '@turf/turf';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
@@ -43,6 +42,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
 	private projectionSubscription: Subscription = null;
+	private approximateProjectionSubscription: Subscription = null;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	private _flags = {
@@ -111,6 +111,15 @@ export class OpenLayersMap extends IMap<OLMap> {
 			.projectAccurately(point, this).subscribe(cb);
 	}
 
+	private approximatePositionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+		if (this.approximateProjectionSubscription) {
+			this.approximateProjectionSubscription.unsubscribe();
+		}
+			const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+			this.approximateProjectionSubscription = this.projectionService.projectApproximately(point, this)
+				.subscribe(cb);
+	}
+
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		const [mainLayer] = layers;
 		const view = this.createView(mainLayer);
@@ -163,6 +172,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
+		}
+
+		if (this.approximateProjectionSubscription) {
+			this.approximateProjectionSubscription.unsubscribe();
 		}
 
 		const rotation = this.mapObject.getView().getRotation();
@@ -437,8 +450,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 	// *****-- pointer move --********
 
 	public onPointerMove(e) {
-		this.positionToPoint(e.coordinate, p => this.pointerMove.emit(p.coordinates));
-	};
+		this.approximatePositionToPoint(e.coordinate, p => this.pointerMove.emit(p.coordinates));
+	}
 
 	public setPointerMove(enable: boolean) {
 		// clear previous move listeners
@@ -458,6 +471,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public dispose() {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
+		}
+
+		if (this.approximateProjectionSubscription) {
+			this.approximateProjectionSubscription.unsubscribe();
 		}
 	}
 }

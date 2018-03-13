@@ -21,14 +21,6 @@ export class ExtentCalculator {
 		return { type: 'Polygon', coordinates: [coordinates] };
 	}
 
-	static transform(transFunc, extentPolygon: CaseMapExtentPolygon, source, destination): CaseMapExtentPolygon {
-		const transformExtent = cloneDeep(extentPolygon);
-		transformExtent.coordinates = [
-			transformExtent.coordinates[0].map((point: [number, number]) => transFunc(point, source, destination))
-		];
-		return transformExtent;
-	}
-
 	static calcRotation(extentPolygon: CaseMapExtentPolygon) {
 		// topLeft , topRight
 		const [[[x1, y1], [x2, y2]]] = extentPolygon.coordinates;

@@ -38,4 +38,8 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return;
 	}
 
+	onResetView() {
+		this.clearEntities();
+		this.initLayers();
+	}
 }

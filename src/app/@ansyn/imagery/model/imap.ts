@@ -22,7 +22,7 @@ export abstract class IMap<T = any> {
 	static addGroupVectorLayer(layer: any, groupName: string) {
 	}
 
-	abstract getCenter(): GeoJSON.Point;
+	abstract getCenter(): Observable<GeoJSON.Point>;
 
 	abstract setCenter(center: GeoJSON.Point, animation: boolean);
 
@@ -45,7 +45,7 @@ export abstract class IMap<T = any> {
 
 	abstract getRotation(): number;
 
-	abstract getPosition(): CaseMapPosition;
+	abstract getPosition(): Observable<CaseMapPosition>;
 
 	abstract updateSize(): void;
 

@@ -8,6 +8,8 @@ import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
+import GeoJSON from 'ol/format/geojson';
+import { Observable } from 'rxjs/Observable';
 
 export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
 
@@ -18,6 +20,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
+	geoJsonFormat: GeoJSON;
 
 	constructor(style: VisualizerStateStyle) {
 		super(ContextEntityVisualizerType, style);
@@ -46,6 +49,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+
+		this.geoJsonFormat = new GeoJSON();
 	}
 
 	private getText(feature) {
@@ -70,29 +75,27 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const projection = view.getProjection();
 
 		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
-			const lonLat = getPointByGeometry(entityMap.originalEntity.featureJson.geometry);
-			const lonLatCords = proj.fromLonLat(lonLat.coordinates, projection);
-			const point = new Point(lonLatCords);
+			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+			const centroid = getPointByGeometry(featureGeoJson.geometry);
+			const point = new Point(<[number, number]> centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
-			const polygon = entityMap.originalEntity.featureJson.geometry as GeoJSON.Polygon;
-			const lonLatCords = proj.fromLonLat(polygon.coordinates, projection);
-			const projectedPolygon = new Polygon(lonLatCords);
+			const projectedPolygon = entityMap.feature.getGeometry() as Polygon;
 
 			this.idToCachedCenter.set(featureId, projectedPolygon);
 			return projectedPolygon;
 		}
 	}
 
-	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		logicalEntities.forEach((entity) => {
 			if (this.idToCachedCenter.has(entity.id)) {
 				this.idToCachedCenter.delete(entity.id);
 			}
 		});
-		super.addOrUpdateEntities(logicalEntities);
+		return super.addOrUpdateEntities(logicalEntities);
 	}
 
 	setReferenceDate(date: Date) {

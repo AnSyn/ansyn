@@ -16,6 +16,7 @@ import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { FeatureCollection, GeoJsonObject, GeometryObject } from 'geojson';
+import { Observable } from 'rxjs/Observable';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -209,7 +210,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		return (<any>feature).styleCache;
 	}
 
-	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]) {
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
+		if (logicalEntities.length <= 0) {
+			return Observable.of(true);
+		}
+
 		const logicalEntitiesCopy = [...logicalEntities];
 
 		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
@@ -218,33 +223,21 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		};
 
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
-			const existingEntity = this.idToEntity.get(entity.id);
-			if (existingEntity) {
-				const featureCollection: FeatureCollection<GeometryObject> = {
-					type: 'FeatureCollection',
-					features: [entity.featureJson]
-				};
-				this.iMap.projectionService.projectCollectionAccuratelyToImage(featureCollection, this.iMap)
-					.subscribe((features: Feature[]) => {
-						const [relevantFeature] = features;
-						existingEntity.feature.setGeometry(relevantFeature.getGeometry());
-						existingEntity.originalEntity = entity;
-				});
-			} else {
-				const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };
-				featuresCollectionToAdd.features.push(clonedFeatureJson);
-				this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
-			}
+			this.removeEntity(entity.id);
+			const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };
+			featuresCollectionToAdd.features.push(clonedFeatureJson);
+			this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
 		});
 
-		this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
-			.subscribe((features: Feature[]) => {
+		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+			.map((features: Feature[]) => {
 			features.forEach((feature: Feature) => {
 				const id: string = <string>feature.getId();
 				const existingEntity = this.idToEntity.get(id);
 				this.idToEntity.set(id, { ...existingEntity, feature: feature });
 			});
 			this.source.addFeatures(features);
+			return true;
 		});
 	}
 
@@ -261,7 +254,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			this.removeEntity(id);
 		});
 
-		this.addOrUpdateEntities(logicalEntities);
+		this.addOrUpdateEntities(logicalEntities).subscribe();
 	}
 
 	removeEntity(logicalEntityId: string) {
@@ -283,11 +276,11 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		return entities;
 	}
 
-	onResetView() {
+	onResetView(): Observable<boolean> {
 		const currentEntities: IVisualizerEntity[] = this.getEntities();
 		this.clearEntities();
 		this.initLayers();
-		this.addOrUpdateEntities(currentEntities);
+		return this.addOrUpdateEntities(currentEntities);
 	}
 
 	dispose() {

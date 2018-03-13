@@ -176,15 +176,15 @@ export class MapAppEffects {
 							observable = Observable.fromPromise(communicator.setActiveMap('openLayersMap', mapData.position, layer));
 						}
 						if (intersection < this.config.overlayCoverage) {
-							observable = Observable.of(communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint)));
+							observable = communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
 						} else {
-							observable = Observable.of(communicator.resetView(layer, mapData.position));
+							observable = communicator.resetView(layer, mapData.position);
 						}
 					} else {
 						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
 							observable = Observable.fromPromise(communicator.setActiveMap('disabledOpenLayersMap', mapData.position, layer));
 						} else {
-							observable = Observable.of(communicator.resetView(layer, mapData.position));
+							observable = communicator.resetView(layer, mapData.position);
 						}
 					}
 					return observable.map(() => new DisplayOverlaySuccessAction(payload));

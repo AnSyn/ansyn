@@ -141,7 +141,7 @@ describe('ToolsAppEffects', () => {
 	it('getActiveCenter$ should get center from active communicator and return SetCenterAction', () => {
 		const activeCommunicator = {
 			getCenter: () => {
-				return { coordinates: [0, 0] };
+				return Observable.of({ coordinates: [0, 0] });
 			}
 		};
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);

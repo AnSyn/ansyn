@@ -5,10 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
+import { TimelineIntervalsPickerComponent } from './components/timeline-intervals-picker/timeline-intervals-picker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models';
-import { TimelineIntervalsPickerComponent } from '@ansyn/status-bar/components/timeline-intervals-picker/timeline-intervals-picker.component';
 import { DatePickerComponent } from '@ansyn/core/components/ansyn-date-picker/ansyn-date-picker.component';
 
 

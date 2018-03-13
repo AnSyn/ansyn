@@ -334,7 +334,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
 			.subscribe((features: Feature[]) => {
-				// TODO: either convert olFeature to GeoJSON or find a way to get the centroid of an olFeature
 				const view: View = map.getView();
 				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });

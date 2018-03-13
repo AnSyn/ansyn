@@ -1,5 +1,6 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { VisualizerStateStyle } from '../models/visualizer-state';
+import { Observable } from 'rxjs/Observable';
 
 export const FrameVisualizerType = 'FrameVisualizer';
 
@@ -38,8 +39,9 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return;
 	}
 
-	onResetView() {
+	onResetView(): Observable<boolean> {
 		this.clearEntities();
 		this.initLayers();
+		return Observable.of(true);
 	}
 }

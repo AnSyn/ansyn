@@ -19,6 +19,7 @@ import VectorLayer from 'ol/layer/vector';
 import MousePosition from 'ol/control/mouseposition';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
+import OLGeoJSON from 'ol/format/geojson';
 import * as turf from '@turf/turf';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
@@ -42,6 +43,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
 	private projectionSubscription: Subscription = null;
+	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	private _flags = {
 		singleClickHandler: null
@@ -333,13 +335,15 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
 			.subscribe((features: Feature[]) => {
 				// TODO: either convert olFeature to GeoJSON or find a way to get the centroid of an olFeature
-				const transformedExtent = features[0].getGeometry();
-
-				const center = ExtentCalculator.calcCenter(extentFeature);
-				const rotation = ExtentCalculator.calcRotation(extentFeature);
-				const resolution = ExtentCalculator.calcResolution(extentFeature, map.getSize(), rotation);
-
 				const view: View = map.getView();
+				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
+					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
+				const geoJsonExtent = geoJsonFeature.features[0].geometry;
+
+				const center = ExtentCalculator.calcCenter(geoJsonExtent);
+				const rotation = ExtentCalculator.calcRotation(geoJsonExtent);
+				const resolution = ExtentCalculator.calcResolution(geoJsonExtent, map.getSize(), rotation);
+
 				view.setCenter(center);
 				view.setRotation(rotation);
 				view.setResolution(resolution);

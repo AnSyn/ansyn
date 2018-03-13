@@ -18,7 +18,7 @@ import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 import MousePosition from 'ol/control/mouseposition';
 import Feature from 'ol/feature';
-import olPolygon from 'ol/geom/Polygon';
+import olPolygon from 'ol/geom/polygon';
 import * as turf from '@turf/turf';
 
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';

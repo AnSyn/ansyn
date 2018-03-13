@@ -100,7 +100,7 @@ describe('MapEffects', () => {
 				setPosition: () => {
 				},
 				getPosition: () => {
-					return {};
+					return Observable.of({});
 				}
 			};
 			const fakeMap: CaseMapState = <any> {id: 'imagery2'};

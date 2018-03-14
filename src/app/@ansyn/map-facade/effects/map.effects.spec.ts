@@ -107,7 +107,7 @@ describe('MapEffects', () => {
 			const fakeMap: CaseMapState = <any> {id: 'imagery2'};
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'setPosition');
+			spyOn(communicator, 'setPosition').and.callFake(() => communicator.setPosition());
 			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });

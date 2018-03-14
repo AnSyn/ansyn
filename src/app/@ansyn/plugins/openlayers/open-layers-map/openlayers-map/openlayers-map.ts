@@ -99,7 +99,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this.showGroups.set('layers', true);
-		this.initMap(element, _mapLayers, position);
+		this.initMap(element, _mapLayers, position).subscribe();
 	}
 
 	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
@@ -120,7 +120,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				.subscribe(cb);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		const [mainLayer] = layers;
 		const view = this.createView(mainLayer);
 		const coordinateFormat: ol.CoordinateFormatType = (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString();
@@ -131,11 +131,16 @@ export class OpenLayersMap extends IMap<OLMap> {
 			controls: [new ScaleLine(), new MousePosition({ projection: 'EPSG:4326', coordinateFormat  })],
 			view
 		});
+
+		let setPositionObservable: Observable<boolean> = Observable.of(true);
 		if (position) {
-			this.setPosition(position);
+			setPositionObservable = this.setPosition(position);
 		}
-		this.initListeners();
-		this.setGroupLayers();
+
+		return setPositionObservable.do(() => {
+			this.initListeners();
+			this.setGroupLayers();
+		});
 	}
 
 	initListeners() {
@@ -170,7 +175,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent) {
+	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}
@@ -188,8 +193,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 			this.fitToExtent(extent);
 			this.mapObject.getView().setRotation(rotation);
 		} else {
-			this.setPosition(position);
+			return this.setPosition(position);
 		}
+
+		return Observable.of(true);
 	}
 
 	public getLayerById(id: string): Layer {
@@ -295,8 +302,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return this._mapObject;
 	}
 
-	public setCenter(center: GeoJSON.Point, animation: boolean) {
-		this.projectionService.projectAccuratelyToImage(center, this).subscribe(projectedCenter => {
+	public setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+		return this.projectionService.projectAccuratelyToImage(center, this).map(projectedCenter => {
 			const olCenter = new Point(<ol.Coordinate> projectedCenter.coordinates);
 			if (animation) {
 				this.flyTo(olCenter);
@@ -304,6 +311,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 				const view = this._mapObject.getView();
 				view.setCenter(olCenter.getCoordinates());
 			}
+
+			return true;
 		});
 	}
 
@@ -336,12 +345,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 			.map((collection: FeatureCollection<GeometryObject>) => collection.features[0].geometry as Polygon);
 	}
 
-
-	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon) {
+	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
 		const collection: GeoJSON.FeatureCollection<Polygon> = turf.featureCollection([turf.feature(extentFeature)]);
 
-		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
-			.subscribe((features: Feature[]) => {
+		return this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
+			.map((features: Feature[]) => {
 				const view: View = map.getView();
 				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
@@ -354,11 +362,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 				view.setCenter(center);
 				view.setRotation(rotation);
 				view.setResolution(resolution);
-
+				return true;
 			});
 	}
 
-	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): void {
+	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = viewProjection.getCode() === projectedState.projection.code;
@@ -367,8 +375,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 			view.setCenter(center);
 			view.setZoom(zoom);
 			view.setRotation(rotation);
+			return Observable.of(true);
 		} else {
-			this.fitRotateExtent(this.mapObject, extentPolygon);
+			return this.fitRotateExtent(this.mapObject, extentPolygon);
 		}
 	}
 

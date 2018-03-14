@@ -313,11 +313,14 @@ export class MapEffects {
 		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position)
-		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
-			const actions = [];
+		.do(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+				const activeMap = MapFacadeService.activeMap(mapState);
+				const communicator = this.communicatorsService.provide(payload.id);
+				return communicator.setPosition(activeMap.data.position);
+			}
+		).switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
-			const communicator = this.communicatorsService.provide(payload.id);
-			communicator.setPosition(activeMap.data.position);
+			const actions = [];
 			const updatedMapsList = [...mapState.mapsList];
 			updatedMapsList.forEach((map: CaseMapState) => {
 				if (map.id === payload.id) {
@@ -352,7 +355,7 @@ export class MapEffects {
 				mapState.mapsList.forEach((mapItem: CaseMapState) => {
 					if (mapId !== mapItem.id) {
 						const comm = this.communicatorsService.provide(mapItem.id);
-						comm.setPosition(mapPosition);
+						comm.setPosition(mapPosition).subscribe();
 					}
 				});
 			});

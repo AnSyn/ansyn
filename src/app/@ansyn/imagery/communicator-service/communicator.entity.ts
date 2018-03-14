@@ -118,22 +118,25 @@ export class CommunicatorEntity {
 	}
 
 
-	public setCenter(center: GeoJSON.Point, animation: boolean = true) {
+	public setCenter(center: GeoJSON.Point, animation: boolean = true): Observable<boolean> {
 		if (this.ActiveMap) {
-			this.ActiveMap.setCenter(center, animation);
+			return this.ActiveMap.setCenter(center, animation);
 		}
+
+		return Observable.of(true);
 	}
 
-	public setPosition(position: CaseMapPosition) {
+	public setPosition(position: CaseMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
-			throw new Error('missing active map');
+			return Observable.throw(new Error('missing active map'));
 		}
-		this.ActiveMap.setPosition(position);
+
+		return this.ActiveMap.setPosition(position);
 	}
 
 	public getPosition(): Observable<CaseMapPosition> {
 		if (!this.ActiveMap) {
-			return Observable.throw('missing active map');
+			return Observable.throw(new Error('missing active map'));
 		}
 		return this.ActiveMap.getPosition();
 	}

@@ -19,7 +19,7 @@ export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cas
 export class CasesService {
 	static defaultTime: CaseTimeState = {
 		type: 'absolute',
-		from: moment().subtract(1, 'y').toDate(),
+		from: moment().subtract(3, 'y').toDate(),
 		to: new Date()
 	};
 

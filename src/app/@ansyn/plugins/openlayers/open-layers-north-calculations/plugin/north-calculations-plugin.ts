@@ -7,6 +7,7 @@ import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import Coordinate = ol.Coordinate;
+import OLMap from 'ol/map';
 
 export const openLayersNorthCalculations = 'openLayersNorthCalculations';
 
@@ -71,7 +72,7 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 	}
 
 // override this method
-	projectPoints(iMap: IMap, coordinates: Coordinate[]): Observable<Point[]> {
+	projectPoints(iMap: IMap<OLMap>, coordinates: Coordinate[]): Observable<Point[]> {
 		const observables = [];
 
 		coordinates.forEach(coordinate => {

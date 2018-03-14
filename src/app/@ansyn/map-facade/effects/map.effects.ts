@@ -317,8 +317,8 @@ export class MapEffects {
 				const activeMap = MapFacadeService.activeMap(mapState);
 				const communicator = this.communicatorsService.provide(payload.id);
 				return communicator.setPosition(activeMap.data.position);
-			}
-		).switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+			})
+		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMapsList = [...mapState.mapsList];
@@ -343,22 +343,28 @@ export class MapEffects {
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.do(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
+		.switchMap((action: SynchronizeMapsAction) => {
 			const mapId = action.payload.mapId;
-			this.communicatorsService.provide(mapId).getPosition().subscribe((mapPosition: CaseMapPosition) => {
-				if (!mapPosition) {
-					const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
-					mapPosition = map.data.position;
-				}
+			return this.communicatorsService.provide(mapId).getPosition()
+				.map((position: CaseMapPosition) => [position, action]);
+		})
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
+			const mapId = action.payload.mapId;
+			if (!mapPosition) {
+				const map: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+				mapPosition = map.data.position;
+			}
 
-				mapState.mapsList.forEach((mapItem: CaseMapState) => {
-					if (mapId !== mapItem.id) {
-						const comm = this.communicatorsService.provide(mapItem.id);
-						comm.setPosition(mapPosition).subscribe();
-					}
-				});
+			const setPositionObservables = [];
+			mapState.mapsList.forEach((mapItem: CaseMapState) => {
+				if (mapId !== mapItem.id) {
+					const comm = this.communicatorsService.provide(mapItem.id);
+					setPositionObservables.push(comm.setPosition(mapPosition));
+				}
 			});
+
+			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
 		});
 
 	@Effect()

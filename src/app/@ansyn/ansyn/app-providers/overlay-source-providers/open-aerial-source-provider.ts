@@ -39,7 +39,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		// add 1 to limit - so we'll know if provider have more then X overlays
-		let urlWithParams = `${baseUrl}?limit=${fetchParams.limit + 1}&bbox=${bbox[0]}%2C${bbox[1]}%2C${bbox[2]}%2C${bbox[3]}`;
+		let urlWithParams = `${baseUrl}?limit=${fetchParams.limit + 1}&bbox=${bbox[0]}%2C${bbox[1]}%2C${bbox[2]}%2C${bbox[3]}&acquisition_from=${fetchParams.timeRange.start.toISOString()}&acquisition_to=${fetchParams.timeRange.end.toISOString()}`;
 		return this.http.get<OverlaysOpenAerialFetchData>(urlWithParams)
 			.map(data => {
 				return this.extractArrayData(data.results);

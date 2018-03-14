@@ -98,6 +98,7 @@ describe('MapEffects', () => {
 		it('listen to SynchronizeMapsAction', () => {
 			const communicator = {
 				setPosition: () => {
+					return Observable.of(true);
 				},
 				getPosition: () => {
 					return Observable.of({});

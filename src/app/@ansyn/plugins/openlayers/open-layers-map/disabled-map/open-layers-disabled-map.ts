@@ -51,8 +51,8 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		return this.projectionService.projectAccurately(point, this);
 	}
 
-	setCenter(center: GeoJSON.Point, animation: boolean) {
-
+	setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+		return Observable.of(true);
 	}
 
 	addLayerIfNotExist(layer: Layer) {
@@ -62,8 +62,9 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	toggleGroup(groupName: string) {
 	}
 
-	resetView(layer: any, position?: CaseMapPosition): void {
+	resetView(layer: any, position?: CaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
+		return Observable.of(true);
 	}
 
 	setMainLayer(layer: Layer, position?: CaseMapPosition) {
@@ -120,7 +121,8 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	removeLayer(layer: any): void {
 	}
 
-	setPosition(position: CaseMapPosition): void {
+	setPosition(position: CaseMapPosition): Observable<boolean> {
+		return Observable.of(true);
 	}
 
 	getPosition(): Observable<CaseMapPosition> {

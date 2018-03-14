@@ -24,19 +24,19 @@ export class CesiumMap extends IMap {
 	}
 
 	getCenter(): Observable<GeoJSON.Point> {
-		return Observable.throw('Method not implemented.');
+		return Observable.throw(new Error('Method not implemented.'));
 	}
 
-	setCenter(center: GeoJSON.Point, animation: boolean) {
-		throw new Error('Method not implemented.');
+	setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+		return Observable.throw(new Error('Method not implemented.'));
 	}
 
 	toggleGroup(groupName: string) {
 		throw new Error('Method not implemented.');
 	}
 
-	resetView(layer: any): void {
-		throw new Error('Method not implemented.');
+	resetView(layer: any): Observable<boolean> {
+		return Observable.throw(new Error('Method not implemented.'));
 	}
 
 	addLayer(layer: any): void {
@@ -47,12 +47,12 @@ export class CesiumMap extends IMap {
 		throw new Error('Method not implemented.');
 	}
 
-	setPosition(position: CaseMapPosition): void {
-		throw new Error('Method not implemented.');
+	setPosition(position: CaseMapPosition): Observable<boolean> {
+		return Observable.throw(new Error('Method not implemented.'));
 	}
 
 	getPosition(): Observable<CaseMapPosition> {
-		return Observable.throw('Method not implemented.');
+		return Observable.throw(new Error('Method not implemented.'));
 	}
 
 	setRotation(rotation: number): void {

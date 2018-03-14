@@ -24,7 +24,7 @@ export abstract class IMap<T = any> {
 
 	abstract getCenter(): Observable<GeoJSON.Point>;
 
-	abstract setCenter(center: GeoJSON.Point, animation: boolean);
+	abstract setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean>;
 
 	abstract toggleGroup(groupName: string);
 
@@ -33,13 +33,13 @@ export abstract class IMap<T = any> {
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): void;
+	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 
 	abstract removeLayer(layer: any): void;
 
-	abstract setPosition(position: CaseMapPosition): void;
+	abstract setPosition(position: CaseMapPosition): Observable<boolean>;
 
 	abstract setRotation(rotation: number): void;
 

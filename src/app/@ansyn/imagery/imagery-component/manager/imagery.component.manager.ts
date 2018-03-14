@@ -66,8 +66,7 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			this._activeMap.resetView(layer, position, extent);
-			return this.resetVisualizers();
+			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetVisualizers());
 		}
 
 		return Observable.of(true);

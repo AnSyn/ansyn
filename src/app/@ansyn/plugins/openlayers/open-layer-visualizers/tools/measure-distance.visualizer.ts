@@ -104,12 +104,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onResetView(): Observable<boolean> {
-		let obs = super.onResetView();
-		if (this.drawInteractionHandler) {
-			this.createInteraction();
-		}
-
-		return obs;
+		return super.onResetView()
+			.filter(result => result === true)
+			.do(() => {
+				if (this.drawInteractionHandler) {
+					this.createInteraction();
+				}
+			});
 	}
 
 	clearInteractionAndEntities() {

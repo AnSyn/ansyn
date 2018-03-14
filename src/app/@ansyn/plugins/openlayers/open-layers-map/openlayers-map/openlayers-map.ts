@@ -142,11 +142,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapObject.on('moveend', () => {
 			this.getCenter().subscribe(mapCenter => {
 				this.centerChanged.emit(mapCenter);
-				this.getPosition().subscribe(position => {
-					if (position) {
-						this.positionChanged.emit(position);
-					}
-				});
+			});
+
+			this.getPosition().subscribe(position => {
+				if (position) {
+					this.positionChanged.emit(position);
+				}
 			});
 		});
 

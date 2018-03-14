@@ -115,9 +115,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
-			const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
-			this.approximateProjectionSubscription = this.projectionService.projectApproximately(point, this)
-				.subscribe(cb);
+
+		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+		this.approximateProjectionSubscription = this.projectionService.projectApproximately(point, this)
+			.subscribe(cb);
 	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {

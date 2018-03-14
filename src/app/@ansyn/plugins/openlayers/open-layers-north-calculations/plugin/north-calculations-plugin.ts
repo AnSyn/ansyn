@@ -41,7 +41,7 @@ export class NorthCalculationsPlugin implements IMapPlugin {
 		this.onDisposedEvent.emit();
 	}
 
-	getCorrectedNorthOnce(iMap): Observable<INorthData> {
+	getCorrectedNorthOnce(iMap: IMap<OLMap>): Observable<INorthData> {
 		const mapObject = iMap.mapObject;
 		const size = mapObject.getSize();
 		const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);

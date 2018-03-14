@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/share';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -13,19 +13,34 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 import * as intersect from '@turf/intersect';
 import { polygon } from '@turf/helpers';
 import {
-	AlertMsgTypes, BackToWorldSuccess, BackToWorldView, CaseMapPosition, CoreActionTypes, coreStateSelector, ICoreState,
+	AlertMsgTypes,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseMapPosition,
+	CoreActionTypes,
+	coreStateSelector,
+	ICoreState,
 	SetLayoutSuccessAction,
 	UpdateAlertMsg
 } from '@ansyn/core';
 import {
-	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, DecreasePendingMapsCountAction,
-	ImageryCreatedAction, ImageryRemovedAction, MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction,
-	PinPointModeTriggerAction, PositionChangedAction, SetMapManualImageProcessing, SetMapsDataActionStore,
+	ActiveMapChangedAction,
+	AnnotationContextMenuTriggerAction,
+	DecreasePendingMapsCountAction,
+	ImageryCreatedAction,
+	ImageryRemovedAction,
+	MapActionTypes,
+	MapsListChangedAction,
+	PinLocationModeTriggerAction,
+	PinPointModeTriggerAction,
+	PositionChangedAction,
+	SetMapManualImageProcessing,
+	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays';
-
+import 'rxjs/add/observable/forkJoin';
 
 @Injectable()
 export class MapEffects {
@@ -363,10 +378,6 @@ export class MapEffects {
 					setPositionObservables.push(comm.setPosition(mapPosition));
 				}
 			});
-
-			if (setPositionObservables.length <= 0) {
-				return Observable.of([action, mapState]);
-			}
 
 			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
 		});

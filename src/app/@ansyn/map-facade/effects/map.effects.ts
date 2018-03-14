@@ -364,6 +364,10 @@ export class MapEffects {
 				}
 			});
 
+			if (setPositionObservables.length <= 0) {
+				return Observable.of([action, mapState]);
+			}
+
 			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
 		});
 

@@ -30,7 +30,6 @@ describe('ContextEntityAppEffects', () => {
 	};
 	const visualizer = {
 		setEntities: () => {
-			return Observable.of(true);
 		},
 		setReferenceDate: () => {
 		}
@@ -114,7 +113,7 @@ describe('ContextEntityAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue(imageryComm);
 		spyOn(imageryComm, 'getVisualizer').and.returnValue(visualizer);
-		spyOn(visualizer, 'setEntities');
+		spyOn(visualizer, 'setEntities').and.callFake(() => Observable.of(true));
 	}));
 
 	it('should be defined', () => {

@@ -31,11 +31,15 @@ export class ContextEntityAppEffects {
 	displayEntityFromSelectedCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
-		.mergeMap(({ payload }: SelectCaseAction) => {
+		.do(({ payload }: SelectCaseAction) => {
+			const observables = [];
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
-				this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities);
+				observables.push(this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities));
 			});
+
+			return Observable.forkJoin(observables);
+		}).mergeMap(({ payload }: SelectCaseAction) => {
 
 			const actions = [];
 
@@ -63,10 +67,10 @@ export class ContextEntityAppEffects {
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => Boolean(caseState.selectedCase.state.contextEntities))
-		.map(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
+		.do(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.id);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
-			this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);
+			return this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);
 		});
 
 	constructor(protected actions$: Actions,
@@ -74,13 +78,15 @@ export class ContextEntityAppEffects {
 				protected communicatorService: ImageryCommunicatorService) {
 	}
 
-	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]) {
+	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]): Observable<boolean> {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
 			const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
 			if (visualizer) {
-				visualizer.setEntities(contextEntities);
+				return visualizer.setEntities(contextEntities);
 			}
 		}
+
+		return Observable.of(true);
 	}
 }

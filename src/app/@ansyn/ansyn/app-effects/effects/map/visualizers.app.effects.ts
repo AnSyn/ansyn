@@ -294,10 +294,14 @@ export class VisualizersAppEffects {
 				return [mapState, action.payload];
 			}
 		)
-		.map(([mapState, coords]: [IMapState, number[]]) => {
+		.switchMap(([mapState, coords]: [IMapState, number[]]) => {
+			const observables = [];
+
 			mapState.mapsList.forEach((map: CaseMapState) => {
-				this.drawPinPointIconOnMap(map, coords);
+				observables.push(this.drawPinPointIconOnMap(map, coords));
 			});
+
+			return Observable.forkJoin(observables);
 		});
 
 	/**
@@ -385,9 +389,9 @@ export class VisualizersAppEffects {
 
 			}
 		)
-		.map(([mapState, coords]: [IMapState, any[]]) => {
+		.switchMap(([mapState, coords]: [IMapState, any[]]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
-			this.drawGotoIconOnMap(activeMap, coords);
+			return this.drawGotoIconOnMap(activeMap, coords);
 		});
 
 	/**
@@ -450,7 +454,7 @@ export class VisualizersAppEffects {
 			if (frameVisualizer) {
 				const entityToDraw = this.mapOverlayToDraw(payload.overlay);
 				frameVisualizer.isActive = true;
-				frameVisualizer.setEntities([entityToDraw]);
+				frameVisualizer.setEntities([entityToDraw]).subscribe();
 			}
 		});
 
@@ -486,8 +490,9 @@ export class VisualizersAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState) {
+	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState): Observable<boolean> {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
+		let observable = Observable.of(true);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
 			const hitMapVisualizer = communicator.getVisualizer(FootprintHeatmapVisualizerType);
@@ -498,13 +503,13 @@ export class VisualizersAppEffects {
 			switch (overlayDisplayMode) {
 				case 'Hitmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					hitMapVisualizer.setEntities(entitiesToDraw);
+					observable = hitMapVisualizer.setEntities(entitiesToDraw);
 					polylineVisualizer.clearEntities();
 					break;
 				}
 				case 'Polygon': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					polylineVisualizer.setEntities(entitiesToDraw);
+					observable = polylineVisualizer.setEntities(entitiesToDraw);
 					hitMapVisualizer.clearEntities();
 					break;
 				}
@@ -515,6 +520,8 @@ export class VisualizersAppEffects {
 				}
 			}
 		}
+
+		return observable;
 	}
 
 	getVisualizer(mapId, visualizerType) {
@@ -522,7 +529,7 @@ export class VisualizersAppEffects {
 		return communicator ? <IMapVisualizer>communicator.getVisualizer(visualizerType) : null;
 	}
 
-	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true) {
+	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true): Observable<boolean> {
 		if (!mapData) {
 			return;
 		}
@@ -547,15 +554,15 @@ export class VisualizersAppEffects {
 				properties: {}
 			};
 			gotoVisualizer.clearEntities();
-			gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
+			return gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
 		} else {
 			gotoVisualizer.clearEntities();
-
-
 		}
+
+		return Observable.of(true);
 	}
 
-	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]) {
+	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]): Observable<boolean> {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
 			const iconVisualizer = communicator.getVisualizer(IconVisualizerType);
@@ -574,9 +581,11 @@ export class VisualizersAppEffects {
 					geometry: pinPoint,
 					properties: {}
 				};
-				iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
+				return iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
 			}
 		}
+
+		return Observable.of(true);
 	}
 
 	// set shadow mouse producer (remove previous producers)
@@ -616,7 +625,8 @@ export class VisualizersAppEffects {
 					properties: {}
 				};
 				mouseShadowVisualizer.clearEntities();
-				mouseShadowVisualizer.setEntities([{ id: 'shadowMouse', featureJson: shadowMouseFeatureJson }]);
+				mouseShadowVisualizer.setEntities([{ id: 'shadowMouse', featureJson: shadowMouseFeatureJson }])
+					.subscribe();
 			});
 		}
 	}

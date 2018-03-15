@@ -27,6 +27,7 @@ describe('ContextEntityAppEffects', () => {
 	};
 	const visualizer = {
 		setEntities: () => {
+			return Observable.of(true);
 		},
 		setReferenceDate: () => {
 		}

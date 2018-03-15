@@ -95,6 +95,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		beforeEach(() => {
 			fakeComm = jasmine.createSpyObj([ 'getVisualizer' ]);
 			fakeComm.getVisualizer.and.returnValue(fakeVisualizer);
+			fakeVisualizer.setEntities.and.callFake(() => Observable.of(true));
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => fakeComm);
 		});
 

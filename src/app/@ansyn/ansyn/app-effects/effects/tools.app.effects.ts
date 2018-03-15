@@ -333,13 +333,13 @@ export class ToolsAppEffects {
 			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
 		}))
 		.filter(({ action, communicator }) => Boolean(communicator))
-		.do(({ action, communicator }) => {
+		.switchMap(({ action, communicator }) => {
 			const center: GeoJSON.Point = {
 				type: 'Point',
 				coordinates: action.payload
 			};
 
-			return communicator.setCenter(center);
+			return communicator.setCenter(center).map(() => { return { action, communicator } });
 		})
 		.map(({ action, communicator }) => new SetActiveCenter(action.payload));
 

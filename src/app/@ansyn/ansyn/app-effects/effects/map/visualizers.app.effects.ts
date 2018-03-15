@@ -449,13 +449,15 @@ export class VisualizersAppEffects {
 	@Effect({ dispatch: false })
 	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.do(({ payload }: DisplayOverlaySuccessAction) => {
-			const frameVisualizer = <FrameVisualizer>this.getVisualizer(payload.mapId, FrameVisualizerType);
+		.switchMap((action: DisplayOverlaySuccessAction) => {
+			const frameVisualizer = <FrameVisualizer>this.getVisualizer(action.payload.mapId, FrameVisualizerType);
 			if (frameVisualizer) {
-				const entityToDraw = this.mapOverlayToDraw(payload.overlay);
+				const entityToDraw = this.mapOverlayToDraw(action.payload.overlay);
 				frameVisualizer.isActive = true;
-				frameVisualizer.setEntities([entityToDraw]).subscribe();
+				return frameVisualizer.setEntities([entityToDraw]).map(() => action);
 			}
+
+			return Observable.of(action);
 		});
 
 	@Effect({ dispatch: false })

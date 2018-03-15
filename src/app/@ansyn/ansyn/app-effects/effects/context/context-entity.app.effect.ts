@@ -31,14 +31,14 @@ export class ContextEntityAppEffects {
 	displayEntityFromSelectedCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
-		.do(({ payload }: SelectCaseAction) => {
+		.switchMap(({ payload }: SelectCaseAction) => {
 			const observables = [];
 			payload.state.maps.data.forEach((mapState: CaseMapState) => {
 				const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 				observables.push(this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities));
 			});
 
-			return Observable.forkJoin(observables);
+			return Observable.forkJoin(observables).map(() => { return  { payload } });
 		}).mergeMap(({ payload }: SelectCaseAction) => {
 
 			const actions = [];
@@ -67,7 +67,7 @@ export class ContextEntityAppEffects {
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => Boolean(caseState.selectedCase.state.contextEntities))
-		.do(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
+		.switchMap(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.id);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;
 			return this.setContextEntity(mapState.id, overlayDate, caseState.selectedCase.state.contextEntities);

@@ -3,7 +3,7 @@ import { Point } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import * as turf from '@turf/turf';
 import { Subscription } from 'rxjs/Subscription';
-import Projection from 'ol/proj/Projection';
+import Projection from 'ol/proj/projection';
 
 export class OpenLayersMousePositionControl extends MousePosition {
 	private approximateProjectionSubscription: Subscription;

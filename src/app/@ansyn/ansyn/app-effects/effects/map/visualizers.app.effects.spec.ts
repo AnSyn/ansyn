@@ -266,7 +266,7 @@ describe('VisualizersAppEffects', () => {
 		const action = new DrawPinPointAction([-70.33666666666667, 25.5]);
 		actions = hot('--a--', { a: action });
 		// undefined because: drawPinPoint$ map don't have a return
-		const expectedResults = cold('--b--', { b: undefined });
+		const expectedResults = cold('--b--', { b: new Array(3).fill(true) });
 
 		expect(visualizersAppEffects.drawPinPoint$).toBeObservable(expectedResults);
 		expect(visualizersAppEffects.drawPinPointIconOnMap).toHaveBeenCalledTimes(3);

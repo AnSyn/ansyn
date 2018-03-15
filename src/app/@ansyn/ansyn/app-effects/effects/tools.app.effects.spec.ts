@@ -187,6 +187,8 @@ describe('ToolsAppEffects', () => {
 			setCenter: () => {
 			}
 		});
+
+		activeCommunicator.setCenter.and.callFake(() => Observable.of(true));
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 		actions = hot('--a--', { a: new GoToAction([0, 0]) });
 

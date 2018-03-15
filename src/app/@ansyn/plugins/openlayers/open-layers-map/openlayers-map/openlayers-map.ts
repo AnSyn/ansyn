@@ -16,7 +16,6 @@ import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
 import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
-import MousePosition from 'ol/control/mouseposition';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import * as turf from '@turf/turf';
@@ -26,6 +25,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Polygon } from 'geojson';
+import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = 'openLayersMap';
@@ -129,7 +129,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 			target: element,
 			layers,
 			renderer: 'canvas',
-			controls: [new ScaleLine(), new MousePosition({ projection: 'EPSG:4326', coordinateFormat  })],
+			controls: [new ScaleLine(), new OpenLayersMousePositionControl({ projection: 'EPSG:4326', coordinateFormat  },
+				(point) => this.projectionService.projectApproximately(point, this))],
 			view
 		});
 

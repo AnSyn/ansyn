@@ -328,10 +328,10 @@ export class MapEffects {
 		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position)
-		.do(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 				const activeMap = MapFacadeService.activeMap(mapState);
 				const communicator = this.communicatorsService.provide(payload.id);
-				return communicator.setPosition(activeMap.data.position);
+				return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
 			})
 		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);

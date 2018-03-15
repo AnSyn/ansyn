@@ -61,17 +61,17 @@ export class VisualizersAnnotationsAppEffects {
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom(this.layersState$, this.store$.select(mapStateSelector))
-		.switchMap(([{ payload }, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayerState, IMapState]) => {
-			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = payload;
+		.switchMap(([action, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayerState, IMapState]) => {
+			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = action.payload;
 			const relevantMapsIds: string[] = this.relevantMapIds(relevantMaps, mapsState);
 			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
 
 			const observables = [];
 			annotationsVisualizers.forEach(visualizer => {
-				observables.push(this.agentOperations[operation](visualizer, payload, layerState));
+				observables.push(this.agentOperations[operation](visualizer, action.payload, layerState));
 			});
 
-			return Observable.forkJoin(observables);
+			return Observable.forkJoin(observables).map(() => [action, layerState, mapsState]);
 		});
 
 	/**

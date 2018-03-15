@@ -241,7 +241,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		});
 	}
 
-	setEntities(logicalEntities: IVisualizerEntity[]) {
+	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		const removedEntities = [];
 		this.idToEntity.forEach(((value, key: string) => {
 			const item = logicalEntities.find((entity) => entity.id === key);
@@ -254,7 +254,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			this.removeEntity(id);
 		});
 
-		this.addOrUpdateEntities(logicalEntities).subscribe();
+		return this.addOrUpdateEntities(logicalEntities);
 	}
 
 	removeEntity(logicalEntityId: string) {

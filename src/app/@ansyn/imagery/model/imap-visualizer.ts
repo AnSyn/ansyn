@@ -69,7 +69,7 @@ export interface IMapVisualizer {
 	 * @description Replace all existing entities (CRUD)
 	 * @param {IVisualizerEntity[]} logicalEntities
 	 */
-	setEntities(logicalEntities: IVisualizerEntity[]);
+	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean>;
 
 	/**
 	 * @description ADD Or Update Entities (CRU)

@@ -262,7 +262,7 @@ describe('VisualizersAppEffects', () => {
 	});
 
 	it('drawPinPoint$ should call drawPinPointIconOnMap() for each map(from selected case)', () => {
-		spyOn(visualizersAppEffects, 'drawPinPointIconOnMap');
+		spyOn(visualizersAppEffects, 'drawPinPointIconOnMap').and.callFake(() => Observable.of(true));
 		const action = new DrawPinPointAction([-70.33666666666667, 25.5]);
 		actions = hot('--a--', { a: action });
 		// undefined because: drawPinPoint$ map don't have a return

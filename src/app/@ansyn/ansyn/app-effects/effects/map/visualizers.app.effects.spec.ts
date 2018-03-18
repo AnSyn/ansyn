@@ -254,8 +254,7 @@ describe('VisualizersAppEffects', () => {
 		spyOn(visualizersAppEffects, 'drawOverlaysOnMap');
 		const action = new DrawOverlaysOnMapTriggerAction();
 		actions = hot('--a--', { a: action });
-		// undefined because: drawOverlaysOnMap$ map don't have a return
-		const expectedResults = cold('--b--', { b: undefined });
+		const expectedResults = cold('--b--', { b: new Array(3).fill(true) });
 
 		expect(visualizersAppEffects.drawOverlaysOnMap$).toBeObservable(expectedResults);
 		expect(visualizersAppEffects.drawOverlaysOnMap).toHaveBeenCalledTimes(3);

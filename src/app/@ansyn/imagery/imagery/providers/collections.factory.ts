@@ -1,9 +1,12 @@
-import { FactoryProvider, Injector } from '@angular/core';
+import { FactoryProvider, Injector, StaticProvider } from '@angular/core';
 import { BaseImageryPlugin } from '../../plugins/base-imagery-plugin';
 import { PLUGINS_COLLECTION, ImageryPluginProvider } from '../../plugins/plugins-collection';
 
 export function baseImageryPluginFactory(pluginsCollection: Array<ImageryPluginProvider[]>, parent: Injector) {
-	const providers = pluginsCollection.reduce((v, i) => [...v, ...i], []);
+	const providers = pluginsCollection
+		.reduce((v, i) => [...v, ...i], [])
+		.filter(({ provide }: ImageryPluginProvider) => provide === BaseImageryPlugin);
+
 	if (providers.length === 0) {
 		return [];
 	}

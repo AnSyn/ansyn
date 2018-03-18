@@ -18,7 +18,7 @@ import { ConfigurationToken } from '../configuration.token';
 import 'rxjs/add/operator/take';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
-import { PluginsProvider } from './providers/visualizers.provider.factory';
+import { PluginsProvider } from './providers/collections.factory';
 
 
 @Component({

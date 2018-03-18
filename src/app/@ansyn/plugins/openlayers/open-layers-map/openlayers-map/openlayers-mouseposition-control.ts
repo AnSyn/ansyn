@@ -26,7 +26,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 	}
 
 	private updateHtmlIfNeeded(html) {
-		if (!this.renderedHTML_ || html != this.renderedHTML_) {
+		if (!this.renderedHTML_ || html !== this.renderedHTML_) {
 			this.element.innerHTML = html;
 			this.renderedHTML_ = html;
 		}

@@ -251,7 +251,7 @@ describe('VisualizersAppEffects', () => {
 	});
 
 	it('drawOverlaysOnMap$ should call drawOverlayOnMap() for each map(from selected case)', () => {
-		spyOn(visualizersAppEffects, 'drawOverlaysOnMap');
+		spyOn(visualizersAppEffects, 'drawOverlaysOnMap').and.callFake(() => Observable.of(true));
 		const action = new DrawOverlaysOnMapTriggerAction();
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: new Array(3).fill(true) });

@@ -137,7 +137,6 @@ export class ImageryComponentManager {
 
 	private destroyCurrentComponent(): void {
 		this.destroyActiveMapVisualizers();
-		this.destroyPlugins();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
@@ -240,5 +239,6 @@ export class ImageryComponentManager {
 			this._subscriptions[i].unsubscribe();
 		}
 		this._subscriptions = [];
+		this.destroyPlugins();
 	}
 }

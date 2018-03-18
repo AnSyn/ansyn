@@ -333,7 +333,7 @@ export class MapEffects {
 				const communicator = this.communicatorsService.provide(payload.id);
 				return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
 			})
-		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMapsList = [...mapState.mapsList];

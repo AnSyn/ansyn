@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -18,7 +19,8 @@ export abstract class BaseMapSourceProvider {
 
 	abstract sourceType: string;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService) {
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
 	protected createOrGetFromCache(metaData: any, mapId: string) {
@@ -60,6 +62,7 @@ export abstract class BaseMapSourceProvider {
 				endTimingLog(this.mapType);
 
 				isFirstLoad = false;
+				this.imageryCommunicatorService.provide(mapId).ActiveMap.mapObject.renderSync();
 			}
 
 			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error) / tilesCounter.total : 1;

@@ -215,23 +215,20 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			return Observable.of(true);
 		}
 
-		const logicalEntitiesCopy = [...logicalEntities];
-
 		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
 			type: 'FeatureCollection',
-			features: []
+			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
 
-		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
+		logicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id);
-			featuresCollectionToAdd.features.push({ ...entity.featureJson, id: entity.id });
 		});
 
 		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
 			features.forEach((feature: Feature) => {
 				const _id: string = <string>feature.getId();
-				this.idToEntity.set(_id, { originalEntity: logicalEntitiesCopy.find(({id}) => id === _id), feature: feature });
+				this.idToEntity.set(_id, { originalEntity: logicalEntities.find(({id}) => id === _id), feature: feature });
 			});
 			this.source.addFeatures(features);
 			return true;

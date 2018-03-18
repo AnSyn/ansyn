@@ -224,17 +224,14 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id);
-			const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };
-			featuresCollectionToAdd.features.push(clonedFeatureJson);
-			this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
+			featuresCollectionToAdd.features.push({ ...entity.featureJson, id: entity.id });
 		});
 
 		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
 			features.forEach((feature: Feature) => {
-				const id: string = <string>feature.getId();
-				const existingEntity = this.idToEntity.get(id);
-				this.idToEntity.set(id, { ...existingEntity, feature: feature });
+				const _id: string = <string>feature.getId();
+				this.idToEntity.set(_id, { originalEntity: logicalEntitiesCopy.find(({id}) => id === _id), feature: feature });
 			});
 			this.source.addFeatures(features);
 			return true;

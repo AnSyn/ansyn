@@ -182,10 +182,14 @@ export class VisualizersAppEffects {
 	drawOverlaysOnMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.map(([action, overlaysState, { mapsList }]: [DrawOverlaysOnMapTriggerAction, IOverlaysState, IMapState]) => {
+		.switchMap(([action, overlaysState, { mapsList }]: [DrawOverlaysOnMapTriggerAction, IOverlaysState, IMapState]) => {
+			const observables = [];
+
 			mapsList.forEach((mapData: CaseMapState) => {
-				this.drawOverlaysOnMap(mapData, overlaysState);
+				observables.push(this.drawOverlaysOnMap(mapData, overlaysState));
 			});
+
+			return Observable.forkJoin(observables);
 		});
 
 	/**

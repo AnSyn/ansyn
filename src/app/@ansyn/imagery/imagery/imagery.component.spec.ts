@@ -7,6 +7,7 @@ import { ConfigurationToken } from '../configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { PLUGINS_COLLECTION } from '@ansyn/imagery';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -41,6 +42,7 @@ describe('ImageryComponent', () => {
 			declarations: [ImageryComponent],
 			providers: [
 				CacheService,
+				{ provide: PLUGINS_COLLECTION, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },

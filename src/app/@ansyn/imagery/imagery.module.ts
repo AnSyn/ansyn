@@ -1,16 +1,22 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageryComponent } from './imagery-component/imagery.component';
+import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { ImageryProviderService } from './provider-service/imagery-provider.service';
 import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './configuration.token';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { CacheService } from './cache-service/cache.service';
+import { createCollection, ImageryPluginProvider } from './plugins/plugins-collection';
 
 @NgModule({
 	imports: [CommonModule],
 	declarations: [ImageryComponent],
-	providers: [ImageryCommunicatorService, ImageryProviderService, CacheService],
+	providers: [
+		ImageryCommunicatorService,
+		ImageryProviderService,
+		CacheService,
+		createCollection([])
+	],
 	exports: [ImageryComponent]
 })
 export class ImageryModule {
@@ -23,6 +29,13 @@ export class ImageryModule {
 				ImageryProviderService,
 				{ provide: ConfigurationToken, useValue: config }
 			]
+		};
+	}
+
+	static provideCollection(providers: Array<ImageryPluginProvider>): ModuleWithProviders {
+		return {
+			ngModule: ImageryModule,
+			providers: [createCollection(providers)]
 		};
 	}
 }

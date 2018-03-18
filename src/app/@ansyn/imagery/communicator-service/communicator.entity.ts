@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
-import { ImageryComponentManager, MapInstanceChanged } from '../imagery-component/manager/imagery.component.manager';
-import { IMapPlugin } from '../model/imap-plugin';
+import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
+import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
 import { CaseMapPosition } from '@ansyn/core';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
@@ -27,6 +27,11 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
+		this.initPlugins();
+	}
+
+	initPlugins() {
+		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this))
 	}
 
 	private registerToManagerEvents() {
@@ -155,8 +160,8 @@ export class CommunicatorEntity {
 		return this.ActiveMap.getRotation();
 	}
 
-	public getPlugin(pluginName: string): IMapPlugin {
-		return this._manager.plugins.find((plugin: IMapPlugin) => plugin.pluginType === pluginName);
+	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
+		return <any> this._manager.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
 	public getVisualizer(visualizerType: string): IMapVisualizer {

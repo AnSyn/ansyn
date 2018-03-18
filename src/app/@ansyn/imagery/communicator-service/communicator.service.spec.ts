@@ -1,6 +1,6 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
-import { ImageryComponentManager, MapInstanceChanged } from '../imagery-component/manager/imagery.component.manager';
+import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 

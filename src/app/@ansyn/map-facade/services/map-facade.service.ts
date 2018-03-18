@@ -19,7 +19,7 @@ import { Feature } from 'geojson';
 import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
-import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
+import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 
 @Injectable()
 export class MapFacadeService {

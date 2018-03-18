@@ -8,15 +8,11 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	NorthCalculationsPlugin,
-	openLayersNorthCalculations
-} from '@ansyn/plugins/openlayers/open-layers-north-calculations/plugin/north-calculations-plugin';
+import { NorthCalculationsPlugin } from '@ansyn/plugins/openlayers/open-layers-north-calculations/plugin/north-calculations-plugin';
 import {
 	BackToWorldSuccess, BackToWorldView, CaseOrientation, CoreActionTypes, LoggerService,
 	Overlay
 } from '@ansyn/core';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 
 @Injectable()
@@ -83,12 +79,12 @@ export class NorthAppEffects {
 	pointNorth(comEntity: CommunicatorEntity): Promise<number> {
 		comEntity.updateSize();
 		return new Promise(resolve => {
-			const northPlugin = <NorthCalculationsPlugin>comEntity.getPlugin(openLayersNorthCalculations);
+			const northPlugin = comEntity.getPlugin<NorthCalculationsPlugin>(NorthCalculationsPlugin);
 			if (!northPlugin) {
 				resolve(0);
 			} else {
 				const currentRotation = comEntity.ActiveMap.mapObject.getView().getRotation();
-				northPlugin.setCorrectedNorth(comEntity.ActiveMap)
+				northPlugin.setCorrectedNorth()
 					.then(north => {
 						comEntity.ActiveMap.mapObject.getView().setRotation(currentRotation);
 						resolve(north);

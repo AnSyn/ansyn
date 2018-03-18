@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
 import { Feature } from 'geojson';
-import { MapInstanceChanged } from '@ansyn/imagery/imagery-component/manager/imagery.component.manager';
+import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export const MapActionTypes = {

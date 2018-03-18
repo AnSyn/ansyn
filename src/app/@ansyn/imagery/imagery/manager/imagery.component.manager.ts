@@ -1,7 +1,7 @@
 import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { IMapComponent } from '../../model/imap-component';
-import { IMapPlugin } from '../../model/imap-plugin';
+import { BaseImageryPlugin } from '../../plugins/base-imagery-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
@@ -24,14 +24,20 @@ export class ImageryComponentManager {
 	private _subscriptions = [];
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public mapComponentInitilaized: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
-
 	public activeMapName: string;
-	private _plugins: IMapPlugin[] = [];
 	private _visualizers: IMapVisualizer[] = [];
+
+	// protected properties
+	public get id(): string {
+		return this._id;
+	}
+
+	public get plugins(): BaseImageryPlugin[] {
+		return this._plugins;
+	}
 
 	constructor(protected imageryProviderService: ImageryProviderService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
@@ -39,7 +45,9 @@ export class ImageryComponentManager {
 				protected _mapComponentRef: ComponentRef<any>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
 				protected config: IImageryConfig,
-				protected _id: string) {
+				protected _id: string,
+				protected _plugins: BaseImageryPlugin[]
+	) {
 		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	}
 
@@ -106,9 +114,7 @@ export class ImageryComponentManager {
 			const mapComponent: IMapComponent = this._mapComponentRef.instance;
 			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 				this.internalSetActiveMap(map);
-				this.buildActiveMapPlugins(activeMapName);
 				this.buildActiveMapVisualizers(activeMapName, map);
-				this.mapComponentInitilaized.emit(this.id);
 				if (activeMapName !== oldMapName && Boolean(oldMapName)) {
 					this.mapInstanceChanged.emit({
 						id: this.id,
@@ -131,7 +137,7 @@ export class ImageryComponentManager {
 
 	private destroyCurrentComponent(): void {
 		this.destroyActiveMapVisualizers();
-		this.destroyActiveMapPlugins();
+		this.destroyPlugins();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
@@ -152,28 +158,10 @@ export class ImageryComponentManager {
 		return Promise.resolve();
 	}
 
-	private buildActiveMapPlugins(activeMapType: string) {
-		// Create Map plugin's
-
-		const mapPlugins: IMapPlugin[] = this.imageryProviderService.createPlugins(activeMapType);
-		if (mapPlugins) {
-			this._plugins = mapPlugins;
-		} else {
-			this._plugins = [];
-		}
-	}
-
-	private destroyActiveMapPlugins() {
-		if (this._plugins) {
-			this._plugins.forEach((plugin: IMapPlugin) => {
-				plugin.dispose();
-			});
-		}
-		this._plugins = [];
-	}
-
-	public get plugins() {
-		return this._plugins;
+	destroyPlugins() {
+		this.plugins.forEach((plugin: BaseImageryPlugin) => {
+			plugin.dispose();
+		});
 	}
 
 	private buildActiveMapVisualizers(activeMapType: string, map: IMap) {
@@ -198,7 +186,7 @@ export class ImageryComponentManager {
 
 		existingVisualizersConfig.forEach(provider => {
 			const providedVisualizers: IMapVisualizer = new provider.visualizerClass(provider.args);
-			providedVisualizers.onInit(this._id, map);
+			providedVisualizers.onInit(this.id, map);
 			visualizers.push(providedVisualizers);
 		});
 
@@ -241,14 +229,6 @@ export class ImageryComponentManager {
 			this.contextMenu.emit(event);
 		}));
 
-	}
-
-	public get id(): string {
-		return this._id;
-	}
-
-	public set id(value: string) {
-		this._id = value;
 	}
 
 	public get ActiveMap(): IMap {

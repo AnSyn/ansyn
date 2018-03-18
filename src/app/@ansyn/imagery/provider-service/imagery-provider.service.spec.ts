@@ -45,18 +45,6 @@ describe('ImageryProviderService', () => {
 		id = 'test3';
 	}
 
-	it('ImageryProviderService should registerPlugin and createPlugins by map type', () => {
-
-		imageryProviderService.registerPlugin('map1', Plugin1);
-		imageryProviderService.registerPlugin('map1', Plugin2);
-		imageryProviderService.registerPlugin('map2', Plugin3);
-
-		const plugins = imageryProviderService.createPlugins('map1');
-		expect(plugins.length).toEqual(2);
-		expect((<any>plugins[0]).id).toEqual(new Plugin1().id);
-		expect((<any>plugins[1]).id).toEqual(new Plugin2().id);
-	});
-
 	it('ImageryProviderService should registerVisualizer and getVisualizersConfig by map type', () => {
 
 		imageryProviderService.registerVisualizer('map1', Plugin1);

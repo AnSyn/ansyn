@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ImageryCommunicatorService, IMapPlugin } from '@ansyn/imagery';
+import { ImageryCommunicatorService, BaseImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
@@ -79,7 +79,7 @@ export class ImagerySandBoxComponent implements OnInit {
 	public toggleDrawCenterPluggin() {
 		const comms = this.imageryCommunicatorService.communicatorsAsArray();
 		comms.forEach((comm) => {
-			const plugin: IMapPlugin = comm.getPlugin('openLayerCenterMarker');
+			const plugin = comm.getPlugin(BaseImageryPlugin);
 			plugin.isEnabled = !plugin.isEnabled;
 		});
 	}

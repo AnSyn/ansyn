@@ -1,13 +1,10 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-
 import { Store, StoreModule } from '@ngrx/store';
-
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { cold, hot } from 'jasmine-marbles';
 import { NorthAppEffects } from './north.app.effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CaseMapState, Overlay } from '@ansyn/core';
+import 'rxjs/add/observable/fromPromise';
 
 describe('NorthAppEffects', () => {
 	let northAppEffects: NorthAppEffects;

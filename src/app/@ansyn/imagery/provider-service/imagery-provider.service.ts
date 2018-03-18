@@ -1,5 +1,5 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { IMapPlugin } from '../model/imap-plugin';
+import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
 import { IMapVisualizer } from '../model/imap-visualizer';
 import { MapVisualizer } from '../model/imap-visualizer.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
@@ -18,13 +18,11 @@ export interface InjectedMapVisualizer {
 export class ImageryProviderService {
 
 	private _mapProviders: { [id: string]: IProvidedMap };
-	private _mapPluginProviders: { [mapType: string]: [{ pluginClass: any, args: any }] };
 	private _mapVisualizersProviders: Map<string, [{ visualizerClass: any, args: any }]>;
 
 	constructor(@Optional() @Inject(MapVisualizer) protected mapVisualizers: InjectedMapVisualizer[],
 				@Inject(VisualizersConfig) visualizersConfig: any) {
 		this._mapProviders = {};
-		this._mapPluginProviders = {};
 		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();
 
 		if (mapVisualizers) {
@@ -45,36 +43,12 @@ export class ImageryProviderService {
 		return this._mapProviders;
 	}
 
-	public registerPlugin(mapType: string, pluginClass: any, constructorArgs?: any) {
-
-		if (!this._mapPluginProviders[mapType]) {
-			this._mapPluginProviders[mapType] = [{ 'pluginClass': pluginClass, args: constructorArgs }];
-		} else {
-			this._mapPluginProviders[mapType].push({ 'pluginClass': pluginClass, args: constructorArgs });
-		}
-	}
-
 	public provideMap(mapName: string): IProvidedMap {
 		if (!this._mapProviders[mapName]) {
 			throw new Error(`'mapName ${mapName} doesn't exist, can't provide it`);
 		}
 
 		return this._mapProviders[mapName];
-	}
-
-	public createPlugins(mapType: string): IMapPlugin[] {
-		const mapPluginProviders = this._mapPluginProviders[mapType];
-		if (!mapPluginProviders) {
-			return null;
-		}
-
-		const plugins: IMapPlugin[] = [];
-		mapPluginProviders.forEach(provider => {
-			const providedPlugin: IMapPlugin = new provider.pluginClass(provider.args);
-			plugins.push(providedPlugin);
-		});
-
-		return plugins;
 	}
 
 	public registerVisualizer(mapType: string, visualizerClass: any, constructorArgs?: any) {

@@ -37,9 +37,4 @@ export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 			extent: [x, y, x1, y1]
 		});
 	}
-
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.create(metaData, mapId);
-		return Promise.resolve(layer);
-	}
 }

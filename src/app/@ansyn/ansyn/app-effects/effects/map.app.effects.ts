@@ -235,13 +235,11 @@ export class MapAppEffects {
 		.do( x => console.log(x))
 		.filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay))
 		.map((action: DisplayOverlayAction) => {
-			console.warn('PIkaboo', action.payload)
-			const a = new RequestOverlayByIDFromBackendAction({
+			return new RequestOverlayByIDFromBackendAction({
 				overlayId: action.payload.overlay.id,
 				sourceType: action.payload.overlay.sourceType,
 				mapId: action.payload.mapId
-			})
-			return a;
+			});
 		});
 
 

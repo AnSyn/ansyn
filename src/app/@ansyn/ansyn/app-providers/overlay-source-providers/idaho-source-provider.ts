@@ -109,7 +109,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		if (idahoElement.properties.numBands > 1 && idahoElement.properties.numBands < 5) {
 			bands = '2,1,0';
 		} else if (idahoElement.properties.numBands >= 5) {
-			bands = '4,2,1'; // check
+			bands = '4,2,1';
 		}
 		overlay.sensorType = idahoElement.properties.sensorName;
 		overlay.sensorName = idahoElement.properties.platformName;

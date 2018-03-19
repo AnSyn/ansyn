@@ -232,7 +232,6 @@ export class MapAppEffects {
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.do( x => console.log(x))
 		.filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay))
 		.map((action: DisplayOverlayAction) => {
 			return new RequestOverlayByIDFromBackendAction({

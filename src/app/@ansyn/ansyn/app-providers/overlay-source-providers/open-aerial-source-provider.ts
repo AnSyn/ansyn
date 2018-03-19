@@ -39,7 +39,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		// add 1 to limit - so we'll know if provider have more then X overlays
-		let urlWithParams = `${baseUrl}?limit=${fetchParams.limit + 1}&bbox=${bbox[0]}%2C${bbox[1]}%2C${bbox[2]}%2C${bbox[3]}&acquisition_from=${fetchParams.timeRange.start.toISOString()}&acquisition_to=${fetchParams.timeRange.end.toISOString()}`;
+		let urlWithParams = `${baseUrl}?limit=${fetchParams.limit + 1}&bbox=${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}&acquisition_from=${fetchParams.timeRange.start.toISOString()}&acquisition_to=${fetchParams.timeRange.end.toISOString()}`;
 		return this.http.get<OverlaysOpenAerialFetchData>(urlWithParams)
 			.map(data => {
 				return this.extractArrayData(data.results);
@@ -98,7 +98,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
 		overlay.date = new Date(openAerialElement.acquisition_end);
 		overlay.photoTime = openAerialElement.acquisition_end;
-		overlay.azimuth = toRadians(180 + 45); // didn't find azimuth
+		overlay.azimuth = toRadians(180);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 

@@ -16,7 +16,7 @@ export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerOpenAerialSourceProviderMapType;
 	public sourceType = OpenLayerOpenAerialSourceProviderSourceType;
 
-	create(metaData: Overlay, mapId: string): any {
+	create(metaData: Overlay, mapId: string): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -28,13 +28,18 @@ export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
 		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
 		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
 
-		return new ImageLayer({
+		return [new ImageLayer({
 			source: new ProjectableRaster({
 				sources: [source],
 				operation: (pixels) => pixels[0],
 				operationType: 'image'
 			}),
 			extent: [x, y, x1, y1]
-		});
+		})];
+	}
+
+	createAsync(metaData: any, mapId: string): Promise<any> {
+		let layer = this.createOrGetFromCache(metaData, mapId);
+		return Promise.resolve(layer[0]);
 	}
 }

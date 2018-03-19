@@ -1,9 +1,12 @@
 <div class="collection">
-	<ansyn-checkbox id="show-only-favorites" [checked]="onlyFavorite" (inputClicked)="showOnlyFavorites($event)"
-					text="Show only favorites" [disabled]="disableShowOnlyFavoritesSelection">
-	</ansyn-checkbox>
+	<label class="switch">
+		<input id="show-only-favorites" [checked]="onlyFavorite"  type="checkbox" (click)="showOnlyFavorites($event)"
+		 [disabled]="disableShowOnlyFavoritesSelection"/>
+		<span class="slider round"></span>
+		<span class="slider-text">Show only favorites</span>
+	</label>
 	<div class="allFilters">
-	<ansyn-filter-container
+			<ansyn-filter-container
 			*ngFor="let filter of filters"
 			[filter]="filter">
 		</ansyn-filter-container>

@@ -1,5 +1,4 @@
 import { AppPage } from './app.po';
-import { by, element } from 'protractor';
 
 describe('Ansyn App', () => {
 	let page: AppPage;
@@ -10,7 +9,15 @@ describe('Ansyn App', () => {
 	});
 
 	it('should initialize app with login', () => {
-		const isPresent = element(by.css('ansyn-login')).isPresent();
+		const isPresent = page.loginComponent.isPresent();
+		expect(isPresent).toBe(true);
+	});
+
+	it('should instantiate the main app component, after a successful login', () => {
+		page.setCorrectUsername();
+		page.setCorrectPassword();
+		page.loginButton.click();
+		const isPresent = page.mainComponent.isPresent();
 		expect(isPresent).toBe(true);
 	});
 });

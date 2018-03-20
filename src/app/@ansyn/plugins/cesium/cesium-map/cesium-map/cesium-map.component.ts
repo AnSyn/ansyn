@@ -3,19 +3,19 @@ import { IMap, IMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
-import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
-
+export const cesiumMapName = 'cesiumMap';
+export const PluginsProvider = getPluginsProvider(cesiumMapName);
 
 @Component({
 	selector: 'ansyn-cesium-component',
 	templateUrl: './cesium-map.component.html',
 	styleUrls: ['./cesium-map.component.less'],
-	providers: [getPluginsProvider(OpenlayersMapComponent.mapName)]
+	providers: [PluginsProvider]
 })
 
 export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapName = 'cesiumMap';
+	static mapName = cesiumMapName;
 	static mapClass = CesiumMap;
 
 	@ViewChild('cesiumMap') mapElement: ElementRef;

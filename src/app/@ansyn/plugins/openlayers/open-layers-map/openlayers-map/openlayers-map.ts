@@ -27,8 +27,10 @@ import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 
+export const openLayersMapName = 'openLayersMap';
+
 export class OpenLayersMap extends IMap<OLMap> {
-	static mapType = 'openLayersMap';
+	static mapType = openLayersMapName;
 
 	static groupLayers = new Map<string, Group>();
 

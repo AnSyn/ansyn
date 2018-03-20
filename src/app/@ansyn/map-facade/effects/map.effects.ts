@@ -41,6 +41,7 @@ import {
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays';
 import 'rxjs/add/observable/forkJoin';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 @Injectable()
 export class MapEffects {
@@ -255,7 +256,7 @@ export class MapEffects {
 					}
 				});
 			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-			return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(openLayersMapName, position) : communicator.loadInitialMapSource(position))
 				.map(() => new BackToWorldSuccess(payload));
 		});
 

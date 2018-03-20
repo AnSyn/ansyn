@@ -127,11 +127,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		const pointNorth = this.actions$
 			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
-
 			.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 				return [payload.ignoreRotation, comboBoxesProperties.orientation, payload.overlay];
 			})
-			.filter(() => Boolean(this.communicator) && this.communicator.activeMapName !== 'disabledOpenLayersMap')
 			.switchMap(([ignoreRotation, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
 				return this.pointNorth()
 					.do(virtualNorth => {

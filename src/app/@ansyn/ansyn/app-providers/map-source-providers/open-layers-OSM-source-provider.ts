@@ -2,8 +2,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerOSMSourceProviderMapType = 'openLayersMap';
+export const OpenLayerOSMSourceProviderMapType = openLayersMapName;
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
 

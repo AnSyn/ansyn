@@ -5,6 +5,16 @@ import { AnsynApi } from './ansyn-api.service';
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { AnsynModule } from '@ansyn/ansyn/ansyn.module';
 import { getProviders } from '@ansyn/ansyn/app-providers';
+import { RouterModule } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+export function MetaReducer(reducer) {
+	return function (state, action) {
+		return reducer(state, action);
+	};
+}
+
+export const metaReducers = [MetaReducer];
 
 export class AnsynBuilder {
 	api: AnsynApi;
@@ -42,10 +52,14 @@ export class AnsynBuilder {
 		div.appendChild(document.createElement('ansyn-app'));
 	}
 
+
 	buildModule(providers, isNgModule, disAbleRouter?): any {
 		return NgModule({
 			imports: [
-				AnsynModule
+				AnsynModule,
+				RouterModule.forRoot([], { useHash: true }),
+				StoreModule.forRoot({}, { metaReducers }),
+				EffectsModule.forRoot([]),
 			],
 			providers: [AnsynApi, ...providers],
 			bootstrap: [AnsynComponent],

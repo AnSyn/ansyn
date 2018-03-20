@@ -12,13 +12,13 @@ import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import * as turf from '@turf/turf';
-import * as GeoJSON from 'geojson';
+import { GeoJsonObject, Point } from 'geojson';
 export const disabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 export class OpenLayersDisabledMap extends IMap<Map> {
 	static mapType = disabledOpenLayersMapName;
 
-	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
@@ -44,15 +44,15 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		this.setMainLayer(layers[0], position);
 	}
 
-	public getCenter(): Observable<GeoJSON.Point> {
+	public getCenter(): Observable<Point> {
 		const view = this.mapObject.getView();
 		const center = view.getCenter();
-		const point = <GeoJSON.Point> turf.geometry('Point', center);
+		const point = <Point> turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
 
-	setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+	setCenter(center: Point, animation: boolean): Observable<boolean> {
 		return Observable.of(true);
 	}
 
@@ -137,7 +137,7 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		this.mapObject.updateSize();
 	}
 
-	addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
+	addGeojsonLayer(data: GeoJsonObject): void {
 	}
 
 	setPointerMove(enable: boolean) {

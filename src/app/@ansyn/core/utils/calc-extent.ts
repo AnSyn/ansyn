@@ -1,12 +1,12 @@
-import * as GeoJSON from 'geojson';
+import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
 import * as bbox from '@turf/bbox';
 import { polygon } from '@turf/helpers';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 import { CaseMapExtent } from '../models/case-map-position.model';
 
-export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Polygon): CaseMapExtent {
-	const footprintFeature: GeoJSON.Feature<any> = {
+export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): CaseMapExtent {
+	const footprintFeature: Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
 		'geometry': footprint
@@ -15,7 +15,7 @@ export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Poly
 	return <any>bbox(<any>footprintFeature);
 }
 
-export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Polygon, footprint: GeoJSON.MultiPolygon): number {
+export function getFootprintIntersectionRatioInExtent(extent: geoPolygon, footprint: MultiPolygon): number {
 	const extentPolygon = polygon(extent.coordinates);
 	const extentArea = area(extentPolygon);
 

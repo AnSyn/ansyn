@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
-import { Feature } from 'geojson';
-import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { Feature, Point, Position } from 'geojson';
 import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
+import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -113,21 +113,21 @@ export class SynchronizeMapsAction implements Action {
 export class MapSingleClickAction implements Action {
 	type = MapActionTypes.MAP_SINGLE_CLICK;
 
-	constructor(public payload: { lonLat: GeoJSON.Position }) {
+	constructor(public payload: { lonLat: Position }) {
 	}
 }
 
 export class PinPointTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_POINT;
 
-	constructor(public payload: GeoJSON.Position) {
+	constructor(public payload: Position) {
 	}
 }
 
 export class DrawPinPointAction implements Action {
 	type = MapActionTypes.DRAW_PIN_POINT_ON_MAP;
 
-	constructor(public payload: GeoJSON.Position) {
+	constructor(public payload: Position) {
 	}
 }
 
@@ -148,7 +148,7 @@ export class SetMapManualImageProcessing implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: { point: GeoJSON.Point, e: MouseEvent }) {
+	constructor(public payload: { point: Point, e: MouseEvent }) {
 	}
 }
 

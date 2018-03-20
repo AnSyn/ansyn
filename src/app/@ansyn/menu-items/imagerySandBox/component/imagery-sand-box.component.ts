@@ -12,6 +12,7 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/open-layer-center-marker-plugin';
+import { Feature, Point } from 'geojson';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -59,7 +60,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			const lat = parseFloat(coordinate.lat);
 			const long = parseFloat(coordinate.long);
 
-			const geoPoint: GeoJSON.Point = {
+			const geoPoint: Point = {
 				type: 'Point',
 				coordinates: [long, lat]
 			};
@@ -119,7 +120,7 @@ export class ImagerySandBoxComponent implements OnInit {
 
 		clonedCase.state.contextEntities = [];
 
-		const feature: GeoJSON.Feature<any> = {
+		const feature: Feature<any> = {
 			'type': 'Feature',
 			'properties': {},
 			'geometry': {

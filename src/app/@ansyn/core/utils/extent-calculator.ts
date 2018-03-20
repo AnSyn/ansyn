@@ -3,6 +3,7 @@ import { toRadians } from './math';
 import * as turfCenter from '@turf/center';
 import { CaseMapExtent } from '@ansyn/core';
 import * as turf from '@turf/turf';
+import { Feature, Polygon } from 'geojson';
 
 export class ExtentCalculator {
 
@@ -10,7 +11,7 @@ export class ExtentCalculator {
 		return <CaseMapExtent> [...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
 	}
 
-	static extentToPolygon(extent: CaseMapExtent): GeoJSON.Feature<GeoJSON.Polygon> {
+	static extentToPolygon(extent: CaseMapExtent): Feature<Polygon> {
 		const minX = extent[0];
 		const minY = extent[1];
 		const maxX = extent[2];

@@ -1,8 +1,8 @@
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
-import { FeatureCollection } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/core';
+import { IVisualizerEntity } from '@ansyn/imagery';
 
 export interface Case {
 	id?: string;
@@ -44,7 +44,7 @@ export interface CaseState {
 	layers?: CaseLayersState
 }
 
-export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon | GeoJSON.Position;
+export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
 export interface CaseTimeState {
 	type: 'absolute',

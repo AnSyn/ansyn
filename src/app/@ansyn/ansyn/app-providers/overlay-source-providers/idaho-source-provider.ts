@@ -10,6 +10,7 @@ import { toRadians } from '@ansyn/core/utils/math';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { MultiPolygon } from 'geojson';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
@@ -53,7 +54,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as MultiPolygon);
 		}
 
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);

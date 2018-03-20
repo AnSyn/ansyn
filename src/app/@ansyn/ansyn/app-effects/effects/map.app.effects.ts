@@ -3,20 +3,16 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
-	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
+	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, OverlaysActionTypes, OverlaysMarkupAction,
 	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
 import {
-	LayersActionTypes,
-	SelectLayerAction,
+	LayersActionTypes, SelectLayerAction,
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { Case, ICasesState } from '@ansyn/menu-items/cases';
+import { ICasesState } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -24,28 +20,20 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction, IOverlaysState, OverlaysService } from '@ansyn/overlays';
 import {
-	IStatusBarState,
-	statusBarStateSelector,
+	IStatusBarState, statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	ImageryCreatedAction,
-	DrawPinPointAction,
-	MapSingleClickAction,
+	DrawPinPointAction, ImageryCreatedAction, MapSingleClickAction,
 	PinPointTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	endTimingLog,
-	extentFromGeojson,
-	getFootprintIntersectionRatioInExtent,
-	getPointByGeometry,
+	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent, getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
 import {
-	SetActiveCenter,
-	SetMapGeoEnabledModeToolsActionStore,
-	SetPinLocationModeAction,
+	SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -110,7 +98,9 @@ export class MapAppEffects {
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
 		.mergeMap((action: PinPointTriggerAction) => {
-			const region = getPolygonByPointAndRadius(action.payload).geometry;
+			console.log(action.payload);
+			// todo conflict between number[] and position
+			const region = getPolygonByPointAndRadius((<any>action.payload)).geometry;
 			return [
 				new DrawPinPointAction(action.payload),
 				new SetOverlaysCriteriaAction({ region })
@@ -308,7 +298,7 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
 		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
-		.do(([action]: [any]) => {
+		.do((action: any) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.id);
 			communicatorHandler.createMapSingleClickEvent();
 		});
@@ -327,8 +317,8 @@ export class MapAppEffects {
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
-		.map(([action, casesState]: [any, ICasesState]) => {
-			const point = getPointByGeometry(casesState.selectedCase.state.region);
+		.map(([action, { selectedCase }]: [any, ICasesState]) => {
+			const point = (<any>getPointByGeometry(selectedCase.state.region));
 			return new DrawPinPointAction(point.coordinates);
 		});
 

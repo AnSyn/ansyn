@@ -47,6 +47,7 @@ import {
 	CoreActionTypes, coreStateSelector, ICoreState, ImageManualProcessArgs, layoutOptions,
 	SetLayoutAction
 } from '@ansyn/core';
+import { Point } from 'geojson';
 
 
 @Injectable()
@@ -297,7 +298,7 @@ export class ToolsAppEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
 		.filter(communicator => Boolean(communicator))
 		.mergeMap((communicator: CommunicatorEntity) => communicator.getCenter())
-		.map((activeMapCenter: GeoJSON.Point) => new SetActiveCenter(activeMapCenter.coordinates));
+		.map((activeMapCenter: Point) => new SetActiveCenter(activeMapCenter.coordinates));
 
 	/**
 	 * @type Effect
@@ -334,7 +335,7 @@ export class ToolsAppEffects {
 		}))
 		.filter(({ action, communicator }) => Boolean(communicator))
 		.switchMap(({ action, communicator }) => {
-			const center: GeoJSON.Point = {
+			const center: Point = {
 				type: 'Point',
 				coordinates: action.payload
 			};

@@ -3,12 +3,13 @@ import { ImageryCommunicatorService } from './communicator.service';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { Point } from 'geojson';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: ImageryComponentManager = <any>{
 		id: '1',
-		centerChanged: new EventEmitter<GeoJSON.Point>(),
+		centerChanged: new EventEmitter<Point>(),
 		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
@@ -20,7 +21,7 @@ describe('ImageryCommunicatorService', () => {
 
 	const componentManager2: ImageryComponentManager = <any>{
 		id: '2',
-		centerChanged: new EventEmitter<GeoJSON.Point>(),
+		centerChanged: new EventEmitter<Point>(),
 		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),

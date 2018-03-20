@@ -11,6 +11,7 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { ImageryCreatedAction } from '@ansyn/map-facade';
+import { Feature } from 'geojson';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -32,7 +33,7 @@ describe('ContextEntityAppEffects', () => {
 		}
 	};
 
-	const feature: GeoJSON.Feature<any> = {
+	const feature: Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
 		'geometry': {

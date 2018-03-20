@@ -25,6 +25,7 @@ import {
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
 import { CommunicatorEntity } from '@ansyn/imagery';
+import { MultiLineString } from 'geojson';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
@@ -145,7 +146,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		clonedLogicalEntities
 			.filter((entity: IVisualizerEntity) => entity.featureJson.geometry.type === 'MultiPolygon')
 			.forEach((entity: IVisualizerEntity) => {
-				let geometry: GeoJSON.MultiLineString = entity.featureJson.geometry;
+				let geometry: MultiLineString = entity.featureJson.geometry;
 				geometry.type = 'MultiLineString';
 				geometry.coordinates = <any> geometry.coordinates[0];
 			});

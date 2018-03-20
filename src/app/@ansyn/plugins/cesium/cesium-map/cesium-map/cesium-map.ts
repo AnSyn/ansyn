@@ -1,14 +1,14 @@
 import { IMap } from '@ansyn/imagery/model/imap';
 import { CaseMapPosition } from '@ansyn/core/index';
 import { EventEmitter } from '@angular/core';
-import { GeoJsonObject } from 'geojson';
+import { GeoJsonObject, Point } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 
 export class CesiumMap extends IMap {
 	static mapType = 'cesium';
 	static groupLayers = new Map<string, any>();
 
-	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
@@ -23,11 +23,11 @@ export class CesiumMap extends IMap {
 		this.mapObject = {};
 	}
 
-	getCenter(): Observable<GeoJSON.Point> {
+	getCenter(): Observable<Point> {
 		return Observable.throw(new Error('Method not implemented.'));
 	}
 
-	setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+	setCenter(center: Point, animation: boolean): Observable<boolean> {
 		return Observable.throw(new Error('Method not implemented.'));
 	}
 

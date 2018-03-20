@@ -21,7 +21,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
 
-		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+		const point = <Point> turf.geometry('Point', coordinates);
 		this.approximateProjectionSubscription = this.projectionFunc(point).subscribe(cb);
 	}
 

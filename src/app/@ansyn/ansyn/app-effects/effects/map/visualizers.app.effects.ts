@@ -50,7 +50,7 @@ import {
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
+import { Feature, Point, Position } from 'geojson';
 import { IconVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/mouse-shadow.visualizer';
 
@@ -244,7 +244,7 @@ export class VisualizersAppEffects {
 				return [mapState, action.payload];
 			}
 		)
-		.switchMap(([mapState, coords]: [IMapState, number[]]) => {
+		.switchMap(([mapState, coords]: [IMapState, Position]) => {
 			const observables = [];
 
 			mapState.mapsList.forEach((map: CaseMapState) => {
@@ -448,12 +448,12 @@ export class VisualizersAppEffects {
 			return Observable.of(true);
 		}
 		if (gotoExpand) {
-			const gotoPoint: GeoJSON.Point = {
+			const gotoPoint: Point = {
 				type: 'Point',
 				// calculate projection?
 				coordinates: point
 			};
-			const gotoFeatureJson: GeoJSON.Feature<any> = {
+			const gotoFeatureJson: Feature<any> = {
 				type: 'Feature',
 				geometry: gotoPoint,
 				properties: {}
@@ -467,7 +467,7 @@ export class VisualizersAppEffects {
 		return Observable.of(true);
 	}
 
-	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]): Observable<boolean> {
+	drawPinPointIconOnMap(mapData: CaseMapState, point: Position): Observable<boolean> {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
 			const iconVisualizer = communicator.getPlugin<IconVisualizer>(IconVisualizer);
@@ -476,12 +476,12 @@ export class VisualizersAppEffects {
 			}
 			iconVisualizer.clearEntities();
 			if (point) {
-				const pinPoint: GeoJSON.Point = {
+				const pinPoint: Point = {
 					type: 'Point',
 					// calculate projection?
 					coordinates: point
 				};
-				const pinFeatureJson: GeoJSON.Feature<any> = {
+				const pinFeatureJson: Feature<any> = {
 					type: 'Feature',
 					geometry: pinPoint,
 					properties: {}
@@ -519,13 +519,12 @@ export class VisualizersAppEffects {
 				if (!mouseShadowVisualizer) {
 					return;
 				}
-
-				const shadowMousePoint: GeoJSON.Point = {
+				const shadowMousePoint: Point = {
 					type: 'Point',
 					// calculate projection?
 					coordinates: point
 				};
-				const shadowMouseFeatureJson: GeoJSON.Feature<any> = {
+				const shadowMouseFeatureJson: Feature<any> = {
 					type: 'Feature',
 					geometry: shadowMousePoint,
 					properties: {}
@@ -563,7 +562,7 @@ export class VisualizersAppEffects {
 	}
 
 	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
-		const featureJson: GeoJSON.Feature<any> = {
+		const featureJson: Feature<any> = {
 			type: 'Feature',
 			geometry: footprint,
 			properties: {}

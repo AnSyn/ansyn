@@ -211,7 +211,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return Observable.of(true);
 		}
 
-		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = <any> {
+		const featuresCollectionToAdd: FeatureCollection<any> = {
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};

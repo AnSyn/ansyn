@@ -19,12 +19,11 @@ import VectorLayer from 'ol/layer/vector';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import * as turf from '@turf/turf';
-
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
-import { FeatureCollection, GeometryObject, Polygon } from 'geojson';
+import { FeatureCollection, GeometryObject, Polygon, Point as GeoPoint, GeoJsonObject } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 
@@ -38,7 +37,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenLayersMap.mapType;
 	private _mapObject: OLMap;
-	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	public centerChanged: EventEmitter<GeoPoint> = new EventEmitter<GeoPoint>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
@@ -105,21 +104,21 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.initMap(element, _mapLayers, position).subscribe();
 	}
 
-	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();
 		}
-		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		this.projectionSubscription = this.projectionService
 			.projectAccurately(point, this).subscribe(cb);
 	}
 
-	private approximatePositionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+	private approximatePositionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
 
-		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		this.approximateProjectionSubscription = this.projectionService.projectApproximately(point, this)
 			.subscribe(cb);
 	}
@@ -307,7 +306,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return this._mapObject;
 	}
 
-	public setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
+	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).map(projectedCenter => {
 			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
 			if (animation) {
@@ -326,10 +325,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapObject.renderSync();
 	}
 
-	public getCenter(): Observable<GeoJSON.Point> {
+	public getCenter(): Observable<GeoPoint> {
 		const view = this._mapObject.getView();
 		const center = view.getCenter();
-		const point = <GeoJSON.Point> turf.geometry('Point', center);
+		const point = <GeoPoint> turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
@@ -351,7 +350,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
-		const collection: GeoJSON.FeatureCollection<Polygon> = turf.featureCollection([turf.feature(extentFeature)]);
+		const collection: FeatureCollection<Polygon> = turf.featureCollection([turf.feature(extentFeature)]);
 
 		return this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
 			.map((features: Feature[]) => {
@@ -415,7 +414,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	public addGeojsonLayer(data: GeoJSON.GeoJsonObject): void {
+	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
 			source: new Vector({
 				features: new olGeoJSON().readFeatures(data)

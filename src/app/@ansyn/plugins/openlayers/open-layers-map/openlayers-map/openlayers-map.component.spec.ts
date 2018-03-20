@@ -5,6 +5,7 @@ import OSM from 'ol/source/osm';
 import * as openLayersMap from './openlayers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
+import { PLUGINS_COLLECTION } from '@ansyn/imagery';
 
 describe('OpenlayersMapComponent', () => {
 	let component: OpenlayersMapComponent;
@@ -13,7 +14,10 @@ describe('OpenlayersMapComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [OpenlayersMapComponent],
-			providers: [{ provide: ProjectionService, useClass: OpenLayersProjectionService }]
+			providers: [
+				{ provide: ProjectionService, useClass: OpenLayersProjectionService },
+				{ provide: PLUGINS_COLLECTION, useValue: [] }
+			]
 		}).compileComponents();
 	}));
 

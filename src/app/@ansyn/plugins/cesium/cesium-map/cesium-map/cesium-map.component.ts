@@ -1,12 +1,16 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IMap, IMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
+import { BaseImageryPlugin } from '@ansyn/imagery';
+import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
+import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 
 
 @Component({
 	selector: 'ansyn-cesium-component',
 	templateUrl: './cesium-map.component.html',
-	styleUrls: ['./cesium-map.component.less']
+	styleUrls: ['./cesium-map.component.less'],
+	providers: [getPluginsProvider(OpenlayersMapComponent.mapName)]
 })
 
 export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
@@ -19,7 +23,7 @@ export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
 	private _map: CesiumMap;
 	public mapCreated: EventEmitter<IMap>;
 
-	constructor() {
+	constructor(@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 		this.mapCreated = new EventEmitter<IMap>();
 	}
 

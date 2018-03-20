@@ -6,15 +6,21 @@ import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
-import Coordinate = ol.Coordinate;
 import { Actions } from '@ngrx/effects';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	BackToWorldSuccess, BackToWorldView, CaseOrientation, CoreActionTypes, LoggerService,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseOrientation,
+	CoreActionTypes,
+	LoggerService,
 	Overlay
 } from '@ansyn/core';
 import { Store } from '@ngrx/store';
+import Coordinate = ol.Coordinate;
+import { OpenLayersVisualizerMapType } from '@ansyn/plugins/openlayers/open-layer-visualizers';
+import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 
 
 export interface INorthData {
@@ -25,6 +31,8 @@ export interface INorthData {
 
 @Injectable()
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
+	static mapName = OpenlayersMapComponent.mapName;
+
 	onDisposedEvent: EventEmitter<any>;
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
@@ -84,7 +92,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		});
 	}
 
-	// override this method
 	projectPoints(coordinates: Coordinate[]): Observable<Point[]> {
 		const observables = [];
 
@@ -96,20 +103,23 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		return Observable.forkJoin(observables);
 	}
 
-	setCorrectedNorth(retryNumber = 0): Promise<number> {
+	setCorrectedNorth(retryNumber = 0, prevActualNorth = 0): Observable<any> {
 		if (retryNumber === this.maxNumberOfRetries) {
-			return;
+			return Observable.of(prevActualNorth);
 		}
-
-		return this.getCorrectedNorthOnce().toPromise().then<number>((northData: INorthData) => {
-			this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
-			this.ActiveMap.mapObject.renderSync();
+		return this.getCorrectedNorthOnce()
+			.do((northData: INorthData) => {
+				this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
+				this.ActiveMap.mapObject.renderSync();
+			})
+			.switchMap((northData: INorthData) => {
 			if (Math.abs(northData.northOffsetDeg) < this.thresholdDegrees) {
-				return northData.actualNorth;
+				return Observable.of(northData.actualNorth);
 			}
-			return this.setCorrectedNorth(retryNumber + 1);
-		}, (result) => {
-			return Promise.reject(result);
+			console.log("getCorrectedNorthOnce", { actualNorth: northData.actualNorth, prevActualNorth });
+
+
+			return this.setCorrectedNorth(retryNumber + 1, northData.actualNorth);
 		});
 	}
 
@@ -117,21 +127,22 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		const pointNorth = this.actions$
 			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
+
 			.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-				return [payload.ignoreRotation, this.communicator, comboBoxesProperties.orientation, payload.overlay];
+				return [payload.ignoreRotation, comboBoxesProperties.orientation, payload.overlay];
 			})
-			.filter(([ignoreRotation, communicator]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => Boolean(communicator) && communicator.activeMapName !== 'disabledOpenLayersMap')
-			.switchMap(([ignoreRotation, communicator, orientation, overlay]: [boolean, CommunicatorEntity, CaseOrientation, Overlay]) => {
-				return Observable.fromPromise(this.pointNorth(communicator))
+			.filter(() => Boolean(this.communicator) && this.communicator.activeMapName !== 'disabledOpenLayersMap')
+			.switchMap(([ignoreRotation, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+				return this.pointNorth()
 					.do(virtualNorth => {
-						communicator.setVirtualNorth(virtualNorth);
+						this.communicator.setVirtualNorth(virtualNorth);
 						if (!ignoreRotation) {
 							switch (orientation) {
 								case 'Align North':
-									communicator.setRotation(virtualNorth);
+									this.communicator.setRotation(virtualNorth);
 									break;
 								case 'Imagery Perspective':
-									communicator.setRotation(overlay.azimuth);
+									this.communicator.setRotation(overlay.azimuth);
 									break;
 							}
 						}
@@ -140,8 +151,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 		const backToWorldSuccessSetNorth = this.actions$
 			.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
+			.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
 			.withLatestFrom(this.store$.select(statusBarStateSelector))
-			.do(([{ payload }, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+			.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
 				this.communicator.setVirtualNorth(0);
 				switch (comboBoxesProperties.orientation) {
 					case 'Align North':
@@ -150,26 +162,21 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				}
 			}).subscribe();
 
-		this.subscribers.push(pointNorth, backToWorldSuccessSetNorth)
+		this.subscribers.push(pointNorth, backToWorldSuccessSetNorth);
 	}
 
-	pointNorth(comEntity: CommunicatorEntity): Promise<number> {
-		comEntity.updateSize();
-		return new Promise(resolve => {
-			const northPlugin = comEntity.getPlugin<NorthCalculationsPlugin>(NorthCalculationsPlugin);
-			if (!northPlugin) {
-				resolve(0);
-			} else {
-				const currentRotation = comEntity.ActiveMap.mapObject.getView().getRotation();
-				northPlugin.setCorrectedNorth()
-					.then(north => {
-						comEntity.ActiveMap.mapObject.getView().setRotation(currentRotation);
-						resolve(north);
-					}, reason => {
-						this.loggerService.warn(`setCorrectedNorth failed: ${reason}`);
-					});
-			}
-		});
+	pointNorth(): Observable<any> {
+		this.communicator.updateSize();
+		const currentRotation = this.ActiveMap.mapObject.getView().getRotation();
+		return this.setCorrectedNorth()
+			.map(north => {
+				this.ActiveMap.mapObject.getView().setRotation(currentRotation);
+				return north;
+			}).catch(reason => {
+				const error = `setCorrectedNorth failed: ${reason}`;
+				this.loggerService.warn(error);
+				return Observable.throw(error);
+			});
 	}
 
 }

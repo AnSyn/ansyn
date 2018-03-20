@@ -46,6 +46,7 @@
 		"@ngrx/store": "^5.1.0",
 		"@ngrx/store-devtools": "5.1.0",
 		"@turf/turf": "4.7.3",
+		"@types/openlayers": "^4.6.2",
 		"angular-tree-component": "6.1.0",
 		"angular2-uuid": "1.1.1",
 		"ansyn-event-drops": "0.4.12",
@@ -66,7 +67,8 @@
 		"rison": "0.1.1",
 		"rxjs": "5.5.2",
 		"wellknown": "0.5.0",
-		"zone.js": "0.8.14"
+		"zone.js": "0.8.14",
+		"geojson": "^0.5.0"
 	},
 	"devDependencies": {
 		"@angular/cli": "1.6.2",
@@ -103,6 +105,17 @@
 		"ts-node": "3.2.0",
 		"tslint": "5.7.0",
 		"typescript": "2.4.2",
-		"webpack": "3.10.0"
+		"webpack": "3.10.0",
+		"gulp": "^3.9.1",
+		"gulp-git": "^2.5.2",
+		"gulp-inline-ng2-template": "^4.0.0",
+		"gulp-jslint": "^1.0.10",
+		"gulp-json-modify": "^1.0.2",
+		"gulp-less": "^4.0.0",
+		"gulp-ngc": "^0.3.3",
+		"gulp-optimize-js": "^1.1.0",
+		"gulp-rename": "^1.2.2",
+		"gulp-replace": "^0.6.1",
+		"gulp-shell": "^0.6.3"
 	}
 }

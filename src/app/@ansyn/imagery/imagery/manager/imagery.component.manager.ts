@@ -30,7 +30,6 @@ export class ImageryComponentManager {
 	public activeMapName: string;
 	private _visualizers: IMapVisualizer[] = [];
 
-	// protected properties
 	public get id(): string {
 		return this._id;
 	}

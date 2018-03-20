@@ -20,6 +20,7 @@ import {
 import { Store } from '@ngrx/store';
 import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 import 'rxjs/add/operator/retry';
+import { Observer } from 'rxjs/Observer';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -61,33 +62,25 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getCorrectedNorth(): Observable<INorthData> {
-		const mapObject = this.ActiveMap.mapObject;
-		const size = mapObject.getSize();
-		const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
-		const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
-
-
-		if (!olCenterView) {
-			return Observable.throw('no coordinate for pixel');
-		}
-
-		return this.projectPoints([olCenterView, olCenterViewWithOffset]).map((projectedPoints: Point[]) => {
+		return Observable.create((observer: Observer<any>) => {
+			const mapObject = this.ActiveMap.mapObject;
+			const size = mapObject.getSize();
+			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
+			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
+			if (!olCenterView) {
+				observer.error('no coordinate for pixel');
+			}
+			observer.next([olCenterView, olCenterViewWithOffset])
+		})
+		.switchMap((centers) => this.projectPoints(centers).map((projectedPoints: Point[]): INorthData => {
 			const projectedCenterView = projectedPoints[0].coordinates;
 			const projectedCenterViewWithOffset = projectedPoints[1].coordinates;
-
-			const northAngleRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-			const northAngleDeg = toDegrees(northAngleRad);
-
+			const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
+			const northOffsetDeg = toDegrees(northOffsetRad);
 			const view = this.ActiveMap.mapObject.getView();
-			const actualNorth = northAngleRad + view.getRotation();
-
-			const eventArgs: INorthData = {
-				northOffsetRad: northAngleRad,
-				northOffsetDeg: northAngleDeg,
-				actualNorth: actualNorth
-			};
-			return eventArgs;
-		})
+			const actualNorth = northOffsetRad + view.getRotation();
+			return { northOffsetRad, northOffsetDeg, actualNorth };
+		}))
 		.mergeMap((northData: INorthData) => {
 			this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
 			this.ActiveMap.mapObject.renderSync();
@@ -155,10 +148,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		this.communicator.updateSize();
 		const currentRotation = this.ActiveMap.mapObject.getView().getRotation();
 		return this.getCorrectedNorth()
-			.map(north => {
-				this.ActiveMap.mapObject.getView().setRotation(currentRotation);
-				return north;
-			}).catch(reason => {
+			.do(() => this.ActiveMap.mapObject.getView().setRotation(currentRotation))
+			.catch(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
 				return Observable.throw(error);

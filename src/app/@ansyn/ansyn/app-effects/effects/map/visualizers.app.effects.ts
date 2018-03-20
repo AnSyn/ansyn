@@ -573,7 +573,7 @@ export class VisualizersAppEffects {
 		if (communicator) {
 			const iconVisualizer = communicator.getVisualizer(IconVisualizerType);
 			if (!iconVisualizer) {
-				return;
+				return Observable.of(true);
 			}
 			iconVisualizer.clearEntities();
 			if (point) {

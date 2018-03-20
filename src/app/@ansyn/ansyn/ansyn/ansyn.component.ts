@@ -10,6 +10,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
+import { LoadDefaultCaseAction } from '@ansyn/menu-items';
 
 @Component({
 	selector: 'ansyn-app',
@@ -42,6 +43,7 @@ export class AnsynComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.store$.dispatch(new LoadDefaultCaseAction());
 		this.selectedCaseName$.subscribe(_selectedCaseName => {
 			this.selectedCaseName = _selectedCaseName;
 		});

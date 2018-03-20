@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DisabledMapComponent } from './disabled-map.component';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
+import { PLUGINS_COLLECTION } from '@ansyn/imagery';
 
 describe('openLayersMap DisabledMapComponent spec', () => {
 	let component: DisabledMapComponent;
@@ -9,7 +10,8 @@ describe('openLayersMap DisabledMapComponent spec', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DisabledMapComponent]
+			declarations: [DisabledMapComponent],
+			providers: [{ provide: PLUGINS_COLLECTION, useValue: [] }]
 		}).compileComponents();
 	}));
 

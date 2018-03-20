@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CesiumMapComponent } from './cesium-map.component';
+import { PLUGINS_COLLECTION } from '@ansyn/imagery';
 
 describe('CesiumMapComponent', () => {
 	let component: CesiumMapComponent;
@@ -7,7 +8,8 @@ describe('CesiumMapComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [CesiumMapComponent]
+			declarations: [CesiumMapComponent],
+			providers: [{ provide: PLUGINS_COLLECTION, useValue: [] }]
 		}).compileComponents();
 	}));
 

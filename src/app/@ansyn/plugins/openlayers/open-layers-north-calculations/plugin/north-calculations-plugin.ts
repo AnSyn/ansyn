@@ -60,7 +60,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		this.subscribers = [];
 	}
 
-	getCorrectedNorthOnce(): Observable<INorthData> {
+	getCorrectedNorth(): Observable<INorthData> {
 		const mapObject = this.ActiveMap.mapObject;
 		const size = mapObject.getSize();
 		const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
@@ -87,7 +87,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				actualNorth: actualNorth
 			};
 			return eventArgs;
-		});
+		})
+		.mergeMap((northData: INorthData) => {
+			this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
+			this.ActiveMap.mapObject.renderSync();
+			if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
+				return Observable.throw({ result: northData.actualNorth });
+			}
+			return Observable.of(northData.actualNorth);
+		})
+		.retry(this.maxNumberOfRetries)
+		.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
@@ -99,20 +109,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		});
 
 		return Observable.forkJoin(observables);
-	}
-
-	setCorrectedNorth(): Observable<any> {
-		return this.getCorrectedNorthOnce()
-			.mergeMap((northData: INorthData) => {
-				this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
-				this.ActiveMap.mapObject.renderSync();
-				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return Observable.throw({ result: northData.actualNorth });
-				}
-				return Observable.of(northData.actualNorth);
-			})
-			.retry(this.maxNumberOfRetries)
-			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
 	}
 
 	initPluginSubscribers() {
@@ -158,7 +154,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.ActiveMap.mapObject.getView().getRotation();
-		return this.setCorrectedNorth()
+		return this.getCorrectedNorth()
 			.map(north => {
 				this.ActiveMap.mapObject.getView().setRotation(currentRotation);
 				return north;

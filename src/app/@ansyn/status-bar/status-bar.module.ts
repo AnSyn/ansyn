@@ -9,7 +9,6 @@ import { TimelineIntervalsPickerComponent } from './components/timeline-interval
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models';
-import { DatePickerComponent } from '@ansyn/core/components/ansyn-date-picker/ansyn-date-picker.component';
 
 
 @NgModule({
@@ -22,7 +21,6 @@ import { DatePickerComponent } from '@ansyn/core/components/ansyn-date-picker/an
 	declarations: [
 		StatusBarComponent,
 		ComboBoxComponent,
-		DatePickerComponent,
 		TimelineTimepickerComponent,
 		TimelineIntervalsPickerComponent
 	],

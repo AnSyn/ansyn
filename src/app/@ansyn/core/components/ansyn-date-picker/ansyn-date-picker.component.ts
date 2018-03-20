@@ -15,7 +15,7 @@ export class DatePickerComponent implements OnInit {
 	@ViewChild('datePicker') datePicker: ElementRef;
 	@Output() dateChange = new EventEmitter<Date>();
 
-	@Input() public disabled = false;
+	@Input() disabled = false;
 
 	@Input()
 	set date(val) {

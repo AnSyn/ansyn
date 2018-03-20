@@ -9,7 +9,7 @@ import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { OverlaysCriteria } from '@ansyn/core';
+import { CaseTimeState, OverlaysCriteria } from '@ansyn/core';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -210,11 +210,16 @@ describe('OverlaysService', () => {
 			filters: {},
 			overlays: new Map()
 		};
+		const mockTimeState: CaseTimeState = {
+			type: 'absolute',
+			from: new Date(Date.now() - 3600000 * 24 * 365),
+			to: new Date()
+		};
 		overlaysTmpData.forEach(item => {
 			mockData.overlays.set(item.id, item);
 		});
 
-		const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters);
+		const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters, mockTimeState);
 		expect(result.length).toBe(overlaysTmpData.length);
 	});
 

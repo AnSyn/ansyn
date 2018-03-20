@@ -36,17 +36,16 @@ export class ImageryComponentManager {
 	}
 
 	public get plugins(): BaseImageryPlugin[] {
-		return this._plugins;
+		return this._mapComponentRef.instance.plugins;
 	}
 
 	constructor(protected imageryProviderService: ImageryProviderService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				protected mapComponentElem: ViewContainerRef,
-				protected _mapComponentRef: ComponentRef<any>,
+				protected _mapComponentRef: ComponentRef<IMapComponent>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
 				protected config: IImageryConfig,
-				protected _id: string,
-				protected _plugins: BaseImageryPlugin[]
+				protected _id: string
 	) {
 		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	}
@@ -107,11 +106,11 @@ export class ImageryComponentManager {
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-			const factory = this.componentFactoryResolver.resolveComponentFactory(providedMap.mapComponent);
+			const factory = this.componentFactoryResolver.resolveComponentFactory<IMapComponent>(providedMap.mapComponent);
 
-			this._mapComponentRef = this.mapComponentElem.createComponent(factory);
+			this._mapComponentRef = this.mapComponentElem.createComponent<IMapComponent>(factory);
 
-			const mapComponent: IMapComponent = this._mapComponentRef.instance;
+			const mapComponent = this._mapComponentRef.instance;
 			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 				this.internalSetActiveMap(map);
 				this.buildActiveMapVisualizers(activeMapName, map);

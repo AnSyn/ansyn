@@ -1,7 +1,8 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersDisabledMap } from './open-layers-disabled-map';
-import { IMap, IMapComponent } from '@ansyn/imagery';
+import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 		<div #olMap></div>
 	`,
 	styles: [
-		`div {
+			`div {
 			position: absolute;
 			width: 100%;
 			height: 100%;
@@ -19,7 +20,8 @@ import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 			display: block;
 			box-sizing: border-box;
 
-		}`]
+		}`],
+	providers: [getPluginsProvider(DisabledMapComponent.mapName)]
 })
 
 export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
@@ -32,8 +34,7 @@ export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 	private _map: OpenLayersDisabledMap;
 	public mapCreated: EventEmitter<IMap>;
 
-
-	constructor() {
+	constructor(@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 		this.mapCreated = new EventEmitter<IMap>();
 	}
 

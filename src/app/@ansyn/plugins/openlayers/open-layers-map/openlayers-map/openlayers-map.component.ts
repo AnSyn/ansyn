@@ -1,14 +1,16 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersMap } from './openlayers-map';
-import { IMap, IMapComponent } from '@ansyn/imagery';
+import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
 
 
 @Component({
 	selector: 'ansyn-ol-component',
 	templateUrl: './openlayers-map.component.html',
-	styleUrls: ['./openlayers-map.component.less']
+	styleUrls: ['./openlayers-map.component.less'],
+	providers: [getPluginsProvider(OpenlayersMapComponent.mapName)]
 })
 
 export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {
@@ -21,7 +23,7 @@ export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent 
 	private _map: OpenLayersMap;
 	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
-	constructor(private projectionService: ProjectionService) {
+	constructor(private projectionService: ProjectionService, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 
 	}
 
@@ -35,6 +37,7 @@ export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent 
 
 	ngOnDestroy(): void {
 		this._map.dispose();
+		this.plugins.forEach((p) => p.dispose())
 	}
 
 }

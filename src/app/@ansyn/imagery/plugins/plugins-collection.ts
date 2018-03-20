@@ -16,13 +16,6 @@ export interface ImageryPluginProvider extends StaticClassProvider {
 	multi: true;
 }
 
-export const emptyCollectionProvider: PluginsCollectionProvider = {
-	provide: PLUGINS_COLLECTION,
-	useValue: [],
-	multi: true
-};
-
-
 export function createCollection(providers: Array<ImageryPluginProvider>): PluginsCollectionProvider {
 	return {
 		provide: PLUGINS_COLLECTION,

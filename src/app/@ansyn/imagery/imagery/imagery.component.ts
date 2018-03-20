@@ -17,15 +17,12 @@ import { IImageryConfig } from '../model/iimagery-config';
 import { ConfigurationToken } from '../configuration.token';
 import 'rxjs/add/operator/take';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
-import { PluginsProvider } from './providers/collections.factory';
 
 
 @Component({
 	selector: 'ansyn-imagery-view',
 	templateUrl: './imagery.component.html',
-	styleUrls: ['./imagery.component.less'],
-	providers: [PluginsProvider]
+	styleUrls: ['./imagery.component.less']
 })
 
 export class ImageryComponent implements OnInit, OnDestroy {
@@ -49,8 +46,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this._mapComponentRef,
 			this.baseSourceProviders,
 			this.config,
-			this.mapComponentSettings.id,
-			this.plugins
+			this.mapComponentSettings.id
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).then(() => {
@@ -62,8 +58,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				protected imageryProviderService: ImageryProviderService,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
-				@Inject(ConfigurationToken) protected config: IImageryConfig,
-				@Inject(BaseImageryPlugin) protected plugins: BaseImageryPlugin[] ) {
+				@Inject(ConfigurationToken) protected config: IImageryConfig) {
 	}
 
 	ngOnDestroy() {

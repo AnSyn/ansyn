@@ -7,8 +7,10 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { EventEmitter } from '@angular/core';
+import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 
 export class CenterMarkerPlugin extends BaseImageryPlugin {
+	static mapName = OpenlayersMapComponent.mapName;
 	onDisposedEvent: EventEmitter<any>;
 	private _subscriptions;
 	private _imageryCommunicator: CommunicatorEntity;

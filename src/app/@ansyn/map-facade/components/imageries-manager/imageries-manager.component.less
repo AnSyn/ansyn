@@ -55,13 +55,22 @@
 			bottom: 0;
 			top: auto;
 			right: auto;
-			left: 160px;
-			background: rgba(0,0,0,0.3);
-			padding: 3px;
+			padding-left: 13px;
+			padding-bottom: 18px;
+			color: #cccccc;
 		}
 		/deep/ .ol-scale-line {
 			bottom: 0;
+			height: 32px;
 		}
+		/deep/ .ol-scale-line-inner{
+			margin-top: 16px;
+		}
+
+		/deep/ .ol-scale-line {
+			min-width: 144px;
+		}
+
 		&.layout1 {
 			/deep/ .ol-mouse-position, /deep/ .ol-scale-line {
 				bottom: @status-bar-height;

@@ -2,8 +2,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
 import { Injectable } from '@angular/core';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerBingSourceProviderMapType = 'openLayersMap';
+export const OpenLayerBingSourceProviderMapType = openLayersMapName;
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 @Injectable()

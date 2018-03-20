@@ -2,8 +2,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerESRI_4326SourceProviderMapType = 'openLayersMap';
+export const OpenLayerESRI_4326SourceProviderMapType = openLayersMapName;
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @Injectable()

@@ -63,6 +63,8 @@ import {
 	UpdateAlertMsg
 } from '@ansyn/core';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
+import { disabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -172,8 +174,8 @@ export class MapAppEffects {
 				.switchMap(layer => {
 					let observable;
 					if (overlay.isGeoRegistered) {
-						if (communicator.activeMapName === 'disabledOpenLayersMap') {
-							observable = Observable.fromPromise(communicator.setActiveMap('openLayersMap', mapData.position, layer));
+						if (communicator.activeMapName === disabledOpenLayersMapName) {
+							observable = Observable.fromPromise(communicator.setActiveMap(openLayersMapName, mapData.position, layer));
 						}
 						if (intersection < this.config.overlayCoverage) {
 							observable = communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
@@ -181,8 +183,8 @@ export class MapAppEffects {
 							observable = communicator.resetView(layer, mapData.position);
 						}
 					} else {
-						if (communicator.activeMapName !== 'disabledOpenLayersMap') {
-							observable = Observable.fromPromise(communicator.setActiveMap('disabledOpenLayersMap', mapData.position, layer));
+						if (communicator.activeMapName !== disabledOpenLayersMapName) {
+							observable = Observable.fromPromise(communicator.setActiveMap(disabledOpenLayersMapName, mapData.position, layer));
 						} else {
 							observable = communicator.resetView(layer, mapData.position);
 						}

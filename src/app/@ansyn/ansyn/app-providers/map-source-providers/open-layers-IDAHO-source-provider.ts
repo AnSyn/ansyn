@@ -1,13 +1,13 @@
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
+import { openLayersMapName, ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Injectable } from '@angular/core';
 import { Overlay } from '@ansyn/core';
 import { extentFromGeojson } from '@ansyn/core/utils';
 import proj from 'ol/proj';
 
-export const OpenLayerIDAHOSourceProviderMapType = 'openLayersMap';
+export const OpenLayerIDAHOSourceProviderMapType = openLayersMapName;
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @Injectable()

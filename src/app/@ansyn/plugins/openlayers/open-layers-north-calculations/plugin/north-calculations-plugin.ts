@@ -21,6 +21,7 @@ import { Store } from '@ngrx/store';
 import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -44,7 +45,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		return this.communicator.ActiveMap;
 	}
 
-	constructor(protected actions$: Actions, public loggerService: LoggerService, public store$: Store<any>) {
+	constructor(protected actions$: Actions,
+				public loggerService: LoggerService,
+				public store$: Store<any>,
+				protected projectionService: ProjectionService) {
 		super();
 		this.onDisposedEvent = new EventEmitter();
 		this.isEnabled = true;
@@ -62,25 +66,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getCorrectedNorth(): Observable<INorthData> {
-		return Observable.create((observer: Observer<any>) => {
-			const mapObject = this.ActiveMap.mapObject;
-			const size = mapObject.getSize();
-			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
-			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
-			if (!olCenterView) {
-				observer.error('no coordinate for pixel');
-			}
-			observer.next([olCenterView, olCenterViewWithOffset])
-		})
-		.switchMap((centers) => this.projectPoints(centers).map((projectedPoints: Point[]): INorthData => {
-			const projectedCenterView = projectedPoints[0].coordinates;
-			const projectedCenterViewWithOffset = projectedPoints[1].coordinates;
+		return this.getProjectedCenters()
+		.map((projectedCenters: Point[]): INorthData => {
+			const projectedCenterView = projectedCenters[0].coordinates;
+			const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 			const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 			const northOffsetDeg = toDegrees(northOffsetRad);
 			const view = this.ActiveMap.mapObject.getView();
 			const actualNorth = northOffsetRad + view.getRotation();
 			return { northOffsetRad, northOffsetDeg, actualNorth };
-		}))
+		})
 		.mergeMap((northData: INorthData) => {
 			this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
 			this.ActiveMap.mapObject.renderSync();
@@ -94,14 +89,24 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		const observables = [];
-
-		coordinates.forEach(coordinate => {
+		return Observable.forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
-			observables.push(this.ActiveMap.projectionService.projectAccurately(point, this.ActiveMap));
-		});
+			return this.projectionService.projectAccurately(point, this.ActiveMap);
+		}));
+	}
 
-		return Observable.forkJoin(observables);
+	getProjectedCenters(): Observable<Point[]> {
+		return Observable.create((observer: Observer<any>) => {
+			const mapObject = this.ActiveMap.mapObject;
+			const size = mapObject.getSize();
+			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
+			if (!olCenterView) {
+				observer.error('no coordinate for pixel');
+			}
+			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
+			observer.next([olCenterView, olCenterViewWithOffset])
+		})
+		.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers))
 	}
 
 	initPluginSubscribers() {

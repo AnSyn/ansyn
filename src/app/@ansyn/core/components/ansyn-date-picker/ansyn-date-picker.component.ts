@@ -20,6 +20,9 @@ export class DatePickerComponent implements OnInit {
 	@Input()
 	set date(val) {
 		this._datePickerValue = val;
+		if (this._datePickerInstance) {
+			this._datePickerInstance.setDate(this._datePickerValue, false);
+		}
 	}
 
 	constructor() {}

@@ -74,10 +74,12 @@ export class OverlaysService {
 
 		doNTimes(howManyIntervals, intervalIndex => {
 			const intervalStartMs = startTime + intervalIndex * intervalSize;
+			const intervalEndTime = new Date(intervalStartMs + intervalSize - 1);
+
 			intervalsArrays.push({
 				startTime: new Date(intervalStartMs),
-				endTime: new Date(intervalStartMs + intervalSize - 1),
-				pivot: new Date(intervalStartMs + intervalSize / 2 ),
+				endTime: intervalEndTime,
+				pivot: intervalEndTime,
 				overlays: []
 			})
 		});

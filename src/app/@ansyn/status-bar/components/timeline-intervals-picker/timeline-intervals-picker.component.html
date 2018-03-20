@@ -12,6 +12,11 @@
 		</option>
 	</select>
 </div>
+
+<div class="error-message-wrapper no-bottom-margin">
+	<p *ngIf="!timeIntervalAdvancedOptions && validation.timeFrameErr" class="error-message">{{validation.timeFrameErr}}</p>
+</div>
+
 <button class="advance-options-button" (click)="toggleIntervalAdvancedOptions()"
 		[class.active]="timeIntervalAdvancedOptions">
 	<span>Advanced</span>
@@ -23,24 +28,28 @@
 		<div>
 			<b>Time Settings</b>
 		</div>
-		<div class="advance-options-time-intervals">
+		<div class="advance-options-time-intervals row">
 			<label>Intervals: Each</label>
 			<ul>
 				<li>
 					<label>Year</label>
-					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.years">
+					<input type="number" min="0" max="99" [(ngModel)]="advancedOptionInterval.years"
+						   (change)="calculateBestWithin()">
 				</li>
 				<li>
 					<label>Month</label>
-					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.months">
+					<input type="number" min="0" max="11" [(ngModel)]="advancedOptionInterval.months"
+						   (change)="calculateBestWithin()">
 				</li>
 				<li>
 					<label>Day</label>
-					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.days">
+					<input type="number" min="0" max="29" [(ngModel)]="advancedOptionInterval.days"
+						   (change)="calculateBestWithin()">
 				</li>
 				<li>
 					<label>Hour</label>
-					<input type="number" min="0" value="0" [(ngModel)]="advancedOptionInterval.hours">
+					<input type="number" min="0" max="23" [(ngModel)]="advancedOptionInterval.hours"
+						   (change)="calculateBestWithin()">
 				</li>
 			</ul>
 		</div>
@@ -48,8 +57,8 @@
 			Time Frame:
 		</div>
 		<ul class="advance-options-time-frame">
-			<li>
-				<input type="radio" name="advance-options-time-frame" checked="checked"
+			<li class="row">
+				<input type="radio" name="advance-options-time-frame" [checked]="timeFrame === 'last'"
 					   id="advance-options-time-frame-last">
 				<label for="advance-options-time-frame-last" (click)="setTimeFrameType('last')">Last</label>
 				<input type="number" min="1" value="1" [disabled]="timeFrame !== 'last'" [(ngModel)]="advancedOptionTimeFrameLast">
@@ -60,21 +69,24 @@
 					</option>
 				</select>
 			</li>
-			<li class="advance-options-time-frame-scope">
-				<input type="radio" name="advance-options-time-frame"
+			<li class="advance-options-time-frame-scope row">
+				<input type="radio" name="advance-options-time-frame" [checked]="timeFrame === 'scope'"
 					   id="advance-options-time-frame-scope" (click)="setTimeFrameType('scope')">
-				<div class="rows-container">
-					<div>
+				<div>
+					<div class="row">
 						<label for="advance-options-time-frame-scope">Start</label>
 						<ansyn-date-picker [disabled]="timeFrame !== 'scope'" [(date)]="advancedOptionStartDate">
 						</ansyn-date-picker>
 					</div>
-					<div>
-						<label for="advance-options-time-frame-scope">end</label>
+					<div class="row no-bottom-margin">
+						<label for="advance-options-time-frame-scope">End</label>
 						<ansyn-date-picker [disabled]="timeFrame !== 'scope'" [(date)]="advancedOptionEndDate">
 						</ansyn-date-picker>
 					</div>
 				</div>
+			</li>
+			<li class="error-message-wrapper no-bottom-margin">
+				<p *ngIf="validation.timeFrameErr" class="error-message">{{validation.timeFrameErr}}</p>
 			</li>
 		</ul>
 	</div>
@@ -82,61 +94,56 @@
 		Criteria:
 	</div>
 	<div class="advance-options-strategies">
-		<div class="filter-strategy-best" [class.disabled]="timeIntervalFilterStrategy !== 'best'">
+		<div class="filter-strategy-best row" [class.disabled]="timeIntervalFilterStrategy !== 'best'">
 			<input type="radio" name="filter-strategy" checked="checked"
 				   id="filter-strategy-best-radio" (click)="setIntervalsFilterStrategy('best')">
-			<div class="rows-container">
-				<label for="filter-strategy-best-radio">Best within</label><br>
-				<div>
+
+			<label for="filter-strategy-best-radio">Best within</label><br>
+
+			<div>
+				<div class="row">
+
 					<select [disabled]="timeIntervalFilterStrategy !== 'best'"
 							[(ngModel)]="advancedOptionCriteriaBest.before">
-						<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
+						<option *ngFor="let timeUnit of bestWithin.validOptions" [value]="timeUnit.value">
 							{{timeUnit.text}}
 						</option>
 					</select>
 					<span>Before</span>
 				</div>
 
-				<div>
+				<div class="row no-bottom-margin">
 					<select [disabled]="timeIntervalFilterStrategy !== 'best'"
 							[(ngModel)]="advancedOptionCriteriaBest.after">
-						<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
+						<option *ngFor="let timeUnit of bestWithin.validOptions" [value]="timeUnit.value">
 							{{timeUnit.text}}
 						</option>
 					</select>
 					<span>After</span>
 				</div>
-
 			</div>
 		</div>
-		<div class="filter-strategy-closest">
+
+		<div class="filter-strategy-closest row no-bottom-margin">
 			<input type="radio" name="filter-strategy"
 				   id="filter-strategy-closest-radio" (click)="setIntervalsFilterStrategy('closest')">
 
-			<ul>
-				<li>
-					<label for="filter-strategy-closest-radio">Closest</label>
-				</li>
-				<li>
-					<input id="filter-strategy-closest-before" type="radio" name="filter-strategy-closest"
-						   value="closest-before" checked="checked" [disabled]="timeIntervalFilterStrategy !== 'closest'"
-						   [(ngModel)]="advancedOptionCriteriaClosest">
-					<label for="filter-strategy-closest-before">Before</label><br>
-				</li>
-				<li>
-					<input id="filter-strategy-closest-after" type="radio" name="filter-strategy-closest"
-						   value="closest-after" [disabled]="timeIntervalFilterStrategy !== 'closest'"
-						   [(ngModel)]="advancedOptionCriteriaClosest">
-					<label for="filter-strategy-closest-after">After</label><br>
-				</li>
-				<li>
-					<input id="filter-strategy-closest-both" type="radio" name="filter-strategy-closest"
-						   value="closest-both" [disabled]="timeIntervalFilterStrategy !== 'closest'"
-						   [(ngModel)]="advancedOptionCriteriaClosest">
-					<label for="filter-strategy-closest-both">Doesn't matter</label><br>
-				</li>
-			</ul>
+			<label for="filter-strategy-closest-radio">Closest</label>
+
+			<div>
+				<select [disabled]="timeIntervalFilterStrategy !== 'closest'"
+						[(ngModel)]="advancedOptionCriteriaClosest">
+					<option value="closest-before">Before</option>
+					<option value="closest-after">After</option>
+					<option value="closest-both">Doesn't matter</option>
+				</select>
+			</div>
 		</div>
+
+		<div class="error-message-wrapper row">
+			<p *ngIf="validation.BestWithinErr" class="error-message">{{validation.BestWithinErr}}</p>
+		</div>
+
 	</div>
 </div>
 

@@ -27,14 +27,12 @@
 		color: @text-disabled-color;
 		cursor: auto;
 	}
-	.rows-container {
-		> div {
-			margin-bottom: @row-bottom-margin;
-			display: flex;
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
+	.row {
+		margin-bottom: @row-bottom-margin;
+		display: flex;
+	}
+	.no-bottom-margin {
+		margin-bottom: 0;
 	}
 
 	.advance-options-button {
@@ -67,7 +65,6 @@
 
 		.advance-options-time {
 			.advance-options-time-intervals {
-				display: flex;
 				margin: @vertical-section-margin;
 				label {
 					white-space: nowrap;
@@ -84,9 +81,6 @@
 			}
 			.advance-options-time-frame {
 				margin: @vertical-section-margin;
-				li {
-					display: flex;
-				}
 				label {
 					min-width: 50px;
 				}
@@ -95,17 +89,21 @@
 		.advance-options-strategies {
 			> div {
 				margin: @vertical-section-margin;
-				display: flex;
 				&:first-child {
 					margin-bottom: 10px;
 				}
 			}
-
+			label {
+				min-width: 80px;
+			}
 			input[type=radio] {
 				margin-left: 0;
 			}
-
-			.filter-strategy-closest {
+			select {
+				min-width: 90px;
+			}
+			.filter-strategy-best span {
+				margin-left: 5px;
 			}
 		}
 	}
@@ -129,6 +127,16 @@
 		}
 		.error {
 			color: crimson;
+		}
+	}
+	.error-message-wrapper {
+		height: 15px;
+		.error-message {
+			height: 15px;
+			color: #d50000;
+			font-size: 12px;
+			margin: 0;
+			padding: 0;
 		}
 	}
 }

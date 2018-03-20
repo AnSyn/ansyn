@@ -7,13 +7,14 @@ import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/open-layer-center-
 import { Actions } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core';
 import { Store } from '@ngrx/store';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		OpenLayersMapModule,
 		ImageryModule.provideCollection([
-			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store], multi: true },
+			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store, ProjectionService], multi: true },
 			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true }
 		])
 	]

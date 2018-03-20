@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector, toolsFlags } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
 
-enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
 @Component({
 	selector: 'ansyn-tools',

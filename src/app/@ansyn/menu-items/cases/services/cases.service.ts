@@ -9,7 +9,11 @@ import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { CaseTimeState, ErrorHandlerService } from '@ansyn/core';
+import {
+	CaseFacetsState,
+	CaseLayersState, CaseMapsState, CaseTimeState, ErrorHandlerService, IContextEntity, ImageManualProcessArgs,
+	Overlay
+} from '@ansyn/core';
 import { UUID } from "angular2-uuid";
 import * as moment from 'moment';
 

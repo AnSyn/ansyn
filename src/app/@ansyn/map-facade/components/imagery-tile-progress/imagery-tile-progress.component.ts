@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IMapState, MapsProgress, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Store } from '@ngrx/store';
-
+import { Observable } from 'rxjs/Observable';
 @Component({
 	selector: 'ansyn-imagery-tile-progress',
 	templateUrl: './imagery-tile-progress.component.html',

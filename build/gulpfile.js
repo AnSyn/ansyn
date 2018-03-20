@@ -100,21 +100,14 @@ gulp.task('copy-assets', ['getAppConfig'], function (done) {
 
 gulp.task('fix-path', ['copy-assets'], function (done) {
 	replace({
-		regex: '\'@ansyn/app/',
-		replacement: '\'ng-ansyn/src/app/app/',
+		regex: '\'@ansyn/',
+		replacement: '\'ng-ansyn/src/app/@ansyn/',
 		// replacement: '\'build/dist/src/app/app/',
 		paths: ['dist/'],
 		recursive: true,
 		silent: true
 	});
-	replace({
-		regex: '\'@ansyn/',
-		replacement: '\'ng-ansyn/src/app/packages/',
-		// replacement: '\'build/dist/src/app/packages/',
-		paths: ['dist/'],
-		recursive: true,
-		silent: true
-	});
+
 	return done()
 
 });

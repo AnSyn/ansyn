@@ -2,7 +2,8 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Dictionary } from '@ngrx/entity/src/models';
 import { UUID } from 'angular2-uuid';
 
 export interface CaseModal {

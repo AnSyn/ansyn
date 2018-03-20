@@ -16,7 +16,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 		super(opt_options);
 	}
 
-	private positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+	private positionToPoint(coordinates: ol.Coordinate, cb: (p: Point) => void) {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}

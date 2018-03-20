@@ -3,7 +3,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { coreStateSelector, ICoreState, IToastMessage } from '../../reducers/core.reducer';
 import { SetToastMessageAction } from '../../actions/core.actions';
-
+import { Observable } from 'rxjs/Observable';
 const animations: any[] = [
 	trigger('toastAnimation', [
 		transition(':enter', [style({

@@ -5,6 +5,7 @@ import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions'
 import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
+import { Observable } from 'rxjs/Observable';
 
 const animationsDuring = '0.2s';
 

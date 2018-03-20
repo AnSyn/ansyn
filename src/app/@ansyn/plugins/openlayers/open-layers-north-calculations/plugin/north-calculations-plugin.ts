@@ -18,10 +18,8 @@ import {
 	Overlay
 } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import Coordinate = ol.Coordinate;
-import { OpenLayersVisualizerMapType } from '@ansyn/plugins/openlayers/open-layer-visualizers';
 import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
-
+import 'rxjs/add/operator/retry';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -92,7 +90,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		});
 	}
 
-	projectPoints(coordinates: Coordinate[]): Observable<Point[]> {
+	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
 		const observables = [];
 
 		coordinates.forEach(coordinate => {
@@ -103,24 +101,18 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		return Observable.forkJoin(observables);
 	}
 
-	setCorrectedNorth(retryNumber = 0, prevActualNorth = 0): Observable<any> {
-		if (retryNumber === this.maxNumberOfRetries) {
-			return Observable.of(prevActualNorth);
-		}
+	setCorrectedNorth(): Observable<any> {
 		return this.getCorrectedNorthOnce()
-			.do((northData: INorthData) => {
+			.mergeMap((northData: INorthData) => {
 				this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
 				this.ActiveMap.mapObject.renderSync();
-			})
-			.switchMap((northData: INorthData) => {
-			if (Math.abs(northData.northOffsetDeg) < this.thresholdDegrees) {
+				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
+					return Observable.throw({ result: northData.actualNorth });
+				}
 				return Observable.of(northData.actualNorth);
-			}
-			console.log("getCorrectedNorthOnce", { actualNorth: northData.actualNorth, prevActualNorth });
-
-
-			return this.setCorrectedNorth(retryNumber + 1, northData.actualNorth);
-		});
+			})
+			.retry(this.maxNumberOfRetries)
+			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
 	}
 
 	initPluginSubscribers() {

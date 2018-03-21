@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoadDefaultCaseAction } from '@ansyn/menu-items';
-import { SetLayoutAction } from '@ansyn/core';
+import { SetLayoutAction, SetWindowLayout, WindowLayout } from '@ansyn/core';
 
 @Injectable()
 export class AnsynApi {
 
 	constructor(public store: Store<any>) {
-		this.store.dispatch(new LoadDefaultCaseAction());
+		// this.store.dispatch(new LoadDefaultCaseAction());
 	}
 
 
@@ -15,8 +15,8 @@ export class AnsynApi {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}
 
-	changeWindowLayout(windowLayout) {
-		// this.store.dispatch((new SetWindowLayout(windowLayout)))
+	changeWindowLayout(windowLayout : WindowLayout) {
+		this.store.dispatch((new SetWindowLayout({windowLayout})))
 	}
 
 

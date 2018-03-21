@@ -3,6 +3,12 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
+export enum AnsynMode {
+	encapsulated,
+	ngModule,
+	compiledNgModule,
+	fullapp
+}
 export const configuration = {
-	production: false,
+	production: AnsynMode.fullapp,
 };

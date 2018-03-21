@@ -1,7 +1,7 @@
 <div class="app animations" [ngClass]="isPinnedClass">
 	<div class="menu">
 		<ansyn-menu [version]="version" *ngIf="(windowLayout$ | async).menu"></ansyn-menu>
-		<ansyn-tools *ngIf="(windowLayout$ | async).toolsOverMenu"></ansyn-tools>
+		<ansyn-tools class="ansynToolsAlone" *ngIf="(windowLayout$ | async).toolsOverMenu"></ansyn-tools>
 	</div>
 
 	<div class="layer">

@@ -139,13 +139,34 @@ describe('Overlays Effects ', () => {
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
 
-	it('onRequestOverlayByID$ should dispatch DisplayOverlayAction with overlay', () => {
+	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
 		const fakeOverlay = <Overlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
 				overlayId: 'test',
 				sourceType: 'IDAHO',
+				mapId: 'testMapId'
+			})
+		});
+		const expectedResults = cold('--b--', {
+			b: new DisplayOverlayAction({
+				overlay: <any> fakeOverlay,
+				mapId: 'testMapId',
+				ignoreRotation: true
+			})
+		});
+		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);
+
+	});
+
+	it('onRequestOverlayByID$ from OPEN_AERIAL should dispatch DisplayOverlayAction with overlay', () => {
+		const fakeOverlay = <Overlay> { id: 'test' };
+		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
+		actions = hot('--a--', {
+			a: new RequestOverlayByIDFromBackendAction({
+				overlayId: 'test',
+				sourceType: 'OPEN_AERIAL',
 				mapId: 'testMapId'
 			})
 		});

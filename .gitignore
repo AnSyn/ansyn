@@ -18,6 +18,7 @@ node_modules
 .c9/
 *.launch
 .settings/
+*.settings*
 *.sublime-workspace
 *.sublime-project
 .metadata/

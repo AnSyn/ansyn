@@ -13,6 +13,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
+		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
 		plugins: []
 	};
@@ -24,6 +25,7 @@ describe('ImageryCommunicatorService', () => {
 		pointerMove: new EventEmitter<any>(),
 		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
+		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
 		plugins: []
 	};

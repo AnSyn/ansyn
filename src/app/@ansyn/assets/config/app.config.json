@@ -286,11 +286,11 @@
 			}
 		]
 		"windowLayout" : {
-			"menu": false,
-			"statusBar": false,
-			"timeLine": false,
-			"contextSun": false,
-			"toolsOverMenu": true
+			"menu": true,
+			"statusBar": true,
+			"timeLine": true,
+			"contextSun": true,
+			"toolsOverMenu": false
 		}
 	},
 	"menuConfig": {

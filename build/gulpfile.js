@@ -94,7 +94,7 @@ gulp.task('getAppConfig', ['compile'],  function (done) {
 
 
 gulp.task('copy-assets', ['getAppConfig'], function (done) {
-	return gulp.src(['../src/assets/**'])
+	return gulp.src(['../src/app/@ansyn/assets/**'])
 		.pipe(gulp.dest('dist/assets'))
 });
 

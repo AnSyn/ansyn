@@ -307,8 +307,14 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check the method getOverlayById with mock data', () => {
+	it('check the method getOverlayById with mock data IDAHO provider', () => {
 		overlaysService.getOverlayById('test', 'IDAHO').subscribe((result: any) => {
+			expect(result).toBeTruthy();
+		});
+	});
+
+	it('check the method getOverlayById with mock data OPEN_AERIAL provider', () => {
+		overlaysService.getOverlayById('test', 'OPEN_AERIAL').subscribe((result: any) => {
 			expect(result).toBeTruthy();
 		});
 	});

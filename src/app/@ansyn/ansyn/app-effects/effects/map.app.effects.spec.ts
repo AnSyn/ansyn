@@ -132,11 +132,11 @@ describe('MapAppEffects', () => {
 	};
 	let fakeOverlay: Overlay;
 
-	const imagery1PositionBoundingBox = { test: 1 };
+	const imagery1PositionBoundingBox = {test: 1};
 
 	const cases: Case[] = [{
 		state: {
-			time: { type: '', from: new Date(), to: new Date() },
+			time: {type: '', from: new Date(), to: new Date()},
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -152,10 +152,10 @@ describe('MapAppEffects', () => {
 				data: [
 					{
 						id: 'imagery1',
-						data: { position: { zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox } }
+						data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}
 					},
-					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Hitmap' } },
-					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
+					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayDisplayMode: 'Hitmap'}},
+					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
 				],
 				activeMapId: 'imagery1'
 			}
@@ -176,11 +176,11 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				ImageryProviderService,
-				{ provide: VisualizersConfig, useValue: {} },
+				{provide: VisualizersConfig, useValue: {}},
 				MapAppEffects,
 				OverlaysService,
 				CacheService,
-				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
+				{provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true},
 				{
 					provide: mapFacadeConfig,
 					useValue: {}
@@ -203,7 +203,7 @@ describe('MapAppEffects', () => {
 						"maxCachedLayers": 100
 					}
 				},
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
+				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock},
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
@@ -226,7 +226,7 @@ describe('MapAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const selectedCase = cases[0];
-		icaseState = { cases, selectedCase } as any;
+		icaseState = {cases, selectedCase} as any;
 
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
@@ -234,7 +234,7 @@ describe('MapAppEffects', () => {
 		layerState = cloneDeep(initialLayersState);
 
 		toolsState = cloneDeep(toolsInitialState);
-		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
+		fakeOverlay = <any>{id: 'overlayId', date: new Date(), isGeoRegistered: true};
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
@@ -272,10 +272,10 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		spyOn(imagery1, 'removeSingleClickEvent');
 		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', { a: new MapSingleClickAction({ lonLat }) });
-		const a = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false });
+		actions = hot('--a--', {a: new MapSingleClickAction({lonLat})});
+		const a = new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch, value: false});
 		const b = new PinPointTriggerAction(lonLat);
-		const expectedResults = cold('--(ab)--', { a, b });
+		const expectedResults = cold('--(ab)--', {a, b});
 		expect(mapAppEffects.onMapSingleClick$).toBeObservable(expectedResults);
 		expect(imagery1.removeSingleClickEvent).toHaveBeenCalledTimes(3);
 	});
@@ -290,13 +290,13 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		spyOn(imagery1, 'addPinPointIndicator');
 		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', { a: new PinPointTriggerAction(lonLat) });
+		actions = hot('--a--', {a: new PinPointTriggerAction(lonLat)});
 		const region = getPolygonByPointAndRadius(lonLat).geometry;
 
 		const a = new DrawPinPointAction(lonLat);
-		const b = new SetOverlaysCriteriaAction({ region });
+		const b = new SetOverlaysCriteriaAction({region});
 
-		const expectedResults = cold('--(ab)--', { a, b });
+		const expectedResults = cold('--(ab)--', {a, b});
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
 	});
 
@@ -310,8 +310,8 @@ describe('MapAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 		spyOn(communicator, 'createMapSingleClickEvent');
 
-		const action = new ImageryCreatedAction({ id: 'tmpId1' });
-		actions = hot('--a--', { a: action });
+		const action = new ImageryCreatedAction({id: 'tmpId1'});
+		actions = hot('--a--', {a: action});
 
 		// no need to check observable itself
 		mapAppEffects.onAddCommunicatorDoPinpointSearch$.subscribe(() => {
@@ -321,19 +321,19 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const action = new MapInstanceChangedAction(<any> { id: 'tmpId2' });
+		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
 		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--a--', { a: new DrawPinPointAction(lonLat) });
+		actions = hot('--a--', {a: action});
+		const expectedResults = cold('--a--', {a: new DrawPinPointAction(lonLat)});
 
 		expect(mapAppEffects.onAddCommunicatorShowPinPointIndicator$).toBeObservable(expectedResults);
 	});
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set('shadowMouse', true);
-		const action = new MapInstanceChangedAction(<any> { id: 'tmpId2' });
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--a--', { a: new StartMouseShadow() });
+		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
+		actions = hot('--a--', {a: action});
+		const expectedResults = cold('--a--', {a: new StartMouseShadow()});
 
 		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
 	});
@@ -345,7 +345,7 @@ describe('MapAppEffects', () => {
 
 		beforeEach(() => {
 			fakeCommunicator = <any> {
-				ActiveMap: { MapType: 'ol' },
+				ActiveMap: {MapType: 'ol'},
 				resetView: () => {
 				}
 			};
@@ -380,13 +380,13 @@ describe('MapAppEffects', () => {
 				azimuth: 0,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
+			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 		});
 	});
 
-	describe('onOverlayFromURL$', () => {
+	describe('onOverlayFromURL$ from IDAHO', () => {
 		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
 			const testOverlay: Overlay = <Overlay>{
 				id: 'testOverlayId',
@@ -396,7 +396,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true,
 				sourceType: 'IDAHO'
 			};
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
+			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
@@ -409,6 +409,7 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
 
+
 		it('should NOT dispatch anything if "overlay date exists"', () => {
 			const testOverlay: Overlay = {
 				id: 'testOverlayId',
@@ -419,8 +420,32 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
-			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
+			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 			const expectedResults = cold('-');
+			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('onOverlayFromURL$ from OPEN_AERIAL', () => {
+		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
+			const testOverlay: Overlay = <Overlay>{
+				id: 'testOverlayId',
+				name: 'testOverlay1',
+				photoTime: new Date().toDateString(),
+				azimuth: 0,
+				isGeoRegistered: true,
+				sourceType: 'OPEN_AERIAL'
+			};
+			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+
+			const expectedResults = cold('--b--', {
+				b: new RequestOverlayByIDFromBackendAction({
+					overlayId: testOverlay.id,
+					sourceType: 'OPEN_AERIAL',
+					mapId: 'imagery1'
+				})
+			});
+
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
 	});
@@ -439,7 +464,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({ id: 'imagery1' })
+				a: new ImageryCreatedAction({id: 'imagery1'})
 			});
 			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({
@@ -455,7 +480,7 @@ describe('MapAppEffects', () => {
 			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
 			const communicators: Array<string> = ['imagery2'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({ id: 'imagery2' })
+				a: new ImageryCreatedAction({id: 'imagery2'})
 			});
 			const expectedResults = cold('-');
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
@@ -464,19 +489,18 @@ describe('MapAppEffects', () => {
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
+			const testOverlay: Overlay = {id: 'testOverlayId1', isGeoRegistered: false} as Overlay;
 			mapState.mapsList = <any> [
-				{ id: 'imagery1', data: { overlay: testOverlay } },
-				{ id: 'imagery2', data: { overlay: testOverlay } }
+				{id: 'imagery1', data: {overlay: testOverlay}},
+				{id: 'imagery2', data: {overlay: testOverlay}}
 			];
 			mapState.activeMapId = 'imagery1';
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
+			actions = hot('--a--', {a: new ActiveMapChangedAction('')});
 			const b = new SetMapGeoEnabledModeToolsActionStore(testOverlay.isGeoRegistered);
-			const expectedResults = cold('--b--', { b });
+			const expectedResults = cold('--b--', {b});
 			expect(mapAppEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
 		});
 	});
-
 
 
 });

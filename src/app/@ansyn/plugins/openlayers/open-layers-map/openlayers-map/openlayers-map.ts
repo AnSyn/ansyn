@@ -308,12 +308,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).map(projectedCenter => {
-			const olCenter = new Point(<ol.Coordinate> projectedCenter.coordinates);
+			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
 				const view = this._mapObject.getView();
-				view.setCenter(olCenter.getCoordinates());
+				view.setCenter(olCenter);
 			}
 
 			return true;
@@ -406,7 +406,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 
-	flyTo(location) {
+	flyTo(location: ol.Coordinate) {
 		const view = this._mapObject.getView();
 		view.animate({
 			center: location,

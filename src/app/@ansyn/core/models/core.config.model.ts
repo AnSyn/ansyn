@@ -9,5 +9,12 @@ export interface ICoreConfig {
 	colors: {
 		active: string,
 		inactive: string
+	},
+	windowLayout: {
+		'menu': boolean,
+		'toolsOverMenu': boolean,
+		'statusBar': boolean,
+		'timeLine': boolean,
+		'contextSun': boolean
 	}
 }

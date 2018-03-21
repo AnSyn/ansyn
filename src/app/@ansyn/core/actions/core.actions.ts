@@ -3,6 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { WindowLayout } from '@ansyn/core';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -15,7 +16,8 @@ export const CoreActionTypes = {
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
-	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS'
+	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
+	SET_WINDOW_LAYOUT : 'SET_WINDOW_LAYOUT'
 };
 
 export type CoreActions =
@@ -103,5 +105,14 @@ export class BackToWorldView implements Action {
 export class BackToWorldSuccess extends BackToWorldView {
 	type = CoreActionTypes.BACK_TO_WORLD_SUCCESS;
 }
+
+
+export class SetWindowLayout implements Action {
+	type = CoreActionTypes.SET_WINDOW_LAYOUT;
+
+	constructor(public payload: { windowLayout: WindowLayout }) {
+	}
+}
+
 
 

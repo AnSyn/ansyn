@@ -285,6 +285,13 @@
 				"text": "Image is out of bounds"
 			}
 		]
+		"windowLayout" : {
+			"menu": false,
+			"statusBar": false,
+			"timeLine": false,
+			"contextSun": false,
+			"toolsOverMenu": true
+		}
 	},
 	"menuConfig": {
 		"path": "/assets/logo.svg",

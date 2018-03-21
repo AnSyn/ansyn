@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
 import '@ansyn/core/utils/clone-deep';
@@ -11,6 +11,7 @@ import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
 import { LoadDefaultCaseAction } from '@ansyn/menu-items';
+import { CoreConfig, coreStateSelector, ICoreConfig, ICoreState, SetWindowLayout, WindowLayout } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-app',
@@ -29,6 +30,10 @@ export class AnsynComponent implements OnInit {
 		.distinctUntilChanged()
 		.skip(1);
 
+	windowLayout$: Observable<WindowLayout> = this.store$.select(coreStateSelector)
+		.pluck<ICoreState, WindowLayout>('windowLayout')
+		.distinctUntilChanged()
+
 	mapState$: Observable<IMapState> = this.store$.select(mapStateSelector);
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
@@ -39,11 +44,12 @@ export class AnsynComponent implements OnInit {
 	selectedCaseName: string;
 	isPinnedClass: string;
 
-	constructor(protected store$: Store<IAppState>) {
+	constructor(protected store$: Store<IAppState>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnInit(): void {
 		this.store$.dispatch(new LoadDefaultCaseAction());
+		this.store$.dispatch(new SetWindowLayout({windowLayout: this.coreConfig.windowLayout}))
 		this.selectedCaseName$.subscribe(_selectedCaseName => {
 			this.selectedCaseName = _selectedCaseName;
 		});
@@ -51,5 +57,7 @@ export class AnsynComponent implements OnInit {
 		this.isPinned$.subscribe((_isPinned: boolean) => {
 			this.isPinnedClass = _isPinned ? 'isPinned' : 'isNotPinned';
 		});
+
+
 	}
 }

@@ -259,9 +259,9 @@ export class VisualizersAppEffects {
 		)
 		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
 		.map(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
-			mapState.mapsList.forEach((map: CaseMapState) => {
-				this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
-			});
+			Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
+				return this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
+			}));
 		});
 
 	/**
@@ -281,7 +281,7 @@ export class VisualizersAppEffects {
 		)
 		.map(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
 			const activeMap = MapFacadeService.activeMap(map);
-			this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
+			return this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
 		});
 
 	/**
@@ -537,16 +537,16 @@ export class VisualizersAppEffects {
 
 	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true): Observable<boolean> {
 		if (!mapData) {
-			return;
+			return Observable.of(true);
 		}
 
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (!communicator) {
-			return;
+			return Observable.of(true);
 		}
 		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
 		if (!gotoVisualizer) {
-			return;
+			return Observable.of(true);
 		}
 		if (gotoExpand) {
 			const gotoPoint: GeoJSON.Point = {

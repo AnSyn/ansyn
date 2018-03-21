@@ -63,7 +63,9 @@ export class AnsynBuilder {
 			],
 			providers: [AnsynApi, ...providers],
 			bootstrap: [AnsynComponent],
-			exports: [AnsynComponent]
+			exports: [AnsynComponent],
+
+
 		})(isNgModule ? class AnsynCostum {
 		} : DynamicsAnsynModule);
 	}

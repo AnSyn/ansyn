@@ -258,8 +258,8 @@ export class VisualizersAppEffects {
 			(action, mapState, toolState) => [action, mapState, toolState]
 		)
 		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
-		.map(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
-			Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
+		.mergeMap(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
+			return Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
 				return this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
 			}));
 		});
@@ -279,7 +279,7 @@ export class VisualizersAppEffects {
 			this.store$.select(toolsStateSelector).pluck('activeCenter'),
 			(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]
 		)
-		.map(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
+		.mergeMap(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
 			const activeMap = MapFacadeService.activeMap(map);
 			return this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
 		});

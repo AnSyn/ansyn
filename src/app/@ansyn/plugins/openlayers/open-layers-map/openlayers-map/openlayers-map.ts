@@ -23,7 +23,7 @@ import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
-import { FeatureCollection, GeometryObject, Polygon, Point as GeoPoint, GeoJsonObject } from 'geojson';
+import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 
@@ -131,8 +131,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 			target: element,
 			layers,
 			renderer: 'canvas',
-			controls: [new ScaleLine(), new OpenLayersMousePositionControl({ projection: 'EPSG:4326', coordinateFormat  },
-				(point) => this.projectionService.projectApproximately(point, this))],
+			controls: [new ScaleLine(), new OpenLayersMousePositionControl({
+					projection: 'EPSG:4326',
+					coordinateFormat
+				},
+				(point) => this.projectionService.projectApproximately(point, this))
+			],
 			view
 		});
 
@@ -458,7 +462,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public singleClickListener(e) {
-		this.positionToPoint(e.coordinate, p => this.singleClick.emit({lonLat: p.coordinates}));
+		this.positionToPoint(e.coordinate, p => this.singleClick.emit({ lonLat: p.coordinates }));
 	}
 
 	// *****-- pointer move --********
@@ -477,7 +481,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 	}
 
-	public getPointerMove() {
+	public getPointerMove(): Observable<any> {
 		return this.pointerMove;
 	}
 

@@ -1,5 +1,24 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { fetchConfigProviders } from '@ansyn/ansyn/app-providers';
-import { AppAnsynModule } from './app/app/app.module';
+import { SetLayoutAction } from '@ansyn/core';
+import { AnsynBuilder } from './appBuilder/ansyn-builder';
+import { AnsynModule } from '@ansyn/ansyn/ansyn.module';
+import { configuration } from './configuration/configuration.dev';
 
-fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));
+
+declare var ansynGlobal;
+if (!configuration.production) {
+	const ansynMap = new AnsynBuilder('ansynMap', '/assets/config/app.config.json');
+	ansynMap.isReady$.subscribe(() => {
+		ansynMap.api.store.dispatch(new SetLayoutAction('layout4'));
+	});
+}
+else {
+	ansynGlobal['AnSynBuilder'] = AnsynBuilder;
+}
+
+// This is a hack!
+if ("") {
+	platformBrowserDynamic().bootstrapModule(AnsynModule);
+}
+
+window['Ansyn'] = AnsynBuilder;

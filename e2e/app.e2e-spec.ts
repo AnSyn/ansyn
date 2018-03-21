@@ -1,5 +1,5 @@
 import { AppPage } from './app.po';
-import { browser } from "protractor";
+import { browser } from 'protractor';
 
 describe('Ansyn App', () => {
 	let page: AppPage;

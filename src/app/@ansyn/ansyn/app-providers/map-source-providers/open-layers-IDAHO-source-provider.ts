@@ -6,6 +6,9 @@ import { Injectable } from '@angular/core';
 import { Overlay } from '@ansyn/core';
 import { extentFromGeojson } from '@ansyn/core/utils';
 import proj from 'ol/proj';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { Store } from '@ngrx/store';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export const OpenLayerIDAHOSourceProviderMapType = openLayersMapName;
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
@@ -13,9 +16,14 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 @Injectable()
 export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
+
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		super(store, cacheService, imageryCommunicatorService)
+	}
 	create(metaData: Overlay, mapId: string): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

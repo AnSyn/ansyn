@@ -54,7 +54,8 @@ const MenuItemsModules = [
 		StatusBarModule,
 		AnsynRouterModule
 	],
-	declarations: [AnsynComponent]
+	declarations: [AnsynComponent],
+	exports: [AnsynComponent]
 })
 
 export class AnsynModule {

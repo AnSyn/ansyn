@@ -6,6 +6,8 @@ import { IMapVisualizer } from '../model/imap-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import 'rxjs/add/observable/merge';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions;
@@ -18,6 +20,10 @@ export class CommunicatorEntity {
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
 	private _virtualNorth = 0;
 
+	get imageryCommunicatorService(): ImageryCommunicatorService {
+		return this._manager.imageryCommunicatorService
+	}
+
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
@@ -27,7 +33,6 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
-		this.initPlugins();
 	}
 
 	initPlugins() {
@@ -54,6 +59,12 @@ export class CommunicatorEntity {
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {
 			this.mapInstanceChanged.emit(event);
 		}));
+
+		this._managerSubscriptions.push(
+			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
+				.filter(({ id }) => id === this.id)
+				.subscribe(this.initPlugins.bind(this))
+		);
 	}
 
 	get id () {
@@ -74,7 +85,9 @@ export class CommunicatorEntity {
 	// CommunicatorEntity methods begin
 
 	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		return this._manager.setActiveMap(mapName, position, layer);
+		return this._manager.setActiveMap(mapName, position, layer).then((data) => {
+			return data;
+		});
 	}
 
 	public get activeMapName(): string {

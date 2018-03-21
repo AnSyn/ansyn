@@ -62,7 +62,10 @@ export abstract class BaseMapSourceProvider {
 				endTimingLog(this.mapType);
 
 				isFirstLoad = false;
-				this.imageryCommunicatorService.provide(mapId).ActiveMap.mapObject.renderSync();
+				const communicator = this.imageryCommunicatorService.provide(mapId);
+				if (communicator) {
+					communicator.ActiveMap.mapObject.renderSync();
+				}
 			}
 
 			const progress = tilesCounter.total ? (tilesCounter.success + tilesCounter.error) / tilesCounter.total : 1;

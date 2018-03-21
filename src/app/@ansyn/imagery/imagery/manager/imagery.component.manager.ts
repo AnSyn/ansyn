@@ -11,6 +11,7 @@ import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/fromPromise';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -26,7 +27,7 @@ export class ImageryComponentManager {
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
+	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
 	private _visualizers: IMapVisualizer[] = [];
 
@@ -40,13 +41,13 @@ export class ImageryComponentManager {
 
 	constructor(protected imageryProviderService: ImageryProviderService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
+				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
 				protected _mapComponentRef: ComponentRef<IMapComponent>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
 				protected config: IImageryConfig,
 				protected _id: string
 	) {
-		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	}
 
 	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
@@ -106,9 +107,7 @@ export class ImageryComponentManager {
 		return new Promise((resolve, reject) => {
 			const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
 			const factory = this.componentFactoryResolver.resolveComponentFactory<IMapComponent>(providedMap.mapComponent);
-
 			this._mapComponentRef = this.mapComponentElem.createComponent<IMapComponent>(factory);
-
 			const mapComponent = this._mapComponentRef.instance;
 			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 				this.internalSetActiveMap(map);
@@ -134,6 +133,7 @@ export class ImageryComponentManager {
 	}
 
 	private destroyCurrentComponent(): void {
+		this.destroyPlugins();
 		this.destroyActiveMapVisualizers();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();

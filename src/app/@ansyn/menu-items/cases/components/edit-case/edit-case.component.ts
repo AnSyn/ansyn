@@ -132,7 +132,7 @@ export class EditCaseComponent implements OnInit {
 			this.store.dispatch(new UpdateCaseAction(this.caseModel));
 		} else {
 			const selectContext = this.contextsList[contextIndex];
-			this.caseModel = this.casesService.updateCaseViaContext(selectContext, this.caseModel);
+			this.caseModel = cloneDeep(this.casesService.updateCaseViaContext(selectContext, this.caseModel));
 			this.casesService.createCase(this.caseModel)
 				.subscribe((addedCase: Case) => {
 					this.store.dispatch(new AddCaseAction(addedCase));

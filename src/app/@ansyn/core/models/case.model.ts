@@ -1,7 +1,7 @@
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { LayoutKey } from '@ansyn/core';
 
 export interface Case {

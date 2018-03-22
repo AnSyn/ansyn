@@ -8,14 +8,12 @@ import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { EventEmitter } from '@angular/core';
 import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
+import { Observable } from 'rxjs/Observable';
 
 export class CenterMarkerPlugin extends BaseImageryPlugin {
 	static mapName = OpenlayersMapComponent.mapName;
 	onDisposedEvent: EventEmitter<any>;
 	private _subscriptions;
-	private _imageryCommunicator: CommunicatorEntity;
-
-
 	private _iconStyle: Style;
 	private _existingLayer;
 
@@ -55,12 +53,16 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	}
 
 	public init(communicator: CommunicatorEntity): void {
-		this._imageryCommunicator = communicator;
+		super.init(communicator);
 		this.register();
 	}
 
+	onResetView(): Observable<boolean> {
+		return Observable.of(true);
+	}
+
 	private register() {
-		this._subscriptions.push(this._imageryCommunicator.positionChanged.subscribe((position: CaseMapPosition) => {
+		this._subscriptions.push(this.communicator.positionChanged.subscribe((position: CaseMapPosition) => {
 			if (this.isEnabled) {
 				this.tryDrawCenter();
 			} else {
@@ -84,7 +86,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 	private tryDeleteCenter() {
 		if (this._existingLayer) {
-			this._imageryCommunicator.removeLayer(this._existingLayer);
+			this.communicator.removeLayer(this._existingLayer);
 			this._existingLayer = null;
 		}
 	}
@@ -97,7 +99,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 			return;
 		}
 
-		const map: IMap = this._imageryCommunicator.ActiveMap;
+		const map: IMap = this.communicator.ActiveMap;
 
 		const center = map.mapObject.getView().getCenter();
 
@@ -114,6 +116,6 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 		this._existingLayer = new VectorLayer({ source: vectorSource });
 
-		this._imageryCommunicator.addLayer(this._existingLayer);
+		this.communicator.addLayer(this._existingLayer);
 	}
 }

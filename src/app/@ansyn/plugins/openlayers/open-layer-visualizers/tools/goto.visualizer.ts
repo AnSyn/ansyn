@@ -1,13 +1,10 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { VisualizerStateStyle } from '../models/visualizer-state';
 
-export const GoToVisualizerType = 'GoToVisualizer';
-
 export class GoToVisualizer extends EntitiesVisualizer {
-	static type = GoToVisualizerType;
 
 	constructor(style: Partial<VisualizerStateStyle>) {
-		super(GoToVisualizerType, style, {
+		super(style, {
 			initial: {
 				icon: {
 					scale: 1,

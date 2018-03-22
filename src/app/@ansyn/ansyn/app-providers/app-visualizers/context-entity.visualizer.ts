@@ -1,6 +1,4 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/entities-visualizer';
-
-import proj from 'ol/proj';
 import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
@@ -11,10 +9,7 @@ import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visua
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
 
-export const ContextEntityVisualizerType = 'ContextEntityVisualizer';
-
 export class ContextEntityVisualizer extends EntitiesVisualizer {
-	static type = ContextEntityVisualizerType;
 
 	isHideable = true;
 
@@ -23,7 +18,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: GeoJSON;
 
 	constructor(style: VisualizerStateStyle) {
-		super(ContextEntityVisualizerType, style);
+		super(style);
 
 		this.updateStyle({
 			initial: {

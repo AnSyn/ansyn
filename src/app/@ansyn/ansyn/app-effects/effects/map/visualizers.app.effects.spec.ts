@@ -30,7 +30,10 @@ import { Case } from '@ansyn/core/models/case.model';
 import {
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { FootprintPolylineVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
+import {
+	FootprintPolylineVisualizer,
+	FootprintPolylineVisualizerType
+} from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
 import {
 	IMapState,
 	initialMapState,
@@ -142,8 +145,7 @@ describe('VisualizersAppEffects', () => {
 		spyOn(CoreService, 'getOverlaysMarkup').and.callFake(() => markup);
 		actions = hot('--a--', {
 			a: new HoverFeatureTriggerAction({
-				id: 'fakeId',
-				visualizerType: FootprintPolylineVisualizerType
+				id: 'fakeId'
 			})
 		});
 		const expectedResults = cold('--b--', { b: new OverlaysMarkupAction(markup) });
@@ -162,8 +164,7 @@ describe('VisualizersAppEffects', () => {
 		spyOn(fakeVisualizer, 'setHoverFeature');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator]);
 		const action = new HoverFeatureTriggerAction({
-			id: 'fakeId',
-			visualizerType: FootprintPolylineVisualizerType
+			id: 'fakeId'
 		});
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: action });
@@ -177,8 +178,7 @@ describe('VisualizersAppEffects', () => {
 			actions = hot('--a--', { a: new MouseOverDropAction('fakeId') });
 			const expectedResults = cold('--b--', {
 				b: new HoverFeatureTriggerAction({
-					id: 'fakeId',
-					visualizerType: FootprintPolylineVisualizerType
+					id: 'fakeId'
 				})
 			});
 			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
@@ -188,8 +188,7 @@ describe('VisualizersAppEffects', () => {
 			actions = hot('--a--', { a: new MouseOutDropAction('fakeId') });
 			const expectedResults = cold('--b--', {
 				b: new HoverFeatureTriggerAction({
-					id: undefined,
-					visualizerType: FootprintPolylineVisualizerType
+					id: undefined
 				})
 			});
 			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
@@ -201,7 +200,7 @@ describe('VisualizersAppEffects', () => {
 		actions = hot('--a--', {
 			a: new DbclickFeatureTriggerAction({
 				id: 'fakeId',
-				visualizerType: FootprintPolylineVisualizerType
+				visualizerType: FootprintPolylineVisualizer
 			})
 		});
 		const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });

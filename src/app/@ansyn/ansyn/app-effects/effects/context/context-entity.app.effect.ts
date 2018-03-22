@@ -8,10 +8,7 @@ import { CaseMapState } from '@ansyn/core';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
-import {
-	ContextEntityVisualizer,
-	ContextEntityVisualizerType
-} from '../../../app-providers/app-visualizers/context-entity.visualizer';
+import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -38,7 +35,9 @@ export class ContextEntityAppEffects {
 				observables.push(this.setContextEntity(mapState.id, overlayDate, payload.state.contextEntities));
 			});
 
-			return Observable.forkJoin(observables).map(() => { return  { payload } });
+			return Observable.forkJoin(observables).map(() => {
+				return { payload };
+			});
 		}).mergeMap(({ payload }: SelectCaseAction) => {
 
 			const actions = [];
@@ -81,7 +80,7 @@ export class ContextEntityAppEffects {
 	private setContextEntity(mapId: string, overlayDate: Date, contextEntities: IVisualizerEntity[]): Observable<boolean> {
 		const communicatorHandler = this.communicatorService.provide(mapId);
 		if (communicatorHandler) {
-			const visualizer = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			const visualizer = communicatorHandler.getPlugin<ContextEntityVisualizer>(ContextEntityVisualizer);
 			if (visualizer) {
 				return visualizer.setEntities(contextEntities);
 			}

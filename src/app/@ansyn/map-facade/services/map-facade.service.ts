@@ -1,22 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { IMapState } from '../reducers/map.reducer';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
-
-import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	ContextMenuShowAction,
-	DbclickFeatureTriggerAction,
-	HoverFeatureTriggerAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction,
 	PositionChangedAction,
+	MapPluginsInitialized
 } from '../actions';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '../actions/map.actions';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/models';
-import { VisualizerEvents } from '@ansyn/imagery/model/imap-visualizer';
-import { Feature } from 'geojson';
 import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
@@ -80,27 +76,13 @@ export class MapFacadeService {
 	initEmitters(id: string) {
 		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
-		communicatorSubscribers.push(communicator.positionChanged.subscribe(this.positionChanged.bind(this)));
-		communicatorSubscribers.push(communicator.singleClick.subscribe(this.singleClick.bind(this)));
-		communicatorSubscribers.push(communicator.contextMenu.subscribe(this.contextMenu.bind(this)));
-		communicator.getAllVisualizers().forEach((visualizer: IMapVisualizer) => {
-			if (visualizer.events.has(VisualizerEvents.onHoverFeature)) {
-				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.onHoverFeature).subscribe(this.hoverFeature.bind(this)));
-			}
-
-			if (visualizer.events.has(VisualizerEvents.doubleClickFeature)) {
-				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.doubleClickFeature).subscribe(this.dbclickFeature.bind(this)));
-			}
-
-			if (visualizer.events.has(VisualizerEvents.drawEndPublisher)) {
-				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.drawEndPublisher).subscribe(this.drawEndSubscriber.bind(this)));
-			}
-
-			if (visualizer.events.has(VisualizerEvents.contextMenuHandler)) {
-				communicatorSubscribers.push(visualizer.events.get(VisualizerEvents.contextMenuHandler).subscribe(this.contextMenuHandlerSubscriber.bind(this)));
-			}
-		});
-		communicatorSubscribers.push(communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)));
+		communicatorSubscribers.push(
+			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
+			communicator.singleClick.subscribe(this.singleClick.bind(this)),
+			communicator.contextMenu.subscribe(this.contextMenu.bind(this)),
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
+			communicator.mapPluginsInitialized.subscribe(this.mapPluginsInitialized.bind(this))
+		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
 
@@ -127,21 +109,7 @@ export class MapFacadeService {
 		this.store.dispatch(new ContextMenuShowAction(event));
 	}
 
-	hoverFeature(event) {
-		this.store.dispatch(new HoverFeatureTriggerAction(event));
+	mapPluginsInitialized(event) {
+		this.store.dispatch(new MapPluginsInitialized(event));
 	}
-
-	dbclickFeature(event) {
-		this.store.dispatch(new DbclickFeatureTriggerAction(event));
-	}
-
-	drawEndSubscriber(feature: Feature<any>) {
-		this.store.dispatch(new AnnotationDrawEndAction(feature));
-	}
-
-	contextMenuHandlerSubscriber(payload: AnnotationsContextMenuEvent) {
-		this.store.dispatch(new AnnotationContextMenuTriggerAction(payload));
-	}
-
-
 }

@@ -5,5 +5,5 @@ export { ImageryComponentManager } from './imagery/manager/imagery.component.man
 export { ImageryModule } from './imagery.module';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
 export { ConfigurationToken } from './configuration.token';
-export { BaseImageryPlugin } from './plugins/base-imagery-plugin';
-export { createCollection, PLUGINS_COLLECTION } from './plugins/plugins-collection';
+export { BaseImageryPlugin } from './model/base-imagery-plugin';
+export { createCollection, PLUGINS_COLLECTION } from './model/plugins-collection';

@@ -1,18 +1,16 @@
-import { EntitiesVisualizer } from './entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
-import { IVisualizerEntity } from '@ansyn/imagery';
-
-export const MouseShadowVisualizerType = 'MouseShadowVisualizer';
+import { IVisualizerEntity } from 'app/@ansyn/imagery/index';
 
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
 
 	// constructor(iconPath: string, args: any) {
 	constructor(args: any) {
-		super(MouseShadowVisualizerType, args);
+		super(args);
 		// set icon
 		this._iconSrc = new Style({
 			image: new Icon({

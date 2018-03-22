@@ -1,4 +1,4 @@
-import { EntitiesVisualizer } from './entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
 import color from 'ol/color';
@@ -9,20 +9,21 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
-import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
+import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
-import { VisualizerStateStyle } from './models/visualizer-state';
+import { VisualizerStateStyle } from '../models/visualizer-state';
 import * as ol from 'openlayers';
 import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
-import { AnnotationsContextMenuEvent } from '@ansyn/core';
+import { AnnotationsContextMenuEvent } from 'app/@ansyn/core/index';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery';
+import { IVisualizerEntity } from 'app/@ansyn/imagery/index';
+import { Store } from '@ngrx/store';
+import { CommunicatorEntity } from '@ansyn/imagery';
+import { Injectable } from '@angular/core';
 
-export const AnnotationVisualizerType = 'AnnotationVisualizer';
-
+@Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	static type = AnnotationVisualizerType;
 	static fillAlpha = 0.4;
 	isHideable = true;
 	disableCache = true;
@@ -62,8 +63,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}));
 	}
 
-	constructor(style?: Partial<VisualizerStateStyle>) {
-		super(AnnotationVisualizerType, style, {
+	constructor(public store: Store<any>, style?: Partial<VisualizerStateStyle>) {
+		super(style, {
 			initial: {
 				stroke: {
 					color: '#27b2cfe6',
@@ -80,6 +81,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+	}
+
+	init(communicator: CommunicatorEntity) {
+		super.init(communicator);
+		this.initDispatchers(this.store);
 	}
 
 	protected resetInteractions(): void {
@@ -142,7 +148,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
 		const width = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
 		const height = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
-		return { left: x4 , top: y4 , width, height, rotation };
+		return { left: x4, top: y4, width, height, rotation };
 	}
 
 	getExtentAsPixels([x1, y1, x2, y2]) {
@@ -232,6 +238,5 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		return geometry;
 	}
-
 
 }

@@ -323,7 +323,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
+		.ofType(MapActionTypes.MAP_PLUGINS_INITIALIZED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))

@@ -8,6 +8,7 @@ import { Actions } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { VisualizersProviders } from '@ansyn/plugins/openlayers/open-layer-visualizers/visualizers-providers';
 
 @NgModule({
 	imports: [
@@ -15,7 +16,8 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		OpenLayersMapModule,
 		ImageryModule.provideCollection([
 			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store, ProjectionService], multi: true },
-			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true }
+			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true },
+			...VisualizersProviders
 		])
 	]
 })

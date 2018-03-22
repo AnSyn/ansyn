@@ -95,9 +95,6 @@ export class SelectCaseAppEffects {
 	}
 
 	selectCaseActions(payload: Case): Action[] {
-		if (payload.id === this.casesService.defaultCase.id) {
-			payload.state.maps.activeMapId = payload.state.maps.data[0].id = UUID.UUID();
-		}
 		const { state } = payload;
 		// status-bar
 		const { orientation, geoFilter, timeFilter } = state;

@@ -73,7 +73,7 @@ export class ActiveMapChangedAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: CaseMapPosition }) {
+	constructor(public payload: { id: string, position: CaseMapPosition, mapInstance: CaseMapState }) {
 	}
 }
 

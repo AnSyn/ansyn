@@ -171,11 +171,11 @@ export class MapEffects {
 	positionChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
-			return [MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList, action.payload.position];
+			return [action, MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList];
 		})
-		.filter(([selectedMap]) => Boolean(selectedMap))
-		.map(([selectedMap, mapsList, position]) => {
-			selectedMap.data.position = position;
+		.filter(([action, selectedMap, mapsList]) => Boolean(selectedMap) && action.payload.mapInstance === selectedMap)
+		.map(([action, selectedMap, mapsList]) => {
+			selectedMap.data.position = action.payload.position;
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
 

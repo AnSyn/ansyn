@@ -1,10 +1,9 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { MapsLayout } from '@ansyn/core/models';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { layoutOptions } from '@ansyn/core';
+import { MapFacadeService } from '../services/map-facade.service';
+import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 
 export interface MapsProgress {
 	[key: string]: number

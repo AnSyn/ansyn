@@ -18,7 +18,7 @@ export class CommunicatorEntity {
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
-	public mapPluginsInitialized = new EventEmitter<string>();
+	public imageryPluginsInitialized = new EventEmitter<string>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
@@ -38,7 +38,7 @@ export class CommunicatorEntity {
 
 	initPlugins() {
 		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
-		this.mapPluginsInitialized.emit(this.id);
+		this.imageryPluginsInitialized.emit(this.id);
 	}
 
 	private registerToManagerEvents() {

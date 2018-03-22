@@ -26,7 +26,7 @@ export const MapActionTypes = {
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
-	MAP_PLUGINS_INITIALIZED: 'MAP_PLUGINS_INITIALIZED',
+	IMAGERY_PLUGINS_INITIALIZED: 'IMAGERY_PLUGINS_INITIALIZED',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	STORE: {
@@ -276,8 +276,8 @@ export class SetIsLoadingAcion implements Action {
 	}
 }
 
-export class MapPluginsInitialized implements Action {
-	readonly type = MapActionTypes.MAP_PLUGINS_INITIALIZED;
+export class ImageryPluginsInitialized implements Action {
+	readonly type = MapActionTypes.IMAGERY_PLUGINS_INITIALIZED;
 	constructor(payload: string) {
 	}
 }

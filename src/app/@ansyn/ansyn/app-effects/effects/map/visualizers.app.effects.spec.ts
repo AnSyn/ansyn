@@ -30,10 +30,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import {
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import {
-	FootprintPolylineVisualizer,
-	FootprintPolylineVisualizerType
-} from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
+import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
 import {
 	IMapState,
 	initialMapState,

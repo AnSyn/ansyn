@@ -268,7 +268,7 @@ export class MapAppEffects {
 	addGroupLayer$: Observable<SelectLayerAction> = this.actions$
 		.ofType<SelectLayerAction>(LayersActionTypes.SELECT_LAYER)
 		.map((action: SelectLayerAction) => {
-			const providers = this.imageryProviderService.getProviders();
+			const providers = this.imageryProviderService.mapProviders;
 			Object.keys(providers).forEach(pName => {
 				const provider = providers[pName];
 				provider.mapComponent.mapClass.addGroupVectorLayer(action.payload, 'layers');
@@ -287,7 +287,7 @@ export class MapAppEffects {
 	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
 		.ofType(LayersActionTypes.UNSELECT_LAYER)
 		.map((action: UnselectLayerAction) => {
-			const providers = this.imageryProviderService.getProviders();
+			const providers = this.imageryProviderService.mapProviders;
 			Object.keys(providers).forEach(pName => {
 				const provider = providers[pName];
 				provider.mapComponent.mapClass.removeGroupLayer(action.payload, 'layers');
@@ -323,7 +323,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_PLUGINS_INITIALIZED)
+		.ofType(MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
 			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))

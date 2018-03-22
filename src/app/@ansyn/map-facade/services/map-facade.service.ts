@@ -9,7 +9,7 @@ import {
 	MapInstanceChangedAction,
 	MapSingleClickAction,
 	PositionChangedAction,
-	MapPluginsInitialized
+	ImageryPluginsInitialized
 } from '../actions';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
@@ -81,7 +81,7 @@ export class MapFacadeService {
 			communicator.singleClick.subscribe(this.singleClick.bind(this)),
 			communicator.contextMenu.subscribe(this.contextMenu.bind(this)),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
-			communicator.mapPluginsInitialized.subscribe(this.mapPluginsInitialized.bind(this))
+			communicator.imageryPluginsInitialized.subscribe(this.imageryPluginsInitialized.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
@@ -109,7 +109,7 @@ export class MapFacadeService {
 		this.store.dispatch(new ContextMenuShowAction(event));
 	}
 
-	mapPluginsInitialized(event) {
-		this.store.dispatch(new MapPluginsInitialized(event));
+	imageryPluginsInitialized(event) {
+		this.store.dispatch(new ImageryPluginsInitialized(event));
 	}
 }

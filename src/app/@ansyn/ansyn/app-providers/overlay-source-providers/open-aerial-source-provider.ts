@@ -82,9 +82,12 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	private extractArrayData(overlays: Array<any>): Array<Overlay> {
-		return overlays ? overlays.map((element) => {
-			return this.parseData(element);
-		}) : [];
+		if (!overlays) {
+			return [];
+		}
+
+		return overlays.filter(meta => meta.properties && meta.properties.tms)
+			.map((element) => this.parseData(element));
 	}
 
 	private extractData(overlays: Array<any>): Overlay {
@@ -102,7 +105,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorName = openAerialElement.platform;
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
-		overlay.imageUrl = openAerialElement.properties.tms ? openAerialElement.properties.tms : openAerialElement.properties.wmts; // not always just tms
+		overlay.imageUrl = openAerialElement.properties.tms;
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
 		overlay.date = new Date(openAerialElement.acquisition_end);
 		overlay.photoTime = openAerialElement.acquisition_end;

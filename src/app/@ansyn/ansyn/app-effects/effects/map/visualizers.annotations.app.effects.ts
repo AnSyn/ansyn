@@ -176,7 +176,7 @@ export class VisualizersAnnotationsAppEffects {
 	 */
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
-		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.MAP_PLUGINS_INITIALIZED)
+		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
 		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'), this.toolsState$)
 		.filter(([action, displayAnnotationsLayer, { flags }]: [Action, boolean, IToolsState]) => displayAnnotationsLayer || flags.get(toolsFlags.annotations))
 		.map(([action, displayAnnotationsLayer]: [Action, boolean, IToolsState]) => {

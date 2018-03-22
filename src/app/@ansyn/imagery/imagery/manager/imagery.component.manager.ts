@@ -6,7 +6,6 @@ import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
 import { CaseMapPosition } from '@ansyn/core';
-import { BaseImageryVisualizer } from '../../model/base-imagery-visualizer';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';

@@ -1,24 +1,17 @@
-import { Inject, Injectable } from '@angular/core';
-import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { Injectable } from '@angular/core';
 
 export interface IProvidedMap {
 	mapType: string;
 	mapComponent: any;
 }
 
-export interface InjectedMapVisualizer {
-	type: string;
-	visualizer: BaseImageryVisualizer
-}
-
 @Injectable()
 export class ImageryProviderService {
 
-	private _mapProviders: { [id: string]: IProvidedMap };
+	private _mapProviders: { [id: string]: IProvidedMap } = {};
 
-	constructor(@Inject(VisualizersConfig) visualizersConfig: any) {
-		this._mapProviders = {};
+	get mapProviders() {
+		return this._mapProviders;
 	}
 
 	public registerMapProvider(mapName: string, mapType: string, component: any) {
@@ -27,10 +20,6 @@ export class ImageryProviderService {
 		}
 
 		this._mapProviders[mapName] = { mapType: mapType, mapComponent: component };
-	}
-
-	getProviders() {
-		return this._mapProviders;
 	}
 
 	public provideMap(mapName: string): IProvidedMap {

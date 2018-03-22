@@ -60,9 +60,9 @@ describe('Filters app effects', () => {
 	const favoriteOver = new Overlay();
 	favoriteOver.id = '2';
 
-	const filtersState: IFiltersState = { ...initialFiltersState };
-	const casesState: ICasesState = { ...initialCasesState };
-	const overlaysState: IOverlaysState = { ...overlaysInitialState };
+	const filtersState = <IFiltersState> { ...initialFiltersState };
+	const casesState = <ICasesState> { ...initialCasesState };
+	const overlaysState = <IOverlaysState> { ...overlaysInitialState };
 
 	const selectedCase: Case = {
 		id: 'case1',

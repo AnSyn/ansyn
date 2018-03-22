@@ -33,29 +33,4 @@ describe('ImageryProviderService', () => {
 		expect(imageryProviderService.provideMap('map1')).toEqual({ mapType: 'map1', mapComponent: mapComponent });
 	});
 
-	class Plugin1 {
-		id = 'test1';
-	}
-
-	class Plugin2 {
-		id = 'test2';
-	}
-
-	class Plugin3 {
-		id = 'test3';
-	}
-
-	it('ImageryProviderService should registerVisualizer and getVisualizersConfig by map type', () => {
-
-		imageryProviderService.registerVisualizer('map1', Plugin1);
-		imageryProviderService.registerVisualizer('map1', Plugin2, 'arg1');
-		imageryProviderService.registerVisualizer('map2', Plugin3);
-
-		const plugins = imageryProviderService.getVisualizersConfig('map1');
-		expect(plugins.length).toEqual(2);
-		// {visualizerClass: visualizerClass, args: constructorArgs}
-		expect((<any>plugins[0]).visualizerClass).toEqual(Plugin1);
-		expect((<any>plugins[1]).visualizerClass).toEqual(Plugin2);
-		expect((<any>plugins[1]).args).toEqual('arg1');
-	});
 });

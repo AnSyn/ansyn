@@ -25,7 +25,10 @@ export interface IOpenAerialOverlaySourceConfig {
 export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = OpenAerialOverlaySourceType;
 
-	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(OpenAerialOverlaysSourceConfig) protected openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig) {
+	constructor(public errorHandlerService: ErrorHandlerService,
+				protected http: HttpClient,
+				@Inject(OpenAerialOverlaysSourceConfig)
+				protected openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig) {
 		super();
 
 	}

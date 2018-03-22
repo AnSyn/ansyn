@@ -3,14 +3,14 @@ import { OpenLayersMap, openLayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const PluginsProvider = getPluginsProvider(openLayersMapName);
+import { getPluginsProviders } from '@ansyn/imagery/imagery/providers/collections.factory';
+export const pluginProviders = getPluginsProviders(openLayersMapName);
 
 @Component({
 	selector: 'ansyn-ol-component',
 	templateUrl: './openlayers-map.component.html',
 	styleUrls: ['./openlayers-map.component.less'],
-	providers: [PluginsProvider]
+	providers: [...pluginProviders]
 })
 
 export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {

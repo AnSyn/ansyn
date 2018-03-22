@@ -1,23 +1,27 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
-import { IMarkupEvent, IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import {
+	IMarkupEvent,
+	IVisualizerEntity,
+	VisualizerEvents,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
-import { VisualizerStateStyle } from '../models/visualizer-state';
-import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
 import Feature from 'ol/feature';
 import Style from 'ol/style/style';
 import condition from 'ol/events/condition';
-import Select from 'ol/interaction/select'
+import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
-import { EventEmitter } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { Store } from '@ngrx/store';
+import { CommunicatorEntity } from '@ansyn/imagery';
 
-export const FootprintPolylineVisualizerType = 'FootprintPolylineVisualizer';
-
+@Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
-	static type = FootprintPolylineVisualizerType;
 	protected hoverLayer: VectorLayer;
 
 	markups: any[] = [];
@@ -32,8 +36,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		return this.events.get(VisualizerEvents.doubleClickFeature);
 	}
 
-	constructor(style: Partial<VisualizerStateStyle>) {
-		super(FootprintPolylineVisualizerType, style);
+	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
+		super(config[FootprintPolylineVisualizer.name]);
 
 		this.updateStyle({
 			opacity: 0.5,
@@ -55,6 +59,11 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+	}
+
+	init(communicator: CommunicatorEntity) {
+		super.init(communicator);
+		this.initDispatchers(this.store);
 	}
 
 	private getMarkupClasses(featureId: string): string[] {
@@ -171,7 +180,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		if ($event.selected.length > 0) {
 			const feature = $event.selected[0];
 
-			const visualizerType = this.type;
+			const visualizerType = this.constructor;
 			const id = feature.getId();
 			this.doubleClickFeature.emit({ visualizerType, id });
 		}
@@ -233,11 +242,14 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	setMarkupFeatures(markups: IMarkupEvent) {
 		this.markups = markups;
-		this.hoverLayer.getSource().refresh();
+		if (this.hoverLayer) {
+			this.hoverLayer.getSource().refresh();
+		}
 		if (this.source) {
 			this.source.refresh();
 		}
 	}
+
 	public purgeCache(feature?: Feature) {
 		if (feature) {
 			delete (<any>feature).styleCache;

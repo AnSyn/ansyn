@@ -1,7 +1,5 @@
-import { Inject, Injectable, Optional } from '@angular/core';
-import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
-import { IMapVisualizer } from '../model/imap-visualizer';
-import { MapVisualizer } from '../model/imap-visualizer.token';
+import { Inject, Injectable } from '@angular/core';
+import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 export interface IProvidedMap {
@@ -11,24 +9,16 @@ export interface IProvidedMap {
 
 export interface InjectedMapVisualizer {
 	type: string;
-	visualizer: IMapVisualizer
+	visualizer: BaseImageryVisualizer
 }
 
 @Injectable()
 export class ImageryProviderService {
 
 	private _mapProviders: { [id: string]: IProvidedMap };
-	private _mapVisualizersProviders: Map<string, [{ visualizerClass: any, args: any }]>;
 
-	constructor(@Optional() @Inject(MapVisualizer) protected mapVisualizers: InjectedMapVisualizer[],
-				@Inject(VisualizersConfig) visualizersConfig: any) {
+	constructor(@Inject(VisualizersConfig) visualizersConfig: any) {
 		this._mapProviders = {};
-		this._mapVisualizersProviders = new Map<string, [{ visualizerClass: any, args: any }]>();
-
-		if (mapVisualizers) {
-			mapVisualizers.forEach(mapVisualizer =>
-				this.registerVisualizer(mapVisualizer.type, mapVisualizer.visualizer, visualizersConfig[mapVisualizer.visualizer.type]));
-		}
 	}
 
 	public registerMapProvider(mapName: string, mapType: string, component: any) {
@@ -49,23 +39,5 @@ export class ImageryProviderService {
 		}
 
 		return this._mapProviders[mapName];
-	}
-
-	public registerVisualizer(mapType: string, visualizerClass: any, constructorArgs?: any) {
-		if (!this._mapVisualizersProviders.has(mapType)) {
-			this._mapVisualizersProviders.set(mapType, [{ visualizerClass, args: constructorArgs }]);
-		} else {
-			const existingVisualizers = this._mapVisualizersProviders.get(mapType);
-			existingVisualizers.push({ visualizerClass, args: constructorArgs });
-			this._mapVisualizersProviders.set(mapType, existingVisualizers);
-		}
-	}
-
-	public getVisualizersConfig(mapType: string): [{ visualizerClass: any, args: any }] {
-		const hasMapVisualizersProviders = this._mapVisualizersProviders.has(mapType);
-		if (!hasMapVisualizersProviders) {
-			return null;
-		}
-		return this._mapVisualizersProviders.get(mapType);
 	}
 }

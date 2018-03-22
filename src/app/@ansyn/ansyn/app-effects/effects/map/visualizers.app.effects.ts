@@ -1,4 +1,3 @@
-import { GoToVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/goto.visualizer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
@@ -26,15 +25,11 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import {
-	FootprintPolylineVisualizer,
-	FootprintPolylineVisualizerType
-} from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
+import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery/model/imap-visualizer';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { FootprintHeatmapVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/heatmap-visualizer';
 import {
 	GoToInputChangeAction,
 	SetAnnotationMode,
@@ -46,18 +41,20 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IconVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
-import { MouseShadowVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/mouse-shadow.visualizer';
-import { ContextEntityVisualizer } from '../../../index';
-import { ContextEntityVisualizerType } from '../../../app-providers/app-visualizers/context-entity.visualizer';
+import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { MeasureDistanceVisualizer, MeasureDistanceVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers';
+import {
+	FootprintHeatmapVisualizer,
+	GoToVisualizer,
+	MeasureDistanceVisualizer
+} from '@ansyn/plugins/openlayers/open-layer-visualizers';
 import { SetPinLocationModeAction } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { FrameVisualizer, FrameVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
-import { IMapVisualizer } from '@ansyn/imagery';
+import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
+import { IconVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
+import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/mouse-shadow.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -88,8 +85,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
 		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
 		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
-			id: payload,
-			visualizerType: FootprintPolylineVisualizerType
+			id: payload
 		}));
 
 	/**
@@ -102,9 +98,9 @@ export class VisualizersAppEffects {
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
 		.do((action: HoverFeatureTriggerAction): void => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const visualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
+				const visualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
 				if (visualizer) {
-					(<FootprintPolylineVisualizer>visualizer).setHoverFeature(action.payload.id);
+					visualizer.setHoverFeature(action.payload.id);
 				}
 			});
 		});
@@ -120,7 +116,7 @@ export class VisualizersAppEffects {
 	onDbclickFeaturePolylineDisplayAction$: Observable<DisplayOverlayFromStoreAction> = this.actions$
 		.ofType<DbclickFeatureTriggerAction>(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
 		.map(({ payload }) => payload)
-		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizerType)
+		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizer)
 		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
 
 	/**
@@ -133,7 +129,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
 		.do((action: OverlaysMarkupAction) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const footprintPolyline = (<FootprintPolylineVisualizer>communicator.getVisualizer(FootprintPolylineVisualizerType));
+				const footprintPolyline = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
 				if (footprintPolyline) {
 					footprintPolyline.setMarkupFeatures(action.payload);
 				}
@@ -205,7 +201,7 @@ export class VisualizersAppEffects {
 		.map(([action, mapState]: [SetMeasureDistanceToolState, IMapState]) => {
 			const activeMapState = MapFacadeService.activeMap(mapState);
 			const communicator = this.imageryCommunicatorService.provide(activeMapState.id);
-			const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
 			if (distanceVisualizerTool) {
 				if (action.payload) {
 					distanceVisualizerTool.createInteraction();
@@ -230,14 +226,14 @@ export class VisualizersAppEffects {
 		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
 		.map(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => {
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+				const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
 				if (distanceVisualizerTool) {
 					distanceVisualizerTool.clearInteractionAndEntities();
 				}
 			});
 
 			const communicator = this.imageryCommunicatorService.provide(action.payload);
-			const distanceVisualizerTool = <MeasureDistanceVisualizer>communicator.getVisualizer(MeasureDistanceVisualizerType);
+			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
 			if (distanceVisualizerTool) {
 				distanceVisualizerTool.createInteraction();
 			}
@@ -415,7 +411,7 @@ export class VisualizersAppEffects {
 			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
 			const communicatorHandler = this.imageryCommunicatorService.provide(mapId);
 
-			const vis = <ContextEntityVisualizer>communicatorHandler.getVisualizer(ContextEntityVisualizerType);
+			const vis = communicatorHandler.getPlugin<ContextEntityVisualizer>(ContextEntityVisualizer);
 			vis.setReferenceDate(action instanceof DisplayOverlaySuccessAction ? selectedMap.data.overlay.date : null);
 		});
 
@@ -454,7 +450,7 @@ export class VisualizersAppEffects {
 	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.switchMap((action: DisplayOverlaySuccessAction) => {
-			const frameVisualizer = <FrameVisualizer>this.getVisualizer(action.payload.mapId, FrameVisualizerType);
+			const frameVisualizer = this.getPlugin<FrameVisualizer>(action.payload.mapId, FrameVisualizer);
 			if (frameVisualizer) {
 				const entityToDraw = this.mapOverlayToDraw(action.payload.overlay);
 				frameVisualizer.isActive = true;
@@ -471,7 +467,7 @@ export class VisualizersAppEffects {
 		.map(([action, mapState]: [ActiveMapChangedAction, IMapState]) => {
 			mapState.mapsList.forEach((mapData: CaseMapState) => {
 				if (Boolean(mapData.data.overlay)) {
-					const frameVisualizer = <FrameVisualizer>this.getVisualizer(mapData.id, FrameVisualizerType);
+					const frameVisualizer = this.getPlugin<FrameVisualizer>(mapData.id, FrameVisualizer);
 					if (frameVisualizer) {
 						frameVisualizer.isActive = action.payload === mapData.id;
 						frameVisualizer.purgeCache();
@@ -484,7 +480,7 @@ export class VisualizersAppEffects {
 	removeOverlayFram$: Observable<void> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.map(({ payload }: BackToWorldView) => {
-			const frameVisualizer = <FrameVisualizer>this.getVisualizer(payload.mapId, FrameVisualizerType);
+			const frameVisualizer = this.getPlugin<FrameVisualizer>(payload.mapId, FrameVisualizer);
 			if (frameVisualizer) {
 				frameVisualizer.clearEntities();
 			}
@@ -500,8 +496,8 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		let observable = Observable.of(true);
 		if (communicator && mapData.data.overlayDisplayMode) {
-			const polylineVisualizer = communicator.getVisualizer(FootprintPolylineVisualizerType);
-			const hitMapVisualizer = communicator.getVisualizer(FootprintHeatmapVisualizerType);
+			const polylineVisualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
+			const hitMapVisualizer = communicator.getPlugin<FootprintHeatmapVisualizer>(FootprintHeatmapVisualizer);
 			if (!polylineVisualizer || !hitMapVisualizer) {
 				return;
 			}
@@ -530,9 +526,9 @@ export class VisualizersAppEffects {
 		return observable;
 	}
 
-	getVisualizer(mapId, visualizerType) {
+	getPlugin<T>(mapId, visualizerType): T {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-		return communicator ? <IMapVisualizer>communicator.getVisualizer(visualizerType) : null;
+		return communicator ? communicator.getPlugin<T>(visualizerType) : null;
 	}
 
 	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true): Observable<boolean> {
@@ -544,7 +540,7 @@ export class VisualizersAppEffects {
 		if (!communicator) {
 			return Observable.of(true);
 		}
-		const gotoVisualizer = communicator.getVisualizer(GoToVisualizerType);
+		const gotoVisualizer = communicator.getPlugin<GoToVisualizer>(GoToVisualizer);
 		if (!gotoVisualizer) {
 			return Observable.of(true);
 		}
@@ -571,7 +567,7 @@ export class VisualizersAppEffects {
 	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]): Observable<boolean> {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
-			const iconVisualizer = communicator.getVisualizer(IconVisualizerType);
+			const iconVisualizer = communicator.getPlugin<IconVisualizer>(IconVisualizer);
 			if (!iconVisualizer) {
 				return Observable.of(true);
 			}
@@ -616,10 +612,11 @@ export class VisualizersAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator && pointerMoveProducer) {
 			pointerMoveProducer.subscribe(point => {
-				const mouseShadowVisualizer = communicator.getVisualizer(MouseShadowVisualizerType);
+				const mouseShadowVisualizer = communicator.getPlugin<MouseShadowVisualizer>(MouseShadowVisualizer);
 				if (!mouseShadowVisualizer) {
 					return;
 				}
+
 				const shadowMousePoint: GeoJSON.Point = {
 					type: 'Point',
 					// calculate projection?
@@ -641,7 +638,7 @@ export class VisualizersAppEffects {
 	clearShadowMouseEntities(mapData: CaseMapState) {
 		const communicator = this.imageryCommunicatorService.provide(mapData.id);
 		if (communicator) {
-			const mouseShadowVisualizer = communicator.getVisualizer(MouseShadowVisualizerType);
+			const mouseShadowVisualizer = communicator.getPlugin<MouseShadowVisualizer>(MouseShadowVisualizer);
 			if (!mouseShadowVisualizer) {
 				return;
 			}

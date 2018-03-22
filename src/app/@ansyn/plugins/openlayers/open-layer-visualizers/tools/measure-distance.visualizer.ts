@@ -1,7 +1,6 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
-import proj from 'ol/proj';
 import Text from 'ol/style/text';
 import Fill from 'ol/style/fill';
 import Style from 'ol/style/style';
@@ -17,15 +16,11 @@ import { UUID } from 'angular2-uuid';
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
 import { getPointByGeometry } from '@ansyn/core/utils';
-import { VisualizerInteractions } from '@ansyn/imagery/model/imap-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 
-export const MeasureDistanceVisualizerType = 'MeasureDistanceVisualizer';
-
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
-	static type = MeasureDistanceVisualizerType;
-
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
 		fill: new Fill({
@@ -81,7 +76,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	constructor(style: Partial<VisualizerStateStyle>) {
-		super(MeasureDistanceVisualizerType, style, {
+		super(style, {
 			initial: {
 				stroke: {
 					color: '#3399CC',

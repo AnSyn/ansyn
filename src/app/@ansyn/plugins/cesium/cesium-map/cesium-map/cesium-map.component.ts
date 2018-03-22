@@ -2,15 +2,15 @@ import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChi
 import { IMap, IMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
+import { getPluginsProviders } from '@ansyn/imagery/imagery/providers/collections.factory';
 export const cesiumMapName = 'cesiumMap';
-export const PluginsProvider = getPluginsProvider(cesiumMapName);
+export const pluginProviders = getPluginsProviders(cesiumMapName);
 
 @Component({
 	selector: 'ansyn-cesium-component',
 	templateUrl: './cesium-map.component.html',
 	styleUrls: ['./cesium-map.component.less'],
-	providers: [PluginsProvider]
+	providers: [...pluginProviders]
 })
 
 export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {

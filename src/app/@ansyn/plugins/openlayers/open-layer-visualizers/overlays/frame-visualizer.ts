@@ -1,16 +1,15 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import { Observable } from 'rxjs/Observable';
-
-export const FrameVisualizerType = 'FrameVisualizer';
-
+import { Inject, Injectable } from '@angular/core';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+@Injectable()
 export class FrameVisualizer extends EntitiesVisualizer {
-	static type = FrameVisualizerType;
 	public markups: any[] = [];
 	public isActive = false;
 
-	constructor(style: Partial<VisualizerStateStyle>) {
-		super(FrameVisualizerType, style);
+	constructor(@Inject(VisualizersConfig) config: IVisualizersConfig) {
+		super(config[FrameVisualizer.name]);
 		this.updateStyle({
 			opacity: 0.5,
 			initial: {

@@ -6,7 +6,7 @@ import { ImageryProviderService } from './provider-service/imagery-provider.serv
 import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './configuration.token';
 import { CacheService } from './cache-service/cache.service';
-import { createCollection, ImageryPluginProvider } from './plugins/plugins-collection';
+import { createCollection, ImageryPluginProvider } from './model/plugins-collection';
 
 @NgModule({
 	imports: [CommonModule],

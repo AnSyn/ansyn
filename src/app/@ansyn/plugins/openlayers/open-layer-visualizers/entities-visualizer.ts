@@ -1,4 +1,4 @@
-import { IMapVisualizer, IVisualizerEntity } from '@ansyn/imagery';
+import { BaseImageryVisualizer, CommunicatorEntity, IMap, IVisualizerEntity } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
@@ -13,10 +13,16 @@ import VectorLayer from 'ol/layer/vector';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { FeatureCollection, GeoJsonObject, GeometryObject } from 'geojson';
+import {
+	VisualizerEvents, VisualizerEventTypes,
+	VisualizerInteractionTypes
+} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Store } from '@ngrx/store';
+import { DbclickFeatureTriggerAction, HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
+import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -28,17 +34,12 @@ export const VisualizerStates = {
 	HOVER: 'hover'
 };
 
-export const EntitiesVisualizerType = 'EntitiesVisualizer';
 
 
-export abstract class EntitiesVisualizer implements IMapVisualizer {
-	static type = EntitiesVisualizerType;
-
+export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
+	static mapName = openLayersMapName;
 	isHideable = false;
 	isHidden = false;
-
-	protected iMap: OpenLayersMap;
-	protected mapId: string;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: VectorLayer;
@@ -55,16 +56,24 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 				color: 'blue',
 				width: 3
 			}
-		},
+		}
 	};
 
 	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
 	subscribers: Subscriber<any>[] = [];
-
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 	events: Map<VisualizerEventTypes, EventEmitter<any>> = new Map<VisualizerEventTypes, EventEmitter<any>>();
 
-	constructor(public type: string, visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+	get iMap(): IMap {
+		return this.communicator.ActiveMap;
+	}
+
+	get mapId(): string {
+		return this.communicator.id;
+	}
+
+	constructor(visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}
 
@@ -73,9 +82,8 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 		return entity && entity.originalEntity;
 	}
 
-	onInit(mapId: string, map: OpenLayersMap) {
-		this.iMap = map;
-		this.mapId = mapId;
+	init(communicator: CommunicatorEntity) {
+		super.init(communicator);
 		this.initLayers();
 		this.resetEvents();
 	}
@@ -174,7 +182,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		if (styleSettings.point) {
 			const { fill, stroke } = styleSettings;
-			styleSettings.image = new Circle({ fill, stroke, ...styleSettings.point } );
+			styleSettings.image = new Circle({ fill, stroke, ...styleSettings.point });
 		}
 
 		if (Object.keys(secondaryStyle).length !== 0) {
@@ -215,7 +223,7 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 			return Observable.of(true);
 		}
 
-		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
+		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = <any> {
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
@@ -226,13 +234,16 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
-			features.forEach((feature: Feature) => {
-				const _id: string = <string>feature.getId();
-				this.idToEntity.set(_id, { originalEntity: logicalEntities.find(({id}) => id === _id), feature: feature });
+				features.forEach((feature: Feature) => {
+					const _id: string = <string>feature.getId();
+					this.idToEntity.set(_id, <any>{
+						originalEntity: logicalEntities.find(({ id }) => id === _id),
+						feature: feature
+					});
+				});
+				this.source.addFeatures(features);
+				return true;
 			});
-			this.source.addFeatures(features);
-			return true;
-		});
 	}
 
 	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
@@ -319,5 +330,23 @@ export abstract class EntitiesVisualizer implements IMapVisualizer {
 
 	removeEvent(type: VisualizerEventTypes) {
 		this.events.delete(type);
+	}
+
+	initDispatchers(store: Store<any>) {
+		if (this.events.has(VisualizerEvents.onHoverFeature)) {
+			this.subscribers.push(this.events.get(VisualizerEvents.onHoverFeature).subscribe((event) => store.dispatch(new HoverFeatureTriggerAction(event))));
+		}
+
+		if (this.events.has(VisualizerEvents.doubleClickFeature)) {
+			this.subscribers.push(this.events.get(VisualizerEvents.doubleClickFeature).subscribe((event) => store.dispatch(new DbclickFeatureTriggerAction(event))));
+		}
+
+		if (this.events.has(VisualizerEvents.drawEndPublisher)) {
+			this.subscribers.push(this.events.get(VisualizerEvents.drawEndPublisher).subscribe((event) => store.dispatch(new AnnotationDrawEndAction(event))));
+		}
+
+		if (this.events.has(VisualizerEvents.contextMenuHandler)) {
+			this.subscribers.push(this.events.get(VisualizerEvents.contextMenuHandler).subscribe((event) => store.dispatch(new AnnotationContextMenuTriggerAction(event))));
+		}
 	}
 }

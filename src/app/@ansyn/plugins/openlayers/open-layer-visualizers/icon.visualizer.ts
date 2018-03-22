@@ -3,14 +3,12 @@ import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 
-export const IconVisualizerType = 'IconVisualizer';
-
 export class IconVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
 
 	// constructor(iconPath: string, args: any) {
 	constructor(args: any) {
-		super(IconVisualizerType, args);
+		super(args);
 		// set icon
 		this._iconSrc = new Style({
 			image: new Icon({

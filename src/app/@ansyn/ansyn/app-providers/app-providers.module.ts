@@ -24,21 +24,9 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { OpenLayersVisualizerMapType } from '@ansyn/plugins/openlayers/open-layer-visualizers/open-layer-visualizers-map-type.model';
-import { FootprintPolygonVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polygon-visualizer';
-import { ContextEntityVisualizer } from './app-visualizers/context-entity.visualizer';
-import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/heatmap-visualizer';
-import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
-import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/annotations.visualizer';
-import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers';
-import { GoToVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/goto.visualizer';
-import { MapVisualizer } from '@ansyn/imagery/model/imap-visualizer.token';
-import { IconVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
-import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/mouse-shadow.visualizer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
@@ -65,81 +53,6 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
 
-		// Map visualizers
-		{
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: ContextEntityVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: FootprintPolygonVisualizer
-			}
-		},
-		{
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: FootprintHeatmapVisualizer
-			}
-		},
-		{
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: FrameVisualizer
-			}
-		},
-		{
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: FootprintPolylineVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: AnnotationsVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: MeasureDistanceVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: GoToVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: IconVisualizer
-			}
-		}, {
-			provide: MapVisualizer,
-			multi: true,
-			useValue: {
-				type: OpenLayersVisualizerMapType,
-				visualizer: MouseShadowVisualizer
-			}
-		},
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
@@ -149,4 +62,5 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 	]
 })
 export class AppProvidersModule {
+
 }

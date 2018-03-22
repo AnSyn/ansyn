@@ -1,8 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
-import { BaseImageryPlugin } from '../plugins/base-imagery-plugin';
+import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { CaseMapPosition } from '@ansyn/core';
-import { IMapVisualizer } from '../model/imap-visualizer';
+import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
@@ -18,6 +18,7 @@ export class CommunicatorEntity {
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
+	public mapPluginsInitialized = new EventEmitter<string>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
@@ -36,7 +37,8 @@ export class CommunicatorEntity {
 	}
 
 	initPlugins() {
-		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this))
+		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
+		this.mapPluginsInitialized.emit(this.id);
 	}
 
 	private registerToManagerEvents() {
@@ -175,14 +177,6 @@ export class CommunicatorEntity {
 
 	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
 		return <any> this._manager.plugins.find((_plugin) => _plugin instanceof plugin);
-	}
-
-	public getVisualizer(visualizerType: string): IMapVisualizer {
-		return this._manager.visualizers.find((visualizer: IMapVisualizer) => visualizer.type === visualizerType);
-	}
-
-	public getAllVisualizers() {
-		return this._manager.visualizers;
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {

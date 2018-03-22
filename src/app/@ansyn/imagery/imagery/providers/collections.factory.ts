@@ -1,21 +1,29 @@
 import { Injector } from '@angular/core';
-import { BaseImageryPlugin } from '../../plugins/base-imagery-plugin';
-import { ImageryPluginProvider, PLUGINS_COLLECTION } from '../../plugins/plugins-collection';
+import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
+import { ImageryPluginProvider, PLUGINS_COLLECTION } from '../../model/plugins-collection';
 
-export function getPluginsProvider(mapName: string) {
+const baseInjectablePlugins = [BaseImageryPlugin];
+
+export function getPluginsProvider(injectableClass: any, mapName: string) {
 	return {
-		provide: BaseImageryPlugin,
+		provide: injectableClass,
 		useFactory(pluginsCollection: Array<ImageryPluginProvider[]>, parent: Injector) {
 			const providers = pluginsCollection
 				.reduce((v, i) => [...v, ...i], [])
-				.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.mapName === mapName);
+				.filter(({ provide, useClass }: ImageryPluginProvider) => provide === injectableClass && useClass.mapName === mapName);
 
 			if (providers.length === 0) {
 				return [];
 			}
 			const childInjector = Injector.create(providers, parent);
-			return childInjector.get(BaseImageryPlugin);
+			return childInjector.get(injectableClass);
 		},
 		deps: [PLUGINS_COLLECTION, Injector]
 	};
+}
+
+export function getPluginsProviders(mapName: string) {
+	return baseInjectablePlugins.map((injectableClass) => {
+		return getPluginsProvider(injectableClass, mapName);
+	});
 }

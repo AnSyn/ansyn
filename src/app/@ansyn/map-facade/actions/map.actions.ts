@@ -26,6 +26,7 @@ export const MapActionTypes = {
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
+	MAP_PLUGINS_INITIALIZED: 'MAP_PLUGINS_INITIALIZED',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	STORE: {
@@ -170,14 +171,14 @@ export class ContextMenuDisplayAction implements Action {
 export class HoverFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
 
-	constructor(public payload: { visualizerType: string, id?: string }) {
+	constructor(public payload: { id?: string }) {
 	}
 }
 
 export class DbclickFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.DBCLICK_FEATURE;
 
-	constructor(public payload: { visualizerType: string, id: string }) {
+	constructor(public payload: { visualizerType: any, id: string }) {
 	}
 }
 
@@ -272,5 +273,11 @@ export class SetIsLoadingAcion implements Action {
 	type = MapActionTypes.VIEW.SET_IS_LOADING;
 	constructor(public payload: Set<string>) {
 
+	}
+}
+
+export class MapPluginsInitialized implements Action {
+	readonly type = MapActionTypes.MAP_PLUGINS_INITIALIZED;
+	constructor(payload: string) {
 	}
 }

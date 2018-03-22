@@ -1,12 +1,12 @@
 import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { IMapComponent } from '../../model/imap-component';
-import { BaseImageryPlugin } from '../../plugins/base-imagery-plugin';
+import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
 import { CaseMapPosition } from '@ansyn/core';
-import { IMapVisualizer } from '../../model/imap-visualizer';
+import { BaseImageryVisualizer } from '../../model/base-imagery-visualizer';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
@@ -29,7 +29,6 @@ export class ImageryComponentManager {
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
-	private _visualizers: IMapVisualizer[] = [];
 
 	public get id(): string {
 		return this._id;
@@ -73,17 +72,17 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetVisualizers());
+			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetPlugins());
 		}
 
 		return Observable.of(true);
 	}
 
-	private resetVisualizers(): Observable<boolean> {
+	private resetPlugins(): Observable<boolean> {
 		let resetObservables = [];
 
-		this.visualizers.forEach((visualizer) => {
-			resetObservables.push(visualizer.onResetView());
+		this.plugins.forEach((plugin: BaseImageryPlugin) => {
+			resetObservables.push(plugin.onResetView());
 		});
 
 		return Observable.forkJoin(resetObservables).map(results => results.every(b => b === true));
@@ -111,7 +110,6 @@ export class ImageryComponentManager {
 			const mapComponent = this._mapComponentRef.instance;
 			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 				this.internalSetActiveMap(map);
-				this.buildActiveMapVisualizers(activeMapName, map);
 				if (activeMapName !== oldMapName && Boolean(oldMapName)) {
 					this.mapInstanceChanged.emit({
 						id: this.id,
@@ -134,7 +132,6 @@ export class ImageryComponentManager {
 
 	private destroyCurrentComponent(): void {
 		this.destroyPlugins();
-		this.destroyActiveMapVisualizers();
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
@@ -159,48 +156,6 @@ export class ImageryComponentManager {
 		this.plugins.forEach((plugin: BaseImageryPlugin) => {
 			plugin.dispose();
 		});
-	}
-
-	private buildActiveMapVisualizers(activeMapType: string, map: IMap) {
-		// Create Map visualizer's
-
-		const mapVisualizersConfig: [{ visualizerClass: any, args: any }] = this.imageryProviderService.getVisualizersConfig(activeMapType);
-		if (!mapVisualizersConfig) {
-			this._visualizers = [];
-			return;
-		}
-
-		const mapVisualizers: IMapVisualizer[] = this.createVisualizers(mapVisualizersConfig, map);
-		if (mapVisualizers) {
-			this._visualizers = mapVisualizers;
-		} else {
-			this._visualizers = [];
-		}
-	}
-
-	public createVisualizers(existingVisualizersConfig: [{ visualizerClass: any, args: any }], map: IMap): IMapVisualizer[] {
-		const visualizers: IMapVisualizer[] = [];
-
-		existingVisualizersConfig.forEach(provider => {
-			const providedVisualizers: IMapVisualizer = new provider.visualizerClass(provider.args);
-			providedVisualizers.onInit(this.id, map);
-			visualizers.push(providedVisualizers);
-		});
-
-		return visualizers;
-	}
-
-	private destroyActiveMapVisualizers() {
-		if (this._visualizers) {
-			this._visualizers.forEach((visualizer: IMapVisualizer) => {
-				visualizer.dispose();
-			});
-		}
-		this._visualizers = [];
-	}
-
-	public get visualizers() {
-		return this._visualizers;
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {

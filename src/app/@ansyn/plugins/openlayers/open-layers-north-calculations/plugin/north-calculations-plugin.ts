@@ -55,8 +55,12 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	public init(communicator: CommunicatorEntity): void {
-		this.communicator = communicator;
+		super.init(communicator);
 		this.initPluginSubscribers();
+	}
+
+	onResetView(): Observable<boolean> {
+		return Observable.of(true);
 	}
 
 	public dispose() {

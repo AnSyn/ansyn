@@ -2,8 +2,8 @@ import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChi
 import { disabledOpenLayersMapName, OpenLayersDisabledMap } from './open-layers-disabled-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { getPluginsProvider } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const PluginsProvider = getPluginsProvider(disabledOpenLayersMapName);
+import { getPluginsProviders } from '@ansyn/imagery/imagery/providers/collections.factory';
+export const pluginProviders = getPluginsProviders(disabledOpenLayersMapName);
 
 @Component({
 	selector: 'ansyn-ol-component',
@@ -21,7 +21,7 @@ export const PluginsProvider = getPluginsProvider(disabledOpenLayersMapName);
 			box-sizing: border-box;
 
 		}`],
-	providers: [PluginsProvider]
+	providers: [...pluginProviders]
 })
 
 export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {

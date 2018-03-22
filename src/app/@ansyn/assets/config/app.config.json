@@ -8,10 +8,10 @@
 			"state": {
 				"maps": {
 					"layout": "layout1",
-					"activeMapId": "defaultImagery1",
+					"activeMapId": null,
 					"data": [
 						{
-							"id": "defaultImagery1",
+							"id": null,
 							"mapType": "openLayersMap",
 							"data": {
 								"position": {

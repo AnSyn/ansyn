@@ -15,6 +15,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Case, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays';
+import { UUID } from 'angular2-uuid';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -48,10 +49,10 @@ export class SelectCaseAppEffects {
 				limit: this.casesService.contextValues.imageryCountBefore,
 				facets: payload.state.facets
 			}).mergeMap((data: { startDate, endDate }) => {
-					payload.state.time.from = new Date(data.startDate);
-					payload.state.time.to = new Date(data.endDate);
-					return this.selectCaseActions(payload);
-				});
+				payload.state.time.from = new Date(data.startDate);
+				payload.state.time.to = new Date(data.endDate);
+				return this.selectCaseActions(payload);
+			});
 		});
 
 	/**
@@ -81,7 +82,6 @@ export class SelectCaseAppEffects {
 		});
 
 
-
 	notImageryCountMode(): boolean {
 		return this.casesService.contextValues.imageryCountBefore === -1 && this.casesService.contextValues.imageryCountAfter === -1;
 	}
@@ -95,6 +95,9 @@ export class SelectCaseAppEffects {
 	}
 
 	selectCaseActions(payload: Case): Action[] {
+		if (payload.id === this.casesService.defaultCase.id) {
+			payload.state.maps.activeMapId = payload.state.maps.data[0].id = UUID.UUID();
+		}
 		const { state } = payload;
 		// status-bar
 		const { orientation, geoFilter, timeFilter } = state;
@@ -119,7 +122,7 @@ export class SelectCaseAppEffects {
 			new SetMapsDataActionStore({ mapsList: data, activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays),
 			new SetAnnotationsLayer(annotationsLayer),
-			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
+			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer)
 		];
 	}
 

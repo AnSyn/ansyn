@@ -26,6 +26,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeometryObject, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
+import 'rxjs/add/operator/take';
 
 export const openLayersMapName = 'openLayersMap';
 
@@ -149,11 +150,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	initListeners() {
 		this._mapObject.on('moveend', () => {
-			this.getCenter().subscribe(mapCenter => {
+			this.getCenter().take(1).subscribe(mapCenter => {
 				this.centerChanged.emit(mapCenter);
 			});
 
-			this.getPosition().subscribe(position => {
+			this.getPosition().take(1).subscribe(position => {
 				if (position) {
 					this.positionChanged.emit(position);
 				}

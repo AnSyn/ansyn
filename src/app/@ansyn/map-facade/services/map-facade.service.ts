@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMapState } from '../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../reducers/map.reducer';
+
 import { ImageryCommunicatorService, IMapVisualizer } from '@ansyn/imagery';
 import {
 	ContextMenuShowAction,
@@ -24,6 +25,9 @@ import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.compo
 @Injectable()
 export class MapFacadeService {
 	subscribers: {[key: string]: any[]} = {};
+
+	mapsList$ = this.store.select(mapStateSelector).pluck<IMapState, CaseMapState[]>('mapsList');
+	mapsList: CaseMapState[] = [];
 
 	static isOverlayGeoRegistered(overlay: Overlay): boolean {
 		if (!overlay) {
@@ -70,6 +74,7 @@ export class MapFacadeService {
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+		this.mapsList$.subscribe((mapsList) => this.mapsList = mapsList);
 	}
 
 	initEmitters(id: string) {
@@ -109,8 +114,10 @@ export class MapFacadeService {
 	}
 
 	positionChanged($event: { id: string, position: CaseMapPosition }) {
-		this.store.dispatch(new PositionChangedAction($event));
+		const mapInstance = <CaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
+		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 	}
+
 
 	singleClick(event) {
 		this.store.dispatch(new MapSingleClickAction(event));

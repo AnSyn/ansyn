@@ -3,6 +3,7 @@ import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { UUID } from 'angular2-uuid';
 
 export interface CaseModal {
 	show: boolean,

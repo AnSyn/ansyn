@@ -1,7 +1,5 @@
 import * as GeoJSON from 'geojson';
 import * as bbox from '@turf/bbox';
-import * as center from '@turf/center';
-import * as inside from '@turf/inside';
 import { polygon } from '@turf/helpers';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';

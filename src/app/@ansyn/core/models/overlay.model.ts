@@ -43,7 +43,7 @@ export class PlanetOverlay {
 		thumbnail: string
 	};
 	_permissions: string[];
-	geometry: GeoJSON.GeometryObject;
+	geometry: GeoJSON.Polygon;
 	id: string;
 	properties: {
 		acquired: string,

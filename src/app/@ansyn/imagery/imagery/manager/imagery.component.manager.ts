@@ -192,5 +192,6 @@ export class ImageryComponentManager {
 		}
 		this._subscriptions = [];
 		this.destroyPlugins();
+		this.destroyActiveMapVisualizers(); // ram 03.18
 	}
 }

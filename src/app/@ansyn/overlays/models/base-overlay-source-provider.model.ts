@@ -90,21 +90,17 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).catch(() => Observable.of({data: [], limited: 0}));
+				return this.fetch(newFetchParams).toPromise();
 			});
 
-		if (fetchPromises.length <= 0) {
-			return Observable.of({data: [], limited: 0});
-		}
-
-		const multipleFetches: Observable<OverlaysFetchData> = Observable.forkJoin(fetchPromises) // Wait for every fetch to resolve
-			.map((data: Array<OverlaysFetchData>) =>
+		const multipleFetches: Promise<OverlaysFetchData> = Promise.all(fetchPromises) // Wait for every fetch to resolve
+			.then((data: Array<OverlaysFetchData>) =>
 				mergeLimitedArrays(data, fetchParams.limit, {
 					sortFn: sortByDateDesc,
 					uniqueBy: o => o.id
 				})); // merge overlays from multiple requests
 
-		return multipleFetches;
+		return Observable.from(multipleFetches);
 	}
 
 	abstract fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData>;

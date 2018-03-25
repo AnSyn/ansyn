@@ -46,6 +46,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	private projectionSubscription: Subscription = null;
 	private approximateProjectionSubscription: Subscription = null;
+	private _subscriptions: Subscription[] = [];
+	private _contextMenuEventListener: (e: MouseEvent) => void;
+	private _containerElem: HTMLElement;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	private _flags = {
@@ -150,27 +153,31 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	initListeners() {
 		this._mapObject.on('moveend', () => {
-			this.getCenter().take(1).subscribe(mapCenter => {
-				this.centerChanged.emit(mapCenter);
-			});
+			this._subscriptions.push(
+				this.getCenter().take(1).subscribe(mapCenter => {
+					this.centerChanged.emit(mapCenter);
+				}),
 
-			this.getPosition().take(1).subscribe(position => {
-				if (position) {
-					this.positionChanged.emit(position);
-				}
-			});
+				this.getPosition().take(1).subscribe(position => {
+					if (position) {
+						this.positionChanged.emit(position);
+					}
+				})
+			);
 		});
 
-		const containerElem = <HTMLElement> this._mapObject.getViewport();
+		this._containerElem = <HTMLElement> this._mapObject.getViewport();
 
-		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
+		this._contextMenuEventListener = (e: MouseEvent) => {
 			e.preventDefault();
 
-			containerElem.click();
+			this._containerElem.click();
 
 			let coordinate = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
 			this.positionToPoint(coordinate, point => this.contextMenu.emit({ point, e }));
-		});
+		};
+
+		this._containerElem.addEventListener('contextmenu', this._contextMenuEventListener);
 	}
 
 	createView(layer): View {
@@ -465,6 +472,12 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
+		}
+
+		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
+
+		if (this._containerElem) {
+			this._containerElem.removeEventListener('contextmenu', this._contextMenuEventListener);
 		}
 	}
 }

@@ -30,6 +30,8 @@ import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer'
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { IToolsState, toolsFlags, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers';
+import { BaseImageryPlugin, ImageryModule } from '@ansyn/imagery';
+import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 
 describe('VisualizersAnnotationsAppEffects', () => {
 	let visualizersAnnotationsAppEffects: VisualizersAnnotationsAppEffects;
@@ -58,7 +60,15 @@ describe('VisualizersAnnotationsAppEffects', () => {
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
 					[mapFeatureKey]: MapReducer
-				})
+				}),
+				ImageryModule.provideCollection([
+					{
+						provide: BaseImageryPlugin,
+						multi: true,
+						useClass: AnnotationsVisualizer,
+						deps: [Store, VisualizersConfig]
+					}
+				])
 			],
 			providers: [
 				VisualizersAnnotationsAppEffects,
@@ -93,8 +103,8 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		let fakeComm;
 
 		beforeEach(() => {
-			fakeComm = jasmine.createSpyObj([ 'getVisualizer' ]);
-			fakeComm.getVisualizer.and.returnValue(fakeVisualizer);
+			fakeComm = jasmine.createSpyObj([ 'getPlugin' ]);
+			fakeComm.getPlugin.and.returnValue(fakeVisualizer);
 			fakeVisualizer.setEntities.and.callFake(() => Observable.of(true));
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => fakeComm);
 		});
@@ -250,11 +260,11 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			const annotationVisualizers: any[] = [
 				{
 					id: 'v1',
-					getVisualizer: () => 'v1Visualizer'
+					getPlugin: () => 'v1Visualizer'
 				},
 				{
 					id: 'v2',
-					getVisualizer: () => 'v2Visualizer'
+					getPlugin: () => 'v2Visualizer'
 				}
 			];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake((_id) => annotationVisualizers.find(({ id }) => id === _id));

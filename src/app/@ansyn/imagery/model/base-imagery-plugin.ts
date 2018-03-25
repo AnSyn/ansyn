@@ -6,7 +6,9 @@ export abstract class BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
 	onDisposedEvent: EventEmitter<any>;
-	abstract onResetView(): Observable<boolean>;
+	onResetView(): Observable<boolean> {
+		return Observable.of(true);
+	};
 	abstract dispose();
 	init(communicator: CommunicatorEntity) {
 		this.communicator = communicator;

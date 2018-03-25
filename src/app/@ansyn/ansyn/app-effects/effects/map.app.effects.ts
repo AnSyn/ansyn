@@ -158,7 +158,7 @@ export class MapAppEffects {
 			const { overlay } = payload;
 			const mapId = payload.mapId || mapState.activeMapId;
 			const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
-			const intersection = getFootprintIntersectionRatioInExtent(ExtentCalculator.polygonToExtent(mapData.position.extentPolygon), overlay.footprint);
+			const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.ActiveMap.mapType;
 			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);

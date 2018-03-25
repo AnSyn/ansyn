@@ -17,35 +17,8 @@ export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Poly
 	return <any>bbox(<any>footprintFeature);
 }
 
-export function extentToPolygon(extent: CaseMapExtent) {
-	const coordinates = [];
-
-	// Keep this order otherwise self intersection!
-	coordinates.push([extent[0], extent[1]]);
-	coordinates.push([extent[0], extent[3]]);
-	coordinates.push([extent[2], extent[3]]);
-	coordinates.push([extent[2], extent[1]]);
-	coordinates.push([extent[0], extent[1]]);
-
-	return polygon([coordinates]);
-}
-
-export function isExtentContainedInPolygon(extent: CaseMapExtent, footprint: GeoJSON.MultiPolygon): boolean {
-	const extentPoly = extentToPolygon(extent);
-
-	const footprintFeature: GeoJSON.Feature<any> = {
-		'type': 'Feature',
-		'properties': {},
-		'geometry': footprint
-	};
-
-	const centerPoint = center(extentPoly);
-	return inside(centerPoint, <any>footprintFeature);
-}
-
-export function getFootprintIntersectionRatioInExtent(extent: CaseMapExtent, footprint: GeoJSON.MultiPolygon): number {
-	const extentPolygon = extentToPolygon(extent);
-
+export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Polygon, footprint: GeoJSON.MultiPolygon): number {
+	const extentPolygon = polygon(extent.coordinates);
 	const extentArea = area(extentPolygon);
 
 	let intersectionArea = 0;

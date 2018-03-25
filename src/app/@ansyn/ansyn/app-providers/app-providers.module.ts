@@ -4,7 +4,7 @@ import {
 	IdahoSourceProvider2,
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider,
-	OpenAerialSourceProvider,
+	PlanetSourceProvider
 } from './overlay-source-providers';
 import {
 	OpenLayerBingSourceProvider,
@@ -13,7 +13,8 @@ import {
 	OpenLayerIDAHOSourceProvider,
 	OpenLayerMapBoxSourceProvider,
 	OpenLayerOSMSourceProvider,
-	OpenLayerTileWMSSourceProvider
+	OpenLayerTileWMSSourceProvider,
+	OpenLayerPlanetSourceProvider
 } from './map-source-providers';
 import { NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
@@ -24,7 +25,6 @@ import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filt
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { OpenLayerPlanetSourceProvider, PlanetSourceProvider } from '@ansyn/ansyn';
 
 @NgModule({
 	imports: [

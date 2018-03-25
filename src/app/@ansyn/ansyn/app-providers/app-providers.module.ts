@@ -1,20 +1,19 @@
 import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import {
+	IdahoSourceProvider,
 	IdahoSourceProvider2,
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider,
-	IdahoSourceProvider,
 	OpenAerialSourceProvider,
 } from './overlay-source-providers';
 import {
 	OpenLayerBingSourceProvider,
-	OpenLayerIDAHOSourceProvider,
+	OpenLayerESRI4326SourceProvider,
 	OpenLayerIDAHO2SourceProvider,
-	OpenLayerOpenAerialSourceProvider,
-	OpenLayerOSMSourceProvider,
-	OpenLayerTileWMSSourceProvider,
+	OpenLayerIDAHOSourceProvider,
 	OpenLayerMapBoxSourceProvider,
-	OpenLayerESRI4326SourceProvider
+	OpenLayerOSMSourceProvider,
+	OpenLayerTileWMSSourceProvider
 } from './map-source-providers';
 import { NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
@@ -25,6 +24,7 @@ import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filt
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { OpenLayerPlanetSourceProvider, PlanetSourceProvider } from '@ansyn/ansyn';
 
 @NgModule({
 	imports: [
@@ -37,7 +37,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 
 		// Map tiling source services
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
@@ -45,7 +45,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerOpenAerialSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
 

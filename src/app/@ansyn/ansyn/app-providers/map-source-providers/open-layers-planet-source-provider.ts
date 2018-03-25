@@ -7,14 +7,14 @@ import { Overlay } from 'app/@ansyn/core/index';
 import { extentFromGeojson } from 'app/@ansyn/core/utils/index';
 import proj from 'ol/proj';
 
-export const OpenLayerOpenAerialSourceProviderMapType = 'openLayersMap';
-export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
+export const OpenLayerPlanetSourceProviderMapType = 'openLayersMap';
+export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @Injectable()
-export class OpenLayerOpenAerialSourceProvider extends BaseMapSourceProvider {
+export class OpenLayerPlanetSourceProvider extends BaseMapSourceProvider {
 
-	public mapType = OpenLayerOpenAerialSourceProviderMapType;
-	public sourceType = OpenLayerOpenAerialSourceProviderSourceType;
+	public mapType = OpenLayerPlanetSourceProviderMapType;
+	public sourceType = OpenLayerPlanetSourceProviderSourceType;
 
 	create(metaData: Overlay, mapId: string): any[] {
 		const source = new XYZ({

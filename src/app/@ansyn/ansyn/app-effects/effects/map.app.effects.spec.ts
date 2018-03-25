@@ -419,7 +419,7 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	describe('onOverlayFromURL$ from OPEN_AERIAL', () => {
+	describe('onOverlayFromURL$ from PLANET', () => {
 		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
 			const testOverlay: Overlay = <Overlay>{
 				id: 'testOverlayId',
@@ -427,14 +427,14 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				azimuth: 0,
 				isGeoRegistered: true,
-				sourceType: 'OPEN_AERIAL'
+				sourceType: 'PLANET'
 			};
 			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
 					overlayId: testOverlay.id,
-					sourceType: 'OPEN_AERIAL',
+					sourceType: 'PLANET',
 					mapId: 'imagery1'
 				})
 			});

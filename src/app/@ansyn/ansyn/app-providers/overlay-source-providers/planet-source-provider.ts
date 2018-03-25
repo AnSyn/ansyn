@@ -123,7 +123,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const overlay: Overlay = new Overlay();
 
 		overlay.id = element.id;
-		overlay.footprint = element.geometry;
+		overlay.footprint = geojsonPolygonToMultiPolygon(element.geometry);
 		overlay.sensorType = element.properties.item_type;
 		overlay.sensorName = element.properties.satellite_id;
 		overlay.bestResolution = element.properties.gsd;

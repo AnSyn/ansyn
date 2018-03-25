@@ -313,8 +313,8 @@ describe('OverlaysService', () => {
 		});
 	});
 
-	it('check the method getOverlayById with mock data OPEN_AERIAL provider', () => {
-		overlaysService.getOverlayById('test', 'OPEN_AERIAL').subscribe((result: any) => {
+	it('check the method getOverlayById with mock data PLANET provider', () => {
+		overlaysService.getOverlayById('test', 'PLANET').subscribe((result: any) => {
 			expect(result).toBeTruthy();
 		});
 	});

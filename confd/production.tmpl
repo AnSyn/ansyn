@@ -401,7 +401,7 @@
     				}
     			],
     			"blacklist": []
-    		},"OPEN_AERIAL": {
+    		},"PLANET": {
     			"whitelist": [
     				{
     					"name": "Entire Earth",
@@ -450,7 +450,11 @@
 		"baseUrl": "{{ getv "/ansyn/overlay/baseurl" "NO-VALUE" }}",
 		"overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "NO-VALUE" }}"
 	},
-	"openAerialOverlaysSourceConfig": {
-		"baseUrl": "https://api.openaerialmap.org/meta"
+	"planetOverlaysSourceConfig": {
+		"baseUrl": "https://api.planet.com/data/v1/quick-search",
+		"itemTypes": ["PSScene3Band", "PSScene4Band", "PSOrthoTile",
+			"REOrthoTile", "REScene", "SkySatScene", "Landsat8L1G", "Sentinel2L1C"],
+		"apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
+		"tilesUrl": "https://tiles.planet.com/data/v1/"
 	}
 }

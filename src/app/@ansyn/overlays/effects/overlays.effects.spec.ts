@@ -160,13 +160,13 @@ describe('Overlays Effects ', () => {
 
 	});
 
-	it('onRequestOverlayByID$ from OPEN_AERIAL should dispatch DisplayOverlayAction with overlay', () => {
+	it('onRequestOverlayByID$ from PLANET should dispatch DisplayOverlayAction with overlay', () => {
 		const fakeOverlay = <Overlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
 				overlayId: 'test',
-				sourceType: 'OPEN_AERIAL',
+				sourceType: 'PLANET',
 				mapId: 'testMapId'
 			})
 		});

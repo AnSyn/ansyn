@@ -156,7 +156,7 @@ describe('VisualizersAppEffects', () => {
 			}
 		};
 		const fakeCommunicator = {
-			getVisualizer: (): any => fakeVisualizer
+			getPlugin: (): any => fakeVisualizer
 		};
 		spyOn(fakeVisualizer, 'setHoverFeature');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator]);
@@ -166,7 +166,7 @@ describe('VisualizersAppEffects', () => {
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: action });
 		expect(visualizersAppEffects.onHoverFeatureEmitSyncHoverFeature$).toBeObservable(expectedResults);
-		expect(fakeCommunicator.getVisualizer().setHoverFeature).toHaveBeenCalledTimes(2);
+		expect(fakeCommunicator.getPlugin().setHoverFeature).toHaveBeenCalledTimes(2);
 	});
 
 	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
@@ -210,7 +210,7 @@ describe('VisualizersAppEffects', () => {
 			}
 		};
 		const fakeCommunicator = {
-			getVisualizer: (): any => fakeVisualizer
+			getPlugin: (): any => fakeVisualizer
 		};
 		spyOn(fakeVisualizer, 'setMarkupFeatures');
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator, fakeCommunicator]);
@@ -218,8 +218,8 @@ describe('VisualizersAppEffects', () => {
 		actions = hot('--a--', { a: action });
 		const expectedResults = cold('--b--', { b: action });
 		expect(visualizersAppEffects.markupVisualizer$).toBeObservable(expectedResults);
-		expect(fakeCommunicator.getVisualizer().setMarkupFeatures).toHaveBeenCalledWith([1, 2, 3, 4]);
-		expect(fakeCommunicator.getVisualizer().setMarkupFeatures).toHaveBeenCalledTimes(3);
+		expect(fakeCommunicator.getPlugin().setMarkupFeatures).toHaveBeenCalledWith([1, 2, 3, 4]);
+		expect(fakeCommunicator.getPlugin().setMarkupFeatures).toHaveBeenCalledTimes(3);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"', () => {

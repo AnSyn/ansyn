@@ -1,15 +1,12 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ContextEntityAppEffects } from './context-entity.app.effect';
 import { Store, StoreModule } from '@ngrx/store';
-import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
-	ICasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
-import { IMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -25,7 +22,7 @@ describe('ContextEntityAppEffects', () => {
 		}
 	};
 	const imageryComm = {
-		getVisualizer: () => {
+		getPlugin: () => {
 		}
 	};
 	const visualizer = {
@@ -112,7 +109,7 @@ describe('ContextEntityAppEffects', () => {
 
 		imageryCommunicatorService = _imageryCommunicatorService;
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue(imageryComm);
-		spyOn(imageryComm, 'getVisualizer').and.returnValue(visualizer);
+		spyOn(imageryComm, 'getPlugin').and.returnValue(visualizer);
 		spyOn(visualizer, 'setEntities').and.callFake(() => Observable.of(true));
 	}));
 

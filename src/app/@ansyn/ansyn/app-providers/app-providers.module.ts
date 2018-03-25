@@ -3,12 +3,8 @@ import {
 	IdahoSourceProvider2,
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider,
-	IdahoOverlaysSourceConfig,
 	IdahoSourceProvider,
-	OpenAerialOverlaysSourceConfig,
 	OpenAerialSourceProvider,
-	IOpenAerialOverlaySourceConfig,
-	IIdahoOverlaySourceConfig
 } from './overlay-source-providers';
 import {
 	OpenLayerBingSourceProvider,
@@ -20,7 +16,7 @@ import {
 	OpenLayerMapBoxSourceProvider,
 	OpenLayerESRI4326SourceProvider
 } from './map-source-providers';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';

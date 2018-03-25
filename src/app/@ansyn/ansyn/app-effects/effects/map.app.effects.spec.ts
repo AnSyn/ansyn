@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
 import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
-	ImageryCreatedAction,
 	ActiveMapChangedAction,
 	DrawPinPointAction,
+	ImageryCreatedAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -23,12 +23,7 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import {
-	DisplayOverlayAction,
-	DisplayOverlaySuccessAction,
-	LoadOverlaysAction,
-	RequestOverlayByIDFromBackendAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
@@ -40,10 +35,7 @@ import {
 	MapReducer,
 	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
-import {
-	AnnotationVisualizerAgentAction,
-	SetMapGeoEnabledModeToolsActionStore
-} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -70,6 +62,7 @@ import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { ImageryPluginsInitialized } from '@ansyn/map-facade';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -200,7 +193,7 @@ describe('MapAppEffects', () => {
 							'mapSourceMetadata': null
 						}
 						],
-						"maxCachedLayers": 100
+						'maxCachedLayers': 100
 					}
 				},
 				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock},
@@ -321,7 +314,7 @@ describe('MapAppEffects', () => {
 
 	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
+		const action = new ImageryPluginsInitialized('tmpId2');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', {a: action});
 		const expectedResults = cold('--a--', {a: new DrawPinPointAction(lonLat)});

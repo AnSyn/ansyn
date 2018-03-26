@@ -1,7 +1,7 @@
-import { BaseOverlaySourceProvider, IFetchParams } from 'app/@ansyn/overlays/index';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/index';
 import { Observable } from 'rxjs/Observable';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService, Overlay } from 'app/@ansyn/core/index';
+import { ErrorHandlerService, Overlay } from '@ansyn/core/index';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';

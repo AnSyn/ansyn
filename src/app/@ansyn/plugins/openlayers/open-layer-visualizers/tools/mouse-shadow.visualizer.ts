@@ -3,7 +3,7 @@ import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
-import { IVisualizerEntity } from 'app/@ansyn/imagery/index';
+import { IVisualizerEntity } from '@ansyn/imagery/index';
 
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;

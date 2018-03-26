@@ -6,8 +6,8 @@ import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 
 export enum AlertMsgTypes {
-	OverlaysOutOfBounds = 'OverlaysOutOfBounds',
-	OverlayIsNotPartOfCase = 'OverlayIsNotPartOfCase'
+	OverlaysOutOfBounds = 'overlaysOutOfBounds',
+	OverlayIsNotPartOfCase = 'overlayIsNotPartOfCase'
 }
 
 export type AlertMsg = Map<AlertMsgTypes, Set<string>>;

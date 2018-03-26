@@ -35,6 +35,8 @@ export class ImageryStatusComponent implements OnInit {
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 
+	alertMsgValues = [];
+
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pluck<ICoreState, AlertMsg>('alertMsg')
 		.do((alertMsg) => this.alertMsgValues = Array.from(alertMsg))
@@ -43,8 +45,6 @@ export class ImageryStatusComponent implements OnInit {
 	favoriteOverlays: Overlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
-	alertMsgValues = [];
-	alertMsg;
 
 	get description() {
 		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;

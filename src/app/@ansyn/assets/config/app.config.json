@@ -268,10 +268,19 @@
 		}
 	},
 	"coreConfig": {
-		"errors": {
-			"noGeoRegistration": "This Image Has No Geo-Registration",
-			"overlayIsNotPartOfCase": "This Overlay Is Not a Part of the Case",
-			"imageIsOutOfBounds": "Image is out of bounds"
+		"alerts": {
+			"noGeoRegistration": {
+				"background": "#a70b0b",
+				"text": "This Image Has No Geo-Registration"
+			},
+			"overlayIsNotPartOfCase": {
+				"background": "#27B2CF",
+				"text": "This Overlay Is Not a Part of the Case"
+			},
+			"imageIsOutOfBounds": {
+				"background": "#80c5d4",
+				"text": "Image is out of bounds"
+			}
 		}
 	},
 	"menuConfig": {

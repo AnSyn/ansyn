@@ -1,3 +1,5 @@
+import { LimitedArray } from '@ansyn/core/utils/limited-array';
+
 export class PlanetOverlay {
 	_links: {
 		_self: string,
@@ -32,4 +34,14 @@ export class PlanetOverlay {
 		usable_data: number,
 		view_angle: number
 	};
+}
+
+export interface OverlaysPlanetFetchData extends LimitedArray {
+	_links: {
+		_first: string,
+		_next: string,
+		_self: string,
+	},
+	features: PlanetOverlay[],
+	type: string
 }

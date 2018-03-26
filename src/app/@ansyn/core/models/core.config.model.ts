@@ -1,10 +1,11 @@
+export interface ICoreConfigAlert {
+	key: string;
+	background: string;
+	text: string;
+}
+
 export interface ICoreConfig {
-	alerts: {
-		[key: string]: {
-			background: string;
-			text: string;
-		}
-	},
+	alerts: ICoreConfigAlert [];
 	colors: {
 		active: string,
 		inactive: string

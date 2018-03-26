@@ -50,20 +50,13 @@
 </div>
 
 <div class="notification">
-	<div class="geo-registered"
-		 [hidden]="!isNotGeoRegistered"
-		 [attr.tooltip-value]="coreConfig.alerts['noGeoRegistration'].text"
-		 [style.background]="coreConfig.alerts['noGeoRegistration'].background"
-		 tooltip-class="bottom left">
-		{{coreConfig.alerts['noGeoRegistration'].text}}
-	</div>
-
 	<div
-		*ngFor="let alertMsg of alertMsgValues"
-		[hidden]="!alertMsg[1].has(mapId)"
-		[style.background]="coreConfig?.alerts[alertMsg[0]]?.background"
-		[attr.tooltip-value]="coreConfig?.alerts[alertMsg[0]]?.text">
-		{{ coreConfig?.alerts[alertMsg[0]]?.text }}
+		*ngFor="let alert of coreConfig?.alerts"
+		[hidden]="!showAlert(alert.key)"
+		[style.background]="alert.background"
+		[attr.tooltip-value]="alert.text"
+		tooltip-class="top left">
+		{{ alert.text }}
 	</div>
 
 </div>

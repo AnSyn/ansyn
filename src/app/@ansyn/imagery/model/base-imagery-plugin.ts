@@ -1,15 +1,24 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-export abstract class BaseImageryPlugin {
+export class BaseImageryPlugin {
+	subscriptions: Subscription[] = [];
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
-	onDisposedEvent: EventEmitter<any>;
+	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
+
 	onResetView(): Observable<boolean> {
 		return Observable.of(true);
 	};
-	abstract dispose();
+
+	dispose() {
+		this.onDisposedEvent.emit();
+		this.subscriptions.forEach(sub => sub.unsubscribe());
+		this.subscriptions = [];
+	}
+
 	init(communicator: CommunicatorEntity) {
 		this.communicator = communicator;
 	};

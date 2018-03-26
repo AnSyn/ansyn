@@ -32,11 +32,8 @@ export interface INorthData {
 @Injectable()
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	static mapName = OpenlayersMapComponent.mapName;
-
-	onDisposedEvent: EventEmitter<any>;
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
-	subscribers = [];
 
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
@@ -57,16 +54,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	public init(communicator: CommunicatorEntity): void {
 		super.init(communicator);
 		this.initPluginSubscribers();
-	}
-
-	onResetView(): Observable<boolean> {
-		return Observable.of(true);
-	}
-
-	public dispose() {
-		this.onDisposedEvent.emit();
-		this.subscribers.forEach((subs) => subs.unsubscribe());
-		this.subscribers = [];
 	}
 
 	getCorrectedNorth(): Observable<INorthData> {
@@ -150,7 +137,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				}
 			}).subscribe();
 
-		this.subscribers.push(pointNorth, backToWorldSuccessSetNorth);
+		this.subscriptions.push(pointNorth, backToWorldSuccessSetNorth);
 	}
 
 	pointNorth(): Observable<any> {

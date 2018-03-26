@@ -12,6 +12,7 @@ import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizer
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/heatmap-visualizer';
 import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 
 export const VisualizersProviders: ImageryPluginProvider[] = [
 	{
@@ -48,7 +49,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: AnnotationsVisualizer,
-		deps: [Store, VisualizersConfig]
+		deps: [Store, Actions, VisualizersConfig]
 	},
 	{
 		provide: BaseImageryPlugin,

@@ -80,34 +80,6 @@ export class VisualizersAnnotationsAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name annotationVisualizerAgent$
-	 * @ofType AnnotationVisualizerAgentAction
-	 * @dependencies layers, maps
-	 * @dispatch: false
-	 */
-	@Effect({ dispatch: false })
-	annotationSetProperties$: Observable<any> = this.actions$
-		.ofType<AnnotationSetProperties>(ToolsActionsTypes.ANNOTATION_SET_PROPERTIES)
-		.map(({ payload }) => payload)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.do(([{ fillColor, strokeWidth, strokeColor }, mapsState]: [AnnotationProperties, IMapState]) => {
-			const relevantMapsIds: string[] = this.relevantMapIds('all', mapsState);
-			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
-			annotationsVisualizers.forEach((activeVisualizers) => {
-				if (fillColor) {
-					activeVisualizers.changeFillColor(fillColor);
-				}
-				if (strokeWidth) {
-					activeVisualizers.changeStrokeWidth(strokeWidth);
-				}
-				if (strokeColor) {
-					activeVisualizers.changeStrokeColor(strokeColor);
-				}
-			});
-		});
-
-	/**
-	 * @type Effect
 	 * @name drawAnnotationEnd$
 	 * @ofType AnnotationDrawEndAction
 	 * @action SetAnnotationsLayer
@@ -183,18 +155,6 @@ export class VisualizersAnnotationsAppEffects {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';
 			return new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps });
 		});
-
-	/**
-	 * @type Effect
-	 * @name updateInitialStyleForNewVisualizer$
-	 * @ofType ImageryCreatedAction
-	 * @action AnnotationSetProperties
-	 */
-	@Effect()
-	updateInitialStyleForNewVisualizer$: Observable<any> = this.actions$
-		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
-		.withLatestFrom(this.toolsState$, (action, { annotationProperties }) => annotationProperties)
-		.map((annotationProperties: AnnotationProperties) => new AnnotationSetProperties({ ...annotationProperties }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

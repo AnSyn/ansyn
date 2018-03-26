@@ -166,21 +166,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 		});
 	});
 
-	it('annotationSetProperties$ should update visualizer via fillColor, strokeColor and strokeWidth', () => {
-		spyOn(visualizersAnnotationsAppEffects, 'annotationVisualizers').and.callFake(() => [fakeVisualizer]);
-		// without fill color shouldn't change fill color
-		const payload: AnnotationProperties = {
-			strokeColor: 'red',
-			strokeWidth: 6,
-		};
-		actions = hot('--a--', { a: new AnnotationSetProperties(payload) });
-		const expectedResult = cold('--b--', { b: [payload, mapState] });
-		expect(visualizersAnnotationsAppEffects.annotationSetProperties$ ).toBeObservable(expectedResult);
-		expect(fakeVisualizer.changeStrokeWidth).toHaveBeenCalledWith(6);
-		expect(fakeVisualizer.changeStrokeColor).toHaveBeenCalledWith('red');
-		expect(fakeVisualizer.changeFillColor).not.toHaveBeenCalled();
-	});
-
 	it('drawAnnotationEnd$ should stringify the GeoJSON object and dispatch SetAnnotationsLayer', () => {
 		const geoJson = <any> { 'geo': 'json' };
 		layersState.annotationsLayer = {

@@ -1,7 +1,5 @@
 import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import {
-	IdahoSourceProvider,
-	IdahoSourceProvider2,
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider,
 	PlanetSourceProvider

@@ -7,8 +7,8 @@ export class IconVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
 
 	// constructor(iconPath: string, args: any) {
-	constructor(args: any) {
-		super(args);
+	constructor() {
+		super();
 		// set icon
 		this._iconSrc = new Style({
 			image: new Icon({

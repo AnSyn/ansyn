@@ -35,11 +35,11 @@ export class ImageryStatusComponent implements OnInit {
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 
-	alertMsgValues = [];
+	alertMsg: AlertMsg;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pluck<ICoreState, AlertMsg>('alertMsg')
-		.do((alertMsg) => this.alertMsgValues = Array.from(alertMsg))
+		.do((alertMsg) => this.alertMsg = alertMsg)
 		.distinctUntilChanged();
 
 	favoriteOverlays: Overlay[];
@@ -50,7 +50,7 @@ export class ImageryStatusComponent implements OnInit {
 		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
 	}
 
-	get isNotGeoRegistered() {
+	get noGeoRegistration() {
 		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
 	}
 
@@ -63,6 +63,15 @@ export class ImageryStatusComponent implements OnInit {
 			this.updateFavoriteStatus();
 		});
 		this.alertMsg$.subscribe();
+	}
+
+	showAlert(alertKey) {
+		const ids = this.alertMsg.get(alertKey);
+		if (ids) {
+			return ids.has(this.mapId);
+		} else {
+			return this[alertKey]
+		}
 	}
 
 	toggleFavorite() {

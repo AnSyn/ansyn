@@ -268,20 +268,23 @@
 		}
 	},
 	"coreConfig": {
-		"alerts": {
-			"noGeoRegistration": {
+		"alerts": [
+			{
+				"key": "noGeoRegistration",
 				"background": "#a70b0b",
 				"text": "This Image Has No Geo-Registration"
 			},
-			"overlayIsNotPartOfCase": {
+			{
+				"key": "overlayIsNotPartOfCase",
 				"background": "#27B2CF",
 				"text": "This Overlay Is Not a Part of the Case"
 			},
-			"overlaysOutOfBounds": {
+			{
+				"key": "overlaysOutOfBounds",
 				"background": "#80c5d4",
 				"text": "Image is out of bounds"
 			}
-		}
+		]
 	},
 	"menuConfig": {
 		"path": "/assets/logo.svg",

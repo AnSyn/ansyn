@@ -17,8 +17,14 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
+import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
+import {
+	DisplayOverlayFromStoreAction, OverlaysActionTypes,
+	OverlaysMarkupAction
+} from '@ansyn/overlays/actions/overlays.actions';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { Actions } from '@ngrx/effects';
 import { CommunicatorEntity } from '@ansyn/imagery';
-import { DbclickFeatureTriggerAction, HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
@@ -26,7 +32,18 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	markups: any[] = [];
 	protected disableCache = true;
 
-	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
+	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
+		.do((action: HoverFeatureTriggerAction): void => this.setHoverFeature(action.payload.id) );
+
+	markupVisualizer$: Observable<any> = this.actions$
+		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
+		.do((action: OverlaysMarkupAction) => this.setMarkupFeatures(action.payload));
+
+	constructor(public store: Store<any>,
+				public actions$: Actions,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+
 		super(config[FootprintPolylineVisualizer.name]);
 
 		this.updateStyle({
@@ -157,10 +174,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 		if ($event.selected.length > 0) {
 			const feature = $event.selected[0];
-
-			const visualizerType = this.constructor;
 			const id = feature.getId();
-			this.store.dispatch(new DbclickFeatureTriggerAction({ visualizerType, id }))
+			this.store.dispatch(new DisplayOverlayFromStoreAction({ id }))
 		}
 	}
 
@@ -237,5 +252,17 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			}
 			features.forEach(f => this.purgeCache(f));
 		}
+	}
+
+	init(communicator: CommunicatorEntity) {
+		super.init(communicator);
+		this.initEffects();
+	}
+
+	initEffects() {
+		this.subscriptions.push(
+			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),
+			this.markupVisualizer$.subscribe()
+		)
 	}
 }

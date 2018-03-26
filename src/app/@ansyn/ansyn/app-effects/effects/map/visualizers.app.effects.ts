@@ -3,7 +3,6 @@ import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import {
 	ActiveMapChangedAction,
-	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	HoverFeatureTriggerAction,
 	MapActionTypes,
@@ -16,7 +15,6 @@ import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
 import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import {
-	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	MouseOutDropAction,
 	MouseOverDropAction,
@@ -87,54 +85,6 @@ export class VisualizersAppEffects {
 		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
 			id: payload
 		}));
-
-	/**
-	 * @type Effect
-	 * @name onHoverFeatureEmitSyncHoverFeature$
-	 * @ofType HoverFeatureTriggerAction
-	 */
-	@Effect({ dispatch: false })
-	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.do((action: HoverFeatureTriggerAction): void => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const visualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
-				if (visualizer) {
-					visualizer.setHoverFeature(action.payload.id);
-				}
-			});
-		});
-
-	/**
-	 * @type Effect
-	 * @name onDbclickFeaturePolylineDisplayAction$
-	 * @ofType DbclickFeatureTriggerAction
-	 * @filter TODO
-	 * @action DisplayOverlayFromStoreAction
-	 */
-	@Effect()
-	onDbclickFeaturePolylineDisplayAction$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType<DbclickFeatureTriggerAction>(MapActionTypes.VISUALIZERS.DBCLICK_FEATURE)
-		.map(({ payload }) => payload)
-		.filter(({ visualizerType }) => visualizerType === FootprintPolylineVisualizer)
-		.map(({ id }) => new DisplayOverlayFromStoreAction({ id }));
-
-	/**
-	 * @type Effect
-	 * @name markupVisualizer$
-	 * @ofType OverlaysMarkupAction
-	 */
-	@Effect({ dispatch: false })
-	markupVisualizer$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
-		.do((action: OverlaysMarkupAction) => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator: CommunicatorEntity) => {
-				const footprintPolyline = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
-				if (footprintPolyline) {
-					footprintPolyline.setMarkupFeatures(action.payload);
-				}
-			});
-		});
 
 	/**
 	 * @type Effect

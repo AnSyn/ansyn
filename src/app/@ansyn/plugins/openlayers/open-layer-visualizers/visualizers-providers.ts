@@ -43,7 +43,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: FootprintPolylineVisualizer,
-		deps: [Store, VisualizersConfig]
+		deps: [Store, Actions, VisualizersConfig]
 	},
 	{
 		provide: BaseImageryPlugin,

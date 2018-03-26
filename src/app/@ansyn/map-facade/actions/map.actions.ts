@@ -21,7 +21,6 @@ export const MapActionTypes = {
 	},
 	VISUALIZERS: {
 		HOVER_FEATURE: 'HOVER_FEATURE',
-		DBCLICK_FEATURE: 'DBCLICK_FEATURE'
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	DRAW_PIN_POINT_ON_MAP: 'DRAW_PIN_POINT_ON_MAP',
@@ -171,13 +170,6 @@ export class HoverFeatureTriggerAction implements Action {
 	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
 
 	constructor(public payload: { id?: string }) {
-	}
-}
-
-export class DbclickFeatureTriggerAction implements Action {
-	type = MapActionTypes.VISUALIZERS.DBCLICK_FEATURE;
-
-	constructor(public payload: { visualizerType: any, id: string }) {
 	}
 }
 

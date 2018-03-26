@@ -19,7 +19,6 @@ import { getPointByGeometry } from '@ansyn/core/utils';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
 
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	protected allLengthTextStyle = new Text({
@@ -116,7 +115,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	createInteraction(type = 'LineString') {
 		this.removeDrawInteraction();
 
-		this.interactionSource = new VectorSource({wrapX: false});
+		this.interactionSource = new VectorSource({ wrapX: false });
 
 		const drawInteractionHandler = new Draw(<any>{
 			source: this.interactionSource,
@@ -134,17 +133,15 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent(data) {
-		this.subscribers.push(<Subscriber<any>>
-			this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
-				.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
-					const [featureJson] = featureCollection.features;
-					const newEntity: IVisualizerEntity = {
-						id: UUID.UUID(),
-						featureJson
-					};
-					this.addOrUpdateEntities([newEntity]).subscribe();
-				})
-		);
+		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
+			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+				const [featureJson] = featureCollection.features;
+				const newEntity: IVisualizerEntity = {
+					id: UUID.UUID(),
+					featureJson
+				};
+				this.addOrUpdateEntities([newEntity]).subscribe();
+			});
 	}
 
 	// override base entities visualizer style
@@ -169,7 +166,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// Line style (after DBClick)
 	mainStyle(feature) {
-		const styles = [new Style({stroke: new Stroke(this.visualizerStyle.initial.stroke)})];
+		const styles = [new Style({ stroke: new Stroke(this.visualizerStyle.initial.stroke) })];
 		// Points
 		const pointsStyle = new Style({
 			image: new Circle({
@@ -241,7 +238,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	 * @return {string} The formatted length.
 	 */
 	formatLength(line, projection) {
-		const length = Sphere.getLength(line, {projection: projection});
+		const length = Sphere.getLength(line, { projection: projection });
 		let output;
 		if (length >= 1000) {
 			output = (Math.round(length / 1000 * 100) / 100) +

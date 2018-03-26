@@ -48,6 +48,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private approximateProjectionSubscription: Subscription = null;
 	private _subscriptions: Subscription[] = [];
 	private _contextMenuEventListener: (e: MouseEvent) => void;
+	private _moveEndListener: () => void;
 	private _containerElem: HTMLElement;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
@@ -152,7 +153,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	initListeners() {
-		this._mapObject.on('moveend', () => {
+		this._moveEndListener = () => {
 			this._subscriptions.push(
 				this.getCenter().take(1).subscribe(mapCenter => {
 					this.centerChanged.emit(mapCenter);
@@ -164,7 +165,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 					}
 				})
 			);
-		});
+		};
+
+		this._mapObject.on('moveend', this._moveEndListener);
 
 		this._containerElem = <HTMLElement> this._mapObject.getViewport();
 
@@ -472,6 +475,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
+		}
+
+		if (this._mapObject) {
+			this._mapObject.un('moveend', this._moveEndListener);
 		}
 
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());

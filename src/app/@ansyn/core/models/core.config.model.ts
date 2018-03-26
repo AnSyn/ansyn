@@ -1,9 +1,9 @@
-
 export interface ICoreConfig {
-	errors: {
-		noGeoRegistration: string,
-		overlayIsNotPartOfCase: string,
-		imageIsOutOfBounds: string
+	alerts: {
+		[key: string]: {
+			background: string;
+			text: string;
+		}
 	},
 	colors: {
 		active: string,

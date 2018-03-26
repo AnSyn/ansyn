@@ -5,7 +5,7 @@ import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
-import { AlertMsg, AlertMsgTypes } from '../../reducers';
+import { AlertMsg } from '../../reducers';
 import { CoreConfig, ICoreConfig } from '../../models/index';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 
@@ -37,18 +37,14 @@ export class ImageryStatusComponent implements OnInit {
 
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pluck<ICoreState, AlertMsg>('alertMsg')
+		.do((alertMsg) => this.alertMsgValues = Array.from(alertMsg))
 		.distinctUntilChanged();
-
-	overlaysOutOfBounds$: Observable<boolean> = this.alertMsg$
-		.map(alertMsg => alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds).has(this.mapId));
-
-	overlayIsNotPartOfCase$: Observable<boolean> = this.alertMsg$
-		.map(alertMsg => alertMsg.get(AlertMsgTypes.OverlayIsNotPartOfCase).has(this.mapId));
-
 
 	favoriteOverlays: Overlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
+	alertMsgValues = [];
+	alertMsg;
 
 	get description() {
 		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
@@ -66,6 +62,7 @@ export class ImageryStatusComponent implements OnInit {
 			this.favoriteOverlays = favoriteOverlays;
 			this.updateFavoriteStatus();
 		});
+		this.alertMsg$.subscribe();
 	}
 
 	toggleFavorite() {

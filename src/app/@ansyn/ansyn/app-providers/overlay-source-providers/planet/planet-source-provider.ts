@@ -5,12 +5,11 @@ import { ErrorHandlerService, Overlay } from 'app/@ansyn/core/index';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
+import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import { HttpResponseBase } from '@angular/common/http/src/response';
-import { geojsonPolygonToMultiPolygon, OverlaysPlanetFetchData } from 'app/@ansyn/core/index';
-import { PlanetOverlay } from './planet-overlay.model';
+import { OverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';

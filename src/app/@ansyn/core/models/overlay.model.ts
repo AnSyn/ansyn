@@ -1,15 +1,5 @@
-import { LimitedArray } from '../utils/limited-array';
 import { CaseRegionState, CaseTimeState } from '@ansyn/core';
 
-export interface OverlaysPlanetFetchData extends LimitedArray {
-	_links: {
-		_first: string,
-		_next: string,
-		_self: string,
-	},
-	features: PlanetOverlay[],
-	type: string
-}
 export interface OverlaysFetchData {
 	data: Overlay[],
 	// number of overlays removed from total overlays (according to config)

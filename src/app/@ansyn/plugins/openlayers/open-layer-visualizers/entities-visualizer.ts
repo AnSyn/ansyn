@@ -13,16 +13,11 @@ import VectorLayer from 'ol/layer/vector';
 import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import {
-	VisualizerEvents, VisualizerEventTypes,
-	VisualizerInteractionTypes
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractionTypes } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Store } from '@ngrx/store';
-import { DbclickFeatureTriggerAction, HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
-import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
+import { Subscription } from 'rxjs/src/Subscription';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -60,9 +55,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	};
 
 	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
-	subscribers: Subscriber<any>[] = [];
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
-	events: Map<VisualizerEventTypes, EventEmitter<any>> = new Map<VisualizerEventTypes, EventEmitter<any>>();
 
 	get iMap(): IMap {
 		return this.communicator.ActiveMap;
@@ -85,7 +78,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	init(communicator: CommunicatorEntity) {
 		super.init(communicator);
 		this.initLayers();
-		this.resetEvents();
 	}
 
 	protected initLayers() {
@@ -109,10 +101,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	protected resetInteractions(): void {
-
-	}
-
-	protected resetEvents(): void {
 
 	}
 
@@ -288,12 +276,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return this.addOrUpdateEntities(currentEntities);
 	}
 
-	dispose() {
-		this.onDisposedEvent.emit();
-		this.subscribers.forEach(sub => sub.unsubscribe());
-		this.subscribers = [];
-	}
-
 	updateStyle(style: Partial<VisualizerStateStyle>) {
 		merge(this.visualizerStyle, style);
 		this.purgeCache();
@@ -324,29 +306,4 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	}
 
-	addEvent(type: VisualizerEventTypes): void {
-		this.events.set(type, new EventEmitter<any>());
-	}
-
-	removeEvent(type: VisualizerEventTypes) {
-		this.events.delete(type);
-	}
-
-	initDispatchers(store: Store<any>) {
-		if (this.events.has(VisualizerEvents.onHoverFeature)) {
-			this.subscribers.push(this.events.get(VisualizerEvents.onHoverFeature).subscribe((event) => store.dispatch(new HoverFeatureTriggerAction(event))));
-		}
-
-		if (this.events.has(VisualizerEvents.doubleClickFeature)) {
-			this.subscribers.push(this.events.get(VisualizerEvents.doubleClickFeature).subscribe((event) => store.dispatch(new DbclickFeatureTriggerAction(event))));
-		}
-
-		if (this.events.has(VisualizerEvents.drawEndPublisher)) {
-			this.subscribers.push(this.events.get(VisualizerEvents.drawEndPublisher).subscribe((event) => store.dispatch(new AnnotationDrawEndAction(event))));
-		}
-
-		if (this.events.has(VisualizerEvents.contextMenuHandler)) {
-			this.subscribers.push(this.events.get(VisualizerEvents.contextMenuHandler).subscribe((event) => store.dispatch(new AnnotationContextMenuTriggerAction(event))));
-		}
-	}
 }

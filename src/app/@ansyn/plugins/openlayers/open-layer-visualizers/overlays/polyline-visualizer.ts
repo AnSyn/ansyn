@@ -2,7 +2,6 @@ import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
 import {
 	IMarkupEvent,
 	IVisualizerEntity,
-	VisualizerEvents,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
@@ -19,22 +18,13 @@ import { Observable } from 'rxjs/Observable';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CommunicatorEntity } from '@ansyn/imagery';
+import { DbclickFeatureTriggerAction, HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
-
 	markups: any[] = [];
-
 	protected disableCache = true;
-
-	get onHoverFeature() {
-		return this.events.get(VisualizerEvents.onHoverFeature);
-	}
-
-	get doubleClickFeature() {
-		return this.events.get(VisualizerEvents.doubleClickFeature);
-	}
 
 	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super(config[FootprintPolylineVisualizer.name]);
@@ -59,11 +49,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
-	}
-
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
-		this.initDispatchers(this.store);
 	}
 
 	private getMarkupClasses(featureId: string): string[] {
@@ -157,13 +142,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		this.addInteraction(VisualizerInteractions.doubleClick, this.createDoubleClickInteraction());
 	}
 
-	protected resetEvents(): void {
-		this.removeEvent(VisualizerEvents.onHoverFeature);
-		this.removeEvent(VisualizerEvents.doubleClickFeature);
-		this.addEvent(VisualizerEvents.onHoverFeature);
-		this.addEvent(VisualizerEvents.doubleClickFeature);
-	}
-
 	createPointerMoveInteraction() {
 		const pointerMove = new Select({
 			condition: condition.pointerMove,
@@ -182,7 +160,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 			const visualizerType = this.constructor;
 			const id = feature.getId();
-			this.doubleClickFeature.emit({ visualizerType, id });
+			this.store.dispatch(new DbclickFeatureTriggerAction({ visualizerType, id }))
 		}
 	}
 
@@ -228,15 +206,14 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	onSelectFeature($event) {
-		const event = { visualizerType: this.type };
 		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
 			const hoverFeature = this.hoverLayer.getSource().getFeatureById(id);
 			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.onHoverFeature.emit({ ...event, id });
+				this.store.dispatch(new HoverFeatureTriggerAction({ id }));
 			}
 		} else {
-			this.onHoverFeature.emit({ ...event });
+			this.store.dispatch(new HoverFeatureTriggerAction({}));
 		}
 	}
 

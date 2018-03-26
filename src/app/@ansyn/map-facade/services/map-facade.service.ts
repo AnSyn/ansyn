@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMapState } from '../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	ContextMenuShowAction,
 	MapInstanceChangedAction,

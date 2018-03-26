@@ -1,5 +1,3 @@
-import { EventEmitter } from '@angular/core';
-import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs/Observable';
@@ -14,19 +12,6 @@ export interface IVisualizerEntity {
 }
 
 export type IMarkupEvent = { id: string, class: boolean }[];
-
-export type VisualizerEventTypes =
-	'onHoverFeature'
-	| 'doubleClickFeature'
-	| 'drawEndPublisher'
-	| 'contextMenuHandler';
-
-export const VisualizerEvents: { [key: string]: VisualizerEventTypes } = {
-	onHoverFeature: 'onHoverFeature',
-	doubleClickFeature: 'doubleClickFeature',
-	drawEndPublisher: 'drawEndPublisher',
-	contextMenuHandler: 'contextMenuHandler'
-};
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
@@ -46,9 +31,7 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	vector: any;
 	isHideable: boolean;
 	isHidden: boolean;
-	events: Map<VisualizerEventTypes, EventEmitter<any>>;
 	interactions: Map<VisualizerInteractionTypes, any>;
-	subscribers: Subscriber<any>[];
 
 	/**
 	 * @description Replace all existing entities (CRUD)
@@ -100,9 +83,4 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	 */
 
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
-
-
-	abstract addEvent(type: VisualizerEventTypes): void;
-
-	abstract removeEvent(type: VisualizerEventTypes): void;
 }

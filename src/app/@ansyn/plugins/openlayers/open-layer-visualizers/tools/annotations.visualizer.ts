@@ -9,7 +9,7 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
-import { VisualizerEvents, VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
 import { VisualizerStateStyle } from '../models/visualizer-state';
 import * as ol from 'openlayers';
@@ -19,15 +19,37 @@ import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { IVisualizerEntity } from 'app/@ansyn/imagery/index';
 import { Store } from '@ngrx/store';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { Injectable } from '@angular/core';
+import { Actions } from '@ngrx/effects';
+import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
+import { CommunicatorEntity } from '@ansyn/imagery';
+import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { Observable } from 'rxjs/Observable';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
 
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	isHideable = true;
 	disableCache = true;
+
 	public mode: AnnotationMode;
+
+	annotationProperties$: Observable<any> = this.store$
+		.select(toolsStateSelector)
+		.pluck<IToolsState, AnnotationProperties>('annotationProperties')
+		.do(({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) => {
+			if (fillColor) {
+				this.changeFillColor(fillColor);
+			}
+			if (strokeWidth) {
+				this.changeStrokeWidth(strokeWidth);
+			}
+			if (strokeColor) {
+				this.changeStrokeColor(strokeColor);
+			}
+		});
+
 	modeDictionary = {
 		Arrow: {
 			type: 'LineString',
@@ -43,14 +65,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.iMap.mapObject.getView().getRotation();
 	}
 
-	get drawEndPublisher() {
-		return this.events.get(VisualizerEvents.drawEndPublisher);
-	}
-
-	get contextMenuHandler() {
-		return this.events.get(VisualizerEvents.contextMenuHandler);
-	}
-
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
@@ -63,7 +77,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}));
 	}
 
-	constructor(public store: Store<any>, style?: Partial<VisualizerStateStyle>) {
+	init(communicator: CommunicatorEntity) {
+		super.init(communicator);
+		this.initEffects();
+	}
+
+	initEffects() {
+		this.subscriptions.push(
+			this.annotationProperties$.subscribe()
+		);
+	}
+
+	constructor(public store$: Store<any>,
+				public actions$: Actions,
+				style?: Partial<VisualizerStateStyle>) {
+
 		super(style, {
 			initial: {
 				stroke: {
@@ -83,21 +111,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
-		this.initDispatchers(this.store);
-	}
-
 	protected resetInteractions(): void {
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
-	}
-
-	protected resetEvents(): void {
-		this.removeEvent(VisualizerEvents.drawEndPublisher);
-		this.removeEvent(VisualizerEvents.contextMenuHandler);
-		this.addEvent(VisualizerEvents.drawEndPublisher);
-		this.addEvent(VisualizerEvents.contextMenuHandler);
 	}
 
 	createContextMenuInteraction() {
@@ -123,7 +139,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			featureId: id,
 			boundingRect
 		};
-		this.contextMenuHandler.emit(contextMenuEvent);
+		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 
 	changeStrokeColor(color) {
@@ -179,7 +195,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.iMap.projectionService.projectCollectionAccurately([feature], this.iMap)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
-				this.drawEndPublisher.emit(geoJsonFeature);
+				this.store$.dispatch(new AnnotationDrawEndAction(geoJsonFeature));
 			});
 	}
 
@@ -240,3 +256,5 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 }
+
+

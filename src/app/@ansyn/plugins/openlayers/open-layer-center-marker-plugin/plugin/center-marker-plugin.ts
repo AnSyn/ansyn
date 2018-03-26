@@ -12,8 +12,6 @@ import { Observable } from 'rxjs/Observable';
 
 export class CenterMarkerPlugin extends BaseImageryPlugin {
 	static mapName = OpenlayersMapComponent.mapName;
-	onDisposedEvent: EventEmitter<any>;
-	private _subscriptions;
 	private _iconStyle: Style;
 	private _existingLayer;
 
@@ -37,7 +35,6 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 	constructor() {
 		super();
-		this.onDisposedEvent = new EventEmitter();
 		this._isEnabled = false;
 
 		this._iconStyle = new Style({
@@ -49,7 +46,6 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 			}))
 		});
 
-		this._subscriptions = [];
 	}
 
 	public init(communicator: CommunicatorEntity): void {
@@ -62,7 +58,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	}
 
 	private register() {
-		this._subscriptions.push(this.communicator.positionChanged.subscribe((position: CaseMapPosition) => {
+		this.subscriptions.push(this.communicator.positionChanged.subscribe((position: CaseMapPosition) => {
 			if (this.isEnabled) {
 				this.tryDrawCenter();
 			} else {
@@ -71,17 +67,9 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 		}));
 	}
 
-	private unregister() {
-		for (let i = 0; i < this._subscriptions.length; i++) {
-			this._subscriptions[i].unsubscribe();
-		}
-		this._subscriptions = [];
-	}
-
 	public dispose() {
-		this.onDisposedEvent.emit();
+		super.dispose();
 		this.tryDeleteCenter();
-		this.unregister();
 	}
 
 	private tryDeleteCenter() {

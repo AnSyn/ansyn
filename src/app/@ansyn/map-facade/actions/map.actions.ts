@@ -45,8 +45,7 @@ export const MapActionTypes = {
 		PIN_POINT_MODE: 'PIN_POINT_MODE',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
-		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
-		ANNOTATION_DRAW_END: 'ANNOTATION_DRAW_END'
+		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
@@ -260,13 +259,6 @@ export class ActiveImageryMouseEnter implements Action {
 
 export class ActiveImageryMouseLeave implements Action {
 	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE;
-}
-
-export class AnnotationDrawEndAction implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_DRAW_END;
-	constructor(public payload: Feature<any>) {
-
-	}
 }
 
 export class SetIsLoadingAcion implements Action {

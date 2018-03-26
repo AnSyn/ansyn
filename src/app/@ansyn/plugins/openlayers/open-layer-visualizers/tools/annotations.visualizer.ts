@@ -21,11 +21,14 @@ import { IVisualizerEntity } from 'app/@ansyn/imagery/index';
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
-import { AnnotationContextMenuTriggerAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { CommunicatorEntity } from '@ansyn/imagery';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
+import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import 'rxjs/add/operator/take';
 
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -49,6 +52,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				this.changeStrokeColor(strokeColor);
 			}
 		});
+
+	annotationsLayer$: Observable<any> = this.store$
+		.select(layersStateSelector)
+		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer')
+		.do((annotationsLayer) => this.annotationsLayer = annotationsLayer);
+
+	public annotationsLayer;
 
 	modeDictionary = {
 		Arrow: {
@@ -84,7 +94,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	initEffects() {
 		this.subscriptions.push(
-			this.annotationProperties$.subscribe()
+			this.annotationProperties$.subscribe(),
+			this.annotationsLayer$.subscribe()
 		);
 	}
 
@@ -192,10 +203,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle)
 		});
 
-		this.iMap.projectionService.projectCollectionAccurately([feature], this.iMap)
+		this.iMap.projectionService
+			.projectCollectionAccurately([feature], this.iMap)
+			.take(1)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
-				this.store$.dispatch(new AnnotationDrawEndAction(geoJsonFeature));
+				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
+				updatedAnnotationsLayer.features.push(geoJsonFeature);
+				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
 			});
 	}
 

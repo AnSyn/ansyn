@@ -5,12 +5,13 @@ import { ErrorHandlerService, Overlay } from 'app/@ansyn/core/index';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
+import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import { HttpResponseBase } from '@angular/common/http/src/response';
-import { OverlaysPlanetFetchData } from '@ansyn/core';
+import { geojsonPolygonToMultiPolygon, OverlaysPlanetFetchData } from '@ansyn/core';
 import { PlanetOverlay } from '@ansyn/core/models/overlay.model';
+import * as turf from '@turf/turf';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -123,7 +124,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const overlay: Overlay = new Overlay();
 
 		overlay.id = element.id;
-		overlay.footprint = geojsonPolygonToMultiPolygon(element.geometry);
+		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);
 		overlay.sensorType = element.properties.item_type;
 		overlay.sensorName = element.properties.satellite_id;
 		overlay.bestResolution = element.properties.gsd;

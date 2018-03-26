@@ -4,6 +4,7 @@ import * as circle from '@turf/circle';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 import * as helpers from '@turf/helpers'
+import * as turf from '@turf/turf';
 
 export function getPolygonByPoint(lonLat: number[]): GeoJSON.Feature<GeoJSON.Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
@@ -30,25 +31,9 @@ export function bboxFromGeoJson(polygon: GeoJSON.Polygon): number[] {
 }
 
 export function geojsonMultiPolygonToPolygon(multiPolygon: GeoJSON.MultiPolygon): GeoJSON.Polygon {
-	if (!multiPolygon) {
-		return null;
-	}
-
-	return {
-		type: 'Polygon',
-		coordinates: multiPolygon.coordinates[0]
-	};
+	return  <GeoJSON.Polygon> turf.geometry('Polygon', multiPolygon.coordinates[0]);
 }
 
 export function geojsonPolygonToMultiPolygon(polygon: GeoJSON.Polygon): GeoJSON.MultiPolygon {
-	if (!polygon) {
-		return null;
-	}
-	const coordinates = [];
-	coordinates.push(polygon.coordinates);
-
-	return {
-		type: 'MultiPolygon',
-		coordinates: coordinates
-	};
+	return <GeoJSON.MultiPolygon> turf.geometry('MultiPolygon', [polygon.coordinates])
 }

@@ -3,8 +3,8 @@ import { VisualizerStateStyle } from '../models/visualizer-state';
 
 export class FootprintPolygonVisualizer extends EntitiesVisualizer {
 
-	constructor(style: Partial<VisualizerStateStyle>) {
-		super(style, {
+	constructor() {
+		super(null, {
 			opacity: 0.5,
 			initial: {
 				stroke: {

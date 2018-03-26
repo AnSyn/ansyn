@@ -17,8 +17,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
 
-	constructor(style: VisualizerStateStyle) {
-		super(style);
+	constructor() {
+		super();
 
 		this.updateStyle({
 			initial: {

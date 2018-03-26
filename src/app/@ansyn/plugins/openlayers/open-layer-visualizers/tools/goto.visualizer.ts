@@ -3,8 +3,8 @@ import { VisualizerStateStyle } from '../models/visualizer-state';
 
 export class GoToVisualizer extends EntitiesVisualizer {
 
-	constructor(style: Partial<VisualizerStateStyle>) {
-		super(style, {
+	constructor() {
+		super(null, {
 			initial: {
 				icon: {
 					scale: 1,

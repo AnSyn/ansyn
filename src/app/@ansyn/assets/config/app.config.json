@@ -277,7 +277,7 @@
 				"background": "#27B2CF",
 				"text": "This Overlay Is Not a Part of the Case"
 			},
-			"imageIsOutOfBounds": {
+			"overlaysOutOfBounds": {
 				"background": "#80c5d4",
 				"text": "Image is out of bounds"
 			}

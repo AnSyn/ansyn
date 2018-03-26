@@ -16,16 +16,13 @@ import { Action, Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Injectable } from '@angular/core';
 import {
-	AnnotationDrawEndAction,
 	AnnotationRemoveFeature,
 	MapActionTypes,
 	MapInstanceChangedAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
-import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
-import { ImageryCreatedAction } from '@ansyn/map-facade';
 
 export interface AgentOperations {
 	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
@@ -76,22 +73,6 @@ export class VisualizersAnnotationsAppEffects {
 			});
 
 			return Observable.forkJoin(observables).map(() => [action, layerState, mapsState]);
-		});
-
-	/**
-	 * @type Effect
-	 * @name drawAnnotationEnd$
-	 * @ofType AnnotationDrawEndAction
-	 * @action SetAnnotationsLayer
-	 */
-	@Effect()
-	drawAnnotationEnd$ = this.actions$
-		.ofType<AnnotationDrawEndAction>(MapActionTypes.TRIGGER.ANNOTATION_DRAW_END)
-		.withLatestFrom(this.layersState$)
-		.map(([action, { annotationsLayer }]: [AnnotationDrawEndAction, ILayerState]) => {
-			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
-			updatedAnnotationsLayer.features.push(action.payload);
-			return new SetAnnotationsLayer(updatedAnnotationsLayer);
 		});
 
 	/**

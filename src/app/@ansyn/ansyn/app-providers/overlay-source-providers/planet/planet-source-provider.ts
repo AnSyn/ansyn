@@ -9,9 +9,8 @@ import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import { HttpResponseBase } from '@angular/common/http/src/response';
-import { geojsonPolygonToMultiPolygon, OverlaysPlanetFetchData } from '@ansyn/core';
-import { PlanetOverlay } from '@ansyn/core/models/overlay.model';
-import * as turf from '@turf/turf';
+import { geojsonPolygonToMultiPolygon, OverlaysPlanetFetchData } from 'app/@ansyn/core/index';
+import { PlanetOverlay } from './planet-overlay.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';

@@ -19,13 +19,12 @@ import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { VisualizersAnnotationsAppEffects } from './visualizers.annotations.app.effects';
 import {
-	AnnotationSetProperties, AnnotationVisualizerAgentAction,
+	AnnotationVisualizerAgentAction,
 	SetAnnotationMode
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ActiveMapChangedAction, AnnotationDrawEndAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { ActiveMapChangedAction } from '@ansyn/map-facade/actions/map.actions';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { IToolsState, toolsFlags, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items';
@@ -164,21 +163,6 @@ describe('VisualizersAnnotationsAppEffects', () => {
 			expect(visualizersAnnotationsAppEffects.annotationVisualizerAgent$).toBeObservable(expectedResult);
 			expect(fakeVisualizer.clearEntities).toHaveBeenCalled();
 		});
-	});
-
-	it('drawAnnotationEnd$ should stringify the GeoJSON object and dispatch SetAnnotationsLayer', () => {
-		const geoJson = <any> { 'geo': 'json' };
-		layersState.annotationsLayer = {
-			type: 'FeatureCollection',
-			features: []
-		};
-		const expectedAnnotationLayer = {
-			type: 'FeatureCollection',
-			features: [geoJson]
-		};
-		actions = hot('--a--', { a: new AnnotationDrawEndAction(geoJson) });
-		const expectedResult = cold('--b--', { b: new SetAnnotationsLayer(<any>expectedAnnotationLayer) });
-		expect(visualizersAnnotationsAppEffects.drawAnnotationEnd$).toBeObservable(expectedResult);
 	});
 
 	it('cancelAnnotationEditMode$ should cancel annotation edit mode ', () => {

@@ -35,8 +35,8 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		// Source provider for overlays
 		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
 
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
+		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 
 		// Map tiling source services

@@ -9,14 +9,12 @@ import {
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
-	DbclickFeatureTriggerAction,
 	DrawOverlaysOnMapTriggerAction,
 	DrawPinPointAction,
 	HoverFeatureTriggerAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	DisplayOverlayFromStoreAction,
 	MouseOutDropAction,
 	MouseOverDropAction,
 	OverlaysMarkupAction,
@@ -30,7 +28,6 @@ import { Case } from '@ansyn/core/models/case.model';
 import {
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
 import {
 	IMapState,
 	initialMapState,
@@ -150,25 +147,6 @@ describe('VisualizersAppEffects', () => {
 
 	});
 
-	it('onHoverFeatureEmitSyncHoverFeature$ should call setHoverFeature per communicator FootprintPolylineVisualizerType', () => {
-		const fakeVisualizer = {
-			setHoverFeature: () => {
-			}
-		};
-		const fakeCommunicator = {
-			getPlugin: (): any => fakeVisualizer
-		};
-		spyOn(fakeVisualizer, 'setHoverFeature');
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator]);
-		const action = new HoverFeatureTriggerAction({
-			id: 'fakeId'
-		});
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(visualizersAppEffects.onHoverFeatureEmitSyncHoverFeature$).toBeObservable(expectedResults);
-		expect(fakeCommunicator.getPlugin().setHoverFeature).toHaveBeenCalledTimes(2);
-	});
-
 	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
 
 		it('with "id" if MouseOverDropAction', () => {
@@ -191,35 +169,6 @@ describe('VisualizersAppEffects', () => {
 			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
 		});
 
-	});
-
-	it('onDbclickFeaturePolylineDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-		actions = hot('--a--', {
-			a: new DbclickFeatureTriggerAction({
-				id: 'fakeId',
-				visualizerType: FootprintPolylineVisualizer
-			})
-		});
-		const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
-		expect(visualizersAppEffects.onDbclickFeaturePolylineDisplayAction$).toBeObservable(expectedResults);
-	});
-
-	it('markupVisualizer$ should call setMarkupFeatures per communicator', () => {
-		const fakeVisualizer = {
-			setMarkupFeatures: () => {
-			}
-		};
-		const fakeCommunicator = {
-			getPlugin: (): any => fakeVisualizer
-		};
-		spyOn(fakeVisualizer, 'setMarkupFeatures');
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [fakeCommunicator, fakeCommunicator, fakeCommunicator]);
-		const action = new OverlaysMarkupAction([1, 2, 3, 4]);
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(visualizersAppEffects.markupVisualizer$).toBeObservable(expectedResults);
-		expect(fakeCommunicator.getPlugin().setMarkupFeatures).toHaveBeenCalledWith([1, 2, 3, 4]);
-		expect(fakeCommunicator.getPlugin().setMarkupFeatures).toHaveBeenCalledTimes(3);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"', () => {

@@ -1,16 +1,37 @@
-FROM 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/nodeslim-confd
+# Stage 1: Build
+FROM node:9.5.0-slim
 
-WORKDIR /opt/ansyn/app
+WORKDIR /ng-app
+COPY . .
 
-RUN npm install -g http-server
+RUN npm set progress=false \
+  && npm config set depth 0 \
+  && npm cache clean --force
 
-COPY ./dist /opt/ansyn/app
+RUN npm install
 
-COPY ./confd/*.toml /etc/confd/conf.d/
-COPY ./confd/*.tmpl /etc/confd/templates/
+RUN node --max_old_space_size=12288 $(npm bin)/ng build --prod --build-optimizer --sourcemap
 
-ADD ./run.sh /opt/ansyn/app
+# Stage 2: Setup
+FROM nginx:1.13-alpine
 
-RUN chmod +x /opt/ansyn/app/run.sh
+RUN apk update \
+  && apk add ca-certificates wget \
+  && update-ca-certificates
 
-CMD ./run.sh
+COPY nginx/default.conf /etc/nginx/conf.d/
+
+RUN rm -f /usr/share/nginx/html/*
+COPY --from=builder /ng-app/dist /usr/share/nginx/html
+
+COPY confd/conf.d/*.toml /etc/confd/conf.d/
+COPY confd/templates/*.tmpl /etc/confd/templates/
+COPY run.sh /usr/share/nginx/html
+
+RUN chmox +x /usr/share/nginx/html/run.sh
+
+RUN mkdir /opt \
+  && wget https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-linux-amd64 -O /opt/confd \
+  && chmod +x /opt/confd
+
+CMD /usr/share/nginx/html/run.sh

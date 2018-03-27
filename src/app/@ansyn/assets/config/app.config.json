@@ -1,20 +1,19 @@
 {
-	"casesConfig": {
-		"baseUrl": "http://ansyn.io:8081/api/store",
-		"paginationLimit": 16,
-		"defaultCase": {
-			"id": "1234-5678",
-			"name": "Default case",
-			"state": {
-				"maps": {
-					"layout": "layout1",
-					"activeMapId": "defaultImagery1",
-					"data": [
-						{
-							"id": "defaultImagery1",
-							"mapType": "openLayersMap",
-							"data": {
-								"position": {
+    "casesConfig": {
+        "baseUrl": "http://ansyn.io:8081/api/store",
+        "paginationLimit": 16,
+        "defaultCase": {
+            "id": "1234-5678",
+            "name": "Default case",
+            "state": {
+                "maps": {
+                    "layout": "layout1",
+                    "activeMapId": "defaultImagery1",
+                    "data": [{
+                            "id": "defaultImagery1",
+                            "mapType": "openLayersMap",
+                            "data": {
+                                "position": {
 									"projectedState": {
 										"projection": {
 											"code": "EPSG:3857"
@@ -28,37 +27,20 @@
 									},
 									"extentPolygon": {
 										"type": "Polygon",
-										"coordinates": [
-											[
-												[
-													-105.59192365470776,
-													22.10145785600497
-												],
-												[
-													-42.56024959467796,
-													22.10145785600497
-												],
-												[
-													-42.56024959467796,
-													55.28198275564807
-												],
-												[
-													-105.59192365470776,
-													55.28198275564807
-												],
-												[
-													-105.59192365470776,
-													22.10145785600497
-												]
-											]
-										]
+										"coordinates": [[
+											[-105.59192365470776, 22.10145785600497],
+											[-42.56024959467796, 22.10145785600497],
+											[-42.56024959467796, 55.28198275564807],
+											[-105.59192365470776, 55.28198275564807],
+											[-105.59192365470776, 22.10145785600497]
+										]]
 									}
-								}
-							},
-							"flags": {}
-						}
-					]
-				},
+                                }
+                            },
+                            "flags": {}
+                        }
+                    ]
+                },
 				"region": {
 					"type": "Polygon",
 					"coordinates": [
@@ -86,73 +68,71 @@
 						]
 					]
 				},
-				"time": null,
-				"facets": {
-					"filters": [
-						{
-							"fieldName": "isGeoRegistered",
-							"type": "Boolean",
-							"metadata": {
-								"displayTrue": true,
-								"displayFalse": false
-							}
-						}
-					],
-					"showOnlyFavorites": false
-				},
-				"geoFilter": "Pin-Point",
+                "time": null,
+                "facets": {
+                    "filters": [
+                    	{
+                    		"fieldName": "isGeoRegistered",
+                    		"type": "Boolean",
+                    		"metadata": {
+                    			"displayTrue": true,
+                    			"displayFalse": false
+                    		}
+                    	}
+                    ],
+                    "showOnlyFavorites": false
+                },
+                "geoFilter": "Pin-Point",
 				"timeFilter": "Start - End",
-				"orientation": "Align North",
-				"favoriteOverlays": [],
-				"layers": {
+                "orientation": "Align North",
+                "favoriteOverlays": [],
+                "layers": {
 					"annotationsLayer": {
 						"type": "FeatureCollection",
 						"features": []
 					},
 					"displayAnnotationsLayer": true
-				}
-			}
-		},
-		"casesQueryParamsKeys": [
-			"facets",
-			"time",
-			"maps",
-			"region",
-			"overlaysManualProcessArgs",
-			"orientation"
-		],
-		"updateCaseDebounceTime": 700,
-		"useHash": true
-	},
-	"layersManagerConfig": {
-		"layersByCaseIdUrl": "http://ansyn.io:8081/api/store"
-	},
-	"overlaysConfig": {
-		"limit": 249
-	},
-	"imageryConfig": {
-		"geoMapsInitialMapSource": [
-			{
+                }
+            }
+        },
+        "casesQueryParamsKeys": ["facets", "time", "maps", "region", "overlaysManualProcessArgs", "orientation"],
+        "updateCaseDebounceTime": 700,
+        "useHash": true
+    },
+    "layersManagerConfig": {
+        "layersByCaseIdUrl": "http://ansyn.io:8081/api/store"
+    },
+    "overlaysConfig": {
+    	"limit": 249
+    },
+    "imageryConfig": {
+        "geoMapsInitialMapSource": [
+        {
 				"mapType": "openLayersMap",
-				"mapSource": "ESRI_4326",
+				"mapSource": "BING",
 				"mapSourceMetadata": {
+					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+					"styles": [
+						"AerialWithLabels"
+					]
 				}
-			},
-			{
-				"mapType": "cesiumMap",
-				"mapSource": "OSM",
-				"mapSourceMetadata": null
-			},
-			{
-				"mapType": "disabledOpenLayersMap",
-				"mapSource": "ESRI_4326",
+		}, {
+                "mapType": "cesiumMap",
+                "mapSource": "OSM",
+                "mapSourceMetadata": null
+            }, {
+            	"mapType": "disabledOpenLayersMap",
+            	"mapSource": "BING",
 				"mapSourceMetadata": {
+					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+					"styles": [
+						"AerialWithLabels"
+					]
 				}
-			}
-		],
-		"maxCachedLayers": 100
-	},
-	"mapFacadeConfig": {
+            }],
+            "maxCachedLayers": 100
+    },
+    "mapFacadeConfig": {
 		"overlayCoverage": 0.1,
 		"sensorTypeShortcuts": {
 			"Panchromatic": "P",
@@ -163,92 +143,77 @@
 			"filterField": "sensorType"
 		}
 	},
-	"filtersConfig": {
-		"filters": [
-			{
-				"modelName": "sensorType",
-				"displayName": "Sensor Type",
-				"type": "Enum"
-			},
-			{
-				"modelName": "sensorName",
-				"displayName": "Sensor Name",
-				"type": "Enum"
-			},
-			{
-				"modelName": "sourceType",
-				"displayName": "Source Type",
-				"type": "Enum"
-			},
-			{
-				"modelName": "isGeoRegistered",
-				"displayName": "Geo Registration",
-				"type": "Boolean",
+    "filtersConfig": {
+        "filters": [
+            { "modelName": "sensorType", "displayName": "Sensor Type", "type": "Enum" },
+            { "modelName": "sensorName", "displayName": "Sensor Name", "type": "Enum" },
+            { "modelName": "sourceType", "displayName": "Source Type", "type": "Enum" },
+            { "modelName":
+            	"isGeoRegistered",
+            	"displayName":
+            	"Geo Registration",
+            	"type": "Boolean",
 				"customData": {
 					"displayTrueName": "Geo registered",
 					"displayFalseName": "Not Geo registered"
 				}
 			},
-			{
-				"modelName": "bestResolution",
-				"displayName": "Resolution",
-				"type": "Slider"
-			}
-		]
+            { "modelName": "bestResolution", "displayName": "Resolution", "type": "Slider" }
+        ]
+    },
+    "contextConfig": {
+    	"baseUrl": "http://ansyn.io:8081/api/store"
 	},
-	"contextConfig": {
-		"baseUrl": "http://ansyn.io:8081/api/store"
-	},
-	"toolsConfig": {
-		"GoTo": {
-			"from": {
-				"datum": "wgs84",
-				"projection": "geo"
-			},
-			"to": {
-				"datum": "ed50",
-				"projection": "utm"
-			}
-		},
+    "toolsConfig": {
+        "GoTo": {
+            "from": {
+                "datum": "wgs84",
+                "projection": "geo"
+            },
+            "to": {
+                "datum": "ed50",
+                "projection": "utm"
+            }
+        },
 		"Proj4": {
 			"ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
 			"ed50Customized": ""
 		},
 		"ImageProcParams": [
-			{
-				"name": "Sharpness",
-				"defaultValue": 0,
-				"min": 0,
-				"max": 100
-			},
-			{
-				"name": "Contrast",
-				"defaultValue": 0,
-				"min": -100,
-				"max": 100
-			},
-			{
-				"name": "Brightness",
-				"defaultValue": 0,
-				"min": -100,
-				"max": 100
-			},
-			{
-				"name": "Gamma",
-				"defaultValue": 100,
-				"min": 1,
-				"max": 200
-			},
-			{
-				"name": "Saturation",
-				"defaultValue": 100,
-				"min": 1,
-				"max": 100
-			}
-		]
-	},
+        			{
+        				"name": "Sharpness",
+        				"defaultValue": 0,
+        				"min": 0,
+        				"max": 100
+        			},
+        			{
+        				"name": "Contrast",
+        				"defaultValue": 0,
+        				"min": -100,
+        				"max": 100
+        			},
+        			{
+        				"name": "Brightness",
+        				"defaultValue": 0,
+        				"min": -100,
+        				"max": 100
+        			},
+        			{
+        				"name": "Gamma",
+        				"defaultValue": 100,
+        				"min": 1,
+        				"max": 200
+        			},
+        			{
+        				"name": "Saturation",
+        				"defaultValue": 100,
+        				"min": 1,
+        				"max": 100
+        			}
+        		]
+    },
 	"loggerConfig": {
-		"env": "DEV",
+		"env": "PROD",
 		"active": false
 	},
 	"statusBarConfig": {
@@ -266,6 +231,7 @@
 			"reset": "Reset timeline (according to the time filter)",
 			"enlarge": "Expand timeline"
 		}
+
 	},
 	"coreConfig": {
 		"alerts": [
@@ -286,16 +252,16 @@
 			}
 		]
 	},
-	"menuConfig": {
-		"path": "/assets/logo.svg",
-		"background": "red",
-		"color": "white",
-		"mode": "debug"
-	},
 	"loginConfig": {
 		"baseUrl": "http://ansyn.io:9001/api/v1/login",
 		"active": true,
 		"authorizedPath": "/"
+	},
+	"menuConfig": {
+		"path": "/assets/logo.svg",
+		"color": "white",
+		"background": "red",
+		"mode": ""
 	},
 	"visualizersConfig": {
 		"FrameVisualizer": {
@@ -351,146 +317,145 @@
 	},
 	"multipleOverlaysSource": {
 		"IDAHO": {
-			"whitelist": [
-				{
-					"name": "Entire Earth",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-180,
-									-90
-								],
-								[
-									-180,
-									90
-								],
-								[
-									180,
-									90
-								],
-								[
-									180,
-									-90
-								],
-								[
-									-180,
-									-90
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": []
-		},
-		"PLANET": {
-			"whitelist": [
-				{
-					"name": "Entire Earth",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-180,
-									-90
-								],
-								[
-									-180,
-									90
-								],
-								[
-									180,
-									90
-								],
-								[
-									180,
-									-90
-								],
-								[
-									-180,
-									-90
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": []
-		},
-		"IDAHO2": {
-			"whitelist": [
-				{
-					"name": "Entire Earth",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-74.06810760498047,
-									40.8028950718582
-								],
-								[
-									-74.09557342529297,
-									40.75453936473234
-								],
-								[
-									-74.07463073730469,
-									40.74543623770158
-								],
-								[
-									-74.11308288574219,
-									40.70536767492135
-								],
-								[
-									-74.06330108642578,
-									40.66918118282895
-								],
-								[
-									-74.01283264160156,
-									40.73347023268492
-								],
-								[
-									-74.01111602783203,
-									40.77768170250654
-								],
-								[
-									-74.06810760498047,
-									40.8028950718582
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": []
-		}
+    			"whitelist": [
+    				{
+    					"name": "Entire Earth",
+    					"dates": [
+    						{
+    							"start": null,
+    							"end": null
+    						}
+    					],
+    					"sensorNames": [
+    						null
+    					],
+    					"coverage": [
+    						[
+    							[
+    								[
+    									-180,
+    									-90
+    								],
+    								[
+    									-180,
+    									90
+    								],
+    								[
+    									180,
+    									90
+    								],
+    								[
+    									180,
+    									-90
+    								],
+    								[
+    									-180,
+    									-90
+    								]
+    							]
+    						]
+    					]
+    				}
+    			],
+    			"blacklist": []
+    		},
+    		"IDAHO2": {
+    			"whitelist": [
+    				{
+    					"name": "Entire Earth",
+    					"dates": [
+    						{
+    							"start": null,
+    							"end": null
+    						}
+    					],
+    					"sensorNames": [
+    						null
+    					],
+    					"coverage": [
+    						[
+    							[
+    								[
+    									-74.06810760498047,
+    									40.8028950718582
+    								],
+    								[
+    									-74.09557342529297,
+    									40.75453936473234
+    								],
+    								[
+    									-74.07463073730469,
+    									40.74543623770158
+    								],
+    								[
+    									-74.11308288574219,
+    									40.70536767492135
+    								],
+    								[
+    									-74.06330108642578,
+    									40.66918118282895
+    								],
+    								[
+    									-74.01283264160156,
+    									40.73347023268492
+    								],
+    								[
+    									-74.01111602783203,
+    									40.77768170250654
+    								],
+    								[
+    									-74.06810760498047,
+    									40.8028950718582
+    								]
+    							]
+    						]
+    					]
+    				}
+    			],
+    			"blacklist": []
+    		},"PLANET": {
+    			"whitelist": [
+    				{
+    					"name": "Entire Earth",
+    					"dates": [
+    						{
+    							"start": null,
+    							"end": null
+    						}
+    					],
+    					"sensorNames": [
+    						null
+    					],
+    					"coverage": [
+    						[
+    							[
+    								[
+    									-180,
+    									-90
+    								],
+    								[
+    									-180,
+    									90
+    								],
+    								[
+    									180,
+    									90
+    								],
+    								[
+    									180,
+    									-90
+    								],
+    								[
+    									-180,
+    									-90
+    								]
+    							]
+    						]
+    					]
+    				}
+    			],
+    			"blacklist": []
+    		}
 	},
 	"idahoOverlaysSourceConfig": {
 		"defaultApi": "overlays",

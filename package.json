@@ -3,14 +3,11 @@
 	"version": "0.2.8",
 	"license": "MIT",
 	"scripts": {
-		"start": "ng serve",
+		"start": "node scripts/generate-config.js && ng serve",
 		"build": "ng build",
 		"start:aot": "ng serve --aot true",
 		"build:aot": "ng build --aot true",
 		"build:prod": "ng build --prod --sourcemap",
-		"start:backwards": "ng serve --app backwards",
-		"build:backwards": "ng build --app backwards",
-		"build:backwards:prod": "ng build --app backwards --prod --sourcemap --build-optimizer=false",
 		"test": "ng test",
 		"test:single-run": "ng test --single-run",
 		"test:e2e": "ng e2e",
@@ -21,13 +18,11 @@
 		"fix-packages": "node scripts/fix-packages",
 		"fix-package-json": "node scripts/fix-package-json",
 		"fix-all": "node scripts/fix-package-json -a",
-		"check-template": "node scripts/check-tmpl",
 		"docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3"
 	},
 	"precommit": [
 		"fix-all",
-		"lint",
-		"check-template"
+		"lint"
 	],
 	"private": true,
 	"dependencies": {

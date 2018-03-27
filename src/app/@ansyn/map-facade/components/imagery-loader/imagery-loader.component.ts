@@ -2,6 +2,7 @@ import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { mapStateSelector, IMapState } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
+import { SetIsLoadingAcion } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-imagery-loader',
@@ -10,24 +11,27 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ImageryLoaderComponent implements OnInit {
 	@Input() mapId;
-	loaderText;
+	isLoadingMaps: Map<string, string> = new Map<string, string>();
 
 	@HostBinding('class.show')
 	get show() {
-		return typeof this.loaderText === 'string';
+		return this.isLoadingMaps.has(this.mapId);
 	}
 
-	loaderText$: Observable<string> = this.store$.select(mapStateSelector)
+	get loaderText(): string {
+		return this.isLoadingMaps.get(this.mapId)
+	}
+
+	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector)
 		.pluck<IMapState, Map<string, string>>('isLoadingMaps')
 		.distinctUntilChanged()
-		.map((isLoadingMaps: Map<string, string>): string => isLoadingMaps.get(this.mapId))
-		.do((loaderText) => this.loaderText = loaderText);
+		.do((isLoadingMaps) => this.isLoadingMaps = isLoadingMaps);
 
 	constructor(public store$: Store<IMapState>) {
 	}
 
 	ngOnInit() {
-		this.loaderText$.subscribe();
+		this.isLoadingMaps$.subscribe();
 	}
 
 }

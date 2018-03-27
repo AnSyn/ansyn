@@ -13,7 +13,7 @@ export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
 	mapsProgress: MapsProgress;
-	mapsIsLoading: Set<string>,
+	mapsIsLoading: Map<string, string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -22,7 +22,7 @@ export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
 	mapsProgress: {},
-	mapsIsLoading: new Set<string>(),
+	mapsIsLoading: new Map<string, string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };
@@ -51,7 +51,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const mapsProgress = { ...state.mapsProgress };
 			delete mapsProgress[action.payload.id];
-			const mapsIsLoading = new Set(state.mapsIsLoading);
+			const mapsIsLoading = new Map(state.mapsIsLoading);
 			mapsIsLoading.delete(action.payload.id);
 			return { ...state, mapsProgress, mapsIsLoading };
 		}
@@ -61,7 +61,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, mapsProgress };
 
 		case MapActionTypes.VIEW.SET_IS_LOADING:
-			return { ...state, mapsIsLoading: new Set(action.payload) };
+			return { ...state, mapsIsLoading: new Map(action.payload) };
 
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };

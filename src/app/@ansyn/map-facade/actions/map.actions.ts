@@ -255,7 +255,7 @@ export class ActiveImageryMouseLeave implements Action {
 
 export class SetIsLoadingAcion implements Action {
 	type = MapActionTypes.VIEW.SET_IS_LOADING;
-	constructor(public payload: Set<string>) {
+	constructor(public payload: Map<string, string>) {
 
 	}
 }

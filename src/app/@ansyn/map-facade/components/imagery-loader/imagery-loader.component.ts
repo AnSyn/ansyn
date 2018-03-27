@@ -10,27 +10,24 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ImageryLoaderComponent implements OnInit {
 	@Input() mapId;
-	private _isLoading;
+	loaderText;
 
 	@HostBinding('class.show')
-	get isLoading() {
-		return this._isLoading;
+	get show() {
+		return typeof this.loaderText === 'string';
 	}
 
-	set isLoading(value: boolean) {
-		this._isLoading = value;
-	}
-
-	isLoading$: Observable<boolean> = this.store$.select(mapStateSelector)
-		.pluck<IMapState, Set<string>>('mapsIsLoading')
+	loaderText$: Observable<string> = this.store$.select(mapStateSelector)
+		.pluck<IMapState, Map<string, string>>('mapsIsLoading')
 		.distinctUntilChanged()
-		.map((mapsIsLoading: Set<string>): boolean => mapsIsLoading.has(this.mapId));
+		.map((mapsIsLoading: Map<string, string>): string => mapsIsLoading.get(this.mapId))
+		.do((loaderText) => this.loaderText = loaderText);
 
 	constructor(public store$: Store<IMapState>) {
 	}
 
 	ngOnInit() {
-		this.isLoading$.subscribe((isLoading) => this.isLoading = isLoading);
+		this.loaderText$.subscribe();
 	}
 
 }

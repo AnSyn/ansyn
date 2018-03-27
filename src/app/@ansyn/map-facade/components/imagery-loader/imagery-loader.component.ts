@@ -18,9 +18,9 @@ export class ImageryLoaderComponent implements OnInit {
 	}
 
 	loaderText$: Observable<string> = this.store$.select(mapStateSelector)
-		.pluck<IMapState, Map<string, string>>('mapsIsLoading')
+		.pluck<IMapState, Map<string, string>>('isLoadingMaps')
 		.distinctUntilChanged()
-		.map((mapsIsLoading: Map<string, string>): string => mapsIsLoading.get(this.mapId))
+		.map((isLoadingMaps: Map<string, string>): string => isLoadingMaps.get(this.mapId))
 		.do((loaderText) => this.loaderText = loaderText);
 
 	constructor(public store$: Store<IMapState>) {
@@ -28,6 +28,7 @@ export class ImageryLoaderComponent implements OnInit {
 
 	ngOnInit() {
 		this.loaderText$.subscribe();
+		// this.store$.dispatch(new SetIsLoadingAcion({ mapId: this.mapId, show: true, text: 'Lior Zeno' }));
 	}
 
 }

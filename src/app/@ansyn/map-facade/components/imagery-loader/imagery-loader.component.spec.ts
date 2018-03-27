@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageryLoaderComponent } from './imagery-loader.component';
 import { StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
 describe('ImageryLoaderComponent', () => {
 	let component: ImageryLoaderComponent;
@@ -28,12 +28,12 @@ describe('ImageryLoaderComponent', () => {
 
 	describe('isLoading should show/hide host element', () => {
 		it('show', () => {
-			component.isLoading = true;
+			spyOnProperty(component, 'show', 'get').and.returnValue(true);
 			fixture.detectChanges();
 			expect(fixture.debugElement.classes.show).toBeTruthy();
 		});
 		it('hide', () => {
-			component.isLoading = false;
+			spyOnProperty(component, 'show', 'get').and.returnValue(false);
 			fixture.detectChanges();
 			expect(fixture.debugElement.classes.show).toBeFalsy();
 		});

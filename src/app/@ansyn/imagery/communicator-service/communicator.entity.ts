@@ -200,7 +200,7 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public setAutoImageProcessing(shouldPerform: boolean): void {
+/*	public setAutoImageProcessing(shouldPerform: boolean): void {
 		if (this.ActiveMap) {
 			this.ActiveMap.setAutoImageProcessing(shouldPerform);
 		}
@@ -210,7 +210,7 @@ export class CommunicatorEntity {
 		if (this.ActiveMap) {
 			this.ActiveMap.setManualImageProcessing(processingParams);
 		}
-	}
+	}*/
 
 	// CommunicatorEntity methods end
 

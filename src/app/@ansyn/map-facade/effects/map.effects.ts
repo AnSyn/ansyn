@@ -41,7 +41,9 @@ import {
 } from '../actions/map.actions';
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import 'rxjs/add/observable/forkJoin';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import {MeasureDistanceVisualizer} from "@ansyn/plugins/openlayers/open-layer-visualizers";
+import {ImageProcessingPlugin} from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
 
 @Injectable()
 export class MapEffects {
@@ -101,7 +103,8 @@ export class MapEffects {
 		.map(({ mapId, toggleValue }): [CommunicatorEntity, boolean] => [this.communicatorsService.provide(mapId), toggleValue])
 		.filter(([comm, toggleValue]) => Boolean(comm))
 		.do(([comm, toggleValue]) => {
-			comm.setAutoImageProcessing(toggleValue);
+			const imageProccesingTool = comm.getPlugin<ImageProcessingPlugin>(ImageProcessingPlugin);
+			imageProccesingTool.setAutoImageProcessing(toggleValue);
 		});
 
 	/**
@@ -116,7 +119,8 @@ export class MapEffects {
 		.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
 		.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
 		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => {
-			communicator.setManualImageProcessing(action.payload.processingParams);
+			const imageProccesingTool = communicator.getPlugin<ImageProcessingPlugin>(ImageProcessingPlugin);
+			imageProccesingTool.setManualImageProcessing(action.payload.processingParams);
 		});
 
 	/**
@@ -256,7 +260,7 @@ export class MapEffects {
 					}
 				});
 			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(openLayersMapName, position) : communicator.loadInitialMapSource(position))
 				.map(() => new BackToWorldSuccess(payload));
 		});
 

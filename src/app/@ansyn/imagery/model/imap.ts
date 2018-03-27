@@ -51,9 +51,9 @@ export abstract class IMap<T = any> {
 
 	abstract addGeojsonLayer(data: GeoJSON.GeoJsonObject);
 
-	abstract setAutoImageProcessing(shouldPerform: boolean): void;
+/*	abstract setAutoImageProcessing(shouldPerform: boolean): void;
 
-	abstract setManualImageProcessing(processingParams: Object): void;
+	abstract setManualImageProcessing(processingParams: Object): void;*/
 
 	abstract dispose(): void;
 

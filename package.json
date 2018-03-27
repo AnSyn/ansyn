@@ -7,7 +7,7 @@
 		"build": "ng build",
 		"start:aot": "ng serve --aot true",
 		"build:aot": "ng build --aot true",
-		"build:prod": "ng build --prod --sourcemap",
+		"build:prod": "node --max_old_space_size=12288 $(npm bin)/ng build --prod --build-optimizer --sourcemap",
 		"test": "ng test",
 		"test:single-run": "ng test --single-run",
 		"test:e2e": "ng e2e",

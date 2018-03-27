@@ -390,53 +390,6 @@ export class VisualizersAppEffects {
 			return clearActions;
 		});
 
-
-	/**
-	 * @type Effect
-	 * @name drawFrameToOverLay$
-	 * @ofType DisplayOverlaySuccessAction
-	 */
-	@Effect({ dispatch: false })
-	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
-		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.switchMap((action: DisplayOverlaySuccessAction) => {
-			const frameVisualizer = this.getPlugin<FrameVisualizer>(action.payload.mapId, FrameVisualizer);
-			if (frameVisualizer) {
-				const entityToDraw = this.mapOverlayToDraw(action.payload.overlay);
-				frameVisualizer.isActive = true;
-				return frameVisualizer.setEntities([entityToDraw]).map(() => action);
-			}
-
-			return Observable.of(action);
-		});
-
-	@Effect({ dispatch: false })
-	activeFrameColorToOverLay$: Observable<void> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [ActiveMapChangedAction, IMapState]) => {
-			mapState.mapsList.forEach((mapData: CaseMapState) => {
-				if (Boolean(mapData.data.overlay)) {
-					const frameVisualizer = this.getPlugin<FrameVisualizer>(mapData.id, FrameVisualizer);
-					if (frameVisualizer) {
-						frameVisualizer.isActive = action.payload === mapData.id;
-						frameVisualizer.purgeCache();
-					}
-				}
-			});
-		});
-
-	@Effect({ dispatch: false })
-	removeOverlayFram$: Observable<void> = this.actions$
-		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
-		.map(({ payload }: BackToWorldView) => {
-			const frameVisualizer = this.getPlugin<FrameVisualizer>(payload.mapId, FrameVisualizer);
-			if (frameVisualizer) {
-				frameVisualizer.clearEntities();
-			}
-		});
-
-
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {

@@ -3,12 +3,41 @@ import { VisualizerStateStyle } from '../models/visualizer-state';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable } from '@angular/core';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { CommunicatorEntity } from '@ansyn/imagery';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import { Actions } from '@ngrx/effects';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { BackToWorldView, CoreActionTypes, Overlay } from '@ansyn/core';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
+import { Store } from '@ngrx/store';
+
 @Injectable()
 export class FrameVisualizer extends EntitiesVisualizer {
 	public markups: any[] = [];
 	public isActive = false;
 
-	constructor(@Inject(VisualizersConfig) config: IVisualizersConfig) {
+	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId)
+		.mergeMap((action: DisplayOverlaySuccessAction) => {
+			const entityToDraw = this.mapOverlayToDraw(action.payload.overlay);
+			return this.setEntities([entityToDraw]).map(() => action);
+		});
+
+	isActive$: Observable<boolean> = this.store$
+		.select(mapStateSelector)
+		.pluck<IMapState, string>('activeMapId')
+		.distinctUntilChanged()
+		.map((activeMapId: string) => activeMapId === this.mapId)
+		.do((isActive) => this.isActive = isActive)
+		.do(this.purgeCache.bind(this));
+
+	removeOverlayFram$: Observable<any> = this.actions$
+		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
+		.filter((action: BackToWorldView) => action.payload.mapId === this.mapId)
+		.do(this.clearEntities.bind(this));
+
+	constructor(@Inject(VisualizersConfig) config: IVisualizersConfig, public actions$: Actions, public store$: Store<any>) {
 		super(config[FrameVisualizer.name]);
 		this.updateStyle({
 			opacity: 0.5,
@@ -23,8 +52,25 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
+	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
+		const featureJson: GeoJSON.Feature<any> = {
+			type: 'Feature',
+			geometry: footprint,
+			properties: {}
+		};
+		return {
+			id,
+			featureJson
+		};
+	}
+
 	getStroke() {
 		return this.isActive ? this.visualizerStyle.colors.active : this.visualizerStyle.colors.inactive;
+	}
+
+	init(communictor: CommunicatorEntity) {
+		super.init(communictor);
+		this.initEffects();
 	}
 
 	public purgeCache() {
@@ -42,5 +88,13 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		this.clearEntities();
 		this.initLayers();
 		return Observable.of(true);
+	}
+
+	initEffects() {
+		this.subscriptions.push(
+			this.drawFrameToOverLay$.subscribe(),
+			this.isActive$.subscribe(),
+			this.removeOverlayFram$.subscribe()
+		)
 	}
 }

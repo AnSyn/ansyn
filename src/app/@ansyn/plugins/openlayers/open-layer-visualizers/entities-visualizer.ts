@@ -62,7 +62,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	get mapId(): string {
-		return this.communicator.id;
+		return this.communicator && this.communicator.id;
 	}
 
 	constructor(visualizerStyle: Partial<VisualizerStateStyle> = {}, defaultStyle: Partial<VisualizerStateStyle> = {}) {

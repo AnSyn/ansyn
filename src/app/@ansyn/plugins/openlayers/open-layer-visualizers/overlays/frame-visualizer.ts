@@ -19,10 +19,8 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	drawFrameToOverLay$: Observable<DisplayOverlaySuccessAction> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId)
-		.mergeMap((action: DisplayOverlaySuccessAction) => {
-			const entityToDraw = this.mapOverlayToDraw(action.payload.overlay);
-			return this.setEntities([entityToDraw]).map(() => action);
-		});
+		.map(({ payload }: DisplayOverlaySuccessAction) => payload.overlay)
+		.mergeMap(this.setOverlay.bind(this));
 
 	isActive$: Observable<boolean> = this.store$
 		.select(mapStateSelector)
@@ -52,16 +50,10 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
-		const featureJson: GeoJSON.Feature<any> = {
-			type: 'Feature',
-			geometry: footprint,
-			properties: {}
-		};
-		return {
-			id,
-			featureJson
-		};
+	setOverlay({ id, footprint }: Overlay) {
+		const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };
+		const entityToDraw = { id, featureJson };
+		return this.setEntities([entityToDraw]);
 	}
 
 	getStroke() {

@@ -3,7 +3,15 @@ const url = require('url');
 const path = require('path');
 const exec = require('child_process').execFile;
 
-const confdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-windows-amd64.exe';
+let confdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-windows-amd64.exe';
+let confdExeExtension = '.exe';
+const linuxConfdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-linux-amd64';
+
+if (process.argv[2] == 'linux') {
+	confdUrl = linuxConfdUrl;
+	confdExeExtension = '';
+}
+
 const confdBasePath = 'confd';
 const confdDevBasePath = 'confd/dev';
 const confdTmplRelPath = '/templates/production.tmpl';
@@ -11,7 +19,8 @@ const confdConfigPath = path.join(confdBasePath, '/conf.d/production.toml');
 const confdTmplPath = path.join(confdBasePath, confdTmplRelPath);
 const devTmplPath = path.join(confdDevBasePath, confdTmplRelPath);
 const devConfigPath = path.join(confdDevBasePath, 'conf.d/development.toml');
-const confdPath = path.join(confdBasePath, 'confd.exe');
+const confdPath = path.join(confdBasePath, `confd${confdExeExtension}`);
+
 
 const download = (uri, filename) => {
 	console.log(`Downloading ${filename} from ${uri}`);
@@ -25,7 +34,7 @@ const download = (uri, filename) => {
 
 		require(protocol).get(uri, function (response) {
 			if (response.statusCode >= 200 && response.statusCode < 300) {
-				const fileStream = fs.createWriteStream(filename);
+				const fileStream = fs.createWriteStream(filename, { mode: 0o755 });
 				fileStream.on('error', onError);
 				fileStream.on('close', resolve);
 				response.pipe(fileStream);

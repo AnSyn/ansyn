@@ -59,7 +59,7 @@ export class AnsynBuilder {
 				AnsynModule,
 				RouterModule.forRoot([], { useHash: true }),
 				StoreModule.forRoot({}, { metaReducers }),
-				EffectsModule.forRoot([]),
+				EffectsModule.forRoot([AnsynApi]),
 			],
 			providers: [AnsynApi, ...providers],
 			bootstrap: [AnsynComponent],

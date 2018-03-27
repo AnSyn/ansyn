@@ -10,5 +10,5 @@ export enum AnsynMode {
 	fullapp
 }
 export const configuration = {
-	production: AnsynMode.fullapp,
+	production: AnsynMode.ngModule,
 };

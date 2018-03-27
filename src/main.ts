@@ -28,6 +28,12 @@ switch (configuration.production) {
 		const ansynMap = new AnsynBuilder('ansynMap', '/assets/config/app.config.json');
 		ansynMap.isReady$.subscribe(() => {
 			ansynMap.api.store.dispatch(new SetLayoutAction('layout4'));
+			setTimeout(() => {
+				ansynMap.api.setOverlayes();
+			}, 5000)
+			ansynMap.api.shadowMouseProducer$.subscribe(mouser => {
+				console.log(mouser)
+			})
 		});
 	}
 }

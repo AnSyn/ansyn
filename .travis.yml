@@ -32,7 +32,7 @@ before_script:
 script:
   - npm run test:single-run
   - npm run test:e2e
-  - npm run build:prod
+  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT
 
 cache:
   yarn: true

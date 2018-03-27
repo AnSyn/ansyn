@@ -10,6 +10,7 @@ import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/open-layer-
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/heatmap-visualizer';
 import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
+import { ImageProcessingPlugin } from '@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin.ts';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 
@@ -66,6 +67,12 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: MouseShadowVisualizer,
+		deps: []
+	},
+	{
+		provide: BaseImageryPlugin,
+		multi: true,
+		useClass: ImageProcessingPlugin,
 		deps: []
 	}
 ];

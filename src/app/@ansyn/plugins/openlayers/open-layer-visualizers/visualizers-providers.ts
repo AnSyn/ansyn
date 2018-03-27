@@ -37,7 +37,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: FrameVisualizer,
-		deps: [VisualizersConfig]
+		deps: [VisualizersConfig, Actions, Store]
 	},
 	{
 		provide: BaseImageryPlugin,

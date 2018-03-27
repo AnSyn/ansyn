@@ -8,9 +8,7 @@ RUN npm set progress=false \
   && npm config set depth 0 \
   && npm cache clean --force
 
-RUN npm install
-
-RUN node --max_old_space_size=12288 $(npm bin)/ng build --prod --build-optimizer --sourcemap
+RUN npm install && npm run build:prod
 
 # Stage 2: Setup
 FROM nginx:1.13-alpine

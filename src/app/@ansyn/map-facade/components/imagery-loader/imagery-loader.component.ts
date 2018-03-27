@@ -28,7 +28,6 @@ export class ImageryLoaderComponent implements OnInit {
 
 	ngOnInit() {
 		this.loaderText$.subscribe();
-		// this.store$.dispatch(new SetIsLoadingAcion({ mapId: this.mapId, show: true, text: 'Lior Zeno' }));
 	}
 
 }

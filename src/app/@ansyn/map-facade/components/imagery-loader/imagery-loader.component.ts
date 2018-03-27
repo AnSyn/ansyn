@@ -1,17 +1,18 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { mapStateSelector, IMapState } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
-import { SetIsLoadingAcion } from '@ansyn/map-facade';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'ansyn-imagery-loader',
 	templateUrl: './imagery-loader.component.html',
 	styleUrls: ['./imagery-loader.component.less']
 })
-export class ImageryLoaderComponent implements OnInit {
+export class ImageryLoaderComponent implements OnInit, OnDestroy {
 	@Input() mapId;
 	isLoadingMaps: Map<string, string> = new Map<string, string>();
+	subscriptions: Subscription[] = [];
 
 	@HostBinding('class.show')
 	get show() {
@@ -31,7 +32,10 @@ export class ImageryLoaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.isLoadingMaps$.subscribe();
+		this.subscriptions.push(this.isLoadingMaps$.subscribe());
 	}
 
+	ngOnDestroy(): void {
+		this.subscriptions.forEach(sub => sub.unsubscribe());
+	}
 }

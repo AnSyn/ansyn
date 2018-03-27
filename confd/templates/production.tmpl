@@ -1,6 +1,6 @@
 {
     "casesConfig": {
-        "baseUrl": "{{ getv "/ansyn/storage/baseurl" "NO-VALUE" }}",
+        "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}",
         "paginationLimit": 16,
         "defaultCase": {
             "id": "1234-5678",
@@ -100,7 +100,7 @@
         "useHash": true
     },
     "layersManagerConfig": {
-        "layersByCaseIdUrl": "{{ getv "/ansyn/storage/baseurl" "NO-VALUE" }}"
+        "layersByCaseIdUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
     },
     "overlaysConfig": {
     	"limit": 249
@@ -162,7 +162,7 @@
         ]
     },
     "contextConfig": {
-    	"baseUrl": "{{ getv "/ansyn/storage/baseurl" "NO-VALUE" }}"
+    	"baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
 	},
     "toolsConfig": {
         "GoTo": {
@@ -253,7 +253,7 @@
 		]
 	},
 	"loginConfig": {
-		"baseUrl": "{{ getv "/ansyn/login/baseurl" "NO-VALUE" }}",
+		"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
 		"active": true,
 		"authorizedPath": "/"
 	},
@@ -458,9 +458,9 @@
     		}
 	},
 	"idahoOverlaysSourceConfig": {
-		"defaultApi": "{{getv "/ansyn/overlay/api/default" "NO-VALUE" }}",
-		"baseUrl": "{{ getv "/ansyn/overlay/baseurl" "NO-VALUE" }}",
-		"overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "NO-VALUE" }}"
+		"defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
+		"baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
+		"overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
 	},
 	"planetOverlaysSourceConfig": {
 		"baseUrl": "https://api.planet.com/data/v1/quick-search",

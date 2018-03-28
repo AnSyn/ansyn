@@ -406,7 +406,7 @@ export class VisualizersAppEffects {
 			}
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
-				case 'Hitmap': {
+				case 'Heatmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					observable = hitMapVisualizer.setEntities(entitiesToDraw);
 					polylineVisualizer.clearEntities();

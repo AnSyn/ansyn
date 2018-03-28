@@ -306,4 +306,13 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	}
 
+	geometryToEntity(id, geometry): IVisualizerEntity {
+		const featureJson: GeoJSON.Feature<any> = {
+			type: 'Feature',
+			geometry,
+			properties: {}
+		};
+		return { id, featureJson };
+	}
+
 }

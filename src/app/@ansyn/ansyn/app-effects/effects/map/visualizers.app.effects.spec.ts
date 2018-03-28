@@ -195,16 +195,6 @@ describe('VisualizersAppEffects', () => {
 		expect(visualizersAppEffects.shouldDrawOverlaysOnMap$).toBeObservable(expectedResults);
 	});
 
-	it('drawOverlaysOnMap$ should call drawOverlayOnMap() for each map(from selected case)', () => {
-		spyOn(visualizersAppEffects, 'drawOverlaysOnMap').and.callFake(() => Observable.of(true));
-		const action = new DrawOverlaysOnMapTriggerAction();
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: new Array(3).fill(true) });
-
-		expect(visualizersAppEffects.drawOverlaysOnMap$).toBeObservable(expectedResults);
-		expect(visualizersAppEffects.drawOverlaysOnMap).toHaveBeenCalledTimes(3);
-	});
-
 	it('drawPinPoint$ should call drawPinPointIconOnMap() for each map(from selected case)', () => {
 		spyOn(visualizersAppEffects, 'drawPinPointIconOnMap').and.callFake(() => Observable.of(true));
 		const action = new DrawPinPointAction([-70.33666666666667, 25.5]);

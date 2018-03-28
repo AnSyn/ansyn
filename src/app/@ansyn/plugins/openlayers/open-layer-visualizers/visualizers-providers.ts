@@ -68,11 +68,5 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		multi: true,
 		useClass: MouseShadowVisualizer,
 		deps: []
-	},
-	{
-		provide: BaseImageryPlugin,
-		multi: true,
-		useClass: ImageProcessingPlugin,
-		deps: []
 	}
 ];

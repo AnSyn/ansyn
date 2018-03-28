@@ -39,11 +39,14 @@ import {
 	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
+
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+
 import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import 'rxjs/add/observable/forkJoin';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-import {MeasureDistanceVisualizer} from "@ansyn/plugins/openlayers/open-layer-visualizers";
-import {ImageProcessingPlugin} from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
+import { MeasureDistanceVisualizer } from "@ansyn/plugins/openlayers/open-layer-visualizers";
+import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
 
 @Injectable()
 export class MapEffects {
@@ -260,7 +263,7 @@ export class MapEffects {
 					}
 				});
 			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(openLayersMapName, position) : communicator.loadInitialMapSource(position))
+			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 				.map(() => new BackToWorldSuccess(payload));
 		});
 

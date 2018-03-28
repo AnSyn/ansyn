@@ -1,6 +1,6 @@
 [template]
 src = "production.tmpl"
-dest = "/opt/ansyn/app/assets/config/app.config.json"
+dest = "/usr/share/nginx/html/assets/config/app.config.json"
 keys = [
 	"/ansyn/storage/baseurl",
     "/ansyn/overlay/baseurl",

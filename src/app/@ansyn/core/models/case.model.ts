@@ -87,7 +87,7 @@ export interface CaseMapsState {
 	data: CaseMapState[]
 }
 
-export type OverlayDisplayMode = 'Hitmap' | 'Polygon' | 'None';
+export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
 export interface CaseMapData {
 	position: CaseMapPosition,

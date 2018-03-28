@@ -6,6 +6,7 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+      - docker-ce
 
 language: node_js
 

@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { CacheService } from './cache.service';
-import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
+import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 
 describe('CacheService', () => {
 	beforeEach(() => {

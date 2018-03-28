@@ -3,7 +3,7 @@ import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { BaseMapSourceProvider } from '../model/base-source-provider.model';
-import { ConfigurationToken } from '../configuration.token';
+import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';

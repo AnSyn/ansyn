@@ -1,16 +1,34 @@
-import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenLayersMap, OpenlayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getBaseImageryPluginFactory } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const BaseImageryPluginFactory = getBaseImageryPluginFactory(OpenlayersMapName);
+import { ImageryPluginProvider, PLUGINS_COLLECTION } from '@ansyn/imagery/model/plugins-collection';
+
+export function factory(pluginsCollection: Array<ImageryPluginProvider[]>, parent: Injector) {
+	const providers = pluginsCollection
+		.reduce((v, i) => [...v, ...i], [])
+		.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(OpenlayersMapName));
+
+	if (providers.length === 0) {
+		return [];
+	}
+	const childInjector = Injector.create(providers, parent);
+	return childInjector.get(BaseImageryPlugin);
+}
 
 @Component({
 	selector: 'ansyn-ol-component',
 	templateUrl: './openlayers-map.component.html',
 	styleUrls: ['./openlayers-map.component.less'],
-	providers: [BaseImageryPluginFactory]
+	providers: [
+		{
+			provide: BaseImageryPlugin,
+			useFactory: factory,
+			deps: [PLUGINS_COLLECTION, Injector]
+		}
+	]
 })
 
 export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {

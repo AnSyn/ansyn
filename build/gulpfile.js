@@ -83,7 +83,7 @@ gulp.task('copy-src', ['copy-style'], function () {
 });
 
 gulp.task('compile', ['copy-src'], function (done) {
-	return Promise.resolve().then(() => ngc(['-p', 'tsconfig.ngc.json'], err => console.log(err)))
+	return Promise.resolve().then(() => ngc(['-p', 'tsconfig.ngc.json'], err => {console.log(err); throw err}))
 });
 
 gulp.task('getAppConfig', ['compile'],  function (done) {

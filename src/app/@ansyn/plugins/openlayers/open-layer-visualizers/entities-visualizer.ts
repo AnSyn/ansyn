@@ -64,7 +64,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return this.communicator && this.communicator.id;
 	}
 
-	constructor(visualizerStyle: Partial<VisualizerStateStyle>, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+	constructor(visualizerStyle: Partial<VisualizerStateStyle> = {}, defaultStyle: Partial<VisualizerStateStyle> = {}) {
 		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}

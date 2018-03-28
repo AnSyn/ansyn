@@ -284,7 +284,7 @@
 				"background": "#80c5d4",
 				"text": "Image is out of bounds"
 			}
-		]
+		],
 		"windowLayout" : {
 			"menu": true,
 			"statusBar": true,

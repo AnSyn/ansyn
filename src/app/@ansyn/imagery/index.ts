@@ -4,6 +4,6 @@ export { ImageryProviderService } from './provider-service/imagery-provider.serv
 export { ImageryComponentManager } from './imagery/manager/imagery.component.manager';
 export { ImageryModule } from './imagery.module';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
-export { ConfigurationToken } from './configuration.token';
+export { ConfigurationToken } from './model/configuration.token';
 export { BaseImageryPlugin } from './model/base-imagery-plugin';
 export { createCollection, PLUGINS_COLLECTION } from './model/plugins-collection';

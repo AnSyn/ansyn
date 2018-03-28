@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
-import { ConfigurationToken } from '@ansyn/imagery/configuration.token';
+import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 
 @Injectable()
 export class CacheService {

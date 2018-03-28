@@ -32,9 +32,8 @@ describe('OpenlayersMapComponent', () => {
 
 	it('createMap should raise mapCreated event', () => {
 		spyOn(component.mapCreated, 'emit');
-		const position = { projectedState: { projection: { code: 'projectionCode' } } };
 		const osmLayer = new TileLayer({ source: new OSM() });
-		component.createMap([osmLayer], <any> position);
+		component.createMap([osmLayer]);
 		expect(component.mapCreated.emit).toHaveBeenCalled();
 	});
 });

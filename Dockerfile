@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:9.5.0-slim
+FROM node:9.5.0-slim as builder
 
 WORKDIR /ng-app
 COPY . .

@@ -11,7 +11,6 @@ import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
-import { VisualizerStateStyle } from '../models/visualizer-state';
 import * as ol from 'openlayers';
 import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
 import { AnnotationsContextMenuEvent } from '@ansyn/core/index';
@@ -100,10 +99,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	constructor(public store$: Store<any>,
-				public actions$: Actions,
-				style?: Partial<VisualizerStateStyle>) {
+				public actions$: Actions) {
 
-		super(style, {
+		super(null, {
 			initial: {
 				stroke: {
 					color: '#27b2cfe6',

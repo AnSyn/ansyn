@@ -1,12 +1,11 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 
-	constructor(@Inject(VisualizersConfig) config: IVisualizersConfig) {
-		super(config[FootprintHeatmapVisualizer.name], {
+	constructor() {
+		super(null, {
 			opacity: 0.5,
 			initial: {
 				fill: {

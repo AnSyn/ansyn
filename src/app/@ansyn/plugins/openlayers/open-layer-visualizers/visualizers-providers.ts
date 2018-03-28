@@ -1,4 +1,3 @@
-import { FootprintPolygonVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polygon-visualizer';
 import { IconVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
 import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
 import { BaseImageryPlugin } from '@ansyn/imagery';
@@ -19,25 +18,19 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		useClass: ContextEntityVisualizer,
 		multi: true,
-		deps: [VisualizersConfig]
-	}
-	, {
-		provide: BaseImageryPlugin,
-		multi: true,
-		useClass: FootprintPolygonVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: FootprintHeatmapVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: FrameVisualizer,
-		deps: [VisualizersConfig, Actions, Store]
+		deps: [Store, Actions, VisualizersConfig]
 	},
 	{
 		provide: BaseImageryPlugin,
@@ -49,30 +42,30 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: AnnotationsVisualizer,
-		deps: [Store, Actions, VisualizersConfig]
+		deps: [Store, Actions]
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: MeasureDistanceVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: GoToVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: IconVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	},
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: MouseShadowVisualizer,
-		deps: [VisualizersConfig]
+		deps: []
 	}
 ];

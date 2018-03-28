@@ -1,5 +1,4 @@
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
@@ -68,7 +67,7 @@ export class OverlaysEffects {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
 					const overlaysResult = unionBy(overlays.data, favoriteOverlays, o => o.id);
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+					const actions: Array<any> = [new LoadOverlaysSuccessAction({overlays: overlaysResult})];
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchQuery));
@@ -81,7 +80,7 @@ export class OverlaysEffects {
 
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch(() => Observable.from([new LoadOverlaysSuccessAction({overlays: []}), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
 	/**

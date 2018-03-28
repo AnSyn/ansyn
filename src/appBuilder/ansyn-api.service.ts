@@ -5,6 +5,8 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { Overlay } from '@ansyn/core/models';
 import { LoadOverlaysSuccessAction } from '@ansyn/overlays';
+import { fakeOverlayData } from './fakeOverlaysData';
+import { SetTimelineStateAction } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class AnsynApi {
@@ -37,18 +39,31 @@ export class AnsynApi {
 		this.store.dispatch(new SetWindowLayout({ windowLayout }));
 	}
 
-	setOverlayes(overlayes?: Array<Overlay>) {
+	setOverlayes(overlays: Overlay[]) {
 
-		const fakeOverlay: Overlay = {
-			id: '132',
-			name: 'fake1',
-			photoTime: '10:32',
-			date: new Date(Date.now()),
-			azimuth: 3.2,
-			isGeoRegistered: false
-		};
+		this.store.dispatch (new SetTimelineStateAction({ state : this.getOverlayTimeFrame(overlays) }));
+		this.store.dispatch(new LoadOverlaysSuccessAction({overlays, refresh: true}));
 
-		this.store.dispatch(new LoadOverlaysSuccessAction([fakeOverlay]));
+	}
+
+	private getOverlayTimeFrame(overlays: Overlay[]) : {from : Date, to: Date} {
+		let minDate = new Date(overlays[0].date).getTime();
+		let maxDate = new Date(overlays[0].date).getTime();
+		overlays.forEach(overlay => {
+			const overlayDate = new Date(overlay.date).getTime();
+			if (overlayDate > maxDate) {
+				maxDate = overlayDate
+			}
+			else if (overlayDate < minDate) {
+				minDate = overlayDate
+			}
+		})
+		const margin = (maxDate - minDate) / 10;
+
+		return {
+			from : new Date(minDate - margin),
+			to : new Date(maxDate + margin)
+		}
 	}
 
 

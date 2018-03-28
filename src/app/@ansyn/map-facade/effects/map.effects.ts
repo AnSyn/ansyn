@@ -8,7 +8,6 @@ import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { OverlaysService } from '@ansyn/overlays';
@@ -35,18 +34,14 @@ import {
 	PinLocationModeTriggerAction,
 	PinPointModeTriggerAction,
 	PositionChangedAction,
-	SetMapManualImageProcessing,
 	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-import { ContextMenuGetFilteredOverlaysAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { ContextMenuGetFilteredOverlaysAction } from '@ansyn/map-facade';
 import 'rxjs/add/observable/forkJoin';
-import { MeasureDistanceVisualizer } from "@ansyn/plugins/openlayers/open-layer-visualizers";
-import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
 
 @Injectable()
 export class MapEffects {
@@ -91,39 +86,6 @@ export class MapEffects {
 			} else {
 				this.mapFacadeService.removeEmitters(action.payload.id);
 			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onToggleImageProcessing$
-	 * @ofType SetMapAutoImageProcessing
-	 * @filter There is a communicator
-	 */
-	@Effect({ dispatch: false })
-	onToggleImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.map(({ payload }) => payload)
-		.map(({ mapId, toggleValue }): [CommunicatorEntity, boolean] => [this.communicatorsService.provide(mapId), toggleValue])
-		.filter(([comm, toggleValue]) => Boolean(comm))
-		.do(([comm, toggleValue]) => {
-			const imageProccesingTool = comm.getPlugin<ImageProcessingPlugin>(ImageProcessingPlugin);
-			imageProccesingTool.setAutoImageProcessing(toggleValue);
-		});
-
-	/**
-	 * @type Effect
-	 * @name onSetManualImageProcessing$
-	 * @ofType SetMapManualImageProcessing
-	 * @filter There is a communicator
-	 */
-	@Effect({ dispatch: false })
-	onSetManualImageProcessing$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
-		.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
-		.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => {
-			const imageProccesingTool = communicator.getPlugin<ImageProcessingPlugin>(ImageProcessingPlugin);
-			imageProccesingTool.setManualImageProcessing(action.payload.processingParams);
 		});
 
 	/**

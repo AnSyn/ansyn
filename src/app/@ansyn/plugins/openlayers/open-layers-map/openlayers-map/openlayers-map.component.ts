@@ -3,31 +3,18 @@ import { OpenLayersMap, OpenlayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { getBaseImageryPluginFactory } from '@ansyn/imagery/imagery/providers/collections.factory';
-import { ImageryPluginProvider, PLUGINS_COLLECTION } from '@ansyn/imagery/model/plugins-collection';
-
-export function factory(pluginsCollection: Array<ImageryPluginProvider[]>, parent: Injector) {
-	const providers = pluginsCollection
-		.reduce((v, i) => [...v, ...i], [])
-		.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(OpenlayersMapName));
-
-	if (providers.length === 0) {
-		return [];
-	}
-	const childInjector = Injector.create(providers, parent);
-	return childInjector.get(BaseImageryPlugin);
-}
+import {
+	BaseImageryPluginProvider,
+	ProvideMapName
+} from '@ansyn/imagery/imagery/providers/imagery.providers';
 
 @Component({
 	selector: 'ansyn-ol-component',
 	templateUrl: './openlayers-map.component.html',
 	styleUrls: ['./openlayers-map.component.less'],
 	providers: [
-		{
-			provide: BaseImageryPlugin,
-			useFactory: factory,
-			deps: [PLUGINS_COLLECTION, Injector]
-		}
+		ProvideMapName(OpenlayersMapName),
+		BaseImageryPluginProvider
 	]
 })
 

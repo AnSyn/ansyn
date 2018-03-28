@@ -7,8 +7,8 @@ import Raster from 'ol/source/raster';
 import { Actions } from '@ngrx/effects';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { SetMapAutoImageProcessing, SetMapManualImageProcessing } from '@ansyn/map-facade';
-import { OpenlayersMapName } from "@ansyn/plugins/openlayers/open-layers-map";
-import { DisabledOpenLayersMapName } from "@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map";
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
 
 
 @Injectable()

@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OpenlayersMapComponent } from './openlayers-map.component';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
-import * as openLayersMap from './openlayers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
 import { PLUGINS_COLLECTION } from '@ansyn/imagery';
@@ -32,7 +31,6 @@ describe('OpenlayersMapComponent', () => {
 	});
 
 	it('createMap should raise mapCreated event', () => {
-		spyOn(openLayersMap, 'OpenLayersMap');
 		spyOn(component.mapCreated, 'emit');
 		const position = { projectedState: { projection: { code: 'projectionCode' } } };
 		const osmLayer = new TileLayer({ source: new OSM() });

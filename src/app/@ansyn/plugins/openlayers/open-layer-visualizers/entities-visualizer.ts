@@ -79,6 +79,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.initLayers();
 	}
 
+	dispose() {
+		super.dispose();
+		this.clearEntities();
+	}
+
 	protected initLayers() {
 		this.createStaticLayers();
 		this.resetInteractions();

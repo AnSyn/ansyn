@@ -2,20 +2,22 @@ import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChi
 import { IMap, IMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { getBaseImageryPluginFactory } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const cesiumMapName = 'cesiumMap';
-export const BaseImageryPluginFactory = getBaseImageryPluginFactory(cesiumMapName);
+import { BaseImageryPluginProvider, ProvideMapName } from '@ansyn/imagery/imagery/providers/imagery.providers';
+export const CesiumMapName = 'cesiumMap';
 
 @Component({
 	selector: 'ansyn-cesium-component',
 	templateUrl: './cesium-map.component.html',
 	styleUrls: ['./cesium-map.component.less'],
-	providers: [BaseImageryPluginFactory]
+	providers: [
+		ProvideMapName(CesiumMapName),
+		BaseImageryPluginProvider
+	]
 })
 
 export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapName = cesiumMapName;
+	static mapName = CesiumMapName;
 	static mapClass = CesiumMap;
 
 	@ViewChild('cesiumMap') mapElement: ElementRef;

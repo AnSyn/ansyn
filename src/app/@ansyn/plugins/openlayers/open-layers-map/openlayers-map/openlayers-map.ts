@@ -477,8 +477,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
 
+		this.removeAllLayers();
+
 		if (this._mapObject) {
 			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.setTarget(null);
 		}
 
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());

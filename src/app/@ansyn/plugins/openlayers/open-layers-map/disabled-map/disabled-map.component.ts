@@ -1,9 +1,9 @@
 import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { disabledOpenLayersMapName, OpenLayersDisabledMap } from './open-layers-disabled-map';
+import { DisabledOpenLayersMapName, OpenLayersDisabledMap } from './open-layers-disabled-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { getBaseImageryPluginFactory } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const BaseImageryPluginFactory = getBaseImageryPluginFactory(disabledOpenLayersMapName);
+export const BaseImageryPluginFactory = getBaseImageryPluginFactory(DisabledOpenLayersMapName);
 
 @Component({
 	selector: 'ansyn-ol-component',
@@ -26,7 +26,7 @@ export const BaseImageryPluginFactory = getBaseImageryPluginFactory(disabledOpen
 
 export class DisabledMapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapName = disabledOpenLayersMapName;
+	static mapName = DisabledOpenLayersMapName;
 	static mapClass = OpenLayersDisabledMap;
 
 	@ViewChild('olMap') mapElement: ElementRef;

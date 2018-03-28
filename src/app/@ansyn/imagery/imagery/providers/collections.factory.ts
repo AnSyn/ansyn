@@ -8,7 +8,7 @@ export function getBaseImageryPluginFactory(mapName: string) {
 		useFactory(pluginsCollection: Array<ImageryPluginProvider[]>, parent: Injector) {
 			const providers = pluginsCollection
 				.reduce((v, i) => [...v, ...i], [])
-				.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.mapName === mapName);
+				.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(mapName));
 
 			if (providers.length === 0) {
 				return [];

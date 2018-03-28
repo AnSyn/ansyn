@@ -28,10 +28,10 @@ import { FeatureCollection, GeometryObject, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 
-export const openLayersMapName = 'openLayersMap';
+export const OpenlayersMapName = 'openLayersMap';
 
 export class OpenLayersMap extends IMap<OLMap> {
-	static mapType = openLayersMapName;
+	static mapType = OpenlayersMapName;
 
 	static groupLayers = new Map<string, Group>();
 

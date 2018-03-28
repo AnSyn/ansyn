@@ -400,28 +400,28 @@ export class VisualizersAppEffects {
 		let observable = Observable.of(true);
 		if (communicator && mapData.data.overlayDisplayMode) {
 			const polylineVisualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
-			const hitMapVisualizer = communicator.getPlugin<FootprintHeatmapVisualizer>(FootprintHeatmapVisualizer);
-			if (!polylineVisualizer || !hitMapVisualizer) {
+			const heatMapVisualizer = communicator.getPlugin<FootprintHeatmapVisualizer>(FootprintHeatmapVisualizer);
+			if (!polylineVisualizer || !heatMapVisualizer) {
 				return;
 			}
 			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
 			switch (overlayDisplayMode) {
 				case 'Heatmap': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					observable = hitMapVisualizer.setEntities(entitiesToDraw);
+					observable = heatMapVisualizer.setEntities(entitiesToDraw);
 					polylineVisualizer.clearEntities();
 					break;
 				}
 				case 'Polygon': {
 					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
 					observable = polylineVisualizer.setEntities(entitiesToDraw);
-					hitMapVisualizer.clearEntities();
+					heatMapVisualizer.clearEntities();
 					break;
 				}
 				case 'None':
 				default: {
 					polylineVisualizer.clearEntities();
-					hitMapVisualizer.clearEntities();
+					heatMapVisualizer.clearEntities();
 				}
 			}
 		}

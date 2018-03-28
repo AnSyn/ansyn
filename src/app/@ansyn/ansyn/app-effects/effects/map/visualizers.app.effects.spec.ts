@@ -171,7 +171,7 @@ describe('VisualizersAppEffects', () => {
 
 	});
 
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Hitmap"', () => {
+	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		mapState.mapsList = [...selectedCase.state.maps.data];
 		mapState.activeMapId = selectedCase.state.maps.activeMapId;
 		const updatedMapsList = cloneDeep(mapState.mapsList);

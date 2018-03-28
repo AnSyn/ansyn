@@ -1,28 +1,20 @@
-import { CommunicatorEntity, IMap, BaseImageryPlugin } from '@ansyn/imagery';
-import Vector from 'ol/source/vector';
-import Feature from 'ol/feature';
-import Point from 'ol/geom/point';
-import Style from 'ol/style/style';
-import Icon from 'ol/style/icon';
-import VectorLayer from 'ol/layer/vector';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { EventEmitter, Injectable } from '@angular/core';
-import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
+import { CommunicatorEntity, BaseImageryPlugin } from '@ansyn/imagery';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ImageryComponentManager } from "@ansyn/imagery/imagery/manager/imagery.component.manager";
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/open-layers-map/image-processing/open-layers-image-processing';
 import Raster from 'ol/source/raster';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { SetMapAutoImageProcessing, SetMapManualImageProcessing } from '@ansyn/map-facade';
+import { OpenlayersMapName } from "@ansyn/plugins/openlayers/open-layers-map";
+import { DisabledOpenLayersMapName } from "@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map";
 
 
 @Injectable()
 export class ImageProcessingPlugin extends BaseImageryPlugin {
-	static mapName = OpenlayersMapComponent.mapName;
-	private _iconStyle: Style;
-	private _existingLayer;
+	static supported = [OpenlayersMapName, DisabledOpenLayersMapName];
+	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
 
@@ -33,28 +25,26 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 			this.setAutoImageProcessing(action.payload.toggleValue)
 		});
 
-	/*	onSetManualImageProcessing$: Observable<any> = this.actions$
-			.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-			.map((action: SetMapManualImageProcessing) => [action, this.communicatorsService.provide(action.payload.mapId)])
-			.filter(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => Boolean(communicator))
-			.do(([action, communicator]: [SetMapManualImageProcessing, CommunicatorEntity]) => {
-				const imageProccesingTool = communicator.getPlugin<ImageProcessingPlugin>(ImageProcessingPlugin);
-				imageProccesingTool.setManualImageProcessing(action.payload.processingParams);
-			});*/
+	onSetManualImageProcessing$: Observable<any> = this.actions$
+		.ofType<SetMapManualImageProcessing>(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
+		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId)
+		.do((action: SetMapManualImageProcessing) => {
+			this.setManualImageProcessing(action.payload.processingParams);
+		});
 
 
 	constructor(public actions$: Actions) {
 		super();
 	}
 
-	public init(): void {
+	public init(communicator: CommunicatorEntity): void {
+		super.init(communicator);
 		this.initEffects();
 	}
 
 	get mapId(): string {
 		return this.communicator && this.communicator.id;
 	}
-
 
 	onResetView(): Observable<boolean> {
 		this._imageProcessing = new OpenLayersImageProcessing();
@@ -68,7 +58,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {
-
 		if (!this.imageLayer  || !this._imageProcessing) {
 			return;
 		}
@@ -95,7 +84,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	initEffects() {
 		this.subscriptions.push(
-			this.onToggleImageProcessing$.subscribe()
+			this.onToggleImageProcessing$.subscribe(),
+			this.onSetManualImageProcessing$.subscribe()
 		)
 	}
 }

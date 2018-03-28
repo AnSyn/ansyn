@@ -120,26 +120,6 @@ export class VisualizersAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name drawOverlaysOnMap$
-	 * @ofType DrawOverlaysOnMapTriggerAction
-	 * @dependencies overlays, cases
-	 */
-	@Effect({ dispatch: false })
-	drawOverlaysOnMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.switchMap(([action, overlaysState, { mapsList }]: [DrawOverlaysOnMapTriggerAction, IOverlaysState, IMapState]) => {
-			const observables = [];
-
-			mapsList.forEach((mapData: CaseMapState) => {
-				observables.push(this.drawOverlaysOnMap(mapData, overlaysState));
-			});
-
-			return Observable.forkJoin(observables);
-		});
-
-	/**
-	 * @type Effect
 	 * @name drawDistamceMeasureOnMap$
 	 * @ofType DrawOverlaysOnMapTriggerAction
 	 * @dependencies overlays, cases
@@ -395,40 +375,6 @@ export class VisualizersAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState): Observable<boolean> {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		let observable = Observable.of(true);
-		if (communicator && mapData.data.overlayDisplayMode) {
-			const polylineVisualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
-			const heatMapVisualizer = communicator.getPlugin<FootprintHeatmapVisualizer>(FootprintHeatmapVisualizer);
-			if (!polylineVisualizer || !heatMapVisualizer) {
-				return;
-			}
-			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
-			switch (overlayDisplayMode) {
-				case 'Heatmap': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					observable = heatMapVisualizer.setEntities(entitiesToDraw);
-					polylineVisualizer.clearEntities();
-					break;
-				}
-				case 'Polygon': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					observable = polylineVisualizer.setEntities(entitiesToDraw);
-					heatMapVisualizer.clearEntities();
-					break;
-				}
-				case 'None':
-				default: {
-					polylineVisualizer.clearEntities();
-					heatMapVisualizer.clearEntities();
-				}
-			}
-		}
-
-		return observable;
-	}
-
 	getPlugin<T>(mapId, visualizerType): T {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		return communicator ? communicator.getPlugin<T>(visualizerType) : null;
@@ -555,23 +501,6 @@ export class VisualizersAppEffects {
 		this.removeShadowMouseProducer(mapData);
 		// clear shadow layer (in case this is shadow consumer)
 		this.clearShadowMouseEntities(mapData);
-	}
-
-	getEntitiesToDraw(overlayState: IOverlaysState): IVisualizerEntity[] {
-		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		return overlaysToDraw.map(this.mapOverlayToDraw);
-	}
-
-	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
-		const featureJson: GeoJSON.Feature<any> = {
-			type: 'Feature',
-			geometry: footprint,
-			properties: {}
-		};
-		return {
-			id,
-			featureJson
-		};
 	}
 
 }

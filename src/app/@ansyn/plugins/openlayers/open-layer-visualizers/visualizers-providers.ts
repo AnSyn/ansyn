@@ -24,7 +24,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: FootprintHeatmapVisualizer,
-		deps: []
+		deps: [Store, Actions]
 	},
 	{
 		provide: BaseImageryPlugin,

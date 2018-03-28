@@ -25,12 +25,33 @@ import {
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
 import { CommunicatorEntity } from '@ansyn/imagery';
+import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
 	markups: any[] = [];
 	protected disableCache = true;
+
+	drawOverlaysOnMap$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
+		.withLatestFrom(this.store.select(overlaysStateSelector), this.store.select(mapStateSelector))
+		.map(([action, overlaysState, { mapsList }]) => [MapFacadeService.mapById(mapsList, this.mapId), overlaysState])
+		.filter(([map]) => Boolean(map))
+		.mergeMap(([map, { overlays, filteredOverlays }]: [CaseMapState, IOverlaysState]) => {
+			if (map.data.overlayDisplayMode === 'Polygon') {
+				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
+				const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
+				return this.setEntities(entitiesToDraw);
+			} else if (this.getEntities().length > 0) {
+				this.clearEntities();
+			}
+			return Observable.empty();
+		});
 
 	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
@@ -261,6 +282,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	initEffects() {
 		this.subscriptions.push(
+			this.drawOverlaysOnMap$.subscribe(),
 			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),
 			this.markupVisualizer$.subscribe()
 		)

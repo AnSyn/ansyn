@@ -26,7 +26,7 @@ COPY confd/conf.d/*.toml /etc/confd/conf.d/
 COPY confd/templates/*.tmpl /etc/confd/templates/
 COPY run.sh /usr/share/nginx/html
 
-RUN chmox +x /usr/share/nginx/html/run.sh
+RUN chmod +x /usr/share/nginx/html/run.sh
 
 RUN mkdir /opt \
   && wget https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-linux-amd64 -O /opt/confd \

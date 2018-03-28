@@ -1,4 +1,7 @@
-import { BaseImageryVisualizer, CommunicatorEntity, IMap, IVisualizerEntity } from '@ansyn/imagery';
+import {
+	BaseImageryVisualizer, CommunicatorEntity, IMap, IVisualizerEntity,
+	VisualizerInteractionTypes
+} from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
@@ -10,15 +13,11 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { VisualizerEventTypes, VisualizerInteractionTypes } from '@ansyn/imagery/model/imap-visualizer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Subscription } from 'rxjs/src/Subscription';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -29,7 +28,6 @@ export const VisualizerStates = {
 	INITIAL: 'initial',
 	HOVER: 'hover'
 };
-
 
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {

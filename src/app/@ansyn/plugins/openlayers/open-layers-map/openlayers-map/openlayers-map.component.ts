@@ -1,11 +1,11 @@
-import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild, InjectionToken, Injector } from '@angular/core';
 import { OpenLayersMap, openLayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getPluginsProviders } from '@ansyn/imagery/imagery/providers/collections.factory';
+import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
 export const pluginProviders = getPluginsProviders(openLayersMapName);
-
 @Component({
 	selector: 'ansyn-ol-component',
 	templateUrl: './openlayers-map.component.html',

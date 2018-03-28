@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BaseImageryPlugin, CommunicatorEntity } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, IMap } from '@ansyn/imagery';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
@@ -28,7 +28,6 @@ export interface INorthData {
 	northOffsetRad: number;
 	actualNorth: number;
 }
-
 @Injectable()
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	static mapName = OpenlayersMapComponent.mapName;

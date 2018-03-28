@@ -1,8 +1,8 @@
-import { Injector } from '@angular/core';
+import { InjectionToken, Injector } from '@angular/core';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { ImageryPluginProvider, PLUGINS_COLLECTION } from '../../model/plugins-collection';
 
-const baseInjectablePlugins = [BaseImageryPlugin];
+export const baseInjectablePlugins = [BaseImageryPlugin];
 
 export function getPluginsProvider(injectableClass: any, mapName: string) {
 	return {

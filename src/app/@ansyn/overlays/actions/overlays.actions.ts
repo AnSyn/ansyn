@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { CaseOrientation, CaseRegionState, CaseTimeState, OverlaySpecialObject } from '@ansyn/core';
+import { OverlaySpecialObject } from '@ansyn/core';
 import { TimelineState } from '../reducers/overlays.reducer';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 
@@ -70,7 +70,7 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: {overlays: Overlay[], refresh? : boolean}) {
+	constructor(public payload: { overlays: Overlay[], refresh?: boolean }) {
 	}
 }
 

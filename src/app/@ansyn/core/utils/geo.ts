@@ -1,11 +1,10 @@
-import { feature, point } from '@turf/helpers';
+import { feature, lineString, point } from '@turf/helpers';
 import * as centerOfMass from '@turf/center-of-mass';
 import * as circle from '@turf/circle';
 import * as bbox from '@turf/bbox';
 import * as bboxPolygon from '@turf/bbox-polygon';
 import { Feature, FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
-import { lineString } from '@turf/helpers'
-import { geometry }  from '@turf/turf';
+import { geometry } from '@turf/turf';
 
 export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
@@ -32,9 +31,9 @@ export function bboxFromGeoJson(polygon: Polygon): number[] {
 }
 
 export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
-	return  <Polygon> geometry('Polygon', multiPolygon.coordinates[0]);
+	return <Polygon> geometry('Polygon', multiPolygon.coordinates[0]);
 }
 
 export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
-	return <MultiPolygon> geometry('MultiPolygon', [polygon.coordinates])
+	return <MultiPolygon> geometry('MultiPolygon', [polygon.coordinates]);
 }

@@ -275,7 +275,7 @@ export class VisualizersAppEffects {
 					shadowMouseConsumers.push(map);
 				}
 			});
-			shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
+				shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
 		});
 
 	/**

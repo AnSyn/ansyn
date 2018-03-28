@@ -22,6 +22,8 @@ import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-ma
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { DisabledMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/disabled-map.component';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -31,9 +33,9 @@ export interface INorthData {
 
 @Injectable()
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
-	static mapName = OpenlayersMapComponent.mapName;
+	static supported = [OpenlayersMapName];
 	communicator: CommunicatorEntity;
-	isEnabled: boolean;
+	isEnabled = true;
 
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
@@ -47,8 +49,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				public store$: Store<any>,
 				protected projectionService: ProjectionService) {
 		super();
-		this.onDisposedEvent = new EventEmitter();
-		this.isEnabled = true;
 	}
 
 	public init(communicator: CommunicatorEntity): void {

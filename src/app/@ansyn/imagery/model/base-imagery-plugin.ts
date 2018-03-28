@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 export class BaseImageryPlugin {
+	static supported = [];
 	subscriptions: Subscription[] = [];
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;

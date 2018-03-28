@@ -16,7 +16,7 @@ import { VisualizerStateStyle } from './models/visualizer-state';
 import { VisualizerInteractionTypes } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Subscription } from 'rxjs/src/Subscription';
 
 export interface FeatureIdentifier {
@@ -32,7 +32,7 @@ export const VisualizerStates = {
 
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
-	static mapName = openLayersMapName;
+	static supported = [OpenlayersMapName];
 	isHideable = false;
 	isHidden = false;
 	public source: SourceVector;
@@ -54,7 +54,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	};
 
-	onDisposedEvent: EventEmitter<void> = new EventEmitter<void>();
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
 	get iMap(): IMap {

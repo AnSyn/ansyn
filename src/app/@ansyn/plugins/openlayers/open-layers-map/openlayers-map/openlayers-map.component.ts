@@ -1,10 +1,10 @@
 import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { OpenLayersMap, openLayersMapName } from './openlayers-map';
+import { OpenLayersMap, OpenlayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getBaseImageryPluginFactory } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const BaseImageryPluginFactory = getBaseImageryPluginFactory(openLayersMapName);
+export const BaseImageryPluginFactory = getBaseImageryPluginFactory(OpenlayersMapName);
 
 @Component({
 	selector: 'ansyn-ol-component',
@@ -15,7 +15,7 @@ export const BaseImageryPluginFactory = getBaseImageryPluginFactory(openLayersMa
 
 export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {
 
-	static mapName = openLayersMapName;
+	static mapName = OpenlayersMapName;
 	static mapClass = OpenLayersMap;
 
 	@ViewChild('olMap') mapElement: ElementRef;

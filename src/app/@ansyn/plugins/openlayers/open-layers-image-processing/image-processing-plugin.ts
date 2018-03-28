@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { ImageryComponentManager } from "@ansyn/imagery/imagery/manager/imagery.component.manager";
 import ImageLayer from "ol/layer/image";
 import { OpenLayersImageProcessing } from "@ansyn/plugins/openlayers/open-layers-map/image-processing/open-layers-image-processing";
+import Raster from "ol/source/raster";
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	private _iconStyle: Style;
 	private _existingLayer;
 	private _imageProcessing: OpenLayersImageProcessing;
-
+	private imageLayer: ImageLayer;
 
 
 	constructor() {
@@ -40,13 +41,21 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		// initialize new _imageProcessing
 		// 3. if not - do nothing
 		//
+		this._imageProcessing = new OpenLayersImageProcessing();
+		const layers = this.communicator.ActiveMap.mapObject.getLayers();
+		this.imageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
+		if (this.imageLayer.getSource() instanceof Raster) {
+			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
+		} else {
+			this._imageProcessing = null;
+		}
+
 		return Observable.of(true);
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {
-		const layers = this.communicator.ActiveMap.mapObject.getLayers();
-		let imageLayer: ImageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
+
+		if (!this.imageLayer  || !this._imageProcessing) {
 			return;
 		}
 		if (shouldPerform) {
@@ -62,7 +71,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	public setManualImageProcessing(processingParams: Object): void {
-		let imageLayer: ImageLayer = this.communicator.ActiveMap.mapObject.find((layer) => layer instanceof ImageLayer);
+		const layers = this.communicator.ActiveMap.mapObject.getLayers();
+		let imageLayer: ImageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
 		if (!imageLayer || !this._imageProcessing) {
 			return;
 		}

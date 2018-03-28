@@ -35,19 +35,11 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		// dispose old imageProcessing
-		// 1. find if raster layer exists
-		// 2. if exists
-		// initialize new _imageProcessing
-		// 3. if not - do nothing
-		//
 		this._imageProcessing = new OpenLayersImageProcessing();
 		const layers = this.communicator.ActiveMap.mapObject.getLayers();
 		this.imageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
 		if (this.imageLayer.getSource() instanceof Raster) {
 			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
-		} else {
-			this._imageProcessing = null;
 		}
 
 		return Observable.of(true);

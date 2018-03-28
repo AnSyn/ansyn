@@ -150,30 +150,6 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	removeSingleClickEvent() {
 	}
 
-	public setAutoImageProcessing(shouldPerform: boolean = false): void {
-		let imageLayer: ImageLayer = <ImageLayer>this.mainLayer;
-		if (!imageLayer) {
-			return;
-		}
-		if (shouldPerform) {
-			// the determine the order which by the image processing will occur
-			const processingParams = {
-				Histogram: { auto: true },
-				Sharpness: { auto: true }
-			};
-			this._imageProcessing.processImage(processingParams);
-		} else {
-			this._imageProcessing.processImage(null);
-		}
-	}
-
-	public setManualImageProcessing(processingParams: Object) {
-		let imageLayer: ImageLayer = <ImageLayer>this.mainLayer;
-		if (!imageLayer) {
-			return;
-		}
-		this._imageProcessing.processImage(processingParams);
-	}
 
 	getRotation(): number {
 		return NaN;

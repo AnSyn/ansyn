@@ -424,31 +424,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
-	public setAutoImageProcessing(shouldPerform: boolean = false): void {
-		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
-			return;
-		}
-		if (shouldPerform) {
-			// the determine the order which by the image processing will occur
-			const processingParams = {
-				Histogram: { auto: true },
-				Sharpness: { auto: true }
-			};
-			this._imageProcessing.processImage(processingParams);
-		} else {
-			this._imageProcessing.processImage(null);
-		}
-	}
-
-	public setManualImageProcessing(processingParams: Object) {
-		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
-			return;
-		}
-		this._imageProcessing.processImage(processingParams);
-	}
-
 	// *****-- click events --********
 	public addSingleClickEvent() {
 		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);

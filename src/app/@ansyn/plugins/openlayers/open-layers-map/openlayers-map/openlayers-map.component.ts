@@ -36,7 +36,7 @@ export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent 
 	}
 
 	ngOnDestroy(): void {
-		if (this._map && typeof this._map.dispose === 'function') {
+		if (this._map) {
 			this._map.dispose();
 		}
 	}

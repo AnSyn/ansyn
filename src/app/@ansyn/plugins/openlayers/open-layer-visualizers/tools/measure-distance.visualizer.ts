@@ -75,8 +75,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(style: Partial<VisualizerStateStyle>) {
-		super(style, {
+	constructor() {
+		super(null, {
 			initial: {
 				stroke: {
 					color: '#3399CC',

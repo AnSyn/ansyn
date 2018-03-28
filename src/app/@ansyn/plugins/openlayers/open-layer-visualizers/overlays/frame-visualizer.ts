@@ -35,7 +35,9 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		.filter((action: BackToWorldView) => action.payload.mapId === this.mapId)
 		.do(this.clearEntities.bind(this));
 
-	constructor(@Inject(VisualizersConfig) config: IVisualizersConfig, public actions$: Actions, public store$: Store<any>) {
+	constructor(public store$: Store<any>,
+				public actions$: Actions,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super(config[FrameVisualizer.name]);
 		this.updateStyle({
 			opacity: 0.5,

@@ -47,6 +47,7 @@ import {
 	CoreActionTypes, coreStateSelector, ICoreState, ImageManualProcessArgs, layoutOptions,
 	SetLayoutAction
 } from '@ansyn/core';
+import { toolsFlags } from '@ansyn/menu-items';
 
 
 @Injectable()
@@ -102,7 +103,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
 		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
-		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
+		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get(toolsFlags.annotations))
 		.mergeMap(() => [
 			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
 			new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })

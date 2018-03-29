@@ -32,7 +32,7 @@ export interface IToolsState {
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
-		['geoRegisteredOptionsEnabled', true],
+		[toolsFlags.geoRegisteredOptionsEnabled, true],
 	]),
 	activeCenter: [0, 0],
 	gotoExpand: false,

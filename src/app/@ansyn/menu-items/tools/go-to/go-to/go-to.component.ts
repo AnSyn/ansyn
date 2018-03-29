@@ -1,5 +1,5 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector, toolsFlags } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
 	GoToAction,
@@ -40,7 +40,7 @@ export class GoToComponent implements OnInit {
 	};
 
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => state.flags.get('pinLocation'))
+		.map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation))
 		.distinctUntilChanged();
 
 	pinLocationMode: boolean;

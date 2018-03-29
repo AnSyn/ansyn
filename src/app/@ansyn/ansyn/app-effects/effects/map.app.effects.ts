@@ -64,6 +64,7 @@ import {
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { toolsFlags } from '@ansyn/menu-items';
 
 @Injectable()
 export class MapAppEffects {
@@ -130,7 +131,7 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select(toolsStateSelector), (action, state: IToolsState): any => ({
 			action,
-			pinLocation: state.flags.get('pinLocation')
+			pinLocation: state.flags.get(toolsFlags.pinLocation)
 		}))
 		.filter(({ action, pinLocation }) => pinLocation)
 		.mergeMap(({ action }) => {
@@ -343,7 +344,7 @@ export class MapAppEffects {
 	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(toolsStateSelector))
-		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get('shadowMouse'))
+		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get(toolsFlags.shadowMouse))
 		.map(() => new StartMouseShadow());
 
 	/**

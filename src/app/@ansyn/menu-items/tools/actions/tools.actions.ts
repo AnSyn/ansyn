@@ -31,6 +31,7 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
+	SET_MANUAL_IMAGE_PROCESSING_SUCCESS: type('SET_MANUAL_IMAGE_PROCESSING_SUCCESS'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
@@ -49,6 +50,14 @@ export const ToolsActionsTypes = {
 	}
 
 };
+
+export class SetManualImageProcessingSuccess implements Action {
+	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
+
+	constructor(public payload?: any) {
+
+	}
+}
 
 export class StartMouseShadow implements Action {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;

@@ -1,10 +1,13 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output } from '@angular/core';
+///<reference path="../../../../../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
+import { Component, EventEmitter, HostBinding, Inject, Input, Output, OnInit } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
 import { ImageManualProcessArgs } from '@ansyn/core';
+import { toolsStateSelector } from '@ansyn/menu-items';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 
 export interface IImageProcParamComp extends IImageProcParam {
@@ -17,7 +20,9 @@ export interface IImageProcParamComp extends IImageProcParam {
 	templateUrl: './image-processing-control.component.html',
 	styleUrls: ['./image-processing-control.component.less']
 })
-export class ImageProcessingControlComponent {
+export class ImageProcessingControlComponent implements OnInit{
+
+
 	private _isExpended: boolean;
 
 	// public throttledManualImageProcess: Function;	// throttled function
@@ -92,5 +97,33 @@ export class ImageProcessingControlComponent {
 
 	close() {
 		this.expand = false;
+	}
+
+	ngOnInit(): void {
+		this.resetParams();
+		// let dispatchValue = <ImageManualProcessArgs> {};
+		this.store$.select(toolsStateSelector)
+			.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector))
+			.subscribe(res =>
+			{
+				console.log(res)
+				if (res[0].imageProcessingHash[res[1].activeMapId] !== undefined) {
+					this.params.forEach(param => {
+						this.params[this.arrayObjectIndexOf(this.params, param.name, 'name')].value = res[0].imageProcessingHash[res[1].activeMapId][param.name];
+					});
+/*					this.params.forEach(param => {
+						dispatchValue[param.name] = param.value;
+					});*/
+				}
+			});
+	}
+
+	arrayObjectIndexOf(myArray, searchTerm, property) {
+		for (let i = 0, len = myArray.length; i < len; i++) {
+			if (myArray[i][property] === searchTerm) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

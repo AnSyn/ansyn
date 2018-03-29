@@ -65,7 +65,7 @@ import {
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
-import {CacheService} from "@ansyn/imagery/cache-service/cache.service";
+import { CacheService } from "@ansyn/imagery/cache-service/cache.service";
 
 @Injectable()
 export class MapAppEffects {

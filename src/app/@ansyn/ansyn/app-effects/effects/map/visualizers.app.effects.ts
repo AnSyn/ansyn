@@ -47,7 +47,7 @@ import {
 	GoToVisualizer,
 	MeasureDistanceVisualizer
 } from '@ansyn/plugins/openlayers/open-layer-visualizers';
-import { SetPinLocationModeAction } from '@ansyn/menu-items';
+import { SetPinLocationModeAction, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/frame-visualizer';
@@ -151,7 +151,7 @@ export class VisualizersAppEffects {
 	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
 		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
-			return [action, toolState.flags.get('isMeasureToolActive')];
+			return [action, toolState.flags.get(toolsFlags.isMeasureToolActive)];
 		})
 		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
 		.map(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => {
@@ -268,7 +268,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onActiveImageryMouseLeave$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
 		.map(() => new StopMouseShadow({ updateTools: false }));
 
@@ -282,7 +282,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onActiveImageryMouseEnter$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
 		.map(() => new StartMouseShadow({ updateTools: false }));
 

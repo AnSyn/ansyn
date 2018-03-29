@@ -5,6 +5,7 @@ import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { SubMenuEnum } from '@ansyn/menu-items/tools/tools/tools.component';
+import { toolsFlags } from '@ansyn/menu-items';
 
 
 describe('ToolsComponent', () => {
@@ -57,18 +58,18 @@ describe('ToolsComponent', () => {
 	it('check the mouse shadow toggle button', () => {
 		const button = fixture.debugElement.nativeElement.querySelector('button:first-child');
 		component.flags = new Map();
-		component.flags.set('shadowMouse', false);
+		component.flags.set(toolsFlags.shadowMouse, false);
 
-		// expect(component.flags.get('shadowMouse')).toBe(false);
+		// expect(component.flags.get(toolsFlags.shadowMouse)).toBe(false);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
 
-		component.flags.set('shadowMouse', true);
+		component.flags.set(toolsFlags.shadowMouse, true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
 	});
 	it('on toggleAutoImageProcessing should nullify imageProcessInitParams', () => {
-		component.flags.set('autoImageProcessing', false);
+		component.flags.set(toolsFlags.autoImageProcessing, false);
 		const button = fixture.debugElement.nativeElement.querySelector('div.image-auto-processing button');
 		button.click();
 		expect(component.imageProcessInitParams).toBeNull();

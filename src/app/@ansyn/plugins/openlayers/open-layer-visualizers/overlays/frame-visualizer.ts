@@ -38,7 +38,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions,
 				@Inject(VisualizersConfig) config: IVisualizersConfig) {
-		super(config[FrameVisualizer.name]);
+		super(config.FrameVisualizer);
 		this.updateStyle({
 			opacity: 0.5,
 			initial: {

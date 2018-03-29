@@ -20,14 +20,14 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	onToggleImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId && !(!this.imageLayer  || !this._imageProcessing))
+		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
 		.do((action: SetMapAutoImageProcessing) =>  {
 			this.setAutoImageProcessing(action.payload.toggleValue)
 		});
 
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetMapManualImageProcessing>(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId && !(!this.imageLayer || !this._imageProcessing))
+		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
 		.do((action: SetMapManualImageProcessing) => {
 			this.setManualImageProcessing(action.payload.processingParams);
 		});
@@ -35,6 +35,10 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	constructor(public actions$: Actions) {
 		super();
+	}
+
+	private isImageLayerAndImageProcessing(): boolean {
+		return !(!this.imageLayer || !this._imageProcessing);
 	}
 
 	public init(communicator: CommunicatorEntity): void {

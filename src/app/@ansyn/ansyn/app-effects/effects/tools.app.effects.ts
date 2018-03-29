@@ -24,6 +24,7 @@ import {
 	SetActiveOverlaysFootprintModeAction,
 	SetManualImageProcessing,
 	SetManualImageProcessingArguments,
+	SetManualImageProcessingSuccess,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
@@ -53,6 +54,23 @@ import { toolsFlags } from '@ansyn/menu-items';
 @Injectable()
 export class ToolsAppEffects {
 
+
+	/**
+	 * @type Effect
+	 * @name onActiveMapChanges$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter There is an active map
+	 * @action DisableImageProcessing?, EnableImageProcessing?, SetAutoImageProcessingSuccess?
+	 */
+	@Effect()
+	onManualDataChange$: Observable<SetManualImageProcessingSuccess> = this.actions$
+		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
+		.map((action: SetMapManualImageProcessing) => {
+			return new SetManualImageProcessingSuccess(action.payload);
+		});
+
+
 	/**
 	 * @type Effect
 	 * @name onActiveMapChanges$
@@ -77,6 +95,7 @@ export class ToolsAppEffects {
 				];
 			}
 		});
+
 
 	/**
 	 * @type Effect

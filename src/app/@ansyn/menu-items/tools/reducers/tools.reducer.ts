@@ -28,6 +28,7 @@ export interface IToolsState {
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
+	imageProcessingHash: {};
 }
 
 export const toolsInitialState: IToolsState = {
@@ -42,7 +43,8 @@ export const toolsInitialState: IToolsState = {
 		strokeColor: '#27b2cf',
 		fillColor: '#ffffff'
 	},
-	manualImageProcessingParams: undefined
+	manualImageProcessingParams: undefined,
+	imageProcessingHash: {}
 };
 
 export const toolsFeatureKey = 'tools';
@@ -51,6 +53,20 @@ export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeat
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
+
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS:
+		{
+			const {mapId, processingParams} = action.payload;
+			return {
+				...state,
+				imageProcessingHash: {
+					...state.imageProcessingHash,
+					[mapId]: processingParams
+				}
+			}
+		}
+
+
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
 

@@ -93,7 +93,8 @@ export interface CaseMapData {
 	position: CaseMapPosition,
 	overlay?: Overlay,
 	isAutoImageProcessingActive?: boolean,
-	overlayDisplayMode?: OverlayDisplayMode
+	overlayDisplayMode?: OverlayDisplayMode,
+	imageManualProcessArgs?: ImageManualProcessArgs
 }
 
 export interface CaseMapState {

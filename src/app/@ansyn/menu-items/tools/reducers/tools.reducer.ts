@@ -3,25 +3,16 @@ import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
-export type ToolsFlag = 'annotations' |
-	'geoRegisteredOptionsEnabled' |
-	'shadowMouse' |
-	'shadowMouseDisabled' |
-	'pinLocation' |
-	'autoImageProcessing' |
-	'imageProcessingDisabled' |
-	'isMeasureToolActive';
-
-export const toolsFlags: {[key: string]: ToolsFlag} = {
-	annotations: 'annotations',
-	geoRegisteredOptionsEnabled: 'geoRegisteredOptionsEnabled',
-	shadowMouse: 'shadowMouse',
-	shadowMouseDisabled: 'shadowMouseDisabled',
-	pinLocation: 'pinLocation',
-	autoImageProcessing: 'autoImageProcessing',
-	imageProcessingDisabled: 'imageProcessingDisabled',
-	isMeasureToolActive: 'isMeasureToolActive'
-};
+export enum toolsFlags {
+	annotations = 'annotations',
+	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
+	shadowMouse = 'shadowMouse',
+	shadowMouseDisabled = 'shadowMouseDisabled',
+	pinLocation = 'pinLocation',
+	autoImageProcessing= 'autoImageProcessing',
+	imageProcessingDisabled = 'imageProcessingDisabled',
+	isMeasureToolActive = 'isMeasureToolActive'
+}
 
 export interface AnnotationProperties {
 	strokeWidth?: number;
@@ -30,7 +21,7 @@ export interface AnnotationProperties {
 }
 
 export interface IToolsState {
-	flags: Map<ToolsFlag, boolean>;
+	flags: Map<toolsFlags, boolean>;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
@@ -40,7 +31,7 @@ export interface IToolsState {
 }
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<ToolsFlag, boolean>([
+	flags: new Map<toolsFlags, boolean>([
 		['geoRegisteredOptionsEnabled', true],
 	]),
 	activeCenter: [0, 0],
@@ -58,7 +49,7 @@ export const toolsFeatureKey = 'tools';
 export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
-	let tmpMap: Map<ToolsFlag, boolean>;
+	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };

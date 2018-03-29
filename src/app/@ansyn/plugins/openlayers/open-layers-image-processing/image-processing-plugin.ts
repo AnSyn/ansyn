@@ -37,10 +37,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	private isImageLayerAndImageProcessing(): boolean {
-		return !(!this.imageLayer || !this._imageProcessing);
-	}
-
 	public init(communicator: CommunicatorEntity): void {
 		super.init(communicator);
 		this.initEffects();
@@ -76,6 +72,11 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	public setManualImageProcessing(processingParams: Object): void {
 		this._imageProcessing.processImage(processingParams);
+	}
+
+
+	public isImageLayerAndImageProcessing(): boolean {
+		return Boolean(this.imageLayer && this._imageProcessing)
 	}
 
 	initEffects() {

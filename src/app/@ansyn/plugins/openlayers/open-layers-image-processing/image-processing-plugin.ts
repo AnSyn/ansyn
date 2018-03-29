@@ -20,14 +20,14 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	onToggleImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId)
+		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId && !(!this.imageLayer  || !this._imageProcessing))
 		.do((action: SetMapAutoImageProcessing) =>  {
 			this.setAutoImageProcessing(action.payload.toggleValue)
 		});
 
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetMapManualImageProcessing>(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId)
+		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId && !(!this.imageLayer || !this._imageProcessing))
 		.do((action: SetMapManualImageProcessing) => {
 			this.setManualImageProcessing(action.payload.processingParams);
 		});
@@ -58,9 +58,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {
-		if (!this.imageLayer  || !this._imageProcessing) {
-			return;
-		}
 		if (shouldPerform) {
 			// the determine the order which by the image processing will occur
 			const processingParams = {
@@ -74,11 +71,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	public setManualImageProcessing(processingParams: Object): void {
-		const layers = this.communicator.ActiveMap.mapObject.getLayers();
-		let imageLayer: ImageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
-			return;
-		}
 		this._imageProcessing.processImage(processingParams);
 	}
 

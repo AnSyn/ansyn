@@ -49,8 +49,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	onResetView(): Observable<boolean> {
 		this._imageProcessing = new OpenLayersImageProcessing();
 		const layers = this.communicator.ActiveMap.mapObject.getLayers();
-		this.imageLayer = layers.array_.find((layer) => layer instanceof ImageLayer);
-		if (this.imageLayer.getSource() instanceof Raster) {
+		this.imageLayer = layers.getArray().find((layer) => layer instanceof ImageLayer);
+		if (this.imageLayer && this.imageLayer.getSource() instanceof Raster) {
 			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
 		}
 

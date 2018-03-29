@@ -25,6 +25,10 @@ export class CommunicatorEntity {
 		return this._manager.imageryCommunicatorService
 	}
 
+	get plugins(): any[] {
+		return (<any>this._manager.plugins)
+	}
+
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<GeoJSON.Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
@@ -37,7 +41,7 @@ export class CommunicatorEntity {
 	}
 
 	initPlugins() {
-		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
+		this.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
 		this.imageryPluginsInitialized.emit(this.id);
 	}
 
@@ -176,7 +180,7 @@ export class CommunicatorEntity {
 	}
 
 	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
-		return <any> this._manager.plugins.find((_plugin) => _plugin instanceof plugin);
+		return <any> this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {

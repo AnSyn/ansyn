@@ -22,12 +22,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
-
 	@Input() set overlay(overlay: Overlay) {
 		this._overlay = overlay;
 		this.updateFavoriteStatus();
 	};
-
 	get overlay() {
 		return this._overlay;
 	}

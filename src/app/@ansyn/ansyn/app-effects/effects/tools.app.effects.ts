@@ -261,24 +261,21 @@ export class ToolsAppEffects {
 	@Effect()
 	onManualImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
-			(action: SetManualImageProcessing, cases: ICasesState, mapsState: IMapState) => {
-				return [action, cloneDeep(cases.selectedCase), mapsState];
-			})
-		.filter(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
-			return Boolean(selectedCase.state.maps.activeMapId && mapsState);
-		})
-		.mergeMap(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
-			const allMapsState = selectedCase.state.maps;
-			const activeMap: CaseMapState = allMapsState.data.find(map => map.id === allMapsState.activeMapId);
-
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
+		.mergeMap(([action, cases, mapsState]: [SetManualImageProcessing, ICasesState, IMapState]) => {
+			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
+			let selectedCase = cloneDeep(cases.selectedCase);
+			// @todo remove this!
+			if (!activeMap.data.overlay) {
+				return Observable.empty();
+			}
 			selectedCase = updateOverlaysManualProcessArgs(selectedCase, activeMap.data.overlay.id, action.payload.processingParams);
 			mapsState = updatesMapAutoImageProcessingFlag(mapsState, false, false);
 			return [
 				new UpdateCaseAction(selectedCase),
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
 				new SetMapManualImageProcessing({
-					mapId: allMapsState.activeMapId,
+					mapId: mapsState.activeMapId,
 					processingParams: action.payload.processingParams
 				})
 			];

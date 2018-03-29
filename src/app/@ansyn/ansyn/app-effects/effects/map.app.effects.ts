@@ -65,6 +65,7 @@ import {
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
+import {CacheService} from "@ansyn/imagery/cache-service/cache.service";
 
 @Injectable()
 export class MapAppEffects {
@@ -153,7 +154,19 @@ export class MapAppEffects {
 	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }]: [DisplayOverlayAction, IMapState]) => OverlaysService.isFullOverlay(payload.overlay))
+		.filter(([{action, payload }]: [any, any]) => OverlaysService.isFullOverlay(payload.overlay))
+		.do(([action, payload]: [any, any]) =>
+		{
+			if (payload.mapsList.some((aMap) => {
+				if ((action.payload.overlay.id === undefined) || (aMap.data.overlay === undefined)) {
+					return false;
+				} else {
+					return (aMap.data.overlay.id === action.payload.overlay.id)
+				}
+				})) {
+				this.cachService.removeLayerFromCache(action.payload.overlay);
+			}
+		})
 		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
 			const { overlay } = payload;
 			const mapId = payload.mapId || mapState.activeMapId;
@@ -432,6 +445,7 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected imageryProviderService: ImageryProviderService,
+				protected cachService: CacheService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

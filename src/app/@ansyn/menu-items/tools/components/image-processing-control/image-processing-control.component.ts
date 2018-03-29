@@ -101,19 +101,14 @@ export class ImageProcessingControlComponent implements OnInit{
 
 	ngOnInit(): void {
 		this.resetParams();
-		// let dispatchValue = <ImageManualProcessArgs> {};
 		this.store$.select(toolsStateSelector)
 			.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector))
 			.subscribe(res =>
 			{
-				console.log(res)
 				if (res[0].imageProcessingHash[res[1].activeMapId] !== undefined) {
 					this.params.forEach(param => {
 						this.params[this.arrayObjectIndexOf(this.params, param.name, 'name')].value = res[0].imageProcessingHash[res[1].activeMapId][param.name];
 					});
-/*					this.params.forEach(param => {
-						dispatchValue[param.name] = param.value;
-					});*/
 				}
 			});
 	}

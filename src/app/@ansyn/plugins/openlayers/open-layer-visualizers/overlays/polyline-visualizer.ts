@@ -65,7 +65,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				public actions$: Actions,
 				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 
-		super(config[FootprintPolylineVisualizer.name]);
+		super(config.FootprintPolylineVisualizer);
 
 		this.updateStyle({
 			opacity: 0.5,

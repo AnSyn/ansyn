@@ -4,7 +4,7 @@ import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
-import { PLUGINS_COLLECTION } from '@ansyn/imagery';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
 
 describe('OpenlayersMapComponent', () => {
 	let component: OpenlayersMapComponent;
@@ -15,7 +15,7 @@ describe('OpenlayersMapComponent', () => {
 			declarations: [OpenlayersMapComponent],
 			providers: [
 				{ provide: ProjectionService, useClass: OpenLayersProjectionService },
-				{ provide: PLUGINS_COLLECTION, useValue: [] }
+				{ provide: PLUGINS_COLLECTIONS, useValue: [] }
 			]
 		}).compileComponents();
 	}));

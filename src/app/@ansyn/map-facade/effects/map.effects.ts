@@ -8,7 +8,7 @@ import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { OverlaysService } from '@ansyn/overlays';
 import { polygon } from '@turf/helpers';
@@ -210,7 +210,7 @@ export class MapEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.switchMap(([{payload}, {mapsList}]: [BackToWorldView, IMapState]) => {
+		.switchMap(([{ payload }, { mapsList }]: [BackToWorldView, IMapState]) => {
 			const mapId = payload.mapId;
 			const selectedMap = MapFacadeService.mapById(mapsList, mapId);
 			const communicator = this.communicatorsService.provide(mapId);
@@ -299,10 +299,10 @@ export class MapEffects {
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position)
 		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
-				const activeMap = MapFacadeService.activeMap(mapState);
-				const communicator = this.communicatorsService.provide(payload.id);
-				return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
-			})
+			const activeMap = MapFacadeService.activeMap(mapState);
+			const communicator = this.communicatorsService.provide(payload.id);
+			return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
+		})
 		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];

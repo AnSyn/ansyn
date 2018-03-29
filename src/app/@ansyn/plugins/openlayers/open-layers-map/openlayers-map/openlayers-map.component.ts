@@ -1,10 +1,11 @@
-import { Component, ElementRef, EventEmitter, Inject, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { OpenLayersMap, OpenlayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import {
 	BaseImageryPluginProvider,
+	MAP_NAME,
 	ProvideMapName
 } from '@ansyn/imagery/imagery/providers/imagery.providers';
 
@@ -18,9 +19,7 @@ import {
 	]
 })
 
-export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent {
-
-	static mapName = OpenlayersMapName;
+export class OpenlayersMapComponent implements OnDestroy, IMapComponent {
 	static mapClass = OpenLayersMap;
 
 	@ViewChild('olMap') mapElement: ElementRef;
@@ -28,11 +27,9 @@ export class OpenlayersMapComponent implements OnInit, OnDestroy, IMapComponent 
 	private _map: OpenLayersMap;
 	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
-	constructor(private projectionService: ProjectionService, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
-
-	}
-
-	ngOnInit(): void {
+	constructor(private projectionService: ProjectionService,
+				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[],
+				@Inject(MAP_NAME) public mapName: string) {
 	}
 
 	createMap(layers: any, position?: CaseMapPosition): void {

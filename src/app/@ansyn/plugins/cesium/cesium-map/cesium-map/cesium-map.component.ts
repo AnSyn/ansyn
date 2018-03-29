@@ -16,8 +16,6 @@ export const CesiumMapName = 'cesiumMap';
 })
 
 export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
-
-	static mapName = CesiumMapName;
 	static mapClass = CesiumMap;
 
 	@ViewChild('cesiumMap') mapElement: ElementRef;

@@ -62,7 +62,7 @@ import {
 	AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, SetOverlaysCriteriaAction,
 	UpdateAlertMsg
 } from '@ansyn/core';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/open-layers-disabled-map';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 @Injectable()

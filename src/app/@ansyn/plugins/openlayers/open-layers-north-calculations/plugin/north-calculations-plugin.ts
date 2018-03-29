@@ -18,11 +18,9 @@ import {
 	Overlay
 } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { OpenlayersMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map.component';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { DisabledMapComponent } from '@ansyn/plugins/openlayers/open-layers-map/disabled-map/disabled-map.component';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 export interface INorthData {

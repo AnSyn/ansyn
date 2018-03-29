@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DisabledMapComponent } from './disabled-map.component';
+import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map.component';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
-import { PLUGINS_COLLECTION } from '@ansyn/imagery';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
 
-describe('openLayersMap DisabledMapComponent spec', () => {
-	let component: DisabledMapComponent;
-	let fixture: ComponentFixture<DisabledMapComponent>;
+describe('openLayersMap OpenLayersDisabledMapComponent spec', () => {
+	let component: OpenLayersDisabledMapComponent;
+	let fixture: ComponentFixture<OpenLayersDisabledMapComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DisabledMapComponent],
-			providers: [{ provide: PLUGINS_COLLECTION, useValue: [] }]
+			declarations: [OpenLayersDisabledMapComponent],
+			providers: [{ provide: PLUGINS_COLLECTIONS, useValue: [] }]
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(DisabledMapComponent);
+		fixture = TestBed.createComponent(OpenLayersDisabledMapComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

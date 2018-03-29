@@ -25,8 +25,8 @@ export class CommunicatorEntity {
 		return this._manager.imageryCommunicatorService
 	}
 
-	get plugins(): any[] {
-		return (<any>this._manager.plugins)
+	get plugins(): BaseImageryPlugin[] {
+		return this._manager.plugins;
 	}
 
 	constructor(public _manager: ImageryComponentManager) {
@@ -180,7 +180,7 @@ export class CommunicatorEntity {
 	}
 
 	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
-		return <any> this.plugins.find((_plugin) => _plugin instanceof plugin);
+		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {

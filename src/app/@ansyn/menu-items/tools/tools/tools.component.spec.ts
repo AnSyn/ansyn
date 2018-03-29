@@ -4,6 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
+import { SubMenuEnum } from '@ansyn/menu-items/tools/tools/tools.component';
 
 
 describe('ToolsComponent', () => {
@@ -97,5 +98,12 @@ describe('ToolsComponent', () => {
 		const args = store.dispatch['calls'].mostRecent();
 		expect(store.dispatch).toHaveBeenCalledTimes(4);
 		expect(args.args[0].payload.operation).toBe('hide');
+	});
+
+	it('isExpand should compare between expandedSubMenu to input', () => {
+		component.expandedSubMenu = SubMenuEnum.annotations;
+		expect(component.isExpand(SubMenuEnum.annotations)).toBeTruthy();
+		expect(component.isExpand(SubMenuEnum.goTo)).toBeFalsy();
+		component.expandedSubMenu = null;
 	});
 });

@@ -1,14 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	AnnotationClose, AnnotationOpen, AnnotationVisualizerAgentAction, GoToExpandAction, SetAnnotationMode,
-	SetAutoCloseMenu, SetAutoImageProcessing, SetMeasureDistanceToolState, StartMouseShadow, StopMouseShadow
+	AnnotationClose,
+	AnnotationOpen,
+	AnnotationVisualizerAgentAction,
+	GoToExpandAction,
+	SetAnnotationMode,
+	SetAutoCloseMenu,
+	SetAutoImageProcessing,
+	SetMeasureDistanceToolState,
+	StartMouseShadow,
+	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsStateSelector, toolsFlags } from '../reducers/tools.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
 
-enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
 @Component({
 	selector: 'ansyn-tools',
@@ -43,7 +51,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	get shadowMouseDisabled() {
-		return this.flags.get(toolsFlags.shadowMouseDisabled)
+		return this.flags.get(toolsFlags.shadowMouseDisabled);
 	}
 
 	get onShadowMouse() {
@@ -54,13 +62,10 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags.get(toolsFlags.autoImageProcessing);
 	}
 
-	get imageProcessingDisabled() {
-		return 	this.flags.get(toolsFlags.imageProcessingDisabled)
+	get onMeasureTool() {
+		return this.flags.get(toolsFlags.isMeasureToolActive);
 	}
 
-	get onMeasureTool() {
-		return this.flags.get(toolsFlags.isMeasureToolActive)
-	}
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(protected store: Store<any>) {
 

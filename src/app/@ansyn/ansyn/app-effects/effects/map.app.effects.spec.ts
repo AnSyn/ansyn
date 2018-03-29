@@ -63,6 +63,7 @@ import { statusBarFlagsItems } from '@ansyn/status-bar';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryPluginsInitialized } from '@ansyn/map-facade';
+import { toolsFlags } from '@ansyn/menu-items';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -323,7 +324,7 @@ describe('MapAppEffects', () => {
 	});
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
-		toolsState.flags.set('shadowMouse', true);
+		toolsState.flags.set(toolsFlags.shadowMouse, true);
 		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
 		actions = hot('--a--', {a: action});
 		const expectedResults = cold('--a--', {a: new StartMouseShadow()});

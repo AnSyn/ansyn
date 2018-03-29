@@ -3,8 +3,8 @@
 		<button tooltip-class="right"
 				tooltip-value="Shadow mouse cursor"
 				(click)="toggleShadowMouse()"
-				[class.mode-on]="flags.get('shadowMouse')"
-				[disabled]="flags.get('shadowMouseDisabled') || isGeoOptionsDisabled">
+				[class.mode-on]="onShadowMouse && !shadowMouseDisabled"
+				[disabled]="shadowMouseDisabled">
 			<i class="icon-shadow-mouse"></i>
 		</button>
 	</div>
@@ -13,7 +13,7 @@
 		<button tooltip-class="right"
 				tooltip-value="Go To"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
-				[class.active]="expandedSubMenu === subMenuEnum.goTo"
+				[class.active]="isExpand(subMenuEnum.goTo) && !isGeoOptionsDisabled"
 				[disabled]="isGeoOptionsDisabled">
 			<i class="icon-tools-go-to"></i>
 		</button>
@@ -24,8 +24,8 @@
 		<button tooltip-class="right"
 				tooltip-value="Automatic Processing - Grayscale Images Only"
 				(click)="toggleAutoImageProcessing()"
-				[class.mode-on]="flags.get(toolsFlags.autoImageProcessing)"
-				[disabled]="flags.get(toolsFlags.imageProcessingDisabled)">
+				[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"
+				[disabled]="imageProcessingDisabled">
 			<i class="icon-automatic-image-processing"></i>
 		</button>
 	</div>
@@ -34,12 +34,12 @@
 		<button tooltip-class="right"
 				tooltip-value="Manual Image Enhancement"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
-				[class.mode-on]="isImageControlActive"
-				[class.active]="expandedSubMenu === subMenuEnum.manualImageProcessing"
-				[disabled]="flags.get(toolsFlags.imageProcessingDisabled)">
+				[class.mode-on]="isImageControlActive && !imageProcessingDisabled"
+				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
+				[disabled]="imageProcessingDisabled">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="expandedSubMenu === subMenuEnum.manualImageProcessing"
+		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
 										(isActive)="isImageControlActive=$event"
 										[initParams]="imageProcessInitParams"></ansyn-image-processing-control>
 	</div>
@@ -49,14 +49,14 @@
 				tooltip-value="Display Overlays"
 				(click)="toggleSubMenu(subMenuEnum.overlays)"
 				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="displayModeOn"
-				[class.active]="expandedSubMenu === subMenuEnum.overlays">
+				[class.mode-on]="displayModeOn && !isGeoOptionsDisabled"
+				[class.active]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled">
 			<i class="icon-tools-polygons"></i>
 		</button>
 
 		<ansyn-overlays-display-mode
 			[disabled]="isGeoOptionsDisabled"
-			[expand]="expandedSubMenu === subMenuEnum.overlays"
+			[expand]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled"
 			[(modeOn)]="displayModeOn">
 		</ansyn-overlays-display-mode>
 	</div>
@@ -64,12 +64,12 @@
 	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
 		<button tooltip-class="right"
 				tooltip-value="Annotations"
-				[class.active]="expandedSubMenu === subMenuEnum.annotations"
+				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations)"
 				[disabled]="isGeoOptionsDisabled">
 			<span class="icon-annotation"></span>
 		</button>
-		<ansyn-annotations-control [expand]="expandedSubMenu === subMenuEnum.annotations"></ansyn-annotations-control>
+		<ansyn-annotations-control [expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>
 	</div>
 
 	<div class="distance-measure-tool">
@@ -77,7 +77,7 @@
 				tooltip-value="Measure Distance"
 				(click)="toggleMeasureDistanceTool()"
 				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="flags.get(toolsFlags.isMeasureToolActive)">
+				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
 			<i class="icon-tools-ruler"></i>
 		</button>
 	</div>

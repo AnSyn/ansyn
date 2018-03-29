@@ -26,16 +26,40 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
 	public userAnnotationsToolOpen = false;
-	public flags: Map<string, boolean>;
-	public isGeoOptionsDisabled = false;
-	public flags$: Observable<Map<string, boolean>> = this.store.select(toolsStateSelector)
+	public flags: Map<toolsFlags, boolean>;
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged();
 	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged();
-	get toolsFlags() {
-		return toolsFlags;
+
+	get isGeoOptionsDisabled() {
+		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
+	}
+
+	get imageProcessingDisabled() {
+		return this.flags.get(toolsFlags.imageProcessingDisabled);
+	}
+
+	get shadowMouseDisabled() {
+		return this.flags.get(toolsFlags.shadowMouseDisabled)
+	}
+
+	get onShadowMouse() {
+		return this.flags.get(toolsFlags.shadowMouse);
+	}
+
+	get onAutoImageProcessing() {
+		return this.flags.get(toolsFlags.autoImageProcessing);
+	}
+
+	get imageProcessingDisabled() {
+		return 	this.flags.get(toolsFlags.imageProcessingDisabled)
+	}
+
+	get onMeasureTool() {
+		return this.flags.get(toolsFlags.isMeasureToolActive)
 	}
 	// @TODO display the shadow mouse only if there more then one map .
 	constructor(protected store: Store<any>) {
@@ -45,7 +69,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.flags$.subscribe(_flags => {
 			this.flags = _flags;
-			this.isGeoOptionsDisabled = !this.flags.get('geoRegisteredOptionsEnabled');
 		});
 		this.gotoExpand$.subscribe(_gotoExpand => {
 			if (_gotoExpand) {
@@ -62,7 +85,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleShadowMouse() {
-		const value = this.flags.get('shadowMouse');
+		const value = this.onShadowMouse;
 
 		if (value) {
 			this.store.dispatch(new StopMouseShadow());
@@ -72,7 +95,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMeasureDistanceTool() {
-		const value = this.flags.get('isMeasureToolActive');
+		const value = this.onMeasureTool;
 		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetMeasureDistanceToolState] }));
 		this.store.dispatch(new SetMeasureDistanceToolState(!value));
 	}
@@ -120,5 +143,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 				relevantMaps: 'active'
 			}));
 		}
+	}
+
+	isExpand(subMenu: SubMenuEnum): boolean {
+		return this.expandedSubMenu === subMenu;
 	}
 }

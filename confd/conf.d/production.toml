@@ -9,5 +9,6 @@ keys = [
     "/ansyn/login/baseurl",
     "/ansyn/menu/background",
     "/ansyn/menu/color",
-    "/ansyn/menu/mode"
+    "/ansyn/menu/mode",
+    "/ansyn/e2e/pass"
 ]

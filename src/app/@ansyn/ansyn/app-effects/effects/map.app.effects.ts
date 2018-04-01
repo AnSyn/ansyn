@@ -158,13 +158,14 @@ export class MapAppEffects {
 		.do(([action, payload]: [any, any]) =>
 		{
 			if (payload.mapsList.some((aMap) => {
-				if ((action.payload.overlay.id === undefined) || (aMap.data.overlay === undefined)) {
+				if (aMap.data.overlay === undefined) {
 					return false;
 				} else {
 					return (aMap.data.overlay.id === action.payload.overlay.id)
 				}
 				})) {
-				this.cachService.removeLayerFromCache(action.payload.overlay);
+				const removeLayerId = `${action.payload.overlay.sourceType}/${JSON.stringify(action.payload.overlay)}`;
+				this.cachService.removeLayerFromCache(removeLayerId);
 			}
 		})
 		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {

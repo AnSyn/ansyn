@@ -12,20 +12,24 @@ export class CacheService {
 		this.cacheSize = config.maxCachedLayers;
 	}
 
-	getLayerFromCache(id: string): any[] {
-		const layers = this.cachedLayesrMap.get(id);
+	getLayerFromCache(overlay: any): any[] {
+		const layers = this.cachedLayesrMap.get(this.createLayerId(overlay));
 		return layers ? [ ...layers ] : [];
 	}
 
-	addLayerToCache(id: string, layers: any[]) {
+	addLayerToCache(overlay: any, layers: any[]) {
 		if (this.cachedLayesrMap.size >= this.cacheSize) {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		this.cachedLayesrMap.set(id, [...layers]);
+		this.cachedLayesrMap.set(this.createLayerId(overlay), [...layers]);
 	}
 
-	removeLayerFromCache(id: string) {
-		this.cachedLayesrMap.delete(id);
+	removeLayerFromCache(overlay: any) {
+		this.cachedLayesrMap.delete(this.createLayerId(overlay));
+	}
+
+	createLayerId(overlay: any): string {
+		return `${overlay.sourceType}/${JSON.stringify(overlay)}`;
 	}
 }

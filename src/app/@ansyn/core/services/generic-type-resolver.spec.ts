@@ -19,20 +19,6 @@ class Class2 extends MockBaseClass {
 	field4 = 'Class2:field4';
 }
 
-
-describe('GenericTypeResolver general tests', () => {
-
-	it('clone method should clone the instace properly', () => {
-		const initialClass: Class1 = new Class1();
-		const clonedClass1: Class1 = <Class1>GenericTypeResolver.cloneObject(initialClass);
-		expect(initialClass === clonedClass1).toBeFalsy();
-		expect(clonedClass1.field1).toBe('Class1:field1');
-		expect(clonedClass1.field2).toBe('Class1:field2');
-		expect(clonedClass1.field3).toBe('Class1:field3');
-	});
-
-});
-
 describe('GenericTypeResolver non multi', () => {
 	let _injector: Injector;
 

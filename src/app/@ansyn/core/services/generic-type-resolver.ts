@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 export type InjectionResolverFilter = (resolvedClasses: any[]) => any;
 
 export interface Resolver {
@@ -11,13 +12,10 @@ export class GenericTypeResolver {
 		const resolvedValue = injector.get(token);
 
 		if (!Array.isArray(resolvedValue) || filterFunction === null) {
-			return isSingelton ? resolvedValue : this.cloneObject(resolvedValue);
+			return isSingelton ? resolvedValue : cloneDeep(resolvedValue);
 		} else {
-			return isSingelton ? filterFunction(resolvedValue) : this.cloneObject(filterFunction(resolvedValue));
+			return isSingelton ? filterFunction(resolvedValue) : cloneDeep(filterFunction(resolvedValue));
 		}
 	}
 
-	static cloneObject(object: Object): object {
-		return Object.assign(Object.create(object), object);
-	}
 }

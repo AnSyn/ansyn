@@ -24,15 +24,13 @@ export abstract class BaseMapSourceProvider {
 	}
 
 	protected createOrGetFromCache(metaData: any, mapId: string) {
-		const id = `${this.sourceType}/${JSON.stringify(metaData)}`;
-
-		const cacheLayers = this.cacheService.getLayerFromCache(id);
+		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
 		if (cacheLayers.length) {
 			return cacheLayers;
 		}
 
 		const layers = this.create(metaData, mapId);
-		this.cacheService.addLayerToCache(id, layers);
+		this.cacheService.addLayerToCache(metaData, layers);
 		return layers;
 	}
 

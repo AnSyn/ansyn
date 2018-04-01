@@ -8,8 +8,7 @@ import { ImageManualProcessArgs } from '@ansyn/core';
 import { toolsStateSelector } from '@ansyn/menu-items';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Subscription } from "rxjs/Subscription";
-import {CaseMapsState} from "@ansyn/core/models/case.model";
-import {IMapState} from "@ansyn/map-facade";
+import { IMapState } from "@ansyn/map-facade";
 
 
 export interface IImageProcParamComp extends IImageProcParam {
@@ -31,7 +30,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	public mapsImapgeProcessingState =	this.store$.select(toolsStateSelector)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.do(res =>
+		.do((res: [IToolsState , IMapState])   =>
 		{
 			const [toolsState, caseMapState]: [IToolsState , IMapState] = res;
 			if (toolsState.imageProcessingHash[caseMapState.activeMapId] !== undefined) {

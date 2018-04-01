@@ -25,8 +25,7 @@ export class CacheService {
 		this.cachedLayesrMap.set(id, [...layers]);
 	}
 
-	removeLayerFromCache(layer: any) {
-		const removeLayer = `${layer.sourceType}/${JSON.stringify(layer)}`;
-		this.cachedLayesrMap.delete(removeLayer);
+	removeLayerFromCache(id: string) {
+		this.cachedLayesrMap.delete(id);
 	}
 }

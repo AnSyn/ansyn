@@ -28,7 +28,7 @@ export interface IToolsState {
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
-	imageProcessingHash: {};
+	imageProcessingHash: { [key: string]: ImageManualProcessArgs }
 }
 
 export const toolsInitialState: IToolsState = {

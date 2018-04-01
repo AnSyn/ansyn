@@ -2,11 +2,11 @@
 	<div class="left-side">
 		<div class="checkbox">
 			<input type="checkbox"
-				   [id]="metadata.baseFilter.modelName + 'true'"
+				   [id]="metadata?.baseFilter?.modelName + 'true'"
 				   class="regular-checkbox"
 				   [checked]="metadata.trueProperties.value"
 				   (change)="onInputClicked(booleanOptions.trueKey, $event.target.checked)"/>
-			<label [for]="metadata.baseFilter.modelName + 'true'"></label>
+			<label [for]="metadata?.baseFilter?.modelName + 'true'"></label>
 		</div>
 		<div class="filter-row">
 			<div class="field-name-container">
@@ -27,11 +27,11 @@
 	<div class="left-side">
 		<div class="checkbox">
 			<input type="checkbox"
-				   [id]="metadata.baseFilter.modelName + 'false'"
+				   [id]="metadata?.baseFilter?.modelName + 'false'"
 				   class="regular-checkbox"
 				   [checked]="metadata.falseProperties.value"
 				   (change)="onInputClicked(booleanOptions.falseKey, $event.target.checked)"/>
-			<label [for]="metadata.baseFilter.modelName + 'false'"></label>
+			<label [for]="metadata?.baseFilter?.modelName + 'false'"></label>
 		</div>
 		<div class="filter-row">
 			<div class="field-name-container">

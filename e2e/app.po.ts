@@ -1,7 +1,5 @@
 import { browser, by, element } from 'protractor';
 
-let myConfig = require('../src/app/@ansyn/assets/config/app.config.json');
-
 export class AppPage {
 	private _LOGIN_COMPONENT_SELECTOR = 'ansyn-login';
 	loginComponent = element(by.css(this._LOGIN_COMPONENT_SELECTOR));
@@ -9,7 +7,8 @@ export class AppPage {
 	private _usernameInput = element(by.id('username'));
 	private _passwordInput = element(by.id('password'));
 	private _CORRECT_USERNAME = 'admin@ansyn.com';
-	private _CORRECT_PASSWORD = process.env.ANSYN_E2E_PASS;
+	// Read password from environment variable
+	private _CORRECT_PASSWORD = process.env['ANSYN_E2E_PASS'];
 	loginButton = element(by.css('button'));
 
 	private _MAIN_COMPONENT_SELECTOR = 'ansyn-app';

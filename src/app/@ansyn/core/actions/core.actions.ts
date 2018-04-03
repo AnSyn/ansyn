@@ -16,7 +16,8 @@ export const CoreActionTypes = {
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
-	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS'
+	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
+	SET_IS_AFTER_LOGIN_FLAG: 'SET_IS_AFTER_LOGIN_FLAG'
 };
 
 export type CoreActions =
@@ -113,6 +114,14 @@ export class BackToWorldView implements Action {
 
 export class BackToWorldSuccess extends BackToWorldView {
 	type = CoreActionTypes.BACK_TO_WORLD_SUCCESS;
+}
+
+export class SetIsAfterLoginFlagAction implements Action {
+	type = CoreActionTypes.SET_IS_AFTER_LOGIN_FLAG;
+
+	constructor(public payload: boolean) {
+
+	}
 }
 
 

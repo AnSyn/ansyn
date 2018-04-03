@@ -23,6 +23,7 @@ export interface ICoreState {
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
+	isAfterLogin: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -33,7 +34,8 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
 	overlaysCriteria: {},
-	layout: 'layout1'
+	layout: 'layout1',
+	isAfterLogin: false
 };
 
 export const coreFeatureKey = 'core';
@@ -73,6 +75,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 
 		case CoreActionTypes.SET_LAYOUT:
 			return {...state, layout: action.payload };
+
+		case CoreActionTypes.SET_IS_AFTER_LOGIN_FLAG:
+			return {...state, isAfterLogin: action.payload };
 
 		default:
 			return state;

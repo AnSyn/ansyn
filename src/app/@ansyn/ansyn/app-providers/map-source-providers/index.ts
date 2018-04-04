@@ -6,5 +6,4 @@ export * from './open-layers-OSM-source-provider';
 export * from './open-layers-TileWMS-source-provider';
 export * from './open-layers-ESRI-4326-source-provider';
 export * from './open-layers-planet-source-provider';
-
-
+export * from './open-layers-not-geo-registered-planet-source-provider';

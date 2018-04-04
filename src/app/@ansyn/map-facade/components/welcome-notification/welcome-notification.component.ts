@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Inject, OnDestroy } from '@angular/core';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 @Component({
 	selector: 'ansyn-welcome-notification',
@@ -12,6 +14,8 @@ import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer
 export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
 	private _subscriptions: Subscription[] = [];
+
+	public config = {};
 
 	isAfterLogin$ = this.store$.select(coreStateSelector)
 		.take(1)
@@ -26,7 +30,9 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	}
 
 	constructor(public store$: Store<IMapState>,
-				protected elem: ElementRef) {
+				protected elem: ElementRef,
+				@Inject(mapFacadeConfig) public mapFacadeconfig: IMapFacadeConfig) {
+		this.config = this.mapFacadeconfig.welcomeNotification;
 	}
 
 	ngAfterViewInit() {

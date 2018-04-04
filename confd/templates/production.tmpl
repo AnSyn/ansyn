@@ -1,921 +1,975 @@
 {
-    "casesConfig": {
-        "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}",
-        "paginationLimit": 16,
-        "defaultCase": {
-            "id": "1234-5678",
-            "name": "Default case",
-            "state": {
-                "maps": {
-                    "layout": "layout1",
-                    "activeMapId": "defaultImagery1",
-                    "data": [{
-                            "id": "defaultImagery1",
-                            "mapType": "openLayersMap",
-                            "data": {
-                                "position": {
-									"projectedState": {
-										"projection": {
-											"code": "EPSG:3857"
-										},
-										"rotation": 0,
-										"center": [
-											-8246112.2430192325,
-											4970248.751006249
-										],
-										"zoom": 4
-									},
-									"extentPolygon": {
-										"type": "Polygon",
-										"coordinates": [[
-											[-105.59192365470776, 22.10145785600497],
-											[-42.56024959467796, 22.10145785600497],
-											[-42.56024959467796, 55.28198275564807],
-											[-105.59192365470776, 55.28198275564807],
-											[-105.59192365470776, 22.10145785600497]
-										]]
-									}
-                                }
-                            },
-                            "flags": {}
-                        }
+  "casesConfig": {
+    "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}",
+    "paginationLimit": 16,
+    "defaultCase": {
+      "id": "4df64c1a-330b-1332-c286-7d73754bd001",
+      "name": "Default case",
+      "lastModified": "2018-04-04T13:21:45.616Z",
+      "state": {
+        "geoFilter": "Pin-Point",
+        "timeFilter": "Start - End",
+        "orientation": "Align North",
+        "maps": {
+          "layout": "layout1",
+          "data": [
+            {
+              "data": {
+                "position": {
+                  "extentPolygon": {
+                    "type": "Polygon",
+                    "coordinates": [
+                      [
+                        [
+                          -117.94293165339445,
+                          33.82040324951603
+                        ],
+                        [
+                          -117.88739896579649,
+                          33.82040324951603
+                        ],
+                        [
+                          -117.88739896579649,
+                          33.80000526593916
+                        ],
+                        [
+                          -117.94293165339445,
+                          33.80000526593916
+                        ],
+                        [
+                          -117.94293165339445,
+                          33.82040324951603
+                        ]
+                      ]
                     ]
-                },
-				"region": {
-					"type": "Polygon",
-					"coordinates": [
-						[
-							[
-								-74.076099,
-								40.713997
-							],
-							[
-								-74.076099,
-								40.714015
-							],
-							[
-								-74.076075,
-								40.714015
-							],
-							[
-								-74.076075,
-								40.713997
-							],
-							[
-								-74.076099,
-								40.713997
-							]
-						]
-					]
-				},
-                "time": null,
-                "facets": {
-                    "filters": [
-                    	{
-                    		"fieldName": "isGeoRegistered",
-                    		"type": "Boolean",
-                    		"metadata": {
-                    			"displayTrue": true,
-                    			"displayFalse": false
-                    		}
-                    	}
+                  },
+                  "projectedState": {
+                    "center": [
+                      -13126256.030144267,
+                      4003347.018056854
                     ],
-                    "showOnlyFavorites": false
-                },
-                "geoFilter": "Pin-Point",
-				"timeFilter": "Start - End",
-                "orientation": "Align North",
-                "favoriteOverlays": [],
-                "layers": {
-					"annotationsLayer": {
-						"type": "FeatureCollection",
-						"features": []
-					},
-					"displayAnnotationsLayer": true
+                    "projection": {
+                      "code": "EPSG:3857"
+                    },
+                    "resolution": 3.3780713146372543,
+                    "rotation": 0,
+                    "zoom": 15.5
+                  }
                 }
+              },
+              "flags": {},
+              "mapType": "openLayersMap",
+              "id": "defaultImagery1"
             }
+          ],
+          "activeMapId": "defaultImagery1"
         },
-        "casesQueryParamsKeys": ["facets", "time", "maps", "region", "overlaysManualProcessArgs", "orientation"],
-        "updateCaseDebounceTime": 700,
-        "useHash": true
+        "layers": {
+          "annotationsLayer": {
+            "type": "FeatureCollection",
+            "features": []
+          },
+          "displayAnnotationsLayer": true
+        },
+        "favoriteOverlays": [],
+        "region": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -117.9189835710201,
+                33.812091224680195
+              ],
+              [
+                -117.91896193002552,
+                33.812091224680195
+              ],
+              [
+                -117.91896193002552,
+                33.81210920546774
+              ],
+              [
+                -117.9189835710201,
+                33.81210920546774
+              ],
+              [
+                -117.9189835710201,
+                33.812091224680195
+              ]
+            ]
+          ]
+        },
+        "time": null,
+        "facets": {
+          "showOnlyFavorites": false,
+          "filters": [
+            {
+              "fieldName": "isGeoRegistered",
+              "metadata": {
+                "displayTrue": true,
+                "displayFalse": false
+              },
+              "type": "Boolean"
+            }
+          ]
+        }
+      }
     },
-    "layersManagerConfig": {
-        "layersByCaseIdUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    "casesQueryParamsKeys": [
+      "facets",
+      "time",
+      "maps",
+      "region",
+      "overlaysManualProcessArgs",
+      "orientation"
+    ],
+    "updateCaseDebounceTime": 700,
+    "useHash": true
+  },
+  "layersManagerConfig": {
+    "layersByCaseIdUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+  },
+  "overlaysConfig": {
+    "limit": 249
+  },
+  "imageryConfig": {
+    "geoMapsInitialMapSource": [
+      {
+        "mapType": "openLayersMap",
+        "mapSource": "BING",
+        "mapSourceMetadata": {
+          "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+          "styles": [
+            "AerialWithLabels"
+          ]
+        }
+      },
+      {
+        "mapType": "cesiumMap",
+        "mapSource": "OSM",
+        "mapSourceMetadata": null
+      },
+      {
+        "mapType": "disabledOpenLayersMap",
+        "mapSource": "BING",
+        "mapSourceMetadata": {
+          "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+          "styles": [
+            "AerialWithLabels"
+          ]
+        }
+      }
+    ],
+    "maxCachedLayers": 100
+  },
+  "mapFacadeConfig": {
+    "overlayCoverage": 0.1,
+    "sensorTypeShortcuts": {
+      "Panchromatic": "P",
+      "8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
+      "4-band (Blue, Green, Red, NIR) Multispectral": "4B"
     },
-    "overlaysConfig": {
-    	"limit": 249
+    "contextMenu": {
+      "filterField": "sensorType"
+    }
+  },
+  "filtersConfig": {
+    "filters": [
+      {
+        "modelName": "sensorType",
+        "displayName": "Sensor Type",
+        "type": "Enum"
+      },
+      {
+        "modelName": "sensorName",
+        "displayName": "Sensor Name",
+        "type": "Enum"
+      },
+      {
+        "modelName": "sourceType",
+        "displayName": "Source Type",
+        "type": "Enum"
+      },
+      {
+        "modelName": "isGeoRegistered",
+        "displayName": "Geo Registration",
+        "type": "Boolean",
+        "customData": {
+          "displayTrueName": "Geo registered",
+          "displayFalseName": "Not Geo registered"
+        }
+      },
+      {
+        "modelName": "bestResolution",
+        "displayName": "Resolution",
+        "type": "Slider"
+      }
+    ]
+  },
+  "contextConfig": {
+    "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+  },
+  "toolsConfig": {
+    "GoTo": {
+      "from": {
+        "datum": "wgs84",
+        "projection": "geo"
+      },
+      "to": {
+        "datum": "ed50",
+        "projection": "utm"
+      }
     },
-    "imageryConfig": {
-        "geoMapsInitialMapSource": [
+    "Proj4": {
+      "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
+      "ed50Customized": ""
+    },
+    "ImageProcParams": [
+      {
+        "name": "Sharpness",
+        "defaultValue": 0,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "name": "Contrast",
+        "defaultValue": 0,
+        "min": -100,
+        "max": 100
+      },
+      {
+        "name": "Brightness",
+        "defaultValue": 0,
+        "min": -100,
+        "max": 100
+      },
+      {
+        "name": "Gamma",
+        "defaultValue": 100,
+        "min": 1,
+        "max": 200
+      },
+      {
+        "name": "Saturation",
+        "defaultValue": 100,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  "loggerConfig": {
+    "env": "PROD",
+    "active": false
+  },
+  "statusBarConfig": {
+    "toolTips": {
+      "orientation": "Overlay orientation",
+      "geoFilter": "Geo filter",
+      "geoFilterEdit": "Edit Geo filter",
+      "geoFilterShow": "Show/hide Geo filter",
+      "timeFilter": "Time filter",
+      "timeFilterEdit": "Edit time filter",
+      "screenNumber": "Screen number",
+      "overlayCount": "Overlay count",
+      "backwards": "Previous overlay",
+      "forward": "Next overlay",
+      "reset": "Reset timeline (according to the time filter)",
+      "enlarge": "Expand timeline"
+    }
+  },
+  "coreConfig": {
+    "alerts": [
+      {
+        "key": "noGeoRegistration",
+        "background": "#a70b0b",
+        "text": "This Image Has No Geo-Registration"
+      },
+      {
+        "key": "overlayIsNotPartOfCase",
+        "background": "#27B2CF",
+        "text": "This Overlay Is Not a Part of the Case"
+      },
+      {
+        "key": "overlaysOutOfBounds",
+        "background": "#80c5d4",
+        "text": "Image is out of bounds"
+      }
+    ]
+  },
+  "loginConfig": {
+    "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+    "active": true,
+    "authorizedPath": "/"
+  },
+  "menuConfig": {
+    "path": "/assets/logo.svg",
+    "color": "{{ getv "/ansyn/menu/color" "white" }}",
+    "background": "{{ getv "/ansyn/menu/background" "red" }}",
+    "mode": "{{ getv "/ansyn/menu/mode" "" }}"
+  },
+  "visualizersConfig": {
+    "FrameVisualizer": {
+      "colors": {
+        "active": "#27b2cf",
+        "inactive": "#d393e1"
+      }
+    },
+    "FootprintPolylineVisualizer": {
+      "colors": {
+        "active": "#27b2cf",
+        "inactive": "#d393e1",
+        "display": "#9524ad",
+        "favorite": "yellow"
+      }
+    },
+    "exampleFootprintHeatmapVisualizer": {
+      "initial": {
+        "fill": {
+          "color": "red"
+        },
+        "stroke": {
+          "color": "green",
+          "width": 3
+        }
+      },
+      "hover": {
+        "fill": {
+          "color": "green"
+        },
+        "stroke": {
+          "color": "yellow",
+          "width": 3
+        }
+      },
+      "entities": {
+        "yellow": {
+          "initial": {
+            "fill": {
+              "color": "yellow"
+            }
+          }
+        },
+        "blue": {
+          "initial": {
+            "fill": {
+              "color": "blue"
+            }
+          }
+        }
+      }
+    }
+  },
+  "multipleOverlaysSource": {
+    "IDAHO": {
+      "whitelist": [
         {
-				"mapType": "openLayersMap",
-				"mapSource": "BING",
-				"mapSourceMetadata": {
-					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-					"styles": [
-						"AerialWithLabels"
-					]
-				}
-		}, {
-                "mapType": "cesiumMap",
-                "mapSource": "OSM",
-                "mapSourceMetadata": null
-            }, {
-            	"mapType": "disabledOpenLayersMap",
-            	"mapSource": "BING",
-				"mapSourceMetadata": {
-					"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-					"styles": [
-						"AerialWithLabels"
-					]
-				}
-            }],
-            "maxCachedLayers": 100
-    },
-    "mapFacadeConfig": {
-		"overlayCoverage": 0.1,
-		"sensorTypeShortcuts": {
-			"Panchromatic": "P",
-			"8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
-			"4-band (Blue, Green, Red, NIR) Multispectral": "4B"
-		},
-		"contextMenu": {
-			"filterField": "sensorType"
-		}
-	},
-    "filtersConfig": {
-        "filters": [
-            { "modelName": "sensorType", "displayName": "Sensor Type", "type": "Enum" },
-            { "modelName": "sensorName", "displayName": "Sensor Name", "type": "Enum" },
-            { "modelName": "sourceType", "displayName": "Source Type", "type": "Enum" },
-            { "modelName":
-            	"isGeoRegistered",
-            	"displayName":
-            	"Geo Registration",
-            	"type": "Boolean",
-				"customData": {
-					"displayTrueName": "Geo registered",
-					"displayFalseName": "Not Geo registered"
-				}
-			},
-            { "modelName": "bestResolution", "displayName": "Resolution", "type": "Slider" }
-        ]
-    },
-    "contextConfig": {
-    	"baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
-	},
-    "toolsConfig": {
-        "GoTo": {
-            "from": {
-                "datum": "wgs84",
-                "projection": "geo"
-            },
-            "to": {
-                "datum": "ed50",
-                "projection": "utm"
+          "name": "Entire Earth",
+          "dates": [
+            {
+              "start": null,
+              "end": null
             }
-        },
-		"Proj4": {
-			"ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
-			"ed50Customized": ""
-		},
-		"ImageProcParams": [
-        			{
-        				"name": "Sharpness",
-        				"defaultValue": 0,
-        				"min": 0,
-        				"max": 100
-        			},
-        			{
-        				"name": "Contrast",
-        				"defaultValue": 0,
-        				"min": -100,
-        				"max": 100
-        			},
-        			{
-        				"name": "Brightness",
-        				"defaultValue": 0,
-        				"min": -100,
-        				"max": 100
-        			},
-        			{
-        				"name": "Gamma",
-        				"defaultValue": 100,
-        				"min": 1,
-        				"max": 200
-        			},
-        			{
-        				"name": "Saturation",
-        				"defaultValue": 100,
-        				"min": 1,
-        				"max": 100
-        			}
-        		]
+          ],
+          "sensorNames": [
+            null
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -180,
+                  -90
+                ],
+                [
+                  -180,
+                  90
+                ],
+                [
+                  180,
+                  90
+                ],
+                [
+                  180,
+                  -90
+                ],
+                [
+                  -180,
+                  -90
+                ]
+              ]
+            ]
+          ]
+        }
+      ],
+      "blacklist": []
     },
-	"loggerConfig": {
-		"env": "PROD",
-		"active": false
-	},
-	"statusBarConfig": {
-		"toolTips": {
-			"orientation": "Overlay orientation",
-			"geoFilter": "Geo filter",
-			"geoFilterEdit": "Edit Geo filter",
-			"geoFilterShow": "Show/hide Geo filter",
-			"timeFilter": "Time filter",
-			"timeFilterEdit": "Edit time filter",
-			"screenNumber": "Screen number",
-			"overlayCount": "Overlay count",
-			"backwards": "Previous overlay",
-			"forward": "Next overlay",
-			"reset": "Reset timeline (according to the time filter)",
-			"enlarge": "Expand timeline"
-		}
-
-	},
-	"coreConfig": {
-		"alerts": [
-			{
-				"key": "noGeoRegistration",
-				"background": "#a70b0b",
-				"text": "This Image Has No Geo-Registration"
-			},
-			{
-				"key": "overlayIsNotPartOfCase",
-				"background": "#27B2CF",
-				"text": "This Overlay Is Not a Part of the Case"
-			},
-			{
-				"key": "overlaysOutOfBounds",
-				"background": "#80c5d4",
-				"text": "Image is out of bounds"
-			}
-		]
-	},
-	"loginConfig": {
-		"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
-		"active": true,
-		"authorizedPath": "/"
-	},
-	"menuConfig": {
-		"path": "/assets/logo.svg",
-		"color": "{{ getv "/ansyn/menu/color" "white" }}",
-		"background": "{{ getv "/ansyn/menu/background" "red" }}",
-		"mode": "{{ getv "/ansyn/menu/mode" "" }}"
-	},
-	"visualizersConfig": {
-		"FrameVisualizer": {
-			"colors": {
-				"active": "#27b2cf",
-				"inactive": "#d393e1"
-			}
-		},
-		"FootprintPolylineVisualizer": {
-			"colors": {
-				"active": "#27b2cf",
-				"inactive": "#d393e1",
-				"display": "#9524ad",
-				"favorite": "yellow"
-			}
-		},
-		"exampleFootprintHeatmapVisualizer": {
-			"initial": {
-				"fill": {
-					"color": "red"
-				},
-				"stroke": {
-					"color": "green",
-					"width": 3
-				}
-			},
-			"hover": {
-				"fill": {
-					"color": "green"
-				},
-				"stroke": {
-					"color": "yellow",
-					"width": 3
-				}
-			},
-			"entities": {
-				"yellow": {
-					"initial": {
-						"fill": {
-							"color": "yellow"
-						}
-					}
-				},
-				"blue": {
-					"initial": {
-						"fill": {
-							"color": "blue"
-						}
-					}
-				}
-			}
-		}
-	},
-	"multipleOverlaysSource": {
-		"IDAHO": {
-    			"whitelist": [
-    				{
-    					"name": "Entire Earth",
-    					"dates": [
-    						{
-    							"start": null,
-    							"end": null
-    						}
-    					],
-    					"sensorNames": [
-    						null
-    					],
-    					"coverage": [
-    						[
-    							[
-    								[
-    									-180,
-    									-90
-    								],
-    								[
-    									-180,
-    									90
-    								],
-    								[
-    									180,
-    									90
-    								],
-    								[
-    									180,
-    									-90
-    								],
-    								[
-    									-180,
-    									-90
-    								]
-    							]
-    						]
-    					]
-    				}
-    			],
-    			"blacklist": []
-    		},
-    		"IDAHO2": {
-    			"whitelist": [
-    				{
-    					"name": "Entire Earth",
-    					"dates": [
-    						{
-    							"start": null,
-    							"end": null
-    						}
-    					],
-    					"sensorNames": [
-    						null
-    					],
-    					"coverage": [
-    						[
-    							[
-    								[
-    									-74.06810760498047,
-    									40.8028950718582
-    								],
-    								[
-    									-74.09557342529297,
-    									40.75453936473234
-    								],
-    								[
-    									-74.07463073730469,
-    									40.74543623770158
-    								],
-    								[
-    									-74.11308288574219,
-    									40.70536767492135
-    								],
-    								[
-    									-74.06330108642578,
-    									40.66918118282895
-    								],
-    								[
-    									-74.01283264160156,
-    									40.73347023268492
-    								],
-    								[
-    									-74.01111602783203,
-    									40.77768170250654
-    								],
-    								[
-    									-74.06810760498047,
-    									40.8028950718582
-    								]
-    							]
-    						]
-    					]
-    				}
-    			],
-    			"blacklist": []
-    		},"PLANET": {
-			"whitelist": [
-				{
-					"name": "California",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-123.233256,
-									42.006186
-								],
-								[
-									-122.378853,
-									42.011663
-								],
-								[
-									-121.037003,
-									41.995232
-								],
-								[
-									-120.001861,
-									41.995232
-								],
-								[
-									-119.996384,
-									40.264519
-								],
-								[
-									-120.001861,
-									38.999346
-								],
-								[
-									-118.71478,
-									38.101128
-								],
-								[
-									-117.498899,
-									37.21934
-								],
-								[
-									-116.540435,
-									36.501861
-								],
-								[
-									-115.85034,
-									35.970598
-								],
-								[
-									-114.634459,
-									35.00118
-								],
-								[
-									-114.634459,
-									34.87521
-								],
-								[
-									-114.470151,
-									34.710902
-								],
-								[
-									-114.333228,
-									34.448009
-								],
-								[
-									-114.136058,
-									34.305608
-								],
-								[
-									-114.256551,
-									34.174162
-								],
-								[
-									-114.415382,
-									34.108438
-								],
-								[
-									-114.535874,
-									33.933176
-								],
-								[
-									-114.497536,
-									33.697668
-								],
-								[
-									-114.524921,
-									33.54979
-								],
-								[
-									-114.727567,
-									33.40739
-								],
-								[
-									-114.661844,
-									33.034958
-								],
-								[
-									-114.524921,
-									33.029481
-								],
-								[
-									-114.470151,
-									32.843265
-								],
-								[
-									-114.524921,
-									32.755634
-								],
-								[
-									-114.72209,
-									32.717295
-								],
-								[
-									-116.04751,
-									32.624187
-								],
-								[
-									-117.126467,
-									32.536556
-								],
-								[
-									-117.24696,
-									32.668003
-								],
-								[
-									-117.252437,
-									32.876127
-								],
-								[
-									-117.329114,
-									33.122589
-								],
-								[
-									-117.471515,
-									33.297851
-								],
-								[
-									-117.7837,
-									33.538836
-								],
-								[
-									-118.183517,
-									33.763391
-								],
-								[
-									-118.260194,
-									33.703145
-								],
-								[
-									-118.413548,
-									33.741483
-								],
-								[
-									-118.391641,
-									33.840068
-								],
-								[
-									-118.566903,
-									34.042715
-								],
-								[
-									-118.802411,
-									33.998899
-								],
-								[
-									-119.218659,
-									34.146777
-								],
-								[
-									-119.278905,
-									34.26727
-								],
-								[
-									-119.558229,
-									34.415147
-								],
-								[
-									-119.875891,
-									34.40967
-								],
-								[
-									-120.138784,
-									34.475393
-								],
-								[
-									-120.472878,
-									34.448009
-								],
-								[
-									-120.64814,
-									34.579455
-								],
-								[
-									-120.609801,
-									34.858779
-								],
-								[
-									-120.670048,
-									34.902595
-								],
-								[
-									-120.631709,
-									35.099764
-								],
-								[
-									-120.894602,
-									35.247642
-								],
-								[
-									-120.905556,
-									35.450289
-								],
-								[
-									-121.004141,
-									35.461243
-								],
-								[
-									-121.168449,
-									35.636505
-								],
-								[
-									-121.283465,
-									35.674843
-								],
-								[
-									-121.332757,
-									35.784382
-								],
-								[
-									-121.716143,
-									36.195153
-								],
-								[
-									-121.896882,
-									36.315645
-								],
-								[
-									-121.935221,
-									36.638785
-								],
-								[
-									-121.858544,
-									36.6114
-								],
-								[
-									-121.787344,
-									36.803093
-								],
-								[
-									-121.929744,
-									36.978355
-								],
-								[
-									-122.105006,
-									36.956447
-								],
-								[
-									-122.335038,
-									37.115279
-								],
-								[
-									-122.417192,
-									37.241248
-								],
-								[
-									-122.400761,
-									37.361741
-								],
-								[
-									-122.515777,
-									37.520572
-								],
-								[
-									-122.515777,
-									37.783465
-								],
-								[
-									-122.329561,
-									37.783465
-								],
-								[
-									-122.406238,
-									38.15042
-								],
-								[
-									-122.488392,
-									38.112082
-								],
-								[
-									-122.504823,
-									37.931343
-								],
-								[
-									-122.701993,
-									37.893004
-								],
-								[
-									-122.937501,
-									38.029928
-								],
-								[
-									-122.97584,
-									38.265436
-								],
-								[
-									-123.129194,
-									38.451652
-								],
-								[
-									-123.331841,
-									38.566668
-								],
-								[
-									-123.44138,
-									38.698114
-								],
-								[
-									-123.737134,
-									38.95553
-								],
-								[
-									-123.687842,
-									39.032208
-								],
-								[
-									-123.824765,
-									39.366301
-								],
-								[
-									-123.764519,
-									39.552517
-								],
-								[
-									-123.85215,
-									39.831841
-								],
-								[
-									-124.109566,
-									40.105688
-								],
-								[
-									-124.361506,
-									40.259042
-								],
-								[
-									-124.410798,
-									40.439781
-								],
-								[
-									-124.158859,
-									40.877937
-								],
-								[
-									-124.109566,
-									41.025814
-								],
-								[
-									-124.158859,
-									41.14083
-								],
-								[
-									-124.065751,
-									41.442061
-								],
-								[
-									-124.147905,
-									41.715908
-								],
-								[
-									-124.257444,
-									41.781632
-								],
-								[
-									-124.213628,
-									42.000709
-								],
-								[
-									-123.233256,
-									42.006186
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": [
-			    {
-					"name": "San Francisco",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-122.4281,
-									37.7068
-								],
-								[
-									-122.5048,
-									37.7068
-								],
-								[
-									-122.5158,
-									37.7835
-								],
-								[
-									-122.4062,
-									37.8108
-								],
-								[
-									-122.3569,
-									37.7287
-								],
-								[
-									-122.3898,
-									37.7068
-								],
-								[
-									-122.4281,
-									37.7068
-								]
-							]
-						]
-					]
-				}
-			]
-		}, "NOT-GEO-REGISTERED-PLANET": {
-			"whitelist": [
-				{
-					"name": "San Francisco",
-					"dates": [
-						{
-							"start": null,
-							"end": null
-						}
-					],
-					"sensorNames": [
-						null
-					],
-					"coverage": [
-						[
-							[
-								[
-									-122.4281,
-									37.7068
-								],
-								[
-									-122.5048,
-									37.7068
-								],
-								[
-									-122.5158,
-									37.7835
-								],
-								[
-									-122.4062,
-									37.8108
-								],
-								[
-									-122.3569,
-									37.7287
-								],
-								[
-									-122.3898,
-									37.7068
-								],
-								[
-									-122.4281,
-									37.7068
-								]
-							]
-						]
-					]
-				}
-			],
-			"blacklist": []
-		}
-	},
-	"idahoOverlaysSourceConfig": {
-		"defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
-		"baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
-		"overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
-	},
-	"planetOverlaysSourceConfig": {
-		"baseUrl": "https://api.planet.com/data/v1/quick-search",
-		"itemTypes": ["PSScene3Band", "PSScene4Band", "PSOrthoTile",
-			"REOrthoTile", "REScene", "SkySatScene", "Landsat8L1G", "Sentinel2L1C"],
-		"apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
-		"tilesUrl": "https://tiles.planet.com/data/v1/"
-	}
+    "IDAHO2": {
+      "whitelist": [
+        {
+          "name": "Entire Earth",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": [
+            null
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -74.06810760498047,
+                  40.8028950718582
+                ],
+                [
+                  -74.09557342529297,
+                  40.75453936473234
+                ],
+                [
+                  -74.07463073730469,
+                  40.74543623770158
+                ],
+                [
+                  -74.11308288574219,
+                  40.70536767492135
+                ],
+                [
+                  -74.06330108642578,
+                  40.66918118282895
+                ],
+                [
+                  -74.01283264160156,
+                  40.73347023268492
+                ],
+                [
+                  -74.01111602783203,
+                  40.77768170250654
+                ],
+                [
+                  -74.06810760498047,
+                  40.8028950718582
+                ]
+              ]
+            ]
+          ]
+        }
+      ],
+      "blacklist": []
+    },
+    "PLANET": {
+      "whitelist": [
+        {
+          "name": "California",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": [
+            null
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -123.233256,
+                  42.006186
+                ],
+                [
+                  -122.378853,
+                  42.011663
+                ],
+                [
+                  -121.037003,
+                  41.995232
+                ],
+                [
+                  -120.001861,
+                  41.995232
+                ],
+                [
+                  -119.996384,
+                  40.264519
+                ],
+                [
+                  -120.001861,
+                  38.999346
+                ],
+                [
+                  -118.71478,
+                  38.101128
+                ],
+                [
+                  -117.498899,
+                  37.21934
+                ],
+                [
+                  -116.540435,
+                  36.501861
+                ],
+                [
+                  -115.85034,
+                  35.970598
+                ],
+                [
+                  -114.634459,
+                  35.00118
+                ],
+                [
+                  -114.634459,
+                  34.87521
+                ],
+                [
+                  -114.470151,
+                  34.710902
+                ],
+                [
+                  -114.333228,
+                  34.448009
+                ],
+                [
+                  -114.136058,
+                  34.305608
+                ],
+                [
+                  -114.256551,
+                  34.174162
+                ],
+                [
+                  -114.415382,
+                  34.108438
+                ],
+                [
+                  -114.535874,
+                  33.933176
+                ],
+                [
+                  -114.497536,
+                  33.697668
+                ],
+                [
+                  -114.524921,
+                  33.54979
+                ],
+                [
+                  -114.727567,
+                  33.40739
+                ],
+                [
+                  -114.661844,
+                  33.034958
+                ],
+                [
+                  -114.524921,
+                  33.029481
+                ],
+                [
+                  -114.470151,
+                  32.843265
+                ],
+                [
+                  -114.524921,
+                  32.755634
+                ],
+                [
+                  -114.72209,
+                  32.717295
+                ],
+                [
+                  -116.04751,
+                  32.624187
+                ],
+                [
+                  -117.126467,
+                  32.536556
+                ],
+                [
+                  -117.24696,
+                  32.668003
+                ],
+                [
+                  -117.252437,
+                  32.876127
+                ],
+                [
+                  -117.329114,
+                  33.122589
+                ],
+                [
+                  -117.471515,
+                  33.297851
+                ],
+                [
+                  -117.7837,
+                  33.538836
+                ],
+                [
+                  -118.183517,
+                  33.763391
+                ],
+                [
+                  -118.260194,
+                  33.703145
+                ],
+                [
+                  -118.413548,
+                  33.741483
+                ],
+                [
+                  -118.391641,
+                  33.840068
+                ],
+                [
+                  -118.566903,
+                  34.042715
+                ],
+                [
+                  -118.802411,
+                  33.998899
+                ],
+                [
+                  -119.218659,
+                  34.146777
+                ],
+                [
+                  -119.278905,
+                  34.26727
+                ],
+                [
+                  -119.558229,
+                  34.415147
+                ],
+                [
+                  -119.875891,
+                  34.40967
+                ],
+                [
+                  -120.138784,
+                  34.475393
+                ],
+                [
+                  -120.472878,
+                  34.448009
+                ],
+                [
+                  -120.64814,
+                  34.579455
+                ],
+                [
+                  -120.609801,
+                  34.858779
+                ],
+                [
+                  -120.670048,
+                  34.902595
+                ],
+                [
+                  -120.631709,
+                  35.099764
+                ],
+                [
+                  -120.894602,
+                  35.247642
+                ],
+                [
+                  -120.905556,
+                  35.450289
+                ],
+                [
+                  -121.004141,
+                  35.461243
+                ],
+                [
+                  -121.168449,
+                  35.636505
+                ],
+                [
+                  -121.283465,
+                  35.674843
+                ],
+                [
+                  -121.332757,
+                  35.784382
+                ],
+                [
+                  -121.716143,
+                  36.195153
+                ],
+                [
+                  -121.896882,
+                  36.315645
+                ],
+                [
+                  -121.935221,
+                  36.638785
+                ],
+                [
+                  -121.858544,
+                  36.6114
+                ],
+                [
+                  -121.787344,
+                  36.803093
+                ],
+                [
+                  -121.929744,
+                  36.978355
+                ],
+                [
+                  -122.105006,
+                  36.956447
+                ],
+                [
+                  -122.335038,
+                  37.115279
+                ],
+                [
+                  -122.417192,
+                  37.241248
+                ],
+                [
+                  -122.400761,
+                  37.361741
+                ],
+                [
+                  -122.515777,
+                  37.520572
+                ],
+                [
+                  -122.515777,
+                  37.783465
+                ],
+                [
+                  -122.329561,
+                  37.783465
+                ],
+                [
+                  -122.406238,
+                  38.15042
+                ],
+                [
+                  -122.488392,
+                  38.112082
+                ],
+                [
+                  -122.504823,
+                  37.931343
+                ],
+                [
+                  -122.701993,
+                  37.893004
+                ],
+                [
+                  -122.937501,
+                  38.029928
+                ],
+                [
+                  -122.97584,
+                  38.265436
+                ],
+                [
+                  -123.129194,
+                  38.451652
+                ],
+                [
+                  -123.331841,
+                  38.566668
+                ],
+                [
+                  -123.44138,
+                  38.698114
+                ],
+                [
+                  -123.737134,
+                  38.95553
+                ],
+                [
+                  -123.687842,
+                  39.032208
+                ],
+                [
+                  -123.824765,
+                  39.366301
+                ],
+                [
+                  -123.764519,
+                  39.552517
+                ],
+                [
+                  -123.85215,
+                  39.831841
+                ],
+                [
+                  -124.109566,
+                  40.105688
+                ],
+                [
+                  -124.361506,
+                  40.259042
+                ],
+                [
+                  -124.410798,
+                  40.439781
+                ],
+                [
+                  -124.158859,
+                  40.877937
+                ],
+                [
+                  -124.109566,
+                  41.025814
+                ],
+                [
+                  -124.158859,
+                  41.14083
+                ],
+                [
+                  -124.065751,
+                  41.442061
+                ],
+                [
+                  -124.147905,
+                  41.715908
+                ],
+                [
+                  -124.257444,
+                  41.781632
+                ],
+                [
+                  -124.213628,
+                  42.000709
+                ],
+                [
+                  -123.233256,
+                  42.006186
+                ]
+              ]
+            ]
+          ]
+        }
+      ],
+      "blacklist": [
+        {
+          "name": "San Francisco",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": [
+            null
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -122.4281,
+                  37.7068
+                ],
+                [
+                  -122.5048,
+                  37.7068
+                ],
+                [
+                  -122.5158,
+                  37.7835
+                ],
+                [
+                  -122.4062,
+                  37.8108
+                ],
+                [
+                  -122.3569,
+                  37.7287
+                ],
+                [
+                  -122.3898,
+                  37.7068
+                ],
+                [
+                  -122.4281,
+                  37.7068
+                ]
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    "NOT-GEO-REGISTERED-PLANET": {
+      "whitelist": [
+        {
+          "name": "San Francisco",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": [
+            null
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -122.4281,
+                  37.7068
+                ],
+                [
+                  -122.5048,
+                  37.7068
+                ],
+                [
+                  -122.5158,
+                  37.7835
+                ],
+                [
+                  -122.4062,
+                  37.8108
+                ],
+                [
+                  -122.3569,
+                  37.7287
+                ],
+                [
+                  -122.3898,
+                  37.7068
+                ],
+                [
+                  -122.4281,
+                  37.7068
+                ]
+              ]
+            ]
+          ]
+        }
+      ],
+      "blacklist": []
+    }
+  },
+  "idahoOverlaysSourceConfig": {
+    "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
+    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
+    "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+  },
+  "planetOverlaysSourceConfig": {
+    "baseUrl": "https://api.planet.com/data/v1/quick-search",
+    "itemTypes": [
+      "PSScene3Band",
+      "PSScene4Band",
+      "PSOrthoTile",
+      "REOrthoTile",
+      "REScene",
+      "SkySatScene",
+      "Landsat8L1G",
+      "Sentinel2L1C"
+    ],
+    "apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
+    "tilesUrl": "https://tiles.planet.com/data/v1/"
+  }
 }

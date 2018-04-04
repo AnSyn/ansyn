@@ -1,7 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { WelcomeNotificationComponent } from './welcome-notification.component';
 import { StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { CoreModule } from '@ansyn/core/core.module';
+import { EffectsModule } from '@ngrx/effects';
 
 fdescribe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;
@@ -9,8 +12,16 @@ fdescribe('WelcomeNotificationComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
-			declarations: [WelcomeNotificationComponent]
+			imports: [
+				StoreModule.forRoot({}),
+				EffectsModule.forRoot([]),
+				CoreModule
+			],
+			declarations: [WelcomeNotificationComponent],
+			providers: [{
+				provide: mapFacadeConfig,
+				useValue: <IMapFacadeConfig> {welcomeNotification: {headerText: 'hhh', mainText: 'mmm'}}
+			}]
 		})
 			.compileComponents();
 	}));

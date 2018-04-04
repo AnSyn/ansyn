@@ -7,20 +7,41 @@
 	/* horizontally  centered */
 	left: calc((100% - @welcome-notification-width) / 2);
 	width: @welcome-notification-width;
-	padding: 1rem;
-	font-size: 1rem;
 	z-index: @z-index-welcome-notification;
-	background-color: white;
-	color: black;
-	border-radius: 4px;
+	// Prevent outline when in focus
+	outline: none;
+	animation: moveIntoView 1s;
+
+	&:focus {
+		.welcome-notification {
+			opacity: 1;
+		}
+	}
 
 	.welcome-notification {
+		opacity: 0;
+		transition: opacity 1s;
+		background-color: white;
+		color: black;
+		padding: 1rem;
+		font-size: 1rem;
+		border-radius: 4px;
+
 		header {
 			margin-bottom: 1rem;
 		}
 		span.icon-map-pin-point {
 			color: #30A2C6;
 		}
+	}
+}
+
+@keyframes moveIntoView {
+	from {
+		transform: translateY(100px);
+	}
+	to {
+		transform: translateY(0);
 	}
 }
 

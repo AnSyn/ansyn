@@ -30,6 +30,7 @@ export type CoreActions =
 	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
+	| SetIsAfterLoginFlagAction
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;

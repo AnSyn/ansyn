@@ -3,9 +3,10 @@
 
 :host {
 	position: absolute;
-	bottom: 2rem;
-	right: 2rem;
-	width: 30%;
+	bottom: calc(@status-bar-height + 10px);
+	left: calc((100% - @welcome-notification-width) / 2);
+	width: @welcome-notification-width;
+	padding: 1rem;
 	font-size: 1rem;
 	z-index: @z-index-welcome-notification;
 	background-color: white;
@@ -13,6 +14,9 @@
 	border-radius: 4px;
 
 	.welcome-notification {
+		header {
+			margin-bottom: 1rem;
+		}
 	}
 }
 

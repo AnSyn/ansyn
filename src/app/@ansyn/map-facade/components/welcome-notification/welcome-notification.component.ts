@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, Inject, OnDestroy } from '@angular/core';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
@@ -28,8 +27,8 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 		return 0;
 	}
 
-	constructor(public store$: Store<IMapState>,
-				protected elem: ElementRef,
+	constructor(public store$: Store<ICoreState>,
+				public elem: ElementRef,
 				@Inject(mapFacadeConfig) public mapFacadeconfig: IMapFacadeConfig) {
 		this.config = this.mapFacadeconfig.welcomeNotification;
 	}

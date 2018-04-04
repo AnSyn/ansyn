@@ -2,7 +2,8 @@ import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider,
-	PlanetSourceProvider
+	PlanetSourceProvider,
+	NotGeoRegisteredPlaneSourceProvider
 } from './overlay-source-providers';
 import {
 	OpenLayerBingSourceProvider,
@@ -12,7 +13,8 @@ import {
 	OpenLayerMapBoxSourceProvider,
 	OpenLayerOSMSourceProvider,
 	OpenLayerTileWMSSourceProvider,
-	OpenLayerPlanetSourceProvider
+	OpenLayerPlanetSourceProvider,
+	OpenLayerNotGeoRegisteredPlanetSourceProvider
 } from './map-source-providers';
 import { NgModule } from '@angular/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery';
@@ -36,6 +38,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
 
 		// Map tiling source services
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
@@ -44,6 +47,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
+		{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
 

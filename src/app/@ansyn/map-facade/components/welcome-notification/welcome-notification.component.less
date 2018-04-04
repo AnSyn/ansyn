@@ -7,12 +7,15 @@
 	/* horizontally  centered */
 	left: calc((100% - @welcome-notification-width) / 2);
 	width: @welcome-notification-width;
-	z-index: @z-index-welcome-notification;
+	z-index: -1;
+	transition: z-index 1s;
 	// Prevent outline when in focus
 	outline: none;
 	animation: moveIntoView 1s;
 
 	&:focus {
+		z-index: @z-index-welcome-notification;
+
 		.welcome-notification {
 			opacity: 1;
 		}

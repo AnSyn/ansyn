@@ -7,7 +7,7 @@ let confdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15
 let confdExeExtension = '.exe';
 const linuxConfdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-linux-amd64';
 
-if (process.argv[2] == 'linux') {
+if (process.platform === 'linux') {
 	confdUrl = linuxConfdUrl;
 	confdExeExtension = '';
 }

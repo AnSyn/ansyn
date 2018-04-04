@@ -4,6 +4,7 @@
 :host {
 	position: absolute;
 	bottom: calc(@status-bar-height + 10px);
+	/* horizontally  centered */
 	left: calc((100% - @welcome-notification-width) / 2);
 	width: @welcome-notification-width;
 	padding: 1rem;
@@ -16,6 +17,9 @@
 	.welcome-notification {
 		header {
 			margin-bottom: 1rem;
+		}
+		span.icon-map-pin-point {
+			color: #30A2C6;
 		}
 	}
 }

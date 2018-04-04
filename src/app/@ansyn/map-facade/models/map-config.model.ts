@@ -3,6 +3,10 @@ export interface IMapFacadeConfig {
 	sensorTypeShortcuts: Object;
 	contextMenu: {
 		filterField: string;
+	};
+	welcomeNotification: {
+		headerText: string;
+		mainText: string;
 	}
 }
 

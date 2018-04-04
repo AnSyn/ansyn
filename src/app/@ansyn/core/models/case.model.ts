@@ -3,6 +3,7 @@ import { Overlay } from './overlay.model';
 import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { LayoutKey } from '@ansyn/core';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 export interface Case {
 	id?: string;
@@ -106,4 +107,4 @@ export interface CaseMapState {
 	};
 }
 
-export const defaultMapType = 'openLayersMap';
+export const defaultMapType = OpenlayersMapName;

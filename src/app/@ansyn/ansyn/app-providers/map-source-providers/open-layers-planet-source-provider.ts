@@ -1,13 +1,13 @@
 import { BaseMapSourceProvider } from '@ansyn/imagery/index';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName, ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Injectable } from '@angular/core';
 import { Overlay } from '@ansyn/core/index';
 import { extentFromGeojson } from '@ansyn/core/utils/index';
 import proj from 'ol/proj';
 
-export const OpenLayerPlanetSourceProviderMapType = 'openLayersMap';
+export const OpenLayerPlanetSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @Injectable()

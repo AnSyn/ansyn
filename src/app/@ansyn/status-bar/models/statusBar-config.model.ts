@@ -6,7 +6,7 @@ export interface IToolTipsConfig {
 	timeFilter ?: string,
 	timeFilterEdit?: string,
 	screenNumber?: string,
-	imageCount?: string,
+	overlayCount?: string,
 	backwards?: string,
 	forward?: string,
 	reset?: string,

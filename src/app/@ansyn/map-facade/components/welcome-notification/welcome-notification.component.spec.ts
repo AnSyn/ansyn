@@ -25,4 +25,8 @@ fdescribe('WelcomeNotificationComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
+	it('tabindex attribute should return zero', () => {
+		expect(component.tabindex).toEqual(0);
+	});
+
 });

@@ -31,7 +31,6 @@ before_script:
 
 script:
   - npm run test:single-run
-  - npm run generate-config -- linux
   - npm run test:e2e
   - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT
 

@@ -20,7 +20,6 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	isAfterLogin$ = this.store$.select(coreStateSelector)
 		.take(1)
 		.pluck<ICoreState, boolean>('isAfterLogin')
-		// .do(() => this.store$.dispatch(new SetIsAfterLoginFlagAction(false)))
 	;
 
 	// Make the DOM element focusable

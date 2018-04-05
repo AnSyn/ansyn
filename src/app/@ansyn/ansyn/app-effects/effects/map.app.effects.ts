@@ -155,13 +155,6 @@ export class MapAppEffects {
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{action, payload }]: [any, IMapState]) => OverlaysService.isFullOverlay(payload.overlay))
-		.do(([action, payload]: [any, IMapState]) =>
-		{
-			if (payload.mapsList.filter((aMap) => Boolean(aMap.data.overlay)).some((aMap) => (aMap.data.overlay.id === action.payload.overlay.id)))
-			{
-				this.cachService.removeLayerFromCache(action.payload.overlay);
-			}
-		})
 		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
 			const { overlay } = payload;
 			const mapId = payload.mapId || mapState.activeMapId;

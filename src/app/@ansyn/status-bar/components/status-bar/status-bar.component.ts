@@ -21,22 +21,20 @@ import { Actions } from '@ngrx/effects';
 })
 
 export class StatusBarComponent implements OnInit {
-	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
-	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	overlaysCriteria$: Observable<OverlaysCriteria> = this.core$
+	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
 
-	layout$: Observable<LayoutKey> = this.core$
+	layout$: Observable<LayoutKey> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, LayoutKey>('layout')
 		.distinctUntilChanged();
 
-	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$
+	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(statusBarStateSelector)
 		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
 		.distinctUntilChanged();
 
 	comboBoxesProperties: ComboBoxesProperties = {};
-	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
+	flags$ = this.store.select(statusBarStateSelector).pluck('flags').distinctUntilChanged();
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
@@ -121,7 +119,9 @@ export class StatusBarComponent implements OnInit {
 	setSubscribers() {
 		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
 
-		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
+			this.comboBoxesProperties = comboBoxesProperties
+		});
 
 		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
 			this.flags = new Map(flags);
@@ -160,8 +160,20 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapPointSearch() {
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
+		if (this.comboBoxesProperties.geoFilter === 'Polygon')
+		{
+			if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
+				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
+			}
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
+			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
+		}
+		else
+		{
+			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true }));
+		}
 	}
 
 	togglePinPointIndicatorView() {

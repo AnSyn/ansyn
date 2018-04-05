@@ -25,7 +25,7 @@ export interface IContextEntity extends IVisualizerEntity {
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
-export type CaseGeoFilter = 'Pin-Point';
+export type CaseGeoFilter = 'Pin-Point' | 'Polygon';
 
 export interface ImageManualProcessArgs {
 	Brightness: number

@@ -19,7 +19,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 			maxZoom: 19
 		});
 
-		this.monitorSource(source, mapId);
+		// this.monitorSource(source, mapId);
 
 		const result = new TileLayer(<any>{
 			visible: true,

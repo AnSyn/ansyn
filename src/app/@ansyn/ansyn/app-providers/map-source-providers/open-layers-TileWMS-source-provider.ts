@@ -26,7 +26,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 			projection: metaData.projection
 		});
 
-		this.monitorSource(source, mapId);
+		// this.monitorSource(source, mapId);
 
 		const tiled = new TileLayer({ visible: true, source });
 		return [tiled];

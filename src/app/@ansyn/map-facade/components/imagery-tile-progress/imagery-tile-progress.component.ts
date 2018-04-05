@@ -2,6 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { IMapState, MapsProgress, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
+import { Actions } from '@ngrx/effects';
+import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-imagery-tile-progress',
@@ -13,19 +15,20 @@ export class ImageryTileProgressComponent implements OnInit, OnDestroy {
 	@Input() lowered;
 
 	private _subscriptions: Subscription[] = [];
-	progress$ = this.store$.select(mapStateSelector)
-		.pluck<IMapState, MapsProgress>('mapsProgress')
-		.distinctUntilChanged()
-		.map((mapsProgress: MapsProgress): number => mapsProgress[this.mapId]);
+	progress$ = this.actions$
+		.ofType(MapActionTypes.VIEW.SET_PROGRESS_BAR)
+		.filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId )
+		.map((action: SetProgressBarAction) => action.payload.progress)
+		.do((progress) => this.progress = progress);
 
 	progress;
 
-	constructor(public store$: Store<IMapState>) {
+	constructor(public actions$: Actions) {
 	}
 
 	ngOnInit() {
 		this._subscriptions.push(
-			this.progress$.subscribe((progress) => this.progress = progress)
+			this.progress$.subscribe()
 		);
 	}
 

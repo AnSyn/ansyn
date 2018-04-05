@@ -27,7 +27,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 			url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'
 		});
 
-		this.monitorSource(source, mapId);
+		// this.monitorSource(source, mapId);
 
 		const openSeaMapLayer = new TileLayer({ source });
 		return [osmLayer, openSeaMapLayer];

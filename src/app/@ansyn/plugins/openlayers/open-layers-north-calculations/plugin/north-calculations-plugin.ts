@@ -38,10 +38,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
-	get ActiveMap() {
-		return this.communicator.ActiveMap;
-	}
-
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
 				public store$: Store<any>,
@@ -61,13 +57,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 			const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 			const northOffsetDeg = toDegrees(northOffsetRad);
-			const view = this.ActiveMap.mapObject.getView();
+			const view = this.iMap.mapObject.getView();
 			const actualNorth = northOffsetRad + view.getRotation();
 			return { northOffsetRad, northOffsetDeg, actualNorth };
 		})
 		.mergeMap((northData: INorthData) => {
-			this.ActiveMap.mapObject.getView().setRotation(northData.actualNorth);
-			this.ActiveMap.mapObject.renderSync();
+			this.iMap.mapObject.getView().setRotation(northData.actualNorth);
+			this.iMap.mapObject.renderSync();
 			if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
 				return Observable.throw({ result: northData.actualNorth });
 			}
@@ -80,13 +76,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
 		return Observable.forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
-			return this.projectionService.projectAccurately(point, this.ActiveMap);
+			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
 	}
 
 	getProjectedCenters(): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
-			const mapObject = this.ActiveMap.mapObject;
+			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!olCenterView) {
@@ -140,9 +136,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
-		const currentRotation = this.ActiveMap.mapObject.getView().getRotation();
+		const currentRotation = this.iMap.mapObject.getView().getRotation();
 		return this.getCorrectedNorth()
-			.do(() => this.ActiveMap.mapObject.getView().setRotation(currentRotation))
+			.do(() => this.iMap.mapObject.getView().setRotation(currentRotation))
 			.catch(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);

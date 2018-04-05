@@ -27,7 +27,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			wrapX: true
 		});
 
-		this.monitorSource(source, mapId);
+		// this.monitorSource(source, mapId);
 
 		const esriLayer = new TileLayer({
 			source: source,

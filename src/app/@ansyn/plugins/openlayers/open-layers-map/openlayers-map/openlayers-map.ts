@@ -106,7 +106,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this.showGroups.set('layers', true);
-		this.initMap(element, _mapLayers, position).subscribe();
+		this.initMap(element, _mapLayers, position).take(1).subscribe();
 	}
 
 	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
@@ -128,28 +128,20 @@ export class OpenLayersMap extends IMap<OLMap> {
 			.subscribe(cb);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
-		const [mainLayer] = layers;
-		const view = this.createView(mainLayer);
-		const coordinateFormat: ol.CoordinateFormatType = (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString();
-		this._mapObject = new OLMap({
-			target: element,
-			layers,
-			renderer: 'canvas',
-			controls: [new ScaleLine(), new OpenLayersMousePositionControl({ projection: 'EPSG:4326', coordinateFormat  },
-				(point) => this.projectionService.projectApproximately(point, this))],
-			view
-		});
-
-		let setPositionObservable: Observable<boolean> = Observable.of(true);
-		if (position) {
-			setPositionObservable = this.setPosition(position);
-		}
-
-		return setPositionObservable.do(() => {
-			this.initListeners();
-			this.setGroupLayers();
-		});
+	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+		const controls = [
+			new ScaleLine(),
+			new OpenLayersMousePositionControl({
+					projection: 'EPSG:4326',
+					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
+				},
+				(point) => this.projectionService.projectApproximately(point, this))
+		];
+		const renderer = 'canvas';
+		this._mapObject = new OLMap({ target, renderer, controls });
+		this.initListeners();
+		this.setGroupLayers();
+		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
@@ -186,7 +178,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	createView(layer): View {
 		return new View({
 			projection: layer.getSource().getProjection(),
-			minZoom: 2.5
 		});
 	}
 
@@ -198,16 +189,17 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
-
-		const rotation = this.mapObject.getView().getRotation();
+		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
 		this._mapObject.setView(view);
 
 		if (extent) {
 			this.fitToExtent(extent);
-			this.mapObject.getView().setRotation(rotation);
-		} else {
+			if (rotation) {
+				this.mapObject.getView().setRotation(rotation);
+			}
+		} else if (position) {
 			return this.setPosition(position);
 		}
 
@@ -238,6 +230,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	setMainLayer(layer: Layer) {
+		layer.set('name', 'main');
 		this.removeAllLayers();
 		this.addLayer(layer);
 

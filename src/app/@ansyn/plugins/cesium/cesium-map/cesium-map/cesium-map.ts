@@ -82,6 +82,10 @@ export class CesiumMap extends IMap {
 		return new Observable();
 	}
 
+	getLayers(): any[] {
+		return [];
+	}
+
 	removeSingleClickEvent() {
 
 	}

@@ -44,6 +44,10 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		this.setMainLayer(layers[0], position);
 	}
 
+	getLayers(): any[] {
+		return this.mapObject.getLayers().getArray();
+	}
+
 	public getCenter(): Observable<GeoJSON.Point> {
 		const view = this.mapObject.getView();
 		const center = view.getCenter();

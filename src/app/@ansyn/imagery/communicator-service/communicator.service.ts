@@ -43,8 +43,4 @@ export class ImageryCommunicatorService {
 		delete (this.communicators[id]);
 		this.instanceRemoved.emit({ id });
 	}
-
-	constructor() {
-
-	}
 }

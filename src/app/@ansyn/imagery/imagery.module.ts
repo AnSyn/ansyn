@@ -12,9 +12,9 @@ import { createCollection, ImageryPluginProvider } from './model/plugins-collect
 	imports: [CommonModule],
 	declarations: [ImageryComponent],
 	providers: [
-		ImageryCommunicatorService,
 		ImageryProviderService,
-		CacheService,
+		ImageryCommunicatorService,
+		{ provide: CacheService, useClass: CacheService, deps: [ConfigurationToken, ImageryCommunicatorService] },
 		createCollection([])
 	],
 	exports: [ImageryComponent]

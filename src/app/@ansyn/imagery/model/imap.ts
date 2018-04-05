@@ -37,6 +37,8 @@ export abstract class IMap<T = any> {
 
 	abstract addLayer(layer: any): void;
 
+	abstract getLayers(): any[];
+
 	abstract removeLayer(layer: any): void;
 
 	abstract setPosition(position: CaseMapPosition): Observable<boolean>;

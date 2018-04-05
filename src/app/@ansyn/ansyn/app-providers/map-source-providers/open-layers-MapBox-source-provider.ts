@@ -20,8 +20,6 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 			projection: 'EPSG:3857'
 		});
 
-		// this.monitorSource(source, mapId);
-
 		const mapBoxLayer = new TileLayer(<any>{
 			source: source,
 			visible: true,

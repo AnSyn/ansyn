@@ -5,10 +5,11 @@ import { SetProgressBarAction } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 @Injectable()
 export class MonitorPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName];
+	static supported = [OpenlayersMapName, DisabledOpenLayersMapName];
 
 	messages = {
 		all: 'Failed to load overlay',
@@ -21,8 +22,6 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	onInit(): void {
-
-
 		this.monitorSource();
 	}
 

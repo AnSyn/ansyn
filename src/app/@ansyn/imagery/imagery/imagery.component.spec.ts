@@ -41,7 +41,7 @@ describe('ImageryComponent', () => {
 			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
-				CacheService,
+				{ provide: CacheService, useValue: null },
 				{ provide: PLUGINS_COLLECTIONS, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },

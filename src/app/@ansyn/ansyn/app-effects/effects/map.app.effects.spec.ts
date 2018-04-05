@@ -169,11 +169,12 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
+				ImageryCommunicatorService,
 				ImageryProviderService,
 				{provide: VisualizersConfig, useValue: {}},
 				MapAppEffects,
 				OverlaysService,
-				CacheService,
 				{provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true},
 				{
 					provide: mapFacadeConfig,

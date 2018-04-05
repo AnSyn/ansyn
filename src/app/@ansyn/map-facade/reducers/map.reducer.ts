@@ -12,7 +12,6 @@ export interface MapsProgress {
 export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
-	mapsProgress: MapsProgress;
 	isLoadingMaps: Map<string, string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
@@ -21,7 +20,6 @@ export interface IMapState {
 export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
-	mapsProgress: {},
 	isLoadingMaps: new Map<string, string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
@@ -34,31 +32,12 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
-		case MapActionTypes.VIEW.SET_PROGRESS_BAR: {
-			if (state.mapsProgress.hasOwnProperty(action.payload.mapId)) {
-				const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
-				return { ...state, mapsProgress };
-			}
-			return state;
-		}
-
-		case MapActionTypes.IMAGERY_CREATED: {
-			const mapsProgress = { ...state.mapsProgress };
-			mapsProgress[action.payload.id] = 0;
-			return { ...state, mapsProgress };
-		}
 
 		case MapActionTypes.IMAGERY_REMOVED: {
-			const mapsProgress = { ...state.mapsProgress };
-			delete mapsProgress[action.payload.id];
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			isLoadingMaps.delete(action.payload.id);
-			return { ...state, mapsProgress, isLoadingMaps };
+			return { ...state, isLoadingMaps };
 		}
-
-		case MapActionTypes.VIEW.SET_PROGRESS_BAR:
-			const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
-			return { ...state, mapsProgress };
 
 		case MapActionTypes.VIEW.SET_IS_LOADING: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);

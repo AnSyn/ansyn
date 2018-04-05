@@ -42,10 +42,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		this.initEffects();
 	}
 
-	get mapId(): string {
-		return this.communicator && this.communicator.id;
-	}
-
 	onResetView(): Observable<boolean> {
 		this._imageProcessing = new OpenLayersImageProcessing();
 		const layers = this.communicator.ActiveMap.mapObject.getLayers();

@@ -2,6 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { IMap } from '@ansyn/imagery';
 
 export class BaseImageryPlugin {
 	static supported = [];
@@ -9,6 +10,14 @@ export class BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
 	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
+
+	get iMap(): IMap {
+		return this.communicator.ActiveMap;
+	}
+
+	get mapId(): string {
+		return this.communicator && this.communicator.id;
+	}
 
 	onResetView(): Observable<boolean> {
 		return Observable.of(true);
@@ -22,6 +31,10 @@ export class BaseImageryPlugin {
 
 	init(communicator: CommunicatorEntity) {
 		this.communicator = communicator;
+		this.onInit();
 	};
 
+	onInit(): void {
+
+	}
 }

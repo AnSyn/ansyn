@@ -56,14 +56,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
-	get iMap(): IMap {
-		return this.communicator.ActiveMap;
-	}
-
-	get mapId(): string {
-		return this.communicator && this.communicator.id;
-	}
-
 	constructor(visualizerStyle: Partial<VisualizerStateStyle> = {}, defaultStyle: Partial<VisualizerStateStyle> = {}) {
 		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);

@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { VisualizersProviders } from '@ansyn/plugins/openlayers/open-layer-visualizers/visualizers-providers';
 import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
+import { MonitorPlugin } from '@ansyn/plugins/openlayers/monitor/monitor.plugin';
 
 @NgModule({
 	imports: [
@@ -18,7 +19,8 @@ import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/open-layers-ima
 		ImageryModule.provideCollection([
 			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store, ProjectionService], multi: true },
 			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true },
-			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Actions], multi: true},
+			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Actions], multi: true },
+			{ provide: BaseImageryPlugin, useClass: MonitorPlugin, deps: [Store], multi: true },
 			...VisualizersProviders
 		])
 	]

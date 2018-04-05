@@ -198,6 +198,13 @@ export class CommunicatorEntity {
 		}
 	}
 
+	public getLayers(): any[] {
+		if (this.ActiveMap) {
+			return this.ActiveMap.getLayers();
+		}
+		return [];
+	}
+
 	public removeLayer(layer: any) {
 		if (this.ActiveMap) {
 			this.ActiveMap.removeLayer(layer);

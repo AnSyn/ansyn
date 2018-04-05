@@ -109,6 +109,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.initMap(element, _mapLayers, position).take(1).subscribe();
 	}
 
+	getLayers(): any[] {
+		return this.mapObject.getLayers().getArray();
+	}
+
 	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
 		if (this.projectionSubscription) {
 			this.projectionSubscription.unsubscribe();

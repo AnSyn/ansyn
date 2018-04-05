@@ -23,7 +23,6 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 			projection: 'EPSG:3857'
 		});
 
-		// this.monitorSource(source, mapId);
 		let [x, y, x1, y1] = extentFromGeojson(metaData.footprint);
 		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
 		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');

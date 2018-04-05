@@ -30,6 +30,7 @@ export class Overlay {
 export interface OverlaysCriteria {
 	time?: CaseTimeState;
 	region?: CaseRegionState;
+	realPolygon?: boolean;
 }
 
 export interface OverlaySpecialObject {

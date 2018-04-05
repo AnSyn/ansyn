@@ -102,7 +102,7 @@ export class OverlaysService {
 		let tBboxFeature = bboxPolygon(tBbox);
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
-			region: tBboxFeature.geometry,
+			region: Boolean(params.realPolygon) ? params.region : tBboxFeature.geometry,
 			timeRange: <any> {
 				start: params.time.from,
 				end: params.time.to

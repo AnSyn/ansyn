@@ -16,29 +16,12 @@ import {
 	]
 })
 
-export class CesiumMapComponent implements OnInit, OnDestroy, ImageryMapComponent {
+export class CesiumMapComponent extends ImageryMapComponent {
 	static mapClass = CesiumMap;
+	@ViewChild('olMap') protected mapElement: ElementRef;
 
-	@ViewChild('cesiumMap') mapElement: ElementRef;
-
-	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
-
-	constructor(private _map: IMap,
-		@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+	constructor(protected map: IMap,
+				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+		super();
 	}
-
-	createMap(layers: any) {
-		this._map.initMap(this.mapElement.nativeElement)
-			.filter(success => success)
-			.do(() => this.mapCreated.emit(this._map))
-			.subscribe();
-	}
-
-	ngOnInit(): void {
-	}
-
-	ngOnDestroy(): void {
-		// this._map.dispose();
-	}
-
 }

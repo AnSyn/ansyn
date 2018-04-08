@@ -4,9 +4,9 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
-export interface TimelineState {
-	from: Date;
-	to: Date;
+export interface TimelineRange {
+	start: Date;
+	end: Date;
 }
 
 export interface OverlayDrop {
@@ -27,7 +27,7 @@ export interface IOverlaysState {
 	specialObjects: Map<string, OverlaySpecialObject>;
 	demo: number;
 	filteredOverlays: string[];
-	timelineState: TimelineState;
+	timeLineRange: TimelineRange;
 	statusMessage: string;
 }
 
@@ -38,18 +38,19 @@ export const overlaysInitialState: IOverlaysState = {
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),
 	demo: 1,
-	timelineState: { from: new Date(), to: new Date() },
+	timeLineRange: { start: new Date(), end: new Date() },
 	filteredOverlays: [],
 	statusMessage: null
 };
 export const overlaysFeatureKey = 'overlays';
 export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
-export const overlaysStatusMessages =  {
-	noOverLayMatchQuery: "No overlays match your query, please try another search",
-	overLoad : "Note: only $overLoad overlays are presented",
-	noOverLayMatchFilters: "No overlays match your query, please try another search",
+export const overlaysStatusMessages = {
+	noOverLayMatchQuery: 'No overlays match your query, please try another search',
+	overLoad: 'Note: only $overLoad overlays are presented',
+	noOverLayMatchFilters: 'No overlays match your query, please try another search',
 	nullify: null
-}
+};
+
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 
@@ -108,7 +109,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({}, state, {
 				loading: false,
-				loaded: false,
+				loaded: false
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS:
@@ -125,17 +126,18 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return { ...state, specialObjects };
 
 		case OverlaysActionTypes.SET_TIMELINE_STATE:
-			const { from, to } = action.payload.state;
-
-			const result: number = from.getTime() - to.getTime();
-			if (result > 0) {
+			const { start, end } = action.payload.timeLineRange;
+			const startTime = start.getTime();
+			const endTime = end.getTime();
+			if (state.timeLineRange.start.getTime() !== startTime ||
+				state.timeLineRange.end.getTime() !== endTime
+			) {
+				const result: number = startTime - endTime;
+				return (result > 0) ? state : { ...state, timeLineRange: action.payload.timeLineRange };
+			}
+			else {
 				return state;
 			}
-
-			return {
-				...state,
-				timelineState: action.payload.state
-			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
 			return {

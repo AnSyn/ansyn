@@ -17,7 +17,7 @@ import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/store-element';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector, TimelineState } from '../../reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector, TimelineRange } from '../../reducers/overlays.reducer';
 import { schemeCategory10 } from 'd3';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
@@ -51,12 +51,12 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	overlaysMarkup: any = [];
 	loading: boolean;
 	noDrops: boolean;
-	timelineState: TimelineState;
+	timelineState: TimelineRange;
 
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
+	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector)
 
-	timelineState$: Observable<TimelineState> = this.overlaysState$
-		.pluck <IOverlaysState, TimelineState>('timelineState')
+	timeLineRange$: Observable<TimelineRange> = this.overlaysState$
+		.pluck <IOverlaysState, TimelineRange>('timeLineRange')
 		.distinctUntilChanged();
 
 	overlaysLoader$: Observable<any> = this.overlaysState$
@@ -126,8 +126,8 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 				this.store$.dispatch(new MouseOverDropAction(result.id));
 			});
 		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
-			.subscribe((dates: TimelineState ) => {
-				this.store$.dispatch(new SetTimelineStateAction({ state: dates, noRedraw: true }));
+			.subscribe((dates: TimelineRange ) => {
+				this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: dates}));
 			});
 
 		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')

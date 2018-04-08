@@ -10,7 +10,7 @@ import { IAppState } from '../app.effects.module';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { Overlay } from '@ansyn/overlays';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector, TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
@@ -45,23 +45,15 @@ export class OverlaysAppEffects {
 	 * @ofType LoadOverlaysSuccessAction
 	 * @filter There is an imagery count before or after
 	 * @dependencies overlays
-	 * @action SetTimelineStateAction
 	 */
-	@Effect()
-	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
+	@Effect({dispatch: false})
+	initTimelineState$ = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 || this.casesService.contextValues.imageryCountAfter !== -1)
 		.do(() => {
 			this.casesService.contextValues.imageryCountBefore = -1;
 			this.casesService.contextValues.imageryCountAfter = -1;
 		})
-		.withLatestFrom(this.store$.select(overlaysStateSelector).pluck<IOverlaysState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
-		.map(({ from, to }: TimelineState) => {
-			const tenth = (to.getTime() - from.getTime()) / 10;
-			const fromTenth = new Date(from.getTime() - tenth);
-			const toTenth = new Date(to.getTime() + tenth);
-			return new SetTimelineStateAction({ state: { from: fromTenth, to: toTenth } });
-		});
 
 	/**
 	 * @type Effect
@@ -86,31 +78,6 @@ export class OverlaysAppEffects {
 		})
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name displayOverlaySetTimeline$
-	 * @description this method moves the timeline to active displayed overlay if exists in timeline
-	 * @ofType DisplayOverlayAction
-	 * @dependencies overlays, map
-	 * @filter isActiveMap && displayedOverlay && displayedOverlay is exeeding timelineState
-	 * @action SetTimelineStateAction
-	 */
-	@Effect()
-	displayOverlaySetTimeline$ = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
-			const displayedOverlay = action.payload.overlay;
-			const timelineState = overlays.timelineState;
-			const isActiveMap = map.activeMapId === action.payload.mapId;
-			return [isActiveMap, displayedOverlay, timelineState];
-		})
-		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
-			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
-		})
-		.map(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
-			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-			return new SetTimelineStateAction({ state });
-		});
 
 	/**
 	 * @type Effect

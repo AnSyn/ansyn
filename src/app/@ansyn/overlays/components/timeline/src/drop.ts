@@ -11,13 +11,15 @@ export default (config, xScale) => selection => {
 			date: dropDate,
 			onClick,
 			onMouseOver,
-			onMouseOut
+			onMouseOut,
+			onDblClick
 		}
 	} = config;
 
 	const drops = selection
 		.selectAll('.drop')
-		.data(filterOverlappingDrop(xScale, dropDate));
+		.data(line => line.data)
+	// .data(filterOverlappingDrop(xScale, dropDate));
 
 	drops
 		.enter()
@@ -28,6 +30,7 @@ export default (config, xScale) => selection => {
 		.on('click', onClick)
 		.on('mouseover', onMouseOver)
 		.on('mouseout', onMouseOut)
+		.on('dblclick', onDblClick)
 		.merge(drops)
 		.attr('cx', d => xScale(dropDate(d)));
 

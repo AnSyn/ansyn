@@ -13,18 +13,19 @@ export class CacheService {
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	isDisplayedLayer(layers) {
+	isDisplayedLayer(layers, cacheId) {
 		return this.imageryCommunicatorService
 			.communicatorsAsArray()
 			.some((communicator) => {
 				const communicatorLayers = communicator.getLayers();
-				return layers.some((layer) => communicatorLayers.includes(layer));
+				return layers.some((layer) => communicatorLayers.some((layer) => layer.get('cacheId') === cacheId));
 			})
 	}
 
 	getLayerFromCache(overlay: any): any[] {
-		const layers = this.cachedLayesrMap.get(this.createLayerId(overlay));
-		return layers && !this.isDisplayedLayer(layers) ? [ ...layers ] : [];
+		const cacheId = this.createLayerId(overlay);
+		const layers = this.cachedLayesrMap.get(cacheId);
+		return layers && !this.isDisplayedLayer(layers, cacheId) ? [ ...layers ] : [];
 	}
 
 	addLayerToCache(overlay: any, layers: any[]) {
@@ -32,7 +33,9 @@ export class CacheService {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		this.cachedLayesrMap.set(this.createLayerId(overlay), [...layers]);
+		const cacheId = this.createLayerId(overlay);
+		layers.forEach((layer) => layer.set('cacheId', cacheId));
+		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 
 	removeLayerFromCache(overlay: any) {

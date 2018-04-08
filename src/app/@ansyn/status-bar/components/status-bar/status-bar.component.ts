@@ -162,10 +162,10 @@ export class StatusBarComponent implements OnInit {
 	toggleMapPointSearch() {
 		if (this.comboBoxesProperties.geoFilter === 'Polygon')
 		{
-			if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
+			/*if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
 				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));*/
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
 		}

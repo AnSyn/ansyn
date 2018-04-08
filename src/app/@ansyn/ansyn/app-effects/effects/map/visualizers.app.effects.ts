@@ -2,35 +2,23 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import {
-	ActiveMapChangedAction,
-	DrawOverlaysOnMapTriggerAction,
-	HoverFeatureTriggerAction,
-	MapActionTypes,
-	PinPointTriggerAction,
-	SetMapsDataActionStore
+	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
+	PinPointTriggerAction, SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
-	DisplayOverlaySuccessAction,
-	MouseOutDropAction,
-	MouseOverDropAction,
-	OverlaysActionTypes,
+	DisplayOverlaySuccessAction, MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes,
 	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
-	GoToInputChangeAction,
-	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-	ShowOverlaysFootprintAction,
-	StartMouseShadow,
-	StopMouseShadow,
-	ToolsActionsTypes
+	GoToInputChangeAction, SetAnnotationMode, SetMeasureDistanceToolState, ShowOverlaysFootprintAction,
+	StartMouseShadow, StopMouseShadow, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -75,7 +63,7 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
 		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
 		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
-			id: payload
+			id: payload || null
 		}));
 
 	/**

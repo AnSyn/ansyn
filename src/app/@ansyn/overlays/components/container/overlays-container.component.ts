@@ -52,26 +52,6 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	loading: boolean;
 	noDrops: boolean;
 	timelineState: TimelineState;
-	configuration: any = {
-		start: new Date(new Date().getTime() - 3600000 * 24 * 365),
-		margin: {
-			top: 60,
-			left: 50,
-			bottom: 40,
-			right: 50
-		},
-		end: new Date(),
-		eventLineColor: (d, i) => schemeCategory10[i],
-		date: d => new Date(d.date),
-		displayLabels: false,
-		shapes: {
-			star: {
-				fill: 'green',
-				offsetY: 20
-			}
-		},
-		metaballs: true
-	};
 
 	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
 
@@ -94,12 +74,24 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	}
 
 	// maybe to move this to the service
-	toggleOverlay(id): void {
-		if (this.selectedOverlays.includes(id)) {
-			this.store$.dispatch(new UnSelectOverlayAction(id));
-		} else {
-			this.store$.dispatch(new SelectOverlayAction(id));
-		}
+	clickOverlay(d): void {
+		console.log("click event" + d.id)
+		// there is no action now for selection of overlay...
+		// if (this.selectedOverlays.includes(d.id)) {
+		// 	this.store$.dispatch(new UnSelectOverlayAction(d.id));
+		// } else {
+		// 	this.store$.dispatch(new SelectOverlayAction(d.id));
+		// }
+	}
+
+	dblClickOverlay(d) {
+		console.log("dblClick" + d.id)
+		startTimingLog(`LOAD_OVERLAY_${d.id}`);
+		this.store$.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: d.id }));
+		// there is no action now for selection of overlay...
+		// if (!this.selectedOverlays.includes(id)) {
+		// 	this.store$.dispatch(new SelectOverlayAction(id));
+		// }
 	}
 
 	setStoreSubscribers(): void {
@@ -108,13 +100,6 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 			this.drops = drops;
 			this.noDrops = !(first(drops).data.length);
 		});
-
-		this.subscribers.timelineState = this.timelineState$
-			.subscribe(timelineState => {
-				this.timelineState = timelineState;
-				this.configuration.start = timelineState.from;
-				this.configuration.end = timelineState.to;
-			});
 
 		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
 			this.loading = loading;
@@ -133,26 +118,16 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	setEmitterSubscribers() {
 
 		this.subscribers.clickEmitter = this.emitter.provide('timeline:click')
-			.subscribe(data => this.toggleOverlay(data.element.id));
-
+			.subscribe(this.clickOverlay.bind(this));
 		this.subscribers.dblclickEmitter = this.emitter.provide('timeline:dblclick')
-			.subscribe(data => {
-				const id = data.element.id;
-				startTimingLog(`LOAD_OVERLAY_${id}`);
-				this.store$.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: id }));
-				if (!this.selectedOverlays.includes(id)) {
-					this.store$.dispatch(new SelectOverlayAction(id));
-				}
-			});
-
-		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
-			.subscribe((result: { dates: TimelineState }) => {
-				this.store$.dispatch(new SetTimelineStateAction({ state: { ...result.dates }, noRedraw: true }));
-			});
-
+			.subscribe(this.dblClickOverlay.bind(this));
 		this.subscribers.mouseOver = this.emitter.provide('timeline:mouseover')
 			.subscribe(result => {
 				this.store$.dispatch(new MouseOverDropAction(result.id));
+			});
+		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
+			.subscribe((dates: TimelineState ) => {
+				this.store$.dispatch(new SetTimelineStateAction({ state: dates, noRedraw: true }));
 			});
 
 		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')
@@ -165,3 +140,5 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 		Object.keys(this.subscribers).forEach((s) => this.subscribers[s].unsubscribe());
 	}
 }
+
+

@@ -9,6 +9,16 @@ export interface TimelineState {
 	to: Date;
 }
 
+export interface OverlayDrop {
+	id: string,
+	date: Date
+}
+
+export interface OverlayLine {
+	name: string,
+	data: Array<OverlayDrop>
+}
+
 export interface IOverlaysState {
 	loaded: boolean;
 	loading: boolean;

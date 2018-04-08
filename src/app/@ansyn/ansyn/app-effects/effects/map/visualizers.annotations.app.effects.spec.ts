@@ -28,7 +28,7 @@ import { ActiveMapChangedAction } from '@ansyn/map-facade/actions/map.actions';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { IToolsState, toolsFlags, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items';
-import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers';
+import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers';
 import { BaseImageryPlugin, ImageryModule } from '@ansyn/imagery';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 

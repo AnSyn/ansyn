@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { IMap } from '@ansyn/imagery';
-import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
+import { OpenLayersImageProcessing } from '../../image-processing/image-processing';
 import { Observable } from 'rxjs/Observable';
 import * as ol from 'openlayers';
 import Map from 'ol/map';

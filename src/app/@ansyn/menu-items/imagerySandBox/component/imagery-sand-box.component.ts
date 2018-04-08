@@ -11,7 +11,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
-import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/open-layer-center-marker-plugin';
+import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
 
 @Component({
 	selector: 'ansyn-map-sand-box',

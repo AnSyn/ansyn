@@ -9,7 +9,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/annotations.visualizer';
+import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../app.effects.module';
 import { Action, Store } from '@ngrx/store';

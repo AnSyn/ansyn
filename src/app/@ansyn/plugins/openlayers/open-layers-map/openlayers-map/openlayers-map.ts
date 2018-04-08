@@ -1,7 +1,7 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core';
-import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
+import { OpenLayersImageProcessing } from '../../image-processing/image-processing';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';

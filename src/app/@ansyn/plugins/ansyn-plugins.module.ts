@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OpenLayersMapModule } from './openlayers/open-layers-map';
 import { BaseImageryPlugin, ImageryModule } from '@ansyn/imagery';
-import { NorthCalculationsPlugin } from './openlayers/open-layers-north-calculations/plugin/north-calculations-plugin';
-import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/open-layer-center-marker-plugin';
+import { NorthCalculationsPlugin } from '@ansyn/plugins/openlayers/north-calculations/north-calculations.plugin';
 import { Actions } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { VisualizersProviders } from '@ansyn/plugins/openlayers/open-layer-visualizers/visualizers-providers';
-import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/open-layers-image-processing/image-processing-plugin";
+import { VisualizersProviders } from '@ansyn/plugins/openlayers/visualizers/visualizers-providers';
+import { ImageProcessingPlugin } from "@ansyn/plugins/openlayers/image-processing/image-processing.plugin";
 import { MonitorPlugin } from '@ansyn/plugins/openlayers/monitor/monitor.plugin';
+import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
 
 @NgModule({
 	imports: [

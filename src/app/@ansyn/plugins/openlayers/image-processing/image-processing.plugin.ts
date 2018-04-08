@@ -2,7 +2,7 @@ import { CommunicatorEntity, BaseImageryPlugin } from '@ansyn/imagery';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import ImageLayer from 'ol/layer/image';
-import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/open-layers-map/image-processing/open-layers-image-processing';
+import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/image-processing/image-processing';
 import Raster from 'ol/source/raster';
 import { Actions } from '@ngrx/effects';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';

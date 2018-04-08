@@ -1,4 +1,4 @@
-import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/models/visualizer-state';
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { BaseImageryPlugin } from './base-imagery-plugin';

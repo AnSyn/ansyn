@@ -29,12 +29,10 @@ export const OpenlayersMapName = 'openLayersMap';
 
 @Injectable()
 export class OpenLayersMap extends IMap<OLMap> {
-	static mapType = OpenlayersMapName;
-
 	static groupLayers = new Map<string, Group>();
 
 	private showGroups = new Map<string, boolean>();
-	public mapType: string = OpenLayersMap.mapType;
+	public mapType: string = OpenlayersMapName;
 	private _mapObject: OLMap;
 	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();

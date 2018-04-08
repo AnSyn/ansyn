@@ -15,7 +15,7 @@ import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/ope
 })
 export class OpenLayersMapModule {
 	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerMapProvider(OpenlayersMapName, OpenLayersMap.mapType, OpenlayersMapComponent);
-		imageryProviderService.registerMapProvider(DisabledOpenLayersMapName, OpenLayersDisabledMap.mapType, OpenLayersDisabledMapComponent);
+		imageryProviderService.registerMapProvider(OpenlayersMapName, OpenlayersMapName, OpenlayersMapComponent);
+		imageryProviderService.registerMapProvider(DisabledOpenLayersMapName, DisabledOpenLayersMapName, OpenLayersDisabledMapComponent);
 	}
 }

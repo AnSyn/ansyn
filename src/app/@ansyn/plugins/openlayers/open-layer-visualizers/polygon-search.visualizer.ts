@@ -13,11 +13,11 @@ import { Actions } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import LineString from "ol/geom/linestring";
 import MultiLineString from "ol/geom/multilinestring";
-import {cloneDeep, remove} from "lodash";
-import {FeatureCollection, GeometryObject} from "geojson";
-import {SetAnnotationsLayer} from "@ansyn/menu-items/layers-manager/actions/layers.actions";
-import {ILayerState, layersStateSelector} from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
-import {OverlaysCriteria, SetOverlaysCriteriaAction} from "@ansyn/core";
+import { cloneDeep, remove } from "lodash";
+import { FeatureCollection, GeometryObject } from "geojson";
+import { SetAnnotationsLayer } from "@ansyn/menu-items/layers-manager/actions/layers.actions";
+import { ILayerState, layersStateSelector } from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
+import { OverlaysCriteria, SetOverlaysCriteriaAction } from "@ansyn/core";
 import GeomPolygon from "ol/geom/polygon";
 
 export class PolygonSearchVisualizer extends EntitiesVisualizer {

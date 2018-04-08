@@ -1,7 +1,6 @@
 import { IMap } from '@ansyn/imagery';
 import { EventEmitter } from '@angular/core';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core';
-import { OpenLayersImageProcessing } from '../../image-processing/image-processing';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -10,11 +9,9 @@ import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
 import Vector from 'ol/source/vector';
-import Raster from 'ol/source/raster';
 import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
-import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
@@ -55,8 +52,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _flags = {
 		singleClickHandler: null
 	};
-
-	private _imageProcessing: OpenLayersImageProcessing;
 
 	static addGroupLayer(layer: any, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
@@ -237,13 +232,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		layer.set('name', 'main');
 		this.removeAllLayers();
 		this.addLayer(layer);
-
-		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing = new OpenLayersImageProcessing((<any>layer).getSource());
-		} else {
-			this._imageProcessing = null;
-		}
-
 		this.setGroupLayers();
 	}
 
@@ -303,10 +291,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
 			this._mapObject.renderSync();
-		}
-
-		if (this._imageProcessing) {
-			this._imageProcessing.processImage(null);
 		}
 	}
 

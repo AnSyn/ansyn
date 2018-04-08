@@ -1,6 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapState, MapsProgress, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { Actions } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';

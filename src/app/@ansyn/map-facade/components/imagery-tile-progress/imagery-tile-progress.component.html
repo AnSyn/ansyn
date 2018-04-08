@@ -1,3 +1,3 @@
 <div class="map-loader-wrapper" [class.lowered]="lowered">
-	<div class="map-loader" [style.width.%]="progress" [hidden]="progress === 100"></div>
+	<div class="map-loader" [style.width.%]="progress" [hidden]="!progress || progress === 100"></div>
 </div>

@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { IMap } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import * as ol from 'openlayers';
@@ -14,6 +14,7 @@ import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
+@Injectable()
 export class OpenLayersDisabledMap extends IMap<Map> {
 	static mapType = DisabledOpenLayersMapName;
 
@@ -26,19 +27,14 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	mapObject: Map;
 	mainLayer: Layer;
 
-	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
-		super();
-
-		this.initMap(element, layers, position);
-	}
-
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition) {
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
 			controls: [new ScaleLine()]
 		});
 		this.setMainLayer(layers[0], position);
+		return Observable.of(true);
 	}
 
 	getLayers(): any[] {

@@ -1,9 +1,10 @@
 import { IMap } from '@ansyn/imagery/model/imap';
 import { CaseMapPosition } from '@ansyn/core/index';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 
+@Injectable()
 export class CesiumMap extends IMap {
 	static mapType = 'cesium';
 	static groupLayers = new Map<string, any>();
@@ -19,8 +20,11 @@ export class CesiumMap extends IMap {
 
 	constructor(element: HTMLElement) {
 		super();
+	}
 
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		this.mapObject = {};
+		return Observable.of(false);
 	}
 
 	getCenter(): Observable<GeoJSON.Point> {

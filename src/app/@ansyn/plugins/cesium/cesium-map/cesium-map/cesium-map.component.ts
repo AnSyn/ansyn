@@ -2,7 +2,10 @@ import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChi
 import { IMap, IMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { BaseImageryPluginProvider, ProvideMapName } from '@ansyn/imagery/imagery/providers/imagery.providers';
+import {
+	BaseImageryPluginProvider, ProvideMap,
+	ProvideMapName
+} from '@ansyn/imagery/imagery/providers/imagery.providers';
 export const CesiumMapName = 'cesiumMap';
 
 @Component({
@@ -10,6 +13,7 @@ export const CesiumMapName = 'cesiumMap';
 	templateUrl: './cesium-map.component.html',
 	styleUrls: ['./cesium-map.component.less'],
 	providers: [
+		ProvideMap(CesiumMap),
 		ProvideMapName(CesiumMapName),
 		BaseImageryPluginProvider
 	]
@@ -20,16 +24,19 @@ export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
 
 	@ViewChild('cesiumMap') mapElement: ElementRef;
 
-	private _map: CesiumMap;
 	public mapCreated: EventEmitter<IMap>;
 
-	constructor(@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+	constructor(private _map: IMap,
+		@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 		this.mapCreated = new EventEmitter<IMap>();
 	}
 
 	createMap(layers: any) {
 		this._map = new CesiumMap(this.mapElement.nativeElement);
-		this.mapCreated.emit(this._map);
+		this._map.initMap(this.mapElement.nativeElement)
+			.filter(success => success)
+			.do(() => this.mapCreated.emit(this._map))
+			.subscribe();
 	}
 
 	ngOnInit(): void {

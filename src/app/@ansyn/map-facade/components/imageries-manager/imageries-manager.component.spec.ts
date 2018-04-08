@@ -25,6 +25,9 @@ const mockAnsynImageryContainer = MockComponent({
 const mockAnnotationContextMenu = MockComponent({
 	selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
 });
+const mockAnsynWelcomeNotification = MockComponent({
+	selector: 'ansyn-welcome-notification'
+});
 
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
@@ -43,13 +46,14 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
-				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer })
+				StoreModule.forRoot({[mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer})
 			],
 			declarations: [
 				ImageriesManagerComponent,
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
+				mockAnsynWelcomeNotification,
 				ImageryStatusComponent,
 				AlertComponentDirective
 			]
@@ -68,12 +72,12 @@ describe('ImageriesManagerComponent', () => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
 		const mapsList = <any> [
-			{ id: 'imagery1', data: { overlay: {} } },
-			{ id: 'imagery2', data: { overlay: {} } }
+			{id: 'imagery1', data: {overlay: {}}},
+			{id: 'imagery2', data: {overlay: {}}}
 		];
 		const activeMapId = 'imagery1';
 		store.dispatch(new SetLayoutAction('layout2'));
-		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
 		fixture.detectChanges();
 	});
 

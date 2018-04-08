@@ -1,18 +1,32 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { select, selectAll, selection } from 'd3';
-import { eventDrops } from 'ansyn-event-drops';
-
+import {
+	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit,
+	ViewChild
+} from '@angular/core';
+import { schemeCategory10, selectAll, selection } from 'd3';
+import * as d3 from 'd3/build/d3';
+import eventDrops from './src/index';
 
 import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { isEqual } from 'lodash';
+import { OverlayDrop, OverlayLine } from '@ansyn/overlays';
+import { TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { select } from 'd3-selection';
+import _ = require('lodash');
+import enLocale from 'd3-time-format/locale/en-US.json';
 
 export const BASE_DROP_COLOR = '#d393e1';
-
 selection.prototype.moveToFront = function () {
 	return this.each(function () {
 		this.parentNode.appendChild(this);
 	});
 };
+
+
+export interface ClickEvent {
+	id: string,
+	clickTime: number
+}
+
 
 @Component({
 	selector: 'ansyn-timeline',
@@ -26,12 +40,25 @@ export class TimelineComponent implements OnInit {
 	@ViewChild('context') context: ElementRef;
 
 
-	private _drops: any[];
-	private _markup: any[];
+	private _drops: Array<OverlayLine> = [];
+	private _markup;
 
-	@Input() configuration: any;
-
+	@Input() timelineState: any;
 	@Input() redraw$: EventEmitter<any>;
+	private firstClick: ClickEvent;
+	private seondClick: ClickEvent;
+	private chart: any;
+
+
+	private _dropNotOnDOM: Array<any>;
+
+	set dropNotOnDom(value) {
+		this._dropNotOnDOM = value;
+	}
+
+	get dropNotOnDom() {
+		return this._dropNotOnDOM;
+	}
 
 	@Input()
 	set markup(value) {
@@ -46,56 +73,24 @@ export class TimelineComponent implements OnInit {
 		this.redraw$.emit();
 	}
 
+
 	@Input()
-	set drops(drops: any[]) {
-		this._drops = drops || [];
-		this.eventDropsHandler();
-		if (this._drops.length > 0 && this._markup) {
-			this.drawMarkup();
-			this.fixMetaballs()
-
+	set drops(drops: Array<OverlayLine>) {
+		if (drops && drops.length) {
+			this._drops = drops.map(entities => ({
+				name: entities.name || '',
+				data: entities.data
+			}));
+			this.initEventDropsSequence();
 		}
-		// this.stream.next();
-
 	}
 
 	get drops() {
 		return this._drops;
 	}
 
-	fixMetaballs() {
-		selectAll('.drop-line')
-			.append('rect')
-			.attr('x', 0)
-			.attr('y', 20)
-			.attr('height', 40)
-			.attr('width', 1)
-			.attr('fill', 'transparent')
-	}
-
-	drawMarkup() {
-
-		selectAll('.drop.displayed').classed('displayed ', false);
-		selectAll('.drop.active').classed('active', false);
-		selectAll('.drop.favorites').classed('favorites', false).style('filter', 'none');
-		const actives = <any>selectAll('.drop.hover');
-		actives.classed('hover', false);
-
-		const nodes = [];
-		this._markup.forEach(markupItem => {
-			const element = document.querySelector(`circle[data-id="${markupItem.id}"]`);
-			if (element) {
-				element.classList.add(markupItem.class);
-				nodes.push(element);
-			}
-		});
-		if (nodes.length > 0) {
-			const selection = (<any>selectAll(nodes));
-			selection.moveToFront();
-			actives.moveToFront();
-		}
-
-		selectAll('.drop.favorites').style('filter', 'url(#highlight)');
+	get actualDrops() {
+		return this.drops[0].data;
 	}
 
 	get markup() {
@@ -108,78 +103,181 @@ export class TimelineComponent implements OnInit {
 
 	ngOnInit() {
 		this.redraw$.subscribe(value => {
-			if (this.drops) {
-				this.eventDropsHandler();
-				this.drawMarkup();
-			}
+			this.initEventDropsSequence();
 		});
 	}
 
-	clickEvent() {
-		const tolerance = 5;
-		let down, wait;
-		const dist = (a, b) => Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+	initEventDropsSequence() {
+		if (this.drops && this.drops.length) {
+			this.initEventDrop();
+			this.drawMarkup();
+			this.fixMetaballs();
+		}
+	}
 
+	fixMetaballs() {
+		selectAll('.drop-line')
+			.append('rect')
+			.attr('x', 0)
+			.attr('y', 20)
+			.attr('height', 40)
+			.attr('width', 1)
+			.attr('fill', 'transparent');
+	}
 
-		return (data, index, nodes, event: MouseEvent) => {
-			if (!down) {
-				down = [event.clientX, event.clientY];
-				wait = window.setTimeout((() => {
-					wait = null;
-					down = null;
-					// this.toggleDrop(nodes[index]);
-					this.emitter.provide('timeline:click').next({ event, element: data, index, nodes });
-				}), 300);
-			} else {
-				if (dist(down, [event.clientX, event.clientY]) < tolerance) {
-					this.selectAndShowDrop(nodes[index], event, data, index, nodes);
-				}
-				if (wait) {
-					window.clearTimeout(wait);
-					wait = null;
-					down = null;
-				}
-				return;
-			}
+	onMouseOver(d) {
+		this.emitter.provide('timeline:mouseover').next(d);
+	}
+
+	onMouseOut(d) {
+		this.emitter.provide('timeline:mouseout').next(d);
+	}
+
+	onZoomEnd() {
+		const dates: TimelineState = {
+			from: this.chart.scale().domain()[0],
+			to: this.chart.scale().domain()[1]
 		};
+		this.emitter.provide('timeline:zoomend')
+			.next(dates);
 	}
 
-	selectAndShowDrop(element, event, data, index, nodes) {
-		this.emitter.provide('timeline:dblclick').next({ event, element: data, index, nodes });
+	onClick(d) {
+		d3.event.stopPropagation();
+		const timeTolarance = 300;
+		if (this.firstClick && this.firstClick.id === d.id && (Date.now() - this.firstClick.clickTime < timeTolarance)) {
+			this.seondClick = {
+				id: d.id,
+				clickTime: Date.now()
+			};
+			this.emitter.provide('timeline:dblclick').next(d);
+		}
+		else {
+			this.firstClick = {
+				id: d.id,
+				clickTime: Date.now()
+			};
+			this.seondClick = null;
+			window.setTimeout((() => {
+				if (
+					this.seondClick &&
+					this.seondClick.id === d.id &&
+					this.firstClick &&
+					this.firstClick.id === d.id &&
+					(this.firstClick.clickTime - this.seondClick.clickTime < timeTolarance)
+				) {
+					return;
+				}
+				else {
+					this.firstClick = null;
+					this.emitter.provide('timeline:click').next(d);
+				}
+			}).bind(this), timeTolarance);
+		}
 	}
 
-	toggleDrop(element) {
-		// d3.select(element)['moveToFront']();
-		// element.classList.toggle('selected');
-	}
 
-	eventDropsHandler(): void {
-		// console.log(eventDrops);
-		// return;
-		const chart = eventDrops(this.configuration)
-			.mouseout(data => this.emitter.provide('timeline:mouseout').next(data))
-			.mouseover(data => this.emitter.provide('timeline:mouseover').next(data))
-			.zoomend((result) => this.emitter.provide('timeline:zoomend').next(result))
-			.zoomStreamCallback(result => this.emitter.provide('timeline:zoomStream').next(result))
-			.eventColor(BASE_DROP_COLOR)
-			.click(this.clickEvent())
-			.dblclick(() => {
-				event.stopPropagation();
-			});
+	initEventDrop(): void {
+		const configuration = {
+			locale: {
+				"dateTime": "%x, %X",
+				"date": "%-m/%-d/%Y",
+				"time": "%-I:%M:%S %p",
+				"periods": ["AM", "PM"],
+				"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+				"shortDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+				"months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+				"shortMonths": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+			},
+			range: {
+				start: new Date(new Date().getTime() - 3600000 * 24 * 365),
+				end: new Date()
+			},
+			margin: {
+				top: 60,
+				left: 50,
+				bottom: 40,
+				right: 50
+			},
+			line: {
+				color: (d, i) => schemeCategory10[i]
+			},
+			drop: {
+				onMouseOver: this.onMouseOver.bind(this),
+				onMouseOut: this.onMouseOut.bind(this),
+				onClick: (this.onClick.bind(this)),
+				color: BASE_DROP_COLOR,
+				date: d => new Date(d.date)
+			},
+			zoom: {
+				onZoom: this.drawMarkup.bind(this),
+				onZoomEnd: this.onZoomEnd.bind(this)
+			},
+			d3: d3
+		};
 
-
-		const dataSet = this.drops.map(entities => ({
-			name: entities.name || '',
-			data: entities.data
-		}));
-
-		const element = select(this.context.nativeElement)
-			.datum(dataSet);
-
-		chart(element);
+		configuration.range = this.timelineState ? {start: this.timelineState.from, end: this.timelineState.to} : configuration.range;
+		this.chart = eventDrops(configuration);
+		d3.select('#timeLineEventDrop')
+			.data([this.drops])
+			.call(this.chart);
 
 		if (this._markup) {
 			this.drawMarkup();
+		}
+	}
+
+
+	drawMarkup() {
+		const dropsElements = selectAll('.drop');
+		dropsElements
+			.attr('class', (drop: OverlayDrop) => {
+				let classList = 'drop';
+				const markUpElement = this.markup.find(markupItem => markupItem.id === drop.id);
+				if (markUpElement) {
+					markUpElement.found = true;
+				}
+				return (markUpElement) ? classList.concat(' changedDrops').concat(' ' + markUpElement.class) : classList;
+			});
+		if (this.drops && this.drops.length) {
+			this.dropNotOnDom = this.markup.filter(dropElement => !dropElement.found).map(dropElement => {
+				const drop = this.actualDrops.find(drop => drop.id === dropElement.id);
+				return drop ? { ...drop, class: dropElement.class } : {};
+			});
+		}
+		this.forceDraw();
+		this.arrangeDrops(dropsElements);
+	}
+
+	arrangeDrops(drops) {
+		(<any>drops.filter('.changedDrops')).moveToFront();
+		(<any>drops.filter('.active')).moveToFront();
+		drops.filter('.favorites').style('filter', 'url(#highlight)');
+	}
+
+	forceDraw() {
+		if (this.dropNotOnDom) {
+			this.dropNotOnDom.forEach(drop => {
+				if (drop) {
+					select('.drops')
+						.append('circle')
+						.attr('class', 'drop changedDrops'.concat(' ' + drop.class).concat(' fake'))
+						.attr('r', 5)
+						.attr('fill', BASE_DROP_COLOR)
+						.on('click', () => this.onClick(drop))
+						.on('mouseover', () => this.onMouseOver(drop))
+						.on('mouseout', () => this.onMouseOut(drop))
+						.attr('cx', () => {
+							if (drop.date) {
+								return this.chart.scale()(drop.date)
+							}
+							else {
+								console.log("no date?"  + drop.id);
+								return null
+							}
+						});
+				}
+			});
 		}
 
 	}

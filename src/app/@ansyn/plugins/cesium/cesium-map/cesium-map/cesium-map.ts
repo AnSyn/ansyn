@@ -3,10 +3,10 @@ import { CaseMapPosition } from '@ansyn/core/index';
 import { EventEmitter, Injectable } from '@angular/core';
 import { GeoJsonObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
+export const CesiumMapName = 'cesium';
 
 @Injectable()
 export class CesiumMap extends IMap {
-	static mapType = 'cesium';
 	static groupLayers = new Map<string, any>();
 
 	centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
@@ -14,13 +14,8 @@ export class CesiumMap extends IMap {
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-
-	mapType: string = CesiumMap.mapType;
+	mapType: string = CesiumMapName;
 	mapObject: any;
-
-	constructor(element: HTMLElement) {
-		super();
-	}
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		this.mapObject = {};

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CesiumMapComponent } from './cesium-map/cesium-map.component';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImageryProviderService } from '@ansyn/imagery/index';
-import { CesiumMap } from './cesium-map/cesium-map';
 import { CesiumMapName } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 
 @NgModule({
@@ -14,6 +13,6 @@ import { CesiumMapName } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 })
 export class CesiumMapModule {
 	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerMapProvider(CesiumMapName, CesiumMap.mapType, CesiumMapComponent);
+		imageryProviderService.registerMapProvider(CesiumMapName, CesiumMapName, CesiumMapComponent);
 	}
 }

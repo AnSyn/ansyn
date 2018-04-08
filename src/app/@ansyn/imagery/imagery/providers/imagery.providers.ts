@@ -3,12 +3,10 @@ import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { ImageryPluginProvider, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery';
 
-export const MAP_NAME: InjectionToken<string> = new InjectionToken('MAP_NAME');
-
-export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryPluginProvider[]>, parent: Injector, mapName: string) {
+export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryPluginProvider[]>, parent: Injector, map: IMap) {
 		const providers = pluginsCollections
 			.reduce((previousValue, collection) => [...previousValue, ...collection], [])
-			.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(mapName));
+			.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(map.mapType));
 
 		if (providers.length === 0) {
 			return [];
@@ -20,15 +18,8 @@ export function BaseImageryPluginProviderFactory(pluginsCollections: Array<Image
 export const BaseImageryPluginProvider = {
 	provide: BaseImageryPlugin,
 	useFactory: BaseImageryPluginProviderFactory,
-	deps: [PLUGINS_COLLECTIONS, Injector, MAP_NAME]
+	deps: [PLUGINS_COLLECTIONS, Injector, IMap]
 };
-
-export function ProvideMapName(name: string) {
-	return {
-		provide: MAP_NAME,
-		useValue: name
-	}
-}
 
 export function ProvideMap(implementaion: any) {
 	return {

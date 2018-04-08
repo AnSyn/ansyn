@@ -1,6 +1,6 @@
 import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
-import { IMapComponent } from '../../model/imap-component';
+import { ImageryMapComponent } from '../../model/imap-component';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
@@ -41,7 +41,7 @@ export class ImageryComponentManager {
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
-				protected _mapComponentRef: ComponentRef<IMapComponent>,
+				protected _mapComponentRef: ComponentRef<ImageryMapComponent>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
 				protected config: IImageryConfig,
 				protected _id: string
@@ -104,8 +104,8 @@ export class ImageryComponentManager {
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-			const factory = this.componentFactoryResolver.resolveComponentFactory<IMapComponent>(providedMap.mapComponent);
-			this._mapComponentRef = this.mapComponentElem.createComponent<IMapComponent>(factory);
+			const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(providedMap.mapComponent);
+			this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
 			const mapComponent = this._mapComponentRef.instance;
 			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
 				this.internalSetActiveMap(map);

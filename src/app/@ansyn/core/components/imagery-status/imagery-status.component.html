@@ -42,7 +42,7 @@
 		 [attr.tooltip-value]="description"
 		 tooltip-class="bottom right"
 	>
-		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
+		{{getFormattedTime(overlay.photoTime)}} {{overlay.sensorName}}
 	</div>
 	<div *ngIf="!overlay">
 		Base Map

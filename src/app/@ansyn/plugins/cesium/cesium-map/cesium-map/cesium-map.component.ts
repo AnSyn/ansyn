@@ -21,7 +21,7 @@ export class CesiumMapComponent implements OnInit, OnDestroy, ImageryMapComponen
 
 	@ViewChild('cesiumMap') mapElement: ElementRef;
 
-	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();;
+	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
 	constructor(private _map: IMap,
 		@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {

@@ -1,6 +1,6 @@
 import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
-import { ImageryMapComponent } from '../../model/imap-component';
+import { ImageryMapComponent } from '../../model/imagery-map-component';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';

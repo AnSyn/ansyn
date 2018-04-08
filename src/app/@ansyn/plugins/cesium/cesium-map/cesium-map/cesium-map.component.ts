@@ -18,7 +18,7 @@ import {
 
 export class CesiumMapComponent extends ImageryMapComponent {
 	static mapClass = CesiumMap;
-	@ViewChild('olMap') protected mapElement: ElementRef;
+	@ViewChild('cesiumMap') protected mapElement: ElementRef;
 
 	constructor(protected map: IMap,
 				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {

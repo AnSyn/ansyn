@@ -102,32 +102,28 @@ export class ImageryComponentManager {
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		return new Promise((resolve, reject) => {
-			const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-			const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(providedMap.mapComponent);
-			this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
-			const mapComponent = this._mapComponentRef.instance;
-			const mapCreatedSubscribe = mapComponent.mapCreated.subscribe((map: IMap) => {
-				this.internalSetActiveMap(map);
-				if (activeMapName !== oldMapName && Boolean(oldMapName)) {
-					this.mapInstanceChanged.emit({
-						id: this.id,
-						newMapInstanceName: activeMapName,
-						oldMapInstanceName: oldMapName
-					});
-				}
-				mapCreatedSubscribe.unsubscribe();
-				resolve();
-			});
-			if (layer) {
-				mapComponent.createMap([layer], position);
-			} else {
-				return this.createMapSourceForMapType(providedMap.mapType).then((layers) => {
-					mapComponent.createMap(layers, position);
-				});
-			}
+		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
+		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(providedMap.mapComponent);
+		this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
+		const mapComponent = this._mapComponentRef.instance;
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(providedMap.mapType);
+		return getLayers.then((layers) => {
+			return mapComponent.createMap(layers, position)
+				.do((map) => this.onMapCreated(map, activeMapName, oldMapName))
+				.toPromise()
 		});
 	}
+
+	private onMapCreated (map: IMap, activeMapName, oldMapName) {
+		this.internalSetActiveMap(map);
+		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
+			this.mapInstanceChanged.emit({
+				id: this.id,
+				newMapInstanceName: activeMapName,
+				oldMapInstanceName: oldMapName
+			});
+		}
+	};
 
 	private destroyCurrentComponent(): void {
 		this.destroyPlugins();

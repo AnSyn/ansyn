@@ -131,7 +131,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			`${this.planetOverlaysSourceConfig.tilesUrl}${overlay.sensorType}/${overlay.id}/{z}/{x}/{y}.png`);
 		overlay.thumbnailUrl = this.appendApiKey(element._links.thumbnail);
 		overlay.date = new Date(element.properties.acquired);
-		overlay.photoTime = element.properties.published;
+		overlay.photoTime = element.properties.acquired;
 		overlay.azimuth = toRadians(element.properties.view_angle);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;

@@ -9,6 +9,7 @@ import { AlertMsg } from '../../reducers';
 import { CoreConfig, ICoreConfig } from '../../models/index';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';
+import { getTimeFormat } from '@ansyn/core/utils/time';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -48,8 +49,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isFavorite: boolean;
 	favoritesButtonText: string;
 
+	getFormattedTime(dateTimeSring: string): string {
+		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
+		return formatedTime;
+	}
+
 	get description() {
-		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
+		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) + ' ' + this.overlay.sensorName : null;
 	}
 
 	get noGeoRegistration() {

@@ -8,15 +8,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { SetIsAfterLoginFlagAction } from '@ansyn/core';
 
-fdescribe('WelcomeNotificationComponent', () => {
+describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;
 	let fixture: ComponentFixture<WelcomeNotificationComponent>;
 	let store: Store<any>;
-
-	beforeEach(inject([Store], (_store: Store<ICoreState>) => {
-		store = _store;
-		store.next(new SetIsAfterLoginFlagAction(true));
-	}));
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -34,28 +29,48 @@ fdescribe('WelcomeNotificationComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(() => {
-		fixture = TestBed.createComponent(WelcomeNotificationComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
+	beforeEach(inject([Store], (_store: Store<ICoreState>) => {
+		store = _store;
+	}));
+
+	describe('invoke when isAfterLogin is false', () => {
+		beforeEach(() => {
+			store.next(new SetIsAfterLoginFlagAction(false));
+			fixture = TestBed.createComponent(WelcomeNotificationComponent);
+			component = fixture.componentInstance;
+			spyOn(component.elem.nativeElement, 'focus');
+			fixture.detectChanges();
+		});
+
+		it('should create', () => {
+			expect(component).toBeTruthy();
+		});
+
+		it('tabindex attribute should return zero', () => {
+			expect(component.tabindex).toEqual(0);
+		});
+
+		it('the element.focus() should not be called, during the component`s init', async(() => {
+			fixture.whenStable().then(() => {
+				expect(component.elem.nativeElement.focus).not.toHaveBeenCalled();
+			});
+		}));
 	});
 
-	it('should create', () => {
-		expect(component).toBeTruthy();
+	describe('invoke when isAfterLogin is true', () => {
+		beforeEach(() => {
+			store.next(new SetIsAfterLoginFlagAction(true));
+			fixture = TestBed.createComponent(WelcomeNotificationComponent);
+			component = fixture.componentInstance;
+			spyOn(component.elem.nativeElement, 'focus');
+			fixture.detectChanges();
+		});
+
+		it('the element.focus() should be called, during the component`s init', async(() => {
+			fixture.whenStable().then(() => {
+				expect(component.elem.nativeElement.focus).toHaveBeenCalled();
+			});
+		}));
 	});
-
-	it('tabindex attribute should return zero', () => {
-		expect(component.tabindex).toEqual(0);
-	});
-
-	it('element should be focused', () => {
-
-	});
-
-	// it('if isAfterLogin is true, bring the element to focus', () => {
-	// 	spyOn(component.elem.nativeElement, 'focus');
-	// 	(<Store<ICoreState>>component.store$.select(coreStateSelector)).next(new SetIsAfterLoginFlagAction(true));
-	// 	expect(component.elem.nativeElement.focus).toHaveBeenCalled();
-	// });
 
 });

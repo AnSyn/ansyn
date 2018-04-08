@@ -1,6 +1,5 @@
 import { EventEmitter } from '@angular/core';
 import { IMap } from '@ansyn/imagery';
-import { OpenLayersImageProcessing } from '../../image-processing/image-processing';
 import { Observable } from 'rxjs/Observable';
 import * as ol from 'openlayers';
 import Map from 'ol/map';
@@ -26,8 +25,6 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	mapType: string = OpenLayersDisabledMap.mapType;
 	mapObject: Map;
 	mainLayer: Layer;
-
-	_imageProcessing: OpenLayersImageProcessing;
 
 	constructor(element: HTMLElement, layers: any, position?: CaseMapPosition) {
 		super();
@@ -85,12 +82,6 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
-		}
-
-		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing = new OpenLayersImageProcessing(<Raster> layer.getSource());
-		} else {
-			this._imageProcessing = null;
 		}
 	}
 

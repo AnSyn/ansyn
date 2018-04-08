@@ -98,11 +98,10 @@ export class OverlaysService {
 	}
 
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
-		let tBbox = bbox(params.region);
-		let tBboxFeature = bboxPolygon(tBbox);
+		let feature =  params.region.type !== 'Feature'  ? params.region : { type: 'Feature', geometry: params.region }
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
-			region: Boolean(params.realPolygon) ? params.region : tBboxFeature.geometry,
+			region: feature,
 			timeRange: <any> {
 				start: params.time.from,
 				end: params.time.to

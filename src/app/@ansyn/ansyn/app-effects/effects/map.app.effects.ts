@@ -97,7 +97,7 @@ export class MapAppEffects {
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
 			return [
 				new DrawPinPointAction(action.payload),
-				new SetOverlaysCriteriaAction({ region,  realPolygon: false })
+				new SetOverlaysCriteriaAction({ region })
 			];
 		});
 

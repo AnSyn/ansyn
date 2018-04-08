@@ -21,6 +21,8 @@ import { Actions } from '@ngrx/effects';
 })
 
 export class StatusBarComponent implements OnInit {
+
+
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
@@ -34,7 +36,9 @@ export class StatusBarComponent implements OnInit {
 		.distinctUntilChanged();
 
 	comboBoxesProperties: ComboBoxesProperties = {};
+
 	flags$ = this.store.select(statusBarStateSelector).pluck('flags').distinctUntilChanged();
+
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
@@ -110,6 +114,8 @@ export class StatusBarComponent implements OnInit {
 
 		this.setSubscribers();
 
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
+
 		this.store.dispatch(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItems.pinPointIndicator,
 			value: true
@@ -159,20 +165,26 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new CopySelectedCaseLinkAction());
 	}
 
-	toggleMapPointSearch() {
+	toggleMapSearch() {
+		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 		if (this.comboBoxesProperties.geoFilter === 'Polygon')
 		{
-			/*if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
-				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
+			if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
+				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
 			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));*/
-			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: !Boolean(this.flags.get('POLYGON_INDICATOR')) }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
 		}
 		else
 		{
-			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true }));
+			if (Boolean(this.flags.get('POLYGON_INDICATOR'))) {
+				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
+			}
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: !Boolean(this.flags.get('PIN_POINT_INDICATOR')) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }));
+
 		}
 	}
 

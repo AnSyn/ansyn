@@ -53,11 +53,11 @@
 						[class.active2]="flags.get(statusBarFlagsItems.pinPointIndicator)">
 					<i class="icon-status-bar-show-pin-point"></i>
 				</button>
-				<button (click)="toggleMapPointSearch()"
+				<button (click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"
 						class="edit-pinpoint toggle-icon"
-						[class.active2]="flags.get(statusBarFlagsItems.pinPointSearch)">
+						[class.active2]="(flags.get(statusBarFlagsItems.pinPointSearch) || flags.get(statusBarFlagsItems.polygonSearch))">
 					<i class="icon-edit"></i>
 				</button>
 			</div>

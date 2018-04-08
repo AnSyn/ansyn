@@ -1,4 +1,4 @@
-import { InjectionToken, Injector } from '@angular/core';
+import { Injector } from '@angular/core';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { ImageryPluginProvider, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery';

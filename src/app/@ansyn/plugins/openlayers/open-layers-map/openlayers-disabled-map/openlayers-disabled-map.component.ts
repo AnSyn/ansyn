@@ -26,27 +26,13 @@ import { BaseImageryPluginProvider, ProvideMap } from '@ansyn/imagery/imagery/pr
 	]
 })
 
-export class OpenLayersDisabledMapComponent implements OnDestroy, ImageryMapComponent {
+export class OpenLayersDisabledMapComponent extends ImageryMapComponent {
 	static mapClass = OpenLayersDisabledMap;
+	@ViewChild('olMap') protected mapElement: ElementRef;
 
-	@ViewChild('olMap') mapElement: ElementRef;
-
-	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
-
-	constructor(private _map: IMap,
+	constructor(protected map: IMap,
 				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+		super();
 	}
 
-	createMap(layers: any, position?: CaseMapPosition): void {
-		this._map.initMap(this.mapElement.nativeElement, layers, position)
-			.filter(success => success)
-			.do(() => this.mapCreated.emit(this._map))
-			.subscribe();
-	}
-
-	ngOnDestroy(): void {
-		if (this._map) {
-			this._map.dispose();
-		}
-	}
 }

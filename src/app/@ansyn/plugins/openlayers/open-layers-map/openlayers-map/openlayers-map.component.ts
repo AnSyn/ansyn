@@ -17,26 +17,12 @@ import {
 	]
 })
 
-export class OpenlayersMapComponent implements OnDestroy, ImageryMapComponent {
+export class OpenlayersMapComponent extends ImageryMapComponent {
 	static mapClass = OpenLayersMap;
-	@ViewChild('olMap') mapElement: ElementRef;
-	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
+	@ViewChild('olMap') protected mapElement: ElementRef;
 
-	constructor(private _map: IMap,
+	constructor(protected map: IMap,
 				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+		super();
 	}
-
-	createMap(layers: any, position?: CaseMapPosition): void {
-		this._map.initMap(this.mapElement.nativeElement, layers, position).subscribe(() => {
-			this.mapCreated.emit(this._map);
-		});
-
-	}
-
-	ngOnDestroy(): void {
-		if (this._map) {
-			this._map.dispose();
-		}
-	}
-
 }

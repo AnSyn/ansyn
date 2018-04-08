@@ -3,7 +3,7 @@ import { DisabledOpenLayersMapName, OpenLayersDisabledMap } from './openlayers-d
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import {
-	BaseImageryPluginProvider, MAP_NAME,
+	BaseImageryPluginProvider, MAP_NAME, ProvideMap,
 	ProvideMapName
 } from '@ansyn/imagery/imagery/providers/imagery.providers';
 
@@ -24,6 +24,7 @@ import {
 
 		}`],
 	providers: [
+		ProvideMap(OpenLayersDisabledMap),
 		ProvideMapName(DisabledOpenLayersMapName),
 		BaseImageryPluginProvider
 	]
@@ -34,16 +35,18 @@ export class OpenLayersDisabledMapComponent implements OnDestroy, IMapComponent 
 
 	@ViewChild('olMap') mapElement: ElementRef;
 
-	private _map: OpenLayersDisabledMap;
 	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
-	constructor(@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[],
+	constructor(private _map: IMap,
+				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[],
 				@Inject(MAP_NAME) public mapName: string) {
 	}
 
 	createMap(layers: any, position?: CaseMapPosition): void {
-		this._map = new OpenLayersDisabledMap(this.mapElement.nativeElement, layers, position);
-		this.mapCreated.emit(this._map);
+		this._map.initMap(this.mapElement.nativeElement, layers, position)
+			.filter(success => success)
+			.do(() => this.mapCreated.emit(this._map))
+			.subscribe();
 	}
 
 	ngOnDestroy(): void {

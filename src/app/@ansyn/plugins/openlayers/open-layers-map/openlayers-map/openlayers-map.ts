@@ -1,5 +1,5 @@
 import { IMap } from '@ansyn/imagery';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
@@ -27,6 +27,7 @@ import 'rxjs/add/operator/take';
 
 export const OpenlayersMapName = 'openLayersMap';
 
+@Injectable()
 export class OpenLayersMap extends IMap<OLMap> {
 	static mapType = OpenlayersMapName;
 
@@ -52,6 +53,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _flags = {
 		singleClickHandler: null
 	};
+	private _mapLayers = [];
 
 	static addGroupLayer(layer: any, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
@@ -90,7 +92,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, public projectionService: ProjectionService, private _mapLayers = [], position?: CaseMapPosition) {
+	constructor(public projectionService: ProjectionService) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -101,7 +103,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this.showGroups.set('layers', true);
-		this.initMap(element, _mapLayers, position).take(1).subscribe();
 	}
 
 	getLayers(): any[] {
@@ -128,6 +129,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+		this._mapLayers = [...layers];
 		const controls = [
 			new ScaleLine(),
 			new OpenLayersMousePositionControl({

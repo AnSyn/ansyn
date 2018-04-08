@@ -2,10 +2,9 @@ import { Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } fro
 import { OpenLayersMap, OpenlayersMapName } from './openlayers-map';
 import { BaseImageryPlugin, IMap, IMapComponent } from '@ansyn/imagery';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import {
 	BaseImageryPluginProvider,
-	MAP_NAME,
+	MAP_NAME, ProvideMap,
 	ProvideMapName
 } from '@ansyn/imagery/imagery/providers/imagery.providers';
 
@@ -14,6 +13,7 @@ import {
 	templateUrl: './openlayers-map.component.html',
 	styleUrls: ['./openlayers-map.component.less'],
 	providers: [
+		ProvideMap(OpenLayersMap),
 		ProvideMapName(OpenlayersMapName),
 		BaseImageryPluginProvider
 	]
@@ -21,20 +21,19 @@ import {
 
 export class OpenlayersMapComponent implements OnDestroy, IMapComponent {
 	static mapClass = OpenLayersMap;
-
 	@ViewChild('olMap') mapElement: ElementRef;
-
-	private _map: OpenLayersMap;
 	public mapCreated: EventEmitter<IMap> = new EventEmitter<IMap>();
 
-	constructor(private projectionService: ProjectionService,
+	constructor(private _map: IMap,
 				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[],
 				@Inject(MAP_NAME) public mapName: string) {
 	}
 
 	createMap(layers: any, position?: CaseMapPosition): void {
-		this._map = new OpenLayersMap(this.mapElement.nativeElement, this.projectionService, layers, position);
-		this.mapCreated.emit(this._map);
+		this._map.initMap(this.mapElement.nativeElement, layers, position).subscribe(() => {
+			this.mapCreated.emit(this._map);
+		});
+
 	}
 
 	ngOnDestroy(): void {

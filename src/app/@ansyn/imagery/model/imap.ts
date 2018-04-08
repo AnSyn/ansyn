@@ -28,6 +28,7 @@ export abstract class IMap<T = any> {
 
 	abstract toggleGroup(groupName: string);
 
+	abstract initMap(element: HTMLElement, layers?: any, position?: CaseMapPosition): Observable<boolean>;
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection

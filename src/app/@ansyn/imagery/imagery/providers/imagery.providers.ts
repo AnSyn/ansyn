@@ -1,6 +1,7 @@
 import { InjectionToken, Injector } from '@angular/core';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { ImageryPluginProvider, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
+import { IMap } from '@ansyn/imagery';
 
 export const MAP_NAME: InjectionToken<string> = new InjectionToken('MAP_NAME');
 
@@ -26,5 +27,12 @@ export function ProvideMapName(name: string) {
 	return {
 		provide: MAP_NAME,
 		useValue: name
+	}
+}
+
+export function ProvideMap(implementaion: any) {
+	return {
+		provide: IMap,
+		useClass: implementaion
 	}
 }

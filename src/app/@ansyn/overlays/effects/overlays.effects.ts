@@ -124,10 +124,10 @@ export class OverlaysEffects {
 	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map((action: LoadOverlaysAction) => {
-			const from = new Date(action.payload.time.from);
-			const to = new Date(action.payload.time.to);
-			const state = { from, to };
-			return new SetTimelineStateAction({ state });
+			const start = new Date(action.payload.time.from);
+			const end = new Date(action.payload.time.to);
+			const timeLineRange = { start, end };
+			return new SetTimelineStateAction({ timeLineRange });
 		});
 
 	/**
@@ -222,22 +222,6 @@ export class OverlaysEffects {
 			const payload = turnOn ? overlaysStatusMessages.noOverLayMatchFilters : overlaysStatusMessages.nullify;
 			return new SetOverlaysStatusMessage(payload);
 		});
-
-	/**
-	 * @type Effect
-	 * @name timelineRedraw$
-	 * @description this method should redraw timeline on changes
-	 * @ofType SetTimelineStateAction
-	 * @filter noRedraw value
-	 * @action RedrawTimelineAction
-	 */
-
-	@Effect()
-	timelineRedraw$: Observable<RedrawTimelineAction> = this.actions$
-		.ofType(OverlaysActionTypes.SET_TIMELINE_STATE)
-		.filter(({ payload }: SetTimelineStateAction) => !payload.noRedraw)
-		.map(() => new RedrawTimelineAction());
-
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IOverlaysState>,

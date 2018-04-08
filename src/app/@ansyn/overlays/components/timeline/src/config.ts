@@ -28,6 +28,7 @@ export default d3 => ({
         onClick: () => {},
         onMouseOver: () => {},
         onMouseOut: () => {},
+		ondblclick: () => {}
     },
     label: {
         padding: 20,

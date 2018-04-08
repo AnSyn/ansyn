@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
 import { CaseOrientation, CaseRegionState, CaseTimeState, OverlaySpecialObject } from '@ansyn/core';
-import { TimelineState } from '../reducers/overlays.reducer';
+import { TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 
 export const OverlaysActionTypes = {
@@ -151,7 +151,7 @@ export class SetFilteredOverlaysAction implements Action {
 export class SetTimelineStateAction implements Action {
 	type = OverlaysActionTypes.SET_TIMELINE_STATE;
 
-	constructor(public payload: { state: TimelineState, noRedraw?: boolean }) {
+	constructor(public payload: { timeLineRange: TimelineRange}) {
 	}
 }
 

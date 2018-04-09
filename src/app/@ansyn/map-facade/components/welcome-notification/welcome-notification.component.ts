@@ -14,7 +14,7 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
 	private _subscriptions: Subscription[] = [];
 
-	public config = {};
+	public config: any = {};
 
 	isAfterLogin$ = this.store$.select(coreStateSelector)
 		.take(1)

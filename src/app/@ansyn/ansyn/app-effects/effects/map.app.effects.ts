@@ -439,6 +439,7 @@ export class MapAppEffects {
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
 		const prevOverlay = mapData.overlay;
 		const isNotDisplayed = !(mapData.overlay && mapData.overlay.id === overlay.id);
+		return isFull && isNotDisplayed;
 	}
 
 	constructor(protected actions$: Actions,

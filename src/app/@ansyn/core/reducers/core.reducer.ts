@@ -4,6 +4,7 @@ import {
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { sessionData, updateSession } from '@ansyn/core';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -23,7 +24,7 @@ export interface ICoreState {
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
-	isAfterLogin: boolean;
+	wasWelcomeNotificationShown: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -35,7 +36,7 @@ export const coreInitialState: ICoreState = {
 	]),
 	overlaysCriteria: {},
 	layout: 'layout1',
-	isAfterLogin: false
+	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown
 };
 
 export const coreFeatureKey = 'core';
@@ -76,8 +77,10 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_LAYOUT:
 			return {...state, layout: action.payload };
 
-		case CoreActionTypes.SET_IS_AFTER_LOGIN_FLAG:
-			return {...state, isAfterLogin: action.payload };
+		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
+			const payloadObj = {wasWelcomeNotificationShown: action.payload};
+			updateSession(payloadObj);
+			return {...state, ...payloadObj };
 
 		default:
 			return state;

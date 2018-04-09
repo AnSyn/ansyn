@@ -33,7 +33,7 @@ describe('WelcomeNotificationComponent', () => {
 		store = _store;
 	}));
 
-	describe('invoke when isAfterLogin is false', () => {
+	describe('invoke when wasWelcomeNotificationShown is false', () => {
 		beforeEach(() => {
 			store.next(new SetIsAfterLoginFlagAction(false));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
@@ -57,7 +57,7 @@ describe('WelcomeNotificationComponent', () => {
 		}));
 	});
 
-	describe('invoke when isAfterLogin is true', () => {
+	describe('invoke when wasWelcomeNotificationShown is true', () => {
 		beforeEach(() => {
 			store.next(new SetIsAfterLoginFlagAction(true));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);

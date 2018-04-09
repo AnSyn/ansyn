@@ -16,9 +16,9 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
 	public config: any = {};
 
-	isAfterLogin$ = this.store$.select(coreStateSelector)
+	wasWelcomeNotificationShown$ = this.store$.select(coreStateSelector)
 		.take(1)
-		.pluck<ICoreState, boolean>('isAfterLogin')
+		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
 	;
 
 	// Make the DOM element focusable
@@ -35,8 +35,8 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
 	ngAfterViewInit() {
 		this._subscriptions.push(
-			this.isAfterLogin$.subscribe(isAfterLogin => {
-				if (isAfterLogin) {
+			this.wasWelcomeNotificationShown$.subscribe(wasWelcomeNotificationShown => {
+				if (wasWelcomeNotificationShown) {
 					this.elem.nativeElement.focus();
 				}
 			})

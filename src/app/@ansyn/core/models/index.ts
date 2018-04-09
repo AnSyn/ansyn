@@ -10,3 +10,4 @@ export * from './visualizers/annotations.model';
 export * from './core.config.model'
 export * from './core.config'
 export * from './layout-options.model';
+export * from './core-session-state.model';

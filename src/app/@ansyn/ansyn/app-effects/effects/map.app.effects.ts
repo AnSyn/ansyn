@@ -155,48 +155,7 @@ export class MapAppEffects {
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([{action, payload }]: [any, IMapState]) => OverlaysService.isFullOverlay(payload.overlay))
-		.mergeMap(([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) => {
-			const { overlay } = payload;
-			const mapId = payload.mapId || mapState.activeMapId;
-			const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
-			const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
-			const communicator = this.imageryCommunicatorService.provide(mapId);
-			const mapType = communicator.ActiveMap.mapType;
-			const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
-
-			if (!sourceLoader) {
-				return Observable.of(new SetToastMessageAction({
-					toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
-					showWarningIcon: true
-				}));
-			}
-
-			return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
-				.switchMap(layer => {
-					let observable;
-					if (overlay.isGeoRegistered) {
-						if (communicator.activeMapName === DisabledOpenLayersMapName) {
-							observable = Observable.fromPromise(communicator.setActiveMap(OpenlayersMapName, mapData.position, layer));
-						}
-						if (intersection < this.config.overlayCoverage) {
-							observable = communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
-						} else {
-							observable = communicator.resetView(layer, mapData.position);
-						}
-					} else {
-						if (communicator.activeMapName !== DisabledOpenLayersMapName) {
-							observable = Observable.fromPromise(communicator.setActiveMap(DisabledOpenLayersMapName, mapData.position, layer));
-						} else {
-							observable = communicator.resetView(layer, mapData.position);
-						}
-					}
-					return observable.map(() => new DisplayOverlaySuccessAction(payload));
-				})
-				.catch(() => Observable.from([
-					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-					new BackToWorldView({ mapId })
-				]));
-		});
+		.mergeMap(this.onDisplayOverlay.bind(this));
 
 	/**
 	 * @type Effect
@@ -428,6 +387,50 @@ export class MapAppEffects {
 			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 			return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
 		});
+
+	onDisplayOverlay([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) {
+		const { overlay } = payload;
+		const mapId = payload.mapId || mapState.activeMapId;
+		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+		const prevOverlay = mapData.overlay;
+		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
+		const communicator = this.imageryCommunicatorService.provide(mapId);
+		const mapType = communicator.ActiveMap.mapType;
+		const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
+
+		if (!sourceLoader) {
+			return Observable.of(new SetToastMessageAction({
+				toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
+				showWarningIcon: true
+			}));
+		}
+
+		return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
+			.switchMap(layer => {
+				let observable;
+				if (overlay.isGeoRegistered) {
+					if (communicator.activeMapName === DisabledOpenLayersMapName) {
+						observable = Observable.fromPromise(communicator.setActiveMap(OpenlayersMapName, mapData.position, layer));
+					}
+					if (intersection < this.config.overlayCoverage) {
+						observable = communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
+					} else {
+						observable = communicator.resetView(layer, mapData.position);
+					}
+				} else {
+					if (communicator.activeMapName !== DisabledOpenLayersMapName) {
+						observable = Observable.fromPromise(communicator.setActiveMap(DisabledOpenLayersMapName, mapData.position, layer));
+					} else {
+						observable = communicator.resetView(layer, mapData.position);
+					}
+				}
+				return observable.map(() => new DisplayOverlaySuccessAction(payload));
+			})
+			.catch(() => Observable.from([
+				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
+			]));
+	}
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

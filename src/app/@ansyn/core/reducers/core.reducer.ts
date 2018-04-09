@@ -4,7 +4,7 @@ import {
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
-import { sessionData, updateSession } from '@ansyn/core';
+import { sessionData, updateSession } from '../services/core-session.service';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',

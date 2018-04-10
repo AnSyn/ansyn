@@ -12,6 +12,7 @@ import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models
 import { SetComboBoxesProperties } from '../../actions';
 import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { UpdateSearchModeAction } from "@ansyn/status-bar";
 import { Actions } from '@ngrx/effects';
 
 @Component({
@@ -162,8 +163,10 @@ export class StatusBarComponent implements OnInit {
 		if (payload.geoFilter !== undefined)
 		{
 			this.searchType = payload.geoFilter;
+			this.store.dispatch((new UpdateSearchModeAction(this.searchType)));
 		}
 		this.store.dispatch(new SetComboBoxesProperties(payload));
+		this.toggleMapSearch();
 	}
 
 	copyLink(): void {

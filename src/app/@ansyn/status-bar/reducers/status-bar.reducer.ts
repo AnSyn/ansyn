@@ -2,6 +2,7 @@ import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.acti
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { ComboBoxesProperties } from '@ansyn/status-bar';
 import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { cloneDeep } from 'lodash';
 import { CaseTimeState } from '@ansyn/core';
 
 export const statusBarToastMessages = {
@@ -12,11 +13,13 @@ export const statusBarToastMessages = {
 export interface IStatusBarState {
 	flags: Map<StatusBarFlag, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
+	searchType: string
 }
 
 export const StatusBarInitialState: IStatusBarState = {
 	flags: new Map<StatusBarFlag, boolean>(),
 	comboBoxesProperties: {},
+	searchType: 'Pin-Point'
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -44,6 +47,10 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
+
+		case StatusBarActionsTypes.UPDATE_SEARCH_MODE:
+			const searchType = cloneDeep(action.payload);
+			return { ...state, searchType: searchType};
 
 		default:
 			return state;

@@ -295,6 +295,7 @@ export class VisualizersAppEffects {
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
 				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor

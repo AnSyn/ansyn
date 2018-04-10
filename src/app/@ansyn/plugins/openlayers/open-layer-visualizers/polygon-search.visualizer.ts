@@ -3,13 +3,19 @@ import Style from 'ol/style/style';
 import proj from 'ol/proj';
 import GeomPolygon from "ol/geom/polygon";
 import Draw from "ol/interaction/draw";
-import { StatusBarActionsTypes, statusBarFlagsItems, UpdateStatusFlagsAction } from "@ansyn/status-bar";
+import {
+	ComboBoxesProperties,
+	IStatusBarState,
+	StatusBarActionsTypes,
+	statusBarFlagsItems,
+	UpdateStatusFlagsAction
+} from "@ansyn/status-bar";
 import { Observable } from "rxjs/Observable";
 import { VisualizerInteractions } from "@ansyn/imagery/model/base-imagery-visualizer";
 import { CommunicatorEntity } from "@ansyn/imagery";
 import { Actions } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { cloneDeep, remove } from "lodash";
+import { cloneDeep, remove, findIndex } from "lodash";
 import { FeatureCollection, GeometryObject } from "geojson";
 import { SetAnnotationsLayer } from "@ansyn/menu-items/layers-manager/actions/layers.actions";
 import { ILayerState, layersStateSelector } from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
@@ -19,8 +25,11 @@ import { statusBarStateSelector } from "@ansyn/status-bar/reducers/status-bar.re
 
 export class PolygonSearchVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
-	static lastPolygonSearchId: any = '';
+	static lastPolygonSearchId: any = [];
+	static isPolygonSearch = false;
+	static lastPolygonSearch: any;
 	public annotationsLayer;
+
 	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
 
 	get drawInteractionHandler() {
@@ -28,6 +37,13 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 	}
 
 	flags$ = this.store$.select(statusBarStateSelector).pluck('flags').distinctUntilChanged();
+
+	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store$.select(statusBarStateSelector)
+		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
+		.filter((ComboBoxesProperties) => ComboBoxesProperties.geoFilter !== undefined)
+		.do((ComboBoxesProperties) => {
+			PolygonSearchVisualizer.isPolygonSearch = ComboBoxesProperties.geoFilter === 'Polygon';
+		});
 
 	polygonSearch$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
@@ -49,16 +65,37 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 			}
 		});
 
-	pinPointSearch$: Observable<any> = this.actions$
+	polygonIndicator$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch && Boolean(this.flags.get('PIN_POINT_SEARCH')))
+		.filter(action => action.payload.key === statusBarFlagsItems.polygonIndicator)
+		.do(() => {
+			console.log(this.flags.get(statusBarFlagsItems.polygonIndicator));
+			if (this.flags.get(statusBarFlagsItems.polygonIndicator)) {
+				let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
+				const exists: boolean = updatedAnnotationsLayer.features.find(feat => feat.properties.id === PolygonSearchVisualizer.lastPolygonSearchId) !== undefined;
+				if (Boolean(PolygonSearchVisualizer.lastPolygonSearch) && PolygonSearchVisualizer.lastPolygonSearch.length !== 0
+					&& !exists) {
+					updatedAnnotationsLayer.features.push(PolygonSearchVisualizer.lastPolygonSearch[0]);
+					this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+				}
+			}
+			else {
+				this.removeLastSearchPolygon();
+			}
+		});
+
+	differentSearch$: Observable<any> = this.actions$
+		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
+		.filter(action => action.payload.key !== statusBarFlagsItems.polygonSearch)
 		.withLatestFrom(this.store$.select(layersStateSelector).pluck<ILayerState, FeatureCollection<any>>('annotationsLayer'), (action: any, annotationsLayer: any): any =>
 		{
 			return annotationsLayer;
 		})
 		.do((annotationsLayer) => {
-			this.annotationsLayer = annotationsLayer;
-			this.removeLastSearchPolygon();
+			if (!PolygonSearchVisualizer.isPolygonSearch) {
+				this.annotationsLayer = annotationsLayer;
+				this.removeLastSearchPolygon();
+			}
 		});
 
 
@@ -72,7 +109,9 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 		this.subscriptions.push(
 			this.polygonSearch$.subscribe(),
 			this.annotationsLayer$.subscribe(),
-			this.pinPointSearch$.subscribe()
+			this.differentSearch$.subscribe(),
+			this.comboBoxesProperties$.subscribe(),
+			this.polygonIndicator$.subscribe()
 		);
 	}
 
@@ -84,11 +123,13 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 
 	removeLastSearchPolygon() {
 		let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
-
-		remove(updatedAnnotationsLayer.features, function(aFeature)
+		let updateLastPolygonSearch = remove(updatedAnnotationsLayer.features, function(aFeature)
 		{
 			return aFeature.properties.id === PolygonSearchVisualizer.lastPolygonSearchId;
 		});
+		if (updateLastPolygonSearch.length !== 0) {
+			PolygonSearchVisualizer.lastPolygonSearch = updateLastPolygonSearch;
+		}
 		this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
 	}
 
@@ -134,6 +175,8 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 					'type': 'Polygon',
 					'coordinates': polyCoords}};
 			this.store$.dispatch(new SetOverlaysCriteriaAction({ region: criteria.region } ) );
+			this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
+			// this.flags.set(statusBarFlagsItems.pinPointIndicator, false);
 		}
 	}
 

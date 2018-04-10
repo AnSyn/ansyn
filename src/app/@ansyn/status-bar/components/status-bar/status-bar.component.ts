@@ -56,6 +56,7 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
+	searchType: CaseGeoFilter = 'Pin-Point';
 
 	get statusBarFlagsItems() {
 		return statusBarFlagsItems;
@@ -158,6 +159,10 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
+		if (payload.geoFilter !== undefined)
+		{
+			this.searchType = payload.geoFilter;
+		}
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
@@ -188,8 +193,15 @@ export class StatusBarComponent implements OnInit {
 		}
 	}
 
-	togglePinPointIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
+	toggleIndicatorView() {
+		if (this.searchType === 'Pin-Point') {
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: !Boolean(this.flags.get('PIN_POINT_INDICATOR')) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
+		}
+		if (this.searchType === 'Polygon') {
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: !Boolean(this.flags.get('POLYGON_INDICATOR')) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
+		}
 	}
 
 	clickGoAdjacent(isNext): void {

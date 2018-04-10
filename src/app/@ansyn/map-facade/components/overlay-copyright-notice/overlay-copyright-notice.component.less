@@ -1,0 +1,19 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+
+:host {
+	position: absolute;
+	bottom: @status-bar-height;
+	/* horizontally  centered */
+	right: 0;
+	z-index: @z-index-overlay-copyright-notice;
+	pointer-events: none;
+
+
+	.overlay-copyright-notice {
+		background-color: rgba(0,0,0,0.3);
+		color: white;
+		padding: 5px;
+	}
+}
+

@@ -15,7 +15,7 @@ import { VisualizerInteractions } from "@ansyn/imagery/model/base-imagery-visual
 import { CommunicatorEntity } from "@ansyn/imagery";
 import { Actions } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { cloneDeep, remove, findIndex } from "lodash";
+import { cloneDeep, remove } from "lodash";
 import { FeatureCollection, GeometryObject } from "geojson";
 import { SetAnnotationsLayer } from "@ansyn/menu-items/layers-manager/actions/layers.actions";
 import { ILayerState, layersStateSelector } from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
@@ -69,7 +69,6 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItems.polygonIndicator)
 		.do(() => {
-			console.log(this.flags.get(statusBarFlagsItems.polygonIndicator));
 			if (this.flags.get(statusBarFlagsItems.polygonIndicator)) {
 				let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
 				const exists: boolean = updatedAnnotationsLayer.features.find(feat => feat.properties.id === PolygonSearchVisualizer.lastPolygonSearchId) !== undefined;
@@ -205,6 +204,7 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+		this.isHideable = true;
 		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
 			this.flags = new Map(flags);
 		});

@@ -6,7 +6,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { SetIsAfterLoginFlagAction } from '@ansyn/core';
+import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
 
 describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;
@@ -35,7 +35,7 @@ describe('WelcomeNotificationComponent', () => {
 
 	describe('invoke when wasWelcomeNotificationShown is false', () => {
 		beforeEach(() => {
-			store.next(new SetIsAfterLoginFlagAction(false));
+			store.next(new SetWasWelcomeNotificationShownFlagAction(false));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
 			spyOn(component.elem.nativeElement, 'focus');
@@ -59,7 +59,7 @@ describe('WelcomeNotificationComponent', () => {
 
 	describe('invoke when wasWelcomeNotificationShown is true', () => {
 		beforeEach(() => {
-			store.next(new SetIsAfterLoginFlagAction(true));
+			store.next(new SetWasWelcomeNotificationShownFlagAction(true));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
 			spyOn(component.elem.nativeElement, 'focus');

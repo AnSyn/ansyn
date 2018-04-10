@@ -206,11 +206,12 @@ describe('VisualizersAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(abcd)--', {
+		const expectedResult = cold('--(abcde)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
 			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
-			d: new SetPinLocationModeAction(false)
+			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false}),
+			e: new SetPinLocationModeAction(false)
 		});
 
 		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
@@ -223,10 +224,11 @@ describe('VisualizersAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcd)--', {
+		const expectedResult = cold('--(bcde)--', {
 			b: new SetAnnotationMode(),
 			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
-			d: new SetPinLocationModeAction(false)
+			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false}),
+			e: new SetPinLocationModeAction(false)
 		});
 
 		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);

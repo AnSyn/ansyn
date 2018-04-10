@@ -73,7 +73,7 @@ describe('StatusBarComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 
 		fixture.nativeElement.querySelector('.eye-button').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
+		expect(store.dispatch).toHaveBeenCalled();
 	});
 
 	describe('clicks', () => {

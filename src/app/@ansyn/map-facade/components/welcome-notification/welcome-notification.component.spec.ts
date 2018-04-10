@@ -38,6 +38,7 @@ describe('WelcomeNotificationComponent', () => {
 			store.next(new SetWasWelcomeNotificationShownFlagAction(false));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
+			spyOn(store, 'dispatch');
 			spyOn(component.elem.nativeElement, 'focus');
 			fixture.detectChanges();
 		});
@@ -50,9 +51,10 @@ describe('WelcomeNotificationComponent', () => {
 			expect(component.tabindex).toEqual(0);
 		});
 
-		it('the element.focus() should not be called, during the component`s init', async(() => {
+		it('the element.focus() should be called, during the component`s init', async(() => {
 			fixture.whenStable().then(() => {
-				expect(component.elem.nativeElement.focus).not.toHaveBeenCalled();
+				expect(store.dispatch).toHaveBeenCalled();
+				expect(component.elem.nativeElement.focus).toHaveBeenCalled();
 			});
 		}));
 	});
@@ -62,13 +64,15 @@ describe('WelcomeNotificationComponent', () => {
 			store.next(new SetWasWelcomeNotificationShownFlagAction(true));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
+			spyOn(store, 'dispatch');
 			spyOn(component.elem.nativeElement, 'focus');
 			fixture.detectChanges();
 		});
 
-		it('the element.focus() should be called, during the component`s init', async(() => {
+		it('the element.focus() should not be called, during the component`s init', async(() => {
 			fixture.whenStable().then(() => {
-				expect(component.elem.nativeElement.focus).toHaveBeenCalled();
+				expect(store.dispatch).toHaveBeenCalled();
+				expect(component.elem.nativeElement.focus).not.toHaveBeenCalled();
 			});
 		}));
 	});

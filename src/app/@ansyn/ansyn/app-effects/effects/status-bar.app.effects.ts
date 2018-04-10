@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItems,
+	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItemsEnum,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
@@ -35,9 +35,9 @@ export class StatusBarAppEffects {
 	@Effect({ dispatch: false })
 	updatePinPointSearchAction$: Observable<void> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointSearch)
 		.withLatestFrom(this.store.select(statusBarStateSelector))
-		.filter(([action, statusBarState]: [UpdateStatusFlagsAction, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.filter(([action, statusBarState]: [UpdateStatusFlagsAction, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
 		.map(() => {
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				communicator.createMapSingleClickEvent();
@@ -55,12 +55,12 @@ export class StatusBarAppEffects {
 	@Effect()
 	updatePinPointIndicatorAction$: Observable<DrawPinPointAction> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointIndicator)
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointIndicator)
 		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
 		.filter(([action, statusBarState, casesState]) => Boolean(casesState.selectedCase))
 		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
 			let coordinates = null;
-			if (statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator)) {
+			if (statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)) {
 				coordinates = getPointByGeometry(casesState.selectedCase.state.region).coordinates;
 			}
 			return new DrawPinPointAction(coordinates);
@@ -107,9 +107,9 @@ export class StatusBarAppEffects {
 	@Effect()
 	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.pinPointSearch)
-		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, Map<string, boolean>>('flags'))
-		.map(([action, flags]: [any, Map<string, boolean>]) => flags.get(statusBarFlagsItems.pinPointSearch))
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointSearch)
+		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags'))
+		.map(([action, flags]: [any, Map<statusBarFlagsItemsEnum, boolean>]) => flags.get(statusBarFlagsItemsEnum.pinPointSearch))
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
 

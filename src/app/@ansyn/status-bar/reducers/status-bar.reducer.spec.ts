@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
-import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;
@@ -11,18 +11,18 @@ describe('Status Bar Reducer', () => {
 
 	it('update status flags - \'good\' value', () => {
 		const action = new UpdateStatusFlagsAction({
-			key: statusBarFlagsItems.pinPointIndicator,
+			key: statusBarFlagsItemsEnum.pinPointIndicator,
 			value: true
 		});
 
 		const newState = StatusBarReducer(_reducerState, action);
-		expect(newState.flags.get(statusBarFlagsItems.pinPointIndicator)).toBe(true);
+		expect(newState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)).toBe(true);
 
 	});
 
 	it('update status flags - \'bad\' value', () => {
 		const action = new UpdateStatusFlagsAction({
-			key: <StatusBarFlag> 'TMP',
+			key: <statusBarFlagsItemsEnum> 'TMP',
 			value: true
 		});
 

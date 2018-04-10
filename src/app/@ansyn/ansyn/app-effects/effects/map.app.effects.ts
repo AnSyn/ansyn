@@ -23,7 +23,7 @@ import {
 	IStatusBarState, statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	DrawPinPointAction, ImageryCreatedAction, MapSingleClickAction,
 	PinPointTriggerAction
@@ -65,7 +65,7 @@ export class MapAppEffects {
 	onMapSingleClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: MapSingleClickAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
-		.filter(([action, caseState, statusBarState]: [MapSingleClickAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.filter(([action, caseState, statusBarState]: [MapSingleClickAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
 		.mergeMap(([action]: [MapSingleClickAction, ICasesState, IStatusBarState]) => {
 			// draw on all maps
 			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
@@ -75,7 +75,7 @@ export class MapAppEffects {
 
 			return [
 				// disable the pinpoint search
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }),
 				// update pin point
 				new PinPointTriggerAction(action.payload.lonLat)
 			];
@@ -250,7 +250,7 @@ export class MapAppEffects {
 	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.withLatestFrom(this.store$.select(statusBarStateSelector))
-		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItems.pinPointSearch))
+		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
 		.do(([action]: [any]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.id);
 			communicatorHandler.createMapSingleClickEvent();
@@ -269,7 +269,7 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
 		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
-			statusBarState.flags.get(statusBarFlagsItems.pinPointIndicator))
+			statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator))
 		.map(([action, casesState]: [any, ICasesState]) => {
 			const point = getPointByGeometry(casesState.selectedCase.state.region);
 			return new DrawPinPointAction(point.coordinates);

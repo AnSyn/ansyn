@@ -14,7 +14,7 @@ import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { IStatusBarState, } from "@ansyn/status-bar";
 import { statusBarStateSelector } from "@ansyn/status-bar/reducers/status-bar.reducer";
-import { statusBarFlagsItems } from "@ansyn/status-bar/models";
+import { statusBarFlagsItemsEnum } from "@ansyn/status-bar/models";
 import { UpdateStatusFlagsAction } from "@ansyn/status-bar/actions/status-bar.actions";
 
 export interface OverlayButton {
@@ -243,17 +243,17 @@ export class ContextMenuComponent implements OnInit {
 
 	setSearchEntity() {
 		if (this.searchMode === 'Pin-Point') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: true }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
 			this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));
 		}
 		else {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: true }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: true }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch }));
 		}
 	}
 

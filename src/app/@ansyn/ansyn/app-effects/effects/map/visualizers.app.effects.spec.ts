@@ -49,7 +49,7 @@ import {
 	AddCaseAction, SetAnnotationMode, SetMeasureDistanceToolState,
 	SetPinLocationModeAction
 } from '@ansyn/menu-items';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
 
 describe('VisualizersAppEffects', () => {
@@ -209,8 +209,8 @@ describe('VisualizersAppEffects', () => {
 		const expectedResult = cold('--(abcde)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
-			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false}),
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false}),
+			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false}),
 			e: new SetPinLocationModeAction(false)
 		});
 
@@ -226,8 +226,8 @@ describe('VisualizersAppEffects', () => {
 
 		const expectedResult = cold('--(bcde)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
-			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false}),
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false}),
+			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false}),
 			e: new SetPinLocationModeAction(false)
 		});
 

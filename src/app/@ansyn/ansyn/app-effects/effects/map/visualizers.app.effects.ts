@@ -21,7 +21,9 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { selectSubMenu, SetPinLocationModeAction, SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	DisplayOverlaySuccessAction, MarkUpClass, MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes,
 	SetMarkUp
@@ -294,8 +296,8 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor

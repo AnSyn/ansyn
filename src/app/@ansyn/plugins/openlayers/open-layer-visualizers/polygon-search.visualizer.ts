@@ -7,7 +7,7 @@ import {
 	ComboBoxesProperties,
 	IStatusBarState,
 	StatusBarActionsTypes,
-	statusBarFlagsItems,
+	statusBarFlagsItemsEnum,
 	UpdateStatusFlagsAction
 } from "@ansyn/status-bar";
 import { Observable } from "rxjs/Observable";
@@ -20,7 +20,6 @@ import { FeatureCollection, GeometryObject } from "geojson";
 import { SetAnnotationsLayer } from "@ansyn/menu-items/layers-manager/actions/layers.actions";
 import { ILayerState, layersStateSelector } from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
 import { OverlaysCriteria, SetOverlaysCriteriaAction } from "@ansyn/core";
-import { StatusBarFlag } from "@ansyn/status-bar/models";
 import { statusBarStateSelector } from "@ansyn/status-bar/reducers/status-bar.reducer";
 
 export class PolygonSearchVisualizer extends EntitiesVisualizer {
@@ -30,7 +29,7 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 	static lastPolygonSearch: any;
 	public annotationsLayer;
 
-	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
+	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
@@ -47,9 +46,9 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 
 	polygonSearch$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.polygonSearch)
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.polygonSearch)
 		.do(() => {
-			const isPolygonSearch = this.flags.get('POLYGON_SEARCH');
+			const isPolygonSearch = this.flags.get(statusBarFlagsItemsEnum.polygonSearch);
 			const drawInteractionHandler = new Draw({
 				type: 'Polygon',
 				geometryFunction: undefined,
@@ -67,9 +66,9 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 
 	polygonIndicator$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItems.polygonIndicator)
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.polygonIndicator)
 		.do(() => {
-			if (this.flags.get(statusBarFlagsItems.polygonIndicator)) {
+			if (this.flags.get(statusBarFlagsItemsEnum.polygonIndicator)) {
 				let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
 				const exists: boolean = updatedAnnotationsLayer.features.find(feat => feat.properties.id === PolygonSearchVisualizer.lastPolygonSearchId) !== undefined;
 				if (Boolean(PolygonSearchVisualizer.lastPolygonSearch) && PolygonSearchVisualizer.lastPolygonSearch.length !== 0
@@ -85,7 +84,7 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 
 	differentSearch$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key !== statusBarFlagsItems.polygonSearch)
+		.filter(action => action.payload.key !== statusBarFlagsItemsEnum.polygonSearch)
 		.withLatestFrom(this.store$.select(layersStateSelector).pluck<ILayerState, FeatureCollection<any>>('annotationsLayer'), (action: any, annotationsLayer: any): any =>
 		{
 			return annotationsLayer;
@@ -174,8 +173,8 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 					'type': 'Polygon',
 					'coordinates': polyCoords}};
 			this.store$.dispatch(new SetOverlaysCriteriaAction({ region: criteria.region } ) );
-			this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
-			// this.flags.set(statusBarFlagsItems.pinPointIndicator, false);
+			this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch }));
+			// this.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, false);
 		}
 	}
 
@@ -205,7 +204,7 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 			}
 		});
 		this.isHideable = true;
-		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
+		this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
 			this.flags = new Map(flags);
 		});
 	}

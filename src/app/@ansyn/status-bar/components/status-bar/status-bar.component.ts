@@ -178,7 +178,7 @@ export class StatusBarComponent implements OnInit {
 				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
 			}
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: !Boolean(this.flags.get('POLYGON_INDICATOR')) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: true }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
 		}
 		else
@@ -186,7 +186,7 @@ export class StatusBarComponent implements OnInit {
 			if (Boolean(this.flags.get('POLYGON_INDICATOR'))) {
 				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
 			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: !Boolean(this.flags.get('PIN_POINT_INDICATOR')) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }));
 

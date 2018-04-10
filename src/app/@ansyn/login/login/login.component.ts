@@ -3,9 +3,6 @@ import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
-import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { Store } from '@ngrx/store';
-import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-login',
@@ -28,8 +25,7 @@ export class LoginComponent implements OnInit {
 
 	constructor(protected authService: AuthService,
 				protected activatedRoute: ActivatedRoute,
-				protected router: Router,
-				protected store$: Store<ICoreState>) {
+				protected router: Router) {
 	}
 
 	ngOnInit(): void {
@@ -41,9 +37,6 @@ export class LoginComponent implements OnInit {
 
 	get login$() {
 		return this.authService.login(this.username, this.password, this.rememberMe)
-			.do(() => {
-				this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
-			})
 			.switchMap(() => Observable.fromPromise(this.router.navigateByUrl(this.returnUrl)))
 			.catch(() => {
 				this.showTryAgainMsg();

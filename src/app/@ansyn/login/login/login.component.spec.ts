@@ -7,10 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/catch';
-import { EffectsModule } from '@ngrx/effects';
-import { Store, StoreModule } from '@ngrx/store';
-import { CoreModule } from '@ansyn/core/core.module';
-import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
@@ -22,26 +18,22 @@ describe('LoginComponent', () => {
 		}
 	};
 	let authService: AuthService;
-	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [LoginComponent],
-			imports: [StoreModule.forRoot({}),
-				EffectsModule.forRoot([]),
-				CoreModule, RouterTestingModule, FormsModule],
+			imports: [RouterTestingModule, FormsModule],
 			providers: [{ provide: AuthService, useValue: mockAuthService }]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Router, AuthService, Store], (_router: Router, _authService: AuthService, _store: Store<ICoreState>) => {
+	beforeEach(inject([Router, AuthService], (_router: Router, _authService: AuthService) => {
 		fixture = TestBed.createComponent(LoginComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		router = _router;
 		authService = _authService;
-		store = _store;
 	}));
 
 	it('should be created', () => {
@@ -70,12 +62,10 @@ describe('LoginComponent', () => {
 			spyOn(router, 'navigateByUrl').and.callFake(() => 'navigation');
 			spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of(''));
 			spyOn(Observable, 'throw').and.callFake(() => Observable.throw);
-			spyOn(store, 'dispatch');
 		});
 
 		it('on switchMap', () => {
 			component.login$.subscribe(() => {
-				expect(store.dispatch).toHaveBeenCalled();
 				expect(Observable.fromPromise).toHaveBeenCalledWith('navigation');
 				expect(router.navigateByUrl).toHaveBeenCalled();
 			});

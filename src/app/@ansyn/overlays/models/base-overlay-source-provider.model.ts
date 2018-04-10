@@ -5,23 +5,20 @@ import * as intersect from '@turf/intersect';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-
-export interface DateRange {
-	start: Date;
-	end: Date;
-}
+import { cloneDeep } from 'lodash';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
 export interface IFetchParams {
 	limit: number;
 	region: GeoJSON.GeoJsonObject;
 	sensors?: string[];
-	timeRange: DateRange;
+	timeRange: Array<IDateRange>;
 }
 
 export interface OverlayFilter {
 	sensor: string;
 	coverage: GeoJSON.Feature<any>;
-	timeRange: DateRange
+	timeRange: IDateRange
 }
 
 export interface StartAndEndDate {
@@ -29,7 +26,7 @@ export interface StartAndEndDate {
 	endDate: string
 }
 
-export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): DateRange {
+export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange): IDateRange {
 	if (!blackRange.end || (whiteRange.end && whiteRange.end <= blackRange.end)) {
 		if (!blackRange.start || whiteRange.end > blackRange.start) {
 			if (whiteRange.start >= blackRange.start) {
@@ -58,11 +55,13 @@ export abstract class BaseOverlaySourceProvider {
 			properties: {},
 			geometry: fetchParams.region
 		};
-
-		// They are strings!
-		const fetchParamsTimeRange = {
-			start: new Date(fetchParams.timeRange.start),
-			end: new Date(fetchParams.timeRange.end)
+		// get time range data
+		const fetchParamsTimeRange = cloneDeep(fetchParams.timeRange);
+		const fetchParamsGlobalTimeRange = {
+			// min start value
+			start: new Date(fetchParams.timeRange.reduce((a, b) => a.start <= b.start ? a : b).start),
+			// max end value
+			end: new Date(fetchParams.timeRange.reduce((a, b) => a.end >= b.end ? a : b).end)
 		};
 
 		const fetchPromises = filters
@@ -74,7 +73,7 @@ export abstract class BaseOverlaySourceProvider {
 				return area(intersection) > 0;
 			})
 			// Make sure they have a common time range
-			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
+			.filter(f => Boolean(timeIntersection(fetchParamsGlobalTimeRange, f.timeRange)))
 			.map(f => {
 				const region = intersect(f.coverage, regionFeature).geometry;
 
@@ -82,7 +81,7 @@ export abstract class BaseOverlaySourceProvider {
 				let newFetchParams: IFetchParams = {
 					limit: fetchParams.limit,
 					region: intersect(f.coverage, regionFeature).geometry,
-					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
+					timeRange: fetchParamsTimeRange.map(tr => timeIntersection(tr, f.timeRange))
 				};
 
 				// Add sensor if exists on the filter

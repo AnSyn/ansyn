@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider, DateRange, IFetchParams } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
@@ -9,10 +9,11 @@ import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-over
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
 interface FiltersList {
 	name: string,
-	dates: DateRange[]
+	dates: IDateRange[]
 	sensorNames: string[],
 	coverage: number[][][][]
 }

@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CaseIntervalCriteria, CaseIntervalCriteriaType, CaseTimeState } from '@ansyn/core';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
-interface ITimeFrame {
-	from: Date,
-	to: Date
-}
+
 
 const HOUR_MILLISECONDS = 60 * 60 * 1000;
 
@@ -177,7 +175,7 @@ export class TimelineIntervalsPickerComponent {
 		this.validation.reset();
 
 		// check time frame
-		const timeFrameMs = timeFrame.to.getTime() - timeFrame.from.getTime();
+		const timeFrameMs = timeFrame.end.getTime() - timeFrame.start.getTime();
 
 		if (timeFrameMs <= 0) {
 			this.validation.timeFrameErr = 'Start time exceeds End time';
@@ -206,8 +204,8 @@ export class TimelineIntervalsPickerComponent {
 		const criteria: CaseIntervalCriteria = this.getCriteria();
 		const intervalsData: CaseTimeState = {
 			type: 'absolute',
-			from: timeFrame.from,
-			to: timeFrame.to,
+			from: timeFrame.start,
+			to: timeFrame.end,
 			intervals: {
 				interval,
 				criteria
@@ -217,26 +215,26 @@ export class TimelineIntervalsPickerComponent {
 		this.applyDate.emit(intervalsData);
 	}
 
-	getTimeFrame(): ITimeFrame {
-		let from;
-		let to = new Date();	// default is 'now'
+	getTimeFrame(): IDateRange {
+		let start;
+		let end = new Date();	// default is 'now'
 
 		// basic mode
 		if (this.timeIntervalAdvancedOptions === false) {
-			from = new Date(to.getTime() - this.basicOptionTimeFrame);
+			start = new Date(end.getTime() - this.basicOptionTimeFrame);
 		} else {
 			// advanced mode
 			if (this.timeFrame === 'last') {
 				// advanced mode: time frame > last
-				from = new Date(to.getTime() - this.advancedOptionTimeFrameLast * this.advancedOptionTimeFrameUnits);
+				start = new Date(end.getTime() - this.advancedOptionTimeFrameLast * this.advancedOptionTimeFrameUnits);
 			} else {
 				// advanced mode: time frame > start - end
-				from = this.advancedOptionStartDate;
-				to = this.advancedOptionEndDate;
+				start = this.advancedOptionStartDate;
+				end = this.advancedOptionEndDate;
 			}
 		}
 
-		return { from, to };
+		return { start, end };
 	}
 
 	getTimeInterval(): number {

@@ -11,7 +11,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { times as doNTimes } from 'lodash';
 import { CaseIntervalCriteria, CaseTimeState, OverlaysCriteria } from '@ansyn/core';
-import { sortByDateAsc, sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { sortByDateAsc, sortByDateDesc, sortByResolutionDesc } from '@ansyn/core/utils/sorting';
+import { Interval, IntervalTimeFrame } from '@ansyn/core/models/intervals.model';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
@@ -51,49 +53,26 @@ export class OverlaysService {
 
 	// limit overlays to be 1 per interval scope
 	static intervalFilter(overlays: Overlay[], timeState: CaseTimeState): Overlay[] {
-		// set interval-size and time-frame
-		const intervalSize = timeState.intervals.interval;
-		const tf = {
-			startDate: timeState.from,
-			endDate: timeState.to,
-			span: timeState.to.getTime() - timeState.from.getTime(),
-		};
-
-		// calculate how many intervals
-		const howManyIntervals = Math.floor(tf.span / intervalSize);
-
-		// update time-frame (when time-frame % interval is not 0)
-		if (tf.span % intervalSize > 0) {
-			tf.startDate = new Date(tf.endDate.getTime() - (intervalSize * howManyIntervals));
-			tf.span = tf.endDate.getTime() - tf.startDate.getTime();
-		}
-
-		// initialize intervalsArrays
-		const startTime = tf.startDate.getTime();
-		const intervalsArrays = [];
-
-		doNTimes(howManyIntervals, intervalIndex => {
-			const intervalStartMs = startTime + intervalIndex * intervalSize;
-			const intervalEndTime = new Date(intervalStartMs + intervalSize - 1);
-
-			intervalsArrays.push({
-				startTime: new Date(intervalStartMs),
-				endTime: intervalEndTime,
-				pivot: intervalEndTime,
-				overlays: []
-			})
-		});
+		const tf: IntervalTimeFrame = OverlaysService.calculateTimeFrame(timeState);
+		// create array of intervals (see Interval interface)
+		const intervalsArrays: Array<Interval> = OverlaysService.createIntervalsArray(tf, timeState);
 
 		// put each overlay in the right interval
+		overlays = overlays.sort(sortByDateAsc);
+		let intervalIndex = 0;
 		overlays.forEach(o => {
-			const normalizedTime = o.date.getTime() - startTime;
-			if (normalizedTime < 0) {
-				console.warn(`overlay ${o.id} may be out of time-frame: ${tf.startDate} to ${tf.endDate}`, o);
+			// advance index until date is not exceeding interval end time
+			while (o.date > intervalsArrays[intervalIndex].endTime && intervalIndex < intervalsArrays.length) {
+				intervalIndex++;
+			}
+			const interval = intervalsArrays[intervalIndex];
+			if (interval.startTime < o.date && o.date <= intervalsArrays[intervalIndex].endTime) {
+				interval.overlays.push(o);
 			} else {
-				const intervalIndex = Math.floor(normalizedTime / intervalSize);
-				intervalsArrays[intervalIndex].overlays.push(o);
+				console.warn(`overlay does not match any interval. id:${o.id}. date: ${o.date}`, o);
 			}
 		});
+
 		// return best-matching overlay by criteria
 		let overlaysByCriteria = OverlaysService.overlaysByCriteria(intervalsArrays, timeState.intervals.criteria);
 
@@ -114,6 +93,69 @@ export class OverlaysService {
 		return overlaysByCriteria;
 	}
 
+	// calculate TimeFrame object
+	static calculateTimeFrame(timeState: CaseTimeState): IntervalTimeFrame {
+		const intervalSize = timeState.intervals.interval;
+		const tf: IntervalTimeFrame = {
+			startDate: timeState.from,
+			endDate: timeState.to,
+			span: timeState.to.getTime() - timeState.from.getTime(),
+			intervalsCount: 0
+		};
+
+		// calculate how many intervals
+		tf.intervalsCount = Math.floor(tf.span / intervalSize);
+
+		// update time-frame (when time-frame % interval is not 0)
+		if (tf.span % intervalSize > 0) {
+			tf.startDate = new Date(tf.endDate.getTime() - (intervalSize * tf.intervalsCount));
+			tf.span = tf.endDate.getTime() - tf.startDate.getTime();
+		}
+		return tf;
+	}
+
+	// create Array<Interval> by timeFrame and timeState
+	static createIntervalsArray(timeFrame: IntervalTimeFrame, timeState: CaseTimeState): Array<Interval> {
+		// set interval-size
+		const intervalSize = timeState.intervals.interval;
+		// initialize intervalsArrays
+		const startTime = timeFrame.startDate.getTime();
+		const intervalsArrays = new Array<Interval>();
+
+		doNTimes(timeFrame.intervalsCount, intervalIndex => {
+			let intervalStartMs = startTime + intervalIndex * intervalSize;
+			let intervalEndTimeMs = intervalStartMs + intervalSize - 1;
+			const intervalPivotTimeMs = intervalStartMs + intervalSize - 1;	// pivot is always the end of the original scope
+
+			// manipulate interval according to criteria
+			switch (timeState.intervals.criteria.type) {
+				case 'best':
+					// move interval scope limits around pivot, according to before/after values
+					intervalStartMs = intervalPivotTimeMs - timeState.intervals.criteria.before;
+					intervalEndTimeMs = intervalPivotTimeMs + timeState.intervals.criteria.after;
+					break;
+				case 'closest-after':
+					// move interval scope limits so scope will start with pivot
+					intervalStartMs = intervalPivotTimeMs;
+					intervalEndTimeMs += intervalSize;
+					break;
+				case 'closest-both':
+					// move interval scope limits so pivot will be in the middle of scope
+					intervalStartMs += (intervalSize / 2);
+					intervalEndTimeMs += (intervalSize / 2);
+					break;
+			}
+
+			intervalsArrays.push({
+				startTime: new Date(intervalStartMs),
+				endTime: new Date(intervalEndTimeMs),
+				pivot: new Date(intervalPivotTimeMs),
+				overlays: []
+			})
+		});
+
+		return intervalsArrays;
+	}
 	// select best-matching overlay by criteria
 	static overlaysByCriteria(intervals: Array<any>, criteria: CaseIntervalCriteria): Overlay[] {
 		const result: Overlay[] = [];
@@ -128,23 +170,22 @@ export class OverlaysService {
 						// remove overlay outside of interval best-scope (best-before/best-after)
 						overlays = overlays.filter(o => {
 							const overlayTime: number = o.date.getTime();
-							const intervalLow: number = interval.pivot - criteria.before;
-							const intervalHigh: number = interval.pivot + criteria.after;
+							const intervalLow: number = interval.pivot.getTime() - criteria.before;
+							const intervalHigh: number = interval.pivot.getTime() + criteria.after;
 							return intervalLow <= overlayTime && overlayTime <= intervalHigh;
-						});
-						// To do: sort by best;
+						}).sort(sortByResolutionDesc);
 						break;
 					case 'closest-before':
-						overlays = overlays.filter(o => o.date.getTime() >= interval.pivot)	// remove overlays after pivot
+						overlays = overlays.filter(o => o.date.getTime() <= interval.pivot.getTime())	// remove overlays after pivot
 							.sort(sortByDateDesc);	// sort - latest first
 						break;
 					case 'closest-after':
-						overlays = overlays.filter(o => o.date.getTime() <= interval.pivot)	// remove overlays before pivot
+						overlays = overlays.filter(o => o.date.getTime() >= interval.pivot.getTime())	// remove overlays before pivot
 							.sort(sortByDateAsc);	// sort - earliest first
 						break;
 					case 'closest-both':
 						overlays = overlays.sort((o1, o2) => // sort - closest
-							Math.abs(o1.date - interval.pivot) - Math.abs(o1.date - interval.pivot));
+							Math.abs(o1.date - interval.pivot.getTime()) - Math.abs(o1.date - interval.pivot.getTime()));
 						break;
 				}
 				if (overlays.length > 0) {
@@ -219,14 +260,35 @@ export class OverlaysService {
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
 		let tBbox = bbox(params.region);
 		let tBboxFeature = bboxPolygon(tBbox);
+		const timeRangeArray: Array<IDateRange> = this.getSearchTimeRange(params.time);
+
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
 			region: tBboxFeature.geometry,
-			timeRange: <any> {
-				start: params.time.from,
-				end: params.time.to
-			}
+			timeRange: timeRangeArray
 		});
+	}
+
+	getSearchTimeRange(timeState: CaseTimeState): Array<IDateRange> {
+		const searchTimeRange = new Array<IDateRange>();
+
+		if (!timeState.intervals) {
+			searchTimeRange.push({
+				start: timeState.from,
+				end: timeState.to
+			});
+		} else {
+			const tf: IntervalTimeFrame = OverlaysService.calculateTimeFrame(timeState);
+			// create array of intervals (see Interval interface)
+			const intervalsArrays: Array<Interval> = OverlaysService.createIntervalsArray(tf, timeState);
+			intervalsArrays.forEach(interval => {
+				searchTimeRange.push({
+					start: interval.startTime,
+					end: interval.endTime
+				});
+			});
+		}
+		return searchTimeRange;
 	}
 
 	getOverlayById(id: string, sourceType: string): Observable<Overlay> {

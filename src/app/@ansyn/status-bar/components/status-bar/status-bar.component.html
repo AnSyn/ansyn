@@ -50,14 +50,14 @@
 						[attr.tooltip-value]="toolTips.geoFilterShow"
 						tooltip-class="top right"
 						class="eye-button toggle-icon"
-						[class.active2]="flags.get(statusBarFlagsItems.pinPointIndicator) || flags.get(statusBarFlagsItems.polygonIndicator)">
+						[class.active2]="flags.get(statusBarFlagsItemsEnum.pinPointIndicator) || flags.get(statusBarFlagsItemsEnum.polygonIndicator)">
 					<i class="icon-status-bar-show-pin-point"></i>
 				</button>
 				<button (click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"
 						class="edit-pinpoint toggle-icon"
-						[class.active2]="(flags.get(statusBarFlagsItems.pinPointSearch) || flags.get(statusBarFlagsItems.polygonSearch))">
+						[class.active2]="(flags.get(statusBarFlagsItemsEnum.pinPointSearch) || flags.get(statusBarFlagsItemsEnum.polygonSearch))">
 					<i class="icon-edit"></i>
 				</button>
 			</div>

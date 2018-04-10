@@ -10,8 +10,8 @@ import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '../../models/index';
-import { statusBarFlagsItems } from '@ansyn/status-bar';
-import { CoreConfig, GoAdjacentOverlay } from '@ansyn/core';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
+import { GoAdjacentOverlay } from '@ansyn/core';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models';
 import { ALERTS } from '@ansyn/core/alerts/alerts.model';
 
@@ -61,7 +61,7 @@ describe('StatusBarComponent', () => {
 	it('eye indicator should be active', () => {
 		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(true);
-		component.flags.set(statusBarFlagsItems.pinPointIndicator, false);
+		component.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, false);
 		fixture.detectChanges();
 		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(false);
@@ -70,7 +70,7 @@ describe('StatusBarComponent', () => {
 	it('check click on pinPoint flags', () => {
 		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.edit-pinpoint').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch }));
 
 		fixture.nativeElement.querySelector('.eye-button').click();
 		expect(store.dispatch).toHaveBeenCalled();

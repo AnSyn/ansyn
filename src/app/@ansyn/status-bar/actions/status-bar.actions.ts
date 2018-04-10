@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { ComboBoxesProperties } from '@ansyn/status-bar/models';
-import { StatusBarFlag } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 
 export const StatusBarActionsTypes = {
 	UPDATE_SEARCH_MODE: 'UPDATE_SEARCH_MODE',
@@ -33,7 +33,7 @@ export class CopySelectedCaseLinkAction implements Action {
 export class UpdateStatusFlagsAction implements Action {
 	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
 
-	constructor(public payload: { key: StatusBarFlag, value?: boolean }) {
+	constructor(public payload: { key: statusBarFlagsItemsEnum, value?: boolean }) {
 	}
 }
 

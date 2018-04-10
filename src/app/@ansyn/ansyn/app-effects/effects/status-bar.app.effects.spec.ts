@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
-import { ExpandAction, statusBarFlagsItems } from '@ansyn/status-bar';
+import { ExpandAction, statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
@@ -124,7 +124,7 @@ describe('StatusBarAppEffects', () => {
 
 
 	it('updatePinPointSearchAction$', () => {
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: true });
 		store.dispatch(action);
 		// mock communicatorsAsArray
 		const imagery1 = {
@@ -141,7 +141,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('updatePinPointIndicatorAction$ - add', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: true });
 		store.dispatch(action);
 		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
@@ -153,7 +153,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('updatePinPointIndicatorAction$ - remove', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator });
 		store.dispatch(action);
 		// mock communicatorsAsArray
 		const imagery1 = {};

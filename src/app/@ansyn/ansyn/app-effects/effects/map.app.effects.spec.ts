@@ -59,7 +59,8 @@ import {
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { statusBarFlagsItems } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
+import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryPluginsInitialized } from '@ansyn/map-facade';
@@ -264,8 +265,8 @@ describe('MapAppEffects', () => {
 
 
 	it('onMapSingleClick$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
 		const imagery1 = {
 			removeSingleClickEvent: () => {
 			}
@@ -274,7 +275,7 @@ describe('MapAppEffects', () => {
 		spyOn(imagery1, 'removeSingleClickEvent');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', {a: new MapSingleClickAction({lonLat})});
-		const a = new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch, value: false});
+		const a = new UpdateStatusFlagsAction({key: statusBarFlagsItemsEnum.pinPointSearch, value: false});
 		const b = new PinPointTriggerAction(lonLat);
 		const expectedResults = cold('--(ab)--', {a, b});
 		expect(mapAppEffects.onMapSingleClick$).toBeObservable(expectedResults);
@@ -282,8 +283,8 @@ describe('MapAppEffects', () => {
 	});
 
 	it('onPinPointTrigger$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
 		const imagery1 = {
 			addPinPointIndicator: () => {
 			}
@@ -302,7 +303,7 @@ describe('MapAppEffects', () => {
 	});
 
 	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
 		const communicator = {
 			createMapSingleClickEvent: () => {
 			}
@@ -321,7 +322,7 @@ describe('MapAppEffects', () => {
 	});
 
 	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
 		const action = new ImageryPluginsInitialized('tmpId2');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', {a: action});

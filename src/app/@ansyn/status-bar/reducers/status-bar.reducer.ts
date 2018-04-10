@@ -1,7 +1,7 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { ComboBoxesProperties } from '@ansyn/status-bar';
-import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { cloneDeep } from 'lodash';
 import { CaseTimeState } from '@ansyn/core';
 
@@ -11,13 +11,13 @@ export const statusBarToastMessages = {
 };
 
 export interface IStatusBarState {
-	flags: Map<StatusBarFlag, boolean>;
+	flags: Map<statusBarFlagsItemsEnum, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
 	searchType: string
 }
 
 export const StatusBarInitialState: IStatusBarState = {
-	flags: new Map<StatusBarFlag, boolean>(),
+	flags: new Map<statusBarFlagsItemsEnum, boolean>(),
 	comboBoxesProperties: {},
 	searchType: 'Pin-Point'
 };
@@ -31,7 +31,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 			return Object.assign({}, state);
 
 		case StatusBarActionsTypes.UPDATE_STATUS_FLAGS:
-			const items = Object.keys(statusBarFlagsItems).map(k => statusBarFlagsItems[k]);
+			const items = Object.keys(statusBarFlagsItemsEnum).map(k => statusBarFlagsItemsEnum[k]);
 			if (!items.includes(action.payload.key)) {
 				throw new Error(`action.payload.key: ${action.payload.key} does not exit in statusBarFlagsItems.`);
 			}

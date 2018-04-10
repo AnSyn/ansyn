@@ -10,7 +10,7 @@ import {
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
-import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
+import { ComboBoxesProperties, statusBarFlagsItemsEnum } from '@ansyn/status-bar/models';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { UpdateSearchModeAction } from "@ansyn/status-bar";
 import { Actions } from '@ngrx/effects';
@@ -50,7 +50,7 @@ export class StatusBarComponent implements OnInit {
 
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
-	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
+	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 	timeSelectionEditIcon = false;
 	@Input() selectedCaseName: string;
@@ -59,8 +59,8 @@ export class StatusBarComponent implements OnInit {
 	goNextActive = false;
 	searchType: CaseGeoFilter = 'Pin-Point';
 
-	get statusBarFlagsItems() {
-		return statusBarFlagsItems;
+	get statusBarFlagsItemsEnum() {
+		return statusBarFlagsItemsEnum;
 	}
 
 	get toolTips(): IToolTipsConfig {
@@ -119,7 +119,7 @@ export class StatusBarComponent implements OnInit {
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
 
 		this.store.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItems.pinPointIndicator,
+			key: statusBarFlagsItemsEnum.pinPointIndicator,
 			value: true
 		}));
 	}
@@ -131,7 +131,7 @@ export class StatusBarComponent implements OnInit {
 			this.comboBoxesProperties = comboBoxesProperties
 		});
 
-		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
+		this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
 			this.flags = new Map(flags);
 		});
 
@@ -177,33 +177,33 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 		if (this.comboBoxesProperties.geoFilter === 'Polygon')
 		{
-			if (Boolean(this.flags.get('PIN_POINT_INDICATOR'))) {
-				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
+			if (Boolean(this.flags.get(statusBarFlagsItemsEnum.pinPointIndicator))) {
+				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: false }));
 			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: true }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: true }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch }));
 		}
 		else
 		{
-			if (Boolean(this.flags.get('POLYGON_INDICATOR'))) {
-				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
+			if (Boolean(this.flags.get(statusBarFlagsItemsEnum.polygonIndicator))) {
+				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: false }));
 			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: true }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
 
 		}
 	}
 
 	toggleIndicatorView() {
 		if (this.searchType === 'Pin-Point') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: !Boolean(this.flags.get('PIN_POINT_INDICATOR')) }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: !Boolean(this.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: false }));
 		}
 		if (this.searchType === 'Polygon') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.polygonIndicator, value: !Boolean(this.flags.get('POLYGON_INDICATOR')) }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: !Boolean(this.flags.get(statusBarFlagsItemsEnum.polygonIndicator)) }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: false }));
 		}
 	}
 

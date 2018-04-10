@@ -3,6 +3,7 @@ import { ComboBoxesProperties } from '@ansyn/status-bar/models';
 import { StatusBarFlag } from '@ansyn/status-bar';
 
 export const StatusBarActionsTypes = {
+	UPDATE_SEARCH_MODE: 'UPDATE_SEARCH_MODE',
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
 	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
@@ -14,6 +15,13 @@ export const StatusBarActionsTypes = {
 };
 // some actions does not have payload
 export type StatusActions = any;
+
+export class UpdateSearchModeAction implements Action {
+	type: string = StatusBarActionsTypes.UPDATE_SEARCH_MODE;
+
+	constructor(public payload: string) {
+	}
+}
 
 export class CopySelectedCaseLinkAction implements Action {
 	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;

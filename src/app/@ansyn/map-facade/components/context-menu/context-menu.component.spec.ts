@@ -179,19 +179,19 @@ describe('ContextMenuComponent', () => {
 		});
 
 		it('action (setPinPoint) should have been call', () => {
-			spyOn(component, 'setPinPoint');
+			spyOn(component, 'setSearchEntity');
 			// button 0 = witch 1.
 			const mouseDown = new MouseEvent('mousedown', { button: 0 });
 			menuOpenButton.dispatchEvent(mouseDown);
-			expect(component.setPinPoint).toHaveBeenCalled();
+			expect(component.setSearchEntity).toHaveBeenCalled();
 		});
 
 		it('action (setPinPoint) should not have been call', () => {
-			spyOn(component, 'setPinPoint');
+			spyOn(component, 'setSearchEntity');
 			// button 1 = witch 2.
 			const mouseDown = new MouseEvent('mousedown', { button: 1 });
 			menuOpenButton.dispatchEvent(mouseDown);
-			expect(component.setPinPoint).not.toHaveBeenCalled();
+			expect(component.setSearchEntity).not.toHaveBeenCalled();
 		});
 
 	});

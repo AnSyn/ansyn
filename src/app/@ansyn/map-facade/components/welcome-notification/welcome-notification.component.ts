@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-welcome-notification',
@@ -19,7 +20,9 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	wasWelcomeNotificationShown$ = this.store$.select(coreStateSelector)
 		.take(1)
 		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-	;
+		.do(() => {
+			this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
+		})	;
 
 	// Make the DOM element focusable
 	@HostBinding('attr.tabindex')
@@ -36,7 +39,7 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 		this._subscriptions.push(
 			this.wasWelcomeNotificationShown$.subscribe(wasWelcomeNotificationShown => {
-				if (wasWelcomeNotificationShown) {
+				if (!wasWelcomeNotificationShown) {
 					this.elem.nativeElement.focus();
 				}
 			})

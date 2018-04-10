@@ -30,7 +30,7 @@ export type CoreActions =
 	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
-	| SetIsAfterLoginFlagAction
+	| SetWasWelcomeNotificationShownFlagAction
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -117,7 +117,7 @@ export class BackToWorldSuccess extends BackToWorldView {
 	type = CoreActionTypes.BACK_TO_WORLD_SUCCESS;
 }
 
-export class SetIsAfterLoginFlagAction implements Action {
+export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	type = CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG;
 
 	constructor(public payload: boolean) {

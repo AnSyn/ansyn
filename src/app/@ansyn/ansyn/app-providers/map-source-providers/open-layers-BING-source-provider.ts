@@ -12,7 +12,7 @@ export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerBingSourceProviderMapType;
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const source = new BingMaps({
 			key: metaData.key,
 			imagerySet: metaData.styles[0],

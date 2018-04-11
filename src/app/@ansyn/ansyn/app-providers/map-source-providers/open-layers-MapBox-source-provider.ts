@@ -13,7 +13,7 @@ export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerMapBoxSourceProviderMapType;
 	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',

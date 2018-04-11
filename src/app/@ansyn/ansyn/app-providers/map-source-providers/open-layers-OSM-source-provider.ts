@@ -13,7 +13,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerOSMSourceProviderMapType;
 	public sourceType = OpenLayerOSMSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});

@@ -405,7 +405,7 @@ export class MapAppEffects {
 			}));
 		}
 
-		return Observable.fromPromise(sourceLoader.createAsync(overlay, mapId))
+		return Observable.fromPromise(sourceLoader.createAsync(overlay))
 			.switchMap(layer => {
 				let observable;
 				if (overlay.isGeoRegistered) {

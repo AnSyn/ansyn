@@ -12,7 +12,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerESRI_4326SourceProviderMapType;
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const source = new XYZ({
 			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',
 			maxZoom: 16,

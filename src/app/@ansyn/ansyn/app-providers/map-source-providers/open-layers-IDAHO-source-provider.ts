@@ -16,7 +16,7 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerIDAHOSourceProviderMapType;
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	create(metaData: Overlay, mapId: string): any[] {
+	create(metaData: Overlay): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -38,8 +38,8 @@ export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 		return [result];
 	}
 
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData, mapId);
+	createAsync(metaData: any): Promise<any> {
+		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer[0]);
 	}
 

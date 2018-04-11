@@ -13,7 +13,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerTileWMSSourceProviderMapType;
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const layers = metaData.layers.join(',');
 
 		const source = new TileWMS(<any>{

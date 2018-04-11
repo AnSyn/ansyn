@@ -19,15 +19,4 @@ describe('Status Bar Reducer', () => {
 		expect(newState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)).toBe(true);
 
 	});
-
-	it('update status flags - \'bad\' value', () => {
-		const action = new UpdateStatusFlagsAction({
-			key: <statusBarFlagsItemsEnum> 'TMP',
-			value: true
-		});
-
-		// const newState = StatusBarReducer(_reducerState, action);
-		expect(() => StatusBarReducer(_reducerState, action)).toThrow();
-
-	});
 });

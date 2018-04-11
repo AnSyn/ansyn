@@ -2,8 +2,8 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import {
-	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
-	PinPointTriggerAction, SetMapsDataActionStore
+	DrawOverlaysOnMapTriggerAction, HoverFeatureTriggerAction, MapActionTypes,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';

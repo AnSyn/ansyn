@@ -6,9 +6,9 @@ import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { SetOverlaysCriteriaAction } from 'app/@ansyn/core/index';
-import { CaseRegionState } from '@ansyn/core';
+import { CaseRegionState } from 'app/@ansyn/core/index';
 import { UUID } from 'angular2-uuid';
-import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region.visualizer';
+import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {

@@ -45,6 +45,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 	}
 
 	onInit() {
+		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe()
 		)

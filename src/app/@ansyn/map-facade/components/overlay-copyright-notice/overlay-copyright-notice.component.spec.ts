@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlayCopyrightNoticeComponent } from './overlay-copyright-notice.component';
-import { OverlaysModule } from '@ansyn/overlays';
+import { OverlaysService } from '@ansyn/overlays';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
@@ -12,11 +12,12 @@ describe('OverlayCopyrightNoticeComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({}),
-				EffectsModule.forRoot([]),
-				OverlaysModule
+				EffectsModule.forRoot([])
 			],
 			declarations: [OverlayCopyrightNoticeComponent],
-			providers: []
+			providers: [
+				{provide: OverlaysService, useValue: {}}
+			]
 		})
 			.compileComponents();
 	}));

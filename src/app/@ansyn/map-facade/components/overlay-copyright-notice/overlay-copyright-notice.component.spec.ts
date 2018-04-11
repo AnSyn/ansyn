@@ -16,22 +16,36 @@ describe('OverlayCopyrightNoticeComponent', () => {
 			],
 			declarations: [OverlayCopyrightNoticeComponent],
 			providers: [
-				{provide: OverlaysService, useValue: {}}
+				{
+					provide: OverlaysService, useValue: {
+						config: {
+							titlesForMapSourceTypes: [{
+								key: 'KKK',
+								value: 'VVV'
+							}]
+						}
+					}
+				}
 			]
 		})
 			.compileComponents();
 	}));
 
-	describe('basic', () => {
-		beforeEach(() => {
-			fixture = TestBed.createComponent(OverlayCopyrightNoticeComponent);
-			component = fixture.componentInstance;
-			fixture.detectChanges();
-		});
+	beforeEach(() => {
+		fixture = TestBed.createComponent(OverlayCopyrightNoticeComponent);
+		component = fixture.componentInstance;
+		component.overlay = {
+			sourceType: 'KKK'
+		} as any;
+		fixture.detectChanges();
+	});
 
-		it('should create', () => {
-			expect(component).toBeTruthy();
-		});
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+
+	it('should find the title for the overlay', () => {
+		expect(component.title).toEqual('VVV');
 	});
 
 });

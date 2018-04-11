@@ -13,8 +13,6 @@ import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { DrawPinPointAction, PinPointModeTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -42,28 +40,6 @@ export class StatusBarAppEffects {
 			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
 				communicator.createMapSingleClickEvent();
 			});
-		});
-
-	/**
-	 * @type Effect
-	 * @name updatePinPointIndicatorAction$
-	 * @ofType UpdateStatusFlagsAction
-	 * @dependencies statusBar, cases
-	 * @filter update pinPointIndicator and has casesState.selectedCase
-	 * @actions DrawPinPointAction
-	 */
-	@Effect()
-	updatePinPointIndicatorAction$: Observable<DrawPinPointAction> = this.actions$
-		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointIndicator)
-		.withLatestFrom(this.store.select(statusBarStateSelector), this.store.select(casesStateSelector))
-		.filter(([action, statusBarState, casesState]) => Boolean(casesState.selectedCase))
-		.map(([action, statusBarState, casesState]: [UpdateStatusFlagsAction, IStatusBarState, ICasesState]) => {
-			let coordinates = null;
-			if (statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)) {
-				coordinates = getPointByGeometry(casesState.selectedCase.state.region).coordinates;
-			}
-			return new DrawPinPointAction(coordinates);
 		});
 
 	/**

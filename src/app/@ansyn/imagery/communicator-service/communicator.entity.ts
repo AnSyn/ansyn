@@ -221,7 +221,7 @@ export class CommunicatorEntity {
 
 	// ======shadow mouse end
 
-	// ====== treat map click event (used for pinPointIndicator)
+	// ====== treat map click event (used for geoFilterIndicator)
 	public createMapSingleClickEvent() {
 		(<any>this.ActiveMap).addSingleClickEvent();
 	}
@@ -230,5 +230,5 @@ export class CommunicatorEntity {
 		(<any>this.ActiveMap).removeSingleClickEvent();
 	}
 
-	// ======end treat map click event (used for pinPointIndicator)
+	// ======end treat map click event (used for geoFilterIndicator)
 }

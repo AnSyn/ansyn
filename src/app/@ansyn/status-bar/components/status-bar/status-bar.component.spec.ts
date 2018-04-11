@@ -61,7 +61,7 @@ describe('StatusBarComponent', () => {
 	it('eye indicator should be active', () => {
 		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(true);
-		component.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, false);
+		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, false);
 		fixture.detectChanges();
 		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(false);

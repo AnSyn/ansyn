@@ -1,1 +1,5 @@
-export enum statusBarFlagsItemsEnum { pinPointIndicator, polygonIndicator, pinPointSearch, polygonSearch }
+export enum statusBarFlagsItemsEnum {
+	geoFilterIndicator,
+	pinPointSearch,
+	polygonSearch
+}

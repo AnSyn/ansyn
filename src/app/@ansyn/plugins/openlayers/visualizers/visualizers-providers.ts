@@ -61,7 +61,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: IconVisualizer,
-		deps: []
+		deps: [Store, Actions]
 	},
 	{
 		provide: BaseImageryPlugin,

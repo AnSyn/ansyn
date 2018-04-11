@@ -139,21 +139,21 @@ describe('StatusBarAppEffects', () => {
 		expect(imagery1.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
 	});
 
-	it('updatePinPointIndicatorAction$ - add', () => {
+	it('updategeoFilterIndicatorAction$ - add', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: true });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true });
 		store.dispatch(action);
 		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		actions = hot('--a--', { a: action });
 
 		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
+		expect(statusBarAppEffects.updategeoFilterIndicatorAction$).toBeObservable(expectedResults);
 	});
 
-	it('updatePinPointIndicatorAction$ - remove', () => {
+	it('updategeoFilterIndicatorAction$ - remove', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator });
 		store.dispatch(action);
 		// mock communicatorsAsArray
 		const imagery1 = {};
@@ -161,7 +161,7 @@ describe('StatusBarAppEffects', () => {
 		actions = hot('--a--', { a: action });
 
 		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
+		expect(statusBarAppEffects.updategeoFilterIndicatorAction$).toBeObservable(expectedResults);
 	});
 
 

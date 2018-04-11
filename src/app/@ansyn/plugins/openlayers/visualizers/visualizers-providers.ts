@@ -1,4 +1,4 @@
-import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/pin-point.visualizer';
+import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
 import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
@@ -12,7 +12,7 @@ import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizer
 import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/visualizers/polygon-search.visualizer";
+import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer";
 
 export const VisualizersProviders: ImageryPluginProvider[] = [
 	{

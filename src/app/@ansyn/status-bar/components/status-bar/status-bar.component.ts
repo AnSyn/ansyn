@@ -119,7 +119,7 @@ export class StatusBarComponent implements OnInit {
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
 
 		this.store.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItemsEnum.pinPointIndicator,
+			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
 		}));
 	}
@@ -175,36 +175,20 @@ export class StatusBarComponent implements OnInit {
 
 	toggleMapSearch() {
 		// this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
-		if (this.comboBoxesProperties.geoFilter === 'Polygon')
-		{
-			if (Boolean(this.flags.get(statusBarFlagsItemsEnum.pinPointIndicator))) {
-				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: false }));
-			}
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
+
+		if (this.comboBoxesProperties.geoFilter === 'Polygon') {
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: true }));
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch }));
-		}
-		else
-		{
-			if (Boolean(this.flags.get(statusBarFlagsItemsEnum.polygonIndicator))) {
-				this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: false }));
-			}
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: true }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch }));
+		} else if (this.comboBoxesProperties.geoFilter === 'Pin-Point') {
 			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch }));
 
 		}
 	}
 
 	toggleIndicatorView() {
-		if (this.searchType === 'Pin-Point') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: !Boolean(this.flags.get(statusBarFlagsItemsEnum.pinPointIndicator)) }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: false }));
-		}
-		if (this.searchType === 'Polygon') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonIndicator, value: !Boolean(this.flags.get(statusBarFlagsItemsEnum.polygonIndicator)) }));
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointIndicator, value: false }));
-		}
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
 	}
 
 	clickGoAdjacent(isNext): void {

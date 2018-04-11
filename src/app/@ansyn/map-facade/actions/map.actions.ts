@@ -124,13 +124,6 @@ export class PinPointTriggerAction implements Action {
 	}
 }
 
-export class DrawPinPointAction implements Action {
-	type = MapActionTypes.DRAW_PIN_POINT_ON_MAP;
-
-	constructor(public payload: GeoJSON.Position) {
-	}
-}
-
 export class SetMapAutoImageProcessing implements Action {
 	type = MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING;
 

@@ -266,7 +266,7 @@ describe('MapAppEffects', () => {
 
 	it('onMapSingleClick$ effect', () => {
 		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
 		const imagery1 = {
 			removeSingleClickEvent: () => {
 			}
@@ -284,13 +284,13 @@ describe('MapAppEffects', () => {
 
 	it('onPinPointTrigger$ effect', () => {
 		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
+		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
 		const imagery1 = {
-			addPinPointIndicator: () => {
+			addgeoFilterIndicator: () => {
 			}
 		};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addPinPointIndicator');
+		spyOn(imagery1, 'addgeoFilterIndicator');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', {a: new PinPointTriggerAction(lonLat)});
 		const region = getPolygonByPointAndRadius(lonLat).geometry;
@@ -321,14 +321,14 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointIndicator, true);
+	it('onAddCommunicatorShowgeoFilterIndicator$ on add communicator show pinpoint', () => {
+		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
 		const action = new ImageryPluginsInitialized('tmpId2');
 		const lonLat = [-70.33666666666667, 25.5];
 		actions = hot('--a--', {a: action});
 		const expectedResults = cold('--a--', {a: new DrawPinPointAction(lonLat)});
 
-		expect(mapAppEffects.onAddCommunicatorShowPinPointIndicator$).toBeObservable(expectedResults);
+		expect(mapAppEffects.onAddCommunicatorShowgeoFilterIndicator$).toBeObservable(expectedResults);
 	});
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {

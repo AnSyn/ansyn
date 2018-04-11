@@ -147,29 +147,6 @@ export class VisualizersAppEffects {
 			return this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
 		});
 
-	/**
-	 * @type Effect
-	 * @name drawPinPoint$
-	 * @ofType DrawPinPointAction
-	 */
-	@Effect({ dispatch: false })
-	drawPinPoint$ = this.actions$
-		.ofType(MapActionTypes.DRAW_PIN_POINT_ON_MAP)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			(action: PinPointTriggerAction, mapState: IMapState) => {
-				return [mapState, action.payload];
-			}
-		)
-		.switchMap(([mapState, coords]: [IMapState, number[]]) => {
-			const observables = [];
-
-			mapState.mapsList.forEach((map: CaseMapState) => {
-				observables.push(this.drawPinPointIconOnMap(map, coords));
-			});
-
-			return Observable.forkJoin(observables);
-		});
 
 	/**
 	 * @type Effect
@@ -346,32 +323,6 @@ export class VisualizersAppEffects {
 			return gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
 		} else {
 			gotoVisualizer.clearEntities();
-		}
-
-		return Observable.of(true);
-	}
-
-	drawPinPointIconOnMap(mapData: CaseMapState, point: any[]): Observable<boolean> {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
-			const iconVisualizer = communicator.getPlugin<IconVisualizer>(IconVisualizer);
-			if (!iconVisualizer) {
-				return Observable.of(true);
-			}
-			iconVisualizer.clearEntities();
-			if (point) {
-				const pinPoint: GeoJSON.Point = {
-					type: 'Point',
-					// calculate projection?
-					coordinates: point
-				};
-				const pinFeatureJson: GeoJSON.Feature<any> = {
-					type: 'Feature',
-					geometry: pinPoint,
-					properties: {}
-				};
-				return iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
-			}
 		}
 
 		return Observable.of(true);

@@ -13,7 +13,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { ICasesState } from '@ansyn/menu-items/cases';
-import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
+import { MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -25,11 +25,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	DrawPinPointAction, ImageryCreatedAction, MapSingleClickAction,
-	PinPointTriggerAction
-} from '@ansyn/map-facade/actions/map.actions';
-import {
-	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent, getPointByGeometry,
+	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent,
 	startTimingLog
 } from '@ansyn/core/utils';
 import {
@@ -93,12 +89,9 @@ export class MapAppEffects {
 	@Effect()
 	onPinPointTrigger$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.mergeMap((action: PinPointTriggerAction) => {
+		.map((action: PinPointTriggerAction) => {
 			const region = getPolygonByPointAndRadius(action.payload).geometry;
-			return [
-				new DrawPinPointAction(action.payload),
-				new SetOverlaysCriteriaAction({ region })
-			];
+			return new SetOverlaysCriteriaAction({ region })
 		});
 
 
@@ -254,25 +247,6 @@ export class MapAppEffects {
 		.do(([action]: [any]) => {
 			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.id);
 			communicatorHandler.createMapSingleClickEvent();
-		});
-
-	/**
-	 * @type Effect
-	 * @name onAddCommunicatorShowPinPointIndicator$
-	 * @ofType MapInstanceChangedAction
-	 * @dependencies cases, statusBar
-	 * @filter pinPointIndicator flag on
-	 * @actions DrawPinPointAction
-	 */
-	@Effect()
-	onAddCommunicatorShowPinPointIndicator$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector))
-		.filter(([action, casesState, statusBarState]: [any, ICasesState, IStatusBarState]) =>
-			statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointIndicator))
-		.map(([action, casesState]: [any, ICasesState]) => {
-			const point = getPointByGeometry(casesState.selectedCase.state.region);
-			return new DrawPinPointAction(point.coordinates);
 		});
 
 	/**

@@ -47,16 +47,11 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 	}
 
-	public init(communicator: CommunicatorEntity): void {
-		super.init(communicator);
-		this.register();
-	}
-
 	onResetView(): Observable<boolean> {
 		return Observable.of(true);
 	}
 
-	private register() {
+	onInit() {
 		this.subscriptions.push(this.communicator.positionChanged.subscribe((position: CaseMapPosition) => {
 			if (this.isEnabled) {
 				this.tryDrawCenter();

@@ -37,11 +37,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	public init(communicator: CommunicatorEntity): void {
-		super.init(communicator);
-		this.initEffects();
-	}
-
 	onResetView(): Observable<boolean> {
 		this._imageProcessing = new OpenLayersImageProcessing();
 		const layers = this.communicator.ActiveMap.mapObject.getLayers();
@@ -75,7 +70,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		return Boolean(this.imageLayer && this._imageProcessing)
 	}
 
-	initEffects() {
+	onInit() {
 		this.subscriptions.push(
 			this.onToggleImageProcessing$.subscribe(),
 			this.onSetManualImageProcessing$.subscribe()

@@ -3,7 +3,7 @@
 	"version": "0.2.8",
 	"license": "MIT",
 	"scripts": {
-		"start": "node scripts/generate-config.js && ng serve",
+		"start": "node scripts/generate-config.js && ng serve --sourcemaps --extract-css",
 		"build": "ng build",
 		"start:aot": "ng serve --aot true",
 		"build:aot": "ng build --aot true",

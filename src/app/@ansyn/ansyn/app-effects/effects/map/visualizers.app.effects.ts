@@ -120,57 +120,6 @@ export class VisualizersAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name drawDistamceMeasureOnMap$
-	 * @ofType DrawOverlaysOnMapTriggerAction
-	 * @dependencies overlays, cases
-	 */
-	@Effect({ dispatch: false })
-	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
-		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => [action, mapState])
-		.map(([action, mapState]: [SetMeasureDistanceToolState, IMapState]) => {
-			const activeMapState = MapFacadeService.activeMap(mapState);
-			const communicator = this.imageryCommunicatorService.provide(activeMapState.id);
-			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-			if (distanceVisualizerTool) {
-				if (action.payload) {
-					distanceVisualizerTool.createInteraction();
-				} else {
-					distanceVisualizerTool.clearInteractionAndEntities();
-				}
-			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesDeleteOldMeasureLayer$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies map
-	 */
-	@Effect({ dispatch: false })
-	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
-			return [action, toolState.flags.get(toolsFlags.isMeasureToolActive)];
-		})
-		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
-		.map(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-				if (distanceVisualizerTool) {
-					distanceVisualizerTool.clearInteractionAndEntities();
-				}
-			});
-
-			const communicator = this.imageryCommunicatorService.provide(action.payload);
-			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-			if (distanceVisualizerTool) {
-				distanceVisualizerTool.createInteraction();
-			}
-		});
-
-	/**
-	 * @type Effect
 	 * @name onActiveMapChangesRedrawPinLocation$
 	 * @ofType ActiveMapChangedAction
 	 * @dependencies mapState, toolState

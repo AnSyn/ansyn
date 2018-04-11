@@ -19,8 +19,38 @@ import { getPointByGeometry } from '@ansyn/core/utils';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { toolsFlags } from '@ansyn/menu-items';
+import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
+
+	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
+		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => activeMapId === this.mapId)
+		.map(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => {
+			if (action.payload) {
+				this.createInteraction();
+			} else {
+				this.clearInteractionAndEntities();
+			}
+		});
+
+	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
+		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.filter(action => action.payload === this.mapId)
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
+			return [action, toolState.flags.get(toolsFlags.isMeasureToolActive)];
+		})
+		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
+		.do(() => this.createInteraction());
+
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
 		fill: new Fill({
@@ -75,7 +105,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor() {
+	constructor(protected actions$: Actions, protected store$: Store<any>) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -96,6 +126,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
+	}
+
+	onInit() {
+		this.subscriptions.push(
+			this.drawDistamceMeasureOnMap$.subscribe(),
+			this.onActiveMapChangesDeleteOldMeasureLayer$.subscribe()
+		)
 	}
 
 	onResetView(): Observable<boolean> {

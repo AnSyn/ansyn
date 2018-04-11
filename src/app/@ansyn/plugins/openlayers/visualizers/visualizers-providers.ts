@@ -48,7 +48,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: MeasureDistanceVisualizer,
-		deps: []
+		deps: [Actions, Store]
 	},
 	{
 		provide: BaseImageryPlugin,

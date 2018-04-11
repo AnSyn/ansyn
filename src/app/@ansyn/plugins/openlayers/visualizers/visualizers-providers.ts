@@ -1,4 +1,4 @@
-import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/icon.visualizer';
+import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/pin-point.visualizer';
 import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';

@@ -22,14 +22,12 @@ import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/
 import { selectSubMenu, SetPinLocationModeAction, SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
 	DisplayOverlaySuccessAction, MarkUpClass, MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes,
 	SetMarkUp
 } from '@ansyn/overlays';
 import { GoToVisualizer } from '@ansyn/plugins/openlayers/visualizers';
-import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/icon.visualizer';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 
 @Injectable()

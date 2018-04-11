@@ -59,7 +59,8 @@ import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { CoreService } from '@ansyn/core/services/core.service';
 import {
-	AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, SetOverlaysCriteriaAction,
+	AddAlertMsg,
+	AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, RemoveAlertMsg, SetOverlaysCriteriaAction,
 	UpdateAlertMsg
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
@@ -312,24 +313,19 @@ export class MapAppEffects {
 	 * @name setOverlaysNotInCase$
 	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
 	 * @dependencies overlays, map
-	 * @action UpdateAlertMsg
+	 * @action AddAlertMsg?, RemoveAlertMsg?
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
-		.map(([action, { filteredOverlays }, { mapsList }, { alertMsg }]: [Action, IOverlaysState, IMapState, ICoreState]) => {
-			const overlayIsNotPartOfCase = new Set(alertMsg.get(AlertMsgTypes.OverlayIsNotPartOfCase));
-
-			mapsList.forEach(({ data, id }) => {
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
+		.mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
+			const key = AlertMsgTypes.OverlayIsNotPartOfCase;
+			return mapsList.map(({ data, id }) => {
 				const { overlay } = data;
-				if (overlay) {
-					filteredOverlays.includes(overlay.id) ? overlayIsNotPartOfCase.delete(id) : overlayIsNotPartOfCase.add(id);
-				} else {
-					overlayIsNotPartOfCase.delete(id);
-				}
+				const shouldRemoved = !overlay || filteredOverlays.includes(overlay.id);
+				return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
 			});
-			return new UpdateAlertMsg({ value: overlayIsNotPartOfCase, key: AlertMsgTypes.OverlayIsNotPartOfCase });
 		});
 
 	/**

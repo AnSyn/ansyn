@@ -10,7 +10,8 @@ export const CoreActionTypes = {
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
-	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
+	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
+	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
@@ -24,7 +25,8 @@ export type CoreActions =
 	| SetToastMessageAction
 	| SetFavoriteOverlaysAction
 	| ClearActiveInteractionsAction
-	| UpdateAlertMsg
+	| AddAlertMsg
+	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
 
@@ -64,12 +66,21 @@ export class ClearActiveInteractionsAction implements Action {
 	}
 }
 
-export class UpdateAlertMsg implements Action {
-	type = CoreActionTypes.UPDATE_ALERT_MSG;
+export class AddAlertMsg implements Action {
+	type = CoreActionTypes.ADD_ALERT_MSG;
 
-	constructor(public payload: { value: Set<string>, key: AlertMsgTypes }) {
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }
+
+export class RemoveAlertMsg implements Action {
+	type = CoreActionTypes.REMOVE_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+
 
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;

@@ -1,8 +1,5 @@
 import { Store } from '@ngrx/store';
-import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
 import { Injectable } from '@angular/core';
-import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 
@@ -16,21 +13,21 @@ export abstract class BaseMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	protected createOrGetFromCache(metaData: any, mapId: string) {
+	protected createOrGetFromCache(metaData: any) {
 		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
 		if (cacheLayers.length) {
 			return cacheLayers;
 		}
 
-		const layers = this.create(metaData, mapId);
+		const layers = this.create(metaData);
 		this.cacheService.addLayerToCache(metaData, layers);
 		return layers;
 	}
 
-	protected abstract create(metaData: any, mapId: string): any[];
+	protected abstract create(metaData: any): any[];
 
-	createAsync(metaData: any, mapId: string): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData, mapId);
+	createAsync(metaData: any): Promise<any> {
+		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
 	}
 }

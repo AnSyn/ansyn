@@ -60,13 +60,11 @@ import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@
 import { CoreService } from '@ansyn/core/services/core.service';
 import {
 	AddAlertMsg,
-	AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, RemoveAlertMsg, SetOverlaysCriteriaAction,
-	UpdateAlertMsg
+	AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction,
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
-import { CacheService } from "@ansyn/imagery/cache-service/cache.service";
 
 @Injectable()
 export class MapAppEffects {

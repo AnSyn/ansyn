@@ -47,10 +47,25 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
 
-		case  CoreActionTypes.UPDATE_ALERT_MSG:
-			const updatedMap = new Map(state.alertMsg);
-			updatedMap.set(<AlertMsgTypes>action.payload.key, <Set<string>>action.payload.value);
-			return { ...state, alertMsg: updatedMap };
+		case  CoreActionTypes.ADD_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.add(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
+
+		case  CoreActionTypes.REMOVE_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.delete(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
 
 		case  CoreActionTypes.SET_OVERLAYS_CRITERIA:
 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };

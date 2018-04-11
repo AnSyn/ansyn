@@ -21,8 +21,7 @@ import {
 	CoreActionTypes,
 	coreStateSelector,
 	ICoreState, RemoveAlertMsg,
-	SetLayoutSuccessAction,
-	UpdateAlertMsg
+	SetLayoutSuccessAction
 } from '@ansyn/core';
 import {
 	ActiveMapChangedAction,
@@ -155,18 +154,15 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateAlertMsg
+	 * @action RemoveAlertMsg?, AddAlertMsg?
 	 */
 	@Effect()
-	checkImageOutOfBounds$: Observable<UpdateAlertMsg> = this.actions$
+	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(map => Boolean(map))
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
+		.filter(Boolean)
+		.map((map: CaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
-
-			// const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
 			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
@@ -189,10 +185,10 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateAlertMsg
+	 * @action RemoveAlertMsg
 	 */
 	@Effect()
-	updateOutOfBoundList: Observable<UpdateAlertMsg> = this.actions$
+	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
 		.map((action: ImageryRemovedAction) => {
 			return new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: action.payload.id });

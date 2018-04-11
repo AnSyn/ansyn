@@ -174,7 +174,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapSearch() {
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
+		// this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 		if (this.comboBoxesProperties.geoFilter === 'Polygon')
 		{
 			if (Boolean(this.flags.get(statusBarFlagsItemsEnum.pinPointIndicator))) {

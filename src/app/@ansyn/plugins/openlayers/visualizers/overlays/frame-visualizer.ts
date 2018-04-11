@@ -80,6 +80,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	}
 
 	onInit() {
+		super.onInit();
 		this.subscriptions.push(
 			this.drawFrameToOverLay$.subscribe(),
 			this.isActive$.subscribe(),

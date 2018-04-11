@@ -87,6 +87,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	onInit() {
+		super.onInit();
 		this.subscriptions.push(
 			this.annotationProperties$.subscribe(),
 			this.annotationsLayer$.subscribe()

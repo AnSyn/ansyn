@@ -129,6 +129,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onInit() {
+		super.onInit();
 		this.subscriptions.push(
 			this.drawDistamceMeasureOnMap$.subscribe(),
 			this.onActiveMapChangesDeleteOldMeasureLayer$.subscribe()

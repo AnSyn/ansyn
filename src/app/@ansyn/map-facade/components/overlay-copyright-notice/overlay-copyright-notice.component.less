@@ -4,8 +4,9 @@
 
 :host {
 	position: absolute;
-	bottom: @status-bar-height;
-	/* horizontally  centered */
+	// bottom position is set in imagery-manager.component.less
+	//
+	// horizontally  centered
 	left: calc((100% - @copyright-notice-width) / 2);
 	max-width: @copyright-notice-width;
 	z-index: @z-index-overlay-copyright-notice;

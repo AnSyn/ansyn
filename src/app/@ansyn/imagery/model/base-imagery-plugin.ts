@@ -27,6 +27,7 @@ export class BaseImageryPlugin {
 		this.onDisposedEvent.emit();
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 		this.subscriptions = [];
+		this.onDispose()
 	}
 
 	init(communicator: CommunicatorEntity) {
@@ -35,6 +36,10 @@ export class BaseImageryPlugin {
 	};
 
 	onInit(): void {
+
+	}
+
+	onDispose() {
 
 	}
 }

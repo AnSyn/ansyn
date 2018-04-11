@@ -62,11 +62,6 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return this.isActive ? this.visualizerStyle.colors.active : this.visualizerStyle.colors.inactive;
 	}
 
-	init(communictor: CommunicatorEntity) {
-		super.init(communictor);
-		this.initEffects();
-	}
-
 	public purgeCache() {
 		if (this.source) {
 			const features = this.source.getFeatures();
@@ -84,7 +79,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return Observable.of(true);
 	}
 
-	initEffects() {
+	onInit() {
 		this.subscriptions.push(
 			this.drawFrameToOverLay$.subscribe(),
 			this.isActive$.subscribe(),

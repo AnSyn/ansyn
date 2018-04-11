@@ -45,11 +45,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	public init(communicator: CommunicatorEntity): void {
-		super.init(communicator);
-		this.initPluginSubscribers();
-	}
-
 	getCorrectedNorth(): Observable<INorthData> {
 		return this.getProjectedCenters()
 		.map((projectedCenters: Point[]): INorthData => {
@@ -94,7 +89,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers))
 	}
 
-	initPluginSubscribers() {
+	onInit() {
 		const pointNorth = this.actions$
 			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)

@@ -275,12 +275,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
-		this.initEffects();
-	}
-
-	initEffects() {
+	onInit() {
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe(),
 			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),

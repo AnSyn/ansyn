@@ -66,8 +66,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return entity && entity.originalEntity;
 	}
 
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
+	onInit() {
 		this.initLayers();
 	}
 

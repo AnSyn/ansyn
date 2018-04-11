@@ -9,17 +9,17 @@ import {
 	StatusBarActionsTypes,
 	statusBarFlagsItemsEnum,
 	UpdateStatusFlagsAction
-} from "@ansyn/status-bar";
+} from "app/@ansyn/status-bar/index";
 import { Observable } from "rxjs/Observable";
 import { VisualizerInteractions } from "@ansyn/imagery/model/base-imagery-visualizer";
-import { CommunicatorEntity } from "@ansyn/imagery";
+import { CommunicatorEntity } from "app/@ansyn/imagery/index";
 import { Actions } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { cloneDeep, remove } from "lodash";
 import { FeatureCollection, GeometryObject } from "geojson";
 import { SetAnnotationsLayer } from "@ansyn/menu-items/layers-manager/actions/layers.actions";
 import { ILayerState, layersStateSelector } from "@ansyn/menu-items/layers-manager/reducers/layers.reducer";
-import { OverlaysCriteria, SetOverlaysCriteriaAction } from "@ansyn/core";
+import { OverlaysCriteria, SetOverlaysCriteriaAction } from "app/@ansyn/core/index";
 import { statusBarStateSelector } from "@ansyn/status-bar/reducers/status-bar.reducer";
 
 export class PolygonSearchVisualizer extends EntitiesVisualizer {
@@ -113,14 +113,15 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 		);
 	}
 
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
+	onInit() {
+		super.onInit();
 		this.initEffects();
 	}
 
 
 	removeLastSearchPolygon() {
-		let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
+		this.clearEntities();
+		/*let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
 		let updateLastPolygonSearch = remove(updatedAnnotationsLayer.features, function(aFeature)
 		{
 			return aFeature.properties.id === PolygonSearchVisualizer.lastPolygonSearchId;
@@ -128,7 +129,7 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 		if (updateLastPolygonSearch.length !== 0) {
 			PolygonSearchVisualizer.lastPolygonSearch = updateLastPolygonSearch;
 		}
-		this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+		this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));*/
 	}
 
 	onDrawEndEvent({ feature }) {
@@ -149,12 +150,15 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap)
 			.take(1)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
-				const [geoJsonFeature] = featureCollection.features;
 				this.removeLastSearchPolygon();
+				const [geoJsonFeature] = featureCollection.features;
+				const entityToDraw = {id: `${Date.now()}` , featureJson: geoJsonFeature };
+				this.setEntities([entityToDraw]);
+				/*
 				let updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
 				PolygonSearchVisualizer.lastPolygonSearchId = geoJsonFeature.properties.id;
 				updatedAnnotationsLayer.features.push(geoJsonFeature);
-				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));*/
 			});
 
 		if ((cloneGeometry instanceof GeomPolygon))

@@ -12,7 +12,7 @@ import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizer
 import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/open-layer-visualizers/polygon-search.visualizer";
+import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/visualizers/polygon-search.visualizer";
 
 export const VisualizersProviders: ImageryPluginProvider[] = [
 	{

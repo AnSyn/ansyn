@@ -13,13 +13,14 @@ import * as intersect from '@turf/intersect';
 import { OverlaysService } from '@ansyn/overlays';
 import { polygon } from '@turf/helpers';
 import {
+	AddAlertMsg,
 	AlertMsgTypes,
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseMapPosition,
 	CoreActionTypes,
 	coreStateSelector,
-	ICoreState,
+	ICoreState, RemoveAlertMsg,
 	SetLayoutSuccessAction,
 	UpdateAlertMsg
 } from '@ansyn/core';
@@ -163,7 +164,9 @@ export class MapEffects {
 		.filter(map => Boolean(map))
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
+			const key = AlertMsgTypes.OverlaysOutOfBounds;
+
+			// const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
 			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
@@ -171,13 +174,13 @@ export class MapEffects {
 				const { footprint } = map.data.overlay;
 				isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
 			}
+
 			if (isWorldView || isInBound) {
-				updatedOverlaysOutOfBounds.delete(map.id);
+				return new RemoveAlertMsg({ key, value: map.id})
 			}
-			else {
-				updatedOverlaysOutOfBounds.add(map.id);
-			}
-			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
+
+			return new AddAlertMsg({key, value: map.id});
+
 		});
 
 	/**
@@ -191,11 +194,8 @@ export class MapEffects {
 	@Effect()
 	updateOutOfBoundList: Observable<UpdateAlertMsg> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, { alertMsg }]: [ImageryRemovedAction, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
-			updatedOverlaysOutOfBounds.delete(action.payload.id);
-			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
+		.map((action: ImageryRemovedAction) => {
+			return new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: action.payload.id });
 		});
 
 

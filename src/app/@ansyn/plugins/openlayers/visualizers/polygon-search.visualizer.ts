@@ -1,49 +1,18 @@
-import { EntitiesVisualizer } from './entities-visualizer';
 import Draw from 'ol/interaction/draw';
-import {
-	ComboBoxesProperties,
-	IStatusBarState,
-	StatusBarActionsTypes,
-	statusBarFlagsItemsEnum,
-	UpdateStatusFlagsAction
-} from 'app/@ansyn/status-bar/index';
+import { StatusBarActionsTypes, statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
 import { Observable } from 'rxjs/Observable';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Feature, FeatureCollection, GeometryObject, Polygon } from 'geojson';
-import { OverlaysCriteria, SetOverlaysCriteriaAction } from 'app/@ansyn/core/index';
-import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseRegionState, coreStateSelector, ICoreState } from '@ansyn/core';
+import { FeatureCollection, GeometryObject } from 'geojson';
+import { SetOverlaysCriteriaAction } from 'app/@ansyn/core/index';
+import { CaseRegionState } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
+import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region.visualizer';
+import * as turf from '@turf/turf';
 
-export class PolygonSearchVisualizer extends EntitiesVisualizer {
+export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
-
-	core$ = this.store$.select(coreStateSelector);
-
-	statusBar$ = this.store$.select(statusBarStateSelector);
-
-	flags$ = this.statusBar$
-		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
-		.distinctUntilChanged();
-
-	geoFilterIndicator$ = this.flags$
-		.map(flags => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
-		.distinctUntilChanged();
-
-	region$ = this.core$
-		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
-		.distinctUntilChanged()
-		.pluck<OverlaysCriteria, CaseRegionState>('region')
-		.distinctUntilChanged();
-
-	geoFilter$: Observable<any> = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
-		.distinctUntilChanged()
-		.map((comboBoxesProperties) => comboBoxesProperties.geoFilter)
-		.distinctUntilChanged();
-
 
 	resetInteraction$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
@@ -66,7 +35,9 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions) {
 
-		super(null, {
+		super(store$, actions$, 'Polygon');
+
+		this.updateStyle({
 			initial: {
 				stroke: {
 					color: '#27b2cfe6',
@@ -85,48 +56,16 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	drawSearchPolygon(region: CaseRegionState): Observable<boolean> {
+	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = UUID.UUID();
-
-		const featureJson: Feature<Polygon> = {
-			type: 'Feature',
-			geometry: <any>region,
-			properties: {}
-		};
-		const entityToDraw = <any> { id, featureJson };
-		return this.setEntities([entityToDraw]);
+		const featureJson = turf.polygon(region.coordinates);
+		const entities = [{ id, featureJson }];
+		return this.setEntities(entities);
 	}
 
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.geoFilterIndicator$
-				.withLatestFrom(this.geoFilter$, this.region$, (geoFilterIndicator, geoFilter, region) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
-
-			this.region$
-				.withLatestFrom(this.geoFilter$, this.geoFilterIndicator$, (region, geoFilter, geoFilterIndicator) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
-
-			this.geoFilter$
-				.withLatestFrom(this.region$, this.geoFilterIndicator$, (geoFilter, region, geoFilterIndicator) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
-
 			this.resetInteraction$.subscribe()
 		);
 	}
@@ -142,18 +81,6 @@ export class PolygonSearchVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetOverlaysCriteriaAction({ region: geoJsonFeature.geometry }));
 			})
 			.subscribe();
-	}
-
-	onChanges([geoFilter, region, geoFilterIndicator]) {
-		if (!geoFilterIndicator) {
-			this.clearEntities();
-			return Observable.empty();
-		}
-		if (geoFilter === 'Polygon') {
-			return this.drawSearchPolygon(region);
-		}
-		this.clearEntities();
-		return Observable.empty();
 	}
 
 }

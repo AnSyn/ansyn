@@ -11,6 +11,7 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { coreFeatureKey, CoreReducer, SetLayoutAction } from '@ansyn/core';
+import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -49,7 +50,8 @@ describe('ImageriesManagerComponent', () => {
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
-				ImageryStatusComponent
+				ImageryStatusComponent,
+				AlertComponentDirective
 			]
 
 		}).compileComponents();

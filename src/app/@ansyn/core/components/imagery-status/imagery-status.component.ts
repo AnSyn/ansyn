@@ -63,7 +63,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
-		console.log(alerts)
 	}
 
 	ngOnInit(): void {

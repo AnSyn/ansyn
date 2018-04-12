@@ -4,14 +4,18 @@ import { FeatureCollection } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { LayoutKey } from '@ansyn/core';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { Entity } from "@ansyn/core/services/storage/storage.service";
 
-export interface Case {
-	id?: string;
-	name?: string;
-	owner?: string;
-	lastModified?: Date;
-	state?: CaseState;
-	creationTime?: Date;
+export interface CasePreview extends Entity {
+	creationTime: Date;
+	id: string;
+	name: string;
+	owner: string;
+	lastModified: Date;
+}
+
+export interface Case extends CasePreview {
+	state: CaseState;
 }
 
 export interface IContextEntity extends IVisualizerEntity {

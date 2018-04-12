@@ -201,25 +201,6 @@ export class CasesEffects {
 
 	/**
 	 * @type Effect
-	 * @name onSelectCaseById$
-	 * @ofType SelectCaseByIdAction
-	 * @dependencies cases
-	 * @filter There is a new selected case
-	 * @action SelectCaseAction
-	 */
-	@Effect()
-	onSelectCaseById$: Observable<SelectCaseAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.map(([{ payload }, casesState]: [SelectCaseByIdAction, ICasesState]): [Case, string] => [
-			casesState.entities[payload],
-			casesState.selectedCase.id
-		])
-		.filter(([selectedCase, oldSelectedCaseId]) => Boolean(selectedCase) && selectedCase.id !== oldSelectedCaseId)
-		.map(([selectedCase]: [Case, string]) => new SelectCaseAction(selectedCase));
-
-	/**
-	 * @type Effect
 	 * @name onSaveCaseAs$
 	 * @ofType SaveCaseAsAction
 	 * @action AddCaseAction

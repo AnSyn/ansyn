@@ -17,7 +17,9 @@ import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlay
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+/*
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
+*/
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { BackToWorldView, LoggerService } from '@ansyn/core';
 
@@ -147,21 +149,6 @@ describe('StatusBarAppEffects', () => {
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		actions = hot('--a--', { a: action });
 
-		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updategeoFilterIndicatorAction$).toBeObservable(expectedResults);
-	});
-
-	it('updategeoFilterIndicatorAction$ - remove', () => {
-
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator });
-		store.dispatch(action);
-		// mock communicatorsAsArray
-		const imagery1 = {};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		actions = hot('--a--', { a: action });
-
-		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updategeoFilterIndicatorAction$).toBeObservable(expectedResults);
 	});
 
 

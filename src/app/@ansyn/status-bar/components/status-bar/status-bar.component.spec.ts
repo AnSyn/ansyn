@@ -70,7 +70,7 @@ describe('StatusBarComponent', () => {
 	it('check click on pinPoint flags', () => {
 		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.edit-pinpoint').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch }));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
 
 		fixture.nativeElement.querySelector('.eye-button').click();
 		expect(store.dispatch).toHaveBeenCalled();

@@ -12,13 +12,11 @@ export const statusBarToastMessages = {
 export interface IStatusBarState {
 	flags: Map<StatusBarFlag, boolean>;
 	comboBoxesProperties: ComboBoxesProperties,
-	overlaysCount: number
 }
 
 export const StatusBarInitialState: IStatusBarState = {
 	flags: new Map<StatusBarFlag, boolean>(),
 	comboBoxesProperties: {},
-	overlaysCount: 0
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -46,8 +44,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
-		case StatusBarActionsTypes.SET_OVERLAYS_COUNT:
-			return { ...state, overlaysCount: action.payload };
 
 		default:
 			return state;

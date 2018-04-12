@@ -1,7 +1,5 @@
 import {
-	CoreActions,
-	CoreActionTypes,
-	SetFavoriteOverlaysAction,
+	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
@@ -27,6 +25,8 @@ export interface ICoreState {
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
+	overlaysCount: number;
+
 	wasWelcomeNotificationShown: boolean;
 }
 
@@ -39,6 +39,7 @@ export const coreInitialState: ICoreState = {
 	]),
 	overlaysCriteria: {},
 	layout: 'layout1',
+	overlaysCount: 0,
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown
 };
 
@@ -78,11 +79,14 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 			return { ...state, overlaysCriteria };
 
 		case CoreActionTypes.SET_LAYOUT:
-			return {...state, layout: action.payload };
+			return { ...state, layout: action.payload };
 
 		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
 			const payloadObj = {wasWelcomeNotificationShown: action.payload};
 			return {...state, ...payloadObj };
+
+		case CoreActionTypes.SET_OVERLAYS_COUNT:
+			return { ...state, overlaysCount: action.payload };
 
 		default:
 			return state;

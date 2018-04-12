@@ -17,7 +17,6 @@ import {
 import {
 	MouseOutDropAction,
 	MouseOverDropAction,
-	OverlaysMarkupAction,
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -44,7 +43,6 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
-import { CoreService } from '@ansyn/core/services/core.service';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
 import {
@@ -52,6 +50,7 @@ import {
 	SetPinLocationModeAction
 } from '@ansyn/menu-items';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -135,19 +134,25 @@ describe('VisualizersAppEffects', () => {
 	}));
 
 	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
-		const markup = [{ id: '1234', class: 'active' }];
-		spyOn(CoreService, 'getOverlaysMarkup').and.callFake(() => markup);
+		const fakeId = 'fakeId'
+		const markup = {
+			classToSet: MarkUpClass.hover,
+			dataToSet: {
+				overlaysIds: [fakeId]
+			}
+		}
+
 		actions = hot('--a--', {
 			a: new HoverFeatureTriggerAction({
-				id: 'fakeId'
+				id: fakeId
 			})
 		});
-		const expectedResults = cold('--b--', { b: new OverlaysMarkupAction(markup) });
+		const expectedResults = cold('--b--', { b: new SetMarkUp(markup) });
 		expect(visualizersAppEffects.onHoverFeatureSetMarkup$).toBeObservable(expectedResults);
 
 	});
 
-	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "undefined")', () => {
+	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "null")', () => {
 
 		it('with "id" if MouseOverDropAction', () => {
 			actions = hot('--a--', { a: new MouseOverDropAction('fakeId') });
@@ -158,18 +163,9 @@ describe('VisualizersAppEffects', () => {
 			});
 			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
 		});
-
-		it('with "undefined" if not MouseOverDropAction', () => {
-			actions = hot('--a--', { a: new MouseOutDropAction('fakeId') });
-			const expectedResults = cold('--b--', {
-				b: new HoverFeatureTriggerAction({
-					id: undefined
-				})
-			});
-			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
-		});
-
 	});
+
+
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		mapState.mapsList = [...selectedCase.state.maps.data];

@@ -109,13 +109,13 @@
 			 [attr.tooltip-value]="toolTips.overlayCount"
 			 tooltip-class="top right">
 			<i class="block-icon icon-status-bar-imagery-count"></i>
-			<span>{{overlaysCount}}</span>
+			<span>{{overlaysCount$ | async}}</span>
 		</div>
 
 	</div>
 
 	<div class="navigation">
-		<button (click)="clickGoPrev()"
+		<button (click)="clickGoAdjacent(false)"
 				[class.active]="goPrevActive"
 				[attr.tooltip-value]="toolTips.backwards"
 				tooltip-class="top left"
@@ -123,7 +123,7 @@
 			<i class="icon-status-bar-prev"></i>
 		</button>
 
-		<button (click)="clickGoNext()"
+		<button (click)="clickGoAdjacent(true)"
 				[class.active]="goNextActive"
 				[attr.tooltip-value]="toolTips.forward"
 				tooltip-class="top left"

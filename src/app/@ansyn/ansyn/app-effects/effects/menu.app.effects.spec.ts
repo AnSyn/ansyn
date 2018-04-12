@@ -53,7 +53,7 @@ describe('MenuAppEffects', () => {
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
 		actions = hot('--a--', { a: new ContainerChangedTriggerAction() });
-		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction(true) });
+		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction() });
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 

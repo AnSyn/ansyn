@@ -7,18 +7,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
-	RedrawTimelineAction,
-	RequestOverlayByIDFromBackendAction,
-	SetTimelineStateAction,
-	UpdateOverlaysCountAction
+	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
+	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
@@ -27,22 +17,12 @@ import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState, SetToastMessageAction } from '@ansyn/core';
+import { coreStateSelector, ICoreState } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
 
 @Injectable()
 export class OverlaysEffects {
-
-	/**
-	 * @type Effect
-	 * @name onOverlaysMarkupChanged$
-	 * @ofType OverlaysMarkupAction
-	 */
-	@Effect({ dispatch: false })
-	onOverlaysMarkupChanged$: Observable<OverlaysMarkupAction> = this.actions$
-		.ofType(OverlaysActionTypes.OVERLAYS_MARKUPS)
-		.share();
 
 	/**
 	 * @type Effect
@@ -76,10 +56,6 @@ export class OverlaysEffects {
 					}
 
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
-
-					overlays.errors.forEach(error => {
-						actions.push(new SetToastMessageAction({ toastText: error.message, showWarningIcon: true }));
-					});
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
@@ -116,58 +92,6 @@ export class OverlaysEffects {
 
 	/**
 	 * @type Effect
-	 * @name initTimelineState$
-	 * @ofType LoadOverlaysAction
-	 * @action SetTimelineStateAction
-	 */
-	@Effect()
-	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS)
-		.map((action: LoadOverlaysAction) => {
-			const start = new Date(action.payload.time.from);
-			const end = new Date(action.payload.time.to);
-			const timeLineRange = { start, end };
-			return new SetTimelineStateAction({ timeLineRange });
-		});
-
-	/**
-	 * @type Effect
-	 * @name goPrevDisplay$
-	 * @ofType GoPrevDisplayAction
-	 * @dependencies overlays
-	 * @filter Exists a previous overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
-	@Effect()
-	goPrevDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType<GoPrevDisplayAction>(OverlaysActionTypes.GO_PREV_DISPLAY)
-		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
-			const index = filteredOverlays.indexOf(action.payload);
-			return filteredOverlays[index - 1];
-		})
-		.filter(prevOverlayId => Boolean(prevOverlayId))
-		.map(prevOverlayId => new DisplayOverlayFromStoreAction({ id: prevOverlayId }));
-
-	/**
-	 * @type Effect
-	 * @name goNextDisplay$
-	 * @ofType GoNextDisplayAction
-	 * @dependencies overlays
-	 * @filter Exists a next overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
-	@Effect()
-	goNextDisplay$: Observable<DisplayOverlayFromStoreAction> = this.actions$
-		.ofType<GoNextDisplayAction>(OverlaysActionTypes.GO_NEXT_DISPLAY)
-		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), (action, filteredOverlays: string[]): string => {
-			const index = filteredOverlays.indexOf(action.payload);
-			return filteredOverlays[index + 1];
-		})
-		.filter(nextOverlayId => Boolean(nextOverlayId))
-		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
-
-	/**
-	 * @type Effect
 	 * @name drops$
 	 * @description this method parse overlays for display ( drops )
 	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
@@ -182,45 +106,7 @@ export class OverlaysEffects {
 			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
 		.withLatestFrom(this.store$.select(overlaysStateSelector))
 		.map(([action, overlays]: [Action, IOverlaysState]) => {
-			return OverlaysService.parseOverlayDataForDisplay(overlays)
-		});
-
-	/**
-	 * @type Effect
-	 * @name dropsCount$
-	 * @description this method should calculate drops count
-	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
-	 * @action UpdateOverlaysCountAction
-	 */
-
-	@Effect()
-	dropsCount$: Observable<UpdateOverlaysCountAction> = this.drops$
-		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
-
-
-	/**
-	 * @type Effect
-	 * @name dropCountWatcher
-	 * @description this method should fire notification when no overlays are available due to filters.
-	 * @ofType UpdateOverlaysCountAction
-	 * @action SetOverlaysStatusMessage
-	 */
-
-	@Effect()
-	dropCountWatcher$: Observable<SetOverlaysStatusMessage> = this.actions$
-		.ofType<UpdateOverlaysCountAction>(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
-		.withLatestFrom(this.store$.select(overlaysStateSelector))
-		.map(([{ payload }, { overlays, statusMessage }]: [UpdateOverlaysCountAction, IOverlaysState]) => {
-			const isMessageActive = statusMessage === overlaysStatusMessages.noOverLayMatchFilters;
-			const isConditionMet = overlays.size > 0 && payload === 0;
-			const turnOn = !statusMessage && isConditionMet;
-			const turnOff = !isConditionMet && isMessageActive;
-			return { turnOn, turnOff };
-		})
-		.filter(({ turnOn, turnOff }) => turnOn || turnOff)
-		.map(({ turnOn }) => {
-			const payload = turnOn ? overlaysStatusMessages.noOverLayMatchFilters : overlaysStatusMessages.nullify;
-			return new SetOverlaysStatusMessage(payload);
+			return OverlaysService.parseOverlayDataForDisplay(overlays);
 		});
 
 	constructor(protected actions$: Actions,

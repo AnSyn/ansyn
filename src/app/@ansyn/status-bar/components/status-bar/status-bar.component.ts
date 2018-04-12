@@ -2,13 +2,14 @@ import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
-	CopySelectedCaseLinkAction, ExpandAction, GoNextAction, GoPrevAction,
-	UpdateStatusFlagsAction
+
+	CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
 	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	ClearActiveInteractionsAction, coreStateSelector, ICoreState, LayoutKey, layoutOptions, Overlay, OverlaysCriteria,
+	ClearActiveInteractionsAction, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey, layoutOptions, Overlay,
+	OverlaysCriteria,
 	SetLayoutAction, SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
@@ -42,7 +43,8 @@ export class StatusBarComponent implements OnInit {
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
-	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
+
+	overlaysCount$: Observable<number> = this.core$.pluck<ICoreState, number>('overlaysCount').distinctUntilChanged();
 
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
@@ -91,10 +93,10 @@ export class StatusBarComponent implements OnInit {
 		}
 
 		if ($event.which === 39) { // ArrowRight
-			this.clickGoNext();
+			this.clickGoAdjacent(true);
 			this.goNextActive = false;
 		} else if ($event.which === 37) { // ArrowLeft
-			this.clickGoPrev();
+			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
 		}
 	}
@@ -131,9 +133,7 @@ export class StatusBarComponent implements OnInit {
 			this.time = _time;
 		});
 
-		this.overlaysCount$.subscribe(overlaysCount => {
-			this.overlaysCount = overlaysCount;
-		});
+
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -170,12 +170,8 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	}
 
-	clickGoPrev(): void {
-		this.store.dispatch(new GoPrevAction());
-	}
-
-	clickGoNext(): void {
-		this.store.dispatch(new GoNextAction());
+	clickGoAdjacent(nextOrPrev): void {
+		this.store.dispatch(new GoAdjacentOverlay({nextOrPrev}));
 	}
 
 	clickExpand(): void {

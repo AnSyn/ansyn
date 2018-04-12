@@ -8,18 +8,17 @@ import { cold, hot } from 'jasmine-marbles';
 import { SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { CoreService } from '@ansyn/core/services/core.service';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core';
+import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
 
 function mockOverlay(id: string): Overlay {
 	const overlay = new Overlay();
 	overlay.id = id;
 	return overlay;
 }
+
 describe('CoreAppEffects', () => {
 	let coreAppEffects: CoreAppEffects;
 	let actions: Observable<any>;
@@ -39,7 +38,7 @@ describe('CoreAppEffects', () => {
 				CoreAppEffects,
 				provideMockActions(() => actions),
 				{
-					provide : LoggerService,
+					provide: LoggerService,
 					useValue: () => null
 				}
 			]
@@ -86,15 +85,18 @@ describe('CoreAppEffects', () => {
 
 	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
 		casesState.selectedCase = <Case> { state: { favoriteOverlays: overlays1to3 } };
-		const markupsResult = {};
-		spyOn(CoreService, 'getOverlaysMarkup').and.callFake(() => markupsResult);
-		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays1to4) });
+		const markupsResult = {
+			classToSet: MarkUpClass.favorites,
+			dataToSet: {
+				overlaysIds: overlays1to3.map(overlay => overlay.id)
+			}
+		};
+		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays1to3) });
 
-		const expectedResult = cold('--a--', {
-			a: new OverlaysMarkupAction(markupsResult),
+		const expectedResult = cold('--b--', {
+			b: new SetMarkUp(markupsResult)
 		});
 
 		expect(coreAppEffects.setFavoriteOverlaysUpdateCase$).toBeObservable(expectedResult);
-		expect(CoreService.getOverlaysMarkup).toHaveBeenCalled();
 	});
 });

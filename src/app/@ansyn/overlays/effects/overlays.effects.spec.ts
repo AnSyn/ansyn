@@ -3,19 +3,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	OverlaysMarkupAction,
-	RedrawTimelineAction,
+	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
 	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
-import { OverlayReducer, overlaysFeatureKey, overlaysInitialState, overlaysStateSelector } from '../reducers/overlays.reducer';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import {
+	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector
+} from '../reducers/overlays.reducer';
+import { BaseOverlaySourceProvider, IFetchParams, RedrawTimelineAction } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { coreInitialState, coreStateSelector, LoggerService } from '@ansyn/core';
@@ -115,13 +113,6 @@ describe('Overlays Effects ', () => {
 		overlaysService = _overlaysService;
 	}));
 
-	it('effect - onOverlaysMarkupChanged$', () => {
-		const action = new OverlaysMarkupAction({});
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(overlaysEffects.onOverlaysMarkupChanged$).toBeObservable(expectedResults);
-	});
-
 	it('effect - onRedrawTimeline$', () => {
 		const action = new RedrawTimelineAction();
 		actions = hot('--a--', { a: action });
@@ -133,12 +124,14 @@ describe('Overlays Effects ', () => {
 		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
-		const expectedResults = cold('--(ab)--', {
+		const expectedResults = cold('--(abc)--', {
 			a: new LoadOverlaysSuccessAction(tmp),
-			b: new SetOverlaysStatusMessage(null)
+			c: new SetOverlaysStatusMessage(null),
+			b: new SetOverlaysCountAction(tmp.length)
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
+
 
 	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
 		const fakeOverlay = <Overlay> { id: 'test' };

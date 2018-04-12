@@ -23,7 +23,7 @@ export class MenuAppEffects {
 		.ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED)
 		.mergeMap(() => [
 			new UpdateMapSizeAction(),
-			new RedrawTimelineAction(true)
+			new RedrawTimelineAction()
 		]);
 
 	/**

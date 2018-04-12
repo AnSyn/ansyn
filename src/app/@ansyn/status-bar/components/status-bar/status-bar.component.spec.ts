@@ -3,7 +3,7 @@ import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import {
-	ExpandAction, GoNextAction, GoPrevAction,
+	ExpandAction,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { StatusBarModule } from '../../status-bar.module';
@@ -11,6 +11,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '../../models/index';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
+import { CoreConfig, GoAdjacentOverlay } from '@ansyn/core';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models';
 import { ALERTS } from '@ansyn/core/alerts/alerts.model';
 
@@ -56,12 +57,6 @@ describe('StatusBarComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	// it('layoutSelectChange call store.dispatch with ChangeLayoutAction', () => {
-	// 	spyOn(store, 'dispatch');
-	// 	component.layoutSelectChange(5);
-	// 	expect(store.dispatch).toHaveBeenCalledWith(new SetLayoutAction(5));
-	// });
-
 
 	it('eye indicator should be active', () => {
 		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
@@ -84,13 +79,13 @@ describe('StatusBarComponent', () => {
 	describe('clicks', () => {
 		it('clickGoPrev should dispatch action GoPrevAction', () => {
 			spyOn(component.store, 'dispatch');
-			component.clickGoPrev();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoPrevAction());
+			component.clickGoAdjacent(false);
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({nextOrPrev: false}));
 		});
 		it('clickGoNext should dispatch action GoNextAction', () => {
 			spyOn(component.store, 'dispatch');
-			component.clickGoNext();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoNextAction());
+			component.clickGoAdjacent(true);
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({nextOrPrev: true}));
 		});
 		it('clickExpand should dispatch action ExpandAction', () => {
 			spyOn(component.store, 'dispatch');
@@ -99,9 +94,9 @@ describe('StatusBarComponent', () => {
 		});
 	});
 
-	[{ k: 39, n: 'goNextActive', f: 'clickGoNext' }, { k: 37, n: 'goPrevActive', f: 'clickGoPrev' }].forEach(key => {
+	[{ k: 39, n: 'goNextActive', f: 'clickGoAdjacent' }, { k: 37, n: 'goPrevActive', f: 'clickGoAdjacent' }].forEach(key => {
 		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
-			spyOn(component, <'clickGoNext' | 'clickGoPrev'>key.f);
+			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
 			const $event = {
 				which: key.k,
@@ -116,3 +111,5 @@ describe('StatusBarComponent', () => {
 		});
 	});
 });
+
+

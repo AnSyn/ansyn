@@ -1,51 +1,47 @@
 export default (config, xScale) => selection => {
-    const {
-        margin,
-        bound: { format: dateFormat },
-        label: { width: labelWidth },
-        line: { height: lineHeight },
-    } = config;
+	const {
+		margin,
+		bound: { format: dateFormat, location },
+		label: { width: labelWidth },
+		line: { height: lineHeight }
 
-    const bounds = selection.selectAll('.bound').data(d => d);
-    const data = selection.data();
-    let numberRows;
-    if (data && data.length) {
-    	 numberRows = selection.data()[0].length;
+	} = config;
+
+	const bounds = selection.selectAll('.bound').data(d => d);
+	let boundsLabelLocation;
+	if (location) {
+		boundsLabelLocation = location;
 	}
-	else {
-    	return null
+	else if (selection.data() && selection.data()[0]) {
+		boundsLabelLocation = lineHeight * selection.data()[0].length + margin.top;
 	}
 
-    bounds.exit().remove();
+	bounds
+		.enter()
+		.append('g')
+		.classed('bound', true)
+		.classed('start', true)
+		.attr(
+			'transform',
+			`translate(${labelWidth}, ${boundsLabelLocation})`
+		)
+		.append('text')
+		.text(dateFormat(xScale.domain()[0]));
 
-    bounds
-        .enter()
-        .filter((_, i) => !i)
-        .append('g')
-        .classed('bound', true)
-        .classed('start', true)
-        .attr(
-            'transform',
-            `translate(${labelWidth}, ${lineHeight * numberRows + margin.top})`
-        )
-        .append('text')
-        .text(dateFormat(xScale.domain()[0]));
+	bounds
+		.enter()
+		.append('g')
+		.classed('bound', true)
+		.classed('end', true)
+		.attr(
+			'transform',
+			`translate(${labelWidth}, ${boundsLabelLocation})`
+		)
+		.append('text')
+		.attr('x', xScale.range()[1] - margin.right)
+		.attr('text-anchor', 'end')
+		.text(dateFormat(xScale.domain()[1]));
 
-    bounds
-        .enter()
-        .filter((_, i) => !i)
-        .append('g')
-        .classed('bound', true)
-        .classed('end', true)
-        .attr(
-            'transform',
-            `translate(${labelWidth}, ${lineHeight * numberRows + margin.top})`
-        )
-        .append('text')
-        .attr('x', xScale.range()[1] - margin.right)
-        .attr('text-anchor', 'end')
-        .text(dateFormat(xScale.domain()[1]));
-
-    bounds.selectAll('.bound.start text').text(dateFormat(xScale.domain()[0]));
-    bounds.selectAll('.bound.end text').text(dateFormat(xScale.domain()[1]));
+	bounds.selectAll('.bound.start text').text(dateFormat(xScale.domain()[0]));
+	bounds.selectAll('.bound.end text').text(dateFormat(xScale.domain()[1]));
 };

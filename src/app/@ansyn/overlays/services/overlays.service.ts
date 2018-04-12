@@ -75,7 +75,7 @@ export class OverlaysService {
 					obj[property] = item[property];
 					return obj;
 				}, {});
-		});
+			});
 	}
 
 
@@ -123,39 +123,46 @@ export class OverlaysService {
 	}
 
 	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: TimelineRange): TimelineRange {
-		let {start, end} = timeLineRange;
-	 	const overlayDate = displayedOverlay.date;
+		let { start, end } = timeLineRange;
+		const startTime = start.getTime();
+		const endTime = end.getTime();
+		const dropTime = displayedOverlay.date.getTime();
 		const deltaTenth = this.getTenth(timeLineRange);
-		if (overlayDate < start) {
-			start = new Date(overlayDate.getTime() - deltaTenth);
-		} else if (overlayDate > end) {
-			end = new Date(overlayDate.getTime() + deltaTenth);
+		const dropTimeMarging = {
+			start: dropTime - deltaTenth,
+			end: dropTime + deltaTenth
+		};
+		if (dropTimeMarging.start < startTime) {
+			start = new Date(dropTimeMarging.start);
+		} else if (dropTimeMarging.end > endTime) {
+			end = new Date(dropTimeMarging.end);
 		}
 		return { start, end };
 	}
 
-	private getTenth(timeLineRange: TimelineRange) : number {
-		let {start, end} = timeLineRange;
+	private getTenth(timeLineRange: TimelineRange): number {
+		let { start, end } = timeLineRange;
 		const delta: number = end.getTime() - start.getTime();
-		return (delta) * 0.1;
+		return delta === 0 ? 5000 : (delta) * 0.05;
 	}
+
 	private expendByTenth(timeLineRange: TimelineRange) {
 		const tenth = this.getTenth(timeLineRange);
 		return {
 			start: new Date(timeLineRange.start.getTime() - tenth),
 			end: new Date(timeLineRange.end.getTime() + tenth)
-		}
+		};
 	}
 
 
-	getTimeRangeFromDrops(drops : Array<OverlayDrop>) : TimelineRange {
+	getTimeRangeFromDrops(drops: Array<OverlayDrop>): TimelineRange {
 		let start = drops[0].date;
 		let end = drops[0].date;
 		drops.forEach(drop => {
 			start = drop.date < start ? drop.date : start;
 			end = drop.date > end ? drop.date : end;
 		});
-		return this.expendByTenth({start, end});
+		return this.expendByTenth({ start, end });
 
 	}
 }

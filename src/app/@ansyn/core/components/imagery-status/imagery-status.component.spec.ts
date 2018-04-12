@@ -5,6 +5,7 @@ import { Overlay } from '../../models/overlay.model';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '../../models/logger.config';
 import { CoreModule } from '@ansyn/core';
+import { ALERTS } from '@ansyn/core/alerts/alerts.model';
 
 
 describe('ImageryStatusComponent', () => {
@@ -14,7 +15,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CoreModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
-			providers: [{ provide: LoggerConfig, useValue: {} }]
+			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: ALERTS, useValue: [] }]
 		}).compileComponents();
 	}));
 

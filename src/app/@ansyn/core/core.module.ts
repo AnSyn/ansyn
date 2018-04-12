@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';

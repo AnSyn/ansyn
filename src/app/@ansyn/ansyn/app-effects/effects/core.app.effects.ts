@@ -68,8 +68,7 @@ export class CoreAppEffects {
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
 			CasesActionTypes.UPDATE_CASE,
 			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
-			CasesActionTypes.SELECT_CASE,
-			CasesActionTypes.SELECT_CASE_BY_ID,
+			CasesActionTypes.SELECT_CASE
 			)
 		.do((action) => {
 			this.loggerService.info(JSON.stringify(action));

@@ -108,13 +108,6 @@ export class SelectCaseAction implements Action {
 	}
 }
 
-export class SelectCaseByIdAction implements Action {
-	type = CasesActionTypes.SELECT_CASE_BY_ID;
-
-	constructor(public payload: string) {
-	}
-}
-
 export class LoadCaseAction implements Action {
 	type = CasesActionTypes.LOAD_CASE;
 

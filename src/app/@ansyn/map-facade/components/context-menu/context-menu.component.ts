@@ -243,7 +243,6 @@ export class ContextMenuComponent implements OnInit {
 
 	setSearchEntity() {
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
 
 		if (this.searchMode === 'Pin-Point') {
 			this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));

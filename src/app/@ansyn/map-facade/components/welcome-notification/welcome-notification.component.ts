@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, Inject, OnDestroy } from '@angular/core';
+import {
+	AfterViewInit,
+	Component,
+	ElementRef,
+	EventEmitter,
+	HostBinding,
+	HostListener,
+	Inject,
+	OnDestroy, Output
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
@@ -13,6 +22,8 @@ import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
 })
 export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
+	@Output() hideMe = new EventEmitter<any>();
+
 	private _subscriptions: Subscription[] = [];
 
 	public config: any = {};
@@ -20,14 +31,22 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	wasWelcomeNotificationShown$ = this.store$.select(coreStateSelector)
 		.take(1)
 		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-		.do(() => {
-			this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
-		})	;
+		;
 
 	// Make the DOM element focusable
 	@HostBinding('attr.tabindex')
 	get tabindex() {
 		return 0;
+	}
+
+	// Mark as done, in the store, when losing focus,
+	// and then signal my container to hide me (after a delay, to display a fading animation)
+	@HostListener('blur')
+	onBlur() {
+		this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
+		setTimeout(() => {
+			this.hideMe.emit();
+		}, 1000);
 	}
 
 	constructor(public store$: Store<ICoreState>,

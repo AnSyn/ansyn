@@ -10,8 +10,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
 import { CoreService } from './services/core.service';
 import {
-	ErrorHandlerService, GenericTypeResolverService, LoggerService,
-	ProjectionConverterService
+	ErrorHandlerService,
+	GenericTypeResolverService,
+	LoggerService,
+	ProjectionConverterService,
+	StorageService
 } from './services';
 import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
 import { WelcomeNotificationComponent } from '@ansyn/core/components/welcome-notification/welcome-notification.component';
@@ -36,7 +39,8 @@ const coreComponents = [
 		ProjectionConverterService,
 		LoggerService,
 		CoreService,
-		ErrorHandlerService
+		ErrorHandlerService,
+		StorageService
 	],
 	exports: coreComponents,
 	declarations: coreComponents

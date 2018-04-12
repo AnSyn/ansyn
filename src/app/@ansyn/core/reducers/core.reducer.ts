@@ -26,7 +26,6 @@ export interface ICoreState {
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
 	overlaysCount: number;
-
 	wasWelcomeNotificationShown: boolean;
 }
 
@@ -84,6 +83,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
 			const payloadObj = {wasWelcomeNotificationShown: action.payload};
 			return {...state, ...payloadObj };
+
+		case CoreActionTypes.SET_OVERLAYS_COUNT:
+			return { ...state, overlaysCount: action.payload };
 
 		case CoreActionTypes.SET_OVERLAYS_COUNT:
 			return { ...state, overlaysCount: action.payload };

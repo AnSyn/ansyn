@@ -50,7 +50,33 @@ export interface OverlayLine {
 
 export interface OverlayDrop {
 	id: string,
-	date: Date
+	date: Date,
+	otherData?: any
+}
+
+export interface OverlayDropMarkUp {
+	id: string,
+	markUpClassList: Array<MarkUpClass>
+}
+
+export interface MarkUpData {
+	overlaysIds: Array<string>
+	type?: MarkUpTypes
+	data?: string
+}
+
+export enum MarkUpClass {
+	active = 'active',
+	hover = 'hover',
+	favorites = 'favorites',
+	displayed = 'displayed',
+	symbole = 'symbole'
+
+}
+
+export enum MarkUpTypes {
+	css = 'css',
+	symbole = 'symbole'
 }
 
 export interface OverlayLine {

@@ -3,49 +3,37 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
-	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction,
+	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
 import {
-	LayersActionTypes,
-	SelectLayerAction,
+	LayersActionTypes, SelectLayerAction,
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { Case, ICasesState } from '@ansyn/menu-items/cases';
+import { ICasesState } from '@ansyn/menu-items/cases';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
-import { DisplayOverlayAction, IOverlaysState, OverlaysService } from '@ansyn/overlays';
+import { DisplayOverlayAction, IOverlaysState, MarkUpClass, OverlaysService, SetMarkUp } from '@ansyn/overlays';
 import {
-	IStatusBarState,
-	statusBarStateSelector,
+	IStatusBarState, statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import {
-	ImageryCreatedAction,
-	DrawPinPointAction,
-	MapSingleClickAction,
+	DrawPinPointAction, ImageryCreatedAction, MapSingleClickAction,
 	PinPointTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	endTimingLog,
-	extentFromGeojson,
-	getFootprintIntersectionRatioInExtent,
-	getPointByGeometry,
+	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent, getPointByGeometry,
 	startTimingLog
 } from '@ansyn/core/utils';
 import {
-	SetActiveCenter,
-	SetMapGeoEnabledModeToolsActionStore,
-	SetPinLocationModeAction,
+	SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -57,7 +45,6 @@ import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
-import { CoreService } from '@ansyn/core/services/core.service';
 import {
 	AddAlertMsg,
 	AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction,
@@ -330,15 +317,24 @@ export class MapAppEffects {
 	 * @type Effect
 	 * @name markupOnMapsDataChanges$
 	 * @ofType ActiveMapChangedAction, MapsListChangedAction
-	 * @dependencies cases
-	 * @action OverlaysMarkupAction
+	 * @dependencies none
+	 * @action RemoveMarkUp, AddMarkUp
 	 */
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
-		.withLatestFrom(this.store$, (action, state): IAppState => state)
-		.map(({ map, core }: IAppState) => CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays))
-		.map(markups => new OverlaysMarkupAction(markups));
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length))
+		.map(([action, mapState]: [Action, IMapState]) =>
+			mapState.mapsList.find(map => map.id === mapState.activeMapId)
+		)
+		.filter((map: CaseMapState) => Boolean(map && map.data && map.data.overlay && map.data.overlay.id))
+		.map((map: CaseMapState) => new SetMarkUp({
+			classToSet: MarkUpClass.active,
+			dataToSet: {
+				overlaysIds: [map.data.overlay.id]
+			}
+		}));
 
 	/**
 	 * @type Effect

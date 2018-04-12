@@ -120,21 +120,13 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set timeline state action should update the store', () => {
-		const data1 = { start: new Date(), end: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
-
+		const data1 = {
+			start: new Date(Date.now() - (1000 * 60 * 60 * 24 * 30)),
+			end: new Date(Date.now())
+		}
 		const action = new SetTimelineStateAction({ timeLineRange: data1 });
 		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.timeLineRange.start.getTime()).toBe(data1.start.getTime());
 		expect(result.timeLineRange.end.getTime()).toBe(data1.end.getTime());
 	});
-
-	it('set timeline state action should fail and not update the store', () => {
-		const data1 = { start: new Date(), end: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
-
-		const action = new SetTimelineStateAction({ timeLineRange: data1 });
-		const result = OverlayReducer(overlaysInitialState, action);
-		expect(result.timeLineRange.start.getTime()).not.toBe(data1.start.getTime());
-		expect(result.timeLineRange.end.getTime()).not.toBe(data1.end.getTime());
-	});
-
 });

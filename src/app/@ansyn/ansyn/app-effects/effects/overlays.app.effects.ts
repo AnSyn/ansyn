@@ -3,41 +3,23 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes, OverlaysMarkupAction, SetTimelineStateAction
+	DisplayOverlaySuccessAction, OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { Overlay } from '@ansyn/overlays';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlaysState, overlaysStateSelector, TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
-import { CoreService } from '@ansyn/core/services/core.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onOverlaysMarkupsChanged$
-	 * @ofType LoadOverlaysSuccessAction
-	 * @dependencies cases
-	 * @filter There is a selected case
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
-		.map(([action, map, core]: [Action, IMapState, ICoreState]) => {
-			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays);
-			return new OverlaysMarkupAction(overlaysMarkup);
-		});
 
 	/**
 	 * @type Effect
@@ -46,14 +28,14 @@ export class OverlaysAppEffects {
 	 * @filter There is an imagery count before or after
 	 * @dependencies overlays
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	initTimelineState$ = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 || this.casesService.contextValues.imageryCountAfter !== -1)
 		.do(() => {
 			this.casesService.contextValues.imageryCountBefore = -1;
 			this.casesService.contextValues.imageryCountAfter = -1;
-		})
+		});
 
 	/**
 	 * @type Effect
@@ -195,7 +177,7 @@ export class OverlaysAppEffects {
 		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId })
+			return new DisplayOverlayAction({ overlay, mapId });
 		});
 
 	constructor(public actions$: Actions,

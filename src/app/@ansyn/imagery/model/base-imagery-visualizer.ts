@@ -11,8 +11,6 @@ export interface IVisualizerEntity {
 	style?: Partial<VisualizerStateStyle>
 }
 
-export type IMarkupEvent = { id: string, class: boolean }[];
-
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {

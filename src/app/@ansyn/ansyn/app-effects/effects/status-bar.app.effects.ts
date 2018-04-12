@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	CopySelectedCaseLinkAction,
-	IStatusBarState,
-	StatusBarActionsTypes,
-	statusBarFlagsItems,
+	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItems,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
@@ -16,19 +13,9 @@ import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/clone-deep';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import {
-	DrawPinPointAction,
-	PinPointModeTriggerAction
-} from '@ansyn/map-facade/actions/map.actions';
-import {
-	GoNextDisplayAction,
-	GoPrevDisplayAction,
-	UpdateOverlaysCountAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { DrawPinPointAction, PinPointModeTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { OverlaysActionTypes } from '@ansyn/overlays/actions';
-import { SetOverlaysCountAction } from '@ansyn/status-bar/actions';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
@@ -108,43 +95,6 @@ export class StatusBarAppEffects {
 		.map(() => {
 			console.log('onExpand$');
 		});
-
-	/**
-	 * @type Effect
-	 * @name onGoPrevNext$
-	 * @ofType GoNextAction, GoPrevAction
-	 * @dependencies cases
-	 * @filter There is an active map overlay
-	 * @action GoNextDisplayAction?, GoPrevDisplayAction?
-	 */
-	@Effect()
-	onGoPrevNext$: Observable<any> = this.actions$
-		.ofType(StatusBarActionsTypes.GO_NEXT, StatusBarActionsTypes.GO_PREV)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, casesState: ICasesState) => {
-			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.activeMapId === map.id);
-			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
-			return [action.type, overlayId];
-		})
-		.filter(([actionType, overlayId]) => Boolean(overlayId))
-		.map(([actionType, currentOverlayId]: [string, string]) => {
-			switch (actionType) {
-				case StatusBarActionsTypes.GO_NEXT:
-					return new GoNextDisplayAction(currentOverlayId);
-				case StatusBarActionsTypes.GO_PREV:
-					return new GoPrevDisplayAction(currentOverlayId);
-			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name setOverlayCount$
-	 * @ofType UpdateOverlaysCountAction
-	 * @action SetOverlaysCountAction
-	 */
-	@Effect()
-	setOverlayCount$ = this.actions$
-		.ofType<UpdateOverlaysCountAction>(OverlaysActionTypes.UPDATE_OVERLAYS_COUNT)
-		.map(({ payload }) => new SetOverlaysCountAction(payload));
 
 	/**
 	 * @type Effect

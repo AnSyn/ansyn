@@ -3,6 +3,9 @@ import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import * as _ from 'lodash';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+
 
 export interface TimelineRange {
 	start: Date;
@@ -11,7 +14,33 @@ export interface TimelineRange {
 
 export interface OverlayDrop {
 	id: string,
-	date: Date
+	date: Date,
+	otherData?: any
+}
+
+export interface OverlayDropMarkUp {
+	id: string,
+	markUpClassList: Array<MarkUpClass>
+}
+
+export interface MarkUpData {
+	overlaysIds: Array<string>
+	type?: MarkUpTypes
+	data?: string
+}
+
+export enum MarkUpClass {
+	active = 'active',
+	hover = 'hover',
+	favorites = 'favorites',
+	displayed = 'displayed',
+	symbole = 'symbole'
+
+}
+
+export enum MarkUpTypes {
+	css = 'css',
+	symbole = 'symbole'
 }
 
 export interface OverlayLine {
@@ -29,7 +58,13 @@ export interface IOverlaysState {
 	filteredOverlays: string[];
 	timeLineRange: TimelineRange;
 	statusMessage: string;
+	dropsMarkUp: ExtendMap<MarkUpClass, MarkUpData>;
 }
+
+let initDropsMarkUp: ExtendMap<MarkUpClass, MarkUpData> = new ExtendMap<MarkUpClass, MarkUpData>();
+Object.keys(MarkUpClass).forEach(key => {
+	initDropsMarkUp.set(MarkUpClass[key], { overlaysIds: [] });
+});
 
 export const overlaysInitialState: IOverlaysState = {
 	loaded: false,
@@ -40,8 +75,10 @@ export const overlaysInitialState: IOverlaysState = {
 	demo: 1,
 	timeLineRange: { start: new Date(), end: new Date() },
 	filteredOverlays: [],
-	statusMessage: null
+	statusMessage: null,
+	dropsMarkUp: initDropsMarkUp
 };
+
 export const overlaysFeatureKey = 'overlays';
 export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
 export const overlaysStatusMessages = {
@@ -145,8 +182,55 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				statusMessage: action.payload
 			};
 
-		default:
+		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
+			let dropsMarkUpCloneToSet = _.clone(state.dropsMarkUp);
+			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
+			return {
+				...state, dropsMarkUp: dropsMarkUpCloneToSet
+			};
+
+		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
+			// currently out of use
+			let dropsMarkUpClone = _.clone(state.dropsMarkUp);
+			if (action.payload.overlayIds) {
+				action.payload.overlayIds.forEach(overlayId => {
+					const markUpClassList = dropsMarkUpClone.findKeysByValue(overlayId, 'overlaysIds');
+					if (markUpClassList && markUpClassList.length) {
+						markUpClassList.forEach(markUpClass =>
+							dropsMarkUpClone.removeValueFromMap(markUpClass, overlayId, 'overlaysIds')
+						);
+					}
+				});
+			}
+			if (action.payload.markupToRemove) {
+				action.payload.markupToRemove.forEach(markUpDrop => {
+					markUpDrop.markUpClassList.forEach(markUpClass => {
+						dropsMarkUpClone.removeValueFromMap(markUpClass, markUpDrop.id, 'overlaysIds');
+					});
+				});
+			}
+
+			return { ...state, dropsMarkUp: dropsMarkUpClone };
+
+
+		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
+			// currently out of use
+			let dropsMarkUp = _.clone(state.dropsMarkUp);
+			action.payload.forEach(dropMarkUp =>
+				dropMarkUp.markUpClassList.forEach(markUpClass => {
+					let markUpData = dropsMarkUp.get(markUpClass);
+					markUpData.overlaysIds.push(dropMarkUp.id);
+					dropsMarkUp.set(markUpClass, markUpData);
+				})
+			);
+			return {
+				...state,
+				dropsMarkUp
+
+			};
+		default :
 			return state;
 	}
+
 }
 

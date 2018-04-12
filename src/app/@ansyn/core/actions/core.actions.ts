@@ -17,7 +17,9 @@ export const CoreActionTypes = {
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
-	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG'
+	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	SET_OVERLAYS_COUNT: 'SET_OVERLAYS_COUNT'
 };
 
 export type CoreActions =
@@ -30,7 +32,16 @@ export type CoreActions =
 	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
+	| GoAdjacentOverlay
 	| SetWasWelcomeNotificationShownFlagAction
+
+
+export class GoAdjacentOverlay implements Action {
+	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
+
+	constructor(public payload: {nextOrPrev: boolean}) {
+	}
+}
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -126,3 +137,10 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 }
 
 
+
+export class SetOverlaysCountAction implements Action {
+	type = CoreActionTypes.SET_OVERLAYS_COUNT;
+
+	constructor(public payload: number) {
+	}
+}

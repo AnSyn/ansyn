@@ -4,7 +4,6 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Rx';
-import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { Overlay } from '../../models/overlay.model';
@@ -13,7 +12,10 @@ import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
 
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction, UnSelectOverlayAction } from '../../actions/overlays.actions';
+import {
+	LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction,
+	UnSelectOverlayAction
+} from '../../actions/overlays.actions';
 import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
@@ -73,8 +75,8 @@ describe('OverlayContainerComponent', () => {
 			],
 			declarations: [
 				OverlaysContainerComponent,
-				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] }),
-				MockComponent({ selector: 'ansyn-overlay-status', inputs: []})
+				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'timeLineRange', 'redraw$', 'markup'] }),
+				MockComponent({ selector: 'ansyn-overlay-status', inputs: [] })
 			],
 			imports: [
 				HttpClientModule,
@@ -89,6 +91,7 @@ describe('OverlayContainerComponent', () => {
 		state = <State<any>> storeFixture.state; // (overlaysInitialState);
 		// state = overlaysInitialState;
 	}));
+
 
 	beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {
 		fixture = TestBed.createComponent(OverlaysContainerComponent);
@@ -118,48 +121,11 @@ describe('OverlayContainerComponent', () => {
 
 	});
 
-	it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data', () => {
-		const data = {
-			element: {
-				id: 'test'
-			}
-		};
-		spyOn(store, 'dispatch');
-		timelineEmitterService.provide('timeline:dblclick').next(data);
-		expect(store.dispatch).toHaveBeenCalledTimes(2);
-
-	});
-
-	it('check for timeline single click', () => {
-		spyOn(component, 'toggleOverlay');
-		const data = {
-			element: {
-				id: 'test'
-			}
-		};
-		timelineEmitterService.provide('timeline:click').next(data);
-		expect(component.toggleOverlay).toHaveBeenCalledWith(data.element.id);
-
-	});
 
 	it('check that we subscribing for both overlays and selected overlays', () => {
 		component.ngOnInit();
-		expect(Object.keys(component.subscribers).length).toEqual(10);
+		expect(Object.keys(component.subscribers).length).toEqual(8);
 	});
-
-	it('check the function toggle overlay', () => {
-		spyOn(store, 'dispatch');
-		const id1 = '32313';
-		const expectedResult1 = new SelectOverlayAction(id1);
-		const expectedResult2 = new UnSelectOverlayAction(id1);
-
-		component.toggleOverlay(id1);
-		expect(store.dispatch).toHaveBeenCalledWith(expectedResult1);
-		component.selectedOverlays.push(id1);
-		component.toggleOverlay(id1);
-		expect(store.dispatch).toHaveBeenCalledWith(expectedResult2);
-	});
-
 
 	it('should distinguish between changed data', () => {
 		const overlays = < Overlay[] > [{
@@ -172,7 +138,8 @@ describe('OverlayContainerComponent', () => {
 			name: 'tmp13',
 			photoTime: new Date(Date.now()).toISOString(),
 			azimuth: 10
-		}];
+		}
+		];
 
 		store.dispatch(new LoadOverlaysAction({}));
 		expect(state.value.overlays.loading).toBeTruthy();

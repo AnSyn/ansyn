@@ -9,9 +9,12 @@ import { addMetaballsDefs } from './metaballs';
 
 import './style.css';
 import { withinRange } from './withinRange';
+import { addHighLight } from './highlightFilter';
+
 
 // do not export anything else here to keep window.eventDrops as a function
 export default ({ d3 = window['d3'], ...customConfiguration }) => {
+	let draw; // doesn't pass lint otherwise
 	const chart: any = selection => {
 		const config = defaultsDeep(
 			customConfiguration || {},
@@ -22,6 +25,7 @@ export default ({ d3 = window['d3'], ...customConfiguration }) => {
 			zoom: zoomConfig,
 			drop: { onClick, onMouseOut, onMouseOver },
 			metaballs,
+			highlight,
 			label: { width: labelWidth },
 			line: { height: lineHeight },
 			range: { start: rangeStart, end: rangeEnd },
@@ -50,12 +54,18 @@ export default ({ d3 = window['d3'], ...customConfiguration }) => {
 			.attr('width', width)
 			.classed('event-drop-chart', true);
 
+
+		const def = svg.append('defs');
+
 		if (zoomConfig) {
 			svg.call(zoom(d3, svg, config, xScale, draw, getEvent));
 		}
 
 		if (metaballs) {
-			svg.call(addMetaballsDefs(config));
+			def.call(addMetaballsDefs(config));
+		}
+		if (highlight) {
+			def.call(addHighLight(config));
 		}
 
 		svg
@@ -75,7 +85,7 @@ export default ({ d3 = window['d3'], ...customConfiguration }) => {
 	chart.scale = () => chart._scale;
 	chart.filteredData = () => chart._filteredData;
 
-	const draw = (config, scale) => selection => {
+	draw = (config, scale) => selection => {
 		const { drop: { date: dropDate } } = config;
 
 		const dateBounds = scale.domain().map(d => new Date(d));

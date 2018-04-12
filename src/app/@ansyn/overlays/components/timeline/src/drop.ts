@@ -3,6 +3,9 @@ import { uniqBy } from 'lodash';
 const filterOverlappingDrop = (xScale, dropDate) => d =>
 	uniqBy(d.data, data => Math.round(xScale(dropDate(data))));
 
+// const noFilterOverlap = (line) => {
+//
+// }
 export default (config, xScale) => selection => {
 	const {
 		drop: {
@@ -12,13 +15,14 @@ export default (config, xScale) => selection => {
 			onClick,
 			onMouseOver,
 			onMouseOut,
-			onDblClick
-		}
+			onDblClick,
+			dropId
+		},
 	} = config;
 
 	const drops = selection
 		.selectAll('.drop')
-		.data(line => line.data)
+		.data(line => line.data);
 	// .data(filterOverlappingDrop(xScale, dropDate));
 
 	drops
@@ -32,6 +36,7 @@ export default (config, xScale) => selection => {
 		.on('mouseout', onMouseOut)
 		.on('dblclick', onDblClick)
 		.merge(drops)
+		.attr('id', dropId)
 		.attr('cx', d => xScale(dropDate(d)));
 
 	drops
@@ -40,4 +45,9 @@ export default (config, xScale) => selection => {
 		.on('mouseover', null)
 		.on('mouseout', null)
 		.remove();
+
+
+
+
 };
+

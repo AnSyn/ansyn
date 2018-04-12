@@ -327,25 +327,25 @@ describe('OverlaysService', () => {
 				date: new Date(6000)
 			} as any;
 			const timelineState = {
-				from: new Date(0),
-				to: new Date(5000) // delta tenth is 500 ms
+				start: new Date(1000),
+				end: new Date(5000) // delta tenth is 500 ms
 			};
-			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-			expect(from).toEqual(new Date(1500));
-			expect(to).toEqual(new Date(6500));
+			const { start, end} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			expect(start.getTime()).toEqual(new Date(1000).getTime());
+			expect(end.getTime()).toEqual(new Date(6200).getTime());
 		});
 
-		it('timelineState should go backwards', () => {
+		it('timelineState should not move', () => {
 			const displayedOverlay = {
-				date: new Date(1000)
+				date: new Date(4000)
 			} as any;
 			const timelineState = {
-				from: new Date(2000),
-				to: new Date(7000) // delta tenth is 500 ms
+				start: new Date(2000),
+				end: new Date(7000) // delta tenth is 500 ms
 			};
-			const { from, to } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-			expect(from).toEqual(new Date(500));
-			expect(to).toEqual(new Date(5500));
+			const { start, end } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			expect(start.getTime()).toEqual(new Date(2000).getTime());
+			expect(end.getTime()).toEqual(new Date(7000).getTime());
 		});
 
 	});

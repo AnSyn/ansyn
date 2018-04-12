@@ -8,7 +8,6 @@ import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
-import { CoreService } from './services/core.service';
 import {
 	ErrorHandlerService,
 	GenericTypeResolverService,
@@ -38,7 +37,6 @@ const coreComponents = [
 		GenericTypeResolverService,
 		ProjectionConverterService,
 		LoggerService,
-		CoreService,
 		ErrorHandlerService,
 		StorageService
 	],

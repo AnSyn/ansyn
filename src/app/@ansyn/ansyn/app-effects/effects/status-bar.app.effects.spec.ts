@@ -2,10 +2,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import {
-	statusBarFeatureKey,
-	StatusBarReducer
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -14,9 +11,8 @@ import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ConnectionBackend } from '@angular/http';
-import { ExpandAction, GoNextAction, GoPrevAction, statusBarFlagsItems } from '@ansyn/status-bar';
+import { ExpandAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -168,20 +164,6 @@ describe('StatusBarAppEffects', () => {
 		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
 	});
 
-
-	describe('onGoPrevNext$', () => {
-		it('should return onGoNextDisplayAction (type of action is GoNextAction) with current overlayId ', () => {
-			actions = hot('--a--', { a: new GoNextAction() }); // current overlay overlayId1
-			const expectedResults = cold('--b--', { b: new GoNextDisplayAction('overlayId1') });
-			expect(statusBarAppEffects.onGoPrevNext$).toBeObservable(expectedResults);
-		});
-
-		it('should return onGoPrevDisplayAction (type of action is GoPrevAction) with current overlayId', () => {
-			actions = hot('--a--', { a: new GoPrevAction() }); // current overlay overlayId1
-			const expectedResults = cold('--b--', { b: new GoPrevDisplayAction('overlayId1') });
-			expect(statusBarAppEffects.onGoPrevNext$).toBeObservable(expectedResults);
-		});
-	});
 
 	it('onExpand$', () => {
 		actions = hot('--a--', { a: new ExpandAction() });

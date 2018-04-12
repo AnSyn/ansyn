@@ -11,6 +11,10 @@
 		</div>
 	</div>
 
-	<ansyn-timeline [drops]="drops" [timeLineRange]="timeLineRange$ | async" [redraw$]="redraw$"
-					[markup]="overlaysMarkup"></ansyn-timeline>
+	<ansyn-timeline
+					[drops]="drops"
+					[redraw$]="redraw$"
+					[timeLineRange]="timeLineRange$ | async"
+					[markup]="dropsMarkUp$ | async">
+	</ansyn-timeline>
 </div>

@@ -1,14 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import * as overlaysAction from '../../actions/overlays.actions';
-import {
-	MouseOutDropAction,
-	MouseOverDropAction,
-	OverlaysMarkupAction,
-	SelectOverlayAction,
-	SetTimelineStateAction,
-	UnSelectOverlayAction
-} from '../../actions/overlays.actions';
+import { MouseOutDropAction, MouseOverDropAction, SetTimelineStateAction } from '../../actions/overlays.actions';
 import { first } from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
@@ -18,10 +11,11 @@ import '@ansyn/core/utils/store-element';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import { IOverlaysState, overlaysStateSelector, TimelineRange } from '../../reducers/overlays.reducer';
-import { schemeCategory10 } from 'd3';
 import { startTimingLog } from '@ansyn/core/utils';
 import { Observable } from 'rxjs/Observable';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { MarkUpClass, MarkUpData } from '@ansyn/overlays';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 
 const animations: any[] = [
 	trigger('timeline-status', [
@@ -48,12 +42,14 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	redraw$: EventEmitter<any> = new EventEmitter();
 	selectedOverlays: Array<string> = [];
 	subscribers: any = {};
-	overlaysMarkup: any = [];
 	loading: boolean;
 	noDrops: boolean;
-	timelineState: TimelineRange;
 
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector)
+	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
+
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
+		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+		.distinctUntilChanged();
 
 	timeLineRange$: Observable<TimelineRange> = this.overlaysState$
 		.pluck <IOverlaysState, TimelineRange>('timeLineRange')
@@ -75,7 +71,7 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 
 	// maybe to move this to the service
 	clickOverlay(d): void {
-		console.log("click event" + d.id)
+		console.log('click event' + d.id);
 		// there is no action now for selection of overlay...
 		// if (this.selectedOverlays.includes(d.id)) {
 		// 	this.store$.dispatch(new UnSelectOverlayAction(d.id));
@@ -85,7 +81,7 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	}
 
 	dblClickOverlay(d) {
-		console.log("dblClick" + d.id)
+		console.log('dblClick' + d.id);
 		startTimingLog(`LOAD_OVERLAY_${d.id}`);
 		this.store$.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: d.id }));
 		// there is no action now for selection of overlay...
@@ -109,10 +105,6 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 			this.redraw$.emit();
 		});
 
-		this.subscribers.overlaysMarkup = this.effects$.onOverlaysMarkupChanged$
-			.subscribe((action: OverlaysMarkupAction) => {
-				this.overlaysMarkup = action.payload;
-			});
 	}
 
 	setEmitterSubscribers() {
@@ -126,14 +118,15 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 				this.store$.dispatch(new MouseOverDropAction(result.id));
 			});
 		this.subscribers.zoomEnd = this.emitter.provide('timeline:zoomend')
-			.subscribe((dates: TimelineRange ) => {
-				this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: dates}));
+			.subscribe((dates: TimelineRange) => {
+				this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: dates }));
 			});
 
 		this.subscribers.mouseout = this.emitter.provide('timeline:mouseout')
 			.subscribe(result => {
 				this.store$.dispatch(new MouseOutDropAction(result.id));
 			});
+
 	};
 
 	ngOnDestroy(): void {

@@ -4,10 +4,6 @@ export interface IMapFacadeConfig {
 	contextMenu: {
 		filterField: string;
 	};
-	welcomeNotification: {
-		headerText: string;
-		mainText: string;
-	}
 }
 
 

@@ -6,14 +6,14 @@ import {
 	HostBinding,
 	HostListener,
 	Inject,
-	OnDestroy, Output
+	OnDestroy,
+	Output
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
+import { CoreConfig, ICoreConfig } from '../../models';
 
 @Component({
 	selector: 'ansyn-welcome-notification',
@@ -51,8 +51,8 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
 	constructor(public store$: Store<ICoreState>,
 				public elem: ElementRef,
-				@Inject(mapFacadeConfig) public mapFacadeconfig: IMapFacadeConfig) {
-		this.config = this.mapFacadeconfig.welcomeNotification;
+				@Inject(CoreConfig) public packageConfig: ICoreConfig) {
+		this.config = this.packageConfig.welcomeNotification;
 	}
 
 	ngAfterViewInit() {

@@ -1,12 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { WelcomeNotificationComponent } from './welcome-notification.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
+import { CoreConfig, ICoreConfig } from '@ansyn/core/models';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 
 describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;
@@ -16,14 +15,13 @@ describe('WelcomeNotificationComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({[coreFeatureKey]: CoreReducer}),
 				EffectsModule.forRoot([]),
-				CoreModule
 			],
 			declarations: [WelcomeNotificationComponent],
 			providers: [{
-				provide: mapFacadeConfig,
-				useValue: <IMapFacadeConfig> {welcomeNotification: {headerText: 'hhh', mainText: 'mmm'}}
+				provide: CoreConfig,
+				useValue: <ICoreConfig> {welcomeNotification: {headerText: 'hhh', mainText: 'mmm'}}
 			}]
 		})
 			.compileComponents();
@@ -38,7 +36,6 @@ describe('WelcomeNotificationComponent', () => {
 			store.next(new SetWasWelcomeNotificationShownFlagAction(false));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
-			spyOn(store, 'dispatch');
 			spyOn(component.elem.nativeElement, 'focus');
 			fixture.detectChanges();
 		});
@@ -53,10 +50,20 @@ describe('WelcomeNotificationComponent', () => {
 
 		it('the element.focus() should be called, during the component`s init', async(() => {
 			fixture.whenStable().then(() => {
-				expect(store.dispatch).toHaveBeenCalled();
 				expect(component.elem.nativeElement.focus).toHaveBeenCalled();
 			});
 		}));
+
+		describe('onBlur()', () => {
+			beforeEach(() => {
+				spyOn(store, 'dispatch');
+				fixture.debugElement.triggerEventHandler('blur', null);
+				fixture.detectChanges();
+			});
+			it('should call store.dispatch', () => {
+				expect(store.dispatch).toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe('invoke when wasWelcomeNotificationShown is true', () => {
@@ -64,14 +71,12 @@ describe('WelcomeNotificationComponent', () => {
 			store.next(new SetWasWelcomeNotificationShownFlagAction(true));
 			fixture = TestBed.createComponent(WelcomeNotificationComponent);
 			component = fixture.componentInstance;
-			spyOn(store, 'dispatch');
 			spyOn(component.elem.nativeElement, 'focus');
 			fixture.detectChanges();
 		});
 
 		it('the element.focus() should not be called, during the component`s init', async(() => {
 			fixture.whenStable().then(() => {
-				expect(store.dispatch).toHaveBeenCalled();
 				expect(component.elem.nativeElement.focus).not.toHaveBeenCalled();
 			});
 		}));

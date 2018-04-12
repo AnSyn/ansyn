@@ -9,10 +9,8 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { HttpClient } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { Store } from '@ngrx/store';
 import { ErrorHandlerService } from '@ansyn/core';
+import { StorageService } from "@ansyn/core/services/storage/storage.service";
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -28,18 +26,16 @@ interface LayerNodesBundle {
 
 @Injectable()
 export class DataLayersService {
-	// should be in a global config
-	baseUrl: string;
 
 	tree: ILayerTreeNode[] = [];
 
-	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(layersConfig) protected config: ILayersManagerConfig) {
-		this.baseUrl = this.config.layersByCaseIdUrl;
+	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
+				protected storageService: StorageService,
+				@Inject(layersConfig) protected config: ILayersManagerConfig) {
 	}
 
 	public getAllLayersInATree(): Observable<LayerRootsBundle> {
-		const urlString = `${this.baseUrl}/layers?from=0&limit=100`;
-		return this.http.get(urlString)
+		return this.storageService.getPage(this.config.schema, 0, 100)
 			.map(this.extractData.bind(this))
 			.catch(err => {
 				return this.errorHandlerService.httpErrorHandle(err);

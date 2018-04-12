@@ -88,7 +88,9 @@ export class EditCaseComponent implements OnInit {
 		return {
 			name: '',
 			owner: '',
+			id: '',
 			lastModified: new Date(),
+			creationTime: new Date(),
 			state: {
 				...selectedCase.state,
 				maps: {

@@ -5,5 +5,5 @@ export interface KeyAndValue {
 
 export interface IOverlaysConfig {
 	limit: number;
-	titlesForMapSourceTypes: KeyAndValue[];
+	sourceTypeNotices: KeyAndValue[];
 }

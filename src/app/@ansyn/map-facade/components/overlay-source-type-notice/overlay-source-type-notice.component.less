@@ -1,0 +1,24 @@
+@import "../../../core/less/common";
+@import "../../../core/less/z-index-globals";
+@import "../../../core/less/tooltip";
+
+:host {
+	position: absolute;
+	// bottom position is set in imagery-manager.component.less
+	//
+	// horizontally  centered
+	left: calc((100% - @source-type-notice-width) / 2);
+	max-width: @source-type-notice-width;
+	z-index: @z-index-overlay-source-type-notice;
+
+	.overlay-source-type-notice {
+		background-color: rgba(0,0,0,0.3);
+		color: white;
+		padding: 5px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size: 12px;
+	}
+}
+

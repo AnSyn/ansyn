@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { CoreConfig } from '@ansyn/core';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -35,7 +36,11 @@ describe('SaveCaseComponent', () => {
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } },  { provide: LoggerConfig, useValue: {} }]
+			providers: [
+				{ provide: casesConfig, useValue: { schema: null } },
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {}
+			}]
 		})
 			.compileComponents();
 	}));

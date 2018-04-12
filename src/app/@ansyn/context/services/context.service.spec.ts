@@ -3,7 +3,7 @@ import { ContextModule } from '../context.module';
 import { ContextConfig } from '@ansyn/context/models';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { StoreModule } from '@ngrx/store';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('ContextService', () => {
@@ -15,6 +15,8 @@ describe('ContextService', () => {
 				HttpClientModule
 			],
 			providers: [
+				{ provide: CoreConfig, useValue: {} },
+				StorageService,
 				{
 					provide: ContextConfig,
 					useValue: {}

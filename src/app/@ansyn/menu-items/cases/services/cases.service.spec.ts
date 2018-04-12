@@ -5,7 +5,7 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
 
@@ -19,7 +19,7 @@ export const MockCasesConfig = {
 				time: {}
 			}
 		},
-		baseUrl: 'fake-cases-url',
+		schema: 'cases',
 		casesQueryParamsKeys: ['facets', 'time', 'maps', 'region', 'overlaysManualProcessArgs', 'orientation']
 
 	}
@@ -28,18 +28,45 @@ export const MockCasesConfig = {
 describe('CasesService', () => {
 	let casesService: CasesService;
 	let http: HttpClient;
+	let storageService: StorageService;
+
+	const caseMock: Case = {
+		id: 'fakeId',
+		name: 'fakeName',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		state: {
+			time: {
+				type: 'absolute',
+				from: new Date(),
+				to: new Date()
+			},
+			orientation: 'Align North',
+			timeFilter: 'Start - End',
+			geoFilter: 'Pin-Point',
+			region: {},
+			overlaysManualProcessArgs: {}
+		}
+	};
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
-			providers: [CasesService, UrlSerializer, MockCasesConfig, {
-				provide: ErrorHandlerService,
-				useValue: { httpErrorHandle: () => Observable.throw(null) }
-			}]
+			providers: [
+				StorageService,
+				CasesService,
+				UrlSerializer,
+				MockCasesConfig,
+				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => Observable.throw(null) } },
+				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' }} }
+			]
 		});
 	});
 
-	beforeEach(inject([CasesService, HttpClient], (_casesService: CasesService, _http: HttpClient) => {
+	beforeEach(inject([StorageService, CasesService, HttpClient],
+		(_storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
+		storageService = _storageService;
 		casesService = _casesService;
 		http = _http;
 	}));
@@ -51,36 +78,56 @@ describe('CasesService', () => {
 
 	it('createCase should send the case as body in ajax("post")', () => {
 		let fakeId = 'fakerId';
-		let selectedCase: Case = { name: 'fakerName' };
+		let selectedCase: Case = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'post').and.callFake(() => Observable.of(fakeResponse) );
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
 		casesService.createCase(selectedCase);
-		expect(http.post).toHaveBeenCalledWith(`${casesService.baseUrl}/cases/${fakeId}`, { ...selectedCase, id: fakeId});
+		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${fakeId}`,
+			{
+				preview: {
+					id: fakeId,
+					name: selectedCase.name,
+					owner: selectedCase.owner,
+					creationTime: selectedCase.creationTime,
+					lastModified: selectedCase.lastModified
+				},
+				data: selectedCase.state
+			});
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
-		let selectedCase: Case = { id: 'fakerId', name: 'fakerOtherName' };
+		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'put').and.callFake(() => Observable.of(fakeResponse) );
 		casesService.updateCase(selectedCase);
-		expect(http.put).toHaveBeenCalledWith(`${casesService.baseUrl}/cases/fakerId`, selectedCase);
+		expect(http.put).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/fakerId`,
+			{
+				preview: {
+					id: selectedCase.id,
+					name: selectedCase.name,
+					owner: selectedCase.owner,
+					creationTime: selectedCase.creationTime,
+					lastModified: selectedCase.lastModified
+				},
+				data: selectedCase.state
+			});
 	});
 
 	it('updateCase should send the case id as param in ajax("delete")', () => {
-		let selectedCase: Case = { id: 'fakerId', name: 'fakerOtherName' };
+		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let caseIdToRemove = selectedCase.id;
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'delete').and.callFake(() => Observable.of(fakeResponse));
 		casesService.removeCase('fakerId');
-		expect(http.delete).toHaveBeenCalledWith(`${casesService.baseUrl}/cases/${caseIdToRemove}`);
+		expect(http.delete).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${caseIdToRemove}`);
 	});
 
 	it('loadCase should get single case from ajax("get")', () => {
 		const caseId = '12345';
 		spyOn(http, 'get').and.returnValue(Observable.of([]));
 		casesService.loadCase(caseId);
-		expect(http.get).toHaveBeenCalledWith(`${casesService.baseUrl}/cases/${caseId}`);
+		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${caseId}`);
 	});
 
 });

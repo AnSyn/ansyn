@@ -7,7 +7,7 @@ import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 
 describe('CasesService', () => {
@@ -17,6 +17,8 @@ describe('CasesService', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
 			providers: [
+				StorageService,
+				{ provide: CoreConfig, useValue: {} },
 				CasesService,
 				{
 					provide: UrlSerializer,

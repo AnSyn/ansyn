@@ -269,7 +269,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
-			if (show) {
+			if (show && this._mapObject) {
 				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
 			}
 		});

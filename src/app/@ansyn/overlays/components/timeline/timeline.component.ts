@@ -84,11 +84,13 @@ export class TimelineComponent implements OnInit {
 				name: entities.name || '',
 				data: entities.data
 			}));
-			if (this._drops[0] && this._drops[0].data && this._drops[0].data.length) {
-				this._drops[0].data.forEach(drop => {
-					this.dropsIdMap.set(drop.id, drop);
-				});
-				this.timeLineRange = this.overlaysService.getTimeRangeFromDrops(this._drops[0].data);
+			if (this._drops[0] && this._drops[0].data) {
+				if (this._drops[0].data.length) {
+					this._drops[0].data.forEach(drop => {
+						this.dropsIdMap.set(drop.id, drop);
+					});
+					this.timeLineRange = this.overlaysService.getTimeRangeFromDrops(this._drops[0].data);
+				}
 				this.initEventDropsSequence();
 			}
 		}

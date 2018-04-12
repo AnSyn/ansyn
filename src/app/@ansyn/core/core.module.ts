@@ -14,13 +14,14 @@ import {
 	ProjectionConverterService
 } from './services';
 import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
-
+import { WelcomeNotificationComponent } from '@ansyn/core/components/welcome-notification/welcome-notification.component';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
 	ImageryStatusComponent,
 	PlaceholderComponent,
-	ToastComponent
+	ToastComponent,
+	WelcomeNotificationComponent
 ];
 
 @NgModule({

@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
+import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
 
 @Component({
 	selector: 'ansyn-welcome-notification',

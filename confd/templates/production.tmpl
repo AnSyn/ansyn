@@ -287,7 +287,10 @@
 	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
 		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
-	}
+	},
+    "storageService": {
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    }
   },
   "loginConfig": {
     "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",

@@ -1,21 +1,26 @@
-import { ComponentFactoryResolver, Directive, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef } from '@angular/core';
+import { IAlertComponent } from '@ansyn/core/alerts/alerts.model';
+
+
+export interface AlertComponentSettings {
+	component: any
+	mapId: string;
+}
 
 @Directive({
 	selector: '[ansynAlertComponent]'
 })
-export class AlertComponentDirective implements OnInit, OnDestroy {
+export class AlertComponentDirective implements OnDestroy {
 	componentRef;
 
 	@Input('ansynAlertComponent')
-	set ansynAlertComponent(component: any) {
-		const factory = this.componentFactoryResolver.resolveComponentFactory(component);
-		this.componentRef = this.viewContainerRef.createComponent(factory);
+	set ansynAlertComponent({ component, mapId }: AlertComponentSettings) {
+		const factory = this.componentFactoryResolver.resolveComponentFactory<IAlertComponent>(component);
+		this.componentRef = this.viewContainerRef.createComponent<IAlertComponent>(factory);
+		this.componentRef.instance.mapId = mapId;
 	};
 
 	constructor(public viewContainerRef: ViewContainerRef, public componentFactoryResolver: ComponentFactoryResolver) {
-	}
-
-	ngOnInit(): void {
 	}
 
 	ngOnDestroy(): void {

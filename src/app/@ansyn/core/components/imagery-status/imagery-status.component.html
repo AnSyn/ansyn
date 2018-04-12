@@ -56,7 +56,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynAlertComponent]="alert.component">
+				[ansynAlertComponent]="{ component: alert.component, mapId: mapId }">
 			</ng-container>
 
 			<ng-template #textAlert>

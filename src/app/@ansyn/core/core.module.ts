@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
@@ -13,11 +13,10 @@ import {
 	ErrorHandlerService, GenericTypeResolverService, LoggerService,
 	ProjectionConverterService
 } from './services';
-import { AlertComponentDirective } from '@ansyn/core/directives/alert-component.directive';
+import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
 
 
 const coreComponents = [
-	AlertComponentDirective,
 	AnsynCheckboxComponent,
 	ImageryStatusComponent,
 	PlaceholderComponent,
@@ -28,7 +27,8 @@ const coreComponents = [
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
-		EffectsModule.forFeature([CoreEffects])
+		EffectsModule.forFeature([CoreEffects]),
+		AlertsModule
 	],
 	providers: [
 		GenericTypeResolverService,
@@ -42,4 +42,5 @@ const coreComponents = [
 })
 
 export class CoreModule {
+
 }

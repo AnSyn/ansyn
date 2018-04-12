@@ -13,7 +13,6 @@ import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multipl
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
-import { CoreConfig } from '@ansyn/core';
 import { PlanetOverlaysSourceConfig } from "@ansyn/ansyn/app-providers/overlay-source-providers";
 
 export const getProviders = (conf): any[] => {
@@ -79,12 +78,7 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: StatusBarConfig,
 			useValue: conf.statusBarConfig
-		},
-		{
-			provide: CoreConfig,
-			useValue: conf.coreConfig
 		}
-
 	];
 };
 

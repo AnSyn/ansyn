@@ -12,9 +12,12 @@ import { CoreService } from './services/core.service';
 import {
 	ErrorHandlerService, GenericTypeResolverService, LoggerService,
 	ProjectionConverterService
-} from './services/index';
+} from './services';
+import { AlertComponentDirective } from '@ansyn/core/directives/alert-component.directive';
+
 
 const coreComponents = [
+	AlertComponentDirective,
 	AnsynCheckboxComponent,
 	ImageryStatusComponent,
 	PlaceholderComponent,

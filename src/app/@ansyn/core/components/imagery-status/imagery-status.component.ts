@@ -1,4 +1,15 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	HostBinding,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	QueryList,
+	ViewChildren
+} from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
@@ -84,7 +95,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (ids) {
 			return ids.has(this.mapId);
 		} else {
-			return this[alertKey]
+			return this[alertKey];
 		}
 	}
 

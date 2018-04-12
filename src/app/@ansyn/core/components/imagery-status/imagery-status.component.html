@@ -50,13 +50,25 @@
 </div>
 
 <div class="notification">
-	<div
-		*ngFor="let alert of coreConfig?.alerts"
-		[hidden]="!showAlert(alert.key)"
-		[style.background]="alert.background"
-		[attr.tooltip-value]="alert.text"
-		tooltip-class="top left">
-		{{ alert.text }}
-	</div>
+
+	<ng-container *ngFor="let alert of coreConfig?.alerts">
+		<ng-container *ngIf="showAlert(alert.key)">
+
+			<ng-container
+				*ngIf="alert.component; else textAlert"
+				[ansynAlertComponent]="alert.component">
+			</ng-container>
+
+			<ng-template #textAlert>
+				<div
+					[style.background]="alert.background"
+					[attr.tooltip-value]="alert.text"
+					tooltip-class="top left">
+					{{ alert.text }}
+				</div>
+			</ng-template>
+
+		</ng-container>
+	</ng-container>
 
 </div>

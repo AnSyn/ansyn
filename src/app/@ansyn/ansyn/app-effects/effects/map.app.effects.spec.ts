@@ -8,7 +8,6 @@ import { cloneDeep } from 'lodash';
 import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	ActiveMapChangedAction,
-	DrawPinPointAction,
 	ImageryCreatedAction,
 	MapInstanceChangedAction,
 	MapSingleClickAction
@@ -295,10 +294,9 @@ describe('MapAppEffects', () => {
 		actions = hot('--a--', {a: new PinPointTriggerAction(lonLat)});
 		const region = getPolygonByPointAndRadius(lonLat).geometry;
 
-		const a = new DrawPinPointAction(lonLat);
-		const b = new SetOverlaysCriteriaAction({region});
+		const a = new SetOverlaysCriteriaAction({region});
 
-		const expectedResults = cold('--(ab)--', {a, b});
+		const expectedResults = cold('--(a)--', {a});
 		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
 	});
 
@@ -321,15 +319,6 @@ describe('MapAppEffects', () => {
 		});
 	});
 
-	it('onAddCommunicatorShowgeoFilterIndicator$ on add communicator show pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
-		const action = new ImageryPluginsInitialized('tmpId2');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: action});
-		const expectedResults = cold('--a--', {a: new DrawPinPointAction(lonLat)});
-
-		expect(mapAppEffects.onAddCommunicatorShowgeoFilterIndicator$).toBeObservable(expectedResults);
-	});
 
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set(toolsFlags.shadowMouse, true);

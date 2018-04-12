@@ -41,7 +41,7 @@ export class UpdateCaseAppEffects {
 		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
 			// properties that should have been saved on another store ( not cases )
 			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
-			const { id, name, lastModified, owner } = cases.selectedCase;
+			const { id, name, lastModified, owner, creationTime } = cases.selectedCase;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
@@ -54,6 +54,7 @@ export class UpdateCaseAppEffects {
 			const updatedCase: Case = {
 				id,
 				name,
+				creationTime,
 				lastModified,
 				owner,
 				state: {

@@ -11,6 +11,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
+import { ICasesState } from "@ansyn/menu-items";
 
 @Component({
 	selector: 'ansyn-app',
@@ -20,7 +21,7 @@ import { IAppState } from '../app-effects/app.effects.module';
 
 export class AnsynComponent implements OnInit {
 	selectedCase$: Observable<Case> = this.store$.select(casesStateSelector)
-		.pluck('selectedCase')
+		.pluck<ICasesState, Case>('selectedCase')
 		.filter(selectedCase => Boolean(selectedCase))
 		.distinctUntilChanged();
 

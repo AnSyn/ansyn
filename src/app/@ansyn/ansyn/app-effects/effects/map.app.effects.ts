@@ -429,10 +429,8 @@ export class MapAppEffects {
 	onDisplayOverlayFilter([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) {
 		const isFull = OverlaysService.isFullOverlay(payload.overlay);
 		const { overlay } = payload;
-		const mapId = payload.mapId || mapState.activeMapId;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
-		const prevOverlay = mapData.overlay;
-		const isNotDisplayed = !(mapData.overlay && mapData.overlay.id === overlay.id);
+		const isNotDisplayed = !(OverlaysService.isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
 		return isFull && isNotDisplayed;
 	}
 

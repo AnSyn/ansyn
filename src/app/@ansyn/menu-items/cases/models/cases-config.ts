@@ -1,7 +1,7 @@
 import { Case } from './case.model';
 
 export interface ICasesConfig {
-	baseUrl: string,
+	schema: string,
 	paginationLimit: number,
 	casesQueryParamsKeys: string[],
 	defaultCase: Case,

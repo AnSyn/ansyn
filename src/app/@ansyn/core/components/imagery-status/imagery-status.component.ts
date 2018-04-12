@@ -1,15 +1,4 @@
-import {
-	Component,
-	EventEmitter,
-	HostBinding,
-	Inject,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output,
-	QueryList,
-	ViewChildren
-} from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
@@ -17,10 +6,10 @@ import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
 import { AlertMsg } from '../../reducers';
-import { CoreConfig, ICoreConfig } from '../../models/index';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '@ansyn/core/utils/time';
+import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -73,7 +62,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
 	}
 
-	constructor(protected store$: Store<any>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
+		console.log(alerts)
 	}
 
 	ngOnInit(): void {

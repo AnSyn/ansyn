@@ -11,7 +11,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '../../models/index';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
-import { CoreConfig } from '@ansyn/core';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models';
 
 describe('StatusBarComponent', () => {
@@ -26,10 +25,6 @@ describe('StatusBarComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				},
-				{
-					provide: CoreConfig,
-					useValue: { errors: {} }
 				},
 				{
 					provide: ORIENTATIONS,

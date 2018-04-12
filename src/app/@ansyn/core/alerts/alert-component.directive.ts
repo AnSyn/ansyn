@@ -2,7 +2,7 @@ import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef
 import { IAlertComponent } from '@ansyn/core/alerts/alerts.model';
 
 
-export interface AlertComponentSettings {
+export interface IAlertComponentSettings {
 	component: any
 	mapId: string;
 }
@@ -14,7 +14,7 @@ export class AlertComponentDirective implements OnDestroy {
 	componentRef;
 
 	@Input('ansynAlertComponent')
-	set ansynAlertComponent({ component, mapId }: AlertComponentSettings) {
+	set ansynAlertComponent({ component, mapId }: IAlertComponentSettings) {
 		const factory = this.componentFactoryResolver.resolveComponentFactory<IAlertComponent>(component);
 		this.componentRef = this.viewContainerRef.createComponent<IAlertComponent>(factory);
 		this.componentRef.instance.mapId = mapId;

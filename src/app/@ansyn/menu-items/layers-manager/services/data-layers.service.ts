@@ -31,7 +31,7 @@ export class DataLayersService {
 
 	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
 				protected storageService: StorageService,
-				@Inject(layersConfig) protected config: ILayersManagerConfig) {
+				@Inject(layersConfig) public config: ILayersManagerConfig) {
 	}
 
 	public getAllLayersInATree(): Observable<LayerRootsBundle> {

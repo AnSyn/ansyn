@@ -7,18 +7,38 @@ import {
 import { Case } from '../models/case.model';
 import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { AddCaseAction, casesAdapter, CasesService } from '@ansyn/menu-items';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import {
+	CaseGeoFilter, CaseOrientation, CaseRegionState, CaseTimeFilter, CaseTimeState,
+	ImageManualProcessArgs
+} from '@ansyn/core/models/case.model';
 
 
 describe('CasesReducer', () => {
+	const caseMock: Case = {
+		id: 'fakeId',
+		name: 'fakeName',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		state: {
+			time: {
+				type: 'absolute',
+				from: new Date(),
+				to: new Date()
+			},
+			orientation: 'Align North',
+			timeFilter: 'Start - End',
+			geoFilter: 'Pin-Point',
+			region: {},
+			overlaysManualProcessArgs: {}
+		}
+	};
 
 	it('ADD_CASE action should add new case to state', () => {
-		let newCase: Case = {
-			id: 'fakeId',
-			name: 'fakeName'
-		};
-		let action = new AddCaseAction(newCase);
+		let action = new AddCaseAction(caseMock);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.entities['fakeId']).toEqual(newCase);
+		expect(result.entities['fakeId']).toEqual(caseMock);
 	});
 
 	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
@@ -50,10 +70,10 @@ describe('CasesReducer', () => {
 		], state);
 
 		state.modal.id = 'id2';
-		state.selectedCase = {};
+		state.selectedCase = { ...caseMock, id: 'id2'};
 
 		let newCase: Case = {
-			id: 'id2', name: 'name2 lastname2'
+			...caseMock, id: 'id2', name: 'name2 lastname2'
 		};
 
 		let action: UpdateCaseAction = new UpdateCaseAction(newCase);

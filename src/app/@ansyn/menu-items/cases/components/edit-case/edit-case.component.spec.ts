@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CasesService } from '../../services/cases.service';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { CoreConfig } from '@ansyn/core';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -40,7 +41,11 @@ describe('EditCaseComponent', () => {
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } },  { provide: LoggerConfig, useValue: {} }]
+			providers: [
+				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {} }
+			]
 		}).compileComponents();
 	}));
 

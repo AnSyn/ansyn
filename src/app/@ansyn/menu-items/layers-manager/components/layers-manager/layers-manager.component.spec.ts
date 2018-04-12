@@ -8,6 +8,7 @@ import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { CoreConfig } from '@ansyn/core';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -21,10 +22,11 @@ describe('LayersManagerComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
-			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }, {
-				provide: LoggerService,
-				useValue: { error: (some) => null }
-			}]
+			providers: [
+				{ provide: layersConfig, useValue: { schema: null } },
+				{ provide: LoggerService, useValue: { error: (some) => null } },
+				{ provide: CoreConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

@@ -129,6 +129,11 @@ describe('MapAppEffects', () => {
 	const imagery1PositionBoundingBox = {test: 1};
 
 	const cases: Case[] = [{
+		id: '1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
 		state: {
 			time: {type: '', from: new Date(), to: new Date()},
 			region: {

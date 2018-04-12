@@ -26,7 +26,7 @@ import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { AddCasesAction } from '@ansyn/menu-items';
 
 describe('CasesEffects', () => {
@@ -34,6 +34,31 @@ describe('CasesEffects', () => {
 	let casesService: CasesService;
 	let actions: Observable<any>;
 	let store: Store<any>;
+
+	const caseMock: Case = {
+		id: 'case1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		state: {
+			maps: {
+				activeMapId: '5555',
+				data: [
+					{
+						id: '5555',
+						data: {}
+
+					},
+					{
+						id: '4444',
+						data: {}
+					}
+				]
+			},
+			favoriteOverlays: ['2']
+		}
+	} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -43,13 +68,15 @@ describe('CasesEffects', () => {
 				RouterTestingModule
 			],
 			providers: [CasesEffects,
+				{ provide: CoreConfig, useValue: {} },
+				StorageService,
 				CasesService,
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => Observable.throw(null) }
 				},
 				provideMockActions(() => actions),
-				{ provide: casesConfig, useValue: { baseUrl: null, defaultCase: { id: 'defaultCaseId' } } }]
+				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } }]
 		}).compileComponents();
 	}));
 
@@ -68,7 +95,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('loadCases$ should call casesService.loadCases with case lastId from state, and return LoadCasesSuccessAction', () => {
-		let loadedCases: Case[] = [{ id: 'loadedCase1' }, { id: 'loadedCase2' }, { id: 'loadedCase1' }];
+		let loadedCases: Case[] = [{ ...caseMock, id: 'loadedCase1' }, { ...caseMock, id: 'loadedCase2' }, { ...caseMock, id: 'loadedCase1' }];
 		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
@@ -76,7 +103,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
-		let newCasePayload: Case = { id: 'newCaseId', name: 'newCaseName' };
+		let newCasePayload: Case = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
 		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const expectedResults = cold('--a--', { a: new SelectCaseAction(newCasePayload) });
@@ -98,7 +125,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
-		const updatedCase: Case = { id: 'updatedCaseId' };
+		const updatedCase: Case = { ...caseMock, id: 'updatedCaseId' };
 		actions = hot('--a--', { a: new UpdateCaseAction(updatedCase) });
 		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
 		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
@@ -107,6 +134,7 @@ describe('CasesEffects', () => {
 	it('loadCase$ should select the case if exists', () => {
 		const caseItem: Case = { id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any;
 		store.dispatch(new AddCaseAction(caseItem));
+		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 		actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
 		const expectedResults = cold('--b--', {
 			b: new SelectCaseAction(caseItem)
@@ -144,7 +172,7 @@ describe('CasesEffects', () => {
 			.returnValue('updateCaseViaQueryParmasResult');
 		const queryParmas: Params = { foo: 'bar' };
 		actions = hot('--a--', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('--b--', { b: new SelectCaseAction('updateCaseViaQueryParmasResult' as Case) });
+		const expectedResults = cold('--b--', { b: new SelectCaseAction('updateCaseViaQueryParmasResult' as any) });
 		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 

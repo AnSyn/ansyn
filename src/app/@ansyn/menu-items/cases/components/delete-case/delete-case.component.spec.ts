@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { CasesService } from '@ansyn/menu-items';
+import { CoreConfig } from '@ansyn/core';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -41,7 +42,11 @@ describe('DeleteCaseComponent', () => {
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } },  { provide: LoggerConfig, useValue: {} }]
+			providers: [
+				{ provide: casesConfig, useValue: { schema: null } },
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {}
+			}]
 		}).compileComponents();
 	}));
 

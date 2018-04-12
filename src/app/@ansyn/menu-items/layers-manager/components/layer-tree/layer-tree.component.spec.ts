@@ -14,6 +14,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { Subject } from 'rxjs/Subject';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ToggleDisplayAnnotationsLayer } from '../../actions/layers.actions';
+import { CoreConfig } from '@ansyn/core';
 
 export function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
 	flattenedArray.push(rootNode);
@@ -38,10 +39,11 @@ describe('LayerTreeComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
-			providers: [{ provide: layersConfig, useValue: { layersByCaseIdUrl: null } }, {
-				provide: LoggerService,
-				useValue: { error: (some) => null }
-			}]
+			providers: [
+				{ provide: layersConfig, useValue: { schema: null } },
+				{ provide: LoggerService, useValue: { error: (some) => null } },
+				{ provide: CoreConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

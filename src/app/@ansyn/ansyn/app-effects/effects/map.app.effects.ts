@@ -46,8 +46,8 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import {
-	AddAlertMsg,
-	AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction,
+	AddAlertMsg, AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, RemoveAlertMsg,
+	SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
@@ -312,7 +312,6 @@ export class MapAppEffects {
 				return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
 			});
 		});
-
 	/**
 	 * @type Effect
 	 * @name markupOnMapsDataChanges$

@@ -3,7 +3,7 @@ import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
-import { UUID } from 'angular2-uuid';
+import { CasePreview } from "@ansyn/core";
 
 export interface CaseModal {
 	show: boolean,
@@ -17,7 +17,7 @@ export interface ICasesState extends EntityState<Case> {
 
 export const casesFeatureKey = 'cases';
 
-export const casesAdapter = createEntityAdapter<Case>({ sortComparer: (ob1: Case, ob2: Case): number => +ob2.creationTime - +ob1.creationTime });
+export const casesAdapter = createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,

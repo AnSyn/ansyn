@@ -1,1 +1,7 @@
-export type ICoreConfig = any;
+export interface ICoreConfig {
+	welcomeNotification: {
+		headerText: string;
+		mainText: string;
+	};
+}
+

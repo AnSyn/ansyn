@@ -25,7 +25,7 @@
 
 <ansyn-context-menu></ansyn-context-menu>
 
-<ansyn-welcome-notification></ansyn-welcome-notification>
+<ansyn-welcome-notification *ngIf="showWelcomeNotification" (hideMe)="showWelcomeNotification = false"></ansyn-welcome-notification>
 
 
 

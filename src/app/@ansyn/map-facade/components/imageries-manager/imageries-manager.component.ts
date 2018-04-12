@@ -34,6 +34,8 @@ export class ImageriesManagerComponent implements OnInit {
 
 	public selectedLayout;
 
+	public showWelcomeNotification = true;
+
 	clickTimeout: number;
 	preventDbClick: boolean;
 

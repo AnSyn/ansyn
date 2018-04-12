@@ -38,7 +38,7 @@ describe('ImageryContainerComponent', () => {
 					selector: 'ansyn-imagery-tile-progress', inputs: ['mapId', 'lowered']
 				}),
 				MockComponent({
-					selector: 'ansyn-overlay-copyright-notice', inputs: ['overlay']
+					selector: 'ansyn-overlay-source-type-notice', inputs: ['overlay']
 				})
 			]
 		}).compileComponents();

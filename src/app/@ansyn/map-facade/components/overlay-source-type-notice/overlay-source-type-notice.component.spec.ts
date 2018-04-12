@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { OverlayCopyrightNoticeComponent } from './overlay-copyright-notice.component';
+import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
 import { OverlaysService } from '@ansyn/overlays';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
-describe('OverlayCopyrightNoticeComponent', () => {
-	let component: OverlayCopyrightNoticeComponent;
-	let fixture: ComponentFixture<OverlayCopyrightNoticeComponent>;
+describe('OverlaySourceTypeNoticeComponent', () => {
+	let component: OverlaySourceTypeNoticeComponent;
+	let fixture: ComponentFixture<OverlaySourceTypeNoticeComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -14,12 +14,12 @@ describe('OverlayCopyrightNoticeComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
-			declarations: [OverlayCopyrightNoticeComponent],
+			declarations: [OverlaySourceTypeNoticeComponent],
 			providers: [
 				{
 					provide: OverlaysService, useValue: {
 						config: {
-							titlesForMapSourceTypes: [{
+							sourceTypeNotices: [{
 								key: 'KKK',
 								value: 'VVV'
 							}]
@@ -32,7 +32,7 @@ describe('OverlayCopyrightNoticeComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(OverlayCopyrightNoticeComponent);
+		fixture = TestBed.createComponent(OverlaySourceTypeNoticeComponent);
 		component = fixture.componentInstance;
 		component.overlay = {
 			sourceType: 'KKK'

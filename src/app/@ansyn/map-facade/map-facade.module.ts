@@ -15,7 +15,7 @@ import { AnnotationContextMenuComponent } from './components/annotation-context-
 import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
-import { OverlayCopyrightNoticeComponent } from '@ansyn/map-facade/components/overlay-copyright-notice/overlay-copyright-notice.component';
+import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
 
 @NgModule({
 	imports: [
@@ -35,7 +35,7 @@ import { OverlayCopyrightNoticeComponent } from '@ansyn/map-facade/components/ov
 		AnnotationContextMenuComponent,
 		ImageryLoaderComponent,
 		ImageryTileProgressComponent,
-		OverlayCopyrightNoticeComponent
+		OverlaySourceTypeNoticeComponent
 	],
 	exports: [ImageriesManagerComponent]
 })

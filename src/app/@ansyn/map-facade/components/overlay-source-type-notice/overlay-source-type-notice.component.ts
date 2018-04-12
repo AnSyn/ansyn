@@ -4,19 +4,17 @@ import { IOverlaysConfig, KeyAndValue } from '@ansyn/overlays/models/overlays.co
 import { OverlaysService } from '@ansyn/overlays';
 
 @Component({
-	selector: 'ansyn-overlay-copyright-notice',
-	templateUrl: './overlay-copyright-notice.component.html',
-	styleUrls: ['./overlay-copyright-notice.component.less']
+	selector: 'ansyn-overlay-source-type-notice',
+	templateUrl: './overlay-source-type-notice.component.html',
+	styleUrls: ['./overlay-source-type-notice.component.less']
 })
-export class OverlayCopyrightNoticeComponent implements OnChanges {
+export class OverlaySourceTypeNoticeComponent implements OnChanges {
 
 	@Input()  set overlay(newOverlay: Overlay) {
 		if (newOverlay) {
-			const keyAndValue: KeyAndValue = this._config.titlesForMapSourceTypes.find(keyAndValue => keyAndValue.key === newOverlay.sourceType);
+			const keyAndValue: KeyAndValue = this._config.sourceTypeNotices.find(keyAndValue => keyAndValue.key === newOverlay.sourceType);
 			if (keyAndValue) {
 				this._title = keyAndValue.value;
-			// } else { // for testing
-			// 	this._title = newOverlay.sourceType;
 			}
 		}
 	}

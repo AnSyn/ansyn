@@ -81,7 +81,6 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 	}
 
 	dblClickOverlay(d) {
-		console.log('dblClick' + d.id);
 		startTimingLog(`LOAD_OVERLAY_${d.id}`);
 		this.store$.dispatch(new overlaysAction.DisplayOverlayFromStoreAction({ id: d.id }));
 		// there is no action now for selection of overlay...

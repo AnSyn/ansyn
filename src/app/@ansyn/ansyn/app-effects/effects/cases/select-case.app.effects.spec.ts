@@ -82,7 +82,9 @@ describe('SelectCaseAppEffects', () => {
 			const payload: Case = {
 				id: 'caseId',
 				name: 'caseName',
+				owner: 'ownerName',
 				lastModified: new Date(),
+				creationTime: new Date(),
 				state
 			};
 

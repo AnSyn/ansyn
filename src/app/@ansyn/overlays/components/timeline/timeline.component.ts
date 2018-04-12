@@ -42,6 +42,8 @@ export class TimelineComponent implements OnInit {
 	private dblClick: number;
 
 	private _timeLineRange: TimelineRange;
+	private oldActiveId: string;
+
 	@Input('timeLineRange')
 	set timeLineRange(value: TimelineRange) {
 		if (value) {
@@ -59,10 +61,11 @@ export class TimelineComponent implements OnInit {
 	set markup(value: ExtendMap<MarkUpClass, MarkUpData>) {
 		const newActive = value.get(MarkUpClass.active).overlaysIds;
 		if (newActive && newActive.length) {
-			const oldActive = this._markup.get(MarkUpClass.active).overlaysIds;
-			if (!oldActive || (oldActive.length && oldActive[0] !== newActive[0])) {
-				this.checkDiffranceInTimeRange(this.dropsIdMap.get(newActive[0]));
+			const newActiveId = newActive[0];
+			if (!this.oldActiveId || this.oldActiveId !== newActiveId) {
+				this.checkDiffranceInTimeRange(this.dropsIdMap.get(newActiveId));
 			}
+			this.oldActiveId = newActiveId;
 		}
 		this._markup = value;
 		this.drawMarkup();

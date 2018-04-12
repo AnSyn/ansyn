@@ -6,7 +6,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
+import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
 
 describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;

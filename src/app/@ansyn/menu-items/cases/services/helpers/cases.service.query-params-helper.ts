@@ -35,7 +35,7 @@ export class QueryParamsHelper {
 			return { ...this.defaultCase, name: caseModel.name };
 		}
 		let updatedCaseModel = cloneDeep(caseModel);
-		updatedCaseModel.state.selectedContextId = selectedContext.id;
+		updatedCaseModel.selectedContextId = selectedContext.id;
 		['region', 'facets', 'time', 'layoutIndex', 'geoFilter', 'orientation'].forEach(key => {
 			if (selectedContext[key]) {
 				updatedCaseModel.state[key] = selectedContext[key];

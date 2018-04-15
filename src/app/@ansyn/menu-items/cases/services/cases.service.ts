@@ -83,7 +83,8 @@ export class CasesService {
 			name: caseValue.name,
 			creationTime: caseValue.creationTime,
 			owner: caseValue.owner,
-			lastModified: caseValue.lastModified
+			lastModified: caseValue.lastModified,
+			selectedContextId: caseValue.selectedContextId
 		};
 	}
 

@@ -40,8 +40,8 @@ export class UpdateCaseAppEffects {
 		.withLatestFrom(this.store$)
 		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
 			// properties that should have been saved on another store ( not cases )
-			let { contextEntities, selectedContextId, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
-			const { id, name, lastModified, owner, creationTime } = cases.selectedCase;
+			let { contextEntities, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
+			const { id, name, lastModified, owner, creationTime, selectedContextId } = cases.selectedCase;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
@@ -57,6 +57,7 @@ export class UpdateCaseAppEffects {
 				creationTime,
 				lastModified,
 				owner,
+				selectedContextId,
 				state: {
 					geoFilter,
 					timeFilter,
@@ -75,7 +76,6 @@ export class UpdateCaseAppEffects {
 					time,
 					facets,
 					contextEntities,
-					selectedContextId,
 					overlaysManualProcessArgs
 				}
 			};

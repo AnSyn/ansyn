@@ -10,7 +10,7 @@ export interface CaseModal {
 	id?: string
 }
 
-export interface ICasesState extends EntityState<Case> {
+export interface ICasesState extends EntityState<CasePreview> {
 	selectedCase: Case;
 	modal: CaseModal
 }

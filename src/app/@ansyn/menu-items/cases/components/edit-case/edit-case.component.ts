@@ -10,6 +10,7 @@ import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 import { selectContextsArray } from '@ansyn/context/reducers';
+import { CasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 
@@ -70,8 +71,8 @@ export class EditCaseComponent implements OnInit {
 		];
 	}
 
-	getCloneActiveCase(caseState: ICasesState): Case {
-		let sCase: Case = caseState.entities[caseState.modal.id];
+	getCloneActiveCase(caseState: ICasesState): CasePreview {
+		let sCase: CasePreview = caseState.entities[caseState.modal.id];
 		if (sCase) {
 			this.editMode = true;
 			sCase = cloneDeep(sCase);
@@ -79,6 +80,7 @@ export class EditCaseComponent implements OnInit {
 			const selectedCase = cloneDeep(caseState.selectedCase);
 			sCase = this.getEmptyCase(selectedCase);
 		}
+
 		return sCase;
 	}
 

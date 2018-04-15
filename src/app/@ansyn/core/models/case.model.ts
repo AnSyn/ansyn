@@ -12,6 +12,7 @@ export interface CasePreview extends Entity {
 	name: string;
 	owner: string;
 	lastModified: Date;
+	selectedContextId?: string;
 }
 
 export interface Case extends CasePreview {
@@ -35,7 +36,6 @@ export interface ImageManualProcessArgs {
 }
 
 export interface CaseState {
-	selectedContextId?: string;
 	maps?: CaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,

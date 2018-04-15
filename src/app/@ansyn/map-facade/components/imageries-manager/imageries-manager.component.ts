@@ -32,9 +32,13 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck<IMapState, CaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
-	public selectedLayout;
+	public showWelcomeNotification$ = this.store.select(coreStateSelector)
+		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
+		.distinctUntilChanged()
+		.map(bool => !bool)
+	;
 
-	public showWelcomeNotification = true;
+	public selectedLayout;
 
 	clickTimeout: number;
 	preventDbClick: boolean;

@@ -2,12 +2,10 @@ import {
 	AfterViewInit,
 	Component,
 	ElementRef,
-	EventEmitter,
 	HostBinding,
 	HostListener,
 	Inject,
-	OnDestroy,
-	Output
+	OnDestroy
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
@@ -21,8 +19,6 @@ import { CoreConfig, ICoreConfig } from '../../models';
 	styleUrls: ['./welcome-notification.component.less']
 })
 export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
-
-	@Output() hideMe = new EventEmitter<any>();
 
 	private _subscriptions: Subscription[] = [];
 
@@ -39,13 +35,11 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 		return 0;
 	}
 
-	// Mark as done, in the store, when losing focus,
-	// and then signal my container to hide me (after a delay, to display a fading animation)
+	// Mark as done, in the store, when losing focus (after a delay, to display a fading animation, before this element is destroyed)
 	@HostListener('blur')
 	onBlur() {
-		this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
 		setTimeout(() => {
-			this.hideMe.emit();
+			this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
 		}, 1000);
 	}
 

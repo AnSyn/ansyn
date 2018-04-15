@@ -56,6 +56,7 @@ describe('WelcomeNotificationComponent', () => {
 
 		describe('onBlur()', () => {
 			beforeEach(() => {
+				spyOn(window, 'setTimeout').and.callFake(fn => {fn()});
 				spyOn(store, 'dispatch');
 				fixture.debugElement.triggerEventHandler('blur', null);
 				fixture.detectChanges();

@@ -78,14 +78,19 @@ export class CasesService {
 	}
 
 	getPreview(caseValue: Case): CasePreview {
-		return {
+		const casePreview: CasePreview = {
 			id: caseValue.id,
 			name: caseValue.name,
 			creationTime: caseValue.creationTime,
 			owner: caseValue.owner,
-			lastModified: caseValue.lastModified,
-			selectedContextId: caseValue.selectedContextId
+			lastModified: caseValue.lastModified
 		};
+
+		if (caseValue.selectedContextId) {
+			casePreview.selectedContextId = caseValue.selectedContextId;
+		}
+
+		return casePreview;
 	}
 
 	convertToStoredEntity(caseValue: Case): StoredEntity<CasePreview, CaseState> {

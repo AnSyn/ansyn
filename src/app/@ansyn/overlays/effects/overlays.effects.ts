@@ -44,7 +44,7 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.withLatestFrom(this.store$.select(coreStateSelector))
-		.switchMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
+		.mergeMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
 					const overlaysResult = unionBy(Array.isArray(overlays.data) ? overlays.data : [],
@@ -63,10 +63,7 @@ export class OverlaysEffects {
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
-					} else {
-						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.nullify));
 					}
-
 					return actions;
 				})
 				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));

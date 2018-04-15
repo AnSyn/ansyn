@@ -263,43 +263,6 @@ describe('MapAppEffects', () => {
 	}));
 
 
-	it('onMapSingleClick$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
-		const imagery1 = {
-			removeSingleClickEvent: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'removeSingleClickEvent');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: new MapSingleClickAction({lonLat})});
-		const a = new UpdateStatusFlagsAction({key: statusBarFlagsItemsEnum.pinPointSearch, value: false});
-		const b = new PinPointTriggerAction(lonLat);
-		const expectedResults = cold('--(ab)--', {a, b});
-		expect(mapAppEffects.onMapSingleClick$).toBeObservable(expectedResults);
-		expect(imagery1.removeSingleClickEvent).toHaveBeenCalledTimes(3);
-	});
-
-	it('onPinPointTrigger$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
-		const imagery1 = {
-			addgeoFilterIndicator: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addgeoFilterIndicator');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: new PinPointTriggerAction(lonLat)});
-		const region = getPolygonByPointAndRadius(lonLat).geometry;
-
-		const a = new SetOverlaysCriteriaAction({region});
-
-		const expectedResults = cold('--(a)--', {a});
-		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
-	});
-
 	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
 		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
 		const communicator = {

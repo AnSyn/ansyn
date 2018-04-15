@@ -1,6 +1,6 @@
 import { union } from 'lodash';
 import { Case } from '@ansyn/menu-items/cases';
-import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
+import { Overlay, OverlaysActionTypes, overlaysStatusMessages, SetOverlaysStatusMessage } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
@@ -44,10 +44,16 @@ export class FiltersAppEffects {
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
-				const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
-				return new SetFilteredOverlaysAction(filteredOverlays);
+		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
+			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
+			let actions: Array<Action> = [new SetFilteredOverlaysAction(filteredOverlays)];
+			if (!overlays.statusMessage || overlays.statusMessage === overlaysStatusMessages.nullify) {
+				const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
+				actions.push(new SetOverlaysStatusMessage(message));
+			}
+			return actions;
 		});
+
 
 	/**
 	 * @type Effect

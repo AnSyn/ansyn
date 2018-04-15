@@ -12,7 +12,7 @@ import {
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
-import { ICasesState } from '@ansyn/menu-items/cases';
+import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import { MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
@@ -23,25 +23,33 @@ import {
 	IStatusBarState, statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import {
-	endTimingLog, extentFromGeojson, getFootprintIntersectionRatioInExtent,
+	ImageryCreatedAction
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	endTimingLog,
+	extentFromGeojson,
+	getFootprintIntersectionRatioInExtent,
 	startTimingLog
 } from '@ansyn/core/utils';
 import {
-	SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
+	SetMapGeoEnabledModeToolsActionStore,
+	SetMapGeoEnabledModeToolsActionStore,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
 import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction } from '@ansyn/core';
+import {
+	AddAlertMsg,
+	AlertMsgTypes, BackToWorldView, RemoveAlertMsg,
+} from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
@@ -49,28 +57,6 @@ import { toolsFlags } from '@ansyn/menu-items';
 @Injectable()
 export class MapAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onMapSingleClickPinLocation$
-	 * @ofType MapSingleClickAction
-	 * @dependencies tools
-	 * @filter In pin location mode
-	 * @action SetPinLocationModeAction, SetActiveCenter
-	 */
-	@Effect()
-	onMapSingleClickPinLocation$: Observable<SetActiveCenter | SetPinLocationModeAction> = this.actions$
-		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, state: IToolsState): any => ({
-			action,
-			pinLocation: state.flags.get(toolsFlags.pinLocation)
-		}))
-		.filter(({ action, pinLocation }) => pinLocation)
-		.mergeMap(({ action }) => {
-			return [
-				new SetPinLocationModeAction(false),
-				new SetActiveCenter(action.payload.lonLat)
-			];
-		});
 
 	/**
 	 * @type Effect

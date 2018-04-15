@@ -5,7 +5,6 @@ import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
 	ContextMenuShowAction,
 	MapInstanceChangedAction,
-	MapSingleClickAction,
 	PositionChangedAction,
 	ImageryPluginsInitialized
 } from '../actions';
@@ -45,7 +44,6 @@ export class MapFacadeService {
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
 			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
-			communicator.singleClick.subscribe(this.singleClick.bind(this)),
 			communicator.contextMenu.subscribe(this.contextMenu.bind(this)),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
 			communicator.imageryPluginsInitialized.subscribe(this.imageryPluginsInitialized.bind(this))
@@ -65,11 +63,6 @@ export class MapFacadeService {
 	positionChanged($event: { id: string, position: CaseMapPosition }) {
 		const mapInstance = <CaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
-	}
-
-
-	singleClick(event) {
-		this.store.dispatch(new MapSingleClickAction(event));
 	}
 
 	contextMenu(event) {

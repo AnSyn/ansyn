@@ -51,52 +51,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onMapSingleClick$
-	 * @ofType MapSingleClickAction
-	 * @dependencies cases, statusBar
-	 * @filter In pin point search
-	 * @action UpdateStatusFlagsAction, PinPointTriggerAction
-	 */
-	@Effect()
-	onMapSingleClick$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.MAP_SINGLE_CLICK)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(statusBarStateSelector), (action: MapSingleClickAction, caseState: ICasesState, statusBarState: IStatusBarState) => [action, caseState, statusBarState])
-		.filter(([action, caseState, statusBarState]: [MapSingleClickAction, ICasesState, IStatusBarState]): any => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
-		.mergeMap(([action]: [MapSingleClickAction, ICasesState, IStatusBarState]) => {
-			// draw on all maps
-			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				// this is for the others communicators
-				communicator.removeSingleClickEvent();
-			});
-
-			return [
-				// disable the pinpoint search
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }),
-				// update pin point
-				new PinPointTriggerAction(action.payload.lonLat)
-			];
-		});
-
-	/**
-	 * @type Effect
-	 * @name onPinPointTrigger$
-	 * @ofType PinPointTriggerAction
-	 * @action UpdateCaseAction, LoadOverlaysAction, DrawPinPointAction
-	 * @description
-	 * draw pin point, update case and load overlays.
-	 * draw pin point is done by DrawPinPointAction
-	 */
-	@Effect()
-	onPinPointTrigger$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.map((action: PinPointTriggerAction) => {
-			const region = getPolygonByPointAndRadius(action.payload).geometry;
-			return new SetOverlaysCriteriaAction({ region })
-		});
-
-
-	/**
-	 * @type Effect
 	 * @name onMapSingleClickPinLocation$
 	 * @ofType MapSingleClickAction
 	 * @dependencies tools

@@ -13,6 +13,7 @@ import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer";
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export const VisualizersProviders: ImageryPluginProvider[] = [
 	{
@@ -61,7 +62,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: IconVisualizer,
-		deps: [Store, Actions]
+		deps: [Store, Actions, ProjectionService]
 	},
 	{
 		provide: BaseImageryPlugin,

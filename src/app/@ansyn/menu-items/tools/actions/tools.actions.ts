@@ -5,14 +5,13 @@ import { AnnotationProperties } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ImageManualProcessArgs } from '@ansyn/core';
 
-export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction';
+export type AnnotationAgentOperation = 'show'| 'hide';
 
 export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
 
 export interface AnnotationVisualizerAgentPayload {
 	operation: AnnotationAgentOperation;
 	relevantMaps: AnnotationAgentRelevantMap;
-	mode?: AnnotationMode;
 }
 
 

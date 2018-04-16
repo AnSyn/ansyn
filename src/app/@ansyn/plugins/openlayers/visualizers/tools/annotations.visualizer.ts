@@ -17,17 +17,26 @@ import { AnnotationsContextMenuEvent } from '@ansyn/core/index';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
-import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { CommunicatorEntity } from '@ansyn/imagery';
+import { AnnotationContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
-import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
+import {
+	AnnotationVisualizerAgentAction,
+	AnnotationVisualizerAgentPayload, SetAnnotationMode, ToolsActionsTypes
+} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapInstanceChangedAction } from '@ansyn/map-facade';
+
+export interface AgentOperations {
+	[key: string]: (layerState: ILayerState) => Observable<boolean>
+}
 
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -36,6 +45,70 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 
 	public mode: AnnotationMode;
+
+	mapState$ = this.store$.select(mapStateSelector);
+	layersState$ = this.store$.select(layersStateSelector);
+	toolsState$ = this.store$.select(toolsStateSelector);
+
+	annotationFlag$ = this.toolsState$
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.map((flags) => flags.get(toolsFlags.annotations))
+		.distinctUntilChanged();
+
+	isActiveMap$ = this.mapState$
+		.pluck<IMapState, string>('activeMapId')
+		.map((activeMapId: string): boolean => activeMapId === this.mapId);
+
+	agentOperations: AgentOperations = {
+		show: ({ annotationsLayer }) => {
+			const entities = AnnotationsVisualizer.annotationsLayerToEntities(annotationsLayer);
+			return this.setEntities(entities);
+		},
+		hide: ({ displayAnnotationsLayer }) => {
+			if (!displayAnnotationsLayer) {
+				this.clearEntities();
+			}
+
+			return Observable.of(true);
+		}
+	};
+
+	cancelAnnotationEditMode$: Observable<any> = this.actions$
+		.ofType<Action>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.do(() => this.store$.dispatch(new SetAnnotationMode()));
+
+	annotationData$: Observable<any> = this.actions$
+		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
+		.withLatestFrom(this.layersState$, this.annotationFlag$, this.isActiveMap$)
+		.filter(([action, layersState, annotationFlag, isActiveMap]: [Action, ILayerState, boolean, boolean]) => layersState.displayAnnotationsLayer || (isActiveMap && annotationFlag))
+		.mergeMap(([action, layersState]) => this.agentOperations.show(layersState));
+
+	annotationVisualizerAgent$: Observable<any> = this.actions$
+		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
+		.withLatestFrom(this.layersState$, this.mapState$, this.isActiveMap$)
+		.mergeMap(([action, layerState, mapsState, isActiveMap]: [AnnotationVisualizerAgentAction, ILayerState, IMapState, boolean]): any => {
+			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = action.payload;
+			switch (relevantMaps) {
+				case 'active':
+					if (isActiveMap) {
+						return this.agentOperations[operation](layerState);
+					}
+					break;
+				case 'all':
+					return this.agentOperations[operation](layerState);
+				case 'others':
+					if (!isActiveMap) {
+						return this.agentOperations[operation](layerState);
+					}
+					break;
+			}
+			return Observable.of(true);
+
+		});
+
+	changeMode$: Observable<any> = this.actions$
+		.ofType<Action>(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE)
+		.do(({ payload }: SetAnnotationMode) =>  this.toggleDrawInteraction(payload));
 
 	annotationProperties$: Observable<any> = this.store$
 		.select(toolsStateSelector)
@@ -54,10 +127,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayer$: Observable<any> = this.store$
 		.select(layersStateSelector)
-		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer')
-		.do((annotationsLayer) => this.annotationsLayer = annotationsLayer);
-
-	public annotationsLayer;
+		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer');
 
 	modeDictionary = {
 		Arrow: {
@@ -90,7 +160,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.annotationProperties$.subscribe(),
-			this.annotationsLayer$.subscribe()
+			this.annotationVisualizerAgent$.subscribe(),
+			this.changeMode$.subscribe(),
+			this.cancelAnnotationEditMode$.subscribe(),
+			this.annotationData$.subscribe()
 		);
 	}
 
@@ -200,9 +273,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.iMap.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
 			.take(1)
-			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+			.withLatestFrom(this.annotationsLayer$)
+			.subscribe(([featureCollection, annotationsLayer]: [FeatureCollection<GeometryObject>, any]) => {
 				const [geoJsonFeature] = featureCollection.features;
-				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...this.annotationsLayer };
+				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
 				updatedAnnotationsLayer.features.push(geoJsonFeature);
 				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
 			});

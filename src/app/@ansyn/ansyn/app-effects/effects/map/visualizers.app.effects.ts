@@ -104,47 +104,6 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesRedrawPinLocation$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies mapState, toolState
-	 */
-	@Effect({ dispatch: false })
-	onActiveMapChangesRedrawPinLocation$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			this.store$.select(toolsStateSelector),
-			(action, mapState, toolState) => [action, mapState, toolState]
-		)
-		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.subMenu === SubMenuEnum.goTo)
-		.mergeMap(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
-			return Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
-				return this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
-			}));
-		});
-
-	/**
-	 * @type Effect
-	 * @name gotoIconVisibilityOnGoToWindowChanged$
-	 * @ofType GoToExpandAction
-	 * @dependencies tools, map
-	 */
-	@Effect({ dispatch: false })
-	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
-		.ofType(ToolsActionsTypes.SET_SUB_MENU)
-		.withLatestFrom(
-			this.store$.select(selectSubMenu).map((subMenu) => subMenu === SubMenuEnum.goTo),
-			this.store$.select(mapStateSelector),
-			this.store$.select(toolsStateSelector).pluck('activeCenter'),
-			(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]
-		)
-		.mergeMap(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
-			const activeMap = MapFacadeService.activeMap(map);
-			return this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
-		});
-
 
 	/**
 	 * @type Effect
@@ -214,27 +173,6 @@ export class VisualizersAppEffects {
 			});
 		});
 
-	/**
-	 * @type Effect
-	 * @name OnGoToInputChanged$
-	 * @ofType GoToInputChangeAction
-	 * @dependencies map
-	 */
-	@Effect({ dispatch: false })
-	OnGoToInputChanged$ = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
-		.skip(1)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			(action: GoToInputChangeAction, mapState) => {
-				return [mapState, action.payload];
-
-			}
-		)
-		.switchMap(([mapState, coords]: [IMapState, any[]]) => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			return this.drawGotoIconOnMap(activeMap, coords);
-		});
 
 	/**
 	 * @type Effect
@@ -291,39 +229,6 @@ export class VisualizersAppEffects {
 	getPlugin<T>(mapId, visualizerType): T {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		return communicator ? communicator.getPlugin<T>(visualizerType) : null;
-	}
-
-	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true): Observable<boolean> {
-		if (!mapData) {
-			return Observable.of(true);
-		}
-
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (!communicator) {
-			return Observable.of(true);
-		}
-		const gotoVisualizer = communicator.getPlugin<GoToVisualizer>(GoToVisualizer);
-		if (!gotoVisualizer) {
-			return Observable.of(true);
-		}
-		if (gotoExpand) {
-			const gotoPoint: GeoJSON.Point = {
-				type: 'Point',
-				// calculate projection?
-				coordinates: point
-			};
-			const gotoFeatureJson: GeoJSON.Feature<any> = {
-				type: 'Feature',
-				geometry: gotoPoint,
-				properties: {}
-			};
-			gotoVisualizer.clearEntities();
-			return gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-		} else {
-			gotoVisualizer.clearEntities();
-		}
-
-		return Observable.of(true);
 	}
 
 	// set shadow mouse producer (remove previous producers)

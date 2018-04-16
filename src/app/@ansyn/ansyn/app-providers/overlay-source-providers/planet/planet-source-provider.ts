@@ -10,6 +10,7 @@ import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { OverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
+import { LoggerService } from '@ansyn/core';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -38,8 +39,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected http: HttpClient,
 				@Inject(PlanetOverlaysSourceConfig)
-				protected planetOverlaysSourceConfig: IPlanetOverlaySourceConfig) {
-		super();
+				protected planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
+				protected loggerService: LoggerService) {
+		super(loggerService);
 
 		this.httpHeaders = new HttpHeaders({ Authorization:
 				`basic ${btoa((this.planetOverlaysSourceConfig.apiKey + ':'))}` });

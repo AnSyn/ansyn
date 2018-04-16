@@ -60,7 +60,7 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { statusBarFlagsItems } from '@ansyn/status-bar';
-import { SetOverlaysCriteriaAction } from '@ansyn/core';
+import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryPluginsInitialized } from '@ansyn/map-facade';
 import { toolsFlags } from '@ansyn/menu-items';
@@ -174,6 +174,7 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
 				ImageryCommunicatorService,
 				ImageryProviderService,

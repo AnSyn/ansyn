@@ -11,6 +11,8 @@ import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerConfig } from '@ansyn/core';
+import { Injectable } from '@angular/core';
 
 const overlays: OverlaysFetchData = {
 	data: [
@@ -34,6 +36,7 @@ const emptyOverlays: OverlaysFetchData = {
 
 const faultySourceType = 'Faulty';
 
+@Injectable()
 class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Truthy';
 
@@ -47,17 +50,18 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
 		return Observable.empty();
-	};
+	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
 		return Observable.empty();
-	};
+	}
 
 	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
-	};
+	}
 }
 
+@Injectable()
 class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = faultySourceType;
 
@@ -67,15 +71,15 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
 		return Observable.empty();
-	};
+	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
 		return Observable.empty();
-	};
+	}
 
 	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
-	};
+	}
 }
 
 const faultyError = new Error(`Failed to fetch overlays from ${faultySourceType}`);
@@ -147,7 +151,8 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 				},
 				{
 					provide: MultipleOverlaysSource,
-					useClass: TruthyOverlaySourceProviderMock
+					useClass: TruthyOverlaySourceProviderMock,
+					multi: true
 				}
 			]
 		});
@@ -189,7 +194,8 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 				},
 				{
 					provide: MultipleOverlaysSource,
-					useClass: FaultyOverlaySourceProviderMock
+					useClass: FaultyOverlaySourceProviderMock,
+					multi: true
 				}
 			]
 		});

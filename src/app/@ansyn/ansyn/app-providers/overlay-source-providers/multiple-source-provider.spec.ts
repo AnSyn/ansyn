@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Rx';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 const overlays: OverlaysFetchData = {
 	data: [
@@ -126,21 +127,27 @@ const whitelist = [
 		coverage: [regionCoordinates]
 	}
 ];
+const loggerServiceMock = { error: (some) => null };
 
-fdescribe('MultipleSourceProvider with one truthy provider', () => {
+describe('MultipleSourceProvider with one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{
+					provide: LoggerService,
+					useValue: loggerServiceMock
+				},
 				MultipleOverlaysSourceProvider,
 				{
-					provide: MultipleOverlaysSourceConfig, useValue: {
+					provide: MultipleOverlaysSourceConfig,
+					useValue: {
 						Truthy: {whitelist: whitelist, blacklist: []}
 					}
 				},
 				{
 					provide: MultipleOverlaysSource,
-					useValue: [new TruthyOverlaySourceProviderMock()]
+					useClass: TruthyOverlaySourceProviderMock
 				}
 			]
 		});
@@ -164,20 +171,25 @@ fdescribe('MultipleSourceProvider with one truthy provider', () => {
 
 });
 
-fdescribe('MultipleSourceProvider with one faulty provider', () => {
+describe('MultipleSourceProvider with one faulty provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{
+					provide: LoggerService,
+					useValue: loggerServiceMock
+				},
 				MultipleOverlaysSourceProvider,
 				{
-					provide: MultipleOverlaysSourceConfig, useValue: {
+					provide: MultipleOverlaysSourceConfig,
+					useValue: {
 						Faulty: {whitelist: whitelist, blacklist: []}
 					}
 				},
 				{
 					provide: MultipleOverlaysSource,
-					useValue: [new FaultyOverlaySourceProviderMock()]
+					useClass: FaultyOverlaySourceProviderMock
 				}
 			]
 		});
@@ -195,11 +207,15 @@ fdescribe('MultipleSourceProvider with one faulty provider', () => {
 
 });
 
-fdescribe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
+describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{
+					provide: LoggerService,
+					useValue: loggerServiceMock
+				},
 				MultipleOverlaysSourceProvider,
 				{
 					provide: MultipleOverlaysSourceConfig, useValue: {
@@ -209,7 +225,13 @@ fdescribe('MultipleSourceProvider with one faulty provider and one truthy provid
 				},
 				{
 					provide: MultipleOverlaysSource,
-					useValue: [new TruthyOverlaySourceProviderMock(), new FaultyOverlaySourceProviderMock()]
+					useClass: TruthyOverlaySourceProviderMock,
+					multi: true
+				},
+				{
+					provide: MultipleOverlaysSource,
+					useClass: FaultyOverlaySourceProviderMock,
+					multi: true
 				}
 			]
 		});

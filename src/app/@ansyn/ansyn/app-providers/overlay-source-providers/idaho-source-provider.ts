@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { ErrorHandlerService, Overlay } from '@ansyn/core';
+import { ErrorHandlerService, LoggerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
@@ -36,8 +36,11 @@ export interface IIdahoOverlaySourceConfig {
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = IdahoOverlaySourceType;
 
-	constructor(public errorHandlerService: ErrorHandlerService, protected httpClient: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig) {
-		super();
+	constructor(public errorHandlerService: ErrorHandlerService,
+				protected httpClient: HttpClient,
+				@Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig,
+				protected loggerService: LoggerService) {
+		super(loggerService);
 
 	}
 

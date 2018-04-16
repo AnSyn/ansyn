@@ -124,23 +124,6 @@ describe('StatusBarAppEffects', () => {
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 
-
-	it('updatePinPointSearchAction$', () => {
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: true });
-		store.dispatch(action);
-		// mock communicatorsAsArray
-		const imagery1 = {
-			createMapSingleClickEvent: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1]);
-		spyOn(imagery1, 'createMapSingleClickEvent');
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: undefined });
-		expect(statusBarAppEffects.updatePinPointSearchAction$).toBeObservable(expectedResults);
-		expect(imagery1.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
-	});
-
 	it('updategeoFilterIndicatorAction$ - add', () => {
 
 		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true });

@@ -105,7 +105,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: Overlay, mapId: string, ignoreRotation?: boolean }) {
+	constructor(public payload: { overlay: Overlay, mapId: string, forceFirstDisplay?: boolean }) {
 	}
 }
 

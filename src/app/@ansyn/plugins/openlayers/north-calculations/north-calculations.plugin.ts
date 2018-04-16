@@ -94,13 +94,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
 			.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-				return [payload.ignoreRotation, comboBoxesProperties.orientation, payload.overlay];
+				return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
 			})
-			.switchMap(([ignoreRotation, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+			.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
 				return this.pointNorth()
 					.do(virtualNorth => {
 						this.communicator.setVirtualNorth(virtualNorth);
-						if (!ignoreRotation) {
+						if (!forceFirstDisplay) {
 							switch (orientation) {
 								case 'Align North':
 									this.communicator.setRotation(virtualNorth);

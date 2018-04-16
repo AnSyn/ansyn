@@ -98,7 +98,7 @@ export class OverlaysEffects {
 				.map((overlay: Overlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
-					ignoreRotation: true
+					forceFirstDisplay: true
 				}));
 		});
 

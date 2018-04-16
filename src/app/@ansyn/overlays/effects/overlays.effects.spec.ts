@@ -153,7 +153,7 @@ describe('Overlays Effects ', () => {
 			b: new DisplayOverlayAction({
 				overlay: <any> fakeOverlay,
 				mapId: 'testMapId',
-				ignoreRotation: true
+				forceFirstDisplay: true
 			})
 		});
 		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);
@@ -174,7 +174,7 @@ describe('Overlays Effects ', () => {
 			b: new DisplayOverlayAction({
 				overlay: <any> fakeOverlay,
 				mapId: 'testMapId',
-				ignoreRotation: true
+				forceFirstDisplay: true
 			})
 		});
 		expect(overlaysEffects.onRequestOverlayByID$).toBeObservable(expectedResults);

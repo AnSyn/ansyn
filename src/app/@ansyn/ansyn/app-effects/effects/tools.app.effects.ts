@@ -34,6 +34,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
+	AnnotationRemoveFeature,
 	PinLocationModeTriggerAction,
 	SetMapManualImageProcessing,
 	SetMapsDataActionStore
@@ -49,11 +50,13 @@ import {
 	SetLayoutAction
 } from '@ansyn/core';
 import { toolsFlags } from '@ansyn/menu-items';
+import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { Feature, FeatureCollection } from 'geojson';
 
 
 @Injectable()
 export class ToolsAppEffects {
-
+	layersState$ = this.store$.select(layersStateSelector);
 
 	/**
 	 * @type Effect
@@ -389,6 +392,26 @@ export class ToolsAppEffects {
 				];
 			}
 			return [new EnableMouseShadow()];
+		});
+
+	/**
+	 * @type Effect
+	 * @name removeFeature$
+	 * @ofType AnnotationRemoveFeature
+	 * @dependencies layers
+	 * @action SetAnnotationsLayer
+	 */
+	@Effect()
+	removeAnnotationFeature$: Observable<SetAnnotationsLayer> = this.actions$
+		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
+		.withLatestFrom(this.layersState$)
+		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {
+			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...layerState.annotationsLayer };
+			const featureIndex = updatedAnnotationsLayer.features.findIndex((feature: Feature<any>) => {
+				return feature.properties.id === action.payload;
+			});
+			updatedAnnotationsLayer.features.splice(featureIndex, 1);
+			return new SetAnnotationsLayer(updatedAnnotationsLayer);
 		});
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService) {

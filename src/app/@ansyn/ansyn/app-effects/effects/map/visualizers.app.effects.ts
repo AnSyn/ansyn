@@ -22,12 +22,7 @@ import {
 	OverlaysMarkupAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/polyline-visualizer';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	GoToInputChangeAction,
 	SetAnnotationMode,
@@ -43,14 +38,11 @@ import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/
 import { CoreService } from '@ansyn/core/services/core.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import {
-	FootprintHeatmapVisualizer,
 	GoToVisualizer,
-	MeasureDistanceVisualizer
 } from '@ansyn/plugins/openlayers/visualizers';
 import { SetPinLocationModeAction, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/icon.visualizer';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 

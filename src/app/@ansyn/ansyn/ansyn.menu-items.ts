@@ -6,6 +6,7 @@ import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
 import { ImagerySandBoxComponent } from '@ansyn/menu-items/imagerySandBox/component/imagery-sand-box.component';
+import { HelpComponent } from '@ansyn/menu-items/help/help/help.component';
 
 export const ansynMenuItems: MenuItem[] = [
 	{
@@ -48,6 +49,12 @@ export const ansynMenuItems: MenuItem[] = [
 		name: 'Imagery SandBox',
 		component: ImagerySandBoxComponent,
 		iconClass: 'icon-main-tools',
+		production: false
+	},
+	{
+		name: 'Help',
+		component: HelpComponent,
+		iconClass: 'icon-main-settings',
 		production: false
 	}
 ];

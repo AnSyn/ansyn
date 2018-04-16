@@ -27,6 +27,7 @@ import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
 import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
+import { HelpModule } from '@ansyn/menu-items/help';
 
 const MenuItemsModules = [
 	CasesModule,
@@ -35,7 +36,8 @@ const MenuItemsModules = [
 	ToolsModule,
 	AlgorithmsModule,
 	SettingsModule,
-	ImagerySandBoxModule
+	ImagerySandBoxModule,
+	HelpModule
 ];
 
 @NgModule({

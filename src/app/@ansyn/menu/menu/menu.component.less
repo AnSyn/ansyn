@@ -1,6 +1,6 @@
-@import "core/less/common";
-@import 'core/less/z-index-globals';
-@import 'core/less/tooltip';
+@import "../../core/less/common";
+@import '../../core/less/z-index-globals';
+@import '../../core/less/tooltip';
 
 div.menu-wrapper {
 	height: 100vh;
@@ -30,6 +30,13 @@ div.menu-wrapper {
 			i {
 				display: block;
 				font-size: 3em;
+			}
+
+			@media screen and (max-height: 700px) {
+				i {
+					// 8 = the current number the menu items
+					font-size: calc(~"((100vh - 94px) / 8) - 40px");
+				}
 			}
 
 			span.badge {

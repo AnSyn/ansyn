@@ -45,7 +45,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 
 	goToPinAvailable$ = Observable.merge(this.pinLocation$, this.activeMapId$)
 		.withLatestFrom(this.pinLocation$, this.activeMapId$, this.activeCenter$, this.goToExpand$)
-		.do(([_, pinLocation, activeMapId, activeCenter, gotoExpand]: [any, boolean, string, number[], boolean]) => {
+		.do(([_, pinLocation, activeMapId]: [any, boolean, string, number[], boolean]) => {
 			if (activeMapId === this.mapId && pinLocation) {
 				this.createSingleClickEvent();
 			} else {

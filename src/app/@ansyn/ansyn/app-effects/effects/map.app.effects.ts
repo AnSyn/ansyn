@@ -174,23 +174,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onAddCommunicatorDoPinpointSearch
-	 * @ofType MapInstanceChangedAction
-	 * @dependencies cases, statusBar
-	 * @filter pinPointSearch flag on
-	 */
-	@Effect({ dispatch: false })
-	onAddCommunicatorDoPinpointSearch$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.store$.select(statusBarStateSelector))
-		.filter(([action, statusBarState]: [any, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
-		.do(([action]: [any]) => {
-			const communicatorHandler = this.imageryCommunicatorService.provide(action.payload.id);
-			communicatorHandler.createMapSingleClickEvent();
-		});
-
-	/**
-	 * @type Effect
 	 * @name onAddCommunicatorShowShadowMouse$
 	 * @ofType MapInstanceChangedAction, SetMapsDataActionStore
 	 * @dependencies cases, statusBar

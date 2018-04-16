@@ -21,26 +21,6 @@ import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reduc
 @Injectable()
 export class StatusBarAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name updatePinPointSearchAction$
-	 * @ofType UpdateStatusFlagsAction
-	 * @dependencies statusBar
-	 * @filter update pinPointSearch and in pinPointSearch
-	 * @description
-	 * add click event to map (for searching overlay according to pin point on click)
-	 */
-	@Effect({ dispatch: false })
-	updatePinPointSearchAction$: Observable<void> = this.actions$
-		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointSearch)
-		.withLatestFrom(this.store.select(statusBarStateSelector))
-		.filter(([action, statusBarState]: [UpdateStatusFlagsAction, IStatusBarState]) => statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch))
-		.map(() => {
-			this.imageryCommunicator.communicatorsAsArray().forEach(communicator => {
-				communicator.createMapSingleClickEvent();
-			});
-		});
 
 	/**
 	 * @type Effect

@@ -8,17 +8,25 @@ import { Actions } from '@ngrx/effects';
 import { getPointByGeometry } from 'app/@ansyn/core/utils/index';
 import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf'
-import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { EventEmitter } from '@angular/core';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import { Point } from 'geojson';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { MapActionTypes, PinPointTriggerAction } from '@ansyn/map-facade';
+import { SetPinLocationModeAction, ToolsActionsTypes } from '@ansyn/menu-items';
 
 export class IconVisualizer extends RegionVisualizer {
+
+	// If pin-location mode, disable singleClickEvent
+	updatePinLocationAction$: Observable<any> = this.actions$
+		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
+		.do((action: SetPinLocationModeAction) => {
+			if (action.payload) {
+				this.removeSingleClickEvent();
+			}
+		});
 
 	contextMenuClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
@@ -30,7 +38,7 @@ export class IconVisualizer extends RegionVisualizer {
 	pinpointSearchActive$: Observable<any> = this.store$.select(statusBarStateSelector)
 		.filter((statusBarState) => statusBarState.comboBoxesProperties.geoFilter === 'Pin-Point' && Boolean(statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch)))
 		.do(() => {
-			this.iMap.mapObject.on('singleclick', this.singleClickListener, this);
+			this.createSingleClickEvent();
 		});
 
 	_iconSrc: Style = new Style({
@@ -69,6 +77,10 @@ export class IconVisualizer extends RegionVisualizer {
 			});
 	}
 
+	public createSingleClickEvent() {
+		this.iMap.mapObject.on('singleclick', this.singleClickListener, this);
+	}
+
 	public removeSingleClickEvent() {
 		this.iMap.mapObject.un('singleclick', this.singleClickListener, this);
 	}
@@ -77,7 +89,13 @@ export class IconVisualizer extends RegionVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.contextMenuClick$.subscribe(),
-			this.pinpointSearchActive$.subscribe()
+			this.pinpointSearchActive$.subscribe(),
+			this.updatePinLocationAction$.subscribe()
 		);
+	}
+
+	onDispose() {
+		this.removeSingleClickEvent();
+		super.onDispose();
 	}
 }

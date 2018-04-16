@@ -70,7 +70,7 @@ export class OverlaysEffects {
 					const overlaysResult = unionBy(Array.isArray(overlays.data) ? overlays.data : [],
 						favoriteOverlays, o => o.id);
 
-					if (Array.isArray(overlays.errors) && overlays.errors.length > 0) {
+					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 						return [new LoadOverlaysSuccessAction(overlaysResult),
 							new SetOverlaysStatusMessage('Error on overlays request')];
 					}

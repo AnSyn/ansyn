@@ -19,7 +19,7 @@ export class ExtendMap<T, V> {
 	findKeysByValue(searchValue, arrayField) {
 		return Array.from(this.map)
 			.filter(([key, val]) => Boolean(val && val[arrayField] && val[arrayField].some(item => item === searchValue)))
-			.map(([key, val]) => key)
+			.map(([key]) => key)
 
 	}
 
@@ -27,7 +27,7 @@ export class ExtendMap<T, V> {
 	removeValueFromMap(key: T, searchValue, arrayField) {
 		// currently out of use
 		return Array.from(this.map)
-			.filter(([key, val]) => Boolean(val && val[arrayField] && val[arrayField].find(item => item === searchValue)))
+			.filter(([key, val]) => Boolean(val && val[arrayField]))
 			.forEach(([key, val]) => {
 				val[arrayField] = val[arrayField].filter(item => item !== searchValue);
 				this.map.set(key, val);

@@ -93,7 +93,7 @@ export class OverlaysService {
 		return (this.config) ? this.config.limit : null;
 	}
 
-	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig,
+	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 

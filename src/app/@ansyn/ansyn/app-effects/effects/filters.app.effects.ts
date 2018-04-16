@@ -46,10 +46,11 @@ export class FiltersAppEffects {
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
-			let actions: Array<Action> = [new SetFilteredOverlaysAction(filteredOverlays)];
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
-			actions.push(new SetOverlaysStatusMessage(message));
-			return actions;
+			return [
+				new SetFilteredOverlaysAction(filteredOverlays),
+				new SetOverlaysStatusMessage(message)
+			];
 		});
 
 

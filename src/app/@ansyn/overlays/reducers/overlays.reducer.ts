@@ -29,20 +29,6 @@ export interface MarkUpData {
 	data?: string
 }
 
-export enum MarkUpClass {
-	active = 'active',
-	hover = 'hover',
-	favorites = 'favorites',
-	displayed = 'displayed',
-	symbole = 'symbole'
-
-}
-
-export enum MarkUpTypes {
-	css = 'css',
-	symbole = 'symbole'
-}
-
 export interface OverlayLine {
 	name: string,
 	data: Array<OverlayDrop>

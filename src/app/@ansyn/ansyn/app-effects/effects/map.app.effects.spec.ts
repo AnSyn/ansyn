@@ -465,7 +465,7 @@ describe('MapAppEffects', () => {
 				b: new DisplayOverlayAction({
 					overlay,
 					mapId: 'imagery1',
-					ignoreRotation: true
+					forceFirstDisplay: true
 				})
 			});
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);

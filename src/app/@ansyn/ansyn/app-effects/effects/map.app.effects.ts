@@ -179,7 +179,7 @@ export class MapAppEffects {
 			return new DisplayOverlayAction({
 				overlay: caseMapState.data.overlay,
 				mapId: caseMapState.id,
-				ignoreRotation: true
+				forceFirstDisplay: true
 			});
 		});
 
@@ -431,7 +431,7 @@ export class MapAppEffects {
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
 		const isNotDisplayed = !(OverlaysService.isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
-		return isFull && isNotDisplayed;
+		return (isFull && isNotDisplayed) || payload.forceFirstDisplay;
 	}
 
 	constructor(protected actions$: Actions,

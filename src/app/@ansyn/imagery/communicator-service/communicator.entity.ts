@@ -220,15 +220,4 @@ export class CommunicatorEntity {
 	}
 
 	// ======shadow mouse end
-
-	// ====== treat map click event (used for geoFilterIndicator)
-	public createMapSingleClickEvent() {
-		(<any>this.ActiveMap).addSingleClickEvent();
-	}
-
-	public removeSingleClickEvent() {
-		(<any>this.ActiveMap).removeSingleClickEvent();
-	}
-
-	// ======end treat map click event (used for geoFilterIndicator)
 }

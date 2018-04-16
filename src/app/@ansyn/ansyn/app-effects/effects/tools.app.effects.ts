@@ -300,24 +300,6 @@ export class ToolsAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name updatePinLocationAction$
-	 * @ofType SetPinLocationModeAction
-	 */
-	@Effect({ dispatch: false })
-	updatePinLocationAction$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.do((action: SetPinLocationModeAction) => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator) => {
-				if (action.payload) {
-					communicator.createMapSingleClickEvent();
-				} else {
-					communicator.removeSingleClickEvent();
-				}
-			});
-		});
-
-	/**
-	 * @type Effect
 	 * @name onGoTo$
 	 * @ofType GoToAction
 	 * @dependencies map

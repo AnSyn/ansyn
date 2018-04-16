@@ -109,7 +109,7 @@ export abstract class BaseOverlaySourceProvider {
 		const multipleFetches: Observable<OverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
 			.map((data: Array<OverlaysFetchData>) => {
 				// All failed
-				if (data.reduce((acc, element) => acc + element.errors.length, 0) >= fetchObservables.length) {
+				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 

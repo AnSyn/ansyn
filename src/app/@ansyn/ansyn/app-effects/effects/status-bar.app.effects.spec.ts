@@ -23,7 +23,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { BackToWorldView } from '@ansyn/core';
+import { BackToWorldView, LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -66,6 +66,7 @@ describe('StatusBarAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				OverlaysService,
 				StatusBarAppEffects,
 				provideMockActions(() => actions),

@@ -18,6 +18,7 @@ import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -57,6 +58,7 @@ describe('OverlayContainerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				OverlaysService,
 				TimelineEmitterService,
 				OverlaysEffects,

@@ -9,7 +9,7 @@ import { Overlay } from '../models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { OverlaysCriteria } from '@ansyn/core';
+import { LoggerService, OverlaysCriteria } from '@ansyn/core';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -119,6 +119,7 @@ describe('OverlaysService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }

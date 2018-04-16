@@ -5,6 +5,7 @@ import * as intersect from '@turf/intersect';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { Injectable } from '@angular/core';
 
 export interface DateRange {
 	start: Date;
@@ -49,6 +50,7 @@ export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): 
 	return null;
 }
 
+@Injectable()
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 

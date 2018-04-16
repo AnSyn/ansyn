@@ -170,8 +170,8 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
 	}
 
-	clickGoAdjacent(nextOrPrev): void {
-		this.store.dispatch(new GoAdjacentOverlay({nextOrPrev}));
+	clickGoAdjacent(isNext): void {
+		this.store.dispatch(new GoAdjacentOverlay({isNext}));
 	}
 
 	clickExpand(): void {

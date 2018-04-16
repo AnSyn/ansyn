@@ -80,12 +80,12 @@ describe('StatusBarComponent', () => {
 		it('clickGoPrev should dispatch action GoPrevAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.clickGoAdjacent(false);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({nextOrPrev: false}));
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({isNext: false}));
 		});
 		it('clickGoNext should dispatch action GoNextAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.clickGoAdjacent(true);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({nextOrPrev: true}));
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({isNext: true}));
 		});
 		it('clickExpand should dispatch action ExpandAction', () => {
 			spyOn(component.store, 'dispatch');

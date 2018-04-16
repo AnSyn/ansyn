@@ -40,7 +40,7 @@ export type CoreActions =
 export class GoAdjacentOverlay implements Action {
 	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
 
-	constructor(public payload: {nextOrPrev: boolean}) {
+	constructor(public payload: {isNext: boolean}) {
 	}
 }
 

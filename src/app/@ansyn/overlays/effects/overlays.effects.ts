@@ -27,7 +27,7 @@ import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState } from '@ansyn/core';
+import { coreStateSelector, ICoreState, SetToastMessageAction } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
 
@@ -69,6 +69,17 @@ export class OverlaysEffects {
 				.mergeMap((overlays: OverlaysFetchData) => {
 					const overlaysResult = unionBy(overlays.data, favoriteOverlays, o => o.id);
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+
+					if (overlays.errors.length > 0 && !Array.isArray(overlays.data)) {
+						actions.push(new LoadOverlaysSuccessAction([]));
+						actions.push(new SetOverlaysStatusMessage('Error on overlays request'));
+						return actions;
+					}
+
+					overlays.errors.forEach(error => {
+						actions.push(new SetToastMessageAction({ toastText: error.message, showWarningIcon: true }));
+					});
+
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchQuery));

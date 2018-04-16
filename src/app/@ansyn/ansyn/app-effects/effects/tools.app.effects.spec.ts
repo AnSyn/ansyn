@@ -165,25 +165,6 @@ describe('ToolsAppEffects', () => {
 		beforeEach(() => {
 			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [activeCommunicator, activeCommunicator]);
 		});
-
-		it('should call createMapSingleClickEvent per communicator ( action.payload equal "true") ', () => {
-			spyOn(activeCommunicator, 'createMapSingleClickEvent');
-			const action = new SetPinLocationModeAction(true);
-			actions = hot('--a--', { a: action });
-			const expectedResults = cold('--b--', { b: action });
-			expect(toolsAppEffects.updatePinLocationAction$).toBeObservable(expectedResults);
-			expect(activeCommunicator.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
-		});
-
-		it('should call removeSingleClickEvent per communicator ( action.payload equal "false") ', () => {
-			spyOn(activeCommunicator, 'removeSingleClickEvent');
-			const action = new SetPinLocationModeAction(false);
-			actions = hot('--a--', { a: new SetPinLocationModeAction(false) });
-			const expectedResults = cold('--b--', { b: action });
-			expect(toolsAppEffects.updatePinLocationAction$).toBeObservable(expectedResults);
-			expect(activeCommunicator.removeSingleClickEvent).toHaveBeenCalled();
-		});
-
 	});
 
 	it('onGoTo$ should call SetCenter on active communicator with action.payload', () => {

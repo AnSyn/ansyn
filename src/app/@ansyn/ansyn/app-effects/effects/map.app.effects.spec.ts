@@ -263,26 +263,6 @@ describe('MapAppEffects', () => {
 	}));
 
 
-	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItemsEnum.pinPointSearch, true);
-		const communicator = {
-			createMapSingleClickEvent: () => {
-			}
-		};
-		// this.imageryCommunicatorService.provide
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-		spyOn(communicator, 'createMapSingleClickEvent');
-
-		const action = new ImageryCreatedAction({id: 'tmpId1'});
-		actions = hot('--a--', {a: action});
-
-		// no need to check observable itself
-		mapAppEffects.onAddCommunicatorDoPinpointSearch$.subscribe(() => {
-			expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
-		});
-	});
-
-
 	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
 		toolsState.flags.set(toolsFlags.shadowMouse, true);
 		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});

@@ -47,11 +47,10 @@ export class VisualizersAppEffects {
 	@Effect()
 	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.filter(({ payload }: HoverFeatureTriggerAction) => Boolean(payload.id))
 		.map(({ payload }: HoverFeatureTriggerAction) => new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: {
-				overlaysIds: [payload.id]
+				overlaysIds: payload.id ? [payload.id] : []
 			}
 		}));
 
@@ -62,20 +61,9 @@ export class VisualizersAppEffects {
 	 * @action HoverFeatureTriggerAction, RemoveMarkUp
 	 */
 	@Effect()
-	onMouseOutDropAction$: Observable<HoverFeatureTriggerAction | SetMarkUp> = this.actions$
+	onMouseOutDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
 		.ofType(OverlaysActionTypes.MOUSE_OUT_DROP)
-		.mergeMap(({ payload }: MouseOutDropAction) => {
-			return [
-				new HoverFeatureTriggerAction({ id: null }),
-				new SetMarkUp({
-						classToSet: MarkUpClass.hover,
-						dataToSet: {
-							overlaysIds: []
-						}
-					}
-				)
-			];
-		});
+		.map(({ payload }: MouseOutDropAction) => new HoverFeatureTriggerAction({ id: null }));
 
 
 	/**

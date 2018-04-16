@@ -136,7 +136,7 @@ export abstract class BaseOverlaySourceProvider {
 	}
 
 	isFaulty(data: OverlaysFetchData): boolean {
-		return !(Array.isArray(data.data) && data.limited >= 0);
+		return Array.isArray(data.errors) && data.errors.length > 0;
 	}
 
 	abstract fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData>;

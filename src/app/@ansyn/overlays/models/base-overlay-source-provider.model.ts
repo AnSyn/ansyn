@@ -1,4 +1,4 @@
-import { Overlay } from '@ansyn/core';
+import { LoggerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
@@ -52,6 +52,8 @@ export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): 
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
+	constructor(protected loggerService: LoggerService) {}
+
 	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<OverlaysFetchData> {
 		const regionFeature: GeoJSON.Feature<any> = {
 			type: 'Feature',
@@ -89,7 +91,7 @@ export abstract class BaseOverlaySourceProvider {
 				}
 
 				return this.fetch(newFetchParams).catch(err => {
-						console.error(err);
+						this.loggerService.error(err);
 						return Observable.of({
 							data: null,
 							limited: -1,

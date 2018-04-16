@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider, DateRange, IFetchParams } from '@ansyn/overlays';
-import { Overlay } from '@ansyn/core';
+import { LoggerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import * as intersect from '@turf/intersect';
@@ -7,8 +7,6 @@ import * as area from '@turf/area';
 import * as difference from '@turf/difference';
 import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 interface FiltersList {
 	name: string,
@@ -35,8 +33,9 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	private sourceConfigs: Array<{ filters: OverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[]) {
-		super();
+				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
+				protected loggerService: LoggerService) {
+		super(loggerService);
 
 		this.prepareWhitelist();
 	}

@@ -129,14 +129,24 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
-		const mergedSortedOverlays: Promise<OverlaysFetchData> = Promise.all(this.sourceConfigs
-			.map(s => s.provider.fetchMultiple(fetchParams, s.filters).toPromise()))
-			.then(overlays => mergeLimitedArrays(overlays, fetchParams.limit, {
-				sortFn: sortByDateDesc,
-				uniqueBy: o => o.id
-			})); // merge the overlays
+		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
+			.map(overlays => {
+				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
+				const errors = this.mergeErrors(overlays);
 
-		return Observable.from(mergedSortedOverlays);
+				if (allFailed) {
+					return {
+						errors,
+						data: null,
+						limited: -1
+					}
+				}
+
+				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
+			}); // merge the overlays
+
+		return mergedSortedOverlays;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {

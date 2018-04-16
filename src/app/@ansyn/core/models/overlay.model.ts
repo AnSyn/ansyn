@@ -3,7 +3,8 @@ import { CaseRegionState, CaseTimeState } from '@ansyn/core';
 export interface OverlaysFetchData {
 	data: Overlay[],
 	// number of overlays removed from total overlays (according to config)
-	limited: number
+	limited: number,
+	errors?: Error[]
 }
 
 export class Overlay {

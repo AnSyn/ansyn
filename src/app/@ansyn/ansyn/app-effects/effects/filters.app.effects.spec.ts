@@ -41,6 +41,7 @@ import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SliderFilterMetadata } from '@ansyn/menu-items';
+import { overlaysStatusMessages, SetOverlaysStatusMessage } from '@ansyn/overlays';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -119,8 +120,9 @@ describe('Filters app effects', () => {
 		filtersState.filters = new Map();
 		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--b--', {
-			b: new SetFilteredOverlaysAction(filteredOverlays)
+		const expectedResults = cold('--(bc)--', {
+			b: new SetFilteredOverlaysAction(filteredOverlays),
+			c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
 		});
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});

@@ -124,14 +124,12 @@ describe('Overlays Effects ', () => {
 		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
-		const expectedResults = cold('--(abc)--', {
+		const expectedResults = cold('--(ab)--', {
 			a: new LoadOverlaysSuccessAction(tmp),
-			c: new SetOverlaysStatusMessage(null),
 			b: new SetOverlaysCountAction(tmp.length)
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
-
 
 	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
 		const fakeOverlay = <Overlay> { id: 'test' };

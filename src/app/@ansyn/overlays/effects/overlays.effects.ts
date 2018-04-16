@@ -67,14 +67,13 @@ export class OverlaysEffects {
 		.switchMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
 			return this.overlaysService.search(action.payload)
 				.mergeMap((overlays: OverlaysFetchData) => {
+					if (Array.isArray(overlays.errors) && overlays.errors.length > 0) {
+						return [new LoadOverlaysSuccessAction([]),
+							new SetOverlaysStatusMessage('Error on overlays request')];
+					}
+
 					const overlaysResult = unionBy(overlays.data, favoriteOverlays, o => o.id);
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
-
-					if (overlays.errors.length > 0 && !Array.isArray(overlays.data)) {
-						actions.push(new LoadOverlaysSuccessAction([]));
-						actions.push(new SetOverlaysStatusMessage('Error on overlays request'));
-						return actions;
-					}
 
 					overlays.errors.forEach(error => {
 						actions.push(new SetToastMessageAction({ toastText: error.message, showWarningIcon: true }));

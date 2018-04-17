@@ -1,17 +1,24 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement, EventEmitter } from '@angular/core';
 import * as d3 from 'd3/build/d3';
 import { OverlaysService } from '@ansyn/overlays/services';
-import { BaseOverlaySourceProvider, MarkUpClass, OverlaysConfig } from '@ansyn/overlays';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { BaseOverlaySourceProvider, OverlaysConfig } from '@ansyn/overlays';
+import { createStore, StoreFixture } from '@ansyn/core/test';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { State, Store, StoreModule } from '@ngrx/store';
+import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
+import { Actions } from '@ngrx/effects';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
 	let fixture: ComponentFixture<TimelineComponent>;
-	let timeLineEmitterService: TimelineEmitterService;
+	let storeFixture: StoreFixture<IOverlaysState>;
+	let store: Store<IOverlaysState>;
+	let state: State<{ overlays: IOverlaysState }>;
+	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService;
+	let getState: () => IOverlaysState;
 	let de: DebugElement;
 	let config: {
 		locale: {
@@ -33,13 +40,20 @@ describe('TimelineComponent', () => {
 			bottom: 40,
 			right: 10
 		},
+		line: {
+			color: (d, i) => null
+		},
 		label: {
 			width: 0,
 			padding: 0,
 			text: ''
 		},
 		range: {
+			start: null,
+			end: null
 		},
+		drop: null,
+		zoom: null,
 		d3: d3
 	};
 
@@ -106,37 +120,40 @@ describe('TimelineComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [TimelineEmitterService, OverlaysService, BaseOverlaySourceProvider, {
+			providers: [OverlaysService, OverlaysEffects, Actions, BaseOverlaySourceProvider, {
 				provide: OverlaysConfig,
 				useValue: {}
 			}
 			],
-			declarations: [TimelineComponent]
+			declarations: [TimelineComponent],
+			imports: [
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
+			]
 		})
 			.compileComponents();
+
+		storeFixture = createStore(OverlayReducer);
+		store = storeFixture.store;
+		getState = storeFixture.getState;
+		state = <State<any>> storeFixture.state; // (overlaysInitialState);
 	}));
+
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TimelineComponent);
 		component = fixture.componentInstance;
-		component.redraw$ = new EventEmitter();
-		component.configuration = config;
-
 		fixture.detectChanges();
 		component.drops = [];
 	});
 
-	beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {
-		timeLineEmitterService = _timelineEmitterService;
-	}));
+
 	beforeEach(inject([OverlaysService], (_overlaysService) => {
 		overlaysService = _overlaysService;
 	}));
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+});
 
-
-})
 
 

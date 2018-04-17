@@ -1,18 +1,26 @@
 import {
-	ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnInit,
+	ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
 	ViewChild
 } from '@angular/core';
 import { schemeCategory10, selection } from 'd3';
 import * as d3 from 'd3/build/d3';
-import eventDrops from './src/index';
+import eventDrops from 'new-ansyn-event-drops';
 
-import { OverlaysService, TimelineEmitterService } from '../../services';
+import { OverlaysService } from '../../services';
 import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers';
-import { TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
-import { EventDropConfiguration } from '@ansyn/overlays/components/timeline/src/config';
+import { IOverlaysState, overlaysStateSelector, TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
 import { MarkUpClass, MarkUpData, MarkUpTypes } from '@ansyn/overlays';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { select, selectAll } from 'd3-selection';
+import { Observable } from 'rxjs/Observable';
+import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
+import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
+import {
+	DisplayOverlayFromStoreAction, MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes,
+	SetTimelineStateAction
+} from '@ansyn/overlays/actions/overlays.actions';
+import { Subscription } from 'rxjs/Subscription';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -30,93 +38,90 @@ selection.prototype.moveToFront = function () {
 })
 
 
-export class TimelineComponent implements OnInit {
+export class TimelineComponent implements OnInit, OnDestroy {
 
 	@ViewChild('context') context: ElementRef;
-	configuration: EventDropConfiguration = this.setConfiguration();
+	configuration = this.setConfiguration();
 	private chart: any;
-
-	@Input() redraw$: EventEmitter<any>;
-
 	private element: any;
 	private dblClick: number;
-
-	private _timeLineRange: TimelineRange;
 	private oldActiveId: string;
 
-	@Input('timeLineRange')
-	set timeLineRange(value: TimelineRange) {
-		if (value) {
-			this._timeLineRange = value;
+	redraw$ = this.actions$.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
+		.do(() => this.initEventDropsSequence());
+
+	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
+
+	timeLineRange$: Observable<TimelineRange> = this.overlaysState$
+		.pluck <IOverlaysState, TimelineRange>('timeLineRange')
+		.distinctUntilChanged()
+		.filter(Boolean)
+		.do((value: TimelineRange) => {
 			this.configuration.range = value;
-		}
-	}
+		});
 
-	get timeLineRange() {
-		return this._timeLineRange;
-	}
 
-	private _markup: ExtendMap<MarkUpClass, MarkUpData>;
-	@Input('markup')
-	set markup(value: ExtendMap<MarkUpClass, MarkUpData>) {
-		const newActive = value.get(MarkUpClass.active).overlaysIds;
-		if (newActive && newActive.length) {
-			const newActiveId = newActive[0];
-			if (!this.oldActiveId || this.oldActiveId !== newActiveId) {
-				this.checkDiffranceInTimeRange(this.dropsIdMap.get(newActiveId));
-			}
-			this.oldActiveId = newActiveId;
-		}
-		this._markup = value;
-		this.drawMarkup();
-	}
-
-	get markup() {
-		return this._markup;
-	}
+	private markup: ExtendMap<MarkUpClass, MarkUpData>;
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
+		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+		.distinctUntilChanged()
+		.do(this.checkDiffranceInTimeRange.bind(this))
+		.do((value: ExtendMap<MarkUpClass, MarkUpData>) => {
+			this.markup = value;
+			this.drawMarkup();
+		});
 
 	dropsIdMap: Map<string, OverlayDrop> = new Map();
-	private _drops: Array<OverlayLine> = [];
-	@Input()
-	set drops(drops: Array<OverlayLine>) {
-		if (drops && drops.length) {
-			this._drops = drops.map(entities => ({
-				name: entities.name || '',
-				data: entities.data
-			}));
-			if (this._drops[0] && this._drops[0].data) {
-				if (this._drops[0].data.length) {
-					this._drops[0].data.forEach(drop => {
-						this.dropsIdMap.set(drop.id, drop);
-					});
-					this.timeLineRange = this.overlaysService.getTimeRangeFromDrops(this._drops[0].data);
-				}
-				this.initEventDropsSequence();
-			}
-		}
-	}
-
-	get drops() {
-		return this._drops;
-	}
+	drops: Array<OverlayLine> = [];
+	dropsChange$ = this.effects$.drops$
+		.map((drops) => drops.map(entities => ({
+			name: entities.name || '',
+			data: entities.data
+		})))
+		.filter((drops) => Boolean(drops && drops[0] && drops[0].data && drops[0].data.length))
+		.do(drops => {
+			drops[0].data.forEach(drop => {
+				this.dropsIdMap.set(drop.id, drop);
+			});
+		})
+		.do(drops => {
+			this.drops = drops;
+			this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops[0].data);
+			this.initEventDropsSequence();
+		});
+	private subscribers: Subscription[];
 
 	@HostListener('window:resize')
 	onresize() {
 		this.initEventDropsSequence();
 	}
 
-	constructor(@Inject(TimelineEmitterService) protected emitter: TimelineEmitterService, @Inject(OverlaysService) protected overlaysService: OverlaysService) {
-
+	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
+				protected store$: Store<IOverlaysState>,
+				protected effects$: OverlaysEffects,
+				protected actions$: Actions) {
 	}
+
 
 	ngOnInit() {
-		this.redraw$.subscribe(() => {
-			this.initEventDropsSequence();
-		});
+		this.subscribers = [this.dropsChange$.subscribe(),
+			this.dropsMarkUp$.subscribe(),
+			this.timeLineRange$.subscribe(),
+			this.redraw$.subscribe()
+		];
 	}
 
-	setConfiguration(): EventDropConfiguration {
+	ngOnDestroy() {
+		this.subscribers.forEach(subscriber => subscriber.unsubscribe())
+
+	}
+
+	setConfiguration() {
 		return {
+			range: {
+				start: new Date(Date.now()),
+				end: new Date(Date.now())
+			},
 			locale: {
 				'dateTime': '%x, %X',
 				'date': '%-m/%-d/%Y',
@@ -163,17 +168,17 @@ export class TimelineComponent implements OnInit {
 	}
 
 	onMouseOver(d) {
-		this.emitter.provide('timeline:mouseover').next(d);
+		this.store$.dispatch(new MouseOverDropAction(d.id));
 	}
 
 	onMouseOut(d) {
-		this.emitter.provide('timeline:mouseout').next(d);
+		this.store$.dispatch(new MouseOutDropAction(d.id));
 	}
 
 	onDblClick(d) {
 		this.dblClick = Date.now();
 		event.stopPropagation();
-		this.emitter.provide('timeline:dblclick').next(d);
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: d.id }));
 	}
 
 	onClick(d) {
@@ -185,21 +190,24 @@ export class TimelineComponent implements OnInit {
 				return;
 			}
 			this.dblClick = null;
-			this.emitter.provide('timeline:click').next(d);
+			// onClick...
 		}).bind(this), timeMargin);
 	}
 
 	onZoomEnd() {
-		this.setTimeLineRangeFromDrops();
-		this.emitter.provide('timeline:zoomend')
-			.next(this.timeLineRange);
+		this.store$.dispatch(new SetTimelineStateAction({
+			timeLineRange: {
+				start: this.chart.scale().domain()[0],
+				end: this.chart.scale().domain()[1]
+			}
+		}));
+
 	}
 
 	initEventDropsSequence() {
 		if (this.drops && this.drops.length) {
 			this.removeOldEventDrops();
 			this.initEventDrop();
-			this.setTimeLineRangeFromDrops();
 			if (this.markup) {
 				this.drawMarkup();
 			}
@@ -213,21 +221,22 @@ export class TimelineComponent implements OnInit {
 		}
 	}
 
-	checkDiffranceInTimeRange(activeMarkup) {
-		const timeLineRange = this.overlaysService.getTimeStateByOverlay(activeMarkup, this.timeLineRange);
-		if (timeLineRange.start.getTime() !== this.timeLineRange.start.getTime() ||
-			timeLineRange.end.getTime() !== this.timeLineRange.end.getTime()
-		) {
-			this.timeLineRange = timeLineRange;
-			this.initEventDropsSequence();
+	checkDiffranceInTimeRange(newMarkUp: ExtendMap<MarkUpClass, MarkUpData>) {
+		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
+		if (!newActive || !newActive.length) {
+			return;
 		}
-	}
-
-	setTimeLineRangeFromDrops() {
-		this.timeLineRange = {
-			start: this.chart.scale().domain()[0],
-			end: this.chart.scale().domain()[1]
-		};
+		const newActiveId = newActive[0];
+		if (!this.oldActiveId || this.oldActiveId !== newActiveId) {
+			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
+			if (timeLineRange.start.getTime() !== this.configuration.range.start.getTime() ||
+				timeLineRange.end.getTime() !== this.configuration.range.end.getTime()
+			) {
+				this.configuration.range = timeLineRange;
+				this.initEventDropsSequence();
+			}
+		}
+		this.oldActiveId = newActiveId;
 	}
 
 	initEventDrop(): void {

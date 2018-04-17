@@ -24,15 +24,6 @@ import { overlaysStatusMessages } from '../reducers/index';
 @Injectable()
 export class OverlaysEffects {
 
-	/**
-	 * @type Effect
-	 * @name onRedrawTimeline$
-	 * @ofType RedrawTimelineAction
-	 */
-	@Effect({ dispatch: false })
-	onRedrawTimeline$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
-		.share();
 
 	/**
 	 * @type Effect

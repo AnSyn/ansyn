@@ -205,7 +205,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
-			let dropsMarkUpCloneToSet = _.clone(state.dropsMarkUp);
+			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
 			return {
 				...state, dropsMarkUp: dropsMarkUpCloneToSet

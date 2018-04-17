@@ -23,7 +23,7 @@ import { Actions } from '@ngrx/effects';
 import { AnnotationContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
@@ -51,9 +51,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.pluck<ILayerState, boolean>('displayAnnotationsLayer')
 		.distinctUntilChanged();
 
-	annotationFlag$ = this.toolsState$
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.map((flags) => flags.get(toolsFlags.annotations))
+	annotationFlag$ = this.store$.select(selectSubMenu)
+		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
 		.distinctUntilChanged();
 
 	isActiveMap$ = this.mapState$

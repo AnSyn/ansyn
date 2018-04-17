@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, SubMenuEnum, toolsFlags, toolsStateSelector, selectSubMenu } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
-import { ToggleAnnotations, SetSubMenu } from '../actions/tools.actions';
+import { SetSubMenu } from '../actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -89,7 +89,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.store.dispatch(new ToggleAnnotations(false));
 		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
@@ -117,24 +116,17 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	toggleSubMenu(subMenu: SubMenuEnum) {
 		// update new state of expandedSubMenu;
 		const lastExpandedSubMenu = this.subMenu;
-		this.store.dispatch(new SetSubMenu((subMenu !== this.subMenu) ? subMenu : null));
+		const value = (subMenu !== this.subMenu) ? subMenu : null;
+			this.store.dispatch(new SetSubMenu(value));
 		// if toggle goto - dispatch;
 		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
 			this.store.dispatch(new GoToExpandAction(this.subMenu === SubMenuEnum.goTo));
-		}
-		// if toggle annotations - treat annotations toggle
-		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations) {
-			this.toggleAnnotationMenu(this.subMenu === SubMenuEnum.annotations);
 		}
 	}
 
 	onAnimation() {
 		this.store.dispatch(new GoToExpandAction(false));
 		this.store.dispatch(new SetSubMenu(null));
-	}
-
-	toggleAnnotationMenu(subMenuOpen) {
-		this.store.dispatch(new ToggleAnnotations(subMenuOpen));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {

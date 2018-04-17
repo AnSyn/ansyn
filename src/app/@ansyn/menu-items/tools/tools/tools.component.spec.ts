@@ -4,9 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { SubMenuEnum } from '@ansyn/menu-items/tools/tools/tools.component';
-import { toolsFlags } from '@ansyn/menu-items';
-import { ToggleAnnotations } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 
 
 describe('ToolsComponent', () => {
@@ -86,20 +84,10 @@ describe('ToolsComponent', () => {
 		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
 	});
 
-	it('toogle annotation menu open', () => {
-		component.toggleAnnotationMenu(true);
-		expect(store.dispatch).toHaveBeenCalledWith(new ToggleAnnotations(true));
-	});
-
-	it('toogle annotation menu close', () => {
-		component.toggleAnnotationMenu(false);
-		expect(store.dispatch).toHaveBeenCalledWith(new ToggleAnnotations(false));
-	});
-
 	it('isExpand should compare between expandedSubMenu to input', () => {
-		component.expandedSubMenu = SubMenuEnum.annotations;
+		component.subMenu = SubMenuEnum.annotations;
 		expect(component.isExpand(SubMenuEnum.annotations)).toBeTruthy();
 		expect(component.isExpand(SubMenuEnum.goTo)).toBeFalsy();
-		component.expandedSubMenu = null;
+		component.subMenu = null;
 	});
 });

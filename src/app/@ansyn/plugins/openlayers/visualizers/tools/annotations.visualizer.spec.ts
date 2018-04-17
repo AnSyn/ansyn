@@ -67,7 +67,7 @@ describe('AnnotationsVisualizer', () => {
 
 		it('should clearEntities if displayAnnotationsLayer = false', () => {
 			spyOn(annotationsVisualizer, 'clearEntities');
-			annotationsVisualizer.onAnnotationsChange([{}, false, true, true]);
+			annotationsVisualizer.onAnnotationsChange([{}, false, false, true]);
 			expect(annotationsVisualizer.clearEntities).toHaveBeenCalled();
 		});
 

@@ -17,7 +17,7 @@ import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState } from '@ansyn/core';
+import { coreStateSelector, ICoreState, UpdateOverlaysCountAction } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { overlaysStatusMessages } from '../reducers/index';
 
@@ -105,6 +105,12 @@ export class OverlaysEffects {
 		.map(([action, overlays]: [Action, IOverlaysState]) => {
 			return OverlaysService.parseOverlayDataForDisplay(overlays);
 		});
+
+	@Effect()
+	dropsCount$: Observable<UpdateOverlaysCountAction> = this.drops$
+		.filter(Boolean)
+		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IOverlaysState>,

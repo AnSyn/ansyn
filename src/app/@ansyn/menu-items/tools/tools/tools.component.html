@@ -61,7 +61,7 @@
 		</ansyn-overlays-display-mode>
 	</div>
 
-	<div class="user-annotations" [class.active]="userAnnotationsToolOpen">
+	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
 		<button tooltip-class="right"
 				tooltip-value="Annotations"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"

@@ -5,10 +5,11 @@ import { MenuActionTypes } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
-import { GoToExpandAction, SetAutoCloseMenu, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { GoToExpandAction, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 
 @Injectable()
 export class MenuAppEffects {
@@ -41,13 +42,16 @@ export class MenuAppEffects {
 	/**
 	 * @type Effect
 	 * @name autoCloseMenu$
-	 * @ofType SetAutoCloseMenu
+	 * @ofType annotationFlag$
 	 * @action SetClickOutside
 	 */
 	@Effect()
-	autoCloseMenu$: Observable<SetClickOutside> = this.actions$
-		.ofType<SetAutoCloseMenu>(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
-		.map(({ payload }) => new SetClickOutside(payload));
+	autoCloseMenu$: Observable<SetClickOutside> = this.store$
+		.select(toolsStateSelector)
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.map((flags) => flags.get(toolsFlags.annotations))
+		.distinctUntilChanged()
+		.map((annotationsFlag: boolean) => new SetClickOutside(!annotationsFlag));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

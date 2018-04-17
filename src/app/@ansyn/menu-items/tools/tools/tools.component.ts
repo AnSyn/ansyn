@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	GoToExpandAction,
-	SetAnnotationMode,
-	SetAutoCloseMenu,
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	StartMouseShadow,
@@ -31,7 +29,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public subMenuEnum = SubMenuEnum;
 	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
-	public userAnnotationsToolOpen = false;
 	public flags: Map<toolsFlags, boolean>;
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
@@ -128,16 +125,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleAnnotationMenu(subMenuOpen) {
-
-		// send event to the store that saying the annotation option is enabled
-		if (subMenuOpen) {
-			this.store.dispatch(new ToggleAnnotations(true));
-			this.store.dispatch(new SetAutoCloseMenu(false));
-		} else {
-			this.store.dispatch(new ToggleAnnotations(false));
-			this.store.dispatch(new SetAutoCloseMenu(true));
-			this.store.dispatch(new SetAnnotationMode());
-		}
+		this.store.dispatch(new ToggleAnnotations(subMenuOpen));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {

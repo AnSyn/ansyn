@@ -19,7 +19,6 @@ import { SetPinLocationModeAction, ToolsActionsTypes } from '@ansyn/menu-items';
 
 export class IconVisualizer extends RegionVisualizer {
 
-	// If pin-location mode, disable singleClickEvent
 	updatePinLocationAction$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
 		.do((action: SetPinLocationModeAction) => {
@@ -40,6 +39,10 @@ export class IconVisualizer extends RegionVisualizer {
 		.do(() => {
 			this.createSingleClickEvent();
 		});
+
+	onExitPinPointSearch: Observable<any> = this.flags$
+		.filter((flags) => !Boolean(flags.get(statusBarFlagsItemsEnum.pinPointSearch)))
+		.do(() => this.removeSingleClickEvent());
 
 	_iconSrc: Style = new Style({
 		image: new Icon({
@@ -90,7 +93,8 @@ export class IconVisualizer extends RegionVisualizer {
 		this.subscriptions.push(
 			this.contextMenuClick$.subscribe(),
 			this.pinpointSearchActive$.subscribe(),
-			this.updatePinLocationAction$.subscribe()
+			this.updatePinLocationAction$.subscribe(),
+			this.onExitPinPointSearch.subscribe()
 		);
 	}
 

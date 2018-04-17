@@ -8,11 +8,9 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
+import { IToolsState, SubMenuEnum, toolsFlags, toolsStateSelector, selectSubMenu } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
-import { ToggleAnnotations } from '@ansyn/menu-items/tools/actions/tools.actions';
-
-export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+import { ToggleAnnotations, SetSubMenu } from '../actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -26,8 +24,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged();
 	imageProcessInitParams = null;
 	isImageControlActive = false;
-	public subMenuEnum = SubMenuEnum;
-	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
@@ -36,6 +32,15 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged();
+
+	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
+	subMenu: SubMenuEnum;
+;
+	subscribers = [];
+
+	get subMenuEnum() {
+		return SubMenuEnum;
+	}
 
 	get isGeoOptionsDisabled() {
 		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
@@ -67,21 +72,25 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.flags$.subscribe(_flags => {
-			this.flags = _flags;
-		});
-		this.gotoExpand$.subscribe(_gotoExpand => {
-			if (_gotoExpand) {
-				this.expandedSubMenu = SubMenuEnum.goTo;
-			}
-		});
-		this.manualImageProcessingParams$.subscribe((processParams) => {
-			this.imageProcessInitParams = processParams;
-		});
+		this.subscribers.push(
+			this.subMenu$.subscribe(),
+			this.flags$.subscribe(_flags => {
+				this.flags = _flags;
+			}),
+			this.gotoExpand$.subscribe(_gotoExpand => {
+				if (_gotoExpand) {
+					this.store.dispatch(new SetSubMenu(SubMenuEnum.goTo));
+				}
+			}),
+			this.manualImageProcessingParams$.subscribe((processParams) => {
+				this.imageProcessInitParams = processParams;
+			})
+		);
 	}
 
 	ngOnDestroy() {
 		this.store.dispatch(new ToggleAnnotations(false));
+		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
 	toggleShadowMouse() {
@@ -107,21 +116,21 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
 		// update new state of expandedSubMenu;
-		const lastExpandedSubMenu = this.expandedSubMenu;
-		this.expandedSubMenu = (subMenu !== this.expandedSubMenu) ? subMenu : null;
+		const lastExpandedSubMenu = this.subMenu;
+		this.store.dispatch(new SetSubMenu((subMenu !== this.subMenu) ? subMenu : null));
 		// if toggle goto - dispatch;
 		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
-			this.store.dispatch(new GoToExpandAction(this.expandedSubMenu === SubMenuEnum.goTo));
+			this.store.dispatch(new GoToExpandAction(this.subMenu === SubMenuEnum.goTo));
 		}
 		// if toggle annotations - treat annotations toggle
 		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations) {
-			this.toggleAnnotationMenu(this.expandedSubMenu === SubMenuEnum.annotations);
+			this.toggleAnnotationMenu(this.subMenu === SubMenuEnum.annotations);
 		}
 	}
 
 	onAnimation() {
 		this.store.dispatch(new GoToExpandAction(false));
-		this.expandedSubMenu = null;
+		this.store.dispatch(new SetSubMenu(null));
 	}
 
 	toggleAnnotationMenu(subMenuOpen) {
@@ -129,6 +138,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {
-		return this.expandedSubMenu === subMenu;
+		return this.subMenu === subMenu;
 	}
 }

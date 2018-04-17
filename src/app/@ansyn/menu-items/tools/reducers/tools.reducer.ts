@@ -1,6 +1,6 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 export enum toolsFlags {
@@ -14,6 +14,8 @@ export enum toolsFlags {
 	isMeasureToolActive = 'isMeasureToolActive'
 }
 
+export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+
 export interface AnnotationProperties {
 	strokeWidth?: number;
 	strokeColor?: string;
@@ -22,6 +24,7 @@ export interface AnnotationProperties {
 
 export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
+	subMenu: SubMenuEnum;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	gotoExpand: boolean;
@@ -35,6 +38,7 @@ export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
 		[toolsFlags.geoRegisteredOptionsEnabled, true],
 	]),
+	subMenu: undefined,
 	activeCenter: [0, 0],
 	gotoExpand: false,
 	annotationMode: undefined,
@@ -162,9 +166,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
+		case ToolsActionsTypes.SET_SUB_MENU:
+			return { ...state, subMenu: action.payload };
+
 		default:
 			return state;
 
 	}
 }
 
+export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);

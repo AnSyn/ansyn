@@ -6,6 +6,7 @@ import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { SubMenuEnum } from '@ansyn/menu-items/tools/tools/tools.component';
 import { toolsFlags } from '@ansyn/menu-items';
+import { ToggleAnnotations } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 
 describe('ToolsComponent', () => {
@@ -86,19 +87,13 @@ describe('ToolsComponent', () => {
 	});
 
 	it('toogle annotation menu open', () => {
-		component.userAnnotationsToolOpen = false;
 		component.toggleAnnotationMenu(true);
-		const args = store.dispatch['calls'].mostRecent();
-		expect(store.dispatch).toHaveBeenCalledTimes(3);
-		expect(args.args[0].payload.operation).toBe('show');
+		expect(store.dispatch).toHaveBeenCalledWith(new ToggleAnnotations(true));
 	});
 
 	it('toogle annotation menu close', () => {
-		component.userAnnotationsToolOpen = true;
 		component.toggleAnnotationMenu(false);
-		const args = store.dispatch['calls'].mostRecent();
-		expect(store.dispatch).toHaveBeenCalledTimes(4);
-		expect(args.args[0].payload.operation).toBe('hide');
+		expect(store.dispatch).toHaveBeenCalledWith(new ToggleAnnotations(false));
 	});
 
 	it('isExpand should compare between expandedSubMenu to input', () => {

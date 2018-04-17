@@ -1,5 +1,5 @@
 import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
-import { AnnotationClose, AnnotationOpen, AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode, ToggleAnnotations } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
 
 describe('ToolsReducer', () => {
@@ -8,16 +8,16 @@ describe('ToolsReducer', () => {
 		expect(toolsInitialState.flags.get(toolsFlags.geoRegisteredOptionsEnabled)).toBe(true);
 	});
 
-	it('Check ANNOTATION_OPEN', () => {
-		const action = new AnnotationOpen(true);
+	it('Check TOGGLE_ANNOTATIONS - true', () => {
+		const action = new ToggleAnnotations(true);
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get(toolsFlags.annotations)).toBe(true);
+		expect(result.flags.get(toolsFlags.annotations)).toBeTruthy();
 	});
 
-	it('Check ANNOTATION_OPEN', () => {
-		const action = new AnnotationClose(false);
+	it('Check TOGGLE_ANNOTATIONS - false', () => {
+		const action = new ToggleAnnotations(false);
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get(toolsFlags.annotations)).toBe(false);
+		expect(result.flags.get(toolsFlags.annotations)).toBeFalsy();
 	});
 
 	it('Check SET_ANNOTATION_MODE', () => {

@@ -28,7 +28,6 @@ export const ToolsActionsTypes = {
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
 	FLAGS: {
 		TOGGLE_ANNOTATIONS: type('TOGGLE_ANNOTATIONS')
 	},
@@ -198,13 +197,6 @@ export class SetManualImageProcessingArguments implements Action {
 	};
 }
 
-export class SetAutoCloseMenu implements Action {
-	type = ToolsActionsTypes.SET_AUTOCLOSE_MENU;
-
-	constructor(public payload: boolean) {
-	}
-}
-
 export class ToggleAnnotations implements Action {
 	type = ToolsActionsTypes.FLAGS.TOGGLE_ANNOTATIONS;
 
@@ -239,7 +231,6 @@ export type ToolsActions =
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetManualImageProcessingArguments
 	| ToggleAnnotations
-	| SetAutoCloseMenu
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState;

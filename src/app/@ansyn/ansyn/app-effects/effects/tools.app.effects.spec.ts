@@ -42,7 +42,6 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { BackToWorldView, ImageManualProcessArgs } from '@ansyn/core';
-import { HideAnnotationAction, ShowAnnotationAction } from '@ansyn/menu-items';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -296,19 +295,6 @@ describe('ToolsAppEffects', () => {
 			const expectedResults = cold('--b--', { b: new SetActiveOverlaysFootprintModeAction(<any>'whatever') });
 			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
 		});
-	});
-
-	describe('onActiveMapChangesDrawAnnotation$', () => {
-		it('shuold "show" active and "remove" others, while displayAnnotationsLayer is false and annotations flag is true', () => {
-			layerState.displayAnnotationsLayer = false;
-			toolsState.flags.set(toolsFlags.annotations, true);
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-			const expectedResults = cold('--(ab)--', {
-				a: new ShowAnnotationAction({ relevantMaps: 'active' }),
-				b: new HideAnnotationAction({ relevantMaps: 'others' })
-			});
-			expect(toolsAppEffects.onActiveMapChangesDrawAnnotation$).toBeObservable(expectedResults);
-		})
 	});
 
 	describe('backToWorldView', () => {

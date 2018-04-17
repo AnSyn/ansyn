@@ -339,20 +339,21 @@ export class MapAppEffects {
 			}
 		)
 		.mergeMap(({ actives, displayed }) => [
-			new SetMarkUp({
-					classToSet: MarkUpClass.active,
-					dataToSet: {
-						overlaysIds: actives
+				new SetMarkUp({
+						classToSet: MarkUpClass.active,
+						dataToSet: {
+							overlaysIds: actives
+						}
 					}
-				}
-			),
-			new SetMarkUp({
-				classToSet: MarkUpClass.displayed,
-				dataToSet: {
-					overlaysIds: displayed
-				}
-			}
-		]);
+				),
+				new SetMarkUp({
+					classToSet: MarkUpClass.displayed,
+					dataToSet: {
+						overlaysIds: displayed
+					}
+				})
+			]
+		);
 
 	/**
 	 * @type Effect

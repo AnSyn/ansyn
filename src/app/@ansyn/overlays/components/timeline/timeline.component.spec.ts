@@ -9,6 +9,7 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overl
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
+import { LoggerService } from '@ansyn/core';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -123,7 +124,11 @@ describe('TimelineComponent', () => {
 			providers: [OverlaysService, OverlaysEffects, Actions, BaseOverlaySourceProvider, {
 				provide: OverlaysConfig,
 				useValue: {}
-			}
+			},
+				{
+					provide: LoggerService,
+					useValue: { error: (some) => null }
+	},
 			],
 			declarations: [TimelineComponent],
 			imports: [

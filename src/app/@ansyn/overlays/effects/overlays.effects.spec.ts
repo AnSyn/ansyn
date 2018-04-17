@@ -13,7 +13,7 @@ import {
 	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
 	overlaysStateSelector
 } from '../reducers/overlays.reducer';
-import { BaseOverlaySourceProvider, IFetchParams, RedrawTimelineAction } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { coreInitialState, coreStateSelector, LoggerService } from '@ansyn/core';
@@ -113,20 +113,13 @@ describe('Overlays Effects ', () => {
 		overlaysService = _overlaysService;
 	}));
 
-	it('effect - onRedrawTimeline$', () => {
-		const action = new RedrawTimelineAction();
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: action });
-		expect(overlaysEffects.onRedrawTimeline$).toBeObservable(expectedResults);
-	});
 
 	it('it should load all the overlays', () => {
 		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
-		const expectedResults = cold('--(ab)--', {
-			a: new LoadOverlaysSuccessAction(tmp),
-			b: new SetOverlaysCountAction(tmp.length)
+		const expectedResults = cold('--(a)--', {
+			a: new LoadOverlaysSuccessAction(tmp)
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});
@@ -174,3 +167,5 @@ describe('Overlays Effects ', () => {
 	});
 
 });
+
+

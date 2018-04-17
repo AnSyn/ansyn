@@ -2,7 +2,7 @@ import Draw from 'ol/interaction/draw';
 import { StatusBarActionsTypes, statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { Actions } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { SetOverlaysCriteriaAction } from 'app/@ansyn/core/index';
 import { CaseRegionState } from 'app/@ansyn/core/index';
@@ -13,10 +13,12 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
+import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
-	drawInteractionHandler: Draw;
 
 	mapState$ = this.store$.select(mapStateSelector);
 
@@ -29,20 +31,31 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
-
 	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.isPolygonSearch$)
 		.do(this.onActiveMapChange.bind(this));
+
+	drawInterrupted$: Observable<any> = this.actions$
+		.ofType<Action>(
+			MenuActionTypes.SELECT_MENU_ITEM,
+			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
+			CoreActionTypes.SET_LAYOUT,
+			OverlaysActionTypes.SELECT_OVERLAY)
+		.withLatestFrom(this.isPolygonSearch$, this.isActiveMap$)
+		.filter(([action, isPolygonSearch, isActiveMap]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isActiveMap)
+		.do(() => {
+			this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+		});
 
 	resetInteraction$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
 		.filter(action => action.payload.key === statusBarFlagsItemsEnum.polygonSearch)
-		.withLatestFrom(this.flags$)
+		.withLatestFrom(this.flags$, this.isActiveMap$)
+		.filter(([action, flags, isActiveMap]: [UpdateStatusFlagsAction, Map<statusBarFlagsItemsEnum, boolean>, boolean]) => isActiveMap)
 		.do(([action, flags]) => {
-			this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+			this.removeDrawInteraction();
 			const isPolygonSearch = flags.get(statusBarFlagsItemsEnum.polygonSearch);
 			if (isPolygonSearch) {
-				this.createDrawEndEvent();
-				this.addInteraction(VisualizerInteractions.drawInteractionHandler, this.drawInteractionHandler);
+				this.createDrawInteraction();
 			}
 		});
 
@@ -72,13 +85,20 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		});
 	}
 
-	public createDrawEndEvent() {
-		return this.drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+	createDrawInteraction() {
+		const drawInteractionHandler = new Draw({
+			type: 'Polygon',
+			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
+			style: this.featureStyle.bind(this)
+		});
 
+		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
-	public removeDrawEndEvent() {
-		return this.drawInteractionHandler.un('drawend', this.onDrawEndEvent.bind(this));
+	public removeDrawInteraction() {
+		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+		this.clearEntities();
 	}
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
@@ -90,14 +110,10 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	onInit() {
 		super.onInit();
-		this.drawInteractionHandler = new Draw({
-			type: 'Polygon',
-			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
-			style: this.featureStyle.bind(this)
-		});
 		this.subscriptions.push(
 			this.resetInteraction$.subscribe(),
-			this.activeMapChange$.subscribe()
+			this.activeMapChange$.subscribe(),
+			this.drawInterrupted$.subscribe()
 		);
 	}
 
@@ -110,22 +126,20 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 			.do((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				this.store$.dispatch(new SetOverlaysCriteriaAction({ region: geoJsonFeature.geometry }));
+				this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
 			})
 			.subscribe();
 	}
 
 	onActiveMapChange([isActiveMap, isPolygonSearch]: [boolean, boolean]) {
-		if (isPolygonSearch) {
-			this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
-
-			if (isActiveMap) {
-				this.addInteraction(VisualizerInteractions.drawInteractionHandler, this.drawInteractionHandler);
-			}
+		this.removeDrawInteraction();
+		if (isPolygonSearch && isActiveMap) {
+			this.createDrawInteraction()
 		}
 	}
 
 	onDispose() {
-		this.removeDrawEndEvent();
+		this.removeDrawInteraction();
 		super.onDispose();
 	}
 }

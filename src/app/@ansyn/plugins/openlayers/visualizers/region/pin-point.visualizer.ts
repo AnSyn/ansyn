@@ -27,6 +27,10 @@ export class IconVisualizer extends RegionVisualizer {
 			}
 		});
 
+	isPinPointSearch$ = this.flags$
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.pinPointSearch))
+		.distinctUntilChanged();
+
 	contextMenuClick$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
 		.map((action: PinPointTriggerAction) => {
@@ -40,9 +44,6 @@ export class IconVisualizer extends RegionVisualizer {
 			this.createSingleClickEvent();
 		});
 
-	onExitPinPointSearch: Observable<any> = this.flags$
-		.filter((flags) => !Boolean(flags.get(statusBarFlagsItemsEnum.pinPointSearch)))
-		.do(() => this.removeSingleClickEvent());
 
 	_iconSrc: Style = new Style({
 		image: new Icon({
@@ -71,12 +72,15 @@ export class IconVisualizer extends RegionVisualizer {
 	public singleClickListener(e) {
 		this.iMap.projectionService
 			.projectAccurately({type: 'Point', coordinates: e.coordinate}, this.iMap)
-			.subscribe((point: Point) =>
+			.withLatestFrom(this.isPinPointSearch$)
+			.subscribe(([point, isPinPointSearch]: [Point, boolean]) =>
 			{
-				this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
-				const region = getPolygonByPointAndRadius(point.coordinates).geometry;
-				this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-				this.removeSingleClickEvent();
+				if (isPinPointSearch) {
+					this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+					const region = getPolygonByPointAndRadius(point.coordinates).geometry;
+					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+					this.removeSingleClickEvent();
+				}
 			});
 	}
 
@@ -94,7 +98,7 @@ export class IconVisualizer extends RegionVisualizer {
 			this.contextMenuClick$.subscribe(),
 			this.pinpointSearchActive$.subscribe(),
 			this.updatePinLocationAction$.subscribe(),
-			this.onExitPinPointSearch.subscribe()
+			this.isPinPointSearch$.subscribe()
 		);
 	}
 

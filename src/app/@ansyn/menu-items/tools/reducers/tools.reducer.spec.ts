@@ -1,5 +1,5 @@
 import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
-import { AnnotationSetProperties, SetAnnotationMode, ToggleAnnotations } from '../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
 
 describe('ToolsReducer', () => {

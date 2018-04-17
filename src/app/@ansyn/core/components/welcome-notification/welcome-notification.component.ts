@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
+import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
+import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
 import { CoreConfig, ICoreConfig } from '../../models';
 
 @Component({

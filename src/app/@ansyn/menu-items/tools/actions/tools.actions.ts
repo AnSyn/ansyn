@@ -5,16 +5,6 @@ import { AnnotationProperties } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ImageManualProcessArgs } from '@ansyn/core';
 
-export type AnnotationAgentOperation = 'show'| 'hide';
-
-export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
-
-export interface AnnotationVisualizerAgentPayload {
-	operation: AnnotationAgentOperation;
-	relevantMaps: AnnotationAgentRelevantMap;
-}
-
-
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
 	STOP_MOUSE_SHADOW: type('[Tools] stop mouse shadow'),
@@ -37,12 +27,10 @@ export const ToolsActionsTypes = {
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
-	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
 	FLAGS: {
-		ANNOTATION_OPEN: type('ANNOTATION_OPEN'),
-		ANNOTATION_CLOSE: type('ANNOTATION_CLOSE')
+		TOGGLE_ANNOTATIONS: type('TOGGLE_ANNOTATIONS')
 	},
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -210,13 +198,6 @@ export class SetManualImageProcessingArguments implements Action {
 	};
 }
 
-export class AnnotationVisualizerAgentAction implements Action {
-	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
-
-	constructor(public payload: AnnotationVisualizerAgentPayload) {
-	}
-}
-
 export class SetAutoCloseMenu implements Action {
 	type = ToolsActionsTypes.SET_AUTOCLOSE_MENU;
 
@@ -224,16 +205,8 @@ export class SetAutoCloseMenu implements Action {
 	}
 }
 
-export class AnnotationOpen implements Action {
-	type = ToolsActionsTypes.FLAGS.ANNOTATION_OPEN;
-
-	constructor(public payload: boolean) {
-
-	}
-}
-
-export class AnnotationClose implements Action {
-	type = ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE;
+export class ToggleAnnotations implements Action {
+	type = ToolsActionsTypes.FLAGS.TOGGLE_ANNOTATIONS;
 
 	constructor(public payload: boolean) {
 
@@ -265,9 +238,7 @@ export type ToolsActions =
 	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetManualImageProcessingArguments
-	| AnnotationVisualizerAgentAction
-	| AnnotationOpen
-	| AnnotationClose
+	| ToggleAnnotations
 	| SetAutoCloseMenu
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore

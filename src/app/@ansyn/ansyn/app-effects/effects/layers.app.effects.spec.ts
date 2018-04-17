@@ -14,7 +14,6 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	casesFeatureKey, CasesReducer, casesStateSelector, ICasesState,
 	initialCasesState
@@ -23,6 +22,7 @@ import { cloneDeep } from 'lodash';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IAppState } from '../app.effects.module';
 import 'rxjs/add/observable/of';
+import { HideAnnotationAction, ShowAnnotationAction } from '@ansyn/menu-items';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -74,7 +74,7 @@ describe('LayersAppEffects', () => {
 		it('displayAnnotationLayer - true', () => {
 			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(true) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'all' })
+				b: new ShowAnnotationAction({ relevantMaps: 'all' })
 			});
 			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});
@@ -82,7 +82,7 @@ describe('LayersAppEffects', () => {
 		it('displayAnnotationLayer - false', () => {
 			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(false) });
 			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'all' })
+				b: new HideAnnotationAction({ relevantMaps: 'all' })
 			});
 			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
 		});

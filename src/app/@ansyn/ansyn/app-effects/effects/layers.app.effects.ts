@@ -2,13 +2,12 @@ import {
 	BeginLayerTreeLoadAction, LayersActionTypes, SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -28,20 +27,6 @@ export class LayersAppEffects {
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
 		.map(() => new BeginLayerTreeLoadAction());
-
-	/**
-	 * @type Effect
-	 * @name showAnnotationsLayer$,
-	 * @ofType ShowAnnotationsLayer
-	 * @action AnnotationVisualizerAgentAction
-	 */
-	@Effect()
-	toggleAnnotationsLayer$: Observable<any> = this.actions$
-		.ofType<ToggleDisplayAnnotationsLayer>(LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER)
-		.map(({ payload }: ToggleDisplayAnnotationsLayer) => new AnnotationVisualizerAgentAction({
-			operation: payload ? 'show' : 'hide', relevantMaps: 'all'
-		}));
-
 
 	/**
 	 * @type Effect

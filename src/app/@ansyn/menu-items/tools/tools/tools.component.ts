@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	AnnotationClose,
-	AnnotationOpen,
-	AnnotationVisualizerAgentAction,
 	GoToExpandAction,
 	SetAnnotationMode,
 	SetAutoCloseMenu,
@@ -15,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { ToggleAnnotations } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
@@ -86,7 +84,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.store.dispatch(new AnnotationClose(false));
+		this.store.dispatch(new ToggleAnnotations(false));
 	}
 
 	toggleShadowMouse() {
@@ -133,20 +131,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 		// send event to the store that saying the annotation option is enabled
 		if (subMenuOpen) {
-			this.store.dispatch(new AnnotationOpen(true));
+			this.store.dispatch(new ToggleAnnotations(true));
 			this.store.dispatch(new SetAutoCloseMenu(false));
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'show',
-				relevantMaps: 'active'
-			}));
 		} else {
-			this.store.dispatch(new AnnotationClose(false));
+			this.store.dispatch(new ToggleAnnotations(false));
 			this.store.dispatch(new SetAutoCloseMenu(true));
 			this.store.dispatch(new SetAnnotationMode());
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'hide',
-				relevantMaps: 'active'
-			}));
 		}
 	}
 

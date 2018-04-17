@@ -5,10 +5,6 @@ import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { MapFacadeService } from '../services/map-facade.service';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 
-export interface MapsProgress {
-	[key: string]: number
-}
-
 export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];

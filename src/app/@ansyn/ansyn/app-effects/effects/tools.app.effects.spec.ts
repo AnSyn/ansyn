@@ -24,7 +24,6 @@ import { Case } from '@ansyn/core/models/case.model';
 import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
 import { ActiveMapChangedAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import {
-	AnnotationVisualizerAgentAction,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	SetAutoImageProcessing,
@@ -43,6 +42,7 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { BackToWorldView, ImageManualProcessArgs } from '@ansyn/core';
+import { HideAnnotationAction, ShowAnnotationAction } from '@ansyn/menu-items';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -309,8 +309,8 @@ describe('ToolsAppEffects', () => {
 			toolsState.flags.set(toolsFlags.annotations, true);
 			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const expectedResults = cold('--(ab)--', {
-				a: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
-				b: new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })
+				a: new ShowAnnotationAction({ relevantMaps: 'active' }),
+				b: new HideAnnotationAction({ relevantMaps: 'others' })
 			});
 			expect(toolsAppEffects.onActiveMapChangesDrawAnnotation$).toBeObservable(expectedResults);
 		})

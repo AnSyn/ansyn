@@ -42,7 +42,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: AnnotationsVisualizer,
-		deps: [Store, Actions]
+		deps: [Store]
 	},
 	{
 		provide: BaseImageryPlugin,

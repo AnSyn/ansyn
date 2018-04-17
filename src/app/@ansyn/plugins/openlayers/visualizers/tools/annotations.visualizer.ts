@@ -80,10 +80,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
 
-	onActiveMapChange$ = this.isActiveMap$
-		.filter(() => Boolean(this.mode))
-		.do(this.onActiveChange.bind(this));
-
 	modeDictionary = {
 		Arrow: {
 			type: 'LineString',
@@ -146,26 +142,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return Observable.of(true);
 	}
 
-	onActiveChange(isActiveMap: boolean) {
-		// if (isActiveMap) {
-		// 	// this.onModeChange(this.mode)
-		// } else {
-		// 	this.removeDrawInteraction();
-		// }
-	}
-
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
 			this.annoatationModeChange$.subscribe(),
 			this.annotationPropertiesChange$.subscribe(),
-			this.onAnnotationsChange$.subscribe(),
-			this.onActiveMapChange$.subscribe()
+			this.onAnnotationsChange$.subscribe()
 		);
 	}
 
-	constructor(public store$: Store<any>,
-				public actions$: Actions) {
+	constructor(public store$: Store<any>) {
 
 		super(null, {
 			initial: {

@@ -4,6 +4,7 @@ import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import { AnnotationProperties } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ImageManualProcessArgs } from '@ansyn/core';
+import { SubMenuEnum } from '@ansyn/menu-items';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -28,6 +29,7 @@ export const ToolsActionsTypes = {
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
+	SET_SUB_MENU: type('SET_SUB_MENU'),
 	FLAGS: {
 		TOGGLE_ANNOTATIONS: type('TOGGLE_ANNOTATIONS')
 	},
@@ -213,6 +215,14 @@ export class AnnotationSetProperties implements Action {
 	}
 }
 
+export class SetSubMenu implements Action {
+	type = ToolsActionsTypes.SET_SUB_MENU;
+
+	constructor(public payload: SubMenuEnum) {
+
+	}
+}
+
 export type ToolsActions =
 	StartMouseShadow
 	| StopMouseShadow
@@ -233,4 +243,5 @@ export type ToolsActions =
 	| ToggleAnnotations
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
-	| SetMeasureDistanceToolState;
+	| SetMeasureDistanceToolState
+ 	| SetSubMenu;

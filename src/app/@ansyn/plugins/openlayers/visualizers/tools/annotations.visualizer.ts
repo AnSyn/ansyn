@@ -1,7 +1,7 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
-import color from 'ol/color';
+import olColor from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
@@ -17,13 +17,12 @@ import { AnnotationsContextMenuEvent } from '@ansyn/core/index';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { IVisualizerEntity } from '@ansyn/imagery/index';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
-import { Actions } from '@ngrx/effects';
-import { AnnotationContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import { IToolsState, selectSubMenu, SubMenuEnum, toolsStateSelector } from '@ansyn/menu-items';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
@@ -171,25 +170,22 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	protected resetInteractions(): void {
+	resetInteractions(): void {
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
 	}
 
 	createContextMenuInteraction() {
-		// const condition = (event) => event.originalEvent.which === 3 && event.type === 'pointerdown';
 		const contextMenuInteraction = new Select(<any>{
 			condition: condition.click,
 			layers: [this.vector],
 			hitTolerance: 10
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
-
 		return contextMenuInteraction;
 	}
 
 	onSelectFeature(data) {
-		// const originalEventTarget = data.mapBrowserEvent.originalEvent.target;
 		data.target.getFeatures().clear();
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
@@ -208,8 +204,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeFillColor(fillColor) {
-		const [r, g, b] = [...(<any>color).asArray(fillColor)];
-		const rgbaColor = (<any>color).asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
+		const [r, g, b] = Array.from(olColor.asArray(fillColor));
+		const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
 		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
 	}
 
@@ -327,6 +323,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	onDispose(): void {
+		super.onDispose();
 		this.removeDrawInteraction();
 	}
 

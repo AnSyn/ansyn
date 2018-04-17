@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Actions } from '@ngrx/effects';
-import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
+import { MapActionTypes, SetProgressBarAction } from '../../actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imagery-tile-progress',

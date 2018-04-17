@@ -143,16 +143,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE:
-
+		case ToolsActionsTypes.FLAGS.TOGGLE_ANNOTATIONS:
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.annotations, false);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.FLAGS.ANNOTATION_OPEN:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.annotations, true);
+			tmpMap.set(toolsFlags.annotations, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:

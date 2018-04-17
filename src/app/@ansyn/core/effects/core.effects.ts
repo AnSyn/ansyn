@@ -3,8 +3,8 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ICoreState } from '../reducers/core.reducer';
 import { Observable } from 'rxjs/Observable';
-import { CoreActionTypes, SetWasWelcomeNotificationShownFlagAction } from '@ansyn/core';
-import { updateSession } from '@ansyn/core/services/core-session.service';
+import { CoreActionTypes, SetWasWelcomeNotificationShownFlagAction } from '../actions/core.actions';
+import { updateSession } from '../services/core-session.service';
 
 @Injectable()
 export class CoreEffects {

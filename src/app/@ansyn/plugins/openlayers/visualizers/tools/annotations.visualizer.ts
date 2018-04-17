@@ -24,19 +24,12 @@ import { AnnotationContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-f
 import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
-import { LayersActionTypes, SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
-import {
-	AnnotationVisualizerAgentAction,
-	AnnotationVisualizerAgentPayload, SetAnnotationMode, ToolsActionsTypes
-} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapInstanceChangedAction } from '@ansyn/map-facade';
-
-export interface AgentOperations {
-	[key: string]: (layerState: ILayerState) => Observable<boolean>
-}
+import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -49,6 +42,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	mapState$ = this.store$.select(mapStateSelector);
 	layersState$ = this.store$.select(layersStateSelector);
 	toolsState$ = this.store$.select(toolsStateSelector);
+	/* data */
+	annotationsLayer$: Observable<any> = this.layersState$
+		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer')
+		.distinctUntilChanged();
+
+	displayAnnotationsLayer$: Observable<any> = this.layersState$
+		.pluck<ILayerState, boolean>('displayAnnotationsLayer')
+		.distinctUntilChanged();
 
 	annotationFlag$ = this.toolsState$
 		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
@@ -57,77 +58,31 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	isActiveMap$ = this.mapState$
 		.pluck<IMapState, string>('activeMapId')
-		.map((activeMapId: string): boolean => activeMapId === this.mapId);
+		.map((activeMapId: string): boolean => activeMapId === this.mapId)
+		.distinctUntilChanged();
 
-	agentOperations: AgentOperations = {
-		show: ({ annotationsLayer }) => {
-			const entities = AnnotationsVisualizer.annotationsLayerToEntities(annotationsLayer);
-			return this.setEntities(entities);
-		},
-		hide: ({ displayAnnotationsLayer }) => {
-			if (!displayAnnotationsLayer) {
-				this.clearEntities();
-			}
-
-			return Observable.of(true);
-		}
-	};
-
-	cancelAnnotationEditMode$: Observable<any> = this.actions$
-		.ofType<Action>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.do(() => this.store$.dispatch(new SetAnnotationMode()));
-
-	annotationData$: Observable<any> = this.actions$
-		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.IMAGERY_PLUGINS_INITIALIZED)
-		.withLatestFrom(this.layersState$, this.annotationFlag$, this.isActiveMap$)
-		.filter(([action, layersState, annotationFlag, isActiveMap]: [Action, ILayerState, boolean, boolean]) => layersState.displayAnnotationsLayer || (isActiveMap && annotationFlag))
-		.mergeMap(([action, layersState]) => this.agentOperations.show(layersState));
-
-	annotationVisualizerAgent$: Observable<any> = this.actions$
-		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
-		.withLatestFrom(this.layersState$, this.mapState$, this.isActiveMap$)
-		.mergeMap(([action, layerState, mapsState, isActiveMap]: [AnnotationVisualizerAgentAction, ILayerState, IMapState, boolean]): any => {
-			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = action.payload;
-			switch (relevantMaps) {
-				case 'active':
-					if (isActiveMap) {
-						return this.agentOperations[operation](layerState);
-					}
-					break;
-				case 'all':
-					return this.agentOperations[operation](layerState);
-				case 'others':
-					if (!isActiveMap) {
-						return this.agentOperations[operation](layerState);
-					}
-					break;
-			}
-			return Observable.of(true);
-
-		});
-
-	changeMode$: Observable<any> = this.actions$
-		.ofType<Action>(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE)
-		.do(({ payload }: SetAnnotationMode) =>  this.toggleDrawInteraction(payload));
+	annotationMode$: Observable<AnnotationMode> = this.toolsState$
+		.pluck<IToolsState, AnnotationMode>('annotationMode')
+		.distinctUntilChanged();
 
 	annotationProperties$: Observable<any> = this.store$
 		.select(toolsStateSelector)
-		.pluck<IToolsState, AnnotationProperties>('annotationProperties')
-		.do(({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) => {
-			if (fillColor) {
-				this.changeFillColor(fillColor);
-			}
-			if (strokeWidth) {
-				this.changeStrokeWidth(strokeWidth);
-			}
-			if (strokeColor) {
-				this.changeStrokeColor(strokeColor);
-			}
-		});
+		.pluck<IToolsState, AnnotationProperties>('annotationProperties');
 
-	annotationsLayer$: Observable<any> = this.store$
-		.select(layersStateSelector)
-		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer');
+	/* events */
+	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
+		.do(this.onModeChange.bind(this));
+
+	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
+		.do(this.onAnnotationPropertiesChange.bind(this));
+
+	onAnnotationsChange$ = Observable
+		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
+		.mergeMap(this.onAnnotationsChange.bind(this));
+
+	onActiveMapChange$ = this.isActiveMap$
+		.filter(() => Boolean(this.mode))
+		.do(this.onActiveChange.bind(this));
 
 	modeDictionary = {
 		Arrow: {
@@ -148,7 +103,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
 
-	static annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
+	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
 			featureJson: feature,
@@ -156,14 +111,56 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}));
 	}
 
+	showAnnotation(annotationsLayer): Observable<any> {
+		const annotationsLayerEntities = this.annotationsLayerToEntities(annotationsLayer);
+
+		this.getEntities()
+			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
+			.forEach(({ id }) => this.removeEntity(id));
+
+		const entities = this.getEntities();
+
+		const entitiesToAdd = annotationsLayerEntities
+			.filter((entity) => !entities.some(({ id }) => id === entity.id));
+
+		return this.addOrUpdateEntities(entitiesToAdd);
+	}
+
+	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) {
+		if (fillColor) {
+			this.changeFillColor(fillColor);
+		}
+		if (strokeWidth) {
+			this.changeStrokeWidth(strokeWidth);
+		}
+		if (strokeColor) {
+			this.changeStrokeColor(strokeColor);
+		}
+	}
+
+	onAnnotationsChange([annotationsLayer, annotationFlag, displayAnnotationsLayer, isActiveMap]: [any, boolean, boolean, boolean]): Observable<any> {
+		if (displayAnnotationsLayer || (isActiveMap && annotationFlag)) {
+			return this.showAnnotation(annotationsLayer);
+		}
+		this.clearEntities();
+		return Observable.of(true);
+	}
+
+	onActiveChange(isActiveMap: boolean) {
+		// if (isActiveMap) {
+		// 	// this.onModeChange(this.mode)
+		// } else {
+		// 	this.removeDrawInteraction();
+		// }
+	}
+
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.annotationProperties$.subscribe(),
-			this.annotationVisualizerAgent$.subscribe(),
-			this.changeMode$.subscribe(),
-			this.cancelAnnotationEditMode$.subscribe(),
-			this.annotationData$.subscribe()
+			this.annoatationModeChange$.subscribe(),
+			this.annotationPropertiesChange$.subscribe(),
+			this.onAnnotationsChange$.subscribe(),
+			this.onActiveMapChange$.subscribe()
 		);
 	}
 
@@ -217,6 +214,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			featureId: id,
 			boundingRect
 		};
+		this.store$.dispatch(new SetAnnotationMode());
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 
@@ -254,8 +252,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-
-		this.removeDrawInteraction();
+		this.store$.dispatch(new SetAnnotationMode());
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any> geometry.clone();
 
@@ -286,9 +283,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
 	}
 
-	toggleDrawInteraction(mode: AnnotationMode) {
-		this.mode = mode === this.mode ? undefined : mode;
+	onModeChange([mode, isActiveMap]: [AnnotationMode, boolean]) {
 		this.removeDrawInteraction();
+
+		if (!isActiveMap) {
+			this.mode =  undefined;
+			return;
+		}
+
+		this.mode = mode === this.mode ? undefined : mode;
 
 		if (!this.mode) {
 			return;
@@ -336,6 +339,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometry = new MultiLineString([coordinates]);
 		}
 		return geometry;
+	}
+
+	onDispose(): void {
+		this.removeDrawInteraction();
 	}
 
 }

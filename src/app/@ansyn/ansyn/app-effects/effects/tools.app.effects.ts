@@ -17,7 +17,6 @@ import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	AnnotationVisualizerAgentAction,
 	DisableMouseShadow,
 	EnableMouseShadow,
 	GoToAction,
@@ -42,14 +41,12 @@ import {
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	CoreActionTypes, coreStateSelector, ICoreState, ImageManualProcessArgs, layoutOptions,
+	CoreActionTypes, ImageManualProcessArgs, layoutOptions,
 	SetLayoutAction
 } from '@ansyn/core';
-import { toolsFlags } from '@ansyn/menu-items';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
 
@@ -112,24 +109,6 @@ export class ToolsAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState))
 		.map((activeMap: CaseMapState) => new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
-
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesDrawAnnotation$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies tools, layers
-	 * @action AnnotationVisualizerAgentAction
-	 */
-	@Effect()
-	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
-		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get(toolsFlags.annotations))
-		.mergeMap(() => [
-			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
-			new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })
-		]);
 
 	/**
 	 * @type Effect

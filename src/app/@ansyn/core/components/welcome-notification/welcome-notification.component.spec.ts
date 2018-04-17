@@ -3,7 +3,7 @@ import { WelcomeNotificationComponent } from './welcome-notification.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { SetWasWelcomeNotificationShownFlagAction } from 'app/@ansyn/core/index';
+import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
 import { CoreConfig, ICoreConfig } from '@ansyn/core/models';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 

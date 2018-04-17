@@ -1,6 +1,6 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 
 @Injectable()

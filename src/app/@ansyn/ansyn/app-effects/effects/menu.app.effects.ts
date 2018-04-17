@@ -28,30 +28,30 @@ export class MenuAppEffects {
 			new RedrawTimelineAction(true)
 		]);
 
-	/**
-	 * @type Effect
-	 * @name onGoToExpand$
-	 * @ofType GoToExpandAction
-	 * @action SetClickOutside
-	 */
-	@Effect()
-	onGoToExpand$: Observable<SetClickOutside> = this.actions$
-		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
-		.map(({ payload }) => new SetClickOutside(!payload));
+	// /**
+	//  * @type Effect
+	//  * @name onGoToExpand$
+	//  * @ofType GoToExpandAction
+	//  * @action SetClickOutside
+	//  */
+	// @Effect()
+	// onGoToExpand$: Observable<SetClickOutside> = this.actions$
+	// 	.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
+	// 	.map(({ payload }) => new SetClickOutside(!payload));
 
-	/**
-	 * @type Effect
-	 * @name autoCloseMenu$
-	 * @ofType annotationFlag$
-	 * @action SetClickOutside
-	 */
-	@Effect()
-	autoCloseMenu$: Observable<SetClickOutside> = this.store$
-		.select(toolsStateSelector)
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.map((flags) => flags.get(toolsFlags.annotations))
-		.distinctUntilChanged()
-		.map((annotationsFlag: boolean) => new SetClickOutside(!annotationsFlag));
+	// /**
+	//  * @type Effect
+	//  * @name autoCloseMenu$
+	//  * @ofType annotationFlag$
+	//  * @action SetClickOutside
+	//  */
+	// @Effect()
+	// autoCloseMenu$: Observable<SetClickOutside> = this.store$
+	// 	.select(toolsStateSelector)
+	// 	.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+	// 	.map((flags) => flags.get(toolsFlags.annotations))
+	// 	.distinctUntilChanged()
+	// 	.map((annotationsFlag: boolean) => new SetClickOutside(!annotationsFlag));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

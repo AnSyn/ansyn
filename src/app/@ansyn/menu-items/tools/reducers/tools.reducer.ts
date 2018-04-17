@@ -4,7 +4,6 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
 export enum toolsFlags {
-	annotations = 'annotations',
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
 	shadowMouse = 'shadowMouse',
 	shadowMouseDisabled = 'shadowMouseDisabled',
@@ -145,11 +144,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.imageProcessingDisabled, true);
 			tmpMap.set(toolsFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.FLAGS.TOGGLE_ANNOTATIONS:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.annotations, action.payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:

@@ -93,10 +93,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.iMap.mapObject.getView().getRotation();
 	}
 
-	get drawInteractionHandler() {
-		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
-	}
-
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,

@@ -16,7 +16,6 @@ export const ToolsActionsTypes = {
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'), // Give better name
 	GO_TO_INPUT_CHANGED: type('GO_TO_INPUT_CHANGED'),
-	GO_TO_EXPAND: type('GO_TO_EXPAND'),
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
@@ -108,13 +107,6 @@ export class GoToAction implements Action {
 
 	constructor(public payload: number[]) {
 	};
-}
-
-export class GoToExpandAction implements Action {
-	type = ToolsActionsTypes.GO_TO_EXPAND;
-
-	constructor(public payload: boolean) {
-	}
 }
 
 export class GoToInputChangeAction implements Action {

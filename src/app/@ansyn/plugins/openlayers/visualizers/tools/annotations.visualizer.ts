@@ -171,6 +171,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	resetInteractions(): void {
+		this.store$.dispatch(new SetAnnotationMode());
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
 	}

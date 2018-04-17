@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	GoToExpandAction,
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	StartMouseShadow,
@@ -18,10 +17,6 @@ import { SetSubMenu } from '../actions/tools.actions';
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit, OnDestroy {
-
-	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
-		.pluck<IToolsState, boolean>('gotoExpand')
-		.distinctUntilChanged();
 	imageProcessInitParams = null;
 	isImageControlActive = false;
 	public displayModeOn = false;
@@ -77,11 +72,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.flags$.subscribe(_flags => {
 				this.flags = _flags;
 			}),
-			this.gotoExpand$.subscribe(_gotoExpand => {
-				if (_gotoExpand) {
-					this.store.dispatch(new SetSubMenu(SubMenuEnum.goTo));
-				}
-			}),
 			this.manualImageProcessingParams$.subscribe((processParams) => {
 				this.imageProcessInitParams = processParams;
 			})
@@ -114,16 +104,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
-		const lastExpandedSubMenu = this.subMenu;
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
 		this.store.dispatch(new SetSubMenu(value));
-		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
-			this.store.dispatch(new GoToExpandAction(this.subMenu === SubMenuEnum.goTo));
-		}
 	}
 
 	onAnimation() {
-		this.store.dispatch(new GoToExpandAction(false));
 		this.store.dispatch(new SetSubMenu(null));
 	}
 

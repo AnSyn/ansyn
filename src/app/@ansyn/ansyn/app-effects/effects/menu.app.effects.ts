@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes } from '@ansyn/menu';
+import { MenuActionTypes, SetClickOutside } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
-import { GoToExpandAction, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import { selectSubMenu } from '@ansyn/menu-items';
 
 @Injectable()
 export class MenuAppEffects {
@@ -28,30 +26,17 @@ export class MenuAppEffects {
 			new RedrawTimelineAction(true)
 		]);
 
-	// /**
-	//  * @type Effect
-	//  * @name onGoToExpand$
-	//  * @ofType GoToExpandAction
-	//  * @action SetClickOutside
-	//  */
-	// @Effect()
-	// onGoToExpand$: Observable<SetClickOutside> = this.actions$
-	// 	.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
-	// 	.map(({ payload }) => new SetClickOutside(!payload));
-
-	// /**
-	//  * @type Effect
-	//  * @name autoCloseMenu$
-	//  * @ofType annotationFlag$
-	//  * @action SetClickOutside
-	//  */
-	// @Effect()
-	// autoCloseMenu$: Observable<SetClickOutside> = this.store$
-	// 	.select(toolsStateSelector)
-	// 	.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-	// 	.map((flags) => flags.get(toolsFlags.annotations))
-	// 	.distinctUntilChanged()
-	// 	.map((annotationsFlag: boolean) => new SetClickOutside(!annotationsFlag));
+	/**
+	 * @type Effect
+	 * @name autoCloseMenu$
+	 * @ofType annotationFlag$
+	 * @action SetClickOutside
+	 */
+	@Effect()
+	autoCloseMenu$: Observable<SetClickOutside> = this.store$
+		.select(selectSubMenu)
+		.distinctUntilChanged()
+		.map((subMenu) => new SetClickOutside(!subMenu));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

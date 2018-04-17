@@ -40,7 +40,7 @@ import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer
 import {
 	GoToVisualizer,
 } from '@ansyn/plugins/openlayers/visualizers';
-import { SetPinLocationModeAction, toolsFlags } from '@ansyn/menu-items';
+import { selectSubMenu, SetPinLocationModeAction, SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/icon.visualizer';
@@ -124,7 +124,7 @@ export class VisualizersAppEffects {
 			this.store$.select(toolsStateSelector),
 			(action, mapState, toolState) => [action, mapState, toolState]
 		)
-		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
+		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.subMenu === SubMenuEnum.goTo)
 		.mergeMap(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
 			return Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
 				return this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
@@ -139,9 +139,9 @@ export class VisualizersAppEffects {
 	 */
 	@Effect({ dispatch: false })
 	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
+		.ofType(ToolsActionsTypes.SET_SUB_MENU)
 		.withLatestFrom(
-			this.store$.select(toolsStateSelector).pluck<IToolsState, boolean>('gotoExpand'),
+			this.store$.select(selectSubMenu).map((subMenu) => subMenu === SubMenuEnum.goTo),
 			this.store$.select(mapStateSelector),
 			this.store$.select(toolsStateSelector).pluck('activeCenter'),
 			(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]

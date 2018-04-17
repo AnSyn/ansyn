@@ -8,8 +8,8 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;

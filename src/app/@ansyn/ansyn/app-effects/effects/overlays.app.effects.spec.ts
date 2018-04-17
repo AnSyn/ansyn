@@ -22,12 +22,13 @@ import { casesFeatureKey, casesStateSelector, initialCasesState } from '@ansyn/m
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/status-bar';
 import {
-	initialMapState, mapFeatureKey, MapReducer, mapStateSelector, RemovePendingOverlayAction,
-	SetPendingOverlaysAction, SynchronizeMapsAction
+	initialMapState, MapReducer, RemovePendingOverlayAction, SetPendingOverlaysAction,
+	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
 import { overlaysInitialState } from '@ansyn/overlays';
+import { mapFeatureKey, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

@@ -12,10 +12,11 @@ import { Overlay } from '@ansyn/overlays';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class OverlaysAppEffects {

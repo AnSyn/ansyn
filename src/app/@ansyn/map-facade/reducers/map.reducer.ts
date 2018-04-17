@@ -1,17 +1,8 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { MapFacadeService } from '../services/map-facade.service';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
-
-export interface IMapState {
-	activeMapId: string;
-	mapsList: CaseMapState[];
-	isLoadingMaps: Map<string, string>,
-	pendingMapsCount: number; // number of maps to be opened
-	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
-}
+import { IMapState } from '@ansyn/map-facade/reducers/interfaces';
 
 export const initialMapState: IMapState = {
 	activeMapId: null,
@@ -21,9 +12,7 @@ export const initialMapState: IMapState = {
 	pendingOverlays: []
 };
 
-export const mapFeatureKey = 'map';
 
-export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureSelector<IMapState>(mapFeatureKey);
 
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 

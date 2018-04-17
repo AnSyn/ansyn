@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageryLoaderComponent } from './imagery-loader.component';
 import { StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
+import { MapReducer } from '@ansyn/map-facade';
 
 describe('ImageryLoaderComponent', () => {
 	let component: ImageryLoaderComponent;

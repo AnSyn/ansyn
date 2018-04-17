@@ -1,5 +1,4 @@
 import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Renderer2 } from '@angular/core';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
@@ -12,6 +11,7 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 export interface OverlayButton {
 	name: string;

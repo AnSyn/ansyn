@@ -30,7 +30,6 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
 	AnnotationRemoveFeature,
@@ -49,6 +48,7 @@ import {
 } from '@ansyn/core';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 
 @Injectable()

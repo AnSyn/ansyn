@@ -11,8 +11,8 @@ import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 
 @Injectable()

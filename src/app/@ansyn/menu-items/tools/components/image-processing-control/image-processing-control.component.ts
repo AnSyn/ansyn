@@ -6,9 +6,8 @@ import { IToolsConfig, toolsConfig } from '../../models';
 import { IImageProcParam } from '../../models/tools-config';
 import { ImageManualProcessArgs } from '@ansyn/core';
 import { toolsStateSelector } from '../../reducers/tools.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Subscription } from "rxjs/Subscription";
-import { IMapState } from "@ansyn/map-facade";
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 
 export interface IImageProcParamComp extends IImageProcParam {

@@ -8,7 +8,6 @@ import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ContextModule } from '@ansyn/context/context.module';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
@@ -24,6 +23,8 @@ import { ContextReducer } from '@ansyn/context/reducers/context.reducer';
 import { AddCaseAction } from '@ansyn/menu-items';
 import { ContextConfig } from '@ansyn/context';
 import { ContextService } from '@ansyn/context/services/context.service';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
+import { MapReducer } from '@ansyn/map-facade';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

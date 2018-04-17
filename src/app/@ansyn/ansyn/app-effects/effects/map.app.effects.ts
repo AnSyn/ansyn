@@ -36,7 +36,6 @@ import {
 	SetActiveCenter, SetMapGeoEnabledModeToolsActionStore, SetPinLocationModeAction,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { CaseMapState } from '@ansyn/core/models';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -49,6 +48,7 @@ import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlay
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class MapAppEffects {

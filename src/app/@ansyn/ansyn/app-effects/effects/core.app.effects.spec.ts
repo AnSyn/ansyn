@@ -7,11 +7,12 @@ import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.r
 import { cold, hot } from 'jasmine-marbles';
 import { SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { initialMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Case } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core';
 import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 function mockOverlay(id: string): Overlay {
 	const overlay = new Overlay();

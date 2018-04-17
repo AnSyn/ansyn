@@ -2,7 +2,6 @@ import { MapEffects } from './map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '../services/map-facade.service';
@@ -15,6 +14,8 @@ import {
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { CaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { initialMapState, MapReducer } from '@ansyn/map-facade';
+import { IMapState, mapFeatureKey, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;

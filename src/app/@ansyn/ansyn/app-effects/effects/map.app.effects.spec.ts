@@ -29,11 +29,8 @@ import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	IMapState,
 	initialMapState,
-	mapFeatureKey,
 	MapReducer,
-	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
@@ -64,6 +61,7 @@ import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryPluginsInitialized } from '@ansyn/map-facade';
 import { toolsFlags } from '@ansyn/menu-items';
+import { IMapState, mapFeatureKey, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
@@ -254,6 +252,7 @@ describe('MapAppEffects', () => {
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
 	}));
 
+
 	beforeEach(inject([MapAppEffects, ImageryCommunicatorService, CasesService, BaseMapSourceProvider], (_mapAppEffects: MapAppEffects, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseMapSourceProvider[]) => {
 		mapAppEffects = _mapAppEffects;
 
@@ -261,7 +260,6 @@ describe('MapAppEffects', () => {
 		casesService = _casesService;
 		baseSourceProviders = _baseSourceProviders;
 	}));
-
 
 	it('onMapSingleClick$ effect', () => {
 		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);

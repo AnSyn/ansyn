@@ -7,11 +7,11 @@ import * as packageJson from '../../../../../package.json';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
 import { ICasesState } from "@ansyn/menu-items";
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Component({
 	selector: 'ansyn-app',

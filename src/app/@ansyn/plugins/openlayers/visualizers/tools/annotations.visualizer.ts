@@ -27,8 +27,8 @@ import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/la
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {

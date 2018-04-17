@@ -6,42 +6,26 @@ import 'rxjs/add/operator/do';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import * as intersect from '@turf/intersect';
 import { OverlaysService } from '@ansyn/overlays';
 import { polygon } from '@turf/helpers';
 import {
-	AddAlertMsg,
-	AlertMsgTypes,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CaseMapPosition,
-	CoreActionTypes,
-	coreStateSelector,
-	ICoreState, RemoveAlertMsg,
-	SetLayoutSuccessAction
+	AddAlertMsg, AlertMsgTypes, BackToWorldSuccess, BackToWorldView, CaseMapPosition, CoreActionTypes,
+	RemoveAlertMsg, SetLayoutSuccessAction
 } from '@ansyn/core';
 import {
-	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	DecreasePendingMapsCountAction,
-	ImageryCreatedAction,
-	ImageryRemovedAction,
-	MapActionTypes,
-	MapsListChangedAction,
-	PinLocationModeTriggerAction,
-	PinPointModeTriggerAction,
-	PositionChangedAction,
-	SetMapsDataActionStore,
-	SynchronizeMapsAction
+	ActiveMapChangedAction, AnnotationContextMenuTriggerAction, DecreasePendingMapsCountAction,
+	ImageryCreatedAction, ImageryRemovedAction, MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction,
+	PinPointModeTriggerAction, PositionChangedAction, SetMapsDataActionStore, SynchronizeMapsAction
 } from '../actions/map.actions';
 
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 import { ContextMenuGetFilteredOverlaysAction } from '@ansyn/map-facade';
 import 'rxjs/add/observable/forkJoin';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class MapEffects {
@@ -172,10 +156,10 @@ export class MapEffects {
 			}
 
 			if (isWorldView || isInBound) {
-				return new RemoveAlertMsg({ key, value: map.id})
+				return new RemoveAlertMsg({ key, value: map.id });
 			}
 
-			return new AddAlertMsg({key, value: map.id});
+			return new AddAlertMsg({ key, value: map.id });
 
 		});
 

@@ -17,7 +17,6 @@ import {
 	StartMouseShadow, StopMouseShadow, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { selectSubMenu, SetPinLocationModeAction, SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
@@ -29,6 +28,7 @@ import {
 import { GoToVisualizer } from '@ansyn/plugins/openlayers/visualizers';
 import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/icon.visualizer';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class VisualizersAppEffects {

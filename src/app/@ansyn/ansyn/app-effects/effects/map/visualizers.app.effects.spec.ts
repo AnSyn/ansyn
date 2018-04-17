@@ -27,13 +27,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import {
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import {
-	IMapState,
-	initialMapState,
-	mapFeatureKey,
-	MapReducer,
-	mapStateSelector
-} from '@ansyn/map-facade/reducers/map.reducer';
+
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
@@ -51,6 +45,8 @@ import {
 } from '@ansyn/menu-items';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
+import { IMapState, mapFeatureKey, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
+import { initialMapState, MapReducer } from '@ansyn/map-facade';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

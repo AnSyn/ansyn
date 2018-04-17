@@ -7,11 +7,12 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { coreFeatureKey, CoreReducer, SetLayoutAction } from '@ansyn/core';
 import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
+import { MapReducer } from '@ansyn/map-facade';
+import { IMapState, mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',

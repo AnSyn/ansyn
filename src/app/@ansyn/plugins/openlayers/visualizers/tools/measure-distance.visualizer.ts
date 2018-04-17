@@ -13,20 +13,18 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import { VisualizerStateStyle } from '../models/visualizer-state';
 import { IVisualizerEntity } from '@ansyn/imagery/model';
 import { getPointByGeometry } from '@ansyn/core/utils';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { toolsFlags } from '@ansyn/menu-items';
 import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
@@ -133,7 +131,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.subscriptions.push(
 			this.drawDistamceMeasureOnMap$.subscribe(),
 			this.onActiveMapChangesDeleteOldMeasureLayer$.subscribe()
-		)
+		);
 	}
 
 	onResetView(): Observable<boolean> {

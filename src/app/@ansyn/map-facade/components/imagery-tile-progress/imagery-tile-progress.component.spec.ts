@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryTileProgressComponent } from './imagery-tile-progress.component';
 import { StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
+import { MapReducer } from '@ansyn/map-facade';
 
 describe('ImageryTileProgressComponent', () => {
 	let component: ImageryTileProgressComponent;

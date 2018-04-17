@@ -9,13 +9,14 @@ import { ImageryContainerComponent } from './components/imagery-container/imager
 import { CoreModule } from '@ansyn/core';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { FormsModule } from '@angular/forms';
-import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { StoreModule } from '@ngrx/store';
 import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
 import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
 import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
+import { MapReducer } from '@ansyn/map-facade/reducers';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
 
 @NgModule({
 	imports: [

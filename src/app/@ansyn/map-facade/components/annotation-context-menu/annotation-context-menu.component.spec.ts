@@ -3,10 +3,11 @@ import { AnnotationContextMenuComponent } from './annotation-context-menu.compon
 import { DebugElement } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import {  MapReducer } from '../../reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
+import { IMapState, mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;

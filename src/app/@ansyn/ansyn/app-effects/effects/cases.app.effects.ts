@@ -12,12 +12,12 @@ import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class CasesAppEffects {

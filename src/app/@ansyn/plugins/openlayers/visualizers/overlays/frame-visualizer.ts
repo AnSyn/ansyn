@@ -8,8 +8,8 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { Actions } from '@ngrx/effects';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { BackToWorldView, CoreActionTypes, Overlay } from '@ansyn/core';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class FrameVisualizer extends EntitiesVisualizer {

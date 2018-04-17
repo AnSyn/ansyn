@@ -6,11 +6,12 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Case } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
-import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { ImageryCreatedAction } from '@ansyn/map-facade';
+import { mapFeatureKey, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;

@@ -33,7 +33,6 @@ import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { SetMapManualImageProcessing, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -42,6 +41,7 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { BackToWorldView, ImageManualProcessArgs } from '@ansyn/core';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

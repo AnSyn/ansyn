@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
 	ContextMenuShowAction,
 	MapInstanceChangedAction,
@@ -15,6 +14,7 @@ import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class MapFacadeService {

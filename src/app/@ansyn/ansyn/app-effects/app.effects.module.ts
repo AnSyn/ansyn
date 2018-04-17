@@ -8,7 +8,6 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { MapAppEffects } from './effects/map.app.effects';
 import { CasesAppEffects } from './effects/cases.app.effects';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
@@ -25,6 +24,7 @@ import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
+import { IMapState } from '@ansyn/map-facade/reducers/interfaces';
 
 
 export interface IAppState {

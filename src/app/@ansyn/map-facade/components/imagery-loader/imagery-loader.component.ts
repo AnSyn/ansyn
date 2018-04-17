@@ -1,8 +1,8 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { mapStateSelector, IMapState } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Component({
 	selector: 'ansyn-imagery-loader',

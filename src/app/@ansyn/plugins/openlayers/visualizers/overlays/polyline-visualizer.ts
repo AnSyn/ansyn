@@ -17,13 +17,13 @@ import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { MarkUpClass, MarkUpData, overlaysStateSelector } from '@ansyn/overlays';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
+import { MapFacadeService } from '@ansyn/map-facade';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
@@ -65,7 +65,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			if (this.source) {
 				this.source.refresh();
 			}
-		})
+		});
 
 	constructor(public store: Store<any>,
 				public actions$: Actions,
@@ -101,7 +101,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private propsByFeature(feature: Feature) {
-		const classes = this.markups.findKeysByValue(<string>feature.getId(), "overlaysIds");
+		const classes = this.markups.findKeysByValue(<string>feature.getId(), 'overlaysIds');
 
 		const isFavorites = classes.includes(MarkUpClass.favorites);
 		const isActive = classes.includes(MarkUpClass.active);

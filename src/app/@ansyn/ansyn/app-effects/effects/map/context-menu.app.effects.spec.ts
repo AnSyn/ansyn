@@ -15,12 +15,13 @@ import {
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
 
 describe('ContextMenuAppEffects', () => {
 	let contextMenuAppEffects: ContextMenuAppEffects;

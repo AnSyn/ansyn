@@ -3,11 +3,11 @@ import { CaseMapState } from '@ansyn/core/models';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { coreStateSelector, ICoreState, LayoutKey, layoutOptions, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Component({
 	selector: 'ansyn-imageries-manager',

@@ -1,9 +1,9 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
 import { Subscription } from 'rxjs/Subscription';
+import { IMapState } from '@ansyn/map-facade/reducers/interfaces';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',

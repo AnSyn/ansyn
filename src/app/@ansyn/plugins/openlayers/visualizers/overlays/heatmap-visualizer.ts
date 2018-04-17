@@ -1,15 +1,14 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { DrawOverlaysOnMapTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { MapFacadeService } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/interfaces';
 
 @Injectable()
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
@@ -48,6 +47,6 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe()
-		)
+		);
 	}
 }

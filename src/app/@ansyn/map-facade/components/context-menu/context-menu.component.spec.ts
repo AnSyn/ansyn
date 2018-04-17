@@ -2,12 +2,13 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ContextMenuComponent } from './context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MapEffects } from '../../effects/map.effects';
 import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { mapFacadeConfig,  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFeatureKey } from '@ansyn/map-facade/reducers/interfaces';
+import { MapReducer } from '@ansyn/map-facade';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;

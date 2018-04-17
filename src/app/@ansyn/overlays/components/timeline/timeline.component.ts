@@ -9,7 +9,7 @@ import eventDrops from 'new-ansyn-event-drops';
 import { OverlaysService } from '../../services';
 import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers';
 import { IOverlaysState, overlaysStateSelector, TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MarkUpClass, MarkUpData, MarkUpTypes } from '@ansyn/overlays';
+import { MarkUpClass, MarkUpData, MarkUpTypes } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { select, selectAll } from 'd3-selection';
 import { Observable } from 'rxjs/Observable';

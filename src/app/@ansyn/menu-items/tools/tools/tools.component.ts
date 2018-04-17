@@ -35,7 +35,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
 	subMenu: SubMenuEnum;
-;
+
 	subscribers = [];
 
 	get subMenuEnum() {
@@ -114,11 +114,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
-		// update new state of expandedSubMenu;
 		const lastExpandedSubMenu = this.subMenu;
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
-			this.store.dispatch(new SetSubMenu(value));
-		// if toggle goto - dispatch;
+		this.store.dispatch(new SetSubMenu(value));
 		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
 			this.store.dispatch(new GoToExpandAction(this.subMenu === SubMenuEnum.goTo));
 		}

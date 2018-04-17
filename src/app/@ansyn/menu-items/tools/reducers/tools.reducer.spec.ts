@@ -8,18 +8,6 @@ describe('ToolsReducer', () => {
 		expect(toolsInitialState.flags.get(toolsFlags.geoRegisteredOptionsEnabled)).toBe(true);
 	});
 
-	it('Check TOGGLE_ANNOTATIONS - true', () => {
-		const action = new ToggleAnnotations(true);
-		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get(toolsFlags.annotations)).toBeTruthy();
-	});
-
-	it('Check TOGGLE_ANNOTATIONS - false', () => {
-		const action = new ToggleAnnotations(false);
-		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get(toolsFlags.annotations)).toBeFalsy();
-	});
-
 	it('Check SET_ANNOTATION_MODE', () => {
 		const action = new SetAnnotationMode('Point');
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);

@@ -1,21 +1,18 @@
 import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
-import {
-
-	CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction
-} from '../../actions/status-bar.actions';
+import { CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
 	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	ClearActiveInteractionsAction, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey, layoutOptions, Overlay,
-	OverlaysCriteria,
-	SetLayoutAction, SetOverlaysCriteriaAction
+	ClearActiveInteractionsAction, CoreActionTypes, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey,
+	layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction, UpdateOverlaysCountAction
 } from '@ansyn/core';
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
 import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { Actions } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -44,14 +41,15 @@ export class StatusBarComponent implements OnInit {
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
 
-	overlaysCount$: Observable<number> = this.core$.pluck<ICoreState, number>('overlaysCount').distinctUntilChanged();
+	overlaysCount$: Observable<number> = this.actions$
+		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
+		.map(({ payload }: UpdateOverlaysCountAction) => payload);
 
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
 	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
 	time: CaseTimeState;
 	timeSelectionEditIcon = false;
-	overlaysCount: number;
 	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
@@ -106,7 +104,7 @@ export class StatusBarComponent implements OnInit {
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
-	) {
+				protected actions$: Actions) {
 
 	}
 
@@ -171,7 +169,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	clickGoAdjacent(isNext): void {
-		this.store.dispatch(new GoAdjacentOverlay({isNext}));
+		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
 	}
 
 	clickExpand(): void {

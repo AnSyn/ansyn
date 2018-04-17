@@ -26,7 +26,6 @@ export interface IToolsState {
 	subMenu: SubMenuEnum;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
-	gotoExpand: boolean;
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
@@ -39,7 +38,6 @@ export const toolsInitialState: IToolsState = {
 	]),
 	subMenu: undefined,
 	activeCenter: [0, 0],
-	gotoExpand: false,
 	annotationMode: undefined,
 	annotationProperties: {
 		strokeWidth: 1,
@@ -113,12 +111,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.pinLocation, action.payload);
 			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.GO_TO:
-			return state;
-
-		case ToolsActionsTypes.GO_TO_EXPAND:
-			return { ...state, gotoExpand: action.payload };
 
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 

@@ -2,6 +2,7 @@ import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/too
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import olColor from 'ol/color';
+import { Observable } from 'rxjs/Observable';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -60,6 +61,16 @@ describe('AnnotationsVisualizer', () => {
 		annotationsVisualizer.resetInteractions();
 		expect(annotationsVisualizer.addInteraction).toHaveBeenCalled();
 		expect(annotationsVisualizer.removeInteraction).toHaveBeenCalled();
+	});
+
+	describe('onAnnotationsChange should call removeInteraction, addInteraction', () => {
+
+		it('should clearEntities if displayAnnotationsLayer = false', () => {
+			spyOn(annotationsVisualizer, 'clearEntities');
+			annotationsVisualizer.onAnnotationsChange([{}, false, true, true]);
+			expect(annotationsVisualizer.clearEntities).toHaveBeenCalled();
+		});
+
 	});
 
 });

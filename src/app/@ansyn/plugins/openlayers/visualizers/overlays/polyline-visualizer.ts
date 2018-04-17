@@ -28,23 +28,7 @@ import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
-	_markups: ExtendMap<MarkUpClass, MarkUpData>;
-	set markups(value) {
-		if (value) {
-			this._markups = value;
-			if (this.hoverLayer) {
-				this.hoverLayer.getSource().refresh();
-			}
-			if (this.source) {
-				this.source.refresh();
-			}
-		}
-	}
-
-	get markups() {
-		return this._markups;
-	}
-
+	markups: ExtendMap<MarkUpClass, MarkUpData>;
 
 	protected disableCache = true;
 
@@ -72,7 +56,16 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
 		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
-		.distinctUntilChanged();
+		.distinctUntilChanged()
+		.do((markups) => {
+			this.markups = markups;
+			if (this.hoverLayer) {
+				this.hoverLayer.getSource().refresh();
+			}
+			if (this.source) {
+				this.source.refresh();
+			}
+		})
 
 	constructor(public store: Store<any>,
 				public actions$: Actions,
@@ -278,7 +271,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe(),
 			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),
-			this.dropsMarkUp$.subscribe(markups => this.markups = markups)
+			this.dropsMarkUp$.subscribe()
 		);
 	}
 }

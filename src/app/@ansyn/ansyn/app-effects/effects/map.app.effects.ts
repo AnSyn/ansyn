@@ -317,7 +317,7 @@ export class MapAppEffects {
 	 * @name markupOnMapsDataChanges$
 	 * @ofType ActiveMapChangedAction, MapsListChangedAction
 	 * @dependencies none
-	 * @action RemoveMarkUp, AddMarkUp
+	 * @action SetMarkUp
 	 */
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$

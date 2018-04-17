@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.2.8",
+	"version": "0.2.81",
 	"license": "MIT",
 	"scripts": {
 		"start": "node scripts/generate-config.js && ng serve --sourcemaps --extract-css",

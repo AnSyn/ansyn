@@ -78,7 +78,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			name: entities.name || '',
 			data: entities.data
 		})))
-		.filter((drops) => Boolean(drops && drops[0] && drops[0].data && drops[0].data.length))
+		.filter((drops) => Boolean(drops && drops[0] && drops[0].data))
 		.do(drops => {
 			drops[0].data.forEach(drop => {
 				this.dropsIdMap.set(drop.id, drop);
@@ -86,7 +86,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		})
 		.do(drops => {
 			this.drops = drops;
-			this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops[0].data);
+			if (this.drops[0].data.length) {
+				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops[0].data);
+			}
 			this.initEventDropsSequence();
 		});
 	private subscribers: Subscription[];

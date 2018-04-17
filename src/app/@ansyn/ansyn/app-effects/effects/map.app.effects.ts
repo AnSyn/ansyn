@@ -45,10 +45,7 @@ import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
-import {
-	AddAlertMsg, AlertMsgTypes, BackToWorldView, coreStateSelector, ICoreState, RemoveAlertMsg,
-	SetOverlaysCriteriaAction
-} from '@ansyn/core';
+import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';
@@ -324,16 +321,38 @@ export class MapAppEffects {
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length))
-		.map(([action, mapState]: [Action, IMapState]) =>
-			mapState.mapsList.find(map => map.id === mapState.activeMapId)
-		)
-		.filter((map: CaseMapState) => Boolean(map && map.data && map.data.overlay && map.data.overlay.id))
-		.map((map: CaseMapState) => new SetMarkUp({
-			classToSet: MarkUpClass.active,
-			dataToSet: {
-				overlaysIds: [map.data.overlay.id]
+		.map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
+				const actives = [];
+				const displayed = [];
+				mapsList.forEach((map: CaseMapState) => {
+					if (Boolean(map.data.overlay)) {
+						if (map.id === activeMapId) {
+							actives.push(map.data.overlay.id);
+						} else {
+							displayed.push(map.data.overlay.id);
+						}
+					}
+				});
+				return {
+					actives, displayed
+				};
 			}
-		}));
+		)
+		.mergeMap(({ actives, displayed }) => [
+			new SetMarkUp({
+					classToSet: MarkUpClass.active,
+					dataToSet: {
+						overlaysIds: actives
+					}
+				}
+			),
+			new SetMarkUp({
+				classToSet: MarkUpClass.displayed,
+				dataToSet: {
+					overlaysIds: displayed
+				}
+			}
+		]);
 
 	/**
 	 * @type Effect

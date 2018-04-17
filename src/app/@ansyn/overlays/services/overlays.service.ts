@@ -98,7 +98,7 @@ export class OverlaysService {
 	}
 
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
-		let feature = params.region
+		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
 			region: feature,

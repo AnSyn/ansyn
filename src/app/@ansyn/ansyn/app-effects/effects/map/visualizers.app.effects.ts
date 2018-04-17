@@ -19,11 +19,6 @@ import {
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { CoreService } from '@ansyn/core/services/core.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import {
-	GoToVisualizer,
-} from '@ansyn/plugins/openlayers/visualizers';
 import { selectSubMenu, SetPinLocationModeAction, SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
 import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';

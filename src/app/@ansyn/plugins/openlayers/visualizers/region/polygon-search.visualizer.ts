@@ -31,20 +31,11 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.isPolygonSearch$)
 		.do(this.onActiveMapChange.bind(this));
 
-	resetInteraction$: Observable<any> = this.actions$
-		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItemsEnum.polygonSearch)
-		.withLatestFrom(this.flags$, this.isActiveMap$)
-		.filter(([action, flags, isActiveMap]: [UpdateStatusFlagsAction, Map<statusBarFlagsItemsEnum, boolean>, boolean]) => isActiveMap)
-		.do(([action, flags]) => {
-			this.removeDrawInteraction();
-			const isPolygonSearch = flags.get(statusBarFlagsItemsEnum.polygonSearch);
-			if (isPolygonSearch) {
-				this.createDrawInteraction();
-			}
+	resetInteraction$: Observable<any> = Observable.combineLatest(this.isPolygonSearch$, this.isActiveMap$)
+		.filter(([isPolygonSearch, isActiveMap]: [boolean, boolean]) => isActiveMap)
+		.do(([isPolygonSearch]) => {
+			this.clearOrResetPolygonDraw(isPolygonSearch);
 		});
-
-
 
 	constructor(public store$: Store<any>,
 				public actions$: Actions) {
@@ -119,6 +110,20 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		this.removeDrawInteraction();
 		if (isPolygonSearch && isActiveMap) {
 			this.createDrawInteraction()
+		}
+	}
+
+	resetInteractions() {
+		super.resetInteractions();
+		this.clearOrResetPolygonDraw(false);
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+
+	}
+
+	clearOrResetPolygonDraw(isPolygonSearch: boolean) {
+		this.removeDrawInteraction();
+		if (isPolygonSearch) {
+			this.createDrawInteraction();
 		}
 	}
 

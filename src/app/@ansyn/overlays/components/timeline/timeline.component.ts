@@ -254,7 +254,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			return;
 		}
 		const newActiveId = newActive[0];
-		if (!this.oldActiveId || this.oldActiveId !== newActiveId) {
+		const isExist = Boolean(this.dropsIdMap.get(newActiveId));
+		if (isExist && (!this.oldActiveId || this.oldActiveId !== newActiveId)) {
 			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
 			if (timeLineRange.start.getTime() !== this.configuration.range.start.getTime() ||
 				timeLineRange.end.getTime() !== this.configuration.range.end.getTime()

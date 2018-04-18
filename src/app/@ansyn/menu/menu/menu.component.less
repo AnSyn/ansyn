@@ -2,6 +2,8 @@
 @import '../../core/less/z-index-globals';
 @import '../../core/less/tooltip';
 
+@number-of-menu-item: 8;
+
 div.menu-wrapper {
 	height: 100vh;
 	display: flex;
@@ -34,8 +36,7 @@ div.menu-wrapper {
 
 			@media screen and (max-height: 700px) {
 				i {
-					// 8 = the current number the menu items
-					font-size: calc(~"((100vh - 94px) / 8) - 40px");
+					font-size: calc(~"((100vh - 94px) / @{number-of-menu-item}) - 45px");
 				}
 			}
 

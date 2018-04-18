@@ -117,8 +117,8 @@ export class SelectCaseAppEffects {
 			new SetLayoutAction(layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region }),
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData), activeMapId }),
-			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay)),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
+			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer)
 		];

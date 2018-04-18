@@ -43,6 +43,10 @@ selection.prototype.moveToFront = function () {
 	});
 };
 
+export interface IEventDropsEvent {
+	id: string;
+	date: Date;
+}
 
 @Component({
 	selector: 'ansyn-timeline',
@@ -51,11 +55,59 @@ selection.prototype.moveToFront = function () {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-
 export class TimelineComponent implements OnInit, OnDestroy {
 
 	@ViewChild('context') context: ElementRef;
-	configuration = this.setConfiguration();
+
+	configuration = {
+		range: {
+			start: new Date(Date.now()),
+			end: new Date(Date.now())
+		},
+		locale: {
+			'dateTime': '%x, %X',
+			'date': '%-m/%-d/%Y',
+			'time': '%-I:%M:%S %p',
+			'periods': ['AM', 'PM'],
+			'days': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+			'shortDays': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+			'shortMonths': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		},
+		bound: {
+			location: '-35'
+		},
+		margin: {
+			top: 60,
+			left: 10,
+			bottom: 40,
+			right: 10
+		},
+		line: {
+			color: (d, i) => schemeCategory10[i]
+		},
+		drop: {
+			onMouseOver: this.onMouseOver.bind(this),
+			onMouseOut: this.onMouseOut.bind(this),
+			onClick: this.clickEvent(),
+			onDblClick: () => event.stopPropagation(),
+			dropId: d => 'dropId-' + d.id,
+			color: BASE_DROP_COLOR,
+			date: d => new Date(d.date),
+			filterOverlap: false
+		},
+		zoom: {
+			onZoom: this.drawMarkup.bind(this),
+			onZoomEnd: this.onZoomEnd.bind(this)
+		},
+		label: {
+			width: 0,
+			padding: 0,
+			text: ''
+		},
+		d3: d3
+	};
+
 	private chart: any;
 	private element: any;
 	private dblClick: number;
@@ -132,82 +184,42 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	}
 
-	setConfiguration() {
-		return {
-			range: {
-				start: new Date(Date.now()),
-				end: new Date(Date.now())
-			},
-			locale: {
-				'dateTime': '%x, %X',
-				'date': '%-m/%-d/%Y',
-				'time': '%-I:%M:%S %p',
-				'periods': ['AM', 'PM'],
-				'days': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-				'shortDays': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-				'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				'shortMonths': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-			},
-			bound: {
-				location: '-35'
-			},
-			margin: {
-				top: 60,
-				left: 10,
-				bottom: 40,
-				right: 10
-			},
-			line: {
-				color: (d, i) => schemeCategory10[i]
-			},
-			drop: {
-				onMouseOver: this.onMouseOver.bind(this),
-				onMouseOut: this.onMouseOut.bind(this),
-				onClick: (this.onClick.bind(this)),
-				onDblClick: (this.onDblClick.bind(this)),
-				dropId: d => 'dropId-' + d.id,
-				color: BASE_DROP_COLOR,
-				date: d => new Date(d.date),
-				filterOverlap: false
-			},
-			zoom: {
-				onZoom: this.drawMarkup.bind(this),
-				onZoomEnd: this.onZoomEnd.bind(this)
-			},
-			label: {
-				width: 0,
-				padding: 0,
-				text: ''
-			},
-			d3: d3
+	onMouseOver({ id }: IEventDropsEvent) {
+		this.store$.dispatch(new MouseOverDropAction(id));
+	}
+
+	onMouseOut({ id }: IEventDropsEvent) {
+		this.store$.dispatch(new MouseOutDropAction(id));
+	}
+
+	clickEvent() {
+		let down, wait;
+		return (data: IEventDropsEvent, index: number, nodes, event: MouseEvent) => {
+			console.log(data, index, nodes, event)
+			if (!down) {
+				down = true;
+				wait = setTimeout((() => {
+					wait = null;
+					this.onClick();
+					down = false;
+				}), 300);
+			} else {
+				this.onDblClick(data);
+				if (wait) {
+					window.clearTimeout(wait);
+					wait = null;
+					down = false;
+				}
+				return;
+			}
 		};
 	}
 
-	onMouseOver(d) {
-		this.store$.dispatch(new MouseOverDropAction(d.id));
+	onDblClick({ id }) {
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	onMouseOut(d) {
-		this.store$.dispatch(new MouseOutDropAction(d.id));
-	}
-
-	onDblClick(d) {
-		this.dblClick = Date.now();
-		event.stopPropagation();
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: d.id }));
-	}
-
-	onClick(d) {
-		const timeMargin = 500;
-		const firstClick = Date.now();
-		window.setTimeout((() => {
-			if (this.dblClick && this.dblClick - firstClick < timeMargin) {
-				this.dblClick = null;
-				return;
-			}
-			this.dblClick = null;
-			// onClick...
-		}).bind(this), timeMargin);
+	onClick() {
 	}
 
 	onZoomEnd() {

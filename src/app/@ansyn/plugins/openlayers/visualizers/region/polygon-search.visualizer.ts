@@ -115,9 +115,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.clearOrResetPolygonDraw(false);
 		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
-
 	}
 
 	clearOrResetPolygonDraw(isPolygonSearch: boolean) {

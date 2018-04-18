@@ -194,8 +194,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	clickEvent() {
 		let down, wait;
-		return (data: IEventDropsEvent, index: number, nodes, event: MouseEvent) => {
-			console.log(data, index, nodes, event)
+		return (data: IEventDropsEvent) => {
 			if (!down) {
 				down = true;
 				wait = setTimeout((() => {

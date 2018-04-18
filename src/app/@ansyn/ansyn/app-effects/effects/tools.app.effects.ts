@@ -86,10 +86,10 @@ export class ToolsAppEffects {
 		.ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
 			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
-			CoreActionTypes.SET_LAYOUT,
-			OverlaysActionTypes.SELECT_OVERLAY)
+			CoreActionTypes.SET_LAYOUT)
 		.withLatestFrom(this.isPolygonSearch$)
 		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
+		.do(() => console.log("HAHA"))
 		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
 
 	/**

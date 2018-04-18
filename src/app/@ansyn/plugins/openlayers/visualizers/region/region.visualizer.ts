@@ -7,6 +7,7 @@ import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, Overlays
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);

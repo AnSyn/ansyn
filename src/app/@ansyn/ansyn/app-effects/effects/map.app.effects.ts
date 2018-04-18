@@ -13,17 +13,14 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { IAppState } from '../';
 import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
-import { MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { DisplayOverlayAction, IOverlaysState, MarkUpClass, OverlaysService, SetMarkUp } from '@ansyn/overlays';
 import {
-	IStatusBarState, statusBarStateSelector,
 	statusBarToastMessages
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import {
 	ImageryCreatedAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -35,7 +32,6 @@ import {
 } from '@ansyn/core/utils';
 import {
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapGeoEnabledModeToolsActionStore,
 	StartMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
@@ -45,11 +41,7 @@ import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
-import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg, SetOverlaysCriteriaAction } from '@ansyn/core';
-import {
-	AddAlertMsg,
-	AlertMsgTypes, BackToWorldView, RemoveAlertMsg,
-} from '@ansyn/core';
+import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg } from '@ansyn/core';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { toolsFlags } from '@ansyn/menu-items';

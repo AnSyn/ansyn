@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../';
 import {
@@ -49,11 +49,63 @@ import {
 } from '@ansyn/core';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
+import { SetSubMenu, SubMenuEnum } from '@ansyn/menu-items';
+import {
+	IStatusBarState,
+	StatusBarActionsTypes,
+	statusBarFlagsItemsEnum,
+	statusBarStateSelector,
+	UpdateStatusFlagsAction
+} from '@ansyn/status-bar';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 
 
 @Injectable()
 export class ToolsAppEffects {
 	layersState$ = this.store$.select(layersStateSelector);
+
+	flags$ = this.store$.select(statusBarStateSelector)
+		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
+		.distinctUntilChanged();
+
+	isPolygonSearch$ = this.flags$
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.polygonSearch))
+		.distinctUntilChanged();
+
+
+	/**
+	 * @type Effect
+	 * @name drawInterrupted$
+	 * @ofType Action
+	 * @dependencies map
+	 * @filter check if polygon draw interrupted
+	 * @action UpdateStatusFlagsAction?
+	 */
+	@Effect()
+	drawInterrupted$: Observable<any> = this.actions$
+		.ofType<Action>(
+			MenuActionTypes.SELECT_MENU_ITEM,
+			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
+			CoreActionTypes.SET_LAYOUT,
+			OverlaysActionTypes.SELECT_OVERLAY)
+		.withLatestFrom(this.isPolygonSearch$)
+		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
+		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+
+	/**
+	 * @type Effect
+	 * @name onSetSubMenu$
+	 * @ofType SetSubMenu
+	 * @dependencies map
+	 * @filter SubMenu not null or undefined
+	 * @action UpdateStatusFlagsAction?
+	 */
+	@Effect()
+	onSetSubMenu$: Observable<any> = this.actions$
+		.ofType<SetSubMenu>(ToolsActionsTypes.SET_SUB_MENU)
+		.map(({ payload }) => payload)
+		.filter(Boolean)
+		.map(() =>  new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
 
 	/**
 	 * @type Effect

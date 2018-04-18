@@ -5,14 +5,13 @@ import { CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction } fro
 import { Observable } from 'rxjs/Observable';
 import {
 	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	ClearActiveInteractionsAction, CoreActionTypes, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey,
+	CoreActionTypes, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey,
 	layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction, UpdateOverlaysCountAction
 } from '@ansyn/core';
-import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
+import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig, ComboBoxesProperties, statusBarFlagsItemsEnum } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
-import { ComboBoxesProperties, statusBarFlagsItemsEnum } from '@ansyn/status-bar/models';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
-import { UpdateSearchModeAction } from "@ansyn/status-bar";
+import { UpdateSearchModeAction } from "../../actions/status-bar.actions";
 import { Actions } from '@ngrx/effects';
 
 @Component({

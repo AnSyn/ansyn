@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HelpComponent } from './help/help.component';
-import { CoreModule } from '@ansyn/core';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
-	imports: [CommonModule, CoreModule],
+	imports: [CarouselModule.forRoot()],
 	declarations: [HelpComponent],
 	entryComponents: [HelpComponent]
 })

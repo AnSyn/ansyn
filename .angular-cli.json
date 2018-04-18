@@ -23,6 +23,7 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
+				"../node_modules/bootstrap/dist/css/bootstrap.min.css",
 				"./styles/styles.less"
 			],
 			"stylePreprocessorOptions": {

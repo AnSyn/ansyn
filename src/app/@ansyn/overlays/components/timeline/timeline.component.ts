@@ -1,15 +1,26 @@
 import {
-	ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	HostListener,
+	Inject,
+	OnDestroy,
+	OnInit,
 	ViewChild
 } from '@angular/core';
 import { schemeCategory10, selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from 'new-ansyn-event-drops';
-
 import { OverlaysService } from '../../services';
 import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers';
-import { IOverlaysState, overlaysStateSelector, TimelineRange } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MarkUpClass, MarkUpData, MarkUpTypes } from '@ansyn/overlays';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	MarkUpData,
+	MarkUpTypes,
+	overlaysStateSelector,
+	TimelineRange
+} from '../../reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { select, selectAll } from 'd3-selection';
 import { Observable } from 'rxjs/Observable';
@@ -17,9 +28,12 @@ import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import {
-	DisplayOverlayFromStoreAction, MouseOutDropAction, MouseOverDropAction, OverlaysActionTypes,
+	DisplayOverlayFromStoreAction,
+	MouseOutDropAction,
+	MouseOverDropAction,
+	OverlaysActionTypes,
 	SetTimelineStateAction
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 
 export const BASE_DROP_COLOR = '#d393e1';
@@ -114,7 +128,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.subscribers.forEach(subscriber => subscriber.unsubscribe())
+		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
 
 	}
 

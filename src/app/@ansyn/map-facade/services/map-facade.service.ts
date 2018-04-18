@@ -9,9 +9,7 @@ import {
 	PositionChangedAction,
 	ImageryPluginsInitialized
 } from '../actions';
-import { range } from 'lodash';
-import { UUID } from 'angular2-uuid';
-import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
@@ -28,35 +26,6 @@ export class MapFacadeService {
 			return true;
 		}
 		return overlay.isGeoRegistered;
-	}
-
-	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
-		const mapsList: CaseMapState[] = [];
-		const activeMap = MapFacadeService.mapById(oldMapsList, oldActiveMapId);
-
-		range(layout.mapsCount).forEach((index) => {
-			if (oldMapsList[index]) {
-				mapsList.push(oldMapsList[index]);
-			} else {
-				const mapStateCopy: CaseMapState = {
-					id: UUID.UUID(),
-					data: { position: null },
-					mapType: defaultMapType,
-					flags: {}
-				};
-				mapsList.push(mapStateCopy);
-			}
-		});
-
-		const mapsListChange = { mapsList };
-
-		/* activeMapId */
-		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
-		if (notExist) {
-			mapsList[mapsList.length - 1] = activeMap;
-		}
-
-		return { ...mapsListChange };
 	}
 
 	static activeMap(mapState: IMapState): CaseMapState {

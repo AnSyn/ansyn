@@ -35,7 +35,7 @@
 
 	&[tooltip-class*="bottom"] {
 		&:after {
-			aleft: auto;
+			left: auto;
 			top: auto;
 			bottom: 0;
 			transform: translteY(100%);
@@ -75,8 +75,16 @@
 		}
 	}
 
+	&[tooltip-class*="wrap"] {
+		&:after {
+			white-space: normal;
+			height: initial;
+			padding: 5px 10px;
+		}
+	}
+
 	&:after {
-		font-family: "Open Sans";
+		font-family: "Open Sans", sans-serif;
 		font-size: small;
 		opacity: 0;
 		position: absolute;

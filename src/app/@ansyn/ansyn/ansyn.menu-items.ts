@@ -54,7 +54,7 @@ export const ansynMenuItems: MenuItem[] = [
 	{
 		name: 'Help',
 		component: HelpComponent,
-		iconClass: 'icon-main-settings',
+		iconClass: 'icon-help-settings',
 		production: false
 	}
 ];

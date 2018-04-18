@@ -2,7 +2,7 @@ import Draw from 'ol/interaction/draw';
 import { StatusBarActionsTypes, statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { Actions } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { SetOverlaysCriteriaAction } from 'app/@ansyn/core/index';
 import { CaseRegionState } from 'app/@ansyn/core/index';
@@ -13,9 +13,6 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
@@ -33,18 +30,6 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.isPolygonSearch$)
 		.do(this.onActiveMapChange.bind(this));
-
-	drawInterrupted$: Observable<any> = this.actions$
-		.ofType<Action>(
-			MenuActionTypes.SELECT_MENU_ITEM,
-			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
-			CoreActionTypes.SET_LAYOUT,
-			OverlaysActionTypes.SELECT_OVERLAY)
-		.withLatestFrom(this.isPolygonSearch$, this.isActiveMap$)
-		.filter(([action, isPolygonSearch, isActiveMap]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isActiveMap)
-		.do(() => {
-			this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
-		});
 
 	resetInteraction$: Observable<any> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
@@ -112,8 +97,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.resetInteraction$.subscribe(),
-			this.activeMapChange$.subscribe(),
-			this.drawInterrupted$.subscribe()
+			this.activeMapChange$.subscribe()
 		);
 	}
 

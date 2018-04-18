@@ -10,7 +10,6 @@ import {
 	ActiveMapChangedAction,
 	ImageryCreatedAction,
 	MapInstanceChangedAction,
-	MapSingleClickAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
@@ -21,7 +20,6 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
@@ -42,13 +40,11 @@ import {
 	overlaysInitialState,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { IToolsState, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	ILayerState,
@@ -58,11 +54,8 @@ import {
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
-import { SetOverlaysCriteriaAction } from '@ansyn/core';
-import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
+import { LoggerService } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { ImageryPluginsInitialized } from '@ansyn/map-facade';
 import { toolsFlags } from '@ansyn/menu-items';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {

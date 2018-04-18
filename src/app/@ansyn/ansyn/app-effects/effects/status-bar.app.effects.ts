@@ -16,6 +16,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { PinPointModeTriggerAction } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -71,7 +72,6 @@ export class StatusBarAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,
-				public imageryCommunicator: ImageryCommunicatorService,
 				public overlaysService: OverlaysService,
 				public casesService: CasesService) {
 	}

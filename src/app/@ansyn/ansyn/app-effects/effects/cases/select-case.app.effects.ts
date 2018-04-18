@@ -132,7 +132,7 @@ export class SelectCaseAppEffects {
 	}
 
 	parseOverlay(overlay: Overlay): Overlay {
-		return  { ...overlay, date: new Date(overlay.date) }
+		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 
 	constructor(protected actions$: Actions,

@@ -11,7 +11,6 @@ import {
 import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig, ComboBoxesProperties, statusBarFlagsItemsEnum } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
-import { UpdateSearchModeAction } from "../../actions/status-bar.actions";
 import { Actions } from '@ngrx/effects';
 
 @Component({
@@ -56,7 +55,6 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
-	searchType: CaseGeoFilter = 'Pin-Point';
 
 	get statusBarFlagsItemsEnum() {
 		return statusBarFlagsItemsEnum;
@@ -159,11 +157,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
-		if (payload.geoFilter !== undefined)
-		{
-			this.searchType = payload.geoFilter;
-			this.store.dispatch((new UpdateSearchModeAction(this.searchType)));
-		}
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 		this.toggleMapSearch();
 	}
@@ -173,7 +166,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapSearch() {
-		// this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
 
 		if (this.comboBoxesProperties.geoFilter === 'Polygon') {

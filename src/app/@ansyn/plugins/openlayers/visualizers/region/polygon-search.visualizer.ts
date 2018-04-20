@@ -1,5 +1,5 @@
 import Draw from 'ol/interaction/draw';
-import { StatusBarActionsTypes, statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -13,13 +13,14 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import { Position } from 'geojson';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
 
 	mapState$ = this.store$.select(mapStateSelector);
 
-	isPolygonSearch$ = this.flags$
+	isPolygonSearch$ = this.statusBarFlags$
 		.map((flags) => flags.get(statusBarFlagsItemsEnum.polygonSearch))
 		.distinctUntilChanged();
 
@@ -123,6 +124,10 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		if (isPolygonSearch) {
 			this.createDrawInteraction();
 		}
+	}
+
+	onContextMenu(point: Position): void {
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: true }));
 	}
 
 	onDispose() {

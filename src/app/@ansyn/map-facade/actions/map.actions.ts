@@ -40,7 +40,7 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
-		PIN_POINT: 'PIN_POINT',
+		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_POINT_MODE: 'PIN_POINT_MODE',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
@@ -117,8 +117,8 @@ export class MapSingleClickAction implements Action {
 	}
 }
 
-export class PinPointTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.PIN_POINT;
+export class ContextMenuTriggerAction implements Action {
+	type = MapActionTypes.TRIGGER.CONTEXT_MENU;
 
 	constructor(public payload: GeoJSON.Position) {
 	}

@@ -7,12 +7,14 @@ import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, Overlays
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade';
+import { Position } from 'geojson';
+import { selectGeoFilter } from '@ansyn/status-bar';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);
 
-	flags$ = this.store$.select(statusBarStateSelector)
+	statusBarFlags$ = this.store$.select(statusBarStateSelector)
 		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
 		.distinctUntilChanged();
 
@@ -21,15 +23,22 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged()
 		.pluck<OverlaysCriteria, CaseRegionState>('region');
 
-	geoFilterIndicator$ = this.flags$
-		.map(flags => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
+	geoFilterIndicator$ = this.statusBarFlags$
+		.map((flags: Map<statusBarFlagsItemsEnum, boolean>) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
 		.distinctUntilChanged();
 
-	geoFilter$: Observable<any> = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
-		.distinctUntilChanged()
-		.map((comboBoxesProperties) => comboBoxesProperties.geoFilter)
+	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
 		.distinctUntilChanged();
+
+	isActiveGeoFilter$ = this.geoFilter$
+		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
+
+	onContextMenu$: Observable<any> = this.actions$
+		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
+		.withLatestFrom(this.isActiveGeoFilter$)
+		.filter(([action, isPinPointGeoFilter]: [ContextMenuTriggerAction, boolean]) => isPinPointGeoFilter)
+		.map(([{ payload }]) => payload)
+		.do(this.onContextMenu.bind(this));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public geoFilter: CaseGeoFilter) {
 		super();
@@ -66,6 +75,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				])
 				.mergeMap(this.onChanges.bind(this))
 				.subscribe(),
+			this.onContextMenu$.subscribe()
 		)
 	}
 
@@ -83,4 +93,5 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	abstract drawRegionOnMap(region: CaseRegionState): Observable<boolean> ;
 
+	abstract onContextMenu(point: Position): void;
 }

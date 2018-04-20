@@ -11,37 +11,31 @@ import * as turf from '@turf/turf'
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
-import { Point } from 'geojson';
-import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { Point, Position } from 'geojson';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { MapActionTypes, PinPointTriggerAction } from '@ansyn/map-facade';
-import { SetPinLocationModeAction, ToolsActionsTypes } from '@ansyn/menu-items';
 
 export class IconVisualizer extends RegionVisualizer {
 
-	updatePinLocationAction$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.do((action: SetPinLocationModeAction) => {
-			if (action.payload) {
-				this.removeSingleClickEvent();
-			}
-		});
+	// updatePinLocationAction$: Observable<any> = this.actions$
+	// 	.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
+	// 	.do((action: SetPinLocationModeAction) => {
+	// 		if (action.payload) {
+	// 			this.removeSingleClickEvent();
+	// 		}
+	// 	});
 
-	isPinPointSearch$ = this.flags$
+	isPinPointSearch$ = this.statusBarFlags$
 		.map((flags) => flags.get(statusBarFlagsItemsEnum.pinPointSearch))
 		.distinctUntilChanged();
 
-	contextMenuClick$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.PIN_POINT)
-		.map((action: PinPointTriggerAction) => {
-			const region = getPolygonByPointAndRadius(action.payload).geometry;
-			this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-		});
-
-	pinpointSearchActive$: Observable<any> = this.store$.select(statusBarStateSelector)
-		.filter((statusBarState) => statusBarState.comboBoxesProperties.geoFilter === 'Pin-Point' && Boolean(statusBarState.flags.get(statusBarFlagsItemsEnum.pinPointSearch)))
-		.do(() => {
-			this.createSingleClickEvent();
+	pinpointSearchActive$: Observable<any> = Observable
+		.combineLatest(this.isPinPointSearch$, this.isActiveGeoFilter$)
+		.do(([isPinPointSearch, isActiveGeoFilter]) => {
+			if (isPinPointSearch && isActiveGeoFilter) {
+				this.createSingleClickEvent();
+			} else {
+				this.removeSingleClickEvent();
+			}
 		});
 
 
@@ -72,16 +66,15 @@ export class IconVisualizer extends RegionVisualizer {
 	public singleClickListener(e) {
 		this.iMap.projectionService
 			.projectAccurately({type: 'Point', coordinates: e.coordinate}, this.iMap)
+			.take(1)
 			.withLatestFrom(this.isPinPointSearch$)
-			.subscribe(([point, isPinPointSearch]: [Point, boolean]) =>
-			{
-				if (isPinPointSearch) {
-					this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
-					const region = getPolygonByPointAndRadius(point.coordinates).geometry;
-					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-					this.removeSingleClickEvent();
-				}
-			});
+			.filter(([point, isPinPointSearch]) => isPinPointSearch)
+			.map(([point]: [Point, boolean]) => point.coordinates)
+			.do(this.updateRegion.bind(this))
+			.do(() => {
+				this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+			})
+			.subscribe();
 	}
 
 	public createSingleClickEvent() {
@@ -92,12 +85,20 @@ export class IconVisualizer extends RegionVisualizer {
 		this.iMap.mapObject.un('singleclick', this.singleClickListener, this);
 	}
 
+	updateRegion(coordinates: Position): void {
+		const region = getPolygonByPointAndRadius(coordinates).geometry;
+		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+	}
+
+	onContextMenu(position: Position): void {
+		this.updateRegion(position);
+	}
+
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.contextMenuClick$.subscribe(),
 			this.pinpointSearchActive$.subscribe(),
-			this.updatePinLocationAction$.subscribe(),
+			// this.updatePinLocationAction$.subscribe(),
 			this.isPinPointSearch$.subscribe()
 		);
 	}

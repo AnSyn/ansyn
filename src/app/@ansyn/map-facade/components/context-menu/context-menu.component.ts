@@ -2,20 +2,16 @@ import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Rende
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction, ContextMenuTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
 import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Overlay } from '@ansyn\/core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
-import { IStatusBarState, } from "@ansyn/status-bar";
-import { statusBarStateSelector } from "@ansyn/status-bar/reducers/status-bar.reducer";
-import { statusBarFlagsItemsEnum } from "@ansyn/status-bar/models";
-import { UpdateStatusFlagsAction } from "@ansyn/status-bar/actions/status-bar.actions";
 
 export interface OverlayButton {
 	name: string;
@@ -29,24 +25,15 @@ export interface OverlayButton {
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
+	mapState$ = this.store.select(mapStateSelector);
 
 	get filterField() {
 		return this.config.contextMenu.filterField
 	}
 
-	mapState$ = this.store.select(mapStateSelector);
-
-
-	searchModeChange$: Observable<string> = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, string>('searchType')
-		.distinctUntilChanged()
-		.do((SearchMode) => {
-			this.searchMode = SearchMode;
-		});
-
 	displayedOverlay$: Observable<Overlay> = this.mapState$
 		.map(MapFacadeService.activeMap)
-		.filter((activeMap: CaseMapState) => Boolean(activeMap))
+		.filter(Boolean)
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
 
@@ -70,7 +57,6 @@ export class ContextMenuComponent implements OnInit {
 	allSensors = [];
 	angleList: Array<'Draw' | 'Turn' | 'Show'> = [];
 	point: GeoJSON.Point;
-	searchMode = 'Pin-Point';
 
 	private _filteredOverlays: Overlay[];
 	private _prevfilteredOverlays = [];
@@ -168,7 +154,6 @@ export class ContextMenuComponent implements OnInit {
 	ngOnInit(): void {
 		this.filteredOverlays$
 			.subscribe((filteredOverlays: Overlay[]) => this.filteredOverlays = filteredOverlays);
-		this.searchModeChange$.subscribe();
 		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
 	}
 
@@ -241,15 +226,8 @@ export class ContextMenuComponent implements OnInit {
 		}
 	}
 
-	setSearchEntity() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
-
-		if (this.searchMode === 'Pin-Point') {
-			this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));
-		}
-		else if (this.searchMode === 'Polygon') {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: true }));
-		}
+	setPinPoint() {
+		this.store.dispatch(new ContextMenuTriggerAction(this.point.coordinates));
 	}
 
 	getSensorType(sensorType: string) {

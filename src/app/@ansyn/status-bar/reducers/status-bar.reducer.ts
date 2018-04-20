@@ -1,9 +1,7 @@
 import { StatusActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { ComboBoxesProperties } from '@ansyn/status-bar';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { cloneDeep } from 'lodash';
-import { CaseTimeState } from '@ansyn/core';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
@@ -12,14 +10,12 @@ export const statusBarToastMessages = {
 
 export interface IStatusBarState {
 	flags: Map<statusBarFlagsItemsEnum, boolean>;
-	comboBoxesProperties: ComboBoxesProperties,
-	searchType: string
+	comboBoxesProperties: ComboBoxesProperties
 }
 
 export const StatusBarInitialState: IStatusBarState = {
 	flags: new Map<statusBarFlagsItemsEnum, boolean>(),
-	comboBoxesProperties: {},
-	searchType: 'Pin-Point'
+	comboBoxesProperties: {}
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -47,14 +43,9 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusAc
 		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
-
-		case StatusBarActionsTypes.UPDATE_SEARCH_MODE:
-			const searchType = cloneDeep(action.payload);
-			return { ...state, searchType: searchType};
-
 		default:
 			return state;
 
 	}
 }
-
+export const selectGeoFilter = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.comboBoxesProperties.geoFilter);

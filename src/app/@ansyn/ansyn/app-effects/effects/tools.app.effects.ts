@@ -89,7 +89,6 @@ export class ToolsAppEffects {
 			CoreActionTypes.SET_LAYOUT)
 		.withLatestFrom(this.isPolygonSearch$)
 		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
-		.do(() => console.log("HAHA"))
 		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
 
 	/**

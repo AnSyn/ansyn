@@ -20,20 +20,16 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	mapState$ = this.store$.select(mapStateSelector);
 
-	isPolygonSearch$ = this.statusBarFlags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.polygonSearch))
-		.distinctUntilChanged();
-
 	isActiveMap$ = this.mapState$
 		.pluck<IMapState, string>('activeMapId')
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
-	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.isPolygonSearch$)
+	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.onSearchMode$)
 		.do(this.onActiveMapChange.bind(this));
 
-	resetInteraction$: Observable<any> = Observable.combineLatest(this.isPolygonSearch$, this.isActiveMap$)
-		.filter(([isPolygonSearch, isActiveMap]: [boolean, boolean]) => isActiveMap)
+	resetInteraction$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
+		.filter(([onSearchMode, isActiveMap]: [boolean, boolean]) => isActiveMap)
 		.do(([isPolygonSearch]) => {
 			this.clearOrResetPolygonDraw(isPolygonSearch);
 		});
@@ -63,6 +59,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	createDrawInteraction() {
+		this.vector.setOpacity(0);
 		const drawInteractionHandler = new Draw({
 			type: 'Polygon',
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
@@ -75,7 +72,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	public removeDrawInteraction() {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
-		this.clearEntities();
+		this.vector.setOpacity(1);
 	}
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
@@ -94,7 +91,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
 		this.iMap.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -107,16 +104,16 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 			.subscribe();
 	}
 
-	onActiveMapChange([isActiveMap, isPolygonSearch]: [boolean, boolean]) {
+	onActiveMapChange([isActiveMap, onSearchMode]: [boolean, boolean]) {
 		this.removeDrawInteraction();
-		if (isPolygonSearch && isActiveMap) {
+		if (onSearchMode && isActiveMap) {
 			this.createDrawInteraction()
 		}
 	}
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 	}
 
 	clearOrResetPolygonDraw(isPolygonSearch: boolean) {
@@ -127,7 +124,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(point: Position): void {
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: true }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: true }));
 	}
 
 	onDispose() {

@@ -58,15 +58,15 @@ export class StatusBarAppEffects {
 	 * @name updatePinPointModeAction$
 	 * @ofType UpdateStatusFlagsAction
 	 * @dependencies statusBar
-	 * @filter is action pinPointSearch
+	 * @filter is action geoFilterSearch
 	 * @action PinPointModeTriggerAction
 	 */
 	@Effect()
 	updatePinPointModeAction$: Observable<PinPointModeTriggerAction> = this.actions$
 		.ofType<UpdateStatusFlagsAction>(StatusBarActionsTypes.UPDATE_STATUS_FLAGS)
-		.filter(action => action.payload.key === statusBarFlagsItemsEnum.pinPointSearch)
+		.filter(action => action.payload.key === statusBarFlagsItemsEnum.geoFilterSearch)
 		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags'))
-		.map(([action, flags]: [any, Map<statusBarFlagsItemsEnum, boolean>]) => flags.get(statusBarFlagsItemsEnum.pinPointSearch))
+		.map(([action, flags]: [any, Map<statusBarFlagsItemsEnum, boolean>]) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
 		.map((value: boolean) => new PinPointModeTriggerAction(value));
 
 

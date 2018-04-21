@@ -194,12 +194,11 @@ describe('VisualizersAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(abcde)--', {
+		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false}),
-			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false}),
-			e: new SetPinLocationModeAction(false)
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+			d: new SetPinLocationModeAction(false)
 		});
 
 		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
@@ -212,10 +211,9 @@ describe('VisualizersAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcde)--', {
+		const expectedResult = cold('--(bce)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false}),
-			d: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false}),
+			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
 			e: new SetPinLocationModeAction(false)
 		});
 

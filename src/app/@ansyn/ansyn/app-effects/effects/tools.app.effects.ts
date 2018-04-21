@@ -51,7 +51,7 @@ import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/la
 import { Feature, FeatureCollection } from 'geojson';
 import { SetSubMenu, SubMenuEnum } from '@ansyn/menu-items';
 import {
-	IStatusBarState,
+	IStatusBarState, selectGeoFilter,
 	StatusBarActionsTypes,
 	statusBarFlagsItemsEnum,
 	statusBarStateSelector,
@@ -69,7 +69,11 @@ export class ToolsAppEffects {
 		.distinctUntilChanged();
 
 	isPolygonSearch$ = this.flags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.polygonSearch))
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
+		.distinctUntilChanged();
+
+	isPolygonGeoFilter$ = this.store$.select(selectGeoFilter)
+		.map((geoFilter) => geoFilter === 'Polygon')
 		.distinctUntilChanged();
 
 
@@ -86,25 +90,11 @@ export class ToolsAppEffects {
 		.ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
 			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
-			CoreActionTypes.SET_LAYOUT)
-		.withLatestFrom(this.isPolygonSearch$)
-		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
-		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
-
-	/**
-	 * @type Effect
-	 * @name onSetSubMenu$
-	 * @ofType SetSubMenu
-	 * @dependencies map
-	 * @filter SubMenu not null or undefined
-	 * @action UpdateStatusFlagsAction?
-	 */
-	@Effect()
-	onSetSubMenu$: Observable<any> = this.actions$
-		.ofType<SetSubMenu>(ToolsActionsTypes.SET_SUB_MENU)
-		.map(({ payload }) => payload)
-		.filter(Boolean)
-		.map(() =>  new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.polygonSearch, value: false }));
+			CoreActionTypes.SET_LAYOUT,
+			ToolsActionsTypes.SET_SUB_MENU)
+		.withLatestFrom(this.isPolygonSearch$, this.isPolygonGeoFilter$)
+		.filter(([action, isPolygonSearch, isPolygonGeoFilter]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isPolygonGeoFilter)
+		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
 	/**
 	 * @type Effect

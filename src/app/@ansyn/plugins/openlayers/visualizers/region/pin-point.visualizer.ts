@@ -16,22 +16,9 @@ import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-
 
 export class IconVisualizer extends RegionVisualizer {
 
-	// updatePinLocationAction$: Observable<any> = this.actions$
-	// 	.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-	// 	.do((action: SetPinLocationModeAction) => {
-	// 		if (action.payload) {
-	// 			this.removeSingleClickEvent();
-	// 		}
-	// 	});
-
-	isPinPointSearch$ = this.statusBarFlags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.pinPointSearch))
-		.distinctUntilChanged();
-
-	pinpointSearchActive$: Observable<any> = Observable
-		.combineLatest(this.isPinPointSearch$, this.isActiveGeoFilter$)
-		.do(([isPinPointSearch, isActiveGeoFilter]) => {
-			if (isPinPointSearch && isActiveGeoFilter) {
+	geoFilterSearchActive$: Observable<any> = this.onSearchMode$
+		.do((onSearchMode: boolean) => {
+			if (onSearchMode) {
 				this.createSingleClickEvent();
 			} else {
 				this.removeSingleClickEvent();
@@ -67,12 +54,12 @@ export class IconVisualizer extends RegionVisualizer {
 		this.iMap.projectionService
 			.projectAccurately({type: 'Point', coordinates: e.coordinate}, this.iMap)
 			.take(1)
-			.withLatestFrom(this.isPinPointSearch$)
-			.filter(([point, isPinPointSearch]) => isPinPointSearch)
+			.withLatestFrom(this.onSearchMode$)
+			.filter(([point, onSearchMode]) => onSearchMode)
 			.map(([point]: [Point, boolean]) => point.coordinates)
 			.do(this.updateRegion.bind(this))
 			.do(() => {
-				this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.pinPointSearch, value: false }));
+				this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 			})
 			.subscribe();
 	}
@@ -97,9 +84,7 @@ export class IconVisualizer extends RegionVisualizer {
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.pinpointSearchActive$.subscribe(),
-			// this.updatePinLocationAction$.subscribe(),
-			this.isPinPointSearch$.subscribe()
+			this.geoFilterSearchActive$.subscribe()
 		);
 	}
 

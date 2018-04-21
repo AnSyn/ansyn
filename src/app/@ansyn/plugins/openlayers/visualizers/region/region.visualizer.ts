@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import {
-	ComboBoxesProperties, IStatusBarState, statusBarFlagsItemsEnum,
+	IStatusBarState, statusBarFlagsItemsEnum,
 	statusBarStateSelector
 } from 'app/@ansyn/status-bar/index';
 import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, OverlaysCriteria } from 'app/@ansyn/core/index';
@@ -33,10 +33,18 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	isActiveGeoFilter$ = this.geoFilter$
 		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
 
+	geoFilterSearch$ = this.statusBarFlags$
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
+		.distinctUntilChanged();
+
+	onSearchMode$ = Observable.combineLatest(this.geoFilterSearch$, this.isActiveGeoFilter$)
+		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
+		.distinctUntilChanged();
+
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
 		.withLatestFrom(this.isActiveGeoFilter$)
-		.filter(([action, isPinPointGeoFilter]: [ContextMenuTriggerAction, boolean]) => isPinPointGeoFilter)
+		.filter(([action, isActiveGeoFilter]: [ContextMenuTriggerAction, boolean]) => isActiveGeoFilter)
 		.map(([{ payload }]) => payload)
 		.do(this.onContextMenu.bind(this));
 

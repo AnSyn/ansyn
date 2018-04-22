@@ -36,7 +36,7 @@ export class MenuAppEffects {
 	autoCloseMenu$: Observable<SetClickOutside> = this.store$
 		.select(selectSubMenu)
 		.distinctUntilChanged()
-		.map((subMenu) => new SetClickOutside(!subMenu));
+		.map((subMenu) => new SetClickOutside(isNaN(subMenu)));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

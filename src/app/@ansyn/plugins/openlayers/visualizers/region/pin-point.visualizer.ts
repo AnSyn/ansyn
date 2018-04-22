@@ -8,12 +8,12 @@ import { Actions } from '@ngrx/effects';
 import { getPointByGeometry } from 'app/@ansyn/core/utils/index';
 import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf'
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CaseGeoFilter, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { Position } from 'geojson';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
-export class IconVisualizer extends RegionVisualizer {
+export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({
 			scale: 1,
@@ -23,7 +23,7 @@ export class IconVisualizer extends RegionVisualizer {
 	});
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService) {
-		super(store$, actions$, CaseGeoFilter.PinPoint);
+		super(store$, actions$, projectionService, CaseGeoFilter.PinPoint);
 	}
 
 	featureStyle(feature: Feature, resolution) {

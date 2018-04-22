@@ -11,8 +11,6 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES'
 };
-// some actions does not have payload
-export type StatusActions = any;
 
 export class CopySelectedCaseLinkAction implements Action {
 	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;
@@ -43,3 +41,5 @@ export class SetComboBoxesProperties implements Action {
 	constructor(public payload: ComboBoxesProperties) {
 	}
 }
+
+export type StatusBarActions = CopySelectedCaseLinkAction | UpdateStatusFlagsAction | ExpandAction | SetComboBoxesProperties;

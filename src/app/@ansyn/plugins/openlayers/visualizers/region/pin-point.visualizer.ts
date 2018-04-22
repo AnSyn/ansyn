@@ -12,6 +12,7 @@ import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CaseGeoFilter, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { Position } from 'geojson';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
@@ -44,6 +45,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 
 	onContextMenu(coordinates: Position): void {
 		const region = getPolygonByPointAndRadius(coordinates).geometry;
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

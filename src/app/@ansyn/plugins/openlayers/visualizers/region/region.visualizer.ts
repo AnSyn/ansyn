@@ -60,7 +60,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.do(this.onContextMenu.bind(this));
 
 	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
-		.filter(([onSearchMode, isActiveMap]: [boolean, boolean]) => isActiveMap)
 		.do(this.interactionChanges.bind(this));
 
 	drawChanges$ = Observable
@@ -129,6 +128,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {
+		console.log("active changed!");
 		this.removeDrawInteraction();
 		if (onSearchMode && isActiveMap) {
 			this.createDrawInteraction();

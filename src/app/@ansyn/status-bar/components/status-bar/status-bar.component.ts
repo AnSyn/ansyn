@@ -158,7 +158,9 @@ export class StatusBarComponent implements OnInit {
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
-		this.toggleMapSearch();
+		if (payload.geoFilter) {
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: true }));
+		}
 	}
 
 	copyLink(): void {
@@ -166,7 +168,6 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	toggleMapSearch() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
 		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
 	}
 

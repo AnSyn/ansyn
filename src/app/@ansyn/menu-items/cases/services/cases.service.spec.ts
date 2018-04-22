@@ -5,7 +5,7 @@ import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
+import { CaseGeoFilter, CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
 
@@ -44,7 +44,7 @@ describe('CasesService', () => {
 			},
 			orientation: 'Align North',
 			timeFilter: 'Start - End',
-			geoFilter: 'Pin-Point',
+			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},
 			overlaysManualProcessArgs: {}
 		}

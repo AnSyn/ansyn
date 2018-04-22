@@ -8,6 +8,7 @@ import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
@@ -15,7 +16,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions) {
 
-		super(store$, actions$, 'Polygon');
+		super(store$, actions$, CaseGeoFilter.Polygon);
 
 		this.updateStyle({
 			initial: {

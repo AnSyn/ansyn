@@ -29,7 +29,7 @@ describe('CasesReducer', () => {
 			},
 			orientation: 'Align North',
 			timeFilter: 'Start - End',
-			geoFilter: 'Pin-Point',
+			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},
 			overlaysManualProcessArgs: {}
 		}

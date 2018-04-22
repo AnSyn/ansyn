@@ -33,8 +33,8 @@
 			</ansyn-combo-box>
 		</div>
 
-		<!-- Geo point -->
-		<div class="combo-box-container block with-buttons">
+		<!-- Geo filter -->
+		<div class="combo-box-container block with-buttons" id="editGeoFilter">
 
 			<ansyn-combo-box
 				class="combo-box-width"
@@ -47,13 +47,14 @@
 
 			<div class="buttons">
 				<button (click)="toggleIndicatorView()"
+						[disabled]="flags.get(statusBarFlagsItemsEnum.geoFilterSearch)"
 						[attr.tooltip-value]="toolTips.geoFilterShow"
 						tooltip-class="top right"
 						class="eye-button toggle-icon"
 						[class.active2]="flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)">
 					<i class="icon-status-bar-show-pin-point"></i>
 				</button>
-				<button id="editGeoFilter"
+				<button
 						(click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"

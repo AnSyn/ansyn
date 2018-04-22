@@ -70,15 +70,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	get drawType() {
-		switch (this.geoFilter) {
-			case 'Pin-Point':
-				return 'Point';
-			default:
-				return this.geoFilter;
-		}
-	}
-
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
@@ -117,7 +108,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		this.vector.setOpacity(0);
 		const drawInteractionHandler = new Draw({
-			type: this.drawType,
+			type: this.geoFilter,
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
 		});

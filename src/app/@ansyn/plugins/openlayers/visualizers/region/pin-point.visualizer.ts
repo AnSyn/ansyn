@@ -10,7 +10,7 @@ import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/regi
 import * as turf from '@turf/turf'
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { SetOverlaysCriteriaAction } from '@ansyn/core';
+import { CaseGeoFilter, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { Position } from 'geojson';
 
 export class IconVisualizer extends RegionVisualizer {
@@ -23,7 +23,7 @@ export class IconVisualizer extends RegionVisualizer {
 	});
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService) {
-		super(store$, actions$, 'Pin-Point');
+		super(store$, actions$, CaseGeoFilter.PinPoint);
 	}
 
 	featureStyle(feature: Feature, resolution) {

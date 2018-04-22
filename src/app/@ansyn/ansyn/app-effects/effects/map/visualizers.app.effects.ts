@@ -6,6 +6,8 @@ import {
 	HoverFeatureTriggerAction,
 	MapActionTypes,
 	SetMapsDataActionStore
+	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, MapActionTypes,
+	PinPointTriggerAction, SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -31,8 +33,6 @@ import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-
 import {
 	DisplayOverlaySuccessAction,
 	MarkUpClass,
-	MouseOutDropAction,
-	MouseOverDropAction,
 	OverlaysActionTypes,
 	SetMarkUp
 } from '@ansyn/overlays';
@@ -40,6 +40,45 @@ import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/too
 
 @Injectable()
 export class VisualizersAppEffects {
+	// /**
+	//  * @type Effect
+	//  * @name onHoverFeatureSetMarkup$
+	//  * @ofType HoverFeatureTriggerAction
+	//  * @dependencies cases
+	//  * @action OverlaysMarkupAction
+	//  */
+	// @Effect()
+	// onHoverFeatureSetMarkup$: Observable<any> = this.actions$
+	// 	.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
+	// 	.map(({ payload }: HoverFeatureTriggerAction) => new SetMarkUp({
+	// 		classToSet: MarkUpClass.hover,
+	// 		dataToSet: {
+	// 			overlaysIds: payload.id ? [payload.id] : []
+	// 		}
+	// 	}));
+	//
+	// /**
+	//  * @type Effect
+	//  * @name onMouseOutDropAction$
+	//  * @ofType MouseOutDropAction
+	//  * @action HoverFeatureTriggerAction, RemoveMarkUp
+	//  */
+	// @Effect()
+	// onMouseOutDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
+	// 	.ofType(OverlaysActionTypes.MOUSE_OUT_DROP)
+	// 	.map(({ payload }: MouseOutDropAction) => new HoverFeatureTriggerAction({ id: null }));
+	//
+	//
+	// /**
+	//  * @type Effect
+	//  * @name onMouseOverDropAction$
+	//  * @ofType MouseOverDropAction
+	//  * @action HoverFeatureTriggerAction
+	//  */
+	// @Effect()
+	// onMouseOverDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
+	// 	.ofType(OverlaysActionTypes.MOUSE_OVER_DROP)
+	// 	.map(({ payload }: MouseOverDropAction) => new HoverFeatureTriggerAction({ id: payload }));
 	/**
 	 * @type Effect
 	 * @name onHoverFeatureSetMarkup$
@@ -47,38 +86,6 @@ export class VisualizersAppEffects {
 	 * @dependencies cases
 	 * @action OverlaysMarkupAction
 	 */
-	@Effect()
-	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.map(({payload}: HoverFeatureTriggerAction) => new SetMarkUp({
-			classToSet: MarkUpClass.hover,
-			dataToSet: {
-				overlaysIds: payload.id ? [payload.id] : []
-			}
-		}));
-
-	/**
-	 * @type Effect
-	 * @name onMouseOutDropAction$
-	 * @ofType MouseOutDropAction
-	 * @action HoverFeatureTriggerAction, RemoveMarkUp
-	 */
-	@Effect()
-	onMouseOutDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
-		.ofType(OverlaysActionTypes.MOUSE_OUT_DROP)
-		.map(({payload}: MouseOutDropAction) => new HoverFeatureTriggerAction({id: null}));
-
-
-	/**
-	 * @type Effect
-	 * @name onMouseOverDropAction$
-	 * @ofType MouseOverDropAction
-	 * @action HoverFeatureTriggerAction
-	 */
-	@Effect()
-	onMouseOverDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
-		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP)
-		.map(({payload}: MouseOverDropAction) => new HoverFeatureTriggerAction({id: payload}));
 
 	/**
 	 * @type Effect

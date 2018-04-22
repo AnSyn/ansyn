@@ -148,13 +148,6 @@ export class ContextMenuDisplayAction implements Action {
 	}
 }
 
-export class HoverFeatureTriggerAction implements Action {
-	type = MapActionTypes.VISUALIZERS.HOVER_FEATURE;
-
-	constructor(public payload: { id?: string }) {
-	}
-}
-
 export class DrawOverlaysOnMapTriggerAction implements Action {
 	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
 

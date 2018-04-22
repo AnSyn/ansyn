@@ -34,23 +34,6 @@ export interface OverlayLine {
 	data: Array<OverlayDrop>
 }
 
-export interface OverlayDrop {
-	id: string,
-	date: Date,
-	otherData?: any
-}
-
-export interface OverlayDropMarkUp {
-	id: string,
-	markUpClassList: Array<MarkUpClass>
-}
-
-export interface MarkUpData {
-	overlaysIds: Array<string>
-	type?: MarkUpTypes
-	data?: string
-}
-
 export enum MarkUpClass {
 	active = 'active',
 	hover = 'hover',

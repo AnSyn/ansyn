@@ -168,20 +168,6 @@ export class SetSpecialObjectsActionStore implements Action {
 	};
 }
 
-export class MouseOverDropAction implements Action {
-	type = OverlaysActionTypes.MOUSE_OVER_DROP;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class MouseOutDropAction implements Action {
-	type = OverlaysActionTypes.MOUSE_OUT_DROP;
-
-	constructor(public payload: string) {
-	}
-}
-
 export class SetOverlaysStatusMessage implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
@@ -213,8 +199,6 @@ export type OverlaysActions
 	| ClearFilterAction
 	| DemoAction
 	| SetFilteredOverlaysAction
-	| MouseOverDropAction
-	| MouseOutDropAction
 	| SetOverlaysStatusMessage
 	| AddMarkUp
 	| RemoveMarkUp

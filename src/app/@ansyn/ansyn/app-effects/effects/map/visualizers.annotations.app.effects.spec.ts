@@ -12,7 +12,7 @@ import {
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/Observable';
 import {
-	ILayerState, initialLayersState,
+	ILayersState, initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
@@ -38,7 +38,7 @@ describe('VisualizersAnnotationsAppEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService = null;
 	let coreState = coreInitialState;
 	let caseState: ICasesState = cloneDeep(initialCasesState);
-	let layersState: ILayerState = cloneDeep(initialLayersState);
+	let layersState: ILayersState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
 	let toolsState: IToolsState = { ...toolsInitialState };
 	const fakeVisualizer = jasmine.createSpyObj([

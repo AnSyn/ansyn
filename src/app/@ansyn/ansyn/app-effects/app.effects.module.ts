@@ -1,6 +1,6 @@
 import { FiltersAppEffects } from './effects/filters.app.effects';
 import { IFiltersState } from '@ansyn/menu-items/filters';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayersState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
@@ -34,7 +34,7 @@ export interface IAppState {
 	overlays: IOverlaysState;
 	cases: ICasesState;
 	menu: IMenuState;
-	layers: ILayerState;
+	layers: ILayersState;
 	statusBar: IStatusBarState;
 	map: IMapState;
 	tools: IToolsState;

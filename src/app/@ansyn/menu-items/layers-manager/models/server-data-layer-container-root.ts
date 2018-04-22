@@ -6,6 +6,6 @@ export interface IServerDataLayerContainerRoot {
 	id: string;
 	name: string;
 	type: LayerType;
-	dataLayerContainers: IServerDataLayerContainer[];
 	dataLayers: IServerDataLayer[];
+	dataLayerContainers: IServerDataLayerContainer[];
 }

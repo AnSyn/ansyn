@@ -72,9 +72,17 @@ export interface CaseFilter {
 export type CaseFilters = CaseFilter[];
 
 export interface CaseFacetsState {
+	layers?: CaseLayers;
 	filters?: CaseFilters;
 	showOnlyFavorites?: boolean;
 }
+
+export interface CaseLayer {
+	fieldName: string;
+	metadata: CaseFilterMetadata;
+}
+
+export type CaseLayers = CaseLayer[];
 
 export interface CaseLayersState {
 	annotationsLayer: FeatureCollection<any>,

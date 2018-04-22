@@ -1,5 +1,5 @@
 import {
-	BeginLayerTreeLoadAction, LayersActionTypes, SetAnnotationsLayer,
+	InitializeLayersAction, InitializeLayersSuccessAction, LayersActionTypes, SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction, UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -21,13 +21,13 @@ export class LayersAppEffects {
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
 	 * @filter The selected case is not empty
-	 * @action ToggleDisplayAnnotationsLayer | BeginLayerTreeLoadAction | SetAnnotationsLayer
+	 * @action ToggleDisplayAnnotationsLayer | InitializeLayersAction | SetAnnotationsLayer
 	 */
 	@Effect()
-	selectCase$: Observable<ToggleDisplayAnnotationsLayer | BeginLayerTreeLoadAction | SetAnnotationsLayer> = this.actions$
+	selectCase$: Observable<ToggleDisplayAnnotationsLayer | InitializeLayersAction | SetAnnotationsLayer> = this.actions$
 		.ofType(CasesActionTypes.SELECT_CASE)
 		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
-		.map(() => new BeginLayerTreeLoadAction());
+		.map(() => new InitializeLayersAction());
 
 	/**
 	 * @type Effect

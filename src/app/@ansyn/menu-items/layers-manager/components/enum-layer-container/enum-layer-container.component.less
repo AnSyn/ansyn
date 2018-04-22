@@ -1,0 +1,111 @@
+@import "core/less/common";
+
+div.enum-fields-enumerator {
+
+	display: flex;
+	padding: 2.5px 0;
+	justify-content: space-between;
+
+	&:hover {
+		div.left-side div.layer-row span.only-layer {
+			visibility: visible;
+		}
+	}
+
+	div.left-side {
+		display: flex;
+
+		div.checkbox {
+			margin-right: 5px;
+
+			input {
+				label {
+					display: inline;
+				}
+			}
+
+			input.regular-checkbox {
+				display: none;
+			}
+
+			input.regular-checkbox + label {
+				border: 1px solid #C9C9C9;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
+				padding: 9px;
+				border-radius: 3px;
+				display: inline-block;
+				position: relative;
+			}
+
+			input.regular-checkbox:hover + label:hover {
+				border: 1px solid #FFFFFF;
+			}
+
+			input.regular-checkbox + label:active {
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+			}
+
+			input.regular-checkbox:checked + label {
+				background-color: #FFFFFF;
+				border: 1px solid #FFFFFF;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+				color: #FFFFFF;
+
+				&:after {
+					content: '\2714';
+					font-size: 14px;
+					position: absolute;
+					top: 0;
+					left: 3px;
+					color: @application-main-color;
+				}
+			}
+		}
+
+		div.layer-row {
+			display: inline-block;
+			position: relative;
+			bottom: 5px;
+			margin-left: 5px;
+
+			div.field-name-container {
+				max-width: 150px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: inline-block;
+				color: #FFFFFF;
+				top: 4px;
+				position: relative;
+
+				span.field-name {
+					font-size: 14px;
+					font-style: normal;
+				}
+			}
+
+			span.only-layer {
+				visibility: hidden;
+				font-size: 12px;
+				font-style: normal;
+				color: rgba(255, 255, 255, 0.75);
+				cursor: pointer;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	div.right-side {
+		span {
+			font-size: 14px;
+			font-style: normal;
+			font-weight: bold;
+			color: #FFFFFF;
+			text-align: right;
+		}
+
+	}
+}

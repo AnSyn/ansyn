@@ -39,7 +39,7 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayersState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -102,7 +102,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
 		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
-		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
+		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayersState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
 		.mergeMap(() =>  [
 			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
 			new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })

@@ -1,0 +1,29 @@
+<div class="container">
+
+	<div class="title-row">
+		<span class="title">{{ layer.displayName }}</span>
+		<!--<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"-->
+			  <!--class="filtered">(filtered)</span>-->
+
+		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledButton"
+				(click)="show = !show">
+		</button>
+
+		<div class="show-all">
+			<span (click)="showAll()">Show all</span>
+		</div>
+	</div>
+
+	<div class="fields" #fields [@fieldsTrigger]="show">
+		<div *ngIf="metadataFromState">
+			<ansyn-enum-layer-container
+				[metadata]="metadataFromState"
+				(onMetadataChange)="onMetadataChange($event)">
+			</ansyn-enum-layer-container>
+		</div>
+	</div>
+
+	<div *ngIf="!metadataFromState">
+		Loading...
+	</div>
+</div>

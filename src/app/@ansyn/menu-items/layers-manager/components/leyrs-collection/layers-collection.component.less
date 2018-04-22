@@ -1,0 +1,43 @@
+@import "core/less/common";
+
+:host {
+	&:extend(.default-menu-item);
+}
+
+.collection {
+	width: 100%;
+	padding: 25px 10px;
+	box-sizing: border-box;
+	height: 100%;
+	.allLayers {
+		overflow-y: auto;
+		height: 100%;
+		padding-right: 10px;
+	}
+	ansyn-checkbox {
+		margin-bottom: 10px;
+	}
+
+}
+
+&::-webkit-scrollbar {
+	width: 7px;
+}
+
+&::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
+
+&::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
+	display: none;
+}
+
+&::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.05);
+	border: 4px solid transparent;
+	background-clip: padding-box;
+	border-radius: 2px;
+	background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+}

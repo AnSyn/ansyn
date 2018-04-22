@@ -38,7 +38,7 @@ import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
-	ILayerState,
+	ILayersState,
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -50,7 +50,7 @@ describe('ToolsAppEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let icaseState: ICasesState;
-	let layerState: ILayerState;
+	let layerState: ILayersState;
 	let toolsState: IToolsState;
 
 	const cases: Case[] = [{

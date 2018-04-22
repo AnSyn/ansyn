@@ -15,7 +15,7 @@ import {
 	CasesModule,
 	FiltersModule,
 	ImagerySandBoxModule,
-	LayersManagerModule,
+	LayersCollectionModule,
 	SettingsModule,
 	ToolsModule
 } from '@ansyn/menu-items';
@@ -29,7 +29,7 @@ import { AppEffectsModule } from './app-effects/app.effects.module';
 const MenuItemsModules = [
 	CasesModule,
 	FiltersModule,
-	LayersManagerModule,
+	LayersCollectionModule,
 	ToolsModule,
 	AlgorithmsModule,
 	SettingsModule,

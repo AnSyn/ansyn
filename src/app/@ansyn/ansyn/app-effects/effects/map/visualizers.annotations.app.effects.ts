@@ -5,7 +5,7 @@ import {
 	SetAnnotationMode, ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayersState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { AnnotationsVisualizer, AnnotationVisualizerType } from '@ansyn/plugins/openlayers/open-layer-visualizers/annotations.visualizer';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../app.effects.module';
@@ -24,7 +24,7 @@ import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { ImageryCreatedAction } from '@ansyn/map-facade';
 
 export interface AgentOperations {
-	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayerState) => void
+	[key: string]: (visualizer: AnnotationsVisualizer, payload: AnnotationVisualizerAgentPayload, layerState: ILayersState) => void
 }
 
 @Injectable()
@@ -58,7 +58,7 @@ export class VisualizersAnnotationsAppEffects {
 	annotationVisualizerAgent$: Observable<any> = this.actions$
 		.ofType<AnnotationVisualizerAgentAction>(ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT)
 		.withLatestFrom(this.layersState$, this.store$.select(mapStateSelector))
-		.do(([{ payload }, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayerState, IMapState]) => {
+		.do(([{ payload }, layerState, mapsState]: [AnnotationVisualizerAgentAction, ILayersState, IMapState]) => {
 			const { operation, relevantMaps }: AnnotationVisualizerAgentPayload = payload;
 			const relevantMapsIds: string[] = this.relevantMapIds(relevantMaps, mapsState);
 			const annotationsVisualizers: AnnotationsVisualizer[] = this.annotationVisualizers(relevantMapsIds);
@@ -105,7 +105,7 @@ export class VisualizersAnnotationsAppEffects {
 	drawAnnotationEnd$ = this.actions$
 		.ofType<AnnotationDrawEndAction>(MapActionTypes.TRIGGER.ANNOTATION_DRAW_END)
 		.withLatestFrom(this.layersState$)
-		.map(([action, { annotationsLayer }]: [AnnotationDrawEndAction, ILayerState]) => {
+		.map(([action, { annotationsLayer }]: [AnnotationDrawEndAction, ILayersState]) => {
 			const updatedAnnotationsLayer =  <FeatureCollection<any>> { ...annotationsLayer };
 			updatedAnnotationsLayer.features.push(action.payload);
 			return new SetAnnotationsLayer(updatedAnnotationsLayer)
@@ -122,7 +122,7 @@ export class VisualizersAnnotationsAppEffects {
 	removeAnnotationFeature$: Observable<SetAnnotationsLayer> = this.actions$
 		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
 		.withLatestFrom(this.layersState$)
-		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {
+		.map(([action, layerState]: [AnnotationRemoveFeature, ILayersState]) => {
 			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...layerState.annotationsLayer } ;
 			const featureIndex = updatedAnnotationsLayer.features.findIndex((feature: Feature<any>) => {
 				return feature.properties.id === action.payload;
@@ -162,7 +162,7 @@ export class VisualizersAnnotationsAppEffects {
 	@Effect()
 	annotationData$: Observable<any> = this.actions$
 		.ofType<SetAnnotationsLayer | MapInstanceChangedAction>(LayersActionTypes.ANNOTATIONS.SET_LAYER, MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
-		.withLatestFrom(this.layersState$.pluck<ILayerState, boolean>('displayAnnotationsLayer'), this.toolsState$)
+		.withLatestFrom(this.layersState$.pluck<ILayersState, boolean>('displayAnnotationsLayer'), this.toolsState$)
 		.filter(([action, displayAnnotationsLayer, { flags }]: [Action, boolean, IToolsState]) => displayAnnotationsLayer || flags.get(toolsFlags.annotations))
 		.map(([action, displayAnnotationsLayer]: [Action, boolean, IToolsState]) => {
 			const relevantMaps: AnnotationAgentRelevantMap = displayAnnotationsLayer ? 'all' : 'active';

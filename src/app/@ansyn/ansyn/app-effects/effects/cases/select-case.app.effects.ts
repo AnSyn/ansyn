@@ -15,6 +15,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Case, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays';
+import 'rxjs/add/operator/mergeMap';
 
 @Injectable()
 export class SelectCaseAppEffects {

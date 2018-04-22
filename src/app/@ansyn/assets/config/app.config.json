@@ -127,6 +127,9 @@
 	"layersManagerConfig": {
 		"layersByCaseIdUrl": "http://ansyn.io:8081/api/store"
 	},
+	"layersConfig": {
+		"layersByCaseIdUrl": "http://ansyn.io:8081/api/store"
+	},
 	"overlaysConfig": {
 		"limit": 500
 	},

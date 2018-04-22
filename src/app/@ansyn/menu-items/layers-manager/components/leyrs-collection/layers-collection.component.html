@@ -1,0 +1,11 @@
+<div class="collection">
+	<ansyn-checkbox id="show-only-favorites" [checked]="onlyFavorite" (inputClicked)="showOnlyFavorites($event)"
+					text="Show only favorites" [disabled]="disableShowOnlyFavoritesSelection">
+	</ansyn-checkbox>
+	<div class="allLayers">
+	<ansyn-layer-container
+			*ngFor="let layer of layers"
+			[layer]="layer">
+		</ansyn-layer-container>
+	</div>
+</div>

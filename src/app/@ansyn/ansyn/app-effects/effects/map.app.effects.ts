@@ -22,6 +22,7 @@ import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/from';
 import { DisplayOverlayAction, IOverlaysState, OverlaysService } from '@ansyn/overlays';
 import {
 	IStatusBarState,

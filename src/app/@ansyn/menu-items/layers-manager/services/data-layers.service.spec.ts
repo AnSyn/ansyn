@@ -1,6 +1,5 @@
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { inject, TestBed } from '@angular/core/testing';
-import { DataLayersService } from './data-layers.service';
+import { DataLayersService, layersConfig } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';

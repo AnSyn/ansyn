@@ -42,7 +42,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
 import {
-	ILayerState,
+	ILayersState,
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -63,7 +63,7 @@ describe('VisualizersAppEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService = null;
 	let coreState = coreInitialState;
 	let caseState: ICasesState = cloneDeep(initialCasesState);
-	let layersState: ILayerState = cloneDeep(initialLayersState);
+	let layersState: ILayersState = cloneDeep(initialLayersState);
 	let mapState: IMapState = cloneDeep(initialMapState);
 
 	const selectedCase: Case = {

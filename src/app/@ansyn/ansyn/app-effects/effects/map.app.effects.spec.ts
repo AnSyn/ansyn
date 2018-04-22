@@ -60,7 +60,7 @@ import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { IToolsState, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
-	ILayerState,
+	ILayersState,
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -120,7 +120,7 @@ describe('MapAppEffects', () => {
 	let statusBarState: IStatusBarState;
 	let mapState: IMapState;
 	let overlaysState: IOverlaysState;
-	let layerState: ILayerState;
+	let layerState: ILayersState;
 	let toolsState: IToolsState;
 	let casesService: CasesService;
 	let baseSourceProviders: BaseMapSourceProvider[];

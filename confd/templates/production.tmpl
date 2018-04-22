@@ -142,7 +142,7 @@
     "geoMapsInitialMapSource": [
       {
         "mapType": "openLayersMap",
-        "mapSource": "ESRI_4326",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [
@@ -157,7 +157,7 @@
       },
       {
         "mapType": "disabledOpenLayersMap",
-        "mapSource": "ESRI_4326",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [

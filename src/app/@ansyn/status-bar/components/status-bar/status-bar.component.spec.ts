@@ -67,13 +67,21 @@ describe('StatusBarComponent', () => {
 		expect(result).toBe(false);
 	});
 
-	it('check click on pinPoint flags', () => {
-		spyOn(store, 'dispatch');
-		fixture.nativeElement.querySelector('.edit-pinpoint').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }));
+	describe('check click on pinPoint flags', () => {
+		beforeEach(() => {
+			spyOn(store, 'dispatch');
+		});
 
-		fixture.nativeElement.querySelector('.eye-button').click();
-		expect(store.dispatch).toHaveBeenCalled();
+		it('edit-pinpoint', () => {
+			fixture.nativeElement.querySelector('.edit-pinpoint').click();
+			fixture.detectChanges();
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
+		});
+		it('button-eye', () => {
+			fixture.nativeElement.querySelector('.eye-button').click();
+			fixture.detectChanges();
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
+		});
 	});
 
 	describe('clicks', () => {

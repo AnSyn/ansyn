@@ -32,7 +32,6 @@ import {
 	MapActionTypes,
 	MapsListChangedAction,
 	PinLocationModeTriggerAction,
-	PinPointModeTriggerAction,
 	PositionChangedAction,
 	SetMapsDataActionStore,
 	SynchronizeMapsAction

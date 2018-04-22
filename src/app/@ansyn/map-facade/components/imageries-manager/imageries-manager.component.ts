@@ -47,7 +47,6 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
-	pinPointMode: boolean;
 	mapsList: CaseMapState[];
 	activeMapId: string;
 
@@ -80,10 +79,6 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	initListeners() {
-		this.mapEffects.pinPointModeTriggerAction$.subscribe((_pinPointMode: boolean) => {
-			this.pinPointMode = _pinPointMode;
-		});
-
 		this.mapEffects.pinLocationModeTriggerAction$.subscribe((_pinLocationMode: boolean) => {
 			this.pinLocationMode = _pinLocationMode;
 		});

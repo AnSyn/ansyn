@@ -41,7 +41,6 @@ export const MapActionTypes = {
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
-		PIN_POINT_MODE: 'PIN_POINT_MODE',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
 		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE'
@@ -191,13 +190,6 @@ export class MapsListChangedAction implements Action {
 	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
 
 	constructor(public payload: CaseMapState[]) {
-	}
-}
-
-export class PinPointModeTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.PIN_POINT_MODE;
-
-	constructor(public payload: boolean) {
 	}
 }
 

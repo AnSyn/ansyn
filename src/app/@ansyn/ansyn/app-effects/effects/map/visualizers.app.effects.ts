@@ -1,14 +1,6 @@
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
-import {
-	DrawOverlaysOnMapTriggerAction,
-	HoverFeatureTriggerAction,
-	MapActionTypes,
-	SetMapsDataActionStore
-	ActiveMapChangedAction, DrawOverlaysOnMapTriggerAction, MapActionTypes,
-	PinPointTriggerAction, SetMapsDataActionStore
-} from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
@@ -30,63 +22,16 @@ import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/
 import { SetPinLocationModeAction, toolsFlags } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import {
-	DisplayOverlaySuccessAction,
-	MarkUpClass,
-	OverlaysActionTypes,
-	SetMarkUp
-} from '@ansyn/overlays';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
+import {
+	DrawOverlaysOnMapTriggerAction,
+	MapActionTypes,
+	SetMapsDataActionStore
+} from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class VisualizersAppEffects {
-	// /**
-	//  * @type Effect
-	//  * @name onHoverFeatureSetMarkup$
-	//  * @ofType HoverFeatureTriggerAction
-	//  * @dependencies cases
-	//  * @action OverlaysMarkupAction
-	//  */
-	// @Effect()
-	// onHoverFeatureSetMarkup$: Observable<any> = this.actions$
-	// 	.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-	// 	.map(({ payload }: HoverFeatureTriggerAction) => new SetMarkUp({
-	// 		classToSet: MarkUpClass.hover,
-	// 		dataToSet: {
-	// 			overlaysIds: payload.id ? [payload.id] : []
-	// 		}
-	// 	}));
-	//
-	// /**
-	//  * @type Effect
-	//  * @name onMouseOutDropAction$
-	//  * @ofType MouseOutDropAction
-	//  * @action HoverFeatureTriggerAction, RemoveMarkUp
-	//  */
-	// @Effect()
-	// onMouseOutDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
-	// 	.ofType(OverlaysActionTypes.MOUSE_OUT_DROP)
-	// 	.map(({ payload }: MouseOutDropAction) => new HoverFeatureTriggerAction({ id: null }));
-	//
-	//
-	// /**
-	//  * @type Effect
-	//  * @name onMouseOverDropAction$
-	//  * @ofType MouseOverDropAction
-	//  * @action HoverFeatureTriggerAction
-	//  */
-	// @Effect()
-	// onMouseOverDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
-	// 	.ofType(OverlaysActionTypes.MOUSE_OVER_DROP)
-	// 	.map(({ payload }: MouseOverDropAction) => new HoverFeatureTriggerAction({ id: payload }));
-	/**
-	 * @type Effect
-	 * @name onHoverFeatureSetMarkup$
-	 * @ofType HoverFeatureTriggerAction
-	 * @dependencies cases
-	 * @action OverlaysMarkupAction
-	 */
-
 	/**
 	 * @type Effect
 	 * @name updateCaseFromTools$
@@ -103,7 +48,7 @@ export class VisualizersAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			activeMap.data.overlayDisplayMode = action.payload;
 			return [
-				new SetMapsDataActionStore({mapsList}),
+				new SetMapsDataActionStore({ mapsList }),
 				new DrawOverlaysOnMapTriggerAction()
 			];
 		});
@@ -125,7 +70,7 @@ export class VisualizersAppEffects {
 	 * @name onStartMapShadow$
 	 * @ofType StartMouseShadow
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onStartMapShadow$: any = this.actions$
 		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
 		.withLatestFrom(this.store$.select(mapStateSelector))
@@ -156,7 +101,7 @@ export class VisualizersAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
 		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
-		.map(() => new StopMouseShadow({updateTools: false}));
+		.map(() => new StopMouseShadow({ updateTools: false }));
 
 	/**
 	 * @type Effect
@@ -170,14 +115,14 @@ export class VisualizersAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER)
 		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
-		.map(() => new StartMouseShadow({updateTools: false}));
+		.map(() => new StartMouseShadow({ updateTools: false }));
 
 	/**
 	 * @type Effect
 	 * @name onEndMapShadow$
 	 * @ofType StopMouseShadow
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onEndMapShadow$ = this.actions$
 		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
 		.withLatestFrom(this.store$.select(mapStateSelector))
@@ -196,7 +141,7 @@ export class VisualizersAppEffects {
 	 * @dependencies map, cases
 	 * @filter Only when context
 	 */
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	displayEntityTimeFromOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction | BackToWorldView>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
@@ -224,7 +169,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction({key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor
@@ -283,7 +228,7 @@ export class VisualizersAppEffects {
 					properties: {}
 				};
 				mouseShadowVisualizer.clearEntities();
-				mouseShadowVisualizer.setEntities([{id: 'shadowMouse', featureJson: shadowMouseFeatureJson}])
+				mouseShadowVisualizer.setEntities([{ id: 'shadowMouse', featureJson: shadowMouseFeatureJson }])
 					.subscribe();
 			});
 		}

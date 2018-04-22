@@ -16,4 +16,11 @@ then
 	exit 1
 fi
 
+tag=$3
+echo "tag $tag"
+if [ -n "$tag" ]
+then
+	version=$tag
+fi
+
 docker build -t "$target:$version" .

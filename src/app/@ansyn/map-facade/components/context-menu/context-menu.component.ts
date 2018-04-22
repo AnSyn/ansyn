@@ -12,6 +12,7 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { selectGeoFilter } from '@ansyn/status-bar';
 
 export interface OverlayButton {
 	name: string;
@@ -51,6 +52,11 @@ export class ContextMenuComponent implements OnInit {
 			this.initializeSensors(filteredOverlays, displayedOverlay);
 		})
 		.map(([filteredOverlays]: [Overlay[], Overlay]) => filteredOverlays);
+
+	geoFilter$ = this.store.select(selectGeoFilter)
+		.do((geoFilter) => this.geoFilter = geoFilter);
+
+	geoFilter;
 
 	nextSensors = [];
 	prevSensors = [];
@@ -155,6 +161,7 @@ export class ContextMenuComponent implements OnInit {
 		this.filteredOverlays$
 			.subscribe((filteredOverlays: Overlay[]) => this.filteredOverlays = filteredOverlays);
 		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
+		this.geoFilter$.subscribe();
 	}
 
 	show(action: ContextMenuShowAction) {

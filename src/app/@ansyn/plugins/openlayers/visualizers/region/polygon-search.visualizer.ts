@@ -9,14 +9,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
 
 	constructor(public store$: Store<any>,
-				public actions$: Actions) {
+				public actions$: Actions,
+				public projectionService: ProjectionService) {
 
-		super(store$, actions$, CaseGeoFilter.Polygon);
+		super(store$, actions$, projectionService, CaseGeoFilter.Polygon);
 
 		this.updateStyle({
 			initial: {

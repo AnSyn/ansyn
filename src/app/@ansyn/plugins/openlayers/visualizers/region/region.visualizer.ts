@@ -14,6 +14,7 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import Draw from 'ol/interaction/draw';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);
@@ -66,7 +67,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
 		.mergeMap(this.drawChanges.bind(this));
 
-	constructor(public store$: Store<any>, public actions$: Actions, public geoFilter: CaseGeoFilter) {
+	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
 	}
 
@@ -94,7 +95,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent({ feature }) {
 		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
-		this.iMap.projectionService
+		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
 			.take(1)
 			.do((featureCollection: FeatureCollection<GeometryObject>) => {

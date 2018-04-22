@@ -1,4 +1,4 @@
-import { IconVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
+import { PinPointVisualizer  } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
 import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
@@ -61,7 +61,7 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 	{
 		provide: BaseImageryPlugin,
 		multi: true,
-		useClass: IconVisualizer,
+		useClass: PinPointVisualizer,
 		deps: [Store, Actions, ProjectionService]
 	},
 	{
@@ -74,6 +74,6 @@ export const VisualizersProviders: ImageryPluginProvider[] = [
 		provide: BaseImageryPlugin,
 		multi: true,
 		useClass: PolygonSearchVisualizer,
-		deps: [Store, Actions, VisualizersConfig]
+		deps: [Store, Actions, ProjectionService]
 	}
 ];

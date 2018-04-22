@@ -53,7 +53,8 @@
 						[class.active2]="flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)">
 					<i class="icon-status-bar-show-pin-point"></i>
 				</button>
-				<button (click)="toggleMapSearch()"
+				<button id="editGeoFilter"
+						(click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"
 						class="edit-pinpoint toggle-icon"

@@ -91,7 +91,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		return this._iconSrc;
 	}
 
-	public createSingleClickEvent(): void {
+	public createSingleClickEvent() {
 		return this.iMap && this.iMap.mapObject.on('singleclick', this.singleClickListener, this);
 	}
 

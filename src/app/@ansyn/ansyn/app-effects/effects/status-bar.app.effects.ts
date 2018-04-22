@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItemsEnum,
+	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItemsEnum, statusBarStateSelector,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
@@ -14,6 +14,7 @@ import '@ansyn/core/utils/clone-deep';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { ClickOutsideMap, MapActionTypes } from '@ansyn/map-facade';
 
 
 @Injectable()
@@ -49,6 +50,19 @@ export class StatusBarAppEffects {
 		.map(() => {
 			console.log('onExpand$');
 		});
+	/**
+	 * @type Effect
+	 * @name onClickOutsideMap$
+	 * @ofType ClickOutsideMap
+	 * @action UpdateStatusFlagsAction
+	 */
+	@Effect()
+	onClickOutsideMap$ = this.actions$
+		.ofType<ClickOutsideMap>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP)
+		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, any>('flags'))
+		.filter(([action, flags]) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
+		.filter(([{ payload }]) => !payload.path.some((element) => element.id === 'editGeoFilter'))
+		.map(([action, flags]) => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,

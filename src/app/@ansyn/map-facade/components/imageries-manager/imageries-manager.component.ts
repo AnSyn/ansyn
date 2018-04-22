@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { CaseMapState } from '@ansyn/core/models';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
@@ -7,7 +7,8 @@ import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { coreStateSelector, ICoreState, LayoutKey, layoutOptions, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.actions';
+import { SetMapsDataActionStore, UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -50,12 +51,21 @@ export class ImageriesManagerComponent implements OnInit {
 	mapsList: CaseMapState[];
 	activeMapId: string;
 
-	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>) {
+	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
 	}
 
 	ngOnInit() {
 		this.initListeners();
 		this.initSubscribers();
+		this.initClickOutside();
+	}
+
+	initClickOutside() {
+		Observable
+			.fromEvent(this.document, 'click')
+			.filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element))
+			.do((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
+			.subscribe()
 	}
 
 	initSubscribers() {

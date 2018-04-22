@@ -1,6 +1,7 @@
 import {
-	Component, ComponentFactoryResolver, ComponentRef, ElementRef, HostListener, Inject, Input, OnInit, Renderer2,
-	ViewChild, ViewContainerRef
+	Component, ComponentFactoryResolver, ComponentRef, ElementRef, Inject, Input, OnInit, QueryList,
+	Renderer2,
+	ViewChild, ViewChildren, ViewContainerRef
 } from '@angular/core';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { IMenuConfig, MenuConfig, MenuItem } from '../models';
@@ -43,6 +44,7 @@ const animations: any[] = [
 export class MenuComponent implements OnInit {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
+	@ViewChildren('menuItemElement') menuItemElements: QueryList<ElementRef>;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -101,11 +103,6 @@ export class MenuComponent implements OnInit {
 
 	get selectedMenuItem(): MenuItem {
 		return this.menuItems && this.menuItems.get(this.selectedMenuItemName);
-	}
-
-	@HostListener('click', ['$event'])
-	clickComponent($event: MouseEvent) {
-		$event.stopPropagation();
 	}
 
 	forceRedraw() {
@@ -211,7 +208,6 @@ export class MenuComponent implements OnInit {
 	}
 
 	ngOnInit() {
-
 		this.menuItems$.subscribe((_menuItems) => {
 			this.menuItems = _menuItems;
 		});
@@ -236,7 +232,10 @@ export class MenuComponent implements OnInit {
 
 		Observable
 			.fromEvent(this.document, 'click')
-			.filter(() => !this.isPinned && this.clickOutside && this.anyMenuItemSelected() && !this.onAnimation)
+			.filter((click: any) => {
+				const include = click.path.some((element) => this.menuItemElements.find(({ nativeElement }: ElementRef) => nativeElement === element));
+				return !include && this.clickOutside && this.anyMenuItemSelected()
+			})
 			.subscribe(this.closeMenu.bind(this));
 	}
 }

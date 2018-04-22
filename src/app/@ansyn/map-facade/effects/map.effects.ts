@@ -255,16 +255,6 @@ export class MapEffects {
 
 	/**
 	 * @type Effect
-	 * @name pinPointModeTriggerAction$
-	 * @ofType PinPointModeTriggerAction
-	 */
-	@Effect({ dispatch: false })
-	pinPointModeTriggerAction$: Observable<boolean> = this.actions$
-		.ofType<PinPointModeTriggerAction>(MapActionTypes.TRIGGER.PIN_POINT_MODE)
-		.map(({ payload }) => payload);
-
-	/**
-	 * @type Effect
 	 * @name pinLocationModeTriggerAction$
 	 * @ofType PinLocationModeTriggerAction
 	 */

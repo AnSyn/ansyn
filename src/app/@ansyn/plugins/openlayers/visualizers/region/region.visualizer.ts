@@ -7,16 +7,50 @@ import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, Overlays
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade';
-import { Position } from 'geojson';
-import { selectGeoFilter } from '@ansyn/status-bar';
+import { ContextMenuTriggerAction, MapActionTypes, mapStateSelector } from '@ansyn/map-facade';
+import { FeatureCollection, GeometryObject, Position } from 'geojson';
+import { selectGeoFilter, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { SetOverlaysCriteriaAction } from '@ansyn/core';
+import Draw from 'ol/interaction/draw';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);
 
+	mapState$ = this.store$.select(mapStateSelector);
+
+	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
+		.distinctUntilChanged();
+
+	isActiveMap$ = this.mapState$
+		.pluck<IMapState, string>('activeMapId')
+		.map((activeMapId: string): boolean => activeMapId === this.mapId)
+		.distinctUntilChanged();
+
+	isActiveGeoFilter$ = this.geoFilter$
+		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
+
 	statusBarFlags$ = this.store$.select(statusBarStateSelector)
 		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
 		.distinctUntilChanged();
+
+	geoFilterSearch$ = this.statusBarFlags$
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
+		.distinctUntilChanged();
+
+	onSearchMode$ = Observable.combineLatest(this.geoFilterSearch$, this.isActiveGeoFilter$)
+		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
+		.distinctUntilChanged();
+
+	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.onSearchMode$)
+		.do(this.onActiveMapChange.bind(this));
+
+	resetInteraction$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
+		.filter(([onSearchMode, isActiveMap]: [boolean, boolean]) => isActiveMap)
+		.do(([isPolygonSearch]) => {
+			this.clearOrResetPolygonDraw(isPolygonSearch);
+		});
 
 	region$ = this.core$
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
@@ -25,20 +59,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterIndicator$ = this.statusBarFlags$
 		.map((flags: Map<statusBarFlagsItemsEnum, boolean>) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
-		.distinctUntilChanged();
-
-	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
-		.distinctUntilChanged();
-
-	isActiveGeoFilter$ = this.geoFilter$
-		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
-
-	geoFilterSearch$ = this.statusBarFlags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
-		.distinctUntilChanged();
-
-	onSearchMode$ = Observable.combineLatest(this.geoFilterSearch$, this.isActiveGeoFilter$)
-		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
 		.distinctUntilChanged();
 
 	onContextMenu$: Observable<any> = this.actions$
@@ -52,6 +72,14 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
+	get drawType() {
+		switch (this.geoFilter) {
+			case 'Pin-Point':
+				return 'Point';
+			default:
+				return this.geoFilter;
+		}
+	}
 
 	onInit() {
 		super.onInit();
@@ -83,7 +111,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				])
 				.mergeMap(this.onChanges.bind(this))
 				.subscribe(),
-			this.onContextMenu$.subscribe()
+			this.onContextMenu$.subscribe(),
+			this.resetInteraction$.subscribe(),
+			this.activeMapChange$.subscribe()
 		)
 	}
 
@@ -99,7 +129,64 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		return Observable.empty();
 	}
 
+	onDrawEndEvent({ feature }) {
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+
+		this.iMap.projectionService
+			.projectCollectionAccurately([feature], this.iMap)
+			.take(1)
+			.do((featureCollection: FeatureCollection<GeometryObject>) => {
+				const [geoJsonFeature] = featureCollection.features;
+				const region = this.createRegion(geoJsonFeature);
+				this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+			})
+			.subscribe();
+	}
+
+	onActiveMapChange([isActiveMap, onSearchMode]: [boolean, boolean]) {
+		this.removeDrawInteraction();
+		if (onSearchMode && isActiveMap) {
+			this.createDrawInteraction()
+		}
+	}
+
+	createDrawInteraction() {
+		this.vector.setOpacity(0);
+		const drawInteractionHandler = new Draw({
+			type: this.drawType,
+			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
+			style: this.featureStyle.bind(this)
+		});
+
+		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
+	}
+
+	public removeDrawInteraction() {
+		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+		this.vector.setOpacity(1);
+	}
+
+	resetInteractions() {
+		super.resetInteractions();
+		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+	}
+
+	clearOrResetPolygonDraw(isPolygonSearch: boolean) {
+		this.removeDrawInteraction();
+		if (isPolygonSearch) {
+			this.createDrawInteraction();
+		}
+	}
+
+	onDispose() {
+		this.removeDrawInteraction();
+		super.onDispose();
+	}
+
 	abstract drawRegionOnMap(region: CaseRegionState): Observable<boolean> ;
 
 	abstract onContextMenu(point: Position): void;
+
+	abstract createRegion(geoJsonFeature: any): any;
 }

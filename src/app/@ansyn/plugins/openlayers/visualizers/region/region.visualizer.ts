@@ -17,7 +17,6 @@ import Draw from 'ol/interaction/draw';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);
-
 	mapState$ = this.store$.select(mapStateSelector);
 
 	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
@@ -43,15 +42,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
 		.distinctUntilChanged();
 
-	activeMapChange$: Observable<any> = Observable.combineLatest(this.isActiveMap$, this.onSearchMode$)
-		.do(this.onActiveMapChange.bind(this));
-
-	resetInteraction$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
-		.filter(([onSearchMode, isActiveMap]: [boolean, boolean]) => isActiveMap)
-		.do(([isPolygonSearch]) => {
-			this.clearOrResetPolygonDraw(isPolygonSearch);
-		});
-
 	region$ = this.core$
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged()
@@ -67,6 +57,14 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.filter(([action, isActiveGeoFilter]: [ContextMenuTriggerAction, boolean]) => isActiveGeoFilter)
 		.map(([{ payload }]) => payload)
 		.do(this.onContextMenu.bind(this));
+
+	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
+		.filter(([onSearchMode, isActiveMap]: [boolean, boolean]) => isActiveMap)
+		.do(this.interactionChanges.bind(this));
+
+	drawChanges$ = Observable
+		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
+		.mergeMap(this.drawChanges.bind(this));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public geoFilter: CaseGeoFilter) {
 		super();
@@ -84,40 +82,13 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-
-			this.geoFilterIndicator$
-				.withLatestFrom(this.geoFilter$, this.region$, (geoFilterIndicator, geoFilter, region) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
-
-			this.region$
-				.withLatestFrom(this.geoFilter$, this.geoFilterIndicator$, (region, geoFilter, geoFilterIndicator) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
-
-			this.geoFilter$
-				.withLatestFrom(this.region$, this.geoFilterIndicator$, (geoFilter, region, geoFilterIndicator) => [
-					geoFilter,
-					region,
-					geoFilterIndicator
-				])
-				.mergeMap(this.onChanges.bind(this))
-				.subscribe(),
+			this.drawChanges$.subscribe(),
 			this.onContextMenu$.subscribe(),
-			this.resetInteraction$.subscribe(),
-			this.activeMapChange$.subscribe()
+			this.interactionChanges$.subscribe()
 		)
 	}
 
-	onChanges([geoFilter, region, geoFilterIndicator]) {
+	drawChanges([geoFilter, region, geoFilterIndicator]) {
 		if (!geoFilterIndicator) {
 			this.clearEntities();
 			return Observable.empty();
@@ -143,13 +114,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			.subscribe();
 	}
 
-	onActiveMapChange([isActiveMap, onSearchMode]: [boolean, boolean]) {
-		this.removeDrawInteraction();
-		if (onSearchMode && isActiveMap) {
-			this.createDrawInteraction()
-		}
-	}
-
 	createDrawInteraction() {
 		this.vector.setOpacity(0);
 		const drawInteractionHandler = new Draw({
@@ -172,9 +136,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 	}
 
-	clearOrResetPolygonDraw(isPolygonSearch: boolean) {
+	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (isPolygonSearch) {
+		if (onSearchMode && isActiveMap) {
 			this.createDrawInteraction();
 		}
 	}

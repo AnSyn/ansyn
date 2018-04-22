@@ -29,10 +29,9 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import {
 	DisplayOverlayFromStoreAction,
-	MouseOutDropAction,
-	MouseOverDropAction,
 	OverlaysActionTypes,
-	SetTimelineStateAction
+	SetTimelineStateAction,
+	SetMarkUp
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -185,11 +184,11 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOver({ id }: IEventDropsEvent) {
-		this.store$.dispatch(new MouseOverDropAction(id));
+		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
-		this.store$.dispatch(new MouseOutDropAction(id));
+		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
 	clickEvent() {

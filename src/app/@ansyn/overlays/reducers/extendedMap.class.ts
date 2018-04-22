@@ -20,7 +20,7 @@ export class ExtendMap<T, V> {
 	}
 
 
-	findKeysByValue(searchValue, arrayField = 'overlaysIds') {
+	findKeysByValue(searchValue, arrayField = 'overlaysIds'): T[] {
 		return Array.from(this.map)
 			.filter(([key, val]) => Boolean(val && val[arrayField] && val[arrayField].some(item => item === searchValue)))
 			.map(([key]) => key);

@@ -13,16 +13,14 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
-import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MarkUpClass, MarkUpData, overlaysStateSelector } from '@ansyn/overlays';
+import { MarkUpClass, MarkUpData, overlaysStateSelector, SetMarkUp } from '@ansyn/overlays';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 
 @Injectable()
@@ -48,24 +46,13 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			return Observable.empty();
 		});
 
-	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.do((action: HoverFeatureTriggerAction): void => this.setHoverFeature(action.payload.id));
-
-
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
+
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
 		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()
-		.do((markups) => {
-			this.markups = markups;
-			if (this.hoverLayer) {
-				this.hoverLayer.getSource().refresh();
-			}
-			if (this.source) {
-				this.source.refresh();
-			}
-		})
+		.do((markups) => this.markups = markups)
+		.do(this.onMarkupsChange.bind(this));
 
 	constructor(public store: Store<any>,
 				public actions$: Actions,
@@ -98,6 +85,19 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected initLayers() {
 		super.initLayers();
 		this.createHoverLayer();
+	}
+
+	private onMarkupsChange() {
+		const hover = this.markups.get(MarkUpClass.hover);
+		const [overlayId] = hover.overlaysIds;
+		this.setHoverFeature(overlayId);
+
+		if (this.hoverLayer) {
+			this.hoverLayer.getSource().refresh();
+		}
+		if (this.source) {
+			this.source.refresh();
+		}
 	}
 
 	private propsByFeature(feature: Feature) {
@@ -247,10 +247,10 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			const id = $event.selected[0].getId();
 			const hoverFeature = this.hoverLayer.getSource().getFeatureById(id);
 			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.store.dispatch(new HoverFeatureTriggerAction({ id }));
+				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 			}
 		} else {
-			this.store.dispatch(new HoverFeatureTriggerAction({}));
+			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 
@@ -270,7 +270,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe(),
-			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),
 			this.dropsMarkUp$.subscribe()
 		);
 	}

@@ -3,6 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),

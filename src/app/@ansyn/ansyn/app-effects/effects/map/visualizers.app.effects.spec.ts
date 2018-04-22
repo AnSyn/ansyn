@@ -10,12 +10,9 @@ import {
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
 	DrawOverlaysOnMapTriggerAction,
-	HoverFeatureTriggerAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	MouseOutDropAction,
-	MouseOverDropAction,
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -49,7 +46,6 @@ import {
 	SetPinLocationModeAction
 } from '@ansyn/menu-items';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -131,40 +127,6 @@ describe('VisualizersAppEffects', () => {
 		imageryCommunicatorService = _imageryCommunicatorService;
 
 	}));
-
-	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
-		const fakeId = 'fakeId'
-		const markup = {
-			classToSet: MarkUpClass.hover,
-			dataToSet: {
-				overlaysIds: [fakeId]
-			}
-		}
-
-		actions = hot('--a--', {
-			a: new HoverFeatureTriggerAction({
-				id: fakeId
-			})
-		});
-		const expectedResults = cold('--b--', { b: new SetMarkUp(markup) });
-		expect(visualizersAppEffects.onHoverFeatureSetMarkup$).toBeObservable(expectedResults);
-
-	});
-
-	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "null")', () => {
-
-		it('with "id" if MouseOverDropAction', () => {
-			actions = hot('--a--', { a: new MouseOverDropAction('fakeId') });
-			const expectedResults = cold('--b--', {
-				b: new HoverFeatureTriggerAction({
-					id: 'fakeId'
-				})
-			});
-			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
-		});
-	});
-
-
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		mapState.mapsList = [...selectedCase.state.maps.data];

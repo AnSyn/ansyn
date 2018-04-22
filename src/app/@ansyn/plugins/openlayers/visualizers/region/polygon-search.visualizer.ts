@@ -10,7 +10,8 @@ import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-
+import { Injectable } from '@angular/core';
+@Injectable()
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;
 

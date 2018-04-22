@@ -13,7 +13,9 @@ import { CaseGeoFilter, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { Position } from 'geojson';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({

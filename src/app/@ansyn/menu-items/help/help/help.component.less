@@ -2,24 +2,52 @@
 
 :host {
 	&:extend(.default-menu-item);
-	padding: 5px;
 	color: white;
-	//display: block;
+	font-size: 14px;
 }
 
 .help-slide {
-	height: calc(~"100vh - 30px");
-}
+	height: calc(~"100vh - 40px");
+	padding-top: 20px;
 
-.center-text {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	max-width: 70%;
+	.first-title {
+		padding: 0 10px;
+		font-size: 16px;
+	}
+
+	.second-title {
+		font-size: 18px;
+		width: 100%;
+		text-align: center;
+		margin-top: 2rem;
+	}
+
+	.above-center {
+		width: 100%;
+		text-align: center;
+		margin-top: 2rem;
+
+		& > div:not(:first-child) {
+			margin-top: 1rem;
+		}
+	}
+
+	.from-center {
+		position: absolute;
+		top: 50%;
+		left: 15%;
+		transform: translateY(-0.5em);
+		width: 70%;
+		text-align: center;
+
+		& > div:not(:first-child) {
+			margin-top: 1rem;
+		}
+	}
 }
 
 footer {
+	padding: 0 10px;
 	transform: translateY(-30px);
 
 	hr {

@@ -51,7 +51,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 			const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 			const northOffsetDeg = toDegrees(northOffsetRad);
-			const view = this.iMap.mapObject.getView();
+			const view = (<IMap>this.iMap).mapObject.getView();
 			const actualNorth = northOffsetRad + view.getRotation();
 			return { northOffsetRad, northOffsetDeg, actualNorth };
 		})

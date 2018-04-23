@@ -6,8 +6,6 @@ import { Observable } from 'rxjs/Observable';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { FeatureCollection } from 'geojson';
 
-export const MouseShadowVisualizerType = 'MouseShadowVisualizer';
-
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
 

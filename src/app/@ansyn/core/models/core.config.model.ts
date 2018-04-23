@@ -6,11 +6,4 @@ export interface ICoreConfig {
 		headerText: string;
 		mainText: string;
 	};
-	windowLayout: {
-		'menu': boolean,
-		'toolsOverMenu': boolean,
-		'statusBar': boolean,
-		'timeLine': boolean,
-		'contextSun': boolean
-	}
 }

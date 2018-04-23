@@ -14,6 +14,7 @@ import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
 import { selectGeoFilter } from '@ansyn/status-bar';
+import { CaseGeoFilter } from '@ansyn/core';
 
 export interface OverlayButton {
 	name: string;
@@ -54,7 +55,7 @@ export class ContextMenuComponent implements OnInit {
 		})
 		.map(([filteredOverlays]: [Overlay[], Overlay]) => filteredOverlays);
 
-	geoFilter$ = this.store.select(selectGeoFilter)
+	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectGeoFilter)
 		.do((geoFilter) => this.geoFilter = geoFilter);
 
 	geoFilter;

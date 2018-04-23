@@ -35,11 +35,11 @@
 				tooltip-value="Manual Image Enhancement"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
 				[class.mode-on]="isImageControlActive && !imageProcessingDisabled"
-				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
-				[disabled]="imageProcessingDisabled">
+				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"
+				[disabled]="imageProcessingDisabled || onAutoImageProcessing">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
+		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"
 										(isActive)="isImageControlActive=$event"
 										[initParams]="imageProcessInitParams"></ansyn-image-processing-control>
 	</div>

@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"baseUrl": "src",
 		"paths": {
-			"@ansyn/*": ["app/@ansyn/*"]
+			"@ansyn/*": ["app/@ansyn/*"],
+			"@builder/*": ["app/appBuilder/*"]
 		},
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,

@@ -83,7 +83,15 @@ gulp.task('copy-src', ['copy-style'], function () {
 });
 
 gulp.task('compile', ['copy-src'], function (done) {
-	return Promise.resolve().then(() => ngc(['-p', 'tsconfig.ngc.json'], err => {console.log(err); throw err}))
+	return Promise.resolve()
+		.then(() => ngc(['-p', 'tsconfig.ngc.json'], err => {
+			del([
+				"dist/**",
+				"src-dist/**"
+			], {force: true});
+			console.log(err);
+			throw err
+		}))
 });
 
 gulp.task('getAppConfig', ['compile'],  function (done) {
@@ -176,10 +184,11 @@ gulp.task('publishNpm', ['copy_packageJson'], function (done) {
 		console.log(stderr);
 		done(err);
 	});
-})
+});
 
 gulp.task('delete_src', ['publishNpm'], function (done) {
 	return del([
+		"dist/**",
 		"src-dist/**"
 	], {force: true});
 });

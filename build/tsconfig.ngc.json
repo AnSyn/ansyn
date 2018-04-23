@@ -4,7 +4,8 @@
 		"rootDir": "src-dist",
 		"outDir": "dist",
 		"paths": {
-			"@ansyn/*": ["src/app/@ansyn/*"]
+			"@ansyn/*": ["src/app/@ansyn/*"],
+			"@builder/*": ["src/app/appBuilder/*"]
 		},
 		"declaration": true,
 		"stripInternal": true,

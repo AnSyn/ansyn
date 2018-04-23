@@ -9,6 +9,7 @@
 		"build:aot": "ng build --aot true",
 		"build:prod": "node --max_old_space_size=12288 $(npm bin)/ng build --prod --build-optimizer --sourcemap",
 		"build:builder": "ng build --app builder",
+		"build:gulp": "cd build && gulp build",
 		"test": "ng test",
 		"test:single-run": "ng test --single-run",
 		"test:e2e": "node scripts/generate-config.js && ng e2e",

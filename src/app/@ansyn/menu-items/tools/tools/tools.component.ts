@@ -100,6 +100,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing());
+		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
+			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+		}
 		this.imageProcessInitParams = null;
 	}
 

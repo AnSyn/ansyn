@@ -128,7 +128,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {
-		console.log("active changed!");
 		this.removeDrawInteraction();
 		if (onSearchMode && isActiveMap) {
 			this.createDrawInteraction();

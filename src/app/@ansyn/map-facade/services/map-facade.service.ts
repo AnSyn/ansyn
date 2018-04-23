@@ -12,6 +12,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class MapFacadeService {
@@ -36,7 +37,7 @@ export class MapFacadeService {
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
-		this.mapsList$.subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
 	}
 
 	initEmitters(id: string) {

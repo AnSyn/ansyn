@@ -1,4 +1,4 @@
-import { CommunicatorEntity, IMap, BaseImageryPlugin } from '@ansyn/imagery';
+import { IMap, BaseImageryPlugin } from '@ansyn/imagery';
 import Vector from 'ol/source/vector';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';

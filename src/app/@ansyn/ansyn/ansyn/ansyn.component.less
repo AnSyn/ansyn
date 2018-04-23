@@ -21,9 +21,9 @@
 :host {
 	div.app {
 		display: flex;
-		height: 100vh;
+		height: 100%;
+		width: 100%;
 		overflow: hidden;
-
 		&.isPinned, &.isNotPinned {
 			background: black;
 			div.layer {
@@ -102,6 +102,9 @@
 			div.menu {
 				animation: menu-init @animation-duration;
 				transform: transitionX(0);
+				.ansynToolsAlone {
+					background: @application-main-color;
+				}
 			}
 
 			div.layer div.maps-container {

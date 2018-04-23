@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Case } from '@ansyn/menu-items/cases';
 import '@ansyn/core/utils/clone-deep';
-import * as packageJson from '../../../../../package.json';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
@@ -11,7 +10,8 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
-import { ICasesState } from "@ansyn/menu-items";
+import { ICasesState } from '@ansyn/menu-items';
+import { coreStateSelector, ICoreState, WindowLayout } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-app',
@@ -30,6 +30,10 @@ export class AnsynComponent implements OnInit {
 		.distinctUntilChanged()
 		.skip(1);
 
+	windowLayout$: Observable<WindowLayout> = this.store$.select(coreStateSelector)
+		.pluck<ICoreState, WindowLayout>('windowLayout')
+		.distinctUntilChanged();
+
 	mapState$: Observable<IMapState> = this.store$.select(mapStateSelector);
 
 	activeMap$: Observable<CaseMapState> = this.mapState$
@@ -38,7 +42,6 @@ export class AnsynComponent implements OnInit {
 
 	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
 	selectedCaseName: string;
-	version = (<any>packageJson).version;
 	isPinnedClass: string;
 
 	constructor(protected store$: Store<IAppState>) {

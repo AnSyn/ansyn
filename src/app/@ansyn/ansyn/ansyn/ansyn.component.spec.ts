@@ -10,6 +10,7 @@ import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.r
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { coreFeatureKey, coreInitialState, CoreReducer, coreStateSelector } from '@ansyn/core';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -26,6 +27,7 @@ describe('AnsynComponent', () => {
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
+	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
 
 	const cases: Case[] = [{
 		id: 'tmp',
@@ -79,7 +81,8 @@ describe('AnsynComponent', () => {
 				mockOverlaysContainer,
 				mockStatus,
 				mockImageryView,
-				mockEmptyComponent
+				mockEmptyComponent,
+				ansynTools
 			],
 			imports: [
 				RouterTestingModule,
@@ -93,6 +96,9 @@ describe('AnsynComponent', () => {
 		const mockStore = new Map<any, any>([
 
 			[casesStateSelector, handler],
+			[coreStateSelector, Observable.of({
+				...coreInitialState
+			})],
 			[toolsStateSelector, Observable.of({
 				flags: new Map<string, any>()
 			})],

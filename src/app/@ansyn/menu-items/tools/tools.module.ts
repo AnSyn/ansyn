@@ -18,7 +18,8 @@ import { ImageProcessingControlComponent } from './components/image-processing-c
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
-	entryComponents: [ToolsComponent]
+	entryComponents: [ToolsComponent],
+	exports: [ToolsComponent]
 })
 
 export class ToolsModule {

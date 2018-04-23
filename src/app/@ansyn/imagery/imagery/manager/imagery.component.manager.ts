@@ -10,6 +10,7 @@ import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/fromPromise';
+import { Point } from 'geojson';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface MapInstanceChanged {
@@ -22,7 +23,7 @@ export class ImageryComponentManager {
 
 	private _activeMap: IMap;
 	private _subscriptions = [];
-	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
+	public centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
@@ -160,7 +161,7 @@ export class ImageryComponentManager {
 
 	private registerToActiveMapEvents() {
 
-		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
+		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: Point) => {
 			this.centerChanged.emit(center);
 		}));
 

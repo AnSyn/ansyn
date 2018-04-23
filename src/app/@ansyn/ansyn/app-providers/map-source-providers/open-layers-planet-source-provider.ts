@@ -6,6 +6,9 @@ import { Injectable } from '@angular/core';
 import { Overlay } from '@ansyn/core/index';
 import { extentFromGeojson } from '@ansyn/core/utils/index';
 import proj from 'ol/proj';
+import { Store } from '@ngrx/store';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 export const OpenLayerPlanetSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
@@ -13,8 +16,15 @@ export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 @Injectable()
 export class OpenLayerPlanetSourceProvider extends BaseMapSourceProvider {
 
+
+
 	public mapType = OpenLayerPlanetSourceProviderMapType;
 	public sourceType = OpenLayerPlanetSourceProviderSourceType;
+
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		super(store, cacheService, imageryCommunicatorService)
+	}
 
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({

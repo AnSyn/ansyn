@@ -12,6 +12,7 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { Point } from 'geojson';
 import { selectGeoFilter } from '@ansyn/status-bar';
 
 export interface OverlayButton {
@@ -62,7 +63,7 @@ export class ContextMenuComponent implements OnInit {
 	prevSensors = [];
 	allSensors = [];
 	angleList: Array<'Draw' | 'Turn' | 'Show'> = [];
-	point: GeoJSON.Point;
+	point: Point;
 
 	private _filteredOverlays: Overlay[];
 	private _prevfilteredOverlays = [];

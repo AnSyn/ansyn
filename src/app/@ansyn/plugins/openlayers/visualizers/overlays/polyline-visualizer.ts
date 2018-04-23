@@ -22,6 +22,8 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { MarkUpClass, MarkUpData, overlaysStateSelector, SetMarkUp } from '@ansyn/overlays';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { CommunicatorEntity } from '@ansyn/imagery';
+import { MultiLineString } from 'geojson';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
@@ -166,7 +168,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		clonedLogicalEntities
 			.filter((entity: IVisualizerEntity) => entity.featureJson.geometry.type === 'MultiPolygon')
 			.forEach((entity: IVisualizerEntity) => {
-				let geometry: GeoJSON.MultiLineString = entity.featureJson.geometry;
+				let geometry: MultiLineString = entity.featureJson.geometry;
 				geometry.type = 'MultiLineString';
 				geometry.coordinates = <any> geometry.coordinates[0];
 			});

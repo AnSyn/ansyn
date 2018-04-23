@@ -14,7 +14,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core';
-import { PlanetOverlaysSourceConfig } from "@ansyn/ansyn/app-providers/overlay-source-providers";
+import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
 
 export const getProviders = (conf): any[] => {
 	return [

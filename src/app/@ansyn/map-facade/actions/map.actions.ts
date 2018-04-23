@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import { CaseMapPosition, CaseMapState } from '@ansyn/core';
 import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
-import { Feature } from 'geojson';
-import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { Feature, Point, Position } from 'geojson';
 import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
+import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -109,7 +109,7 @@ export class SynchronizeMapsAction implements Action {
 export class ContextMenuTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.CONTEXT_MENU;
 
-	constructor(public payload: GeoJSON.Position) {
+	constructor(public payload: Position) {
 	}
 }
 
@@ -130,7 +130,7 @@ export class SetMapManualImageProcessing implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: { point: GeoJSON.Point, e: MouseEvent }) {
+	constructor(public payload: { point: Point, e: MouseEvent }) {
 	}
 }
 

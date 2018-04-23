@@ -1,4 +1,4 @@
-import { createEntityAdapter } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { EntityState } from '@ngrx/entity/src/models';
 import { Context } from '@ansyn/core';
 import { ContextActionTypes, ContextActions } from '../actions/context.actions';

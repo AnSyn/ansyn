@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { OverlaySpecialObject } from '@ansyn/core';
 import { TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { MarkUpClass, MarkUpData, OverlayDropMarkUp } from '@ansyn/overlays';
+import { OverlaySpecialObject } from '@ansyn/core';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),

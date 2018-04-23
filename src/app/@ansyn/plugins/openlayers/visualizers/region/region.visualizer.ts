@@ -2,8 +2,8 @@ import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entiti
 import {
 	IStatusBarState, statusBarFlagsItemsEnum,
 	statusBarStateSelector
-} from 'app/@ansyn/status-bar/index';
-import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, OverlaysCriteria } from 'app/@ansyn/core/index';
+} from '@ansyn/status-bar';
+import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, OverlaysCriteria } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';

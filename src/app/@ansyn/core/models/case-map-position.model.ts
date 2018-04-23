@@ -1,3 +1,5 @@
+import { Polygon } from 'geojson';
+
 export type CaseMapExtent = [number, number, number, number];
 
 export interface CaseMapProjectedState {
@@ -10,7 +12,7 @@ export interface CaseMapProjectedState {
 	zoom?: number;
 }
 
-export type CaseMapExtentPolygon = GeoJSON.Polygon;
+export type CaseMapExtentPolygon = Polygon;
 
 export interface CaseMapPosition {
 	projectedState: CaseMapProjectedState;

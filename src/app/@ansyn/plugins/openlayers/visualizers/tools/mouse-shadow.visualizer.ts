@@ -3,7 +3,8 @@ import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
-import { IVisualizerEntity } from '@ansyn/imagery/index';
+import { IVisualizerEntity } from '@ansyn/imagery';
+import { FeatureCollection } from 'geojson';
 
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
@@ -28,7 +29,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 
 		const logicalEntitiesCopy = [...logicalEntities];
 
-		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = {
+		const featuresCollectionToAdd: FeatureCollection<any> = {
 			type: 'FeatureCollection',
 			features: []
 		};

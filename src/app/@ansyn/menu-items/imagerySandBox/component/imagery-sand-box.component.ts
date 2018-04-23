@@ -10,6 +10,7 @@ import { cloneDeep } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
+import { Feature, Point } from 'geojson';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
 
 @Component({
@@ -54,7 +55,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			const lat = parseFloat(coordinate.lat);
 			const long = parseFloat(coordinate.long);
 
-			const geoPoint: GeoJSON.Point = {
+			const geoPoint: Point = {
 				type: 'Point',
 				coordinates: [long, lat]
 			};
@@ -114,7 +115,7 @@ export class ImagerySandBoxComponent implements OnInit {
 
 		clonedCase.state.contextEntities = [];
 
-		const feature: GeoJSON.Feature<any> = {
+		const feature: Feature<any> = {
 			'type': 'Feature',
 			'properties': {},
 			'geometry': {

@@ -2,10 +2,10 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { CaseMapPosition } from '@ansyn/core';
-import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/observable/merge';
 
@@ -14,7 +14,7 @@ export class CommunicatorEntity {
 
 
 	public positionChanged: EventEmitter<{ id: string, position: CaseMapPosition }>;
-	public centerChanged: EventEmitter<GeoJSON.Point>;
+	public centerChanged: EventEmitter<Point>;
 	public singleClick: EventEmitter<any>;
 	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
@@ -30,7 +30,7 @@ export class CommunicatorEntity {
 	}
 
 	constructor(public _manager: ImageryComponentManager) {
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
+		this.centerChanged = new EventEmitter<Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
 		this.singleClick = new EventEmitter<any>();
 		this.contextMenu = new EventEmitter<any>();
@@ -46,7 +46,7 @@ export class CommunicatorEntity {
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
+		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: Point) => {
 			this.centerChanged.emit(center);
 		}));
 
@@ -114,7 +114,7 @@ export class CommunicatorEntity {
 		return null;
 	}
 
-	public getCenter(): Observable<GeoJSON.Point> {
+	public getCenter(): Observable<Point> {
 		if (this.ActiveMap) {
 			return this.ActiveMap.getCenter();
 		}
@@ -127,7 +127,7 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
+	public addGeojsonLayer(data: GeoJsonObject) {
 		if (this.ActiveMap) {
 			this.ActiveMap.addGeojsonLayer(data);
 		}
@@ -142,7 +142,7 @@ export class CommunicatorEntity {
 	}
 
 
-	public setCenter(center: GeoJSON.Point, animation: boolean = true): Observable<boolean> {
+	public setCenter(center: Point, animation: boolean = true): Observable<boolean> {
 		if (this.ActiveMap) {
 			return this.ActiveMap.setCenter(center, animation);
 		}

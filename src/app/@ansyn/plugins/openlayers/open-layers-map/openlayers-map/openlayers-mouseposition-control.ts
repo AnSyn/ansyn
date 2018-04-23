@@ -16,12 +16,12 @@ export class OpenLayersMousePositionControl extends MousePosition {
 		super(opt_options);
 	}
 
-	private positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoJSON.Point) => void) {
+	private positionToPoint(coordinates: ol.Coordinate, cb: (p: Point) => void) {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
 
-		const point = <GeoJSON.Point> turf.geometry('Point', coordinates);
+		const point = <Point> turf.geometry('Point', coordinates);
 		this.approximateProjectionSubscription = this.projectionFunc(point).subscribe(cb);
 	}
 

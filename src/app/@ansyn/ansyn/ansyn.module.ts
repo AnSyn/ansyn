@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ansynMenuItems } from './ansyn.menu-items';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { BrowserModule } from '@angular/platform-browser';
+
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
 import { MenuModule } from '@ansyn/menu';
@@ -44,7 +44,6 @@ const MenuItemsModules = [
 		AppProvidersModule,
 		...MenuItemsModules,
 		OverlaysModule,
-		BrowserModule,
 		FormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
@@ -58,7 +57,8 @@ const MenuItemsModules = [
 		StatusBarModule,
 		AnsynRouterModule
 	],
-	declarations: [AnsynComponent]
+	declarations: [AnsynComponent],
+	exports: [AnsynComponent]
 })
 
 export class AnsynModule {

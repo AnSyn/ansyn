@@ -24,7 +24,7 @@ export interface IPlanetOverlaySourceConfig {
 	tilesUrl: string;
 }
 
-interface IPlanetFilter {
+export interface IPlanetFilter {
 	type: string,
 	field_name: string,
 	config: object;

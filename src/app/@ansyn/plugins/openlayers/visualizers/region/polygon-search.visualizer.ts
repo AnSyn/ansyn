@@ -1,9 +1,9 @@
-import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from 'app/@ansyn/status-bar/index';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { CaseRegionState } from 'app/@ansyn/core/index';
+import { CaseRegionState } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
-import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
+import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';

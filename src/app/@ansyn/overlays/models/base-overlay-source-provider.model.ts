@@ -5,6 +5,7 @@ import * as intersect from '@turf/intersect';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 
 export interface DateRange {
@@ -14,14 +15,14 @@ export interface DateRange {
 
 export interface IFetchParams {
 	limit: number;
-	region: GeoJSON.GeoJsonObject;
+	region: GeoJsonObject;
 	sensors?: string[];
 	timeRange: DateRange;
 }
 
 export interface OverlayFilter {
 	sensor: string;
-	coverage: GeoJSON.Feature<any>;
+	coverage: Feature<any>;
 	timeRange: DateRange
 }
 
@@ -57,7 +58,7 @@ export abstract class BaseOverlaySourceProvider {
 	constructor(protected loggerService: LoggerService) {}
 
 	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<OverlaysFetchData> {
-		const regionFeature: GeoJSON.Feature<any> = {
+		const regionFeature: Feature<any> = {
 			type: 'Feature',
 			properties: {},
 			geometry: fetchParams.region

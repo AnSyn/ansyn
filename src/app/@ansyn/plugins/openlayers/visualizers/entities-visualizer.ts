@@ -1,5 +1,4 @@
-import { BaseImageryVisualizer, CommunicatorEntity, IMap, IVisualizerEntity } from '@ansyn/imagery';
-import { EventEmitter } from '@angular/core';
+import { BaseImageryVisualizer, IVisualizerEntity, VisualizerInteractionTypes } from '@ansyn/imagery';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
 import Feature from 'ol/feature';
@@ -10,14 +9,11 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { VisualizerInteractionTypes } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Subscription } from 'rxjs/src/Subscription';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -28,7 +24,6 @@ export const VisualizerStates = {
 	INITIAL: 'initial',
 	HOVER: 'hover'
 };
-
 
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
@@ -201,7 +196,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return Observable.of(true);
 		}
 
-		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = <any> {
+		const featuresCollectionToAdd: FeatureCollection<any> = {
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};

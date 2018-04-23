@@ -10,11 +10,10 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ConnectionBackend } from '@angular/http';
 import { ExpandAction, statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
@@ -68,7 +67,7 @@ describe('StatusBarAppEffects', () => {
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				OverlaysService,
-				ConnectionBackend,
+				HttpBackend,
 				{
 					provide: OverlaysConfig,
 					useValue: {

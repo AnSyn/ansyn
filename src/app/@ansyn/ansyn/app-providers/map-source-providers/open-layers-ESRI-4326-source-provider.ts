@@ -2,6 +2,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { Store } from '@ngrx/store';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
 export const OpenLayerESRI_4326SourceProviderMapType = OpenlayersMapName;
@@ -12,6 +15,10 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 	public mapType = OpenLayerESRI_4326SourceProviderMapType;
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		super(store, cacheService, imageryCommunicatorService)
+	}
 	create(metaData: any): any[] {
 		const source = new XYZ({
 			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',

@@ -7,22 +7,25 @@ import * as area from '@turf/area';
 import * as difference from '@turf/difference';
 import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { Feature, Polygon } from 'geojson';
 
-interface FiltersList {
+export interface FiltersList {
 	name: string,
 	dates: DateRange[]
 	sensorNames: string[],
 	coverage: number[][][][]
 }
 
-interface IMultipleOverlaysSourceConfig {
+export interface IMultipleOverlaysSourceConfig {
 	[key: string]: {
 		whitelist: FiltersList[],
 		blacklist: FiltersList[]
 	}
 }
 
-type IMultipleOverlaysSources = BaseOverlaySourceProvider;
+export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
 
 export const MultipleOverlaysSourceConfig: InjectionToken<IMultipleOverlaysSourceConfig> = new InjectionToken('multiple-overlays-source-config');
 export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = new InjectionToken('multiple-overlays-sources');
@@ -40,7 +43,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		this.prepareWhitelist();
 	}
 
-	private coverageToFeature(coordinates: number[][][]): GeoJSON.Feature<GeoJSON.Polygon> {
+	private coverageToFeature(coordinates: number[][][]): Feature<Polygon> {
 		return {
 			type: 'Feature',
 			properties: {},

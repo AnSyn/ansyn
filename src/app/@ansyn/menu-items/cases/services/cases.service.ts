@@ -9,9 +9,9 @@ import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { CasePreview, CaseState, CaseTimeState, ErrorHandlerService } from '@ansyn/core';
-import { UUID } from "angular2-uuid";
+import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
-import { StorageService, StoredEntity } from "@ansyn/core/services/storage/storage.service";
+import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -71,7 +71,7 @@ export class CasesService {
 				time: Boolean(caseValue.state.time) ? {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),
-					to: new Date(caseValue.state.time.to),
+					to: new Date(caseValue.state.time.to)
 				} : null
 			}
 		};
@@ -137,7 +137,7 @@ export class CasesService {
 	loadCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.get<CasePreview, CaseState>(this.config.schema, selectedCaseId)
 			.map(storedEntity =>
-				this.parseCase({...storedEntity.preview , state: storedEntity.data}))
+				this.parseCase({ ...storedEntity.preview, state: storedEntity.data }))
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
 	}
 

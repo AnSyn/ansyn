@@ -2,9 +2,10 @@ import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { GeoJsonObject, Point } from 'geojson';
 
 export abstract class IMap<T = any> {
-	centerChanged: EventEmitter<GeoJSON.Point>;
+	centerChanged: EventEmitter<Point>;
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any>;
@@ -22,9 +23,9 @@ export abstract class IMap<T = any> {
 	static addGroupVectorLayer(layer: any, groupName: string) {
 	}
 
-	abstract getCenter(): Observable<GeoJSON.Point>;
+	abstract getCenter(): Observable<Point>;
 
-	abstract setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean>;
+	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
 
 	abstract toggleGroup(groupName: string);
 
@@ -32,7 +33,7 @@ export abstract class IMap<T = any> {
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
 	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
-	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
+	 * @param {Point[]} extent The extent (bounding box points) of the map at ESPG:4326
 	 */
 	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
 
@@ -52,7 +53,7 @@ export abstract class IMap<T = any> {
 
 	abstract updateSize(): void;
 
-	abstract addGeojsonLayer(data: GeoJSON.GeoJsonObject);
+	abstract addGeojsonLayer(data: GeoJsonObject);
 
 	abstract dispose(): void;
 

@@ -37,6 +37,41 @@
 				"dev": "configuration/configuration.dev.ts",
 				"prod": "configuration/configuration.prod.ts"
 			}
+		},
+		{
+			"name": "builder",
+			"root": "src",
+			"outDir": "src/app/appBuilder/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "index.html",
+			"main": "app/appBuilder/main.builder.ts",
+			"polyfills": "polyfills.ts",
+			"test": "test.ts",
+			"tsconfig": "tsconfig.app.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
 		}
 	],
 	"e2e": {

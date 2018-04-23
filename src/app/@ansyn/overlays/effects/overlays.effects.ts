@@ -42,11 +42,11 @@ export class OverlaysEffects {
 						favoriteOverlays, o => o.id);
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
-						return [new LoadOverlaysSuccessAction(overlaysResult),
+						return [new LoadOverlaysSuccessAction(overlaysResult ),
 							new SetOverlaysStatusMessage('Error on overlays request')];
 					}
 
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+					const actions: Array<any> = [new LoadOverlaysSuccessAction( overlaysResult )];
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
@@ -57,7 +57,7 @@ export class OverlaysEffects {
 					}
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch(() => Observable.from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
 	/**

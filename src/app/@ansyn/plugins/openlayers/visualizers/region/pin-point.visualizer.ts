@@ -3,10 +3,10 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { CaseRegionState } from 'app/@ansyn/core/index';
+import { CaseRegionState } from '@ansyn/core';
 import { Actions } from '@ngrx/effects';
-import { getPointByGeometry } from 'app/@ansyn/core/utils/index';
-import { RegionVisualizer } from 'app/@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
+import { getPointByGeometry } from '@ansyn/core/utils';
+import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf'
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { CaseGeoFilter, SetOverlaysCriteriaAction } from '@ansyn/core';

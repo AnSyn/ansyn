@@ -11,6 +11,8 @@ import * as centroid from '@turf/centroid';
 import { CaseState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseFacetsState, CaseLayersState, IContextEntity, Overlay } from '@ansyn/core';
+import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 
 export class QueryParamsHelper {
 
@@ -61,17 +63,17 @@ export class QueryParamsHelper {
 					case 'geometry':
 						const geometryString = qParams.geometry;
 						if (geometryString) {
-							const geoJsonGeomtry: GeoJSON.GeoJsonObject = <GeoJSON.GeoJsonObject>wellknown.parse(geometryString);
+							const geoJsonGeomtry: GeoJsonObject = <GeoJsonObject>wellknown.parse(geometryString);
 
 							if (geoJsonGeomtry.type === 'Point') {
-								const geoPoint: GeoJSON.Point = <any>geoJsonGeomtry;
+								const geoPoint: Point = <any>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
 								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
 
 								updatedCaseModel.state.contextEntities = [];
 
-								const feature: GeoJSON.Feature<any> = {
+								const feature: Feature<any> = {
 									'type': 'Feature',
 									'properties': {},
 									'geometry': geoPoint
@@ -83,10 +85,10 @@ export class QueryParamsHelper {
 									featureJson: feature
 								});
 							} else if (geoJsonGeomtry.type === 'Polygon') {
-								const geoPolygon: GeoJSON.Polygon = <GeoJSON.Polygon>geoJsonGeomtry;
+								const geoPolygon: Polygon = <Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
 
-								const feature: GeoJSON.Feature<any> = {
+								const feature: Feature<any> = {
 									'type': 'Feature',
 									'geometry': geoPolygon,
 									'properties': {}

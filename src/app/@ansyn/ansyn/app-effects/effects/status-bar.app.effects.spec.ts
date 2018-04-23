@@ -10,7 +10,7 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ExpandAction, GoNextAction, GoPrevAction, statusBarFlagsItems } from '@ansyn/status-bar';
+import { ExpandAction, statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';

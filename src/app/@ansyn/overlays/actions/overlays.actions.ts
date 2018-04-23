@@ -88,7 +88,7 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: { overlays: Overlay[], refresh?: boolean }) {
+	constructor(public payload: Overlay[]) {
 	}
 }
 

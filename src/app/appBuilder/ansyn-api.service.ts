@@ -42,7 +42,6 @@ export class AnsynApi {
 	setOverlayes(overlays: Overlay[]) {
 
 		this.store.dispatch(new SetTimelineStateAction({ timeLineRange: this.getOverlayTimeFrame(overlays) }));
-		this.store.dispatch(new LoadOverlaysSuccessAction({ overlays, refresh: true }));
 
 	}
 

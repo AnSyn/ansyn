@@ -130,20 +130,16 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
 
-			const overlays = OverlaysService.sort(action.payload.overlays);
-			let stateOverlays;
-			if (action.payload.refresh) {
-				stateOverlays = new Map();
-				overlays.forEach(overlay => stateOverlays.set(overlay.id, overlay))
-			}
-			else {
-				stateOverlays = new Map(state.overlays);
-				overlays.forEach(overlay => {
-					if (!stateOverlays.has(overlay.id)) {
-						stateOverlays.set(overlay.id, overlay);
-					}
-				});
-			}
+			const overlays = OverlaysService.sort(action.payload);
+
+			const stateOverlays = new Map(state.overlays);
+
+			overlays.forEach(overlay => {
+				if (!stateOverlays.has(overlay.id)) {
+					stateOverlays.set(overlay.id, overlay);
+				}
+			});
+
 			// we already initiliazing the state
 			return {
 				...state,

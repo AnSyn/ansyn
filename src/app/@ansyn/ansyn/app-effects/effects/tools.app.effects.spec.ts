@@ -226,7 +226,7 @@ describe('ToolsAppEffects', () => {
 			expect(toolsAppEffects.onActiveMapChanges$).toBeObservable(expectedResults);
 		});
 
-		it('onActiveMapChanges with overlay and image processing as false on should raise EnableImageProcessing and ToggleImageProcessingSuccess with false', () => {
+		it('onActiveMapChanges  with overlay and image processing as false on should raise EnableImageProcessing and ToggleImageProcessingSuccess with false', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.overlay = 'overlay' as any;
 			activeMap.data.isAutoImageProcessingActive = false;

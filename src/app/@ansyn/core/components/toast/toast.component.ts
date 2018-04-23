@@ -35,7 +35,7 @@ export class ToastComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.toastMessage$.subscribe((toastMessage: IToastMessage) => {
+		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
 			if (toastMessage) { // Hide toast in duration time
 				const duration = this.duration * 1000;
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);

@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { LoadDefaultCaseAction } from '@ansyn/menu-items/index';
+import { coreInitialState, WindowLayout } from '@ansyn/core';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
@@ -20,6 +21,7 @@ export const metaReducers = [MetaReducer];
 
 export interface AnsynBuilderOptions {
 	providers: any[];
+	windowLayout: WindowLayout
 }
 
 export class AnsynBuilder {
@@ -73,7 +75,10 @@ export class AnsynBuilder {
 			.bootstrapModule(module)
 			.then((moduleRef: NgModuleRef<DynamicsAnsynModule>) => {
 				this.moduleRef = moduleRef;
-				this.api.store.dispatch(new LoadDefaultCaseAction());
+				this.api.loadDefaultCase();
+				if (this.options && this.options.windowLayout) {
+					this.api.changeWindowLayout(this.options.windowLayout);
+				}
 				this.callback(moduleRef.instance.api);
 			});
 	}

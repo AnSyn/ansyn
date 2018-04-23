@@ -37,7 +37,7 @@ export class MapFacadeService {
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
-		this.mapsList$.subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
 	}
 
 	initEmitters(id: string) {

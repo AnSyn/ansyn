@@ -17,8 +17,6 @@ export class AppAnsynComponent implements AfterViewInit {
 		const metaTag = this.renderer.createElement('meta');
 		metaTag.setAttribute('version', (<any>packageJson).version);
 		this.renderer.appendChild(this.document.head, metaTag);
-
-		this.document.getElementsByTagName('body')[0].style.margin = '0';
 	}
 
 }

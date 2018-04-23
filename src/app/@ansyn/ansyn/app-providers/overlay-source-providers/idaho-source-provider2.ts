@@ -11,7 +11,6 @@ export class IdahoSourceProvider2 extends IdahoSourceProvider {
 	sourceType = IdahoOverlaySourceType2;
 	constructor(public errorHandlerService: ErrorHandlerService, protected http: HttpClient, @Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig, protected loggerService: LoggerService) {
 		super(errorHandlerService, http, _overlaySourceConfig, loggerService)
-		// problem to inherit the dependencies
 	}
 	protected parseData(idahoElement: any, token: string): Overlay {
 		const result = super.parseData(idahoElement, token);

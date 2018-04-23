@@ -1,16 +1,22 @@
 <div class="menu-wrapper">
 
 	<div class="menu" [class.expanded]="expand">
-		<div
-			class="menu-btn"
-			*ngFor="let menuItem of menuItemsAsArray$ | async"
-			[class.active]="isActive(menuItem.name)"
-			(click)="toggleItem(menuItem.name)">
 
-			<i [ngClass]="menuItem.iconClass"></i>
-			<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
-			{{menuItem.name}}
-		</div>
+		<ng-container *ngFor="let menuItem of menuItemsAsArray$ | async">
+
+			<div
+				#menuItemElement
+				class="menu-btn"
+				[class.active]="isActive(menuItem.name)"
+				(click)="toggleItem(menuItem.name)">
+
+				<i [ngClass]="menuItem.iconClass"></i>
+				<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+				{{menuItem.name}}
+			</div>
+
+		</ng-container>
+
 
 		<div class="logo">
 			<div class="mode"
@@ -23,7 +29,6 @@
 			<img [src]="menuConfig.path" [alt]="version" [title]="version">
 		</div>
 	</div>
-
 
 	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">

@@ -4,6 +4,7 @@ import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ImageryTileProgressComponent', () => {
 	let component: ImageryTileProgressComponent;
@@ -12,7 +13,7 @@ describe('ImageryTileProgressComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
+			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }), EffectsModule.forRoot([])],
 			declarations: [ImageryTileProgressComponent]
 		})
 			.compileComponents();

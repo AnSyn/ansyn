@@ -6,17 +6,17 @@ import {
 	CopyCaseLinkAction,
 	LoadCasesAction,
 	OpenModalAction,
-	SelectCaseByIdAction
+	LoadCaseAction
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs/Observable';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
-import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { CaseModal } from '../../reducers/cases.reducer';
+import { CasePreview } from "@ansyn/core";
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -37,7 +37,7 @@ export class CasesTableComponent implements OnInit {
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 
 	ids$: Observable<string[] | number[]> = this.store$.select(selectCasesIds);
-	entities$: Observable<Dictionary<Case>> = this.store$.select(selectCaseEntities);
+	entities$: Observable<Dictionary<CasePreview>> = this.store$.select(selectCaseEntities);
 
 	modalCaseId$: Observable<string> = this.caseState$
 		.pluck<ICasesState, CaseModal>('modal')
@@ -95,7 +95,7 @@ export class CasesTableComponent implements OnInit {
 	}
 
 	selectCase(caseId: string): void {
-		this.store$.dispatch(new SelectCaseByIdAction(caseId));
+		this.store$.dispatch(new LoadCaseAction(caseId));
 	}
 
 }

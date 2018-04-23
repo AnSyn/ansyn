@@ -1,27 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { IMapState, MapsProgress, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Store } from '@ngrx/store';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Actions } from '@ngrx/effects';
+import { MapActionTypes, SetProgressBarAction } from '../../actions/map.actions';
+
 @Component({
 	selector: 'ansyn-imagery-tile-progress',
 	templateUrl: './imagery-tile-progress.component.html',
 	styleUrls: ['./imagery-tile-progress.component.less']
 })
-export class ImageryTileProgressComponent implements OnInit {
+export class ImageryTileProgressComponent implements OnInit, OnDestroy {
 	@Input() mapId;
 	@Input() lowered;
 
-	progress$ = this.store$.select(mapStateSelector)
-		.pluck<IMapState, MapsProgress>('mapsProgress')
-		.distinctUntilChanged()
-		.map((mapsProgress: MapsProgress): number => mapsProgress[this.mapId]);
+	private _subscriptions: Subscription[] = [];
+	progress$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.VIEW.SET_PROGRESS_BAR)
+		.filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId )
+		.map((action: SetProgressBarAction) => action.payload.progress)
+		.do((progress) => this.progress = progress);
 
 	progress;
 
-	constructor(public store$: Store<IMapState>) {
+	constructor(public actions$: Actions) {
 	}
 
 	ngOnInit() {
-		this.progress$.subscribe((progress) => this.progress = progress);
+		this._subscriptions.push(
+			this.progress$.subscribe()
+		);
+	}
+
+	ngOnDestroy(): void {
+		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 }

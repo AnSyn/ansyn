@@ -1,5 +1,5 @@
 import { AppPage } from './app.po';
-import { by, element } from 'protractor';
+import { browser } from 'protractor';
 
 describe('Ansyn App', () => {
 	let page: AppPage;
@@ -10,7 +10,18 @@ describe('Ansyn App', () => {
 	});
 
 	it('should initialize app with login', () => {
-		const isPresent = element(by.css('ansyn-login')).isPresent();
-		expect(isPresent).toBe(true);
+		expect(page.loginComponent.isPresent()).toBe(true);
+	});
+
+	it('should instantiate the main app component, after a successful login', () => {
+		page.setCorrectUsername();
+		page.setCorrectPassword();
+		page.loginButton.click();
+		browser.wait(
+			() => page.mainComponent.isPresent(),
+			null,
+			'Timed out waiting for main component'
+		);
+		expect(page.mainComponent.isPresent()).toBe(true);
 	});
 });

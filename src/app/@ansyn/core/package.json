@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/core",
-	"version": "0.2.8",
+	"version": "0.2.81",
 	"description": "",
 	"main": "index.js",
 	"scripts": {

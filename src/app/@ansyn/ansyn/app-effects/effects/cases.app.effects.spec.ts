@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { contextFeatureKey } from '@ansyn/context/reducers';
 import { ContextReducer } from '@ansyn/context/reducers/context.reducer';
 import { AddCaseAction } from '@ansyn/menu-items';
@@ -34,6 +34,10 @@ describe('CasesAppEffects', () => {
 
 	const selectedCase: Case = {
 		id: 'case1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
 		state: {
 			maps: {
 				activeMapId: '5555',
@@ -76,6 +80,8 @@ describe('CasesAppEffects', () => {
 				},
 				ImageryCommunicatorService,
 				CasesAppEffects,
+				{ provide: CoreConfig, useValue: {} },
+				StorageService,
 				CasesService,
 				{
 					provide: ErrorHandlerService,
@@ -86,7 +92,7 @@ describe('CasesAppEffects', () => {
 					useValue: {}
 				},
 				provideMockActions(() => actions),
-				{ provide: casesConfig, useValue: { baseUrl: null } }
+				{ provide: casesConfig, useValue: { schema: null } }
 			]
 		}).compileComponents();
 	}));

@@ -1,0 +1,14 @@
+[template]
+src = "production.tmpl"
+dest = "/usr/share/nginx/html/assets/config/app.config.json"
+keys = [
+	"/ansyn/storage/baseurl",
+    "/ansyn/overlay/baseurl",
+    "/ansyn/overlay/api/find",
+    "/ansyn/overlay/api/default",
+    "/ansyn/login/baseurl",
+    "/ansyn/menu/background",
+    "/ansyn/menu/color",
+    "/ansyn/menu/mode",
+    "/ansyn/imagery/mapsource"
+]

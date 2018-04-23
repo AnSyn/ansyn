@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
@@ -6,15 +6,17 @@ import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
 import { AlertMsg } from '../../reducers';
-import { CoreConfig, ICoreConfig } from '../../models/index';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { Subscription } from 'rxjs/Subscription';
+import { getTimeFormat } from '@ansyn/core/utils/time';
+import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
 
 @Component({
 	selector: 'ansyn-imagery-status',
 	templateUrl: './imagery-status.component.html',
 	styleUrls: ['./imagery-status.component.less']
 })
-export class ImageryStatusComponent implements OnInit {
+export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: Overlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
@@ -32,6 +34,7 @@ export class ImageryStatusComponent implements OnInit {
 	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
+	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
 
@@ -46,23 +49,34 @@ export class ImageryStatusComponent implements OnInit {
 	isFavorite: boolean;
 	favoritesButtonText: string;
 
+	getFormattedTime(dateTimeSring: string): string {
+		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
+		return formatedTime;
+	}
+
 	get description() {
-		return (this.overlay && this.overlay) ? new Date(this.overlay.photoTime).toUTCString() + ' - ' + this.overlay.sensorName : null;
+		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) + ' ' + this.overlay.sensorName : null;
 	}
 
 	get noGeoRegistration() {
 		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
 	}
 
-	constructor(protected store$: Store<any>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
 	}
 
 	ngOnInit(): void {
-		this.favoriteOverlays$.subscribe((favoriteOverlays) => {
-			this.favoriteOverlays = favoriteOverlays;
-			this.updateFavoriteStatus();
-		});
-		this.alertMsg$.subscribe();
+		this._subscriptions.push(
+			this.favoriteOverlays$.subscribe((favoriteOverlays) => {
+				this.favoriteOverlays = favoriteOverlays;
+				this.updateFavoriteStatus();
+			}),
+			this.alertMsg$.subscribe()
+		);
+	}
+
+	ngOnDestroy(): void {
+		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
 	showAlert(alertKey) {
@@ -70,7 +84,7 @@ export class ImageryStatusComponent implements OnInit {
 		if (ids) {
 			return ids.has(this.mapId);
 		} else {
-			return this[alertKey]
+			return this[alertKey];
 		}
 	}
 

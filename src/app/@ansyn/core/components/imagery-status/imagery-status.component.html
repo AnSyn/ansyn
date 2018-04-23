@@ -2,16 +2,16 @@
 	<button (click)="backToWorldView.emit()"
 			class="back-to-world-view"
 			*ngIf="overlay"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom' : 'top'"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 			tooltip-value="Back to base map">
 		<i class="icon-context-menu-prev"></i>
 		Back to base map
 	</button>
 
-	<button *ngIf="mapsAmount > 1" [disabled]="isNotGeoRegistered"
+	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
-			tooltip-class="bottom right"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
 	</button>
@@ -19,9 +19,7 @@
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
 			tooltip-value="Show/ Hide layers"
-			tooltip-class="bottom right"
-
-	>
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i [class.icon-main-data-layers]="layerFlag"
 		   [class.icon-layers-hide]="!layerFlag"></i>
 	</button>
@@ -30,19 +28,16 @@
 			[class.active2]="isFavorite"
 			(click)="toggleFavorite()"
 			[attr.tooltip-value]="favoritesButtonText"
-			tooltip-class="bottom right">
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-favorites"></i>
 	</button>
 </div>
 
-<div class="description"
-
->
+<div class="description">
 	<div *ngIf="overlay"
 		 [attr.tooltip-value]="description"
-		 tooltip-class="bottom right"
-	>
-		{{overlay.photoTime | date: 'H:mm:ss dd/MM/yy'}} {{overlay.sensorName}}
+		 [attr.tooltip-class]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+		{{description}}
 	</div>
 	<div *ngIf="!overlay">
 		Base Map
@@ -50,13 +45,25 @@
 </div>
 
 <div class="notification">
-	<div
-		*ngFor="let alert of coreConfig?.alerts"
-		[hidden]="!showAlert(alert.key)"
-		[style.background]="alert.background"
-		[attr.tooltip-value]="alert.text"
-		tooltip-class="top left">
-		{{ alert.text }}
-	</div>
+
+	<ng-container *ngFor="let alert of alerts">
+		<ng-container *ngIf="showAlert(alert.key)">
+
+			<ng-container
+				*ngIf="alert.component; else textAlert"
+				[ansynAlertComponent]="{ component: alert.component, mapId: mapId }">
+			</ng-container>
+
+			<ng-template #textAlert>
+				<div
+					[style.background]="alert.background"
+					[attr.tooltip-value]="alert.text"
+					tooltip-class="top left">
+					{{ alert.text }}
+				</div>
+			</ng-template>
+
+		</ng-container>
+	</ng-container>
 
 </div>

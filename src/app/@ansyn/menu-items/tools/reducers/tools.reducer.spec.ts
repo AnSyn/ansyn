@@ -1,23 +1,11 @@
-import { AnnotationProperties, toolsInitialState, ToolsReducer } from './tools.reducer';
-import { AnnotationClose, AnnotationOpen, AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
+import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
+import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
 
 describe('ToolsReducer', () => {
 
 	it('check initial state ', () => {
-		expect(toolsInitialState.flags.get('geoRegisteredOptionsEnabled')).toBe(true);
-	});
-
-	it('Check ANNOTATION_OPEN', () => {
-		const action = new AnnotationOpen(true);
-		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get('annotations')).toBe(true);
-	});
-
-	it('Check ANNOTATION_OPEN', () => {
-		const action = new AnnotationClose(false);
-		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.flags.get('annotations')).toBe(false);
+		expect(toolsInitialState.flags.get(toolsFlags.geoRegisteredOptionsEnabled)).toBe(true);
 	});
 
 	it('Check SET_ANNOTATION_MODE', () => {

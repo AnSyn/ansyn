@@ -14,7 +14,7 @@ import { ImageryProviderService } from '../provider-service/imagery-provider.ser
 import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { IImageryConfig } from '../model/iimagery-config';
-import { ConfigurationToken } from '../configuration.token';
+import { ConfigurationToken } from '../model/configuration.token';
 import 'rxjs/add/operator/take';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 

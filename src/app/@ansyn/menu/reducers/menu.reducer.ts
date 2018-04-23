@@ -67,7 +67,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
 			updateSession({ isPinned: action.payload });
-			return { ...state, isPinned: action.payload };
+			return { ...state, isPinned: action.payload, clickOutside: !action.payload};
 
 		case MenuActionTypes.SET_CLICK_OUTSIDE:
 			return { ...state, clickOutside: action.payload };

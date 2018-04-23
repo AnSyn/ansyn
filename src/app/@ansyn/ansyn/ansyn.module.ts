@@ -25,6 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
+import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
 
 const MenuItemsModules = [
 	CasesModule,
@@ -48,6 +50,7 @@ const MenuItemsModules = [
 		AnsynPluginsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynMenuItems),
+		AlertsModule.provideAlerts(ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,
 		ImageryModule,

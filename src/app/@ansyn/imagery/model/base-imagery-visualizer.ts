@@ -1,4 +1,4 @@
-import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/models/visualizer-state';
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { BaseImageryPlugin } from './base-imagery-plugin';
@@ -10,8 +10,6 @@ export interface IVisualizerEntity {
 	type?: string,
 	style?: Partial<VisualizerStateStyle>
 }
-
-export type IMarkupEvent = { id: string, class: boolean }[];
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 

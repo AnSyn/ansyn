@@ -1,20 +1,17 @@
 import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
-import {
-	CopySelectedCaseLinkAction, ExpandAction, GoNextAction, GoPrevAction,
-	UpdateStatusFlagsAction
-} from '../../actions/status-bar.actions';
+import { CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import {
 	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	ClearActiveInteractionsAction, coreStateSelector, ICoreState, LayoutKey, layoutOptions, Overlay, OverlaysCriteria,
-	SetLayoutAction, SetOverlaysCriteriaAction
+	CoreActionTypes, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey,
+	layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction, UpdateOverlaysCountAction
 } from '@ansyn/core';
-import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig } from '../../models';
+import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig, ComboBoxesProperties, statusBarFlagsItemsEnum } from '../../models';
 import { SetComboBoxesProperties } from '../../actions';
-import { ComboBoxesProperties, StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar/models';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { Actions } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -23,40 +20,44 @@ import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxe
 })
 
 export class StatusBarComponent implements OnInit {
-	statusBar$: Observable<IStatusBarState> = this.store.select(statusBarStateSelector);
-	core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	overlaysCriteria$: Observable<OverlaysCriteria> = this.core$
+
+
+	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
 
-	layout$: Observable<LayoutKey> = this.core$
+	layout$: Observable<LayoutKey> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, LayoutKey>('layout')
 		.distinctUntilChanged();
 
-	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.statusBar$
+	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(statusBarStateSelector)
 		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
 		.distinctUntilChanged();
 
 	comboBoxesProperties: ComboBoxesProperties = {};
-	flags$ = this.statusBar$.pluck('flags').distinctUntilChanged();
+
+	flags$ = this.store.select(statusBarStateSelector).pluck('flags').distinctUntilChanged();
+
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
-	overlaysCount$: Observable<number> = this.statusBar$.pluck<IStatusBarState, number>('overlaysCount').distinctUntilChanged();
+
+	overlaysCount$: Observable<number> = this.actions$
+		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
+		.map(({ payload }: UpdateOverlaysCountAction) => payload);
 
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
-	flags: Map<StatusBarFlag, boolean> = new Map<StatusBarFlag, boolean>();
+	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 	timeSelectionEditIcon = false;
-	overlaysCount: number;
 	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
 
-	get statusBarFlagsItems() {
-		return statusBarFlagsItems;
+	get statusBarFlagsItemsEnum() {
+		return statusBarFlagsItemsEnum;
 	}
 
 	get toolTips(): IToolTipsConfig {
@@ -91,10 +92,10 @@ export class StatusBarComponent implements OnInit {
 		}
 
 		if ($event.which === 39) { // ArrowRight
-			this.clickGoNext();
+			this.clickGoAdjacent(true);
 			this.goNextActive = false;
 		} else if ($event.which === 37) { // ArrowLeft
-			this.clickGoPrev();
+			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
 		}
 	}
@@ -104,7 +105,7 @@ export class StatusBarComponent implements OnInit {
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
-	) {
+				protected actions$: Actions) {
 
 	}
 
@@ -112,8 +113,10 @@ export class StatusBarComponent implements OnInit {
 
 		this.setSubscribers();
 
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
+
 		this.store.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItems.pinPointIndicator,
+			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
 		}));
 	}
@@ -121,9 +124,11 @@ export class StatusBarComponent implements OnInit {
 	setSubscribers() {
 		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
 
-		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
+			this.comboBoxesProperties = comboBoxesProperties
+		});
 
-		this.flags$.subscribe((flags: Map<StatusBarFlag, boolean>) => {
+		this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
 			this.flags = new Map(flags);
 		});
 
@@ -131,9 +136,7 @@ export class StatusBarComponent implements OnInit {
 			this.time = _time;
 		});
 
-		this.overlaysCount$.subscribe(overlaysCount => {
-			this.overlaysCount = overlaysCount;
-		});
+
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -155,27 +158,25 @@ export class StatusBarComponent implements OnInit {
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
+		if (payload.geoFilter) {
+			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: true }));
+		}
 	}
 
 	copyLink(): void {
 		this.store.dispatch(new CopySelectedCaseLinkAction());
 	}
 
-	toggleMapPointSearch() {
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateStatusFlagsAction] }));
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
+	toggleMapSearch() {
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
 	}
 
-	togglePinPointIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
+	toggleIndicatorView() {
+		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
 	}
 
-	clickGoPrev(): void {
-		this.store.dispatch(new GoPrevAction());
-	}
-
-	clickGoNext(): void {
-		this.store.dispatch(new GoNextAction());
+	clickGoAdjacent(isNext): void {
+		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
 	}
 
 	clickExpand(): void {

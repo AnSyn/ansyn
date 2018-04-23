@@ -1,27 +1,52 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { MapFacadeService } from '../services/map-facade.service';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { range } from 'lodash';
+import { UUID } from 'angular2-uuid';
 
-export interface MapsProgress {
-	[key: string]: number
+export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
+	const mapsList: CaseMapState[] = [];
+	const activeMap = oldMapsList.find(({ id }) => oldActiveMapId === id);
+
+	range(layout.mapsCount).forEach((index) => {
+		if (oldMapsList[index]) {
+			mapsList.push(oldMapsList[index]);
+		} else {
+			const mapStateCopy: CaseMapState = {
+				id: UUID.UUID(),
+				data: { position: null },
+				mapType: defaultMapType,
+				flags: {}
+			};
+			mapsList.push(mapStateCopy);
+		}
+	});
+
+	const mapsListChange = { mapsList };
+
+	/* activeMapId */
+	const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
+	if (notExist) {
+		mapsList[mapsList.length - 1] = activeMap;
+	}
+
+	return { ...mapsListChange };
 }
 
 export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
-	mapsProgress: MapsProgress;
 	isLoadingMaps: Map<string, string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
 
+
 export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
-	mapsProgress: {},
 	isLoadingMaps: new Map<string, string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
@@ -34,31 +59,12 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
-		case MapActionTypes.VIEW.SET_PROGRESS_BAR: {
-			if (state.mapsProgress.hasOwnProperty(action.payload.mapId)) {
-				const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
-				return { ...state, mapsProgress };
-			}
-			return state;
-		}
-
-		case MapActionTypes.IMAGERY_CREATED: {
-			const mapsProgress = { ...state.mapsProgress };
-			mapsProgress[action.payload.id] = 0;
-			return { ...state, mapsProgress };
-		}
 
 		case MapActionTypes.IMAGERY_REMOVED: {
-			const mapsProgress = { ...state.mapsProgress };
-			delete mapsProgress[action.payload.id];
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			isLoadingMaps.delete(action.payload.id);
-			return { ...state, mapsProgress, isLoadingMaps };
+			return { ...state, isLoadingMaps };
 		}
-
-		case MapActionTypes.VIEW.SET_PROGRESS_BAR:
-			const mapsProgress = { ...state.mapsProgress, [action.payload.mapId]: action.payload.progress };
-			return { ...state, mapsProgress };
 
 		case MapActionTypes.VIEW.SET_IS_LOADING: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -99,7 +105,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			const layout = layoutOptions.get(action.payload);
 			if ( layout.mapsCount !== state.mapsList.length && state.mapsList.length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - state.mapsList.length);
-				const mapsDataChanges = MapFacadeService.setMapsDataChanges(state.mapsList, state.activeMapId, layout);
+				const mapsDataChanges = setMapsDataChanges(state.mapsList, state.activeMapId, layout);
 				return { ...state, pendingMapsCount, ...mapsDataChanges };
 			}
 			return state;

@@ -1,9 +1,8 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { IToolsState, toolsStateSelector, toolsFlags } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
 	GoToAction,
-	GoToExpandAction,
 	GoToInputChangeAction,
 	PullActiveCenter,
 	SetPinLocationModeAction
@@ -15,6 +14,8 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 import { CoordinatesSystem } from '@ansyn/core/models';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { SetSubMenu } from '../../actions/tools.actions';
+import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -25,8 +26,8 @@ export class GoToComponent implements OnInit {
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
-	public gotoExpand$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.pluck<IToolsState, boolean>('gotoExpand')
+	public gotoExpand$: Observable<boolean> = this.store$.select(selectSubMenu)
+		.map((subMenu) => subMenu === SubMenuEnum.goTo)
 		.distinctUntilChanged();
 	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector)
 		.pluck<any, any>('activeCenter')
@@ -40,7 +41,7 @@ export class GoToComponent implements OnInit {
 	};
 
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => state.flags.get('pinLocation'))
+		.map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation))
 		.distinctUntilChanged();
 
 	pinLocationMode: boolean;
@@ -113,7 +114,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	close() {
-		this.store$.dispatch(new GoToExpandAction(false));
+		this.store$.dispatch(new SetSubMenu(null));
 	}
 
 	private dispatchInputUpdated(coords: number[], convertFrom: CoordinatesSystem) {

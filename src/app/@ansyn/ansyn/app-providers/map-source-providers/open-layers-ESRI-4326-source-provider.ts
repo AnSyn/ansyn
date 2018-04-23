@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerESRI_4326SourceProviderMapType = openLayersMapName;
+export const OpenLayerESRI_4326SourceProviderMapType = OpenlayersMapName;
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 		super(store, cacheService, imageryCommunicatorService)
 	}
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const source = new XYZ({
 			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',
 			maxZoom: 16,
@@ -33,8 +33,6 @@ export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
 			},
 			wrapX: true
 		});
-
-		this.monitorSource(source, mapId);
 
 		const esriLayer = new TileLayer({
 			source: source,

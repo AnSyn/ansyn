@@ -54,3 +54,8 @@ export function getTimeDiffFormat(timeDiff: TimeDiff): string {
 	}
 	return result;
 }
+
+export function getTimeFormat(dateTime: Date): string {
+	// Remarks: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+	return dateTime.toLocaleString('en-US', {hour12: false});
+}

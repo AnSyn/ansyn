@@ -8,6 +8,7 @@ import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { mapFacadeConfig,  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
+import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar";
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -20,7 +21,7 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer })],
 			declarations: [ContextMenuComponent],
 			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {
 				provide: mapFacadeConfig,

@@ -1,35 +1,14 @@
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
-import {
-	ActiveMapChangedAction,
-	DrawOverlaysOnMapTriggerAction,
-	HoverFeatureTriggerAction,
-	MapActionTypes,
-	PinPointTriggerAction,
-	SetMapsDataActionStore
-} from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { CaseMapState, OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import {
-	DisplayOverlaySuccessAction,
-	MouseOutDropAction,
-	MouseOverDropAction,
-	OverlaysActionTypes,
-	OverlaysMarkupAction
-} from '@ansyn/overlays/actions/overlays.actions';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/overlays/polyline-visualizer';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	GoToInputChangeAction,
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
 	ShowOverlaysFootprintAction,
@@ -40,52 +19,19 @@ import {
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { CoreService } from '@ansyn/core/services/core.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { SetPinLocationModeAction, toolsFlags } from '@ansyn/menu-items';
+import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core';
+import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 import {
-	FootprintHeatmapVisualizer,
-	GoToVisualizer,
-	MeasureDistanceVisualizer
-} from '@ansyn/plugins/openlayers/open-layer-visualizers';
-import { SetPinLocationModeAction } from '@ansyn/menu-items';
-import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes, Overlay } from '@ansyn/core';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { Feature, Point, Position } from 'geojson';
-import { IconVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/icon.visualizer';
-import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/tools/mouse-shadow.visualizer';
+	DrawOverlaysOnMapTriggerAction,
+	MapActionTypes,
+	SetMapsDataActionStore
+} from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class VisualizersAppEffects {
-	/**
-	 * @type Effect
-	 * @name onHoverFeatureSetMarkup$
-	 * @ofType HoverFeatureTriggerAction
-	 * @dependencies cases
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	onHoverFeatureSetMarkup$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
-		.map(([action, map, core]: [HoverFeatureTriggerAction, IMapState, ICoreState]) => {
-			const markups = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays, action.payload.id);
-			return new OverlaysMarkupAction(markups);
-		});
-
-	/**
-	 * @type Effect
-	 * @name onMouseOverDropAction$
-	 * @ofType MouseOverDropAction, MouseOutDropAction
-	 * @action HoverFeatureTriggerAction
-	 */
-	@Effect()
-	onMouseOverDropAction$: Observable<HoverFeatureTriggerAction> = this.actions$
-		.ofType(OverlaysActionTypes.MOUSE_OVER_DROP, OverlaysActionTypes.MOUSE_OUT_DROP)
-		.map((action: MouseOverDropAction | MouseOutDropAction) => action instanceof MouseOverDropAction ? action.payload : undefined)
-		.map((payload: string | undefined) => new HoverFeatureTriggerAction({
-			id: payload
-		}));
-
 	/**
 	 * @type Effect
 	 * @name updateCaseFromTools$
@@ -118,141 +64,6 @@ export class VisualizersAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
 
-	/**
-	 * @type Effect
-	 * @name drawOverlaysOnMap$
-	 * @ofType DrawOverlaysOnMapTriggerAction
-	 * @dependencies overlays, cases
-	 */
-	@Effect({ dispatch: false })
-	drawOverlaysOnMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.switchMap(([action, overlaysState, { mapsList }]: [DrawOverlaysOnMapTriggerAction, IOverlaysState, IMapState]) => {
-			const observables = [];
-
-			mapsList.forEach((mapData: CaseMapState) => {
-				observables.push(this.drawOverlaysOnMap(mapData, overlaysState));
-			});
-
-			return Observable.forkJoin(observables);
-		});
-
-	/**
-	 * @type Effect
-	 * @name drawDistamceMeasureOnMap$
-	 * @ofType DrawOverlaysOnMapTriggerAction
-	 * @dependencies overlays, cases
-	 */
-	@Effect({ dispatch: false })
-	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
-		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => [action, mapState])
-		.map(([action, mapState]: [SetMeasureDistanceToolState, IMapState]) => {
-			const activeMapState = MapFacadeService.activeMap(mapState);
-			const communicator = this.imageryCommunicatorService.provide(activeMapState.id);
-			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-			if (distanceVisualizerTool) {
-				if (action.payload) {
-					distanceVisualizerTool.createInteraction();
-				} else {
-					distanceVisualizerTool.clearInteractionAndEntities();
-				}
-			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesDeleteOldMeasureLayer$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies map
-	 */
-	@Effect({ dispatch: false })
-	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
-			return [action, toolState.flags.get('isMeasureToolActive')];
-		})
-		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
-		.map(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach(communicator => {
-				const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-				if (distanceVisualizerTool) {
-					distanceVisualizerTool.clearInteractionAndEntities();
-				}
-			});
-
-			const communicator = this.imageryCommunicatorService.provide(action.payload);
-			const distanceVisualizerTool = communicator.getPlugin<MeasureDistanceVisualizer>(MeasureDistanceVisualizer);
-			if (distanceVisualizerTool) {
-				distanceVisualizerTool.createInteraction();
-			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesRedrawPinLocation$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies mapState, toolState
-	 */
-	@Effect({ dispatch: false })
-	onActiveMapChangesRedrawPinLocation$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			this.store$.select(toolsStateSelector),
-			(action, mapState, toolState) => [action, mapState, toolState]
-		)
-		.filter(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => toolState.gotoExpand)
-		.mergeMap(([action, mapState, toolState]: [ActiveMapChangedAction, IMapState, IToolsState]) => {
-			return Observable.forkJoin(mapState.mapsList.map((map: CaseMapState) => {
-				return this.drawGotoIconOnMap(map, toolState.activeCenter, map.id === action.payload);
-			}));
-		});
-
-	/**
-	 * @type Effect
-	 * @name gotoIconVisibilityOnGoToWindowChanged$
-	 * @ofType GoToExpandAction
-	 * @dependencies tools, map
-	 */
-	@Effect({ dispatch: false })
-	gotoIconVisibilityOnGoToWindowChanged$ = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO_EXPAND)
-		.withLatestFrom(
-			this.store$.select(toolsStateSelector).pluck<IToolsState, boolean>('gotoExpand'),
-			this.store$.select(mapStateSelector),
-			this.store$.select(toolsStateSelector).pluck('activeCenter'),
-			(action, gotoExpand, map, activeCenter) => [gotoExpand, map, activeCenter]
-		)
-		.mergeMap(([gotoExpand, map, activeCenter]: [boolean, IMapState, any[]]) => {
-			const activeMap = MapFacadeService.activeMap(map);
-			return this.drawGotoIconOnMap(activeMap, activeCenter, gotoExpand);
-		});
-
-	/**
-	 * @type Effect
-	 * @name drawPinPoint$
-	 * @ofType DrawPinPointAction
-	 */
-	@Effect({ dispatch: false })
-	drawPinPoint$ = this.actions$
-		.ofType(MapActionTypes.DRAW_PIN_POINT_ON_MAP)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			(action: PinPointTriggerAction, mapState: IMapState) => {
-				return [mapState, action.payload];
-			}
-		)
-		.switchMap(([mapState, coords]: [IMapState, Position]) => {
-			const observables = [];
-
-			mapState.mapsList.forEach((map: CaseMapState) => {
-				observables.push(this.drawPinPointIconOnMap(map, coords));
-			});
-
-			return Observable.forkJoin(observables);
-		});
 
 	/**
 	 * @type Effect
@@ -275,7 +86,7 @@ export class VisualizersAppEffects {
 					shadowMouseConsumers.push(map);
 				}
 			});
-				shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
+			shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
 		});
 
 	/**
@@ -288,7 +99,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onActiveImageryMouseLeave$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
 		.map(() => new StopMouseShadow({ updateTools: false }));
 
@@ -302,7 +113,7 @@ export class VisualizersAppEffects {
 	@Effect()
 	onActiveImageryMouseEnter$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get('shadowMouse'))
+		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
 		.filter((shadowMouseOn: boolean) => shadowMouseOn)
 		.map(() => new StartMouseShadow({ updateTools: false }));
 
@@ -322,27 +133,6 @@ export class VisualizersAppEffects {
 			});
 		});
 
-	/**
-	 * @type Effect
-	 * @name OnGoToInputChanged$
-	 * @ofType GoToInputChangeAction
-	 * @dependencies map
-	 */
-	@Effect({ dispatch: false })
-	OnGoToInputChanged$ = this.actions$
-		.ofType(ToolsActionsTypes.GO_TO_INPUT_CHANGED)
-		.skip(1)
-		.withLatestFrom(
-			this.store$.select(mapStateSelector),
-			(action: GoToInputChangeAction, mapState) => {
-				return [mapState, action.payload];
-
-			}
-		)
-		.switchMap(([mapState, coords]: [IMapState, any[]]) => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			return this.drawGotoIconOnMap(activeMap, coords);
-		});
 
 	/**
 	 * @type Effect
@@ -379,7 +169,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false }),
+				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor
@@ -395,102 +185,9 @@ export class VisualizersAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	drawOverlaysOnMap(mapData: CaseMapState, overlayState: IOverlaysState): Observable<boolean> {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		let observable = Observable.of(true);
-		if (communicator && mapData.data.overlayDisplayMode) {
-			const polylineVisualizer = communicator.getPlugin<FootprintPolylineVisualizer>(FootprintPolylineVisualizer);
-			const hitMapVisualizer = communicator.getPlugin<FootprintHeatmapVisualizer>(FootprintHeatmapVisualizer);
-			if (!polylineVisualizer || !hitMapVisualizer) {
-				return;
-			}
-			const overlayDisplayMode: OverlayDisplayMode = mapData.data.overlayDisplayMode;
-			switch (overlayDisplayMode) {
-				case 'Hitmap': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					observable = hitMapVisualizer.setEntities(entitiesToDraw);
-					polylineVisualizer.clearEntities();
-					break;
-				}
-				case 'Polygon': {
-					const entitiesToDraw = this.getEntitiesToDraw(overlayState);
-					observable = polylineVisualizer.setEntities(entitiesToDraw);
-					hitMapVisualizer.clearEntities();
-					break;
-				}
-				case 'None':
-				default: {
-					polylineVisualizer.clearEntities();
-					hitMapVisualizer.clearEntities();
-				}
-			}
-		}
-
-		return observable;
-	}
-
 	getPlugin<T>(mapId, visualizerType): T {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		return communicator ? communicator.getPlugin<T>(visualizerType) : null;
-	}
-
-	drawGotoIconOnMap(mapData: CaseMapState, point: any[], gotoExpand = true): Observable<boolean> {
-		if (!mapData) {
-			return Observable.of(true);
-		}
-
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (!communicator) {
-			return Observable.of(true);
-		}
-		const gotoVisualizer = communicator.getPlugin<GoToVisualizer>(GoToVisualizer);
-		if (!gotoVisualizer) {
-			return Observable.of(true);
-		}
-		if (gotoExpand) {
-			const gotoPoint: Point = {
-				type: 'Point',
-				// calculate projection?
-				coordinates: point
-			};
-			const gotoFeatureJson: Feature<any> = {
-				type: 'Feature',
-				geometry: gotoPoint,
-				properties: {}
-			};
-			gotoVisualizer.clearEntities();
-			return gotoVisualizer.setEntities([{ id: 'goto', featureJson: gotoFeatureJson }]);
-		} else {
-			gotoVisualizer.clearEntities();
-		}
-
-		return Observable.of(true);
-	}
-
-	drawPinPointIconOnMap(mapData: CaseMapState, point: Position): Observable<boolean> {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
-			const iconVisualizer = communicator.getPlugin<IconVisualizer>(IconVisualizer);
-			if (!iconVisualizer) {
-				return Observable.of(true);
-			}
-			iconVisualizer.clearEntities();
-			if (point) {
-				const pinPoint: Point = {
-					type: 'Point',
-					// calculate projection?
-					coordinates: point
-				};
-				const pinFeatureJson: Feature<any> = {
-					type: 'Feature',
-					geometry: pinPoint,
-					properties: {}
-				};
-				return iconVisualizer.setEntities([{ id: 'pinPoint', featureJson: pinFeatureJson }]);
-			}
-		}
-
-		return Observable.of(true);
 	}
 
 	// set shadow mouse producer (remove previous producers)
@@ -519,12 +216,13 @@ export class VisualizersAppEffects {
 				if (!mouseShadowVisualizer) {
 					return;
 				}
-				const shadowMousePoint: Point = {
+
+				const shadowMousePoint: GeoJSON.Point = {
 					type: 'Point',
 					// calculate projection?
 					coordinates: point
 				};
-				const shadowMouseFeatureJson: Feature<any> = {
+				const shadowMouseFeatureJson: GeoJSON.Feature<any> = {
 					type: 'Feature',
 					geometry: shadowMousePoint,
 					properties: {}
@@ -554,23 +252,6 @@ export class VisualizersAppEffects {
 		this.removeShadowMouseProducer(mapData);
 		// clear shadow layer (in case this is shadow consumer)
 		this.clearShadowMouseEntities(mapData);
-	}
-
-	getEntitiesToDraw(overlayState: IOverlaysState): IVisualizerEntity[] {
-		const overlaysToDraw = <any[]> OverlaysService.pluck(overlayState.overlays, overlayState.filteredOverlays, ['id', 'footprint']);
-		return overlaysToDraw.map(this.mapOverlayToDraw);
-	}
-
-	mapOverlayToDraw({ id, footprint }: Overlay): IVisualizerEntity {
-		const featureJson: Feature<any> = {
-			type: 'Feature',
-			geometry: footprint,
-			properties: {}
-		};
-		return {
-			id,
-			featureJson
-		};
 	}
 
 }

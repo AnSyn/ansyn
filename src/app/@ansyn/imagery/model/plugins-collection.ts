@@ -1,8 +1,8 @@
-import { InjectionToken, ModuleWithProviders, ValueProvider } from '@angular/core';
+import { InjectionToken, ValueProvider } from '@angular/core';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { BaseImageryPlugin } from '@ansyn/imagery';
 
-export const PLUGINS_COLLECTION: InjectionToken<ImageryPluginProvider[]> = new InjectionToken('PLUGINS_COLLECTION');
+export const PLUGINS_COLLECTIONS: InjectionToken<ImageryPluginProvider[]> = new InjectionToken('PLUGINS_COLLECTIONS');
 
 export interface PluginsCollectionProvider extends ValueProvider {
 	provide: InjectionToken<ImageryPluginProvider[]>;
@@ -10,15 +10,19 @@ export interface PluginsCollectionProvider extends ValueProvider {
 	multi: true;
 }
 
+export interface BaseImageryPluginClass {
+	new(): BaseImageryPlugin;
+}
+
 export interface ImageryPluginProvider extends StaticClassProvider {
-	provide: any;
+	provide: BaseImageryPluginClass;
 	useClass: any;
 	multi: true;
 }
 
 export function createCollection(providers: Array<ImageryPluginProvider>): PluginsCollectionProvider {
 	return {
-		provide: PLUGINS_COLLECTION,
+		provide: PLUGINS_COLLECTIONS,
 		useValue: providers,
 		multi: true
 	};

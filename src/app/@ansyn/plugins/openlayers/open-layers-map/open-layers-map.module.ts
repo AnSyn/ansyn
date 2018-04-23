@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
 import { OpenlayersMapComponent } from './openlayers-map/openlayers-map.component';
 import { ImageryModule, ImageryProviderService } from '@ansyn/imagery';
-import { DisabledMapComponent } from './disabled-map/disabled-map.component';
+import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map/openlayers-disabled-map.component';
 import { OpenLayersMap } from './openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from './disabled-map/open-layers-disabled-map';
+import { DisabledOpenLayersMapName, OpenLayersDisabledMap } from './openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map';
 
 @NgModule({
 	imports: [ImageryModule],
-	declarations: [OpenlayersMapComponent, DisabledMapComponent],
+	declarations: [OpenlayersMapComponent, OpenLayersDisabledMapComponent],
 	providers: [],
-	exports: [OpenlayersMapComponent, DisabledMapComponent],
-	entryComponents: [OpenlayersMapComponent, DisabledMapComponent]
+	exports: [OpenlayersMapComponent, OpenLayersDisabledMapComponent],
+	entryComponents: [OpenlayersMapComponent, OpenLayersDisabledMapComponent]
 })
 export class OpenLayersMapModule {
 	constructor(imageryProviderService: ImageryProviderService) {
-		imageryProviderService.registerMapProvider(OpenlayersMapComponent.mapName, OpenLayersMap.mapType, OpenlayersMapComponent);
-		imageryProviderService.registerMapProvider(DisabledMapComponent.mapName, OpenLayersDisabledMap.mapType, DisabledMapComponent);
+		imageryProviderService.registerMapProvider(OpenlayersMapName, OpenlayersMapName, OpenlayersMapComponent);
+		imageryProviderService.registerMapProvider(DisabledOpenLayersMapName, DisabledOpenLayersMapName, OpenLayersDisabledMapComponent);
 	}
 }

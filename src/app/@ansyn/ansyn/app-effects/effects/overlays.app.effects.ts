@@ -3,41 +3,23 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes, OverlaysMarkupAction, SetTimelineStateAction
+	DisplayOverlaySuccessAction, OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { CasesService } from '@ansyn/menu-items/cases';
 import { Overlay } from '@ansyn/overlays';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlaysState, overlaysStateSelector, TimelineState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade';
 import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
-import { CoreService } from '@ansyn/core/services/core.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class OverlaysAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onOverlaysMarkupsChanged$
-	 * @ofType LoadOverlaysSuccessAction
-	 * @dependencies cases
-	 * @filter There is a selected case
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	onOverlaysMarkupsChanged$: Observable<OverlaysMarkupAction> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(coreStateSelector))
-		.map(([action, map, core]: [Action, IMapState, ICoreState]) => {
-			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, core.favoriteOverlays);
-			return new OverlaysMarkupAction(overlaysMarkup);
-		});
 
 	/**
 	 * @type Effect
@@ -45,22 +27,14 @@ export class OverlaysAppEffects {
 	 * @ofType LoadOverlaysSuccessAction
 	 * @filter There is an imagery count before or after
 	 * @dependencies overlays
-	 * @action SetTimelineStateAction
 	 */
-	@Effect()
-	initTimelineState$: Observable<SetTimelineStateAction> = this.actions$
+	@Effect({ dispatch: false })
+	initTimelineState$ = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 || this.casesService.contextValues.imageryCountAfter !== -1)
 		.do(() => {
 			this.casesService.contextValues.imageryCountBefore = -1;
 			this.casesService.contextValues.imageryCountAfter = -1;
-		})
-		.withLatestFrom(this.store$.select(overlaysStateSelector).pluck<IOverlaysState, TimelineState>('timelineState'), (action, timelineState: TimelineState) => timelineState)
-		.map(({ from, to }: TimelineState) => {
-			const tenth = (to.getTime() - from.getTime()) / 10;
-			const fromTenth = new Date(from.getTime() - tenth);
-			const toTenth = new Date(to.getTime() + tenth);
-			return new SetTimelineStateAction({ state: { from: fromTenth, to: toTenth } });
 		});
 
 	/**
@@ -86,31 +60,6 @@ export class OverlaysAppEffects {
 		})
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name displayOverlaySetTimeline$
-	 * @description this method moves the timeline to active displayed overlay if exists in timeline
-	 * @ofType DisplayOverlayAction
-	 * @dependencies overlays, map
-	 * @filter isActiveMap && displayedOverlay && displayedOverlay is exeeding timelineState
-	 * @action SetTimelineStateAction
-	 */
-	@Effect()
-	displayOverlaySetTimeline$ = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector), (action: DisplayOverlayAction, overlays: IOverlaysState, map: IMapState) => {
-			const displayedOverlay = action.payload.overlay;
-			const timelineState = overlays.timelineState;
-			const isActiveMap = map.activeMapId === action.payload.mapId;
-			return [isActiveMap, displayedOverlay, timelineState];
-		})
-		.filter(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
-			return isActiveMap && displayedOverlay && (displayedOverlay.date < timelineState.from || timelineState.to < displayedOverlay.date);
-		})
-		.map(([isActiveMap, displayedOverlay, timelineState]: [boolean, Overlay, TimelineState]) => {
-			const state = this.overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
-			return new SetTimelineStateAction({ state });
-		});
 
 	/**
 	 * @type Effect
@@ -228,7 +177,7 @@ export class OverlaysAppEffects {
 		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId })
+			return new DisplayOverlayAction({ overlay, mapId });
 		});
 
 	constructor(public actions$: Actions,

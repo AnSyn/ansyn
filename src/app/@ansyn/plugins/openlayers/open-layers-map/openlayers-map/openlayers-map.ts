@@ -1,7 +1,6 @@
 import { IMap } from '@ansyn/imagery';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core';
-import { OpenLayersImageProcessing } from '../image-processing/open-layers-image-processing';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -10,11 +9,9 @@ import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
 import Point from 'ol/geom/point';
 import Vector from 'ol/source/vector';
-import Raster from 'ol/source/raster';
 import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
-import ImageLayer from 'ol/layer/image';
 import VectorLayer from 'ol/layer/vector';
 import Feature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
@@ -27,15 +24,14 @@ import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Po
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 
-export const openLayersMapName = 'openLayersMap';
+export const OpenlayersMapName = 'openLayersMap';
 
+@Injectable()
 export class OpenLayersMap extends IMap<OLMap> {
-	static mapType = openLayersMapName;
-
 	static groupLayers = new Map<string, Group>();
 
 	private showGroups = new Map<string, boolean>();
-	public mapType: string = OpenLayersMap.mapType;
+	public mapType: string = OpenlayersMapName;
 	private _mapObject: OLMap;
 	public centerChanged: EventEmitter<GeoPoint> = new EventEmitter<GeoPoint>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
@@ -45,13 +41,16 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	private projectionSubscription: Subscription = null;
 	private approximateProjectionSubscription: Subscription = null;
+	private _subscriptions: Subscription[] = [];
+	private _contextMenuEventListener: (e: MouseEvent) => void;
+	private _moveEndListener: () => void;
+	private _containerElem: HTMLElement;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	private _flags = {
 		singleClickHandler: null
 	};
-
-	private _imageProcessing: OpenLayersImageProcessing;
+	private _mapLayers = [];
 
 	static addGroupLayer(layer: any, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
@@ -90,7 +89,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
-	constructor(element: HTMLElement, public projectionService: ProjectionService, private _mapLayers = [], position?: CaseMapPosition) {
+	constructor(public projectionService: ProjectionService) {
 		super();
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
@@ -101,7 +100,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this.showGroups.set('layers', true);
-		this.initMap(element, _mapLayers, position).subscribe();
+	}
+
+	getLayers(): any[] {
+		return this.mapObject.getLayers().getArray();
 	}
 
 	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
@@ -123,63 +125,57 @@ export class OpenLayersMap extends IMap<OLMap> {
 			.subscribe(cb);
 	}
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
-		const [mainLayer] = layers;
-		const view = this.createView(mainLayer);
-		const coordinateFormat: ol.CoordinateFormatType = (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString();
-		this._mapObject = new OLMap({
-			target: element,
-			layers,
-			renderer: 'canvas',
-			controls: [new ScaleLine(), new OpenLayersMousePositionControl({
+	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+		this._mapLayers = [...layers];
+		const controls = [
+			new ScaleLine(),
+			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat
+					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
 				},
 				(point) => this.projectionService.projectApproximately(point, this))
-			],
-			view
-		});
-
-		let setPositionObservable: Observable<boolean> = Observable.of(true);
-		if (position) {
-			setPositionObservable = this.setPosition(position);
-		}
-
-		return setPositionObservable.do(() => {
-			this.initListeners();
-			this.setGroupLayers();
-		});
+		];
+		const renderer = 'canvas';
+		this._mapObject = new OLMap({ target, renderer, controls });
+		this.initListeners();
+		this.setGroupLayers();
+		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
-		this._mapObject.on('moveend', () => {
-			this.getCenter().take(1).subscribe(mapCenter => {
-				this.centerChanged.emit(mapCenter);
-			});
+		this._moveEndListener = () => {
+			this._subscriptions.push(
+				this.getCenter().take(1).subscribe(mapCenter => {
+					this.centerChanged.emit(mapCenter);
+				}),
 
-			this.getPosition().take(1).subscribe(position => {
-				if (position) {
-					this.positionChanged.emit(position);
-				}
-			});
-		});
+				this.getPosition().take(1).subscribe(position => {
+					if (position) {
+						this.positionChanged.emit(position);
+					}
+				})
+			);
+		};
 
-		const containerElem = <HTMLElement> this._mapObject.getViewport();
+		this._mapObject.on('moveend', this._moveEndListener);
 
-		containerElem.addEventListener('contextmenu', (e: MouseEvent) => {
+		this._containerElem = <HTMLElement> this._mapObject.getViewport();
+
+		this._contextMenuEventListener = (e: MouseEvent) => {
 			e.preventDefault();
 
-			containerElem.click();
+			this._containerElem.click();
 
 			let coordinate = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
 			this.positionToPoint(coordinate, point => this.contextMenu.emit({ point, e }));
-		});
+		};
+
+		this._containerElem.addEventListener('contextmenu', this._contextMenuEventListener);
 	}
 
 	createView(layer): View {
 		return new View({
 			projection: layer.getSource().getProjection(),
-			minZoom: 2.5
 		});
 	}
 
@@ -191,16 +187,17 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
-
-		const rotation = this.mapObject.getView().getRotation();
+		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
 		this._mapObject.setView(view);
 
 		if (extent) {
 			this.fitToExtent(extent);
-			this.mapObject.getView().setRotation(rotation);
-		} else {
+			if (rotation) {
+				this.mapObject.getView().setRotation(rotation);
+			}
+		} else if (position) {
 			return this.setPosition(position);
 		}
 
@@ -231,15 +228,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	setMainLayer(layer: Layer) {
+		layer.set('name', 'main');
 		this.removeAllLayers();
 		this.addLayer(layer);
-
-		if (layer.getSource() instanceof Raster) {
-			this._imageProcessing = new OpenLayersImageProcessing((<any>layer).getSource());
-		} else {
-			this._imageProcessing = null;
-		}
-
 		this.setGroupLayers();
 	}
 
@@ -277,7 +268,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
-			if (show) {
+			if (show && this._mapObject) {
 				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
 			}
 		});
@@ -299,10 +290,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
 			this._mapObject.renderSync();
-		}
-
-		if (this._imageProcessing) {
-			this._imageProcessing.processImage(null);
 		}
 	}
 
@@ -427,31 +414,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
-	public setAutoImageProcessing(shouldPerform: boolean = false): void {
-		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
-			return;
-		}
-		if (shouldPerform) {
-			// the determine the order which by the image processing will occur
-			const processingParams = {
-				Histogram: { auto: true },
-				Sharpness: { auto: true }
-			};
-			this._imageProcessing.processImage(processingParams);
-		} else {
-			this._imageProcessing.processImage(null);
-		}
-	}
-
-	public setManualImageProcessing(processingParams: Object) {
-		let imageLayer: ImageLayer = this._mapLayers.find((layer) => layer instanceof ImageLayer);
-		if (!imageLayer || !this._imageProcessing) {
-			return;
-		}
-		this._imageProcessing.processImage(processingParams);
-	}
-
 	// *****-- click events --********
 	public addSingleClickEvent() {
 		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);
@@ -493,6 +455,19 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
+		}
+
+		this.removeAllLayers();
+
+		if (this._mapObject) {
+			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.setTarget(null);
+		}
+
+		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
+
+		if (this._containerElem) {
+			this._containerElem.removeEventListener('contextmenu', this._contextMenuEventListener);
 		}
 	}
 }

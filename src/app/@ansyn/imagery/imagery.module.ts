@@ -4,7 +4,7 @@ import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { ImageryProviderService } from './provider-service/imagery-provider.service';
 import { IImageryConfig } from './model/iimagery-config';
-import { ConfigurationToken } from './configuration.token';
+import { ConfigurationToken } from './model/configuration.token';
 import { CacheService } from './cache-service/cache.service';
 import { createCollection, ImageryPluginProvider } from './model/plugins-collection';
 
@@ -12,9 +12,9 @@ import { createCollection, ImageryPluginProvider } from './model/plugins-collect
 	imports: [CommonModule],
 	declarations: [ImageryComponent],
 	providers: [
-		ImageryCommunicatorService,
 		ImageryProviderService,
-		CacheService,
+		ImageryCommunicatorService,
+		{ provide: CacheService, useClass: CacheService, deps: [ConfigurationToken, ImageryCommunicatorService] },
 		createCollection([])
 	],
 	exports: [ImageryComponent]

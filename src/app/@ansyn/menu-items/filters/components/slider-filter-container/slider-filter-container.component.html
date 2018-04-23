@@ -10,5 +10,5 @@
 	</div>
 </div>
 
-<p-slider class='slider' [(ngModel)]="rangeValues" [range]="true" (onChange)="handleChange($event)"
-		  [min]="factor * metadata.min" [max]="factor * metadata.max" [step]="factor / 10"></p-slider>
+<p-slider class='slider' [(ngModel)]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
+		  [min]="factor * metadata.min" [max]="factor * metadata.max" ></p-slider>

@@ -5,7 +5,6 @@
 	},
 	"apps": [
 		{
-			"name": "main",
 			"root": "src",
 			"outDir": "dist",
 			"assets": [
@@ -40,9 +39,9 @@
 			}
 		},
 		{
-			"name": "backwards",
+			"name": "builder",
 			"root": "src",
-			"outDir": "dist",
+			"outDir": "src/app/appBuilder/dist",
 			"assets": [
 				{
 					"glob": "**/*",
@@ -52,10 +51,10 @@
 				"favicon.ico"
 			],
 			"index": "index.html",
-			"main": "main.ts",
-			"polyfills": "polyfills.backwards.ts",
+			"main": "app/appBuilder/main.builder.ts",
+			"polyfills": "polyfills.ts",
 			"test": "test.ts",
-			"tsconfig": "tsconfig.backwards.json",
+			"tsconfig": "tsconfig.app.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
@@ -71,8 +70,7 @@
 			"environmentSource": "configuration/configuration.ts",
 			"environments": {
 				"dev": "configuration/configuration.dev.ts",
-				"prod": "configuration/configuration.prod.ts",
-				"int": "configuration/configuration.int.ts"
+				"prod": "configuration/configuration.prod.ts"
 			}
 		}
 	],
@@ -83,11 +81,7 @@
 	},
 	"lint": [
 		{
-			"project": "src/tsconfig.app.json",
-			"exclude": "**/node_modules/**/*"
-		},
-		{
-			"project": "src/tsconfig.backwards.json",
+			"project": "tsconfig.app.json",
 			"exclude": "**/node_modules/**/*"
 		},
 		{
@@ -108,7 +102,7 @@
 		"styleExt": "less",
 		"component": {},
 		"build": {
-			"showCircularDependencies": false
+			"showCircularDependencies": true
 		}
 	}
 }

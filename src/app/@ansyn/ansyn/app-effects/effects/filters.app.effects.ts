@@ -1,6 +1,6 @@
 import { union } from 'lodash';
 import { Case } from '@ansyn/menu-items/cases';
-import { Overlay, OverlaysActionTypes } from '@ansyn/overlays';
+import { Overlay, OverlaysActionTypes, overlaysStatusMessages, SetOverlaysStatusMessage } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
@@ -9,8 +9,7 @@ import { IAppState } from '../app.effects.module';
 import { FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction,
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -44,10 +43,16 @@ export class FiltersAppEffects {
 		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
-		.map(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
+		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
+		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
-			return new SetFilteredOverlaysAction(filteredOverlays);
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
+			return [
+				new SetFilteredOverlaysAction(filteredOverlays),
+				new SetOverlaysStatusMessage(message)
+			];
 		});
+
 
 	/**
 	 * @type Effect
@@ -105,7 +110,7 @@ export class FiltersAppEffects {
 							const someNotInfinity = (<SliderFilterMetadata>filterMetadata).start !== -Infinity || (<SliderFilterMetadata>filterMetadata).end !== Infinity;
 							return someNotInfinity ? badgeNum + 1 : badgeNum;
 						case BooleanFilterMetadata: {
-							const someUnchecked  = !(<BooleanFilterMetadata>filterMetadata).trueProperties.value || !(<BooleanFilterMetadata>filterMetadata).falseProperties.value ;
+							const someUnchecked = !(<BooleanFilterMetadata>filterMetadata).trueProperties.value || !(<BooleanFilterMetadata>filterMetadata).falseProperties.value;
 							return someUnchecked ? badgeNum + 1 : badgeNum;
 						}
 						default:

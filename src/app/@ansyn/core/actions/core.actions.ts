@@ -11,12 +11,16 @@ export const CoreActionTypes = {
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
-	UPDATE_ALERT_MSG: 'UPDATE_ALERT_MSG',
+	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
+	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
 	SET_LAYOUT: 'SET_LAYOUT',
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_WINDOW_LAYOUT : 'SET_WINDOW_LAYOUT'
 };
 
@@ -26,9 +30,23 @@ export type CoreActions =
 	| SetToastMessageAction
 	| SetFavoriteOverlaysAction
 	| ClearActiveInteractionsAction
-	| UpdateAlertMsg
+	| AddAlertMsg
+	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
+	| GoAdjacentOverlay
+	| SetWasWelcomeNotificationShownFlagAction
+	| UpdateOverlaysCountAction
+
+
+export class GoAdjacentOverlay implements Action {
+	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
+
+	constructor(public payload: {isNext: boolean}) {
+	}
+}
+
+
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -66,12 +84,21 @@ export class ClearActiveInteractionsAction implements Action {
 	}
 }
 
-export class UpdateAlertMsg implements Action {
-	type = CoreActionTypes.UPDATE_ALERT_MSG;
+export class AddAlertMsg implements Action {
+	type = CoreActionTypes.ADD_ALERT_MSG;
 
-	constructor(public payload: { value: Set<string>, key: AlertMsgTypes }) {
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }
+
+export class RemoveAlertMsg implements Action {
+	type = CoreActionTypes.REMOVE_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+
 
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
@@ -106,6 +133,22 @@ export class BackToWorldSuccess extends BackToWorldView {
 	type = CoreActionTypes.BACK_TO_WORLD_SUCCESS;
 }
 
+export class SetWasWelcomeNotificationShownFlagAction implements Action {
+	type = CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG;
+
+	constructor(public payload: boolean) {
+
+	}
+}
+
+
+
+export class UpdateOverlaysCountAction {
+	type = CoreActionTypes.UPDATE_OVERLAY_COUNT;
+	constructor(public payload: number) {
+
+	}
+}
 
 export class SetWindowLayout implements Action {
 	type = CoreActionTypes.SET_WINDOW_LAYOUT;

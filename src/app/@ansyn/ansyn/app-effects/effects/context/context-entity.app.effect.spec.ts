@@ -44,6 +44,11 @@ describe('ContextEntityAppEffects', () => {
 
 	const fakeContextEntities = [{ id: '1', date: new Date('2015-04-17T03:55:12.129Z'), featureJson: feature }];
 	const cases: Case[] = [{
+		id: '1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
 		state: {
 			contextEntities: fakeContextEntities,
 			time: { type: '', from: new Date(), to: new Date() },

@@ -6,20 +6,26 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;
 	let http: HttpClient;
+	let storageService: StorageService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
 			providers: [
+				{
+					provide: CoreConfig,
+					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' }}
+				},
+				StorageService,
 				DataLayersService,
 				{
 					provide: layersConfig,
-					useValue: { 'layersByCaseIdUrl': 'http://localhost:9001/api/v1/layers'}
+					useValue: { 'schema': 'layers'}
 				},
 				{
 					provide: LoggerService,
@@ -34,7 +40,9 @@ describe('DataLayersService', () => {
 		});
 	});
 
-	beforeEach(inject([DataLayersService, HttpClient], (_dataLayersService: DataLayersService, _http: HttpClient) => {
+	beforeEach(inject([StorageService, DataLayersService, HttpClient],
+		(_storageService: StorageService, _dataLayersService: DataLayersService, _http: HttpClient) => {
+		storageService = _storageService;
 		dataLayersService = _dataLayersService;
 		http = _http;
 	}));
@@ -77,6 +85,8 @@ describe('DataLayersService', () => {
 
 		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
 		dataLayersService.getAllLayersInATree();
-		expect(http.get).toHaveBeenCalledWith(`${dataLayersService.baseUrl}/layers?from=0&limit=100`);
+		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}`,
+			{ params: { from: '0', limit: '100'}}
+		);
 	});
 });

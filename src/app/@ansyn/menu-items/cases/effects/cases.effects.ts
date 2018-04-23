@@ -12,22 +12,19 @@ import {
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
+	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectCaseByIdAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction,
-	SaveCaseAsAction
+	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import { casesStateSelector, ICasesState } from '../reducers/cases.reducer';
+import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
 import { Case, Context } from '@ansyn/core';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { selectCaseEntities, selectCaseTotal } from '../reducers/cases.reducer';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { ContextActionTypes } from '@ansyn/context/actions/context.actions';
 import { selectContextsArray } from '@ansyn/context/reducers';
 
@@ -152,16 +149,10 @@ export class CasesEffects {
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASE)
-		.withLatestFrom(this.store.select(selectCaseEntities))
-		.switchMap(([action, entities]: [LoadCaseAction, Dictionary<Case>]) => {
-			const existingCase = entities[action.payload];
-			if (existingCase) {
-				return Observable.of(new SelectCaseAction(existingCase));
-			} else {
-				return this.casesService.loadCase(action.payload)
-					.map((caseValue: Case) => new SelectCaseAction(caseValue))
-					.catch(() => Observable.of(new LoadDefaultCaseAction()));
-			}
+		.switchMap((action: LoadCaseAction) => {
+			return this.casesService.loadCase(action.payload)
+				.map((caseValue: Case) => new SelectCaseAction(caseValue))
+				.catch(() => Observable.of(new LoadDefaultCaseAction()));
 		}).share();
 
 	/**
@@ -207,25 +198,6 @@ export class CasesEffects {
 					return new SelectCaseAction(defaultCaseQueryParams);
 				});
 		});
-
-	/**
-	 * @type Effect
-	 * @name onSelectCaseById$
-	 * @ofType SelectCaseByIdAction
-	 * @dependencies cases
-	 * @filter There is a new selected case
-	 * @action SelectCaseAction
-	 */
-	@Effect()
-	onSelectCaseById$: Observable<SelectCaseAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE_BY_ID)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.map(([{ payload }, casesState]: [SelectCaseByIdAction, ICasesState]): [Case, string] => [
-			casesState.entities[payload],
-			casesState.selectedCase.id
-		])
-		.filter(([selectedCase, oldSelectedCaseId]) => Boolean(selectedCase) && selectedCase.id !== oldSelectedCaseId)
-		.map(([selectedCase]: [Case, string]) => new SelectCaseAction(selectedCase));
 
 	/**
 	 * @type Effect

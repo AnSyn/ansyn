@@ -1,10 +1,14 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
-import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
+import { IToolsConfig, toolsConfig } from '../../models';
+import { IImageProcParam } from '../../models/tools-config';
 import { ImageManualProcessArgs } from '@ansyn/core';
+import { toolsStateSelector } from '../../reducers/tools.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { Subscription } from "rxjs/Subscription";
+import { IMapState } from "@ansyn/map-facade";
 
 
 export interface IImageProcParamComp extends IImageProcParam {
@@ -17,8 +21,29 @@ export interface IImageProcParamComp extends IImageProcParam {
 	templateUrl: './image-processing-control.component.html',
 	styleUrls: ['./image-processing-control.component.less']
 })
-export class ImageProcessingControlComponent {
+export class ImageProcessingControlComponent implements OnInit, OnDestroy {
+
 	private _isExpended: boolean;
+
+	private subscriptions: Subscription[] = [];
+
+
+	public mapsImapgeProcessingState =	this.store$.select(toolsStateSelector)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.do((res: [IToolsState , IMapState])   =>
+		{
+			const [toolsState, caseMapState]: [IToolsState , IMapState] = res;
+			if (toolsState.imageProcessingHash[caseMapState.activeMapId] !== undefined) {
+				this.params.forEach(param => {
+					this.params[this.params.findIndex((x) => x.name === param.name)].value = toolsState.imageProcessingHash[caseMapState.activeMapId][param.name];
+				});
+			}
+		});
+
+
+	params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
+		return { ...param, value: param.defaultValue };
+	});
 
 	// public throttledManualImageProcess: Function;	// throttled function
 
@@ -47,11 +72,6 @@ export class ImageProcessingControlComponent {
 	}
 
 	@Output() isActive = new EventEmitter<boolean>();
-
-
-	params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
-		return { ...param, value: param.defaultValue };
-	});
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
 		// this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
@@ -92,5 +112,14 @@ export class ImageProcessingControlComponent {
 
 	close() {
 		this.expand = false;
+	}
+
+	ngOnInit(): void {
+		this.resetParams();
+		this.subscriptions.push(this.mapsImapgeProcessingState.subscribe());
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }

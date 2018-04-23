@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../';
 import {
@@ -17,13 +17,13 @@ import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep } from 'lodash';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	AnnotationVisualizerAgentAction,
 	DisableMouseShadow,
 	EnableMouseShadow,
 	GoToAction,
 	SetActiveOverlaysFootprintModeAction,
 	SetManualImageProcessing,
 	SetManualImageProcessingArguments,
+	SetManualImageProcessingSuccess,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
@@ -33,6 +33,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
+	AnnotationRemoveFeature,
 	PinLocationModeTriggerAction,
 	SetMapManualImageProcessing,
 	SetMapsDataActionStore
@@ -40,18 +41,77 @@ import {
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import {
-	CoreActionTypes, coreStateSelector, ICoreState, ImageManualProcessArgs, layoutOptions,
+	CoreActionTypes, ImageManualProcessArgs, layoutOptions,
 	SetLayoutAction
 } from '@ansyn/core';
 import { Point } from 'geojson';
+import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { Feature, FeatureCollection } from 'geojson';
+import { SetSubMenu, SubMenuEnum } from '@ansyn/menu-items';
+import {
+	IStatusBarState, selectGeoFilter,
+	StatusBarActionsTypes,
+	statusBarFlagsItemsEnum,
+	statusBarStateSelector,
+	UpdateStatusFlagsAction
+} from '@ansyn/status-bar';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 
 
 @Injectable()
 export class ToolsAppEffects {
+	layersState$ = this.store$.select(layersStateSelector);
+
+	flags$ = this.store$.select(statusBarStateSelector)
+		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
+		.distinctUntilChanged();
+
+	isPolygonSearch$ = this.flags$
+		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
+		.distinctUntilChanged();
+
+	isPolygonGeoFilter$ = this.store$.select(selectGeoFilter)
+		.map((geoFilter) => geoFilter === 'Polygon')
+		.distinctUntilChanged();
+
+
+	/**
+	 * @type Effect
+	 * @name drawInterrupted$
+	 * @ofType Action
+	 * @dependencies map
+	 * @filter check if polygon draw interrupted
+	 * @action UpdateStatusFlagsAction?
+	 */
+	@Effect()
+	drawInterrupted$: Observable<any> = this.actions$
+		.ofType<Action>(
+			MenuActionTypes.SELECT_MENU_ITEM,
+			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
+			CoreActionTypes.SET_LAYOUT,
+			ToolsActionsTypes.SET_SUB_MENU)
+		.withLatestFrom(this.isPolygonSearch$, this.isPolygonGeoFilter$)
+		.filter(([action, isPolygonSearch, isPolygonGeoFilter]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isPolygonGeoFilter)
+		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+
+	/**
+	 * @type Effect
+	 * @name onActiveMapChanges$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter There is an active map
+	 * @action DisableImageProcessing?, EnableImageProcessing?, SetAutoImageProcessingSuccess?
+	 */
+	@Effect()
+	onManualDataChange$: Observable<SetManualImageProcessingSuccess> = this.actions$
+		.ofType(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
+		.map((action: SetMapManualImageProcessing) => {
+			return new SetManualImageProcessingSuccess(action.payload);
+		});
+
 
 	/**
 	 * @type Effect
@@ -78,6 +138,7 @@ export class ToolsAppEffects {
 			}
 		});
 
+
 	/**
 	 * @type Effect
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
@@ -90,24 +151,6 @@ export class ToolsAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState))
 		.map((activeMap: CaseMapState) => new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
-
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesDrawAnnotation$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies tools, layers
-	 * @action AnnotationVisualizerAgentAction
-	 */
-	@Effect()
-	onActiveMapChangesDrawAnnotation$: Observable<any> = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(layersStateSelector))
-		.filter(([action, toolsState, layerState]: [ActiveMapChangedAction, IToolsState, ILayerState]) => !layerState.displayAnnotationsLayer && toolsState.flags.get('annotations'))
-		.mergeMap(() => [
-			new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'active' }),
-			new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'others' })
-		]);
 
 	/**
 	 * @type Effect
@@ -261,24 +304,21 @@ export class ToolsAppEffects {
 	@Effect()
 	onManualImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
-			(action: SetManualImageProcessing, cases: ICasesState, mapsState: IMapState) => {
-				return [action, cloneDeep(cases.selectedCase), mapsState];
-			})
-		.filter(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
-			return Boolean(selectedCase.state.maps.activeMapId && mapsState);
-		})
-		.mergeMap(([action, selectedCase, mapsState]: [SetManualImageProcessing, Case, IMapState]) => {
-			const allMapsState = selectedCase.state.maps;
-			const activeMap: CaseMapState = allMapsState.data.find(map => map.id === allMapsState.activeMapId);
-
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
+		.mergeMap(([action, cases, mapsState]: [SetManualImageProcessing, ICasesState, IMapState]) => {
+			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
+			let selectedCase = cloneDeep(cases.selectedCase);
+			// @todo remove this!
+			if (!activeMap.data.overlay) {
+				return Observable.empty();
+			}
 			selectedCase = updateOverlaysManualProcessArgs(selectedCase, activeMap.data.overlay.id, action.payload.processingParams);
 			mapsState = updatesMapAutoImageProcessingFlag(mapsState, false, false);
 			return [
 				new UpdateCaseAction(selectedCase),
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
 				new SetMapManualImageProcessing({
-					mapId: allMapsState.activeMapId,
+					mapId: mapsState.activeMapId,
 					processingParams: action.payload.processingParams
 				})
 			];
@@ -299,24 +339,6 @@ export class ToolsAppEffects {
 		.filter(communicator => Boolean(communicator))
 		.mergeMap((communicator: CommunicatorEntity) => communicator.getCenter())
 		.map((activeMapCenter: Point) => new SetActiveCenter(activeMapCenter.coordinates));
-
-	/**
-	 * @type Effect
-	 * @name updatePinLocationAction$
-	 * @ofType SetPinLocationModeAction
-	 */
-	@Effect({ dispatch: false })
-	updatePinLocationAction$: Observable<any> = this.actions$
-		.ofType(ToolsActionsTypes.SET_PIN_LOCATION_MODE)
-		.do((action: SetPinLocationModeAction) => {
-			this.imageryCommunicatorService.communicatorsAsArray().forEach((communicator) => {
-				if (action.payload) {
-					communicator.createMapSingleClickEvent();
-				} else {
-					communicator.removeSingleClickEvent();
-				}
-			});
-		});
 
 	/**
 	 * @type Effect
@@ -373,6 +395,26 @@ export class ToolsAppEffects {
 				];
 			}
 			return [new EnableMouseShadow()];
+		});
+
+	/**
+	 * @type Effect
+	 * @name removeFeature$
+	 * @ofType AnnotationRemoveFeature
+	 * @dependencies layers
+	 * @action SetAnnotationsLayer
+	 */
+	@Effect()
+	removeAnnotationFeature$: Observable<SetAnnotationsLayer> = this.actions$
+		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
+		.withLatestFrom(this.layersState$)
+		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {
+			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...layerState.annotationsLayer };
+			const featureIndex = updatedAnnotationsLayer.features.findIndex((feature: Feature<any>) => {
+				return feature.properties.id === action.payload;
+			});
+			updatedAnnotationsLayer.features.splice(featureIndex, 1);
+			return new SetAnnotationsLayer(updatedAnnotationsLayer);
 		});
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService) {

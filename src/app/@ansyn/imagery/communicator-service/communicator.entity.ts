@@ -25,6 +25,10 @@ export class CommunicatorEntity {
 		return this._manager.imageryCommunicatorService
 	}
 
+	get plugins(): BaseImageryPlugin[] {
+		return this._manager.plugins;
+	}
+
 	constructor(public _manager: ImageryComponentManager) {
 		this.centerChanged = new EventEmitter<Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
@@ -37,7 +41,7 @@ export class CommunicatorEntity {
 	}
 
 	initPlugins() {
-		this._manager.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
+		this.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
 		this.imageryPluginsInitialized.emit(this.id);
 	}
 
@@ -176,7 +180,7 @@ export class CommunicatorEntity {
 	}
 
 	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
-		return <any> this._manager.plugins.find((_plugin) => _plugin instanceof plugin);
+		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
@@ -194,21 +198,16 @@ export class CommunicatorEntity {
 		}
 	}
 
+	public getLayers(): any[] {
+		if (this.ActiveMap) {
+			return this.ActiveMap.getLayers();
+		}
+		return [];
+	}
+
 	public removeLayer(layer: any) {
 		if (this.ActiveMap) {
 			this.ActiveMap.removeLayer(layer);
-		}
-	}
-
-	public setAutoImageProcessing(shouldPerform: boolean): void {
-		if (this.ActiveMap) {
-			this.ActiveMap.setAutoImageProcessing(shouldPerform);
-		}
-	}
-
-	public setManualImageProcessing(processingParams: Object): void {
-		if (this.ActiveMap) {
-			this.ActiveMap.setManualImageProcessing(processingParams);
 		}
 	}
 
@@ -221,15 +220,4 @@ export class CommunicatorEntity {
 	}
 
 	// ======shadow mouse end
-
-	// ====== treat map click event (used for pinPointIndicator)
-	public createMapSingleClickEvent() {
-		(<any>this.ActiveMap).addSingleClickEvent();
-	}
-
-	public removeSingleClickEvent() {
-		(<any>this.ActiveMap).removeSingleClickEvent();
-	}
-
-	// ======end treat map click event (used for pinPointIndicator)
 }

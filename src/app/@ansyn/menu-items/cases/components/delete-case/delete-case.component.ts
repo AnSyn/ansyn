@@ -2,10 +2,10 @@ import { Component, EventEmitter, HostBinding, OnInit, Output } from '@angular/c
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
-import { Case } from '../../models/case.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable } from 'rxjs/Observable';
+import { CasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 
@@ -36,7 +36,7 @@ export class DeleteCaseComponent implements OnInit {
 		.select(casesStateSelector)
 		.map((cases) => cases.entities[cases.modal.id]);
 
-	activeCase: Case;
+	activeCase: CasePreview;
 
 	@Output() submitCase = new EventEmitter();
 
@@ -52,7 +52,7 @@ export class DeleteCaseComponent implements OnInit {
 	}
 
 	onSubmitRemove() {
-		this.casesService.removeCase(this.activeCase.id).subscribe(() => {
+		(<Observable<any>>this.casesService.removeCase(this.activeCase.id)).subscribe(() => {
 			this.store.dispatch(new DeleteCaseAction(this.activeCase.id));
 			this.close();
 		});

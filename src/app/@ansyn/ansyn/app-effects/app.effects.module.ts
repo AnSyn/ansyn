@@ -23,7 +23,6 @@ import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 import { RouterAppEffects } from './effects/router.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { VisualizersAnnotationsAppEffects } from './effects/map/visualizers.annotations.app.effects';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 
@@ -57,7 +56,6 @@ export interface IAppState {
 			RouterAppEffects,
 			VisualizersAppEffects,
 			CoreAppEffects,
-			VisualizersAnnotationsAppEffects,
 			UpdateCaseAppEffects,
 			SelectCaseAppEffects
 		])

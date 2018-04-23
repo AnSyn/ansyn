@@ -1,18 +1,19 @@
 import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Renderer2 } from '@angular/core';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { ContextMenuDisplayAction, ContextMenuShowAction, PinPointTriggerAction } from '../../actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction, ContextMenuTriggerAction } from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
 import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Overlay } from '@ansyn\/core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
+import { selectGeoFilter } from '@ansyn/status-bar';
 
 export interface OverlayButton {
 	name: string;
@@ -26,17 +27,15 @@ export interface OverlayButton {
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
+	mapState$ = this.store.select(mapStateSelector);
 
 	get filterField() {
 		return this.config.contextMenu.filterField
 	}
 
-	mapState$ = this.store.select(mapStateSelector);
-
-
 	displayedOverlay$: Observable<Overlay> = this.mapState$
 		.map(MapFacadeService.activeMap)
-		.filter((activeMap: CaseMapState) => Boolean(activeMap))
+		.filter(Boolean)
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
 
@@ -54,6 +53,11 @@ export class ContextMenuComponent implements OnInit {
 			this.initializeSensors(filteredOverlays, displayedOverlay);
 		})
 		.map(([filteredOverlays]: [Overlay[], Overlay]) => filteredOverlays);
+
+	geoFilter$ = this.store.select(selectGeoFilter)
+		.do((geoFilter) => this.geoFilter = geoFilter);
+
+	geoFilter;
 
 	nextSensors = [];
 	prevSensors = [];
@@ -146,6 +150,7 @@ export class ContextMenuComponent implements OnInit {
 				protected mapEffects$: MapEffects,
 				protected elem: ElementRef,
 				protected renderer: Renderer2,
+				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 
@@ -156,8 +161,8 @@ export class ContextMenuComponent implements OnInit {
 	ngOnInit(): void {
 		this.filteredOverlays$
 			.subscribe((filteredOverlays: Overlay[]) => this.filteredOverlays = filteredOverlays);
-
 		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
+		this.geoFilter$.subscribe();
 	}
 
 	show(action: ContextMenuShowAction) {
@@ -230,7 +235,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	setPinPoint() {
-		this.store.dispatch(new PinPointTriggerAction(this.point.coordinates));
+		this.store.dispatch(new ContextMenuTriggerAction(this.point.coordinates));
 	}
 
 	getSensorType(sensorType: string) {

@@ -1,9 +1,11 @@
 import {
-	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction, SetToastMessageAction
+	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
+	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { sessionData } from '../services/core-session.service';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -33,7 +35,7 @@ export interface ICoreState {
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
 	windowLayout: WindowLayout;
-
+	wasWelcomeNotificationShown: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -44,6 +46,7 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
 	overlaysCriteria: {},
+	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
 	windowLayout : {
 		menu: true,
@@ -65,21 +68,40 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
 
-		case  CoreActionTypes.UPDATE_ALERT_MSG:
-			const updatedMap = new Map(state.alertMsg);
-			updatedMap.set(<AlertMsgTypes>action.payload.key, <Set<string>>action.payload.value);
-			return { ...state, alertMsg: updatedMap };
+		case  CoreActionTypes.ADD_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.add(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
+
+		case  CoreActionTypes.REMOVE_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.delete(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
 
 		case  CoreActionTypes.SET_OVERLAYS_CRITERIA:
 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
 			return { ...state, overlaysCriteria };
 
 		case CoreActionTypes.SET_LAYOUT:
-			return {...state, layout: action.payload };
+			return { ...state, layout: action.payload };
 
 		case CoreActionTypes.SET_WINDOW_LAYOUT: {
 			return { ...state, windowLayout: action.payload.windowLayout };
 		}
+
+		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
+			const payloadObj = {wasWelcomeNotificationShown: action.payload};
+			return {...state, ...payloadObj };
 
 		default:
 			return state;

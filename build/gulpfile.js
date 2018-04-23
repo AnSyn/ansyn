@@ -17,7 +17,7 @@ const inlineTemplatePluginOptions = {
 	base: '../src',
 	useRelativePaths: true,
 	styleProcessor: (path, ext, file, cb) => {
-		less.render(file, {paths: ['../src/app/@ansyn']}, (e, out) => {
+		less.render(file, {paths: ['../src/app/@ansyn/']}, (e, out) => {
 			if (e) {
 				console.error(e);
 				throw e;

@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
-import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;
@@ -11,23 +11,12 @@ describe('Status Bar Reducer', () => {
 
 	it('update status flags - \'good\' value', () => {
 		const action = new UpdateStatusFlagsAction({
-			key: statusBarFlagsItems.pinPointIndicator,
+			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
 		});
 
 		const newState = StatusBarReducer(_reducerState, action);
-		expect(newState.flags.get(statusBarFlagsItems.pinPointIndicator)).toBe(true);
-
-	});
-
-	it('update status flags - \'bad\' value', () => {
-		const action = new UpdateStatusFlagsAction({
-			key: <StatusBarFlag> 'TMP',
-			value: true
-		});
-
-		// const newState = StatusBarReducer(_reducerState, action);
-		expect(() => StatusBarReducer(_reducerState, action)).toThrow();
+		expect(newState.flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)).toBe(true);
 
 	});
 });

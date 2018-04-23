@@ -29,6 +29,10 @@ describe('AnsynComponent', () => {
 
 	const cases: Case[] = [{
 		id: 'tmp',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		owner: 'owner',
+		name: 'name',
 		state: {
 			favoriteOverlays: [],
 			time: { type: '', from: new Date(), to: new Date() },

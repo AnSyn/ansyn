@@ -1,10 +1,8 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { createStore, MockComponent, StoreFixture } from '@ansyn/core/test';
 import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
-import { TimelineEmitterService } from '../../services/timeline-emitter.service';
 import { Observable } from 'rxjs/Rx';
-import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { Overlay } from '../../models/overlay.model';
@@ -13,11 +11,12 @@ import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
 
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction, SelectOverlayAction, UnSelectOverlayAction } from '../../actions/overlays.actions';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '../../actions/overlays.actions';
 import { Actions } from '@ngrx/effects';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -52,13 +51,11 @@ describe('OverlayContainerComponent', () => {
 	let state: State<{ overlays: IOverlaysState }>;
 	let getState: () => IOverlaysState;
 
-	let timelineEmitterService: TimelineEmitterService;
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				OverlaysService,
-				TimelineEmitterService,
 				OverlaysEffects,
 				Actions,
 				{
@@ -71,8 +68,8 @@ describe('OverlayContainerComponent', () => {
 			],
 			declarations: [
 				OverlaysContainerComponent,
-				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'configuration', 'redraw$', 'markup'] }),
-				MockComponent({ selector: 'ansyn-overlay-status', inputs: []})
+				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'timeLineRange', 'redraw$', 'markup'] }),
+				MockComponent({ selector: 'ansyn-overlay-status', inputs: [] })
 			],
 			imports: [
 				HttpClientModule,
@@ -88,108 +85,40 @@ describe('OverlayContainerComponent', () => {
 		// state = overlaysInitialState;
 	}));
 
-	beforeEach(inject([TimelineEmitterService], (_timelineEmitterService) => {
+
+	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlaysContainerComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
-		overlaysService = fixture.debugElement.injector.get(OverlaysService);
-		overlaysEffects = fixture.debugElement.injector.get(OverlaysEffects);
-		timelineEmitterService = _timelineEmitterService;
-	}));
 
 
-	it('should create', () => {
-		expect(component).toBeTruthy();
-	});
+		it('check that we subscribing for both overlays and selected overlays', () => {
+			component.ngOnInit();
+			expect(Object.keys(component.subscribers).length).toEqual(8);
+		});
 
-	it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data', () => {
-		const data = {
-			element: {
-				id: 'test'
+		it('should distinguish between changed data', () => {
+			const overlays = < Overlay[] > [{
+				id: '12',
+				name: 'tmp12',
+				photoTime: new Date(Date.now()).toISOString(),
+				azimuth: 10
+			}, {
+				id: '13',
+				name: 'tmp13',
+				photoTime: new Date(Date.now()).toISOString(),
+				azimuth: 10
 			}
-		};
-		spyOn(store, 'dispatch');
+			];
 
-		component.selectedOverlays = ['test'];
-		timelineEmitterService.provide('timeline:dblclick').next(data);
-		expect(store.dispatch).toHaveBeenCalledTimes(1);
+			store.dispatch(new LoadOverlaysAction({}));
+			expect(state.value.overlays.loading).toBeTruthy();
 
-	});
+			store.dispatch(new LoadOverlaysSuccessAction(overlays));
+			expect(state.value.overlays.overlays.size).toEqual(2);
+			expect(state.value.overlays.loading).toBeFalsy();
 
-	it('check that the listeners that is set in ngAfterViewInit is been called with selected data an unselected data', () => {
-		const data = {
-			element: {
-				id: 'test'
-			}
-		};
-		spyOn(store, 'dispatch');
-		timelineEmitterService.provide('timeline:dblclick').next(data);
-		expect(store.dispatch).toHaveBeenCalledTimes(2);
+		});
 
 	});
-
-	it('check for timeline single click', () => {
-		spyOn(component, 'toggleOverlay');
-		const data = {
-			element: {
-				id: 'test'
-			}
-		};
-		timelineEmitterService.provide('timeline:click').next(data);
-		expect(component.toggleOverlay).toHaveBeenCalledWith(data.element.id);
-
-	});
-
-	it('check that we subscribing for both overlays and selected overlays', () => {
-		component.ngOnInit();
-		expect(Object.keys(component.subscribers).length).toEqual(10);
-	});
-
-	it('check the function toggle overlay', () => {
-		spyOn(store, 'dispatch');
-		const id1 = '32313';
-		const expectedResult1 = new SelectOverlayAction(id1);
-		const expectedResult2 = new UnSelectOverlayAction(id1);
-
-		component.toggleOverlay(id1);
-		expect(store.dispatch).toHaveBeenCalledWith(expectedResult1);
-		component.selectedOverlays.push(id1);
-		component.toggleOverlay(id1);
-		expect(store.dispatch).toHaveBeenCalledWith(expectedResult2);
-	});
-
-
-	it('should distinguish between changed data', () => {
-		const overlays = < Overlay[] > [{
-			id: '12',
-			name: 'tmp12',
-			photoTime: new Date(Date.now()).toISOString(),
-			azimuth: 10
-		}, {
-			id: '13',
-			name: 'tmp13',
-			photoTime: new Date(Date.now()).toISOString(),
-			azimuth: 10
-		}];
-
-		store.dispatch(new LoadOverlaysAction({}));
-		expect(state.value.overlays.loading).toBeTruthy();
-
-		store.dispatch(new LoadOverlaysSuccessAction(overlays));
-		expect(state.value.overlays.overlays.size).toEqual(2);
-		expect(state.value.overlays.loading).toBeFalsy();
-
-	});
-	/*
-			this is nice test I am keeping it as an example
-		 */
-	// xit('check that fetchData has been called', () => {
-	//     spyOn(overlaysService, 'getByCase').and.callFake(() => {
-	//         return Observable.create((observer: Observer < any > ) => {
-	//             observer.next({ key: 'value' });
-	//         });
-	//     });
-	//     component.ngOnInit();
-	//     expect(overlaysService.getByCase).toHaveBeenCalled();
-	// })
 });
+

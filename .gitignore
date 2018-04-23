@@ -55,3 +55,8 @@ yarn-error.log
 
 /e2e/REPORTS
 *.patch
+
+# Confd dev file
+confd/dev
+confd/confd.exe
+confd/confd

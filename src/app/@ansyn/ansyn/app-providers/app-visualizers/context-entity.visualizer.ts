@@ -1,11 +1,11 @@
-import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/open-layer-visualizers/entities-visualizer';
+import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
-import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/open-layer-visualizers/models/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/models/visualizer-state';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
 

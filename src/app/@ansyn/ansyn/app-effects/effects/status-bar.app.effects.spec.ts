@@ -2,10 +2,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import {
-	statusBarFeatureKey,
-	StatusBarReducer
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -15,14 +12,12 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ExpandAction, GoNextAction, GoPrevAction, statusBarFlagsItems } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { GoNextDisplayAction, GoPrevDisplayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { DrawPinPointAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { BackToWorldView } from '@ansyn/core';
+import { LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -65,6 +60,7 @@ describe('StatusBarAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				OverlaysService,
 				StatusBarAppEffects,
 				provideMockActions(() => actions),
@@ -124,62 +120,16 @@ describe('StatusBarAppEffects', () => {
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 
+	it('updategeoFilterIndicatorAction$ - add', () => {
 
-	it('updatePinPointSearchAction$', () => {
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: true });
-		store.dispatch(action);
-		// mock communicatorsAsArray
-		const imagery1 = {
-			createMapSingleClickEvent: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1]);
-		spyOn(imagery1, 'createMapSingleClickEvent');
-		actions = hot('--a--', { a: action });
-		const expectedResults = cold('--b--', { b: undefined });
-		expect(statusBarAppEffects.updatePinPointSearchAction$).toBeObservable(expectedResults);
-		expect(imagery1.createMapSingleClickEvent).toHaveBeenCalledTimes(2);
-	});
-
-	it('updatePinPointIndicatorAction$ - add', () => {
-
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator, value: true });
+		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true });
 		store.dispatch(action);
 		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		actions = hot('--a--', { a: action });
 
-		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
 	});
 
-	it('updatePinPointIndicatorAction$ - remove', () => {
-
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator });
-		store.dispatch(action);
-		// mock communicatorsAsArray
-		const imagery1 = {};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		actions = hot('--a--', { a: action });
-
-		const expectedResults = cold('--b--', { b: new DrawPinPointAction([-70.33666666666667, 25.5]) });
-		expect(statusBarAppEffects.updatePinPointIndicatorAction$).toBeObservable(expectedResults);
-	});
-
-
-	describe('onGoPrevNext$', () => {
-		it('should return onGoNextDisplayAction (type of action is GoNextAction) with current overlayId ', () => {
-			actions = hot('--a--', { a: new GoNextAction() }); // current overlay overlayId1
-			const expectedResults = cold('--b--', { b: new GoNextDisplayAction('overlayId1') });
-			expect(statusBarAppEffects.onGoPrevNext$).toBeObservable(expectedResults);
-		});
-
-		it('should return onGoPrevDisplayAction (type of action is GoPrevAction) with current overlayId', () => {
-			actions = hot('--a--', { a: new GoPrevAction() }); // current overlay overlayId1
-			const expectedResults = cold('--b--', { b: new GoPrevDisplayAction('overlayId1') });
-			expect(statusBarAppEffects.onGoPrevNext$).toBeObservable(expectedResults);
-		});
-	});
 
 	it('onExpand$', () => {
 		actions = hot('--a--', { a: new ExpandAction() });

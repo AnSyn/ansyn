@@ -36,6 +36,9 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-imagery-tile-progress', inputs: ['mapId', 'lowered']
+				}),
+				MockComponent({
+					selector: 'ansyn-overlay-source-type-notice', inputs: ['overlay']
 				})
 			]
 		}).compileComponents();
@@ -44,7 +47,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryContainerComponent);
 		component = fixture.componentInstance;
-		component.mapState = {} as any;
+		component.mapState = {data: {}} as any;
 		fixture.detectChanges();
 	});
 

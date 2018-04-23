@@ -44,7 +44,7 @@ export class SaveCaseComponent implements OnInit {
 	};
 
 	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
-		.pluck('selectedCase')
+		.pluck<ICasesState, Case>('selectedCase')
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 

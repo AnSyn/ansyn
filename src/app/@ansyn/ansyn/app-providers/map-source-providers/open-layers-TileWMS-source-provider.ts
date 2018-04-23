@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerTileWMSSourceProviderMapType = openLayersMapName;
+export const OpenLayerTileWMSSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
 
@@ -21,7 +21,7 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 		super(store, cacheService, imageryCommunicatorService)
 	}
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const layers = metaData.layers.join(',');
 
 		const source = new TileWMS(<any>{
@@ -33,8 +33,6 @@ export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
 			},
 			projection: metaData.projection
 		});
-
-		this.monitorSource(source, mapId);
 
 		const tiled = new TileLayer({ visible: true, source });
 		return [tiled];

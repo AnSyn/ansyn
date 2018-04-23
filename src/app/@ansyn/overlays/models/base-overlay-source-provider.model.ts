@@ -1,11 +1,12 @@
-import { Overlay } from '@ansyn/core';
+import { LoggerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
+import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';
+import { Injectable } from '@angular/core';
 
 export interface DateRange {
 	start: Date;
@@ -50,8 +51,11 @@ export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): 
 	return null;
 }
 
+@Injectable()
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
+
+	constructor(protected loggerService: LoggerService) {}
 
 	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<OverlaysFetchData> {
 		const regionFeature: Feature<any> = {
@@ -66,7 +70,7 @@ export abstract class BaseOverlaySourceProvider {
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const fetchPromises = filters
+		const fetchObservables = filters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(f.coverage, regionFeature);
 				if (!intersection || !intersection.geometry) {
@@ -77,8 +81,6 @@ export abstract class BaseOverlaySourceProvider {
 			// Make sure they have a common time range
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
 			.map(f => {
-				const region = intersect(f.coverage, regionFeature).geometry;
-
 				// Create new filters, by the common region and time
 				let newFetchParams: IFetchParams = {
 					limit: fetchParams.limit,
@@ -91,17 +93,51 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).toPromise();
+				return this.fetch(newFetchParams).catch(err => {
+						this.loggerService.error(err);
+						return Observable.of({
+							data: null,
+							limited: -1,
+							errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
+						});
+					});
 			});
 
-		const multipleFetches: Promise<OverlaysFetchData> = Promise.all(fetchPromises) // Wait for every fetch to resolve
-			.then((data: Array<OverlaysFetchData>) =>
-				mergeLimitedArrays(data, fetchParams.limit, {
-					sortFn: sortByDateDesc,
-					uniqueBy: o => o.id
-				})); // merge overlays from multiple requests
+		if (fetchObservables.length <= 0) {
+			return Observable.of({data: [], limited: 0, errors: []});
+		}
 
-		return Observable.from(multipleFetches);
+		const multipleFetches: Observable<OverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
+			.map((data: Array<OverlaysFetchData>) => {
+				// All failed
+				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
+					return { data: null, limited: -1, errors: data[0].errors };
+				}
+
+				return this.mergeOverlaysFetchData(data, fetchParams.limit)
+			});
+
+		return multipleFetches;
+	}
+
+	mergeOverlaysFetchData(data: OverlaysFetchData[], limit: number, errors?: Error[]): OverlaysFetchData {
+		return {
+			...mergeLimitedArrays(data.filter(item => !this.isFaulty(item)) as Array<LimitedArray>,
+				limit, {
+				sortFn: sortByDateDesc,
+				uniqueBy: o => o.id
+			}),
+			errors: errors ? errors : this.mergeErrors(data)
+		};
+	}
+
+	mergeErrors(data: OverlaysFetchData[]): Error[] {
+		return [].concat.apply([],
+				data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
+	}
+
+	isFaulty(data: OverlaysFetchData): boolean {
+		return Array.isArray(data.errors) && data.errors.length > 0;
 	}
 
 	abstract fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData>;

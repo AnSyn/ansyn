@@ -9,6 +9,7 @@
 	for dynamic tooltips use [attr.tooltip-value]
 	<button [attr.tooltip-value]="myString" tooltip-class="right">Hello</button>
 */
+@distance: 15px;
 
 [tooltip-value]:not(.active):not(:disabled):after {
 	content: attr(tooltip-value);
@@ -18,6 +19,8 @@
 
 	&[tooltip-class*="top"] {
 		&:after {
+			left: auto;
+			bottom: auto;
 			transform: translateY(-100%);
 		}
 		&[tooltip-class*="right"]:after {
@@ -29,13 +32,13 @@
 			right: 0;
 		}
 		&:hover:after {
-			transform: translateY(calc(~"-100% - 15px"));
+			transform: translateY(calc(~"-100% - @{distance}"));
 		}
 	}
 
 	&[tooltip-class*="bottom"] {
 		&:after {
-			aleft: auto;
+			left: auto;
 			top: auto;
 			bottom: 0;
 			transform: translteY(100%);
@@ -49,7 +52,7 @@
 			right: 0;
 		}
 		&:hover:after {
-			transform: translate(0, calc(~"100% + 15px"));
+			transform: translate(0, calc(~"100% + @{distance}"));
 		}
 	}
 
@@ -60,7 +63,7 @@
 			transform: translate(100%, 0);
 		}
 		&:hover:after {
-			transform: translate(calc(~"100% + 15px"), 0);
+			transform: translate(calc(~"100% + @{distance}"), 0);
 		}
 	}
 
@@ -71,12 +74,20 @@
 			transform: translate(-100%, 0);
 		}
 		&:hover:after {
-			transform: translateX(calc(~"-100% - 15px"));
+			transform: translateX(calc(~"-100% - @{distance}"));
+		}
+	}
+
+	&[tooltip-class*="wrap"] {
+		&:after {
+			white-space: normal;
+			height: initial;
+			padding: 5px 10px;
 		}
 	}
 
 	&:after {
-		font-family: "Open Sans";
+		font-family: "Open Sans", sans-serif;
 		font-size: small;
 		opacity: 0;
 		position: absolute;

@@ -1,11 +1,12 @@
 import { IMap } from '@ansyn/imagery/model/imap';
 import { CaseMapPosition } from '@ansyn/core/index';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { Observable } from 'rxjs/Observable';
+export const CesiumMapName = 'cesium';
 
+@Injectable()
 export class CesiumMap extends IMap {
-	static mapType = 'cesium';
 	static groupLayers = new Map<string, any>();
 
 	centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
@@ -13,14 +14,12 @@ export class CesiumMap extends IMap {
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-
-	mapType: string = CesiumMap.mapType;
+	mapType: string = CesiumMapName;
 	mapObject: any;
 
-	constructor(element: HTMLElement) {
-		super();
-
+	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		this.mapObject = {};
+		return Observable.of(false);
 	}
 
 	getCenter(): Observable<Point> {
@@ -80,6 +79,10 @@ export class CesiumMap extends IMap {
 
 	getPointerMove() {
 		return new Observable();
+	}
+
+	getLayers(): any[] {
+		return [];
 	}
 
 	removeSingleClickEvent() {

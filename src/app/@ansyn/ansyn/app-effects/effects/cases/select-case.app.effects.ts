@@ -13,7 +13,7 @@ import {
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Case, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
+import { Case, CaseMapState, Overlay, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays';
 import { UUID } from 'angular2-uuid';
 
@@ -110,19 +110,30 @@ export class SelectCaseAppEffects {
 		if (typeof time.to === 'string') {
 			time.to = new Date(time.to);
 		}
+
 		// layers
 		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
 		return [
 			new SetLayoutAction(layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region }),
-			new SetMapsDataActionStore({ mapsList: data, activeMapId }),
-			new SetFavoriteOverlaysAction(favoriteOverlays),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
+			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer)
 		];
 	}
 
+	parseMapData(map: CaseMapState): CaseMapState {
+		if (map.data.overlay) {
+			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } }
+		}
+		return map;
+	}
+
+	parseOverlay(overlay: Overlay): Overlay {
+		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+	}
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

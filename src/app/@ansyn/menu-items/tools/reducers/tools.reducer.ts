@@ -1,27 +1,19 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 
-export type ToolsFlag = 'annotations' |
-	'geoRegisteredOptionsEnabled' |
-	'shadowMouse' |
-	'shadowMouseDisabled' |
-	'pinLocation' |
-	'autoImageProcessing' |
-	'imageProcessingDisabled' |
-	'isMeasureToolActive';
+export enum toolsFlags {
+	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
+	shadowMouse = 'shadowMouse',
+	shadowMouseDisabled = 'shadowMouseDisabled',
+	pinLocation = 'pinLocation',
+	autoImageProcessing= 'autoImageProcessing',
+	imageProcessingDisabled = 'imageProcessingDisabled',
+	isMeasureToolActive = 'isMeasureToolActive'
+}
 
-export const toolsFlags: {[key: string]: ToolsFlag} = {
-	annotations: 'annotations',
-	geoRegisteredOptionsEnabled: 'geoRegisteredOptionsEnabled',
-	shadowMouse: 'shadowMouse',
-	shadowMouseDisabled: 'shadowMouseDisabled',
-	pinLocation: 'pinLocation',
-	autoImageProcessing: 'autoImageProcessing',
-	imageProcessingDisabled: 'imageProcessingDisabled',
-	isMeasureToolActive: 'isMeasureToolActive'
-};
+export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
 export interface AnnotationProperties {
 	strokeWidth?: number;
@@ -30,36 +22,52 @@ export interface AnnotationProperties {
 }
 
 export interface IToolsState {
-	flags: Map<ToolsFlag, boolean>;
+	flags: Map<toolsFlags, boolean>;
+	subMenu: SubMenuEnum;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
-	gotoExpand: boolean;
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
+	imageProcessingHash: { [key: string]: ImageManualProcessArgs }
 }
 
 export const toolsInitialState: IToolsState = {
-	flags: new Map<ToolsFlag, boolean>([
-		['geoRegisteredOptionsEnabled', true],
+	flags: new Map<toolsFlags, boolean>([
+		[toolsFlags.geoRegisteredOptionsEnabled, true],
 	]),
+	subMenu: undefined,
 	activeCenter: [0, 0],
-	gotoExpand: false,
 	annotationMode: undefined,
 	annotationProperties: {
 		strokeWidth: 1,
 		strokeColor: '#27b2cf',
 		fillColor: '#ffffff'
 	},
-	manualImageProcessingParams: undefined
+	manualImageProcessingParams: undefined,
+	imageProcessingHash: {}
 };
 
 export const toolsFeatureKey = 'tools';
 export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeatureSelector<IToolsState>(toolsFeatureKey);
 
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
-	let tmpMap: Map<ToolsFlag, boolean>;
+	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
+
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS:
+		{
+			const {mapId, processingParams} = action.payload;
+			return {
+				...state,
+				imageProcessingHash: {
+					...state.imageProcessingHash,
+					[mapId]: processingParams
+				}
+			}
+		}
+
+
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
 
@@ -104,12 +112,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.pinLocation, action.payload);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.GO_TO:
-			return state;
-
-		case ToolsActionsTypes.GO_TO_EXPAND:
-			return { ...state, gotoExpand: action.payload };
-
 		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 
 			tmpMap = new Map(state.flags);
@@ -136,18 +138,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.annotations, false);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.FLAGS.ANNOTATION_OPEN:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.annotations, true);
-			return { ...state, flags: tmpMap };
-
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.autoImageProcessing, false);
@@ -162,9 +152,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
+		case ToolsActionsTypes.SET_SUB_MENU:
+			return { ...state, subMenu: action.payload };
+
 		default:
 			return state;
 
 	}
 }
 
+export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);

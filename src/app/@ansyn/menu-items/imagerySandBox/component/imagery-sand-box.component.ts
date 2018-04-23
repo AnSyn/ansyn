@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ImageryCommunicatorService, BaseImageryPlugin } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
@@ -9,10 +9,9 @@ import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
-import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/open-layer-center-marker-plugin';
 import { Feature, Point } from 'geojson';
+import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -46,10 +45,6 @@ export class ImagerySandBoxComponent implements OnInit {
 
 	public showAnnotationsChange($event) {
 		if (this.showAnnotations.nativeElement.checked) {
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'show',
-				relevantMaps: 'all'
-			}));
 		}
 	}
 

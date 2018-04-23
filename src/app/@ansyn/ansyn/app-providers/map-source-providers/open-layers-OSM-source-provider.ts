@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { openLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 
-export const OpenLayerOSMSourceProviderMapType = openLayersMapName;
+export const OpenLayerOSMSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
 
@@ -21,7 +21,7 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 		super(store, cacheService, imageryCommunicatorService)
 	}
 
-	create(metaData: any, mapId: string): any[] {
+	create(metaData: any): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});
@@ -34,8 +34,6 @@ export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
 			opaque: false,
 			url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'
 		});
-
-		this.monitorSource(source, mapId);
 
 		const openSeaMapLayer = new TileLayer({ source });
 		return [osmLayer, openSeaMapLayer];

@@ -1,42 +1,27 @@
 import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IMap, IMapComponent } from '@ansyn/imagery/index';
+import { IMap, ImageryMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { getPluginsProviders } from '@ansyn/imagery/imagery/providers/collections.factory';
-export const cesiumMapName = 'cesiumMap';
-export const pluginProviders = getPluginsProviders(cesiumMapName);
+import {
+	BaseImageryPluginProvider, ProvideMap,
+} from '@ansyn/imagery/imagery/providers/imagery.providers';
 
 @Component({
 	selector: 'ansyn-cesium-component',
 	templateUrl: './cesium-map.component.html',
 	styleUrls: ['./cesium-map.component.less'],
-	providers: [...pluginProviders]
+	providers: [
+		ProvideMap(CesiumMap),
+		BaseImageryPluginProvider
+	]
 })
 
-export class CesiumMapComponent implements OnInit, OnDestroy, IMapComponent {
-
-	static mapName = cesiumMapName;
+export class CesiumMapComponent extends ImageryMapComponent {
 	static mapClass = CesiumMap;
+	@ViewChild('cesiumMap') protected mapElement: ElementRef;
 
-	@ViewChild('cesiumMap') mapElement: ElementRef;
-
-	private _map: CesiumMap;
-	public mapCreated: EventEmitter<IMap>;
-
-	constructor(@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
-		this.mapCreated = new EventEmitter<IMap>();
+	constructor(protected map: IMap,
+				@Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+		super();
 	}
-
-	createMap(layers: any) {
-		this._map = new CesiumMap(this.mapElement.nativeElement);
-		this.mapCreated.emit(this._map);
-	}
-
-	ngOnInit(): void {
-	}
-
-	ngOnDestroy(): void {
-		// this._map.dispose();
-	}
-
 }

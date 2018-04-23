@@ -69,7 +69,7 @@ describe('SelectCaseAppEffects', () => {
 		it('should set all feature stores properties', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
-				geoFilter: CaseGeoFilter = 'Pin-Point',
+				geoFilter: CaseGeoFilter = CaseGeoFilter.PinPoint,
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
@@ -82,7 +82,9 @@ describe('SelectCaseAppEffects', () => {
 			const payload: Case = {
 				id: 'caseId',
 				name: 'caseName',
+				owner: 'ownerName',
 				lastModified: new Date(),
+				creationTime: new Date(),
 				state
 			};
 

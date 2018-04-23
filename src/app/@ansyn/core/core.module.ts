@@ -8,35 +8,42 @@ import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
-import { CoreService } from './services/core.service';
 import {
-	ErrorHandlerService, GenericTypeResolverService, LoggerService,
-	ProjectionConverterService
-} from './services/index';
+	ErrorHandlerService,
+	GenericTypeResolverService,
+	LoggerService,
+	ProjectionConverterService,
+	StorageService
+} from './services';
+import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { WelcomeNotificationComponent } from '@ansyn/core/components/welcome-notification/welcome-notification.component';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
 	ImageryStatusComponent,
 	PlaceholderComponent,
-	ToastComponent
+	ToastComponent,
+	WelcomeNotificationComponent
 ];
 
 @NgModule({
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
-		EffectsModule.forFeature([CoreEffects])
+		EffectsModule.forFeature([CoreEffects]),
+		AlertsModule
 	],
 	providers: [
 		GenericTypeResolverService,
 		ProjectionConverterService,
 		LoggerService,
-		CoreService,
-		ErrorHandlerService
+		ErrorHandlerService,
+		StorageService
 	],
 	exports: coreComponents,
 	declarations: coreComponents
 })
 
 export class CoreModule {
+
 }

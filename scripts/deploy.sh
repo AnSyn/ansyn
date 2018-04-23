@@ -28,9 +28,7 @@ echo "start deploying version $version on target $target"
 
 eval $(aws ecr get-login --no-include-email --region us-west-2)
 
-docker build -t "$target:$version" .
-
-docker tag "$target:$version" "$target:latest"
+docker tag "ansyn:$version" "$target:latest"
 
 docker tag "$target:latest" "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:latest"
 

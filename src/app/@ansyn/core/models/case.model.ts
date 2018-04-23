@@ -2,15 +2,21 @@ import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/core';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { Entity } from "@ansyn/core/services/storage/storage.service";
 import { IVisualizerEntity } from '@ansyn/imagery';
 
-export interface Case {
-	id?: string;
-	name?: string;
-	owner?: string;
-	lastModified?: Date;
-	state?: CaseState;
-	creationTime?: Date;
+export interface CasePreview extends Entity {
+	creationTime: Date;
+	id: string;
+	name: string;
+	owner: string;
+	lastModified: Date;
+	selectedContextId?: string;
+}
+
+export interface Case extends CasePreview {
+	state: CaseState;
 }
 
 export interface IContextEntity extends IVisualizerEntity {
@@ -19,7 +25,10 @@ export interface IContextEntity extends IVisualizerEntity {
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
-export type CaseGeoFilter = 'Pin-Point';
+export enum CaseGeoFilter {
+	PinPoint = 'Point',
+	Polygon = 'Polygon'
+}
 
 export interface ImageManualProcessArgs {
 	Brightness: number
@@ -30,7 +39,6 @@ export interface ImageManualProcessArgs {
 }
 
 export interface CaseState {
-	selectedContextId?: string;
 	maps?: CaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
@@ -87,13 +95,14 @@ export interface CaseMapsState {
 	data: CaseMapState[]
 }
 
-export type OverlayDisplayMode = 'Hitmap' | 'Polygon' | 'None';
+export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
 export interface CaseMapData {
 	position: CaseMapPosition,
 	overlay?: Overlay,
 	isAutoImageProcessingActive?: boolean,
-	overlayDisplayMode?: OverlayDisplayMode
+	overlayDisplayMode?: OverlayDisplayMode,
+	imageManualProcessArgs?: ImageManualProcessArgs
 }
 
 export interface CaseMapState {
@@ -105,4 +114,4 @@ export interface CaseMapState {
 	};
 }
 
-export const defaultMapType = 'openLayersMap';
+export const defaultMapType = OpenlayersMapName;

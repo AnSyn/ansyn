@@ -14,7 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -28,6 +28,8 @@ describe('LayersEffects', () => {
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],
 			providers: [
+				{ provide: CoreConfig, useValue: {} },
+				StorageService,
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }

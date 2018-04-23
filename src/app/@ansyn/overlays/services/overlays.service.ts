@@ -2,7 +2,7 @@ import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provide
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
-import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
+import { IOverlaysState, TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
 import * as bbox from '@turf/bbox';
@@ -10,6 +10,7 @@ import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { OverlaysCriteria } from '@ansyn/core';
+import { OverlayDrop } from '@ansyn/overlays';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
@@ -74,7 +75,7 @@ export class OverlaysService {
 					obj[property] = item[property];
 					return obj;
 				}, {});
-		});
+			});
 	}
 
 
@@ -92,16 +93,15 @@ export class OverlaysService {
 		return (this.config) ? this.config.limit : null;
 	}
 
-	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig,
+	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
-		let tBbox = bbox(params.region);
-		let tBboxFeature = bboxPolygon(tBbox);
+		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
 			limit: this.config.limit,
-			region: tBboxFeature.geometry,
+			region: feature,
 			timeRange: <any> {
 				start: params.time.from,
 				end: params.time.to
@@ -121,17 +121,47 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
-	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: TimelineState): TimelineState {
-		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
-		const deltaTenth: number = (delta) * 0.1;
-		let from: Date, to: Date;
-		if (displayedOverlay.date < timelineState.from) {
-			from = new Date(displayedOverlay.date.getTime() - deltaTenth);
-			to = new Date(from.getTime() + delta);
-		} else if (timelineState.to < displayedOverlay.date) {
-			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
-			from = new Date(to.getTime() - delta);
+	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: TimelineRange): TimelineRange {
+		let { start, end } = timeLineRange;
+		const startTime = start.getTime();
+		const endTime = end.getTime();
+		const dropTime = displayedOverlay.date.getTime();
+		const deltaTenth = this.getTenth(timeLineRange);
+		const dropTimeMarging = {
+			start: dropTime - deltaTenth,
+			end: dropTime + deltaTenth
+		};
+		if (dropTimeMarging.start < startTime) {
+			start = new Date(dropTimeMarging.start);
+		} else if (dropTimeMarging.end > endTime) {
+			end = new Date(dropTimeMarging.end);
 		}
-		return { from, to };
+		return { start, end };
+	}
+
+	private getTenth(timeLineRange: TimelineRange): number {
+		let { start, end } = timeLineRange;
+		const delta: number = end.getTime() - start.getTime();
+		return delta === 0 ? 5000 : (delta) * 0.05;
+	}
+
+	private expendByTenth(timeLineRange: TimelineRange) {
+		const tenth = this.getTenth(timeLineRange);
+		return {
+			start: new Date(timeLineRange.start.getTime() - tenth),
+			end: new Date(timeLineRange.end.getTime() + tenth)
+		};
+	}
+
+
+	getTimeRangeFromDrops(drops: Array<OverlayDrop>): TimelineRange {
+		let start = drops[0].date;
+		let end = drops[0].date;
+		drops.forEach(drop => {
+			start = drop.date < start ? drop.date : start;
+			end = drop.date > end ? drop.date : end;
+		});
+		return this.expendByTenth({ start, end });
+
 	}
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -43,21 +43,21 @@ import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import {
-	CoreActionTypes, ImageManualProcessArgs, layoutOptions,
-	SetLayoutAction
-} from '@ansyn/core';
+import { CoreActionTypes, ImageManualProcessArgs, layoutOptions, SetLayoutAction } from '@ansyn/core';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Feature, FeatureCollection } from 'geojson';
-import { SetSubMenu, SubMenuEnum } from '@ansyn/menu-items';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
 import {
-	IStatusBarState, selectGeoFilter,
+	IStatusBarState,
+	selectGeoFilter,
 	StatusBarActionsTypes,
 	statusBarFlagsItemsEnum,
 	statusBarStateSelector,
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
+import { IImageProcParamComp } from '@ansyn/menu-items/tools/components/image-processing-control/image-processing-control.component';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 
 
 @Injectable()
@@ -140,6 +140,31 @@ export class ToolsAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name onActiveMapChangesUpdateHash$
+	 * @ofType ActiveMapChangedAction
+	 * @dependencies map
+	 * @filter
+	 * @action DisableImageProcessing?, EnableImageProcessing?, SetManualImageProcessingArguments?
+	 */
+	@Effect()
+	onActiveMapChangesUpdateHash$: Observable<any> = this.actions$
+		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(mapStateSelector))
+		.filter(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => toolsState.imageProcessingHash.hasOwnProperty(action.payload))
+		.mergeMap(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => {
+			const activeMap: CaseMapState = MapFacadeService.activeMap(mapState);
+			if (!activeMap.data.overlay) {
+				return [new DisableImageProcessing()];
+			}
+			return [
+				new EnableImageProcessing(),
+				new SetManualImageProcessingArguments({ processingParams: toolsState.imageProcessingHash[action.payload] })
+			];
+		});
+
+
+	/**
+	 * @type Effect
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
 	 * @ofType ActiveMapChangedAction
 	 * @dependencies map
@@ -183,11 +208,23 @@ export class ToolsAppEffects {
 		.mergeMap(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => {
 			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];
-			let manualProcessArgs;
+			let manualProcessArgs: ImageManualProcessArgs;
+			let params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
+				return { ...param, value: param.defaultValue };
+			});
+
+			manualProcessArgs = {
+				Sharpness: params[0].defaultValue,
+				Contrast: params[1].defaultValue,
+				Brightness: params[2].defaultValue,
+				Gamma: params[3].defaultValue,
+				Saturation: params[4].defaultValue
+			};
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
 			if (selectedCase.state.overlaysManualProcessArgs) {
-				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id];
+				manualProcessArgs = Boolean(selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id]) ?
+					selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] : manualProcessArgs;
 			}
 			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action
@@ -361,7 +398,9 @@ export class ToolsAppEffects {
 				coordinates: action.payload
 			};
 
-			return communicator.setCenter(center).map(() => { return { action, communicator } });
+			return communicator.setCenter(center).map(() => {
+				return { action, communicator };
+			});
 		})
 		.map(({ action, communicator }) => new SetActiveCenter(action.payload));
 
@@ -416,7 +455,8 @@ export class ToolsAppEffects {
 			return new SetAnnotationsLayer(updatedAnnotationsLayer);
 		});
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 }
 

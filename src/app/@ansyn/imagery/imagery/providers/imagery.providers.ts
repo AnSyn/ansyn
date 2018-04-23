@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { FactoryProvider, Injector } from '@angular/core';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { ImageryPluginProvider, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery';
@@ -15,7 +15,7 @@ export function BaseImageryPluginProviderFactory(pluginsCollections: Array<Image
 		return childInjector.get(BaseImageryPlugin);
 }
 
-export const BaseImageryPluginProvider = {
+export const BaseImageryPluginProvider: FactoryProvider = {
 	provide: BaseImageryPlugin,
 	useFactory: BaseImageryPluginProviderFactory,
 	deps: [PLUGINS_COLLECTIONS, Injector, IMap]

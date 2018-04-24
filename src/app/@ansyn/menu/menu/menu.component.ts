@@ -233,9 +233,10 @@ export class MenuComponent implements OnInit {
 		Observable
 			.fromEvent(this.document, 'click')
 			.filter((click: any) => {
-				const include = click.path.some((element) => this.menuItemElements.find(({ nativeElement }: ElementRef) => nativeElement === element));
+				const include = click.path.some((element) => element.nodeName === "ANSYN-MENU");
 				return !include && this.clickOutside && this.anyMenuItemSelected()
 			})
 			.subscribe(this.closeMenu.bind(this));
 	}
 }
+

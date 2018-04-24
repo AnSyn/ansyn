@@ -55,10 +55,19 @@ footer {
 	hr {
 		width: 80%;
 		text-align: center;
-		border-color: white;
+		border-color: fade(#ffffff, 50);
 	}
 
 	input {
 		transform: translateY(3px)
+	}
+}
+
+// Make the carousel indicators round
+/deep/ .carousel-indicators {
+	li {
+		height: 10px;
+		width: 10px;
+		border-radius: 5px;
 	}
 }

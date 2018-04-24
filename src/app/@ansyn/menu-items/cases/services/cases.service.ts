@@ -73,14 +73,6 @@ export class CasesService {
 			lastModified: new Date(caseValue.lastModified),
 			state: {
 				...caseValue.state,
-				favoriteOverlays: <Array<Overlay>>caseValue.state.favoriteOverlays,
-				overlaysManualProcessArgs: <OverlaysManualProcessArgs>caseValue.state.overlaysManualProcessArgs,
-				contextEntities: <Array<IContextEntity>>caseValue.state.contextEntities,
-				geoFilter: <CaseGeoFilter>caseValue.state.geoFilter,
-				maps: <CaseMapsState>caseValue.state.maps,
-				// facets: <CaseFacetsState>caseValue.state.facets,
-				// layers: <CaseLayersState>caseValue.state.layers,
-				// needed for ngc
 				time: Boolean(caseValue.state.time) ? {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),

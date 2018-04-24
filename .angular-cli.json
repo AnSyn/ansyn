@@ -41,7 +41,7 @@
 		{
 			"name": "builder",
 			"root": "src",
-			"outDir": "src/app/builder/dist",
+			"outDir": "build/buildBundle/dist",
 			"assets": [
 				{
 					"glob": "**/*",
@@ -51,7 +51,7 @@
 				"favicon.ico"
 			],
 			"index": "index.html",
-			"main": "app/builder/main.builder.ts",
+			"main": "app/appBuilder/main.builder.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
 			"tsconfig": "tsconfig.app.json",

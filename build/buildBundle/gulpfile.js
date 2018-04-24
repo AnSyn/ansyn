@@ -1,11 +1,14 @@
 const gulp = require('gulp');
 const gp_concat = require('gulp-concat');
 const gulpSequence = require('gulp-sequence');
-const distFolder = '../../dist';
+const distFolder = './dist';
 const path = require('path')
 const del = require('del');
 const replace = require('replace');
-const credentials = require('./gitCred')
+const credentials = {
+	user: null,
+	password: null
+}
 const deploy = {
 	withZone: {
 		local: './deployWithZone',
@@ -55,7 +58,7 @@ gulp.task('addZone', function (done) {
 	replace({
 		regex: '\// import \'zone',
 		replacement: '\import \'zone',
-		// replacement: '\'build/dist/src/app/app/',
+		// 	replacement: '\'build/dist/src/app/app/',
 		paths: ['../../src/polyfills.ts'],
 		recursive: false,
 		silent: false
@@ -65,7 +68,7 @@ gulp.task('addZone', function (done) {
 
 
 gulp.task('webPackcompile', function (done) {
-	exec('cd ../../ && ng build', function (err, stdout, stderr) {
+	exec('cd ../../ && npm run build:builder', function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		done(err);
@@ -148,6 +151,18 @@ gulp.task('git-push', function (done) {
 	const addRemoteOrigin = 'cd ' + deploypath + ' && git push origin master --force';
 	exec(addRemoteOrigin, function (err, stdout, stderr) {
 		return done(err)
+	})
+});
+
+gulp.task('copyToLocal', function (done){
+	gulp.src('./deployWithZone/ansyn.cdn.withZone.js').pipe(gulp.dest('../../../angular1-ansyn/angular-seed/app/bower_components'))
+})
+
+gulp.task('localDeploy', function (done) {
+	currentDeploy = deploy.withZone;
+	gulpSequence('clean', 'addZone', 'webPackcompile', 'concat', 'copyToLocal', function (err) {
+		console.log(err);
+			return done()
 	})
 });
 

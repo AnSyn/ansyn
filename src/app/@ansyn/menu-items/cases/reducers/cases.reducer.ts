@@ -19,7 +19,7 @@ export interface ICasesState extends EntityState<CasePreview> {
 
 export const casesFeatureKey = 'cases';
 
-export const casesAdapter = <EntityAdapter<CasePreview>>createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
+export const casesAdapter = createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,

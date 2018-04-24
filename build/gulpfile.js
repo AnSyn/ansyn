@@ -147,7 +147,7 @@ gulp.task('copy_packageJson', function (done) {
 	return gulp.src('../package.json')
 		.pipe(jsonModify({
 			key: 'version',
-			value: cmdArgs.version
+			value: cmdArgs && cmdArgs.version ? cmdArgs.version : null
 		}))
 		.pipe(jsonModify({
 			key: 'name',
@@ -211,4 +211,18 @@ gulp.task('build', function (done) {
 				})
 			}
 		})
+});
+
+gulp.task('testCompile', function (done) {
+	gulpSequence('clean', 'copy-public-api', 'copy-src', 'compile', (err) => {
+		gulpSequence('clean', () => {
+			if (err) {
+				console.log(err);
+				throw err
+			}
+			else {
+				return done()
+			}
+		})
+	})
 });

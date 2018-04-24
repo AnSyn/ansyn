@@ -78,8 +78,8 @@ export class CasesService {
 				contextEntities: <Array<IContextEntity>>caseValue.state.contextEntities,
 				geoFilter: <CaseGeoFilter>caseValue.state.geoFilter,
 				maps: <CaseMapsState>caseValue.state.maps,
-				facets: <CaseFacetsState>caseValue.state.facets,
-				layers: <CaseLayersState>caseValue.state.layers,
+				// facets: <CaseFacetsState>caseValue.state.facets,
+				// layers: <CaseLayersState>caseValue.state.layers,
 				// needed for ngc
 				time: Boolean(caseValue.state.time) ? {
 					...caseValue.state.time,

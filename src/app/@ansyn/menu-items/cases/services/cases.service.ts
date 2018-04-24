@@ -8,7 +8,12 @@ import 'rxjs/add/observable/of';
 import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
-import { CasePreview, CaseState, CaseTimeState, ErrorHandlerService } from '@ansyn/core';
+import {
+	CaseFacetsState,
+	CaseGeoFilter, CaseLayersState, CaseMapsState,
+	CasePreview, CaseState, CaseTimeState, ErrorHandlerService, IContextEntity, ImageManualProcessArgs,
+	Overlay, OverlaysManualProcessArgs
+} from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
 import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
@@ -68,6 +73,14 @@ export class CasesService {
 			lastModified: new Date(caseValue.lastModified),
 			state: {
 				...caseValue.state,
+				favoriteOverlays: <Array<Overlay>>caseValue.state.favoriteOverlays,
+				overlaysManualProcessArgs: <OverlaysManualProcessArgs>caseValue.state.overlaysManualProcessArgs,
+				contextEntities: <Array<IContextEntity>>caseValue.state.contextEntities,
+				geoFilter: <CaseGeoFilter>caseValue.state.geoFilter,
+				maps: <CaseMapsState>caseValue.state.maps,
+				facets: <CaseFacetsState>caseValue.state.facets,
+				layers: <CaseLayersState>caseValue.state.layers,
+				// needed for ngc
 				time: Boolean(caseValue.state.time) ? {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),

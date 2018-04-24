@@ -4,6 +4,7 @@ import { ComboBoxesProperties } from '@ansyn/status-bar';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { isNil } from 'lodash';
 import { StatusBarActions } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CaseGeoFilter } from '@ansyn/core';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
@@ -49,4 +50,4 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 	}
 }
-export const selectGeoFilter = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.comboBoxesProperties.geoFilter);
+export const selectGeoFilter = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => <CaseGeoFilter>statusBar.comboBoxesProperties.geoFilter);

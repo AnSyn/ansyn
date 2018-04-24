@@ -9,6 +9,7 @@ import { toolsStateSelector } from '../../reducers/tools.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Subscription } from "rxjs/Subscription";
 import { IMapState } from "@ansyn/map-facade";
+import { Observable } from 'rxjs/Observable';
 
 
 export interface IImageProcParamComp extends IImageProcParam {
@@ -29,7 +30,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 
 	public mapsImapgeProcessingState =	this.store$.select(toolsStateSelector)
-		.withLatestFrom(this.store$.select(mapStateSelector))
+		.withLatestFrom(<Observable<IMapState>>this.store$.select(mapStateSelector))
 		.do((res: [IToolsState , IMapState])   =>
 		{
 			const [toolsState, caseMapState]: [IToolsState , IMapState] = res;

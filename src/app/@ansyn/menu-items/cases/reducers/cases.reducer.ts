@@ -2,8 +2,10 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { CasePreview } from "@ansyn/core";
+import { Dictionary } from '@ngrx/entity/src/models';
+import { Operator } from 'rxjs/Operator';
 
 export interface CaseModal {
 	show: boolean,
@@ -17,7 +19,7 @@ export interface ICasesState extends EntityState<CasePreview> {
 
 export const casesFeatureKey = 'cases';
 
-export const casesAdapter = createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
+export const casesAdapter = <EntityAdapter<CasePreview>>createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,
@@ -69,6 +71,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapter.getSelectors();
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
-export const selectCaseEntities = createSelector(casesStateSelector, selectEntities);
-export const selectCasesIds = createSelector(casesStateSelector, selectIds);
+export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<CasePreview>>>createSelector(casesStateSelector, selectEntities);
+export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
 

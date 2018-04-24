@@ -7,6 +7,7 @@ import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class MonitorPlugin extends BaseImageryPlugin {
@@ -37,7 +38,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView() {
-		return super.onResetView()
+		return <Observable<boolean>>super.onResetView()
 			.do(this.monitorSource.bind(this));
 	}
 

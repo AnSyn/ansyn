@@ -43,13 +43,9 @@ import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import {
-	CoreActionTypes, ImageManualProcessArgs, layoutOptions,
-	SetLayoutAction
-} from '@ansyn/core';
-import { Point } from 'geojson';
+import { CoreActionTypes, ImageManualProcessArgs, layoutOptions, SetLayoutAction } from '@ansyn/core';
+import { Feature, FeatureCollection, Point } from 'geojson';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Feature, FeatureCollection } from 'geojson';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
 import {
 	IStatusBarState,
@@ -60,7 +56,6 @@ import {
 	UpdateStatusFlagsAction
 } from '@ansyn/status-bar';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { IImageProcParamComp } from '@ansyn/menu-items/tools/components/image-processing-control/image-processing-control.component';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
 
 

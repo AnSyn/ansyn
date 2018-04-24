@@ -5,7 +5,6 @@
 		<ng-container *ngFor="let menuItem of menuItemsAsArray$ | async">
 
 			<div
-				#menuItemElement
 				class="menu-btn"
 				[class.active]="isActive(menuItem.name)"
 				(click)="toggleItem(menuItem.name)">

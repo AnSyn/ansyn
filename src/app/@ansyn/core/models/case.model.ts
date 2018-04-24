@@ -3,7 +3,7 @@ import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/core';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-import { Entity } from "@ansyn/core/services/storage/storage.service";
+import { Entity } from '@ansyn/core/services/storage/storage.service';
 import { IVisualizerEntity } from '@ansyn/imagery';
 
 export interface CasePreview extends Entity {
@@ -25,6 +25,7 @@ export interface IContextEntity extends IVisualizerEntity {
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
+
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
 	Polygon = 'Polygon'
@@ -38,6 +39,10 @@ export interface ImageManualProcessArgs {
 	Sharpness: number
 }
 
+export interface OverlaysManualProcessArgs {
+	[ key: string ]: ImageManualProcessArgs
+}
+
 export interface CaseState {
 	maps?: CaseMapsState,
 	time: CaseTimeState,
@@ -48,7 +53,7 @@ export interface CaseState {
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: Overlay[],
-	overlaysManualProcessArgs: { [key: string]: ImageManualProcessArgs } | {},
+	overlaysManualProcessArgs: OverlaysManualProcessArgs,
 	layers?: CaseLayersState
 }
 

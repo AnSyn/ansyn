@@ -11,7 +11,10 @@ import * as centroid from '@turf/centroid';
 import { CaseState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-import { CaseFacetsState, CaseLayersState, IContextEntity, Overlay } from '@ansyn/core';
+import {
+	CaseFacetsState, CaseGeoFilter, CaseLayersState, IContextEntity, Overlay,
+	OverlaysManualProcessArgs
+} from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 
 export class QueryParamsHelper {
@@ -25,6 +28,8 @@ export class QueryParamsHelper {
 
 	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: Case = this.defaultCase) {
 		const sCase = cloneDeep(defaultCase);
+		sCase.state.overlaysManualProcessArgs = <OverlaysManualProcessArgs>sCase.state.overlaysManualProcessArgs;
+		// needed for ngc
 		const qParamsKeys = Object.keys(qParams);
 		qParamsKeys.forEach((key) => {
 			sCase.state[key] = this.decodeCaseObjects(key, qParams[key]);
@@ -37,6 +42,8 @@ export class QueryParamsHelper {
 			return { ...this.defaultCase, name: caseModel.name };
 		}
 		let updatedCaseModel = cloneDeep(caseModel);
+		updatedCaseModel.state.geoFilter = <CaseGeoFilter>updatedCaseModel.state.geoFilter;
+		// needed for ngc
 		updatedCaseModel.selectedContextId = selectedContext.id;
 		['region', 'facets', 'time', 'layoutIndex', 'geoFilter', 'orientation'].forEach(key => {
 			if (selectedContext[key]) {

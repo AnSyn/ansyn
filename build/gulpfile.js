@@ -9,9 +9,9 @@ const exec = require('child_process').exec;
 const replace = require('replace');
 const jsonModify = require('gulp-json-modify');
 const pkg = require('../package.json');
-const gulpReplace = require('gulp-replace')
 const gulpLess = require('gulp-less');
-
+const gulpSequence = require('gulp-sequence');
+const cmdArgs = require('./proccessCmdArgs')((process.argv));
 
 const inlineTemplatePluginOptions = {
 	base: '../src',
@@ -27,27 +27,33 @@ const inlineTemplatePluginOptions = {
 	}
 };
 
-let preVersion = "1.5.6";
 
-gulp.task('saveVersion', function () {
-	try {
-		preVersion = require('./dist/package').version
-	}
-	catch (e) {
-		preVersion = '1.5.6'
-	}
-});
-
-
-gulp.task('clean', ['saveVersion'], function () {
+gulp.task('clean_dist', function () {
 	return del([
 		"dist/**",
+	], {force: true});
+});
+
+gulp.task('clean_src-dist', function () {
+	return del([
 		"src-dist/**"
 	], {force: true});
 });
 
+gulp.task('clean', function (done) {
+	gulpSequence('clean_dist', 'clean_src-dist', function (err) {
+		if (err) {
+			throw err
+		}
+		else {
+			return done()
 
-gulp.task('copy-public-api', ['clean'], function () {
+		}
+	})
+});
+
+
+gulp.task('copy-public-api', function () {
 
 	return gulp.src([
 		'../README.md',
@@ -58,20 +64,20 @@ gulp.task('copy-public-api', ['clean'], function () {
 
 });
 
-gulp.task('copy-style', ['copy-public-api'], function () {
+gulp.task('copy-style', function () {
 
 	return gulp.src([
 		'../src/styles/**/*'
 	])
 		.pipe(gulpLess({
-			paths: [ path.join(__dirname, '../src/app/@ansyn')]
+			paths: [path.join(__dirname, '../src/app/@ansyn')]
 		}))
 		.pipe(gulp.dest('dist/styles'))
 
 });
 
 
-gulp.task('copy-src', ['copy-style'], function () {
+gulp.task('copy-src', function () {
 	// and compile less to css
 	return gulp.src([
 		'../src/**/*.ts',
@@ -82,31 +88,26 @@ gulp.task('copy-src', ['copy-style'], function () {
 
 });
 
-gulp.task('compile', ['copy-src'], function (done) {
+gulp.task('compile', function (done) {
 	return Promise.resolve()
 		.then(() => ngc(['-p', 'tsconfig.ngc.json'], err => {
-			del([
-				"dist/**",
-				"src-dist/**"
-			], {force: true});
-			console.log(err);
 			throw err
 		}))
 });
 
-gulp.task('getAppConfig', ['compile'],  function (done) {
+gulp.task('getAppConfig', function (done) {
 	const appConfig = fs.readFileSync('../src/app/@ansyn/assets/config/app.config.json');
 	fs.writeFileSync('dist/defaultAppConfig.js', "export const appConfig = " + appConfig);
 	return done()
 });
 
 
-gulp.task('copy-assets', ['getAppConfig'], function (done) {
+gulp.task('copy-assets', function (done) {
 	return gulp.src(['../src/app/@ansyn/assets/**'])
 		.pipe(gulp.dest('dist/assets'))
 });
 
-gulp.task('fix-path', ['copy-assets'], function (done) {
+gulp.task('fix-path', function (done) {
 	replace({
 		regex: '\'@ansyn/',
 		replacement: '\'ng-ansyn/src/app/@ansyn/',
@@ -120,10 +121,8 @@ gulp.task('fix-path', ['copy-assets'], function (done) {
 
 });
 
-gulp.task('copy_packageJson', ['fix-path'], function (done) {
-	// const version = pkg.versionmain
-	const versionNumber = parseInt(preVersion.slice(-1)) + 1;
-	const currentVersion = preVersion.replace(/.$/, versionNumber).replace(/^./, "1");
+gulp.task('copy_packageJson', function (done) {
+
 	const peerDependencies = {
 		"@angular/animations": "5.1.2",
 		"@angular/common": "5.1.2",
@@ -148,7 +147,7 @@ gulp.task('copy_packageJson', ['fix-path'], function (done) {
 	return gulp.src('../package.json')
 		.pipe(jsonModify({
 			key: 'version',
-			value: currentVersion
+			value: cmdArgs.version
 		}))
 		.pipe(jsonModify({
 			key: 'name',
@@ -178,7 +177,7 @@ gulp.task('copy_packageJson', ['fix-path'], function (done) {
 });
 
 
-gulp.task('publishNpm', ['copy_packageJson'], function (done) {
+gulp.task('publishNpm', function (done) {
 	exec('cd dist && npm publish', function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
@@ -186,13 +185,30 @@ gulp.task('publishNpm', ['copy_packageJson'], function (done) {
 	});
 });
 
-gulp.task('delete_src', ['publishNpm'], function (done) {
-	return del([
-		"dist/**",
-		"src-dist/**"
-	], {force: true});
-});
 
-gulp.task('build', ['delete_src'], function (done) {
-	console.log("done!");
+gulp.task('build', function (done) {
+	gulpSequence('clean', 'copy-public-api', 'copy-style', 'copy-src', 'compile', 'getAppConfig',
+		'copy-assets', 'fix-path', 'copy_packageJson', (err) => {
+			if (err) {
+				console.log(err);
+				gulpSequence('clean', () => {
+					return done()
+				});
+			}
+			else if (cmdArgs.version) {
+				gulpSequence('publishNpm', 'clean', (err) => {
+					console.log(err);
+					gulpSequence('clean', () => {
+						return done()
+					})
+				});
+
+			}
+			else {
+				gulpSequence('clean_src-dist', () => {
+					console.log("no version argument (e.g. --version 1.0.0) supplied - dist folder created");
+					return done()
+				})
+			}
+		})
 });

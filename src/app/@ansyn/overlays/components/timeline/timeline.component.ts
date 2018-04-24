@@ -34,6 +34,7 @@ import {
 	SetMarkUp
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
+import { RedrawTimelineAction } from '@ansyn/overlays';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -112,7 +113,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	private dblClick: number;
 	private oldActiveId: string;
 
-	redraw$ = this.actions$.ofType(OverlaysActionTypes.REDRAW_TIMELINE)
+	redraw$ = this.actions$.ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE)
 		.do(() => this.initEventDropsSequence());
 
 	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);

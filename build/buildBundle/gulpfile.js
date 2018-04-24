@@ -156,7 +156,9 @@ gulp.task('sequenceWithZone', function (done) {
 	currentDeploy = deploy.withZone;
 	gulpSequence('clean', 'addZone', 'webPackcompile', 'concat', 'git-init', 'git-add', 'git-commit', 'git-addRemote', 'git-push', function (err) {
 		console.log(err);
-		return done()
+		gulpSequence('clean', function() {
+			return done()
+		})
 	})
 });
 
@@ -164,13 +166,17 @@ gulp.task('sequenceNoZone', function (done) {
 	currentDeploy = deploy.noZone;
 	gulpSequence('clean', 'removeZone', 'webPackcompile', 'concat', 'git-init', 'git-add', 'git-commit', 'git-addRemote', 'git-push', function (err) {
 		console.log(err);
-		return done()
+		gulpSequence('clean', function() {
+			return done()
+		})
 	})
 });
 
 gulp.task('createCdn', function (done) {
 	gulpSequence('sequenceWithZone', 'sequenceNoZone', function (err) {
 		console.log(err);
-		return done()
+		gulpSequence('clean', function() {
+			return done()
+		})
 	})
 });

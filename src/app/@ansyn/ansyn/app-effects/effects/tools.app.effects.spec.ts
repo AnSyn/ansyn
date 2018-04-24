@@ -127,7 +127,39 @@ describe('ToolsAppEffects', () => {
 							ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
 							ed50Customized: ''
 						},
-						ImageProcParams: {}
+						ImageProcParams:
+						[
+							{
+								name: 'Sharpness',
+								defaultValue: 0,
+								min: 0,
+								max: 100
+							},
+							{
+								name: 'Contrast',
+								defaultValue: 0,
+								min: -100,
+								max: 100
+							},
+							{
+								name: 'Brightness',
+								defaultValue: 100,
+								min: -100,
+								max: 100
+							},
+							{
+								name: 'Gamma',
+								defaultValue: 100,
+								min: 1,
+								max: 200
+							},
+							{
+								name: 'Saturation',
+								defaultValue: 0,
+								min: 1,
+								max: 100
+							}
+						]
 					}
 				}
 			]
@@ -241,15 +273,15 @@ describe('ToolsAppEffects', () => {
 	});
 
 	describe('onDisplayOverlaySuccess', () => {
+		const manualProcessArgs = {
+			Sharpness: 0,
+			Contrast: 0,
+			Brightness: 100,
+			Gamma: 100,
+			Saturation: 0
+		};
 		it('onDisplayOverlaySuccess with image processing as true should raise EnableImageProcessing, SetMapAutoImageProcessing, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
-			const manualProcessArgs = {
-				Sharpness: 0,
-				Contrast: 0,
-				Brightness: 100,
-				Gamma: 100,
-				Saturation: 0
-			};
 			activeMap.data.isAutoImageProcessingActive = true;
 			actions = hot('--a--', {
 				a: new DisplayOverlaySuccessAction({
@@ -266,20 +298,15 @@ describe('ToolsAppEffects', () => {
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 		});
 
-
 		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = false;
-			actions = hot('--a--', {
-				a: new DisplayOverlaySuccessAction({
-					overlay: <any> { id: 'id' },
-					mapId: activeMap.id
-				})
-			});
-			const expectedResults = cold('--(abc)--', {
+			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' }, mapId : activeMap.id }) });
+			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
-				b: new SetManualImageProcessingArguments({ processingParams: undefined }),
-				c: new SetAutoImageProcessingSuccess(false)
+				b: new SetMapManualImageProcessing({mapId: activeMap.id, processingParams: manualProcessArgs}),
+				c: new SetManualImageProcessingArguments({ processingParams: manualProcessArgs }),
+				d: new SetAutoImageProcessingSuccess(false)
 			});
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 		});

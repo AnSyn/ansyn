@@ -151,7 +151,7 @@ export class ToolsAppEffects {
 	 * @action DisableImageProcessing?, EnableImageProcessing?, SetManualImageProcessingArguments?
 	 */
 	@Effect()
-	onActiveMapChangesUpdateHash$: Observable<any> = this.actions$
+	onActiveMapChangesUpdateFromHash$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(mapStateSelector))
 		.filter(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => toolsState.imageProcessingHash.hasOwnProperty(action.payload))
@@ -213,22 +213,21 @@ export class ToolsAppEffects {
 			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];
 			let manualProcessArgs: ImageManualProcessArgs;
-			let params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
-				return { ...param, value: param.defaultValue };
+			let params = this.config.ImageProcParams.map(param => {
+				return param.defaultValue;
 			});
 
 			manualProcessArgs = {
-				Sharpness: params[0].defaultValue,
-				Contrast: params[1].defaultValue,
-				Brightness: params[2].defaultValue,
-				Gamma: params[3].defaultValue,
-				Saturation: params[4].defaultValue
+				Sharpness: params[0],
+				Contrast: params[1],
+				Brightness: params[2],
+				Gamma: params[3],
+				Saturation: params[4]
 			};
 
 			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
 			if (selectedCase.state.overlaysManualProcessArgs) {
-				manualProcessArgs = Boolean(selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id]) ?
-					selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] : manualProcessArgs;
+				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || manualProcessArgs;
 			}
 			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action

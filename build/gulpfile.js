@@ -19,7 +19,6 @@ const inlineTemplatePluginOptions = {
 	styleProcessor: (path, ext, file, cb) => {
 		less.render(file, {paths: ['../src/app/@ansyn/']}, (e, out) => {
 			if (e) {
-				console.error(e);
 				throw e;
 			}
 			cb(null, out.css);

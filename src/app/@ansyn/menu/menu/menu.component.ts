@@ -44,7 +44,6 @@ const animations: any[] = [
 export class MenuComponent implements OnInit {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
-	@ViewChildren('menuItemElement') menuItemElements: QueryList<ElementRef>;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -60,7 +59,6 @@ export class MenuComponent implements OnInit {
 	}
 
 	@ViewChild('container') container: ElementRef;
-	@ViewChild('menuWrapper') menuWrapper: ElementRef;
 	@Input() version;
 
 	menuState$: Observable<IMenuState> = this.store.select(menuStateSelector);
@@ -233,7 +231,7 @@ export class MenuComponent implements OnInit {
 		Observable
 			.fromEvent(this.document, 'click')
 			.filter((click: any) => {
-				const include = click.path.some((element) => element.nodeName === "ANSYN-MENU");
+				const include = click.path.includes(this.elementRef.nativeElement);
 				return !include && this.clickOutside && this.anyMenuItemSelected()
 			})
 			.subscribe(this.closeMenu.bind(this));

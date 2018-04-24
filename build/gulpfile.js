@@ -186,6 +186,7 @@ gulp.task('publishNpm', function (done) {
 
 
 gulp.task('build', function (done) {
+
 	gulpSequence('clean', 'copy-public-api', 'copy-style', 'copy-src', 'compile', 'getAppConfig',
 		'copy-assets', 'fix-path', 'copy_packageJson', (err) => {
 			if (err) {
@@ -205,7 +206,7 @@ gulp.task('build', function (done) {
 			}
 			else {
 				gulpSequence('clean_src-dist', () => {
-					console.log("no version argument (e.g. --version 1.0.0) supplied - dist folder created");
+					console.log("no version argument (e.g. gulp build --version 1.0.0) or (npm run build:gulp -- --version 1.0.0) - dist folder created");
 					return done()
 				})
 			}

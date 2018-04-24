@@ -11,6 +11,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
+import { SetDoneStartupOperations } from '@ansyn/menu';
 
 const animations: any[] = [
 	trigger(
@@ -143,6 +144,8 @@ export class MenuComponent implements OnInit {
 		} else {
 			this.store.dispatch(new ToggleIsPinnedAction(false));
 		}
+
+		this.store.dispatch(new SetDoneStartupOperations(true));
 	}
 
 	componentChanges(): void {

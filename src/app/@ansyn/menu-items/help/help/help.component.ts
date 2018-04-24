@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { IMenuState, menuStateSelector, SetShowHelpOnStartup } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-help',
 	templateUrl: './help.component.html',
 	styleUrls: ['./help.component.less']
 })
-export class HelpComponent implements OnInit {
+export class HelpComponent {
 
-	constructor() {
+	public showHelpOnStartup$ = this.store.select<IMenuState>(menuStateSelector)
+		.pluck<IMenuState, boolean>('showHelpOnStartup')
+		.distinctUntilChanged()
+		.map(bool => !bool);
+
+	constructor(public store: Store<IMenuState>) {
 	}
 
-	ngOnInit() {
+	onCheckboxClick(isChecked: boolean) {
+		this.store.dispatch(new SetShowHelpOnStartup(!isChecked));
 	}
-
 }

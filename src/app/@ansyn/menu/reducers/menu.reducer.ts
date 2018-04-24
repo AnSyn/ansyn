@@ -4,19 +4,29 @@ import { MenuItem } from '../models';
 import { isDevMode } from '@angular/core';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { localStorageData, updateLocalStorage } from '@ansyn/menu/helpers/menu-local-storage.helper';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;
 	selectedMenuItem: string;
 	isPinned: boolean;
 	clickOutside: boolean;
+	showHelpOnStartup: boolean;
+	doneStartupOperations: boolean;
 }
 
 export const initialMenuState: IMenuState = {
 	menuItems: new Map(),
-	selectedMenuItem: sessionData().selectedMenuItem,
+	selectedMenuItem: (sessionData().doneStartupOperations ?
+			sessionData().selectedMenuItem
+			: (localStorageData().showHelpOnStartup ?
+				'Help'
+				: sessionData().selectedMenuItem)
+	),
 	isPinned: sessionData().isPinned,
-	clickOutside: true
+	clickOutside: true,
+	showHelpOnStartup: localStorageData().showHelpOnStartup,
+	doneStartupOperations: sessionData().doneStartupOperations
 };
 
 export const menuFeatureKey = 'menu';
@@ -71,6 +81,15 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SET_CLICK_OUTSIDE:
 			return { ...state, clickOutside: action.payload };
+
+		case MenuActionTypes.SET_SHOW_HELP_ON_STARTUP:
+			updateLocalStorage({ showHelpOnStartup: action.payload });
+			return { ...state, showHelpOnStartup: action.payload };
+
+		case MenuActionTypes.SET_DONE_STARTUP_OPERATIONS:
+			updateSession({ doneStartupOperations: action.payload });
+			return { ...state, doneStartupOperations: action.payload };
+
 		default:
 			return state;
 	}

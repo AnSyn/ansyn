@@ -12,6 +12,7 @@
 				<div>blablabla</div>
 				<div>Nulla vitae elit libero, a pharetra augue mollis interdum.</div>
 				<div>Nulla vitae elit libero, a pharetra augue mollis interdum.</div>
+				<div><img src="assets/icons/map/compass.svg"></div>
 			</div>
 		</div>
 	</slide>
@@ -52,7 +53,10 @@
 <footer>
 	<hr/>
 	<label>
-		<input type="checkbox">
-		blablabla
+		<ansyn-checkbox
+			text="Don't show on startup"
+			[checked]="showHelpOnStartup$ | async"
+			(inputClicked)="onCheckboxClick($event.data.isChecked)"
+		></ansyn-checkbox>
 	</label>
 </footer>

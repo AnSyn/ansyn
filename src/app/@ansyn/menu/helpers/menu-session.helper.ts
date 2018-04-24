@@ -2,7 +2,7 @@ import { MenuSessionState } from '../models/menu-session-state.model';
 
 export function sessionData(): MenuSessionState {
 	const menuState: MenuSessionState = JSON.parse(sessionStorage.getItem('menuState'));
-	return menuState ? menuState : { selectedMenuItem: '', isPinned: false };
+	return menuState ? menuState : { selectedMenuItem: '', isPinned: false, doneStartupOperations: false };
 }
 
 export function updateSession(data: MenuSessionState) {

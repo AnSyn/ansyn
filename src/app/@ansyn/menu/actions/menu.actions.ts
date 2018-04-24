@@ -11,7 +11,9 @@ export const MenuActionTypes = {
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
-	SET_CLICK_OUTSIDE: 'SET_CLICK_OUTSIDE'
+	SET_CLICK_OUTSIDE: 'SET_CLICK_OUTSIDE',
+	SET_SHOW_HELP_ON_STARTUP: 'SET_SHOW_HELP_ON_STARTUP',
+	SET_DONE_STARTUP_OPERATIONS: 'SET_DONE_STARTUP_OPERATIONS'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -65,6 +67,20 @@ export class ContainerChangedTriggerAction implements Action {
 
 export class SetClickOutside implements Action {
 	type = MenuActionTypes.SET_CLICK_OUTSIDE;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class SetShowHelpOnStartup implements Action {
+	type = MenuActionTypes.SET_SHOW_HELP_ON_STARTUP;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class SetDoneStartupOperations implements Action {
+	type = MenuActionTypes.SET_DONE_STARTUP_OPERATIONS;
 
 	constructor(public payload: boolean) {
 	}

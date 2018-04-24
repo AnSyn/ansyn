@@ -3,8 +3,7 @@ import {
 	Renderer2,
 	ViewChild, ViewChildren, ViewContainerRef
 } from '@angular/core';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
-import { IMenuConfig, MenuConfig, MenuItem } from '../models';
+import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';

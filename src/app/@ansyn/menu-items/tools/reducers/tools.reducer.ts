@@ -66,7 +66,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			};
 		}
 
-		case ToolsActionsTypes.UPDATE_IMAGE_PROCESIING_HASH:
+		case ToolsActionsTypes.UPDATE_IMAGE_PROCESSING_HASH:
 			return { ...state, imageProcessingHash: action.payload };
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:

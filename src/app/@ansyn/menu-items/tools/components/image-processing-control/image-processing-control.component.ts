@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
@@ -22,29 +22,7 @@ export interface IImageProcParamComp extends IImageProcParam {
 })
 export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
-	private _isExpended: boolean;
-
 	private subscriptions: Subscription[] = [];
-
-	public onManualProcessingExpand$ = this.store$.select(selectSubMenu)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([selectedSubMenu]: [SubMenuEnum, IMapState]) => selectedSubMenu === SubMenuEnum.manualImageProcessing)
-		.do(([selectedSubMenu, mapState]: [SubMenuEnum, IMapState]) => {
-			console.log('YooHoo');
-			const manualProcessArgs = {
-				Sharpness: this.params[0].value,
-				Contrast: this.params[1].value,
-				Brightness: this.params[2].value,
-				Gamma: this.params[3].value,
-				Saturation: this.params[4].value
-			};
-			this.store$.dispatch(new SetMapManualImageProcessing({
-				mapId: mapState.activeMapId,
-				processingParams: manualProcessArgs
-			}));
-		})
-		.distinctUntilChanged();
-
 
 	public mapsImapgeProcessingState$ = this.store$.select(toolsStateSelector)
 		.withLatestFrom(this.store$.select(mapStateSelector))
@@ -52,93 +30,106 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 			const [toolsState, caseMapState]: [IToolsState, IMapState] = res;
 			if (toolsState.imageProcessingHash[caseMapState.activeMapId] !== undefined) {
 				this.params.forEach(param => {
-					this.params[this.params.findIndex((x) => x.name === param.name)].value = toolsState.imageProcessingHash[caseMapState.activeMapId][param.name];
+					this.imageManualProcessArgs[param.name] = toolsState.imageProcessingHash[caseMapState.activeMapId][param.name];
 				});
 			}
 		});
 
+	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector)
+		.map((tools: IToolsState) => tools.manualImageProcessingParams)
+		.distinctUntilChanged()
+		.do((imageManualProcessArgs) => {
+			this.imageManualProcessArgs = imageManualProcessArgs;
+		});
 
-	params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
-		return { ...param, value: param.defaultValue };
-	});
-
-	// public throttledManualImageProcess: Function;	// throttled function
-
-	@HostBinding('class.expand') @Input()
-	set expand(value) {
-		this._isExpended = value;
+	get params() {
+		return this.config.ImageProcParams;
 	}
 
-	get expand() {
-		return this._isExpended;
-	}
+	imageManualProcessArgs: ImageManualProcessArgs;
 
-	@Input()
-	set initParams(_initParams) {
-		if (_initParams) {
-			const isChangeFromInit = this.params.some(({ value, name }) => value !== _initParams[name]);
-			if (isChangeFromInit) {
-				this.params.forEach((param) => param.value = _initParams[param.name]);
-				this.manualImageProcess();
-			}
-		}
-		else {
-			this.resetParams();
-			this.isActive.emit(false);
-		}
-	}
-
-	@Output() isActive = new EventEmitter<boolean>();
+	@HostBinding('class.expand') @Input() expand;
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
-		// this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
 	}
 
-	manualImageProcess() {
-
-		const isChangeFromDefualt = this.params.some(({ value, defaultValue }) => value !== defaultValue);
-		let dispatchValue = <ImageManualProcessArgs> {};
-		if (isChangeFromDefualt) {
-			this.params.forEach(param => {
-				dispatchValue[param.name] = param.value;
-			});
-		}
-		else {
-			dispatchValue = undefined;
-		}
-		this.isActive.emit(isChangeFromDefualt);
-		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
+	resetOne(name) {
+		this.updateParam(name,  this.config.ImageProcParams[name].defaultValue);
 	}
 
-	resetOne(param) {
-		param.value = param.defaultValue;
-		this.manualImageProcess();
-	}
-
-	resetAllParamsAndEmit() {
-		this.resetParams();
-		this.manualImageProcess();
-		this.isActive.emit(false);
+	updateParam(key, value) {
+		const processingParams = { ...this.imageManualProcessArgs };
+		processingParams[key] = value;
+		this.store$.dispatch(new SetManualImageProcessing({ processingParams }));
 	}
 
 	resetParams() {
-		this.params.forEach(param => {
-			param.value = param.defaultValue;
+		const processingParams = { ...this.imageManualProcessArgs };
+		this.config.ImageProcParams.forEach((imageProcParam) => {
+			processingParams[imageProcParam.name] = imageProcParam.defaultValue;
 		});
-	}
-
-	close() {
-		this.expand = false;
+		this.store$.dispatch(new SetManualImageProcessing({ processingParams }));
 	}
 
 	ngOnInit(): void {
 		this.resetParams();
 		this.subscriptions.push(
 			this.mapsImapgeProcessingState$.subscribe(),
-			this.onManualProcessingExpand$.subscribe());
+			this.manualImageProcessingParams$.subscribe()
+		);
 	}
 
 	ngOnDestroy(): void {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }
+
+// this.onManualProcessingExpand$.subscribe(),
+
+// resetAllParamsAndEmit() {
+// 	this.resetParams();
+// 	this.manualImageProcess();
+// 	this.isActive.emit(false);
+// }
+
+// this.params.forEach(param => {
+// 	param.value = param.defaultValue;
+// });
+
+
+// manualProcessArgsFromParams(): ImageManualProcessArgs {
+// 	const manualProcessArgs = {
+// 		Sharpness: this.params[0].value,
+// 		Contrast: this.params[1].value,
+// 		Brightness: this.params[2].value,
+// 		Gamma: this.params[3].value,
+// 		Saturation: this.params[4].value
+// 	};
+// 	return manualProcessArgs;
+// }
+
+//
+// const isChangeFromDefualt = this.params.some(({ value, defaultValue }) => value !== defaultValue);
+// let dispatchValue = <ImageManualProcessArgs> {};
+// if (isChangeFromDefualt) {
+// 	this.params.forEach(param => {
+// 		dispatchValue[param.name] = param.value;
+// 	});
+// }
+// else {
+// 	dispatchValue = undefined;
+// }
+// this.isActive.emit(isChangeFromDefualt);
+
+
+
+// public onManualProcessingExpand$ = this.store$.select(selectSubMenu)
+// 	.withLatestFrom(this.store$.select(mapStateSelector))
+// 	.filter(([selectedSubMenu]: [SubMenuEnum, IMapState]) => selectedSubMenu === SubMenuEnum.manualImageProcessing)
+// 	.do(([selectedSubMenu, mapState]: [SubMenuEnum, IMapState]) => {
+// 		this.store$.dispatch(new SetMapManualImageProcessing({
+// 			mapId: mapState.activeMapId,
+// 			processingParams: this.manualProcessArgsFromParams()
+// 		}));
+// 	})
+// 	.distinctUntilChanged();

@@ -158,10 +158,10 @@ export class MapEffects {
 			}
 
 			if (isWorldView || isInBound) {
-				return new RemoveAlertMsg({ key, value: map.id})
+				return new RemoveAlertMsg({ key, value: map.id });
 			}
 
-			return new AddAlertMsg({key, value: map.id});
+			return new AddAlertMsg({ key, value: map.id });
 
 		});
 

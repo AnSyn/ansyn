@@ -26,6 +26,7 @@ export const ToolsActionsTypes = {
 	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
+	UPDATE_IMAGE_PROCESIING_HASH: type('UPDATE_IMAGE_PROCESIING_HASH'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -33,8 +34,16 @@ export const ToolsActionsTypes = {
 
 };
 
+export class UpdateImageProcessingHash implements Action {
+	type = ToolsActionsTypes.UPDATE_IMAGE_PROCESIING_HASH;
+
+	constructor(public payload: ImageProcessingHash) {
+
+	}
+}
+
 export class SetManualImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
+	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS;
 
 	constructor(public payload?: any) {
 

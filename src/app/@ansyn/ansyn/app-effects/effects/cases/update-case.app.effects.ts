@@ -21,7 +21,8 @@ export const UpdateCaseActionTypes = [
 	...Object.values(LayersActionTypes.ANNOTATIONS), // -> annotationsLayer, displayAnnotationsLayer
 	MapActionTypes.STORE.SET_MAPS_DATA, // -> maps: activeMapId, data
 	CoreActionTypes.SET_LAYOUT, // -> maps: layoutIndex
-	CoreActionTypes.SET_OVERLAYS_CRITERIA // -> time, region
+	CoreActionTypes.SET_OVERLAYS_CRITERIA, // -> time, region
+	ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
 ];
 
 

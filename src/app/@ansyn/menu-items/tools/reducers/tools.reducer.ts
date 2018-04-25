@@ -8,7 +8,7 @@ export enum toolsFlags {
 	shadowMouse = 'shadowMouse',
 	shadowMouseDisabled = 'shadowMouseDisabled',
 	pinLocation = 'pinLocation',
-	autoImageProcessing= 'autoImageProcessing',
+	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
 	isMeasureToolActive = 'isMeasureToolActive'
 }
@@ -34,7 +34,7 @@ export interface IToolsState {
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
-		[toolsFlags.geoRegisteredOptionsEnabled, true],
+		[toolsFlags.geoRegisteredOptionsEnabled, true]
 	]),
 	subMenu: undefined,
 	activeCenter: [0, 0],
@@ -55,18 +55,19 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
 
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS:
-		{
-			const {mapId, processingParams} = action.payload;
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS: {
+			const { mapId, processingParams } = action.payload;
 			return {
 				...state,
 				imageProcessingHash: {
 					...state.imageProcessingHash,
 					[mapId]: processingParams
 				}
-			}
+			};
 		}
 
+		case ToolsActionsTypes.UPDATE_IMAGE_PROCESIING_HASH:
+			return { ...state, imageProcessingHash: action.payload };
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
@@ -140,7 +141,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
@@ -162,3 +162,4 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 }
 
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
+export const selectImageProcessingHash = createSelector(toolsStateSelector, (tools: IToolsState) => tools.imageProcessingHash);

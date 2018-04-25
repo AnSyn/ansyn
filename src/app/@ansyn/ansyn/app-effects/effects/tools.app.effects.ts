@@ -197,18 +197,14 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector),
-			(action: DisplayOverlaySuccessAction, cases: ICasesState, mapsState: IMapState) => {
-				const mapId = action.payload.mapId || mapsState.activeMapId;
-				const selectedMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
-				return [action, selectedMap, cloneDeep(cases.selectedCase)];
-			})
-		.filter(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => Boolean(selectedMap))
-		.mergeMap(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case]) => {
-			// action 1: EnableImageProcessing
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectImageProcessingHash))
+		.mergeMap(([action, mapState, imageProcessingHash]: [DisplayOverlaySuccessAction, IMapState, ImageProcessingHash]) => {
+			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, action.payload.mapId );
 			const actions = [new EnableImageProcessing()];
+
 			let manualProcessArgs: ImageManualProcessArgs;
 			let params = this.config.ImageProcParams.map(param => {
+				manualProcessArgs[param.name] = param.defaultValue;
 				return param.defaultValue;
 			});
 
@@ -220,10 +216,8 @@ export class ToolsAppEffects {
 				Saturation: params[4]
 			};
 
-			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
-			if (selectedCase.state.overlaysManualProcessArgs) {
-				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || manualProcessArgs;
-			}
+			manualProcessArgs = (imageProcessingHash && imageProcessingHash[action.payload.overlay.id]) || manualProcessArgs;
+
 			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action
 				actions.push(new SetMapAutoImageProcessing({

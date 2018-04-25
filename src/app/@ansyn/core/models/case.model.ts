@@ -32,6 +32,10 @@ export enum CaseGeoFilter {
 	Polygon = 'Polygon'
 }
 
+export interface ImageProcessingHash {
+	[key: string]: ImageManualProcessArgs
+}
+
 export interface ImageManualProcessArgs {
 	Brightness: number
 	Contrast: number

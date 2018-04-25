@@ -24,9 +24,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged();
-	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
-		.map((tools: IToolsState) => tools.manualImageProcessingParams)
-		.distinctUntilChanged();
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
 	subMenu: SubMenuEnum;
@@ -71,9 +68,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.subMenu$.subscribe(),
 			this.flags$.subscribe(_flags => {
 				this.flags = _flags;
-			}),
-			this.manualImageProcessingParams$.subscribe((processParams) => {
-				this.imageProcessInitParams = processParams;
 			})
 		);
 	}

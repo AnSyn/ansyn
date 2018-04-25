@@ -39,9 +39,7 @@
 				[disabled]="imageProcessingDisabled || onAutoImageProcessing">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"
-										(isActive)="isImageControlActive=$event"
-										[initParams]="imageProcessInitParams"></ansyn-image-processing-control>
+		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"></ansyn-image-processing-control>
 	</div>
 
 	<div class="display-overlay-visualizer">

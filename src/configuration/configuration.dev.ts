@@ -4,4 +4,5 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const configuration = {
 	production: false,
+	privatePath: '../../private/private.module'
 };

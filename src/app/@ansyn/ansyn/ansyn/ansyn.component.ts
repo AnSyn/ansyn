@@ -1,17 +1,15 @@
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Case } from '@ansyn/menu-items/cases';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
-import { ICasesState } from '@ansyn/menu-items';
-import { coreStateSelector, ICoreState, WindowLayout } from '@ansyn/core';
+import { coreStateSelector, ICoreState, WindowLayout } from '@ansyn/core/reducers/core.reducer';
 
 @Component({
 	selector: 'ansyn-app',

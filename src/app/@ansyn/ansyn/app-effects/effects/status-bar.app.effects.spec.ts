@@ -1,7 +1,7 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ExpandAction, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
@@ -10,14 +10,14 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { Observable } from 'rxjs/Observable';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ExpandAction, statusBarFlagsItemsEnum } from '@ansyn/status-bar';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { BaseOverlaySourceProvider, IFetchParams, Overlay } from '@ansyn/overlays';
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core';
+import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

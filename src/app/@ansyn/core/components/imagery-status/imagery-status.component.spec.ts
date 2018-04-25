@@ -4,7 +4,7 @@ import { StoreModule } from '@ngrx/store';
 import { Overlay } from '../../models/overlay.model';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '../../models/logger.config';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { ALERTS } from '@ansyn/core/alerts/alerts.model';
 
 

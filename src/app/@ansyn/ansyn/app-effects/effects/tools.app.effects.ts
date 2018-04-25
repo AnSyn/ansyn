@@ -10,8 +10,8 @@ import {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	ToolsActionsTypes
-} from '@ansyn/menu-items/tools';
-import { CasesActionTypes } from '@ansyn/menu-items/cases';
+} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import 'rxjs/add/operator/withLatestFrom';
 import { cloneDeep } from 'lodash';
@@ -28,8 +28,8 @@ import {
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
@@ -38,25 +38,25 @@ import {
 	SetMapManualImageProcessing,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
-import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { Case, CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CoreActionTypes, ImageManualProcessArgs, layoutOptions, SetLayoutAction } from '@ansyn/core';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items';
 import {
-	IStatusBarState,
-	selectGeoFilter,
-	StatusBarActionsTypes,
-	statusBarFlagsItemsEnum,
-	statusBarStateSelector,
-	UpdateStatusFlagsAction
-} from '@ansyn/status-bar';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
+	IStatusBarState, selectGeoFilter,
+	statusBarStateSelector
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
+import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+
 
 
 @Injectable()

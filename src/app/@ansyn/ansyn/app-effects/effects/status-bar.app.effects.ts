@@ -2,19 +2,21 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import {
-	CopySelectedCaseLinkAction, IStatusBarState, StatusBarActionsTypes, statusBarFlagsItemsEnum, statusBarStateSelector,
+	CopySelectedCaseLinkAction, StatusBarActionsTypes,
 	UpdateStatusFlagsAction
-} from '@ansyn/status-bar';
+} from '@ansyn/status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/clone-deep';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { ClickOutsideMap, MapActionTypes } from '@ansyn/map-facade';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ClickOutsideMap, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 
 @Injectable()

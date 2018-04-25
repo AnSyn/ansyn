@@ -5,12 +5,13 @@ import {
 	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction, SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Case, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
-import { OverlayReducer, overlaysFeatureKey, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import {
+	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
 import {
 	IToolsState, toolsFeatureKey, toolsInitialState, ToolsReducer,
@@ -18,16 +19,23 @@ import {
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesFeatureKey, casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/status-bar';
 import {
-	initialMapState, mapFeatureKey, MapReducer, mapStateSelector, RemovePendingOverlayAction,
-	SetPendingOverlaysAction, SynchronizeMapsAction
-} from '@ansyn/map-facade';
+	casesFeatureKey, CasesReducer, casesStateSelector,
+	initialCasesState
+} from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { cold, hot } from 'jasmine-marbles';
+import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
-import { overlaysInitialState } from '@ansyn/overlays';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { Case } from '@ansyn/core/models/case.model';
+import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	RemovePendingOverlayAction, SetPendingOverlaysAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade/actions/map.actions';
+import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

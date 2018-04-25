@@ -17,10 +17,13 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
+	AddCaseAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import {
+	SetAnnotationMode,
+	SetMeasureDistanceToolState, SetPinLocationModeAction,
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
@@ -40,12 +43,10 @@ import {
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
-import {
-	AddCaseAction, SetAnnotationMode, SetMeasureDistanceToolState,
-	SetPinLocationModeAction
-} from '@ansyn/menu-items';
-import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;

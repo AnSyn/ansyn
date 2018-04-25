@@ -11,6 +11,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
+import { MenuItem } from '../models/menu-item.model';
+import { MenuConfig } from '../models/menuConfig';
+import { IMenuConfig } from '../models/menu-config.model';
 
 const animations: any[] = [
 	trigger(

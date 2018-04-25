@@ -9,20 +9,23 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IVisualizerEntity, VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
-import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/index';
+import {
+	AnnotationMode, AnnotationsContextMenuBoundingRect,
+	AnnotationsContextMenuEvent
+} from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import {
+	AnnotationProperties, IToolsState, selectSubMenu, SubMenuEnum,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, selectSubMenu, SubMenuEnum, toolsStateSelector } from '@ansyn/menu-items';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';

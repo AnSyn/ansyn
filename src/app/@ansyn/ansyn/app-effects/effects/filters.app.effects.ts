@@ -1,19 +1,22 @@
 import { union } from 'lodash';
-import { Case } from '@ansyn/menu-items/cases';
-import { Overlay, OverlaysActionTypes, overlaysStatusMessages, SetOverlaysStatusMessage } from '@ansyn/overlays';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
-import { FilterMetadata, InitializeFiltersAction, ResetFiltersAction } from '@ansyn/menu-items/filters';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
-	LoadOverlaysAction, LoadOverlaysSuccessAction,
-	SetFilteredOverlaysAction
+	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
+	SetFilteredOverlaysAction, SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import {
+	IOverlaysState, overlaysStateSelector,
+	overlaysStatusMessages
+} from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	EnableOnlyFavoritesSelectionAction,
+	InitializeFiltersAction, ResetFiltersAction
+} from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
@@ -25,7 +28,9 @@ import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { CaseFacetsState } from '@ansyn/core';
+import { Case, CaseFacetsState } from '@ansyn/core/models/case.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 
 @Injectable()
 export class FiltersAppEffects {

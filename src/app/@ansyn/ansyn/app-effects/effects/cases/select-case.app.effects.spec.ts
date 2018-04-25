@@ -3,19 +3,25 @@ import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/Observable';
 import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/select-case.app.effects';
-import {
-	Case, CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
-	CaseTimeState, SetLayoutAction, SetOverlaysCriteriaAction
-} from '@ansyn/core';
-import { CasesService, SelectCaseAction } from '@ansyn/menu-items';
+
 import { cold, hot } from 'jasmine-marbles';
 import { SetAnnotationsLayer, ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
+import {
+	SetFavoriteOverlaysAction, SetLayoutAction,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
-import { OverlaysService } from '@ansyn/overlays';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import {
+	Case,
+	CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
+	CaseTimeState
+} from '@ansyn/core/models/case.model';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -91,7 +97,7 @@ describe('SelectCaseAppEffects', () => {
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
 			const expectedResult = cold('--(abcdefg)--', {
-				a: new SetLayoutAction(maps.layout),
+				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),

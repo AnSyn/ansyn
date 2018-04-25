@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;

@@ -1,16 +1,16 @@
-import { statusBarFlagsItemsEnum, UpdateStatusFlagsAction } from '@ansyn/status-bar';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { CaseRegionState } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
 import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Injectable } from '@angular/core';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 @Injectable()
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	static fillAlpha = 0.4;

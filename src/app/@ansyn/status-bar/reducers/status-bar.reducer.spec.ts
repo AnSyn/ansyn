@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
+import { statusBarFlagsItemsEnum } from '../models/status-bar-flag-items.model';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;

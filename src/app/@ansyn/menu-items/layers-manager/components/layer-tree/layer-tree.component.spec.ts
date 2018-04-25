@@ -14,7 +14,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { Subject } from 'rxjs/Subject';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ToggleDisplayAnnotationsLayer } from '../../actions/layers.actions';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 export function flattenNodeTree(rootNode: ILayerTreeNode, flattenedArray: ILayerTreeNode[] = []): ILayerTreeNode[] {
 	flattenedArray.push(rootNode);

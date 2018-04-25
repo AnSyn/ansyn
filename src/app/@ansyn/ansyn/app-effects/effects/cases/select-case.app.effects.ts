@@ -5,17 +5,21 @@ import { IAppState } from '../../';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
-import { CasesActionTypes, CasesService, SelectCaseAction } from '@ansyn/menu-items';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
+import {
+	SetFavoriteOverlaysAction, SetLayoutAction,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core/actions/core.actions';
 import {
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Case, CaseMapState, Overlay, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays';
-import { UUID } from 'angular2-uuid';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -114,7 +118,7 @@ export class SelectCaseAppEffects {
 		// layers
 		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
 		return [
-			new SetLayoutAction(layout),
+			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),

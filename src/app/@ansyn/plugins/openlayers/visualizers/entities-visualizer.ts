@@ -1,4 +1,3 @@
-import { BaseImageryVisualizer, IVisualizerEntity, VisualizerInteractionTypes } from '@ansyn/imagery';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
 import Feature from 'ol/feature';
@@ -14,6 +13,10 @@ import { VisualizerStateStyle } from './models/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import {
+	BaseImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractionTypes
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -196,7 +199,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return Observable.of(true);
 		}
 
-		const featuresCollectionToAdd: FeatureCollection<any> = {
+		const featuresCollectionToAdd = <FeatureCollection<any>> {
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};

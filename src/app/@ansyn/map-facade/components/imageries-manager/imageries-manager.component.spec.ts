@@ -1,7 +1,5 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
-import { MockComponent } from '@ansyn/core/test';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
@@ -10,8 +8,11 @@ import { Observable } from 'rxjs/Observable';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
-import { coreFeatureKey, CoreReducer, SetLayoutAction } from '@ansyn/core';
 import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',

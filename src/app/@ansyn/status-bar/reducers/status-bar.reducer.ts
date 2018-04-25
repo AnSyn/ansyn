@@ -1,10 +1,10 @@
 import { StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ComboBoxesProperties } from '@ansyn/status-bar';
+import { ComboBoxesProperties } from '../models/combo-boxes.model';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { isNil } from 'lodash';
 import { StatusBarActions } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CaseGeoFilter } from '@ansyn/core';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',

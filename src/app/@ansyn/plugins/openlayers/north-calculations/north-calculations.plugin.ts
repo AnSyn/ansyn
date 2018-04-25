@@ -1,5 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { BaseImageryPlugin, CommunicatorEntity, IMap } from '@ansyn/imagery';
+import { Injectable } from '@angular/core';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
@@ -7,21 +6,20 @@ import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	BackToWorldSuccess,
-	BackToWorldView,
-	CaseOrientation,
-	CoreActionTypes,
-	LoggerService,
-	Overlay
-} from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { CaseOrientation } from '@ansyn/core/models/case.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 
 export interface INorthData {
 	northOffsetDeg: number;

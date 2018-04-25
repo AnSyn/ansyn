@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 
 @NgModule({
 	imports: [CoreModule, CommonModule],

@@ -2,7 +2,7 @@ import { InjectionToken, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';

@@ -9,10 +9,10 @@ import {
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { StatusBarConfig } from '../../models/index';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
-import { GoAdjacentOverlay } from '@ansyn/core';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { statusBarFlagsItemsEnum } from '../../models/status-bar-flag-items.model';
+import { GoAdjacentOverlay } from '@ansyn/core/actions/core.actions';
+import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { ALERTS } from '@ansyn/core/alerts/alerts.model';
 
 describe('StatusBarComponent', () => {

@@ -1,4 +1,4 @@
-import { MenuItem } from '@ansyn/menu/models';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model.ts';
 import { CasesComponent } from '@ansyn/menu-items/cases/components/cases/cases.component';
 import { FiltersCollectionComponent } from '@ansyn/menu-items/filters/components/filters-collection/filters-collection.component';
 import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/components/layers-manager/layers-manager.component';

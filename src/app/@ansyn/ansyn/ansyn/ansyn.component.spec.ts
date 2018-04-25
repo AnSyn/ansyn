@@ -10,7 +10,7 @@ import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.r
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { coreFeatureKey, coreInitialState, CoreReducer, coreStateSelector } from '@ansyn/core';
+import { coreFeatureKey, coreInitialState, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;

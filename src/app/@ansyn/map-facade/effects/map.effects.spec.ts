@@ -14,7 +14,8 @@ import {
 	ImageryRemovedAction
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
-import { CaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;

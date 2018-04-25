@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;

@@ -8,7 +8,7 @@ import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;

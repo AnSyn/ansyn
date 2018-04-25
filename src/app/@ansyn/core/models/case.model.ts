@@ -1,10 +1,11 @@
+///<reference path="../../imagery/model/base-imagery-visualizer.ts"/>
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
-import { LayoutKey } from '@ansyn/core';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { IVisualizerEntity } from '@ansyn/imagery';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { LayoutKey } from '@ansyn/core/models/layout-options.model';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface CasePreview extends Entity {
 	creationTime: Date;

@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { ProjectionConverterService } from '@ansyn/core/services';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';

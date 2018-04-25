@@ -1,6 +1,6 @@
 import { CasesEffects } from './cases.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { CasesService } from '../services/cases.service';
+import { casesConfig, CasesService } from '../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
@@ -18,16 +18,16 @@ import {
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
-import { OverlayReducer } from '@ansyn/overlays';
-import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
-import { AddCasesAction } from '@ansyn/menu-items';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { AddCasesAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

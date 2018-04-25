@@ -21,12 +21,13 @@ import {
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
-import { Case, Context } from '@ansyn/core';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
 import { ContextActionTypes } from '@ansyn/context/actions/context.actions';
-import { selectContextsArray } from '@ansyn/context/reducers';
+import { Case } from '@ansyn/core/models/case.model';
+import { Context } from '@ansyn/core/models/context.model';
+import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 
 @Injectable()
 export class CasesEffects {

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { ComboBoxesProperties } from '@ansyn/status-bar/models';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar';
+import { ComboBoxesProperties } from '../models/combo-boxes.model.ts';
+import { statusBarFlagsItemsEnum } from '../models/status-bar-flag-items.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',

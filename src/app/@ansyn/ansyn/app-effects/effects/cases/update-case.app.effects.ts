@@ -5,13 +5,14 @@ import { IAppState } from '../../';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
-import { FiltersService, UpdateCaseAction } from '@ansyn/menu-items';
-import { Case } from '@ansyn/core';
-import { StatusBarActionsTypes } from '@ansyn/status-bar';
 import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { MapActionTypes } from '@ansyn/map-facade';
+import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+import { Case } from '@ansyn/core/models/case.model';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 export const UpdateCaseActionTypes = [
 	...facetChangesActionType, // -> facets

@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { BackToWorldView, CaseMapState, Overlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	SynchronizeMapsAction
 } from '../../actions/map.actions';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { BackToWorldView } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-imagery-container',

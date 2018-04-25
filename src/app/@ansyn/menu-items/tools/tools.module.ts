@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { GoToModule } from './go-to/go-to.module';
 import { IToolsConfig, toolsConfig } from './models';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';

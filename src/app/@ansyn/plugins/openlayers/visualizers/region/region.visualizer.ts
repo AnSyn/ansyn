@@ -1,20 +1,24 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-import {
-	IStatusBarState, statusBarFlagsItemsEnum,
-	statusBarStateSelector
-} from '@ansyn/status-bar';
-import { CaseGeoFilter, CaseRegionState, coreStateSelector, ICoreState, OverlaysCriteria } from '@ansyn/core';
+
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { ContextMenuTriggerAction, MapActionTypes, mapStateSelector } from '@ansyn/map-facade';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { selectGeoFilter, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import Draw from 'ol/interaction/draw';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import {
+	IStatusBarState, selectGeoFilter,
+	statusBarStateSelector
+} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
+import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	core$ = this.store$.select(coreStateSelector);

@@ -1,14 +1,16 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { CaseMapState } from '@ansyn/core/models';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import { coreStateSelector, ICoreState, LayoutKey, layoutOptions, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { SetMapsDataActionStore, UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { MapsLayout } from '@ansyn/core/models/maps-layout';
+import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-imageries-manager',

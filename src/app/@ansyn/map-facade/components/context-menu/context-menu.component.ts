@@ -13,8 +13,8 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
-import { selectGeoFilter } from '@ansyn/status-bar';
-import { CaseGeoFilter } from '@ansyn/core';
+import { selectGeoFilter } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 
 export interface OverlayButton {
 	name: string;

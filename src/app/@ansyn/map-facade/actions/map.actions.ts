@@ -1,9 +1,11 @@
 import { Action } from '@ngrx/store';
-import { CaseMapPosition, CaseMapState } from '@ansyn/core';
-import { AnnotationsContextMenuEvent, Overlay } from '@ansyn/core/models';
 import { Feature, Point, Position } from 'geojson';
 import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',

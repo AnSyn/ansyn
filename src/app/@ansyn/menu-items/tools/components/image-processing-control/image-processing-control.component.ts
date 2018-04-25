@@ -1,5 +1,5 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
-import { IToolsState } from '../../reducers/tools.reducer';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
@@ -26,12 +26,30 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	private subscriptions: Subscription[] = [];
 
+	public onManualProcessingExpand$ = this.store$.select(selectSubMenu)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.filter(([selectedSubMenu]: [SubMenuEnum, IMapState]) => selectedSubMenu === SubMenuEnum.manualImageProcessing)
+		.do(([selectedSubMenu, mapState]: [SubMenuEnum, IMapState]) => {
+			console.log('YooHoo');
+			const manualProcessArgs = {
+				Sharpness: this.params[0].value,
+				Contrast: this.params[1].value,
+				Brightness: this.params[2].value,
+				Gamma: this.params[3].value,
+				Saturation: this.params[4].value
+			};
+			this.store$.dispatch(new SetMapManualImageProcessing({
+				mapId: mapState.activeMapId,
+				processingParams: manualProcessArgs
+			}));
+		})
+		.distinctUntilChanged();
 
-	public mapsImapgeProcessingState =	this.store$.select(toolsStateSelector)
-		.withLatestFrom(<Observable<IMapState>>this.store$.select(mapStateSelector))
-		.do((res: [IToolsState , IMapState])   =>
-		{
-			const [toolsState, caseMapState]: [IToolsState , IMapState] = res;
+
+	public mapsImapgeProcessingState$ = this.store$.select(toolsStateSelector)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.do((res: [IToolsState, IMapState]) => {
+			const [toolsState, caseMapState]: [IToolsState, IMapState] = res;
 			if (toolsState.imageProcessingHash[caseMapState.activeMapId] !== undefined) {
 				this.params.forEach(param => {
 					this.params[this.params.findIndex((x) => x.name === param.name)].value = toolsState.imageProcessingHash[caseMapState.activeMapId][param.name];
@@ -115,7 +133,9 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.resetParams();
-		this.subscriptions.push(this.mapsImapgeProcessingState.subscribe());
+		this.subscriptions.push(
+			this.mapsImapgeProcessingState$.subscribe(),
+			this.onManualProcessingExpand$.subscribe());
 	}
 
 	ngOnDestroy(): void {

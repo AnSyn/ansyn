@@ -1,5 +1,7 @@
 @import "../../../core/less/common";
 
+@ansyn-help-footer-height: 40px;
+
 :host {
 	&:extend(.default-menu-item);
 	color: white;
@@ -8,7 +10,7 @@
 
 .help-slide {
 	box-sizing: border-box;
-	height: calc(~"100vh - 40px");
+	height: calc(~"100vh - @{ansyn-help-footer-height}");
 	padding-top: 20px;
 
 	.first-title {

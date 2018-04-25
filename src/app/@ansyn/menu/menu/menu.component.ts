@@ -2,7 +2,7 @@ import {
 	Component, ComponentFactoryResolver, ComponentRef, ElementRef, HostListener, Inject, Input, OnInit, Renderer2,
 	ViewChild, ViewContainerRef
 } from '@angular/core';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
+import { SelectMenuItemAction, UnSelectMenuItemAction, SetDoneStartupOperations } from '../actions';
 import { IMenuConfig, MenuConfig, MenuItem } from '../models';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
@@ -11,7 +11,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
-import { SetDoneStartupOperations } from '@ansyn/menu';
 
 const animations: any[] = [
 	trigger(

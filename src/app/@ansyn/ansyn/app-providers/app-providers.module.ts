@@ -1,9 +1,23 @@
-import { NgModule } from '@angular/core';
+import { BaseOverlaySourceProvider } from '@ansyn/overlays';
+import {
+	MultipleOverlaysSource, MultipleOverlaysSourceProvider, NotGeoRegisteredPlaneSourceProvider,
+	PlanetSourceProvider
+} from './overlay-source-providers';
+import {
+	OpenLayerBingSourceProvider, OpenLayerESRI4326SourceProvider, OpenLayerIDAHO2SourceProvider,
+	OpenLayerIDAHOSourceProvider, OpenLayerMapBoxSourceProvider, OpenLayerNotGeoRegisteredPlanetSourceProvider,
+	OpenLayerOSMSourceProvider, OpenLayerTileWMSSourceProvider, OpenLayerPlanetSourceProvider
+} from './map-source-providers';
+import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { EnumFilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items/filters';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { IMultipleOverlaysSources } from '@ansyn/ansyn';
 import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider
@@ -25,39 +39,50 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map/projection/open-layers-projection.service';
 
+export const appProviders = [
+	// Source provider for overlays
+	{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
+
+	// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+	// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
+	{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
+	{ provide: <InjectionToken<IMultipleOverlaysSources>>MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
+
+	// Map tiling source services
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
+
+	// Source provider for filters
+	{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
+	{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
+	{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
+
+	{ provide: ProjectionService, useClass: OpenLayersProjectionService }
+];
+
 @NgModule({
 	imports: [
 		BrowserModule,
 		HttpClientModule
 	],
-	providers: [
-		// Source provider for overlays
-		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
-
-		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
-
-		// Map tiling source services
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
-		{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
-
-		// Source provider for filters
-		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
-
-		{ provide: ProjectionService, useClass: OpenLayersProjectionService }
-	]
+	providers: appProviders
 })
 export class AppProvidersModule {
 
+	static forRoot(providers: Array<{ provide: any, useClass: any, multi: true }>): ModuleWithProviders {
+		return {
+			ngModule: AppProvidersModule,
+			providers: [
+				...appProviders,
+				...providers
+			]
+		};
+	}
 }
